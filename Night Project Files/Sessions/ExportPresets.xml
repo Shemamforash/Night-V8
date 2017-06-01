@@ -1,0 +1,20 @@
+<ExportPresets LastType="">
+  <Preset DisplayName="" Type="DocxExport">
+    <ExportSettings Type="DocxExport">
+      <Filename>C:\Users\Iovana\Documents\NightDesign.docx</Filename>
+      <PageSize>A4</PageSize>
+      <GroupedBy>Nothing</GroupedBy>
+      <SortedBy>DisplayName</SortedBy>
+      <HyperlinkOnReferences>1</HyperlinkOnReferences>
+      <ExportMethod>Single</ExportMethod>
+      <IncludeImages>1</IncludeImages>
+      <SideBySideImages>0</SideBySideImages>
+      <InsertTableOfContents>1</InsertTableOfContents>
+      <IncludeTitlePage>1</IncludeTitlePage>
+      <IncludeTechnicalNames>0</IncludeTechnicalNames>
+      <ExportMarkup>1</ExportMarkup>
+      <AutoOpenFile>1</AutoOpenFile>
+      <ExportQueries>1</ExportQueries>
+    </ExportSettings>
+  </Preset>
+</ExportPresets>

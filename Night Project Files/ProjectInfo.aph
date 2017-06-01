@@ -1,0 +1,19 @@
+<ProjectInfo Version="1">
+  <Signature>30109F74435873ACCE5B17D97C430E71D8DE2683C1046168E77D8D941200040E</Signature>
+  <Content>
+    <Project Guid="8bc0c235-bcfd-4470-ac71-a1d8901ca5c7">
+      <DisplayName Value="Night"/>
+      <DetailName Value="A text-based game about life and death."/>
+      <MainProjectGuid Value="7f97a366-d83f-4316-9534-b46b2c6472b8"/>
+      <IconType Value="0"/>
+      <IdProjectIcon Value="00000000-0000-0000-0000-000000000000"/>
+      <ScmProviderGuid Value="0745c2ee-abe3-451b-934e-7f597f56c0d7"/>
+      <ScmConfiguration Value=""/>
+      <CreationTimeStamp Value="636318361829681525"/>
+      <PartitionHash Value="FF493C85FA4ED4E9CCEA20682E258D41FD4482B98ED6EE6AD4C57BD35B765CC9"/>
+      <SaveFileVersion Value="55"/>
+      <ProjectType Value="0"/>
+      <IsOnlineProject Value="False"/>
+    </Project>
+  </Content>
+</ProjectInfo>
