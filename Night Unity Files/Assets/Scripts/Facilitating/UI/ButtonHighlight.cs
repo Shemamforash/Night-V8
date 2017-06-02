@@ -2,22 +2,27 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class ButtonHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
-	private Text buttonText;
+public class ButtonHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+{
+    private Text buttonText;
 
-	void Start () {
-		buttonText = transform.Find("Text").GetComponent<Text>();
-	}
-	
-	public void OnPointerEnter(PointerEventData eventData){
-		buttonText.color = Color.black;
-	}
+    void Start()
+    {
+        buttonText = transform.Find("Text").GetComponent<Text>();
+    }
 
-	public void OnPointerExit(PointerEventData eventData){
-		buttonText.color = Color.white;
-	}
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        buttonText.color = Color.black;
+    }
 
-	public void OnDisable(){
-		buttonText.color = Color.white;
-	}
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        buttonText.color = Color.white;
+    }
+
+    public void OnDisable()
+    {
+        buttonText.color = Color.white;
+    }
 }

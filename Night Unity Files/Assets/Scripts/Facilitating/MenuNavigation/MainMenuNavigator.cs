@@ -8,7 +8,6 @@ public class MainMenuNavigator : MonoBehaviour
     public GameObject newGameSubMenu, mainSubMenu, optionsSubMenu, statsSubMenu, noSaveSubMenu, overwriteSubMenu;
     private enum Difficulty { EASY, NORMAL, HARD };
     private Difficulty selectedDifficulty;
-    private bool permadeathOn = true;
 
     public void BackToMenu()
     {
@@ -94,21 +93,5 @@ public class MainMenuNavigator : MonoBehaviour
                 print("No Difficulty Selected");
                 break;
         }
-    }
-
-    public void TogglePermadeath(GameObject button)
-    {
-        Text buttonText = button.transform.Find("Text").GetComponent<Text>();
-        if (buttonText.text.ToLower() == "on")
-        {
-            buttonText.text = "OFF";
-            permadeathOn = false;
-        }
-        else
-        {
-            buttonText.text = "ON";
-            permadeathOn = true;
-        }
-        EventSystem.current.SetSelectedGameObject(null);
     }
 }
