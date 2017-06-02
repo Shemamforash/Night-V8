@@ -3,14 +3,18 @@ using UnityEngine;
 
 public class MainMenuNavigator : MonoBehaviour
 {
-    public GameObject newGameSubMenu, mainSubMenu, optionsSubMenu;
+    public GameObject newGameSubMenu, mainSubMenu, optionsSubMenu, statsSubMenu, noSaveSubMenu, overwriteSubMenu;
     private enum Difficulty { EASY, NORMAL, HARD };
     private Difficulty selectedDifficulty;
+	private bool permadeathOn = true;
 
     public void BackToMenu()
     {
         newGameSubMenu.SetActive(false);
         optionsSubMenu.SetActive(false);
+		noSaveSubMenu.SetActive(false);
+		overwriteSubMenu.SetActive(false);
+		statsSubMenu.SetActive(false);
         mainSubMenu.SetActive(true);
     }
 
@@ -18,6 +22,26 @@ public class MainMenuNavigator : MonoBehaviour
     {
         Application.Quit();
     }
+
+	public void OpenStats(){
+		mainSubMenu.SetActive(false);
+		statsSubMenu.SetActive(true);
+	}
+
+	public void StartNewGame(){
+		/*if save exists {} */
+		newGameSubMenu.SetActive(false);
+		overwriteSubMenu.SetActive(true);
+		//else{start new game}
+	}
+
+	public void ContinueGame(){
+		/*if save exists{
+			load game
+		} else { */
+		mainSubMenu.SetActive(false);
+		noSaveSubMenu.SetActive(true);
+	}
 
     public void OpenNewGameMenu()
     {
@@ -49,4 +73,15 @@ public class MainMenuNavigator : MonoBehaviour
                 break;
         }
     }
+
+	public void TogglePermadeath(GameObject button){
+		Text buttonText = button.transform.Find("Text").GetComponent<Text>();
+		if(buttonText.text.ToLower() == "on"){
+			buttonText.text = "OFF";
+			permadeathOn = false;
+		} else {
+			buttonText.text = "ON";
+			permadeathOn = true;
+		}
+	}
 }
