@@ -8,7 +8,7 @@ public class ButtonGroup : MonoBehaviour
 
     public void Start()
     {
-        buttonBorderImage = Resources.Load("ButtonBorder", typeof(Sprite)) as Sprite;
+        buttonBorderImage = Resources.Load("Images/ButtonBorder", typeof(Sprite)) as Sprite;
     }
 
     public void MakeActiveInGroup(Button btn)

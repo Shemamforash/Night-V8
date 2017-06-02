@@ -6,7 +6,7 @@ public class ButtonHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExit
 	private Text buttonText;
 
 	void Start () {
-		buttonText = transform.FindChild("Text").GetComponent<Text>();
+		buttonText = transform.Find("Text").GetComponent<Text>();
 	}
 	
 	public void OnPointerEnter(PointerEventData eventData){

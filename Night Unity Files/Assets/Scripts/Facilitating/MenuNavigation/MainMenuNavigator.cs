@@ -25,6 +25,11 @@ public class MainMenuNavigator : MonoBehaviour
         newGameSubMenu.SetActive(true);
     }
 
+	public void OpenOptionsMenu(){
+		mainSubMenu.SetActive(false);
+		optionsSubMenu.SetActive(true);
+	}
+
     public void SetDifficulty(GameObject btn)
     {
         string btnDifficulty = btn.transform.Find("Text").GetComponent<Text>().text.ToLower();
