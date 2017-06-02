@@ -15,14 +15,20 @@ Platform assembly: C:\Users\Iovana\Desktop\Night-V8\Night Unity Files\Menu Build
 Loading C:\Users\Iovana\Desktop\Night-V8\Night Unity Files\Menu Build_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: C:\Users\Iovana\Desktop\Night-V8\Night Unity Files\Menu Build_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\Iovana\Desktop\Night-V8\Night Unity Files\Menu Build_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.029 seconds
+- Completed reload, in  0.057 seconds
 Platform assembly: C:\Users\Iovana\Desktop\Night-V8\Night Unity Files\Menu Build_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Iovana\Desktop\Night-V8\Night Unity Files\Menu Build_Data\Managed\System.dll (this message is harmless)
 desktop: 1366x768 60Hz; virtual: 1366x768 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 1.426655 ms
+UnloadTime: 1.700617 ms
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 7.733702 ms
+
+Unloading 8 unused Assets to reduce memory usage. Loaded Objects now: 300.
+Total: 2.563163 ms (FindLiveObjects: 0.058029 ms CreateObjectMapping: 0.052502 ms MarkObjects: 0.750040 ms  DeleteObjects: 1.700222 ms)
+
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 3620 -> priority: 1 
-  Thread -> id: 3508 -> priority: 1 
+  Thread -> id: 4e58 -> priority: 1 
+  Thread -> id: 2ea0 -> priority: 1 
