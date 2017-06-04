@@ -4,7 +4,7 @@
       <Filename>C:\Users\Iovana\Documents\NightDesign.docx</Filename>
       <PageSize>A4</PageSize>
       <GroupedBy>Nothing</GroupedBy>
-      <SortedBy>DisplayName</SortedBy>
+      <SortedBy>NavigatorOrder</SortedBy>
       <HyperlinkOnReferences>1</HyperlinkOnReferences>
       <ExportMethod>Single</ExportMethod>
       <IncludeImages>1</IncludeImages>
@@ -14,7 +14,7 @@
       <IncludeTechnicalNames>0</IncludeTechnicalNames>
       <ExportMarkup>1</ExportMarkup>
       <AutoOpenFile>1</AutoOpenFile>
-      <ExportQueries>1</ExportQueries>
+      <ExportQueries>0</ExportQueries>
     </ExportSettings>
   </Preset>
 </ExportPresets>

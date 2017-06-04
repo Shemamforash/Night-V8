@@ -1,6 +1,5 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class MainMenuNavigator : MonoBehaviour
@@ -46,7 +45,7 @@ public class MainMenuNavigator : MonoBehaviour
 	public void ClearSaveAndLoad(){
 		//TODO create new game
         SaveController.Save();
-        SceneManager.LoadScene("Game");
+        // SceneManager.LoadScene("Game");
 	}
 
     public void ContinueGame()
@@ -54,7 +53,7 @@ public class MainMenuNavigator : MonoBehaviour
         if (SaveController.SaveExists())
         {
             //TODO load old game
-            SceneManager.LoadScene("Game");
+            // SceneManager.LoadScene("Game");
         }
         else
         {
