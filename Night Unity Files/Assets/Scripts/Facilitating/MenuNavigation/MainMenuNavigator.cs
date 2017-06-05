@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 public class MainMenuNavigator : MonoBehaviour
 {
     public GameObject newGameSubMenu, mainSubMenu, optionsSubMenu, statsSubMenu, noSaveSubMenu, overwriteSubMenu;
+	public Button newGameFirstSelect, mainMenuFirstSelect, noSaveFirstSelect, overwriteFirstSelect;
+	public Slider optionsFirstSelect;
+	public Scrollbar statsFirstSelect;
+
     private enum Difficulty { EASY, NORMAL, HARD };
     private Difficulty selectedDifficulty;
 
@@ -16,6 +20,7 @@ public class MainMenuNavigator : MonoBehaviour
         overwriteSubMenu.SetActive(false);
         statsSubMenu.SetActive(false);
         mainSubMenu.SetActive(true);
+		mainMenuFirstSelect.Select();
     }
 
     public void CloseGame()
@@ -27,6 +32,7 @@ public class MainMenuNavigator : MonoBehaviour
     {
         mainSubMenu.SetActive(false);
         statsSubMenu.SetActive(true);
+		statsFirstSelect.Select();
     }
 
     public void StartNewGame()
@@ -35,6 +41,7 @@ public class MainMenuNavigator : MonoBehaviour
         {
             newGameSubMenu.SetActive(false);
             overwriteSubMenu.SetActive(true);
+			overwriteFirstSelect.Select();
         }
         else
         {
@@ -59,6 +66,7 @@ public class MainMenuNavigator : MonoBehaviour
         {
             mainSubMenu.SetActive(false);
             noSaveSubMenu.SetActive(true);
+			noSaveFirstSelect.Select();
         }
     }
 
@@ -66,12 +74,14 @@ public class MainMenuNavigator : MonoBehaviour
     {
         mainSubMenu.SetActive(false);
         newGameSubMenu.SetActive(true);
+		newGameFirstSelect.Select();
     }
 
     public void OpenOptionsMenu()
     {
         mainSubMenu.SetActive(false);
         optionsSubMenu.SetActive(true);
+		optionsFirstSelect.Select();
     }
 
     public void SetDifficulty(GameObject btn)

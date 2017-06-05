@@ -23,7 +23,7 @@ public abstract class Toggler : MonoBehaviour
             btnText.text = "ON";
             On();
         }
-        EventSystem.current.SetSelectedGameObject(null);
+        // EventSystem.current.SetSelectedGameObject(null);
     }
 
     protected abstract void On();

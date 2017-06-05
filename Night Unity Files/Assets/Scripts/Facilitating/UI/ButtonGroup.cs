@@ -13,9 +13,12 @@ public class ButtonGroup : MonoBehaviour
 
     public void MakeActiveInGroup(Button btn)
     {
-		RevertActiveButton();
+        RevertActiveButton();
         activeButton = btn;
-        activeButton.enabled = false;
+        activeButton.GetComponent<ButtonHighlight>().enabled = false;
+        ColorBlock colors = activeButton.GetComponent<Button>().colors;
+        colors.normalColor = Color.white;
+        activeButton.GetComponent<Button>().colors = colors;
         activeButton.transform.Find("Text").GetComponent<Text>().color = Color.white;
         activeButton.GetComponent<Button>().image.sprite = buttonBorderImage;
     }
@@ -24,8 +27,11 @@ public class ButtonGroup : MonoBehaviour
     {
         if (activeButton != null)
         {
-            activeButton.enabled = true;
+            activeButton.GetComponent<ButtonHighlight>().enabled = true;
             activeButton.GetComponent<Button>().image.sprite = null;
+            ColorBlock colors = activeButton.GetComponent<Button>().colors;
+            colors.normalColor = new Color(1f, 1f, 1f, 0f);
+            activeButton.GetComponent<Button>().colors = colors;
         }
     }
 
