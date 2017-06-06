@@ -1,5 +1,6 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
+using System.Collections;
 
 public class ThunderClick : MonoBehaviour
 {
@@ -14,10 +15,9 @@ public class ThunderClick : MonoBehaviour
         thunderSource = GetComponent<AudioSource>();
     }
 
-    public void Update()
-    {
-        if (lightningTimer > 0f)
-        {
+    private IEnumerator LightningFlash(){
+        lightningTimer = lightningDuration;
+        while(lightningTimer > 0f){
             lightningTimer += Random.Range(-0.01f, 0.005f);
             if (lightningTimer < 0f)
             {
@@ -25,12 +25,12 @@ public class ThunderClick : MonoBehaviour
             }
             float opacity = 1 / lightningDuration * lightningTimer;
             lightningImage.color = new Color(1f, 1f, 1f, opacity);
+            yield return null;
         }
     }
 
     public void InitiateThunder()
     {
-        lightningTimer = lightningDuration;
         if (Random.Range(0f, 1f) < 0.5f)
         {
             thunderSource.PlayOneShot(thunderSound1, Random.Range(0.6f, 1f));
@@ -39,5 +39,6 @@ public class ThunderClick : MonoBehaviour
         {
             thunderSource.PlayOneShot(thunderSound2, Random.Range(0.6f, 1f));
         }
+        StartCoroutine("LightningFlash");
     }
 }
