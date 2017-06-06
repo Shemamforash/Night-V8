@@ -1,37 +1,33 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ButtonGroup : MonoBehaviour
 {
-    private Button activeButton = null;
-    private Sprite buttonBorderImage;
+    public Button initialActiveButton;
+    private Button activeButton;
 
-    public void Start()
+    public void OnEnable()
     {
-        buttonBorderImage = Resources.Load("Images/ButtonBorder", typeof(Sprite)) as Sprite;
+        if (activeButton != initialActiveButton)
+        {
+            MakeActiveInGroup(initialActiveButton);
+        }
     }
 
     public void MakeActiveInGroup(Button btn)
     {
         RevertActiveButton();
         activeButton = btn;
-        activeButton.GetComponent<ButtonHighlight>().enabled = false;
-        ColorBlock colors = activeButton.GetComponent<Button>().colors;
-        colors.normalColor = Color.white;
-        activeButton.GetComponent<Button>().colors = colors;
-        activeButton.transform.Find("Text").GetComponent<Text>().color = Color.white;
-        activeButton.GetComponent<Button>().image.sprite = buttonBorderImage;
+        activeButton.GetComponent<ButtonHighlight>().SetBorderActive(true);
     }
 
     private void RevertActiveButton()
     {
         if (activeButton != null)
         {
-            activeButton.GetComponent<ButtonHighlight>().enabled = true;
-            activeButton.GetComponent<Button>().image.sprite = null;
-            ColorBlock colors = activeButton.GetComponent<Button>().colors;
-            colors.normalColor = new Color(1f, 1f, 1f, 0f);
-            activeButton.GetComponent<Button>().colors = colors;
+            activeButton.GetComponent<ButtonHighlight>().SetBorderActive(false);
+			activeButton = null;
         }
     }
 

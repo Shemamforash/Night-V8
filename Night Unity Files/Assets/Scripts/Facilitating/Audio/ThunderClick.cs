@@ -6,7 +6,7 @@ public class ThunderClick : MonoBehaviour
     private AudioSource thunderSource;
     public AudioClip thunderSound1, thunderSound2;
 
-    private float lightningTimer = 0f, lightningDuration = 0.1f;
+    private float lightningTimer = 0f, lightningDuration = 0.15f;
     public Image lightningImage;
 
     public void Start()
@@ -18,7 +18,6 @@ public class ThunderClick : MonoBehaviour
     {
         if (lightningTimer > 0f)
         {
-            // lightningTimer -= Time.deltaTime;
             lightningTimer += Random.Range(-0.01f, 0.005f);
             if (lightningTimer < 0f)
             {
