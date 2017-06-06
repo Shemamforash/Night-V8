@@ -4,8 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuNavigator : MonoBehaviour
 {
-    public GameObject newGameSubMenu, mainSubMenu, optionsSubMenu, statsSubMenu, noSaveSubMenu, overwriteSubMenu;
-	public Button newGameFirstSelect, mainMenuFirstSelect, noSaveFirstSelect, overwriteFirstSelect;
+    public GameObject newGameSubMenu, mainSubMenu, optionsSubMenu, statsSubMenu, noSaveSubMenu, overwriteSubMenu, controlsSubMenu;
+	public Button newGameFirstSelect, mainMenuFirstSelect, noSaveFirstSelect, overwriteFirstSelect, controlsFirstSelect;
 	public Slider optionsFirstSelect;
 	public Scrollbar statsFirstSelect;
 
@@ -19,6 +19,7 @@ public class MainMenuNavigator : MonoBehaviour
         noSaveSubMenu.SetActive(false);
         overwriteSubMenu.SetActive(false);
         statsSubMenu.SetActive(false);
+        controlsSubMenu.SetActive(false);
         mainSubMenu.SetActive(true);
 		mainMenuFirstSelect.Select();
     }
@@ -26,6 +27,12 @@ public class MainMenuNavigator : MonoBehaviour
     public void CloseGame()
     {
         Application.Quit();
+    }
+
+    public void OpenControls(){
+        mainSubMenu.SetActive(false);
+        controlsSubMenu.SetActive(true);
+        controlsFirstSelect.Select();
     }
 
     public void OpenStats()

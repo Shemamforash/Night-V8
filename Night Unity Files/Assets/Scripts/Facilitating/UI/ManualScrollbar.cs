@@ -2,22 +2,23 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ManualScrollbar : MonoBehaviour, ISelectHandler, IDeselectHandler
+public class ManualScrollbar : Highlight
 {
     public ScrollRect scrollrect;
     private bool selected = false;
+    private float scrollRectYPos;
 
-    public void OnSelect(BaseEventData eventData)
+    public override void OnSelect(BaseEventData eventData)
     {
+        base.OnSelect(eventData);
         selected = true;
     }
 
-    public void OnDeselect(BaseEventData eventData)
+    public override void OnDeselect(BaseEventData eventData)
     {
+        base.OnDeselect(eventData);
         selected = false;
     }
-
-    private float scrollRectYPos;
 
     void Update()
     {
