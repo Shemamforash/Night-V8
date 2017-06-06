@@ -5,12 +5,22 @@ using UnityEngine.SceneManagement;
 public class MainMenuNavigator : MonoBehaviour
 {
     public GameObject newGameSubMenu, mainSubMenu, optionsSubMenu, statsSubMenu, noSaveSubMenu, overwriteSubMenu, controlsSubMenu;
-	public Button newGameFirstSelect, mainMenuFirstSelect, noSaveFirstSelect, overwriteFirstSelect, controlsFirstSelect;
-	public Slider optionsFirstSelect;
-	public Scrollbar statsFirstSelect;
+    public Button newGameFirstSelect, mainMenuFirstSelect, noSaveFirstSelect, overwriteFirstSelect, controlsFirstSelect;
+    public Slider optionsFirstSelect;
+    public Scrollbar statsFirstSelect;
 
-    private enum Difficulty { EASY, NORMAL, HARD };
-    private Difficulty selectedDifficulty;
+    public void Start()
+    {
+        SaveController.LoadSettings();
+        GetComponent<GlobalAudioManager>().Initialise();
+    }
+
+    //TODO move me somewhere more suitable
+    public void OnApplicationQuit()
+    {
+        SaveController.SaveSettings();
+        SaveController.SaveGame();
+    }
 
     public void BackToMenu()
     {
@@ -21,7 +31,7 @@ public class MainMenuNavigator : MonoBehaviour
         statsSubMenu.SetActive(false);
         controlsSubMenu.SetActive(false);
         mainSubMenu.SetActive(true);
-		mainMenuFirstSelect.Select();
+        mainMenuFirstSelect.Select();
     }
 
     public void CloseGame()
@@ -29,7 +39,8 @@ public class MainMenuNavigator : MonoBehaviour
         Application.Quit();
     }
 
-    public void OpenControls(){
+    public void OpenControls()
+    {
         mainSubMenu.SetActive(false);
         controlsSubMenu.SetActive(true);
         controlsFirstSelect.Select();
@@ -39,7 +50,7 @@ public class MainMenuNavigator : MonoBehaviour
     {
         mainSubMenu.SetActive(false);
         statsSubMenu.SetActive(true);
-		statsFirstSelect.Select();
+        statsFirstSelect.Select();
     }
 
     public void StartNewGame()
@@ -48,7 +59,7 @@ public class MainMenuNavigator : MonoBehaviour
         {
             newGameSubMenu.SetActive(false);
             overwriteSubMenu.SetActive(true);
-			overwriteFirstSelect.Select();
+            overwriteFirstSelect.Select();
         }
         else
         {
@@ -56,24 +67,25 @@ public class MainMenuNavigator : MonoBehaviour
         }
     }
 
-	public void ClearSaveAndLoad(){
-		//TODO create new game
-        SaveController.Save();
+    public void ClearSaveAndLoad()
+    {
+        //TODO create new game
+        SaveController.SaveGame();
         // SceneManager.LoadScene("Game");
-	}
+    }
 
     public void ContinueGame()
     {
         if (SaveController.SaveExists())
         {
-            //TODO load old game
+            SaveController.LoadGame();
             // SceneManager.LoadScene("Game");
         }
         else
         {
             mainSubMenu.SetActive(false);
             noSaveSubMenu.SetActive(true);
-			noSaveFirstSelect.Select();
+            noSaveFirstSelect.Select();
         }
     }
 
@@ -81,33 +93,19 @@ public class MainMenuNavigator : MonoBehaviour
     {
         mainSubMenu.SetActive(false);
         newGameSubMenu.SetActive(true);
-		newGameFirstSelect.Select();
+        newGameFirstSelect.Select();
     }
 
     public void OpenOptionsMenu()
     {
         mainSubMenu.SetActive(false);
         optionsSubMenu.SetActive(true);
-		optionsFirstSelect.Select();
+        optionsFirstSelect.Select();
     }
 
     public void SetDifficulty(GameObject btn)
     {
         string btnDifficulty = btn.transform.Find("Text").GetComponent<Text>().text.ToLower();
-        switch (btnDifficulty)
-        {
-            case "easy":
-                selectedDifficulty = Difficulty.EASY;
-                break;
-            case "normal":
-                selectedDifficulty = Difficulty.NORMAL;
-                break;
-            case "hard":
-                selectedDifficulty = Difficulty.HARD;
-                break;
-            default:
-                print("No Difficulty Selected");
-                break;
-        }
+        Settings.SetDifficultyFromString(btnDifficulty);
     }
 }

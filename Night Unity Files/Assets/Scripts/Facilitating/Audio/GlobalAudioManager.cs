@@ -4,12 +4,55 @@ using System.Collections.Generic;
 
 public class GlobalAudioManager : MonoBehaviour
 {
-    // Volume values static to prevent reset between scenes
-    private static float masterVolume = 1, effectsVolume = 1, musicVolume = 1;
     private List<AudioSource> musicSources = new List<AudioSource>();
     private List<AudioSource> effectsSources = new List<AudioSource>();
+    public Slider masterSlider, musicSlider, effectsSlider;
 
-    public void Start()
+    private void UpdateVolumes()
+    {
+        foreach (AudioSource a in musicSources)
+        {
+            if (Settings.masterVolume < Settings.musicVolume)
+            {
+                a.volume = Settings.masterVolume;
+            }
+            else
+            {
+                a.volume = Settings.musicVolume;
+            }
+        }
+        foreach (AudioSource e in effectsSources)
+        {
+            if (Settings.masterVolume < Settings.effectsVolume)
+            {
+                e.volume = Settings.masterVolume;
+            }
+            else
+            {
+                e.volume = Settings.effectsVolume;
+            }
+        }
+    }
+
+    public void SetMasterVolume(Slider slider)
+    {
+        Settings.masterVolume = slider.value;
+        UpdateVolumes();
+    }
+
+    public void SetEffectsVolume(Slider slider)
+    {
+        Settings.effectsVolume = slider.value;
+        UpdateVolumes();
+    }
+
+    public void SetMusicVolume(Slider slider)
+    {
+        Settings.musicVolume = slider.value;
+        UpdateVolumes();
+    }
+
+    public void Initialise()
     {
         List<GameObject> musicObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("MusicSource"));
         List<GameObject> effectsObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("SFXSource"));
@@ -21,49 +64,10 @@ public class GlobalAudioManager : MonoBehaviour
         {
             effectsSources.Add(e.GetComponent<AudioSource>());
         }
-    }
 
-    private void UpdateVolumes()
-    {
-        foreach (AudioSource a in musicSources)
-        {
-            if (masterVolume < musicVolume)
-            {
-                a.volume = masterVolume;
-            }
-            else
-            {
-                a.volume = musicVolume;
-            }
-        }
-        foreach (AudioSource e in effectsSources)
-        {
-            if (masterVolume < effectsVolume)
-            {
-				e.volume = masterVolume;
-            }
-            else
-            {
-                e.volume = effectsVolume;
-            }
-        }
-    }
-
-    public void SetMasterVolume(Slider slider)
-    {
-        masterVolume = slider.value;
-        UpdateVolumes();
-    }
-
-    public void SetEffectsVolume(Slider slider)
-    {
-        effectsVolume = slider.value;
-        UpdateVolumes();
-    }
-
-    public void SetMusicVolume(Slider slider)
-    {
-        musicVolume = slider.value;
+        masterSlider.value = Settings.masterVolume;
+        musicSlider.value = Settings.musicVolume;
+        effectsSlider.value = Settings.effectsVolume;
         UpdateVolumes();
     }
 }

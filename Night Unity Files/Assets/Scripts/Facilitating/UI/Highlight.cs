@@ -7,6 +7,7 @@ public class Highlight : MonoBehaviour, ISelectHandler, IDeselectHandler
     protected bool initialised = false;
     public int leftOffset, rightOffset, topOffset, bottomOffset;
 	public Transform targetBorderParent;
+    public string tooltipInfo;
 
     public virtual void Initialise()
     {
