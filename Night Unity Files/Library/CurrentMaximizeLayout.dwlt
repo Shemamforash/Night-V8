@@ -20,10 +20,10 @@ MonoBehaviour:
     y: 30
     width: 1366
     height: 645
-  m_MinSize: {x: 679, y: 492}
-  m_MaxSize: {x: 14004, y: 14042}
+  m_MinSize: {x: 681, y: 321}
+  m_MaxSize: {x: 12006, y: 8021}
   vertical: 0
-  controlID: 33882
+  controlID: 39654
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -120,10 +120,10 @@ MonoBehaviour:
     y: 0
     width: 1089
     height: 645
-  m_MinSize: {x: 402, y: 492}
-  m_MaxSize: {x: 10002, y: 14042}
+  m_MinSize: {x: 404, y: 321}
+  m_MaxSize: {x: 8004, y: 8021}
   vertical: 1
-  controlID: 33883
+  controlID: 39621
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,10 +144,10 @@ MonoBehaviour:
     y: 0
     width: 1089
     height: 374
-  m_MinSize: {x: 402, y: 221}
-  m_MaxSize: {x: 8002, y: 4021}
+  m_MinSize: {x: 404, y: 221}
+  m_MaxSize: {x: 8004, y: 4021}
   vertical: 0
-  controlID: 33884
+  controlID: 39598
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -166,8 +166,8 @@ MonoBehaviour:
     y: 0
     width: 269
     height: 374
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 6}
   m_Panes:
   - {fileID: 6}
@@ -200,10 +200,10 @@ MonoBehaviour:
     width: 267
     height: 353
   m_TreeViewState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: c288faff
-    m_LastClickedID: -358206
-    m_ExpandedIDs: 8cc3faffb6c3faff4603fbff4e03fbff7e03fbffa403fbff8006fbffe408fbffec08fbff900cfbff3011fbfffe2ffbff6241fbff8841fbff189dfbff40c2fbfff040fcff6641fcff5046fcffd246fcffce49fcffd662fcfffc6efcff8070fcff7a75fcff4a77fcff4099fcff8499fcff50c0fcffecf3fcff54f4fcff86f4fcfff0f4fcff3af5fcffccf5fcff68f6fcff7cf7fcffa2fdfcffacfdfcffb6fdfcff7004fdff6a0dfdff2c11fdff72ddfeffe6fbffff0000000074260000da26000054270000602700002a2800006c2800008e280000be590100ce590100125a01002a5a01002e5a01003e5d0100925d0100c86e0100d86e0100e26e0100386f0100f08e01006e930100fa9801007c9d0100d89d01008e1b0200b61b02008a1c0200be1c0200482d0200742d0200342e0200402e02006a2e0200cc2e0200d02e0200b04f0200e84f0200e450020086510200ac54020098550200a455020034560200f8760200fa7b0200d480020052ba020024bb020074bb0200a4bb0200debb0200
+    scrollPos: {x: 0, y: 80}
+    m_SelectedIDs: 84adfaff
+    m_LastClickedID: -348796
+    m_ExpandedIDs: 8cc3faffb6c3faff4603fbff4e03fbff7e03fbffa403fbff8006fbffe408fbffec08fbff900cfbff3011fbfffe2ffbff6241fbff8841fbff189dfbff40c2fbfff040fcff6641fcff5046fcffd246fcffce49fcffd662fcfffc6efcff8070fcff7a75fcff4a77fcff4099fcff8499fcff50c0fcffecf3fcff54f4fcff86f4fcfff0f4fcff3af5fcffccf5fcff68f6fcff7cf7fcffa2fdfcffacfdfcffb6fdfcff7004fdff6a0dfdff2c11fdff72ddfeffe6fbffff0000000074260000da26000054270000602700002a2800006c2800008e280000be590100ce590100125a01002a5a01002e5a01003e5d0100925d0100c86e0100d86e0100e26e0100386f0100f08e01006e930100fa9801007c9d0100d89d01008e1b0200b61b02008a1c0200be1c0200482d0200742d0200342e0200402e02006a2e0200cc2e0200d02e0200b04f0200e84f0200e450020086510200ac54020098550200a455020034560200f8760200fa7b0200d48002004eba020052ba020024bb020074bb0200a4bb0200debb0200e2bb0200eebb0200
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -243,8 +243,8 @@ MonoBehaviour:
     y: 0
     width: 820
     height: 374
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 204, y: 221}
+  m_MaxSize: {x: 4004, y: 4021}
   m_ActualView: {fileID: 2}
   m_Panes:
   - {fileID: 8}
@@ -370,14 +370,14 @@ MonoBehaviour:
     y: 374
     width: 1089
     height: 271
-  m_MinSize: {x: 230, y: 250}
-  m_MaxSize: {x: 10000, y: 10000}
-  m_ActualView: {fileID: 11}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 11}
   - {fileID: 12}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -415,18 +415,18 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Prefabs/UI Prefabs
+    - Assets/Scripts/Facilitating/UI/GameOnly
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Prefabs/UI Prefabs
+  - Assets/Scripts/Facilitating/UI/GameOnly
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Iovana\Desktop\Night-V8\Night Unity Files
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 39}
-    m_SelectedIDs: 125f0100
-    m_LastClickedID: 89874
+    scrollPos: {x: 0, y: 55}
+    m_SelectedIDs: 26fc0200
+    m_LastClickedID: 195622
     m_ExpandedIDs: 00000000d6240000042500000a250000142500006e2500008c250000ffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -480,8 +480,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: c288faff
-    m_LastClickedInstanceID: -358206
+    m_SelectedInstanceIDs: 84adfaff
+    m_LastClickedInstanceID: -348796
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
@@ -554,8 +554,8 @@ MonoBehaviour:
     y: 0
     width: 277
     height: 645
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 277, y: 71}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -587,7 +587,7 @@ MonoBehaviour:
     y: 92
     width: 275
     height: 624
-  m_ScrollPosition: {x: 0, y: 0}
+  m_ScrollPosition: {x: 0, y: 255.87683}
   m_InspectorMode: 0
   m_PreviewResizer:
     m_CachedPref: 160

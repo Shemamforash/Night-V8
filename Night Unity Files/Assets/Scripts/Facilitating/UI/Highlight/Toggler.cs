@@ -24,7 +24,7 @@ public class Toggler : Highlight
 
     public void Toggle()
     {
-        if (buttonText.text.ToLower() == "on")
+        if (childTexts[0].text.ToLower() == "on")
         {
             Off();
         }
@@ -36,13 +36,13 @@ public class Toggler : Highlight
 
     protected virtual void On()
     {
-        buttonText.text = "ON";
+        childTexts[0].text = "ON";
         currentTooltipText = tooltipText;
     }
 
     protected virtual void Off()
     {
-        buttonText.text = "OFF";
+        childTexts[0].text = "OFF";
         currentTooltipText = alternateTooltipText;
     }
 }

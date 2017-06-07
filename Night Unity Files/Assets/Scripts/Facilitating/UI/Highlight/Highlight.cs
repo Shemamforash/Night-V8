@@ -8,7 +8,7 @@ public class Highlight : MonoBehaviour, ISelectHandler, IDeselectHandler
     If it's interactive, it must have it's colours inverted when selected, and must have a tooltip.
     */
 
-    protected Text buttonText;
+    protected Text[] childTexts;
     public string tooltipText;
 
     public virtual string GetTooltip()
@@ -18,15 +18,11 @@ public class Highlight : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public virtual void Awake()
     {
-        Transform buttonObject = transform.Find("Text");
-        if (buttonObject != null)
-        {
-            buttonText = buttonObject.GetComponent<Text>();
-        }
+        childTexts = gameObject.GetComponentsInChildren<Text>();
         RectTransform rect = GetComponent<RectTransform>();
         rect.localScale = new Vector2(1, 1);
-        rect.offsetMin = new Vector2(10, 10);
-        rect.offsetMax = new Vector2(-10, -10);
+        rect.offsetMin = new Vector2(5, 5);
+        rect.offsetMax = new Vector2(-5, -5);
     }
 
     public virtual void OnSelect(BaseEventData eventData)
@@ -41,7 +37,7 @@ public class Highlight : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     private void ChangeTextColour(Color c)
     {
-        if (buttonText != null)
+        foreach (Text buttonText in childTexts)
         {
             buttonText.color = c;
         }
