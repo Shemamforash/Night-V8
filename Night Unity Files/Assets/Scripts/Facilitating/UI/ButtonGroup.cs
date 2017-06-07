@@ -19,14 +19,14 @@ public class ButtonGroup : MonoBehaviour
     {
         RevertActiveButton();
         activeButton = btn;
-        activeButton.GetComponent<ButtonHighlight>().SetBorderActive(true);
+        activeButton.GetComponent<BorderHighlight>().BorderOn();
     }
 
     private void RevertActiveButton()
     {
         if (activeButton != null)
         {
-            activeButton.GetComponent<ButtonHighlight>().SetBorderActive(false);
+            activeButton.GetComponent<BorderHighlight>().BorderOff();
 			activeButton = null;
         }
     }
