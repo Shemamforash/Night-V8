@@ -31,6 +31,7 @@ public class TooltipController : MonoBehaviour
                     RectTransform elementTransform = currentElement.GetComponent<RectTransform>();
                     elementTransform.GetWorldCorners(corners);
                     Vector2 targetPosition = corners[0];
+                    targetPosition.y -= 5;
                     tooltipObject.transform.parent.transform.position = targetPosition;
                 }
                 else

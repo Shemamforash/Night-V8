@@ -2,6 +2,10 @@
 
 public class ManualSlider : BorderHighlight
 {
+    public override void Awake(){
+        
+    }
+
     public override void OnSelect(BaseEventData eventData)
     {
         BorderOn();

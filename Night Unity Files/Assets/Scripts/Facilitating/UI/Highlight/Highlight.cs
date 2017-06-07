@@ -16,13 +16,17 @@ public class Highlight : MonoBehaviour, ISelectHandler, IDeselectHandler
         return tooltipText;
     }
 
-    public void Awake()
+    public virtual void Awake()
     {
         Transform buttonObject = transform.Find("Text");
         if (buttonObject != null)
         {
             buttonText = buttonObject.GetComponent<Text>();
         }
+        RectTransform rect = GetComponent<RectTransform>();
+        rect.localScale = new Vector2(1, 1);
+        rect.offsetMin = new Vector2(10, 10);
+        rect.offsetMax = new Vector2(-10, -10);
     }
 
     public virtual void OnSelect(BaseEventData eventData)

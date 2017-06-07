@@ -69,17 +69,18 @@ public class MainMenuNavigator : MonoBehaviour
 
     public void ClearSaveAndLoad()
     {
-        //TODO create new game
+        SaveController.SaveSettings();
         SaveController.SaveGame();
-        // SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("Game");
     }
 
     public void ContinueGame()
     {
         if (SaveController.SaveExists())
         {
+            SaveController.SaveSettings();
             SaveController.LoadGame();
-            // SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("Game");
         }
         else
         {

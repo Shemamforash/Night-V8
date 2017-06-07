@@ -7,8 +7,9 @@ public class Toggler : Highlight
     public string alternateTooltipText;
     private string currentTooltipText;
 
-    public virtual void Start()
+    public override void Awake()
     {
+        base.Awake();
         currentTooltipText = tooltipText;
         if(alternateTooltipText == ""){
             alternateTooltipText = currentTooltipText;
