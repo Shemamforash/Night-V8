@@ -19,10 +19,10 @@ public class Highlight : MonoBehaviour, ISelectHandler, IDeselectHandler
     public virtual void Awake()
     {
         childTexts = gameObject.GetComponentsInChildren<Text>();
-        RectTransform rect = GetComponent<RectTransform>();
-        rect.localScale = new Vector2(1, 1);
-        rect.offsetMin = new Vector2(5, 5);
-        rect.offsetMax = new Vector2(-5, -5);
+        // RectTransform rect = GetComponent<RectTransform>();
+        // rect.localScale = new Vector2(1, 1);
+        // rect.offsetMin = new Vector2(10, 5);
+        // rect.offsetMax = new Vector2(-10, -5);
     }
 
     public virtual void OnSelect(BaseEventData eventData)
