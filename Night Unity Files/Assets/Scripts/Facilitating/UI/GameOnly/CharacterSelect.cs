@@ -3,24 +3,24 @@ using UnityEngine;
 
 public class CharacterSelect : BorderHighlight, InputListener
 {
-    private Selectable firstSelectInCharacter, outerCharacterSelectable, actionSelectable;
-    private bool characterIsSelected = false, actionBarSelected = false;
+    private Selectable actionSelectable, selectedCharacter;
+    private bool actionBarSelected = false;
     private Transform actionContainer;
 
     public void OnCancel()
     {
-        if (characterIsSelected)
+        if (selectedCharacter != null)
         {
             if (actionBarSelected)
             {
                 actionSelectable.Select();
                 actionContainer.gameObject.SetActive(false);
-				actionBarSelected = false;
+                actionBarSelected = false;
             }
             else
             {
-                outerCharacterSelectable.Select();
-                characterIsSelected = false;
+                selectedCharacter.Select();
+                selectedCharacter = null;
             }
         }
     }
@@ -33,21 +33,19 @@ public class CharacterSelect : BorderHighlight, InputListener
     public void Start()
     {
         InputSpeaker.RegisterForInput(this);
-        outerCharacterSelectable = GetComponent<Selectable>();
-        firstSelectInCharacter = transform.Find("Name Container").GetComponent<Selectable>();
         actionContainer = GameObject.Find("Actions").transform.Find("Viewport").Find("Content");
         actionContainer.gameObject.SetActive(false);
     }
 
-    public void SelectCharacter()
+    public void SelectCharacter(Selectable s)
     {
-        firstSelectInCharacter.Select();
-        characterIsSelected = true;
+        selectedCharacter = s;
+        s.transform.Find("Name Container").GetComponent<Selectable>().Select();
     }
 
     public void SelectActions(Selectable s)
     {
-		actionSelectable = s;
+        actionSelectable = s;
         actionBarSelected = true;
         actionContainer.gameObject.SetActive(true);
         actionContainer.GetChild(0).GetComponent<Selectable>().Select();

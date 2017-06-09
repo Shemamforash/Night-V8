@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class TimeListener {
+public abstract class TimeListener : MonoBehaviour {
 	public void Subscribe(){
 		WorldTime.SubscribeTimeListener(this);
 	}

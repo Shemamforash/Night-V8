@@ -10,7 +10,7 @@ public class ThunderClick : MonoBehaviour
     private float lightningTimer = 0f, lightningDuration = 0.15f;
     public Image lightningImage;
 
-    public void Start()
+    public void Awake()
     {
         thunderSource = GetComponent<AudioSource>();
     }

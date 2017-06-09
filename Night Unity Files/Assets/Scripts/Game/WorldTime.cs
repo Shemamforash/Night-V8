@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class WorldTime : MonoBehaviour
 {
     private static List<TimeListener> timeListeners = new List<TimeListener>();
-    private static float currentTime, quarterHourTimer = 2.5f;
+    private static float currentTime, quarterHourTimer = .02f;
     private static int days = 0, hours = 6, minutes = 0;
     private static bool isNight = false;
     private static bool isPaused = false;
+    public Text timeText, dayText;
 
     public static void SubscribeTimeListener(TimeListener t)
     {
@@ -61,20 +63,35 @@ public class WorldTime : MonoBehaviour
             {
                 minutes = 0;
                 ++hours;
+                BroadcastHourChange();
                 if (hours == 24)
                 {
                     ++days;
+                    BroadcastDayChange();
+                    hours = 0;
                 }
-                if (hours >= 6 && hours < 20)
+                //TODO make me make sense
+                if (hours >= 6 && hours < 20 && isNight)
                 {
                     isNight = false;
+                    quarterHourTimer *= 2;
                 }
-                else
+                else if((hours < 6 || hours >= 20) && !isNight)
                 {
                     isNight = true;
+                    quarterHourTimer /= 2;
                 }
             }
         }
+        if (minutes < 10)
+        {
+            timeText.text = hours + ":0" + minutes;
+        }
+        else
+        {
+            timeText.text = hours + ":" + minutes;
+        }
+        dayText.text = "Day " + days;
     }
 
     void Update()
