@@ -1,4 +1,4 @@
-<ExportPresets LastType="">
+<ExportPresets LastType="Unity3DExport">
   <Preset DisplayName="" Type="DocxExport">
     <ExportSettings Type="DocxExport">
       <Filename>C:\Users\Iovana\Documents\NightDesign.docx</Filename>
@@ -15,6 +15,19 @@
       <ExportMarkup>1</ExportMarkup>
       <AutoOpenFile>1</AutoOpenFile>
       <ExportQueries>0</ExportQueries>
+    </ExportSettings>
+  </Preset>
+  <Preset DisplayName="" Type="Unity3DExport">
+    <ExportSettings Type="Unity3DExport">
+      <Filename>C:\Users\Iovana\Desktop\Night-V8\Night Unity Files\Assets\Night.articyu3d</Filename>
+      <CustomSettings>
+        <Option Name="set_Localization" Value="False"/>
+        <Option Name="set_TextFormatter" Value="Unity"/>
+      </CustomSettings>
+      <PackageStates>
+        <State Id="72057594037928194" Enabled="1"/>
+      </PackageStates>
+      <SelectedRuleSet>72057594037928191</SelectedRuleSet>
     </ExportSettings>
   </Preset>
 </ExportPresets>

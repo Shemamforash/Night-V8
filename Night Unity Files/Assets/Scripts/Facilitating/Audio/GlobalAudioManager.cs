@@ -2,72 +2,76 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class GlobalAudioManager : MonoBehaviour
+namespace Audio
 {
-    private List<AudioSource> musicSources = new List<AudioSource>();
-    private List<AudioSource> effectsSources = new List<AudioSource>();
-    public Slider masterSlider, musicSlider, effectsSlider;
-
-    private void UpdateVolumes()
+    using Persistence;
+    public class GlobalAudioManager : MonoBehaviour
     {
-        foreach (AudioSource a in musicSources)
+        private List<AudioSource> musicSources = new List<AudioSource>();
+        private List<AudioSource> effectsSources = new List<AudioSource>();
+        public Slider masterSlider, musicSlider, effectsSlider;
+
+        private void UpdateVolumes()
         {
-            if (Settings.masterVolume < Settings.musicVolume)
+            foreach (AudioSource a in musicSources)
             {
-                a.volume = Settings.masterVolume;
+                if (Settings.masterVolume < Settings.musicVolume)
+                {
+                    a.volume = Settings.masterVolume;
+                }
+                else
+                {
+                    a.volume = Settings.musicVolume;
+                }
             }
-            else
+            foreach (AudioSource e in effectsSources)
             {
-                a.volume = Settings.musicVolume;
+                if (Settings.masterVolume < Settings.effectsVolume)
+                {
+                    e.volume = Settings.masterVolume;
+                }
+                else
+                {
+                    e.volume = Settings.effectsVolume;
+                }
             }
         }
-        foreach (AudioSource e in effectsSources)
+
+        public void SetMasterVolume(Slider slider)
         {
-            if (Settings.masterVolume < Settings.effectsVolume)
+            Settings.masterVolume = slider.value;
+            UpdateVolumes();
+        }
+
+        public void SetEffectsVolume(Slider slider)
+        {
+            Settings.effectsVolume = slider.value;
+            UpdateVolumes();
+        }
+
+        public void SetMusicVolume(Slider slider)
+        {
+            Settings.musicVolume = slider.value;
+            UpdateVolumes();
+        }
+
+        public void Initialise()
+        {
+            List<GameObject> musicObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("MusicSource"));
+            List<GameObject> effectsObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("SFXSource"));
+            foreach (GameObject m in musicObjects)
             {
-                e.volume = Settings.masterVolume;
+                musicSources.Add(m.GetComponent<AudioSource>());
             }
-            else
+            foreach (GameObject e in effectsObjects)
             {
-                e.volume = Settings.effectsVolume;
+                effectsSources.Add(e.GetComponent<AudioSource>());
             }
+
+            masterSlider.value = Settings.masterVolume;
+            musicSlider.value = Settings.musicVolume;
+            effectsSlider.value = Settings.effectsVolume;
+            UpdateVolumes();
         }
-    }
-
-    public void SetMasterVolume(Slider slider)
-    {
-        Settings.masterVolume = slider.value;
-        UpdateVolumes();
-    }
-
-    public void SetEffectsVolume(Slider slider)
-    {
-        Settings.effectsVolume = slider.value;
-        UpdateVolumes();
-    }
-
-    public void SetMusicVolume(Slider slider)
-    {
-        Settings.musicVolume = slider.value;
-        UpdateVolumes();
-    }
-
-    public void Initialise()
-    {
-        List<GameObject> musicObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("MusicSource"));
-        List<GameObject> effectsObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("SFXSource"));
-        foreach (GameObject m in musicObjects)
-        {
-            musicSources.Add(m.GetComponent<AudioSource>());
-        }
-        foreach (GameObject e in effectsObjects)
-        {
-            effectsSources.Add(e.GetComponent<AudioSource>());
-        }
-
-        masterSlider.value = Settings.masterVolume;
-        musicSlider.value = Settings.musicVolume;
-        effectsSlider.value = Settings.effectsVolume;
-        UpdateVolumes();
     }
 }

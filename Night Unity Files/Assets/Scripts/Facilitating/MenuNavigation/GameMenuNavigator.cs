@@ -1,93 +1,99 @@
-﻿using UnityEngine.UI;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
-
-public class GameMenuNavigator : MonoBehaviour
+﻿namespace Menus
 {
-    public GameObject pauseMainMenu, pauseSubMenu, optionsSubMenu, controlsSubMenu, gameMenu;
-    public Button pauseMenuFirstSelect, controlsFirstSelect;
-    private GameObject gameLastButton;
-    public Slider optionsFirstSelect;
-    public bool menuButtonDown = false;
+    using Persistence;
+    using Audio;
+    using World;
+    using UnityEngine.UI;
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
+    using UnityEngine.EventSystems;
 
-    public void Start()
+    public class GameMenuNavigator : MonoBehaviour
     {
-        SaveController.LoadSettings();
-        GetComponent<GlobalAudioManager>().Initialise();
-    }
+        public GameObject pauseMainMenu, pauseSubMenu, optionsSubMenu, controlsSubMenu, gameMenu;
+        public Button pauseMenuFirstSelect, controlsFirstSelect;
+        private GameObject gameLastButton;
+        public Slider optionsFirstSelect;
+        public bool menuButtonDown = false;
 
-    public void Update()
-    {
-        if (Input.GetAxis("Menu") != 0)
+        public void Start()
         {
-            if (!menuButtonDown)
+            SaveController.LoadSettings();
+            GetComponent<GlobalAudioManager>().Initialise();
+        }
+
+        public void Update()
+        {
+            if (Input.GetAxis("Menu") != 0)
             {
-                menuButtonDown = true;
-                TogglePauseMenu();
+                if (!menuButtonDown)
+                {
+                    menuButtonDown = true;
+                    TogglePauseMenu();
+                }
+            }
+            else
+            {
+                menuButtonDown = false;
             }
         }
-        else
+
+        public void TogglePauseMenu()
         {
-            menuButtonDown = false;
+            if (pauseSubMenu.activeInHierarchy)
+            {
+                pauseMainMenu.SetActive(false);
+                gameMenu.SetActive(true);
+                gameLastButton.GetComponent<Selectable>().Select();
+                WorldTime.UnPause();
+            }
+            else
+            {
+                gameMenu.SetActive(false);
+                gameLastButton = EventSystem.current.currentSelectedGameObject;
+                WorldTime.Pause();
+                BackToMenu();
+            }
         }
-    }
 
-    public void TogglePauseMenu()
-    {
-        if (pauseSubMenu.activeInHierarchy)
+        public void OnApplicationQuit()
         {
-            pauseMainMenu.SetActive(false);
-            gameMenu.SetActive(true);
-            gameLastButton.GetComponent<Selectable>().Select();
-            WorldTime.UnPause();
+            Save();
         }
-        else
+
+        public void BackToMenu()
         {
-            gameMenu.SetActive(false);
-            gameLastButton = EventSystem.current.currentSelectedGameObject;
-            WorldTime.Pause();
-            BackToMenu();
+            pauseMainMenu.SetActive(true);
+            optionsSubMenu.SetActive(false);
+            controlsSubMenu.SetActive(false);
+            pauseSubMenu.SetActive(true);
+            pauseMenuFirstSelect.Select();
         }
-    }
 
-    public void OnApplicationQuit()
-    {
-        Save();
-    }
+        private void Save()
+        {
+            SaveController.SaveSettings();
+            SaveController.SaveGame();
+        }
 
-    public void BackToMenu()
-    {
-        pauseMainMenu.SetActive(true);
-        optionsSubMenu.SetActive(false);
-        controlsSubMenu.SetActive(false);
-        pauseSubMenu.SetActive(true);
-        pauseMenuFirstSelect.Select();
-    }
+        public void ExitAndSave()
+        {
+            Save();
+            SceneManager.LoadScene("Menu");
+        }
 
-    private void Save()
-    {
-        SaveController.SaveSettings();
-        SaveController.SaveGame();
-    }
+        public void OpenControls()
+        {
+            pauseSubMenu.SetActive(false);
+            controlsSubMenu.SetActive(true);
+            controlsFirstSelect.Select();
+        }
 
-    public void ExitAndSave()
-    {
-        Save();
-        SceneManager.LoadScene("Menu");
-    }
-
-    public void OpenControls()
-    {
-        pauseSubMenu.SetActive(false);
-        controlsSubMenu.SetActive(true);
-        controlsFirstSelect.Select();
-    }
-
-    public void OpenOptionsMenu()
-    {
-        pauseSubMenu.SetActive(false);
-        optionsSubMenu.SetActive(true);
-        optionsFirstSelect.Select();
+        public void OpenOptionsMenu()
+        {
+            pauseSubMenu.SetActive(false);
+            optionsSubMenu.SetActive(true);
+            optionsFirstSelect.Select();
+        }
     }
 }

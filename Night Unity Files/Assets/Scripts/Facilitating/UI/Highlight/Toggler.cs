@@ -2,47 +2,51 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Toggler : Highlight
+namespace UI.Highlight
 {
-    public string alternateTooltipText;
-    private string currentTooltipText;
-
-    public override void Awake()
+    public class Toggler : Highlight
     {
-        base.Awake();
-        currentTooltipText = tooltipText;
-        if(alternateTooltipText == ""){
-            alternateTooltipText = currentTooltipText;
-        }
-        On();
-    }
+        public string alternateTooltipText;
+        private string currentTooltipText;
 
-    public override string GetTooltip()
-    {
-        return currentTooltipText;
-    }
-
-    public void Toggle()
-    {
-        if (childTexts[0].text.ToLower() == "on")
+        public override void Awake()
         {
-            Off();
-        }
-        else
-        {
+            base.Awake();
+            currentTooltipText = tooltipText;
+            if (alternateTooltipText == "")
+            {
+                alternateTooltipText = currentTooltipText;
+            }
             On();
         }
-    }
 
-    protected virtual void On()
-    {
-        childTexts[0].text = "ON";
-        currentTooltipText = tooltipText;
-    }
+        public override string GetTooltip()
+        {
+            return currentTooltipText;
+        }
 
-    protected virtual void Off()
-    {
-        childTexts[0].text = "OFF";
-        currentTooltipText = alternateTooltipText;
+        public void Toggle()
+        {
+            if (childTexts[0].text.ToLower() == "on")
+            {
+                Off();
+            }
+            else
+            {
+                On();
+            }
+        }
+
+        protected virtual void On()
+        {
+            childTexts[0].text = "ON";
+            currentTooltipText = tooltipText;
+        }
+
+        protected virtual void Off()
+        {
+            childTexts[0].text = "OFF";
+            currentTooltipText = alternateTooltipText;
+        }
     }
 }

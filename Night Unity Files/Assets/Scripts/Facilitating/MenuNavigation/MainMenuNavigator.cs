@@ -1,112 +1,117 @@
-﻿using UnityEngine.UI;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-public class MainMenuNavigator : MonoBehaviour
+﻿namespace Menus
 {
-    public GameObject newGameSubMenu, mainSubMenu, optionsSubMenu, statsSubMenu, noSaveSubMenu, overwriteSubMenu, controlsSubMenu;
-    public Button newGameFirstSelect, mainMenuFirstSelect, noSaveFirstSelect, overwriteFirstSelect, controlsFirstSelect;
-    public Slider optionsFirstSelect;
-    public Scrollbar statsFirstSelect;
+    using UnityEngine.UI;
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
+    using Persistence;
+    using Audio;
 
-    public void Start()
+    public class MainMenuNavigator : MonoBehaviour
     {
-        SaveController.LoadSettings();
-        GetComponent<GlobalAudioManager>().Initialise();
-    }
+        public GameObject newGameSubMenu, mainSubMenu, optionsSubMenu, statsSubMenu, noSaveSubMenu, overwriteSubMenu, controlsSubMenu;
+        public Button newGameFirstSelect, mainMenuFirstSelect, noSaveFirstSelect, overwriteFirstSelect, controlsFirstSelect;
+        public Slider optionsFirstSelect;
+        public Scrollbar statsFirstSelect;
 
-    //TODO move me somewhere more suitable
-    public void OnApplicationQuit()
-    {
-        SaveController.SaveSettings();
-        SaveController.SaveGame();
-    }
-
-    public void BackToMenu()
-    {
-        newGameSubMenu.SetActive(false);
-        optionsSubMenu.SetActive(false);
-        noSaveSubMenu.SetActive(false);
-        overwriteSubMenu.SetActive(false);
-        statsSubMenu.SetActive(false);
-        controlsSubMenu.SetActive(false);
-        mainSubMenu.SetActive(true);
-        mainMenuFirstSelect.Select();
-    }
-
-    public void CloseGame()
-    {
-        Application.Quit();
-    }
-
-    public void OpenControls()
-    {
-        mainSubMenu.SetActive(false);
-        controlsSubMenu.SetActive(true);
-        controlsFirstSelect.Select();
-    }
-
-    public void OpenStats()
-    {
-        mainSubMenu.SetActive(false);
-        statsSubMenu.SetActive(true);
-        statsFirstSelect.Select();
-    }
-
-    public void StartNewGame()
-    {
-        if (SaveController.SaveExists())
+        public void Start()
         {
-            newGameSubMenu.SetActive(false);
-            overwriteSubMenu.SetActive(true);
-            overwriteFirstSelect.Select();
+            SaveController.LoadSettings();
+            GetComponent<GlobalAudioManager>().Initialise();
         }
-        else
-        {
-            ClearSaveAndLoad();
-        }
-    }
 
-    public void ClearSaveAndLoad()
-    {
-        SaveController.SaveSettings();
-        SaveController.SaveGame();
-        SceneManager.LoadScene("Game");
-    }
-
-    public void ContinueGame()
-    {
-        if (SaveController.SaveExists())
+        //TODO move me somewhere more suitable
+        public void OnApplicationQuit()
         {
             SaveController.SaveSettings();
-            SaveController.LoadGame();
-            SceneManager.LoadScene("Game");
+            SaveController.SaveGame();
         }
-        else
+
+        public void BackToMenu()
+        {
+            newGameSubMenu.SetActive(false);
+            optionsSubMenu.SetActive(false);
+            noSaveSubMenu.SetActive(false);
+            overwriteSubMenu.SetActive(false);
+            statsSubMenu.SetActive(false);
+            controlsSubMenu.SetActive(false);
+            mainSubMenu.SetActive(true);
+            mainMenuFirstSelect.Select();
+        }
+
+        public void CloseGame()
+        {
+            Application.Quit();
+        }
+
+        public void OpenControls()
         {
             mainSubMenu.SetActive(false);
-            noSaveSubMenu.SetActive(true);
-            noSaveFirstSelect.Select();
+            controlsSubMenu.SetActive(true);
+            controlsFirstSelect.Select();
         }
-    }
 
-    public void OpenNewGameMenu()
-    {
-        mainSubMenu.SetActive(false);
-        newGameSubMenu.SetActive(true);
-        newGameFirstSelect.Select();
-    }
+        public void OpenStats()
+        {
+            mainSubMenu.SetActive(false);
+            statsSubMenu.SetActive(true);
+            statsFirstSelect.Select();
+        }
 
-    public void OpenOptionsMenu()
-    {
-        mainSubMenu.SetActive(false);
-        optionsSubMenu.SetActive(true);
-        optionsFirstSelect.Select();
-    }
+        public void StartNewGame()
+        {
+            if (SaveController.SaveExists())
+            {
+                newGameSubMenu.SetActive(false);
+                overwriteSubMenu.SetActive(true);
+                overwriteFirstSelect.Select();
+            }
+            else
+            {
+                ClearSaveAndLoad();
+            }
+        }
 
-    public void SetDifficulty(GameObject btn)
-    {
-        string btnDifficulty = btn.transform.Find("Text").GetComponent<Text>().text.ToLower();
-        Settings.SetDifficultyFromString(btnDifficulty);
+        public void ClearSaveAndLoad()
+        {
+            SaveController.SaveSettings();
+            SaveController.SaveGame();
+            SceneManager.LoadScene("Game");
+        }
+
+        public void ContinueGame()
+        {
+            if (SaveController.SaveExists())
+            {
+                SaveController.SaveSettings();
+                SaveController.LoadGame();
+                SceneManager.LoadScene("Game");
+            }
+            else
+            {
+                mainSubMenu.SetActive(false);
+                noSaveSubMenu.SetActive(true);
+                noSaveFirstSelect.Select();
+            }
+        }
+
+        public void OpenNewGameMenu()
+        {
+            mainSubMenu.SetActive(false);
+            newGameSubMenu.SetActive(true);
+            newGameFirstSelect.Select();
+        }
+
+        public void OpenOptionsMenu()
+        {
+            mainSubMenu.SetActive(false);
+            optionsSubMenu.SetActive(true);
+            optionsFirstSelect.Select();
+        }
+
+        public void SetDifficulty(GameObject btn)
+        {
+            string btnDifficulty = btn.transform.Find("Text").GetComponent<Text>().text.ToLower();
+            Settings.SetDifficultyFromString(btnDifficulty);
+        }
     }
 }

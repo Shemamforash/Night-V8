@@ -1,21 +1,24 @@
 ﻿using UnityEngine.EventSystems;
 using UnityEngine;
 
-public class RefocusKeyboardInput : MonoBehaviour
+namespace UI.Misc
 {
-    private GameObject selected;
-
-    public void Start()
+    public class RefocusKeyboardInput : MonoBehaviour
     {
-        selected = EventSystem.current.currentSelectedGameObject;
-    }
+        private GameObject selected;
 
-    public void Update()
-    {
-        if (EventSystem.current.currentSelectedGameObject == null)
+        public void Start()
         {
-            EventSystem.current.SetSelectedGameObject(selected);
+            selected = EventSystem.current.currentSelectedGameObject;
         }
-        selected = EventSystem.current.currentSelectedGameObject;
+
+        public void Update()
+        {
+            if (EventSystem.current.currentSelectedGameObject == null)
+            {
+                EventSystem.current.SetSelectedGameObject(selected);
+            }
+            selected = EventSystem.current.currentSelectedGameObject;
+        }
     }
 }

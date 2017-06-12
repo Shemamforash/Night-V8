@@ -1,38 +1,41 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
-using System.Collections.Generic;
 
-public class ButtonGroup : MonoBehaviour
+namespace UI.Misc
 {
-    public Button initialActiveButton;
-    private Button activeButton;
-
-    public void OnEnable()
+    using UI.Highlight;
+    public class ButtonGroup : MonoBehaviour
     {
-        if (activeButton != initialActiveButton)
+        public Button initialActiveButton;
+        private Button activeButton;
+
+        public void OnEnable()
         {
-            MakeActiveInGroup(initialActiveButton);
+            if (activeButton != initialActiveButton)
+            {
+                MakeActiveInGroup(initialActiveButton);
+            }
         }
-    }
 
-    public void MakeActiveInGroup(Button btn)
-    {
-        RevertActiveButton();
-        activeButton = btn;
-        activeButton.GetComponent<BorderHighlight>().BorderOn();
-    }
-
-    private void RevertActiveButton()
-    {
-        if (activeButton != null)
+        public void MakeActiveInGroup(Button btn)
         {
-            activeButton.GetComponent<BorderHighlight>().BorderOff();
-			activeButton = null;
+            RevertActiveButton();
+            activeButton = btn;
+            activeButton.GetComponent<BorderHighlight>().BorderOn();
         }
-    }
 
-    public void OnDisable()
-    {
-        RevertActiveButton();
+        private void RevertActiveButton()
+        {
+            if (activeButton != null)
+            {
+                activeButton.GetComponent<BorderHighlight>().BorderOff();
+                activeButton = null;
+            }
+        }
+
+        public void OnDisable()
+        {
+            RevertActiveButton();
+        }
     }
 }

@@ -1,18 +1,22 @@
 ﻿using UnityEngine.EventSystems;
 
-public class ManualSlider : BorderHighlight
+namespace UI.Highlight
 {
-    public override void Awake(){
-        
-    }
-
-    public override void OnSelect(BaseEventData eventData)
+    public class ManualSlider : BorderHighlight
     {
-        BorderOn();
-    }
+        public override void Awake()
+        {
 
-    public override void OnDeselect(BaseEventData eventData)
-    {
-        BorderOff();
+        }
+
+        public override void OnSelect(BaseEventData eventData)
+        {
+            BorderOn();
+        }
+
+        public override void OnDeselect(BaseEventData eventData)
+        {
+            BorderOff();
+        }
     }
 }

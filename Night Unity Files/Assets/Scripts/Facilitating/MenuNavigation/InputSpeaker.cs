@@ -2,71 +2,74 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputSpeaker : MonoBehaviour
+namespace Menus
 {
-    private static List<InputListener> listeners = new List<InputListener>();
-    private static bool confirmPressed = false, cancelPressed = false;
-    private enum Axes { CANCEL, SUBMIT };
-
-    public static void RegisterForInput(InputListener listener)
+    public class InputSpeaker : MonoBehaviour
     {
-        listeners.Add(listener);
-    }
+        private static List<InputListener> listeners = new List<InputListener>();
+        private static bool confirmPressed = false, cancelPressed = false;
+        private enum Axes { CANCEL, SUBMIT };
 
-    private void CheckConfirmPressed()
-    {
-        if (Input.GetAxis("Submit") != 0)
+        public static void RegisterForInput(InputListener listener)
         {
-            if (!confirmPressed)
+            listeners.Add(listener);
+        }
+
+        private void CheckConfirmPressed()
+        {
+            if (Input.GetAxis("Submit") != 0)
             {
-                confirmPressed = true;
-                Broadcast(Axes.SUBMIT);
+                if (!confirmPressed)
+                {
+                    confirmPressed = true;
+                    Broadcast(Axes.SUBMIT);
+                }
+            }
+            else
+            {
+                confirmPressed = false;
             }
         }
-        else
-        {
-            confirmPressed = false;
-        }
-    }
 
-    private void CheckCancelPressed()
-    {
-        if (Input.GetAxis("Cancel") != 0)
+        private void CheckCancelPressed()
         {
-            if (!cancelPressed)
+            if (Input.GetAxis("Cancel") != 0)
             {
-                cancelPressed = true;
-                Broadcast(Axes.CANCEL);
+                if (!cancelPressed)
+                {
+                    cancelPressed = true;
+                    Broadcast(Axes.CANCEL);
+                }
+            }
+            else
+            {
+                cancelPressed = false;
             }
         }
-        else
-        {
-            cancelPressed = false;
-        }
-    }
 
-    private void Broadcast(Axes axis)
-    {
-        switch (axis)
+        private void Broadcast(Axes axis)
         {
-            case Axes.SUBMIT:
-                foreach (InputListener l in listeners)
-                {
-                    l.OnConfirm();
-                }
-                break;
-            case Axes.CANCEL:
-                foreach (InputListener l in listeners)
-                {
-                    l.OnCancel();
-                }
-                break;
+            switch (axis)
+            {
+                case Axes.SUBMIT:
+                    foreach (InputListener l in listeners)
+                    {
+                        l.ReceiveConfirmEvent();
+                    }
+                    break;
+                case Axes.CANCEL:
+                    foreach (InputListener l in listeners)
+                    {
+                        l.ReceiveCancelEvent();
+                    }
+                    break;
+            }
         }
-    }
 
-    public void Update()
-    {
-        CheckConfirmPressed();
-        CheckCancelPressed();
+        public void Update()
+        {
+            CheckConfirmPressed();
+            CheckCancelPressed();
+        }
     }
 }

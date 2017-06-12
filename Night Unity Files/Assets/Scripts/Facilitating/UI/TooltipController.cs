@@ -2,49 +2,53 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class TooltipController : MonoBehaviour
+namespace UI.Misc
 {
-    private RectTransform parentRect;
-    private Highlight lastElement = null, currentElement = null;
-    private Vector3[] corners = new Vector3[4];
-    public GameObject tooltipObject;
-    private Text tooltipText;
-
-    public void Start()
+    using UI.Highlight;
+    public class TooltipController : MonoBehaviour
     {
-        tooltipText = tooltipObject.GetComponent<Text>();
-        parentRect = tooltipObject.transform.parent.GetComponent<RectTransform>();
-    }
+        private RectTransform parentRect;
+        private Highlight lastElement = null, currentElement = null;
+        private Vector3[] corners = new Vector3[4];
+        public GameObject tooltipObject;
+        private Text tooltipText;
 
-    public void Update()
-    {
-        if (Input.GetAxis("Tooltip") != 0)
+        public void Start()
         {
-            currentElement = EventSystem.current.currentSelectedGameObject.GetComponent<Highlight>();
-            bool alreadyHighlighted = currentElement == lastElement && currentElement != null;
-            if (!alreadyHighlighted)
-            {
-                if (currentElement != null && currentElement.GetTooltip() != "")
-                {
-                    tooltipObject.transform.parent.gameObject.SetActive(true);
-                    tooltipText.text = currentElement.GetTooltip();
-                    RectTransform elementTransform = currentElement.GetComponent<RectTransform>();
-                    elementTransform.GetWorldCorners(corners);
-                    Vector2 targetPosition = corners[0];
-                    targetPosition.y -= 5;
-                    tooltipObject.transform.parent.transform.position = targetPosition;
-                }
-                else
-                {
-                    tooltipObject.transform.parent.gameObject.SetActive(false);
-                }
-            }
-            lastElement = currentElement;
+            tooltipText = tooltipObject.GetComponent<Text>();
+            parentRect = tooltipObject.transform.parent.GetComponent<RectTransform>();
         }
-        else if (lastElement != null)
+
+        public void Update()
         {
-            tooltipObject.transform.parent.gameObject.SetActive(false);
-            lastElement = null;
+            if (Input.GetAxis("Tooltip") != 0)
+            {
+                currentElement = EventSystem.current.currentSelectedGameObject.GetComponent<Highlight>();
+                bool alreadyHighlighted = currentElement == lastElement && currentElement != null;
+                if (!alreadyHighlighted)
+                {
+                    if (currentElement != null && currentElement.GetTooltip() != "")
+                    {
+                        tooltipObject.transform.parent.gameObject.SetActive(true);
+                        tooltipText.text = currentElement.GetTooltip();
+                        RectTransform elementTransform = currentElement.GetComponent<RectTransform>();
+                        elementTransform.GetWorldCorners(corners);
+                        Vector2 targetPosition = corners[0];
+                        targetPosition.y -= 5;
+                        tooltipObject.transform.parent.transform.position = targetPosition;
+                    }
+                    else
+                    {
+                        tooltipObject.transform.parent.gameObject.SetActive(false);
+                    }
+                }
+                lastElement = currentElement;
+            }
+            else if (lastElement != null)
+            {
+                tooltipObject.transform.parent.gameObject.SetActive(false);
+                lastElement = null;
+            }
         }
     }
 }
