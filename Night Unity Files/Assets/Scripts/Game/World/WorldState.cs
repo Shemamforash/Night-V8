@@ -6,6 +6,7 @@ namespace World
     {
 		public static int currentDanger = 0;
 		public static int daysSpentHere = 0;
+		public static int noPreviousLocations = 0;
 		private TimeListener timeListener = new TimeListener();
 
 		private void IncrementDaysSpentHere(){
@@ -22,6 +23,7 @@ namespace World
 			if(currentDanger < 0){
 				currentDanger = 0;
 			}
+			++noPreviousLocations;
 		}
 
 		public WorldState(){
