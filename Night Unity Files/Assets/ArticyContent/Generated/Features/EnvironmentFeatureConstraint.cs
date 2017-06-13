@@ -26,168 +26,113 @@ namespace Articy.Night.Features
         
         private Boolean mLoadedConstraints;
         
-        private TextConstraint mEnvironmentName;
+        private NumberConstraint mMinTemperature;
         
-        private EnumConstraint mEnvironmentType;
+        private NumberConstraint mMaxTemperature;
         
-        private NumberConstraint mEnvironmentMinTemperature;
+        private NumberConstraint mWaterLevel;
         
-        private NumberConstraint mEnvironmentMaxTemperature;
+        private NumberConstraint mFoodLevel;
         
-        private NumberConstraint mEnvironmentWaterLevel;
+        private NumberConstraint mFuelLevel;
         
-        private NumberConstraint mEnvironmentFoodLevel;
+        private NumberConstraint mScrapLevel;
         
-        private NumberConstraint mEnvironmentFuelLevel;
+        private NumberConstraint mBanditDanger;
         
-        private NumberConstraint mEnvironmentScrapLevel;
+        private NumberConstraint mTerrainAccessibility;
         
-        private NumberConstraint mEnvironmentBanditDanger;
+        private NumberConstraint mCampFrequency;
         
-        private NumberConstraint mEnvironmentTerrainAccessibility;
+        private NumberConstraint mNormalisedDanger;
         
-        private NumberConstraint mEnvironmentCampFrequency;
-        
-        private BooleanConstraint mEnvironmentMentalDanger;
-        
-        private BooleanConstraint mEnvironmentAnimalDanger;
-        
-        private BooleanConstraint mEnvironmentTrapDanger;
-        
-        private BooleanConstraint mEnvironmentRadiationDanger;
-        
-        public TextConstraint EnvironmentName
+        public NumberConstraint MinTemperature
         {
             get
             {
                 EnsureConstraints();
-                return mEnvironmentName;
+                return mMinTemperature;
             }
         }
         
-        public EnumConstraint EnvironmentType
+        public NumberConstraint MaxTemperature
         {
             get
             {
                 EnsureConstraints();
-                return mEnvironmentType;
+                return mMaxTemperature;
             }
         }
         
-        public NumberConstraint EnvironmentMinTemperature
+        public NumberConstraint WaterLevel
         {
             get
             {
                 EnsureConstraints();
-                return mEnvironmentMinTemperature;
+                return mWaterLevel;
             }
         }
         
-        public NumberConstraint EnvironmentMaxTemperature
+        public NumberConstraint FoodLevel
         {
             get
             {
                 EnsureConstraints();
-                return mEnvironmentMaxTemperature;
+                return mFoodLevel;
             }
         }
         
-        public NumberConstraint EnvironmentWaterLevel
+        public NumberConstraint FuelLevel
         {
             get
             {
                 EnsureConstraints();
-                return mEnvironmentWaterLevel;
+                return mFuelLevel;
             }
         }
         
-        public NumberConstraint EnvironmentFoodLevel
+        public NumberConstraint ScrapLevel
         {
             get
             {
                 EnsureConstraints();
-                return mEnvironmentFoodLevel;
+                return mScrapLevel;
             }
         }
         
-        public NumberConstraint EnvironmentFuelLevel
+        public NumberConstraint BanditDanger
         {
             get
             {
                 EnsureConstraints();
-                return mEnvironmentFuelLevel;
+                return mBanditDanger;
             }
         }
         
-        public NumberConstraint EnvironmentScrapLevel
+        public NumberConstraint TerrainAccessibility
         {
             get
             {
                 EnsureConstraints();
-                return mEnvironmentScrapLevel;
+                return mTerrainAccessibility;
             }
         }
         
-        public NumberConstraint EnvironmentBanditDanger
+        public NumberConstraint CampFrequency
         {
             get
             {
                 EnsureConstraints();
-                return mEnvironmentBanditDanger;
+                return mCampFrequency;
             }
         }
         
-        public NumberConstraint EnvironmentTerrainAccessibility
+        public NumberConstraint NormalisedDanger
         {
             get
             {
                 EnsureConstraints();
-                return mEnvironmentTerrainAccessibility;
-            }
-        }
-        
-        public NumberConstraint EnvironmentCampFrequency
-        {
-            get
-            {
-                EnsureConstraints();
-                return mEnvironmentCampFrequency;
-            }
-        }
-        
-        public BooleanConstraint EnvironmentMentalDanger
-        {
-            get
-            {
-                EnsureConstraints();
-                return mEnvironmentMentalDanger;
-            }
-        }
-        
-        public BooleanConstraint EnvironmentAnimalDanger
-        {
-            get
-            {
-                EnsureConstraints();
-                return mEnvironmentAnimalDanger;
-            }
-        }
-        
-        public BooleanConstraint EnvironmentTrapDanger
-        {
-            get
-            {
-                EnsureConstraints();
-                return mEnvironmentTrapDanger;
-            }
-        }
-        
-        public BooleanConstraint EnvironmentRadiationDanger
-        {
-            get
-            {
-                EnsureConstraints();
-                return mEnvironmentRadiationDanger;
+                return mNormalisedDanger;
             }
         }
         
@@ -198,21 +143,16 @@ namespace Articy.Night.Features
                 return;
             }
             mLoadedConstraints = true;
-            mEnvironmentName = new Articy.Unity.Constraints.TextConstraint(2048, "", null, false, false);
-            mEnvironmentType = new Articy.Unity.Constraints.EnumConstraint(false, "BySortIndex");
-            mEnvironmentMinTemperature = new Articy.Unity.Constraints.NumberConstraint(-3.40282346638529E+38, 3.40282346638529E+38, 0, 0, 0, null);
-            mEnvironmentMaxTemperature = new Articy.Unity.Constraints.NumberConstraint(-3.40282346638529E+38, 3.40282346638529E+38, 0, 0, 0, null);
-            mEnvironmentWaterLevel = new Articy.Unity.Constraints.NumberConstraint(-3.40282346638529E+38, 3.40282346638529E+38, 0, 0, 0, null);
-            mEnvironmentFoodLevel = new Articy.Unity.Constraints.NumberConstraint(-3.40282346638529E+38, 3.40282346638529E+38, 0, 0, 0, null);
-            mEnvironmentFuelLevel = new Articy.Unity.Constraints.NumberConstraint(-3.40282346638529E+38, 3.40282346638529E+38, 0, 0, 0, null);
-            mEnvironmentScrapLevel = new Articy.Unity.Constraints.NumberConstraint(-3.40282346638529E+38, 3.40282346638529E+38, 0, 0, 0, null);
-            mEnvironmentBanditDanger = new Articy.Unity.Constraints.NumberConstraint(-3.40282346638529E+38, 3.40282346638529E+38, 0, 0, 0, null);
-            mEnvironmentTerrainAccessibility = new Articy.Unity.Constraints.NumberConstraint(-3.40282346638529E+38, 3.40282346638529E+38, 0, 0, 0, null);
-            mEnvironmentCampFrequency = new Articy.Unity.Constraints.NumberConstraint(-3.40282346638529E+38, 3.40282346638529E+38, 0, 0, 0, null);
-            mEnvironmentMentalDanger = new Articy.Unity.Constraints.BooleanConstraint(false);
-            mEnvironmentAnimalDanger = new Articy.Unity.Constraints.BooleanConstraint(false);
-            mEnvironmentTrapDanger = new Articy.Unity.Constraints.BooleanConstraint(false);
-            mEnvironmentRadiationDanger = new Articy.Unity.Constraints.BooleanConstraint(false);
+            mMinTemperature = new Articy.Unity.Constraints.NumberConstraint(-3.40282346638529E+38, 3.40282346638529E+38, 0, 0, 0, null);
+            mMaxTemperature = new Articy.Unity.Constraints.NumberConstraint(-3.40282346638529E+38, 3.40282346638529E+38, 0, 0, 0, null);
+            mWaterLevel = new Articy.Unity.Constraints.NumberConstraint(0, 10, 0, 0, 0, null);
+            mFoodLevel = new Articy.Unity.Constraints.NumberConstraint(0, 10, 0, 0, 0, null);
+            mFuelLevel = new Articy.Unity.Constraints.NumberConstraint(0, 10, 0, 0, 0, null);
+            mScrapLevel = new Articy.Unity.Constraints.NumberConstraint(0, 10, 0, 0, 0, null);
+            mBanditDanger = new Articy.Unity.Constraints.NumberConstraint(0, 10, 0, 0, 0, null);
+            mTerrainAccessibility = new Articy.Unity.Constraints.NumberConstraint(0, 10, 0, 0, 0, null);
+            mCampFrequency = new Articy.Unity.Constraints.NumberConstraint(0, 1, 0, 0, 0, null);
+            mNormalisedDanger = new Articy.Unity.Constraints.NumberConstraint(0, 8, 0, 0, 0, null);
         }
     }
 }

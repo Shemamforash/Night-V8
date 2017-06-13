@@ -17,6 +17,19 @@
       <ExportQueries>0</ExportQueries>
     </ExportSettings>
   </Preset>
+  <Preset DisplayName="Night" Type="Unity3DExport">
+    <ExportSettings Type="Unity3DExport">
+      <Filename>C:\Users\Iovana\Desktop\Night-V8\Night Unity Files\Assets\Night.articyu3d</Filename>
+      <CustomSettings>
+        <Option Name="set_Localization" Value="False"/>
+        <Option Name="set_TextFormatter" Value="Unity"/>
+      </CustomSettings>
+      <PackageStates>
+        <State Id="72057594037928194" Enabled="1"/>
+      </PackageStates>
+      <SelectedRuleSet>72057594037928191</SelectedRuleSet>
+    </ExportSettings>
+  </Preset>
   <Preset DisplayName="" Type="Unity3DExport">
     <ExportSettings Type="Unity3DExport">
       <Filename>C:\Users\Iovana\Desktop\Night-V8\Night Unity Files\Assets\Night.articyu3d</Filename>

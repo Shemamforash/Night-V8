@@ -3,7 +3,7 @@
     "set_Localization": "False",
     "set_TextFormatter": "Unity",
     "set_UseScriptSupport": "True",
-    "ObjectDefinitionsHash": "2E62B7575E8AE894D9C7A9F234E7784817392AC8EE9F8CC7B2A546FA5BA0A0AD"
+    "ObjectDefinitionsHash": "8F222B1557E58960455D18F14B09F3580B9738BE069D6011A4F890DE21C22DD2"
   },
   "Project": {
     "Name": "Night",
@@ -251,15 +251,6 @@
         "WeatherTypeHot": 1,
         "WeatherTypeCold": 2,
         "WeatherTypeMisc": 3
-      }
-    },
-    {
-      "Type": "EnvironmentType",
-      "Class": "Enum",
-      "Values": {
-        "EnvironmentClassA": 1,
-        "EnvironmentClassB": 2,
-        "EnvironmentClassC": 3
       }
     },
     {
@@ -799,98 +790,59 @@
             "DisplayName": "Environment",
             "Properties": [
               {
-                "Property": "EnvironmentName",
-                "Type": "String",
-                "DisplayName": "Name"
-              },
-              {
-                "Property": "EnvironmentType",
-                "Type": "EnvironmentType",
-                "DisplayName": "Type"
-              },
-              {
-                "Property": "EnvironmentMinTemperature",
+                "Property": "MinTemperature",
                 "Type": "Float",
                 "DisplayName": "Minimum Temperature"
               },
               {
-                "Property": "EnvironmentMaxTemperature",
+                "Property": "MaxTemperature",
                 "Type": "Float",
                 "DisplayName": "Maximum Temperature"
               },
               {
-                "Property": "EnvironmentWaterLevel",
+                "Property": "WaterLevel",
                 "Type": "Float",
                 "DisplayName": "Water Level"
               },
               {
-                "Property": "EnvironmentFoodLevel",
+                "Property": "FoodLevel",
                 "Type": "Float",
                 "DisplayName": "Food Level"
               },
               {
-                "Property": "EnvironmentFuelLevel",
+                "Property": "FuelLevel",
                 "Type": "Float",
                 "DisplayName": "Fuel Level"
               },
               {
-                "Property": "EnvironmentScrapLevel",
+                "Property": "ScrapLevel",
                 "Type": "Float",
                 "DisplayName": "Scrap Level"
               },
               {
-                "Property": "EnvironmentBanditDanger",
+                "Property": "BanditDanger",
                 "Type": "Float",
                 "DisplayName": "Bandit Danger"
               },
               {
-                "Property": "EnvironmentTerrainAccessibility",
+                "Property": "TerrainAccessibility",
                 "Type": "Float",
                 "DisplayName": "Terrain Accessibility"
               },
               {
-                "Property": "EnvironmentCampFrequency",
+                "Property": "CampFrequency",
                 "Type": "Float",
                 "DisplayName": "Camp Frequency"
               },
               {
-                "Property": "EnvironmentMentalDanger",
-                "Type": "Bool",
-                "DisplayName": "Mental Danger"
-              },
-              {
-                "Property": "EnvironmentAnimalDanger",
-                "Type": "Bool",
-                "DisplayName": "Animal Danger"
-              },
-              {
-                "Property": "EnvironmentTrapDanger",
-                "Type": "Bool",
-                "DisplayName": "Trap Danger"
-              },
-              {
-                "Property": "EnvironmentRadiationDanger",
-                "Type": "Bool",
-                "DisplayName": "Radiation Danger"
+                "Property": "NormalisedDanger",
+                "Type": "Float",
+                "DisplayName": "Normalised Danger Level"
               }
             ],
             "Constraints": [
               {
-                "Property": "EnvironmentName",
-                "Type": "Text",
-                "MaxLength": "2048",
-                "PlaceholderValue": "",
-                "IsLocalized": "False",
-                "AllowsLinebreaks": "False"
-              },
-              {
-                "Property": "EnvironmentType",
-                "Type": "Enum",
-                "IsLocalized": "False",
-                "SortMode": "BySortIndex"
-              },
-              {
-                "Property": "EnvironmentMinTemperature",
+                "Property": "MinTemperature",
                 "Type": "Number",
                 "MinValue": "-3.40282346638529E+38",
                 "MaxValue": "3.40282346638529E+38",
@@ -900,7 +852,7 @@
                 "Unit": null
               },
               {
-                "Property": "EnvironmentMaxTemperature",
+                "Property": "MaxTemperature",
                 "Type": "Number",
                 "MinValue": "-3.40282346638529E+38",
                 "MaxValue": "3.40282346638529E+38",
@@ -910,94 +862,84 @@
                 "Unit": null
               },
               {
-                "Property": "EnvironmentWaterLevel",
+                "Property": "WaterLevel",
                 "Type": "Number",
-                "MinValue": "-3.40282346638529E+38",
-                "MaxValue": "3.40282346638529E+38",
+                "MinValue": "0",
+                "MaxValue": "10",
                 "Precision": "0",
                 "MinPrecision": "0",
                 "MaxPrecision": "0",
                 "Unit": null
               },
               {
-                "Property": "EnvironmentFoodLevel",
+                "Property": "FoodLevel",
                 "Type": "Number",
-                "MinValue": "-3.40282346638529E+38",
-                "MaxValue": "3.40282346638529E+38",
+                "MinValue": "0",
+                "MaxValue": "10",
                 "Precision": "0",
                 "MinPrecision": "0",
                 "MaxPrecision": "0",
                 "Unit": null
               },
               {
-                "Property": "EnvironmentFuelLevel",
+                "Property": "FuelLevel",
                 "Type": "Number",
-                "MinValue": "-3.40282346638529E+38",
-                "MaxValue": "3.40282346638529E+38",
+                "MinValue": "0",
+                "MaxValue": "10",
                 "Precision": "0",
                 "MinPrecision": "0",
                 "MaxPrecision": "0",
                 "Unit": null
               },
               {
-                "Property": "EnvironmentScrapLevel",
+                "Property": "ScrapLevel",
                 "Type": "Number",
-                "MinValue": "-3.40282346638529E+38",
-                "MaxValue": "3.40282346638529E+38",
+                "MinValue": "0",
+                "MaxValue": "10",
                 "Precision": "0",
                 "MinPrecision": "0",
                 "MaxPrecision": "0",
                 "Unit": null
               },
               {
-                "Property": "EnvironmentBanditDanger",
+                "Property": "BanditDanger",
                 "Type": "Number",
-                "MinValue": "-3.40282346638529E+38",
-                "MaxValue": "3.40282346638529E+38",
+                "MinValue": "0",
+                "MaxValue": "10",
                 "Precision": "0",
                 "MinPrecision": "0",
                 "MaxPrecision": "0",
                 "Unit": null
               },
               {
-                "Property": "EnvironmentTerrainAccessibility",
+                "Property": "TerrainAccessibility",
                 "Type": "Number",
-                "MinValue": "-3.40282346638529E+38",
-                "MaxValue": "3.40282346638529E+38",
+                "MinValue": "0",
+                "MaxValue": "10",
                 "Precision": "0",
                 "MinPrecision": "0",
                 "MaxPrecision": "0",
                 "Unit": null
               },
               {
-                "Property": "EnvironmentCampFrequency",
+                "Property": "CampFrequency",
                 "Type": "Number",
-                "MinValue": "-3.40282346638529E+38",
-                "MaxValue": "3.40282346638529E+38",
+                "MinValue": "0",
+                "MaxValue": "1",
                 "Precision": "0",
                 "MinPrecision": "0",
                 "MaxPrecision": "0",
                 "Unit": null
               },
               {
-                "Property": "EnvironmentMentalDanger",
-                "Type": "Boolean",
-                "DisplayAsCombobox": "False"
-              },
-              {
-                "Property": "EnvironmentAnimalDanger",
-                "Type": "Boolean",
-                "DisplayAsCombobox": "False"
-              },
-              {
-                "Property": "EnvironmentTrapDanger",
-                "Type": "Boolean",
-                "DisplayAsCombobox": "False"
-              },
-              {
-                "Property": "EnvironmentRadiationDanger",
-                "Type": "Boolean",
-                "DisplayAsCombobox": "False"
+                "Property": "NormalisedDanger",
+                "Type": "Number",
+                "MinValue": "0",
+                "MaxValue": "8",
+                "Precision": "0",
+                "MinPrecision": "0",
+                "MaxPrecision": "0",
+                "Unit": null
               }
             ]
           }
@@ -1368,6 +1310,38 @@
                 "Type": "Enum",
                 "IsLocalized": "False",
                 "SortMode": "BySortIndex"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "Type": "Journal_Entry_Template",
+      "Class": "Entity",
+      "InheritsFrom": "Entity",
+      "Template": {
+        "TechnicalName": "Journal_Entry_Template",
+        "DisplayName": "Journal Entry Template",
+        "Features": [
+          {
+            "TechnicalName": "JournalEntry",
+            "DisplayName": "JournalEntry",
+            "Properties": [
+              {
+                "Property": "JournalEntryList",
+                "Type": "String",
+                "DisplayName": "Entry Lines"
+              }
+            ],
+            "Constraints": [
+              {
+                "Property": "JournalEntryList",
+                "Type": "Text",
+                "MaxLength": "2048",
+                "PlaceholderValue": "",
+                "IsLocalized": "False",
+                "AllowsLinebreaks": "True"
               }
             ]
           }
@@ -3802,7 +3776,7 @@
             "TechnicalName": "Txt_F7928A38",
             "Id": "0x10000000000016C",
             "Parent": "0x100000000000169",
-            "DisplayName": "Environments",
+            "DisplayName": "Environment Design",
             "Attachments": [],
             "PreviewImage": {
               "ViewBox": {
@@ -3819,7 +3793,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "The world is made up of a number of environments. Each environment has different dangers, resources, and weather. Some environment types are more difficult that others. The selection of environment is based on the player's progress. Environment selection is based on probability, with certain environments being more likely to follow others. Environments will also have danger types associated with them that affect the ways in which characters can be endangered. This is for flavour reasons, and to increase replayability, as well as to further differentiate environments.",
+            "Text": "The world is made up of a number of environments. Each environment has different dangers, resources, and weather. Some environment types are more difficult that others. The selection of environment is based on the player's progress. Environment selection is based on probability, with certain environments being more likely to follow others. Environments will also have danger types associated with them that affect the ways in which characters can be endangered. This is for flavour reasons, and to increase replayability, as well as to further differentiate environments.\r\n\r\nThe environments are:\r\n\r\n    * <color=#ffa61aff>Shattered Peaks </color>- Mountains as old as the world itself. Once rich with life these broken spires offer some protection against the open earth. Do not take it's safety lightly, however, for others also find shelter in the dark dales here.\r\n    * Verdant Oasis - A rare sight, Oases pop up where ancient springs become so engorged that they breach the surface of the earth. A haven for any desert wanderes who stumble across it. Far from civilisation, these oasis can become a death trap if supplies cannot be found to sustain the party.\r\n    * Oil Sands - The sands stretch endlessly across the horizon, a monument to the long-gone facilities that pumped this precious juice out of the depths of the crust. Rich in fuel and scrap for building, but toxic and hostile to life. Bandit encounters are regular, as they come to feed their parched vehicles at these blackened watering holes.\r\n    * Sheltered Ravines - These long crevasses are all that remain of an ancient tide that swept across the world. Miles of interlocking corridors carved deep into the rock provide a hidden place of refuge. Travellers should beware, these ravines can prove fatal during downpours, and passage through the tunnels can be treacherous in the dim light that reaches the floor.\r\n    * Endless Prairie - The great plains, the final wonder of the earth. Grasslands that wander endlessly across the salty earth. Rife with wildlife, many come to eek a living off of the land- many hostile. The soil itself is littered with the scrap of civilisation, attracting scavengers and treasure hunters, stay vigilant and the bounty of this place is yours.\r\n    * Silent Scrublands - On the edges of plains and salt flats, the scrublands act as a buffer between life and death. The soil here is parched, though some flora manages to survive. Water and food is limited, but without resources the scrublands are fairly safe.\r\n    * Aching Salts - The great highways of the world all cross the salts. They have become the battlefield of our time. Wrecks litter the sides of the road, pecked dry by hunters. Weapons, fuel, food, and scrap can all be found here, hidden in caches left by those seeking refuge in the forgotten places.\r\n    * Weeping Wastelands - The front lines of forgotten wars. These scars on the landscape are wracked by storms, rain, and fire. In only a few days the wastelands can be transformed from rolling dunes to sopping mud. The vicious weather is not without it's benefits, the constant churning of the earth often brings up remnants of the past. Cross these wasted lands with care.\r\n    * Dead Ruins - The dead lands of the world, tombs of the humanity. Once great towers stood, a testament to man's dominance of nature. Now crumbling, irradiated ruins, madmen and militants stalk the landscape, looking for powerful machines that lay buried beneath the stone. An extremely dangerous area, not least because of it's oppresive effect on the mind. \r\n\nEnvironment selection- 2 methods. Method 1: all environments are linked to certain other environments, forming a sparse graph. Each link has a weight and follow up environments are chosen semi-randomly based on the link. Method 2: environments have a generation probability that is directly related to the difficulty, safer environments are more likely at lower difficulties. \r\n\r\nBoth methods could provide the player with a small number of options to choose from, rather than choosing for them. It should be a given that the next environment generated cannot be the same as the previous environment (not the current one), or rather, the same environment can be selected only twice in a row.",
             "ExternalId": "",
             "Position": {
               "x": 0.0,
@@ -3856,7 +3830,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "The weather in this distant future is extreme, sometimes a gentle boon, other times a terrible bane. Weather can replenish much needed water in the thirsty landscape, and take it away just as quickly. Weather comes in a variety of flavours; Rain, Drizzle, Hail, Blizzards, Winds, Clear Skies, and even Firestorms. As with environments, weather selection is probabilistic, based both on the previous weather, and the environment. Hot environments are more likely to have hot weather and vice versa.\r\n\r\nThe Weather Types are:\r\n\r\n    * Drizzle (Light water, Slightly Reduced Temperature)\r\n    * Rain (Medium water, Reduced Temperature)\r\n    * Wet Storm (Low Visibility, High water, More Reduced Temperature)\r\n    * Haze (Very Low Visibility)\r\n    * Mist (Medium Visibility, Slight Water, Slightly Reduced Temperature)\r\n    * Fog (Low Visibility, Slight Water, Reduced Temperature)\r\n    * Miasma (Very Low Visibility, Mental Danger, Random Temperature Fluctuations)\r\n    * Clear (Higher Temperature)\r\n    * Cloudy (Slightly Higher Temperature, Slightly Increased Food)\r\n    * Overcast (Normal Temperature, Increased Food)\r\n    * Hail (Reduced Temperature, Reduced Visibility, Physical Danger)\r\n    * Lightning Storm (Slight Water, Lower Temperature, Lightning Danger)\r\n    * Dry Storm (Reduced Food, Reduced Water, Chance to get lost, Higher Temperature)\r\n    * Fire Storm (Severely Reduced Water, No Food, Fire Danger, Very High Temperature)\r\n    * Flood (Huge amounts of water, No Food, Water Danger)\r\n    * Ice Storm (Very low temperature, Physical Danger, Reduced Water, Reduced Food)\r\n    * Hurrican (Lower Temperature, Physical Danger, Reduced Food)\r\n    * Ether Storm (Random Huge Temperature Fluctuations, Massive Mental Danger, Massive Physical Danger)",
+            "Text": "The weather in this distant future is extreme, sometimes a gentle boon, other times a terrible bane. Weather can replenish much needed water in the thirsty landscape, and take it away just as quickly. Weather comes in a variety of flavours; Rain, Drizzle, Hail, Blizzards, Winds, Clear Skies, and even Firestorms. As with environments, weather selection is probabilistic, based both on the previous weather, and the environment. Hot environments are more likely to have hot weather and vice versa.\r\n\r\nThe Weather Types are:\r\n\r\n    * Drizzle (Light water, Slightly Reduced Temperature)\r\n    * Rain (Medium water, Reduced Temperature)\r\n    * Wet Storm (Low Visibility, High water, More Reduced Temperature)\r\n    * Haze (Very Low Visibility)\r\n    * Mist (Medium Visibility, Slight Water, Slightly Reduced Temperature)\r\n    * Fog (Low Visibility, Slight Water, Reduced Temperature)\r\n    * Miasma (Very Low Visibility, Mental Danger, Random Temperature Fluctuations)\r\n    * Clear (Higher Temperature)\r\n    * Cloudy (Slightly Higher Temperature, Slightly Increased Food)\r\n    * Overcast (Normal Temperature, Increased Food)\r\n    * Hail (Reduced Temperature, Reduced Visibility, Physical Danger)\r\n    * Lightning Storm (Slight Water, Lower Temperature, Lightning Danger)\r\n    * Dry Storm (Reduced Food, Reduced Water, Chance to get lost, Higher Temperature)\r\n    * Fire Storm (Severely Reduced Water, No Food, Fire Danger, Very High Temperature)\r\n    * Flood (Huge amounts of water, No Food, Water Danger)\r\n    * Ice Storm (Very low temperature, Physical Danger, Reduced Water, Reduced Food)\r\n    * Hurricane (Lower Temperature, Physical Danger, Reduced Food)\r\n    * Ether Storm (Random Huge Temperature Fluctuations, Massive Mental Danger, Massive Physical Danger)\r\n\nWeather selection should be based on environmental factors. Environments with higher temperatures should cause hotter weather to be chosen and vica versa. The same applies to resources levels. There still needs to be some variation in chosen weather in order to allow for rain to appear in hot temperatures (though it might be rare). Some kind of sorting algorithm could be used to order weather types by appropriateness.",
             "ExternalId": "",
             "Position": {
               "x": 20.0,
@@ -3967,7 +3941,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "World danger is a global modifier for dangerous events. It increases the severity and probability of events, and the severity of weather, but also increases the quality of weapons and abundance of scrap.\r\n\r\nWorld danger increases by one step for every day that passes. However the danger level decreases by 2 steps whenever the party transitions to a new area. The new danger level is used to influence which environment should appear after transitioning.\r\n\r\nDanger events are triggered based on various conditions. Environmental and Weather events are conditional to the presence of the environment or weather, but may have compounding effects. Bandit events can generally be anticipated since they are triggered based on bandit camps, distance to the vehicle, time of day, and player actions. Night events are only triggered at night.\r\n\r\nOther events may trigger in a similar fashion to danger events, for example finding resource caches, weapons, lore items, survivors, and anything else.",
+            "Text": "World danger is a global modifier for dangerous events. It increases the severity and probability of events, and the severity of weather, but also increases the quality of weapons and abundance of scrap.\r\n\r\nWorld danger increases by one step for every day that passes. However the danger level decreases by 2 steps whenever the party transitions to a new area. The new danger level is used to influence which environment should appear after transitioning.\r\n\r\nDanger events are triggered based on various conditions. Environmental and Weather events are conditional to the presence of the environment or weather, but may have compounding effects. Bandit events can generally be anticipated since they are triggered based on bandit camps, distance to the vehicle, time of day, and player actions. Night events are only triggered at night.\r\n\r\nOther events may trigger in a similar fashion to danger events, for example finding resource caches, weapons, lore items, survivors, and anything else.\r\n\r\nDanger Types:\r\n\r\n    * Radiation- causes loss of strength over time\r\n    * Heat- causes loss of endurance, fewer animals, less water\r\n    * Flood- can cause characters to drown\r\n    * Fire- burning, destroys fuel and food\r\n    * Oppression- causes loss of stability\r\n    * Raids- increased probability of random attacks\r\n    * Animals- increased probability of animal attacks\r\n    * Ghouls- increased probability of resources being stolen during night time\r\n    * Militants- increased danger of encounters\r\n    * Mines- chance to cause character death\r\n    * Visibility- chance to cause character to be lost\r\n    * Pitfalls- chance to cause character to break limb\r\n    * Night- chance for attacks during the night\r\n    * Vengeance- increased chance for retaliation from attackers\r\n    * Sentinels- chance to stumble across ancient war machines\r\n    * Lightning- chance for characters to be incapacitated by lightning",
             "ExternalId": "",
             "Position": {
               "x": 80.0,
@@ -4312,6 +4286,43 @@
               "h": 196.0
             },
             "ShortId": 171120838
+          }
+        },
+        {
+          "Type": "TextObject",
+          "Properties": {
+            "TechnicalName": "Txt_B5E93274",
+            "Id": "0x100000000000A57",
+            "Parent": "0x10000000000094A",
+            "DisplayName": "Environments",
+            "Attachments": [],
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Environments are contained in their own object. Environments have weather. Both environments and weather have weighted links to other environments and weather respectively. The weights on these links indicate the probability for the weather/environment to occur after the current one.\r\n\r\nWhen weather in an environment is chosen, the next weather is immediately chosen. Therefore an environment contains a weather, and the weather contains a reference to the next weather. Weather lasts for a semi random duration depending on it's type.\r\n\r\nBoth environments and weather have danger. Dangers are objects that contain a list of events that can occur. For example rainy weather could have wet danger. Floods could have flood danger, dry storms and wet storms could have lightning danger. Events in a danger have their own probabilities of ocurring, and have a string template for outputting event data to the event screen for the player to read, for example \"<Character> fell into trap (-<amnt>Strength)\" would allow for any character and amount of strength to be displayed using a general template.",
+            "ExternalId": "",
+            "Position": {
+              "x": 160.0,
+              "y": 160.0
+            },
+            "ZIndex": 8.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "ShortId": 3051958900
           }
         },
         {
@@ -5423,13 +5434,13 @@
               "WeatherWaterMod": 0.0,
               "WeatherFoodMod": 0.0,
               "WeatherDangerMod": 0.0,
-              "WeatherFireDanger": null,
-              "WeatherWindDanger": null,
-              "WeatherFloodDanger": null,
-              "WeatherColdDanger": null,
-              "WeatherToxicDanger": null,
+              "WeatherFireDanger": false,
+              "WeatherWindDanger": false,
+              "WeatherFloodDanger": false,
+              "WeatherColdDanger": false,
+              "WeatherToxicDanger": false,
               "WeatherVisionModifier": 0.0,
-              "EnumValue": 3
+              "EnumValue": 2
             }
           }
         },
@@ -5593,6 +5604,549 @@
           }
         },
         {
+          "Type": "Journal_Entry_Template",
+          "Properties": {
+            "TechnicalName": "Ntt_DB11DD46",
+            "Id": "0x100000000000A7D",
+            "Parent": "0x100000000000A61",
+            "Attachments": [],
+            "DisplayName": "Misc",
+            "Color": {
+              "r": 0.55201143,
+              "g": 0.50888133,
+              "b": 0.309468955
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 132.0,
+              "y": 131.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 3675381062
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": "Engines roar in the distance,\r\nDriver sighs,\r\n"
+            }
+          }
+        },
+        {
+          "Type": "Journal_Entry_Template",
+          "Properties": {
+            "TechnicalName": "Ntt_E5DCF08E",
+            "Id": "0x100000000000A82",
+            "Parent": "0x100000000000A61",
+            "Attachments": [],
+            "DisplayName": "Night",
+            "Color": {
+              "r": 0.55201143,
+              "g": 0.50888133,
+              "b": 0.309468955
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 197.0,
+              "y": 263.0
+            },
+            "ZIndex": 1.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 3856461966
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": ""
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentPeaks",
+            "Id": "0x100000000000B98",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Shattered Peaks",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 133.0,
+              "y": 140.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 3323312058
+          },
+          "Template": {
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 7.0,
+              "FoodLevel": 7.0,
+              "FuelLevel": 4.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 3.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentWastelands",
+            "Id": "0x100000000000B9C",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Weeping Wastelands",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 327.0,
+              "y": 166.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 2378845923
+          },
+          "Template": {
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 4.0,
+              "FoodLevel": 3.0,
+              "FuelLevel": 6.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 8.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentOasis",
+            "Id": "0x100000000000BA0",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Verdant Oasis",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 182.0,
+              "y": 77.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 3755014890
+          },
+          "Template": {
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 10.0,
+              "FoodLevel": 8.0,
+              "FuelLevel": 2.0,
+              "ScrapLevel": 1.0,
+              "BanditDanger": 1.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 0.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentRavines",
+            "Id": "0x100000000000BA4",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Sheltered Ravines",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 271.0,
+              "y": 75.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 1439376606
+          },
+          "Template": {
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 8.0,
+              "FoodLevel": 5.0,
+              "FuelLevel": 3.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 4.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentSands",
+            "Id": "0x100000000000BA8",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Oil Sands",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 427.0,
+              "y": 96.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 2466035624
+          },
+          "Template": {
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 2.0,
+              "FoodLevel": 1.0,
+              "FuelLevel": 10.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 5.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentPrairie",
+            "Id": "0x100000000000BAC",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Endless Prairie",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 490.0,
+              "y": 79.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 4245390323
+          },
+          "Template": {
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 6.0,
+              "FoodLevel": 9.0,
+              "FuelLevel": 3.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 1.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentRuins",
+            "Id": "0x100000000000BB0",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Dead Ruins",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 631.0,
+              "y": 60.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 1901863203
+          },
+          "Template": {
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 3.0,
+              "FoodLevel": 4.0,
+              "FuelLevel": 8.0,
+              "ScrapLevel": 10.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 6.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentScrublands",
+            "Id": "0x100000000000BB4",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Silent Scrublands",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 755.0,
+              "y": 63.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 1499357293
+          },
+          "Template": {
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 5.0,
+              "FoodLevel": 6.0,
+              "FuelLevel": 5.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 2.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentSalts",
+            "Id": "0x100000000000BB8",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Aching Salts",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 848.0,
+              "y": 74.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 3685917409
+          },
+          "Template": {
+            "Environment": {
+              "MinTemperature": 30.0,
+              "MaxTemperature": 45.0,
+              "WaterLevel": 1.0,
+              "FoodLevel": 2.0,
+              "FuelLevel": 6.0,
+              "ScrapLevel": 7.0,
+              "BanditDanger": 6.0,
+              "TerrainAccessibility": 10.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 7.0
+            }
+          }
+        },
+        {
           "Type": "UserFolder",
           "Properties": {
             "TechnicalName": "Ufo_6E32CB39",
@@ -5679,6 +6233,61 @@
             "ExternalId": "",
             "ShortId": 3566849329
           }
+        },
+        {
+          "Type": "UserFolder",
+          "Properties": {
+            "TechnicalName": "Ufo_78ED446E",
+            "Id": "0x100000000000A5D",
+            "Parent": "0x3000000AC61A2B3",
+            "DisplayName": "Journal Entries",
+            "ExternalId": "",
+            "ShortId": 2028815470
+          }
+        },
+        {
+          "Type": "UserFolder",
+          "Properties": {
+            "TechnicalName": "Ufo_E32E1576",
+            "Id": "0x100000000000A5F",
+            "Parent": "0x100000000000A5D",
+            "DisplayName": "Danger",
+            "ExternalId": "",
+            "ShortId": 3811448182
+          }
+        },
+        {
+          "Type": "UserFolder",
+          "Properties": {
+            "TechnicalName": "Ufo_AD0E7B37",
+            "Id": "0x100000000000A61",
+            "Parent": "0x100000000000A5D",
+            "DisplayName": "Environment",
+            "ExternalId": "",
+            "ShortId": 2903407415
+          }
+        },
+        {
+          "Type": "UserFolder",
+          "Properties": {
+            "TechnicalName": "Ufo_DA0B5EE6",
+            "Id": "0x100000000000A63",
+            "Parent": "0x100000000000A5D",
+            "DisplayName": "Weather",
+            "ExternalId": "",
+            "ShortId": 3658178278
+          }
+        },
+        {
+          "Type": "UserFolder",
+          "Properties": {
+            "TechnicalName": "Ufo_ED3E3D93",
+            "Id": "0x100000000000A65",
+            "Parent": "0x100000000000A5D",
+            "DisplayName": "Character",
+            "ExternalId": "",
+            "ShortId": 3980279187
+          }
         }
       ]
     }
@@ -5744,7 +6353,54 @@
           {
             "Id": "0x100000000000679",
             "TechnicalName": "Ufo_31F82AA0",
-            "Type": "EntitiesUserFolder"
+            "Type": "EntitiesUserFolder",
+            "Children": [
+              {
+                "Id": "0x100000000000B98",
+                "TechnicalName": "EnvironmentPeaks",
+                "Type": "Entity"
+              },
+              {
+                "Id": "0x100000000000B9C",
+                "TechnicalName": "EnvironmentWastelands",
+                "Type": "Entity"
+              },
+              {
+                "Id": "0x100000000000BA0",
+                "TechnicalName": "EnvironmentOasis",
+                "Type": "Entity"
+              },
+              {
+                "Id": "0x100000000000BA4",
+                "TechnicalName": "EnvironmentRavines",
+                "Type": "Entity"
+              },
+              {
+                "Id": "0x100000000000BA8",
+                "TechnicalName": "EnvironmentSands",
+                "Type": "Entity"
+              },
+              {
+                "Id": "0x100000000000BAC",
+                "TechnicalName": "EnvironmentPrairie",
+                "Type": "Entity"
+              },
+              {
+                "Id": "0x100000000000BB0",
+                "TechnicalName": "EnvironmentRuins",
+                "Type": "Entity"
+              },
+              {
+                "Id": "0x100000000000BB4",
+                "TechnicalName": "EnvironmentScrublands",
+                "Type": "Entity"
+              },
+              {
+                "Id": "0x100000000000BB8",
+                "TechnicalName": "EnvironmentSalts",
+                "Type": "Entity"
+              }
+            ]
           },
           {
             "Id": "0x10000000000067B",
@@ -5842,6 +6498,45 @@
                 "Type": "Entity"
               }
             ]
+          },
+          {
+            "Id": "0x100000000000A5D",
+            "TechnicalName": "Ufo_78ED446E",
+            "Type": "EntitiesUserFolder",
+            "Children": [
+              {
+                "Id": "0x100000000000A5F",
+                "TechnicalName": "Ufo_E32E1576",
+                "Type": "EntitiesUserFolder"
+              },
+              {
+                "Id": "0x100000000000A61",
+                "TechnicalName": "Ufo_AD0E7B37",
+                "Type": "EntitiesUserFolder",
+                "Children": [
+                  {
+                    "Id": "0x100000000000A7D",
+                    "TechnicalName": "Ntt_DB11DD46",
+                    "Type": "Entity"
+                  },
+                  {
+                    "Id": "0x100000000000A82",
+                    "TechnicalName": "Ntt_E5DCF08E",
+                    "Type": "Entity"
+                  }
+                ]
+              },
+              {
+                "Id": "0x100000000000A63",
+                "TechnicalName": "Ufo_DA0B5EE6",
+                "Type": "EntitiesUserFolder"
+              },
+              {
+                "Id": "0x100000000000A65",
+                "TechnicalName": "Ufo_ED3E3D93",
+                "Type": "EntitiesUserFolder"
+              }
+            ]
           }
         ]
       },
@@ -5901,6 +6596,11 @@
                 "Id": "0x10000000000034A",
                 "TechnicalName": "Environment",
                 "Type": "Feature"
+              },
+              {
+                "Id": "0x100000000000A67",
+                "TechnicalName": "JournalEntry",
+                "Type": "Feature"
               }
             ]
           },
@@ -5927,6 +6627,11 @@
                   {
                     "Id": "0x10000000000054D",
                     "TechnicalName": "EnvironmentTemplate_03",
+                    "Type": "Template"
+                  },
+                  {
+                    "Id": "0x100000000000A72",
+                    "TechnicalName": "Journal_Entry_Template",
                     "Type": "Template"
                   }
                 ]
@@ -6354,6 +7059,11 @@
               {
                 "Id": "0x10000000000099B",
                 "TechnicalName": "Txt_0A3318C6",
+                "Type": "TextObject"
+              },
+              {
+                "Id": "0x100000000000A57",
+                "TechnicalName": "Txt_B5E93274",
                 "Type": "TextObject"
               }
             ]

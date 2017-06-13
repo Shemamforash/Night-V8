@@ -7,7 +7,7 @@ namespace World
     public class WorldTime : MonoBehaviour
     {
         private static List<TimeListener> timeListeners = new List<TimeListener>();
-        private static float currentTime, quarterHourTimer = .02f;
+        private static float currentTime, quarterHourTimer = .2f;
         private static int days = 0, hours = 6, minutes = 0;
         private static bool isNight = false;
         private static bool isPaused = false;
@@ -39,6 +39,12 @@ namespace World
             foreach (TimeListener t in timeListeners)
             {
                 t.ReceiveDayEvent();
+            }
+        }
+
+        public void BroadcastTravel(){
+            foreach(TimeListener t in timeListeners){
+                t.ReceiveTravelEvent();
             }
         }
 

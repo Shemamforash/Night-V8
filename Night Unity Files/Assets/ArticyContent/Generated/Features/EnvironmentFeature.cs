@@ -25,248 +25,168 @@ namespace Articy.Night.Features
     {
         
         [SerializeField()]
-        private String mEnvironmentName;
+        private Single mMinTemperature;
         
         [SerializeField()]
-        private EnvironmentType mEnvironmentType = new EnvironmentType();
+        private Single mMaxTemperature;
         
         [SerializeField()]
-        private Single mEnvironmentMinTemperature;
+        private Single mWaterLevel;
         
         [SerializeField()]
-        private Single mEnvironmentMaxTemperature;
+        private Single mFoodLevel;
         
         [SerializeField()]
-        private Single mEnvironmentWaterLevel;
+        private Single mFuelLevel;
         
         [SerializeField()]
-        private Single mEnvironmentFoodLevel;
+        private Single mScrapLevel;
         
         [SerializeField()]
-        private Single mEnvironmentFuelLevel;
+        private Single mBanditDanger;
         
         [SerializeField()]
-        private Single mEnvironmentScrapLevel;
+        private Single mTerrainAccessibility;
         
         [SerializeField()]
-        private Single mEnvironmentBanditDanger;
+        private Single mCampFrequency;
         
         [SerializeField()]
-        private Single mEnvironmentTerrainAccessibility;
+        private Single mNormalisedDanger;
         
-        [SerializeField()]
-        private Single mEnvironmentCampFrequency;
-        
-        [SerializeField()]
-        private Boolean mEnvironmentMentalDanger = new Boolean();
-        
-        [SerializeField()]
-        private Boolean mEnvironmentAnimalDanger = new Boolean();
-        
-        [SerializeField()]
-        private Boolean mEnvironmentTrapDanger = new Boolean();
-        
-        [SerializeField()]
-        private Boolean mEnvironmentRadiationDanger = new Boolean();
-        
-        public String EnvironmentName
+        public Single MinTemperature
         {
             get
             {
-                return mEnvironmentName;
+                return mMinTemperature;
             }
             set
             {
-                mEnvironmentName = value;
+                mMinTemperature = value;
             }
         }
         
-        public EnvironmentType EnvironmentType
+        public Single MaxTemperature
         {
             get
             {
-                return mEnvironmentType;
+                return mMaxTemperature;
             }
             set
             {
-                mEnvironmentType = value;
+                mMaxTemperature = value;
             }
         }
         
-        public Single EnvironmentMinTemperature
+        public Single WaterLevel
         {
             get
             {
-                return mEnvironmentMinTemperature;
+                return mWaterLevel;
             }
             set
             {
-                mEnvironmentMinTemperature = value;
+                mWaterLevel = value;
             }
         }
         
-        public Single EnvironmentMaxTemperature
+        public Single FoodLevel
         {
             get
             {
-                return mEnvironmentMaxTemperature;
+                return mFoodLevel;
             }
             set
             {
-                mEnvironmentMaxTemperature = value;
+                mFoodLevel = value;
             }
         }
         
-        public Single EnvironmentWaterLevel
+        public Single FuelLevel
         {
             get
             {
-                return mEnvironmentWaterLevel;
+                return mFuelLevel;
             }
             set
             {
-                mEnvironmentWaterLevel = value;
+                mFuelLevel = value;
             }
         }
         
-        public Single EnvironmentFoodLevel
+        public Single ScrapLevel
         {
             get
             {
-                return mEnvironmentFoodLevel;
+                return mScrapLevel;
             }
             set
             {
-                mEnvironmentFoodLevel = value;
+                mScrapLevel = value;
             }
         }
         
-        public Single EnvironmentFuelLevel
+        public Single BanditDanger
         {
             get
             {
-                return mEnvironmentFuelLevel;
+                return mBanditDanger;
             }
             set
             {
-                mEnvironmentFuelLevel = value;
+                mBanditDanger = value;
             }
         }
         
-        public Single EnvironmentScrapLevel
+        public Single TerrainAccessibility
         {
             get
             {
-                return mEnvironmentScrapLevel;
+                return mTerrainAccessibility;
             }
             set
             {
-                mEnvironmentScrapLevel = value;
+                mTerrainAccessibility = value;
             }
         }
         
-        public Single EnvironmentBanditDanger
+        public Single CampFrequency
         {
             get
             {
-                return mEnvironmentBanditDanger;
+                return mCampFrequency;
             }
             set
             {
-                mEnvironmentBanditDanger = value;
+                mCampFrequency = value;
             }
         }
         
-        public Single EnvironmentTerrainAccessibility
+        public Single NormalisedDanger
         {
             get
             {
-                return mEnvironmentTerrainAccessibility;
+                return mNormalisedDanger;
             }
             set
             {
-                mEnvironmentTerrainAccessibility = value;
-            }
-        }
-        
-        public Single EnvironmentCampFrequency
-        {
-            get
-            {
-                return mEnvironmentCampFrequency;
-            }
-            set
-            {
-                mEnvironmentCampFrequency = value;
-            }
-        }
-        
-        public Boolean EnvironmentMentalDanger
-        {
-            get
-            {
-                return mEnvironmentMentalDanger;
-            }
-            set
-            {
-                mEnvironmentMentalDanger = value;
-            }
-        }
-        
-        public Boolean EnvironmentAnimalDanger
-        {
-            get
-            {
-                return mEnvironmentAnimalDanger;
-            }
-            set
-            {
-                mEnvironmentAnimalDanger = value;
-            }
-        }
-        
-        public Boolean EnvironmentTrapDanger
-        {
-            get
-            {
-                return mEnvironmentTrapDanger;
-            }
-            set
-            {
-                mEnvironmentTrapDanger = value;
-            }
-        }
-        
-        public Boolean EnvironmentRadiationDanger
-        {
-            get
-            {
-                return mEnvironmentRadiationDanger;
-            }
-            set
-            {
-                mEnvironmentRadiationDanger = value;
+                mNormalisedDanger = value;
             }
         }
         
         private void CloneProperties(object aClone)
         {
             Articy.Night.Features.EnvironmentFeature newClone = ((Articy.Night.Features.EnvironmentFeature)(aClone));
-            newClone.EnvironmentName = EnvironmentName;
-            newClone.EnvironmentType = EnvironmentType;
-            newClone.EnvironmentMinTemperature = EnvironmentMinTemperature;
-            newClone.EnvironmentMaxTemperature = EnvironmentMaxTemperature;
-            newClone.EnvironmentWaterLevel = EnvironmentWaterLevel;
-            newClone.EnvironmentFoodLevel = EnvironmentFoodLevel;
-            newClone.EnvironmentFuelLevel = EnvironmentFuelLevel;
-            newClone.EnvironmentScrapLevel = EnvironmentScrapLevel;
-            newClone.EnvironmentBanditDanger = EnvironmentBanditDanger;
-            newClone.EnvironmentTerrainAccessibility = EnvironmentTerrainAccessibility;
-            newClone.EnvironmentCampFrequency = EnvironmentCampFrequency;
-            newClone.EnvironmentMentalDanger = EnvironmentMentalDanger;
-            newClone.EnvironmentAnimalDanger = EnvironmentAnimalDanger;
-            newClone.EnvironmentTrapDanger = EnvironmentTrapDanger;
-            newClone.EnvironmentRadiationDanger = EnvironmentRadiationDanger;
+            newClone.MinTemperature = MinTemperature;
+            newClone.MaxTemperature = MaxTemperature;
+            newClone.WaterLevel = WaterLevel;
+            newClone.FoodLevel = FoodLevel;
+            newClone.FuelLevel = FuelLevel;
+            newClone.ScrapLevel = ScrapLevel;
+            newClone.BanditDanger = BanditDanger;
+            newClone.TerrainAccessibility = TerrainAccessibility;
+            newClone.CampFrequency = CampFrequency;
+            newClone.NormalisedDanger = NormalisedDanger;
         }
         
         public object CloneObject()
@@ -284,144 +204,99 @@ namespace Articy.Night.Features
         #region property provider interface
         public void setProp(string aProperty, object aValue)
         {
-            if ((aProperty == "EnvironmentName"))
+            if ((aProperty == "MinTemperature"))
             {
-                EnvironmentName = System.Convert.ToString(aValue);
+                MinTemperature = System.Convert.ToSingle(aValue);
                 return;
             }
-            if ((aProperty == "EnvironmentType"))
+            if ((aProperty == "MaxTemperature"))
             {
-                EnvironmentType = ((EnvironmentType)(aValue));
+                MaxTemperature = System.Convert.ToSingle(aValue);
                 return;
             }
-            if ((aProperty == "EnvironmentMinTemperature"))
+            if ((aProperty == "WaterLevel"))
             {
-                EnvironmentMinTemperature = System.Convert.ToSingle(aValue);
+                WaterLevel = System.Convert.ToSingle(aValue);
                 return;
             }
-            if ((aProperty == "EnvironmentMaxTemperature"))
+            if ((aProperty == "FoodLevel"))
             {
-                EnvironmentMaxTemperature = System.Convert.ToSingle(aValue);
+                FoodLevel = System.Convert.ToSingle(aValue);
                 return;
             }
-            if ((aProperty == "EnvironmentWaterLevel"))
+            if ((aProperty == "FuelLevel"))
             {
-                EnvironmentWaterLevel = System.Convert.ToSingle(aValue);
+                FuelLevel = System.Convert.ToSingle(aValue);
                 return;
             }
-            if ((aProperty == "EnvironmentFoodLevel"))
+            if ((aProperty == "ScrapLevel"))
             {
-                EnvironmentFoodLevel = System.Convert.ToSingle(aValue);
+                ScrapLevel = System.Convert.ToSingle(aValue);
                 return;
             }
-            if ((aProperty == "EnvironmentFuelLevel"))
+            if ((aProperty == "BanditDanger"))
             {
-                EnvironmentFuelLevel = System.Convert.ToSingle(aValue);
+                BanditDanger = System.Convert.ToSingle(aValue);
                 return;
             }
-            if ((aProperty == "EnvironmentScrapLevel"))
+            if ((aProperty == "TerrainAccessibility"))
             {
-                EnvironmentScrapLevel = System.Convert.ToSingle(aValue);
+                TerrainAccessibility = System.Convert.ToSingle(aValue);
                 return;
             }
-            if ((aProperty == "EnvironmentBanditDanger"))
+            if ((aProperty == "CampFrequency"))
             {
-                EnvironmentBanditDanger = System.Convert.ToSingle(aValue);
+                CampFrequency = System.Convert.ToSingle(aValue);
                 return;
             }
-            if ((aProperty == "EnvironmentTerrainAccessibility"))
+            if ((aProperty == "NormalisedDanger"))
             {
-                EnvironmentTerrainAccessibility = System.Convert.ToSingle(aValue);
-                return;
-            }
-            if ((aProperty == "EnvironmentCampFrequency"))
-            {
-                EnvironmentCampFrequency = System.Convert.ToSingle(aValue);
-                return;
-            }
-            if ((aProperty == "EnvironmentMentalDanger"))
-            {
-                EnvironmentMentalDanger = System.Convert.ToBoolean(aValue);
-                return;
-            }
-            if ((aProperty == "EnvironmentAnimalDanger"))
-            {
-                EnvironmentAnimalDanger = System.Convert.ToBoolean(aValue);
-                return;
-            }
-            if ((aProperty == "EnvironmentTrapDanger"))
-            {
-                EnvironmentTrapDanger = System.Convert.ToBoolean(aValue);
-                return;
-            }
-            if ((aProperty == "EnvironmentRadiationDanger"))
-            {
-                EnvironmentRadiationDanger = System.Convert.ToBoolean(aValue);
+                NormalisedDanger = System.Convert.ToSingle(aValue);
                 return;
             }
         }
         
         public Articy.Unity.Interfaces.ScriptDataProxy getProp(string aProperty)
         {
-            if ((aProperty == "EnvironmentName"))
+            if ((aProperty == "MinTemperature"))
             {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentName);
+                return new Articy.Unity.Interfaces.ScriptDataProxy(MinTemperature);
             }
-            if ((aProperty == "EnvironmentType"))
+            if ((aProperty == "MaxTemperature"))
             {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentType);
+                return new Articy.Unity.Interfaces.ScriptDataProxy(MaxTemperature);
             }
-            if ((aProperty == "EnvironmentMinTemperature"))
+            if ((aProperty == "WaterLevel"))
             {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentMinTemperature);
+                return new Articy.Unity.Interfaces.ScriptDataProxy(WaterLevel);
             }
-            if ((aProperty == "EnvironmentMaxTemperature"))
+            if ((aProperty == "FoodLevel"))
             {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentMaxTemperature);
+                return new Articy.Unity.Interfaces.ScriptDataProxy(FoodLevel);
             }
-            if ((aProperty == "EnvironmentWaterLevel"))
+            if ((aProperty == "FuelLevel"))
             {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentWaterLevel);
+                return new Articy.Unity.Interfaces.ScriptDataProxy(FuelLevel);
             }
-            if ((aProperty == "EnvironmentFoodLevel"))
+            if ((aProperty == "ScrapLevel"))
             {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentFoodLevel);
+                return new Articy.Unity.Interfaces.ScriptDataProxy(ScrapLevel);
             }
-            if ((aProperty == "EnvironmentFuelLevel"))
+            if ((aProperty == "BanditDanger"))
             {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentFuelLevel);
+                return new Articy.Unity.Interfaces.ScriptDataProxy(BanditDanger);
             }
-            if ((aProperty == "EnvironmentScrapLevel"))
+            if ((aProperty == "TerrainAccessibility"))
             {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentScrapLevel);
+                return new Articy.Unity.Interfaces.ScriptDataProxy(TerrainAccessibility);
             }
-            if ((aProperty == "EnvironmentBanditDanger"))
+            if ((aProperty == "CampFrequency"))
             {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentBanditDanger);
+                return new Articy.Unity.Interfaces.ScriptDataProxy(CampFrequency);
             }
-            if ((aProperty == "EnvironmentTerrainAccessibility"))
+            if ((aProperty == "NormalisedDanger"))
             {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentTerrainAccessibility);
-            }
-            if ((aProperty == "EnvironmentCampFrequency"))
-            {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentCampFrequency);
-            }
-            if ((aProperty == "EnvironmentMentalDanger"))
-            {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentMentalDanger);
-            }
-            if ((aProperty == "EnvironmentAnimalDanger"))
-            {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentAnimalDanger);
-            }
-            if ((aProperty == "EnvironmentTrapDanger"))
-            {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentTrapDanger);
-            }
-            if ((aProperty == "EnvironmentRadiationDanger"))
-            {
-                return new Articy.Unity.Interfaces.ScriptDataProxy(EnvironmentRadiationDanger);
+                return new Articy.Unity.Interfaces.ScriptDataProxy(NormalisedDanger);
             }
             return null;
         }
