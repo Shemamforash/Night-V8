@@ -8,7 +8,7 @@ namespace World
     {
         private static List<TimeListener> timeListeners = new List<TimeListener>();
         private static float currentTime, quarterHourTimer = .2f;
-        private static int days = 0, hours = 6, minutes = 0;
+        public static int days = 0, hours = 6, minutes = 0;
         private static bool isNight = false;
         private static bool isPaused = false;
         public Text timeText, dayText;
@@ -31,6 +31,12 @@ namespace World
             foreach (TimeListener t in timeListeners)
             {
                 t.ReceiveHourEvent();
+            }
+        }
+
+        private static void BroadcastMinuteChange(){
+            foreach(TimeListener t in timeListeners){
+                t.ReceiveMinuteEvent();
             }
         }
 
@@ -67,6 +73,7 @@ namespace World
             {
                 currentTime -= quarterHourTimer;
                 minutes += 5;
+                BroadcastMinuteChange();
                 if (minutes == 60)
                 {
                     minutes = 0;

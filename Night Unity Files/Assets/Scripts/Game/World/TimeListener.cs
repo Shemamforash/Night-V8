@@ -8,6 +8,7 @@ namespace World
         private List<Action> hourEvents = new List<Action>();
         private List<Action> dayEvents = new List<Action>();
         private List<Action> travelEvents = new List<Action>();
+        private List<Action> minuteEvents = new List<Action>();
         private List<Action<bool>> pauseEvents = new List<Action<bool>>();
 
         public TimeListener()
@@ -28,6 +29,10 @@ namespace World
         public void ReceivePauseEvent(bool paused)
         {
             pauseEvents.ForEach(a => a(paused));
+        }
+
+        public void ReceiveMinuteEvent(){
+            minuteEvents.ForEach(a => a());
         }
 
         public void ReceiveTravelEvent()
@@ -51,6 +56,10 @@ namespace World
         public void OnTravel(Action travelEvent)
         {
             travelEvents.Add(travelEvent);
+        }
+
+        public void OnMinute(Action minuteEvent){
+            minuteEvents.Add(minuteEvent);
         }
     }
 }

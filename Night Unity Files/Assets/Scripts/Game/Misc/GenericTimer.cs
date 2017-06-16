@@ -1,34 +1,32 @@
-﻿namespace Helper
+﻿
+using System.Collections;
+using UnityEngine;
+
+public static class GenericTimer
 {
-	using System.Collections;
-	using UnityEngine;
+    public delegate float InnerTimeMethod(float currentTime, float duration);
+    public delegate void EndOfTimerMethod();
 
-    public static class GenericTimer
+    public static IEnumerator StartTimer(float duration, EndOfTimerMethod EndOfTimerMethod)
     {
-        public delegate float InnerTimeMethod(float currentTime, float duration);
-		public delegate void EndOfTimerMethod();
+        return StartTimer(duration, EndOfTimerMethod, null);
+    }
 
-        public static IEnumerator StartTimer(float duration, EndOfTimerMethod EndOfTimerMethod)
+    public static IEnumerator StartTimer(float duration, EndOfTimerMethod EndOfTimerMethod, InnerTimeMethod DuringTimerMethod)
+    {
+        float currentTime = 0;
+        while (currentTime < duration)
         {
-            return StartTimer(duration, EndOfTimerMethod, null);
+            currentTime += Time.deltaTime;
+            if (DuringTimerMethod != null)
+            {
+                currentTime = DuringTimerMethod(currentTime, duration);
+            }
+            yield return null;
         }
-
-        public static IEnumerator StartTimer(float duration, EndOfTimerMethod EndOfTimerMethod, InnerTimeMethod DuringTimerMethod)
+        if (EndOfTimerMethod != null)
         {
-            float currentTime = 0;
-            while (currentTime < duration)
-            {
-                currentTime += Time.deltaTime;
-                if (DuringTimerMethod != null)
-                {
-                    currentTime = DuringTimerMethod(currentTime, duration);
-                }
-                yield return null;
-            }
-            if (EndOfTimerMethod != null)
-            {
-                EndOfTimerMethod();
-            }
+            EndOfTimerMethod();
         }
     }
 }
