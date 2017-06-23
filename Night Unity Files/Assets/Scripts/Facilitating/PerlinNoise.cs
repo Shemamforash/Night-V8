@@ -73,14 +73,17 @@ public class PerlinNoise
                     Grad(_p[BB + 1], x - 1, y - 1, z - 1))));
     }
 
+    //already returns between 0 and 1
     public static double GetValue(double x, double y)
     {
         double sum = 0;
         double currentFrequency = _frequency;
+        double amplitude = 1;
         for (int i = 0; i < _octaveCount; ++i)
         {
-            sum += _persistence * Noise(x * currentFrequency, y * currentFrequency);
+            sum += amplitude * Noise(x * currentFrequency, y * currentFrequency);
             currentFrequency *= _lacunarity;
+            amplitude /= _persistence;
         }
 
         if (sum < -1f)

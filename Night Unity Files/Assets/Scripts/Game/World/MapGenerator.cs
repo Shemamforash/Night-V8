@@ -3,43 +3,253 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Threading;
 
 public class MapGenerator : MonoBehaviour
 {
     public GameObject mapObject;
     public GameObject tileTemplate;
-    private int width = 100, height = 100;
+    private int width = 20, height = 20;
     private float maxTilesScreenWidth = 75f;
     //bigger = smoother
-    private float noiseScale = 100f;
+    private float noiseScale = 10f;
     private float tileWidth;
     private MapTile[,] mapTiles;
     private float seed;
     private Texture2D mapTexture;
+    private bool navigationActive = false;
+    public int persistence = 1, lacunarity = 1, octaves = 1;
 
-    public void Awake()
+    public void SetPersistence(Slider s)
     {
-        //frequency, lacunarity, persistence, octaves
-        seed = UnityEngine.Random.Range(0f, 1000000f);
-        noiseScale = width / 50f * noiseScale;
-        PerlinNoise.Generate(width / noiseScale, 2, 2, 3);
-        mapTiles = new MapTile[width, height];
-        tileWidth = 1920f / maxTilesScreenWidth;
-        int midWidth = width / 2;
-        int midHeight = height / 2;
+        int value = (int)s.value;
+        persistence = value;
+        Regenerate();
+    }
 
-        mapTexture = new Texture2D((int)(width * tileWidth), (int)(height * tileWidth));
-        GameObject mapTextureObject = new GameObject();
-        RectTransform mapTransform = mapTextureObject.AddComponent<RectTransform>();
-        mapTextureObject.AddComponent<Image>();
-        mapTextureObject.transform.SetParent(mapObject.transform);
-        mapTransform.sizeDelta = new Vector2(tileWidth * width, tileWidth * height);
-        mapTransform.anchoredPosition = new Vector2(0, 0);
+    public void SetLacunarity(Slider s)
+    {
+        int value = (int)s.value;
+        lacunarity = value;
+        Regenerate();
+    }
 
-        for (int i = 0; i < width * tileWidth; ++i)
+    public void SetOctaves(Slider s)
+    {
+        int value = (int)s.value;
+        octaves = value;
+        Regenerate();
+    }
+
+    private void Regenerate()
+    {
+        PerlinNoise.Generate(width / noiseScale, persistence, lacunarity, octaves);
+        // float[,] heightMap = GenerateHeightMap(GenerateMountainRange2(5));
+        GenerateMapMesh(GenerateMountainRange2(3));
+        GenerateMapImage();
+    }
+
+    private float[,] GenerateMountainRange2(int noRanges)
+    {
+        float[,] mountainMask = new float[mapWidthPixels, mapHeightPixels];
+        List<Vector2> mountainPoints = new List<Vector2>();
+        while (noRanges > 0)
         {
+            int maxLength = UnityEngine.Random.Range(2000, 5000);
+            int currentLength = 0;
+            int maxX = mapWidthPixels;
+            int maxY = mapHeightPixels;
+            float currentX = UnityEngine.Random.Range(0, maxX);
+            float currentY = UnityEngine.Random.Range(0, maxY);
+            Vector2 currentDir = new Vector2();
+            currentDir.x = UnityEngine.Random.Range(-1.00f, 1.00f);
+            currentDir.y = UnityEngine.Random.Range(-1.00f, 1.00f);
+            currentDir.Normalize();
+            while (currentLength < maxLength)
+            {
+                if (currentX < 0 || currentX > mapWidthPixels || currentY < 0 || currentY > mapHeightPixels)
+                {
+                    break;
+                }
+                mountainPoints.Add(new Vector2(currentX, currentY));
+                currentX += currentDir.x;
+                currentY += currentDir.y;
+                bool changeDir = UnityEngine.Random.Range(0f, 1f) < 0.02f;
+                if (changeDir)
+                {
+                    float theta = UnityEngine.Random.Range(-30f, 30f) * Mathf.Deg2Rad;
+                    float newX = currentDir.x * Mathf.Cos(theta) - currentDir.y * Mathf.Sin(theta);
+                    float newY = currentDir.x * Mathf.Sin(theta) + currentDir.y * Mathf.Cos(theta);
+                    currentDir.x = newX;
+                    currentDir.y = newY;
+                    currentDir.Normalize();
+                }
+                ++currentLength;
+            }
+            --noRanges;
+        }
+        float maxDistance = Mathf.Max(mapHeightPixels, mapWidthPixels);
+        for (int x = 0; x < mapWidthPixels; ++x)
+        {
+            for (int y = 0; y < mapHeightPixels; ++y)
+            {
+                Vector2 nearestMountain;
+                float nearestMountainDistance = 10000000;
+                foreach (Vector2 mountainPoint in mountainPoints)
+                {
+                    float tempDistance = Vector2.Distance(new Vector2(x, y), mountainPoint);
+                    if (tempDistance < nearestMountainDistance)
+                    {
+                        nearestMountainDistance = tempDistance;
+                        nearestMountain = mountainPoint;
+                    }
+                }
+                float weight = 1 - nearestMountainDistance / maxDistance;
+                mountainMask[x, y] = weight;
+            }
+        }
+        return mountainMask;
+    }
+
+    private float[,] GenerateMountainRange(int noRanges)
+    {
+        float[,] mountainMask = new float[mapWidthPixels, mapHeightPixels];
+        while (noRanges > 0)
+        {
+            int maxLength = UnityEngine.Random.Range(2000, 5000);
+            int currentLength = 0;
+            int maxX = mapWidthPixels;
+            int maxY = mapHeightPixels;
+            float currentX = UnityEngine.Random.Range(0, maxX);
+            float currentY = UnityEngine.Random.Range(0, maxY);
+            Vector2 currentDir = new Vector2();
+            currentDir.x = UnityEngine.Random.Range(-1.00f, 1.00f);
+            currentDir.y = UnityEngine.Random.Range(-1.00f, 1.00f);
+            currentDir.Normalize();
+            while (currentLength < maxLength)
+            {
+                if (currentX < 0 || currentX > mapWidthPixels || currentY < 0 || currentY > mapHeightPixels)
+                {
+                    break;
+                }
+                mountainMask[(int)currentX, (int)currentY] = 1;
+                // Vector2 perpendicularDir = new Vector2(currentDir.x, currentDir.y);
+                // perpendicularDir.x = currentDir.x * Mathf.Cos(90 * Mathf.Deg2Rad) - currentDir.y * Mathf.Sin(90 * Mathf.Deg2Rad);
+                // perpendicularDir.y = currentDir.x * Mathf.Sin(90 * Mathf.Deg2Rad) + currentDir.y * Mathf.Cos(90 * Mathf.Deg2Rad);
+                // float perpXPos = currentX, perpYPos = currentY, perpXNeg = currentX, perpYNeg = currentY;
+                // float opacity = 1f;
+                // for (int i = 0; i < 99; ++i)
+                // {
+                //     opacity -= 0.01f;
+                //     perpXPos += perpendicularDir.x;
+                //     perpYPos += perpendicularDir.y;
+                //     perpXNeg -= perpendicularDir.x;
+                //     perpYNeg -= perpendicularDir.y;
+                //     if (perpXPos >= 0 && perpXPos <= mapWidthPixels && perpYPos >= 0 && perpYPos < mapHeightPixels)
+                //     {
+                //         mountainMask[(int)perpXPos, (int)perpYPos] = opacity;
+                //     }
+                //     if (perpXNeg >= 0 && perpXNeg <= mapWidthPixels && perpYNeg >= 0 && perpYNeg < mapHeightPixels)
+                //     {
+                //         mountainMask[(int)perpXNeg, (int)perpYNeg] = opacity;
+                //     }
+                // }
+                currentX += currentDir.x;
+                currentY += currentDir.y;
+                bool changeDir = UnityEngine.Random.Range(0f, 1f) < 0.02f;
+                if (changeDir)
+                {
+                    float theta = UnityEngine.Random.Range(-30f, 30f) * Mathf.Deg2Rad;
+                    float newX = currentDir.x * Mathf.Cos(theta) - currentDir.y * Mathf.Sin(theta);
+                    float newY = currentDir.x * Mathf.Sin(theta) + currentDir.y * Mathf.Cos(theta);
+                    currentDir.x = newX;
+                    currentDir.y = newY;
+                    currentDir.Normalize();
+                }
+                ++currentLength;
+            }
+            --noRanges;
+        }
+        return mountainMask;
+    }
+
+    private void GenerateMapMesh(float[,] mask)
+    {
+        int meshComplexity = 4;
+        GameObject meshObject = GameObject.Find("MapMesh");
+        MeshFilter mf = meshObject.GetComponent<MeshFilter>();
+        Mesh m = mf.mesh;
+        List<Vector3> vertices = new List<Vector3>();
+        List<int> tris = new List<int>();
+
+        int meshWidth = mapWidthPixels / meshComplexity;
+        int meshHeight = mapHeightPixels / meshComplexity;
+
+        float scale = 40f / (float)meshWidth;
+        meshObject.transform.position = new Vector3(-meshWidth / 2 * scale, -meshHeight / 2 * scale);
+        meshObject.transform.localScale = new Vector3(scale, scale, 1);
+
+
+        //all interior vertices need to exists 4 times
+        //all exterior non-corner vertices need to exist 2 times
+        //all exterior corner vertices need to exist once
+        for (int x = 0; x < meshWidth; ++x)
+        {
+            for (int y = 0; y < meshHeight; ++y)
+            {
+                float height = heightMap[x * meshComplexity, y * meshComplexity];// * Mathf.Pow(mask[x * meshComplexity, y * meshComplexity], 8f);
+                vertices.Add(new Vector3(x, y, -height));
+            }
+        }
+
+        for (int x = 0; x < meshWidth - 1; ++x)
+        {
+            for (int y = 0; y < meshHeight - 1; ++y)
+            {
+                int v1Tri = y * meshWidth + x;
+                int v2Tri = v1Tri + 1;
+                int v3Tri = (y + 1) * meshWidth + x;
+                int v4Tri = v3Tri + 1;
+                tris.Add(v1Tri);
+                tris.Add(v2Tri);
+                tris.Add(v3Tri);
+                tris.Add(v2Tri);
+                tris.Add(v4Tri);
+                tris.Add(v3Tri);
+            }
+        }
+        m.vertices = vertices.ToArray();
+        m.triangles = tris.ToArray();
+        m.RecalculateNormals();
+    }
+
+    private void ParallelHeightMapLine(int i, int mapHeightPixels)
+    {
+        float x = i / (float)(width * tileWidth);
+        for (int j = 0; j < mapHeightPixels; ++j)
+        {
+            float y = j / (float)(height * tileWidth);
+            float tileHeight = (float)PerlinNoise.GetValue(x + seed, y + seed);
+            // tileHeight = ApplySimple(tileHeight, x);
+            // tileHeight = ApplyPolarisation(tileHeight);
+            // tileHeight = ApplyPlateau(tileHeight);
+            // tileHeight = ApplyRadial(tileHeight, i, j, width * tileWidth / 2f, height * tileWidth / 2f, 2f);
+
+            heightMap[i, j] = tileHeight;
+        }
+    }
+
+    private float[,] GenerateHeightMap(float[,] mask)
+    {
+        List<Thread> activeThreads = new List<Thread>();
+
+        for (int i = 0; i < mapWidthPixels; ++i)
+        {
+            // Thread t = new Thread(() => ParallelHeightMapLine(i, mapHeightPixels));
+            // activeThreads.Add(t);
+            // t.Start();
             float x = i / (float)(width * tileWidth);
-            for (int j = 0; j < height * tileWidth; ++j)
+            for (int j = 0; j < mapHeightPixels; ++j)
             {
                 float y = j / (float)(height * tileWidth);
                 float tileHeight = (float)PerlinNoise.GetValue(x + seed, y + seed);
@@ -47,22 +257,53 @@ public class MapGenerator : MonoBehaviour
                 // tileHeight = ApplyPolarisation(tileHeight);
                 // tileHeight = ApplyPlateau(tileHeight);
                 // tileHeight = ApplyRadial(tileHeight, i, j, width * tileWidth / 2f, height * tileWidth / 2f, 2f);
-                float remainder = tileHeight % 0.1f;
-                if ((remainder <= 0.01f || remainder >= 0.09f) && (tileHeight > 0.01f && tileHeight < 0.99f))
-                {
-                    tileHeight = 1;
-                }
-                else
-                {
-                    tileHeight = 0;
-                }
+
+                // heightMap[i, j] = (float)Math.Pow(tileHeight, mask[i, j]);
+                heightMap[i, j] = tileHeight * Mathf.Pow(mask[i, j], 10f);
+                // heightMap[i, j] = mask[i, j];
+            }
+        }
+        // while (activeThreads.Count != 0)
+        // {
+        //     for (int i = activeThreads.Count - 1; i >= 0; --i)
+        //     {
+        //         Thread t = activeThreads[i];
+        //         if (!t.IsAlive)
+        //         {
+        //             activeThreads.RemoveAt(i);
+        //         }
+        //     }
+        // }
+        return heightMap;
+    }
+
+    private void GenerateMapImage()
+    {
+        mapTexture = new Texture2D(mapWidthPixels, mapHeightPixels);
+        GameObject mapTextureObject = new GameObject();
+        RectTransform mapTransform = mapTextureObject.AddComponent<RectTransform>();
+        mapTextureObject.AddComponent<Image>();
+        mapTextureObject.transform.SetParent(mapObject.transform.Find("Canvas"));
+        mapTransform.sizeDelta = new Vector2(mapWidthPixels, mapHeightPixels);
+        mapTransform.anchoredPosition = new Vector2(0, 0);
+        for (int i = 0; i < mapWidthPixels; ++i)
+        {
+            for (int j = 0; j < mapHeightPixels; ++j)
+            {
+                float tileHeight = heightMap[i, j];
                 mapTexture.SetPixel(i, j, new Color(tileHeight, tileHeight, tileHeight, 1));
             }
         }
         mapTexture.Apply();
         Sprite mapSprite = Sprite.Create(mapTexture, new Rect(0.0f, 0.0f, mapTexture.width, mapTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
         mapTextureObject.GetComponent<Image>().sprite = mapSprite;
+    }
 
+    private void GenerateNavigationLayer()
+    {
+        navigationActive = true;
+        int midWidth = width / 2;
+        int midHeight = height / 2;
         for (int i = 0; i < width; ++i)
         {
             float x = (i - midWidth) * tileWidth;
@@ -86,6 +327,37 @@ public class MapGenerator : MonoBehaviour
                 mapTiles[i, j] = newTile;
             }
         }
+    }
+
+    private float[,] heightMap;
+    private int mapWidthPixels, mapHeightPixels;
+
+    public void Awake()
+    {
+        //frequency, lacunarity, persistence, octaves
+        seed = UnityEngine.Random.Range(0f, 1000000f);
+        noiseScale = width / 50f * noiseScale;
+        PerlinNoise.Generate(width / noiseScale, 2, 2, 6);
+        mapTiles = new MapTile[width, height];
+        tileWidth = 1920f / maxTilesScreenWidth;
+        // tileWidth = 20f;
+
+        // float[,] heightMap = GenerateHeightMap();
+        mapWidthPixels = (int)(width * tileWidth);
+        mapHeightPixels = (int)(height * tileWidth);
+        heightMap = new float[mapWidthPixels, mapHeightPixels];
+        for (int i = 0; i < mapWidthPixels; ++i)
+        {
+            for (int j = 0; j < mapHeightPixels; ++j)
+            {
+                heightMap[i, j] = 0;
+            }
+        }
+        float[,] mountainMask = GenerateMountainRange2(5);
+        heightMap = GenerateHeightMap(mountainMask);
+        GenerateMapMesh(heightMap);
+        // GenerateMapImage();
+        // GenerateNavigationLayer();
     }
 
     // public List<Tuple<float, float>> CreateMountainMask(int mapWidth, int mapHeight){
@@ -112,41 +384,44 @@ public class MapGenerator : MonoBehaviour
 
     public void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-        int x = selectedTile.x;
-        int y = selectedTile.y;
-        int xMove = 0, yMove = 0;
-        if (horizontal < 0)
+        if (navigationActive)
         {
-            --x;
-            xMove = 1;
-        }
-        else if (horizontal > 0)
-        {
-            ++x;
-            xMove = -1;
-        }
-        if (vertical < 0)
-        {
-            --y;
-            yMove = 1;
-        }
-        else if (vertical > 0)
-        {
-            ++y;
-            yMove = -1;
-        }
-        if (x >= 0 && x < width && y >= 0 && y < height && (xMove != 0 || yMove != 0))
-        {
-            selectedTile.Deselect();
-            selectedTile = mapTiles[x, y];
-            selectedTile.Select();
-            RectTransform mapRect = mapObject.GetComponent<RectTransform>();
-            Vector2 mapPosition = mapRect.anchoredPosition;
-            mapPosition.x += xMove * tileWidth;
-            mapPosition.y += yMove * tileWidth;
-            mapRect.anchoredPosition = mapPosition;
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
+            int x = selectedTile.x;
+            int y = selectedTile.y;
+            int xMove = 0, yMove = 0;
+            if (horizontal < 0)
+            {
+                --x;
+                xMove = 1;
+            }
+            else if (horizontal > 0)
+            {
+                ++x;
+                xMove = -1;
+            }
+            if (vertical < 0)
+            {
+                --y;
+                yMove = 1;
+            }
+            else if (vertical > 0)
+            {
+                ++y;
+                yMove = -1;
+            }
+            if (x >= 0 && x < width && y >= 0 && y < height && (xMove != 0 || yMove != 0))
+            {
+                selectedTile.Deselect();
+                selectedTile = mapTiles[x, y];
+                selectedTile.Select();
+                RectTransform mapRect = mapObject.GetComponent<RectTransform>();
+                Vector2 mapPosition = mapRect.anchoredPosition;
+                mapPosition.x += xMove * tileWidth;
+                mapPosition.y += yMove * tileWidth;
+                mapRect.anchoredPosition = mapPosition;
+            }
         }
     }
 
