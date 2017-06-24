@@ -81,16 +81,16 @@ public class MapGenerator : MonoBehaviour
                     int targetLengthMax = targetLength / 4;
                     if (rand > 0.66f)
                     {
-                        CreateMountainLine(currentPosition, mountainPoints, Random.Range(targetLengthMin, targetLengthMax), perpendicular, lineLevel + 1);
+                        // CreateMountainLine(currentPosition, mountainPoints, Random.Range(targetLengthMin, targetLengthMax), perpendicular, lineLevel + 1);
                     }
                     else if (rand < 0.33)
                     {
-                        CreateMountainLine(currentPosition, mountainPoints, Random.Range(targetLengthMin, targetLengthMax), -perpendicular, lineLevel + 1);
+                        // CreateMountainLine(currentPosition, mountainPoints, Random.Range(targetLengthMin, targetLengthMax), -perpendicular, lineLevel + 1);
                     }
                     else
                     {
-                        CreateMountainLine(currentPosition, mountainPoints, Random.Range(targetLengthMin, targetLengthMax), perpendicular, lineLevel + 1);
-                        CreateMountainLine(currentPosition, mountainPoints, Random.Range(targetLengthMin, targetLengthMax), -perpendicular, lineLevel + 1);
+                        // CreateMountainLine(currentPosition, mountainPoints, Random.Range(targetLengthMin, targetLengthMax), perpendicular, lineLevel + 1);
+                        // CreateMountainLine(currentPosition, mountainPoints, Random.Range(targetLengthMin, targetLengthMax), -perpendicular, lineLevel + 1);
                     }
                 }
             }
@@ -154,7 +154,7 @@ public class MapGenerator : MonoBehaviour
             --noRanges;
         }
 
-        float maxDistance = Mathf.Max(mapHeightPixels, mapWidthPixels);
+        float maxDistance = Mathf.Max(mapHeightPixels, mapWidthPixels) / 2;
         for (int x = 0; x < mapWidthPixels; ++x)
         {
             for (int y = 0; y < mapHeightPixels; ++y)
@@ -171,6 +171,9 @@ public class MapGenerator : MonoBehaviour
                     }
                 }
                 float weight = 1 - nearestMountainDistance / maxDistance;
+                if(weight < 0){
+                    weight = 0;
+                }
                 mountainMask[x, y] = weight;
                 // mountainMask[x, y] = 0;
             }
@@ -184,7 +187,7 @@ public class MapGenerator : MonoBehaviour
 
     private void GenerateMapMesh(float[,] mask)
     {
-        int meshComplexity = 4;
+        int meshComplexity = 2;
         GameObject meshObject = GameObject.Find("MapMesh");
         MeshFilter mf = meshObject.GetComponent<MeshFilter>();
         Mesh m = mf.mesh;
@@ -247,6 +250,7 @@ public class MapGenerator : MonoBehaviour
                 // tileHeight = ApplyRadial(tileHeight, i, j, width * tileWidth / 2f, height * tileWidth / 2f, 2f);
 
                 // heightMap[i, j] = (float)Math.Pow(tileHeight, mask[i, j]);
+                tileHeight = (tileHeight - 0.5f) / 0.5f;
                 heightMap[i, j] = tileHeight * Mathf.Pow(mask[i, j], 10f);
             }
         }
