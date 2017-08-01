@@ -97,15 +97,17 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private Vector2 OffsetDirectionInRange(Vector2 direction, float offsetAmount){
+    private Vector2 OffsetDirectionInRange(Vector2 direction, float offsetAmount)
+    {
         return OffsetDirectionInRange(direction, -offsetAmount, offsetAmount);
     }
 
     private Vector2 OffsetDirectionInRange(Vector2 direction, float offsetMin, float offsetMax)
     {
         float theta = Random.Range(offsetMin, offsetMax);
-        if(theta < 0f){
-             theta = 360f + theta;
+        if (theta < 0f)
+        {
+            theta = 360f + theta;
         }
         return OffsetDirection(direction, theta);
     }
@@ -113,7 +115,8 @@ public class MapGenerator : MonoBehaviour
     private Vector2 OffsetDirection(Vector2 direction, float theta)
     {
         bool negativeTheta = theta < 0;
-        if(negativeTheta){
+        if (negativeTheta)
+        {
             theta = -theta;
         }
         theta *= Mathf.Deg2Rad;
@@ -123,7 +126,7 @@ public class MapGenerator : MonoBehaviour
         float ySin = direction.y * Mathf.Sin(theta);
         if (negativeTheta)
         {
-            xSin = - xSin;
+            xSin = -xSin;
         }
         else
         {
@@ -171,7 +174,8 @@ public class MapGenerator : MonoBehaviour
                     }
                 }
                 float weight = 1 - nearestMountainDistance / maxDistance;
-                if(weight < 0){
+                if (weight < 0)
+                {
                     weight = 0;
                 }
                 mountainMask[x, y] = weight;
@@ -197,7 +201,7 @@ public class MapGenerator : MonoBehaviour
         int meshWidth = mapWidthPixels / meshComplexity;
         int meshHeight = mapHeightPixels / meshComplexity;
 
-        float scale = 40f / (float)meshWidth;
+        float scale = 40f / ((float)meshWidth * 3);
         meshObject.transform.position = new Vector3(-meshWidth / 2 * scale, -meshHeight / 2 * scale);
         meshObject.transform.localScale = new Vector3(scale, scale, 1);
 
@@ -243,15 +247,15 @@ public class MapGenerator : MonoBehaviour
             for (int j = 0; j < mapHeightPixels; ++j)
             {
                 float y = j / (float)(height * tileWidth);
-                float tileHeight = (float)PerlinNoise.GetValue(x + seed, y + seed);
+                float tileHeight = (float)PerlinNoise.GetValue(x + seed, y + seed, true);
                 // tileHeight = ApplySimple(tileHeight, x);
                 // tileHeight = ApplyPolarisation(tileHeight);
                 // tileHeight = ApplyPlateau(tileHeight);
                 // tileHeight = ApplyRadial(tileHeight, i, j, width * tileWidth / 2f, height * tileWidth / 2f, 2f);
 
-                // heightMap[i, j] = (float)Math.Pow(tileHeight, mask[i, j]);
-                tileHeight = (tileHeight - 0.5f) / 0.5f;
-                heightMap[i, j] = tileHeight * Mathf.Pow(mask[i, j], 10f);
+                heightMap[i, j] = tileHeight;
+                // tileHeight = (tileHeight - 0.5f) / 0.5f;
+                // heightMap[i, j] = tileHeight * Mathf.Pow(mask[i, j], 10f);
             }
         }
         return heightMap;
@@ -317,7 +321,7 @@ public class MapGenerator : MonoBehaviour
         //frequency, lacunarity, persistence, octaves
         seed = UnityEngine.Random.Range(0f, 1000000f);
         noiseScale = width / 50f * noiseScale;
-        PerlinNoise.Generate(width / noiseScale, 2, 2, 6);
+        PerlinNoise.Generate(width / noiseScale, 1f, 1f, 3);
         mapTiles = new MapTile[width, height];
         tileWidth = 1920f / maxTilesScreenWidth;
         // tileWidth = 20f;

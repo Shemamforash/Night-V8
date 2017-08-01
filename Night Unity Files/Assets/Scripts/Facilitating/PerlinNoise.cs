@@ -12,17 +12,17 @@ public class PerlinNoise
 
     private static double _lacunarity = 2.0;
     private static int _octaveCount = 6;
-    private static double _persistence = 0.5;
+    private static double _gain = 0.5;
 
     private static int[] _p = new int[512];
 
     private static List<int> _permutation = new List<int>();
 
-    public static void Generate(float frequency, float lacunarity, float persistence, int octaves)
+    public static void Generate(float frequency, float lacunarity, float gain, int octaves)
     {
         _frequency = frequency;
         _lacunarity = lacunarity;
-        _persistence = persistence;
+        _gain = gain;
         _octaveCount = octaves;
 
         for (int i = 0; i < 256; i++)
@@ -74,16 +74,20 @@ public class PerlinNoise
     }
 
     //already returns between 0 and 1
-    public static double GetValue(double x, double y)
+    public static double GetValue(double x, double y, bool useAbs)
     {
         double sum = 0;
         double currentFrequency = _frequency;
         double amplitude = 1;
         for (int i = 0; i < _octaveCount; ++i)
         {
-            sum += amplitude * Noise(x * currentFrequency, y * currentFrequency);
+            double noiseVal = Noise(x * currentFrequency, y * currentFrequency);
+            if(useAbs){
+                noiseVal = Mathf.Abs((float)noiseVal);
+            }
+            sum += amplitude * noiseVal;
             currentFrequency *= _lacunarity;
-            amplitude /= _persistence;
+            amplitude *= _gain;
         }
 
         if (sum < -1f)
