@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text.RegularExpressions;
 
 namespace Characters
 {
@@ -11,16 +12,28 @@ namespace Characters
         public static void LoadTraits()
         {
             TextAsset traitFile = Resources.Load("traits") as TextAsset;
-            string[] lines = traitFile.text.Split('\n');
+            string traitText = traitFile.text;
+            string[] lines = Regex.Split(traitText, "\r\n|\r|\n");
             for (int i = 0; i < lines.Length; i += 10)
             {
-                Trait newTrait = new Trait(lines[0], lines[1], lines[2], lines[3], lines[4], lines[5], lines[6], lines[7], lines[8]);
+                Trait newTrait = new Trait(lines[i], lines[i + 1], lines[i + 2], lines[i + 3], lines[i + 4], lines[i + 5], lines[i + 6], lines[i + 7], lines[i + 8]);
+                traitDictionary[lines[i]] = newTrait;
             }
         }
 
-		public static Trait FindTrait(string traitName){
-			return traitDictionary[traitName];
-		}
+        public static Trait FindTrait(string traitName)
+        {
+            try
+            {
+                return traitDictionary[traitName];
+            }
+            catch (KeyNotFoundException e)
+            {
+                Debug.Log(traitName + " is not a valid trait name in this dictionary");
+                return null;
+            }
+
+        }
 
         public class Trait
         {

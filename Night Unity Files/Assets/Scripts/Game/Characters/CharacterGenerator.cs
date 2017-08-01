@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Characters
 {
-    public class CharacterGenerator : MonoBehaviour
+    public class CharacterGenerator
     {
         public static void GenerateCharacter()
         {

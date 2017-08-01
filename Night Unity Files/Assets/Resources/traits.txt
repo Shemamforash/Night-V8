@@ -9,7 +9,6 @@ starve=0
 sight=0
 
 Scavenger
-Nomadic
 str=0
 int=0
 stab=0

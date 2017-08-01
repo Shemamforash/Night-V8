@@ -12,7 +12,7 @@ namespace Characters
         private float starvationTolerance, dehydrationTolerance, starvation, dehydration;
         private WeightCategory weight;
         private float sight;
-        private Trait primaryTrait, secondaryTrait;
+        private Traits.Trait primaryTrait, secondaryTrait;
 
         private CharacterClass characterClass;
         private static Dictionary<string, CharacterClass> characterClasses = new Dictionary<string, CharacterClass>();
