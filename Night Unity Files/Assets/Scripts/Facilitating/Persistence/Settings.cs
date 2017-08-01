@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Characters;
 
 namespace Persistence
 {
@@ -15,6 +16,7 @@ namespace Persistence
         public static float masterVolume = 1;
         public static float musicVolume = 1;
         public static float effectsVolume = 1;
+        public static List<Character> party;
 
         public static void SetDifficultyFromString(string difficultyString)
         {

@@ -10,7 +10,7 @@ namespace World
         private static float currentTime, quarterHourTimer = .2f;
         public static int days = 0, hours = 6, minutes = 0;
         private static bool isNight = false;
-        private static bool isPaused = true;
+        private static bool isPaused = false;
         public Text timeText, dayText;
 
         public static void SubscribeTimeListener(TimeListener t)

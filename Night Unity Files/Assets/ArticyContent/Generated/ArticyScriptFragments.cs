@@ -19,7 +19,7 @@ namespace Articy.Night.GlobalVariables
 {
     
     
-    [Articy.Unity.ArticyCodeGenerationHashAttribute(636329538523768539)]
+    [Articy.Unity.ArticyCodeGenerationHashAttribute(636371911846785561)]
     public class ArticyScriptFragments : BaseScriptFragments, ISerializationCallbackReceiver
     {
         

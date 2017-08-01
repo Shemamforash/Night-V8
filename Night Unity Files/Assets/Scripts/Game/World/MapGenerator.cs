@@ -316,34 +316,34 @@ public class MapGenerator : MonoBehaviour
     private float[,] heightMap;
     private int mapWidthPixels, mapHeightPixels;
 
-    public void Awake()
-    {
-        //frequency, lacunarity, persistence, octaves
-        seed = UnityEngine.Random.Range(0f, 1000000f);
-        noiseScale = width / 50f * noiseScale;
-        PerlinNoise.Generate(width / noiseScale, 1f, 1f, 3);
-        mapTiles = new MapTile[width, height];
-        tileWidth = 1920f / maxTilesScreenWidth;
-        // tileWidth = 20f;
+    // public void Awake()
+    // {
+    //     //frequency, lacunarity, persistence, octaves
+    //     seed = UnityEngine.Random.Range(0f, 1000000f);
+    //     noiseScale = width / 50f * noiseScale;
+    //     PerlinNoise.Generate(width / noiseScale, 1f, 1f, 3);
+    //     mapTiles = new MapTile[width, height];
+    //     tileWidth = 1920f / maxTilesScreenWidth;
+    //     // tileWidth = 20f;
 
-        // float[,] heightMap = GenerateHeightMap();
-        mapWidthPixels = (int)(width * tileWidth);
-        mapHeightPixels = (int)(height * tileWidth);
-        heightMap = new float[mapWidthPixels, mapHeightPixels];
-        for (int i = 0; i < mapWidthPixels; ++i)
-        {
-            for (int j = 0; j < mapHeightPixels; ++j)
-            {
-                heightMap[i, j] = 0;
-            }
-        }
-        float[,] mountainMask = GenerateMountainRange(1);
-        heightMap = GenerateHeightMap(mountainMask);
-        GenerateMapMesh(heightMap);
-        // GenerateMapMesh(mountainMask);
-        // GenerateMapImage(mountainMask);
-        // GenerateNavigationLayer();
-    }
+    //     // float[,] heightMap = GenerateHeightMap();
+    //     mapWidthPixels = (int)(width * tileWidth);
+    //     mapHeightPixels = (int)(height * tileWidth);
+    //     heightMap = new float[mapWidthPixels, mapHeightPixels];
+    //     for (int i = 0; i < mapWidthPixels; ++i)
+    //     {
+    //         for (int j = 0; j < mapHeightPixels; ++j)
+    //         {
+    //             heightMap[i, j] = 0;
+    //         }
+    //     }
+    //     float[,] mountainMask = GenerateMountainRange(1);
+    //     heightMap = GenerateHeightMap(mountainMask);
+    //     GenerateMapMesh(heightMap);
+    //     // GenerateMapMesh(mountainMask);
+    //     // GenerateMapImage(mountainMask);
+    //     // GenerateNavigationLayer();
+    // }
 
     private MapTile selectedTile = null;
 

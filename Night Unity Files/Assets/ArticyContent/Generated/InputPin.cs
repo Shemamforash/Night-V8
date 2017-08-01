@@ -21,7 +21,7 @@ namespace Articy.Night
     
     
     [Serializable()]
-    [Articy.Unity.ArticyCodeGenerationHashAttribute(636329538465047363)]
+    [Articy.Unity.ArticyCodeGenerationHashAttribute(636371911516342784)]
     public class InputPin : ArticyPrimitive, IInputPin
     {
         
