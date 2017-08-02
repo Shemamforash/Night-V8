@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Text.RegularExpressions;
 
 namespace Characters
 {
@@ -11,9 +10,7 @@ namespace Characters
 
         public static void LoadTraits()
         {
-            TextAsset traitFile = Resources.Load("traits") as TextAsset;
-            string traitText = traitFile.text;
-            string[] lines = Regex.Split(traitText, "\r\n|\r|\n");
+            string[] lines = Helper.ReadLinesFromFile("traits");
             for (int i = 0; i < lines.Length; i += 10)
             {
                 Trait newTrait = new Trait(lines[i], lines[i + 1], lines[i + 2], lines[i + 3], lines[i + 4], lines[i + 5], lines[i + 6], lines[i + 7], lines[i + 8]);

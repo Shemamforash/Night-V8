@@ -13,8 +13,7 @@ namespace Characters
 
 		public static List<Character> LoadInitialParty(){
 			List<Character> characters = new List<Character>();
-			Character c = new Character("Driver", "Driver", 100, 100, 100, 100, 100, 100, Character.WeightCategory.MEDIUM, 100, Traits.FindTrait("Nomadic"), Traits.FindTrait("Scavenger"));
-			Debug.Log(c);
+			Character c = new Character("Driver", "Driver", 100, 100, 100, 100, 100, 100, Character.WeightCategory.MEDIUM, 100, "Scavenger");
 			characters.Add(c);
 			return characters;
 		}

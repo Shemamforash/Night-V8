@@ -23,6 +23,7 @@ namespace UI.GameOnly
                 }
                 else
                 {
+                    SetDetailedViewActive(false, selectedCharacter.transform);
                     selectedCharacter.Select();
                     selectedCharacter = null;
                 }
@@ -36,10 +37,20 @@ namespace UI.GameOnly
             actionContainer.gameObject.SetActive(false);
         }
 
+        private void SetDetailedViewActive(bool active, Transform characterUIObject)
+        {
+            for (int i = 0; i < characterUIObject.transform.childCount; ++i)
+            {
+                Transform t = characterUIObject.transform.GetChild(i);
+                t.Find("Detailed").gameObject.SetActive(true);
+            }
+        }
+
         public void SelectCharacter(Selectable s)
         {
             selectedCharacter = s;
-            s.transform.Find("Name Container").GetComponent<Selectable>().Select();
+            SetDetailedViewActive(true, s.transform);
+            // s.transform.Find("Name Container").GetComponent<Selectable>().Select();
         }
 
         public void SelectActions(Selectable s)
