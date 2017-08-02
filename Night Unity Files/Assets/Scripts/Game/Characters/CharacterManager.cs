@@ -10,7 +10,7 @@ namespace Characters
 {
     public class CharacterManager : MonoBehaviour
     {
-        private List<Character> characters = new List<Character>();
+        private static List<Character> characters = new List<Character>();
         private TimeListener timeListener = new TimeListener();
         public GameObject driverObject;
         public GameObject characterPrefab;
@@ -33,7 +33,7 @@ namespace Characters
 
         private void PopulateCharacterUI()
         {
-            float yMax = 0.8f, yMin = 0.6f;
+            float yMax = 0.9f, yMin = 0.8f;
             for (int i = 1; i < characters.Count; ++i)
             {
                 GameObject newCharacterUI = Instantiate(characterPrefab);
@@ -44,8 +44,8 @@ namespace Characters
                 uiRect.offsetMax = new Vector2(-5, -5);
                 uiRect.anchorMin = new Vector2(0, yMin);
                 uiRect.anchorMax = new Vector2(1, yMax);
-                yMax -= 0.2f;
-                yMin -= 0.2f;
+                yMax -= 0.1f;
+                yMin -= 0.1f;
                 Button b = newCharacterUI.GetComponent<Button>();
                 b.onClick.AddListener(delegate
                 {
@@ -75,6 +75,51 @@ namespace Characters
                 }
 
             }
+        }
+
+        private static Character FindCharacterFromGameObject(GameObject g)
+        {
+            foreach (Character c in characters)
+            {
+                if (c.characterUI == g)
+                {
+                    return c;
+                }
+            }
+            return null;
+        }
+
+        private static void ChangeCharacterPanel(GameObject g, bool expand)
+        {
+            bool foundCharacter = false;
+            float moveAmount = 0.3f;
+            if (expand)
+            {
+                moveAmount = -moveAmount;
+            }
+            for (int i = 0; i < characters.Count; ++i)
+            {
+                if (foundCharacter)
+                {
+                    RectTransform rect = characters[i].characterUI.GetComponent<RectTransform>();
+                    rect.anchorMin = new Vector2(rect.anchorMin.x, rect.anchorMin.y + moveAmount);
+                    rect.anchorMax = new Vector2(rect.anchorMax.x, rect.anchorMax.y + moveAmount);
+                }
+                else if (characters[i].characterUI == g)
+                {
+                    foundCharacter = true;
+                }
+            }
+        }
+
+        public static void ExpandCharacter(GameObject g)
+        {
+            ChangeCharacterPanel(g, true);
+        }
+
+        public static void CollapseCharacter(GameObject g)
+        {
+			ChangeCharacterPanel(g, false);
         }
     }
 

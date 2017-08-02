@@ -1,5 +1,7 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
+using Characters;
+
 namespace UI.GameOnly
 {
     using UI.Highlight;
@@ -33,16 +35,22 @@ namespace UI.GameOnly
         public void Start()
         {
             inputListener.OnCancel(ExitCharacter);
-            actionContainer = GameObject.Find("Actions").transform.Find("Viewport").Find("Content");
-            actionContainer.gameObject.SetActive(false);
         }
 
         private void SetDetailedViewActive(bool active, Transform characterUIObject)
         {
-            for (int i = 0; i < characterUIObject.transform.childCount; ++i)
+            if (active)
             {
-                Transform t = characterUIObject.transform.GetChild(i);
-                t.Find("Detailed").gameObject.SetActive(true);
+                CharacterManager.ExpandCharacter(characterUIObject.gameObject);
+            }
+            else
+            {
+                CharacterManager.CollapseCharacter(characterUIObject.gameObject);
+            }
+            for (int i = 0; i < characterUIObject.childCount; ++i)
+            {
+                Transform t = characterUIObject.GetChild(i);
+                t.Find("Detailed").gameObject.SetActive(active);
             }
         }
 
