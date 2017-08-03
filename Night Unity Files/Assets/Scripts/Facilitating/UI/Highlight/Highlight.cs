@@ -1,16 +1,17 @@
 ﻿using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace UI.Highlight
 {
-    public class Highlight : MonoBehaviour, ISelectHandler, IDeselectHandler
+    public class Highlight : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
     {
         /*Base class for all interactive objects.
         If it's interactive, it must have it's colours inverted when selected, and must have a tooltip.
         */
 
-        protected Text[] childTexts;
+        protected List<Text> childTexts = new List<Text>();
         public string tooltipText;
 
         public virtual string GetTooltip()
@@ -20,7 +21,15 @@ namespace UI.Highlight
 
         public virtual void Awake()
         {
-            childTexts = gameObject.GetComponentsInChildren<Text>();
+            List<Transform> children = Helper.FindAllChildren(transform);
+            foreach (Transform t in children)
+            {
+                Text text = t.GetComponent<Text>();
+                if (text != null)
+                {
+                    childTexts.Add(text);
+                }
+            }
         }
 
         public virtual void OnSelect(BaseEventData eventData)
@@ -29,6 +38,16 @@ namespace UI.Highlight
         }
 
         public virtual void OnDeselect(BaseEventData eventData)
+        {
+            ChangeTextColour(Color.white);
+        }
+
+        public void OnPointerEnter(PointerEventData p)
+        {
+            ChangeTextColour(Color.black);
+        }
+
+        public void OnPointerExit(PointerEventData p)
         {
             ChangeTextColour(Color.white);
         }

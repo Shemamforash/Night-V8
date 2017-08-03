@@ -6,7 +6,7 @@ namespace UI.GameOnly
 {
     using UI.Highlight;
     using Menus;
-    public class CharacterSelect : BorderHighlight
+    public class CharacterSelect : MonoBehaviour
     {
         private Selectable actionSelectable, selectedCharacter;
         private bool actionBarSelected = false;
@@ -17,18 +17,9 @@ namespace UI.GameOnly
         {
             if (selectedCharacter != null)
             {
-                if (actionBarSelected)
-                {
-                    actionSelectable.Select();
-                    actionContainer.gameObject.SetActive(false);
-                    actionBarSelected = false;
-                }
-                else
-                {
-                    SetDetailedViewActive(false, selectedCharacter.transform);
-                    selectedCharacter.Select();
-                    selectedCharacter = null;
-                }
+                SetDetailedViewActive(false, selectedCharacter.transform.parent);
+                selectedCharacter.Select();
+                selectedCharacter = null;
             }
         }
 
@@ -47,18 +38,22 @@ namespace UI.GameOnly
             {
                 CharacterManager.CollapseCharacter(characterUIObject.gameObject);
             }
-            for (int i = 0; i < characterUIObject.childCount; ++i)
-            {
-                Transform t = characterUIObject.GetChild(i);
-                t.Find("Detailed").gameObject.SetActive(active);
-            }
+            // for (int i = 0; i < characterUIObject.childCount; ++i)
+            // {
+            // Transform t = characterUIObject.GetChild(i);
+            characterUIObject.Find("Detailed").gameObject.SetActive(active);
+            characterUIObject.Find("Simple").gameObject.SetActive(!active);
+            // }
         }
 
         public void SelectCharacter(Selectable s)
         {
+            if (selectedCharacter != null)
+            {
+                ExitCharacter();
+            }
             selectedCharacter = s;
-            SetDetailedViewActive(true, s.transform);
-            // s.transform.Find("Name Container").GetComponent<Selectable>().Select();
+            SetDetailedViewActive(true, s.transform.parent);
         }
 
         public void SelectActions(Selectable s)

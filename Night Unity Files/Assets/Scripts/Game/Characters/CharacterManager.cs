@@ -46,7 +46,7 @@ namespace Characters
                 uiRect.anchorMax = new Vector2(1, yMax);
                 yMax -= 0.1f;
                 yMin -= 0.1f;
-                Button b = newCharacterUI.GetComponent<Button>();
+                Button b = newCharacterUI.transform.Find("Simple").GetComponent<Button>();
                 b.onClick.AddListener(delegate
                 {
                     GetComponent<CharacterSelect>().SelectCharacter(b);
@@ -54,7 +54,7 @@ namespace Characters
             }
             for (int i = 0; i < characters.Count; ++i)
             {
-                Button b = characters[i].characterUI.GetComponent<Button>();
+                Button b = characters[i].characterUI.transform.Find("Simple").GetComponent<Button>();
                 Navigation n = b.navigation;
 
                 if (i == 0)

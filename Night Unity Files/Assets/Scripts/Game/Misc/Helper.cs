@@ -19,4 +19,15 @@ public static class Helper
             Debug.Log(t);
         }
     }
+
+    public static List<Transform> FindAllChildren(Transform t){
+        List<Transform> children = new List<Transform>();
+        int noChildren = t.childCount;
+        for(int i = 0; i < noChildren; ++i){
+            Transform child = t.GetChild(i);
+            children.Add(child);
+            children.AddRange(FindAllChildren(child));
+        }
+        return children;
+    }
 }
