@@ -30,6 +30,8 @@ namespace UI.GameOnly
 
         private void SetDetailedViewActive(bool active, Transform characterUIObject)
         {
+            characterUIObject.Find("Detailed").gameObject.SetActive(active);
+            characterUIObject.Find("Simple").gameObject.SetActive(!active);
             if (active)
             {
                 CharacterManager.ExpandCharacter(characterUIObject.gameObject);
@@ -38,12 +40,6 @@ namespace UI.GameOnly
             {
                 CharacterManager.CollapseCharacter(characterUIObject.gameObject);
             }
-            // for (int i = 0; i < characterUIObject.childCount; ++i)
-            // {
-            // Transform t = characterUIObject.GetChild(i);
-            characterUIObject.Find("Detailed").gameObject.SetActive(active);
-            characterUIObject.Find("Simple").gameObject.SetActive(!active);
-            // }
         }
 
         public void SelectCharacter(Selectable s)

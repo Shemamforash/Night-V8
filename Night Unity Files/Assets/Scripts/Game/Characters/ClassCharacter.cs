@@ -5,9 +5,9 @@ using World;
 
 namespace Characters
 {
-    public class CharacterClass
+    public class ClassCharacter
     {
-        private static Dictionary<string, CharacterClass> classDictionary = new Dictionary<string, CharacterClass>();
+        private static Dictionary<string, ClassCharacter> classDictionary = new Dictionary<string, ClassCharacter>();
 
         private string classTrait, className;
 
@@ -16,16 +16,16 @@ namespace Characters
             string[] lines = Helper.ReadLinesFromFile("classes");
             for (int i = 0; i < lines.Length; i += 2)
             {
-                CharacterClass newClass = new CharacterClass(lines[i], lines[i + 1]);
+                ClassCharacter newClass = new ClassCharacter(lines[i], lines[i + 1]);
                 classDictionary[lines[i]] = newClass;
             }
         }
 
-        public static CharacterClass FindClass(string name){
+        public static ClassCharacter FindClass(string name){
             return classDictionary[name];
         }
 
-        public CharacterClass(string className, string classTrait)
+        public ClassCharacter(string className, string classTrait)
         {
             this.classTrait = classTrait;
             this.className = className;

@@ -5,6 +5,7 @@ using World;
 using Persistence;
 using UnityEngine.UI;
 using UI.GameOnly;
+using UnityEngine.EventSystems;
 
 namespace Characters
 {
@@ -18,7 +19,7 @@ namespace Characters
         public void Awake()
         {
             Traits.LoadTraits();
-            CharacterClass.LoadCharacterClasses();
+            ClassCharacter.LoadCharacterClasses();
             if (Settings.party != null)
             {
                 characters = Settings.party;
@@ -27,7 +28,7 @@ namespace Characters
             {
                 characters = CharacterGenerator.LoadInitialParty();
             }
-            characters[0].characterUI = driverObject;
+            characters[0].SetCharacterUI(driverObject);
             PopulateCharacterUI();
         }
 
@@ -37,8 +38,8 @@ namespace Characters
             for (int i = 1; i < characters.Count; ++i)
             {
                 GameObject newCharacterUI = Instantiate(characterPrefab);
-                characters[i].characterUI = newCharacterUI;
                 newCharacterUI.transform.SetParent(transform);
+                characters[i].SetCharacterUI(newCharacterUI);
                 RectTransform uiRect = newCharacterUI.GetComponent<RectTransform>();
                 uiRect.offsetMin = new Vector2(5, 5);
                 uiRect.offsetMax = new Vector2(-5, -5);
@@ -46,7 +47,7 @@ namespace Characters
                 uiRect.anchorMax = new Vector2(1, yMax);
                 yMax -= 0.1f;
                 yMin -= 0.1f;
-                Button b = newCharacterUI.transform.Find("Simple").GetComponent<Button>();
+                Button b = characters[i].GetCharacterUI().simpleViewButton;
                 b.onClick.AddListener(delegate
                 {
                     GetComponent<CharacterSelect>().SelectCharacter(b);
@@ -54,26 +55,25 @@ namespace Characters
             }
             for (int i = 0; i < characters.Count; ++i)
             {
-                Button b = characters[i].characterUI.transform.Find("Simple").GetComponent<Button>();
+                Button b = characters[i].GetCharacterUI().simpleViewButton;
                 Navigation n = b.navigation;
-
                 if (i == 0)
                 {
                     if (i + 1 < characters.Count)
                     {
-                        n.selectOnDown = characters[i + 1].characterUI.GetComponent<Button>();
+                        n.selectOnDown = characters[i + 1].GetCharacterUI().simpleViewButton;
                     }
                 }
                 else if (i == characters.Count - 1)
                 {
-                    n.selectOnUp = characters[i - 1].characterUI.GetComponent<Button>();
+                    n.selectOnUp = characters[i - 1].GetCharacterUI().simpleViewButton;
                 }
                 else
                 {
-                    n.selectOnUp = characters[i - 1].characterUI.GetComponent<Button>();
-                    n.selectOnDown = characters[i + 1].characterUI.GetComponent<Button>();
+                    n.selectOnUp = characters[i - 1].GetCharacterUI().simpleViewButton;
+                    n.selectOnDown = characters[i + 1].GetCharacterUI().simpleViewButton;
                 }
-
+                b.navigation = n;
             }
         }
 
@@ -81,7 +81,7 @@ namespace Characters
         {
             foreach (Character c in characters)
             {
-                if (c.characterUI == g)
+                if (c.GetCharacterUI().gameObject == g)
                 {
                     return c;
                 }
@@ -101,13 +101,17 @@ namespace Characters
             {
                 if (foundCharacter)
                 {
-                    RectTransform rect = characters[i].characterUI.GetComponent<RectTransform>();
+                    RectTransform rect = characters[i].GetCharacterUI().gameObject.GetComponent<RectTransform>();
                     rect.anchorMin = new Vector2(rect.anchorMin.x, rect.anchorMin.y + moveAmount);
                     rect.anchorMax = new Vector2(rect.anchorMax.x, rect.anchorMax.y + moveAmount);
                 }
-                else if (characters[i].characterUI == g)
+                else if (characters[i].GetCharacterUI().gameObject == g)
                 {
                     foundCharacter = true;
+                    if (expand)
+                    {
+                        characters[i].GetCharacterUI().eatButton.Select();
+                    }
                 }
             }
         }
@@ -119,7 +123,7 @@ namespace Characters
 
         public static void CollapseCharacter(GameObject g)
         {
-			ChangeCharacterPanel(g, false);
+            ChangeCharacterPanel(g, false);
         }
     }
 

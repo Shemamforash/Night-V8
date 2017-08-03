@@ -30,4 +30,14 @@ public static class Helper
         }
         return children;
     }
+
+    public static Transform FindChildWithName(Transform t, string name){
+        List<Transform> children = FindAllChildren(t);
+        foreach(Transform child in children){
+            if(child.name == name){
+                return child;
+            }
+        }
+        return null;
+    }
 }
