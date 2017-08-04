@@ -16,11 +16,7 @@ namespace World
         private Environment currentEnvironment = null;
         private TimeListener timeListener = new TimeListener();
 
-		public EnvironmentManager(){
-			WorldState.environmentManager = this;
-		}
-
-        void Start()
+        public void Awake()
         {
             List<EnvironmentTemplate> templates = ArticyDatabase.GetAllOfType<EnvironmentTemplate>();
             environments = new Environment[templates.Count];

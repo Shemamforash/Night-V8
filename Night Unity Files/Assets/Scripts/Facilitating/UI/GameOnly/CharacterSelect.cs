@@ -1,11 +1,10 @@
-﻿using UnityEngine.UI;
+﻿using Characters;
+using Menus;
 using UnityEngine;
-using Characters;
+using UnityEngine.UI;
 
-namespace UI.GameOnly
+namespace Facilitating.UI.GameOnly
 {
-    using UI.Highlight;
-    using Menus;
     public class CharacterSelect : MonoBehaviour
     {
         private Selectable actionSelectable, selectedCharacter;
@@ -58,6 +57,18 @@ namespace UI.GameOnly
             actionBarSelected = true;
             actionContainer.gameObject.SetActive(true);
             actionContainer.GetChild(0).GetComponent<Selectable>().Select();
+        }
+        
+        public void CharacterEat()
+        {
+            Character current = CharacterManager.FindCharacterFromGameObject(selectedCharacter.transform.parent.gameObject);
+            current.Eat();
+        }
+
+        public void CharacterDrink()
+        {
+            Character current = CharacterManager.FindCharacterFromGameObject(selectedCharacter.transform.parent.gameObject);
+            current.Drink();
         }
     }
 }

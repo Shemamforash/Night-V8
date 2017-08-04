@@ -3,4 +3,9 @@
     <Difficulty>NORMAL</Difficulty>
     <Permadeath>True</Permadeath>
   </SessionSettings>
+  <Home>
+    <StoredFood>0</StoredFood>
+    <StoredWater>0</StoredWater>
+    <StoredFuel>0</StoredFuel>
+  </Home>
 </SaveData>

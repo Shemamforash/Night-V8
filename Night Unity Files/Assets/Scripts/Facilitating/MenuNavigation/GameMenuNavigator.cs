@@ -26,6 +26,7 @@
         public void Start()
         {
             SaveController.LoadSettings();
+            SaveController.LoadGameFromFile();
             GetComponent<GlobalAudioManager>().Initialise();
         }
 
@@ -108,7 +109,7 @@
         private void Save()
         {
             SaveController.SaveSettings();
-            SaveController.SaveGame();
+            SaveController.SaveGameToFile();
         }
 
         public void ExitAndSave()

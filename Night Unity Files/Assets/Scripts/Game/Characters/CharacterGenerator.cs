@@ -14,9 +14,9 @@ namespace Characters
         public static List<Character> LoadInitialParty()
         {
             List<Character> characters = new List<Character>();
-            Character c = new Character("Driver", "Driver", 100, 100, 100, 100, 100, 100, Character.WeightCategory.MEDIUM, 100, "Scavenger");
+            Character c = new Character("Driver", "Driver", 100, 100, 100, 100, 100, 100, Character.WeightCategory.Medium, 100, "Scavenger");
             characters.Add(c);
-            c = new Character("Test", "Driver", 100, 100, 100, 100, 100, 100, Character.WeightCategory.MEDIUM, 100, "Scavenger");
+            c = new Character("Test", "Driver", 100, 100, 100, 100, 100, 100, Character.WeightCategory.Medium, 100, "Scavenger");
 			characters.Add(c);
             return characters;
         }

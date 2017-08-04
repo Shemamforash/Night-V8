@@ -5,7 +5,7 @@ using Characters;
 
 namespace Persistence
 {
-    public class Settings : MonoBehaviour
+    public class GameData : MonoBehaviour
     {
         //Playthrough Settings
         public enum Difficulty { EASY, NORMAL, HARD };
@@ -17,19 +17,22 @@ namespace Persistence
         public static float musicVolume = 1;
         public static float effectsVolume = 1;
         public static List<Character> party;
+        
+        //Camp Data
+        public static float storedWater = 0f, storedFood = 0f, storedFuel = 0f;
 
         public static void SetDifficultyFromString(string difficultyString)
         {
             switch (difficultyString)
             {
                 case "easy":
-                    difficultySetting = Settings.Difficulty.EASY;
+                    difficultySetting = GameData.Difficulty.EASY;
                     break;
                 case "normal":
-                    difficultySetting = Settings.Difficulty.NORMAL;
+                    difficultySetting = GameData.Difficulty.NORMAL;
                     break;
                 case "hard":
-                    difficultySetting = Settings.Difficulty.HARD;
+                    difficultySetting = GameData.Difficulty.HARD;
                     break;
                 default:
                     print("No Difficulty Selected");

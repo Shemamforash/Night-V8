@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Facilitating.UI.GameOnly;
 using UnityEngine;
 using World;
 using Persistence;
 using UnityEngine.UI;
 using UI.GameOnly;
-using UnityEngine.EventSystems;
 
 namespace Characters
 {
@@ -15,22 +15,31 @@ namespace Characters
         private TimeListener timeListener = new TimeListener();
         public GameObject driverObject;
         public GameObject characterPrefab;
+		private PersistenceListener persistenceListener;
 
-        public void Awake()
+		private void Awake(){
+			persistenceListener = new PersistenceListener(Load, Save, "Character Manager");
+		}
+
+        private void Load()
         {
             Traits.LoadTraits();
             ClassCharacter.LoadCharacterClasses();
-            if (Settings.party != null)
+            if (GameData.party != null)
             {
-                characters = Settings.party;
+                characters = GameData.party;
             }
             else
             {
                 characters = CharacterGenerator.LoadInitialParty();
             }
-            characters[0].SetCharacterUI(driverObject);
+            characters[0].SetCharacterUi(driverObject);
             PopulateCharacterUI();
         }
+
+		private void Save(){
+			GameData.party = characters;
+		}
 
         private void PopulateCharacterUI()
         {
@@ -39,7 +48,7 @@ namespace Characters
             {
                 GameObject newCharacterUI = Instantiate(characterPrefab);
                 newCharacterUI.transform.SetParent(transform);
-                characters[i].SetCharacterUI(newCharacterUI);
+                characters[i].SetCharacterUi(newCharacterUI);
                 RectTransform uiRect = newCharacterUI.GetComponent<RectTransform>();
                 uiRect.offsetMin = new Vector2(5, 5);
                 uiRect.offsetMax = new Vector2(-5, -5);
@@ -47,7 +56,8 @@ namespace Characters
                 uiRect.anchorMax = new Vector2(1, yMax);
                 yMax -= 0.1f;
                 yMin -= 0.1f;
-                Button b = characters[i].GetCharacterUI().simpleViewButton;
+                newCharacterUI.transform.localScale = new Vector2(1, 1);
+                Button b = characters[i].GetCharacterUi().SimpleViewButton;
                 b.onClick.AddListener(delegate
                 {
                     GetComponent<CharacterSelect>().SelectCharacter(b);
@@ -55,40 +65,40 @@ namespace Characters
             }
             for (int i = 0; i < characters.Count; ++i)
             {
-                Button b = characters[i].GetCharacterUI().simpleViewButton;
+                Button b = characters[i].GetCharacterUi().SimpleViewButton;
                 Navigation n = b.navigation;
                 if (i == 0)
                 {
                     if (i + 1 < characters.Count)
                     {
-                        n.selectOnDown = characters[i + 1].GetCharacterUI().simpleViewButton;
+                        n.selectOnDown = characters[i + 1].GetCharacterUi().SimpleViewButton;
                     }
                 }
                 else if (i == characters.Count - 1)
                 {
-                    n.selectOnUp = characters[i - 1].GetCharacterUI().simpleViewButton;
+                    n.selectOnUp = characters[i - 1].GetCharacterUi().SimpleViewButton;
                 }
                 else
                 {
-                    n.selectOnUp = characters[i - 1].GetCharacterUI().simpleViewButton;
-                    n.selectOnDown = characters[i + 1].GetCharacterUI().simpleViewButton;
+                    n.selectOnUp = characters[i - 1].GetCharacterUi().SimpleViewButton;
+                    n.selectOnDown = characters[i + 1].GetCharacterUi().SimpleViewButton;
                 }
                 b.navigation = n;
             }
         }
 
-        private static Character FindCharacterFromGameObject(GameObject g)
+        public static Character FindCharacterFromGameObject(GameObject g)
         {
             foreach (Character c in characters)
             {
-                if (c.GetCharacterUI().gameObject == g)
+                if (c.GetCharacterUi().GameObject == g)
                 {
                     return c;
                 }
             }
             return null;
         }
-
+        
         private static void ChangeCharacterPanel(GameObject g, bool expand)
         {
             bool foundCharacter = false;
@@ -101,16 +111,16 @@ namespace Characters
             {
                 if (foundCharacter)
                 {
-                    RectTransform rect = characters[i].GetCharacterUI().gameObject.GetComponent<RectTransform>();
+                    RectTransform rect = characters[i].GetCharacterUi().GameObject.GetComponent<RectTransform>();
                     rect.anchorMin = new Vector2(rect.anchorMin.x, rect.anchorMin.y + moveAmount);
                     rect.anchorMax = new Vector2(rect.anchorMax.x, rect.anchorMax.y + moveAmount);
                 }
-                else if (characters[i].GetCharacterUI().gameObject == g)
+                else if (characters[i].GetCharacterUi().GameObject == g)
                 {
                     foundCharacter = true;
                     if (expand)
                     {
-                        characters[i].GetCharacterUI().eatButton.Select();
+                        characters[i].GetCharacterUi().EatButton.Select();
                     }
                 }
             }

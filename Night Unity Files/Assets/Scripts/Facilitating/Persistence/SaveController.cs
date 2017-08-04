@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.IO;
 using System.Xml;
+using System.Collections.Generic;
 
 namespace Persistence
 {
@@ -8,19 +9,79 @@ namespace Persistence
     {
         private static string gameSaveLocation = Application.dataPath + "/NightSave.xml";
         private static string settingsSaveLocation = Application.dataPath + "/GameSettings.xml";
-        public static bool LoadGame()
+        private static List<PersistenceListener> persistenceListeners = new List<PersistenceListener>();
+        private static bool loaded = false;
+
+        public static bool LoadGameFromFile()
         {
             try
             {
                 saveDoc = new XmlDocument();
                 saveDoc.Load(gameSaveLocation);
-                Settings.SetDifficultyFromString(saveDoc.SelectSingleNode("/SaveData/SessionSettings/Difficulty").InnerText);
-                Settings.permadeathOn = saveDoc.SelectSingleNode("/SaveData/SessionSettings/Permadeath").InnerText.ToLower() == "true";
+                GameData.SetDifficultyFromString(saveDoc.SelectSingleNode("/SaveData/SessionSettings/Difficulty").InnerText);
+                GameData.permadeathOn = saveDoc.SelectSingleNode("/SaveData/SessionSettings/Permadeath").InnerText.ToLower() == "true";
+                GameData.storedFood = float.Parse(saveDoc.SelectSingleNode("/SaveData/Home/StoredFood").InnerText);
+                GameData.storedWater = float.Parse(saveDoc.SelectSingleNode("/SaveData/Home/StoredWater").InnerText);
+                GameData.storedFuel = float.Parse(saveDoc.SelectSingleNode("/SaveData/Home/StoredFuel").InnerText);
+                NotifyListenersLoad();
+                loaded = true;
                 return true;
             }
             catch (IOException e)
             {
                 return false;
+            }
+        }
+        
+        public static bool SaveGameToFile()
+        {
+            try
+            {
+                NotifyListenersSave();
+
+                saveDoc = new XmlDocument();
+                XmlNode root = CreateNodeAndAppend("SaveData", saveDoc);
+
+                XmlNode gameSettings = CreateNodeAndAppend("SessionSettings", root);
+                CreateNodeAndAppend("Difficulty", gameSettings, GameData.difficultySetting.ToString());
+                CreateNodeAndAppend("Permadeath", gameSettings, GameData.permadeathOn.ToString());
+                
+                XmlNode homeData = CreateNodeAndAppend("Home", root);
+                CreateNodeAndAppend("StoredFood", homeData, GameData.storedFood.ToString());
+                CreateNodeAndAppend("StoredWater", homeData, GameData.storedWater.ToString());
+                CreateNodeAndAppend("StoredFuel", homeData, GameData.storedFuel.ToString());
+                
+                saveDoc.Save(gameSaveLocation);
+                return true;
+            }
+            catch (IOException e)
+            {
+                return false;
+            }
+        }
+
+        private static void NotifyListenersLoad()
+        {
+            foreach (PersistenceListener listener in persistenceListeners)
+            {
+                listener.Load();
+            }
+        }
+
+        private static void NotifyListenersSave()
+        {
+            foreach (PersistenceListener listener in persistenceListeners)
+            {
+                listener.Save();
+            }
+        }
+
+        public static void Register(PersistenceListener pl)
+        {
+            persistenceListeners.Add(pl);
+            if (loaded)
+            {
+                pl.Load();
             }
         }
 
@@ -37,9 +98,9 @@ namespace Persistence
             {
                 saveDoc = new XmlDocument();
                 XmlNode root = CreateNodeAndAppend("SettingsData", saveDoc);
-                CreateNodeAndAppend("MasterVolume", root, Settings.masterVolume.ToString());
-                CreateNodeAndAppend("MusicVolume", root, Settings.musicVolume.ToString());
-                CreateNodeAndAppend("EffectsVolume", root, Settings.effectsVolume.ToString());
+                CreateNodeAndAppend("MasterVolume", root, GameData.masterVolume.ToString());
+                CreateNodeAndAppend("MusicVolume", root, GameData.musicVolume.ToString());
+                CreateNodeAndAppend("EffectsVolume", root, GameData.effectsVolume.ToString());
                 saveDoc.Save(settingsSaveLocation);
                 return true;
             }
@@ -57,9 +118,9 @@ namespace Persistence
                 {
                     saveDoc = new XmlDocument();
                     saveDoc.Load(settingsSaveLocation);
-                    Settings.masterVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/MasterVolume").InnerText);
-                    Settings.musicVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/MusicVolume").InnerText);
-                    Settings.effectsVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/EffectsVolume").InnerText);
+                    GameData.masterVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/MasterVolume").InnerText);
+                    GameData.musicVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/MusicVolume").InnerText);
+                    GameData.effectsVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/EffectsVolume").InnerText);
                 }
                 return true;
             }
@@ -68,27 +129,7 @@ namespace Persistence
                 return false;
             }
         }
-
-        public static bool SaveGame()
-        {
-            try
-            {
-                saveDoc = new XmlDocument();
-                XmlNode root = CreateNodeAndAppend("SaveData", saveDoc);
-
-                XmlNode gameSettings = CreateNodeAndAppend("SessionSettings", root);
-                CreateNodeAndAppend("Difficulty", gameSettings, Settings.difficultySetting.ToString());
-                CreateNodeAndAppend("Permadeath", gameSettings, Settings.permadeathOn.ToString());
-
-                saveDoc.Save(gameSaveLocation);
-                return true;
-            }
-            catch (IOException e)
-            {
-                return false;
-            }
-        }
-
+        
         private static XmlNode CreateNodeAndAppend(string tagName, XmlNode parent)
         {
             XmlNode newNode = saveDoc.CreateElement(tagName);

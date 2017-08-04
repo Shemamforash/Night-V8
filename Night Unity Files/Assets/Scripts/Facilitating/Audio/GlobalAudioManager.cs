@@ -10,48 +10,66 @@ namespace Audio
         private List<AudioSource> musicSources = new List<AudioSource>();
         private List<AudioSource> effectsSources = new List<AudioSource>();
         public Slider masterSlider, musicSlider, effectsSlider;
+        private float musicVolume, effectsVolume, masterVolume;
+        private PersistenceListener persistenceListener;
+
+        public void Awake(){
+            persistenceListener = new PersistenceListener(Load, Save, "Audio Manager");
+        }
+
+        private void Load(){
+            musicVolume = GameData.musicVolume;
+            effectsVolume = GameData.effectsVolume;
+            masterVolume = GameData.masterVolume;
+        }
+
+        private void Save(){
+            GameData.musicVolume = musicVolume;
+            GameData.effectsVolume = effectsVolume;
+            GameData.masterVolume = masterVolume;
+        }
 
         private void UpdateVolumes()
         {
             foreach (AudioSource a in musicSources)
             {
-                if (Settings.masterVolume < Settings.musicVolume)
+                if (masterVolume < musicVolume)
                 {
-                    a.volume = Settings.masterVolume;
+                    a.volume = masterVolume;
                 }
                 else
                 {
-                    a.volume = Settings.musicVolume;
+                    a.volume = musicVolume;
                 }
             }
             foreach (AudioSource e in effectsSources)
             {
-                if (Settings.masterVolume < Settings.effectsVolume)
+                if (masterVolume < effectsVolume)
                 {
-                    e.volume = Settings.masterVolume;
+                    e.volume = masterVolume;
                 }
                 else
                 {
-                    e.volume = Settings.effectsVolume;
+                    e.volume = effectsVolume;
                 }
             }
         }
 
         public void SetMasterVolume(Slider slider)
         {
-            Settings.masterVolume = slider.value;
+            masterVolume = slider.value;
             UpdateVolumes();
         }
 
         public void SetEffectsVolume(Slider slider)
         {
-            Settings.effectsVolume = slider.value;
+            effectsVolume = slider.value;
             UpdateVolumes();
         }
 
         public void SetMusicVolume(Slider slider)
         {
-            Settings.musicVolume = slider.value;
+            musicVolume = slider.value;
             UpdateVolumes();
         }
 
@@ -68,9 +86,9 @@ namespace Audio
                 effectsSources.Add(e.GetComponent<AudioSource>());
             }
 
-            masterSlider.value = Settings.masterVolume;
-            musicSlider.value = Settings.musicVolume;
-            effectsSlider.value = Settings.effectsVolume;
+            masterSlider.value = masterVolume;
+            musicSlider.value = musicVolume;
+            effectsSlider.value = effectsVolume;
             UpdateVolumes();
         }
     }

@@ -23,7 +23,7 @@
         public void OnApplicationQuit()
         {
             SaveController.SaveSettings();
-            SaveController.SaveGame();
+            SaveController.SaveGameToFile();
         }
 
         public void BackToMenu()
@@ -74,7 +74,7 @@
         public void ClearSaveAndLoad()
         {
             SaveController.SaveSettings();
-            SaveController.SaveGame();
+            SaveController.SaveGameToFile();
             SceneManager.LoadScene("Game");
         }
 
@@ -83,7 +83,7 @@
             if (SaveController.SaveExists())
             {
                 SaveController.SaveSettings();
-                SaveController.LoadGame();
+                SaveController.LoadGameFromFile();
                 SceneManager.LoadScene("Game");
             }
             else
@@ -111,7 +111,7 @@
         public void SetDifficulty(GameObject btn)
         {
             string btnDifficulty = btn.transform.Find("Text").GetComponent<Text>().text.ToLower();
-            Settings.SetDifficultyFromString(btnDifficulty);
+            GameData.SetDifficultyFromString(btnDifficulty);
         }
     }
 }
