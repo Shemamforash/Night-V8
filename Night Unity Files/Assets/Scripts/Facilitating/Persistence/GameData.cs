@@ -1,38 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using Characters;
+using UnityEngine;
 
-namespace Persistence
+namespace Facilitating.Persistence
 {
     public class GameData : MonoBehaviour
     {
         //Playthrough Settings
-        public enum Difficulty { EASY, NORMAL, HARD };
-        public static Difficulty difficultySetting = Difficulty.NORMAL;
-        public static bool permadeathOn = true;
+        public enum Difficulty { Easy, Normal, Hard };
+        public static Difficulty DifficultySetting = Difficulty.Normal;
+        public static bool PermadeathOn = true;
 
         //Options Settings
-        public static float masterVolume = 1;
-        public static float musicVolume = 1;
-        public static float effectsVolume = 1;
-        public static List<Character> party;
+        public static float MasterVolume = 1;
+        public static float MusicVolume = 1;
+        public static float EffectsVolume = 1;
+        public static List<Character> Party;
         
         //Camp Data
-        public static float storedWater = 0f, storedFood = 0f, storedFuel = 0f;
+        public static float StoredWater = 0f, StoredFood = 0f, StoredFuel = 0f;
 
         public static void SetDifficultyFromString(string difficultyString)
         {
             switch (difficultyString)
             {
                 case "easy":
-                    difficultySetting = GameData.Difficulty.EASY;
+                    DifficultySetting = Difficulty.Easy;
                     break;
                 case "normal":
-                    difficultySetting = GameData.Difficulty.NORMAL;
+                    DifficultySetting = Difficulty.Normal;
                     break;
                 case "hard":
-                    difficultySetting = GameData.Difficulty.HARD;
+                    DifficultySetting = Difficulty.Hard;
                     break;
                 default:
                     print("No Difficulty Selected");

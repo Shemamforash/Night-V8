@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Facilitating.Persistence;
 using Facilitating.UI.GameOnly;
+using Game.Characters;
 using UnityEngine;
 using World;
 using Persistence;
@@ -13,8 +15,6 @@ namespace Characters
     {
         private static List<Character> characters = new List<Character>();
         private TimeListener timeListener = new TimeListener();
-        public GameObject driverObject;
-        public GameObject characterPrefab;
 		private PersistenceListener persistenceListener;
 
 		private void Awake(){
@@ -25,37 +25,33 @@ namespace Characters
         {
             Traits.LoadTraits();
             ClassCharacter.LoadCharacterClasses();
-            if (GameData.party != null)
+            if (GameData.Party != null)
             {
-                characters = GameData.party;
+                characters = GameData.Party;
             }
             else
             {
                 characters = CharacterGenerator.LoadInitialParty();
             }
-            characters[0].SetCharacterUi(driverObject);
             PopulateCharacterUI();
         }
 
 		private void Save(){
-			GameData.party = characters;
+			GameData.Party = characters;
 		}
 
         private void PopulateCharacterUI()
         {
-            float yMax = 0.9f, yMin = 0.8f;
-            for (int i = 1; i < characters.Count; ++i)
+            float currentY = 1f;
+            for (int i = 0; i < characters.Count; ++i)
             {
-                GameObject newCharacterUI = Instantiate(characterPrefab);
-                newCharacterUI.transform.SetParent(transform);
-                characters[i].SetCharacterUi(newCharacterUI);
+                GameObject newCharacterUI = characters[i].CharacterUi.GameObject;
                 RectTransform uiRect = newCharacterUI.GetComponent<RectTransform>();
                 uiRect.offsetMin = new Vector2(5, 5);
                 uiRect.offsetMax = new Vector2(-5, -5);
-                uiRect.anchorMin = new Vector2(0, yMin);
-                uiRect.anchorMax = new Vector2(1, yMax);
-                yMax -= 0.1f;
-                yMin -= 0.1f;
+                uiRect.anchorMin = new Vector2(0, currentY - 0.1f);
+                uiRect.anchorMax = new Vector2(1, currentY);
+                currentY -= 0.1f;
                 newCharacterUI.transform.localScale = new Vector2(1, 1);
                 Button b = characters[i].GetCharacterUi().SimpleViewButton;
                 b.onClick.AddListener(delegate

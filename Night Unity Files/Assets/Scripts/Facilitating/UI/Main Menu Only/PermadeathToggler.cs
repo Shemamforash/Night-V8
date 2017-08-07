@@ -1,4 +1,6 @@
-﻿namespace UI.Highlight
+﻿using Facilitating.Persistence;
+
+namespace UI.Highlight
 {
     using Persistence;
 
@@ -10,7 +12,7 @@
         public override void Awake()
         {
             base.Awake();
-            persistenceListener = new PersistenceListener(() => permadeathOn = GameData.permadeathOn, () => GameData.permadeathOn = permadeathOn, "Permadeath Toggler");
+            persistenceListener = new PersistenceListener(() => permadeathOn = GameData.PermadeathOn, () => GameData.PermadeathOn = permadeathOn, "Permadeath Toggler");
         }
 
         protected override void On()

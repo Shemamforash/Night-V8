@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Facilitating.UI.GameOnly;
+using Game.Characters;
+using Game.Misc;
 using UnityEngine;
 using UnityEngine.UI;
 using World;
@@ -9,15 +11,22 @@ namespace Characters
     public class Character
     {
         public CharacterUI CharacterUi;
-        private string _name;
-        private float _strength, _strengthMax, _intelligence, _intelligenceMax, _endurance, _stability;
-        private float _starvationTolerance, _dehydrationTolerance, _starvation, _dehydration;
-        private WeightCategory _weight;
-        private float _sight;
-        private Traits.Trait _primaryTrait, _secondaryTrait;
+	    public string Name;
+	    public MyFloat Strength;
+	    public MyFloat Intelligence;
+	    public MyFloat Endurance;
+	    public MyFloat Stability;
+	    public MyFloat StarvationTolerance;
+	    public MyFloat DehydrationTolerance;
+	    public MyFloat Starvation;
+	    public MyFloat Dehydration;
+	    public MyFloat Hunger, Thirst;
+	    public WeightCategory Weight;
+	    public float Sight;
+	    public Traits.Trait PrimaryTrait, SecondaryTrait;
 
         private ClassCharacter _characterClass;
-        public enum WeightCategory { Light, Medium, Heavy };
+        public enum WeightCategory { VeryLight, Light, Medium, Heavy, VeryHeavy };
 		private List<CharacterAction> _availableActions = new List<CharacterAction>();
 	    private GameObject actionButtonPrefab;
 
@@ -46,25 +55,18 @@ namespace Characters
 			}
 		}
 
-        public Character(string name, string className, float strength, float intelligence, float endurance, float stability, float starvationTolerance, float dehydrationTolerance,
-        WeightCategory weight, float sight, string secondaryTrait)
+        public Character(string name, ClassCharacter classCharacter, WeightCategory weight, Traits.Trait secondaryTrait)
         {
-            _name = name;
-            _characterClass = ClassCharacter.FindClass(className);
-            _strength = strength;
-            _strengthMax = strength;
-            _intelligence = intelligence;
-            _intelligenceMax = intelligence;
-            _endurance = endurance;
-            _stability = stability;
-            _starvationTolerance = starvationTolerance;
-            _dehydrationTolerance = dehydrationTolerance;
-            _weight = weight;
-            _sight = sight;
-            _primaryTrait = Traits.FindTrait(_characterClass.ClassTrait());
-            _secondaryTrait = Traits.FindTrait(secondaryTrait);
+            Name = name;
+            _characterClass = classCharacter;
+            Weight = weight;
+            PrimaryTrait = Traits.FindTrait(_characterClass.ClassTrait());
+            SecondaryTrait = secondaryTrait;
 	        _availableActions.Add(new FindResources("Find Resources"));
 	        actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
+	        GameObject characterUI = GameObject.Instantiate(Resources.Load("Prefabs/Character Template") as GameObject);
+	        characterUI.transform.SetParent(GameObject.Find("Characters").transform);
+	        SetCharacterUi(characterUI);
         }
 
 		public void SetCharacterUi(GameObject g){
@@ -90,15 +92,22 @@ namespace Characters
 			public Button EatButton;
 			public Button DrinkButton;
 			public GameObject actionScrollContent;
+			public Text ThirstText, HungerText, StrengthText, IntelligenceText, EnduranceText, StabilityText;
 			
 			public CharacterUI(GameObject gameObject){
 				GameObject = gameObject;
-				actionScrollContent = Helper.FindChildWithName(gameObject.transform, "Content").gameObject;
-				Button backButton = Helper.FindChildWithName(gameObject.transform, "Back Button").GetComponent<Button>();
+				actionScrollContent = Helper.FindChildWithName(gameObject, "Content").gameObject;
+				Button backButton = Helper.FindChildWithName(gameObject, "Back Button").GetComponent<Button>();
 				backButton.onClick.AddListener(gameObject.transform.parent.GetComponent<CharacterSelect>().ExitCharacter);
-				EatButton = Helper.FindChildWithName(gameObject.transform, "Eat Button").GetComponent<Button>();
-				DrinkButton = Helper.FindChildWithName(gameObject.transform, "Drink Button").GetComponent<Button>();
-				SimpleViewButton = gameObject.transform.Find("Simple").GetComponent<Button>();
+				EatButton = Helper.FindChildWithName(gameObject, "Eat Button").GetComponent<Button>();
+				DrinkButton = Helper.FindChildWithName(gameObject, "Drink Button").GetComponent<Button>();
+				SimpleViewButton = GameObject.Find("Simple").GetComponent<Button>();
+				ThirstText = Helper.FindChildWithName(gameObject, "Thirst").GetComponent<Text>();
+				HungerText = Helper.FindChildWithName(gameObject, "Hunger").GetComponent<Text>();
+				StrengthText = Helper.FindChildWithName(gameObject, "Strength").GetComponent<Text>();
+				IntelligenceText = Helper.FindChildWithName(gameObject, "Intelligence").GetComponent<Text>();
+				EnduranceText = Helper.FindChildWithName(gameObject, "Endurance").GetComponent<Text>();
+				StabilityText = Helper.FindChildWithName(gameObject, "Stability").GetComponent<Text>();
 			}
 		}
 

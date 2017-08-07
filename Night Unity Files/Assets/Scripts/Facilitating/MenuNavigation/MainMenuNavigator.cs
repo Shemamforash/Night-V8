@@ -1,4 +1,6 @@
-﻿namespace Menus
+﻿using Facilitating.Persistence;
+
+namespace Menus
 {
     using UnityEngine.UI;
     using UnityEngine;

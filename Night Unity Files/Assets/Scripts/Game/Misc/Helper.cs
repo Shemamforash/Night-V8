@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text.RegularExpressions;
+using Game.Misc;
 
 public static class Helper
 {
@@ -20,10 +21,12 @@ public static class Helper
         }
     }
 
-    public static List<Transform> FindAllChildren(Transform t){
+    public static List<Transform> FindAllChildren(Transform t)
+    {
         List<Transform> children = new List<Transform>();
         int noChildren = t.childCount;
-        for(int i = 0; i < noChildren; ++i){
+        for (int i = 0; i < noChildren; ++i)
+        {
             Transform child = t.GetChild(i);
             children.Add(child);
             children.AddRange(FindAllChildren(child));
@@ -31,10 +34,19 @@ public static class Helper
         return children;
     }
 
-    public static Transform FindChildWithName(Transform t, string name){
+    public static Transform FindChildWithName(GameObject g, string name)
+    {
+        Transform t = g.transform;
+        return FindChildWithName(t, name);
+    }
+
+    public static Transform FindChildWithName(Transform t, string name)
+    {
         List<Transform> children = FindAllChildren(t);
-        foreach(Transform child in children){
-            if(child.name == name){
+        foreach (Transform child in children)
+        {
+            if (child.name == name)
+            {
                 return child;
             }
         }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Xml;
 using System.Collections.Generic;
+using Facilitating.Persistence;
 
 namespace Persistence
 {
@@ -19,10 +20,10 @@ namespace Persistence
                 saveDoc = new XmlDocument();
                 saveDoc.Load(gameSaveLocation);
                 GameData.SetDifficultyFromString(saveDoc.SelectSingleNode("/SaveData/SessionSettings/Difficulty").InnerText);
-                GameData.permadeathOn = saveDoc.SelectSingleNode("/SaveData/SessionSettings/Permadeath").InnerText.ToLower() == "true";
-                GameData.storedFood = float.Parse(saveDoc.SelectSingleNode("/SaveData/Home/StoredFood").InnerText);
-                GameData.storedWater = float.Parse(saveDoc.SelectSingleNode("/SaveData/Home/StoredWater").InnerText);
-                GameData.storedFuel = float.Parse(saveDoc.SelectSingleNode("/SaveData/Home/StoredFuel").InnerText);
+                GameData.PermadeathOn = saveDoc.SelectSingleNode("/SaveData/SessionSettings/Permadeath").InnerText.ToLower() == "true";
+                GameData.StoredFood = float.Parse(saveDoc.SelectSingleNode("/SaveData/Home/StoredFood").InnerText);
+                GameData.StoredWater = float.Parse(saveDoc.SelectSingleNode("/SaveData/Home/StoredWater").InnerText);
+                GameData.StoredFuel = float.Parse(saveDoc.SelectSingleNode("/SaveData/Home/StoredFuel").InnerText);
                 NotifyListenersLoad();
                 loaded = true;
                 return true;
@@ -43,13 +44,13 @@ namespace Persistence
                 XmlNode root = CreateNodeAndAppend("SaveData", saveDoc);
 
                 XmlNode gameSettings = CreateNodeAndAppend("SessionSettings", root);
-                CreateNodeAndAppend("Difficulty", gameSettings, GameData.difficultySetting.ToString());
-                CreateNodeAndAppend("Permadeath", gameSettings, GameData.permadeathOn.ToString());
+                CreateNodeAndAppend("Difficulty", gameSettings, GameData.DifficultySetting.ToString());
+                CreateNodeAndAppend("Permadeath", gameSettings, GameData.PermadeathOn.ToString());
                 
                 XmlNode homeData = CreateNodeAndAppend("Home", root);
-                CreateNodeAndAppend("StoredFood", homeData, GameData.storedFood.ToString());
-                CreateNodeAndAppend("StoredWater", homeData, GameData.storedWater.ToString());
-                CreateNodeAndAppend("StoredFuel", homeData, GameData.storedFuel.ToString());
+                CreateNodeAndAppend("StoredFood", homeData, GameData.StoredFood.ToString());
+                CreateNodeAndAppend("StoredWater", homeData, GameData.StoredWater.ToString());
+                CreateNodeAndAppend("StoredFuel", homeData, GameData.StoredFuel.ToString());
                 
                 saveDoc.Save(gameSaveLocation);
                 return true;
@@ -98,9 +99,9 @@ namespace Persistence
             {
                 saveDoc = new XmlDocument();
                 XmlNode root = CreateNodeAndAppend("SettingsData", saveDoc);
-                CreateNodeAndAppend("MasterVolume", root, GameData.masterVolume.ToString());
-                CreateNodeAndAppend("MusicVolume", root, GameData.musicVolume.ToString());
-                CreateNodeAndAppend("EffectsVolume", root, GameData.effectsVolume.ToString());
+                CreateNodeAndAppend("MasterVolume", root, GameData.MasterVolume.ToString());
+                CreateNodeAndAppend("MusicVolume", root, GameData.MusicVolume.ToString());
+                CreateNodeAndAppend("EffectsVolume", root, GameData.EffectsVolume.ToString());
                 saveDoc.Save(settingsSaveLocation);
                 return true;
             }
@@ -118,9 +119,9 @@ namespace Persistence
                 {
                     saveDoc = new XmlDocument();
                     saveDoc.Load(settingsSaveLocation);
-                    GameData.masterVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/MasterVolume").InnerText);
-                    GameData.musicVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/MusicVolume").InnerText);
-                    GameData.effectsVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/EffectsVolume").InnerText);
+                    GameData.MasterVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/MasterVolume").InnerText);
+                    GameData.MusicVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/MusicVolume").InnerText);
+                    GameData.EffectsVolume = float.Parse(saveDoc.SelectSingleNode("/SettingsData/EffectsVolume").InnerText);
                 }
                 return true;
             }

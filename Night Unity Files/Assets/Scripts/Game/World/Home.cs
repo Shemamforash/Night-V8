@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Persistence;
 using System;
+using Facilitating.Persistence;
 
 namespace World
 {
@@ -22,16 +23,16 @@ namespace World
 
         public static void Load()
         {
-            _water.Increment(GameData.storedWater);
-            _food.Increment(GameData.storedFood);
-            _fuel.Increment(GameData.storedFuel);
+            _water.Increment(GameData.StoredWater);
+            _food.Increment(GameData.StoredFood);
+            _fuel.Increment(GameData.StoredFuel);
         }
 
         public static void Save()
         {
-            GameData.storedWater = _water.Quantity();
-            GameData.storedFood = _food.Quantity();
-            GameData.storedFuel = _fuel.Quantity();
+            GameData.StoredWater = _water.Quantity();
+            GameData.StoredFood = _food.Quantity();
+            GameData.StoredFuel = _fuel.Quantity();
         }
 
         public static void IncrementResource(Resource.ResourceType resourceType, float amount)

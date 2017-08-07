@@ -1,6 +1,7 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
 using System.Collections.Generic;
+using Facilitating.Persistence;
 
 namespace Audio
 {
@@ -18,15 +19,15 @@ namespace Audio
         }
 
         private void Load(){
-            musicVolume = GameData.musicVolume;
-            effectsVolume = GameData.effectsVolume;
-            masterVolume = GameData.masterVolume;
+            musicVolume = GameData.MusicVolume;
+            effectsVolume = GameData.EffectsVolume;
+            masterVolume = GameData.MasterVolume;
         }
 
         private void Save(){
-            GameData.musicVolume = musicVolume;
-            GameData.effectsVolume = effectsVolume;
-            GameData.masterVolume = masterVolume;
+            GameData.MusicVolume = musicVolume;
+            GameData.EffectsVolume = effectsVolume;
+            GameData.MasterVolume = masterVolume;
         }
 
         private void UpdateVolumes()
