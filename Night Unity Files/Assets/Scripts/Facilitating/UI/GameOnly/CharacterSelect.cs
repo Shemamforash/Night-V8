@@ -1,4 +1,5 @@
 ﻿using Characters;
+using Game.Characters;
 using Menus;
 using UnityEngine;
 using UnityEngine.UI;

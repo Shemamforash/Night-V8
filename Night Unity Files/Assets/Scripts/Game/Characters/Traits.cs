@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Misc;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Characters
 {
@@ -8,13 +9,13 @@ namespace Game.Characters
     {
         private static readonly Dictionary<string, Trait> TraitDictionary = new Dictionary<string, Trait>();
         private static List<string> _traitNames = new List<string>();
-        
-        
+
+
         public static Trait GenerateTrait()
         {
             return TraitDictionary[_traitNames[Random.Range(0, _traitNames.Count)]];
         }
-        
+
         public static void LoadTraits()
         {
             string[] lines = Helper.ReadLinesFromFile("traits");
@@ -53,13 +54,13 @@ namespace Game.Characters
                             newTrait.ThirstToleranceModifier = ParseValueFromLine(value);
                             break;
                         case "starve":
-                            newTrait.StarvationToleranceModifier = ParseValueFromLine(value);
+                            newTrait.HungerToleranceModifier = ParseValueFromLine(value);
                             break;
                         case "sight":
                             newTrait.SightModifier = ParseValueFromLine(value);
                             break;
-                            default:
-                                throw new Exceptions.TraitAttributeNotRecognisedException(attribute);
+                        default:
+                            throw new Exceptions.TraitAttributeNotRecognisedException(attribute);
                     }
                     ++i;
                     if (i == lines.Length)
@@ -98,8 +99,36 @@ namespace Game.Characters
                 EnduranceBonus,
                 WeightModifier,
                 ThirstToleranceModifier,
-                StarvationToleranceModifier,
+                HungerToleranceModifier,
                 SightModifier;
+
+            public string GetTraitDetails()
+            {
+                string traitDetails = Name + ":";
+                traitDetails += GetValueAsString(WeightModifier, "Weight");
+                traitDetails += GetValueAsString(StrengthBonus, " str");
+                traitDetails += GetValueAsString(IntelligenceBonus, " int");
+                traitDetails += GetValueAsString(StabilityBonus, " stb");
+                traitDetails += GetValueAsString(EnduranceBonus, " end");
+                traitDetails += GetValueAsString(ThirstToleranceModifier, "% thrst");
+                traitDetails += GetValueAsString(HungerToleranceModifier, "% hungr");
+                traitDetails += GetValueAsString(SightModifier, "% sight");
+                return traitDetails;
+            }
+
+            public static string GetValueAsString(float value, string suffix)
+            {
+                string roundedValue = (Math.Round(value * 10) / 10).ToString();
+                if (value == 0)
+                {
+                    return "";
+                }
+                if (value > 0)
+                {
+                    roundedValue = "+" + roundedValue;
+                }
+                return "\n    " + roundedValue + " " + suffix;
+            }
         }
     }
 }

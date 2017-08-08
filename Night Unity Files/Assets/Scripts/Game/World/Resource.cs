@@ -6,8 +6,8 @@ public class Resource {
 
 	public enum ResourceType { Unknown, Nothing, Water, Food, Fuel, Ammo, Camp };
 	private float _quantity = 0f;
-	private Text resourceText;
-	private Func<float, string> _unitConversion;
+	private readonly Text resourceText;
+	private readonly Func<float, string> _unitConversion;
 
 	public Resource(string name, Func<float, string> unitConversion){
 		resourceText = GameObject.Find(name).transform.Find("Text").GetComponent<Text>();
@@ -35,5 +35,10 @@ public class Resource {
 
 	public float Quantity() {
 		return _quantity;
+	}
+
+	public GameObject GetObject()
+	{
+		return resourceText.transform.parent.gameObject;
 	}
 }

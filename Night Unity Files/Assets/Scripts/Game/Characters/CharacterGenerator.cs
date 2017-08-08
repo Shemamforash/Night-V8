@@ -10,7 +10,7 @@ namespace Game.Characters
     public class CharacterGenerator
     {
         private static List<string> _characterNames;
-        
+
         public static Character GenerateCharacter()
         {
             ClassCharacter newClass = GenerateClass();
@@ -108,19 +108,25 @@ namespace Game.Characters
                 default:
                     throw new Exceptions.UnrecognisedWeightCategoryException();
             }
-            c.Strength = new MyFloat(strengthMax, c.CharacterUi.StrengthText, 0, strengthMax);
-            Func<float, string> strengthFormatting = f => f + " +";
-            c.Strength.SetFormattingFunction(strengthFormatting);
 
-            c.Endurance = new MyFloat(enduranceMax, c.CharacterUi.EnduranceText, 0, enduranceMax);
-            Func<float, string> enduranceFormatting = f => f + " ..";
-            c.Endurance.SetFormattingFunction(enduranceFormatting);
+            List<TextAssociation> strengthAssociations = new List<TextAssociation>()
+            {
+                new TextAssociation(c.CharacterUi.StrengthText, f => f + " +"),
+                new TextAssociation(c.CharacterUi.StrengthTextDetail, f => f + "/" + strengthMax + " str")
+            };
+            c.Strength = new MyFloat(strengthMax, strengthAssociations, 0, strengthMax);
+
+            List<TextAssociation> enduranceAssociations = new List<TextAssociation>()
+            {
+                new TextAssociation(c.CharacterUi.EnduranceText, f => f + " .."),
+                new TextAssociation(c.CharacterUi.EnduranceTextDetail, f => f + "/" + enduranceMax + " end")
+            };
+            c.Strength = new MyFloat(enduranceMax, enduranceAssociations, 0, enduranceMax);
 
             c.StarvationTolerance = hunger * 3;
             c.DehydrationTolerance = thirst * 3;
-            
-            c.Starvation = new MyFloat(0, c.CharacterUi.HungerText, 0, c.StarvationTolerance);
-            Func<float, string> starvationFormatting = f => 
+
+            Func<float, string> starvationFormatting = f =>
             {
                 if (f == 0)
                 {
@@ -136,9 +142,9 @@ namespace Game.Characters
                 }
                 return "Starving";
             };
-            c.Starvation.SetFormattingFunction(starvationFormatting);
-            
-            c.Dehydration = new MyFloat(0, c.CharacterUi.ThirstText, 0, c.DehydrationTolerance);
+            TextAssociation starvationAssociation = new TextAssociation(c.CharacterUi.HungerText, starvationFormatting);
+            c.Starvation = new MyFloat(0, starvationAssociation, 0, c.StarvationTolerance);
+
             Func<float, string> dehydrationFormatting = f =>
             {
                 if (f == 0)
@@ -155,8 +161,10 @@ namespace Game.Characters
                 }
                 return "Parched";
             };
-            c.Dehydration.SetFormattingFunction(dehydrationFormatting);
-            
+            TextAssociation dehydrationAssociation =
+                new TextAssociation(c.CharacterUi.ThirstText, dehydrationFormatting);
+            c.Dehydration = new MyFloat(0, dehydrationAssociation, 0, c.DehydrationTolerance);
+
             c.Hunger = new MyFloat(hunger);
             c.Thirst = new MyFloat(thirst);
         }

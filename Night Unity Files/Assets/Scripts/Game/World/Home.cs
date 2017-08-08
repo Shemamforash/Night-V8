@@ -2,6 +2,7 @@
 using Persistence;
 using System;
 using Facilitating.Persistence;
+using UnityEngine.UI;
 
 namespace World
 {
@@ -63,6 +64,21 @@ namespace World
                     return _food.Consume(amount);
                 default:
                     return 0;
+            }
+        }
+
+        public static GameObject GetResourceObject(Resource.ResourceType type)
+        {
+            switch (type)
+            {
+                case Resource.ResourceType.Water:
+                    return _water.GetObject();
+                case Resource.ResourceType.Food:
+                    return _food.GetObject();
+                case Resource.ResourceType.Fuel:
+                    return _fuel.GetObject();
+                default:
+                    return null;
             }
         }
     }

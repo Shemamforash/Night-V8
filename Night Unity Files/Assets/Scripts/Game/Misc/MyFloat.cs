@@ -1,20 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Misc
 {
-    public class MyFloat
+    public partial class MyFloat
     {
         private readonly float _min;
         private readonly float _max;
         private float _currentValue;
         private readonly bool _capped, _throwException;
-        private Text _associatedText;
+        private List<TextAssociation> _associatedTexts = new List<TextAssociation>();
 
-        private Func<float, string> _formattingFunction;
-
-        //Defauly 0 decimal places
+        //Default 0 decimal places
         private float _precisionDivisor = 1f;
 
         public MyFloat(float value)
@@ -31,27 +29,33 @@ namespace Game.Misc
             _capped = true;
         }
 
-        public MyFloat(float value, float min, float max, bool throwException)
+        public MyFloat(float value, float min, float max, bool throwException) : this(value, min, max)
         {
-            Value = value;
-            _min = min;
-            _max = max;
             _throwException = throwException;
         }
 
-        public MyFloat(float value, Text associatedText)
+        public MyFloat(float value, List<TextAssociation> associatedTexts)
         {
-            _associatedText = associatedText;
+            _associatedTexts = associatedTexts;
             Value = value;
         }
 
-        public MyFloat(float value, Text associatedText, float min, float max)
+        public MyFloat(float value, List<TextAssociation> associatedTexts, float min, float max) : this(value,
+            associatedTexts)
         {
-            _associatedText = associatedText;
-            Value = value;
             _capped = true;
             _min = min;
             _max = max;
+        }
+
+        public MyFloat(float value, TextAssociation associatedText) : this(value,
+            new List<TextAssociation> {associatedText})
+        {
+        }
+
+        public MyFloat(float value, TextAssociation associatedText, float min, float max) : this(value,
+            new List<TextAssociation> {associatedText}, min, max)
+        {
         }
 
         public static float operator +(MyFloat a, MyFloat b)
@@ -68,15 +72,10 @@ namespace Game.Misc
         {
             return _max;
         }
-        
-        public void SetAssociatedText(Text associatedText)
-        {
-            _associatedText = associatedText;
-        }
 
-        public void SetFormattingFunction(Func<float, string> formattingFunction)
+        public void AddAssociatedText(TextAssociation associatedText)
         {
-            _formattingFunction = formattingFunction;
+            _associatedTexts.Add(associatedText);
             UpdateText();
         }
 
@@ -87,19 +86,13 @@ namespace Game.Misc
 
         public void UpdateText()
         {
-            if (_associatedText != null)
+            float roundedValue = RoundValue();
+            foreach (TextAssociation t in _associatedTexts)
             {
-                if (_formattingFunction != null)
-                {
-                    _associatedText.text = _formattingFunction(RoundValue());
-                }
-                else
-                {
-                    _associatedText.text = RoundValue().ToString();
-                }
+                t.UpdateText(roundedValue);
             }
         }
-        
+
         public float Value
         {
             get { return _currentValue; }

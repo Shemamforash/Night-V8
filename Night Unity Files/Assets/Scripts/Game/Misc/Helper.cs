@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text.RegularExpressions;
 using Game.Misc;
+using NUnit.Framework;
+using UnityEngine.UI;
 
 public static class Helper
 {
@@ -51,5 +54,36 @@ public static class Helper
             }
         }
         return null;
+    }
+
+    public enum NavigationDirections
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    };
+
+    public static void SetNavigation(GameObject origin, GameObject target, NavigationDirections d)
+    {
+        Button originButton = origin.GetComponent<Button>();
+        Button targetButton = target.GetComponent<Button>();
+        Navigation originButtonNavigation = originButton.navigation;
+        switch (d)
+        {
+            case NavigationDirections.Up:
+                originButtonNavigation.selectOnUp = targetButton;
+                break;
+            case NavigationDirections.Down:
+                originButtonNavigation.selectOnDown = targetButton;
+                break;
+            case NavigationDirections.Left:
+                originButtonNavigation.selectOnLeft = targetButton;
+                break;
+            case NavigationDirections.Right:
+                originButtonNavigation.selectOnRight = targetButton;
+                break;
+        }
+        originButton.navigation = originButtonNavigation;
     }
 }
