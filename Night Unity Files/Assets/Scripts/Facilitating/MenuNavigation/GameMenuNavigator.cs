@@ -20,7 +20,7 @@
 
         public GameMenuNavigator()
         {
-            WorldState.menuNavigator = this;
+            WorldState.MenuNavigator = this;
         }
 
         public void Start()
@@ -41,14 +41,14 @@
             destinationOption1Text.text = option1.EnvironmentName;
             destinationOption2Text.text = option2.EnvironmentName;
             WorldTime.Pause();
-            WorldState.currentDanger += 1;
+            WorldState.CurrentDanger += 1;
         }
 
         public void MakeDestinationSelection(Text t){
             if(t == destinationOption1Text) {
-                WorldState.environmentManager.SetCurrentEnvironment(destinationOption1);
+                WorldState.EnvironmentManager.SetCurrentEnvironment(destinationOption1);
             } else {
-                WorldState.environmentManager.SetCurrentEnvironment(destinationOption2);
+                WorldState.EnvironmentManager.SetCurrentEnvironment(destinationOption2);
             }
             navigationMenu.SetActive(false);
             BackToGame();

@@ -54,6 +54,16 @@ namespace Game.Misc
             _max = max;
         }
 
+        public static float operator +(MyFloat a, MyFloat b)
+        {
+            return a.Value + b.Value;
+        }
+
+        public static float operator /(MyFloat a, float b)
+        {
+            return a.Value / b;
+        }
+
         public float Max()
         {
             return _max;

@@ -16,8 +16,7 @@ namespace Characters
 	    public MyFloat Intelligence;
 	    public MyFloat Endurance;
 	    public MyFloat Stability;
-	    public MyFloat StarvationTolerance;
-	    public MyFloat DehydrationTolerance;
+	    public float StarvationTolerance, DehydrationTolerance;
 	    public MyFloat Starvation;
 	    public MyFloat Dehydration;
 	    public MyFloat Hunger, Thirst;
@@ -80,12 +79,14 @@ namespace Characters
 				newActionButton.transform.Find("Text").GetComponent<Text>().text = a.GetActionName();
 				newActionButton.GetComponent<Button>().onClick.AddListener(a.ExecuteAction);
 			}
+			CharacterUi.NameText.text = Name;
+			CharacterUi.ClassTraitText.text = _characterClass.ClassName() + " " + SecondaryTrait.Name;
 		}
 
 		public CharacterUI GetCharacterUi(){
 			return CharacterUi;
 		}
-
+	    
 		public class CharacterUI {
 			public GameObject GameObject;
 			public Button SimpleViewButton;
@@ -93,6 +94,7 @@ namespace Characters
 			public Button DrinkButton;
 			public GameObject actionScrollContent;
 			public Text ThirstText, HungerText, StrengthText, IntelligenceText, EnduranceText, StabilityText;
+			public Text NameText, ClassTraitText;
 			
 			public CharacterUI(GameObject gameObject){
 				GameObject = gameObject;
@@ -102,23 +104,29 @@ namespace Characters
 				EatButton = Helper.FindChildWithName(gameObject, "Eat Button").GetComponent<Button>();
 				DrinkButton = Helper.FindChildWithName(gameObject, "Drink Button").GetComponent<Button>();
 				SimpleViewButton = GameObject.Find("Simple").GetComponent<Button>();
+				
 				ThirstText = Helper.FindChildWithName(gameObject, "Thirst").GetComponent<Text>();
 				HungerText = Helper.FindChildWithName(gameObject, "Hunger").GetComponent<Text>();
 				StrengthText = Helper.FindChildWithName(gameObject, "Strength").GetComponent<Text>();
 				IntelligenceText = Helper.FindChildWithName(gameObject, "Intelligence").GetComponent<Text>();
 				EnduranceText = Helper.FindChildWithName(gameObject, "Endurance").GetComponent<Text>();
 				StabilityText = Helper.FindChildWithName(gameObject, "Stability").GetComponent<Text>();
+
+				NameText = Helper.FindChildWithName(gameObject, "Simple Name").GetComponent<Text>();
+				ClassTraitText = Helper.FindChildWithName(gameObject, "ClassTrait").GetComponent<Text>();
 			}
 		}
 
 	    public void Drink()
 	    {
-		    Home.ConsumeResource(Resource.ResourceType.Water, 10);
+		    float consumed = Home.ConsumeResource(Resource.ResourceType.Water, 0.25f);
+		    Dehydration.Value -= consumed;
 	    }
 
 	    public void Eat()
 	    {
-		    Home.ConsumeResource(Resource.ResourceType.Food, 10);
+		    float consumed = Home.ConsumeResource(Resource.ResourceType.Food, 1);
+		    Starvation.Value -= consumed;
 	    }
     }
 }

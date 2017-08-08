@@ -6,31 +6,37 @@ namespace World
 
     public class WorldState : MonoBehaviour
     {
-		public static float currentDanger = 0f;
-		public static int daysSpentHere = 0;
-		public static int noPreviousLocations = 0;
-		private TimeListener timeListener = new TimeListener();
-		public static GameMenuNavigator menuNavigator;
-		public static EnvironmentManager environmentManager;
+		public static float CurrentDanger;
+		public static int DaysSpentHere;
+		public static int NoPreviousLocations;
+		private readonly TimeListener timeListener = new TimeListener();
+		public static GameMenuNavigator MenuNavigator;
+		public static EnvironmentManager EnvironmentManager;
+
+	    public void Awake()
+	    {
+		    MenuNavigator = Camera.main.GetComponent<GameMenuNavigator>();
+		    EnvironmentManager = GameObject.Find("Canvas").GetComponent<EnvironmentManager>();
+	    }
 
 		private void IncrementDaysSpentHere(){
-			++daysSpentHere;
-			currentDanger += 0.5f;
-			if(currentDanger > 8){
-				currentDanger = 8;
+			++DaysSpentHere;
+			CurrentDanger += 0.5f;
+			if(CurrentDanger > 8){
+				CurrentDanger = 8;
 			}
-			if(daysSpentHere == 7){
+			if(DaysSpentHere == 7){
 				//TODO gameover
 			}
 		}
 
 		private void ResetDaysSpentHere(){
-			daysSpentHere = 0;
-			currentDanger -= 1;
-			if(currentDanger < 0){
-				currentDanger = 0;
+			DaysSpentHere = 0;
+			CurrentDanger -= 1;
+			if(CurrentDanger < 0){
+				CurrentDanger = 0;
 			}
-			++noPreviousLocations;
+			++NoPreviousLocations;
 		}
 
 		public WorldState(){

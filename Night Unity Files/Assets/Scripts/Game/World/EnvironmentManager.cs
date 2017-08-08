@@ -56,7 +56,7 @@ namespace World
             {
                 Environment option1 = SelectEnvironmentChoice(null);
                 Environment option2 = SelectEnvironmentChoice(option1);
-                WorldState.menuNavigator.ShowDestinationChoices(option1, option2);
+                WorldState.MenuNavigator.ShowDestinationChoices(option1, option2);
             }
         }
 
@@ -68,7 +68,7 @@ namespace World
 
         private Environment SelectEnvironmentChoice(Environment disallowed)
         {
-            int dangerIndex = (int)Mathf.Floor(WorldState.currentDanger);
+            int dangerIndex = (int)Mathf.Floor(WorldState.CurrentDanger);
             float[] pDistribution = new float[] { 0.15f, 0.2f, 0.3f, 0.2f, 0.15f };
             float rand = Random.Range(0f, 1f);
             float currentPVal = 0f;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using UnityEngine;
 
 namespace World
 {
@@ -31,7 +32,8 @@ namespace World
             pauseEvents.ForEach(a => a(paused));
         }
 
-        public void ReceiveMinuteEvent(){
+        public void ReceiveMinuteEvent()
+        {
             minuteEvents.ForEach(a => a());
         }
 
@@ -44,10 +46,12 @@ namespace World
         {
             hourEvents.Add(hourEvent);
         }
+
         public void OnDay(Action dayEvent)
         {
             dayEvents.Add(dayEvent);
         }
+
         public void OnPause(Action<bool> pauseEvent)
         {
             pauseEvents.Add(pauseEvent);
@@ -58,7 +62,8 @@ namespace World
             travelEvents.Add(travelEvent);
         }
 
-        public void OnMinute(Action minuteEvent){
+        public void OnMinute(Action minuteEvent)
+        {
             minuteEvents.Add(minuteEvent);
         }
     }

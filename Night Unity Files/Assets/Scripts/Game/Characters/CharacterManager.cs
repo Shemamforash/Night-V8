@@ -19,7 +19,17 @@ namespace Characters
 
 		private void Awake(){
 			persistenceListener = new PersistenceListener(Load, Save, "Character Manager");
+		    timeListener.OnHour(UpdateCharacterThirstAndHunger);
 		}
+
+        private void UpdateCharacterThirstAndHunger()
+        {
+            foreach (Character c in characters)
+            {
+                c.Dehydration.Value += c.Thirst / 12f;
+                c.Starvation.Value += c.Hunger / 12f;
+            }
+        }
 
         private void Load()
         {

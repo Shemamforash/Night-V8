@@ -13,7 +13,7 @@ namespace World
         public void Awake()
         {
             Func<float, string> litreConversion = f => (Mathf.Round(f * 10f) / 10f).ToString() + "L";
-            Func<float, string> foodConversion = f => Mathf.Round(f).ToString() + "kcal";
+            Func<float, string> foodConversion = f => Mathf.Round(f).ToString() + "meals";
             Func<float, string> fuelConversion = f => Mathf.Round(f).ToString() + "cans";
             _water = new Resource("Water", litreConversion);
             _food = new Resource("Food", foodConversion);
