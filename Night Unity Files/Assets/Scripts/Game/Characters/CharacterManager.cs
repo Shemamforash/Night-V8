@@ -14,17 +14,20 @@ namespace Game.Characters
         private static List<Character> _characters = new List<Character>();
         private readonly TimeListener _timeListener = new TimeListener();
         private PersistenceListener _persistenceListener;
+        private static CharacterSelect _characterSelect;
 
         private void Awake()
         {
+            _characterSelect = GetComponent<CharacterSelect>();
             _persistenceListener = new PersistenceListener(Load, Save, "Character Manager");
             _timeListener.OnHour(UpdateCharacterThirstAndHunger);
         }
 
         private void UpdateCharacterThirstAndHunger()
         {
-            foreach (Character c in _characters)
+            for (int i = _characters.Count - 1; i >=0; --i)
             {
+                Character c = _characters[i];
                 c.Dehydration.Value += c.Thirst / 12f;
                 c.Starvation.Value += c.Hunger / 12f;
             }
@@ -50,7 +53,7 @@ namespace Game.Characters
             GameData.Party = _characters;
         }
 
-        private void PopulateCharacterUi()
+        private static void PopulateCharacterUi()
         {
             float currentY = 1f;
             for (int i = 0; i < _characters.Count; ++i)
@@ -64,7 +67,7 @@ namespace Game.Characters
                 currentY -= 0.1f;
                 newCharacterUi.transform.localScale = new Vector2(1, 1);
                 Button b = _characters[i].GetCharacterUi().SimpleView.GetComponent<Button>();
-                b.onClick.AddListener(delegate { GetComponent<CharacterSelect>().SelectCharacter(b); });
+                b.onClick.AddListener(delegate { _characterSelect.SelectCharacter(b); });
             }
             for (int i = 0; i < _characters.Count; ++i)
             {
@@ -105,6 +108,16 @@ namespace Game.Characters
             return null;
         }
 
+        public static void RemoveCharacter(Character c, bool isDriver)
+        {
+            _characters.Remove(c);
+            PopulateCharacterUi();
+            if (isDriver)
+            {
+                WorldState.MenuNavigator.EndGameFail();
+            }
+        }
+        
         private static void ChangeCharacterPanel(GameObject g, bool expand)
         {
             bool foundCharacter = false;

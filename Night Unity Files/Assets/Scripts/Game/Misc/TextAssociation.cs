@@ -9,9 +9,9 @@ namespace Game.Misc
     {
         private readonly Text _associatedText;
         private readonly Func<float, string> _formattingFunction;
-        private bool _roundValue;
+        private readonly bool _roundValue;
         private float _precision = 10f;
-        
+
         public TextAssociation(Text associatedText)
         {
             _associatedText = associatedText;
@@ -26,17 +26,17 @@ namespace Game.Misc
 
         public void SetPrecision(int n)
         {
-            _precision = (float)Math.Pow(10f, n);
+            _precision = (float) Math.Pow(10f, n);
         }
 
         public float Round(float value)
         {
             return Mathf.Round(value * _precision) / _precision;
         }
-        
+
         public void UpdateText(float value)
         {
-            if (_roundValue)
+            if (_roundValue || _formattingFunction == null)
             {
                 value = Round(value);
             }

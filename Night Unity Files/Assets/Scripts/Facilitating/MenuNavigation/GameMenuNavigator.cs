@@ -1,4 +1,9 @@
-﻿namespace Menus
+﻿using System;
+using Characters;
+using Game.Misc;
+using UnityEditor;
+
+namespace Menus
 {
     using Persistence;
     using Audio;
@@ -10,14 +15,16 @@
 
     public class GameMenuNavigator : MonoBehaviour
     {
-        public GameObject pauseMainMenu, pauseSubMenu, optionsSubMenu, controlsSubMenu, gameMenu, navigationMenu;
+        public GameObject pauseMainMenu, pauseSubMenu, optionsSubMenu, controlsSubMenu, gameMenu, navigationMenu, gameOverMenu, actionDurationMenu;
         public Button pauseMenuFirstSelect, controlsFirstSelect, navigationFirstSelect;
         private GameObject gameLastButton;
         public Slider optionsFirstSelect;
         public bool menuButtonDown = false;
         private Environment destinationOption1, destinationOption2;
-        public Text destinationOption1Text, destinationOption2Text;
-
+        public Text destinationOption1Text, destinationOption2Text, actionDurationText;
+        private Character.CharacterAction currentAction;
+        private int _actionDuration;
+        
         public GameMenuNavigator()
         {
             WorldState.MenuNavigator = this;
@@ -44,6 +51,39 @@
             WorldState.CurrentDanger += 1;
         }
 
+        public void ShowActionDurationMenu(Character.CharacterAction a)
+        {
+            WorldTime.Pause();
+            actionDurationMenu.SetActive(true);
+            _actionDuration = a.Duration;
+            actionDurationText.text = _actionDuration + "hrs"; 
+            Helper.FindChildWithName(actionDurationMenu, "Confirm").GetComponent<Button>().Select();
+            gameMenu.SetActive(false);
+            currentAction = a;
+        }
+
+        public void CloseActionDurationMenu()
+        {
+            WorldTime.UnPause();
+            actionDurationMenu.SetActive(false);
+            gameMenu.SetActive(true);
+            currentAction.Duration = _actionDuration;
+            currentAction.InitialiseAction();
+            currentAction.Parent().CharacterUi.CollapseCharacterButton.Select();
+        }
+
+        public void IncrementActionDuration()
+        {
+            ++_actionDuration;
+            actionDurationText.text = _actionDuration + "hrs";
+        }
+
+        public void DecrementActionDuration()
+        {
+            --_actionDuration;
+            actionDurationText.text = _actionDuration + "hrs";
+        }
+        
         public void MakeDestinationSelection(Text t){
             if(t == destinationOption1Text) {
                 WorldState.EnvironmentManager.SetCurrentEnvironment(destinationOption1);
@@ -52,6 +92,13 @@
             }
             navigationMenu.SetActive(false);
             BackToGame();
+        }
+
+        public void EndGameFail()
+        {
+            WorldTime.Pause();
+            gameOverMenu.SetActive(true);
+            gameMenu.SetActive(false);
         }
 
         public void Update()

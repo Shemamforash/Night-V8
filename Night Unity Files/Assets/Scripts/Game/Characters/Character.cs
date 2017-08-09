@@ -2,6 +2,7 @@
 using Game.Characters;
 using Game.Misc;
 using UnityEngine;
+using UnityEngine.Timeline;
 using UnityEngine.UI;
 using World;
 
@@ -39,30 +40,90 @@ namespace Characters
 
         public abstract class CharacterAction
         {
-            private string _actionName;
+            private readonly string _actionName;
             public GameObject ActionObject;
+            private readonly bool _durationFixed;
+            private int _duration;
+            private TimeListener _timeListener = new TimeListener();
+            private MyFloat _timeRemaining;
+            private Character _parent;
 
-            public CharacterAction(string actionName)
+            public int Duration
             {
-                _actionName = actionName;
+                get { return _duration; }
+                set
+                {
+                    if (!_durationFixed)
+                    {
+                        _duration = value;
+                    }
+                }
             }
 
-            public abstract void ExecuteAction();
+            public Character Parent()
+            {
+                return _parent;
+            }
+
+            protected CharacterAction(string actionName, bool durationFixed, int duration, Character parent)
+            {
+                _actionName = actionName;
+                _durationFixed = durationFixed;
+                _duration = duration;
+                _timeListener.OnHour(UpdateTime);
+                _parent = parent;
+                TextAssociation currentActionAssociation = new TextAssociation(_parent.CharacterUi.CurrentActionText,
+                    f => _actionName + " (" + (int)f + "hrs)", true);
+                _timeRemaining = new MyFloat(_duration, currentActionAssociation);
+            }
+
+            protected virtual void ExecuteAction()
+            {
+                _parent.CharacterUi.CurrentActionText.text = "Doing nothing";
+            }
+
+            public virtual void InitialiseAction()
+            {
+                _timeRemaining.Value = _duration;
+            }
+
+            protected void ImmobiliseParent()
+            {
+                //for preventing weapon switching when exploring
+            }
 
             public string GetActionName()
             {
                 return _actionName;
             }
+
+            public bool IsDurationFixed()
+            {
+                return _durationFixed;
+            }
+
+            private void UpdateTime()
+            {
+                if (_timeRemaining > 0)
+                {
+                    --_timeRemaining.Value;
+                    if (_timeRemaining == 0)
+                    {
+                        ExecuteAction();
+                    }
+                }
+            }
         }
 
         public class FindResources : CharacterAction
         {
-            public FindResources(string actionName) : base(actionName)
+            public FindResources(Character c) : base("Find Resources", false, 1, c)
             {
             }
 
-            public override void ExecuteAction()
+            protected override void ExecuteAction()
             {
+                base.ExecuteAction();
                 Home.IncrementResource(Resource.ResourceType.Water, 1);
                 Home.IncrementResource(Resource.ResourceType.Food, 1);
             }
@@ -75,18 +136,19 @@ namespace Characters
             Weight = weight;
             PrimaryTrait = Traits.FindTrait(_characterClass.ClassTrait());
             SecondaryTrait = secondaryTrait;
-            _availableActions.Add(new FindResources("Find Resources"));
+
+            GameObject characterUi = GameObject.Instantiate(Resources.Load("Prefabs/Character Template") as GameObject);
+            characterUi.transform.SetParent(GameObject.Find("Characters").transform);
+            SetCharacterUi(characterUi);
+
+            _availableActions.Add(new FindResources(this));
             actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
-            GameObject characterUI = GameObject.Instantiate(Resources.Load("Prefabs/Character Template") as GameObject);
-            characterUI.transform.SetParent(GameObject.Find("Characters").transform);
-            SetCharacterUi(characterUI);
+
+            UpdateActionUi();
         }
 
-        public void SetCharacterUi(GameObject g)
+        private void UpdateActionUi()
         {
-            CharacterUi = new CharacterUI(g);
-            CharacterUi.EatButton.onClick.AddListener(Eat);
-            CharacterUi.DrinkButton.onClick.AddListener(Drink);
             for (int i = 0; i < _availableActions.Count; ++i)
             {
                 CharacterAction a = _availableActions[i];
@@ -95,13 +157,16 @@ namespace Characters
                 newActionButton.transform.SetParent(CharacterUi.actionScrollContent.transform);
                 newActionButton.transform.Find("Text").GetComponent<Text>().text = a.GetActionName();
                 Button currentButton = newActionButton.GetComponent<Button>();
-                currentButton.GetComponent<Button>().onClick.AddListener(a.ExecuteAction);
-                
+                currentButton.GetComponent<Button>().onClick
+                    .AddListener(() => WorldState.MenuNavigator.ShowActionDurationMenu(a));
+
                 Helper.SetNavigation(newActionButton, CharacterUi.WeaponCard, Helper.NavigationDirections.Left);
                 if (i == _availableActions.Count - 1)
                 {
-                    Helper.SetNavigation(newActionButton, CharacterUi.CollapseCharacterButton.gameObject, Helper.NavigationDirections.Down);
-                    Helper.SetNavigation(CharacterUi.CollapseCharacterButton.gameObject, newActionButton, Helper.NavigationDirections.Up);
+                    Helper.SetNavigation(newActionButton, CharacterUi.CollapseCharacterButton.gameObject,
+                        Helper.NavigationDirections.Down);
+                    Helper.SetNavigation(CharacterUi.CollapseCharacterButton.gameObject, newActionButton,
+                        Helper.NavigationDirections.Up);
                 }
 
                 if (i > 0)
@@ -112,9 +177,18 @@ namespace Characters
                 }
                 else if (i == 0)
                 {
-                    Helper.SetNavigation(CharacterUi.WeaponCard.gameObject, newActionButton, Helper.NavigationDirections.Right);
+                    Helper.SetNavigation(CharacterUi.WeaponCard.gameObject, newActionButton,
+                        Helper.NavigationDirections.Right);
                 }
             }
+        }
+
+        private void SetCharacterUi(GameObject g)
+        {
+            CharacterUi = new CharacterUI(g);
+            CharacterUi.EatButton.onClick.AddListener(Eat);
+            CharacterUi.DrinkButton.onClick.AddListener(Drink);
+
             CharacterUi.NameText.text = Name;
             CharacterUi.ClassTraitText.text = _characterClass.ClassName() + " " + SecondaryTrait.Name;
             CharacterUi.DetailedClassText.text = PrimaryTrait.GetTraitDetails();
@@ -125,8 +199,8 @@ namespace Characters
         public string GetConditions()
         {
             string conditions = "";
-            conditions += GetThirstStatus() + "\n";
-            conditions += GetHungerStatus();
+            conditions += GetThirstStatus() + "(" + Mathf.Round(Thirst.Value / 1.2f) / 10f + " litres/hr)\n";
+            conditions += GetHungerStatus() + "(" + Mathf.Round(Hunger.Value / 1.2f) / 10f + " meals/hr)";
             return conditions;
         }
 
@@ -144,17 +218,29 @@ namespace Characters
             {
                 return "Hungry";
             }
+            if (f < Hunger * 3f)
+            {
+                Eat();
+            }
+            if (f >= StarvationTolerance)
+            {
+                Kill();
+            }
             return "Starving";
         }
-        
+
         public string GetHungerStatus()
         {
             return GetHungerStatus(Starvation.Value);
         }
 
+        public void Kill()
+        {
+            CharacterManager.RemoveCharacter(this, Name == "Driver");
+        }
+
         public string GetThirstStatus(float f)
         {
-           
             if (f == 0)
             {
                 return "Slaked";
@@ -167,9 +253,17 @@ namespace Characters
             {
                 return "Thirsty";
             }
+            if (f < Thirst * 3f)
+            {
+                Drink();
+            }
+            if (f >= DehydrationTolerance)
+            {
+                Kill();
+            }
             return "Parched";
         }
-        
+
         public string GetThirstStatus()
         {
             return GetThirstStatus(Dehydration.Value);

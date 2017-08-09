@@ -59,6 +59,11 @@ namespace Game.Misc
         {
             return a.Value + b.Value;
         }
+        
+        public static float operator +(MyFloat a, float b)
+        {
+            return a.Value + b;
+        }
 
         public static float operator /(MyFloat a, float b)
         {
