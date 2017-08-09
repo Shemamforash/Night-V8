@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Facilitating.UI.GameOnly;
 using Game.Characters;
 using Game.Misc;
 using UnityEngine;
@@ -8,7 +7,7 @@ using World;
 
 namespace Characters
 {
-    public class Character
+    public partial class Character
     {
         public CharacterUI CharacterUi;
         public string Name;
@@ -102,6 +101,7 @@ namespace Characters
                 if (i == _availableActions.Count - 1)
                 {
                     Helper.SetNavigation(newActionButton, CharacterUi.CollapseCharacterButton.gameObject, Helper.NavigationDirections.Down);
+                    Helper.SetNavigation(CharacterUi.CollapseCharacterButton.gameObject, newActionButton, Helper.NavigationDirections.Up);
                 }
 
                 if (i > 0)
@@ -119,6 +119,60 @@ namespace Characters
             CharacterUi.ClassTraitText.text = _characterClass.ClassName() + " " + SecondaryTrait.Name;
             CharacterUi.DetailedClassText.text = PrimaryTrait.GetTraitDetails();
             CharacterUi.DetailedTraitText.text = SecondaryTrait.GetTraitDetails();
+            CharacterUi.WeightText.text = "Weight: " + Weight + " (requires " + ((int) Weight + 5) + " fuel)";
+        }
+
+        public string GetConditions()
+        {
+            string conditions = "";
+            conditions += GetThirstStatus() + "\n";
+            conditions += GetHungerStatus();
+            return conditions;
+        }
+
+        public string GetHungerStatus(float f)
+        {
+            if (f == 0)
+            {
+                return "Full";
+            }
+            if (f < Hunger)
+            {
+                return "Sated";
+            }
+            if (f < Hunger * 2f)
+            {
+                return "Hungry";
+            }
+            return "Starving";
+        }
+        
+        public string GetHungerStatus()
+        {
+            return GetHungerStatus(Starvation.Value);
+        }
+
+        public string GetThirstStatus(float f)
+        {
+           
+            if (f == 0)
+            {
+                return "Slaked";
+            }
+            if (f < Thirst)
+            {
+                return "Quenched";
+            }
+            if (f < Thirst * 2f)
+            {
+                return "Thirsty";
+            }
+            return "Parched";
+        }
+        
+        public string GetThirstStatus()
+        {
+            return GetThirstStatus(Dehydration.Value);
         }
 
         public CharacterUI GetCharacterUi()
@@ -126,64 +180,6 @@ namespace Characters
             return CharacterUi;
         }
 
-        public class CharacterUI
-        {
-            public GameObject GameObject, SimpleView, DetailedView;
-            public Button EatButton;
-            public Button DrinkButton;
-            public Button CollapseCharacterButton;
-            public GameObject actionScrollContent, WeaponCard;
-            public Text ThirstText, HungerText, StrengthText, IntelligenceText, EnduranceText, StabilityText;
-            public Text StrengthTextDetail, IntelligenceTextDetail, EnduranceTextDetail, StabilityTextDetail;
-            public Text NameText, ClassTraitText, DetailedClassText, DetailedTraitText;
-            public Text ConditionsText;
-
-            public CharacterUI(GameObject gameObject)
-            {
-                GameObject = gameObject;
-                SimpleView = GameObject.transform.Find("Simple").gameObject;
-                DetailedView = GameObject.transform.Find("Detailed").gameObject;
-                
-                actionScrollContent = Helper.FindChildWithName(gameObject, "Content").gameObject;
-                CollapseCharacterButton = FindInDetailedView<Button>("Back Button");
-                CollapseCharacterButton.onClick.AddListener(
-                    gameObject.transform.parent.GetComponent<CharacterSelect>().ExitCharacter);
-                
-                ThirstText = FindInSimpleView<Text>("Thirst");
-                HungerText = FindInSimpleView<Text>("Hunger");
-                StrengthText = FindInSimpleView<Text>("Strength");
-                IntelligenceText = FindInSimpleView<Text>("Intelligence");
-                EnduranceText = FindInSimpleView<Text>("Endurance");
-                StabilityText = FindInSimpleView<Text>("Stability");
-
-                NameText = FindInSimpleView<Text>("Simple Name");
-                ClassTraitText = FindInSimpleView<Text>("ClassTrait");
-
-                DetailedClassText = FindInDetailedView<Text>("Class");
-                DetailedTraitText = FindInDetailedView<Text>("Trait");
-                
-                EatButton = FindInDetailedView<Button>("Eat Button");
-                DrinkButton = FindInDetailedView<Button>("Drink Button");
-                WeaponCard = Helper.FindChildWithName(DetailedView, "Weapon Card").gameObject;
-                ConditionsText = FindInDetailedView<Text>("Conditions");
-                
-                StrengthTextDetail = FindInDetailedView<Text>("Strength");
-                IntelligenceTextDetail = FindInDetailedView<Text>("Intelligence");
-                EnduranceTextDetail = FindInDetailedView<Text>("Endurance");
-                StabilityTextDetail = FindInDetailedView<Text>("Stability");
-            }
-
-            public T FindInSimpleView<T>(string name)
-            {
-                return Helper.FindChildWithName(SimpleView, name).GetComponent<T>();
-            }
-
-            public T FindInDetailedView<T>(string name)
-            {
-                return Helper.FindChildWithName(DetailedView, name).GetComponent<T>();
-            }
-        }
-        
         public void Drink()
         {
             float consumed = Home.ConsumeResource(Resource.ResourceType.Water, 0.25f);

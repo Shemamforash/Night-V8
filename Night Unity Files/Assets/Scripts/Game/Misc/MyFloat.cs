@@ -12,9 +12,6 @@ namespace Game.Misc
         private readonly bool _capped, _throwException;
         private List<TextAssociation> _associatedTexts = new List<TextAssociation>();
 
-        //Default 0 decimal places
-        private float _precisionDivisor = 1f;
-
         public MyFloat(float value)
         {
             Value = value;
@@ -68,6 +65,51 @@ namespace Game.Misc
             return a.Value / b;
         }
 
+        public static bool operator <(MyFloat a, MyFloat b)
+        {
+            return a.Value < b.Value;
+        }
+
+        public static bool operator <(MyFloat a, float b)
+        {
+            return a.Value < b;
+        }
+        
+        public static bool operator <(float a, MyFloat b)
+        {
+            return a < b.Value;
+        }
+
+        public static bool operator >(MyFloat a, MyFloat b)
+        {
+            return a.Value > b.Value;
+        }
+
+        public static bool operator >(MyFloat a, float b)
+        {
+            return a.Value > b;
+        }
+        
+        public static bool operator >(float a, MyFloat b)
+        {
+            return a > b.Value;
+        }
+
+        public static float operator *(MyFloat a, float b)
+        {
+            return a.Value + b;
+        }
+
+        public static bool operator ==(MyFloat a, float b)
+        {
+            return a.Value == b;
+        }
+
+        public static bool operator !=(MyFloat a, float b)
+        {
+            return a.Value != b;
+        }
+
         public float Max()
         {
             return _max;
@@ -79,17 +121,11 @@ namespace Game.Misc
             UpdateText();
         }
 
-        public void SetDecimalPlaces(int places)
-        {
-            _precisionDivisor = Mathf.Pow(10, places);
-        }
-
         public void UpdateText()
         {
-            float roundedValue = RoundValue();
             foreach (TextAssociation t in _associatedTexts)
             {
-                t.UpdateText(roundedValue);
+                t.UpdateText(_currentValue);
             }
         }
 
@@ -127,11 +163,6 @@ namespace Game.Misc
                 }
                 UpdateText();
             }
-        }
-
-        private float RoundValue()
-        {
-            return Mathf.Round(_currentValue * _precisionDivisor) / _precisionDivisor;
         }
     }
 }
