@@ -1,4 +1,4 @@
-using Facilitating.UI.GameOnly;
+using Game.Characters;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,8 +28,7 @@ namespace Characters
 
             actionScrollContent = Helper.FindChildWithName(gameObject, "Content").gameObject;
             CollapseCharacterButton = FindInDetailedView<Button>("Back Button");
-            CollapseCharacterButton.onClick.AddListener(
-                gameObject.transform.parent.GetComponent<CharacterSelect>().ExitCharacter);
+            CollapseCharacterButton.onClick.AddListener(CharacterManager.ExitCharacter);
 
             ThirstText = FindInSimpleView<Text>("Thirst");
             HungerText = FindInSimpleView<Text>("Hunger");
@@ -65,6 +64,20 @@ namespace Characters
         public T FindInDetailedView<T>(string name)
         {
             return Helper.FindChildWithName(DetailedView, name).GetComponent<T>();
+        }
+
+        public void SwitchToDetailedView()
+        {
+            DetailedView.SetActive(true);
+            SimpleView.SetActive(false);
+            EatButton.Select();
+        }
+
+        public void SwitchToSimpleView()
+        {
+            DetailedView.SetActive(false);
+            SimpleView.SetActive(true);
+            SimpleView.GetComponent<Button>().Select();
         }
     }
 }

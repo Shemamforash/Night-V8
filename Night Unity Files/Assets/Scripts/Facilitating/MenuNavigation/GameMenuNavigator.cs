@@ -1,156 +1,146 @@
-﻿using System;
+﻿using Audio;
 using Characters;
-using Game.Misc;
-using UnityEditor;
+using Facilitating.UI;
+using Game.Characters;
+using Persistence;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using World;
 
-namespace Menus
+namespace Facilitating.MenuNavigation
 {
-    using Persistence;
-    using Audio;
-    using World;
-    using UnityEngine.UI;
-    using UnityEngine;
-    using UnityEngine.SceneManagement;
-    using UnityEngine.EventSystems;
-
-    public class GameMenuNavigator : MonoBehaviour
+    public class GameMenuNavigator : MenuNavigator
     {
-        public GameObject pauseMainMenu, pauseSubMenu, optionsSubMenu, controlsSubMenu, gameMenu, navigationMenu, gameOverMenu, actionDurationMenu;
-        public Button pauseMenuFirstSelect, controlsFirstSelect, navigationFirstSelect;
-        private GameObject gameLastButton;
-        public Slider optionsFirstSelect;
-        public bool menuButtonDown = false;
-        private Environment destinationOption1, destinationOption2;
-        public Text destinationOption1Text, destinationOption2Text, actionDurationText;
-        private Character.CharacterAction currentAction;
+        private bool _menuButtonDown;
+        private Environment _destinationOption1, _destinationOption2;
+        public Text DestinationOption1Text, DestinationOption2Text, ActionDurationText;
+        private Character.CharacterAction _currentAction;
         private int _actionDuration;
+        private bool _pauseMenuOpen;
         
-        public GameMenuNavigator()
-        {
-            WorldState.MenuNavigator = this;
-        }
-
-        public void Start()
+        public void Awake()
         {
             SaveController.LoadSettings();
             SaveController.LoadGameFromFile();
-            GetComponent<GlobalAudioManager>().Initialise();
+            Camera.main.GetComponent<GlobalAudioManager>().Initialise();
+
+            WorldState.MenuNavigator = this;
+            DestinationOption1Text = Helper.FindChildWithName(gameObject, "Option 1").Find("Text").GetComponent<Text>();
+            DestinationOption2Text = Helper.FindChildWithName(gameObject, "Option 2").Find("Text").GetComponent<Text>();
+            ActionDurationText = Helper.FindChildWithName(gameObject, "Duration").GetComponent<Text>();
+
+            AddMenu("Pause Sub Menu", "Resume");
+            AddMenu("Options Container", "Master Slider");
+            AddMenu("Controls Container", "Back");
+            AddMenu("Game Menu", "Food");
+            AddMenu("DestinationMenu", "Option 1");
+            AddMenu("Game Over Menu", "Menu");
+            AddMenu("Action Duration Menu", "Confirm");
+            
+            SetInitialMenu(GameObject.Find("Game Menu"), GameObject.Find("Food"));
+            
+            Debug.Log(EventSystem.current.currentSelectedGameObject);
+        }
+
+        protected override void SwitchToMenu(string menu, bool paused)
+        {
+            CharacterManager.ExitCharacter();
+            base.SwitchToMenu(menu, paused);
         }
 
         public void ShowDestinationChoices(Environment option1, Environment option2)
         {
-            gameLastButton = EventSystem.current.currentSelectedGameObject;
-            gameMenu.SetActive(false);
-            navigationMenu.SetActive(true);
-            navigationFirstSelect.Select();
-            destinationOption1 = option1;
-            destinationOption2 = option2;
-            destinationOption1Text.text = option1.EnvironmentName;
-            destinationOption2Text.text = option2.EnvironmentName;
-            WorldTime.Pause();
+            SwitchToMenu("DestinationMenu", true);
+            _destinationOption1 = option1;
+            _destinationOption2 = option2;
+            DestinationOption1Text.text = option1.EnvironmentName;
+            DestinationOption2Text.text = option2.EnvironmentName;
             WorldState.CurrentDanger += 1;
         }
 
         public void ShowActionDurationMenu(Character.CharacterAction a)
         {
-            WorldTime.Pause();
-            actionDurationMenu.SetActive(true);
+            SwitchToMenu("Action Duration Menu", true);
             _actionDuration = a.Duration;
-            actionDurationText.text = _actionDuration + "hrs"; 
-            Helper.FindChildWithName(actionDurationMenu, "Confirm").GetComponent<Button>().Select();
-            gameMenu.SetActive(false);
-            currentAction = a;
+            ActionDurationText.text = _actionDuration + "hrs"; 
+            _currentAction = a;
         }
 
         public void CloseActionDurationMenu()
         {
-            WorldTime.UnPause();
-            actionDurationMenu.SetActive(false);
-            gameMenu.SetActive(true);
-            currentAction.Duration = _actionDuration;
-            currentAction.InitialiseAction();
-            currentAction.Parent().CharacterUi.CollapseCharacterButton.Select();
+            SwitchToMenu("Game Menu", false);
+            _currentAction.Duration = _actionDuration;
+            _currentAction.InitialiseAction();
         }
 
         public void IncrementActionDuration()
         {
             ++_actionDuration;
-            actionDurationText.text = _actionDuration + "hrs";
+            ActionDurationText.text = _actionDuration + "hrs";
         }
 
         public void DecrementActionDuration()
         {
-            --_actionDuration;
-            actionDurationText.text = _actionDuration + "hrs";
+            if (_actionDuration > 1)
+            {
+                --_actionDuration;
+                ActionDurationText.text = _actionDuration + "hrs";
+            }
         }
         
         public void MakeDestinationSelection(Text t){
-            if(t == destinationOption1Text) {
-                WorldState.EnvironmentManager.SetCurrentEnvironment(destinationOption1);
+            SwitchToMenu("Game Menu", false);
+            if(t == DestinationOption1Text) {
+                WorldState.EnvironmentManager.SetCurrentEnvironment(_destinationOption1);
             } else {
-                WorldState.EnvironmentManager.SetCurrentEnvironment(destinationOption2);
+                WorldState.EnvironmentManager.SetCurrentEnvironment(_destinationOption2);
             }
-            navigationMenu.SetActive(false);
-            BackToGame();
         }
 
         public void EndGameFail()
         {
-            WorldTime.Pause();
-            gameOverMenu.SetActive(true);
-            gameMenu.SetActive(false);
+            SwitchToMenu("Game Over Menu", true);
         }
 
         public void Update()
         {
             if (Input.GetAxis("Menu") != 0)
             {
-                if (!menuButtonDown)
+                if (!_menuButtonDown)
                 {
-                    menuButtonDown = true;
+                    _menuButtonDown = true;
                     TogglePauseMenu();
                 }
             }
             else
             {
-                menuButtonDown = false;
+                _menuButtonDown = false;
             }
         }
 
         public void TogglePauseMenu()
         {
-            if (pauseSubMenu.activeInHierarchy)
+            if (!_pauseMenuOpen)
             {
-                pauseMainMenu.SetActive(false);
-                BackToGame();
+                SwitchToMenu("Pause Sub Menu", true);
             }
             else
             {
-                gameMenu.SetActive(false);
-                gameLastButton = EventSystem.current.currentSelectedGameObject;
-                WorldTime.Pause();
-                BackToMenu();
+                SwitchToMenu("Game Menu", false);
             }
+            _pauseMenuOpen = !_pauseMenuOpen;
         }
 
-        private void BackToGame(){
-            gameMenu.SetActive(true);
-            gameLastButton.GetComponent<Selectable>().Select();
-            WorldTime.UnPause();
+        public void BackToPauseMenu()
+        {
+            SwitchToMenu("Pause Sub Menu", true);
         }
-
+        
         public void OnApplicationQuit()
         {
             Save();
-        }
-
-        public void BackToMenu()
-        {
-            pauseMainMenu.SetActive(true);
-            optionsSubMenu.SetActive(false);
-            controlsSubMenu.SetActive(false);
-            pauseSubMenu.SetActive(true);
-            pauseMenuFirstSelect.Select();
         }
 
         private void Save()
@@ -167,16 +157,12 @@ namespace Menus
 
         public void OpenControls()
         {
-            pauseSubMenu.SetActive(false);
-            controlsSubMenu.SetActive(true);
-            controlsFirstSelect.Select();
+            SwitchToMenu("Controls Container", true);
         }
 
         public void OpenOptionsMenu()
         {
-            pauseSubMenu.SetActive(false);
-            optionsSubMenu.SetActive(true);
-            optionsFirstSelect.Select();
+            SwitchToMenu("Options Container", true);
         }
     }
 }

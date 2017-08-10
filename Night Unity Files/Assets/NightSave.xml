@@ -4,8 +4,8 @@
     <Permadeath>True</Permadeath>
   </SessionSettings>
   <Home>
-    <StoredFood>23</StoredFood>
-    <StoredWater>63</StoredWater>
+    <StoredFood>19</StoredFood>
+    <StoredWater>23.25</StoredWater>
     <StoredFuel>0</StoredFuel>
   </Home>
 </SaveData>

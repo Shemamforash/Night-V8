@@ -46,14 +46,21 @@ public static class Helper
     public static Transform FindChildWithName(Transform t, string name)
     {
         List<Transform> children = FindAllChildren(t);
+        Transform foundChild = null;
+        int noNameOccurences = 0;
         foreach (Transform child in children)
         {
             if (child.name == name)
             {
-                return child;
+                ++noNameOccurences;
+                foundChild = child;
             }
         }
-        return null;
+        if (noNameOccurences > 1)
+        {
+            throw new Exceptions.UnspecificGameObjectNameException(noNameOccurences);
+        }
+        return foundChild;
     }
 
     public enum NavigationDirections

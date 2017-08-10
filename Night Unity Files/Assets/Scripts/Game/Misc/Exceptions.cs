@@ -57,5 +57,20 @@ namespace Game.Misc
                 get { return "Capped value exceeded bounds"; }
             }
         }
+
+        public class UnspecificGameObjectNameException : Exception
+        {
+            private readonly int _occurences;
+            
+            public UnspecificGameObjectNameException(int occurences)
+            {
+                _occurences = occurences;
+            }
+            
+            public override string Message
+            {
+                get { return "GameObject name too general, found " + _occurences + " occurences"; }
+            }
+        }
     }
 }
