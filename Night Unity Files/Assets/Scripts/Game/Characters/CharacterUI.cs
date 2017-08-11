@@ -17,6 +17,18 @@ namespace Characters
         public Text NameText, ClassTraitText, DetailedClassText, DetailedTraitText;
         public Text ConditionsText, WeightText;
 
+        public Text WeaponNameTextDetailed,
+            WeaponNameTextSimple,
+            WeaponModifier1Text,
+            WeaponModifier2Text,
+            WeaponDamageText,
+            WeaponFireRateText,
+            WeaponReloadSpeedText,
+            WeaponCapacityText,
+            WeaponHandlingText,
+            WeaponCriticalChanceText,
+            WeaponAccuracyText;
+
         public CharacterUI(GameObject gameObject)
         {
             GameObject = gameObject;
@@ -54,6 +66,18 @@ namespace Characters
             IntelligenceTextDetail = FindInDetailedView<Text>("Intelligence");
             EnduranceTextDetail = FindInDetailedView<Text>("Endurance");
             StabilityTextDetail = FindInDetailedView<Text>("Stability");
+
+            WeaponNameTextSimple = FindInSimpleView<Text>("Weapon Name");
+            WeaponNameTextDetailed = FindInDetailedView<Text>("Weapon Name");
+            WeaponModifier1Text = FindInDetailedView<Text>("Primary Modifier");
+            WeaponModifier2Text = FindInDetailedView<Text>("Secondary Modifier");
+            WeaponDamageText = FindInDetailedView<Text>("Damage");
+            WeaponFireRateText = FindInDetailedView<Text>("Fire Rate");
+            WeaponReloadSpeedText = FindInDetailedView<Text>("Reload Speed");
+            WeaponCapacityText = FindInDetailedView<Text>("Capacity");
+            WeaponHandlingText = FindInDetailedView<Text>("Handling");
+            WeaponCriticalChanceText = FindInDetailedView<Text>("Critical Chance");
+            WeaponAccuracyText = FindInDetailedView<Text>("Accuracy");
         }
 
         public T FindInSimpleView<T>(string name)

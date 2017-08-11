@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Characters;
+using Game.Combat;
 using Game.Misc;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -49,6 +50,7 @@ namespace Game.Characters
         {
             Character theDriver = new Character("Driver", ClassCharacter.FindClass("Driver"),
                 Character.WeightCategory.Medium, Traits.FindTrait("Scavenger"));
+            theDriver.SetWeapon(WeaponGenerator.GenerateWeapon());
             CalculateAttributesFromWeight(theDriver);
             return theDriver;
         }

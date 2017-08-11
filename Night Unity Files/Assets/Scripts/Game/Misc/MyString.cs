@@ -8,17 +8,29 @@ namespace Game.Misc
         private List<Text> _associatedTexts;
         private string _text;
 
-        public MyString(List<Text> associatedTexts)
+        public MyString(string initialText, List<Text> associatedTexts)
         {
+            _text = initialText;
             _associatedTexts = associatedTexts;
-            foreach (Text t in associatedTexts)
+            UpdateAssociatedText();
+        }
+
+        public MyString(string initialText, Text associatedText) : this(initialText, new List<Text> {associatedText})
+        {
+        }
+
+        private void UpdateAssociatedText()
+        {
+            foreach (Text t in _associatedTexts)
             {
                 t.text = _text;
             }
         }
 
-        public MyString(Text associatedText) : this(new List<Text> {associatedText})
+        public void SetText(string text)
         {
+            _text = text;
+            UpdateAssociatedText();
         }
     }
 }

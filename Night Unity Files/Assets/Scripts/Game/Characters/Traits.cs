@@ -36,28 +36,28 @@ namespace Game.Characters
                             _traitNames.Add(value);
                             break;
                         case "str":
-                            newTrait.StrengthBonus = ParseValueFromLine(value);
+                            newTrait.StrengthBonus = float.Parse(value);
                             break;
                         case "int":
-                            newTrait.IntelligenceBonus = ParseValueFromLine(value);
+                            newTrait.IntelligenceBonus = float.Parse(value);
                             break;
                         case "stab":
-                            newTrait.StabilityBonus = ParseValueFromLine(value);
+                            newTrait.StabilityBonus = float.Parse(value);
                             break;
                         case "end":
-                            newTrait.EnduranceBonus = ParseValueFromLine(value);
+                            newTrait.EnduranceBonus = float.Parse(value);
                             break;
                         case "weight":
-                            newTrait.WeightModifier = ParseValueFromLine(value);
+                            newTrait.WeightModifier = float.Parse(value);
                             break;
                         case "thirst":
-                            newTrait.ThirstToleranceModifier = ParseValueFromLine(value);
+                            newTrait.ThirstToleranceModifier = float.Parse(value);
                             break;
                         case "starve":
-                            newTrait.HungerToleranceModifier = ParseValueFromLine(value);
+                            newTrait.HungerToleranceModifier = float.Parse(value);
                             break;
                         case "sight":
-                            newTrait.SightModifier = ParseValueFromLine(value);
+                            newTrait.SightModifier = float.Parse(value);
                             break;
                         default:
                             throw new Exceptions.TraitAttributeNotRecognisedException(attribute);
@@ -82,11 +82,6 @@ namespace Game.Characters
             {
                 throw new Exceptions.UnknownTraitException(traitName);
             }
-        }
-
-        private static float ParseValueFromLine(string line)
-        {
-            return float.Parse(line);
         }
 
         public class Trait

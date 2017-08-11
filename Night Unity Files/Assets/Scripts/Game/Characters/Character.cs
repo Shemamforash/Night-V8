@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Articy.Night;
 using Game.Characters;
+using Game.Combat;
 using Game.Misc;
 using UnityEngine;
 using UnityEngine.Timeline;
@@ -24,6 +26,16 @@ namespace Characters
         public float Sight;
         public Traits.Trait PrimaryTrait, SecondaryTrait;
 
+        private MyString WeaponName;
+
+        private MyFloat WeaponDamage,
+            WeaponFireRate,
+            WeaponReloadSpeed,
+            WeaponCapacity,
+            WeaponHandling,
+            WeaponCriticalChance,
+            WeaponAccuracy;
+
         private ClassCharacter _characterClass;
 
         public enum WeightCategory
@@ -37,83 +49,7 @@ namespace Characters
 
         private List<CharacterAction> _availableActions = new List<CharacterAction>();
         private GameObject actionButtonPrefab;
-
-        public abstract class CharacterAction
-        {
-            private readonly string _actionName;
-            public GameObject ActionObject;
-            private readonly bool _durationFixed;
-            private int _duration;
-            private TimeListener _timeListener = new TimeListener();
-            private MyFloat _timeRemaining;
-            private Character _parent;
-
-            public int Duration
-            {
-                get { return _duration; }
-                set
-                {
-                    if (!_durationFixed)
-                    {
-                        _duration = value;
-                    }
-                }
-            }
-
-            public Character Parent()
-            {
-                return _parent;
-            }
-
-            protected CharacterAction(string actionName, bool durationFixed, int duration, Character parent)
-            {
-                _actionName = actionName;
-                _durationFixed = durationFixed;
-                _duration = duration;
-                _timeListener.OnHour(UpdateTime);
-                _parent = parent;
-                TextAssociation currentActionAssociation = new TextAssociation(_parent.CharacterUi.CurrentActionText,
-                    f => _actionName + " (" + (int)f + "hrs)", true);
-                _timeRemaining = new MyFloat(_duration, currentActionAssociation);
-            }
-
-            protected virtual void ExecuteAction()
-            {
-                _parent.CharacterUi.CurrentActionText.text = "Doing nothing";
-            }
-
-            public virtual void InitialiseAction()
-            {
-                _timeRemaining.Value = _duration;
-            }
-
-            protected void ImmobiliseParent()
-            {
-                //for preventing weapon switching when exploring
-            }
-
-            public string GetActionName()
-            {
-                return _actionName;
-            }
-
-            public bool IsDurationFixed()
-            {
-                return _durationFixed;
-            }
-
-            private void UpdateTime()
-            {
-                if (_timeRemaining > 0)
-                {
-                    --_timeRemaining.Value;
-                    if (_timeRemaining == 0)
-                    {
-                        ExecuteAction();
-                    }
-                }
-            }
-        }
+        private Weapon _weapon;
 
         public class FindResources : CharacterAction
         {
@@ -127,6 +63,24 @@ namespace Characters
                 Home.IncrementResource(Resource.ResourceType.Water, 1);
                 Home.IncrementResource(Resource.ResourceType.Food, 1);
             }
+        }
+
+        public void SetWeapon(Weapon weapon)
+        {
+            _weapon = weapon;
+            UpdateWeaponCard();
+        }
+
+        private void UpdateWeaponCard()
+        {
+            WeaponName.SetText(_weapon.GetName());
+            WeaponDamage.Value = _weapon.Damage;
+            WeaponAccuracy.Value = _weapon.Accuracy;
+            WeaponCapacity.Value = _weapon.Capacity;
+            WeaponCriticalChance.Value = _weapon.CriticalChance;
+            WeaponFireRate.Value = _weapon.FireRate;
+            WeaponHandling.Value = _weapon.Handling;
+            WeaponReloadSpeed.Value = _weapon.ReloadSpeed;
         }
 
         public Character(string name, ClassCharacter classCharacter, WeightCategory weight, Traits.Trait secondaryTrait)
@@ -194,6 +148,18 @@ namespace Characters
             CharacterUi.DetailedClassText.text = PrimaryTrait.GetTraitDetails();
             CharacterUi.DetailedTraitText.text = SecondaryTrait.GetTraitDetails();
             CharacterUi.WeightText.text = "Weight: " + Weight + " (requires " + ((int) Weight + 5) + " fuel)";
+
+            WeaponName = new MyString("",
+                new List<Text> {CharacterUi.WeaponNameTextSimple, CharacterUi.WeaponNameTextDetailed});
+            WeaponDamage = new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + " dam", true));
+            WeaponAccuracy = new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + "% acc", true));
+            WeaponFireRate = new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + "rnds/s", true));
+            WeaponReloadSpeed =
+                new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + "s rel", true));
+            WeaponCapacity = new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + " cap", true));
+            WeaponCriticalChance =
+                new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + "% crit", true));
+            WeaponHandling = new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + "% hand", true));
         }
 
         public string GetConditions()

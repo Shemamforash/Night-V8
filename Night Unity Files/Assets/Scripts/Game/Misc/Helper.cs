@@ -37,6 +37,12 @@ public static class Helper
         return children;
     }
 
+    public static float Round(float val, int precision)
+    {
+        float precisionDivider = (float)Math.Pow(10f, precision);
+        return (float)(Math.Round(val * precisionDivider) / precisionDivider);
+    }
+
     public static Transform FindChildWithName(GameObject g, string name)
     {
         Transform t = g.transform;

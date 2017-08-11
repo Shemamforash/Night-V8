@@ -1,30 +1,40 @@
-﻿using UnityEngine;
+﻿using Articy.Night;
+using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Game.Combat
 {
-    public class Weapon : ScriptableObject
+    public class Weapon
     {
-        private float _damage, _accuracy, _fireRate, _handling, _reloadTime, _criticalChance;
-        private int _ammoCapacity;
+        public readonly float Damage, Accuracy, ReloadSpeed, CriticalChance, Handling, FireRate, Capacity;
+        private WeaponBase _baseWeapon;
         private bool _automatic;
-        private WeaponClass _weaponClass;
-        private WeaponModifier _primaryModifier, _secondaryModifier;
-
-        public Weapon(float damage, float accuracy, float fireRate, float handling, float reloadTime, int ammoCapacity,
-            float criticalChance, bool automatic, WeaponClass weaponClass, WeaponModifier primaryModifier,
-            WeaponModifier secondaryModifier)
+        
+        public Weapon(WeaponBase baseWeapon, bool automatic)
         {
-            _damage = damage;
-            _accuracy = accuracy;
-            _fireRate = fireRate;
-            _handling = handling;
-            _reloadTime = reloadTime;
-            _ammoCapacity = ammoCapacity;
-            _criticalChance = criticalChance;
+            _baseWeapon = baseWeapon;
             _automatic = automatic;
-            _weaponClass = weaponClass;
-            _primaryModifier = primaryModifier;
-            _secondaryModifier = secondaryModifier;
+            Damage = baseWeapon.GetAttributeValue(WeaponBase.Attributes.Damage);
+            Accuracy = baseWeapon.GetAttributeValue(WeaponBase.Attributes.Accuracy);
+            ReloadSpeed = baseWeapon.GetAttributeValue(WeaponBase.Attributes.ReloadSpeed);
+            CriticalChance = baseWeapon.GetAttributeValue(WeaponBase.Attributes.CriticalChance);
+            Handling = baseWeapon.GetAttributeValue(WeaponBase.Attributes.Handling);
+            FireRate = baseWeapon.GetAttributeValue(WeaponBase.Attributes.FireRate);
+            Capacity = baseWeapon.GetAttributeValue(WeaponBase.Attributes.Capacity);
+            
+            if (!automatic)
+            {
+                Damage *= 2;
+                Capacity = Mathf.Ceil(Capacity / 2);
+                Accuracy *= 1.5f;
+                ReloadSpeed /= 2f;
+            }
+        }
+
+        public string GetName()
+        {
+            string automaticString = _automatic ? "Automatic" : "Manual";
+            return _baseWeapon.Rarity + " " + _baseWeapon.Suffix + "(" + automaticString + ")";
         }
     }
 }

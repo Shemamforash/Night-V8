@@ -16,7 +16,7 @@ namespace Facilitating.MenuNavigation
         private bool _menuButtonDown;
         private Environment _destinationOption1, _destinationOption2;
         public Text DestinationOption1Text, DestinationOption2Text, ActionDurationText;
-        private Character.CharacterAction _currentAction;
+        private CharacterAction _currentAction;
         private int _actionDuration;
         private bool _pauseMenuOpen;
         
@@ -60,7 +60,7 @@ namespace Facilitating.MenuNavigation
             WorldState.CurrentDanger += 1;
         }
 
-        public void ShowActionDurationMenu(Character.CharacterAction a)
+        public void ShowActionDurationMenu(CharacterAction a)
         {
             SwitchToMenu("Action Duration Menu", true);
             _actionDuration = a.Duration;
