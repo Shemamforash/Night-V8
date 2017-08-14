@@ -1,14 +1,12 @@
-﻿using Articy.Night;
-using JetBrains.Annotations;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.Combat
 {
     public class Weapon
     {
         public readonly float Damage, Accuracy, ReloadSpeed, CriticalChance, Handling, FireRate, Capacity;
-        private WeaponBase _baseWeapon;
-        private bool _automatic;
+        private readonly WeaponBase _baseWeapon;
+        private readonly bool _automatic;
         
         public Weapon(WeaponBase baseWeapon, bool automatic)
         {
@@ -34,7 +32,7 @@ namespace Game.Combat
         public string GetName()
         {
             string automaticString = _automatic ? "Automatic" : "Manual";
-            return _baseWeapon.Rarity + " " + _baseWeapon.Suffix + "(" + automaticString + ")";
+            return _baseWeapon.Rarity + " " + _baseWeapon.Suffix + " (" + automaticString + " " + _baseWeapon.Type + ")";
         }
     }
 }

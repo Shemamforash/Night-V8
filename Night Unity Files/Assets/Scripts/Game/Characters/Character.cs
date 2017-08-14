@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
-using Articy.Night;
 using Game.Characters;
 using Game.Combat;
 using Game.Misc;
 using UnityEngine;
-using UnityEngine.Timeline;
 using UnityEngine.UI;
 using World;
 
 namespace Characters
 {
-    public partial class Character
+    public class Character
     {
         public CharacterUI CharacterUi;
         public string Name;
@@ -68,11 +66,6 @@ namespace Characters
         public void SetWeapon(Weapon weapon)
         {
             _weapon = weapon;
-            UpdateWeaponCard();
-        }
-
-        private void UpdateWeaponCard()
-        {
             WeaponName.SetText(_weapon.GetName());
             WeaponDamage.Value = _weapon.Damage;
             WeaponAccuracy.Value = _weapon.Accuracy;
@@ -152,14 +145,14 @@ namespace Characters
             WeaponName = new MyString("",
                 new List<Text> {CharacterUi.WeaponNameTextSimple, CharacterUi.WeaponNameTextDetailed});
             WeaponDamage = new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + " dam", true));
-            WeaponAccuracy = new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + "% acc", true));
-            WeaponFireRate = new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + "rnds/s", true));
+            WeaponAccuracy = new MyFloat(0, new TextAssociation(CharacterUi.WeaponAccuracyText, f => f + "% acc", true));
+            WeaponFireRate = new MyFloat(0, new TextAssociation(CharacterUi.WeaponFireRateText, f => f + "rnds/s", true));
             WeaponReloadSpeed =
-                new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + "s rel", true));
-            WeaponCapacity = new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + " cap", true));
+                new MyFloat(0, new TextAssociation(CharacterUi.WeaponReloadSpeedText, f => f + "s rel", true));
+            WeaponCapacity = new MyFloat(0, new TextAssociation(CharacterUi.WeaponCapacityText, f => f + " cap", true));
             WeaponCriticalChance =
-                new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + "% crit", true));
-            WeaponHandling = new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + "% hand", true));
+                new MyFloat(0, new TextAssociation(CharacterUi.WeaponCriticalChanceText, f => f + "% crit", true));
+            WeaponHandling = new MyFloat(0, new TextAssociation(CharacterUi.WeaponHandlingText, f => f + "% hand", true));
         }
 
         public string GetConditions()
