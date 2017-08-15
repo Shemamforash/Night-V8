@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Characters;
+using Facilitating.MenuNavigation;
 using Facilitating.Persistence;
 using Menus;
 using Persistence;
@@ -24,7 +25,7 @@ namespace Game.Characters
         {
             _persistenceListener = new PersistenceListener(Load, Save, "Character Manager");
             _timeListener.OnHour(UpdateCharacterThirstAndHunger);
-            _inputListener.OnCancel(ExitCharacter);
+            _inputListener.OnAxis(InputAxis.Cancel, ExitCharacter);
         }
 
         private void UpdateCharacterThirstAndHunger()
@@ -59,14 +60,14 @@ namespace Game.Characters
 
         private static void PopulateCharacterUi()
         {
-            GameObject waterObject = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Water").gameObject;
-            GameObject foodObject = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Food").gameObject;
-            GameObject fuelObject = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Fuel").gameObject;
+            GameObject waterObject = Helper.FindChildWithName<GameObject>(GameObject.Find("Game Menu"), "Water");
+            GameObject foodObject = Helper.FindChildWithName<GameObject>(GameObject.Find("Game Menu"), "Food");
+            GameObject fuelObject = Helper.FindChildWithName<GameObject>(GameObject.Find("Game Menu"), "Fuel");
 
             float currentY = 1f;
-            for (int i = 0; i < _characters.Count; ++i)
+            foreach (Character c in _characters)
             {
-                GameObject newCharacterUi = _characters[i].CharacterUi.GameObject;
+                GameObject newCharacterUi = c.CharacterUi.GameObject;
                 RectTransform uiRect = newCharacterUi.GetComponent<RectTransform>();
                 uiRect.offsetMin = new Vector2(5, 5);
                 uiRect.offsetMax = new Vector2(-5, -5);
@@ -74,7 +75,7 @@ namespace Game.Characters
                 uiRect.anchorMax = new Vector2(1, currentY);
                 currentY -= 0.1f;
                 newCharacterUi.transform.localScale = new Vector2(1, 1);
-                Button b = _characters[i].GetCharacterUi().SimpleView.GetComponent<Button>();
+                Button b = c.GetCharacterUi().SimpleView.GetComponent<Button>();
                 b.onClick.AddListener(delegate { SelectCharacter(b); });
             }
             for (int i = 0; i < _characters.Count; ++i)

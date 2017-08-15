@@ -27,9 +27,9 @@ namespace Facilitating.MenuNavigation
             Camera.main.GetComponent<GlobalAudioManager>().Initialise();
 
             WorldState.MenuNavigator = this;
-            DestinationOption1Text = Helper.FindChildWithName(gameObject, "Option 1").Find("Text").GetComponent<Text>();
-            DestinationOption2Text = Helper.FindChildWithName(gameObject, "Option 2").Find("Text").GetComponent<Text>();
-            ActionDurationText = Helper.FindChildWithName(gameObject, "Duration").GetComponent<Text>();
+            DestinationOption1Text = Helper.FindChildWithName<Transform>(gameObject, "Option 1").Find("Text").GetComponent<Text>();
+            DestinationOption2Text = Helper.FindChildWithName<Transform>(gameObject, "Option 2").Find("Text").GetComponent<Text>();
+            ActionDurationText = Helper.FindChildWithName<Transform>(gameObject, "Duration").GetComponent<Text>();
 
             AddMenu("Pause Sub Menu", "Resume");
             AddMenu("Options Container", "Master Slider");

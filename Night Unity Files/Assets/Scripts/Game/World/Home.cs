@@ -9,16 +9,19 @@ namespace World
     public class Home : MonoBehaviour
     {
         private PersistenceListener _persistenceListener;
-        private static Resource _water, _food, _fuel;
+        private static Resource _water, _food, _fuel, _ammo;
 
         public void Awake()
         {
             Func<float, string> litreConversion = f => (Mathf.Round(f * 10f) / 10f).ToString() + "L";
             Func<float, string> foodConversion = f => Mathf.Round(f).ToString() + "meals";
             Func<float, string> fuelConversion = f => Mathf.Round(f).ToString() + "cans";
+            Func<float, string> ammoConversion = f => Mathf.Round(f).ToString() + " rnds";
             _water = new Resource("Water", litreConversion);
             _food = new Resource("Food", foodConversion);
             _fuel = new Resource("Fuel", fuelConversion);
+            _ammo = new Resource("Ammo", ammoConversion);
+            _ammo.Increment(100);
             _persistenceListener = new PersistenceListener(Load, Save, "Home");
         }
 

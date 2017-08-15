@@ -1,75 +1,70 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Menus;
 using UnityEngine;
 
-namespace Menus
+namespace Facilitating.MenuNavigation
 {
-    public class InputSpeaker : MonoBehaviour
+    public partial class InputSpeaker : MonoBehaviour
     {
-        private static List<InputListener> listeners = new List<InputListener>();
-        private static bool confirmPressed = false, cancelPressed = false;
-        private enum Axes { CANCEL, SUBMIT };
+        private static readonly List<InputListener> Listeners = new List<InputListener>();
+        private readonly List<InputPress> _inputPressList = new List<InputPress>();
 
-        public static void RegisterForInput(InputListener listener)
+        public void Awake()
         {
-            listeners.Add(listener);
-        }
-
-        private void CheckConfirmPressed()
-        {
-            if (Input.GetAxis("Submit") != 0)
-            {
-                if (!confirmPressed)
-                {
-                    confirmPressed = true;
-                    Broadcast(Axes.SUBMIT);
-                }
-            }
-            else
-            {
-                confirmPressed = false;
-            }
-        }
-
-        private void CheckCancelPressed()
-        {
-            if (Input.GetAxis("Cancel") != 0)
-            {
-                if (!cancelPressed)
-                {
-                    cancelPressed = true;
-                    Broadcast(Axes.CANCEL);
-                }
-            }
-            else
-            {
-                cancelPressed = false;
-            }
-        }
-
-        private void Broadcast(Axes axis)
-        {
-            switch (axis)
-            {
-                case Axes.SUBMIT:
-                    foreach (InputListener l in listeners)
-                    {
-                        l.ReceiveConfirmEvent();
-                    }
-                    break;
-                case Axes.CANCEL:
-                    foreach (InputListener l in listeners)
-                    {
-                        l.ReceiveCancelEvent();
-                    }
-                    break;
-            }
+            _inputPressList.Add(new InputPress("Submit", InputAxis.Submit));
+            _inputPressList.Add(new InputPress("Cancel", InputAxis.Cancel));
+            _inputPressList.Add(new InputPress("Fire", InputAxis.Fire));
+            _inputPressList.Add(new InputPress("Reload", InputAxis.Reload));
         }
 
         public void Update()
         {
-            CheckConfirmPressed();
-            CheckCancelPressed();
+            foreach (InputPress i in _inputPressList)
+            {
+                i.CheckPress();
+            }
+        }
+        
+        public static void RegisterForInput(InputListener listener)
+        {
+            Listeners.Add(listener);
+        }
+
+        private class InputPress
+        {
+            private bool _pressed;
+            private readonly string _axisName;
+            private readonly InputAxis _inputAxis;
+
+            public InputPress(string axisName, InputAxis inputAxis)
+            {
+                _axisName = axisName;
+                _inputAxis = inputAxis;
+            }
+
+            public void CheckPress()
+            {
+                if (Input.GetAxis(_axisName) != 0)
+                {
+                    if (!_pressed)
+                    {
+                        _pressed = true;
+                        Broadcast(_inputAxis);
+                    }
+                }
+                else
+                {
+                    _pressed = false;
+                }
+            }
+        }
+
+        private static void Broadcast(InputAxis axis)
+        {
+            foreach (InputListener l in Listeners)
+            {
+                l.ReceiveInputEvent(axis);
+            }
         }
     }
 }

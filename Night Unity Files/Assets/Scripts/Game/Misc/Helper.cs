@@ -43,10 +43,10 @@ public static class Helper
         return (float)(Math.Round(val * precisionDivider) / precisionDivider);
     }
 
-    public static Transform FindChildWithName(GameObject g, string name)
+    public static T FindChildWithName<T>(GameObject g, string name)
     {
         Transform t = g.transform;
-        return FindChildWithName(t, name);
+        return FindChildWithName(t, name).GetComponent<T>();
     }
 
     public static Transform FindChildWithName(Transform t, string name)

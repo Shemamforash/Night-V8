@@ -33,8 +33,8 @@ namespace Facilitating.UI
 
         protected void AddMenu(string menuName, string firstButtonName)
         {
-            GameObject menu = Helper.FindChildWithName(gameObject, menuName).gameObject;
-            GameObject firstButton = Helper.FindChildWithName(menu, firstButtonName).gameObject;
+            GameObject menu = Helper.FindChildWithName<GameObject>(gameObject, menuName);
+            GameObject firstButton = Helper.FindChildWithName<GameObject>(menu, firstButtonName);
             menusList.Add(new MenuButtonPair(menu, firstButton));
         }
 

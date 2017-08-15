@@ -76,6 +76,11 @@ namespace Characters
             WeaponReloadSpeed.Value = _weapon.ReloadSpeed;
         }
 
+        public Weapon GetWeapon()
+        {
+            return _weapon;
+        }
+
         public Character(string name, ClassCharacter classCharacter, WeightCategory weight, Traits.Trait secondaryTrait)
         {
             Name = name;
