@@ -21,11 +21,11 @@ namespace Game.Characters
         private Transform _actionContainer;
         private readonly InputListener _inputListener = new InputListener();
 
-        private void Awake()
+        public void Awake()
         {
             _persistenceListener = new PersistenceListener(Load, Save, "Character Manager");
             _timeListener.OnHour(UpdateCharacterThirstAndHunger);
-            _inputListener.OnAxis(InputAxis.Cancel, ExitCharacter);
+            _inputListener.OnAxisPress(InputAxis.Cancel, ExitCharacter);
         }
 
         private void UpdateCharacterThirstAndHunger()
@@ -42,6 +42,10 @@ namespace Game.Characters
         {
             Traits.LoadTraits();
             ClassCharacter.LoadCharacterClasses();
+        }
+
+        public void Start()
+        {
             if (GameData.Party != null)
             {
                 _characters = GameData.Party;
@@ -60,9 +64,9 @@ namespace Game.Characters
 
         private static void PopulateCharacterUi()
         {
-            GameObject waterObject = Helper.FindChildWithName<GameObject>(GameObject.Find("Game Menu"), "Water");
-            GameObject foodObject = Helper.FindChildWithName<GameObject>(GameObject.Find("Game Menu"), "Food");
-            GameObject fuelObject = Helper.FindChildWithName<GameObject>(GameObject.Find("Game Menu"), "Fuel");
+            GameObject waterObject = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Water");
+            GameObject foodObject = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Food");
+            GameObject fuelObject = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Fuel");
 
             float currentY = 1f;
             foreach (Character c in _characters)

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using Facilitating.MenuNavigation;
 using Game.Characters;
 using Game.Combat;
 using Game.Misc;
+using Game.World;
 using UnityEngine;
 using UnityEngine.UI;
 using World;
@@ -49,20 +51,6 @@ namespace Characters
         private GameObject actionButtonPrefab;
         private Weapon _weapon;
 
-        public class FindResources : CharacterAction
-        {
-            public FindResources(Character c) : base("Find Resources", false, 1, c)
-            {
-            }
-
-            protected override void ExecuteAction()
-            {
-                base.ExecuteAction();
-                Home.IncrementResource(Resource.ResourceType.Water, 1);
-                Home.IncrementResource(Resource.ResourceType.Food, 1);
-            }
-        }
-
         public void SetWeapon(Weapon weapon)
         {
             _weapon = weapon;
@@ -93,7 +81,8 @@ namespace Characters
             characterUi.transform.SetParent(GameObject.Find("Characters").transform);
             SetCharacterUi(characterUi);
 
-            _availableActions.Add(new FindResources(this));
+            _availableActions.Add(new CharacterAction.FindResources(this));
+            _availableActions.Add(new CharacterAction.Hunt(this));
             actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
 
             UpdateActionUi();
@@ -109,8 +98,17 @@ namespace Characters
                 newActionButton.transform.SetParent(CharacterUi.actionScrollContent.transform);
                 newActionButton.transform.Find("Text").GetComponent<Text>().text = a.GetActionName();
                 Button currentButton = newActionButton.GetComponent<Button>();
-                currentButton.GetComponent<Button>().onClick
-                    .AddListener(() => WorldState.MenuNavigator.ShowActionDurationMenu(a));
+
+                if (!a.IsDurationFixed())
+                {
+                    currentButton.GetComponent<Button>().onClick
+                        .AddListener(() => GameMenuNavigator.MenuNavigator.ShowActionDurationMenu(a));
+                }
+                else
+                {
+                    currentButton.GetComponent<Button>().onClick
+                        .AddListener(() => a.InitialiseAction());
+                }
 
                 Helper.SetNavigation(newActionButton, CharacterUi.WeaponCard, Helper.NavigationDirections.Left);
                 if (i == _availableActions.Count - 1)
@@ -240,13 +238,13 @@ namespace Characters
 
         public void Drink()
         {
-            float consumed = Home.ConsumeResource(Resource.ResourceType.Water, 0.25f);
+            float consumed = Home.ConsumeResource(ResourceType.Water, 0.25f);
             Dehydration.Value -= consumed;
         }
 
         public void Eat()
         {
-            float consumed = Home.ConsumeResource(Resource.ResourceType.Food, 1);
+            float consumed = Home.ConsumeResource(ResourceType.Food, 1);
             Starvation.Value -= consumed;
         }
     }

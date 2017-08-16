@@ -21,9 +21,9 @@ namespace Facilitating.UI
             }
         }
 
-        private readonly List<MenuButtonPair> menusList = new List<MenuButtonPair>();
-        private readonly Stack<MenuButtonPair> menuHistory = new Stack<MenuButtonPair>();
-        private GameObject _currentMenu;
+        private static readonly List<MenuButtonPair> menusList = new List<MenuButtonPair>();
+        private static readonly Queue<MenuButtonPair> menuHistory = new Queue<MenuButtonPair>();
+        private static GameObject _currentMenu;
 
         protected void SetInitialMenu(GameObject startMenu, GameObject startHighlight)
         {
@@ -33,8 +33,8 @@ namespace Facilitating.UI
 
         protected void AddMenu(string menuName, string firstButtonName)
         {
-            GameObject menu = Helper.FindChildWithName<GameObject>(gameObject, menuName);
-            GameObject firstButton = Helper.FindChildWithName<GameObject>(menu, firstButtonName);
+            GameObject menu = Helper.FindChildWithName(transform, menuName).gameObject;
+            GameObject firstButton = Helper.FindChildWithName(menu.transform, firstButtonName).gameObject;
             menusList.Add(new MenuButtonPair(menu, firstButton));
         }
 
@@ -49,8 +49,8 @@ namespace Facilitating.UI
             }
             return false;
         }
-        
-        protected virtual void SwitchToMenu(string target, bool pause)
+
+        public virtual void SwitchToMenu(string target, bool pause)
         {
             if (pause)
             {
@@ -62,7 +62,6 @@ namespace Facilitating.UI
             }
             MenuButtonPair currentMenuButton =
                 new MenuButtonPair(_currentMenu, EventSystem.current.currentSelectedGameObject);
-            menuHistory.Push(currentMenuButton);
             foreach (MenuButtonPair menuPair in menusList)
             {
                 GameObject menu = menuPair.Menu;
@@ -81,17 +80,16 @@ namespace Facilitating.UI
                     if (previousMenuButton != null && target == previousMenuButton.Menu.name)
                     {
                         previousMenuButton.Button.GetComponent<Selectable>().Select();
-                        menuHistory.Pop();
+                        menuHistory.Dequeue();
                     }
                     else
                     {
                         menuPair.Button.GetComponent<Selectable>().Select();
                     }
+                    menuHistory.Enqueue(currentMenuButton);
+                    break;
                 }
-                else
-                {
-                    menu.SetActive(false);
-                }
+                menu.SetActive(false);
             }
         }
     }

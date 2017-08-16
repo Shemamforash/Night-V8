@@ -14,7 +14,8 @@ namespace Game.Combat
             RegularRoundsText,
             InfernalRoundsText,
             WeaponNameText,
-            ExposureText;
+            ExposureText,
+            ReloadTimeRemaining;
 
         private Button _flankButton, _approachButton, _retreatButton, _coverButton;
         private Slider _characterHealthSlider, _aimSlider;
@@ -24,7 +25,7 @@ namespace Game.Combat
         {
             _combatMenu = combatMenu;
             MagazineContent = Helper.FindChildWithName<Transform>(_combatMenu, "Magazine").Find("Content").gameObject;
-            AmmoPrefab = Resources.Load("Prefabs/AmmoPrefab") as GameObject;
+            AmmoPrefab = Resources.Load("Prefabs/Ammo Prefab") as GameObject;
 
             CharacterName = Helper.FindChildWithName<Text>(_combatMenu, "Name");
             CharacterHealthText = Helper.FindChildWithName<Text>(_combatMenu, "Strength Remaining");
@@ -32,6 +33,7 @@ namespace Game.Combat
             InfernalRoundsText = Helper.FindChildWithName<Text>(_combatMenu, "Infernal");
             WeaponNameText = Helper.FindChildWithName<Text>(_combatMenu, "Weapon");
             ExposureText = Helper.FindChildWithName<Text>(_combatMenu, "Exposure");
+            ReloadTimeRemaining = Helper.FindChildWithName<Text>(_combatMenu, "Time Remaining");
 
             _flankButton = Helper.FindChildWithName<Button>(_combatMenu, "Flank");
             _approachButton = Helper.FindChildWithName<Button>(_combatMenu, "Approach");
@@ -44,21 +46,39 @@ namespace Game.Combat
 
         public void ResetMagazine(int capacity)
         {
-            _magazineAmmo.Clear();
+            EnableReloadTime(false);
             foreach (GameObject round in _magazineAmmo)
             {
                 GameObject.Destroy(round);
-                _magazineAmmo.Add(round);
             }
+            _magazineAmmo.Clear();
             for (int i = 0; i < capacity; ++i)
             {
                 GameObject newRound = GameObject.Instantiate(AmmoPrefab);
                 newRound.transform.SetParent(MagazineContent.transform);
+                _magazineAmmo.Add(newRound);
             }
         }
 
+        public void EmptyMagazine()
+        {
+            EnableReloadTime(true);
+        }
+
+        public void UpdateReloadTime(float time)
+        {
+            ReloadTimeRemaining.text = (Mathf.Round(time * 10f) / 10f).ToString("0.0") + "secs remaining";
+        }
+
+        private void EnableReloadTime(bool enable)
+        {
+            ReloadTimeRemaining.gameObject.SetActive(enable);
+            MagazineContent.SetActive(!enable);
+        }
+        
         public void UpdateMagazine(int remaining)
         {
+            EnableReloadTime(false);
             for (int i = 0; i < _magazineAmmo.Count; ++i)
             {
                 GameObject round = _magazineAmmo[i].transform.Find("Round").gameObject;

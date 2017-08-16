@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Facilitating.MenuNavigation
 {
-    public partial class InputSpeaker : MonoBehaviour
+    public class InputSpeaker : MonoBehaviour
     {
         private static readonly List<InputListener> Listeners = new List<InputListener>();
         private readonly List<InputPress> _inputPressList = new List<InputPress>();
@@ -49,22 +49,25 @@ namespace Facilitating.MenuNavigation
                     if (!_pressed)
                     {
                         _pressed = true;
-                        Broadcast(_inputAxis);
+                        BroadcastPress(_inputAxis);
                     }
                 }
                 else
                 {
                     _pressed = false;
+                    BroadcastRelease(_inputAxis);
                 }
             }
         }
 
-        private static void Broadcast(InputAxis axis)
+        private static void BroadcastPress(InputAxis axis)
         {
-            foreach (InputListener l in Listeners)
-            {
-                l.ReceiveInputEvent(axis);
-            }
+            Listeners.ForEach(l => l.ReceivePressEvent(axis));
+        }
+
+        private static void BroadcastRelease(InputAxis axis)
+        {
+            Listeners.ForEach(l => l.ReceiveReleaseEvent(axis));
         }
     }
 }

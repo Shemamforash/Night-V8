@@ -67,10 +67,6 @@ namespace Game.Combat
                     rarityWeaponDictionary[rarity] = baseWeapon;
                 }
             }
-            for (int i = 0; i < 10; ++i)
-            {
-                GenerateWeapon();
-            }
         }
 
         private void ReadMinMaxValuesFromLine(WeaponBase weapon,

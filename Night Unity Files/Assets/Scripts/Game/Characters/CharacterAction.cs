@@ -1,4 +1,7 @@
+using System;
+using Game.Combat;
 using Game.Misc;
+using Game.World;
 using UnityEngine;
 using World;
 
@@ -40,7 +43,7 @@ namespace Characters
             _parent = parent;
             TextAssociation currentActionAssociation = new TextAssociation(_parent.CharacterUi.CurrentActionText,
                 f => _actionName + " (" + (int) f + "hrs)", true);
-            _timeRemaining = new MyFloat(_duration, currentActionAssociation);
+            _timeRemaining = new MyFloat(0, currentActionAssociation);
         }
 
         protected virtual void ExecuteAction()
@@ -51,6 +54,10 @@ namespace Characters
         public virtual void InitialiseAction()
         {
             _timeRemaining.Value = _duration;
+            if (_duration == 0)
+            {
+                ExecuteAction();
+            }
         }
 
         protected void ImmobiliseParent()
@@ -77,6 +84,33 @@ namespace Characters
                 {
                     ExecuteAction();
                 }
+            }
+        }
+        
+        public class FindResources : CharacterAction
+        {
+            public FindResources(Character c) : base("Find Resources", false, 1, c)
+            {
+            }
+
+            protected override void ExecuteAction()
+            {
+                base.ExecuteAction();
+                Home.IncrementResource(ResourceType.Water, 1);
+                Home.IncrementResource(ResourceType.Food, 1);
+            }
+        }
+
+        public class Hunt : CharacterAction
+        {
+            public Hunt(Character c) : base("Hunt", true, 0, c)
+            {
+            }
+
+            protected override void ExecuteAction()
+            {
+                base.ExecuteAction();
+                CombatManager.EnterCombat(_parent);
             }
         }
     }

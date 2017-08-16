@@ -19,16 +19,21 @@ namespace Facilitating.MenuNavigation
         private CharacterAction _currentAction;
         private int _actionDuration;
         private bool _pauseMenuOpen;
-        
+        public static GameMenuNavigator MenuNavigator;
+
         public void Awake()
         {
+            MenuNavigator = this;
+            
             SaveController.LoadSettings();
             SaveController.LoadGameFromFile();
             Camera.main.GetComponent<GlobalAudioManager>().Initialise();
 
             WorldState.MenuNavigator = this;
-            DestinationOption1Text = Helper.FindChildWithName<Transform>(gameObject, "Option 1").Find("Text").GetComponent<Text>();
-            DestinationOption2Text = Helper.FindChildWithName<Transform>(gameObject, "Option 2").Find("Text").GetComponent<Text>();
+            DestinationOption1Text = Helper.FindChildWithName<Transform>(gameObject, "Option 1").Find("Text")
+                .GetComponent<Text>();
+            DestinationOption2Text = Helper.FindChildWithName<Transform>(gameObject, "Option 2").Find("Text")
+                .GetComponent<Text>();
             ActionDurationText = Helper.FindChildWithName<Transform>(gameObject, "Duration").GetComponent<Text>();
 
             AddMenu("Pause Sub Menu", "Resume");
@@ -38,13 +43,14 @@ namespace Facilitating.MenuNavigation
             AddMenu("DestinationMenu", "Option 1");
             AddMenu("Game Over Menu", "Menu");
             AddMenu("Action Duration Menu", "Confirm");
-            
+            AddMenu("Combat Menu", "Approach");
+
             SetInitialMenu(GameObject.Find("Game Menu"), GameObject.Find("Food"));
-            
+
             Debug.Log(EventSystem.current.currentSelectedGameObject);
         }
 
-        protected override void SwitchToMenu(string menu, bool paused)
+        public override void SwitchToMenu(string menu, bool paused)
         {
             CharacterManager.ExitCharacter();
             base.SwitchToMenu(menu, paused);
@@ -64,7 +70,7 @@ namespace Facilitating.MenuNavigation
         {
             SwitchToMenu("Action Duration Menu", true);
             _actionDuration = a.Duration;
-            ActionDurationText.text = _actionDuration + "hrs"; 
+            ActionDurationText.text = _actionDuration + "hrs";
             _currentAction = a;
         }
 
@@ -89,12 +95,16 @@ namespace Facilitating.MenuNavigation
                 ActionDurationText.text = _actionDuration + "hrs";
             }
         }
-        
-        public void MakeDestinationSelection(Text t){
+
+        public void MakeDestinationSelection(Text t)
+        {
             SwitchToMenu("Game Menu", false);
-            if(t == DestinationOption1Text) {
+            if (t == DestinationOption1Text)
+            {
                 WorldState.EnvironmentManager.SetCurrentEnvironment(_destinationOption1);
-            } else {
+            }
+            else
+            {
                 WorldState.EnvironmentManager.SetCurrentEnvironment(_destinationOption2);
             }
         }
@@ -137,7 +147,7 @@ namespace Facilitating.MenuNavigation
         {
             SwitchToMenu("Pause Sub Menu", true);
         }
-        
+
         public void OnApplicationQuit()
         {
             Save();

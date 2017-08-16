@@ -45,8 +45,17 @@ public static class Helper
 
     public static T FindChildWithName<T>(GameObject g, string name)
     {
+        if (typeof(T) == typeof(GameObject))
+        {
+            throw new Exceptions.CannotGetGameObjectComponent();
+        }
         Transform t = g.transform;
         return FindChildWithName(t, name).GetComponent<T>();
+    }
+
+    public static GameObject FindChildWithName(GameObject g, string name)
+    {
+        return FindChildWithName(g.transform, name).gameObject;
     }
 
     public static Transform FindChildWithName(Transform t, string name)
@@ -64,7 +73,7 @@ public static class Helper
         }
         if (noNameOccurences > 1)
         {
-            throw new Exceptions.UnspecificGameObjectNameException(noNameOccurences);
+            throw new Exceptions.UnspecificGameObjectNameException(noNameOccurences, name);
         }
         return foundChild;
     }

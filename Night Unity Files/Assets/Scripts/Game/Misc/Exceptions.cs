@@ -61,15 +61,25 @@ namespace Game.Misc
         public class UnspecificGameObjectNameException : Exception
         {
             private readonly int _occurences;
+            private readonly string _name;
             
-            public UnspecificGameObjectNameException(int occurences)
+            public UnspecificGameObjectNameException(int occurences, string name)
             {
                 _occurences = occurences;
+                _name = name;
             }
             
             public override string Message
             {
-                get { return "GameObject name too general, found " + _occurences + " occurences"; }
+                get { return "GameObject name too general, found " + _occurences + " occurences of " + _name; }
+            }
+        }
+
+        public class CannotGetGameObjectComponent : Exception
+        {
+            public override string Message
+            {
+                get { return "GameObject references cannot be gathered from getcomponent() calls."; }
             }
         }
     }

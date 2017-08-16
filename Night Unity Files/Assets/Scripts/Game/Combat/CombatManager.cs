@@ -9,12 +9,12 @@ namespace Game.Combat
 {
     public class CombatManager : MonoBehaviour
     {
-        private CombatUI _combatUi;
-        private MyFloat _strengthText;
-        private CombatState _currentCombatState = CombatState.Aiming;
-        private Character _character;
+        private static CombatUI _combatUi;
+        private static MyFloat _strengthText;
+        private static CombatState _currentCombatState = CombatState.Aiming;
+        private static Character _character;
         private readonly InputListener _inputListener = new InputListener();
-        private float _reloadStartTime;
+        private static float _reloadStartTime, _fireStartTime;
 
         private enum CombatState
         {
@@ -24,28 +24,65 @@ namespace Game.Combat
             ExitingCover,
             Firing,
             Aiming,
+            Cocking,
             Reloading,
         }
 
         public void Awake()
         {
             _combatUi = new CombatUI(GameObject.Find("Combat Menu"));
-            _inputListener.OnAxis(InputAxis.Fire, FireWeapon);
-            _inputListener.OnAxis(InputAxis.Reload, ReloadWeapon);
+            _inputListener.OnAxisPress(InputAxis.Fire, Fire);
+            _inputListener.OnAxisRelease(InputAxis.Fire, StopFiring);
+            _inputListener.OnAxisPress(InputAxis.Reload, ReloadWeapon);
         }
 
-        private void FireWeapon()
+        private void Fire()
         {
-            if (_currentCombatState == CombatState.Aiming)
+            if (_currentCombatState == CombatState.Aiming || _currentCombatState == CombatState.Firing)
             {
-                _character.GetWeapon().Fire();
-                _combatUi.UpdateMagazine(_character.GetWeapon().GetRemainingAmmo());
+                if (_character.GetWeapon().GetRemainingAmmo() == 0)
+                {
+                    ReloadWeapon();
+                }
+                else
+                {
+                    _character.GetWeapon().Fire();
+                    _combatUi.UpdateMagazine(_character.GetWeapon().GetRemainingAmmo());
+                    if (_character.GetWeapon().Automatic)
+                    {
+                        _currentCombatState = CombatState.Firing;
+                        _fireStartTime = Time.time;
+                    }
+                    else
+                    {
+                        _currentCombatState = CombatState.Cocking;
+                    }
+                }
             }
         }
 
-        public void EnterCombat(Character c)
+        private void StopFiring()
+        {
+            if (_currentCombatState == CombatState.Firing)
+            {
+                _currentCombatState = CombatState.Aiming;
+            }
+            _fireStartTime = 0f;
+        }
+
+        private void ContinueFiring()
+        {
+            float timeSinceShot = Time.time - _fireStartTime;
+            if (timeSinceShot >= 1f / _character.GetWeapon().FireRate)
+            {
+                Fire();
+            }
+        }
+
+        public static void EnterCombat(Character c)
         {
             WorldTime.Pause();
+            GameMenuNavigator.MenuNavigator.SwitchToMenu("Combat Menu", true);
             _character = c;
             _combatUi.CharacterName.text = c.Name;
             _combatUi.WeaponNameText.text = c.GetWeapon().GetName();
@@ -63,6 +100,7 @@ namespace Game.Combat
         {
             WorldTime.UnPause();
             _currentCombatState = CombatState.Aiming;
+            GameMenuNavigator.MenuNavigator.SwitchToMenu("Game Menu", true);
         }
 
         public void TakeDamage(float f)
@@ -72,8 +110,9 @@ namespace Game.Combat
 
         private void ReloadWeapon()
         {
-            _reloadStartTime = Time.time;
             _currentCombatState = CombatState.Reloading;
+            _combatUi.EmptyMagazine();
+            _reloadStartTime = Time.time;
         }
 
         public void Update()
@@ -81,12 +120,23 @@ namespace Game.Combat
             if (_currentCombatState == CombatState.Reloading)
             {
                 float timeSinceReloadStarted = Time.time - _reloadStartTime;
-                if (timeSinceReloadStarted >= _character.GetWeapon().ReloadSpeed)
+                float reloadDuration = _character.GetWeapon().ReloadSpeed;
+                _combatUi.UpdateReloadTime(reloadDuration - timeSinceReloadStarted);
+                if (timeSinceReloadStarted >= reloadDuration)
                 {
                     _currentCombatState = CombatState.Aiming;
+                    _character.GetWeapon().Reload();
                     _combatUi.UpdateMagazine(_character.GetWeapon().GetRemainingAmmo());
                 }
             }
+            else if (_currentCombatState == CombatState.Firing)
+            {
+                ContinueFiring();
+            } else if (_currentCombatState == CombatState.Cocking)
+            {
+                
+            }
+            
         }
     }
 }

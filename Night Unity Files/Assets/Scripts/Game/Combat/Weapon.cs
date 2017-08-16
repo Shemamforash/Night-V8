@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using World;
+﻿using Game.World;
+using UnityEngine;
 
 namespace Game.Combat
 {
@@ -8,13 +8,13 @@ namespace Game.Combat
         public readonly float Damage, Accuracy, ReloadSpeed, CriticalChance, Handling, FireRate;
         public int Capacity;
         private readonly WeaponBase _baseWeapon;
-        private readonly bool _automatic;
+        public readonly bool Automatic;
         private int _ammoInMagazine;
         
         public Weapon(WeaponBase baseWeapon, bool automatic)
         {
             _baseWeapon = baseWeapon;
-            _automatic = automatic;
+            Automatic = automatic;
             Damage = baseWeapon.GetAttributeValue(WeaponBase.Attributes.Damage);
             Accuracy = baseWeapon.GetAttributeValue(WeaponBase.Attributes.Accuracy);
             ReloadSpeed = baseWeapon.GetAttributeValue(WeaponBase.Attributes.ReloadSpeed);
@@ -35,7 +35,7 @@ namespace Game.Combat
 
         public string GetName()
         {
-            string automaticString = _automatic ? "Automatic" : "Manual";
+            string automaticString = Automatic ? "Automatic" : "Manual";
             return _baseWeapon.Rarity + " " + _baseWeapon.Suffix + " (" + automaticString + " " + _baseWeapon.Type + ")";
         }
 
@@ -51,7 +51,7 @@ namespace Game.Combat
 
         public void Reload()
         {
-            float ammoAvailable = Home.ConsumeResource(Resource.ResourceType.Ammo, Capacity);
+            float ammoAvailable = Home.ConsumeResource(ResourceType.Ammo, Capacity);
             _ammoInMagazine += (int)ammoAvailable;
         }
 

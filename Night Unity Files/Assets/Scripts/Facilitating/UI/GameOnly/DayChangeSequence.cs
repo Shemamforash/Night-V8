@@ -1,42 +1,42 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using Audio;
+using UnityEngine;
 using World;
 
-namespace UI.GameOnly
+namespace Facilitating.UI.GameOnly
 {
-    using Audio;
     public class DayChangeSequence : MonoBehaviour
     {
-        public float timeToRead = 3f;
-        public float timeBetweenLines = 1f;
-        public float fadeTime = 2f;
-        private CanvasGroup menuScreen, thisCanvasGroup;
-        private ThunderClick thunderClick;
-        private TimeListener timeListener = new TimeListener();
+        public float TimeToRead = 3f;
+        public float TimeBetweenLines = 1f;
+        public float FadeTime = 2f;
+        private CanvasGroup _menuScreen, _thisCanvasGroup;
+        private ThunderClick _thunderClick;
+        private readonly TimeListener _timeListener = new TimeListener();
 
         public void Awake()
         {
-            thisCanvasGroup = GetComponent<CanvasGroup>();
-            menuScreen = GameObject.Find("Game Menu").GetComponent<CanvasGroup>();
-            thunderClick = GetComponent<ThunderClick>();
-            timeListener.OnDay(ChangeDay);
+            _thisCanvasGroup = GetComponent<CanvasGroup>();
+            _menuScreen = GameObject.Find("Game Menu").GetComponent<CanvasGroup>();
+            _thunderClick = GetComponent<ThunderClick>();
+            _timeListener.OnDay(ChangeDay);
         }
 
         public void ChangeDay()
         {
             WorldTime.Pause();
-            menuScreen.interactable = false;
-            menuScreen.alpha = 0;
-            thisCanvasGroup.interactable = true;
-            thisCanvasGroup.alpha = 1;
-            thunderClick.InitiateThunder();
+            _menuScreen.interactable = false;
+            _menuScreen.alpha = 0;
+            _thisCanvasGroup.interactable = true;
+            _thisCanvasGroup.alpha = 1;
+            _thunderClick.InitiateThunder();
             StartCoroutine("ShowLines");
         }
 
         private IEnumerator WaitToReadText()
         {
             float currentTime = 0;
-            while (currentTime < timeToRead)
+            while (currentTime < TimeToRead)
             {
                 currentTime += Time.deltaTime;
                 yield return null;
@@ -46,12 +46,12 @@ namespace UI.GameOnly
 
         private void TransitionEnd()
         {
-            thunderClick.InitiateThunder();
-            menuScreen.alpha = 1;
-            thisCanvasGroup.alpha = 0;
+            _thunderClick.InitiateThunder();
+            _menuScreen.alpha = 1;
+            _thisCanvasGroup.alpha = 0;
             WorldTime.UnPause();
-            menuScreen.interactable = true;
-            thisCanvasGroup.interactable = false;
+            _menuScreen.interactable = true;
+            _thisCanvasGroup.interactable = false;
         }
 
         private IEnumerator ShowLines()
@@ -62,10 +62,10 @@ namespace UI.GameOnly
             {
                 transform.GetChild(i).gameObject.SetActive(false);
             }
-            while (currentTime < timeBetweenLines)
+            while (currentTime < TimeBetweenLines)
             {
                 currentTime += Time.deltaTime;
-                if (currentTime > timeBetweenLines && currentChild < transform.childCount)
+                if (currentTime > TimeBetweenLines && currentChild < transform.childCount)
                 {
                     transform.GetChild(currentChild).gameObject.SetActive(true);
                     ++currentChild;

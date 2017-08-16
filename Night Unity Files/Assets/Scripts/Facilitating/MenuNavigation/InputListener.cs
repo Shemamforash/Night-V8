@@ -6,53 +6,58 @@ namespace Menus
 {
     public class InputListener
     {
-        private readonly List<Action> _cancelActions = new List<Action>();
-        private readonly List<Action> _confirmActions = new List<Action>();
-        private readonly List<Action> _fireActions = new List<Action>();
-        private readonly List<Action> _reloadActions = new List<Action>();
+        private readonly InputTypeActionList _pressActions = new InputTypeActionList();
+        private readonly InputTypeActionList _releaseActions = new InputTypeActionList();
 
         public InputListener()
         {
             InputSpeaker.RegisterForInput(this);
         }
 
-        public void ReceiveInputEvent(InputAxis inputAxis)
+        private class InputTypeActionList
         {
-            switch (inputAxis)
-            {
-                case InputAxis.Cancel:
-                    _cancelActions.ForEach(a => a());
-                    break;
-                case InputAxis.Submit:
-                    _confirmActions.ForEach(a => a());
-                    break;
-                case InputAxis.Fire:
-                    _fireActions.ForEach(a => a());
-                    break;
-                case InputAxis.Reload:
-                    _reloadActions.ForEach(a => a());
+            private readonly Dictionary<InputAxis, List<Action>> _actions = new Dictionary<InputAxis, List<Action>>();
 
-                    break;
+            public void Subscribe(InputAxis inputAxis, Action action)
+            {
+                if (_actions.ContainsKey(inputAxis))
+                {
+                    _actions[inputAxis].Add(action);
+                }
+                else
+                {
+                    _actions[inputAxis] = new List<Action> {action};
+                }
+            }
+
+            public void ReceiveEvent(InputAxis inputAxis)
+            {
+                List<Action> actionList;
+                if (_actions.TryGetValue(inputAxis, out actionList))
+                {
+                    actionList.ForEach(a => a());
+                }
             }
         }
 
-        public void OnAxis(InputAxis inputAxis, Action action)
+        public void ReceivePressEvent(InputAxis inputAxis)
         {
-            switch (inputAxis)
-            {
-                case InputAxis.Cancel:
-                    _cancelActions.Add(action);
-                    break;
-                case InputAxis.Submit:
-                    _confirmActions.Add(action);
-                    break;
-                case InputAxis.Fire:
-                    _fireActions.Add(action);
-                    break;
-                case InputAxis.Reload:
-                    _reloadActions.Add(action);
-                    break;
-            }
+            _pressActions.ReceiveEvent(inputAxis);
+        }
+
+        public void ReceiveReleaseEvent(InputAxis inputAxis)
+        {
+            _releaseActions.ReceiveEvent(inputAxis);
+        }
+
+        public void OnAxisPress(InputAxis inputAxis, Action action)
+        {
+            _pressActions.Subscribe(inputAxis, action);
+        }
+
+        public void OnAxisRelease(InputAxis inputAxis, Action action)
+        {
+            _releaseActions.Subscribe(inputAxis, action);
         }
     }
 }

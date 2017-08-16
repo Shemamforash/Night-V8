@@ -38,7 +38,7 @@ namespace Characters
             DetailedView = GameObject.transform.Find("Detailed").gameObject;
             DetailedView.SetActive(false);
 
-            actionScrollContent = Helper.FindChildWithName<GameObject>(gameObject, "Content");
+            actionScrollContent = Helper.FindChildWithName(gameObject.transform, "Content").gameObject;
             CollapseCharacterButton = FindInDetailedView<Button>("Back Button");
             CollapseCharacterButton.onClick.AddListener(CharacterManager.ExitCharacter);
 
@@ -59,7 +59,7 @@ namespace Characters
 
             EatButton = FindInDetailedView<Button>("Eat Button");
             DrinkButton = FindInDetailedView<Button>("Drink Button");
-            WeaponCard = Helper.FindChildWithName<GameObject>(DetailedView, "Weapon Card");
+            WeaponCard = Helper.FindChildWithName(DetailedView.transform, "Weapon Card").gameObject;
             ConditionsText = FindInDetailedView<Text>("Conditions");
 
             StrengthTextDetail = FindInDetailedView<Text>("Strength");
