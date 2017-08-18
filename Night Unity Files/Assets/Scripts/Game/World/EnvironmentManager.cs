@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.World;
 using UnityEngine;
 
 namespace World
@@ -43,7 +44,7 @@ namespace World
         }
 
         private void UpdateTemperature(){
-            temperatureText.text = currentEnvironment.GetTemperature(WorldTime.hours, WorldTime.minutes) + "\u00B0" + "C";
+            temperatureText.text = currentEnvironment.GetTemperature(WorldTime.Hours, WorldTime.Minutes) + "\u00B0" + "C";
         }
 
         private void GenerateEnvironment()

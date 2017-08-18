@@ -1,11 +1,11 @@
-using System;
+using Characters;
 using Game.Combat;
-using Game.Misc;
 using Game.World;
+using SamsHelper.ReactiveUI;
 using UnityEngine;
 using World;
 
-namespace Characters
+namespace Game.Characters
 {
     public abstract class CharacterAction
     {
@@ -14,7 +14,7 @@ namespace Characters
         private readonly bool _durationFixed;
         private int _duration;
         private TimeListener _timeListener = new TimeListener();
-        private MyFloat _timeRemaining;
+        private MyFloat _timeRemaining = new MyFloat();
         private Character _parent;
 
         public int Duration
@@ -41,19 +41,18 @@ namespace Characters
             _duration = duration;
             _timeListener.OnHour(UpdateTime);
             _parent = parent;
-            TextAssociation currentActionAssociation = new TextAssociation(_parent.CharacterUi.CurrentActionText,
-                f => _actionName + " (" + (int) f + "hrs)", true);
-            _timeRemaining = new MyFloat(0, currentActionAssociation);
+            _parent.CharacterUi.CurrentActionText.SetFormattingFunction(f => _actionName + " (" + (int) f + "hrs)");
+            _timeRemaining.AddLinkedText( _parent.CharacterUi.CurrentActionText);
         }
 
         protected virtual void ExecuteAction()
         {
-            _parent.CharacterUi.CurrentActionText.text = "Doing nothing";
+            _parent.CharacterUi.CurrentActionText.Text("Doing nothing");
         }
 
         public virtual void InitialiseAction()
         {
-            _timeRemaining.Value = _duration;
+            _timeRemaining.Val = _duration;
             if (_duration == 0)
             {
                 ExecuteAction();
@@ -79,7 +78,7 @@ namespace Characters
         {
             if (_timeRemaining > 0)
             {
-                --_timeRemaining.Value;
+                --_timeRemaining.Val;
                 if (_timeRemaining == 0)
                 {
                     ExecuteAction();

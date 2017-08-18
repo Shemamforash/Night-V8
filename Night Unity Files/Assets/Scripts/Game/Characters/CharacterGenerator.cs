@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using Characters;
 using Game.Combat;
-using Game.Misc;
+using SamsHelper;
+using SamsHelper.ReactiveUI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -114,35 +115,22 @@ namespace Game.Characters
             c.Hunger = new MyFloat(hunger);
             c.Thirst = new MyFloat(thirst);
 
-            List<TextAssociation> strengthAssociations = new List<TextAssociation>()
-            {
-                new TextAssociation(c.CharacterUi.StrengthText, f => f + " str", true),
-                new TextAssociation(c.CharacterUi.StrengthTextDetail, f => f + "/" + strengthMax + " str", true)
-            };
-            c.Strength = new MyFloat(strengthMax, strengthAssociations, 0, strengthMax);
+            c.CharacterUi.StrengthTextDetail.SetFormattingFunction(f => f + "/" + strengthMax + " str");
+            c.Strength = new MyFloat(strengthMax, 0, strengthMax);
 
-            List<TextAssociation> enduranceAssociations = new List<TextAssociation>()
-            {
-                new TextAssociation(c.CharacterUi.EnduranceText, f => f + " end", true),
-                new TextAssociation(c.CharacterUi.EnduranceTextDetail, f => f + "/" + enduranceMax + " end", true)
-            };
-            c.Strength = new MyFloat(enduranceMax, enduranceAssociations, 0, enduranceMax);
+            c.CharacterUi.EnduranceTextDetail.SetFormattingFunction(f => f + "/" + enduranceMax + " end");
+            c.Strength = new MyFloat(enduranceMax, 0, enduranceMax);
 
             c.StarvationTolerance = hunger * 3;
             c.DehydrationTolerance = thirst * 3;
 
-            Func<float, string> starvationFormatting = c.GetHungerStatus;
-            TextAssociation starvationAssociation = new TextAssociation(c.CharacterUi.HungerText, starvationFormatting, false);
-            c.Starvation = new MyFloat(0, starvationAssociation, 0, c.StarvationTolerance);
+            c.CharacterUi.HungerText.SetFormattingFunction(c.GetHungerStatus);
+            c.Starvation = new MyFloat(0, 0, c.StarvationTolerance);
 
-            Func<float, string> dehydrationFormatting = c.GetThirstStatus;
-            TextAssociation dehydrationAssociation =
-                new TextAssociation(c.CharacterUi.ThirstText, dehydrationFormatting, false);
-            c.Dehydration = new MyFloat(0, dehydrationAssociation, 0, c.DehydrationTolerance);
+            c.CharacterUi.ThirstText.SetFormattingFunction(c.GetThirstStatus);
+            c.Dehydration = new MyFloat(0, 0, c.DehydrationTolerance);
             
-            TextAssociation conditionAssociation = new TextAssociation(c.CharacterUi.ConditionsText, f => c.GetConditions(), false);
-            c.Starvation.AddAssociatedText(conditionAssociation);
-            c.Dehydration.AddAssociatedText(conditionAssociation);
+            c.CharacterUi.ConditionsText.SetFormattingFunction(f => c.GetConditions());
         }
     }
 }

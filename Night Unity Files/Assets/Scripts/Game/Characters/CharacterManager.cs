@@ -3,8 +3,12 @@ using System.Linq;
 using Characters;
 using Facilitating.MenuNavigation;
 using Facilitating.Persistence;
+using Game.World;
 using Menus;
 using Persistence;
+using SamsHelper;
+using SamsHelper.Input;
+using SamsHelper.Persistence;
 using UnityEngine;
 using UnityEngine.UI;
 using World;
@@ -33,8 +37,8 @@ namespace Game.Characters
             for (int i = _characters.Count - 1; i >= 0; --i)
             {
                 Character c = _characters[i];
-                c.Dehydration.Value += c.Thirst / 12f;
-                c.Starvation.Value += c.Hunger / 12f;
+                c.Dehydration.Val += c.Thirst / 12f;
+                c.Starvation.Val += c.Hunger / 12f;
             }
         }
 

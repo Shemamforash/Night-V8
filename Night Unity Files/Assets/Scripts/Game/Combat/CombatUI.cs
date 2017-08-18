@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SamsHelper;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -60,6 +61,11 @@ namespace Game.Combat
             }
         }
 
+        public void UpdateAimSlider(float value)
+        {
+            _aimSlider.value = value;
+        }
+        
         public void EmptyMagazine()
         {
             EnableReloadTime(true);
@@ -84,6 +90,11 @@ namespace Game.Combat
                 GameObject round = _magazineAmmo[i].transform.Find("Round").gameObject;
                 round.SetActive(i < remaining);
             }
+        }
+
+        public void SetMagazineText(string text)
+        {
+            ReloadTimeRemaining.text = text;
         }
     }
 }

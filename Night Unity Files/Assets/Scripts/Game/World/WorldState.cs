@@ -1,16 +1,15 @@
 ﻿using Facilitating.MenuNavigation;
 using UnityEngine;
+using World;
 
-namespace World
+namespace Game.World
 {
-	using Menus;
-
-    public class WorldState : MonoBehaviour
+	public class WorldState : MonoBehaviour
     {
 		public static float CurrentDanger;
 		public static int DaysSpentHere;
 		public static int NoPreviousLocations;
-		private readonly TimeListener timeListener = new TimeListener();
+		private readonly TimeListener _timeListener = new TimeListener();
 		public static GameMenuNavigator MenuNavigator;
 		public static EnvironmentManager EnvironmentManager;
 
@@ -41,8 +40,8 @@ namespace World
 		}
 
 		public WorldState(){
-			timeListener.OnDay(IncrementDaysSpentHere);
-			timeListener.OnTravel(ResetDaysSpentHere);
+			_timeListener.OnDay(IncrementDaysSpentHere);
+			_timeListener.OnTravel(ResetDaysSpentHere);
 		}
     }
 }

@@ -1,120 +1,130 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SamsHelper;
+using SamsHelper.BaseGameFunctionality;
+using UnityEngine;
 using UnityEngine.UI;
+using World;
 
-namespace World
+namespace Game.World
 {
     public class WorldTime : MonoBehaviour
     {
-        private static List<TimeListener> timeListeners = new List<TimeListener>();
-        private static float currentTime, quarterHourTimer = .2f;
-        public static int days = 0, hours = 6, minutes = 0;
-        private static bool isNight = false;
-        private static bool isPaused = false;
-        public Text timeText, dayText;
+        private static readonly List<TimeListener> TimeListeners = new List<TimeListener>();
+        private static float _currentTime, _quarterHourTimer = .2f;
+        public static int Days, Hours = 6, Minutes;
+        private static bool _isNight;
+        private static bool _isPaused;
+        private Text _timeText, _dayText;
 
+        public void Awake()
+        {
+            _timeText = Helper.FindChildWithName(gameObject, "Time").transform.Find("Text").GetComponent<Text>();
+            _dayText = Helper.FindChildWithName(gameObject, "Day").transform.Find("Text").GetComponent<Text>();
+        }
+        
         public static void SubscribeTimeListener(TimeListener t)
         {
-            timeListeners.Add(t);
+            TimeListeners.Add(t);
         }
 
         private static void BroadcastPause()
         {
-            foreach (TimeListener t in timeListeners)
+            foreach (TimeListener t in TimeListeners)
             {
-                t.ReceivePauseEvent(isPaused);
+                t.ReceivePauseEvent(_isPaused);
             }
         }
 
         private static void BroadcastHourChange()
         {
-            foreach (TimeListener t in timeListeners)
+            foreach (TimeListener t in TimeListeners)
             {
                 t.ReceiveHourEvent();
             }
         }
 
         private static void BroadcastMinuteChange(){
-            foreach(TimeListener t in timeListeners){
+            foreach(TimeListener t in TimeListeners){
                 t.ReceiveMinuteEvent();
             }
         }
 
         private static void BroadcastDayChange()
         {
-            foreach (TimeListener t in timeListeners)
+            foreach (TimeListener t in TimeListeners)
             {
                 t.ReceiveDayEvent();
             }
         }
 
         public void BroadcastTravel(){
-            foreach(TimeListener t in timeListeners){
+            foreach(TimeListener t in TimeListeners){
                 t.ReceiveTravelEvent();
             }
         }
 
         public static void Pause()
         {
-            isPaused = true;
+            _isPaused = true;
             BroadcastPause();
         }
 
         public static void UnPause()
         {
-            isPaused = false;
+            _isPaused = false;
             BroadcastPause();
         }
 
         private void IncrementWorldTime()
         {
-            currentTime += Time.deltaTime;
-            if (currentTime >= quarterHourTimer)
+            _currentTime += Time.deltaTime;
+            if (_currentTime >= _quarterHourTimer)
             {
-                currentTime -= quarterHourTimer;
-                minutes += 5;
+                _currentTime -= _quarterHourTimer;
+                Minutes += 5;
                 BroadcastMinuteChange();
-                if (minutes == 60)
+                if (Minutes == 60)
                 {
-                    minutes = 0;
-                    ++hours;
+                    Minutes = 0;
+                    ++Hours;
                     BroadcastHourChange();
-                    if (hours == 24)
+                    if (Hours == 24)
                     {
-                        ++days;
+                        ++Days;
                         BroadcastDayChange();
-                        hours = 0;
+                        Hours = 0;
                     }
                     //TODO make me make sense
-                    if (hours >= 6 && hours < 20 && isNight)
+                    if (Hours >= 6 && Hours < 20 && _isNight)
                     {
-                        isNight = false;
-                        quarterHourTimer *= 2;
+                        _isNight = false;
+                        _quarterHourTimer *= 2;
                     }
-                    else if ((hours < 6 || hours >= 20) && !isNight)
+                    else if ((Hours < 6 || Hours >= 20) && !_isNight)
                     {
-                        isNight = true;
-                        quarterHourTimer /= 2;
+                        _isNight = true;
+                        _quarterHourTimer /= 2;
                     }
                 }
             }
-            if (minutes < 10)
+            if (Minutes < 10)
             {
-                timeText.text = hours + ":0" + minutes;
+                _timeText.text = Hours + ":0" + Minutes;
             }
             else
             {
-                timeText.text = hours + ":" + minutes;
+                _timeText.text = Hours + ":" + Minutes;
             }
-            dayText.text = "Day " + days;
+            _dayText.text = "Day " + Days;
         }
 
         void Update()
         {
-            if (!isPaused)
+            if (!_isPaused)
             {
                 IncrementWorldTime();
             }
+            CooldownManager.UpdateCooldowns();
         }
     }
 }

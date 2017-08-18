@@ -1,5 +1,5 @@
 ﻿using Characters;
-using Game.Misc;
+using SamsHelper;
 
 namespace Game.Characters
 {

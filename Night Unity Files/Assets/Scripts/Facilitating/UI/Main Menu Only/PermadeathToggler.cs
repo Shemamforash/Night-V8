@@ -1,4 +1,5 @@
 ﻿using Facilitating.Persistence;
+using SamsHelper.Persistence;
 
 namespace UI.Highlight
 {

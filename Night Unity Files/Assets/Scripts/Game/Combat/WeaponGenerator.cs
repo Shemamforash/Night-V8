@@ -54,7 +54,7 @@ namespace Game.Combat
                     string suffix = rarityNode.SelectSingleNode("Suffix").InnerText;
                     XmlNode statsNode = rarityNode.SelectSingleNode("BaseStats");
 
-                    
+
                     WeaponBase baseWeapon = new WeaponBase(type, rarity, suffix);
                     ReadMinMaxValuesFromLine(baseWeapon, WeaponBase.Attributes.Damage, statsNode);
                     ReadMinMaxValuesFromLine(baseWeapon, WeaponBase.Attributes.Accuracy, statsNode);
@@ -94,14 +94,22 @@ namespace Game.Combat
 
         public static Weapon GenerateWeapon()
         {
+            bool automatic = true;
             Array types = Enum.GetValues(typeof(WeaponType));
             WeaponType weaponType = (WeaponType) types.GetValue(UnityEngine.Random.Range(0, types.Length));
+#if UNITY_EDITOR
+            bool manualRequired = true;
+            if (manualRequired)
+            {
+                weaponType = WeaponType.Rifle;
+                automatic = false;
+            }
+#endif
             Array rarities = Enum.GetValues(typeof(WeaponRarity));
             WeaponRarity weaponRarity =
                 (WeaponRarity) rarities.GetValue(UnityEngine.Random.Range(0, rarities.Length));
             WeaponBase baseWeapon = WeaponDictionary[weaponType][weaponRarity];
 
-            bool automatic = true;
             if (weaponType == WeaponType.Pistol || weaponType == WeaponType.Rifle)
             {
                 if (UnityEngine.Random.Range(0.0f, 1.0f) > 0.6f)
@@ -109,7 +117,7 @@ namespace Game.Combat
                     automatic = false;
                 }
             }
-            
+
             return new Weapon(baseWeapon, automatic);
         }
     }

@@ -2,11 +2,11 @@
 using Facilitating.MenuNavigation;
 using Game.Characters;
 using Game.Combat;
-using Game.Misc;
 using Game.World;
+using SamsHelper;
+using SamsHelper.ReactiveUI;
 using UnityEngine;
 using UnityEngine.UI;
-using World;
 
 namespace Characters
 {
@@ -14,27 +14,27 @@ namespace Characters
     {
         public CharacterUI CharacterUi;
         public string Name;
-        public MyFloat Strength;
-        public MyFloat Intelligence;
-        public MyFloat Endurance;
-        public MyFloat Stability;
         public float StarvationTolerance, DehydrationTolerance;
-        public MyFloat Starvation;
-        public MyFloat Dehydration;
-        public MyFloat Hunger, Thirst;
+        public MyFloat Strength = new MyFloat();
+        public MyFloat Intelligence = new MyFloat();
+        public MyFloat Endurance = new MyFloat();
+        public MyFloat Stability = new MyFloat();
+        public MyFloat Starvation = new MyFloat();
+        public MyFloat Dehydration = new MyFloat();
+        public MyFloat Hunger, Thirst = new MyFloat();
         public WeightCategory Weight;
         public float Sight;
         public Traits.Trait PrimaryTrait, SecondaryTrait;
 
-        private MyString WeaponName;
+        private MyString _weaponName = new MyString();
 
-        private MyFloat WeaponDamage,
-            WeaponFireRate,
-            WeaponReloadSpeed,
-            WeaponCapacity,
-            WeaponHandling,
-            WeaponCriticalChance,
-            WeaponAccuracy;
+        private MyFloat _weaponDamage = new MyFloat();
+        private MyFloat _weaponFireRate = new MyFloat();
+        private MyFloat _weaponReloadSpeed = new MyFloat();
+        private MyFloat _weaponCapacity = new MyFloat();
+        private MyFloat _weaponHandling = new MyFloat();
+        private MyFloat _weaponCriticalChance = new MyFloat();
+        private MyFloat _weaponAccuracy = new MyFloat();
 
         private ClassCharacter _characterClass;
 
@@ -54,14 +54,14 @@ namespace Characters
         public void SetWeapon(Weapon weapon)
         {
             _weapon = weapon;
-            WeaponName.SetText(_weapon.GetName());
-            WeaponDamage.Value = _weapon.Damage;
-            WeaponAccuracy.Value = _weapon.Accuracy;
-            WeaponCapacity.Value = _weapon.Capacity;
-            WeaponCriticalChance.Value = _weapon.CriticalChance;
-            WeaponFireRate.Value = _weapon.FireRate;
-            WeaponHandling.Value = _weapon.Handling;
-            WeaponReloadSpeed.Value = _weapon.ReloadSpeed;
+            _weaponName.Text = _weapon.GetName();
+            _weaponDamage.Val = _weapon.Damage;
+            _weaponAccuracy.Val = _weapon.Accuracy;
+            _weaponCapacity.Val = _weapon.Capacity;
+            _weaponCriticalChance.Val = _weapon.CriticalChance;
+            _weaponFireRate.Val = _weapon.FireRate;
+            _weaponHandling.Val = _weapon.Handling;
+            _weaponReloadSpeed.Val = _weapon.ReloadSpeed;
         }
 
         public Weapon GetWeapon()
@@ -145,24 +145,24 @@ namespace Characters
             CharacterUi.DetailedTraitText.text = SecondaryTrait.GetTraitDetails();
             CharacterUi.WeightText.text = "Weight: " + Weight + " (requires " + ((int) Weight + 5) + " fuel)";
 
-            WeaponName = new MyString("",
-                new List<Text> {CharacterUi.WeaponNameTextSimple, CharacterUi.WeaponNameTextDetailed});
-            WeaponDamage = new MyFloat(0, new TextAssociation(CharacterUi.WeaponDamageText, f => f + " dam", true));
-            WeaponAccuracy = new MyFloat(0, new TextAssociation(CharacterUi.WeaponAccuracyText, f => f + "% acc", true));
-            WeaponFireRate = new MyFloat(0, new TextAssociation(CharacterUi.WeaponFireRateText, f => f + "rnds/s", true));
-            WeaponReloadSpeed =
-                new MyFloat(0, new TextAssociation(CharacterUi.WeaponReloadSpeedText, f => f + "s rel", true));
-            WeaponCapacity = new MyFloat(0, new TextAssociation(CharacterUi.WeaponCapacityText, f => f + " cap", true));
-            WeaponCriticalChance =
-                new MyFloat(0, new TextAssociation(CharacterUi.WeaponCriticalChanceText, f => f + "% crit", true));
-            WeaponHandling = new MyFloat(0, new TextAssociation(CharacterUi.WeaponHandlingText, f => f + "% hand", true));
+            _weaponName = new MyString("");
+            _weaponName.AddLinkedText(CharacterUi.WeaponNameTextSimple);
+            _weaponName.AddLinkedText(CharacterUi.WeaponNameTextDetailed);
+
+            _weaponDamage.AddLinkedText(CharacterUi.WeaponDamageText);
+            _weaponAccuracy.AddLinkedText(CharacterUi.WeaponAccuracyText);
+            _weaponFireRate.AddLinkedText(CharacterUi.WeaponFireRateText);
+            _weaponReloadSpeed.AddLinkedText(CharacterUi.WeaponReloadSpeedText);
+            _weaponCapacity.AddLinkedText(CharacterUi.WeaponCapacityText);
+            _weaponCriticalChance.AddLinkedText(CharacterUi.WeaponCriticalChanceText);
+            _weaponHandling.AddLinkedText(CharacterUi.WeaponHandlingText);
         }
 
         public string GetConditions()
         {
             string conditions = "";
-            conditions += GetThirstStatus() + "(" + Mathf.Round(Thirst.Value / 1.2f) / 10f + " litres/hr)\n";
-            conditions += GetHungerStatus() + "(" + Mathf.Round(Hunger.Value / 1.2f) / 10f + " meals/hr)";
+            conditions += GetThirstStatus() + "(" + Mathf.Round(Thirst.Val / 1.2f) / 10f + " litres/hr)\n";
+            conditions += GetHungerStatus() + "(" + Mathf.Round(Hunger.Val / 1.2f) / 10f + " meals/hr)";
             return conditions;
         }
 
@@ -193,7 +193,7 @@ namespace Characters
 
         public string GetHungerStatus()
         {
-            return GetHungerStatus(Starvation.Value);
+            return GetHungerStatus(Starvation.Val);
         }
 
         public void Kill()
@@ -228,7 +228,7 @@ namespace Characters
 
         public string GetThirstStatus()
         {
-            return GetThirstStatus(Dehydration.Value);
+            return GetThirstStatus(Dehydration.Val);
         }
 
         public CharacterUI GetCharacterUi()
@@ -239,13 +239,13 @@ namespace Characters
         public void Drink()
         {
             float consumed = Home.ConsumeResource(ResourceType.Water, 0.25f);
-            Dehydration.Value -= consumed;
+            Dehydration.Val -= consumed;
         }
 
         public void Eat()
         {
             float consumed = Home.ConsumeResource(ResourceType.Food, 1);
-            Starvation.Value -= consumed;
+            Starvation.Val -= consumed;
         }
     }
 }

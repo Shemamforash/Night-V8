@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Game.Misc;
+using SamsHelper;
 using Random = UnityEngine.Random;
 
 namespace Game.Characters
