@@ -43,7 +43,7 @@ namespace Game.Combat.CombatStates
                 CombatManager.CombatUi.SetMagazineText("NO AMMO");
             }
         }
-        
+
         public override void Enter()
         {
             _timeSinceLastFire = 0f;

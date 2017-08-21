@@ -12,6 +12,7 @@ namespace Game.World
         private static readonly List<TimeListener> TimeListeners = new List<TimeListener>();
         private static float _currentTime, _quarterHourTimer = .2f;
         public static int Days, Hours = 6, Minutes;
+        public const int MinutesPerHour = 12;
         private static bool _isNight;
         private static bool _isPaused;
         private Text _timeText, _dayText;
@@ -81,7 +82,7 @@ namespace Game.World
             if (_currentTime >= _quarterHourTimer)
             {
                 _currentTime -= _quarterHourTimer;
-                Minutes += 5;
+                Minutes += 60 / MinutesPerHour;
                 BroadcastMinuteChange();
                 if (Minutes == 60)
                 {

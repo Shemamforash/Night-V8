@@ -85,9 +85,11 @@ namespace SamsHelper.ReactiveUI
                         menuPair.Button.GetComponent<Selectable>().Select();
                     }
                     MenuHistory.Enqueue(currentMenuButton);
-                    break;
                 }
-                menu.SetActive(false);
+                else
+                {
+                    menu.SetActive(false);
+                }
             }
         }
     }

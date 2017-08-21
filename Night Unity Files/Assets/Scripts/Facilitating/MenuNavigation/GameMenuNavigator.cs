@@ -2,6 +2,7 @@
 using Characters;
 using Facilitating.UI;
 using Game.Characters;
+using Game.Characters.CharacterActions;
 using Game.World;
 using Persistence;
 using SamsHelper;
@@ -19,7 +20,7 @@ namespace Facilitating.MenuNavigation
         private bool _menuButtonDown;
         private Environment _destinationOption1, _destinationOption2;
         public Text DestinationOption1Text, DestinationOption2Text, ActionDurationText;
-        private CharacterAction _currentAction;
+        private BaseCharacterAction _currentAction;
         private int _actionDuration;
         private bool _pauseMenuOpen;
         public static GameMenuNavigator MenuNavigator;
@@ -69,34 +70,29 @@ namespace Facilitating.MenuNavigation
             WorldState.CurrentDanger += 1;
         }
 
-        public void ShowActionDurationMenu(CharacterAction a)
+        public void ShowActionDurationMenu(BaseCharacterAction a)
         {
             SwitchToMenu("Action Duration Menu", true);
-            _actionDuration = a.Duration;
-            ActionDurationText.text = _actionDuration + "hrs";
             _currentAction = a;
+            ActionDurationText.text = _currentAction.GetCostAsString();
         }
 
         public void CloseActionDurationMenu()
         {
             SwitchToMenu("Game Menu", false);
-            _currentAction.Duration = _actionDuration;
-            _currentAction.InitialiseAction();
+            _currentAction.Start();
         }
 
         public void IncrementActionDuration()
         {
-            ++_actionDuration;
-            ActionDurationText.text = _actionDuration + "hrs";
+            _currentAction.IncreaseDuration();
+            ActionDurationText.text = _currentAction.GetCostAsString();
         }
 
         public void DecrementActionDuration()
         {
-            if (_actionDuration > 1)
-            {
-                --_actionDuration;
-                ActionDurationText.text = _actionDuration + "hrs";
-            }
+            _currentAction.DecreaseDuration();
+            ActionDurationText.text = _currentAction.GetCostAsString();
         }
 
         public void MakeDestinationSelection(Text t)

@@ -78,14 +78,14 @@ namespace Characters
             WeaponModifier1Text = new ReactiveText<string>(FindInDetailedView<Text>("Primary Modifier"));
             WeaponModifier2Text = new ReactiveText<string>(FindInDetailedView<Text>("Secondary Modifier"));
 
-            WeaponDamageText = new ReactiveText<float>(FindInDetailedView<Text>("Damage"), f => f + "dam");
-            WeaponFireRateText = new ReactiveText<float>(FindInDetailedView<Text>("Fire Rate"), f => f + "rnds/s");
-            WeaponReloadSpeedText = new ReactiveText<float>(FindInDetailedView<Text>("Reload Speed"), f => f + "s rel");
-            WeaponCapacityText = new ReactiveText<float>(FindInDetailedView<Text>("Capacity"), f => f + " cap");
-            WeaponHandlingText = new ReactiveText<float>(FindInDetailedView<Text>("Handling"), f => f + "% hand");
+            WeaponDamageText = new ReactiveText<float>(FindInDetailedView<Text>("Damage"), f => Helper.Round(f, 2) + "dam");
+            WeaponFireRateText = new ReactiveText<float>(FindInDetailedView<Text>("Fire Rate"), f => Helper.Round(f, 2) + "rnds/s");
+            WeaponReloadSpeedText = new ReactiveText<float>(FindInDetailedView<Text>("Reload Speed"), f => Helper.Round(f, 2) + "s rel");
+            WeaponCapacityText = new ReactiveText<float>(FindInDetailedView<Text>("Capacity"), f => Helper.Round(f, 0) + " cap");
+            WeaponHandlingText = new ReactiveText<float>(FindInDetailedView<Text>("Handling"), f => Helper.Round(f, 2) + "% hand");
             WeaponCriticalChanceText =
-                new ReactiveText<float>(FindInDetailedView<Text>("Critical Chance"), f => f + "% crit");
-            WeaponAccuracyText = new ReactiveText<float>(FindInDetailedView<Text>("Accuracy"), f => f + "% acc");
+                new ReactiveText<float>(FindInDetailedView<Text>("Critical Chance"), f => Helper.Round(f, 2) + "% crit");
+            WeaponAccuracyText = new ReactiveText<float>(FindInDetailedView<Text>("Accuracy"), f => Helper.Round(f, 2) + "% acc");
         }
 
         public T FindInSimpleView<T>(string name)

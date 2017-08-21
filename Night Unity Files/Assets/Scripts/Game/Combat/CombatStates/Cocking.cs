@@ -14,7 +14,7 @@ namespace Game.Combat.CombatStates
 			CombatManager.CombatUi.EmptyMagazine();
 			CombatManager.CombatUi.SetMagazineText("EJECT CARTRIDGE");
 		}
-		
+
 		public override void Exit()
 		{
 			CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());

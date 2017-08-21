@@ -5,19 +5,14 @@ namespace SamsHelper.BaseGameFunctionality
 {
     public abstract class State
     {
-        private string _name;
+        private readonly string _name;
         protected StateMachine ParentMachine;
-        protected Action UpdateCallback;
+        private Action _updateCallback;
 
-        public State(string name, StateMachine parentMachine)
+        protected State(string name, StateMachine parentMachine)
         {
             _name = name;
             ParentMachine = parentMachine;
-        }
-
-        public State(string name, StateMachine parentMachine, Action updateCallback) : this(name, parentMachine)
-        {
-            UpdateCallback = updateCallback;
         }
 
         public string Name()
@@ -25,11 +20,24 @@ namespace SamsHelper.BaseGameFunctionality
             return _name;
         }
 
+        public void SetUpdateCallback(Action updateCallback)
+        {
+            _updateCallback = updateCallback;
+        }
+        
+        public void TryUpdateCallback()
+        {
+            if (_updateCallback != null)
+            {
+                _updateCallback();
+            }
+        }
+
         public virtual void Update()
         {
-            if (UpdateCallback != null)
+            if (_updateCallback != null)
             {
-                UpdateCallback();
+                _updateCallback();
             }
         }
 

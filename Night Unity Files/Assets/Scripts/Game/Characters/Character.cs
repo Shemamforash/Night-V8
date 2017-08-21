@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
-using Facilitating.MenuNavigation;
+using System.Linq;
 using Game.Characters;
+using Game.Characters.CharacterActions;
 using Game.Combat;
 using Game.World;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Characters
 {
-    public class Character
+    public class Character : StateMachine
     {
         public CharacterUI CharacterUi;
         public string Name;
@@ -47,7 +49,6 @@ namespace Characters
             VeryHeavy
         };
 
-        private List<CharacterAction> _availableActions = new List<CharacterAction>();
         private GameObject actionButtonPrefab;
         private Weapon _weapon;
 
@@ -69,46 +70,35 @@ namespace Characters
             return _weapon;
         }
 
-        public Character(string name, ClassCharacter classCharacter, WeightCategory weight, Traits.Trait secondaryTrait)
+        public void Initialise(string name, ClassCharacter classCharacter, WeightCategory weight, Traits.Trait secondaryTrait)
         {
             Name = name;
             _characterClass = classCharacter;
             Weight = weight;
             PrimaryTrait = Traits.FindTrait(_characterClass.ClassTrait());
             SecondaryTrait = secondaryTrait;
-
-            GameObject characterUi = GameObject.Instantiate(Resources.Load("Prefabs/Character Template") as GameObject);
-            characterUi.transform.SetParent(GameObject.Find("Characters").transform);
-            SetCharacterUi(characterUi);
-
-            _availableActions.Add(new CharacterAction.FindResources(this));
-            _availableActions.Add(new CharacterAction.Hunt(this));
             actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
-
+            SetCharacterUi(gameObject);
+            AddState(new FindResources(this));
+            AddState(new EnterCombat(this));
+            AddState(new Sleep(this));
+            AddState(new Idle(this));
+            SetDefaultState("Idle");
             UpdateActionUi();
         }
 
         private void UpdateActionUi()
         {
+            List<BaseCharacterAction> _availableActions = States().Cast<BaseCharacterAction>().ToList();
             for (int i = 0; i < _availableActions.Count; ++i)
             {
-                CharacterAction a = _availableActions[i];
-                GameObject newActionButton = GameObject.Instantiate(actionButtonPrefab);
-                a.ActionObject = newActionButton;
+                BaseCharacterAction a = _availableActions[i];
+                GameObject newActionButton = Instantiate(actionButtonPrefab);
+                a.ActionButtonGameObject = newActionButton;
                 newActionButton.transform.SetParent(CharacterUi.actionScrollContent.transform);
-                newActionButton.transform.Find("Text").GetComponent<Text>().text = a.GetActionName();
+                newActionButton.transform.Find("Text").GetComponent<Text>().text = a.Name();
                 Button currentButton = newActionButton.GetComponent<Button>();
-
-                if (!a.IsDurationFixed())
-                {
-                    currentButton.GetComponent<Button>().onClick
-                        .AddListener(() => GameMenuNavigator.MenuNavigator.ShowActionDurationMenu(a));
-                }
-                else
-                {
-                    currentButton.GetComponent<Button>().onClick
-                        .AddListener(() => a.InitialiseAction());
-                }
+                currentButton.GetComponent<Button>().onClick.AddListener(() => NavigateToState(a.Name()));
 
                 Helper.SetNavigation(newActionButton, CharacterUi.WeaponCard, Helper.NavigationDirections.Left);
                 if (i == _availableActions.Count - 1)
@@ -121,7 +111,7 @@ namespace Characters
 
                 if (i > 0)
                 {
-                    GameObject previousActionButton = _availableActions[i - 1].ActionObject;
+                    GameObject previousActionButton = _availableActions[i - 1].ActionButtonGameObject;
                     Helper.SetNavigation(newActionButton, previousActionButton, Helper.NavigationDirections.Up);
                     Helper.SetNavigation(previousActionButton, newActionButton, Helper.NavigationDirections.Down);
                 }
@@ -144,6 +134,7 @@ namespace Characters
             CharacterUi.DetailedClassText.text = PrimaryTrait.GetTraitDetails();
             CharacterUi.DetailedTraitText.text = SecondaryTrait.GetTraitDetails();
             CharacterUi.WeightText.text = "Weight: " + Weight + " (requires " + ((int) Weight + 5) + " fuel)";
+            CharacterUi.CurrentActionText.SetFormattingFunction(f => CurrentState.Name() + " " + ((BaseCharacterAction)CurrentState).GetCostAsString());
 
             _weaponName = new MyString("");
             _weaponName.AddLinkedText(CharacterUi.WeaponNameTextSimple);

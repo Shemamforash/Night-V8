@@ -28,6 +28,16 @@ namespace SamsHelper.ReactiveUI
             _valueCapped = true;
         }
 
+        public float Max()
+        {
+            return _max;
+        }
+
+        public float Min()
+        {
+            return _min;
+        }
+
         public void TreatAsInt()
         {
             _treatAsInt = true;

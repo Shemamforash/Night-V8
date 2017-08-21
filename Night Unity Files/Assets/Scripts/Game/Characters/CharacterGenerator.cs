@@ -18,7 +18,8 @@ namespace Game.Characters
             ClassCharacter newClass = GenerateClass();
             string name = GenerateName(newClass);
             Traits.Trait secondaryTrait = GenerateTrait();
-            Character c = new Character(name, newClass, GenerateWeightCategory(), secondaryTrait);
+            Character c = GenerateCharacterObject().GetComponent<Character>();
+            c.Initialise(name, newClass, GenerateWeightCategory(), secondaryTrait);
             CalculateAttributesFromWeight(c);
             return c;
         }
@@ -47,9 +48,18 @@ namespace Game.Characters
             return characters;
         }
 
+        private static GameObject GenerateCharacterObject()
+        {
+            GameObject characterUi = GameObject.Instantiate(Resources.Load("Prefabs/Character Template") as GameObject);
+            characterUi.AddComponent<Character>();
+            characterUi.transform.SetParent(GameObject.Find("Characters").transform);
+            return characterUi;
+        }
+
         private static Character GenerateDriver()
         {
-            Character theDriver = new Character("Driver", ClassCharacter.FindClass("Driver"),
+            Character theDriver = GenerateCharacterObject().GetComponent<Character>();
+            theDriver.Initialise("Driver", ClassCharacter.FindClass("Driver"),
                 Character.WeightCategory.Medium, Traits.FindTrait("Scavenger"));
             theDriver.SetWeapon(WeaponGenerator.GenerateWeapon());
             CalculateAttributesFromWeight(theDriver);
@@ -111,7 +121,7 @@ namespace Game.Characters
                 default:
                     throw new Exceptions.UnrecognisedWeightCategoryException();
             }
-            
+
             c.Hunger = new MyFloat(hunger);
             c.Thirst = new MyFloat(thirst);
 
@@ -119,7 +129,7 @@ namespace Game.Characters
             c.Strength = new MyFloat(strengthMax, 0, strengthMax);
 
             c.CharacterUi.EnduranceTextDetail.SetFormattingFunction(f => f + "/" + enduranceMax + " end");
-            c.Strength = new MyFloat(enduranceMax, 0, enduranceMax);
+            c.Endurance = new MyFloat(enduranceMax, 0, enduranceMax);
 
             c.StarvationTolerance = hunger * 3;
             c.DehydrationTolerance = thirst * 3;
@@ -129,7 +139,7 @@ namespace Game.Characters
 
             c.CharacterUi.ThirstText.SetFormattingFunction(c.GetThirstStatus);
             c.Dehydration = new MyFloat(0, 0, c.DehydrationTolerance);
-            
+
             c.CharacterUi.ConditionsText.SetFormattingFunction(f => c.GetConditions());
         }
     }

@@ -4,7 +4,6 @@ using Facilitating.MenuNavigation;
 using Game.Combat.CombatStates;
 using Game.World;
 using SamsHelper.BaseGameFunctionality;
-using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
@@ -15,7 +14,6 @@ namespace Game.Combat
         public static CombatUI CombatUi;
         private static MyFloat _strengthText;
         private static Character _character;
-        private readonly InputListener _inputListener = new InputListener();
         private float _reloadStartTime, _cockStartTime;
         private readonly MyFloat _aimAmount = new MyFloat(0, 0, 100);
 
@@ -41,6 +39,7 @@ namespace Game.Combat
         
         public void Awake()
         {
+            base.Awake();
             CombatUi = new CombatUI(GameObject.Find("Combat Menu"));
             AddState(new Approaching(this, true));
             AddState(new Aiming(this, true));
@@ -54,17 +53,6 @@ namespace Game.Combat
             SetDefaultState("Aiming");
         }
         
-        public void Start()
-        {
-            _inputListener.OnAnyPress(axis => GetCurrentState().OnInputDown(axis));
-            _inputListener.OnAnyRelease(axis => GetCurrentState().OnInputUp(axis));
-        }
-
-        private State GetCurrentState()
-        {
-            return CurrentState;
-        }
-
         public static void EnterCombat(Character c)
         {
             WorldTime.Pause();

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SamsHelper.Input;
 using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality
@@ -9,7 +10,19 @@ namespace SamsHelper.BaseGameFunctionality
         private readonly Dictionary<string, State> _states = new Dictionary<string, State>();
         protected State CurrentState;
         private string _defaultState;
+        private InputListener _inputListener = new InputListener();
 
+        public virtual void Awake()
+        {
+            _inputListener.OnAnyPress(axis => CurrentState.OnInputDown(axis));
+            _inputListener.OnAnyRelease(axis => CurrentState.OnInputUp(axis));
+        }
+
+        public List<State> States()
+        {
+            return new List<State>(_states.Values);
+        }
+        
         public void SetDefaultState(string defaultState)
         {
             _defaultState = defaultState;
@@ -49,7 +62,7 @@ namespace SamsHelper.BaseGameFunctionality
 
         public void ReturnToDefault()
         {
-            if (_defaultState != null)
+            if (_defaultState != null && CurrentState.Name() != _defaultState)
             {
                 NavigateToState(_defaultState);
             }
