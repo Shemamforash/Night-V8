@@ -18,8 +18,8 @@ namespace Game.Characters
 
         public static void LoadTraits()
         {
-            string[] lines = Helper.ReadLinesFromFile("traits");
-            for (int i = 0; i < lines.Length; i += 1)
+            List<string> lines = Helper.ReadLinesFromFile("traits");
+            for (int i = 0; i < lines.Count; i += 1)
             {
                 string line = lines[i];
                 Trait newTrait = new Trait();
@@ -63,7 +63,7 @@ namespace Game.Characters
                             throw new Exceptions.TraitAttributeNotRecognisedException(attribute);
                     }
                     ++i;
-                    if (i == lines.Length)
+                    if (i == lines.Count)
                     {
                         break;
                     }

@@ -14,8 +14,8 @@ namespace Characters
 
         public static void LoadCharacterClasses()
         {
-            string[] lines = Helper.ReadLinesFromFile("classes");
-            for (int i = 0; i < lines.Length; i += 2)
+            List<string> lines = Helper.ReadLinesFromFile("classes");
+            for (int i = 0; i < lines.Count; i += 2)
             {
                 ClassCharacter newClass = new ClassCharacter(lines[i], lines[i + 1]);
                 classDictionary[lines[i]] = newClass;

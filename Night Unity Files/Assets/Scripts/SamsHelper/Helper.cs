@@ -8,11 +8,19 @@ namespace SamsHelper
 {
     public static class Helper
     {
-        public static string[] ReadLinesFromFile(string fileName)
+        public static List<string> ReadLinesFromFile(string fileName)
         {
             TextAsset file = Resources.Load(fileName) as TextAsset;
             string contents = file.text;
-            string[] lines = Regex.Split(contents, "\r\n|\r|\n");
+            string[] tempLines = Regex.Split(contents, "\r\n|\r|\n");
+            List<string> lines = new List<string>();
+            foreach (string line in tempLines)
+            {
+                if (line != "")
+                {
+                    lines.Add(line);
+                }
+            }
             return lines;
         }
 
@@ -78,13 +86,32 @@ namespace SamsHelper
             return foundChild;
         }
 
+        public static void PrintList<T>(List<T> list)
+        {
+            string listString = "";
+            for (int i = 0; i < list.Count; ++i)
+            {
+                if (i != 0)
+                {
+                    listString += ", ";
+                }
+                listString += list[i];
+            }
+            Debug.Log(listString);
+        }
+
+        public static void PrintList<T>(T[] arr)
+        {
+            PrintList(new List<T>(arr));
+        }
+        
         public enum NavigationDirections
         {
             Up,
             Down,
             Left,
             Right
-        };
+        }
 
         public static void SetNavigation(GameObject origin, GameObject target, NavigationDirections d)
         {

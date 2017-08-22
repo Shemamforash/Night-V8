@@ -7,8 +7,8 @@ namespace SamsHelper.BaseGameFunctionality
 {
     public class StateMachine : MonoBehaviour
     {
-        private readonly Dictionary<string, State> _states = new Dictionary<string, State>();
-        protected State CurrentState;
+        protected readonly Dictionary<string, State> _states = new Dictionary<string, State>();
+        private State CurrentState;
         private string _defaultState;
         private InputListener _inputListener = new InputListener();
 
@@ -18,9 +18,14 @@ namespace SamsHelper.BaseGameFunctionality
             _inputListener.OnAnyRelease(axis => CurrentState.OnInputUp(axis));
         }
 
-        public List<State> States()
+        public List<State> StatesAsList()
         {
             return new List<State>(_states.Values);
+        }
+
+        protected State GetCurrentState()
+        {
+            return CurrentState;
         }
         
         public void SetDefaultState(string defaultState)
@@ -39,7 +44,7 @@ namespace SamsHelper.BaseGameFunctionality
             _states[state.Name()] = state;
         }
 
-        public void NavigateToState(string stateName)
+        public virtual void NavigateToState(string stateName)
         {
             CurrentState = _states[stateName];
             CurrentState.Enter();

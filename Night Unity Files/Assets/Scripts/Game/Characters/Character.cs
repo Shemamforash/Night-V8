@@ -89,7 +89,7 @@ namespace Characters
 
         private void UpdateActionUi()
         {
-            List<BaseCharacterAction> _availableActions = States().Cast<BaseCharacterAction>().ToList();
+            List<BaseCharacterAction> _availableActions = StatesAsList().Cast<BaseCharacterAction>().ToList();
             for (int i = 0; i < _availableActions.Count; ++i)
             {
                 BaseCharacterAction a = _availableActions[i];
@@ -134,7 +134,7 @@ namespace Characters
             CharacterUi.DetailedClassText.text = PrimaryTrait.GetTraitDetails();
             CharacterUi.DetailedTraitText.text = SecondaryTrait.GetTraitDetails();
             CharacterUi.WeightText.text = "Weight: " + Weight + " (requires " + ((int) Weight + 5) + " fuel)";
-            CharacterUi.CurrentActionText.SetFormattingFunction(f => CurrentState.Name() + " " + ((BaseCharacterAction)CurrentState).GetCostAsString());
+            CharacterUi.CurrentActionText.SetFormattingFunction(f => GetCurrentState().Name() + " " + ((BaseCharacterAction)GetCurrentState()).GetCostAsString());
 
             _weaponName = new MyString("");
             _weaponName.AddLinkedText(CharacterUi.WeaponNameTextSimple);

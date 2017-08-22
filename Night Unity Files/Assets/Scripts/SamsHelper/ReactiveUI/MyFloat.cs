@@ -157,5 +157,10 @@ namespace SamsHelper.ReactiveUI
         {
             return a._currentValue != b._currentValue;
         }
+
+        public float RandomInRange()
+        {
+            return Random.Range(_min, _max);
+        }
     }
 }
