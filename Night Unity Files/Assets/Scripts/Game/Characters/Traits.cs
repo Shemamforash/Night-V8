@@ -8,12 +8,18 @@ namespace Game.Characters
     public static class Traits
     {
         private static readonly Dictionary<string, Trait> TraitDictionary = new Dictionary<string, Trait>();
-        private static List<string> _traitNames = new List<string>();
-
+        private static readonly Dictionary<string, Trait> ClassDictionary = new Dictionary<string, Trait>();
+        private static readonly List<string> _traitNames = new List<string>();
+        private static readonly List<string> _classNames = new List<string>();
 
         public static Trait GenerateTrait()
         {
             return TraitDictionary[_traitNames[Random.Range(0, _traitNames.Count)]];
+        }
+
+        public static Trait GenerateClass()
+        {
+            return ClassDictionary[_classNames[Random.Range(0, _classNames.Count)]];
         }
 
         public static void LoadTraits()
@@ -32,8 +38,18 @@ namespace Game.Characters
                     {
                         case "name":
                             newTrait.Name = value;
-                            TraitDictionary[newTrait.Name] = newTrait;
-                            _traitNames.Add(value);
+                            break;
+                        case "type":
+                            if (value == "Trait")
+                            {
+                                TraitDictionary[newTrait.Name] = newTrait;
+                                _traitNames.Add(newTrait.Name);
+                            }
+                            else
+                            {
+                                ClassDictionary[newTrait.Name] = newTrait;
+                                _classNames.Add(newTrait.Name);
+                            }
                             break;
                         case "str":
                             newTrait.StrengthBonus = float.Parse(value);
@@ -81,6 +97,18 @@ namespace Game.Characters
             catch (KeyNotFoundException e)
             {
                 throw new Exceptions.UnknownTraitException(traitName);
+            }
+        }
+        
+        public static Trait FindClass(string className)
+        {
+            try
+            {
+                return ClassDictionary[className];
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new Exceptions.UnknownTraitException(className);
             }
         }
 

@@ -6,8 +6,8 @@ namespace SamsHelper.ReactiveUI
     {
         private readonly bool _valueCapped;
         private bool _treatAsInt;
-        private readonly float _min;
-        private readonly float _max;
+        private float _min;
+        private float _max;
         private float _currentValue;
 
         public MyFloat()
@@ -28,15 +28,32 @@ namespace SamsHelper.ReactiveUI
             _valueCapped = true;
         }
 
-        public float Max()
+        public float Max
         {
-            return _max;
+            get { return _max; }
+            set
+            {
+                _max = value;
+                if (_currentValue > _max)
+                {
+                    Val = _max;
+                }
+            }
         }
 
-        public float Min()
+        public float Min
         {
-            return _min;
+            get { return _min; }
+            set
+            {
+                _min = value;
+                if (_currentValue < _min)
+                {
+                    Val = _min;
+                }
+            }
         }
+
 
         public void TreatAsInt()
         {

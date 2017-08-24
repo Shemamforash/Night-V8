@@ -3,57 +3,54 @@ using System.Collections.Generic;
 using Facilitating.Persistence;
 using Persistence;
 using SamsHelper.Persistence;
+using SamsHelper.ReactiveUI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.World
 {
     public class Home : MonoBehaviour
     {
         private PersistenceListener _persistenceListener;
-        private static readonly Dictionary<ResourceType, Resource> Resources =
-            new Dictionary<ResourceType, Resource>();
+        private static Inventory _homeInventory = new Inventory();
 
+        public static Inventory Inventory()
+        {
+            return _homeInventory;
+        }
+        
         public void Awake()
         {
-            Func<float, string> litreConversion = f => (Mathf.Round(f * 10f) / 10f).ToString() + "L";
-            Func<float, string> foodConversion = f => Mathf.Round(f).ToString() + "meals";
-            Func<float, string> fuelConversion = f => Mathf.Round(f).ToString() + "cans";
-            Func<float, string> ammoConversion = f => Mathf.Round(f).ToString() + " rnds";
-            Resources[ResourceType.Water] = new Resource("Water", litreConversion);
-            Resources[ResourceType.Food] = new Resource("Food", foodConversion);
-            Resources[ResourceType.Fuel] = new Resource("Fuel", fuelConversion);
-            Resources[ResourceType.Ammo] = new Resource("Ammo", ammoConversion);
-            Resources[ResourceType.Ammo].Increment(100);
+            GenerateResource("Water", "sips");
+            GenerateResource("Food", "meals");
+            GenerateResource("Fuel", "dregs");
+            GenerateResource("Ammo", "rounds");
+#if UNITY_EDITOR
+            _homeInventory.IncrementResource("Ammo", 100);
+#endif
             _persistenceListener = new PersistenceListener(Load, Save, "Home");
         }
 
-        public static void Load()
+        private void GenerateResource(string name, string convention)
         {
-            Resources[ResourceType.Water].Increment(GameData.StoredWater);
-            Resources[ResourceType.Food].Increment(GameData.StoredFood);
-            Resources[ResourceType.Fuel].Increment(GameData.StoredFuel);
+            Func<float, string> conversion = f => Mathf.Round(f).ToString() + " " + convention;
+            Text resourceText = GameObject.Find(name).transform.Find("Text").GetComponent<Text>();
+            ReactiveText<float> reactiveText = new ReactiveText<float>(resourceText, conversion);
+            _homeInventory.AddResource(name, reactiveText);
+        }
+        
+        public void Load()
+        {
+            _homeInventory.IncrementResource("Water", GameData.StoredWater);
+            _homeInventory.IncrementResource("Food", GameData.StoredFood);
+            _homeInventory.IncrementResource("Fuel", GameData.StoredFuel);
         }
 
-        public static void Save()
+        public void Save()
         {
-            GameData.StoredWater = Resources[ResourceType.Water].Quantity();
-            GameData.StoredFood = Resources[ResourceType.Food].Quantity();
-            GameData.StoredFuel = Resources[ResourceType.Fuel].Quantity();
-        }
-
-        public static void IncrementResource(ResourceType resourceType, float amount)
-        {
-            Resources[resourceType].Increment(amount);
-        }
-
-        public static float ConsumeResource(ResourceType resourceType, float amount)
-        {
-            return Resources[resourceType].Consume(amount);
-        }
-
-        public static GameObject GetResourceObject(ResourceType resourceType)
-        {
-            return Resources[resourceType].GetObject();
+            GameData.StoredWater = _homeInventory.GetResourceQuantity("Water");
+            GameData.StoredFood = _homeInventory.GetResourceQuantity("Food");
+            GameData.StoredFuel = _homeInventory.GetResourceQuantity("Fuel");
         }
     }
 }

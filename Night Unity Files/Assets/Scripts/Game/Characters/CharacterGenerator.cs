@@ -15,28 +15,19 @@ namespace Game.Characters
 
         public static Character GenerateCharacter()
         {
-            ClassCharacter newClass = GenerateClass();
+            Traits.Trait newClass = Traits.GenerateClass();
             string name = GenerateName(newClass);
-            Traits.Trait secondaryTrait = GenerateTrait();
+            Traits.Trait secondaryTrait = Traits.GenerateTrait();
             Character c = GenerateCharacterObject().GetComponent<Character>();
-            c.Initialise(name, newClass, GenerateWeightCategory(), secondaryTrait);
+            c.Initialise(name, newClass, secondaryTrait, GenerateWeightCategory());
             CalculateAttributesFromWeight(c);
             return c;
         }
 
-        public static ClassCharacter GenerateClass()
-        {
-            return ClassCharacter.FindClass("Driver");
-        }
 
-        public static string GenerateName(ClassCharacter classCharacter)
+        public static string GenerateName(Traits.Trait classCharacter)
         {
             return _characterNames[Random.Range(0, _characterNames.Count)];
-        }
-
-        public static Traits.Trait GenerateTrait()
-        {
-            return Traits.GenerateTrait();
         }
 
         public static List<Character> LoadInitialParty()
@@ -59,8 +50,8 @@ namespace Game.Characters
         private static Character GenerateDriver()
         {
             Character theDriver = GenerateCharacterObject().GetComponent<Character>();
-            theDriver.Initialise("Driver", ClassCharacter.FindClass("Driver"),
-                Character.WeightCategory.Medium, Traits.FindTrait("Scavenger"));
+            theDriver.Initialise("Driver", Traits.FindClass("Driver"), Traits.FindTrait("Nomadic"),
+                Character.WeightCategory.Medium);
             theDriver.SetWeapon(WeaponGenerator.GenerateWeapon());
             CalculateAttributesFromWeight(theDriver);
             return theDriver;

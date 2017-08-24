@@ -6,7 +6,7 @@ namespace Game.World
 {
 	public class WorldState : MonoBehaviour
     {
-		public static float CurrentDanger;
+	    public static float StormDistanceMax, StormDistanceActual;
 		public static int DaysSpentHere;
 		public static int NoPreviousLocations;
 		private readonly TimeListener _timeListener = new TimeListener();
@@ -17,31 +17,38 @@ namespace Game.World
 	    {
 		    MenuNavigator = Camera.main.GetComponent<GameMenuNavigator>();
 		    EnvironmentManager = GameObject.Find("Canvas").GetComponent<EnvironmentManager>();
+		    StormDistanceMax = 10;
+		    StormDistanceActual = 10;
 	    }
 
 		private void IncrementDaysSpentHere(){
 			++DaysSpentHere;
-			CurrentDanger += 0.5f;
-			if(CurrentDanger > 8){
-				CurrentDanger = 8;
+			--StormDistanceActual;
+			if(StormDistanceActual == 10){
+				FindNewLocation();
 			}
 			if(DaysSpentHere == 7){
 				//TODO gameover
 			}
 		}
 
-		private void ResetDaysSpentHere(){
-			DaysSpentHere = 0;
-			CurrentDanger -= 1;
-			if(CurrentDanger < 0){
-				CurrentDanger = 0;
-			}
-			++NoPreviousLocations;
-		}
+	    private void FindNewLocation()
+	    {
+		    StormDistanceMax--;
+		    StormDistanceActual = StormDistanceMax;
+		    if (StormDistanceMax == 0)
+		    {
+			    InitiateFinalEncounter();
+		    }
+	    }
 
+	    private void InitiateFinalEncounter()
+	    {
+		    //TODO
+	    }
+	    
 		public WorldState(){
 			_timeListener.OnDay(IncrementDaysSpentHere);
-			_timeListener.OnTravel(ResetDaysSpentHere);
 		}
     }
 }

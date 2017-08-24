@@ -34,7 +34,6 @@ namespace Game.World
         public override void Enter()
         {
             _timeRemaining = (int)(_duration.RandomInRange() * WorldTime.MinutesPerHour);
-            Debug.Log("banana");
         }
 
         public void UpdateWeather()

@@ -26,7 +26,7 @@ namespace Characters
         public MyFloat Hunger, Thirst = new MyFloat();
         public WeightCategory Weight;
         public float Sight;
-        public Traits.Trait PrimaryTrait, SecondaryTrait;
+        public Traits.Trait CharacterClass, CharacterTrait;
 
         private MyString _weaponName = new MyString();
 
@@ -38,8 +38,6 @@ namespace Characters
         private MyFloat _weaponCriticalChance = new MyFloat();
         private MyFloat _weaponAccuracy = new MyFloat();
 
-        private ClassCharacter _characterClass;
-
         public enum WeightCategory
         {
             VeryLight,
@@ -47,7 +45,7 @@ namespace Characters
             Medium,
             Heavy,
             VeryHeavy
-        };
+        }
 
         private GameObject actionButtonPrefab;
         private Weapon _weapon;
@@ -70,13 +68,12 @@ namespace Characters
             return _weapon;
         }
 
-        public void Initialise(string name, ClassCharacter classCharacter, WeightCategory weight, Traits.Trait secondaryTrait)
+        public void Initialise(string name, Traits.Trait classCharacter, Traits.Trait characterTrait, WeightCategory weight)
         {
             Name = name;
-            _characterClass = classCharacter;
+            CharacterClass = classCharacter;
+            CharacterTrait = characterTrait;
             Weight = weight;
-            PrimaryTrait = Traits.FindTrait(_characterClass.ClassTrait());
-            SecondaryTrait = secondaryTrait;
             actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
             SetCharacterUi(gameObject);
             AddState(new FindResources(this));
@@ -130,9 +127,9 @@ namespace Characters
             CharacterUi.DrinkButton.onClick.AddListener(Drink);
 
             CharacterUi.NameText.text = Name;
-            CharacterUi.ClassTraitText.text = _characterClass.ClassName() + " " + SecondaryTrait.Name;
-            CharacterUi.DetailedClassText.text = PrimaryTrait.GetTraitDetails();
-            CharacterUi.DetailedTraitText.text = SecondaryTrait.GetTraitDetails();
+            CharacterUi.ClassTraitText.text = CharacterTrait.Name + " " + CharacterClass.Name;
+            CharacterUi.DetailedClassText.text = CharacterClass.GetTraitDetails();
+            CharacterUi.DetailedTraitText.text = CharacterTrait.GetTraitDetails();
             CharacterUi.WeightText.text = "Weight: " + Weight + " (requires " + ((int) Weight + 5) + " fuel)";
             CharacterUi.CurrentActionText.SetFormattingFunction(f => GetCurrentState().Name() + " " + ((BaseCharacterAction)GetCurrentState()).GetCostAsString());
 
@@ -229,13 +226,13 @@ namespace Characters
 
         public void Drink()
         {
-            float consumed = Home.ConsumeResource(ResourceType.Water, 0.25f);
+            float consumed = Home.Inventory().DecrementResource("Water", 0.25f);
             Dehydration.Val -= consumed;
         }
 
         public void Eat()
         {
-            float consumed = Home.ConsumeResource(ResourceType.Food, 1);
+            float consumed = Home.Inventory().DecrementResource("Food", 1);
             Starvation.Val -= consumed;
         }
     }

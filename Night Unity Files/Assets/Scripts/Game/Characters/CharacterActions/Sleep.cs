@@ -9,7 +9,7 @@ namespace Game.Characters.CharacterActions
             SetUpdateCallback(() =>
             {
                 Character.Endurance.Val += 3;
-                if (Character.Endurance.Val == Character.Endurance.Max())
+                if (Character.Endurance.Val == Character.Endurance.Max)
                 {
                     Exit();
                 }

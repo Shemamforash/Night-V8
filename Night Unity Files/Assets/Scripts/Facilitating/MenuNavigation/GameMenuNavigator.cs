@@ -18,8 +18,7 @@ namespace Facilitating.MenuNavigation
     public class GameMenuNavigator : MenuNavigator
     {
         private bool _menuButtonDown;
-        private Environment _destinationOption1, _destinationOption2;
-        public Text DestinationOption1Text, DestinationOption2Text, ActionDurationText;
+        public Text ActionDurationText;
         private BaseCharacterAction _currentAction;
         private int _actionDuration;
         private bool _pauseMenuOpen;
@@ -34,10 +33,6 @@ namespace Facilitating.MenuNavigation
             Camera.main.GetComponent<GlobalAudioManager>().Initialise();
 
             WorldState.MenuNavigator = this;
-            DestinationOption1Text = Helper.FindChildWithName<Transform>(gameObject, "Option 1").Find("Text")
-                .GetComponent<Text>();
-            DestinationOption2Text = Helper.FindChildWithName<Transform>(gameObject, "Option 2").Find("Text")
-                .GetComponent<Text>();
             ActionDurationText = Helper.FindChildWithName<Transform>(gameObject, "Duration").GetComponent<Text>();
 
             AddMenu("Pause Sub Menu", "Resume");
@@ -58,16 +53,6 @@ namespace Facilitating.MenuNavigation
         {
             CharacterManager.ExitCharacter();
             base.SwitchToMenu(menu, paused);
-        }
-
-        public void ShowDestinationChoices(Environment option1, Environment option2)
-        {
-            SwitchToMenu("DestinationMenu", true);
-            _destinationOption1 = option1;
-            _destinationOption2 = option2;
-            DestinationOption1Text.text = option1.EnvironmentName;
-            DestinationOption2Text.text = option2.EnvironmentName;
-            WorldState.CurrentDanger += 1;
         }
 
         public void ShowActionDurationMenu(BaseCharacterAction a)
@@ -93,19 +78,6 @@ namespace Facilitating.MenuNavigation
         {
             _currentAction.DecreaseDuration();
             ActionDurationText.text = _currentAction.GetCostAsString();
-        }
-
-        public void MakeDestinationSelection(Text t)
-        {
-            SwitchToMenu("Game Menu", false);
-            if (t == DestinationOption1Text)
-            {
-                WorldState.EnvironmentManager.SetCurrentEnvironment(_destinationOption1);
-            }
-            else
-            {
-                WorldState.EnvironmentManager.SetCurrentEnvironment(_destinationOption2);
-            }
         }
 
         public void EndGameFail()

@@ -53,13 +53,10 @@ namespace World
             {
                 currentEnvironment = environments[0];
             }
-            else
-            {
-                Environment option1 = SelectEnvironmentChoice(null);
-                Environment option2 = SelectEnvironmentChoice(option1);
-                WorldState.MenuNavigator.ShowDestinationChoices(option1, option2);
-            }
-        }
+//            else
+//            {
+//            }
+        } 
 
         public void SetCurrentEnvironment(Environment e)
         {
@@ -67,41 +64,41 @@ namespace World
             environmentText.text = currentEnvironment.EnvironmentName;
         }
 
-        private Environment SelectEnvironmentChoice(Environment disallowed)
-        {
-            int dangerIndex = (int)Mathf.Floor(WorldState.CurrentDanger);
-            float[] pDistribution = new float[] { 0.15f, 0.2f, 0.3f, 0.2f, 0.15f };
-            float rand = Random.Range(0f, 1f);
-            float currentPVal = 0f;
-            for (int i = 0; i < pDistribution.Length; ++i)
-            {
-                currentPVal += pDistribution[i];
-                int j = dangerIndex - 2 + i;
-                if (j < 0)
-                {
-                    j = 0;
-                }
-                else if (j >= environments.Length)
-                {
-                    j = environments.Length - 1;
-                }
-                if (rand <= currentPVal)
-                {
-                    if (environments[j] == disallowed)
-                    {
-                        if (j - 1 > 0)
-                        {
-                            return environments[j - 1];
-                        }
-                        else
-                        {
-                            return environments[j + 1];
-                        }
-                    }
-                    return environments[j];
-                }
-            }
-            return null;
-        }
+//        private Environment SelectEnvironmentChoice(Environment disallowed)
+//        {
+//            int dangerIndex = (int)Mathf.Floor(WorldState.DangerLevel);
+//            float[] pDistribution = new float[] { 0.15f, 0.2f, 0.3f, 0.2f, 0.15f };
+//            float rand = Random.Range(0f, 1f);
+//            float currentPVal = 0f;
+//            for (int i = 0; i < pDistribution.Length; ++i)
+//            {
+//                currentPVal += pDistribution[i];
+//                int j = dangerIndex - 2 + i;
+//                if (j < 0)
+//                {
+//                    j = 0;
+//                }
+//                else if (j >= environments.Length)
+//                {
+//                    j = environments.Length - 1;
+//                }
+//                if (rand <= currentPVal)
+//                {
+//                    if (environments[j] == disallowed)
+//                    {
+//                        if (j - 1 > 0)
+//                        {
+//                            return environments[j - 1];
+//                        }
+//                        else
+//                        {
+//                            return environments[j + 1];
+//                        }
+//                    }
+//                    return environments[j];
+//                }
+//            }
+//            return null;
+//        }
     }
 }

@@ -82,5 +82,26 @@ namespace SamsHelper
                 get { return "GameObject references cannot be gathered from getcomponent() calls."; }
             }
         }
+
+        public class ResourceValueChangeInvalid : Exception
+        {
+            private readonly string _direction;
+            private readonly string _resourceName;
+            private readonly float _amount;
+            public ResourceValueChangeInvalid(string resourceName, string decrement, float amount)
+            {
+                _resourceName = resourceName;
+                _direction = decrement;
+                _amount = amount;
+            }
+
+            public override string Message
+            {
+                get
+                {
+                    return "Attempted to " + _direction + " resource " + _resourceName + " by " + _amount;
+                }
+            }
+        }
     }
 }

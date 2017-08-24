@@ -30,8 +30,8 @@ namespace Game.Characters.CharacterActions
 
         public override void Exit()
         {
-            Home.IncrementResource(ResourceType.Water, 1);
-            Home.IncrementResource(ResourceType.Food, 1);
+            Home.Inventory().IncrementResource("Water", 1);
+            Home.Inventory().IncrementResource("Food", 1);
             base.Exit();
         }
     }

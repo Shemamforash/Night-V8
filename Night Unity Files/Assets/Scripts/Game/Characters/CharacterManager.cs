@@ -45,7 +45,6 @@ namespace Game.Characters
         private void Load()
         {
             Traits.LoadTraits();
-            ClassCharacter.LoadCharacterClasses();
         }
 
         public void Start()

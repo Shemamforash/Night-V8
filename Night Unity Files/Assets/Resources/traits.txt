@@ -1,9 +1,15 @@
 name=Nomadic
+type=Trait
 end=10
 thirst=0.9
 starve=0.9
 
+name=Goliath
+type=Trait
+weight=1
+
 name=Scavenger
+type=Class
 int=10
 end=10
 thirst=0.9
@@ -11,7 +17,17 @@ starve=0.9
 sight=1.1
 
 name=Wanderer
+type=Class
 weight=-1
 
-name=Goliath
-weight=1
+name=Driver
+type=Class
+
+name=Ravager
+type=Class
+
+name=Conqueror
+type=Class
+
+name=Survivor
+type=Class
