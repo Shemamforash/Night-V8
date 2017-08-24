@@ -20,7 +20,7 @@ namespace Articy.Night
 {
     
     
-    public class EnvironmentTemplate : Entity, IEntity, IPropertyProvider, IObjectWithFeatureEnvironment
+    public class EnvironmentTemplate : Entity, IEntity, IPropertyProvider, IObjectWithFeatureJournalEntry, IObjectWithFeatureEnvironment
     {
         
         [SerializeField()]
@@ -46,6 +46,11 @@ namespace Articy.Night
             {
                 return mConstraints;
             }
+        }
+        
+        public JournalEntryFeature GetFeatureJournalEntry()
+        {
+            return Template.JournalEntry;
         }
         
         public EnvironmentFeature GetFeatureEnvironment()

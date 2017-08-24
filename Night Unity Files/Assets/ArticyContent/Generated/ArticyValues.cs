@@ -209,6 +209,15 @@ namespace Articy.Night
     
     
     [Serializable()]
+    public class ArticyValueJournalEntryFeature : ArticyValue<Articy.Night.Features.JournalEntryFeature>
+    {
+    }
+}
+namespace Articy.Night
+{
+    
+    
+    [Serializable()]
     public class ArticyValueEnvironmentFeature : ArticyValue<Articy.Night.Features.EnvironmentFeature>
     {
     }
@@ -282,15 +291,6 @@ namespace Articy.Night
     
     [Serializable()]
     public class ArticyValueJournal_Entry_TemplateTemplate : ArticyValue<Articy.Night.Templates.Journal_Entry_TemplateTemplate>
-    {
-    }
-}
-namespace Articy.Night
-{
-    
-    
-    [Serializable()]
-    public class ArticyValueJournalEntryFeature : ArticyValue<Articy.Night.Features.JournalEntryFeature>
     {
     }
 }

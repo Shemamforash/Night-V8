@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Text;
 using Game.World;
+using SamsHelper;
+using SamsHelper.BaseGameFunctionality;
 using UnityEngine;
 
 namespace World
@@ -9,65 +13,105 @@ namespace World
     using UnityEngine.UI;
     using Menus;
 
-    public class EnvironmentManager : MonoBehaviour
+    public class EnvironmentManager : ProbabalisticStateMachine
     {
         public ArticyRef articyEnvironments;
         public Text environmentText, temperatureText;
-        private Environment[] environments;
-        private Environment currentEnvironment = null;
         private TimeListener timeListener = new TimeListener();
-
-        public void Awake()
+        private List<string> _visitedEnvironments = new List<string>();
+        
+        public void Start()
         {
-            List<EnvironmentTemplate> templates = ArticyDatabase.GetAllOfType<EnvironmentTemplate>();
-            environments = new Environment[templates.Count];
-            templates.ForEach(environmentType =>
-            {
-                int arrayPosition = (int)environmentType.Template.Environment.NormalisedDanger;
-
-                Environment e = new Environment(
-                    environmentType.DisplayName,
-                    environmentType.Template.Environment.WaterLevel,
-                    environmentType.Template.Environment.FoodLevel,
-                    environmentType.Template.Environment.FuelLevel,
-                    environmentType.Template.Environment.ScrapLevel,
-                    environmentType.Template.Environment.NormalisedDanger,
-                    (int)environmentType.Template.Environment.TerrainAccessibility,
-                    environmentType.Template.Environment.MinTemperature,
-                    environmentType.Template.Environment.MaxTemperature
-                    );
-                environments[arrayPosition] = e;
-            });
+            VisitAllStates();
+            LoadEnvironments();
+            LoadProbabilities("EnvironmentProbabilityTable");
+            NavigateToState("Oasis");
             timeListener.OnTravel(GenerateEnvironment);
             timeListener.OnMinute(UpdateTemperature);
-            GenerateEnvironment();
+//            TestEnvironmentGenerator();
         }
 
-        private void UpdateTemperature(){
-            temperatureText.text = currentEnvironment.GetTemperature(WorldTime.Hours, WorldTime.Minutes) + "\u00B0" + "C";
+        public override void NavigateToState(string stateName)
+        {
+            base.NavigateToState(stateName);
+            _visitedEnvironments.Add(stateName);
+        }
+
+        private void TestEnvironmentGenerator()
+        {
+            int expectedTransitions = StatesAsList().Count;
+            int totalTransitions;
+            int fails = 0;
+            int trials = 10000;
+            for (int i = 0; i < trials; ++i)
+            {
+                _visitedEnvironments.Clear();
+                NavigateToState("Oasis");
+                totalTransitions = 1;
+                try
+                {
+                    while (true)
+                    {
+                        GenerateEnvironment();
+                        ++totalTransitions;
+                    }
+                }
+                catch(KeyNotFoundException e)
+                {
+                    if (totalTransitions != expectedTransitions)
+                    {
+                        Helper.PrintList(_visitedEnvironments);
+                        ++fails;
+                    }
+                }
+            }
+            Debug.Log(fails + " failed tests from " + trials + " trials.");
+        }
+
+        private void LoadEnvironments()
+        {
+            Helper.ConstructObjectsFromCsv("EnvironmentBalance", delegate(string[] attributes)
+            {
+                Environment environment = new Environment(
+                    attributes[0],
+                    attributes[1],
+                    this,
+                    float.Parse(attributes[2]),
+                    float.Parse(attributes[3]),
+                    float.Parse(attributes[4]),
+                    float.Parse(attributes[5]),
+                    float.Parse(attributes[6]),
+                    float.Parse(attributes[7])
+                );
+                AddState(environment);
+            });
+        }
+        
+        private void UpdateTemperature()
+        {
+            temperatureText.text = ((Environment)GetCurrentState()).GetTemperature(WorldTime.Hours, WorldTime.Minutes) + "\u00B0" + "C";
         }
 
         private void GenerateEnvironment()
         {
-            if (currentEnvironment == null)
-            {
-                currentEnvironment = environments[0];
-            }
-//            else
-//            {
-//            }
-        } 
-
-        public void SetCurrentEnvironment(Environment e)
-        {
-			currentEnvironment = e;
-            environmentText.text = currentEnvironment.EnvironmentName;
+            ((Environment)GetCurrentState()).NextEnvironment(_visitedEnvironments);
+            environmentText.text = ((Environment)GetCurrentState()).GetDisplayName();
         }
+        
+#if UNITY_EDITOR
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                GenerateEnvironment();
+            }
+        }
+#endif
 
 //        private Environment SelectEnvironmentChoice(Environment disallowed)
 //        {
-//            int dangerIndex = (int)Mathf.Floor(WorldState.DangerLevel);
-//            float[] pDistribution = new float[] { 0.15f, 0.2f, 0.3f, 0.2f, 0.15f };
+//            int dangerIndex = (int) Mathf.Floor(WorldState.DangerLevel);
+//            float[] pDistribution = new float[] {0.15f, 0.2f, 0.3f, 0.2f, 0.15f};
 //            float rand = Random.Range(0f, 1f);
 //            float currentPVal = 0f;
 //            for (int i = 0; i < pDistribution.Length; ++i)
@@ -90,10 +134,7 @@ namespace World
 //                        {
 //                            return environments[j - 1];
 //                        }
-//                        else
-//                        {
-//                            return environments[j + 1];
-//                        }
+//                        return environments[j + 1];
 //                    }
 //                    return environments[j];
 //                }

@@ -26,7 +26,22 @@ namespace Articy.Night.Templates
     {
         
         [SerializeField()]
+        private ArticyValueJournalEntryFeature mJournalEntry = new ArticyValueJournalEntryFeature();
+        
+        [SerializeField()]
         private ArticyValueEnvironmentFeature mEnvironment = new ArticyValueEnvironmentFeature();
+        
+        public Articy.Night.Features.JournalEntryFeature JournalEntry
+        {
+            get
+            {
+                return mJournalEntry.GetValue();
+            }
+            set
+            {
+                mJournalEntry.SetValue(value);
+            }
+        }
         
         public Articy.Night.Features.EnvironmentFeature Environment
         {
@@ -43,6 +58,10 @@ namespace Articy.Night.Templates
         private void CloneProperties(object aClone)
         {
             Articy.Night.Templates.EnvironmentTemplateTemplate newClone = ((Articy.Night.Templates.EnvironmentTemplateTemplate)(aClone));
+            if ((JournalEntry != null))
+            {
+                newClone.JournalEntry = ((Articy.Night.Features.JournalEntryFeature)(JournalEntry.CloneObject()));
+            }
             if ((Environment != null))
             {
                 newClone.Environment = ((Articy.Night.Features.EnvironmentFeature)(Environment.CloneObject()));
@@ -69,6 +88,10 @@ namespace Articy.Night.Templates
             {
                 string featurePath = aProperty.Substring(0, featureIndex);
                 string featureProperty = aProperty.Substring((featureIndex + 1));
+                if ((featurePath == "JournalEntry"))
+                {
+                    JournalEntry.setProp(featureProperty, aValue);
+                }
                 if ((featurePath == "Environment"))
                 {
                     Environment.setProp(featureProperty, aValue);
@@ -83,6 +106,10 @@ namespace Articy.Night.Templates
             {
                 string featurePath = aProperty.Substring(0, featureIndex);
                 string featureProperty = aProperty.Substring((featureIndex + 1));
+                if ((featurePath == "JournalEntry"))
+                {
+                    return JournalEntry.getProp(featureProperty);
+                }
                 if ((featurePath == "Environment"))
                 {
                     return Environment.getProp(featureProperty);

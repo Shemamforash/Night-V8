@@ -3,7 +3,7 @@
     "set_Localization": "False",
     "set_TextFormatter": "Unity",
     "set_UseScriptSupport": "True",
-    "ObjectDefinitionsHash": "8F222B1557E58960455D18F14B09F3580B9738BE069D6011A4F890DE21C22DD2"
+    "ObjectDefinitionsHash": "7C7879FB05D8C14300A9085F33E7328E83E4D975E23AA7B38DC4CBE24C5ECE28"
   },
   "Project": {
     "Name": "Night",
@@ -785,6 +785,27 @@
         "TechnicalName": "EnvironmentTemplate",
         "DisplayName": "Environment Template",
         "Features": [
+          {
+            "TechnicalName": "JournalEntry",
+            "DisplayName": "JournalEntry",
+            "Properties": [
+              {
+                "Property": "JournalEntryList",
+                "Type": "String",
+                "DisplayName": "Entry Lines"
+              }
+            ],
+            "Constraints": [
+              {
+                "Property": "JournalEntryList",
+                "Type": "Text",
+                "MaxLength": "2048",
+                "PlaceholderValue": "",
+                "IsLocalized": "False",
+                "AllowsLinebreaks": "True"
+              }
+            ]
+          },
           {
             "TechnicalName": "Environment",
             "DisplayName": "Environment",
@@ -3016,7 +3037,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Weapons can be fired when not Hidden, and there is at least one unit of ammunition in the weapon. Before firing the player must aim with it. Increasing the player's aim level increases the probability of hitting the enemy, up to the accuracy limit of the weapon. When the aim level has been increased to a satisfactory level, the fire button may be pressed to begin firing. If the weapon is automatic the player may hold down the fire button until the clip is empty before reloading (whilst reducing the aim level). However if the weapon is manual, the player must reload between every shot (though the aim level is not reduced between shots).",
+            "Text": "Weapons can be fired when not moving and not hidden, and there is at least one unit of ammunition in the weapon. Before firing the player must aim with it. Increasing the player's aim level increases the probability of hitting the enemy, up to the accuracy limit of the weapon. When the aim level has been increased to a satisfactory level, the fire button may be pressed to begin firing. If the weapon is automatic the player may hold down the fire button until the clip is empty before reloading (whilst reducing the aim level). However if the weapon is manual, the player must reload between every shot (though the aim level is not reduced between shots). Aim is automatically increased when the player is able to fire, up to a limit based on their cover.",
             "ExternalId": "",
             "Position": {
               "x": 80.0,
@@ -3460,7 +3481,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Damage: How much health is removed from an enemy when hit\r\n\r\nAccuracy: The probability of hitting the target\r\n\r\nFire Rate: The time between shots (automatic)/ the time to cock the weapon (manual)\r\n\r\nManoeuvrability: Movement speed modifier for changing cover, position, and time taken to aim the weapon\r\n\r\nReload Time: Time taken to reload the weapon\r\n\r\nCapacity: The number of units of ammunition the weapon can hold before needing to be reloaded.\r\n\r\nCritical Chance: The probability for any shot to create a critical effect.",
+            "Text": "Damage: How much health is removed from an enemy when hit\r\n\r\nAccuracy: The probability of hitting the target\r\n\r\nFire Rate: The time between shots (automatic)/ the time to cock the weapon (manual)\r\n\r\nHandling: Movement speed modifier for changing cover, position, and time taken to aim the weapon\r\n\r\nReload Time: Time taken to reload the weapon\r\n\r\nCapacity: The number of units of ammunition the weapon can hold before needing to be reloaded.\r\n\r\nCritical Chance: The probability for any shot to create a critical effect.",
             "ExternalId": "",
             "Position": {
               "x": 100.0,
@@ -3497,7 +3518,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Weapons come in a number of rarities that affect the power of a weapon, it's flavour, and is affected by the progress of the player and the context in which the weapon is found (difficult to get to -> more powerful). The rarities are listed below, along with their weapon name counterparts.\r\n\r\n- Rusty\r\n\r\n- Slinger (Pistol)\r\n\r\n- Snipper (Rifle)\r\n\r\n- Banger (Shotgun)\r\n\r\n- Rattler (SMG)\r\n\r\n- Gouger (LMG)\r\n\r\n- Boomer (Explosive)\r\n\r\n- Tarnished\r\n\r\n- Shortshooter (Pistol)\r\n\r\n- Groundrider (Sniper)\r\n\r\n- Leadspreader (Shotgun)\r\n\r\n- Saltscraper (SMG)\r\n\r\n- Godgrinder (LMG)\r\n\r\n- Earsplitter\r\n\r\n- Shiny\r\n\r\n- Handsnapper\r\n\r\n- \r\n\r\n- Gleaming\r\n\r\n- Radiant\r\n\r\n- Deathgrip\r\n\r\n- Voidwalker\r\n\r\n- Hellcracker\r\n\r\n- \r\n\r\n-",
+            "Text": "Weapons come in a number of rarities that affect the power of a weapon, it's flavour, and is affected by the progress of the player and the context in which the weapon is found (difficult to get to -> more powerful). The rarities are listed below, along with their weapon name counterparts.\r\n\r\n- Rusty\r\n\r\n- Slinger (Pistol)\r\n\r\n- Snipper (Rifle)\r\n\r\n- Banger (Shotgun)\r\n\r\n- Rattler (SMG)\r\n\r\n- Gouger (LMG)\r\n\r\n- Boomer (Explosive)\r\n\r\n- Tarnished\r\n\r\n- Shortshooter (Pistol)\r\n\r\n- Groundrider (Sniper)\r\n\r\n- Leadspreader (Shotgun)\r\n\r\n- Saltscraper (SMG)\r\n\r\n- Eruptor (LMG)\r\n\r\n- Earsplitter (Explosive)\r\n\r\n- Shiny\r\n\r\n- Handsnapper\r\n\r\n- \r\n\r\n- Gleaming\r\n\r\n- Radiant\r\n\r\n- Deathgrip (Pistol)\r\n\r\n- Voidwalker (Sniper)\r\n\r\n- Hellsmasher (Shotgun)\r\n\r\n- Beastbreaker (SMG)\r\n\r\n- Godgrinder (LMG)\r\n\r\n- Heavencracker (Explosive)",
             "ExternalId": "",
             "Position": {
               "x": 120.0,
@@ -3534,7 +3555,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Prefixes are used to add flavour to a weapon when generating it's name, and to add interesting effects to a weapon that may or may not encourage players to use them. Prefixes can be applied to all weapon types, and are assigned using a probability distribution table based on the rarity of the weapon.\r\n\r\nAccuracy-\r\n\r\nDamage- (-)  (+) Deep, Thundering\r\n\r\nManouevrability- (-) Colossal, Massive, Hefty, Bulky, (+) Lithe, Supple, Nimble, Elegant\r\n\r\nReload Speed- (-) Inept, Unwieldy, Clumsy, \r\n\r\nCapacity- (-) Desolate, Barren, Sparse, Lacking, (+) Loaded, Full, Teeming, Overflowing\r\n\r\nCritical Chance- (-) Incapable, Pathetic, Feeble, Weak, (+) Strong, Potent, Forceful, Vehement\r\n\r\nFire Rate- (-) Slumbering, Sluggish, Drowsy, Slow, (+) Quick, Hasty, Abrupt, Sudden",
+            "Text": "Prefixes are used to add flavour to a weapon when generating it's name, and to add interesting effects to a weapon that may or may not encourage players to use them. Prefixes can be applied to all weapon types, and are assigned using a probability distribution table based on the rarity of the weapon.\r\n\r\nAccuracy-\r\n\r\nDamage- (-)  (+) Deep, Thundering\r\n\r\nHandling- (-) Colossal, Massive, Hefty, Bulky, (+) Lithe, Supple, Nimble, Elegant\r\n\r\nReload Speed- (-) Inept, Unwieldy, Clumsy, \r\n\r\nCapacity- (-) Desolate, Barren, Sparse, Lacking, (+) Loaded, Full, Teeming, Overflowing\r\n\r\nCritical Chance- (-) Incapable, Pathetic, Feeble, Weak, (+) Strong, Potent, Forceful, Vehement\r\n\r\nFire Rate- (-) Slumbering, Sluggish, Drowsy, Slow, (+) Quick, Hasty, Abrupt, Sudden",
             "ExternalId": "",
             "Position": {
               "x": 140.0,
@@ -3645,7 +3666,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "Characters will have the following stats:\r\n\r\nStrength- acts as health, affects how much damage the character can take and how much weight the character can carry, also affects manoeuvrability and reload speed\r\n\r\nIntelligence- affects the probability that the character can find resources in the environment, also affects accuracy\r\n\r\nEndurance- affects how far the character can travel, sleep increases endurance, endurance reaches 0, character will auto sleep\r\n\r\nStability- unstable characters are more likely to run away, cause fights, commit murder, steal, or overeat\r\n\r\nStarvation/Dehydration Tolerance- affects how much the character can go without food or water before dying\r\n\r\nStarvation- food debt of character, starvation reduces strength\r\n\r\nDehydration- water debt of character, dehydration reduces intelligence\r\n\r\nWeight- affects the fuel cost to transport the character\r\n\r\nSight- affects how far the character can see on the map in tiles\r\n\r\nPrimary/Secondary Trait- various effects including behaviours, enhancements, and handicaps",
+            "Text": "Characters will have the following stats:\r\n\r\nStrength- acts as health, affects how much damage the character can take and how much weight the character can carry, also affects manoeuvrability and reload speed\r\n\r\nIntelligence- affects the probability that the character can find resources in the environment, also affects accuracy\r\n\r\nEndurance- affects how far the character can travel, sleep increases endurance, endurance reaches 0, character will auto sleep. Endurance is used up at a rate of 1 per hour when awake. When sleeping it recovers at 2 per hour. Exploring consumes 2 endurance per hour.\r\n\r\nStability- unstable characters are more likely to run away, cause fights, commit murder, steal, or overeat.\r\n\r\nStarvation/Dehydration Tolerance- affects how much the character can go without food or water before dying\r\n\r\nStarvation- food debt of character, starvation reduces strength\r\n\r\nDehydration- water debt of character, dehydration reduces intelligence\r\n\r\nWeight- affects the fuel cost to transport the character\r\n\r\nSight- affects how far the character can see on the map in tiles\r\n\r\nPrimary/Secondary Trait- various effects including behaviours, enhancements, and handicaps",
             "ExternalId": "",
             "Position": {
               "x": 40.0,
@@ -3682,7 +3703,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "All NPC characters will be created from a template of sorts, called a class. The class determines the main trait of a character, their name, and the stats they are likely to have. Secondary traits are not influenced by the class of a character and may have many different effects. No class should be objectively better than others, and many characters will have traits that cause negative effects as well as positive ones.",
+            "Text": "All NPC characters will be created from a template of sorts, called a class. The class determines the main trait of a character, their name, and the stats they are likely to have. Secondary traits are not influenced by the class of a character and may have many different effects. No class should be objectively better than others, and many characters will have traits that cause negative effects as well as positive ones.\r\n\r\nClasses:\r\n\r\n    * Ravager- high intelligence, high endurance, low strength, medium stability\r\n    * Survivor - high endurance, medium stability, medium strength, medium intelligence\r\n    * Conqueror- low endurance, medium stability, high strength, low intelligence\r\n\ndemigod, protector, crusador, paragon, saviour, exemplar, wrecker, forager, despoiler, desolator, destroyer, harrier, raider, penetrator, subsister, \r\n\r\nTraits:\r\n\r\n    * Dessicated/Parched/Withered- high dehydration tolerance\r\n    * Hungered/Craving/Gaunt- high starvation tolerance\r\n    * Keen-eyed/Longsighted- high sight\r\n    * Embattled- high strength, high endurance\r\n    * Furious- high strength, low stability",
             "ExternalId": "",
             "Position": {
               "x": 60.0,
@@ -3773,6 +3794,80 @@
         {
           "Type": "TextObject",
           "Properties": {
+            "TechnicalName": "Txt_B0D10BD7",
+            "Id": "0x100000000000E74",
+            "Parent": "0x10000000000011E",
+            "DisplayName": "Eating and Drinking",
+            "Attachments": [],
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Characters must eat and drink in order to survive. All characters have a food and water requirement based on their weight and any relevant traits. Characters have a corresponding hunger and thirst characteristic that dictates how much food they must eat. The average character must consume 2000kcal and 3liters of water to stay healthy. Every hour the character is awake they need hunger/12 calories, and thirst/12 liters of water to survive. The reason the hunger and thirst values are divided by twelve is because it is assumed a character will sleep 12 hours of the day and so not require any food or water.\r\n\r\nUnless a character constantly eats and drinks, they will accrue a deficit of calories and thirst. This deficit is compared to their starvation/dehydration tolerance attribute. This deficit causes a reduction in strength and intelligence values respectively. When the deficit for thirst and hunger meets its corresponding tolerance value, the character dies.\r\n\r\nTemperature has an additional effect on thirst, higher temperatures require characters to drink more water. Damage causes a reduction to strength, and so eating is required in order to recover from an injury.",
+            "ExternalId": "",
+            "Position": {
+              "x": 120.0,
+              "y": 120.0
+            },
+            "ZIndex": 6.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "ShortId": 2966490071
+          }
+        },
+        {
+          "Type": "TextObject",
+          "Properties": {
+            "TechnicalName": "Txt_E0C3F610",
+            "Id": "0x100000000000E7A",
+            "Parent": "0x10000000000011E",
+            "DisplayName": "Names",
+            "Attachments": [],
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Characters would be named after objects or roles that would become important during and after an apocalypse. Important things would be:\r\n\r\nAquifers, Purifiers, Ammunition, Canned Food, Guns, Medicine, Hunters, Warriors, Doctors, Libraries, Generators, Solar Panels,",
+            "ExternalId": "",
+            "Position": {
+              "x": 140.0,
+              "y": 140.0
+            },
+            "ZIndex": 7.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "ShortId": 3770938896
+          }
+        },
+        {
+          "Type": "TextObject",
+          "Properties": {
             "TechnicalName": "Txt_F7928A38",
             "Id": "0x10000000000016C",
             "Parent": "0x100000000000169",
@@ -3793,7 +3888,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "The world is made up of a number of environments. Each environment has different dangers, resources, and weather. Some environment types are more difficult that others. The selection of environment is based on the player's progress. Environment selection is based on probability, with certain environments being more likely to follow others. Environments will also have danger types associated with them that affect the ways in which characters can be endangered. This is for flavour reasons, and to increase replayability, as well as to further differentiate environments.\r\n\r\nThe environments are:\r\n\r\n    * <color=#ffa61aff>Shattered Peaks </color>- Mountains as old as the world itself. Once rich with life these broken spires offer some protection against the open earth. Do not take it's safety lightly, however, for others also find shelter in the dark dales here.\r\n    * Verdant Oasis - A rare sight, Oases pop up where ancient springs become so engorged that they breach the surface of the earth. A haven for any desert wanderes who stumble across it. Far from civilisation, these oasis can become a death trap if supplies cannot be found to sustain the party.\r\n    * Oil Sands - The sands stretch endlessly across the horizon, a monument to the long-gone facilities that pumped this precious juice out of the depths of the crust. Rich in fuel and scrap for building, but toxic and hostile to life. Bandit encounters are regular, as they come to feed their parched vehicles at these blackened watering holes.\r\n    * Sheltered Ravines - These long crevasses are all that remain of an ancient tide that swept across the world. Miles of interlocking corridors carved deep into the rock provide a hidden place of refuge. Travellers should beware, these ravines can prove fatal during downpours, and passage through the tunnels can be treacherous in the dim light that reaches the floor.\r\n    * Endless Prairie - The great plains, the final wonder of the earth. Grasslands that wander endlessly across the salty earth. Rife with wildlife, many come to eek a living off of the land- many hostile. The soil itself is littered with the scrap of civilisation, attracting scavengers and treasure hunters, stay vigilant and the bounty of this place is yours.\r\n    * Silent Scrublands - On the edges of plains and salt flats, the scrublands act as a buffer between life and death. The soil here is parched, though some flora manages to survive. Water and food is limited, but without resources the scrublands are fairly safe.\r\n    * Aching Salts - The great highways of the world all cross the salts. They have become the battlefield of our time. Wrecks litter the sides of the road, pecked dry by hunters. Weapons, fuel, food, and scrap can all be found here, hidden in caches left by those seeking refuge in the forgotten places.\r\n    * Weeping Wastelands - The front lines of forgotten wars. These scars on the landscape are wracked by storms, rain, and fire. In only a few days the wastelands can be transformed from rolling dunes to sopping mud. The vicious weather is not without it's benefits, the constant churning of the earth often brings up remnants of the past. Cross these wasted lands with care.\r\n    * Dead Ruins - The dead lands of the world, tombs of the humanity. Once great towers stood, a testament to man's dominance of nature. Now crumbling, irradiated ruins, madmen and militants stalk the landscape, looking for powerful machines that lay buried beneath the stone. An extremely dangerous area, not least because of it's oppresive effect on the mind. \r\n\nEnvironment selection- 2 methods. Method 1: all environments are linked to certain other environments, forming a sparse graph. Each link has a weight and follow up environments are chosen semi-randomly based on the link. Method 2: environments have a generation probability that is directly related to the difficulty, safer environments are more likely at lower difficulties. \r\n\r\nBoth methods could provide the player with a small number of options to choose from, rather than choosing for them. It should be a given that the next environment generated cannot be the same as the previous environment (not the current one), or rather, the same environment can be selected only twice in a row.",
+            "Text": "The world is made up of a number of environments. Each environment has different dangers, resources, and weather. Some environment types are more difficult that others. The selection of environment is based on the player's progress. Environment selection is based on probability, with certain environments being more likely to follow others. Environments will also have danger types associated with them that affect the ways in which characters can be endangered. This is for flavour reasons, and to increase replayability, as well as to further differentiate environments.\r\n\r\nThe environments are:\r\n\r\n    * <color=#ffa61aff>Shattered Peaks </color>- Mountains as old as the world itself. Once rich with life these broken spires offer some protection against the open earth. Do not take it's safety lightly, however, for others also find shelter in the dark dales here.\r\n    * Verdant Oasis - A rare sight, Oases pop up where ancient springs become so engorged that they breach the surface of the earth. A haven for any desert wanderers who stumble across it. Far from civilisation, these oasis can become a death trap if supplies cannot be found to sustain the party.\r\n    * Oil Sands - The sands stretch endlessly across the horizon, a monument to the long-gone facilities that pumped this precious juice out of the depths of the crust. Rich in fuel and scrap for building, but toxic and hostile to life. Bandit encounters are regular, as they come to feed their parched vehicles at these blackened watering holes.\r\n    * Sheltered Ravines - These long crevasses are all that remain of an ancient tide that swept across the world. Miles of interlocking corridors carved deep into the rock provide a hidden place of refuge. Travellers should beware, these ravines can prove fatal during downpours, and passage through the tunnels can be treacherous in the dim light that reaches the floor.\r\n    * Endless Prairie - The great plains, the final wonder of the earth. Grasslands that wander endlessly across the salty earth. Rife with wildlife, many come to eek a living off of the land- many hostile. The soil itself is littered with the scrap of civilisation, attracting scavengers and treasure hunters, stay vigilant and the bounty of this place is yours.\r\n    * Silent Scrublands - On the edges of plains and salt flats, the scrublands act as a buffer between life and death. The soil here is parched, though some flora manages to survive. Water and food is limited, but without resources the scrublands are fairly safe.\r\n    * Aching Salts - The great highways of the world all cross the salts. They have become the battlefield of our time. Wrecks litter the sides of the road, pecked dry by hunters. Weapons, fuel, food, and scrap can all be found here, hidden in caches left by those seeking refuge in the forgotten places.\r\n    * Weeping Wastelands - The front lines of forgotten wars. These scars on the landscape are wracked by storms, rain, and fire. In only a few days the wastelands can be transformed from rolling dunes to sopping mud. The vicious weather is not without it's benefits, the constant churning of the earth often brings up remnants of the past. Cross these wasted lands with care.\r\n    * Dead Ruins - The dead lands of the world, tombs of the humanity. Once great towers stood, a testament to man's dominance of nature. Now crumbling, irradiated ruins, madmen and militants stalk the landscape, looking for powerful machines that lay buried beneath the stone. An extremely dangerous area, not least because of it's oppresive effect on the mind. \r\n\nEnvironment selection- 2 methods. Method 1: all environments are linked to certain other environments, forming a sparse graph. Each link has a weight and follow up environments are chosen semi-randomly based on the link. Method 2: environments have a generation probability that is directly related to the difficulty, safer environments are more likely at lower difficulties. \r\n\r\nThe player will not be able to choose the environment they travel to.\r\n\r\n<i>Both methods could provide the player with a small number of options to choose from, rather than choosing for them. It should be a given that the next environment generated cannot be the same as the previous environment (not the current one), or rather, the same environment can be selected only twice in a row.</i>",
             "ExternalId": "",
             "Position": {
               "x": 0.0,
@@ -3978,7 +4073,7 @@
               "g": 0.75686276,
               "b": 0.8
             },
-            "Text": "The storm is always on the horizon, swallowing anything too slow to escape. If the party remains in the same location for 7 days, the storm will destroy all the characters, and end the game. Transitioning to a new area resets the storm's distance from the players.",
+            "Text": "The storm is always on the horizon, swallowing anything too slow to escape. If the party remains in the same location for 7 days, the storm will destroy all the characters, and end the game. Transitioning to a new area resets the storm's distance from the players.\r\n\r\nThe storm approaches the player. Initially it is 10 days away. The player can move to a new location whenever they want, but on the 10th day they must move if they can. Every time they move, the number of days away decreases by 1. Eventually the party is forced to confront the storm, the demons within, and their own mortality. This has been done for 3 reasons:\r\n\r\n    1. It forces the game to have a maximum, controllable length. This provides an endpoint for the players to work against and allows me to better deliver the story and control pacing.\r\n    2. It represents the inevitable onset of death. The longer the player flees, the more the driver realises it cannot be escaped, and that only by facing it can you achieve any kind of resolution.\r\n    3. It allows the player to have agency over the way they play, keeping ahead of the storm may allow the player to accrue greater resources and weapons at the cost of greater difficulty. Keeping ahead of the storm will provide greater insights into the story and the minds of the characters.",
             "ExternalId": "",
             "Position": {
               "x": 100.0,
@@ -4326,6 +4421,80 @@
           }
         },
         {
+          "Type": "TextObject",
+          "Properties": {
+            "TechnicalName": "Txt_0B9393C3",
+            "Id": "0x100000000000E80",
+            "Parent": "0x100000000000118",
+            "DisplayName": "Intro",
+            "Attachments": [],
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "I have taken this journey before,\r\n\r\nWe used to call it the path of life,\r\n\r\nBut I lost my faith,\r\n\r\nFor on this road we cannot escape death.",
+            "ExternalId": "",
+            "Position": {
+              "x": 80.0,
+              "y": 80.0
+            },
+            "ZIndex": 4.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "ShortId": 194220995
+          }
+        },
+        {
+          "Type": "TextObject",
+          "Properties": {
+            "TechnicalName": "Txt_D3105B17",
+            "Id": "0x100000000000E86",
+            "Parent": "0x100000000000169",
+            "DisplayName": "Regions",
+            "Attachments": [],
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "Color": {
+              "r": 0.5764706,
+              "g": 0.75686276,
+              "b": 0.8
+            },
+            "Text": "Regions are the subdivisions that make up environments. Regions are used to define important locations for the player. Examples could be: hunting grounds, ruins, wells, rivers, strongholds, camps, wrecks, rigs, and more. Different environments have different (though shared) regions, meaning that some regions may occur more in certain environments than others, or not at all.",
+            "ExternalId": "",
+            "Position": {
+              "x": 120.0,
+              "y": 120.0
+            },
+            "ZIndex": 6.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "ShortId": 3541064471
+          }
+        },
+        {
           "Type": "EnvironmentTemplate_03",
           "Properties": {
             "TechnicalName": "Ntt_A7F08CF6",
@@ -4646,6 +4815,546 @@
               "WeaponSecondaryPrefix": "0x0",
               "WeaponAreaEffect": true,
               "WeaponRarity": 1
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentPeaks",
+            "Id": "0x100000000000B98",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Mountains",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 133.0,
+              "y": 140.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 3323312058
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": "Lightning wracks the very tops of the mountains\r\nRivers bulge and break their banks\r\nA rock flies overhead, Driver worries about rock slides\r\nAn animal slips and falls off the jagged cliffs\r\nThe sun's light is split between a myriad of peaks"
+            },
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 7.0,
+              "FoodLevel": 7.0,
+              "FuelLevel": 4.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 3.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentWastelands",
+            "Id": "0x100000000000B9C",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Wastelands",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 327.0,
+              "y": 166.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 2378845923
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": "Engines crack and break in the distance\r\nThe earth shifts beneath us\r\nA stray bullet breaks the silence"
+            },
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 4.0,
+              "FoodLevel": 3.0,
+              "FuelLevel": 6.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 8.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentOasis",
+            "Id": "0x100000000000BA0",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Oasis",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 182.0,
+              "y": 77.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 3755014890
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": "Insects buzz around the water\r\nBirds cheep from the tree tops\r\nThe call of an animal echoes through the bushes\r\nThe smell of flowers fills the air"
+            },
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 10.0,
+              "FoodLevel": 8.0,
+              "FuelLevel": 2.0,
+              "ScrapLevel": 1.0,
+              "BanditDanger": 1.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 0.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentRavines",
+            "Id": "0x100000000000BA4",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Lakes",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 271.0,
+              "y": 75.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 1439376606
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": "The sound of water echoes through the tunnels\r\nWater drips from the ceiling\r\nVoices chatter overhead... be silent"
+            },
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 8.0,
+              "FoodLevel": 5.0,
+              "FuelLevel": 3.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 4.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentSands",
+            "Id": "0x100000000000BA8",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Sands",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 427.0,
+              "y": 96.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 2466035624
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": "Oil trickles across the floor\r\nA distant battle rages over the horizon\r\nThe air chokes with tar\r\n"
+            },
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 2.0,
+              "FoodLevel": 1.0,
+              "FuelLevel": 10.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 5.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentPrairie",
+            "Id": "0x100000000000BAC",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Prairie",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 490.0,
+              "y": 79.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 4245390323
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": "The wind makes waves in the dry grass\r\nTiny animals scuttle about in the undergrowth\r\nSomething large passes nearby\r\nA tree rustles it's leave in the breeze\r\nDriver breaths in the fresh air\r\n"
+            },
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 6.0,
+              "FoodLevel": 9.0,
+              "FuelLevel": 3.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 1.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentRuins",
+            "Id": "0x100000000000BB0",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Ruins",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 631.0,
+              "y": 60.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 1901863203
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": "The wind moans through empty streets\r\nGunfire in the distance\r\nSomething stirs in the rubble\r\nElderly girders bend and creak\r\nCanvas windows ripple in the breeze"
+            },
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 3.0,
+              "FoodLevel": 4.0,
+              "FuelLevel": 8.0,
+              "ScrapLevel": 10.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 6.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentScrublands",
+            "Id": "0x100000000000BB4",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Scrublands",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 755.0,
+              "y": 63.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 1499357293
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": "A lizard creeps across the sand\r\nDry brush shifts restlessly in the wind\r\nEngines thunder in the distance"
+            },
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 5.0,
+              "FoodLevel": 6.0,
+              "FuelLevel": 5.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 2.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentSalts",
+            "Id": "0x100000000000BB8",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Salts",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 848.0,
+              "y": 74.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 3685917409
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": "Salt grains tumble on the breeze\r\nDriver shields his eyes from the glare\r\nClouds trail listlessly in the sky\r\nDriver sighs\r\nDry pores beg for water"
+            },
+            "Environment": {
+              "MinTemperature": 30.0,
+              "MaxTemperature": 45.0,
+              "WaterLevel": 1.0,
+              "FoodLevel": 2.0,
+              "FuelLevel": 6.0,
+              "ScrapLevel": 7.0,
+              "BanditDanger": 6.0,
+              "TerrainAccessibility": 10.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 7.0
+            }
+          }
+        },
+        {
+          "Type": "EnvironmentTemplate",
+          "Properties": {
+            "TechnicalName": "EnvironmentPeaks",
+            "Id": "0x100000000000E8C",
+            "Parent": "0x100000000000679",
+            "Attachments": [],
+            "DisplayName": "Towers",
+            "Color": {
+              "r": 0.545098066,
+              "g": 0.670588255,
+              "b": 0.3254902
+            },
+            "Text": "",
+            "ExternalId": "",
+            "Position": {
+              "x": 148.0,
+              "y": 194.0
+            },
+            "ZIndex": 0.0,
+            "Size": {
+              "w": 256.0,
+              "h": 196.0
+            },
+            "PreviewImage": {
+              "ViewBox": {
+                "x": 0.0,
+                "y": 0.0,
+                "w": 0.0,
+                "h": 0.0
+              },
+              "Mode": "FromAsset",
+              "Asset": "0x0"
+            },
+            "ShortId": 3869818790
+          },
+          "Template": {
+            "JournalEntry": {
+              "JournalEntryList": "Lightning wracks the very tops of the mountains\r\nRivers bulge and break their banks\r\nA rock flies overhead, Driver worries about rock slides\r\nAn animal slips and falls off the jagged cliffs\r\nThe sun's light is split between a myriad of peaks"
+            },
+            "Environment": {
+              "MinTemperature": 0.0,
+              "MaxTemperature": 0.0,
+              "WaterLevel": 7.0,
+              "FoodLevel": 7.0,
+              "FuelLevel": 4.0,
+              "ScrapLevel": 0.0,
+              "BanditDanger": 0.0,
+              "TerrainAccessibility": 0.0,
+              "CampFrequency": 0.0,
+              "NormalisedDanger": 3.0
             }
           }
         },
@@ -5612,9 +6321,9 @@
             "Attachments": [],
             "DisplayName": "Misc",
             "Color": {
-              "r": 0.55201143,
-              "g": 0.50888133,
-              "b": 0.309468955
+              "r": 0.549019635,
+              "g": 0.5058824,
+              "b": 0.305882365
             },
             "Text": "",
             "ExternalId": "",
@@ -5654,9 +6363,9 @@
             "Attachments": [],
             "DisplayName": "Night",
             "Color": {
-              "r": 0.55201143,
-              "g": 0.50888133,
-              "b": 0.309468955
+              "r": 0.549019635,
+              "g": 0.5058824,
+              "b": 0.305882365
             },
             "Text": "",
             "ExternalId": "",
@@ -5684,465 +6393,6 @@
           "Template": {
             "JournalEntry": {
               "JournalEntryList": ""
-            }
-          }
-        },
-        {
-          "Type": "EnvironmentTemplate",
-          "Properties": {
-            "TechnicalName": "EnvironmentPeaks",
-            "Id": "0x100000000000B98",
-            "Parent": "0x100000000000679",
-            "Attachments": [],
-            "DisplayName": "Shattered Peaks",
-            "Color": {
-              "r": 0.545098066,
-              "g": 0.670588255,
-              "b": 0.3254902
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 133.0,
-              "y": 140.0
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 256.0,
-              "h": 196.0
-            },
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "ShortId": 3323312058
-          },
-          "Template": {
-            "Environment": {
-              "MinTemperature": 0.0,
-              "MaxTemperature": 0.0,
-              "WaterLevel": 7.0,
-              "FoodLevel": 7.0,
-              "FuelLevel": 4.0,
-              "ScrapLevel": 0.0,
-              "BanditDanger": 0.0,
-              "TerrainAccessibility": 0.0,
-              "CampFrequency": 0.0,
-              "NormalisedDanger": 3.0
-            }
-          }
-        },
-        {
-          "Type": "EnvironmentTemplate",
-          "Properties": {
-            "TechnicalName": "EnvironmentWastelands",
-            "Id": "0x100000000000B9C",
-            "Parent": "0x100000000000679",
-            "Attachments": [],
-            "DisplayName": "Weeping Wastelands",
-            "Color": {
-              "r": 0.545098066,
-              "g": 0.670588255,
-              "b": 0.3254902
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 327.0,
-              "y": 166.0
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 256.0,
-              "h": 196.0
-            },
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "ShortId": 2378845923
-          },
-          "Template": {
-            "Environment": {
-              "MinTemperature": 0.0,
-              "MaxTemperature": 0.0,
-              "WaterLevel": 4.0,
-              "FoodLevel": 3.0,
-              "FuelLevel": 6.0,
-              "ScrapLevel": 0.0,
-              "BanditDanger": 0.0,
-              "TerrainAccessibility": 0.0,
-              "CampFrequency": 0.0,
-              "NormalisedDanger": 8.0
-            }
-          }
-        },
-        {
-          "Type": "EnvironmentTemplate",
-          "Properties": {
-            "TechnicalName": "EnvironmentOasis",
-            "Id": "0x100000000000BA0",
-            "Parent": "0x100000000000679",
-            "Attachments": [],
-            "DisplayName": "Verdant Oasis",
-            "Color": {
-              "r": 0.545098066,
-              "g": 0.670588255,
-              "b": 0.3254902
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 182.0,
-              "y": 77.0
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 256.0,
-              "h": 196.0
-            },
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "ShortId": 3755014890
-          },
-          "Template": {
-            "Environment": {
-              "MinTemperature": 0.0,
-              "MaxTemperature": 0.0,
-              "WaterLevel": 10.0,
-              "FoodLevel": 8.0,
-              "FuelLevel": 2.0,
-              "ScrapLevel": 1.0,
-              "BanditDanger": 1.0,
-              "TerrainAccessibility": 0.0,
-              "CampFrequency": 0.0,
-              "NormalisedDanger": 0.0
-            }
-          }
-        },
-        {
-          "Type": "EnvironmentTemplate",
-          "Properties": {
-            "TechnicalName": "EnvironmentRavines",
-            "Id": "0x100000000000BA4",
-            "Parent": "0x100000000000679",
-            "Attachments": [],
-            "DisplayName": "Sheltered Ravines",
-            "Color": {
-              "r": 0.545098066,
-              "g": 0.670588255,
-              "b": 0.3254902
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 271.0,
-              "y": 75.0
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 256.0,
-              "h": 196.0
-            },
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "ShortId": 1439376606
-          },
-          "Template": {
-            "Environment": {
-              "MinTemperature": 0.0,
-              "MaxTemperature": 0.0,
-              "WaterLevel": 8.0,
-              "FoodLevel": 5.0,
-              "FuelLevel": 3.0,
-              "ScrapLevel": 0.0,
-              "BanditDanger": 0.0,
-              "TerrainAccessibility": 0.0,
-              "CampFrequency": 0.0,
-              "NormalisedDanger": 4.0
-            }
-          }
-        },
-        {
-          "Type": "EnvironmentTemplate",
-          "Properties": {
-            "TechnicalName": "EnvironmentSands",
-            "Id": "0x100000000000BA8",
-            "Parent": "0x100000000000679",
-            "Attachments": [],
-            "DisplayName": "Oil Sands",
-            "Color": {
-              "r": 0.545098066,
-              "g": 0.670588255,
-              "b": 0.3254902
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 427.0,
-              "y": 96.0
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 256.0,
-              "h": 196.0
-            },
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "ShortId": 2466035624
-          },
-          "Template": {
-            "Environment": {
-              "MinTemperature": 0.0,
-              "MaxTemperature": 0.0,
-              "WaterLevel": 2.0,
-              "FoodLevel": 1.0,
-              "FuelLevel": 10.0,
-              "ScrapLevel": 0.0,
-              "BanditDanger": 0.0,
-              "TerrainAccessibility": 0.0,
-              "CampFrequency": 0.0,
-              "NormalisedDanger": 5.0
-            }
-          }
-        },
-        {
-          "Type": "EnvironmentTemplate",
-          "Properties": {
-            "TechnicalName": "EnvironmentPrairie",
-            "Id": "0x100000000000BAC",
-            "Parent": "0x100000000000679",
-            "Attachments": [],
-            "DisplayName": "Endless Prairie",
-            "Color": {
-              "r": 0.545098066,
-              "g": 0.670588255,
-              "b": 0.3254902
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 490.0,
-              "y": 79.0
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 256.0,
-              "h": 196.0
-            },
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "ShortId": 4245390323
-          },
-          "Template": {
-            "Environment": {
-              "MinTemperature": 0.0,
-              "MaxTemperature": 0.0,
-              "WaterLevel": 6.0,
-              "FoodLevel": 9.0,
-              "FuelLevel": 3.0,
-              "ScrapLevel": 0.0,
-              "BanditDanger": 0.0,
-              "TerrainAccessibility": 0.0,
-              "CampFrequency": 0.0,
-              "NormalisedDanger": 1.0
-            }
-          }
-        },
-        {
-          "Type": "EnvironmentTemplate",
-          "Properties": {
-            "TechnicalName": "EnvironmentRuins",
-            "Id": "0x100000000000BB0",
-            "Parent": "0x100000000000679",
-            "Attachments": [],
-            "DisplayName": "Dead Ruins",
-            "Color": {
-              "r": 0.545098066,
-              "g": 0.670588255,
-              "b": 0.3254902
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 631.0,
-              "y": 60.0
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 256.0,
-              "h": 196.0
-            },
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "ShortId": 1901863203
-          },
-          "Template": {
-            "Environment": {
-              "MinTemperature": 0.0,
-              "MaxTemperature": 0.0,
-              "WaterLevel": 3.0,
-              "FoodLevel": 4.0,
-              "FuelLevel": 8.0,
-              "ScrapLevel": 10.0,
-              "BanditDanger": 0.0,
-              "TerrainAccessibility": 0.0,
-              "CampFrequency": 0.0,
-              "NormalisedDanger": 6.0
-            }
-          }
-        },
-        {
-          "Type": "EnvironmentTemplate",
-          "Properties": {
-            "TechnicalName": "EnvironmentScrublands",
-            "Id": "0x100000000000BB4",
-            "Parent": "0x100000000000679",
-            "Attachments": [],
-            "DisplayName": "Silent Scrublands",
-            "Color": {
-              "r": 0.545098066,
-              "g": 0.670588255,
-              "b": 0.3254902
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 755.0,
-              "y": 63.0
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 256.0,
-              "h": 196.0
-            },
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "ShortId": 1499357293
-          },
-          "Template": {
-            "Environment": {
-              "MinTemperature": 0.0,
-              "MaxTemperature": 0.0,
-              "WaterLevel": 5.0,
-              "FoodLevel": 6.0,
-              "FuelLevel": 5.0,
-              "ScrapLevel": 0.0,
-              "BanditDanger": 0.0,
-              "TerrainAccessibility": 0.0,
-              "CampFrequency": 0.0,
-              "NormalisedDanger": 2.0
-            }
-          }
-        },
-        {
-          "Type": "EnvironmentTemplate",
-          "Properties": {
-            "TechnicalName": "EnvironmentSalts",
-            "Id": "0x100000000000BB8",
-            "Parent": "0x100000000000679",
-            "Attachments": [],
-            "DisplayName": "Aching Salts",
-            "Color": {
-              "r": 0.545098066,
-              "g": 0.670588255,
-              "b": 0.3254902
-            },
-            "Text": "",
-            "ExternalId": "",
-            "Position": {
-              "x": 848.0,
-              "y": 74.0
-            },
-            "ZIndex": 0.0,
-            "Size": {
-              "w": 256.0,
-              "h": 196.0
-            },
-            "PreviewImage": {
-              "ViewBox": {
-                "x": 0.0,
-                "y": 0.0,
-                "w": 0.0,
-                "h": 0.0
-              },
-              "Mode": "FromAsset",
-              "Asset": "0x0"
-            },
-            "ShortId": 3685917409
-          },
-          "Template": {
-            "Environment": {
-              "MinTemperature": 30.0,
-              "MaxTemperature": 45.0,
-              "WaterLevel": 1.0,
-              "FoodLevel": 2.0,
-              "FuelLevel": 6.0,
-              "ScrapLevel": 7.0,
-              "BanditDanger": 6.0,
-              "TerrainAccessibility": 10.0,
-              "CampFrequency": 0.0,
-              "NormalisedDanger": 7.0
             }
           }
         },
@@ -6398,6 +6648,11 @@
               {
                 "Id": "0x100000000000BB8",
                 "TechnicalName": "EnvironmentSalts",
+                "Type": "Entity"
+              },
+              {
+                "Id": "0x100000000000E8C",
+                "TechnicalName": "EnvironmentPeaks",
                 "Type": "Entity"
               }
             ]
@@ -6892,6 +7147,11 @@
                 "Id": "0x1000000000009A1",
                 "TechnicalName": "Txt_25292834",
                 "Type": "TextObject"
+              },
+              {
+                "Id": "0x100000000000E80",
+                "TechnicalName": "Txt_0B9393C3",
+                "Type": "TextObject"
               }
             ]
           },
@@ -6976,6 +7236,16 @@
                 "Id": "0x100000000000989",
                 "TechnicalName": "Txt_C4AB0A36",
                 "Type": "TextObject"
+              },
+              {
+                "Id": "0x100000000000E74",
+                "TechnicalName": "Txt_B0D10BD7",
+                "Type": "TextObject"
+              },
+              {
+                "Id": "0x100000000000E7A",
+                "TechnicalName": "Txt_E0C3F610",
+                "Type": "TextObject"
               }
             ]
           },
@@ -7012,6 +7282,11 @@
               {
                 "Id": "0x100000000000965",
                 "TechnicalName": "Txt_12E59ADF",
+                "Type": "TextObject"
+              },
+              {
+                "Id": "0x100000000000E86",
+                "TechnicalName": "Txt_D3105B17",
                 "Type": "TextObject"
               }
             ]

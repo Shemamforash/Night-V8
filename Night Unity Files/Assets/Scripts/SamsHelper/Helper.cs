@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Articy.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,16 @@ namespace SamsHelper
                 }
             }
             return lines;
+        }
+
+        public static void ConstructObjectsFromCsv(string fileName, Action<string[]> constructionMethod)
+        {
+            List<string> lines = ReadLinesFromFile(fileName);
+            foreach (string line in lines)
+            {
+                string[] attributes = line.Split(',');
+                constructionMethod(attributes);
+            }
         }
 
         public static void Log<T>(List<T> aList)

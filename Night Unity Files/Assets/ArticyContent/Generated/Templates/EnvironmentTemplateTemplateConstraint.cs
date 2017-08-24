@@ -24,7 +24,17 @@ namespace Articy.Night.Templates
     public class EnvironmentTemplateTemplateConstraint
     {
         
+        private JournalEntryFeatureConstraint mJournalEntry = new JournalEntryFeatureConstraint();
+        
         private EnvironmentFeatureConstraint mEnvironment = new EnvironmentFeatureConstraint();
+        
+        public JournalEntryFeatureConstraint JournalEntry
+        {
+            get
+            {
+                return mJournalEntry;
+            }
+        }
         
         public EnvironmentFeatureConstraint Environment
         {

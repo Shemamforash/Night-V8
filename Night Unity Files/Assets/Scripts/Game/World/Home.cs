@@ -25,6 +25,7 @@ namespace Game.World
             GenerateResource("Food", "meals");
             GenerateResource("Fuel", "dregs");
             GenerateResource("Ammo", "rounds");
+            GenerateResource("Scrap", "bits");
 #if UNITY_EDITOR
             _homeInventory.IncrementResource("Ammo", 100);
 #endif

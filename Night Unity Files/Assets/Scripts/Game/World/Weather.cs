@@ -6,11 +6,10 @@ using UnityEngine;
 
 namespace Game.World
 {
-    public class Weather : State
+    public class Weather : ProbabalisticState
     {
         private MyFloat _temperature, _visibility, _water, _duration;
         private List<Danger> _dangers = new List<Danger>();
-        private Dictionary<string, float> probabilityDictionary = new Dictionary<string, float>();
         private int _timeRemaining;
         
         public Weather(string name, MyFloat temperature, MyFloat visibility, MyFloat water, MyFloat duration) : base(name, WeatherManager.GetWeatherManager())
@@ -24,11 +23,6 @@ namespace Game.World
         public void AddDanger(string dangerType, float severity)
         {
             _dangers.Add(new Danger(dangerType, severity));
-        }
-
-        public void AddWeatherProbability(string weatherName, float probability)
-        {
-            probabilityDictionary[weatherName] = probability;
         }
 
         public override void Enter()
@@ -47,31 +41,7 @@ namespace Game.World
 
         public override void Exit()
         {
-            WeatherManager.GetWeatherManager().NavigateToState(NextWeather(this));
-        }
-
-        public string NextWeather(Weather lastWeather)
-        {
-            string lastWeatherName = lastWeather == null ? "" : lastWeather.Name();
-            float cumulativeValue = 0;
-            float targetValue = UnityEngine.Random.Range(0f, 1.0f);
-            string fallBackWeather = "";
-            foreach (string weatherName in probabilityDictionary.Keys)
-            {
-                cumulativeValue += probabilityDictionary[weatherName];
-                if (cumulativeValue >= targetValue)
-                {
-                    if (weatherName != lastWeatherName)
-                    {
-                        return weatherName;
-                    }
-                }
-                else
-                {
-                    fallBackWeather = weatherName;
-                }
-            }
-            return fallBackWeather;
+            WeatherManager.GetWeatherManager().NavigateToState(NextState(Name()));
         }
 
         private class Danger

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality;
 using SamsHelper.ReactiveUI;
@@ -8,7 +9,7 @@ using World;
 
 namespace Game.World
 {
-    public class WeatherManager : StateMachine
+    public class WeatherManager : ProbabalisticStateMachine
     {
         private static WeatherManager _self;
         private TimeListener _timeListener = new TimeListener();
@@ -24,7 +25,7 @@ namespace Game.World
         public void Start()
         {
             LoadWeather();
-            LoadWeatherProbabilities();
+            LoadProbabilities("WeatherProbabilityTable");
             NavigateToState("Clear");
             _timeListener.OnMinute(() => ((Weather) GetCurrentState()).UpdateWeather());
 //            GenerateWeatherString(2000);
@@ -43,10 +44,8 @@ namespace Game.World
 
         private void LoadWeather()
         {
-            List<string> lines = Helper.ReadLinesFromFile("WeatherBalance");
-            foreach (string line in lines)
+            Helper.ConstructObjectsFromCsv("WeatherBalance", delegate(string[] attributes)
             {
-                string[] attributes = line.Split(',');
                 string weatherName = attributes[0];
                 float temperatureMin = float.Parse(attributes[1]);
                 float temperatureMax = float.Parse(attributes[2]);
@@ -70,22 +69,7 @@ namespace Game.World
                 {
                     weather.AddDanger(attributes[11], float.Parse(attributes[12]));
                 }
-            }
-        }
-
-        private void LoadWeatherProbabilities()
-        {
-            List<string> lines = Helper.ReadLinesFromFile("WeatherProbabilityTable");
-            string[] weatherOrder = lines[0].Split(',');
-            for (int i = 1; i < lines.Count; ++i)
-            {
-                string[] probabilities = lines[i].Split(',');
-                Weather weather = (Weather) _states[probabilities[0]];
-                for (int j = 1; j < probabilities.Length; ++j)
-                {
-                    weather.AddWeatherProbability(weatherOrder[j], float.Parse(probabilities[j]));
-                }
-            }
+            });
         }
 
         private void GenerateWeatherString(int stringLength)
