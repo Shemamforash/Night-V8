@@ -1,4 +1,5 @@
-﻿using SamsHelper.BaseGameFunctionality;
+﻿using Game.World;
+using SamsHelper.BaseGameFunctionality;
 
 namespace World
 {

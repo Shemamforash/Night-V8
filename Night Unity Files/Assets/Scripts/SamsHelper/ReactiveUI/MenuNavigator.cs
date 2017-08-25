@@ -33,6 +33,11 @@ namespace SamsHelper.ReactiveUI
         {
             GameObject menu = Helper.FindChildWithName(transform, menuName).gameObject;
             GameObject firstButton = Helper.FindChildWithName(menu.transform, firstButtonName).gameObject;
+            if (!menu.activeInHierarchy)
+            {
+                menu.SetActive(true);
+                menu.SetActive(false);
+            }
             MenusList.Add(new MenuButtonPair(menu, firstButton));
         }
 

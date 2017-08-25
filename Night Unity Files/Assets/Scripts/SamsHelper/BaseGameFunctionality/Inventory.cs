@@ -22,6 +22,11 @@ namespace Game.World
             _unlimited = false;
         }
 
+        public Resource  GetResource(string resourceName)
+        {
+            return _resources[resourceName];
+        }
+
         public void AddItem(InventoryItem item)
         {
             if (_items.Count < _inventorySize || _unlimited)

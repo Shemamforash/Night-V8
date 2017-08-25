@@ -43,6 +43,7 @@ namespace Facilitating.MenuNavigation
             AddMenu("Game Over Menu", "Menu");
             AddMenu("Action Duration Menu", "Confirm");
             AddMenu("Combat Menu", "Approach");
+            AddMenu("Region Menu", "Back");
 
             SetInitialMenu(GameObject.Find("Game Menu"), GameObject.Find("Food"));
 

@@ -12,7 +12,7 @@ namespace Game.World
     public class Home : MonoBehaviour
     {
         private PersistenceListener _persistenceListener;
-        private static Inventory _homeInventory = new Inventory();
+        private static DesolationInventory _homeInventory = new DesolationInventory();
 
         public static Inventory Inventory()
         {
@@ -21,23 +21,23 @@ namespace Game.World
         
         public void Awake()
         {
-            GenerateResource("Water", "sips");
-            GenerateResource("Food", "meals");
-            GenerateResource("Fuel", "dregs");
-            GenerateResource("Ammo", "rounds");
-            GenerateResource("Scrap", "bits");
+            SetResourceSuffix("Water", "sips");
+            SetResourceSuffix("Food", "meals");
+            SetResourceSuffix("Fuel", "dregs");
+            SetResourceSuffix("Ammo", "rounds");
+            SetResourceSuffix("Scrap", "bits");
 #if UNITY_EDITOR
             _homeInventory.IncrementResource("Ammo", 100);
 #endif
             _persistenceListener = new PersistenceListener(Load, Save, "Home");
         }
 
-        private void GenerateResource(string name, string convention)
+        private void SetResourceSuffix(string name, string convention)
         {
             Func<float, string> conversion = f => Mathf.Round(f).ToString() + " " + convention;
             Text resourceText = GameObject.Find(name).transform.Find("Text").GetComponent<Text>();
             ReactiveText<float> reactiveText = new ReactiveText<float>(resourceText, conversion);
-            _homeInventory.AddResource(name, reactiveText);
+            _homeInventory.GetResource(name).AddLinkedText(reactiveText);
         }
         
         public void Load()

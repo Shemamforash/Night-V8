@@ -80,6 +80,7 @@ namespace Characters
             AddState(new EnterCombat(this));
             AddState(new Sleep(this));
             AddState(new Idle(this));
+            AddState(new Explore(this));
             SetDefaultState("Idle");
             UpdateActionUi();
         }

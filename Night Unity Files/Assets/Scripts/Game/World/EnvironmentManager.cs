@@ -1,21 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
-using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality;
 using UnityEngine;
+using UnityEngine.UI;
+using World;
 
-namespace World
+namespace Game.World
 {
-    using Articy.Unity;
-    using Articy.Night;
-    using UnityEngine.UI;
-    using Menus;
-
     public class EnvironmentManager : ProbabalisticStateMachine
     {
-        public ArticyRef articyEnvironments;
         public Text environmentText, temperatureText;
         private TimeListener timeListener = new TimeListener();
         private List<string> _visitedEnvironments = new List<string>();
@@ -35,6 +28,7 @@ namespace World
         {
             base.NavigateToState(stateName);
             _visitedEnvironments.Add(stateName);
+            RegionManager.GenerateNewRegions();
         }
 
         private void TestEnvironmentGenerator()
@@ -107,39 +101,5 @@ namespace World
             }
         }
 #endif
-
-//        private Environment SelectEnvironmentChoice(Environment disallowed)
-//        {
-//            int dangerIndex = (int) Mathf.Floor(WorldState.DangerLevel);
-//            float[] pDistribution = new float[] {0.15f, 0.2f, 0.3f, 0.2f, 0.15f};
-//            float rand = Random.Range(0f, 1f);
-//            float currentPVal = 0f;
-//            for (int i = 0; i < pDistribution.Length; ++i)
-//            {
-//                currentPVal += pDistribution[i];
-//                int j = dangerIndex - 2 + i;
-//                if (j < 0)
-//                {
-//                    j = 0;
-//                }
-//                else if (j >= environments.Length)
-//                {
-//                    j = environments.Length - 1;
-//                }
-//                if (rand <= currentPVal)
-//                {
-//                    if (environments[j] == disallowed)
-//                    {
-//                        if (j - 1 > 0)
-//                        {
-//                            return environments[j - 1];
-//                        }
-//                        return environments[j + 1];
-//                    }
-//                    return environments[j];
-//                }
-//            }
-//            return null;
-//        }
     }
 }
