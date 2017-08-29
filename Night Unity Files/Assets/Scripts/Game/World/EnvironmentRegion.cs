@@ -1,4 +1,5 @@
-﻿using SamsHelper;
+﻿using Characters;
+using SamsHelper;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ namespace Game.World
 
     {
         private string _regionDescription;
+        private int _distance;
         private RegionTemplate _template;
 
         private GameObject _regionObject;
@@ -18,7 +20,12 @@ namespace Game.World
         {
             _template = template;
             _regionObject = regionObject;
-            
+            _distance = Random.Range(2, 10);
+            IncrementResource("Water", _template.WaterAvailable);
+            IncrementResource("Food", _template.FoodAvailable);
+            IncrementResource("Fuel", _template.FuelAvailable);
+            IncrementResource("Scrap", _template.ScrapAvailable);
+            IncrementResource("Ammo", _template.AmmoAvailable);
             Helper.FindChildWithName<Text>(regionObject, "Text").text = "New Region";
         }
 
@@ -35,6 +42,11 @@ namespace Game.World
         public string Type()
         {
             return _template.Type;
+        }
+
+        public void ExtractResources(Character c)
+        {
+            float maximumCarryingCapacity = c.RemainingCarryCapacity();
         }
 
         public string Description()
@@ -74,6 +86,11 @@ namespace Game.World
         public GameObject GetObject()
         {
             return _regionObject;
+        }
+
+        public int Distance()
+        {
+            return _distance;
         }
     }
 }

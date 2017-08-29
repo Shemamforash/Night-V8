@@ -1,17 +1,38 @@
-﻿using Characters;
+﻿using System;
+using Characters;
 using Game.World;
+using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
     public class Explore : BaseCharacterAction
     {
+        private Action _endOfExplorationAction;
+        
         public Explore(Character character) : base("Explore", character)
         {
         }
 
         public override void Enter()
         {
-            WorldState.MenuNavigator.SwitchToMenu("Region Menu", true);
+            RegionManager.EnterManager(this);
+            _endOfExplorationAction = null;
+        }
+
+        public void SetExplorationAction(Action endOfExplorationAction)
+        {
+            _endOfExplorationAction = endOfExplorationAction;
+            Debug.Log(TimeRemainingAsHours());
+            Start();
+        }
+
+        public override void Exit()
+        {
+            if (_endOfExplorationAction != null)
+            {
+                _endOfExplorationAction();
+            }
+            base.Exit();
         }
     }
 }

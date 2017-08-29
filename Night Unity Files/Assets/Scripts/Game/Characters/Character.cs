@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game.Characters;
 using Game.Characters.CharacterActions;
@@ -63,12 +64,19 @@ namespace Characters
             _weaponReloadSpeed.Val = _weapon.ReloadSpeed;
         }
 
+        public void SetActionListActive(bool active)
+        {
+            CharacterUi.ActionScrollContent.SetActive(active);
+            CharacterUi.CurrentActionText.SetActive(!active);
+        }
+
         public Weapon GetWeapon()
         {
             return _weapon;
         }
 
-        public void Initialise(string name, Traits.Trait classCharacter, Traits.Trait characterTrait, WeightCategory weight)
+        public void Initialise(string name, Traits.Trait classCharacter, Traits.Trait characterTrait,
+            WeightCategory weight)
         {
             Name = name;
             CharacterClass = classCharacter;
@@ -81,19 +89,34 @@ namespace Characters
             AddState(new Sleep(this));
             AddState(new Idle(this));
             AddState(new Explore(this));
+            AddState(new JourneyToLocation(this));
+            AddState(new JourneyFromLocation(this));
             SetDefaultState("Idle");
             UpdateActionUi();
         }
 
+        public List<State> StatesAsList(bool includeInactiveStates)
+        {
+            List<State> states = new List<State>();
+            foreach (BaseCharacterAction s in base.StatesAsList())
+            {
+                if (s.IsStateVisible() || includeInactiveStates)
+                {
+                    states.Add(s);
+                }
+            }
+            return states;
+        }
+        
         private void UpdateActionUi()
         {
-            List<BaseCharacterAction> _availableActions = StatesAsList().Cast<BaseCharacterAction>().ToList();
+            List<BaseCharacterAction> _availableActions = StatesAsList(false).Cast<BaseCharacterAction>().ToList();
             for (int i = 0; i < _availableActions.Count; ++i)
             {
                 BaseCharacterAction a = _availableActions[i];
                 GameObject newActionButton = Instantiate(actionButtonPrefab);
                 a.ActionButtonGameObject = newActionButton;
-                newActionButton.transform.SetParent(CharacterUi.actionScrollContent.transform);
+                newActionButton.transform.SetParent(CharacterUi.ActionScrollContent.transform);
                 newActionButton.transform.Find("Text").GetComponent<Text>().text = a.Name();
                 Button currentButton = newActionButton.GetComponent<Button>();
                 currentButton.GetComponent<Button>().onClick.AddListener(() => NavigateToState(a.Name()));
@@ -132,7 +155,9 @@ namespace Characters
             CharacterUi.DetailedClassText.text = CharacterClass.GetTraitDetails();
             CharacterUi.DetailedTraitText.text = CharacterTrait.GetTraitDetails();
             CharacterUi.WeightText.text = "Weight: " + Weight + " (requires " + ((int) Weight + 5) + " fuel)";
-            CharacterUi.CurrentActionText.SetFormattingFunction(f => GetCurrentState().Name() + " " + ((BaseCharacterAction)GetCurrentState()).GetCostAsString());
+            Func<float, string> actionFormatting = f => GetCurrentState().Name() + " " + ((BaseCharacterAction) GetCurrentState()).GetCostAsString();
+            CharacterUi.CurrentActionText.SetFormattingFunction(actionFormatting);
+            CharacterUi.DetailedCurrentActionText.SetFormattingFunction(actionFormatting);
 
             _weaponName = new MyString("");
             _weaponName.AddLinkedText(CharacterUi.WeaponNameTextSimple);
@@ -235,6 +260,11 @@ namespace Characters
         {
             float consumed = Home.Inventory().DecrementResource("Food", 1);
             Starvation.Val -= consumed;
+        }
+
+        public float RemainingCarryCapacity()
+        {
+            return Strength.Val;
         }
     }
 }

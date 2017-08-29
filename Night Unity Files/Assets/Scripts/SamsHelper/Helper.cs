@@ -43,6 +43,20 @@ namespace SamsHelper
             }
         }
 
+        public static List<T> FindAllComponentsInChildren<T>(Transform t)
+        {
+            List<T> childrenWithComponents = new List<T>();
+            foreach (Transform child in FindAllChildren(t))
+            {
+                T component = child.GetComponent<T>();
+                if (component != null)
+                {
+                    childrenWithComponents.Add(component);
+                }
+            }
+            return childrenWithComponents;
+        }
+        
         public static List<Transform> FindAllChildren(Transform t)
         {
             List<Transform> children = new List<Transform>();

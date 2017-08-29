@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using SamsHelper.Input;
 using UnityEngine;
 
@@ -18,12 +19,12 @@ namespace SamsHelper.BaseGameFunctionality
             _inputListener.OnAnyRelease(axis => CurrentState.OnInputUp(axis));
         }
 
-        public List<State> StatesAsList()
+        public virtual List<State> StatesAsList()
         {
             return new List<State>(_states.Values);
         }
 
-        protected State GetCurrentState()
+        public State GetCurrentState()
         {
             return CurrentState;
         }

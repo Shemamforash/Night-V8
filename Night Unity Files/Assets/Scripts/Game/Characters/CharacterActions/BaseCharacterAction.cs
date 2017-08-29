@@ -13,7 +13,7 @@ namespace Game.Characters.CharacterActions
     {
         protected int _defaultDuration;
         private readonly MyFloat _timeRemaining = new MyFloat();
-        protected bool IsDurationFixed, Ready;
+        protected bool IsDurationFixed, Ready, IsVisible = true;
         private readonly TimeListener _timeListener = new TimeListener();
         public GameObject ActionButtonGameObject;
         protected Character Character;
@@ -24,11 +24,17 @@ namespace Game.Characters.CharacterActions
             _timeListener.OnMinute(UpdateAction);
             _defaultDuration = WorldTime.MinutesPerHour;
             _timeRemaining.AddLinkedText(Character.CharacterUi.CurrentActionText);
+            _timeRemaining.AddLinkedText(Character.CharacterUi.DetailedCurrentActionText);
         }
 
         public virtual bool IncreaseDuration()
         {
-            _timeRemaining.Val += WorldTime.MinutesPerHour;
+            return IncreaseDuration(1);
+        }
+
+        public virtual bool IncreaseDuration(int hours)
+        {
+            _timeRemaining.Val += WorldTime.MinutesPerHour * hours;
             return true;
         }
 
@@ -62,6 +68,7 @@ namespace Game.Characters.CharacterActions
         public void Start()
         {
             Ready = true;
+            ((Character)ParentMachine).SetActionListActive(false);
         }
 
         public void UpdateAction()
@@ -81,6 +88,7 @@ namespace Game.Characters.CharacterActions
         {
             Ready = false;
             ParentMachine.ReturnToDefault();
+            ((Character)ParentMachine).SetActionListActive(true);
         }
 
         public int TimeRemainingAsHours()
@@ -91,6 +99,11 @@ namespace Game.Characters.CharacterActions
         public virtual string GetCostAsString()
         {
             return TimeRemainingAsHours() + " hrs";
+        }
+
+        public bool IsStateVisible()
+        {
+            return IsVisible;
         }
     }
 }

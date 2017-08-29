@@ -41,5 +41,10 @@ namespace SamsHelper.ReactiveUI
         {
             _associatedText.text = text;
         }
+
+        public void SetActive(bool active)
+        {
+            _associatedText.gameObject.SetActive(active);
+        }
     }
 }
