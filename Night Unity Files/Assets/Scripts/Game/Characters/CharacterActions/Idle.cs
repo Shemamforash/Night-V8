@@ -6,6 +6,7 @@ namespace Game.Characters.CharacterActions
     {
         public Idle(Character character) : base("Idle", character)
         {
+            IsVisible = false;
         }
 
         public override void Enter()

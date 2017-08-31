@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using Characters;
 using Game.Combat;
+using Game.Combat.Weapons;
 using SamsHelper;
 using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.CustomTypes;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

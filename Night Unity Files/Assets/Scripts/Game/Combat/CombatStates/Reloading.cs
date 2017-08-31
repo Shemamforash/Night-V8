@@ -1,4 +1,5 @@
 ﻿using SamsHelper.BaseGameFunctionality;
+using SamsHelper.BaseGameFunctionality.CooldownSystem;
 
 namespace Game.Combat.CombatStates
 {

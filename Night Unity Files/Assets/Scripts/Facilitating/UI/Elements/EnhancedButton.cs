@@ -9,22 +9,23 @@ using UnityEngine.UI;
 
 namespace UI.Misc.Elements
 {
-    public class EnhancedButton : Button, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
+    [RequireComponent(typeof(Button))]
+    public class EnhancedButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        private List<Action> _onSelectActions = new List<Action>();
+        public List<Action> OnSelectActions = new List<Action>();
         private List<EnhancedText> _textChildren = new List<EnhancedText>();
-        private Image _image;
+        private Button _button;
         public bool UseBorder;
 
         public void Awake()
         {
+            _button = GetComponent<Button>();
             _textChildren = Helper.FindAllComponentsInChildren<EnhancedText>(transform);
-            _image = GetComponent<Image>();
         }
         
         public void AddOnSelectEvent(Action a)
         {
-            _onSelectActions.Add(a);
+            OnSelectActions.Add(a);
         }
 
         public void OnSelect(BaseEventData eventData)
@@ -46,18 +47,18 @@ namespace UI.Misc.Elements
         {
             UseDeselectedColours();
         }
-
+        
         private void UseSelectedColours()
         {
-            _onSelectActions.ForEach(a => a());
+            OnSelectActions.ForEach(a => a());
             ChangeTextColor(UiAppearanceController.Instance.SecondaryColor);
-            _image.color = UiAppearanceController.Instance.MainColor;
+            _button.image.color = UiAppearanceController.Instance.MainColor;
         }
 
         private void UseDeselectedColours()
         {
             ChangeTextColor(UiAppearanceController.Instance.MainColor);
-            _image.color = UiAppearanceController.Instance.SecondaryColor;
+            _button.image.color = UiAppearanceController.Instance.BackgroundColor;
         }
 
         private void ChangeTextColor(Color c)

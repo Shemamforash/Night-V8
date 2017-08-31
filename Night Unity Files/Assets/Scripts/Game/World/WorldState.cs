@@ -1,6 +1,9 @@
-﻿using Facilitating.MenuNavigation;
+﻿using Audio;
+using Facilitating.MenuNavigation;
+using Game.World.Environment;
+using Game.World.Time;
+using Persistence;
 using UnityEngine;
-using World;
 
 namespace Game.World
 {
@@ -10,12 +13,14 @@ namespace Game.World
 		public static int DaysSpentHere;
 		public static int NoPreviousLocations;
 		private readonly TimeListener _timeListener = new TimeListener();
-		public static GameMenuNavigator MenuNavigator;
 		public static EnvironmentManager EnvironmentManager;
 
 	    public void Awake()
 	    {
-		    MenuNavigator = Camera.main.GetComponent<GameMenuNavigator>();
+		    SaveController.LoadSettings();
+            SaveController.LoadGameFromFile();
+            Camera.main.GetComponent<GlobalAudioManager>().Initialise();
+
 		    EnvironmentManager = GameObject.Find("Canvas").GetComponent<EnvironmentManager>();
 		    StormDistanceMax = 10;
 		    StormDistanceActual = 10;

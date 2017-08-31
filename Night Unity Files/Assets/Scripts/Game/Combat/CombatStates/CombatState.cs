@@ -1,5 +1,7 @@
 ﻿using Characters;
+using Game.Combat.Weapons;
 using SamsHelper.BaseGameFunctionality;
+using SamsHelper.BaseGameFunctionality.StateMachines;
 
 namespace Game.Combat.CombatStates
 {

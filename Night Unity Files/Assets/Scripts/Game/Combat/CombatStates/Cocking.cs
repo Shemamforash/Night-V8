@@ -1,4 +1,5 @@
 ﻿using SamsHelper.BaseGameFunctionality;
+using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using UnityEngine;
 

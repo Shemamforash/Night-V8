@@ -1,71 +1,27 @@
 ﻿using Facilitating.Persistence;
+using Game.World;
+using Game.World.Time;
+using Persistence;
+using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.MenuSystem;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-namespace Menus
+namespace Facilitating.MenuNavigation
 {
-    using UnityEngine.UI;
-    using UnityEngine;
-    using UnityEngine.SceneManagement;
-    using Persistence;
-    using Audio;
-
     public class MainMenuNavigator : MonoBehaviour
     {
-        public GameObject newGameSubMenu, mainSubMenu, optionsSubMenu, statsSubMenu, noSaveSubMenu, overwriteSubMenu, controlsSubMenu;
-        public Button newGameFirstSelect, mainMenuFirstSelect, noSaveFirstSelect, overwriteFirstSelect, controlsFirstSelect;
-        public Slider optionsFirstSelect;
-        public Scrollbar statsFirstSelect;
-
-        public void Start()
-        {
-            SaveController.LoadSettings();
-            GetComponent<GlobalAudioManager>().Initialise();
-        }
-
-        //TODO move me somewhere more suitable
-        public void OnApplicationQuit()
-        {
-            SaveController.SaveSettings();
-            SaveController.SaveGameToFile();
-        }
-
-        public void BackToMenu()
-        {
-            newGameSubMenu.SetActive(false);
-            optionsSubMenu.SetActive(false);
-            noSaveSubMenu.SetActive(false);
-            overwriteSubMenu.SetActive(false);
-            statsSubMenu.SetActive(false);
-            controlsSubMenu.SetActive(false);
-            mainSubMenu.SetActive(true);
-            mainMenuFirstSelect.Select();
-        }
-
         public void CloseGame()
         {
             Application.Quit();
-        }
-
-        public void OpenControls()
-        {
-            mainSubMenu.SetActive(false);
-            controlsSubMenu.SetActive(true);
-            controlsFirstSelect.Select();
-        }
-
-        public void OpenStats()
-        {
-            mainSubMenu.SetActive(false);
-            statsSubMenu.SetActive(true);
-            statsFirstSelect.Select();
         }
 
         public void StartNewGame()
         {
             if (SaveController.SaveExists())
             {
-                newGameSubMenu.SetActive(false);
-                overwriteSubMenu.SetActive(true);
-                overwriteFirstSelect.Select();
+                MenuStateMachine.Instance.NavigateToState("Overwrite Save Warning");
             }
             else
             {
@@ -77,6 +33,12 @@ namespace Menus
         {
             SaveController.SaveSettings();
             SaveController.SaveGameToFile();
+            LoadGame();
+        }
+
+        private void LoadGame()
+        {
+            WorldTime.UnPause();
             SceneManager.LoadScene("Game");
         }
 
@@ -86,28 +48,12 @@ namespace Menus
             {
                 SaveController.SaveSettings();
                 SaveController.LoadGameFromFile();
-                SceneManager.LoadScene("Game");
+                LoadGame();
             }
             else
             {
-                mainSubMenu.SetActive(false);
-                noSaveSubMenu.SetActive(true);
-                noSaveFirstSelect.Select();
+                MenuStateMachine.Instance.NavigateToState("No Save Warning");
             }
-        }
-
-        public void OpenNewGameMenu()
-        {
-            mainSubMenu.SetActive(false);
-            newGameSubMenu.SetActive(true);
-            newGameFirstSelect.Select();
-        }
-
-        public void OpenOptionsMenu()
-        {
-            mainSubMenu.SetActive(false);
-            optionsSubMenu.SetActive(true);
-            optionsFirstSelect.Select();
         }
 
         public void SetDifficulty(GameObject btn)

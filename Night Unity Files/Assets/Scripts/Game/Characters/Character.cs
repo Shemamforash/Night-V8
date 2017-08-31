@@ -4,10 +4,14 @@ using System.Linq;
 using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Combat;
+using Game.Combat.Weapons;
 using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.CustomTypes;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,6 +43,8 @@ namespace Characters
         private MyFloat _weaponCriticalChance = new MyFloat();
         private MyFloat _weaponAccuracy = new MyFloat();
 
+        public DesolationInventory CharacterInventory = new DesolationInventory();
+
         public enum WeightCategory
         {
             VeryLight,
@@ -54,7 +60,7 @@ namespace Characters
         public void SetWeapon(Weapon weapon)
         {
             _weapon = weapon;
-            _weaponName.Text = _weapon.GetName();
+            _weaponName.Text = _weapon.Name;
             _weaponDamage.Val = _weapon.Damage;
             _weaponAccuracy.Val = _weapon.Accuracy;
             _weaponCapacity.Val = _weapon.Capacity;
@@ -119,7 +125,11 @@ namespace Characters
                 newActionButton.transform.SetParent(CharacterUi.ActionScrollContent.transform);
                 newActionButton.transform.Find("Text").GetComponent<Text>().text = a.Name();
                 Button currentButton = newActionButton.GetComponent<Button>();
-                currentButton.GetComponent<Button>().onClick.AddListener(() => NavigateToState(a.Name()));
+                currentButton.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    CharacterUi.CollapseCharacterButton.Select();
+                    NavigateToState(a.Name());
+                });
 
                 Helper.SetNavigation(newActionButton, CharacterUi.WeaponCard, Helper.NavigationDirections.Left);
                 if (i == _availableActions.Count - 1)

@@ -1,14 +1,16 @@
-﻿namespace Game.World
+﻿using SamsHelper.BaseGameFunctionality.InventorySystem;
+
+namespace Game.World
 {
     public class DesolationInventory : Inventory
     {
         public DesolationInventory()
         {
-            AddResource("Water", 0, float.MaxValue);
-            AddResource("Food", 0, float.MaxValue);
-            AddResource("Fuel", 0, float.MaxValue);
-            AddResource("Scrap", 0, float.MaxValue);
-            AddResource("Ammo", 0, float.MaxValue);
+            AddResource(new InventoryItem("Water", 1, 0, float.MaxValue));
+            AddResource(new InventoryItem("Food", 1, 0, float.MaxValue));
+            AddResource(new InventoryItem("Fuel", 1, 0, float.MaxValue));
+            AddResource(new InventoryItem("Scrap", 0.5f, 0, float.MaxValue));
+            AddResource(new InventoryItem("Ammo", 0.1f, 0, float.MaxValue));
         }
     }
 }

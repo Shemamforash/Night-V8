@@ -3,8 +3,12 @@ using Characters;
 using Facilitating.MenuNavigation;
 using Game.Combat.CombatStates;
 using Game.World;
+using Game.World.Time;
 using SamsHelper.BaseGameFunctionality;
+using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.CustomTypes;
+using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
 namespace Game.Combat
@@ -56,10 +60,10 @@ namespace Game.Combat
         public static void EnterCombat(Character c)
         {
             WorldTime.Pause();
-            GameMenuNavigator.MenuNavigator.SwitchToMenu("Combat Menu", true);
+            MenuStateMachine.Instance.NavigateToState("Combat Menu");
             _character = c;
             CombatUi.CharacterName.text = c.Name;
-            CombatUi.WeaponNameText.text = c.GetWeapon().GetName();
+            CombatUi.WeaponNameText.text = c.GetWeapon().Name;
 
             CombatUi.ResetMagazine(_character.GetWeapon().Capacity);
             CombatUi.UpdateMagazine(_character.GetWeapon().GetRemainingAmmo());
@@ -69,7 +73,7 @@ namespace Game.Combat
         {
             WorldTime.UnPause();
             ReturnToDefault();
-            GameMenuNavigator.MenuNavigator.SwitchToMenu("Game Menu", true);
+            MenuStateMachine.Instance.NavigateToState("Game Menu");
         }
 
         public void TakeDamage(float f)

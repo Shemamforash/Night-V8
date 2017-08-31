@@ -4,14 +4,15 @@ using Characters;
 using Facilitating.MenuNavigation;
 using Facilitating.Persistence;
 using Game.World;
-using Menus;
+using Game.World.Time;
 using Persistence;
 using SamsHelper;
 using SamsHelper.Input;
 using SamsHelper.Persistence;
+using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.UI;
-using World;
 
 namespace Game.Characters
 {
@@ -30,6 +31,7 @@ namespace Game.Characters
             _persistenceListener = new PersistenceListener(Load, Save, "Character Manager");
             _timeListener.OnHour(UpdateCharacterThirstAndHunger);
             _inputListener.OnAxisPress(InputAxis.Cancel, ExitCharacter);
+            Traits.LoadTraits();
         }
 
         private void UpdateCharacterThirstAndHunger()
@@ -44,7 +46,7 @@ namespace Game.Characters
 
         private void Load()
         {
-            Traits.LoadTraits();
+            
         }
 
         public void Start()
@@ -67,9 +69,7 @@ namespace Game.Characters
 
         private static void PopulateCharacterUi()
         {
-            GameObject waterObject = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Water");
-            GameObject foodObject = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Food");
-            GameObject fuelObject = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Fuel");
+            GameObject inventoryObject = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Inventory");
 
             float currentY = 1f;
             foreach (Character c in _characters)
@@ -91,14 +91,10 @@ namespace Game.Characters
 
                 if (i == 0)
                 {
-                    Helper.SetNavigation(currentButton, waterObject,
+                    Helper.SetNavigation(currentButton, inventoryObject,
                         Helper.NavigationDirections.Up);
 
-                    Helper.SetNavigation(waterObject,currentButton,
-                        Helper.NavigationDirections.Down);
-                    Helper.SetNavigation(foodObject, currentButton,
-                        Helper.NavigationDirections.Down);
-                    Helper.SetNavigation(fuelObject, currentButton,
+                    Helper.SetNavigation(inventoryObject,currentButton,
                         Helper.NavigationDirections.Down);
                 }
                 else if (i > 0)
@@ -121,7 +117,7 @@ namespace Game.Characters
             PopulateCharacterUi();
             if (isDriver)
             {
-                WorldState.MenuNavigator.EndGameFail();
+                MenuStateMachine.Instance.NavigateToState("Game Over Menu");
             }
         }
 

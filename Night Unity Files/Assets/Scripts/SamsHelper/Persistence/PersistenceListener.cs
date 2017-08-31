@@ -30,7 +30,7 @@ namespace SamsHelper.Persistence
 
         public void Save()
         {
-            if (LoadEvent != null)
+            if (SaveEvent != null)
             {
                 SaveEvent();
             }

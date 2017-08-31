@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Facilitating.Persistence;
 using Persistence;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
@@ -35,7 +36,7 @@ namespace Game.World
         private void SetResourceSuffix(string name, string convention)
         {
             Func<float, string> conversion = f => Mathf.Round(f).ToString() + " " + convention;
-            Text resourceText = GameObject.Find(name).transform.Find("Text").GetComponent<Text>();
+            Text resourceText = GameObject.Find(name).GetComponent<Text>();
             ReactiveText<float> reactiveText = new ReactiveText<float>(resourceText, conversion);
             _homeInventory.GetResource(name).AddLinkedText(reactiveText);
         }

@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
 using SamsHelper;
-using UI.Misc.Elements;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Facilitating.UI.Elements
 {
+    [ExecuteInEditMode]
     public class UiAppearanceController : MonoBehaviour
     {
-        [HideInInspector]
         public Font UniversalFont;
-        public Color MainColor, SecondaryColor;
+        public Color MainColor, SecondaryColor, BackgroundColor;
         public Image BorderImage;
         public int _smallFontSize, _mediumFontSize, _largeFontSize, _titleFontSize;
         private static UiAppearanceController _instance;
 
-        [ExecuteInEditMode]
         public void Awake()
         {
             _instance = this;
@@ -42,7 +41,10 @@ namespace Facilitating.UI.Elements
         [ExecuteInEditMode]
         public void Update()
         {
-            UpdateTextFont();
+//            if (!EditorApplication.isPlaying)
+//            {
+                UpdateTextFont();
+//            }
         }
 
 //        public void SetFontSize(EnhancedText.FontSizes fontSize, int newSize)

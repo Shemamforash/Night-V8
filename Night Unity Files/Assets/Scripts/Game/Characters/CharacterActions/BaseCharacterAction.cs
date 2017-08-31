@@ -2,17 +2,20 @@
 using Characters;
 using Facilitating.MenuNavigation;
 using Game.World;
+using Game.World.Time;
 using SamsHelper.BaseGameFunctionality;
+using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.CustomTypes;
+using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
-using World;
 
 namespace Game.Characters.CharacterActions
 {
     public class BaseCharacterAction : State
     {
         protected int _defaultDuration;
-        private readonly MyFloat _timeRemaining = new MyFloat();
+        protected readonly MyFloat _timeRemaining = new MyFloat();
         protected bool IsDurationFixed, Ready, IsVisible = true;
         private readonly TimeListener _timeListener = new TimeListener();
         public GameObject ActionButtonGameObject;
@@ -61,7 +64,7 @@ namespace Game.Characters.CharacterActions
             }
             else
             {
-                GameMenuNavigator.MenuNavigator.ShowActionDurationMenu(this);
+                MenuStateMachine.Instance.NavigateToState("Action Duration Menu");
             }
         }
 
@@ -71,7 +74,7 @@ namespace Game.Characters.CharacterActions
             ((Character)ParentMachine).SetActionListActive(false);
         }
 
-        public void UpdateAction()
+        public virtual void UpdateAction()
         {
             if (Ready && _timeRemaining > 0)
             {

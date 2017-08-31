@@ -22,7 +22,6 @@ namespace Game.Characters.CharacterActions
         public void SetExplorationAction(Action endOfExplorationAction)
         {
             _endOfExplorationAction = endOfExplorationAction;
-            Debug.Log(TimeRemainingAsHours());
             Start();
         }
 

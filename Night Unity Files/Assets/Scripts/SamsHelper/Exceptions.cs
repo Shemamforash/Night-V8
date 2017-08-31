@@ -62,13 +62,13 @@ namespace SamsHelper
         {
             private readonly int _occurences;
             private readonly string _name;
-            
+
             public UnspecificGameObjectNameException(int occurences, string name)
             {
                 _occurences = occurences;
                 _name = name;
             }
-            
+
             public override string Message
             {
                 get { return "GameObject name too general, found " + _occurences + " occurences of " + _name; }
@@ -88,6 +88,7 @@ namespace SamsHelper
             private readonly string _direction;
             private readonly string _resourceName;
             private readonly float _amount;
+
             public ResourceValueChangeInvalid(string resourceName, string decrement, float amount)
             {
                 _resourceName = resourceName;
@@ -97,10 +98,39 @@ namespace SamsHelper
 
             public override string Message
             {
-                get
-                {
-                    return "Attempted to " + _direction + " resource " + _resourceName + " by " + _amount;
-                }
+                get { return "Attempted to " + _direction + " resource " + _resourceName + " by " + _amount; }
+            }
+        }
+
+        public class DefaultSelectableNotProvidedForMenu : Exception
+        {
+            private readonly string _name;
+
+            public DefaultSelectableNotProvidedForMenu(string name)
+            {
+                _name = name;
+            }
+
+            public override string Message
+            {
+                get { return "Attempted to navigate to menu '" + _name + "' but no default selectable was found"; }
+            }
+        }
+
+        public class InventoryItemNotStackableException : Exception
+        {
+            private readonly string _name;
+            private readonly float _amount;
+            
+            public InventoryItemNotStackableException(string name, float amount)
+            {
+                _name = name;
+                _amount = amount;
+            }
+
+            public override string Message
+            {
+                get { return "Tried to change item " + _name + " quantity by " + _amount + " but item is unique."; }
             }
         }
     }
