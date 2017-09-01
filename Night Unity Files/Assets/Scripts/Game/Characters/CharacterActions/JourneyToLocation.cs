@@ -1,4 +1,5 @@
-﻿using Characters;
+﻿using System;
+using Characters;
 using Game.World;
 using Game.World.Region;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -10,12 +11,11 @@ namespace Game.Characters.CharacterActions
     public class JourneyToLocation : BaseCharacterAction
     {
         private Region _targetRegion;
-        private InventoryManager _inventoryManager;
-        
+        private Action _targetReachedAction;
+
         public JourneyToLocation(Character character) : base("Journey To Location", character)
         {
             IsVisible = false;
-            _inventoryManager = GameObject.Find("Pick Up Menu").GetComponent<InventoryManager>();
         }
 
         public void SetTargetRegion(Region targetRegion)
@@ -23,6 +23,11 @@ namespace Game.Characters.CharacterActions
             _targetRegion = targetRegion;
             IncreaseDuration(_targetRegion.Distance());
             Start();
+        }
+
+        public void SetTargetReachedAction(Action targetReachedAction)
+        {
+            _targetReachedAction = targetReachedAction;
         }
 
         public override void UpdateAction()
@@ -41,12 +46,13 @@ namespace Game.Characters.CharacterActions
         private void DoAtLocation()
         {
             MenuStateMachine.Instance.NavigateToState("Pick Up Menu");
-            _inventoryManager.SetInventorys(Character.CharacterInventory, _targetRegion);
+            InventoryManager inventoryManager = GameObject.Find("Pick Up Menu").GetComponent<InventoryManager>();
+            inventoryManager.SetInventories(Character.CharacterInventory, _targetRegion, this);
+            _targetReachedAction();
         }
-        
+
         public override void Exit()
         {
-            //TODO show resources
             Ready = false;
             ParentMachine.NavigateToState("Journey From Location");
             BaseCharacterAction journeyFrom = (BaseCharacterAction) ParentMachine.GetCurrentState();

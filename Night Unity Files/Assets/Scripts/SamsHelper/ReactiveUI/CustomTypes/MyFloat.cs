@@ -32,7 +32,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
         {
             _currentValue = 0;
         }
-        
+
         public MyFloat(float initialValue)
         {
             _currentValue = initialValue;
@@ -109,10 +109,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
 //                        throw new Exceptions.CappedValueExceededBoundsException();
 #endif
                     }
-                    else
-                    {
-                        _currentValue = value;
-                    }
+                    _currentValue = value;
                 }
                 else
                 {
@@ -121,13 +118,13 @@ namespace SamsHelper.ReactiveUI.CustomTypes
                 UpdateLinkedTexts(_currentValue);
             }
         }
-        
+
         //OPERATORS
         public static float operator +(MyFloat a, MyFloat b)
         {
             return a._currentValue + b._currentValue;
         }
-        
+
         public static float operator +(MyFloat a, float b)
         {
             return a._currentValue + b;
@@ -147,7 +144,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
         {
             return a._currentValue < b;
         }
-        
+
         public static bool operator <(float a, MyFloat b)
         {
             return a < b._currentValue;
@@ -162,7 +159,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
         {
             return a._currentValue > b;
         }
-        
+
         public static bool operator >(float a, MyFloat b)
         {
             return a > b._currentValue;
@@ -187,7 +184,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
         {
             return a._currentValue == b._currentValue;
         }
-        
+
         public static bool operator !=(MyFloat a, MyFloat b)
         {
             return a._currentValue != b._currentValue;

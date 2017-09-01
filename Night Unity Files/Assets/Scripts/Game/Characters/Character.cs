@@ -90,11 +90,12 @@ namespace Characters
             Weight = weight;
             actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
             SetCharacterUi(gameObject);
+            CharacterInventory.SetMaxWeight(50);
             AddState(new FindResources(this));
             AddState(new EnterCombat(this));
             AddState(new Sleep(this));
             AddState(new Idle(this));
-            AddState(new Explore(this));
+            AddState(new PrepareExpedition(this));
             AddState(new JourneyToLocation(this));
             AddState(new JourneyFromLocation(this));
             SetDefaultState("Idle");

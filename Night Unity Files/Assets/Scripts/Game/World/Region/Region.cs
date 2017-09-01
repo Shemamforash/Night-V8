@@ -15,7 +15,7 @@ namespace Game.World.Region
         private GameObject _regionObject;
 //        private List<Encounter> _enemyEncounters = new List<Encounter>();
 
-        public Region(RegionTemplate template, GameObject regionObject)
+        public Region(RegionTemplate template, GameObject regionObject) : base()
         {
             _template = template;
             _regionObject = regionObject;

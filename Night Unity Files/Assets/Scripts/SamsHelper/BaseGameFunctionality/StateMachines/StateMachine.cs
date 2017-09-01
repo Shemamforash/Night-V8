@@ -44,10 +44,11 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             States[state.Name()] = state;
         }
 
-        public virtual void NavigateToState(string stateName)
+        public virtual State NavigateToState(string stateName)
         {
             _currentState = States[stateName];
             _currentState.Enter();
+            return _currentState;
         }
 
         public bool IsInState(string statename)

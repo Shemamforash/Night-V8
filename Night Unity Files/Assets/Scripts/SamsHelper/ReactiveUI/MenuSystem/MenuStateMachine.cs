@@ -24,14 +24,14 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             NavigateToState(InitialMenu.name);
         }
 
-        public override void NavigateToState(string stateName)
+        public override State NavigateToState(string stateName)
         {
             State s = GetCurrentState();
             if (s != null)
             {
                 GetCurrentState().Exit();
             }
-            base.NavigateToState(stateName);
+            return base.NavigateToState(stateName);
         }
         
         public static MenuStateMachine Instance

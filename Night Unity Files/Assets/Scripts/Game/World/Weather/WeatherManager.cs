@@ -30,10 +30,10 @@ namespace Game.World.Weather
 //            GenerateWeatherString(2000);
         }
 
-        public override void NavigateToState(string stateName)
+        public override State NavigateToState(string stateName)
         {
-            base.NavigateToState(stateName);
             _weatherText.text = stateName;
+            return base.NavigateToState(stateName);
         }
 
         public static WeatherManager GetWeatherManager()

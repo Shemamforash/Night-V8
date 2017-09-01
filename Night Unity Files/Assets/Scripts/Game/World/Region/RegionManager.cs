@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Characters;
 using Game.Characters.CharacterActions;
 using SamsHelper;
 using SamsHelper.ReactiveUI;
@@ -20,7 +21,7 @@ namespace Game.World
         private static int _noRegionsToGenerate = 10;
         private static GameObject _regionContainer, _regionPrefab, _backButton, _exploreButton;
         private static Text _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
-        private static Explore _characterExploration;
+        private static Character _character;
 
         public void Awake()
         {
@@ -115,7 +116,7 @@ namespace Game.World
             _exploreButton.GetComponent<Button>().onClick.AddListener(delegate
             {
                 Region.Region targetRegion = _unexploredRegions[Random.Range(0, _unexploredRegions.Count)];
-                StartExploration(delegate { DiscoverRegion(targetRegion); }, targetRegion.Distance());
+                StartExploration(delegate { DiscoverRegion(targetRegion); }, targetRegion);
             });
             _exploreButton.transform.Find("Text").GetComponent<Text>().text = "Explore...";
             if (_discoveredRegions.Count != 0)
@@ -143,16 +144,17 @@ namespace Game.World
             _regionInfoDescriptionText.text = region.Description();
         }
 
-        public static void EnterManager(Explore explore)
+        public static void EnterManager(Character character)
         {
-            _characterExploration = explore;
+            _character = character;
             MenuStateMachine.Instance.NavigateToState("Region Menu");
         }
 
-        public static void StartExploration(Action a, int duration)
+        public static void StartExploration(Action a, Region.Region target)
         {
-            _characterExploration.IncreaseDuration(duration * 2);
-            _characterExploration.SetExplorationAction(a);
+            JourneyToLocation state = (JourneyToLocation) _character.NavigateToState("Journey To Location");
+            state.SetTargetReachedAction(a);
+            state.SetTargetRegion(target);
             ExitManager(true);
         }
 
@@ -160,9 +162,9 @@ namespace Game.World
         {
             if (!characterIsExploring)
             {
-                _characterExploration.Exit();
+                _character.ReturnToDefault();
             }
-            _characterExploration = null;
+            _character = null;
             MenuStateMachine.Instance.GoToInitialMenu();
         }
     }

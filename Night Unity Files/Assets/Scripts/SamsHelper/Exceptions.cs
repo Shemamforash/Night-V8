@@ -121,7 +121,7 @@ namespace SamsHelper
         {
             private readonly string _name;
             private readonly float _amount;
-            
+
             public InventoryItemNotStackableException(string name, float amount)
             {
                 _name = name;
@@ -131,6 +131,44 @@ namespace SamsHelper
             public override string Message
             {
                 get { return "Tried to change item " + _name + " quantity by " + _amount + " but item is unique."; }
+            }
+        }
+
+        public class MoveItemToSameInventoryException : Exception
+        {
+            public override string Message
+            {
+                get { return "Tried to move item from inventory to same inventory."; }
+            }
+        }
+
+        public class ItemNotInInventoryException : Exception
+        {
+            private readonly string _itemName;
+
+            public ItemNotInInventoryException(string itemName)
+            {
+                _itemName = itemName;
+            }
+
+            public override string Message
+            {
+                get { return "Tried to remove item " + _itemName + " from an inventory that did not contain it."; }
+            }
+        }
+
+        public class ResourceDoesNotExistException : Exception
+        {
+            private readonly string _resourceName;
+
+            public ResourceDoesNotExistException(string resourceName)
+            {
+                _resourceName = resourceName;
+            }
+
+            public override string Message
+            {
+                get { return "Tried to get resource " + _resourceName + " but resource does not exist."; }
             }
         }
     }

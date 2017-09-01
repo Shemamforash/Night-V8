@@ -30,11 +30,12 @@ namespace Game.World.Environment
 //            TestEnvironmentGenerator();
         }
 
-        public override void NavigateToState(string stateName)
+        public override State NavigateToState(string stateName)
         {
-            base.NavigateToState(stateName);
+            State newState = base.NavigateToState(stateName);
             _visitedEnvironments.Add(stateName);
             RegionManager.GenerateNewRegions();
+            return newState;
         }
 
         private void TestEnvironmentGenerator()

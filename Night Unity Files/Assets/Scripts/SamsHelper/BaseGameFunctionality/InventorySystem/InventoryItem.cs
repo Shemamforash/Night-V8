@@ -7,29 +7,50 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     {
         private MyFloat _quantity;
         public string Name;
-        private float _weight;
-        private bool _stackable = true;
 
-        public InventoryItem(string name, float weight, float min, float max)
+        private float _weight;
+
+        //If stackable, quantity will increase beyond 1, otherwise each duplicate item is carried seperately in the inventory
+        //If marked as destroyonempty, the inventory item will be deleted when its quantity reaches 0 (useful for resources).
+        private bool _stackable, _destroyOnEmpty = true;
+
+        public InventoryItem(string name, float weight)
         {
             Name = name;
             _weight = weight;
-            _quantity = new MyFloat(0, min, max);
+            _quantity = new MyFloat(0, 0, float.MaxValue);
             Decrement(0);
         }
 
-        public InventoryItem(string name, float weight) : this(name, weight, 0, float.MaxValue)
+        public InventoryItem Clone()
         {
+            InventoryItem clone = new InventoryItem(Name, _weight)
+            {
+                _destroyOnEmpty = _destroyOnEmpty,
+                _stackable = _stackable,
+                _quantity = {Val = 1}
+            };
+            return clone;
         }
 
-        public void SetUnique()
+        public void DontDestroyOnEmpty()
         {
-            _stackable = false;
+            _destroyOnEmpty = false;
         }
 
-        public void SetMin(float min)
+        public void AllowStacking()
         {
-            _quantity.Min = min;
+            _stackable = true;
+        }
+
+        public bool Stackable()
+        {
+            return _stackable;
+        }
+
+        public bool DestroyOnEmpty()
+        {
+            return _destroyOnEmpty;
         }
 
         public void SetMax(float max)
@@ -45,26 +66,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public float Decrement(float amount)
         {
-            if (_stackable)
-            {
-                float previousQuantity = _quantity.Val;
-                _quantity.Val -= amount;
-                float consumption = previousQuantity - _quantity.Val;
-                return consumption;
-            }
-            throw new Exceptions.InventoryItemNotStackableException(Name, -amount);
+            float previousQuantity = _quantity.Val;
+            _quantity.Val = _quantity.Val - amount;
+            float consumption = previousQuantity - _quantity.Val;
+            return consumption;
         }
 
         public void Increment(float amount)
         {
-            if (_stackable)
-            {
-                _quantity.Val += amount;
-            }
-            else
-            {
-                throw new Exceptions.InventoryItemNotStackableException(Name, amount);
-            }
+            _quantity.Val += amount;
         }
 
         public float Quantity()
