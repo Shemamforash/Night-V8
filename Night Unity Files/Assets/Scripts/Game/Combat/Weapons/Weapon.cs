@@ -12,7 +12,7 @@ namespace Game.Combat.Weapons
         public readonly bool Automatic;
         private int _ammoInMagazine;
         
-        public Weapon(WeaponBase baseWeapon, bool automatic) : base("", 10)
+        public Weapon(WeaponBase baseWeapon, bool automatic, string name, float weight) : base(name, weight)
         {
             _baseWeapon = baseWeapon;
             Automatic = automatic;
@@ -33,14 +33,7 @@ namespace Game.Combat.Weapons
                 ReloadSpeed /= 2f;
             }
             
-            GenerateName();
             Reload();
-        }
-
-        private void GenerateName()
-        {
-            string automaticString = Automatic ? "Automatic" : "Manual";
-            Name = _baseWeapon.Rarity + " " + _baseWeapon.Suffix + " (" + automaticString + " " + _baseWeapon.Type + ")";
         }
 
         public bool Fire()

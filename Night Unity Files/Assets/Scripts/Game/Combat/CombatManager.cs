@@ -63,7 +63,7 @@ namespace Game.Combat
             MenuStateMachine.Instance.NavigateToState("Combat Menu");
             _character = c;
             CombatUi.CharacterName.text = c.Name;
-            CombatUi.WeaponNameText.text = c.GetWeapon().Name;
+            CombatUi.WeaponNameText.text = c.GetWeapon().Name();
 
             CombatUi.ResetMagazine(_character.GetWeapon().Capacity);
             CombatUi.UpdateMagazine(_character.GetWeapon().GetRemainingAmmo());

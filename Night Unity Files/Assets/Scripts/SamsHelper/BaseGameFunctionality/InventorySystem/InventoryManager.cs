@@ -10,12 +10,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public class InventoryManager : MonoBehaviour
     {
         public Transform InventoryAParent, InventoryBParent;
-        private static InventoryContainer _originInventoryContainer, _targetInventoryContainer;
-        private JourneyToLocation _characterLocationState;
+        protected InventoryContainer OriginInventoryContainer, TargetInventoryContainer;
+        protected JourneyToLocation CharacterLocationState;
+        private Action _onInventorySetAction;
 
         public void ExitManager()
         {
-            _characterLocationState.Exit();
+            CharacterLocationState.Exit();
         }
 
         public class InventoryContainer
@@ -25,13 +26,14 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             private readonly GameObject _itemPrefab;
             private readonly Transform _parent;
             private List<ItemUIObject> _items = new List<ItemUIObject>();
+            private Action _onInventoryMoveAction;
 
             private class ItemUIObject
             {
                 public GameObject GameObject;
-                public InventoryItem Item;
+                public BasicInventoryContents Item;
 
-                public ItemUIObject(GameObject gameObject, InventoryItem item)
+                public ItemUIObject(GameObject gameObject, BasicInventoryContents item)
                 {
                     GameObject = gameObject;
                     Item = item;
@@ -44,12 +46,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 _parent = parent;
             }
 
-            private ItemUIObject GetItemIfInInventory(InventoryItem item)
+            private ItemUIObject GetItemIfInInventory(BasicInventoryContents item)
             {
-                return _items.FirstOrDefault(i => item == i.Item);
+                return _items.FirstOrDefault(i => item.Name() == i.Item.Name());
             }
 
-            private ItemUIObject CreateNewUiObject(InventoryItem item)
+            private ItemUIObject CreateNewUiObject(BasicInventoryContents item)
             {
                 GameObject newItemObject = Instantiate(_itemPrefab);
                 newItemObject.transform.SetParent(_parent);
@@ -58,7 +60,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 Button b = Helper.FindChildWithName<Button>(newItemObject, "Move");
                 b.onClick.AddListener(delegate
                 {
-                    InventoryItem transferredItem = _inventory.MoveItem(item, _otherInventoryContainer._inventory);
+                    BasicInventoryContents transferredItem = _inventory.Move(item, _otherInventoryContainer._inventory);
                     if (transferredItem != null)
                     {
                         _otherInventoryContainer.AddItem(transferredItem);
@@ -68,7 +70,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 return newItemUi;
             }
 
-            private void AddItem(InventoryItem item)
+            public void SetOnInventoryMoveAction(Action inventoryMoveAction)
+            {
+                _onInventoryMoveAction = inventoryMoveAction;
+            }
+
+            private void AddItem(BasicInventoryContents item)
             {
                 ItemUIObject found = GetItemIfInInventory(item);
                 if (found == null)
@@ -81,17 +88,25 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             private void UpdateItemObject(ItemUIObject itemObject)
             {
-                InventoryItem item = itemObject.Item;
-                if (item == null || item.Quantity() == 0)
+                BasicInventoryContents item = itemObject.Item;
+                if (item.Quantity() == 0 || !_inventory.ContainsItem(item))
                 {
                     Destroy(itemObject.GameObject);
                     _items.Remove(itemObject);
                 }
                 else
                 {
-                    Helper.FindChildWithName<Text>(itemObject.GameObject, "Weight").text = item.GetTotalWeight() + " W";
-                    Helper.FindChildWithName<Text>(itemObject.GameObject, "Name").text = item.Name;
-                    Helper.FindChildWithName<Text>(itemObject.GameObject, "Amount").text = item.Quantity().ToString();
+                    InventoryResource resource = item as InventoryResource;
+                    float weight = resource != null ? resource.GetTotalWeight() : item.Weight();
+                    Helper.FindChildWithName<Text>(itemObject.GameObject, "Weight").text = weight + " W";
+                    Helper.FindChildWithName<Text>(itemObject.GameObject, "Name").text = item.Name();
+                    InventoryResource inventoryResource = item as InventoryResource;
+                    float amount = inventoryResource != null ? inventoryResource.Quantity() : 1;
+                    Helper.FindChildWithName<Text>(itemObject.GameObject, "Amount").text = Helper.Round(amount, 1).ToString();
+                }
+                if (_onInventoryMoveAction != null)
+                {
+                    _onInventoryMoveAction();
                 }
             }
 
@@ -100,7 +115,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 Clear();
                 _inventory = inventory;
                 _otherInventoryContainer = otherInventoryContainer;
-                _inventory.Items().ForEach(AddItem);
+                _inventory.Contents().ForEach(AddItem);
             }
 
             public Inventory GetInventory()
@@ -115,18 +130,27 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
         }
 
-        public void Awake()
+        public virtual void Awake()
         {
-            _originInventoryContainer = new InventoryContainer(Resources.Load<GameObject>("Prefabs/RightItem"), InventoryAParent);
-            _targetInventoryContainer = new InventoryContainer(Resources.Load<GameObject>("Prefabs/LeftItem"), InventoryBParent);
+            OriginInventoryContainer = new InventoryContainer(Resources.Load<GameObject>("Prefabs/RightItem"), InventoryAParent);
+            TargetInventoryContainer = new InventoryContainer(Resources.Load<GameObject>("Prefabs/LeftItem"), InventoryBParent);
             Helper.FindChildWithName<Button>(gameObject, "Confirm").onClick.AddListener(ExitManager);
         }
 
-        public void SetInventories(Inventory inventoryOrigin, Inventory inventoryTarget, JourneyToLocation characterLocationState)
+        public virtual void SetInventories(Inventory inventoryOrigin, Inventory inventoryTarget, JourneyToLocation characterLocationState)
         {
-            _originInventoryContainer.SetInventory(inventoryOrigin, _targetInventoryContainer);
-            _targetInventoryContainer.SetInventory(inventoryTarget, _originInventoryContainer);
-            _characterLocationState = characterLocationState;
+            OriginInventoryContainer.SetInventory(inventoryOrigin, TargetInventoryContainer);
+            TargetInventoryContainer.SetInventory(inventoryTarget, OriginInventoryContainer);
+            CharacterLocationState = characterLocationState;
+            if (_onInventorySetAction != null)
+            {
+                _onInventorySetAction();
+            }
+        }
+
+        protected void OnInventorySetAction(Action inventorySetAction)
+        {
+            _onInventorySetAction = inventorySetAction;
         }
     }
 }

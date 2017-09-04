@@ -171,5 +171,20 @@ namespace SamsHelper
                 get { return "Tried to get resource " + _resourceName + " but resource does not exist."; }
             }
         }
+
+        public class ResourceAlreadyExistsException : Exception
+        {
+            private readonly string _name;
+
+            public ResourceAlreadyExistsException(string name)
+            {
+                _name = name;
+            }
+
+            public override string Message
+            {
+                get { return "Resource " + _name + " already exists in inventory."; }
+            }
+        }
     }
 }

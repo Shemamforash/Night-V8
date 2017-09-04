@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,10 +43,12 @@ namespace Facilitating.UI.Elements
 
         public void Update()
         {
+#if UNITY_EDITOR
             if (!EditorApplication.isPlayingOrWillChangePlaymode)
             {
                 UpdateFontSize();
             }
+#endif
         }
 
         private void UpdateFontSize()

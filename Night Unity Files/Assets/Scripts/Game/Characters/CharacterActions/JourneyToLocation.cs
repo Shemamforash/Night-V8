@@ -25,6 +25,11 @@ namespace Game.Characters.CharacterActions
             Start();
         }
 
+        public Region GetTargetRegion()
+        {
+            return _targetRegion;
+        }
+
         public void SetTargetReachedAction(Action targetReachedAction)
         {
             _targetReachedAction = targetReachedAction;

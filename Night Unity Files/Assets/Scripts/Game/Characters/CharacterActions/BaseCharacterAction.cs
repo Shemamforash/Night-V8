@@ -108,5 +108,10 @@ namespace Game.Characters.CharacterActions
         {
             return IsVisible;
         }
+
+        public Character GetCharacter()
+        {
+            return Character;
+        }
     }
 }

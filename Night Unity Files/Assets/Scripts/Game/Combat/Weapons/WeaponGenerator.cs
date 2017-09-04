@@ -7,8 +7,6 @@ namespace Game.Combat.Weapons
 {
     public class WeaponGenerator : MonoBehaviour
     {
-        private string _baseWeaponInfoPath;
-
         private static readonly Dictionary<WeaponType, Dictionary<WeaponRarity, WeaponBase>> WeaponDictionary =
             new Dictionary<WeaponType, Dictionary<WeaponRarity, WeaponBase>>();
 
@@ -33,14 +31,14 @@ namespace Game.Combat.Weapons
 
         public void Awake()
         {
-            _baseWeaponInfoPath = Application.dataPath + "/Resources/WeaponClasses.xml";
             LoadBaseWeapons();
         }
 
         private void LoadBaseWeapons()
         {
+            TextAsset weaponFile = Resources.Load<TextAsset>("WeaponClasses");
             XmlDocument weaponXml = new XmlDocument();
-            weaponXml.Load(_baseWeaponInfoPath);
+            weaponXml.LoadXml(weaponFile.text);
             foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
             {
                 Dictionary<WeaponRarity, WeaponBase> rarityWeaponDictionary =
@@ -117,7 +115,14 @@ namespace Game.Combat.Weapons
                 }
             }
 
-            return new Weapon(baseWeapon, automatic);
+            return new Weapon(baseWeapon, automatic, GenerateName(automatic, baseWeapon), 10f);
+        }
+        
+        private static string GenerateName(bool automatic, WeaponBase baseWeapon)
+        {
+            string automaticString = automatic ? "Automatic" : "Manual";
+            string name = baseWeapon.Rarity + " " + baseWeapon.Suffix + " (" + automaticString + " " + baseWeapon.Type + ")";
+            return name;
         }
     }
 }

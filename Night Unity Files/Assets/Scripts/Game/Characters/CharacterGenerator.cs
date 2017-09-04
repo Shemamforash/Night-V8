@@ -54,7 +54,9 @@ namespace Game.Characters
             Character theDriver = GenerateCharacterObject().GetComponent<Character>();
             theDriver.Initialise("Driver", Traits.FindClass("Driver"), Traits.FindTrait("Nomadic"),
                 Character.WeightCategory.Medium);
-            theDriver.SetWeapon(WeaponGenerator.GenerateWeapon());
+            Weapon w = WeaponGenerator.GenerateWeapon();
+            theDriver.AddItemToInventory(w);
+            theDriver.SetWeapon(w);
             CalculateAttributesFromWeight(theDriver);
             return theDriver;
         }

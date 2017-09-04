@@ -1,7 +1,5 @@
 ﻿using System;
 using Characters;
-using Game.World;
-using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
@@ -12,6 +10,7 @@ namespace Game.Characters.CharacterActions
         public JourneyFromLocation(Character character) : base("Journey From Location", character)
         {
             IsVisible = false;
+            IsDurationFixed = true;
         }
 
         public override void Exit()

@@ -57,10 +57,15 @@ namespace Characters
         private GameObject actionButtonPrefab;
         private Weapon _weapon;
 
+        public void AddItemToInventory(InventoryItem item)
+        {
+            CharacterInventory.AddItem(item);
+        }
+        
         public void SetWeapon(Weapon weapon)
         {
             _weapon = weapon;
-            _weaponName.Text = _weapon.Name;
+            _weaponName.Text = _weapon.Name();
             _weaponDamage.Val = _weapon.Damage;
             _weaponAccuracy.Val = _weapon.Accuracy;
             _weaponCapacity.Val = _weapon.Capacity;
@@ -90,7 +95,7 @@ namespace Characters
             Weight = weight;
             actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
             SetCharacterUi(gameObject);
-            CharacterInventory.SetMaxWeight(50);
+            CharacterInventory.MaxWeight = 20;
             AddState(new FindResources(this));
             AddState(new EnterCombat(this));
             AddState(new Sleep(this));
