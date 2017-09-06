@@ -14,20 +14,17 @@ namespace Game.Characters.CharacterActions
 {
     public class BaseCharacterAction : State
     {
-        protected int _defaultDuration;
-        protected readonly MyFloat _timeRemaining = new MyFloat();
-        protected bool IsDurationFixed, Ready, IsVisible = true;
-        private readonly TimeListener _timeListener = new TimeListener();
+        protected int DefaultDuration;
+        protected int TimeRemaining;
+        protected bool PlayerSetsDuration, IsVisible = true;
         public GameObject ActionButtonGameObject;
         protected Character Character;
+        protected Action HourCallback;
 
         public BaseCharacterAction(string name, Character character) : base(name, character)
         {
             Character = character;
-            _timeListener.OnMinute(UpdateAction);
-            _defaultDuration = WorldTime.MinutesPerHour;
-            _timeRemaining.AddLinkedText(Character.CharacterUi.CurrentActionText);
-            _timeRemaining.AddLinkedText(Character.CharacterUi.DetailedCurrentActionText);
+            DefaultDuration = WorldTime.MinutesPerHour;
         }
 
         public virtual bool IncreaseDuration()
@@ -37,32 +34,24 @@ namespace Game.Characters.CharacterActions
 
         public virtual bool IncreaseDuration(int hours)
         {
-            _timeRemaining.Val += WorldTime.MinutesPerHour * hours;
+            TimeRemaining += WorldTime.MinutesPerHour * hours;
             return true;
         }
 
         public virtual bool DecreaseDuration()
         {
-            if (_timeRemaining == WorldTime.MinutesPerHour)
+            if (TimeRemaining == WorldTime.MinutesPerHour)
             {
                 return false;
             }
-            _timeRemaining.Val -= WorldTime.MinutesPerHour;
+            TimeRemaining -= WorldTime.MinutesPerHour;
             return true;
         }
 
         public override void Enter()
         {
-            _timeRemaining.Val = _defaultDuration;
-            if (IsDurationFixed)
-            {
-                Ready = true;
-                if (_defaultDuration == 0)
-                {
-                    Exit();
-                }
-            }
-            else
+            TimeRemaining = DefaultDuration;
+            if (PlayerSetsDuration)
             {
                 MenuStateMachine.Instance.NavigateToState("Action Duration Menu");
             }
@@ -70,17 +59,24 @@ namespace Game.Characters.CharacterActions
 
         public void Start()
         {
-            Ready = true;
+            WorldTime.Instance().MinuteEvent += Update;
             ((Character)ParentMachine).SetActionListActive(false);
         }
 
-        public virtual void UpdateAction()
+        public virtual void Update()
         {
-            if (Ready && _timeRemaining > 0)
+            if (TimeRemaining > 0)
             {
-                --_timeRemaining.Val;
+                --TimeRemaining;
                 TryUpdateCallback();
-                if (_timeRemaining == 0)
+                if (TimeRemaining % WorldTime.MinutesPerHour == 0)
+                {
+                    if (HourCallback != null)
+                    {
+                        HourCallback();
+                    }
+                }
+                if (TimeRemaining == 0)
                 {
                     Exit();
                 }
@@ -89,14 +85,14 @@ namespace Game.Characters.CharacterActions
 
         public override void Exit()
         {
-            Ready = false;
+            WorldTime.Instance().MinuteEvent -= Update;
             ParentMachine.ReturnToDefault();
             ((Character)ParentMachine).SetActionListActive(true);
         }
 
         public int TimeRemainingAsHours()
         {
-            return (int) Math.Ceiling(_timeRemaining / WorldTime.MinutesPerHour);
+            return (int)Math.Ceiling((float)TimeRemaining / WorldTime.MinutesPerHour);
         }
 
         public virtual string GetCostAsString()

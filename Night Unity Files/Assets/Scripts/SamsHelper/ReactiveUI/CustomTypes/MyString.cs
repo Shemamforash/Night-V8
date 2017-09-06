@@ -3,7 +3,7 @@
     public class MyString : MyValue<string>
     {
         private string _text;
-
+        
         public MyString()
         {
             _text = "";

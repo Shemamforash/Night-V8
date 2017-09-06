@@ -11,13 +11,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     {
         public Transform InventoryAParent, InventoryBParent;
         protected InventoryContainer OriginInventoryContainer, TargetInventoryContainer;
-        protected JourneyToLocation CharacterLocationState;
+        protected Action InventoryCloseCallback;
         private Action _onInventorySetAction;
-
-        public void ExitManager()
-        {
-            CharacterLocationState.Exit();
-        }
 
         public class InventoryContainer
         {
@@ -134,14 +129,14 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             OriginInventoryContainer = new InventoryContainer(Resources.Load<GameObject>("Prefabs/RightItem"), InventoryAParent);
             TargetInventoryContainer = new InventoryContainer(Resources.Load<GameObject>("Prefabs/LeftItem"), InventoryBParent);
-            Helper.FindChildWithName<Button>(gameObject, "Confirm").onClick.AddListener(ExitManager);
+            Helper.FindChildWithName<Button>(gameObject, "Confirm").onClick.AddListener(delegate { InventoryCloseCallback(); });
         }
 
-        public virtual void SetInventories(Inventory inventoryOrigin, Inventory inventoryTarget, JourneyToLocation characterLocationState)
+        public virtual void SetInventories(Inventory inventoryOrigin, Inventory inventoryTarget, Action inventoryCloseCallBack)
         {
             OriginInventoryContainer.SetInventory(inventoryOrigin, TargetInventoryContainer);
             TargetInventoryContainer.SetInventory(inventoryTarget, OriginInventoryContainer);
-            CharacterLocationState = characterLocationState;
+            InventoryCloseCallback = inventoryCloseCallBack;
             if (_onInventorySetAction != null)
             {
                 _onInventorySetAction();

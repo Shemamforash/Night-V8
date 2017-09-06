@@ -177,5 +177,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             Move(resource, target, remainingSpace);
             return null;
         }
+
+        public void MoveAllResources(Inventory target)
+        {
+            foreach (InventoryResource resource in _resources)
+            {
+                Move(resource, target, resource.Quantity());
+            }
+        }
     }
 }

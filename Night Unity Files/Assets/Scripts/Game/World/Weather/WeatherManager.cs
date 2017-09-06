@@ -11,7 +11,6 @@ namespace Game.World.Weather
     public class WeatherManager : ProbabalisticStateMachine
     {
         private static WeatherManager _self;
-        private TimeListener _timeListener = new TimeListener();
         private Text _weatherText;
 
         public void Awake()
@@ -26,7 +25,7 @@ namespace Game.World.Weather
             LoadWeather();
             LoadProbabilities("WeatherProbabilityTable");
             NavigateToState("Clear");
-            _timeListener.OnMinute(() => ((Weather) GetCurrentState()).UpdateWeather());
+            WorldTime.Instance().MinuteEvent += () => ((Weather) GetCurrentState()).UpdateWeather();
 //            GenerateWeatherString(2000);
         }
 

@@ -38,7 +38,7 @@ namespace Facilitating.MenuNavigation
 
         private void LoadGame()
         {
-            WorldTime.UnPause();
+            WorldTime.Instance().UnPause();
             SceneManager.LoadScene("Game");
         }
 

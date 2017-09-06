@@ -21,7 +21,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             _menu.gameObject.SetActive(true);
             if (_menu.PauseOnOpen)
             {
-                WorldTime.Pause();
+                WorldTime.Instance().Pause();
             }
             if (_lastSelectedItem != null)
             {
@@ -42,7 +42,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             _lastSelectedItem = EventSystem.current.currentSelectedGameObject.GetComponent<Selectable>();
             if (_menu.PauseOnOpen)
             {
-                WorldTime.UnPause();
+                WorldTime.Instance().UnPause();
             }
             _menu.gameObject.SetActive(false);
         }

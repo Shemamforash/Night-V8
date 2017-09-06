@@ -1,4 +1,5 @@
 ﻿using Characters;
+using Game.Combat;
 using SamsHelper;
 using UnityEngine;
 using UnityEngine.UI;
@@ -90,6 +91,12 @@ namespace Game.World.Region
         public int Distance()
         {
             return _distance;
+        }
+
+        public CombatScenario GetCombatScenario()
+        {
+            //TODO combat scenarios
+            return null;
         }
     }
 }

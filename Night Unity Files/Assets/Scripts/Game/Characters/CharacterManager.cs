@@ -1,15 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Characters;
-using Facilitating.MenuNavigation;
 using Facilitating.Persistence;
-using Game.World;
 using Game.World.Time;
-using Persistence;
 using SamsHelper;
 using SamsHelper.Input;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,17 +15,14 @@ namespace Game.Characters
     public class CharacterManager : MonoBehaviour
     {
         private static List<Character> _characters = new List<Character>();
-        private readonly TimeListener _timeListener = new TimeListener();
         private PersistenceListener _persistenceListener;
-        private Selectable _actionSelectable;
-        private static Selectable _selectedCharacter;
-        private Transform _actionContainer;
+        public static Character SelectedCharacter;
         private readonly InputListener _inputListener = new InputListener();
 
         public void Awake()
         {
             _persistenceListener = new PersistenceListener(Load, Save, "Character Manager");
-            _timeListener.OnHour(UpdateCharacterThirstAndHunger);
+            WorldTime.Instance().HourEvent += UpdateCharacterThirstAndHunger;
             _inputListener.OnAxisPress(InputAxis.Cancel, ExitCharacter);
             Traits.LoadTraits();
         }
@@ -46,7 +39,6 @@ namespace Game.Characters
 
         private void Load()
         {
-            
         }
 
         public void Start()
@@ -94,7 +86,7 @@ namespace Game.Characters
                     Helper.SetNavigation(currentButton, inventoryObject,
                         Helper.NavigationDirections.Up);
 
-                    Helper.SetNavigation(inventoryObject,currentButton,
+                    Helper.SetNavigation(inventoryObject, currentButton,
                         Helper.NavigationDirections.Down);
                 }
                 else if (i > 0)
@@ -155,10 +147,11 @@ namespace Game.Characters
 
         public static void ExitCharacter()
         {
-            if (_selectedCharacter != null)
+            Debug.Log(SelectedCharacter);
+            if (SelectedCharacter != null)
             {
-                SetDetailedViewActive(false, _selectedCharacter.transform.parent);
-                _selectedCharacter = null;
+                SetDetailedViewActive(false, SelectedCharacter.transform);
+                SelectedCharacter = null;
             }
         }
 
@@ -176,30 +169,30 @@ namespace Game.Characters
 
         public static void SelectCharacter(Selectable s)
         {
-            if (_selectedCharacter != null)
+            if (SelectedCharacter != null)
             {
                 ExitCharacter();
             }
-            _selectedCharacter = s;
+            SelectedCharacter = _characters.FirstOrDefault(c => c.CharacterUi.SimpleView.GetComponent<Button>() == s);
             SetDetailedViewActive(true, s.transform.parent);
         }
 
         public void SelectActions(Selectable s)
         {
-            _actionSelectable = s;
-            _actionContainer.gameObject.SetActive(true);
-            _actionContainer.GetChild(0).GetComponent<Selectable>().Select();
+//            _actionSelectable = s;
+//            _actionContainer.gameObject.SetActive(true);
+//            _actionContainer.GetChild(0).GetComponent<Selectable>().Select();
         }
-        
+
         public void CharacterEat()
         {
-            Character current = FindCharacterFromGameObject(_selectedCharacter.transform.parent.gameObject);
+            Character current = FindCharacterFromGameObject(SelectedCharacter.transform.parent.gameObject);
             current.Eat();
         }
 
         public void CharacterDrink()
         {
-            Character current = FindCharacterFromGameObject(_selectedCharacter.transform.parent.gameObject);
+            Character current = FindCharacterFromGameObject(SelectedCharacter.transform.parent.gameObject);
             current.Drink();
         }
     }

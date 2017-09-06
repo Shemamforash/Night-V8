@@ -150,7 +150,7 @@ namespace Game.World
 
         public static void StartExploration(Action a, Region.Region target)
         {
-            JourneyToLocation state = (JourneyToLocation) _character.NavigateToState("Journey To Location");
+            Travel state = (Travel) _character.NavigateToState("Travel");
             state.SetTargetReachedAction(a);
             state.SetTargetRegion(target);
             ExitManager(true);

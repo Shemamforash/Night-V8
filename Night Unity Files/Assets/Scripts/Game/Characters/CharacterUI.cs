@@ -14,10 +14,10 @@ namespace Characters
         public Button CollapseCharacterButton;
         public GameObject ActionScrollContent, WeaponCard;
 
-        public ReactiveText<float> CurrentActionText, DetailedCurrentActionText;
-        public ReactiveText<string> ConditionsText;
-        public ReactiveText<float> ThirstText, HungerText, StrengthText, IntelligenceText, EnduranceText, StabilityText;
-        public ReactiveText<float> StrengthTextDetail, IntelligenceTextDetail, EnduranceTextDetail, StabilityTextDetail;
+        public Text CurrentActionText, DetailedCurrentActionText;
+        public Text ConditionsText;
+        public Text ThirstText, HungerText, StrengthText, IntelligenceText, EnduranceText, StabilityText;
+        public Text StrengthTextDetail, IntelligenceTextDetail, EnduranceTextDetail, StabilityTextDetail;
 
         public Text NameText, ClassTraitText, DetailedClassText, DetailedTraitText;
         public Text WeightText;
@@ -27,7 +27,7 @@ namespace Characters
             WeaponModifier1Text,
             WeaponModifier2Text;
 
-        public ReactiveText<float> WeaponDamageText,
+        public Text WeaponDamageText,
             WeaponFireRateText,
             WeaponReloadSpeedText,
             WeaponCapacityText,
@@ -48,18 +48,18 @@ namespace Characters
             CollapseCharacterButton = FindInDetailedView<Button>("Back Button");
             CollapseCharacterButton.onClick.AddListener(CharacterManager.ExitCharacter);
 
-            ThirstText = new ReactiveText<float>(FindInSimpleView<Text>("Thirst"));
-            HungerText = new ReactiveText<float>(FindInSimpleView<Text>("Hunger"));
-            StrengthText = new ReactiveText<float>(FindInSimpleView<Text>("Strength"), f => f + " str");
-            IntelligenceText = new ReactiveText<float>(FindInSimpleView<Text>("Intelligence"), f => f + " int");
-            EnduranceText = new ReactiveText<float>(FindInSimpleView<Text>("Endurance"), f => f + " end");
-            StabilityText = new ReactiveText<float>(FindInSimpleView<Text>("Stability"), f => f + " stab");
+            ThirstText = FindInSimpleView<Text>("Thirst");
+            HungerText = FindInSimpleView<Text>("Hunger");
+            StrengthText = FindInSimpleView<Text>("Strength"); //, f => f + " str");
+            IntelligenceText = FindInSimpleView<Text>("Intelligence"); //, f => f + " int");
+            EnduranceText = FindInSimpleView<Text>("Endurance"); //, f => f + " end");
+            StabilityText = FindInSimpleView<Text>("Stability"); //, f => f + " stab");
 
             NameText = FindInSimpleView<Text>("Simple Name");
             ClassTraitText = FindInSimpleView<Text>("ClassTrait");
-            CurrentActionText = new ReactiveText<float>(FindInSimpleView<Text>("Current Action"));
+            CurrentActionText = FindInSimpleView<Text>("Current Action");
 
-            DetailedCurrentActionText = new ReactiveText<float>(FindInDetailedView<Text>("CurrentAction"));
+            DetailedCurrentActionText = FindInDetailedView<Text>("CurrentAction");
             DetailedClassText = FindInDetailedView<Text>("Class");
             DetailedTraitText = FindInDetailedView<Text>("Trait");
             WeightText = FindInDetailedView<Text>("Weight");
@@ -67,33 +67,25 @@ namespace Characters
             EatButton = FindInDetailedView<Button>("Eat Button");
             DrinkButton = FindInDetailedView<Button>("Drink Button");
             WeaponCard = Helper.FindChildWithName(DetailedView.transform, "Weapon Card").gameObject;
-            ConditionsText = new ReactiveText<string>(FindInDetailedView<Text>("Conditions"));
+            ConditionsText = FindInDetailedView<Text>("Conditions");
 
-            StrengthTextDetail = new ReactiveText<float>(FindInDetailedView<Text>("Strength"));
-            IntelligenceTextDetail = new ReactiveText<float>(FindInDetailedView<Text>("Intelligence"));
-            EnduranceTextDetail = new ReactiveText<float>(FindInDetailedView<Text>("Endurance"));
-            StabilityTextDetail = new ReactiveText<float>(FindInDetailedView<Text>("Stability"));
+            StrengthTextDetail = FindInDetailedView<Text>("Strength");
+            IntelligenceTextDetail = FindInDetailedView<Text>("Intelligence");
+            EnduranceTextDetail = FindInDetailedView<Text>("Endurance");
+            StabilityTextDetail = FindInDetailedView<Text>("Stability");
 
             WeaponNameTextSimple = new ReactiveText<string>(FindInSimpleView<Text>("Weapon Name"));
             WeaponNameTextDetailed = new ReactiveText<string>(FindInDetailedView<Text>("Weapon Name"));
             WeaponModifier1Text = new ReactiveText<string>(FindInDetailedView<Text>("Primary Modifier"));
             WeaponModifier2Text = new ReactiveText<string>(FindInDetailedView<Text>("Secondary Modifier"));
 
-            WeaponDamageText =
-                new ReactiveText<float>(FindInDetailedView<Text>("Damage"), f => Helper.Round(f, 2) + "dam");
-            WeaponFireRateText = new ReactiveText<float>(FindInDetailedView<Text>("Fire Rate"),
-                f => Helper.Round(f, 2) + "rnds/s");
-            WeaponReloadSpeedText = new ReactiveText<float>(FindInDetailedView<Text>("Reload Speed"),
-                f => Helper.Round(f, 2) + "s rel");
-            WeaponCapacityText =
-                new ReactiveText<float>(FindInDetailedView<Text>("Capacity"), f => Helper.Round(f, 0) + " cap");
-            WeaponHandlingText =
-                new ReactiveText<float>(FindInDetailedView<Text>("Handling"), f => Helper.Round(f, 2) + "% hand");
-            WeaponCriticalChanceText =
-                new ReactiveText<float>(FindInDetailedView<Text>("Critical Chance"),
-                    f => Helper.Round(f, 2) + "% crit");
-            WeaponAccuracyText =
-                new ReactiveText<float>(FindInDetailedView<Text>("Accuracy"), f => Helper.Round(f, 2) + "% acc");
+            WeaponDamageText = FindInDetailedView<Text>("Damage"); //, f => Helper.Round(f, 2) + "dam");
+            WeaponFireRateText = FindInDetailedView<Text>("Fire Rate"); //f => Helper.Round(f, 2) + "rnds/s");
+            WeaponReloadSpeedText = FindInDetailedView<Text>("Reload Speed"); //f => Helper.Round(f, 2) + "s rel");
+            WeaponCapacityText = FindInDetailedView<Text>("Capacity"); //f => Helper.Round(f, 0) + " cap");
+            WeaponHandlingText = FindInDetailedView<Text>("Handling"); //f => Helper.Round(f, 2) + "% hand");
+            WeaponCriticalChanceText = FindInDetailedView<Text>("Critical Chance"); //,f => Helper.Round(f, 2) + "% crit");
+            WeaponAccuracyText = FindInDetailedView<Text>("Accuracy"); //f => Helper.Round(f, 2) + "% acc");
         }
 
         public T FindInSimpleView<T>(string name)

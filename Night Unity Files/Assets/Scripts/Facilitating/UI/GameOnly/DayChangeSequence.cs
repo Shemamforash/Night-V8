@@ -13,19 +13,18 @@ namespace Facilitating.UI.GameOnly
         public float FadeTime = 2f;
         private CanvasGroup _menuScreen, _thisCanvasGroup;
         private ThunderClick _thunderClick;
-        private readonly TimeListener _timeListener = new TimeListener();
 
         public void Awake()
         {
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _menuScreen = GameObject.Find("Game Menu").GetComponent<CanvasGroup>();
             _thunderClick = GetComponent<ThunderClick>();
-            _timeListener.OnDay(ChangeDay);
+            WorldTime.Instance().DayEvent += ChangeDay;
         }
 
         public void ChangeDay()
         {
-            WorldTime.Pause();
+            WorldTime.Instance().Pause();
             _menuScreen.interactable = false;
             _menuScreen.alpha = 0;
             _thisCanvasGroup.interactable = true;
@@ -50,7 +49,7 @@ namespace Facilitating.UI.GameOnly
             _thunderClick.InitiateThunder();
             _menuScreen.alpha = 1;
             _thisCanvasGroup.alpha = 0;
-            WorldTime.UnPause();
+            WorldTime.Instance().UnPause();
             _menuScreen.interactable = true;
             _thisCanvasGroup.interactable = false;
         }

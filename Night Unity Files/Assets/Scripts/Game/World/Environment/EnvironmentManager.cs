@@ -10,7 +10,6 @@ namespace Game.World.Environment
     public class EnvironmentManager : ProbabalisticStateMachine
     {
         private Text _environmentText, _temperatureText;
-        private TimeListener timeListener = new TimeListener();
         private List<string> _visitedEnvironments = new List<string>();
 
         public void Awake()
@@ -25,8 +24,8 @@ namespace Game.World.Environment
             LoadEnvironments();
             LoadProbabilities("EnvironmentProbabilityTable");
             NavigateToState("Oasis");
-            timeListener.OnTravel(GenerateEnvironment);
-            timeListener.OnMinute(UpdateTemperature);
+            WorldTime.Instance().TravelEvent += GenerateEnvironment;
+            WorldTime.Instance().MinuteEvent += UpdateTemperature;
 //            TestEnvironmentGenerator();
         }
 

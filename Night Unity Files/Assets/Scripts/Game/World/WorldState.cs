@@ -12,7 +12,6 @@ namespace Game.World
 	    public static float StormDistanceMax, StormDistanceActual;
 		public static int DaysSpentHere;
 		public static int NoPreviousLocations;
-		private readonly TimeListener _timeListener = new TimeListener();
 		public static EnvironmentManager EnvironmentManager;
 
 	    public void Awake()
@@ -53,7 +52,7 @@ namespace Game.World
 	    }
 	    
 		public WorldState(){
-			_timeListener.OnDay(IncrementDaysSpentHere);
+			WorldTime.Instance().DayEvent += IncrementDaysSpentHere;
 		}
     }
 }

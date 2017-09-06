@@ -10,9 +10,9 @@ using UnityEngine.UI;
 
 namespace Game.World
 {
-    public class Home : MonoBehaviour
+    public class Home
     {
-        private PersistenceListener _persistenceListener;
+        private static PersistenceListener _persistenceListener;
         private static DesolationInventory _homeInventory = new DesolationInventory();
 
         public static Inventory Inventory()
@@ -20,7 +20,7 @@ namespace Game.World
             return _homeInventory;
         }
         
-        public void Awake()
+        static Home()
         {
             SetResourceSuffix("Water", "sips");
             SetResourceSuffix("Food", "meals");
@@ -33,7 +33,7 @@ namespace Game.World
             _persistenceListener = new PersistenceListener(Load, Save, "Home");
         }
 
-        private void SetResourceSuffix(string name, string convention)
+        private static void SetResourceSuffix(string name, string convention)
         {
             Func<float, string> conversion = f => Mathf.Round(f).ToString() + " " + convention;
             Text resourceText = GameObject.Find(name).GetComponent<Text>();
@@ -41,14 +41,14 @@ namespace Game.World
             _homeInventory.GetResource(name).AddLinkedText(reactiveText);
         }
         
-        public void Load()
+        public static void Load()
         {
             _homeInventory.IncrementResource("Water", GameData.StoredWater);
             _homeInventory.IncrementResource("Food", GameData.StoredFood);
             _homeInventory.IncrementResource("Fuel", GameData.StoredFuel);
         }
 
-        public void Save()
+        public static void Save()
         {
             GameData.StoredWater = _homeInventory.GetResourceQuantity("Water");
             GameData.StoredFood = _homeInventory.GetResourceQuantity("Food");

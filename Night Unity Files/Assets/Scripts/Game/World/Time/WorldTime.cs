@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEngine;
@@ -8,71 +8,45 @@ namespace Game.World.Time
 {
     public class WorldTime : MonoBehaviour
     {
-        private static readonly List<TimeListener> TimeListeners = new List<TimeListener>();
+        public event Action MinuteEvent;
+        public event Action HourEvent;
+        public event Action DayEvent;
+        public event Action TravelEvent;
+        public event Action<bool> PauseEvent;
+        
         private static float _currentTime, _quarterHourTimer = .2f;
         public static int Days, Hours = 6, Minutes;
         public const int MinutesPerHour = 12;
-        private static bool _isNight;
-        private static bool _isPaused;
+        private static bool _isNight, _isPaused;
         private Text _timeText, _dayText;
+        private static WorldTime _instance;
 
         public void Awake()
         {
             _timeText = Helper.FindChildWithName(gameObject, "Time").GetComponent<Text>();
             _dayText = Helper.FindChildWithName(gameObject, "Day").GetComponent<Text>();
+            _instance = this;
+        }
+
+        public static WorldTime Instance()
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType(typeof(WorldTime)) as WorldTime;
+            }
+            return _instance;
         }
         
-        public static void SubscribeTimeListener(TimeListener t)
-        {
-            TimeListeners.Add(t);
-        }
-
-        private static void BroadcastPause()
-        {
-            foreach (TimeListener t in TimeListeners)
-            {
-                t.ReceivePauseEvent(_isPaused);
-            }
-        }
-
-        private static void BroadcastHourChange()
-        {
-            foreach (TimeListener t in TimeListeners)
-            {
-                t.ReceiveHourEvent();
-            }
-        }
-
-        private static void BroadcastMinuteChange(){
-            foreach(TimeListener t in TimeListeners){
-                t.ReceiveMinuteEvent();
-            }
-        }
-
-        private static void BroadcastDayChange()
-        {
-            foreach (TimeListener t in TimeListeners)
-            {
-                t.ReceiveDayEvent();
-            }
-        }
-
-        public void BroadcastTravel(){
-            foreach(TimeListener t in TimeListeners){
-                t.ReceiveTravelEvent();
-            }
-        }
-
-        public static void Pause()
+        public void Pause()
         {
             _isPaused = true;
-            BroadcastPause();
+            if (PauseEvent != null) PauseEvent(true);
         }
 
-        public static void UnPause()
+        public void UnPause()
         {
             _isPaused = false;
-            BroadcastPause();
+            if (PauseEvent != null) PauseEvent(false);
         }
 
         private void IncrementWorldTime()
@@ -82,16 +56,16 @@ namespace Game.World.Time
             {
                 _currentTime -= _quarterHourTimer;
                 Minutes += 60 / MinutesPerHour;
-                BroadcastMinuteChange();
+                if (MinuteEvent != null) MinuteEvent();
                 if (Minutes == 60)
                 {
                     Minutes = 0;
                     ++Hours;
-                    BroadcastHourChange();
+                    if (HourEvent != null) HourEvent();
                     if (Hours == 24)
                     {
                         ++Days;
-                        BroadcastDayChange();
+                        if (DayEvent != null) DayEvent();
                         Hours = 0;
                     }
                     //TODO make me make sense

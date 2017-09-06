@@ -1,4 +1,5 @@
-﻿using SamsHelper;
+﻿using Game.Characters;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine.UI;
 
@@ -22,8 +23,8 @@ namespace Facilitating.UI.GameOnly
             });
             OnInventorySetAction(delegate
             {
-                _characterInventoryText.text = CharacterLocationState.GetCharacter().Name;
-                _locationInventoryText.text = CharacterLocationState.GetTargetRegion().Name();
+                _characterInventoryText.text = CharacterManager.SelectedCharacter.Name;
+                _locationInventoryText.text = CharacterManager.SelectedCharacter.CurrentRegion.Name();
             });
         }
     }
