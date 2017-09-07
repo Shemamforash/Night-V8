@@ -11,8 +11,8 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
-            Character.CurrentRegion = null;
-            Character.CharacterUi.CurrentActionText.text = Name();
+            GetCharacter().CurrentRegion = null;
+            GetCharacter().CharacterUi.CurrentActionText.text = Name();
         }
 
         public override string GetCostAsString()

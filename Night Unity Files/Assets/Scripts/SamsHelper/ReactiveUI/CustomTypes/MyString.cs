@@ -2,27 +2,23 @@
 {
     public class MyString : MyValue<string>
     {
-        private string _text;
         
-        public MyString()
+        public MyString() : this("")
         {
-            _text = "";
         }
         
-        public MyString(string initialText)
+        public MyString(string initialText) : base(initialText)
         {
-            _text = initialText;
-            UpdateLinkedTexts(_text);
         }
 
         public string Text
         {
             set
             {
-                _text = value;
-                UpdateLinkedTexts(_text);
+                _currentValue = value;
+                BroadcastChange();
             }
-            get { return _text; }
+            get { return _currentValue; }
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Game.Combat.CombatStates
         {
             if (axis == InputAxis.Horizontal)
             {
-                ParentCombatManager.ReturnToDefault();
+                ((CombatManager)ParentMachine).ReturnToDefault();
             }
         }
     }

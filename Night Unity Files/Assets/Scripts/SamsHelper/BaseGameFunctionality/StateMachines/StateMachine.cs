@@ -10,13 +10,6 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         protected readonly Dictionary<string, State> States = new Dictionary<string, State>();
         private State _currentState;
         private string _defaultState;
-        private readonly InputListener _inputListener = new InputListener();
-
-        public virtual void Awake()
-        {
-            _inputListener.OnAnyPress(axis => _currentState.OnInputDown(axis));
-            _inputListener.OnAnyRelease(axis => _currentState.OnInputUp(axis));
-        }
 
         public virtual List<State> StatesAsList()
         {

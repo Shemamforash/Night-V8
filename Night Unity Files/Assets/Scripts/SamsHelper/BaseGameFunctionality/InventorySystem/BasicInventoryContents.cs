@@ -21,9 +21,9 @@
             return _weight;
         }
 
-        public virtual float Quantity()
+        public virtual int Quantity()
         {
-            return 1f;
+            return 1;
         }
     }
 }

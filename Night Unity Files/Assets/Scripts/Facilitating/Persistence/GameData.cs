@@ -18,7 +18,7 @@ namespace Facilitating.Persistence
         public static List<Character> Party;
         
         //Camp Data
-        public static float StoredWater = 0f, StoredFood = 0f, StoredFuel = 0f;
+        public static int StoredWater = 0, StoredFood = 0, StoredFuel = 0;
 
         public static void SetDifficultyFromString(string difficultyString)
         {

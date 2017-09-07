@@ -20,7 +20,7 @@ namespace Game.Combat.CombatStates
         
         public override void Update()
         {
-            ParentCombatManager.IncreaseAim();
+            ((CombatManager)ParentMachine).IncreaseAim();
         }
 
         public override void OnInputDown(InputAxis inputAxis)

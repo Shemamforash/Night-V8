@@ -11,10 +11,9 @@ namespace Game.Characters.CharacterActions
             DefaultDuration = 0;
         }
 
-        public override void Exit()
+        public override void Enter()
         {
-            base.Exit();
-            CombatManager.EnterCombat(Character);
+            CombatManager.EnterCombat(GetCharacter());
         }
     }
 }

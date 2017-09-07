@@ -37,17 +37,19 @@ namespace Game.World
         {
             Helper.ConstructObjectsFromCsv("RegionData", delegate(string[] attributes)
             {
-                RegionTemplate newTemplate = new RegionTemplate();
-                newTemplate.InternalName = attributes[0];
-                newTemplate.DisplayName = attributes[1];
-                newTemplate.Type = attributes[2];
-                newTemplate.WaterAvailable = float.Parse(attributes[3]);
-                newTemplate.FoodAvailable = float.Parse(attributes[4]);
-                newTemplate.FuelAvailable = float.Parse(attributes[5]);
-                newTemplate.ScrapAvailable = float.Parse(attributes[6]);
-                newTemplate.AmmoAvailable = float.Parse(attributes[7]);
-                newTemplate.Encounters = attributes[8];
-                newTemplate.Items = attributes[9];
+                RegionTemplate newTemplate = new RegionTemplate
+                {
+                    InternalName = attributes[0],
+                    DisplayName = attributes[1],
+                    Type = attributes[2],
+                    WaterAvailable = int.Parse(attributes[3]),
+                    FoodAvailable = int.Parse(attributes[4]),
+                    FuelAvailable = int.Parse(attributes[5]),
+                    ScrapAvailable = int.Parse(attributes[6]),
+                    AmmoAvailable = int.Parse(attributes[7]),
+                    Encounters = attributes[8],
+                    Items = attributes[9]
+                };
                 _templates[newTemplate.InternalName] = newTemplate;
             });
         }
@@ -151,7 +153,7 @@ namespace Game.World
         public static void StartExploration(Action a, Region.Region target)
         {
             Travel state = (Travel) _character.NavigateToState("Travel");
-            state.SetTargetReachedAction(a);
+            state.AddOnExit(a);
             state.SetTargetRegion(target);
             ExitManager(true);
         }

@@ -6,11 +6,11 @@ namespace Game.Combat.CombatStates
     public class Firing : CombatState
     {
         private float _timeSinceLastFire;
-        
+
         public Firing(CombatManager parentMachine, bool isPlayerState) : base("Firing", parentMachine, isPlayerState)
         {
         }
-        
+
         public override void Update()
         {
             if (Weapon().GetRemainingAmmo() > 0)
@@ -26,14 +26,14 @@ namespace Game.Combat.CombatStates
                     {
                         CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
                     }
-                    ParentCombatManager.DecreaseAim();
+                    ((CombatManager) ParentMachine).DecreaseAim();
                     if (Weapon().Automatic)
                     {
                         _timeSinceLastFire = 1f / Weapon().FireRate;
                     }
                     else
                     {
-                        ParentCombatManager.NavigateToState("Cocking");
+                        ((CombatManager) ParentMachine).NavigateToState("Cocking");
                     }
                 }
             }
@@ -53,7 +53,7 @@ namespace Game.Combat.CombatStates
         {
             if (inputAxis == InputAxis.Fire)
             {
-                ParentCombatManager.NavigateToState("Aiming");
+                ((CombatManager) ParentMachine).NavigateToState("Aiming");
             }
         }
     }

@@ -26,7 +26,7 @@ namespace Characters
         public float StarvationTolerance, DehydrationTolerance;
         public MyFloat Strength = new MyFloat();
         public MyFloat Intelligence = new MyFloat();
-        public MyFloat Endurance = new MyFloat("end");
+        public MyFloat Endurance = new MyFloat();
         public MyFloat Stability = new MyFloat();
         public MyFloat Starvation = new MyFloat();
         public MyFloat Dehydration = new MyFloat();
@@ -39,13 +39,13 @@ namespace Characters
 
         private MyString _weaponName = new MyString();
 
-        private MyFloat _weaponDamage = new MyFloat();
-        private MyFloat _weaponFireRate = new MyFloat();
-        private MyFloat _weaponReloadSpeed = new MyFloat();
-        private MyFloat _weaponCapacity = new MyFloat();
-        private MyFloat _weaponHandling = new MyFloat();
-        private MyFloat _weaponCriticalChance = new MyFloat();
-        private MyFloat _weaponAccuracy = new MyFloat();
+        private readonly MyFloat _weaponDamage = new MyFloat();
+        private readonly MyFloat _weaponFireRate = new MyFloat();
+        private readonly MyFloat _weaponReloadSpeed = new MyFloat();
+        private readonly MyFloat _weaponCapacity = new MyFloat();
+        private readonly MyFloat _weaponHandling = new MyFloat();
+        private readonly MyFloat _weaponCriticalChance = new MyFloat();
+        private readonly MyFloat _weaponAccuracy = new MyFloat();
 
         public DesolationInventory CharacterInventory = new DesolationInventory();
 
@@ -80,7 +80,16 @@ namespace Characters
             Endurance.Val = Endurance.Val - amount;
             if (Endurance.ReachedMin())
             {
-                NavigateToState("Sleep");
+                BaseCharacterAction action = GetCurrentState() as BaseCharacterAction;
+                action.Interrupt();
+                Sleep sleepAction = NavigateToState("Sleep") as Sleep;
+                sleepAction.IncreaseDuration((int)(Endurance.Max / 5f));
+                sleepAction.AddOnExit(() =>
+                {
+                    NavigateToState(action.Name());
+                    action.Resume();
+                });
+                sleepAction.Start();
             }
         }
 
@@ -139,7 +148,7 @@ namespace Characters
             Weight = weight;
             actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
             SetCharacterUi(gameObject);
-            CharacterInventory.MaxWeight = 20;
+            CharacterInventory.MaxWeight = 50;
             AddState(new CollectResources(this));
             AddState(new Combat(this));
             AddState(new Sleep(this));
@@ -246,9 +255,12 @@ namespace Characters
             };
 
             _weaponName = new MyString("");
-            _weaponName.AddLinkedText(CharacterUi.WeaponNameTextSimple);
-            _weaponName.AddLinkedText(CharacterUi.WeaponNameTextDetailed);
-
+            _weaponName.AddOnValueChange(t =>
+            {
+                CharacterUi.WeaponNameTextDetailed.text = t;
+                CharacterUi.WeaponNameTextSimple.text = t;
+            });
+            
             _weaponDamage.AddOnValueChange(f => CharacterUi.WeaponDamageText.text = Helper.Round(f, 2) + " dmg");
             _weaponAccuracy.AddOnValueChange(f => CharacterUi.WeaponAccuracyText.text = Helper.Round(f, 2) + "acc");
             _weaponFireRate.AddOnValueChange(f => CharacterUi.WeaponFireRateText.text = Helper.Round(f, 2) + "frt");
@@ -338,13 +350,13 @@ namespace Characters
 
         public void Drink()
         {
-            float consumed = Home.Inventory().DecrementResource("Water", 0.25f);
+            float consumed = WorldState.Inventory().DecrementResource("Water", 1);
             Dehydration.Val -= consumed;
         }
 
         public void Eat()
         {
-            float consumed = Home.Inventory().DecrementResource("Food", 1);
+            float consumed = WorldState.Inventory().DecrementResource("Food", 1);
             Starvation.Val -= consumed;
         }
 

@@ -1,19 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace SamsHelper.ReactiveUI.CustomTypes
 {
     public abstract class MyValue<T>
     {
-        private readonly List<ReactiveText<T>> _linkedTexts = new List<ReactiveText<T>>();
+        protected event Action<T> OnValueChange;
+        protected T _currentValue;
 
-        public void AddLinkedText(ReactiveText<T> linkedText)
+        public MyValue(T initialValue)
         {
-            _linkedTexts.Add(linkedText);
+            _currentValue = initialValue;
         }
-        
-        public void UpdateLinkedTexts(T val)
+
+        public void AddOnValueChange(Action<T> a)
         {
-            _linkedTexts.ForEach(t => t.Text(val));
+            a(_currentValue);
+            OnValueChange += a;
+        }
+
+        public void BroadcastChange()
+        {
+            if (OnValueChange != null)
+            {
+                OnValueChange(_currentValue);
+            }
         }
     }
 }

@@ -96,17 +96,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _resources.Add(new InventoryResource(name, weight));
         }
 
-        public void AddLinkedTextToResource(string itemName, ReactiveText<float> reactiveText)
-        {
-            GetResource(itemName).AddLinkedText(reactiveText);
-        }
-
-        public void IncrementResource(string name, float amount)
+        public void IncrementResource(string name, int amount)
         {
             IncrementResource(GetResource(name), amount);
         }
 
-        public void IncrementResource(InventoryResource resource, float amount)
+        public void IncrementResource(InventoryResource resource, int amount)
         {
             if (amount < 0)
             {
@@ -116,12 +111,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             resource.Increment(amount);
         }
 
-        public float DecrementResource(string name, float amount)
+        public int DecrementResource(string name, int amount)
         {
             return DecrementResource(GetResource(name), amount);
         }
 
-        public float DecrementResource(InventoryResource resource, float amount)
+        public int DecrementResource(InventoryResource resource, int amount)
         {
             if (amount < 0)
             {
@@ -131,7 +126,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return resource.Decrement(amount);
         }
 
-        public float GetResourceQuantity(string name)
+        public int GetResourceQuantity(string name)
         {
             return GetResource(name).Quantity();
         }
@@ -164,17 +159,28 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return movedItem;
         }
 
-        public BasicInventoryContents Move(InventoryResource resource, Inventory target, float amount)
+        public BasicInventoryContents Move(BasicInventoryContents item, Inventory target, int quantity)
         {
-            if (target.InventoryHasSpace(resource.GetWeight(amount)))
+            InventoryResource resource = item as InventoryResource;
+            if (resource != null)
             {
-                DecrementResource(resource, amount);
-                InventoryResource targetResource = target.GetResource(resource.Name());
-                target.IncrementResource(targetResource, amount);
-                return targetResource;
+                if (!target.InventoryHasSpace(resource.GetWeight(quantity)))
+                {
+                    float remainingSpace = target.MaxWeight - target.InventoryWeight;
+                    quantity = (int) Math.Floor(remainingSpace / resource.Weight());
+                }
+                if (quantity != 0)
+                {
+                    DecrementResource(resource, quantity);
+                    InventoryResource targetResource = target.GetResource(resource.Name());
+                    target.IncrementResource(targetResource, quantity);
+                    return targetResource;
+                }
             }
-            float remainingSpace = MaxWeight - InventoryWeight;
-            Move(resource, target, remainingSpace);
+            else
+            {
+                return Move(item, target);
+            }
             return null;
         }
 

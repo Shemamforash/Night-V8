@@ -7,36 +7,22 @@ namespace SamsHelper.ReactiveUI.CustomTypes
 {
     public class MyFloat : MyValue<float>
     {
-        private event Action<float> OnValueChange;
-        
-        private readonly bool _valueCapped;
-        private bool _treatAsInt;
         private float _min;
         private float _max;
-        private float _currentValue;
-        public string Name = "";
-
-        public MyFloat(string name) : this(0, 0, float.MaxValue)
-        {
-            Name = name;
-        }
 
         public MyFloat() : this(0, 0, float.MaxValue)
         {
         }
 
-        public MyFloat(float initialValue)
+        public MyFloat(float initialValue) : base(initialValue)
         {
-            _currentValue = initialValue;
-            if (OnValueChange != null) OnValueChange(_currentValue);
-//            UpdateLinkedTexts(_currentValue);
+            BroadcastChange();
         }
 
         public MyFloat(float initialValue, float min, float max) : this(initialValue)
         {
             _min = min;
             _max = max;
-            _valueCapped = true;
         }
 
         public float Max
@@ -65,57 +51,24 @@ namespace SamsHelper.ReactiveUI.CustomTypes
             }
         }
 
-
-        public void TreatAsInt()
-        {
-            _treatAsInt = true;
-        }
-
-        public void AddOnValueChange(Action<float> action)
-        {
-            action(_currentValue);
-            OnValueChange += action;
-        }
-        
         public float Val
         {
-            get
-            {
-                if (_treatAsInt)
-                {
-                    return (int) _currentValue;
-                }
-                return _currentValue;
-            }
+            get { return _currentValue; }
             set
             {
-                if (_valueCapped)
+                if (value > _max)
                 {
-                    bool exceeded = false;
-                    if (value > _max)
-                    {
-                        _currentValue = _max;
-                        exceeded = true;
-                    }
-                    else if (value < _min)
-                    {
-                        _currentValue = _min;
-                        exceeded = true;
-                    }
-                    if (exceeded)
-                    {
-#if UNITY_EDITOR
-//                        throw new Exceptions.CappedValueExceededBoundsException();
-#endif
-                    }
-                    _currentValue = value;
+                    _currentValue = _max;
+                }
+                else if (value < _min)
+                {
+                    _currentValue = _min;
                 }
                 else
                 {
                     _currentValue = value;
                 }
-                if (OnValueChange != null) OnValueChange(_currentValue);
-//                UpdateLinkedTexts(_currentValue);
+                BroadcastChange();
             }
         }
 
@@ -141,7 +94,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
             }
             return false;
         }
-        
+
         //OPERATORS
         public static float operator +(MyFloat a, MyFloat b)
         {

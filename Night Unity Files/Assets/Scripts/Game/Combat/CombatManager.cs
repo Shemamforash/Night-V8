@@ -43,7 +43,6 @@ namespace Game.Combat
         
         public void Awake()
         {
-            base.Awake();
             CombatUi = new CombatUI(GameObject.Find("Combat Menu"));
             AddState(new Approaching(this, true));
             AddState(new Aiming(this, true));

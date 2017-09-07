@@ -17,13 +17,11 @@ namespace Game.Characters
         private static List<Character> _characters = new List<Character>();
         private PersistenceListener _persistenceListener;
         public static Character SelectedCharacter;
-        private readonly InputListener _inputListener = new InputListener();
 
         public void Awake()
         {
             _persistenceListener = new PersistenceListener(Load, Save, "Character Manager");
             WorldTime.Instance().HourEvent += UpdateCharacterThirstAndHunger;
-            _inputListener.OnAxisPress(InputAxis.Cancel, ExitCharacter);
             Traits.LoadTraits();
         }
 
@@ -43,6 +41,7 @@ namespace Game.Characters
 
         public void Start()
         {
+            InputSpeaker.Instance().AddOnPressEvent(InputAxis.Cancel, ExitCharacter);
             if (GameData.Party != null)
             {
                 _characters = GameData.Party;
@@ -147,7 +146,6 @@ namespace Game.Characters
 
         public static void ExitCharacter()
         {
-            Debug.Log(SelectedCharacter);
             if (SelectedCharacter != null)
             {
                 SetDetailedViewActive(false, SelectedCharacter.transform);

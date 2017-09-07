@@ -1,41 +1,40 @@
-﻿using SamsHelper.ReactiveUI;
+﻿using System;
 using SamsHelper.ReactiveUI.CustomTypes;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class InventoryResource : BasicInventoryContents
     {
-        private readonly MyFloat _quantity = new MyFloat(0, 0, float.MaxValue);
+        private readonly MyInt _quantity = new MyInt(0, 0, int.MaxValue);
 
         public InventoryResource(string name, float weight) : base(name, weight)
         {
         }
         
-        public void AddLinkedText(ReactiveText<float> reactiveText)
+        public void AddOnUpdate(Action<int> action)
         {
-            _quantity.AddLinkedText(reactiveText);
-            _quantity.UpdateLinkedTexts(_quantity.Val);
+            _quantity.AddOnValueChange(action);
         }
 
-        public float Decrement(float amount)
+        public int Decrement(int amount)
         {
-            float previousQuantity = _quantity.Val;
+            int previousQuantity = _quantity.Val;
             _quantity.Val = _quantity.Val - amount;
-            float consumption = previousQuantity - _quantity.Val;
+            int consumption = previousQuantity - _quantity.Val;
             return consumption;
         }
 
-        public void Increment(float amount)
+        public void Increment(int amount)
         {
             _quantity.Val += amount;
         }
 
-        public override float Quantity()
+        public override int Quantity()
         {
             return _quantity.Val;
         }
 
-        public float GetWeight(float quantity)
+        public float GetWeight(int quantity)
         {
             return quantity * Weight();
         }

@@ -48,7 +48,7 @@ namespace Game.Combat.Weapons
 
         public void Reload()
         {
-            float ammoAvailable = Home.Inventory().DecrementResource("Ammo", Capacity);
+            float ammoAvailable = WorldState.Inventory().DecrementResource("Ammo", Capacity);
             _ammoInMagazine += (int)ammoAvailable;
         }
 

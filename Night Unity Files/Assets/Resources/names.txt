@@ -1,4 +1,4 @@
-Lux, the evergiver
+Lux
 Balm
 Aquifer
 Iodyne
@@ -6,3 +6,6 @@ Kero
 Petro
 Caliber
 Ambule
+Lig
+Rev
+Panacea

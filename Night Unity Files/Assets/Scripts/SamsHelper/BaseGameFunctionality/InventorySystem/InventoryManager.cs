@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Facilitating.UI.Elements;
 using Game.Characters.CharacterActions;
+using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -53,16 +55,20 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 newItemObject.transform.localScale = new Vector3(1, 1, 1);
                 ItemUIObject newItemUi = new ItemUIObject(newItemObject, item);
                 Button b = Helper.FindChildWithName<Button>(newItemObject, "Move");
-                b.onClick.AddListener(delegate
-                {
-                    BasicInventoryContents transferredItem = _inventory.Move(item, _otherInventoryContainer._inventory);
-                    if (transferredItem != null)
-                    {
-                        _otherInventoryContainer.AddItem(transferredItem);
-                    }
-                    UpdateItemObject(newItemUi);
-                });
+                b.onClick.AddListener(() => GetMoveAmountAction(1, item, newItemUi));
+                EnhancedButton eb = b.gameObject.GetComponent<EnhancedButton>();
+                eb.AddOnHoldAction(() => GetMoveAmountAction(5, item, newItemUi), 0.5f);
                 return newItemUi;
+            }
+
+            private void GetMoveAmountAction(int amount, BasicInventoryContents item, ItemUIObject newItemUi)
+            {
+                BasicInventoryContents transferredItem = _inventory.Move(item, _otherInventoryContainer._inventory, amount);
+                if (transferredItem != null)
+                {
+                    _otherInventoryContainer.AddItem(transferredItem);
+                }
+                UpdateItemObject(newItemUi);
             }
 
             public void SetOnInventoryMoveAction(Action inventoryMoveAction)

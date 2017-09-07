@@ -1,45 +1,32 @@
-﻿using System;
-using Characters;
+﻿using Characters;
 using Game.Combat;
-using Game.World;
 using Game.World.Region;
-using Game.World.Time;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.ReactiveUI.MenuSystem;
-using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
     public class Travel : BaseCharacterAction
     {
-        private Action _targetReachedAction;
-
         public Travel(Character character) : base("Travel", character)
         {
             IsVisible = false;
-            HourCallback = Character.Travel;
+            HourCallback = GetCharacter().Travel;
         }
 
         public void SetTargetRegion(Region targetRegion)
         {
-            Character.CurrentRegion = targetRegion;
-            IncreaseDuration(Character.CurrentRegion.Distance());
+            GetCharacter().CurrentRegion = targetRegion;
+            IncreaseDuration(GetCharacter().CurrentRegion.Distance());
             Start();
         }
 
         public Region GetTargetRegion()
         {
-            return Character.CurrentRegion;
-        }
-
-        public void SetTargetReachedAction(Action targetReachedAction)
-        {
-            _targetReachedAction = targetReachedAction;
+            return GetCharacter().CurrentRegion;
         }
 
         public override void Exit()
         {
-            CombatScenario scenario = Character.CurrentRegion.GetCombatScenario();
+            CombatScenario scenario = GetCharacter().CurrentRegion.GetCombatScenario();
             if (scenario != null)
             {
                 ParentMachine.NavigateToState("Combat");
@@ -48,8 +35,7 @@ namespace Game.Characters.CharacterActions
             {
                 ParentMachine.NavigateToState("Collect Resources");
             }
-            
-            _targetReachedAction();
+            base.Exit(false);
         }
     }
 }

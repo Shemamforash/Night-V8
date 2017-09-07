@@ -11,7 +11,7 @@ namespace Game.Combat.CombatStates
         public override void Enter()
         {
             CombatManager.CombatUi.EmptyMagazine();
-            new Cooldown(ParentCombatManager.Character().GetWeapon().ReloadSpeed, Exit, f => CombatManager.CombatUi.UpdateReloadTime(f));
+            new Cooldown(((CombatManager)ParentMachine).Character().GetWeapon().ReloadSpeed, Exit, f => CombatManager.CombatUi.UpdateReloadTime(f));
         }
 
         public override void Exit()

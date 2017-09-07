@@ -1,7 +1,5 @@
-﻿using System;
-using Characters;
+﻿using Characters;
 using Game.World;
-using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
@@ -13,7 +11,7 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
-            RegionManager.EnterManager(Character);
+            RegionManager.EnterManager(GetCharacter());
         }
     }
 }

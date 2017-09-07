@@ -8,9 +8,8 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         private static MenuStateMachine _instance;
         public Menu InitialMenu;
         
-        public override void Awake()
+        public void Awake()
         {
-            base.Awake();
             foreach (Menu t in Helper.FindAllComponentsInChildren<Menu>(transform))
             {
                 MenuState menu = new MenuState(t.name, t, this);

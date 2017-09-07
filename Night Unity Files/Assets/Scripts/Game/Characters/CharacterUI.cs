@@ -22,7 +22,7 @@ namespace Characters
         public Text NameText, ClassTraitText, DetailedClassText, DetailedTraitText;
         public Text WeightText;
 
-        public ReactiveText<string> WeaponNameTextDetailed,
+        public Text WeaponNameTextDetailed,
             WeaponNameTextSimple,
             WeaponModifier1Text,
             WeaponModifier2Text;
@@ -74,18 +74,18 @@ namespace Characters
             EnduranceTextDetail = FindInDetailedView<Text>("Endurance");
             StabilityTextDetail = FindInDetailedView<Text>("Stability");
 
-            WeaponNameTextSimple = new ReactiveText<string>(FindInSimpleView<Text>("Weapon Name"));
-            WeaponNameTextDetailed = new ReactiveText<string>(FindInDetailedView<Text>("Weapon Name"));
-            WeaponModifier1Text = new ReactiveText<string>(FindInDetailedView<Text>("Primary Modifier"));
-            WeaponModifier2Text = new ReactiveText<string>(FindInDetailedView<Text>("Secondary Modifier"));
+            WeaponNameTextSimple = FindInSimpleView<Text>("Weapon Name");
+            WeaponNameTextDetailed = FindInDetailedView<Text>("Weapon Name");
+            WeaponModifier1Text = FindInDetailedView<Text>("Primary Modifier");
+            WeaponModifier2Text = FindInDetailedView<Text>("Secondary Modifier");
 
-            WeaponDamageText = FindInDetailedView<Text>("Damage"); //, f => Helper.Round(f, 2) + "dam");
-            WeaponFireRateText = FindInDetailedView<Text>("Fire Rate"); //f => Helper.Round(f, 2) + "rnds/s");
-            WeaponReloadSpeedText = FindInDetailedView<Text>("Reload Speed"); //f => Helper.Round(f, 2) + "s rel");
-            WeaponCapacityText = FindInDetailedView<Text>("Capacity"); //f => Helper.Round(f, 0) + " cap");
-            WeaponHandlingText = FindInDetailedView<Text>("Handling"); //f => Helper.Round(f, 2) + "% hand");
-            WeaponCriticalChanceText = FindInDetailedView<Text>("Critical Chance"); //,f => Helper.Round(f, 2) + "% crit");
-            WeaponAccuracyText = FindInDetailedView<Text>("Accuracy"); //f => Helper.Round(f, 2) + "% acc");
+            WeaponDamageText = FindInDetailedView<Text>("Damage");
+            WeaponFireRateText = FindInDetailedView<Text>("Fire Rate");
+            WeaponReloadSpeedText = FindInDetailedView<Text>("Reload Speed");
+            WeaponCapacityText = FindInDetailedView<Text>("Capacity");
+            WeaponHandlingText = FindInDetailedView<Text>("Handling");
+            WeaponCriticalChanceText = FindInDetailedView<Text>("Critical Chance");
+            WeaponAccuracyText = FindInDetailedView<Text>("Accuracy");
         }
 
         public T FindInSimpleView<T>(string name)

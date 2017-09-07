@@ -87,9 +87,9 @@ namespace SamsHelper
         {
             private readonly string _direction;
             private readonly string _resourceName;
-            private readonly float _amount;
+            private readonly int _amount;
 
-            public ResourceValueChangeInvalid(string resourceName, string decrement, float amount)
+            public ResourceValueChangeInvalid(string resourceName, string decrement, int amount)
             {
                 _resourceName = resourceName;
                 _direction = decrement;

@@ -24,9 +24,9 @@ namespace Persistence
                 _saveDoc.Load(GameSaveLocation);
                 GameData.SetDifficultyFromString(_saveDoc.SelectSingleNode("/SaveData/SessionSettings/Difficulty").InnerText);
                 GameData.PermadeathOn = _saveDoc.SelectSingleNode("/SaveData/SessionSettings/Permadeath").InnerText.ToLower() == "true";
-                GameData.StoredFood = float.Parse(_saveDoc.SelectSingleNode("/SaveData/Home/StoredFood").InnerText);
-                GameData.StoredWater = float.Parse(_saveDoc.SelectSingleNode("/SaveData/Home/StoredWater").InnerText);
-                GameData.StoredFuel = float.Parse(_saveDoc.SelectSingleNode("/SaveData/Home/StoredFuel").InnerText);
+                GameData.StoredFood = int.Parse(_saveDoc.SelectSingleNode("/SaveData/Home/StoredFood").InnerText);
+                GameData.StoredWater = int.Parse(_saveDoc.SelectSingleNode("/SaveData/Home/StoredWater").InnerText);
+                GameData.StoredFuel = int.Parse(_saveDoc.SelectSingleNode("/SaveData/Home/StoredFuel").InnerText);
                 NotifyListenersLoad();
                 _loaded = true;
                 return true;

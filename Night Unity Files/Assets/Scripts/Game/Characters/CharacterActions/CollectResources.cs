@@ -18,9 +18,9 @@ namespace Game.Characters.CharacterActions
         {
             MenuStateMachine.Instance.NavigateToState("Pick Up Menu");
             _previousCharacter = CharacterManager.SelectedCharacter;
-            CharacterManager.SelectedCharacter = Character;
+            CharacterManager.SelectedCharacter = GetCharacter();
             InventoryManager inventoryManager = GameObject.Find("Pick Up Menu").GetComponent<InventoryManager>();
-            inventoryManager.SetInventories(Character.CharacterInventory, Character.CurrentRegion, Exit);
+            inventoryManager.SetInventories(GetCharacter().CharacterInventory, GetCharacter().CurrentRegion, Exit);
         }
 
         public override void Exit()

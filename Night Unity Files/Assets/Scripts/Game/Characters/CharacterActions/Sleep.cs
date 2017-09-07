@@ -1,24 +1,27 @@
 ﻿using Characters;
+using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
     public class Sleep : BaseCharacterAction
     {
+        private int _enduranceRecoveryAmount = 5;
+        
         public Sleep(Character character) : base("Sleep", character)
         {
-            SetUpdateCallback(() =>
-            {
-                Character.Endurance.Val += 3;
-                if (Character.Endurance.Val == Character.Endurance.Max)
-                {
-                    Exit();
-                }
-            });
+            HourCallback = () => GetCharacter().Rest(_enduranceRecoveryAmount);
         }
-        
+
+        public override void Exit()
+        {
+            Debug.Log("banana");
+            base.Exit(false);
+            ClearOnExit();
+        }
+
         public override string GetCostAsString()
         {
-            return TimeRemainingAsHours() + " hrs & +" + 3 * TimeRemainingAsHours() + " end ";
+            return TimeRemainingAsHours() + " hrs & +" + _enduranceRecoveryAmount * TimeRemainingAsHours() + " end ";
         }
     }
 }

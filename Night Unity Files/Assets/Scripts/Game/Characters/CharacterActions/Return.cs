@@ -11,19 +11,19 @@ namespace Game.Characters.CharacterActions
         public Return(Character character) : base("Return", character)
         {
             IsVisible = false;
-            HourCallback = Character.Travel;
+            HourCallback = GetCharacter().Travel;
         }
 
         public override void Enter()
         {
-            IncreaseDuration(Character.CurrentRegion.Distance());
+            IncreaseDuration(GetCharacter().CurrentRegion.Distance());
             Start();
         }
 
         public override void Exit()
         {
-            Character.CharacterInventory.MoveAllResources(Home.Inventory());
-            base.Exit();
+            GetCharacter().CharacterInventory.MoveAllResources(WorldState.Inventory());
+            base.Exit(true);
         }
     }
 }

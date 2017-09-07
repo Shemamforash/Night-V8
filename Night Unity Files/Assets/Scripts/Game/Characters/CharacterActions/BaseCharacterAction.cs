@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Characters;
 using Facilitating.MenuNavigation;
 using Game.World;
@@ -16,14 +17,12 @@ namespace Game.Characters.CharacterActions
     {
         protected int DefaultDuration;
         protected int TimeRemaining;
-        protected bool PlayerSetsDuration, IsVisible = true;
+        protected bool PlayerSetsDuration, IsVisible = true, Interrupted = false;
         public GameObject ActionButtonGameObject;
-        protected Character Character;
         protected Action HourCallback;
 
         public BaseCharacterAction(string name, Character character) : base(name, character)
         {
-            Character = character;
             DefaultDuration = WorldTime.MinutesPerHour;
         }
 
@@ -48,27 +47,37 @@ namespace Game.Characters.CharacterActions
             return true;
         }
 
-        public override void Enter()
+        public void Enter(int duration)
         {
-            TimeRemaining = DefaultDuration;
+            TimeRemaining = duration;
             if (PlayerSetsDuration)
             {
                 MenuStateMachine.Instance.NavigateToState("Action Duration Menu");
             }
+            ((Character)ParentMachine).SetActionListActive(false);
         }
 
         public void Start()
         {
             WorldTime.Instance().MinuteEvent += Update;
-            ((Character)ParentMachine).SetActionListActive(false);
         }
 
+        public void Interrupt()
+        {
+            WorldTime.Instance().MinuteEvent -= Update;
+        }
+
+        public void Resume()
+        {
+            WorldTime.Instance().MinuteEvent += Update;
+        }
+        
         public virtual void Update()
         {
             if (TimeRemaining > 0)
             {
                 --TimeRemaining;
-                TryUpdateCallback();
+                TryOnUpdate();
                 if (TimeRemaining % WorldTime.MinutesPerHour == 0)
                 {
                     if (HourCallback != null)
@@ -83,10 +92,11 @@ namespace Game.Characters.CharacterActions
             }
         }
 
-        public override void Exit()
+        public void Exit(bool returnToDefault)
         {
+            base.Exit();
             WorldTime.Instance().MinuteEvent -= Update;
-            ParentMachine.ReturnToDefault();
+            if(returnToDefault) ParentMachine.ReturnToDefault();
             ((Character)ParentMachine).SetActionListActive(true);
         }
 
@@ -107,7 +117,7 @@ namespace Game.Characters.CharacterActions
 
         public Character GetCharacter()
         {
-            return Character;
+            return (Character)ParentMachine;
         }
     }
 }

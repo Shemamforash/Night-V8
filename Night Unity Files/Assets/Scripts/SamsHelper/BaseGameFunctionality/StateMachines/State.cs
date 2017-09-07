@@ -7,7 +7,8 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
     {
         private readonly string _name;
         protected StateMachine ParentMachine;
-        private Action _updateCallback;
+        private event Action OnUpdate;
+        private event Action OnExit;
 
         protected State(string name, StateMachine parentMachine)
         {
@@ -20,25 +21,34 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             return _name;
         }
 
-        public void SetUpdateCallback(Action updateCallback)
+        public void AddOnUpdate(Action updateCallback)
         {
-            _updateCallback = updateCallback;
+            OnUpdate += updateCallback;
+        }
+
+        public void AddOnExit(Action exitCallback)
+        {
+            OnExit += exitCallback;
+        }
+
+        public void ClearOnExit()
+        {
+            OnExit = null;
         }
         
-        public void TryUpdateCallback()
+        public void TryOnUpdate()
         {
-            if (_updateCallback != null)
-            {
-                _updateCallback();
-            }
+            if (OnUpdate != null) OnUpdate();
+        }
+
+        public void TryOnExit()
+        {
+            if (OnExit != null) OnExit();
         }
 
         public virtual void Update()
         {
-            if (_updateCallback != null)
-            {
-                _updateCallback();
-            }
+            TryOnUpdate();
         }
 
         public virtual void Enter()
@@ -47,6 +57,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public virtual void Exit()
         {
+            TryOnExit();
         }
 
         public virtual void OnInputDown(InputAxis inputAxis)

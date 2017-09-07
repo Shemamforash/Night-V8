@@ -15,7 +15,6 @@ namespace Game.World.Weather
 
         public void Awake()
         {
-            base.Awake();
             _self = this;
             _weatherText = GameObject.Find("Weather").GetComponent<Text>();
         }
