@@ -7,6 +7,7 @@ namespace Game.Combat.CombatStates
     {
         public Aiming(CombatManager parentMachine, bool isPlayerState) : base("Aiming", parentMachine, isPlayerState)
         {
+            OnUpdate += IncreaseAim;
         }
 
         public override void Enter()
@@ -18,7 +19,7 @@ namespace Game.Combat.CombatStates
             }
         }
         
-        public override void Update()
+        private void IncreaseAim()
         {
             ((CombatManager)ParentMachine).IncreaseAim();
         }

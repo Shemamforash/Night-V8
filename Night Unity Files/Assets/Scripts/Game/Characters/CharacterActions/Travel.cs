@@ -15,8 +15,9 @@ namespace Game.Characters.CharacterActions
         public void SetTargetRegion(Region targetRegion)
         {
             GetCharacter().CurrentRegion = targetRegion;
-            IncreaseDuration(GetCharacter().CurrentRegion.Distance());
+            SetDuration(GetCharacter().CurrentRegion.Distance());
             Start();
+            SetStateTransitionTarget(CheckForEnterCombat());
         }
 
         public Region GetTargetRegion()
@@ -24,18 +25,14 @@ namespace Game.Characters.CharacterActions
             return GetCharacter().CurrentRegion;
         }
 
-        public override void Exit()
+        public string CheckForEnterCombat()
         {
             CombatScenario scenario = GetCharacter().CurrentRegion.GetCombatScenario();
             if (scenario != null)
             {
-                ParentMachine.NavigateToState("Combat");
+                return "Combat";
             }
-            else
-            {
-                ParentMachine.NavigateToState("Collect Resources");
-            }
-            base.Exit(false);
+            return "Collect Resources";
         }
     }
 }

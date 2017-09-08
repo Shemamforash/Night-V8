@@ -159,6 +159,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return movedItem;
         }
 
+        //BUG creates new resources when moving resources to fill remainder of inventory
         public BasicInventoryContents Move(BasicInventoryContents item, Inventory target, int quantity)
         {
             InventoryResource resource = item as InventoryResource;

@@ -80,7 +80,11 @@ namespace Game.World
 	    private static void SetResourceSuffix(string name, string convention)
 	    {
 		    Text resourceText = GameObject.Find(name).GetComponent<Text>();
-		    _homeInventory.GetResource(name).AddOnUpdate(f => resourceText.text = Mathf.Round(f) + " " + convention);
+		    _homeInventory.GetResource(name).AddOnUpdate(f =>
+		    {
+			    Debug.Log("banana");
+			    resourceText.text = Mathf.Round(f) + " " + convention;
+		    });
 	    }
         
 	    public static void Load()

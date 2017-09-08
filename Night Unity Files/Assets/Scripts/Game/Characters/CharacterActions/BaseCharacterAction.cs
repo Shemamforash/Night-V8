@@ -17,24 +17,27 @@ namespace Game.Characters.CharacterActions
     {
         protected int DefaultDuration;
         protected int TimeRemaining;
-        protected bool PlayerSetsDuration, IsVisible = true, Interrupted = false;
+        protected int UpdateInterval = 1;
+        protected bool IsVisible = true, Interrupted = false;
         public GameObject ActionButtonGameObject;
         protected Action HourCallback;
+        private string _stateTransitionTarget;
 
         public BaseCharacterAction(string name, Character character) : base(name, character)
         {
             DefaultDuration = WorldTime.MinutesPerHour;
+            AddOnExit(() => WorldTime.Instance().MinuteEvent -= Update);
         }
 
-        public virtual bool IncreaseDuration()
+        public virtual bool SetDuration(int hours)
         {
-            return IncreaseDuration(1);
-        }
-
-        public virtual bool IncreaseDuration(int hours)
-        {
-            TimeRemaining += WorldTime.MinutesPerHour * hours;
+            TimeRemaining = WorldTime.MinutesPerHour * hours;
             return true;
+        }
+
+        public void SetStateTransitionTarget(string stateTransitionTarget)
+        {
+            _stateTransitionTarget = stateTransitionTarget;
         }
 
         public virtual bool DecreaseDuration()
@@ -47,62 +50,51 @@ namespace Game.Characters.CharacterActions
             return true;
         }
 
-        public void Enter(int duration)
-        {
-            TimeRemaining = duration;
-            if (PlayerSetsDuration)
-            {
-                MenuStateMachine.Instance.NavigateToState("Action Duration Menu");
-            }
-            ((Character)ParentMachine).SetActionListActive(false);
-        }
-
         public void Start()
         {
-            WorldTime.Instance().MinuteEvent += Update;
+            WorldTime.Instance().MinuteEvent += UpdateAction;
         }
 
-        public void Interrupt()
+        public virtual void Interrupt()
         {
-            WorldTime.Instance().MinuteEvent -= Update;
+            WorldTime.Instance().MinuteEvent -= UpdateAction;
+            Interrupted = true;
         }
 
-        public void Resume()
+        public virtual void Resume()
         {
-            WorldTime.Instance().MinuteEvent += Update;
+            WorldTime.Instance().MinuteEvent += UpdateAction;
+            Interrupted = false;
         }
-        
-        public virtual void Update()
+
+        public virtual void UpdateAction()
         {
-            if (TimeRemaining > 0)
+            --TimeRemaining;
+            if (TimeRemaining == 0)
             {
-                --TimeRemaining;
-                TryOnUpdate();
-                if (TimeRemaining % WorldTime.MinutesPerHour == 0)
+                WorldTime.Instance().MinuteEvent -= UpdateAction;
+                GetCharacter().NavigateToState(_stateTransitionTarget);
+            }
+            if (TimeRemaining % (WorldTime.MinutesPerHour / UpdateInterval) == 0)
+            {
+                if (HourCallback != null)
                 {
-                    if (HourCallback != null)
-                    {
-                        HourCallback();
-                    }
-                }
-                if (TimeRemaining == 0)
-                {
-                    Exit();
+                    HourCallback();
                 }
             }
         }
 
-        public void Exit(bool returnToDefault)
+        public override void Exit()
         {
-            base.Exit();
-            WorldTime.Instance().MinuteEvent -= Update;
-            if(returnToDefault) ParentMachine.ReturnToDefault();
-            ((Character)ParentMachine).SetActionListActive(true);
+            if (!Interrupted)
+            {
+                base.Exit();
+            }
         }
 
         public int TimeRemainingAsHours()
         {
-            return (int)Math.Ceiling((float)TimeRemaining / WorldTime.MinutesPerHour);
+            return (int) Math.Ceiling((float) TimeRemaining / WorldTime.MinutesPerHour);
         }
 
         public virtual string GetCostAsString()
@@ -117,7 +109,7 @@ namespace Game.Characters.CharacterActions
 
         public Character GetCharacter()
         {
-            return (Character)ParentMachine;
+            return (Character) ParentMachine;
         }
     }
 }

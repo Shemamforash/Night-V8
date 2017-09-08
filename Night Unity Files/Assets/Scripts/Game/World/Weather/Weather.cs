@@ -35,13 +35,8 @@ namespace Game.World.Weather
             --_timeRemaining;
             if (_timeRemaining == 0)
             {
-                Exit();
+                WeatherManager.GetWeatherManager().NavigateToState(NextState(Name()));
             }
-        }
-
-        public override void Exit()
-        {
-            WeatherManager.GetWeatherManager().NavigateToState(NextState(Name()));
         }
 
         private class Danger

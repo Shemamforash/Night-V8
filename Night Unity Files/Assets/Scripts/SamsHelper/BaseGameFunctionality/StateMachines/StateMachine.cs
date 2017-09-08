@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using SamsHelper.Input;
 using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.StateMachines
@@ -39,6 +39,10 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public virtual State NavigateToState(string stateName)
         {
+            if (_currentState != null)
+            {
+                _currentState.Exit();
+            }
             _currentState = States[stateName];
             _currentState.Enter();
             return _currentState;

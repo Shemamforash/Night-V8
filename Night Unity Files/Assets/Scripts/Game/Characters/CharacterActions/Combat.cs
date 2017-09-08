@@ -7,7 +7,6 @@ namespace Game.Characters.CharacterActions
     {
         public Combat(Character character) : base("Combat", character)
         {
-            PlayerSetsDuration = true;
             DefaultDuration = 0;
         }
 

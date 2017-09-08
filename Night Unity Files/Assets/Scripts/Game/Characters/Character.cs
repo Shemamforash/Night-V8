@@ -83,10 +83,10 @@ namespace Characters
                 BaseCharacterAction action = GetCurrentState() as BaseCharacterAction;
                 action.Interrupt();
                 Sleep sleepAction = NavigateToState("Sleep") as Sleep;
-                sleepAction.IncreaseDuration((int)(Endurance.Max / 5f));
+                sleepAction.SetDuration((int)(Endurance.Max / 5f));
+                sleepAction.SetStateTransitionTarget(action.Name());
                 sleepAction.AddOnExit(() =>
                 {
-                    NavigateToState(action.Name());
                     action.Resume();
                 });
                 sleepAction.Start();
@@ -131,7 +131,7 @@ namespace Characters
         public void SetActionListActive(bool active)
         {
             CharacterUi.ActionScrollContent.SetActive(active);
-            CharacterUi.CurrentActionText.gameObject.SetActive(!active);
+            CharacterUi.DetailedCurrentActionText.gameObject.SetActive(!active);
         }
 
         public Weapon GetWeapon()

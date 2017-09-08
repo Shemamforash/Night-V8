@@ -12,18 +12,19 @@ namespace Game.Characters.CharacterActions
         {
             IsVisible = false;
             HourCallback = GetCharacter().Travel;
+            SetStateTransitionTarget("Idle");
         }
 
         public override void Enter()
         {
-            IncreaseDuration(GetCharacter().CurrentRegion.Distance());
+            SetDuration(GetCharacter().CurrentRegion.Distance());
             Start();
         }
 
-        public override void Exit()
+        public void ReturnToVehicle()
         {
+            GetCharacter().Travel();
             GetCharacter().CharacterInventory.MoveAllResources(WorldState.Inventory());
-            base.Exit(true);
         }
     }
 }

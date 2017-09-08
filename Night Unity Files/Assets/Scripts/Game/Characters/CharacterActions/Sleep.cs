@@ -1,5 +1,5 @@
 ﻿using Characters;
-using UnityEngine;
+using SamsHelper.ReactiveUI.MenuSystem;
 
 namespace Game.Characters.CharacterActions
 {
@@ -12,16 +12,20 @@ namespace Game.Characters.CharacterActions
             HourCallback = () => GetCharacter().Rest(_enduranceRecoveryAmount);
         }
 
-        public override void Exit()
+        public void ShowDurationMenu()
         {
-            Debug.Log("banana");
-            base.Exit(false);
-            ClearOnExit();
+            MenuStateMachine.Instance.NavigateToState("Action Duration Menu");
         }
-
+        
         public override string GetCostAsString()
         {
-            return TimeRemainingAsHours() + " hrs & +" + _enduranceRecoveryAmount * TimeRemainingAsHours() + " end ";
+            return "+" +_enduranceRecoveryAmount + " end/hr";
+        }
+
+        public void Exit()
+        {
+            base.Exit();
+            ClearOnExit();
         }
     }
 }

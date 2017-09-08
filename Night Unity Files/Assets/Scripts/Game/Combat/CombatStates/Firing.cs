@@ -9,9 +9,10 @@ namespace Game.Combat.CombatStates
 
         public Firing(CombatManager parentMachine, bool isPlayerState) : base("Firing", parentMachine, isPlayerState)
         {
+            OnUpdate += FireWeapon;
         }
 
-        public override void Update()
+        public void FireWeapon()
         {
             if (Weapon().GetRemainingAmmo() > 0)
             {
