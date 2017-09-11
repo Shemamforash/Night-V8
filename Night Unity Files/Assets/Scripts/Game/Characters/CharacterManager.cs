@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Characters;
 using Facilitating.Persistence;
 using Game.World.Time;
@@ -12,17 +13,16 @@ using UnityEngine.UI;
 
 namespace Game.Characters
 {
-    public class CharacterManager : MonoBehaviour
+    public class CharacterManager : MonoBehaviour , IPersistenceTemplate
     {
         private static List<Character> _characters = new List<Character>();
-        private PersistenceListener _persistenceListener;
         public static Character SelectedCharacter;
 
         public void Awake()
         {
-            _persistenceListener = new PersistenceListener(Load, Save, "Character Manager");
-            WorldTime.Instance().HourEvent += UpdateCharacterThirstAndHunger;
+            WorldTime.Instance().MinuteEvent += UpdateCharacterThirstAndHunger;
             Traits.LoadTraits();
+            SaveController.AddPersistenceListener(this);
         }
 
         private void UpdateCharacterThirstAndHunger()
@@ -30,32 +30,19 @@ namespace Game.Characters
             for (int i = _characters.Count - 1; i >= 0; --i)
             {
                 Character c = _characters[i];
-                c.Dehydration.Val += c.Thirst / 12f;
-                c.Starvation.Val += c.Hunger / 12f;
+                c.CharacterAttributes.UpdateThirst();
+                c.CharacterAttributes.UpdateHunger();            
             }
-        }
-
-        private void Load()
-        {
         }
 
         public void Start()
         {
             InputSpeaker.Instance().AddOnPressEvent(InputAxis.Cancel, ExitCharacter);
-            if (GameData.Party != null)
-            {
-                _characters = GameData.Party;
-            }
-            else
+            if (_characters.Count == 0)
             {
                 _characters = CharacterGenerator.LoadInitialParty();
             }
             PopulateCharacterUi();
-        }
-
-        private void Save()
-        {
-            GameData.Party = _characters;
         }
 
         private static void PopulateCharacterUi()
@@ -192,6 +179,28 @@ namespace Game.Characters
         {
             Character current = FindCharacterFromGameObject(SelectedCharacter.transform.parent.gameObject);
             current.Drink();
+        }
+
+        public void Load(XmlNode doc, PersistenceType saveType)
+        {
+            XmlNode characterManagerNode = doc.SelectSingleNode("CharacterManager");
+            XmlNodeList characterNodes = characterManagerNode.SelectNodes("Character");
+            foreach (XmlNode characterNode in characterNodes)
+            {
+                Character c = new Character();
+                c.Load(characterNode, saveType);
+                _characters.Add(c);
+            }
+        }
+
+        public void Save(XmlNode doc, PersistenceType saveType)
+        {
+            XmlNode characterManagerNode = SaveController.CreateNodeAndAppend("CharacterManager", doc);
+            foreach (Character c in _characters)
+            {
+                XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", characterManagerNode);
+                c.Save(characterNode, saveType);
+            }
         }
     }
 }

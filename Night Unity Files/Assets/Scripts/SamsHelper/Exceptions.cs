@@ -6,18 +6,12 @@ namespace SamsHelper
     {
         public class LoadOrSaveNotSetException : Exception
         {
-            public override string Message
-            {
-                get { return "A save or load action was not set in a PersistenceListener"; }
-            }
+            public override string Message => "A save or load action was not set in a PersistenceListener";
         }
 
         public class UnrecognisedWeightCategoryException : Exception
         {
-            public override string Message
-            {
-                get { return "Unrecognised Weight Category Assigned: "; }
-            }
+            public override string Message => "Unrecognised Weight Category Assigned: ";
         }
 
         public class TraitAttributeNotRecognisedException : Exception
@@ -29,10 +23,7 @@ namespace SamsHelper
                 _attribute = attribute;
             }
 
-            public override string Message
-            {
-                get { return "Trait attribute not recognised in traits.txt file: " + _attribute; }
-            }
+            public override string Message => "Trait attribute not recognised in traits.txt file: " + _attribute;
         }
 
         public class UnknownTraitException : Exception
@@ -44,18 +35,12 @@ namespace SamsHelper
                 _trait = trait;
             }
 
-            public override String Message
-            {
-                get { return "Trait not recognised: " + _trait; }
-            }
+            public override String Message => "Trait not recognised: " + _trait;
         }
 
         public class CappedValueExceededBoundsException : Exception
         {
-            public override string Message
-            {
-                get { return "Capped value exceeded bounds"; }
-            }
+            public override string Message => "Capped value exceeded bounds";
         }
 
         public class UnspecificGameObjectNameException : Exception
@@ -69,18 +54,12 @@ namespace SamsHelper
                 _name = name;
             }
 
-            public override string Message
-            {
-                get { return "GameObject name too general, found " + _occurences + " occurences of " + _name; }
-            }
+            public override string Message => "GameObject name too general, found " + _occurences + " occurences of " + _name;
         }
 
         public class CannotGetGameObjectComponent : Exception
         {
-            public override string Message
-            {
-                get { return "GameObject references cannot be gathered from getcomponent() calls."; }
-            }
+            public override string Message => "GameObject references cannot be gathered from getcomponent() calls.";
         }
 
         public class ResourceValueChangeInvalid : Exception
@@ -96,10 +75,7 @@ namespace SamsHelper
                 _amount = amount;
             }
 
-            public override string Message
-            {
-                get { return "Attempted to " + _direction + " resource " + _resourceName + " by " + _amount; }
-            }
+            public override string Message => "Attempted to " + _direction + " resource " + _resourceName + " by " + _amount;
         }
 
         public class DefaultSelectableNotProvidedForMenu : Exception
@@ -111,10 +87,7 @@ namespace SamsHelper
                 _name = name;
             }
 
-            public override string Message
-            {
-                get { return "Attempted to navigate to menu '" + _name + "' but no default selectable was found"; }
-            }
+            public override string Message => "Attempted to navigate to menu '" + _name + "' but no default selectable was found";
         }
 
         public class InventoryItemNotStackableException : Exception
@@ -128,18 +101,12 @@ namespace SamsHelper
                 _amount = amount;
             }
 
-            public override string Message
-            {
-                get { return "Tried to change item " + _name + " quantity by " + _amount + " but item is unique."; }
-            }
+            public override string Message => "Tried to change item " + _name + " quantity by " + _amount + " but item is unique.";
         }
 
         public class MoveItemToSameInventoryException : Exception
         {
-            public override string Message
-            {
-                get { return "Tried to move item from inventory to same inventory."; }
-            }
+            public override string Message => "Tried to move item from inventory to same inventory.";
         }
 
         public class ItemNotInInventoryException : Exception
@@ -151,10 +118,7 @@ namespace SamsHelper
                 _itemName = itemName;
             }
 
-            public override string Message
-            {
-                get { return "Tried to remove item " + _itemName + " from an inventory that did not contain it."; }
-            }
+            public override string Message => "Tried to remove item " + _itemName + " from an inventory that did not contain it.";
         }
 
         public class ResourceDoesNotExistException : Exception
@@ -166,10 +130,7 @@ namespace SamsHelper
                 _resourceName = resourceName;
             }
 
-            public override string Message
-            {
-                get { return "Tried to get resource " + _resourceName + " but resource does not exist."; }
-            }
+            public override string Message => "Tried to get resource " + _resourceName + " but resource does not exist.";
         }
 
         public class ResourceAlreadyExistsException : Exception
@@ -181,10 +142,23 @@ namespace SamsHelper
                 _name = name;
             }
 
-            public override string Message
+            public override string Message => "Resource " + _name + " already exists in inventory.";
+        }
+
+        public class MaxOrMinWeightExceededException : Exception
+        {
+            private readonly string _traitName, _name, _className;
+            private readonly int _targetWeight;
+
+            public MaxOrMinWeightExceededException(string name, int targetWeight, string characterClassName, string characterTraitName)
             {
-                get { return "Resource " + _name + " already exists in inventory."; }
+                _name = name;
+                _targetWeight = targetWeight;
+                _className = characterClassName;
+                _traitName = characterTraitName;
             }
+
+            public override string Message => "Tried to assign weight " + _targetWeight + " to " + _name + " with class " + _className + " and trait " + _traitName;
         }
     }
 }

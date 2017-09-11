@@ -7,6 +7,7 @@ using SamsHelper;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.UI;
+using Character = Game.Characters.Character;
 using Random = UnityEngine.Random;
 
 namespace Game.World

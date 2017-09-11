@@ -17,11 +17,55 @@ namespace Game.Characters
             string name = GenerateName(newClass);
             Traits.Trait secondaryTrait = Traits.GenerateTrait();
             Character c = GenerateCharacterObject().GetComponent<Character>();
-            c.Initialise(name, newClass, secondaryTrait, GenerateWeightCategory());
-            CalculateAttributesFromWeight(c);
+            c.Initialise(name, newClass, secondaryTrait);
+            CalculateAttributes(c);
             return c;
         }
 
+        private static void TestCharacterGenerator()
+        {
+            int charactersToTest = 100;
+            Dictionary<Character, List<string>> fails = new Dictionary<Character, List<string>>();
+            for (int i = 0; i < charactersToTest; ++i)
+            {
+                Character c = GenerateCharacter();
+                CharacterAttributes attributes = c.CharacterAttributes;
+                List<string> failMessages = new List<string>();
+                if (!InBounds(attributes.Strength.Val, 40, 160))
+                {
+                    failMessages.Add("Strength out of bounds");
+                }
+                if (!InBounds(attributes.Endurance.Val, 40, 160))
+                {
+                    failMessages.Add("Endurance out of bounds");
+                }
+                if (!InBounds(attributes.Stability.Val, 5, 25))
+                {
+                    failMessages.Add("Stability out of bounds");
+                }
+                if (!InBounds(attributes.Intelligence.Val, 5, 25))
+                {
+                    failMessages.Add("Intelligence out of bounds");
+                }
+                if (failMessages.Count != 0)
+                {
+                    fails[c] = failMessages;
+                }
+            }
+            foreach (Character c in fails.Keys)
+            {
+                Debug.Log(c.CharacterName + " class: " + c.CharacterClass.Name + " trait: " + c.CharacterTrait.Name + " failed following tests:");
+                foreach (string s in fails[c])
+                {
+                    Debug.Log(s);
+                }
+            }
+        }
+
+        private static bool InBounds(int value, int lower, int upper)
+        {
+            return value >= lower && value <= upper;
+        }
 
         public static string GenerateName(Traits.Trait classCharacter)
         {
@@ -34,6 +78,11 @@ namespace Game.Characters
             List<Character> characters = new List<Character>();
             characters.Add(GenerateDriver());
             characters.Add(GenerateCharacter());
+            
+#if UNITY_EDITOR
+//            TestCharacterGenerator();
+#endif
+            
             return characters;
         }
 
@@ -48,84 +97,54 @@ namespace Game.Characters
         private static Character GenerateDriver()
         {
             Character theDriver = GenerateCharacterObject().GetComponent<Character>();
-            theDriver.Initialise("Driver", Traits.FindClass("Driver"), Traits.FindTrait("Nomadic"),
-                Character.WeightCategory.Medium);
+            theDriver.Initialise("Driver", Traits.FindClass("Driver"), Traits.FindTrait("Nomadic"));
             Weapon w = WeaponGenerator.GenerateWeapon();
             theDriver.AddItemToInventory(w);
             theDriver.SetWeapon(w);
-            CalculateAttributesFromWeight(theDriver);
+            CalculateAttributes(theDriver);
+            theDriver.CharacterAttributes.Weight = WeightCategory.Medium;
             return theDriver;
         }
 
-        private static Character.WeightCategory GenerateWeightCategory()
+        private static WeightCategory CalculateWeight(Character c)
         {
+            int weightOffset = c.CharacterClass.WeightModifier + c.CharacterTrait.WeightModifier;
+            int targetWeight = 2;
             float rand = Random.Range(0f, 1.0f);
             if (rand < 0.25f)
             {
-                return Character.WeightCategory.Light;
+                targetWeight = 1;
             }
             if (rand > 0.75f)
             {
-                return Character.WeightCategory.Heavy;
+                targetWeight = 3;
             }
-            return Character.WeightCategory.Medium;
+            targetWeight += weightOffset;
+            if (targetWeight < 0 || targetWeight > 4)
+            {
+                throw new Exceptions.MaxOrMinWeightExceededException(c.name, targetWeight, c.CharacterClass.Name, c.CharacterTrait.Name);
+            }
+            return (WeightCategory) targetWeight;
         }
 
-        private static void CalculateAttributesFromWeight(Character c)
+        private static void CalculateAttributes(Character c)
         {
-            float strengthMax;
-            float enduranceMax;
-            float hunger;
-            float thirst;
-            switch (c.Weight)
-            {
-                case Character.WeightCategory.VeryLight:
-                    strengthMax = Random.Range(10f, 30f);
-                    enduranceMax = Random.Range(70, 100);
-                    hunger = 10;
-                    thirst = 2f;
-                    break;
-                case Character.WeightCategory.Light:
-                    strengthMax = Random.Range(20, 50);
-                    enduranceMax = Random.Range(50, 80);
-                    hunger = 15;
-                    thirst = 2.5f;
-                    break;
-                case Character.WeightCategory.Medium:
-                    strengthMax = Random.Range(30, 70);
-                    enduranceMax = Random.Range(30, 70);
-                    hunger = 20;
-                    thirst = 3f;
-                    break;
-                case Character.WeightCategory.Heavy:
-                    strengthMax = Random.Range(50, 80);
-                    enduranceMax = Random.Range(20, 50);
-                    hunger = 25;
-                    thirst = 3.5f;
-                    break;
-                case Character.WeightCategory.VeryHeavy:
-                    strengthMax = Random.Range(70, 100);
-                    enduranceMax = Random.Range(10, 30);
-                    hunger = 30;
-                    thirst = 4f;
-                    break;
-                default:
-                    throw new Exceptions.UnrecognisedWeightCategoryException();
-            }
-
-            c.Hunger.Val = hunger;
-            c.Thirst.Val = thirst;
-            c.Strength.Max = strengthMax;
-            c.Strength.Val = strengthMax;
-            c.Endurance.Max = enduranceMax;
-            c.Endurance.Val = enduranceMax;
-            c.StarvationTolerance = hunger * 3;
-            c.DehydrationTolerance = thirst * 3;
-
-            c.Starvation.Max = c.StarvationTolerance;
-            c.Dehydration.Max = c.DehydrationTolerance;
-
-//            c.CharacterUi.ConditionsText.SetFormattingFunction(f => c.GetConditions());
+            CharacterAttributes attributes = c.CharacterAttributes;
+            int strengthBonusVal = 15;
+            int enduranceBonusVal = 15;
+            int stabilityBonusVal = 4;
+            int intelligenceBonusVal = 4;
+            Debug.Log(
+                "str " + c.CharacterClass.StrengthBonus + " end: " + c.CharacterClass.EnduranceBonus + " stab: " + c.CharacterClass.StabilityBonus + " int: " + c.CharacterClass.IntelligenceBonus);
+            attributes.Strength.Max = Random.Range(80, 120) + c.CharacterClass.StrengthBonus * strengthBonusVal + c.CharacterTrait.StrengthBonus;
+            attributes.Strength.Val = attributes.Strength.Max;
+            attributes.Endurance.Max = Random.Range(30, 70) + c.CharacterClass.EnduranceBonus * enduranceBonusVal + c.CharacterTrait.EnduranceBonus;
+            attributes.Endurance.Val = attributes.Endurance.Max;
+            attributes.Stability.Max = Random.Range(15, 20) + c.CharacterClass.StabilityBonus * stabilityBonusVal + c.CharacterTrait.StabilityBonus;
+            attributes.Stability.Val = attributes.Stability.Max;
+            attributes.Intelligence.Max = Random.Range(15, 20) + c.CharacterClass.IntelligenceBonus * intelligenceBonusVal + c.CharacterTrait.IntelligenceBonus;
+            attributes.Intelligence.Val = attributes.Intelligence.Max;
+            attributes.Weight = CalculateWeight(c);
         }
     }
 }

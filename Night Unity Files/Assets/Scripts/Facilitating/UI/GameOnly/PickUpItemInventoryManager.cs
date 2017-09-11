@@ -23,7 +23,7 @@ namespace Facilitating.UI.GameOnly
             });
             OnInventorySetAction(delegate
             {
-                _characterInventoryText.text = CharacterManager.SelectedCharacter.Name;
+                _characterInventoryText.text = CharacterManager.SelectedCharacter.CharacterName;
                 _locationInventoryText.text = CharacterManager.SelectedCharacter.CurrentRegion.Name();
             });
         }

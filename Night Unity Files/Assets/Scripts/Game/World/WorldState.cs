@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Xml;
 using Audio;
+using Facilitating.Audio;
 using Facilitating.Persistence;
 using Game.World.Environment;
 using Game.World.Time;
@@ -12,13 +14,12 @@ using UnityEngine.UI;
 
 namespace Game.World
 {
-	public class WorldState : MonoBehaviour
+	public class WorldState : MonoBehaviour , IPersistenceTemplate
     {
 	    public static int StormDistanceMax, StormDistanceActual;
 		public static int DaysSpentHere;
 		public static int NoPreviousLocations;
 		public static EnvironmentManager EnvironmentManager;
-	    private static PersistenceListener _persistenceListener;
 	    private static DesolationInventory _homeInventory = new DesolationInventory();
 
 	    public void Awake()
@@ -31,12 +32,11 @@ namespace Game.World
 #if UNITY_EDITOR
 		    _homeInventory.IncrementResource("Ammo", 100);
 #endif
-		    _persistenceListener = new PersistenceListener(Load, Save, "Home");
-		    
+		    SaveController.AddPersistenceListener(this);
 		    SaveController.LoadSettings();
-            SaveController.LoadGameFromFile();
-            Camera.main.GetComponent<GlobalAudioManager>().Initialise();
+            SaveController.LoadGame();
 
+		    WorldTime.Instance().DayEvent += IncrementDaysSpentHere;
 		    EnvironmentManager = GameObject.Find("Canvas").GetComponent<EnvironmentManager>();
 		    StormDistanceMax = 10;
 		    StormDistanceActual = 10;
@@ -68,10 +68,6 @@ namespace Game.World
 		    //TODO
 	    }
 	    
-		public WorldState(){
-			WorldTime.Instance().DayEvent += IncrementDaysSpentHere;
-		}
-
 	    public static Inventory Inventory()
 	    {
 		    return _homeInventory;
@@ -82,23 +78,34 @@ namespace Game.World
 		    Text resourceText = GameObject.Find(name).GetComponent<Text>();
 		    _homeInventory.GetResource(name).AddOnUpdate(f =>
 		    {
-			    Debug.Log("banana");
 			    resourceText.text = Mathf.Round(f) + " " + convention;
 		    });
 	    }
         
-	    public static void Load()
+	    public void Load(XmlNode root, PersistenceType saveData)
 	    {
-		    _homeInventory.IncrementResource("Water", GameData.StoredWater);
-		    _homeInventory.IncrementResource("Food", GameData.StoredFood);
-		    _homeInventory.IncrementResource("Fuel", GameData.StoredFuel);
+		    if (saveData == PersistenceType.Game)
+		    {
+			    _homeInventory.Resources().ForEach(r => LoadResource(r.Name(), root));
+		    }
+	    }
+	    
+	    public void Save(XmlNode root, PersistenceType saveData)
+	    {
+		    if (saveData == PersistenceType.Game)
+		    {
+			    _homeInventory.Resources().ForEach(r => SaveResource(r.Name(), root));
+		    }
 	    }
 
-	    public static void Save()
+	    private static void LoadResource(string resourceName, XmlNode root)
 	    {
-		    GameData.StoredWater = _homeInventory.GetResourceQuantity("Water");
-		    GameData.StoredFood = _homeInventory.GetResourceQuantity("Food");
-		    GameData.StoredFuel = _homeInventory.GetResourceQuantity("Fuel");
+		    _homeInventory.IncrementResource(resourceName, SaveController.ParseIntFromNodeAndString(root, resourceName));
+	    }
+	    
+	    private static void SaveResource(string resourceName, XmlNode root)
+	    {
+		    SaveController.CreateNodeAndAppend(resourceName, root, _homeInventory.GetResourceQuantity(resourceName));
 	    }
     }
 }

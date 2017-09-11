@@ -1,130 +1,124 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using System.Collections.Generic;
-using Facilitating.Persistence;
 using SamsHelper.Persistence;
+using UnityEngine;
 
-namespace Persistence
+namespace Facilitating.Persistence
 {
-    public class SaveController
+    public static class SaveController
     {
         private static readonly string GameSaveLocation = Application.dataPath + "/NightSave.xml";
         private static readonly string SettingsSaveLocation = Application.dataPath + "/GameSettings.xml";
-        private static readonly List<PersistenceListener> PersistenceListeners = new List<PersistenceListener>();
-        private static bool _loaded;
         private static XmlDocument _saveDoc;
+        private static readonly List<Action<XmlNode, PersistenceType>> OnLoad = new List<Action<XmlNode, PersistenceType>>();
+        private static readonly List<Action<XmlNode, PersistenceType>> OnSave = new List<Action<XmlNode, PersistenceType>>();
 
-
-        public static bool LoadGameFromFile()
+        public static void AddPersistenceListener(IPersistenceTemplate persistentObject)
         {
-            try
-            {
-                _saveDoc = new XmlDocument();
-                _saveDoc.Load(GameSaveLocation);
-                GameData.SetDifficultyFromString(_saveDoc.SelectSingleNode("/SaveData/SessionSettings/Difficulty").InnerText);
-                GameData.PermadeathOn = _saveDoc.SelectSingleNode("/SaveData/SessionSettings/Permadeath").InnerText.ToLower() == "true";
-                GameData.StoredFood = int.Parse(_saveDoc.SelectSingleNode("/SaveData/Home/StoredFood").InnerText);
-                GameData.StoredWater = int.Parse(_saveDoc.SelectSingleNode("/SaveData/Home/StoredWater").InnerText);
-                GameData.StoredFuel = int.Parse(_saveDoc.SelectSingleNode("/SaveData/Home/StoredFuel").InnerText);
-                NotifyListenersLoad();
-                _loaded = true;
-                return true;
-            }
-            catch (IOException e)
-            {
-                return false;
-            }
+            OnLoad.Add(persistentObject.Load);
+            OnSave.Add(persistentObject.Save);
         }
 
-        public static bool SaveGameToFile()
+        public static void BroadcastLoad(XmlNode root, PersistenceType persistenceType)
         {
-            try
-            {
-                NotifyListenersSave();
-
-                _saveDoc = new XmlDocument();
-                XmlNode root = CreateNodeAndAppend("SaveData", _saveDoc);
-
-                XmlNode gameSettings = CreateNodeAndAppend("SessionSettings", root);
-                CreateNodeAndAppend("Difficulty", gameSettings, GameData.DifficultySetting.ToString());
-                CreateNodeAndAppend("Permadeath", gameSettings, GameData.PermadeathOn.ToString());
-                
-                XmlNode homeData = CreateNodeAndAppend("Home", root);
-                CreateNodeAndAppend("StoredFood", homeData, GameData.StoredFood.ToString());
-                CreateNodeAndAppend("StoredWater", homeData, GameData.StoredWater.ToString());
-                CreateNodeAndAppend("StoredFuel", homeData, GameData.StoredFuel.ToString());
-                
-                _saveDoc.Save(GameSaveLocation);
-                return true;
-            }
-            catch (IOException e)
-            {
-                return false;
-            }
+            OnLoad.ForEach(a => a(root, persistenceType));
         }
 
-        private static void NotifyListenersLoad()
+        public static void BroadcastSave(XmlNode root, PersistenceType persistenceType)
         {
-            foreach (PersistenceListener listener in PersistenceListeners)
-            {
-                listener.Load();
-            }
+            OnSave.ForEach(a => a(root, persistenceType));
         }
 
-        private static void NotifyListenersSave()
+        public static bool SaveGame()
         {
-            foreach (PersistenceListener listener in PersistenceListeners)
-            {
-                listener.Save();
-            }
+            return Save(GameSaveLocation, PersistenceType.Game);
         }
 
-        public static void Register(PersistenceListener pl)
+        public static bool SaveSettings()
         {
-            PersistenceListeners.Add(pl);
-            if (_loaded)
-            {
-                pl.Load();
-            }
+            return Save(SettingsSaveLocation, PersistenceType.Settings);
         }
-
+        
+        public static bool LoadGame()
+        {
+            return Load(GameSaveLocation, PersistenceType.Game);
+        }
+        
+        public static bool LoadSettings()
+        {
+            return Load(SettingsSaveLocation, PersistenceType.Settings);
+        }
+        
         public static bool SaveExists()
         {
             return File.Exists(GameSaveLocation);
         }
 
-        public static bool SaveSettings()
+        //Node creation
+        public static XmlNode CreateNodeAndAppend(string tagName, XmlNode parent)
         {
-            try
-            {
-                _saveDoc = new XmlDocument();
-                XmlNode root = CreateNodeAndAppend("SettingsData", _saveDoc);
-                CreateNodeAndAppend("MasterVolume", root, GameData.MasterVolume.ToString());
-                CreateNodeAndAppend("MusicVolume", root, GameData.MusicVolume.ToString());
-                CreateNodeAndAppend("EffectsVolume", root, GameData.EffectsVolume.ToString());
-                _saveDoc.Save(SettingsSaveLocation);
-                return true;
-            }
-            catch (IOException e)
-            {
-                return false;
-            }
+            XmlNode newNode = _saveDoc.CreateElement(tagName);
+            parent.AppendChild(newNode);
+            return newNode;
+        }
+        
+        public static XmlNode CreateNodeAndAppend<T>(string tagName, XmlNode parent, T value)
+        {
+            XmlNode newNode = CreateNodeAndAppend(tagName, parent);
+            newNode.InnerText = value.ToString();
+            return newNode;
         }
 
-        public static bool LoadSettings()
+        //Float parsing
+        public static float ParseFloatFromNodeAndString(XmlNode root, string str)
+        {
+            XmlNode node = root.SelectSingleNode(str);
+            return ParseFloatFromNode(node);
+        }
+        
+        public static float ParseFloatFromNode(XmlNode node)
+        {
+            if (node != null) return float.Parse(node.InnerText);
+            throw new Exception("Could not parse float from node");
+        }
+        
+        //Int Parsing
+        public static int ParseIntFromNodeAndString(XmlNode root, string str)
+        {
+            XmlNode node = root.SelectSingleNode(str);
+            return ParseIntFromSubNode(node);
+        }
+        
+        public static int ParseIntFromSubNode(XmlNode node)
+        {
+            if (node != null) return int.Parse(node.InnerText);
+            throw new Exception("Could not parse int from node");
+        }
+        
+        //Bool parsing
+        public static bool ParseBoolFromSubNode(XmlNode n, string boolName)
+        {
+            XmlNode selectSingleNode = n.SelectSingleNode(boolName);
+            if (selectSingleNode != null) return selectSingleNode.InnerText == "True";
+            throw new Exception("Could not parse float from node");
+        }
+        
+        //Basic Load/Save Functions
+        private static bool Load(string fileLocation, PersistenceType saveType)
         {
             try
             {
-                if (File.Exists(SettingsSaveLocation))
+                if (File.Exists(fileLocation))
                 {
                     _saveDoc = new XmlDocument();
-                    _saveDoc.Load(SettingsSaveLocation);
-                    GameData.MasterVolume = float.Parse(_saveDoc.SelectSingleNode("/SettingsData/MasterVolume").InnerText);
-                    GameData.MusicVolume = float.Parse(_saveDoc.SelectSingleNode("/SettingsData/MusicVolume").InnerText);
-                    GameData.EffectsVolume = float.Parse(_saveDoc.SelectSingleNode("/SettingsData/EffectsVolume").InnerText);
+                    _saveDoc.Load(fileLocation);
+                    XmlNode root = _saveDoc.SelectSingleNode(saveType.ToString());
+                    BroadcastLoad(root, saveType);
+                    return true;
                 }
-                return true;
+                return false;
             }
             catch (IOException e)
             {
@@ -132,18 +126,20 @@ namespace Persistence
             }
         }
         
-        private static XmlNode CreateNodeAndAppend(string tagName, XmlNode parent)
+        private static bool Save(string fileLocation, PersistenceType saveType)
         {
-            XmlNode newNode = _saveDoc.CreateElement(tagName);
-            parent.AppendChild(newNode);
-            return newNode;
-        }
-
-        private static XmlNode CreateNodeAndAppend(string tagName, XmlNode parent, string text)
-        {
-            XmlNode newNode = CreateNodeAndAppend(tagName, parent);
-            newNode.InnerText = text;
-            return newNode;
+            try
+            {
+                _saveDoc = new XmlDocument();
+                XmlNode root = CreateNodeAndAppend(saveType.ToString(), _saveDoc);
+                BroadcastSave(root, saveType);
+                _saveDoc.Save(fileLocation);
+                return true;
+            }
+            catch (IOException e)
+            {
+                return false;
+            }
         }
     }
 }

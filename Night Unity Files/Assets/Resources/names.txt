@@ -9,3 +9,5 @@ Ambule
 Lig
 Rev
 Panacea
+Salva
+Holo

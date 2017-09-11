@@ -1,4 +1,5 @@
-﻿using Persistence;
+﻿using Facilitating.Persistence;
+using Persistence;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
@@ -38,7 +39,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         public void OnApplicationQuit()
         {
             SaveController.SaveSettings();
-            SaveController.SaveGameToFile();
+            SaveController.SaveGame();
         }
         
         public void GoToMenu(Menu m)

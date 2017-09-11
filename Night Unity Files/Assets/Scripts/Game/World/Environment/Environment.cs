@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.World.Time;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using UnityEngine;
 
@@ -54,7 +55,10 @@ namespace Game.World.Environment
             ParentMachine.NavigateToState(NextState(visitedEnvironments));
         }
 
-        public int GetTemperature(int hours, int minutes){
+        public int GetTemperature()
+        {
+            int hours = WorldTime.Hours;
+            int minutes = WorldTime.Minutes;
             hours -= 6;
             if(hours < 0){
                 hours = 24 + hours;

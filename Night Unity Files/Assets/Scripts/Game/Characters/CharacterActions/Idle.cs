@@ -1,5 +1,4 @@
 ﻿using Characters;
-using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
@@ -12,7 +11,6 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
-            Debug.Log("idling");
             GetCharacter().CurrentRegion = null;
             GetCharacter().CharacterUi.CurrentActionText.text = Name();
             GetCharacter().SetActionListActive(true);

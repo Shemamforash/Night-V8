@@ -6,13 +6,12 @@ namespace Game.Characters.CharacterActions
 {
     public class Return : BaseCharacterAction
     {
-        private Action _endOfExplorationAction;
-        
         public Return(Character character) : base("Return", character)
         {
             IsVisible = false;
             HourCallback = GetCharacter().Travel;
             SetStateTransitionTarget("Idle");
+            AddOnExit(ReturnToVehicle);
         }
 
         public override void Enter()

@@ -3,6 +3,7 @@ using Game.Combat;
 using SamsHelper;
 using UnityEngine;
 using UnityEngine.UI;
+using Character = Game.Characters.Character;
 
 namespace Game.World.Region
 {

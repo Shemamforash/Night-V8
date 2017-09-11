@@ -79,7 +79,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
 
         public bool ReachedMin()
         {
-            if (_currentValue == _min)
+            if (_currentValue >= _min)
             {
                 return true;
             }
@@ -88,7 +88,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
 
         public bool ReachedMax()
         {
-            if (_currentValue == _max)
+            if (_currentValue >= _max)
             {
                 return true;
             }

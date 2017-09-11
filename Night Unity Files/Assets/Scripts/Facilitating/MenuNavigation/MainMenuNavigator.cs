@@ -32,7 +32,7 @@ namespace Facilitating.MenuNavigation
         public void ClearSaveAndLoad()
         {
             SaveController.SaveSettings();
-            SaveController.SaveGameToFile();
+            SaveController.SaveGame();
             LoadGame();
         }
 
@@ -47,7 +47,7 @@ namespace Facilitating.MenuNavigation
             if (SaveController.SaveExists())
             {
                 SaveController.SaveSettings();
-                SaveController.LoadGameFromFile();
+                SaveController.LoadGame();
                 LoadGame();
             }
             else

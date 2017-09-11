@@ -10,6 +10,7 @@ using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.CustomTypes;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
+using Character = Game.Characters.Character;
 
 namespace Game.Combat
 {
@@ -61,7 +62,7 @@ namespace Game.Combat
             WorldTime.Instance().Pause();
             MenuStateMachine.Instance.NavigateToState("Combat Menu");
             _character = c;
-            CombatUi.CharacterName.text = c.Name;
+            CombatUi.CharacterName.text = c.CharacterName;
             CombatUi.WeaponNameText.text = c.GetWeapon().Name();
 
             CombatUi.ResetMagazine(_character.GetWeapon().Capacity);

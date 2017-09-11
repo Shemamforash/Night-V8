@@ -17,7 +17,7 @@ namespace Game.World.Environment
             _environmentText = GameObject.Find("Environment").GetComponent<Text>();
             _temperatureText = GameObject.Find("Temperature").GetComponent<Text>();
         }
-        
+
         public void Start()
         {
             VisitAllStates();
@@ -34,6 +34,7 @@ namespace Game.World.Environment
             State newState = base.NavigateToState(stateName);
             _visitedEnvironments.Add(stateName);
             RegionManager.GenerateNewRegions();
+            _environmentText.text = ((Environment) GetCurrentState()).GetDisplayName();
             return newState;
         }
 
@@ -56,7 +57,7 @@ namespace Game.World.Environment
                         ++totalTransitions;
                     }
                 }
-                catch(KeyNotFoundException e)
+                catch (KeyNotFoundException e)
                 {
                     if (totalTransitions != expectedTransitions)
                     {
@@ -72,7 +73,7 @@ namespace Game.World.Environment
         {
             Helper.ConstructObjectsFromCsv("EnvironmentBalance", delegate(string[] attributes)
             {
-                global::Game.World.Environment.Environment environment = new global::Game.World.Environment.Environment(
+                Environment environment = new Environment(
                     attributes[0],
                     attributes[1],
                     this,
@@ -86,18 +87,22 @@ namespace Game.World.Environment
                 AddState(environment);
             });
         }
-        
+
         private void UpdateTemperature()
         {
-            _temperatureText.text = ((global::Game.World.Environment.Environment)GetCurrentState()).GetTemperature(WorldTime.Hours, WorldTime.Minutes) + "\u00B0" + "C";
+            _temperatureText.text = GetTemperature() + "\u00B0" + "C";
+        }
+
+        public int GetTemperature()
+        {
+            return ((Environment) GetCurrentState()).GetTemperature();
         }
 
         private void GenerateEnvironment()
         {
-            ((global::Game.World.Environment.Environment)GetCurrentState()).NextEnvironment(_visitedEnvironments);
-            _environmentText.text = ((global::Game.World.Environment.Environment)GetCurrentState()).GetDisplayName();
+            ((Environment) GetCurrentState()).NextEnvironment(_visitedEnvironments);
         }
-        
+
 #if UNITY_EDITOR
         public void Update()
         {

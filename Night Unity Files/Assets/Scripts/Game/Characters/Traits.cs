@@ -23,70 +23,40 @@ namespace Game.Characters
             return ClassDictionary[_classNames[Random.Range(0, _classNames.Count)]];
         }
 
+        public static string DefaultValueIfEmpty(string[] arr, int position, string defaultString)
+        {
+            return arr[position] == "" ? defaultString : arr[position];
+        }
+        
         public static void LoadTraits()
         {
-            List<string> lines = Helper.ReadLinesFromFile("traits");
-            for (int i = 0; i < lines.Count; i += 1)
+            Helper.ConstructObjectsFromCsv("traits", arr =>
             {
-                string line = lines[i];
-                Trait newTrait = new Trait();
-                while (line != "")
+                string name = arr[0];
+                string traitType = arr[1];
+                int strength = int.Parse(DefaultValueIfEmpty(arr, 2, "0"));
+                int intelligence = int.Parse(DefaultValueIfEmpty(arr, 3, "0"));
+                int stability = int.Parse(DefaultValueIfEmpty(arr, 4, "0"));
+                int endurance = int.Parse(DefaultValueIfEmpty(arr, 5, "0"));
+                Trait newTrait = new Trait
                 {
-                    string[] attrValuePair = line.Split('=');
-                    string attribute = attrValuePair[0];
-                    string value = attrValuePair[1];
-                    switch (attribute)
-                    {
-                        case "name":
-                            newTrait.Name = value;
-                            break;
-                        case "type":
-                            if (value == "Trait")
-                            {
-                                TraitDictionary[newTrait.Name] = newTrait;
-                                _traitNames.Add(newTrait.Name);
-                            }
-                            else
-                            {
-                                ClassDictionary[newTrait.Name] = newTrait;
-                                _classNames.Add(newTrait.Name);
-                            }
-                            break;
-                        case "str":
-                            newTrait.StrengthBonus = float.Parse(value);
-                            break;
-                        case "int":
-                            newTrait.IntelligenceBonus = float.Parse(value);
-                            break;
-                        case "stab":
-                            newTrait.StabilityBonus = float.Parse(value);
-                            break;
-                        case "end":
-                            newTrait.EnduranceBonus = float.Parse(value);
-                            break;
-                        case "weight":
-                            newTrait.WeightModifier = float.Parse(value);
-                            break;
-                        case "thirst":
-                            newTrait.ThirstToleranceModifier = float.Parse(value);
-                            break;
-                        case "starve":
-                            newTrait.HungerToleranceModifier = float.Parse(value);
-                            break;
-                        case "sight":
-                            newTrait.SightModifier = float.Parse(value);
-                            break;
-                        default:
-                            throw new Exceptions.TraitAttributeNotRecognisedException(attribute);
-                    }
-                    ++i;
-                    if (i == lines.Count)
-                    {
-                        break;
-                    }
-                    line = lines[i];
+                    Name = name,
+                    StrengthBonus = strength,
+                    IntelligenceBonus =  intelligence,
+                    StabilityBonus = stability,
+                    EnduranceBonus = endurance
+                };
+                if (traitType == "Trait")
+                {
+                    TraitDictionary[newTrait.Name] = newTrait;
+                    _traitNames.Add(name);
                 }
-            }
+                else
+                {
+                    _classNames.Add(name);
+                    ClassDictionary[name] = newTrait;
+                }
+            });
         }
 
         public static Trait FindTrait(string traitName)
@@ -100,7 +70,7 @@ namespace Game.Characters
                 throw new Exceptions.UnknownTraitException(traitName);
             }
         }
-        
+
         public static Trait FindClass(string className)
         {
             try
@@ -117,7 +87,7 @@ namespace Game.Characters
         {
             public string Name;
 
-            public float StrengthBonus,
+            public int StrengthBonus,
                 IntelligenceBonus,
                 StabilityBonus,
                 EnduranceBonus,
@@ -129,7 +99,7 @@ namespace Game.Characters
             public string GetTraitDetails()
             {
                 string traitDetails = Name + ":";
-                traitDetails += GetValueAsString(WeightModifier, "Weight");
+                traitDetails += GetValueAsString(WeightModifier, "weight");
                 traitDetails += GetValueAsString(StrengthBonus, " str");
                 traitDetails += GetValueAsString(IntelligenceBonus, " int");
                 traitDetails += GetValueAsString(StabilityBonus, " stb");
@@ -140,9 +110,9 @@ namespace Game.Characters
                 return traitDetails;
             }
 
-            public static string GetValueAsString(float value, string suffix)
+            public static string GetValueAsString(int value, string suffix)
             {
-                string roundedValue = (Math.Round(value * 10) / 10).ToString();
+                string roundedValue = value.ToString();
                 if (value == 0)
                 {
                     return "";

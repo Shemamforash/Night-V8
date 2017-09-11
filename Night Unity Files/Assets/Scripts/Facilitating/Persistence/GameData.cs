@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Characters;
 using UnityEngine;
+using Character = Game.Characters.Character;
 
 namespace Facilitating.Persistence
 {

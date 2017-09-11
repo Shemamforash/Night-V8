@@ -26,6 +26,16 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _isWeightLimited = true;
         }
 
+        public List<InventoryResource> Resources()
+        {
+            return _resources;
+        }
+        
+        public List<InventoryItem> Items()
+        {
+            return _items;
+        }
+        
         public float MaxWeight
         {
             get { return _maxWeight; }
