@@ -36,9 +36,8 @@ namespace Game.World.Environment
         
         private void CalculateTemperatures(){
             float temperatureVariation = _defaultMaxTemperature - _defaultMinTemperature;
-            temperatureVariation = 20f;
             for(int i = 0; i < 24 * 12; ++i){
-                float normalisedTime = (float)i / (24f * 12f);
+                float normalisedTime = i / (24f * 12f);
                 float tempAtTime = Mathf.Pow(normalisedTime, 3);
                 tempAtTime -= 2f * Mathf.Pow(normalisedTime, 2);
                 tempAtTime += normalisedTime;

@@ -30,8 +30,8 @@ namespace Game.Characters
             for (int i = _characters.Count - 1; i >= 0; --i)
             {
                 Character c = _characters[i];
-                c.CharacterAttributes.UpdateThirst();
-                c.CharacterAttributes.UpdateHunger();            
+                c.Attributes.UpdateThirst();
+                c.Attributes.UpdateHunger();            
             }
         }
 
@@ -188,8 +188,8 @@ namespace Game.Characters
             foreach (XmlNode characterNode in characterNodes)
             {
                 Character c = new Character();
-                c.Load(characterNode, saveType);
-                _characters.Add(c);
+//                c.Load(characterNode, saveType);
+//                _characters.Add(c);
             }
         }
 

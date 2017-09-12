@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Game.World.Time;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI.CustomTypes;
@@ -8,11 +9,12 @@ namespace Game.World.Weather
 {
     public class Weather : ProbabalisticState
     {
-        private MyFloat _temperature, _visibility, _water, _duration;
+        private MyInt _temperature, _visibility, _water, _duration;
         private List<Danger> _dangers = new List<Danger>();
         private int _timeRemaining;
+        public WeatherAttributes Attributes;
         
-        public Weather(string name, MyFloat temperature, MyFloat visibility, MyFloat water, MyFloat duration) : base(name, WeatherManager.GetWeatherManager())
+        public Weather(string name, MyInt temperature, MyInt visibility, MyInt water, MyInt duration) : base(name, WeatherManager.Instance())
         {
             _temperature = temperature;
             _visibility = visibility;
@@ -27,7 +29,14 @@ namespace Game.World.Weather
 
         public override void Enter()
         {
-            _timeRemaining = (int)(_duration.RandomInRange() * WorldTime.MinutesPerHour);
+            _temperature.Val = _temperature.RandomInRange();
+            _timeRemaining = _duration.RandomInRange() * WorldTime.MinutesPerHour;
+            WeatherSystemController.Instance().ChangeWeather(this, _timeRemaining);
+        }
+
+        public int Temperature()
+        {
+            return _temperature.Val;
         }
 
         public void UpdateWeather()
@@ -35,7 +44,7 @@ namespace Game.World.Weather
             --_timeRemaining;
             if (_timeRemaining == 0)
             {
-                WeatherManager.GetWeatherManager().NavigateToState(NextState(Name()));
+                WeatherManager.Instance().NavigateToState(NextState(Name()));
             }
         }
 

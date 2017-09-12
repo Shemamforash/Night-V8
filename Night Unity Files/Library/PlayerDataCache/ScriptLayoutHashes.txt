@@ -15,7 +15,7 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 c24a21b131bfa67be1162db2cba4b52b UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
 5cd836b1859afa0fc45cf1c6fd3974c2 Assembly-CSharp.dll:Articy.Night.Spot
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ArticyDebugBranch
-5f17cd701d14891cf1eab8b2317e643a Assembly-CSharp.dll:Characters.Character
+f8d987e5306bbe6bf17a3e29970509d7 Assembly-CSharp.dll:Game.Characters.Character
 67ebf5dbe166aec80c4ce7441a3a22fd Assembly-CSharp.dll:Articy.Night.Jump
 b5a3acfc1ef42418f153e0e3d2cba230 Assembly-CSharp.dll:Articy.Night.TextObject
 30f56146b0570109a128ca7ce92268bc Assembly-CSharp.dll:Articy.Night.FlowFragment
@@ -53,6 +53,7 @@ c63db43c730fa2cbb8ca07de15898cb6 UnityEngine.UI.dll:UnityEngine.UI.Toggle
 f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 86d36c43c53541d667100dc90b89cfba UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 1b8c02d0aa82fbf036a2b9b2d713eec3 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
+b7b93d920abe29246a7458dd55870cf7 Assembly-CSharp.dll:Facilitating.UI.GameOnly.PickUpItemInventoryManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:SamsHelper.Input.InputSpeaker
 a35dc9cca2faebc5f5f1aeb9e8e47bbe UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
@@ -87,7 +88,8 @@ f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 86d36c43c53541d667100dc90b89cfba UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 1b8c02d0aa82fbf036a2b9b2d713eec3 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
 b09c45db93ce90f4584f83f4cd03efa8 Assembly-CSharp.dll:UI.Highlight.Highlight
-d0878219e4e6230a040b45e6d9cba93b Assembly-CSharp.dll:Audio.GlobalAudioManager
+1e56e861e373fd6732f475900c9a704e Assembly-CSharp.dll:SamsHelper.ReactiveUI.MenuSystem.MenuStateMachine
+5e26f8f6dab9bec1066af75662eaccc5 Assembly-CSharp.dll:Facilitating.Audio.GlobalAudioManager
 5c696f894c00ed302d5aa871fd3840fe Assembly-CSharp.dll:UI.Highlight.ManualScrollbar
 e4123d95aa591ca69ad27fce7e4c9ee1 Assembly-CSharp.dll:Articy.Night.LocationText
 0ae0a11e9469221ad5c73cd080b9fcaf Assembly-CSharp.dll:Articy.Night.Comment
@@ -128,13 +130,17 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 463516d5b5fe8e67a0a24c48f2095b04 UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingRenderer
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Articy.Night.GlobalVariables.ArticyScriptFragments
 490cf6b2a0c18ac8ac4500ad7dee10f0 Assembly-CSharp.dll:Articy.Night.EnvironmentTemplate
 98d8da70c786039bcd87414ad25ac937 Assembly-CSharp.dll:UI.Highlight.BorderHighlight
 3ff923a0f376802a437ffbfadb2548f8 Assembly-CSharp.dll:Articy.Night.Journal_Entry_Template
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:SamsHelper.BaseGameFunctionality.StateMachines.ProbabalisticStateMachine
+1791e00672780b712790bf826f315319 Assembly-CSharp.dll:Facilitating.UI.Elements.EnhancedButton
 b406ed27d2d1f1d7faf2a12b343594bf Assembly-CSharp.dll:Articy.Night.DialogueFragment
 44027122d107ab071fcb0994fc9c1d91 Assembly-CSharp.dll:Articy.Night.UserFolder
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.World.RegionManager
 3b454d1a16ee0b775475946a715c2b1b Assembly-CSharp.dll:Articy.Night.GlobalVariables.ArticyGlobalVariables
+bb9a6e15e430c5a80936a47609314a8d Assembly-CSharp.dll:SamsHelper.ReactiveUI.MenuSystem.Menu
 c6a664479c23fc196a90c02b100bedd8 Assembly-CSharp.dll:Articy.Night.Hub
 ff2e694a19973017fff8bf80ac7c89a1 Assembly-CSharp.dll:UI.Highlight.Toggler
 47ded053b0e7614064f3a503c935e867 Assembly-CSharp.dll:UI.Misc.TooltipController
@@ -156,7 +162,6 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 73843688b51256aed059f049c540bca8 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformChild
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 fe71560eefe58ce5a7cf67292e8b6fe5 Assembly-CSharp.dll:Facilitating.UI.GameOnly.DayChangeSequence
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.World.Home
 ab2bfe0282d9ca6b330570ca20d96f72 Assembly-CSharp.dll:Articy.Night.Location
 0cb21d6a90366755552f10f9220a051d Assembly-CSharp.dll:Articy.Night.Instruction
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
@@ -169,7 +174,7 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 463516d5b5fe8e67a0a24c48f2095b04 UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingRenderer
-ff2e694a19973017fff8bf80ac7c89a1 Assembly-CSharp.dll:UI.Highlight.PermadeathToggler
+ff2e694a19973017fff8bf80ac7c89a1 Assembly-CSharp.dll:Facilitating.UI.Main_Menu_Only.PermadeathToggler
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.World.Weather.WeatherManager
 98d8da70c786039bcd87414ad25ac937 Assembly-CSharp.dll:UI.Highlight.ManualSlider
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Characters.CharacterManager
@@ -178,11 +183,12 @@ ff2e694a19973017fff8bf80ac7c89a1 Assembly-CSharp.dll:UI.Highlight.PermadeathTogg
 30f56146b0570109a128ca7ce92268bc Assembly-CSharp.dll:Articy.Night.Dialogue
 047e0291c50d208ada27bc33da0053f4 Assembly-CSharp.dll:Persistence.StatsTracker
 e1f1ff879ba05d0a15db2cc3a08d9a55 Assembly-CSharp.dll:.ArticyDebugFlowPlayer
+b7b93d920abe29246a7458dd55870cf7 Assembly-CSharp.dll:SamsHelper.BaseGameFunctionality.InventorySystem.InventoryManager
 b44355d7832d92a93606cd5818cd55ff Assembly-CSharp.dll:Articy.Night.EnvironmentTemplate_03
 ff2e694a19973017fff8bf80ac7c89a1 Assembly-CSharp.dll:UI.Highlight.WindowSizer
+1360f0a8aed69501c0ced3697cf53c8c Assembly-CSharp.dll:Facilitating.UI.Elements.EnhancedText
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.World.Time.WorldTime
 feb41be848a2528250dd278d3393f73e Assembly-CSharp.dll:UI.Misc.ButtonGroup
-5373a0a5cf7375c88d9351b594fbfbed Assembly-CSharp.dll:.MapGenerator
 9e171b1c56de24518977091943a39571 Assembly-CSharp.dll:Articy.Night.Document
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Weapons.WeaponGenerator
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.CombatManager
@@ -197,10 +203,4 @@ e21dff56391bf807e40f38b4841ca9f6 ArticyRuntime.dll:Articy.Unity.ArticyObject
 1e566a7c4ee051450c73b7416418c11d ArticyRuntime.dll:Articy.Unity.ArticyPackage
 c668f311d49f4ee04fb68d89836e23af ArticyRuntime.dll:Articy.Unity.ArticyReference
 05524b8f659e7bfe5756d1335fec24ba ArticyRuntime.dll:Articy.Unity.Interfaces.BaseScriptFragments
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Articy.Night.GlobalVariables.ArticyScriptFragments
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.World.RegionManager
-1360f0a8aed69501c0ced3697cf53c8c Assembly-CSharp.dll:Facilitating.UI.Elements.EnhancedText
-d01e9fb87e321e1c8561c8ab9fd12772 Assembly-CSharp.dll:UI.Misc.Elements.EnhancedButton
-1e56e861e373fd6732f475900c9a704e Assembly-CSharp.dll:SamsHelper.ReactiveUI.MenuSystem.MenuStateMachine
-bb9a6e15e430c5a80936a47609314a8d Assembly-CSharp.dll:SamsHelper.ReactiveUI.MenuSystem.Menu
-b7b93d920abe29246a7458dd55870cf7 Assembly-CSharp.dll:SamsHelper.BaseGameFunctionality.InventorySystem.InventoryManager
+7f2da673cc1d5dea4886dcd993d0828b Assembly-CSharp.dll:.WeatherSystemController

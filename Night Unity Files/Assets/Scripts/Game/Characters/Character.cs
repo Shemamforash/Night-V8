@@ -22,7 +22,7 @@ namespace Game.Characters
     {
         public CharacterUI CharacterUi;
         public string CharacterName;
-        public CharacterAttributes CharacterAttributes;
+        public CharacterAttributes Attributes;
 
         public Traits.Trait CharacterClass, CharacterTrait;
         public Region CurrentRegion;
@@ -49,8 +49,8 @@ namespace Game.Characters
 
         public void TakeDamage(int amount)
         {
-            CharacterAttributes.Strength.Val -= amount;
-            if (CharacterAttributes.Strength.ReachedMin())
+            Attributes.Strength.Val -= amount;
+            if (Attributes.Strength.ReachedMin())
             {
                 //TODO kill character
             }
@@ -58,13 +58,13 @@ namespace Game.Characters
 
         public void Tire(int amount)
         {
-            CharacterAttributes.Endurance.Val -= amount;
-            if (CharacterAttributes.Endurance.ReachedMin())
+            Attributes.Endurance.Val -= amount;
+            if (Attributes.Endurance.ReachedMin())
             {
                 BaseCharacterAction action = GetCurrentState() as BaseCharacterAction;
                 action.Interrupt();
                 Sleep sleepAction = NavigateToState("Sleep") as Sleep;
-                sleepAction.SetDuration((int)(CharacterAttributes.Endurance.Max / 5f));
+                sleepAction.SetDuration((int)(Attributes.Endurance.Max / 5f));
                 sleepAction.SetStateTransitionTarget(action.Name());
                 sleepAction.AddOnExit(() =>
                 {
@@ -76,8 +76,8 @@ namespace Game.Characters
 
         public void Rest(int amount)
         {
-            CharacterAttributes.Endurance.Val += amount;
-            if (CharacterAttributes.Endurance.ReachedMax())
+            Attributes.Endurance.Val += amount;
+            if (Attributes.Endurance.ReachedMax())
             {
                 if (CurrentRegion == null)
                 {
@@ -120,15 +120,8 @@ namespace Game.Characters
             return _weapon;
         }
 
-        public void Initialise(string name, Traits.Trait classCharacter, Traits.Trait characterTrait)
+        public void Awake()
         {
-            CharacterName = name;
-            CharacterClass = classCharacter;
-            CharacterTrait = characterTrait;
-            actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
-            CharacterAttributes = new CharacterAttributes(this);
-            SetCharacterUi(gameObject);
-            CharacterInventory.MaxWeight = 50;
             AddState(new CollectResources(this));
             AddState(new CharacterActions.Combat(this));
             AddState(new Sleep(this));
@@ -137,8 +130,78 @@ namespace Game.Characters
             AddState(new Travel(this));
             AddState(new Return(this));
             SetDefaultState("Idle");
+            Attributes = new CharacterAttributes(this);
+            actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
+        }
+
+        public void Initialise(string characterName, Traits.Trait classCharacter, Traits.Trait characterTrait)
+        {
+            CharacterName = characterName;
+            CharacterClass = classCharacter;
+            CharacterTrait = characterTrait;
+            SetCharacterUi(gameObject);
+            CharacterInventory.MaxWeight = 50;
             UpdateActionUi();
         }
+        
+        private void SetCharacterUi(GameObject g)
+        {
+            CharacterUi = new CharacterUI(g);
+            CharacterUi.EatButton.onClick.AddListener(Eat);
+            CharacterUi.DrinkButton.onClick.AddListener(Drink);
+
+            CharacterUi.NameText.text = CharacterName;
+            CharacterUi.ClassTraitText.text = CharacterTrait.Name + " " + CharacterClass.Name;
+            CharacterUi.DetailedClassText.text = CharacterClass.GetTraitDetails();
+            CharacterUi.DetailedTraitText.text = CharacterTrait.GetTraitDetails();
+            CharacterUi.WeightText.text = "Weight: " + Attributes.Weight + " (requires " + ((int) Attributes.Weight + 5) + " fuel)";
+
+            WorldTime.Instance().MinuteEvent += delegate
+            {
+                string currentActionString = GetCurrentState().Name() + " " + ((BaseCharacterAction) GetCurrentState()).GetCostAsString();
+                CharacterUi.CurrentActionText.text = currentActionString;
+                CharacterUi.DetailedCurrentActionText.text = currentActionString;
+            };
+
+            _weaponName = new MyString("");
+            _weaponName.AddOnValueChange(t =>
+            {
+                CharacterUi.WeaponNameTextDetailed.text = t;
+                CharacterUi.WeaponNameTextSimple.text = t;
+            });
+            
+            _weaponDamage.AddOnValueChange(f => CharacterUi.WeaponDamageText.text = Helper.Round(f, 2) + " dmg");
+            _weaponAccuracy.AddOnValueChange(f => CharacterUi.WeaponAccuracyText.text = Helper.Round(f, 2) + "acc");
+            _weaponFireRate.AddOnValueChange(f => CharacterUi.WeaponFireRateText.text = Helper.Round(f, 2) + "frt");
+            _weaponReloadSpeed.AddOnValueChange(f => CharacterUi.WeaponReloadSpeedText.text = Helper.Round(f, 2) + "rld");
+            _weaponCapacity.AddOnValueChange(f => CharacterUi.WeaponCapacityText.text = Helper.Round(f, 2) + "cap");
+            _weaponCriticalChance.AddOnValueChange(f => CharacterUi.WeaponCriticalChanceText.text = Helper.Round(f, 2) + "crt");
+            _weaponHandling.AddOnValueChange(f => CharacterUi.WeaponHandlingText.text = Helper.Round(f, 2) + "hnd");
+            
+            Attributes.Strength.AddOnValueChange(delegate(int f)
+            {
+                CharacterUi.StrengthText.text = f + " str";
+                CharacterUi.StrengthTextDetail.text = f + "/" + Attributes.Strength.Max + " str";
+            });
+            Attributes.Endurance.AddOnValueChange(delegate(int f)
+            {
+                CharacterUi.EnduranceText.text = f + " end";
+                CharacterUi.EnduranceTextDetail.text = f + "/" + Attributes.Endurance.Max + " end";
+            });
+            Attributes.Stability.AddOnValueChange(delegate(int f)
+            {
+                CharacterUi.StabilityText.text = f + " stb";
+                CharacterUi.StabilityTextDetail.text = f + "/" + Attributes.Stability.Max + " stb";
+            });
+            Attributes.Intelligence.AddOnValueChange(delegate(int f)
+            {
+                CharacterUi.IntelligenceText.text = f + " int";
+                CharacterUi.IntelligenceTextDetail.text = f + "/" + Attributes.Intelligence.Max + " int";
+            });
+            Attributes.Hunger.AddOnValueChange(f => CharacterUi.HungerText.text = Attributes.GetHungerStatus());
+            Attributes.Thirst.AddOnValueChange(f => CharacterUi.ThirstText.text = Attributes.GetThirstStatus());
+        }
+
 
         public List<State> StatesAsList(bool includeInactiveStates)
         {
@@ -193,69 +256,11 @@ namespace Game.Characters
             }
         }
 
-        private void SetCharacterUi(GameObject g)
-        {
-            CharacterUi = new CharacterUI(g);
-            CharacterUi.EatButton.onClick.AddListener(Eat);
-            CharacterUi.DrinkButton.onClick.AddListener(Drink);
-
-            CharacterUi.NameText.text = CharacterName;
-            CharacterUi.ClassTraitText.text = CharacterTrait.Name + " " + CharacterClass.Name;
-            CharacterUi.DetailedClassText.text = CharacterClass.GetTraitDetails();
-            CharacterUi.DetailedTraitText.text = CharacterTrait.GetTraitDetails();
-            CharacterUi.WeightText.text = "Weight: " + CharacterAttributes.Weight + " (requires " + ((int) CharacterAttributes.Weight + 5) + " fuel)";
-
-            WorldTime.Instance().MinuteEvent += delegate
-            {
-                string currentActionString = GetCurrentState().Name() + " " + ((BaseCharacterAction) GetCurrentState()).GetCostAsString();
-                CharacterUi.CurrentActionText.text = currentActionString;
-                CharacterUi.DetailedCurrentActionText.text = currentActionString;
-            };
-
-            _weaponName = new MyString("");
-            _weaponName.AddOnValueChange(t =>
-            {
-                CharacterUi.WeaponNameTextDetailed.text = t;
-                CharacterUi.WeaponNameTextSimple.text = t;
-            });
-            
-            _weaponDamage.AddOnValueChange(f => CharacterUi.WeaponDamageText.text = Helper.Round(f, 2) + " dmg");
-            _weaponAccuracy.AddOnValueChange(f => CharacterUi.WeaponAccuracyText.text = Helper.Round(f, 2) + "acc");
-            _weaponFireRate.AddOnValueChange(f => CharacterUi.WeaponFireRateText.text = Helper.Round(f, 2) + "frt");
-            _weaponReloadSpeed.AddOnValueChange(f => CharacterUi.WeaponReloadSpeedText.text = Helper.Round(f, 2) + "rld");
-            _weaponCapacity.AddOnValueChange(f => CharacterUi.WeaponCapacityText.text = Helper.Round(f, 2) + "cap");
-            _weaponCriticalChance.AddOnValueChange(f => CharacterUi.WeaponCriticalChanceText.text = Helper.Round(f, 2) + "crt");
-            _weaponHandling.AddOnValueChange(f => CharacterUi.WeaponHandlingText.text = Helper.Round(f, 2) + "hnd");
-            
-            CharacterAttributes.Strength.AddOnValueChange(delegate(int f)
-            {
-                CharacterUi.StrengthText.text = f + " str";
-                CharacterUi.StrengthTextDetail.text = f + "/" + CharacterAttributes.Strength.Max + " str";
-            });
-            CharacterAttributes.Endurance.AddOnValueChange(delegate(int f)
-            {
-                CharacterUi.EnduranceText.text = f + " end";
-                CharacterUi.EnduranceTextDetail.text = f + "/" + CharacterAttributes.Endurance.Max + " end";
-            });
-            CharacterAttributes.Stability.AddOnValueChange(delegate(int f)
-            {
-                CharacterUi.StabilityText.text = f + " stb";
-                CharacterUi.StabilityTextDetail.text = f + "/" + CharacterAttributes.Stability.Max + " stb";
-            });
-            CharacterAttributes.Intelligence.AddOnValueChange(delegate(int f)
-            {
-                CharacterUi.IntelligenceText.text = f + " int";
-                CharacterUi.IntelligenceTextDetail.text = f + "/" + CharacterAttributes.Intelligence.Max + " int";
-            });
-            CharacterAttributes.Hunger.AddOnValueChange(f => CharacterUi.HungerText.text = CharacterAttributes.GetHungerStatus());
-            CharacterAttributes.Thirst.AddOnValueChange(f => CharacterUi.ThirstText.text = CharacterAttributes.GetThirstStatus());
-        }
-
         public string GetConditions()
         {
             string conditions = "";
-            conditions += CharacterAttributes.GetThirstStatus() + "(" + Mathf.Round(CharacterAttributes.Thirst.Val / 1.2f) / 10f + " litres/hr)\n";
-            conditions += CharacterAttributes.GetThirstStatus() + "(" + Mathf.Round(CharacterAttributes.Hunger.Val / 1.2f) / 10f + " meals/hr)";
+            conditions += Attributes.GetThirstStatus() + "(" + Mathf.Round(Attributes.Thirst.Val / 1.2f) / 10f + " litres/hr)\n";
+            conditions += Attributes.GetThirstStatus() + "(" + Mathf.Round(Attributes.Hunger.Val / 1.2f) / 10f + " meals/hr)";
             return conditions;
         }
 
@@ -272,32 +277,32 @@ namespace Game.Characters
         public void Drink()
         {
             int consumed = WorldState.Inventory().DecrementResource("Water", 1);
-            CharacterAttributes.Dehydration.Val -= consumed;
+            Attributes.Dehydration.Val -= consumed;
         }
 
         public void Eat()
         {
             int consumed = WorldState.Inventory().DecrementResource("Food", 1);
-            CharacterAttributes.Starvation.Val -= consumed;
+            Attributes.Starvation.Val -= consumed;
         }
 
         public float RemainingCarryCapacity()
         {
-            return CharacterAttributes.Strength.Val;
+            return Attributes.Strength.Val;
         }
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
             CharacterName = doc.SelectSingleNode("Name").InnerText;
             XmlNode attributesNode = doc.SelectSingleNode("Attributes");
-            CharacterAttributes.Load(attributesNode, saveType);
+            Attributes.Load(attributesNode, saveType);
         }
 
         public void Save(XmlNode doc, PersistenceType saveType)
         {
             SaveController.CreateNodeAndAppend("Name", doc, CharacterName);
             XmlNode attributesNode = SaveController.CreateNodeAndAppend("Attributes", doc);
-            CharacterAttributes.Save(attributesNode, saveType);
+            Attributes.Save(attributesNode, saveType);
         }
     }
 }

@@ -10,12 +10,12 @@ namespace Game.World.Weather
 {
     public class WeatherManager : ProbabalisticStateMachine
     {
-        private static WeatherManager _self;
+        private static WeatherManager _instance;
         private Text _weatherText;
 
         public void Awake()
         {
-            _self = this;
+            _instance = this;
             _weatherText = GameObject.Find("Weather").GetComponent<Text>();
         }
 
@@ -34,9 +34,13 @@ namespace Game.World.Weather
             return base.NavigateToState(stateName);
         }
 
-        public static WeatherManager GetWeatherManager()
+        public static WeatherManager Instance()
         {
-            return _self;
+            if (_instance != null)
+            {
+                return _instance;
+            }
+            return FindObjectOfType<WeatherManager>();
         }
 
         private void LoadWeather()
@@ -44,18 +48,18 @@ namespace Game.World.Weather
             Helper.ConstructObjectsFromCsv("WeatherBalance", delegate(string[] attributes)
             {
                 string weatherName = attributes[0];
-                float temperatureMin = float.Parse(attributes[1]);
-                float temperatureMax = float.Parse(attributes[2]);
-                MyFloat temperature = new MyFloat(temperatureMax, temperatureMin, temperatureMax);
-                float visibilityMin = float.Parse(attributes[3]);
-                float visibilityMax = float.Parse(attributes[4]);
-                MyFloat visibility = new MyFloat(visibilityMax, visibilityMin, visibilityMax);
-                float waterMin = float.Parse(attributes[5]);
-                float waterMax = float.Parse(attributes[6]);
-                MyFloat water = new MyFloat(waterMax, waterMin, waterMax);
-                float durationMin = float.Parse(attributes[7]);
-                float durationMax = float.Parse(attributes[8]);
-                MyFloat duration = new MyFloat(durationMax, durationMin, durationMax);
+                int temperatureMin = int.Parse(attributes[1]);
+                int temperatureMax = int.Parse(attributes[2]);
+                MyInt temperature = new MyInt(temperatureMax, temperatureMin, temperatureMax);
+                int visibilityMin = int.Parse(attributes[3]);
+                int visibilityMax = int.Parse(attributes[4]);
+                MyInt visibility = new MyInt(visibilityMax, visibilityMin, visibilityMax);
+                int waterMin = int.Parse(attributes[5]);
+                int waterMax = int.Parse(attributes[6]);
+                MyInt water = new MyInt(waterMax, waterMin, waterMax);
+                int durationMin = int.Parse(attributes[7]);
+                int durationMax = int.Parse(attributes[8]);
+                MyInt duration = new MyInt(durationMax, durationMin, durationMax);
                 Weather weather = new Weather(weatherName, temperature, visibility, water, duration);
                 AddState(weather);
                 if (attributes[9] != "0")
@@ -66,6 +70,11 @@ namespace Game.World.Weather
                 {
                     weather.AddDanger(attributes[11], float.Parse(attributes[12]));
                 }
+                float rainAmount = float.Parse(attributes[13]);
+                float fogAmount = float.Parse(attributes[14]);
+                float dustAmount = float.Parse(attributes[15]);
+                float hailAmount = float.Parse(attributes[16]);
+                weather.Attributes = new WeatherAttributes(rainAmount, fogAmount, dustAmount, hailAmount);
             });
         }
 

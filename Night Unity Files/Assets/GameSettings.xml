@@ -4,76 +4,76 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>99</Val>
-          <Max>99</Max>
+          <Val>100</Val>
+          <Max>100</Max>
         </Strength>
         <Endurance>
-          <Val>63</Val>
-          <Max>63</Max>
+          <Val>58</Val>
+          <Max>58</Max>
         </Endurance>
         <Stability>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>20</Val>
+          <Max>20</Max>
         </Stability>
         <Intelligence>
-          <Val>22</Val>
-          <Max>22</Max>
+          <Val>20</Val>
+          <Max>20</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
-          <Max>0</Max>
+          <Max>9</Max>
         </Starvation>
         <Dehydration>
           <Val>30</Val>
-          <Max>1</Max>
+          <Max>10</Max>
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>11</Max>
+          <Max>8</Max>
         </Hunger>
         <Thirst>
           <Val>11</Val>
-          <Max>0</Max>
+          <Max>2</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
     <Character>
-      <Name>Caliber</Name>
+      <Name>Holo</Name>
       <Attributes>
         <Strength>
-          <Val>86</Val>
-          <Max>86</Max>
+          <Val>96</Val>
+          <Max>96</Max>
         </Strength>
         <Endurance>
-          <Val>46</Val>
-          <Max>46</Max>
+          <Val>84</Val>
+          <Max>84</Max>
         </Endurance>
         <Stability>
-          <Val>24</Val>
-          <Max>24</Max>
+          <Val>-2</Val>
+          <Max>0</Max>
         </Stability>
         <Intelligence>
-          <Val>36</Val>
-          <Max>36</Max>
+          <Val>15</Val>
+          <Max>15</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
-          <Max>0</Max>
+          <Max>9</Max>
         </Starvation>
         <Dehydration>
           <Val>30</Val>
-          <Max>1</Max>
+          <Max>10</Max>
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>11</Max>
+          <Max>8</Max>
         </Hunger>
         <Thirst>
           <Val>11</Val>
-          <Max>0</Max>
+          <Max>2</Max>
         </Thirst>
-        <Weight>2</Weight>
+        <Weight>3</Weight>
       </Attributes>
     </Character>
   </CharacterManager>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.World.Time;
+using Game.World.Weather;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using UnityEngine;
@@ -95,7 +96,7 @@ namespace Game.World.Environment
 
         public int GetTemperature()
         {
-            return ((Environment) GetCurrentState()).GetTemperature();
+            return ((Environment) GetCurrentState()).GetTemperature() + ((Weather.Weather)WeatherManager.Instance().GetCurrentState()).Temperature();
         }
 
         private void GenerateEnvironment()

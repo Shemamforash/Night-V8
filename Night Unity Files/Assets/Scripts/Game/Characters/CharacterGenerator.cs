@@ -29,7 +29,7 @@ namespace Game.Characters
             for (int i = 0; i < charactersToTest; ++i)
             {
                 Character c = GenerateCharacter();
-                CharacterAttributes attributes = c.CharacterAttributes;
+                CharacterAttributes attributes = c.Attributes;
                 List<string> failMessages = new List<string>();
                 if (!InBounds(attributes.Strength.Val, 40, 160))
                 {
@@ -102,7 +102,7 @@ namespace Game.Characters
             theDriver.AddItemToInventory(w);
             theDriver.SetWeapon(w);
             CalculateAttributes(theDriver);
-            theDriver.CharacterAttributes.Weight = WeightCategory.Medium;
+            theDriver.Attributes.Weight = WeightCategory.Medium;
             return theDriver;
         }
 
@@ -129,13 +129,11 @@ namespace Game.Characters
 
         private static void CalculateAttributes(Character c)
         {
-            CharacterAttributes attributes = c.CharacterAttributes;
+            CharacterAttributes attributes = c.Attributes;
             int strengthBonusVal = 15;
             int enduranceBonusVal = 15;
             int stabilityBonusVal = 4;
             int intelligenceBonusVal = 4;
-            Debug.Log(
-                "str " + c.CharacterClass.StrengthBonus + " end: " + c.CharacterClass.EnduranceBonus + " stab: " + c.CharacterClass.StabilityBonus + " int: " + c.CharacterClass.IntelligenceBonus);
             attributes.Strength.Max = Random.Range(80, 120) + c.CharacterClass.StrengthBonus * strengthBonusVal + c.CharacterTrait.StrengthBonus;
             attributes.Strength.Val = attributes.Strength.Max;
             attributes.Endurance.Max = Random.Range(30, 70) + c.CharacterClass.EnduranceBonus * enduranceBonusVal + c.CharacterTrait.EnduranceBonus;

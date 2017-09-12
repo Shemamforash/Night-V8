@@ -13,13 +13,14 @@ namespace Game.World.Time
         public event Action DayEvent;
         public event Action TravelEvent;
         public event Action<bool> PauseEvent;
-        
-        private static float _currentTime, _quarterHourTimer = .2f;
+
+        private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
         public const int MinutesPerHour = 12;
         private static bool _isNight, _isPaused;
         private Text _timeText, _dayText;
         private static WorldTime _instance;
+        public static float MinuteInSeconds = .2f;
 
         public void Awake()
         {
@@ -52,32 +53,30 @@ namespace Game.World.Time
         private void IncrementWorldTime()
         {
             _currentTime += UnityEngine.Time.deltaTime;
-            if (_currentTime >= _quarterHourTimer)
+            if (_currentTime >= MinuteInSeconds)
             {
-                _currentTime -= _quarterHourTimer;
+                _currentTime = 0;
                 Minutes += 60 / MinutesPerHour;
-                if (MinuteEvent != null) MinuteEvent();
+                MinuteEvent?.Invoke();
                 if (Minutes == 60)
                 {
                     Minutes = 0;
                     ++Hours;
-                    if (HourEvent != null) HourEvent();
+                    HourEvent?.Invoke();
                     if (Hours == 24)
                     {
                         ++Days;
-                        if (DayEvent != null) DayEvent();
+                        DayEvent?.Invoke();
                         Hours = 0;
                     }
                     //TODO make me make sense
                     if (Hours >= 6 && Hours < 20 && _isNight)
                     {
                         _isNight = false;
-                        _quarterHourTimer *= 2;
                     }
                     else if ((Hours < 6 || Hours >= 20) && !_isNight)
                     {
                         _isNight = true;
-                        _quarterHourTimer /= 2;
                     }
                 }
             }
