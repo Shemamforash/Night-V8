@@ -160,5 +160,11 @@ namespace SamsHelper
             }
             originButton.navigation = originButtonNavigation;
         }
+
+        public static void SetReciprocalNavigation(GameObject origin, GameObject target)
+        {
+            SetNavigation(origin, target, NavigationDirections.Down);
+            SetNavigation(target, origin, NavigationDirections.Up);
+        }
     }
 }

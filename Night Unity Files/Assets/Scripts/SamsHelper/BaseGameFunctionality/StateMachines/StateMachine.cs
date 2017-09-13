@@ -24,7 +24,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         public void SetDefaultState(string defaultState)
         {
             _defaultState = defaultState;
-            _currentState = States[_defaultState];
+            NavigateToState(defaultState);
         }
 
         public State GetState(string stateName)

@@ -36,7 +36,6 @@ public class WeatherSystemController : MonoBehaviour
             SetRain(_targetAttributes.RainAmount);
             SetDust(_targetAttributes.DustAmount);
             SetHail(_targetAttributes.HailAmount);
-            Debug.Log("Fog " + _targetAttributes.FogAmount + ", Rain " + _targetAttributes.RainAmount + ", Dust " + _targetAttributes.DustAmount + ", Hail " + _targetAttributes.HailAmount);
         }
         else
         {

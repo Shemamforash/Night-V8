@@ -1,4 +1,4 @@
-﻿using Characters;
+﻿using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
@@ -7,6 +7,7 @@ namespace Game.Characters.CharacterActions
         public Idle(Character character) : base("Idle", character)
         {
             IsVisible = false;
+            HourCallback = () => GetCharacter().Rest(1);
         }
 
         public override void Enter()

@@ -54,7 +54,6 @@ namespace Game.Combat
             AddState(new Flanking(this, true));
             AddState(new Reloading(this, true));
             AddState(new Retreating(this, true));
-            SetDefaultState("Aiming");
         }
         
         public static void EnterCombat(Character c)

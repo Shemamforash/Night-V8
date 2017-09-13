@@ -56,22 +56,30 @@ namespace Game.Characters
             }
         }
 
+        private bool IsOverburdened()
+        {
+            return CharacterInventory.GetInventoryWeight() > Attributes.Strength.Val;
+        }
+
         public void Tire(int amount)
         {
-            Attributes.Endurance.Val -= amount;
-            if (Attributes.Endurance.ReachedMin())
+            Attributes.Endurance.Val -= IsOverburdened() ? amount * 2 : amount;
+            CheckEnduranceZero();
+        }
+
+        private void CheckEnduranceZero()
+        {
+            if (!Attributes.Endurance.ReachedMin()) return;
+            BaseCharacterAction action = GetCurrentState() as BaseCharacterAction;
+            action.Interrupt();
+            Sleep sleepAction = NavigateToState("Sleep") as Sleep;
+            sleepAction.SetDuration((int)(Attributes.Endurance.Max / 5f));
+            sleepAction.SetStateTransitionTarget(action.Name());
+            sleepAction.AddOnExit(() =>
             {
-                BaseCharacterAction action = GetCurrentState() as BaseCharacterAction;
-                action.Interrupt();
-                Sleep sleepAction = NavigateToState("Sleep") as Sleep;
-                sleepAction.SetDuration((int)(Attributes.Endurance.Max / 5f));
-                sleepAction.SetStateTransitionTarget(action.Name());
-                sleepAction.AddOnExit(() =>
-                {
-                    action.Resume();
-                });
-                sleepAction.Start();
-            }
+                action.Resume();
+            });
+            sleepAction.Start();
         }
 
         public void Rest(int amount)
@@ -91,9 +99,16 @@ namespace Game.Characters
             Tire(CalculateEnduranceCostForDistance(1));
         }
 
+        public int CalculateTotalWeight()
+        {
+            int characterWeight = 5 + (int) Attributes.Weight;
+            int inventoryWeight = (int)(CharacterInventory.GetInventoryWeight() / 10);
+            return characterWeight + inventoryWeight;
+        }
+        
         public int CalculateEnduranceCostForDistance(int distance)
         {
-            return distance * (int)CharacterInventory.GetInventoryWeight();
+            return distance * CalculateTotalWeight();
         }
 
         public void SetWeapon(Weapon weapon)
@@ -129,7 +144,6 @@ namespace Game.Characters
             AddState(new PrepareTravel(this));
             AddState(new Travel(this));
             AddState(new Return(this));
-            SetDefaultState("Idle");
             Attributes = new CharacterAttributes(this);
             actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
         }
@@ -142,6 +156,7 @@ namespace Game.Characters
             SetCharacterUi(gameObject);
             CharacterInventory.MaxWeight = 50;
             UpdateActionUi();
+            SetDefaultState("Idle");
         }
         
         private void SetCharacterUi(GameObject g)

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Xml;
 using Characters;
 using Facilitating.Persistence;
-using Game.World.Time;
 using SamsHelper;
 using SamsHelper.Input;
 using SamsHelper.Persistence;
@@ -20,19 +19,8 @@ namespace Game.Characters
 
         public void Awake()
         {
-            WorldTime.Instance().MinuteEvent += UpdateCharacterThirstAndHunger;
             Traits.LoadTraits();
             SaveController.AddPersistenceListener(this);
-        }
-
-        private void UpdateCharacterThirstAndHunger()
-        {
-            for (int i = _characters.Count - 1; i >= 0; --i)
-            {
-                Character c = _characters[i];
-                c.Attributes.UpdateThirst();
-                c.Attributes.UpdateHunger();            
-            }
         }
 
         public void Start()

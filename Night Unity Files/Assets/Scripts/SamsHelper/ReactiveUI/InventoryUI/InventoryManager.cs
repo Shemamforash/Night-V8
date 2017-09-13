@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Facilitating.UI.Elements;
-using Game.Characters.CharacterActions;
-using SamsHelper.BaseGameFunctionality.CooldownSystem;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SamsHelper.BaseGameFunctionality.InventorySystem
+namespace SamsHelper.ReactiveUI.InventoryUI
 {
     public class InventoryManager : MonoBehaviour
     {

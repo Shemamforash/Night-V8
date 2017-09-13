@@ -1,6 +1,4 @@
-﻿using Characters;
-using Game.Combat.Weapons;
-using SamsHelper.BaseGameFunctionality;
+﻿using Game.Combat.Weapons;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using Character = Game.Characters.Character;
 

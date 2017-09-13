@@ -79,7 +79,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
 
         public bool ReachedMin()
         {
-            if (_currentValue >= _min)
+            if (_currentValue <= _min)
             {
                 return true;
             }

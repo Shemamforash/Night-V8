@@ -1,6 +1,7 @@
 ﻿using Game.Characters;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine.UI;
 
 namespace Facilitating.UI.GameOnly
