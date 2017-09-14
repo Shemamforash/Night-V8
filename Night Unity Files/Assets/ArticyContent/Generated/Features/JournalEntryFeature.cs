@@ -25,9 +25,9 @@ namespace Articy.Night.Features
     {
         
         [SerializeField()]
-        private String mJournalEntryList;
+        private string mJournalEntryList;
         
-        public String JournalEntryList
+        public string JournalEntryList
         {
             get
             {

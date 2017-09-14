@@ -24,10 +24,10 @@ namespace Articy.Night
     {
         
         [SerializeField()]
-        private String mMenuText;
+        private string mMenuText;
         
         [SerializeField()]
-        private String mStageDirections;
+        private string mStageDirections;
         
         [SerializeField()]
         private ArticyValueArticyObject mSpeaker = new ArticyValueArticyObject();
@@ -36,22 +36,22 @@ namespace Articy.Night
         private Color mColor;
         
         [SerializeField()]
-        private String mText;
+        private string mText;
         
         [SerializeField()]
-        private String mExternalId;
+        private string mExternalId;
         
         [SerializeField()]
         private Vector2 mPosition;
         
         [SerializeField()]
-        private Single mZIndex;
+        private float mZIndex;
         
         [SerializeField()]
         private Vector2 mSize;
         
         [SerializeField()]
-        private UInt32 mShortId;
+        private uint mShortId;
         
         [SerializeField()]
         private ArticyValueListInputPin mInputPins = new ArticyValueListInputPin();
@@ -59,7 +59,7 @@ namespace Articy.Night
         [SerializeField()]
         private ArticyValueListOutputPin mOutputPins = new ArticyValueListOutputPin();
         
-        public String MenuText
+        public string MenuText
         {
             get
             {
@@ -71,7 +71,7 @@ namespace Articy.Night
             }
         }
         
-        public String StageDirections
+        public string StageDirections
         {
             get
             {
@@ -107,7 +107,7 @@ namespace Articy.Night
             }
         }
         
-        public String Text
+        public string Text
         {
             get
             {
@@ -119,7 +119,7 @@ namespace Articy.Night
             }
         }
         
-        public String ExternalId
+        public string ExternalId
         {
             get
             {
@@ -143,7 +143,7 @@ namespace Articy.Night
             }
         }
         
-        public Single ZIndex
+        public float ZIndex
         {
             get
             {
@@ -167,7 +167,7 @@ namespace Articy.Night
             }
         }
         
-        public UInt32 ShortId
+        public uint ShortId
         {
             get
             {
@@ -298,7 +298,7 @@ namespace Articy.Night
             }
             if ((aProperty == "ShortId"))
             {
-                ShortId = ((UInt32)(aValue));
+                ShortId = ((uint)(aValue));
                 return;
             }
             if ((aProperty == "InputPins"))

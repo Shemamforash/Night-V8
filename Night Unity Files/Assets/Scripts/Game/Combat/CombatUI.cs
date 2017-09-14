@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using SamsHelper;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.Combat
 {
-    public class CombatUI
+    public class CombatUi
     {
-        public GameObject AmmoPrefab, MagazineContent;
+        public readonly GameObject AmmoPrefab, MagazineContent;
         private GameObject _combatMenu;
 
-        public Text CharacterName,
+        public readonly TextMeshProUGUI CharacterName,
             CharacterHealthText,
             RegularRoundsText,
             InfernalRoundsText,
@@ -22,19 +23,19 @@ namespace Game.Combat
         private Slider _characterHealthSlider, _aimSlider;
         private List<GameObject> _magazineAmmo = new List<GameObject>();
 
-        public CombatUI(GameObject combatMenu)
+        public CombatUi(GameObject combatMenu)
         {
             _combatMenu = combatMenu;
             MagazineContent = Helper.FindChildWithName<Transform>(_combatMenu, "Magazine").Find("Content").gameObject;
             AmmoPrefab = Resources.Load("Prefabs/Ammo Prefab") as GameObject;
 
-            CharacterName = Helper.FindChildWithName<Text>(_combatMenu, "Name");
-            CharacterHealthText = Helper.FindChildWithName<Text>(_combatMenu, "Strength Remaining");
-            RegularRoundsText = Helper.FindChildWithName<Text>(_combatMenu, "Regular");
-            InfernalRoundsText = Helper.FindChildWithName<Text>(_combatMenu, "Infernal");
-            WeaponNameText = Helper.FindChildWithName<Text>(_combatMenu, "Weapon");
-            ExposureText = Helper.FindChildWithName<Text>(_combatMenu, "Exposure");
-            ReloadTimeRemaining = Helper.FindChildWithName<Text>(_combatMenu, "Time Remaining");
+            CharacterName = Helper.FindChildWithName<TextMeshProUGUI>(_combatMenu, "Name");
+            CharacterHealthText = Helper.FindChildWithName<TextMeshProUGUI>(_combatMenu, "Strength Remaining");
+            RegularRoundsText = Helper.FindChildWithName<TextMeshProUGUI>(_combatMenu, "Regular");
+            InfernalRoundsText = Helper.FindChildWithName<TextMeshProUGUI>(_combatMenu, "Infernal");
+            WeaponNameText = Helper.FindChildWithName<TextMeshProUGUI>(_combatMenu, "Weapon");
+            ExposureText = Helper.FindChildWithName<TextMeshProUGUI>(_combatMenu, "Exposure");
+            ReloadTimeRemaining = Helper.FindChildWithName<TextMeshProUGUI>(_combatMenu, "Time Remaining");
 
             _flankButton = Helper.FindChildWithName<Button>(_combatMenu, "Flank");
             _approachButton = Helper.FindChildWithName<Button>(_combatMenu, "Approach");
@@ -55,8 +56,7 @@ namespace Game.Combat
             _magazineAmmo.Clear();
             for (int i = 0; i < capacity; ++i)
             {
-                GameObject newRound = GameObject.Instantiate(AmmoPrefab);
-                newRound.transform.SetParent(MagazineContent.transform);
+                GameObject newRound = Helper.InstantiateUiObject(AmmoPrefab, MagazineContent.transform);
                 _magazineAmmo.Add(newRound);
             }
         }
@@ -65,7 +65,7 @@ namespace Game.Combat
         {
             _aimSlider.value = value;
         }
-        
+
         public void EmptyMagazine()
         {
             EnableReloadTime(true);
@@ -81,7 +81,7 @@ namespace Game.Combat
             ReloadTimeRemaining.gameObject.SetActive(enable);
             MagazineContent.SetActive(!enable);
         }
-        
+
         public void UpdateMagazine(int remaining)
         {
             EnableReloadTime(false);

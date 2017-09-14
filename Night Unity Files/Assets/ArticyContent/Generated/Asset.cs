@@ -23,13 +23,13 @@ namespace Articy.Night
     {
         
         [SerializeField()]
-        private String mDisplayName;
+        private string mDisplayName;
         
         [SerializeField()]
-        private String mFilename;
+        private string mFilename;
         
         [SerializeField()]
-        private String mOriginalSource;
+        private string mOriginalSource;
         
         [SerializeField()]
         private PreviewImage mPreviewImage = new PreviewImage();
@@ -38,25 +38,25 @@ namespace Articy.Night
         private Color mColor;
         
         [SerializeField()]
-        private String mText;
+        private string mText;
         
         [SerializeField()]
-        private String mExternalId;
+        private string mExternalId;
         
         [SerializeField()]
         private Vector2 mPosition;
         
         [SerializeField()]
-        private Single mZIndex;
+        private float mZIndex;
         
         [SerializeField()]
         private Vector2 mSize;
         
         [SerializeField()]
-        private UInt32 mShortId;
+        private uint mShortId;
         
         [SerializeField()]
-        private String mAssetRefPath;
+        private string mAssetRefPath;
         
         [SerializeField()]
         private UnityEngine.Object mCachedAsset;
@@ -64,7 +64,7 @@ namespace Articy.Night
         [SerializeField()]
         private AssetCategory mCategory;
         
-        public String DisplayName
+        public string DisplayName
         {
             get
             {
@@ -76,7 +76,7 @@ namespace Articy.Night
             }
         }
         
-        public String Filename
+        public string Filename
         {
             get
             {
@@ -88,7 +88,7 @@ namespace Articy.Night
             }
         }
         
-        public String OriginalSource
+        public string OriginalSource
         {
             get
             {
@@ -124,7 +124,7 @@ namespace Articy.Night
             }
         }
         
-        public String Text
+        public string Text
         {
             get
             {
@@ -136,7 +136,7 @@ namespace Articy.Night
             }
         }
         
-        public String ExternalId
+        public string ExternalId
         {
             get
             {
@@ -160,7 +160,7 @@ namespace Articy.Night
             }
         }
         
-        public Single ZIndex
+        public float ZIndex
         {
             get
             {
@@ -184,7 +184,7 @@ namespace Articy.Night
             }
         }
         
-        public UInt32 ShortId
+        public uint ShortId
         {
             get
             {
@@ -196,7 +196,7 @@ namespace Articy.Night
             }
         }
         
-        public String AssetRefPath
+        public string AssetRefPath
         {
             get
             {
@@ -325,7 +325,7 @@ namespace Articy.Night
             }
             if ((aProperty == "ShortId"))
             {
-                ShortId = ((UInt32)(aValue));
+                ShortId = ((uint)(aValue));
                 return;
             }
             base.setProp(aProperty, aValue);

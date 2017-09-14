@@ -5,6 +5,7 @@ using Characters;
 using Game.Characters.CharacterActions;
 using SamsHelper;
 using SamsHelper.ReactiveUI.MenuSystem;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Character = Game.Characters.Character;
@@ -19,7 +20,7 @@ namespace Game.World
         private static Dictionary<string, RegionTemplate> _templates = new Dictionary<string, RegionTemplate>();
         private static int _noRegionsToGenerate = 10;
         private static GameObject _regionContainer, _regionPrefab, _backButton, _exploreButton;
-        private static Text _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
+        private static TextMeshProUGUI _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
         private static Character _character;
 
         public void Awake()
@@ -27,9 +28,9 @@ namespace Game.World
             _backButton = Helper.FindChildWithName(gameObject, "Back");
             _backButton.GetComponent<Button>().onClick.AddListener(delegate { ExitManager(false); });
             _regionContainer = Helper.FindChildWithName(gameObject, "Content");
-            _regionInfoNameText = Helper.FindChildWithName<Text>(gameObject, "Name");
-            _regionInfoTypeText = Helper.FindChildWithName<Text>(gameObject, "Type");
-            _regionInfoDescriptionText = Helper.FindChildWithName<Text>(gameObject, "Description");
+            _regionInfoNameText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
+            _regionInfoTypeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Type");
+            _regionInfoDescriptionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Description");
             _regionPrefab = Resources.Load("Prefabs/Region") as GameObject;
             LoadRegionTemplates();
         }
@@ -73,7 +74,7 @@ namespace Game.World
                 RegionTemplate template = _templates[_templates.Keys.ToList()[Random.Range(0, _templates.Keys.Count)]];
                 Region.Region region = new Region.Region(template, newRegionObject);
                 newRegionObject.GetComponent<Button>().onClick.AddListener(delegate { UpdateRegionInfo(region); });
-                newRegionObject.transform.Find("Text").GetComponent<Text>().text = region.Name();
+                newRegionObject.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = region.Name();
                 _unexploredRegions.Add(region);
                 newRegionObject.SetActive(false);
             }
@@ -119,7 +120,7 @@ namespace Game.World
                 Region.Region targetRegion = _unexploredRegions[Random.Range(0, _unexploredRegions.Count)];
                 StartExploration(delegate { DiscoverRegion(targetRegion); }, targetRegion);
             });
-            _exploreButton.transform.Find("Text").GetComponent<Text>().text = "Explore...";
+            _exploreButton.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = "Explore...";
             if (_discoveredRegions.Count != 0)
             {
                 GameObject lastRegionInList = _discoveredRegions[_discoveredRegions.Count - 1].GetObject();
@@ -132,10 +133,7 @@ namespace Game.World
 
         private static GameObject AddNewButton()
         {
-            GameObject newRegionObject = Instantiate(_regionPrefab);
-            newRegionObject.transform.SetParent(_regionContainer.transform);
-            newRegionObject.transform.localScale = new Vector3(1, 1, 1);
-            return newRegionObject;
+            return Helper.InstantiateUiObject(_regionPrefab, _regionContainer.transform);
         }
 
         private static void UpdateRegionInfo(Region.Region region)
@@ -148,7 +146,7 @@ namespace Game.World
         public static void EnterManager(Character character)
         {
             _character = character;
-            MenuStateMachine.Instance.NavigateToState("Region Menu");
+            MenuStateMachine.Instance().NavigateToState("Region Menu");
         }
 
         public static void StartExploration(Action a, Region.Region target)
@@ -166,7 +164,7 @@ namespace Game.World
                 _character.ReturnToDefault();
             }
             _character = null;
-            MenuStateMachine.Instance.GoToInitialMenu();
+            MenuStateMachine.Instance().GoToInitialMenu();
         }
     }
 }

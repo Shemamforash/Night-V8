@@ -1,4 +1,5 @@
-﻿#if UNITY_EDITOR
+﻿using TMPro;
+#if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -7,10 +8,10 @@ using UnityEngine.UI;
 namespace Facilitating.UI.Elements
 {
     [ExecuteInEditMode]
-    [RequireComponent(typeof(Text))]
+    [RequireComponent(typeof(TextMeshProUGUI))]
     public class EnhancedText : MonoBehaviour
     {
-        private Text _text;
+        private TextMeshProUGUI _text;
 
         public enum FontSizes
         {
@@ -24,28 +25,40 @@ namespace Facilitating.UI.Elements
 
         public void Awake()
         {
-            _text = gameObject.GetComponent<Text>();
-            _text.supportRichText = true;
-            _text.alignByGeometry = true;
-            _text.resizeTextForBestFit = true;
-            _text.resizeTextMinSize = 10;
-            _text.resizeTextMaxSize = UiAppearanceController.Instance.GetFontSize(FontSize);
+            TryReplaceText();
+            _text.richText = true;
             UpdateFontSize();
             _text.font = UiAppearanceController.Instance.UniversalFont;
         }
 
-        public void SetFont(Font universalFont)
+        public void SetFont(TMP_FontAsset universalFont)
         {
-            _text = gameObject.GetComponent<Text>();
+            TryReplaceText();
+            _text = gameObject.GetComponent<TextMeshProUGUI>();
             _text.font = universalFont;
             UpdateFontSize();
         }
 
+        private void TryReplaceText()
+        {
+            if (GetComponent<TextMeshProUGUI>() == null)
+            {
+                Text t = gameObject.GetComponent<Text>();
+                string textContent = t.text;
+                DestroyImmediate(t);
+                TextMeshProUGUI newtext = gameObject.AddComponent<TextMeshProUGUI>();
+                newtext.text = textContent;
+            }
+            _text = gameObject.GetComponent<TextMeshProUGUI>();
+            _text.spriteAsset = Resources.Load("Sprites/Icons") as TMP_SpriteAsset;
+        }
+        
         public void Update()
         {
 #if UNITY_EDITOR
             if (!EditorApplication.isPlayingOrWillChangePlaymode)
             {
+                TryReplaceText();
                 UpdateFontSize();
             }
 #endif
@@ -53,8 +66,8 @@ namespace Facilitating.UI.Elements
 
         private void UpdateFontSize()
         {
+            TryReplaceText();
             _text.fontSize = UiAppearanceController.Instance.GetFontSize(FontSize);
-            _text.resizeTextMaxSize = UiAppearanceController.Instance.GetFontSize(FontSize);
         }
 
         public void SetColor(Color color)

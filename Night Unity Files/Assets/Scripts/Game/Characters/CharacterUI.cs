@@ -1,6 +1,6 @@
 using Game.Characters;
 using SamsHelper;
-using SamsHelper.ReactiveUI;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,20 +14,20 @@ namespace Characters
         public Button CollapseCharacterButton;
         public GameObject ActionScrollContent, WeaponCard;
 
-        public Text CurrentActionText, DetailedCurrentActionText;
-        public Text ConditionsText;
-        public Text ThirstText, HungerText, StrengthText, IntelligenceText, EnduranceText, StabilityText;
-        public Text StrengthTextDetail, IntelligenceTextDetail, EnduranceTextDetail, StabilityTextDetail;
+        public TextMeshProUGUI CurrentActionText, DetailedCurrentActionText;
+        public TextMeshProUGUI ConditionsText;
+        public TextMeshProUGUI ThirstText, HungerText, StrengthText, IntelligenceText, EnduranceText, StabilityText;
+        public TextMeshProUGUI StrengthTextDetail, IntelligenceTextDetail, EnduranceTextDetail, StabilityTextDetail;
 
-        public Text NameText, ClassTraitText, DetailedClassText, DetailedTraitText;
-        public Text WeightText;
+        public TextMeshProUGUI NameText, ClassTraitText, DetailedClassText, DetailedTraitText;
+        public TextMeshProUGUI WeightText;
 
-        public Text WeaponNameTextDetailed,
+        public TextMeshProUGUI WeaponNameTextDetailed,
             WeaponNameTextSimple,
             WeaponModifier1Text,
             WeaponModifier2Text;
 
-        public Text WeaponDamageText,
+        public TextMeshProUGUI WeaponDamageText,
             WeaponFireRateText,
             WeaponReloadSpeedText,
             WeaponCapacityText,
@@ -48,44 +48,44 @@ namespace Characters
             CollapseCharacterButton = FindInDetailedView<Button>("Back Button");
             CollapseCharacterButton.onClick.AddListener(CharacterManager.ExitCharacter);
 
-            ThirstText = FindInSimpleView<Text>("Thirst");
-            HungerText = FindInSimpleView<Text>("Hunger");
-            StrengthText = FindInSimpleView<Text>("Strength"); //, f => f + " str");
-            IntelligenceText = FindInSimpleView<Text>("Intelligence"); //, f => f + " int");
-            EnduranceText = FindInSimpleView<Text>("Endurance"); //, f => f + " end");
-            StabilityText = FindInSimpleView<Text>("Stability"); //, f => f + " stab");
+            ThirstText = FindInSimpleView<TextMeshProUGUI>("Thirst");
+            HungerText = FindInSimpleView<TextMeshProUGUI>("Hunger");
+            StrengthText = FindInSimpleView<TextMeshProUGUI>("Strength"); //, f => f + " str");
+            IntelligenceText = FindInSimpleView<TextMeshProUGUI>("Intelligence"); //, f => f + " int");
+            EnduranceText = FindInSimpleView<TextMeshProUGUI>("Endurance"); //, f => f + " end");
+            StabilityText = FindInSimpleView<TextMeshProUGUI>("Stability"); //, f => f + " stab");
 
-            NameText = FindInSimpleView<Text>("Simple Name");
-            ClassTraitText = FindInSimpleView<Text>("ClassTrait");
-            CurrentActionText = FindInSimpleView<Text>("Current Action");
+            NameText = FindInSimpleView<TextMeshProUGUI>("Simple Name");
+            ClassTraitText = FindInSimpleView<TextMeshProUGUI>("ClassTrait");
+            CurrentActionText = FindInSimpleView<TextMeshProUGUI>("Current Action");
 
-            DetailedCurrentActionText = FindInDetailedView<Text>("CurrentAction");
-            DetailedClassText = FindInDetailedView<Text>("Class");
-            DetailedTraitText = FindInDetailedView<Text>("Trait");
-            WeightText = FindInDetailedView<Text>("Weight");
+            DetailedCurrentActionText = FindInDetailedView<TextMeshProUGUI>("CurrentAction");
+            DetailedClassText = FindInDetailedView<TextMeshProUGUI>("Class");
+            DetailedTraitText = FindInDetailedView<TextMeshProUGUI>("Trait");
+            WeightText = FindInDetailedView<TextMeshProUGUI>("Weight");
 
             EatButton = FindInDetailedView<Button>("Eat Button");
             DrinkButton = FindInDetailedView<Button>("Drink Button");
             WeaponCard = Helper.FindChildWithName(DetailedView.transform, "Weapon Card").gameObject;
-            ConditionsText = FindInDetailedView<Text>("Conditions");
+            ConditionsText = FindInDetailedView<TextMeshProUGUI>("Conditions");
 
-            StrengthTextDetail = FindInDetailedView<Text>("Strength");
-            IntelligenceTextDetail = FindInDetailedView<Text>("Intelligence");
-            EnduranceTextDetail = FindInDetailedView<Text>("Endurance");
-            StabilityTextDetail = FindInDetailedView<Text>("Stability");
+            StrengthTextDetail = FindInDetailedView<TextMeshProUGUI>("Strength");
+            IntelligenceTextDetail = FindInDetailedView<TextMeshProUGUI>("Intelligence");
+            EnduranceTextDetail = FindInDetailedView<TextMeshProUGUI>("Endurance");
+            StabilityTextDetail = FindInDetailedView<TextMeshProUGUI>("Stability");
 
-            WeaponNameTextSimple = FindInSimpleView<Text>("Weapon Name");
-            WeaponNameTextDetailed = FindInDetailedView<Text>("Weapon Name");
-            WeaponModifier1Text = FindInDetailedView<Text>("Primary Modifier");
-            WeaponModifier2Text = FindInDetailedView<Text>("Secondary Modifier");
+            WeaponNameTextSimple = FindInSimpleView<TextMeshProUGUI>("Weapon Name");
+            WeaponNameTextDetailed = FindInDetailedView<TextMeshProUGUI>("Weapon Name");
+            WeaponModifier1Text = FindInDetailedView<TextMeshProUGUI>("Primary Modifier");
+            WeaponModifier2Text = FindInDetailedView<TextMeshProUGUI>("Secondary Modifier");
 
-            WeaponDamageText = FindInDetailedView<Text>("Damage");
-            WeaponFireRateText = FindInDetailedView<Text>("Fire Rate");
-            WeaponReloadSpeedText = FindInDetailedView<Text>("Reload Speed");
-            WeaponCapacityText = FindInDetailedView<Text>("Capacity");
-            WeaponHandlingText = FindInDetailedView<Text>("Handling");
-            WeaponCriticalChanceText = FindInDetailedView<Text>("Critical Chance");
-            WeaponAccuracyText = FindInDetailedView<Text>("Accuracy");
+            WeaponDamageText = FindInDetailedView<TextMeshProUGUI>("Damage");
+            WeaponFireRateText = FindInDetailedView<TextMeshProUGUI>("Fire Rate");
+            WeaponReloadSpeedText = FindInDetailedView<TextMeshProUGUI>("Reload Speed");
+            WeaponCapacityText = FindInDetailedView<TextMeshProUGUI>("Capacity");
+            WeaponHandlingText = FindInDetailedView<TextMeshProUGUI>("Handling");
+            WeaponCriticalChanceText = FindInDetailedView<TextMeshProUGUI>("Critical Chance");
+            WeaponAccuracyText = FindInDetailedView<TextMeshProUGUI>("Accuracy");
         }
 
         public T FindInSimpleView<T>(string name)

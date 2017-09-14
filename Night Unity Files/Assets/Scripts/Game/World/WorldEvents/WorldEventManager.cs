@@ -3,6 +3,7 @@ using System.Xml;
 using Facilitating.Persistence;
 using SamsHelper;
 using SamsHelper.Persistence;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,12 +11,12 @@ namespace Game.World.WorldEvents
 {
     public class WorldEventManager : MonoBehaviour, IPersistenceTemplate
     {
-        private static Text _eventLogText;
+        private static TextMeshProUGUI _eventLogText;
         private static List<string> _eventLog = new List<string>();
 
         public void Awake()
         {
-            _eventLogText = Helper.FindChildWithName<Text>(gameObject, "Event Log");
+            _eventLogText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Event Log");
             PrintFirstFourEvents();
         }
 

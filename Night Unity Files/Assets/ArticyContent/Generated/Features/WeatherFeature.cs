@@ -25,42 +25,42 @@ namespace Articy.Night.Features
     {
         
         [SerializeField()]
-        private String mWeatherName;
+        private string mWeatherName;
         
         [SerializeField()]
-        private Single mWeatherTemperatureOffset;
+        private float mWeatherTemperatureOffset;
         
         [SerializeField()]
-        private Single mWeatherWaterMod;
+        private float mWeatherWaterMod;
         
         [SerializeField()]
-        private Single mWeatherFoodMod;
+        private float mWeatherFoodMod;
         
         [SerializeField()]
-        private Single mWeatherDangerMod;
+        private float mWeatherDangerMod;
         
         [SerializeField()]
-        private Boolean mWeatherFireDanger = new Boolean();
+        private bool mWeatherFireDanger = new bool();
         
         [SerializeField()]
-        private Boolean mWeatherWindDanger = new Boolean();
+        private bool mWeatherWindDanger = new bool();
         
         [SerializeField()]
-        private Boolean mWeatherFloodDanger = new Boolean();
+        private bool mWeatherFloodDanger = new bool();
         
         [SerializeField()]
-        private Boolean mWeatherColdDanger = new Boolean();
+        private bool mWeatherColdDanger = new bool();
         
         [SerializeField()]
-        private Boolean mWeatherToxicDanger = new Boolean();
+        private bool mWeatherToxicDanger = new bool();
         
         [SerializeField()]
-        private Single mWeatherVisionModifier;
+        private float mWeatherVisionModifier;
         
         [SerializeField()]
         private EnumValue mEnumValue = new EnumValue();
         
-        public String WeatherName
+        public string WeatherName
         {
             get
             {
@@ -72,7 +72,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WeatherTemperatureOffset
+        public float WeatherTemperatureOffset
         {
             get
             {
@@ -84,7 +84,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WeatherWaterMod
+        public float WeatherWaterMod
         {
             get
             {
@@ -96,7 +96,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WeatherFoodMod
+        public float WeatherFoodMod
         {
             get
             {
@@ -108,7 +108,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WeatherDangerMod
+        public float WeatherDangerMod
         {
             get
             {
@@ -120,7 +120,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Boolean WeatherFireDanger
+        public bool WeatherFireDanger
         {
             get
             {
@@ -132,7 +132,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Boolean WeatherWindDanger
+        public bool WeatherWindDanger
         {
             get
             {
@@ -144,7 +144,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Boolean WeatherFloodDanger
+        public bool WeatherFloodDanger
         {
             get
             {
@@ -156,7 +156,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Boolean WeatherColdDanger
+        public bool WeatherColdDanger
         {
             get
             {
@@ -168,7 +168,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Boolean WeatherToxicDanger
+        public bool WeatherToxicDanger
         {
             get
             {
@@ -180,7 +180,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WeatherVisionModifier
+        public float WeatherVisionModifier
         {
             get
             {

@@ -11,7 +11,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         private State _currentState;
         private string _defaultState;
 
-        public virtual List<State> StatesAsList()
+        protected List<State> StatesAsList()
         {
             return new List<State>(States.Values);
         }
@@ -20,8 +20,8 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         {
             return _currentState;
         }
-        
-        public void SetDefaultState(string defaultState)
+
+        protected void SetDefaultState(string defaultState)
         {
             _defaultState = defaultState;
             NavigateToState(defaultState);
@@ -32,23 +32,24 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             return States[stateName];
         }
 
-        public void AddState(State state)
+        protected void AddState(State state)
         {
             States[state.Name()] = state;
         }
 
         public virtual State NavigateToState(string stateName)
         {
-            if (_currentState != null)
+            _currentState?.Exit();
+            if (!States.ContainsKey(stateName))
             {
-                _currentState.Exit();
+                throw new Exceptions.UnknownStateNameException(stateName);
             }
             _currentState = States[stateName];
             _currentState.Enter();
             return _currentState;
         }
 
-        public bool IsInState(string statename)
+        private bool IsInState(string statename)
         {
             return _currentState.Name() == statename;
         }

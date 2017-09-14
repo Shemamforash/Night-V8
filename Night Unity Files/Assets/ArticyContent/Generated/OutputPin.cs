@@ -28,7 +28,7 @@ namespace Articy.Night
         private ArticyValueArticyScriptInstruction mText = new ArticyValueArticyScriptInstruction();
         
         [SerializeField()]
-        private UInt64 mOwner;
+        private ulong mOwner;
         
         [SerializeField()]
         private ArticyValueListOutgoingConnection mConnections = new ArticyValueListOutgoingConnection();
@@ -45,7 +45,7 @@ namespace Articy.Night
             }
         }
         
-        public UInt64 Owner
+        public ulong Owner
         {
             get
             {

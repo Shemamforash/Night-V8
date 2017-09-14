@@ -4,6 +4,7 @@ using Game.World.Time;
 using Persistence;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.MenuSystem;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -21,7 +22,7 @@ namespace Facilitating.MenuNavigation
         {
             if (SaveController.SaveExists())
             {
-                MenuStateMachine.Instance.NavigateToState("Overwrite Save Warning");
+                MenuStateMachine.Instance().NavigateToState("Overwrite Save Warning");
             }
             else
             {
@@ -52,13 +53,13 @@ namespace Facilitating.MenuNavigation
             }
             else
             {
-                MenuStateMachine.Instance.NavigateToState("No Save Warning");
+                MenuStateMachine.Instance().NavigateToState("No Save Warning");
             }
         }
 
         public void SetDifficulty(GameObject btn)
         {
-            string btnDifficulty = btn.transform.Find("Text").GetComponent<Text>().text.ToLower();
+            string btnDifficulty = btn.transform.Find("Text").GetComponent<TextMeshProUGUI>().text.ToLower();
             GameData.SetDifficultyFromString(btnDifficulty);
         }
     }

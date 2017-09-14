@@ -24,18 +24,18 @@ namespace Articy.Night
     {
         
         [SerializeField()]
-        private String mLabel;
+        private string mLabel;
         
         [SerializeField()]
         private Color mColor;
         
         [SerializeField()]
-        private UInt64 mSourcePin;
+        private ulong mSourcePin;
         
         [SerializeField()]
         private ArticyValueArticyObject mSource = new ArticyValueArticyObject();
         
-        public String Label
+        public string Label
         {
             get
             {
@@ -59,7 +59,7 @@ namespace Articy.Night
             }
         }
         
-        public UInt64 SourcePin
+        public ulong SourcePin
         {
             get
             {

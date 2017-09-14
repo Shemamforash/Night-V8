@@ -1,24 +1,18 @@
-﻿using UnityEngine;
+﻿using SamsHelper;
+using UnityEngine;
 
 namespace UI.Highlight
 {
     public class BorderHighlight : Highlight
     {
-        protected GameObject borderPrefab, borderObject;
+        protected GameObject borderObject;
         protected bool initialised = false;
         public int leftOffset, rightOffset, topOffset, bottomOffset;
-        public Transform targetBorderParent;
 
-        public virtual void Initialise()
+        public void Initialise()
         {
-            borderPrefab = Resources.Load("Prefabs/Border", typeof(GameObject)) as GameObject;
-            borderObject = Instantiate(borderPrefab);
+            borderObject =  Helper.InstantiateUiObject("Prefabs/Border", transform);
             borderObject.name = "Border";
-            if (targetBorderParent == null)
-            {
-                targetBorderParent = transform;
-            }
-            borderObject.transform.SetParent(targetBorderParent);
             RectTransform rect = borderObject.GetComponent<RectTransform>();
             rect.localScale = new Vector2(1, 1);
             rect.anchorMin = new Vector2(0, 0);

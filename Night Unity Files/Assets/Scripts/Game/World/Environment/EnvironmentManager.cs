@@ -3,6 +3,7 @@ using Game.World.Time;
 using Game.World.Weather;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,13 +11,13 @@ namespace Game.World.Environment
 {
     public class EnvironmentManager : ProbabalisticStateMachine
     {
-        private Text _environmentText, _temperatureText;
+        private TextMeshProUGUI _environmentText, _temperatureText;
         private List<string> _visitedEnvironments = new List<string>();
 
         public void Awake()
         {
-            _environmentText = GameObject.Find("Environment").GetComponent<Text>();
-            _temperatureText = GameObject.Find("Temperature").GetComponent<Text>();
+            _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();
+            _temperatureText = GameObject.Find("Temperature").GetComponent<TextMeshProUGUI>();
         }
 
         public void Start()

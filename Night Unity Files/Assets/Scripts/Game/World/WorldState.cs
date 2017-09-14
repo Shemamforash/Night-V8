@@ -9,6 +9,7 @@ using Persistence;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -75,10 +76,10 @@ namespace Game.World
         
 	    private static void SetResourceSuffix(string name, string convention)
 	    {
-		    Text resourceText = GameObject.Find(name).GetComponent<Text>();
+		    TextMeshProUGUI resourceText = GameObject.Find(name).GetComponent<TextMeshProUGUI>();
 		    _homeInventory.GetResource(name).AddOnUpdate(f =>
 		    {
-			    resourceText.text = Mathf.Round(f) + " " + convention;
+			    resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f) + " " + convention;
 		    });
 	    }
         

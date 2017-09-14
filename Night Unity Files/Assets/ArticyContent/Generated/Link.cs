@@ -26,16 +26,16 @@ namespace Articy.Night
         private Color mColor;
         
         [SerializeField()]
-        private String mText;
+        private string mText;
         
         [SerializeField()]
-        private String mExternalId;
+        private string mExternalId;
         
         [SerializeField()]
         private Vector2 mPosition;
         
         [SerializeField()]
-        private Single mZIndex;
+        private float mZIndex;
         
         [SerializeField()]
         private Vector2 mSize;
@@ -44,25 +44,25 @@ namespace Articy.Night
         private ArticyValueArticyObject mTarget = new ArticyValueArticyObject();
         
         [SerializeField()]
-        private UInt32 mShortId;
+        private uint mShortId;
         
         [SerializeField()]
         private VisibilityModes mVisibility = new VisibilityModes();
         
         [SerializeField()]
-        private Boolean mShowDisplayName = new Boolean();
+        private bool mShowDisplayName = new bool();
         
         [SerializeField()]
         private Color mDisplayNameColor;
         
         [SerializeField()]
-        private Int32 mDisplayNameSize;
+        private int mDisplayNameSize;
         
         [SerializeField()]
         private SelectabilityModes mSelectability = new SelectabilityModes();
         
         [SerializeField()]
-        private Boolean mDropShadow = new Boolean();
+        private bool mDropShadow = new bool();
         
         public Color Color
         {
@@ -76,7 +76,7 @@ namespace Articy.Night
             }
         }
         
-        public String Text
+        public string Text
         {
             get
             {
@@ -88,7 +88,7 @@ namespace Articy.Night
             }
         }
         
-        public String ExternalId
+        public string ExternalId
         {
             get
             {
@@ -112,7 +112,7 @@ namespace Articy.Night
             }
         }
         
-        public Single ZIndex
+        public float ZIndex
         {
             get
             {
@@ -148,7 +148,7 @@ namespace Articy.Night
             }
         }
         
-        public UInt32 ShortId
+        public uint ShortId
         {
             get
             {
@@ -172,7 +172,7 @@ namespace Articy.Night
             }
         }
         
-        public Boolean ShowDisplayName
+        public bool ShowDisplayName
         {
             get
             {
@@ -196,7 +196,7 @@ namespace Articy.Night
             }
         }
         
-        public Int32 DisplayNameSize
+        public int DisplayNameSize
         {
             get
             {
@@ -220,7 +220,7 @@ namespace Articy.Night
             }
         }
         
-        public Boolean DropShadow
+        public bool DropShadow
         {
             get
             {
@@ -300,7 +300,7 @@ namespace Articy.Night
             }
             if ((aProperty == "ShortId"))
             {
-                ShortId = ((UInt32)(aValue));
+                ShortId = ((uint)(aValue));
                 return;
             }
             if ((aProperty == "Visibility"))

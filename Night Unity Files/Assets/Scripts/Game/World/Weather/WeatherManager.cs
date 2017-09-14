@@ -3,6 +3,7 @@ using Game.World.Time;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI.CustomTypes;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,12 +12,12 @@ namespace Game.World.Weather
     public class WeatherManager : ProbabalisticStateMachine
     {
         private static WeatherManager _instance;
-        private Text _weatherText;
+        private TextMeshProUGUI _weatherText;
 
         public void Awake()
         {
             _instance = this;
-            _weatherText = GameObject.Find("Weather").GetComponent<Text>();
+            _weatherText = GameObject.Find("Weather").GetComponent<TextMeshProUGUI>();
         }
 
         public void Start()

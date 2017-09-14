@@ -137,6 +137,27 @@ namespace SamsHelper
             Left,
             Right
         }
+        
+        
+        public static GameObject InstantiateUiObject<T>(string prefabLocation, Transform parent) where T : Component
+        {
+            GameObject newUiObject = InstantiateUiObject(prefabLocation, parent);
+            newUiObject.AddComponent<T>();
+            return newUiObject;
+        }
+        
+        public static GameObject InstantiateUiObject(string prefabLocation, Transform parent)
+         {
+             return InstantiateUiObject(Resources.Load(prefabLocation) as GameObject, parent);
+         }
+        
+        public static GameObject InstantiateUiObject(GameObject prefab, Transform parent)
+        {
+            GameObject newUiObject = GameObject.Instantiate(prefab);
+            newUiObject.transform.SetParent(parent);
+            newUiObject.transform.localScale = new Vector3(1, 1, 1);
+            return newUiObject;
+        }
 
         public static void SetNavigation(GameObject origin, GameObject target, NavigationDirections d)
         {

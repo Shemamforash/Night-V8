@@ -1,5 +1,4 @@
 ﻿using Facilitating.Persistence;
-using Persistence;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
@@ -8,7 +7,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
     {
         private static MenuStateMachine _instance;
         public Menu InitialMenu;
-        
+
         public void Awake()
         {
             foreach (Menu t in Helper.FindAllComponentsInChildren<Menu>(transform))
@@ -24,27 +23,21 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             NavigateToState(InitialMenu.name);
         }
 
-        public static MenuStateMachine Instance
+        public static MenuStateMachine Instance()
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = FindObjectOfType<MenuStateMachine>();
-                }
-                return _instance;
-            }
+            return _instance ?? (_instance = FindObjectOfType<MenuStateMachine>());
         }
+
         //TODO move me somewhere more suitable
         public void OnApplicationQuit()
         {
             SaveController.SaveSettings();
             SaveController.SaveGame();
         }
-        
+
         public void GoToMenu(Menu m)
         {
-            NavigateToState(m.gameObject.name);    
+            NavigateToState(m.gameObject.name);
         }
 
         public void GoToInitialMenu()

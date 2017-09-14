@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml;
 using Characters;
+using Facilitating.MenuNavigation;
 using Facilitating.Persistence;
 using SamsHelper;
 using SamsHelper.Input;
@@ -35,7 +36,7 @@ namespace Game.Characters
 
         private static void PopulateCharacterUi()
         {
-            GameObject inventoryObject = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Inventory");
+            GameObject inventoryObject = HomeInventoryDisplay.Instance().GetInventoryObject();
 
             float currentY = 1f;
             foreach (Character c in _characters)
@@ -83,7 +84,7 @@ namespace Game.Characters
             PopulateCharacterUi();
             if (isDriver)
             {
-                MenuStateMachine.Instance.NavigateToState("Game Over Menu");
+                MenuStateMachine.Instance().NavigateToState("Game Over Menu");
             }
         }
 

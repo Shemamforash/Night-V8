@@ -13,6 +13,7 @@ using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.CustomTypes;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,7 +40,6 @@ namespace Game.Characters
 
         public DesolationInventory CharacterInventory = new DesolationInventory();
 
-        private GameObject actionButtonPrefab;
         private Weapon _weapon;
 
         public void AddItemToInventory(InventoryItem item)
@@ -61,7 +61,7 @@ namespace Game.Characters
             return CharacterInventory.GetInventoryWeight() > Attributes.Strength.Val;
         }
 
-        public void Tire(int amount)
+        private void Tire(int amount)
         {
             Attributes.Endurance.Val -= IsOverburdened() ? amount * 2 : amount;
             CheckEnduranceZero();
@@ -145,7 +145,6 @@ namespace Game.Characters
             AddState(new Travel(this));
             AddState(new Return(this));
             Attributes = new CharacterAttributes(this);
-            actionButtonPrefab = Resources.Load("Prefabs/Action Button") as GameObject;
         }
 
         public void Initialise(string characterName, Traits.Trait classCharacter, Traits.Trait characterTrait)
@@ -195,33 +194,33 @@ namespace Game.Characters
             
             Attributes.Strength.AddOnValueChange(delegate(int f)
             {
-                CharacterUi.StrengthText.text = f + " str";
-                CharacterUi.StrengthTextDetail.text = f + "/" + Attributes.Strength.Max + " str";
+                CharacterUi.StrengthText.text = f + " <sprite name=\"Strength\">";
+                CharacterUi.StrengthTextDetail.text = f + "/" + Attributes.Strength.Max + " <sprite name=\"Strength\">";
             });
             Attributes.Endurance.AddOnValueChange(delegate(int f)
             {
-                CharacterUi.EnduranceText.text = f + " end";
-                CharacterUi.EnduranceTextDetail.text = f + "/" + Attributes.Endurance.Max + " end";
+                CharacterUi.EnduranceText.text = f + " <sprite name=\"Endurance\">";
+                CharacterUi.EnduranceTextDetail.text = f + "/" + Attributes.Endurance.Max + " <sprite name=\"Endurance\">";
             });
             Attributes.Stability.AddOnValueChange(delegate(int f)
             {
-                CharacterUi.StabilityText.text = f + " stb";
-                CharacterUi.StabilityTextDetail.text = f + "/" + Attributes.Stability.Max + " stb";
+                CharacterUi.StabilityText.text = f + " <sprite name=\"Stability\">";
+                CharacterUi.StabilityTextDetail.text = f + "/" + Attributes.Stability.Max + " <sprite name=\"Stability\">";
             });
             Attributes.Intelligence.AddOnValueChange(delegate(int f)
             {
-                CharacterUi.IntelligenceText.text = f + " int";
-                CharacterUi.IntelligenceTextDetail.text = f + "/" + Attributes.Intelligence.Max + " int";
+                CharacterUi.IntelligenceText.text = f + " <sprite name=\"Intelligence\">";
+                CharacterUi.IntelligenceTextDetail.text = f + "/" + Attributes.Intelligence.Max + " <sprite name=\"Intelligence\">";
             });
             Attributes.Hunger.AddOnValueChange(f => CharacterUi.HungerText.text = Attributes.GetHungerStatus());
             Attributes.Thirst.AddOnValueChange(f => CharacterUi.ThirstText.text = Attributes.GetThirstStatus());
         }
 
 
-        public List<State> StatesAsList(bool includeInactiveStates)
+        private List<State> StatesAsList(bool includeInactiveStates)
         {
             List<State> states = new List<State>();
-            foreach (BaseCharacterAction s in base.StatesAsList())
+            foreach (BaseCharacterAction s in StatesAsList())
             {
                 if (s.IsStateVisible() || includeInactiveStates)
                 {
@@ -237,10 +236,9 @@ namespace Game.Characters
             for (int i = 0; i < _availableActions.Count; ++i)
             {
                 BaseCharacterAction a = _availableActions[i];
-                GameObject newActionButton = Instantiate(actionButtonPrefab);
+                GameObject newActionButton = Helper.InstantiateUiObject("Prefabs/Action Button", CharacterUi.ActionScrollContent.transform);
                 a.ActionButtonGameObject = newActionButton;
-                newActionButton.transform.SetParent(CharacterUi.ActionScrollContent.transform);
-                newActionButton.transform.Find("Text").GetComponent<Text>().text = a.Name();
+                newActionButton.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = a.Name();
                 Button currentButton = newActionButton.GetComponent<Button>();
                 currentButton.GetComponent<Button>().onClick.AddListener(() =>
                 {

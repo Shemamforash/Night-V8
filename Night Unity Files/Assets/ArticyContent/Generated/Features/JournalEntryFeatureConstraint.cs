@@ -24,7 +24,7 @@ namespace Articy.Night.Features
     public class JournalEntryFeatureConstraint
     {
         
-        private Boolean mLoadedConstraints;
+        private bool mLoadedConstraints;
         
         private TextConstraint mJournalEntryList;
         

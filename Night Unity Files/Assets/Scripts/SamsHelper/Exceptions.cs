@@ -35,7 +35,7 @@ namespace SamsHelper
                 _trait = trait;
             }
 
-            public override String Message => "Trait not recognised: " + _trait;
+            public override string Message => "Trait not recognised: " + _trait;
         }
 
         public class CappedValueExceededBoundsException : Exception
@@ -159,6 +159,17 @@ namespace SamsHelper
             }
 
             public override string Message => "Tried to assign weight " + _targetWeight + " to " + _name + " with class " + _className + " and trait " + _traitName;
+        }
+
+        public class UnknownStateNameException : Exception
+        {
+            private string _stateName;
+            public UnknownStateNameException(string stateName)
+            {
+                _stateName = stateName;
+            }
+
+            public override string Message => "Tried to navigate to unknown state '" + _stateName + "'.";
         }
     }
 }

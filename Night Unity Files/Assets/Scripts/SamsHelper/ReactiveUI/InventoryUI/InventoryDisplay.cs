@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,13 +13,18 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         private Inventory _inventory;
         private readonly List<InventoryItemUi> _inventoryItems = new List<InventoryItemUi>();
         private Button _closeButton;
-        private Text _titleText, _capacityText;
+        protected TextMeshProUGUI TitleText, CapacityText;
 
-        public void Awake()
+        public virtual void Awake()
         {
             _closeButton = Helper.FindChildWithName<Button>(gameObject, "Close");
-            _titleText = Helper.FindChildWithName<Text>(gameObject, "Title");
-            _capacityText = Helper.FindChildWithName<Text>(gameObject, "Capacity");
+            _closeButton.onClick.AddListener(Close);
+            TitleText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Title");
+            CapacityText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Capacity");
+        }
+
+        protected virtual void Close()
+        {
         }
 
         public void SetInventory(Inventory inventory)
@@ -39,9 +45,6 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 if (i > 0)
                 {
                     Helper.SetNavigation(uiObject, _inventoryItems[i - 1].GetGameObject(), Helper.NavigationDirections.Up);
-                }
-                if (i < inventoryContents.Count - 1)
-                {
                     Helper.SetNavigation(_inventoryItems[i - 1].GetGameObject(), uiObject, Helper.NavigationDirections.Down);
                 }
                 InventoryItemUi itemUi = new InventoryItemUi(uiObject, inventoryItem);
@@ -52,10 +55,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         protected virtual GameObject AddItem(BasicInventoryContents inventoryItem)
         {
-            GameObject itemUi = Instantiate(ItemPrefab);
-            itemUi.transform.SetParent(InventoryContent);
-            itemUi.transform.localScale = new Vector3(1, 1, 1);
-            return itemUi;
+            return Helper.InstantiateUiObject(ItemPrefab, InventoryContent);
         }
     }
 }

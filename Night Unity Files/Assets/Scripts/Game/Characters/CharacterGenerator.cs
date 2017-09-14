@@ -88,10 +88,7 @@ namespace Game.Characters
 
         private static GameObject GenerateCharacterObject()
         {
-            GameObject characterUi = GameObject.Instantiate(Resources.Load("Prefabs/Character Template") as GameObject);
-            characterUi.AddComponent<Character>();
-            characterUi.transform.SetParent(GameObject.Find("Characters").transform);
-            return characterUi;
+            return Helper.InstantiateUiObject<Character>("Prefabs/Character Template", GameObject.Find("Characters").transform);
         }
 
         private static Character GenerateDriver()

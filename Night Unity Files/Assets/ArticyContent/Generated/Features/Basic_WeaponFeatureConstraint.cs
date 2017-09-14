@@ -24,7 +24,7 @@ namespace Articy.Night.Features
     public class Basic_WeaponFeatureConstraint
     {
         
-        private Boolean mLoadedConstraints;
+        private bool mLoadedConstraints;
         
         private TextConstraint mWeaponType;
         

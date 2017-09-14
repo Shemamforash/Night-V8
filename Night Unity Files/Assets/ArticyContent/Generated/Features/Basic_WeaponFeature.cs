@@ -25,31 +25,31 @@ namespace Articy.Night.Features
     {
         
         [SerializeField()]
-        private String mWeaponType;
+        private string mWeaponType;
         
         [SerializeField()]
-        private Single mWeaponDamage;
+        private float mWeaponDamage;
         
         [SerializeField()]
-        private Single mWeaponAccuracy;
+        private float mWeaponAccuracy;
         
         [SerializeField()]
-        private Single mWeaponManouevrability;
+        private float mWeaponManouevrability;
         
         [SerializeField()]
-        private Single mWeaponFireRate;
+        private float mWeaponFireRate;
         
         [SerializeField()]
-        private Single mWeaponReloadSpeed;
+        private float mWeaponReloadSpeed;
         
         [SerializeField()]
-        private Int32 mWeaponCapacity;
+        private int mWeaponCapacity;
         
         [SerializeField()]
-        private Single mWeaponCriticalChance;
+        private float mWeaponCriticalChance;
         
         [SerializeField()]
-        private Boolean mWeaponAutomatic = new Boolean();
+        private bool mWeaponAutomatic = new bool();
         
         [SerializeField()]
         private ArticyValueArticyObject mWeaponPrimaryPrefix = new ArticyValueArticyObject();
@@ -58,12 +58,12 @@ namespace Articy.Night.Features
         private ArticyValueArticyObject mWeaponSecondaryPrefix = new ArticyValueArticyObject();
         
         [SerializeField()]
-        private Boolean mWeaponAreaEffect = new Boolean();
+        private bool mWeaponAreaEffect = new bool();
         
         [SerializeField()]
         private WeaponRarity mWeaponRarity = new WeaponRarity();
         
-        public String WeaponType
+        public string WeaponType
         {
             get
             {
@@ -75,7 +75,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WeaponDamage
+        public float WeaponDamage
         {
             get
             {
@@ -87,7 +87,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WeaponAccuracy
+        public float WeaponAccuracy
         {
             get
             {
@@ -99,7 +99,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WeaponManouevrability
+        public float WeaponManouevrability
         {
             get
             {
@@ -111,7 +111,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WeaponFireRate
+        public float WeaponFireRate
         {
             get
             {
@@ -123,7 +123,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WeaponReloadSpeed
+        public float WeaponReloadSpeed
         {
             get
             {
@@ -135,7 +135,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Int32 WeaponCapacity
+        public int WeaponCapacity
         {
             get
             {
@@ -147,7 +147,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WeaponCriticalChance
+        public float WeaponCriticalChance
         {
             get
             {
@@ -159,7 +159,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Boolean WeaponAutomatic
+        public bool WeaponAutomatic
         {
             get
             {
@@ -195,7 +195,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Boolean WeaponAreaEffect
+        public bool WeaponAreaEffect
         {
             get
             {

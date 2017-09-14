@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Facilitating.UI.Elements;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -49,9 +50,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
             private ItemUIObject CreateNewUiObject(BasicInventoryContents item)
             {
-                GameObject newItemObject = Instantiate(_itemPrefab);
-                newItemObject.transform.SetParent(_parent);
-                newItemObject.transform.localScale = new Vector3(1, 1, 1);
+                GameObject newItemObject = Helper.InstantiateUiObject(_itemPrefab, _parent);
                 ItemUIObject newItemUi = new ItemUIObject(newItemObject, item);
                 Button b = Helper.FindChildWithName<Button>(newItemObject, "Move");
                 b.onClick.AddListener(() => GetMoveAmountAction(1, item, newItemUi));
@@ -98,11 +97,11 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 {
                     InventoryResource resource = item as InventoryResource;
                     float weight = resource != null ? resource.GetTotalWeight() : item.Weight();
-                    Helper.FindChildWithName<Text>(itemObject.GameObject, "Weight").text = weight + " W";
-                    Helper.FindChildWithName<Text>(itemObject.GameObject, "Name").text = item.Name();
+                    Helper.FindChildWithName<TextMeshProUGUI>(itemObject.GameObject, "Weight").text = weight + " W";
+                    Helper.FindChildWithName<TextMeshProUGUI>(itemObject.GameObject, "Name").text = item.Name();
                     InventoryResource inventoryResource = item as InventoryResource;
                     float amount = inventoryResource != null ? inventoryResource.Quantity() : 1;
-                    Helper.FindChildWithName<Text>(itemObject.GameObject, "Amount").text = Helper.Round(amount, 1).ToString();
+                    Helper.FindChildWithName<TextMeshProUGUI>(itemObject.GameObject, "Amount").text = Helper.Round(amount, 1).ToString();
                 }
                 if (_onInventoryMoveAction != null)
                 {

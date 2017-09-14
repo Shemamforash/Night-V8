@@ -1,7 +1,4 @@
-﻿using System;
-using Characters;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.ReactiveUI.InventoryUI;
+﻿using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
@@ -20,7 +17,7 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
-            MenuStateMachine.Instance.NavigateToState("Pick Up Menu");
+            MenuStateMachine.Instance().NavigateToState("Pick Up Menu");
             _previousCharacter = CharacterManager.SelectedCharacter;
             CharacterManager.SelectedCharacter = GetCharacter();
             InventoryManager inventoryManager = GameObject.Find("Pick Up Menu").GetComponent<InventoryManager>();
@@ -42,7 +39,7 @@ namespace Game.Characters.CharacterActions
         public void ReturnToGameScreen()
         {
             CharacterManager.SelectedCharacter = _previousCharacter;
-            MenuStateMachine.Instance.GoToInitialMenu();
+            MenuStateMachine.Instance().GoToInitialMenu();
         }
     }
 }

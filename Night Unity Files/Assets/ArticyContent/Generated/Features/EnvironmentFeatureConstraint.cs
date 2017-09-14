@@ -24,7 +24,7 @@ namespace Articy.Night.Features
     public class EnvironmentFeatureConstraint
     {
         
-        private Boolean mLoadedConstraints;
+        private bool mLoadedConstraints;
         
         private NumberConstraint mMinTemperature;
         

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using SamsHelper;
+using TMPro;
 
 namespace UI.Highlight
 {
@@ -12,7 +13,7 @@ namespace UI.Highlight
         If it's interactive, it must have it's colours inverted when selected, and must have a tooltip.
         */
 
-        protected List<Text> childTexts = new List<Text>();
+        protected List<TextMeshProUGUI> childTexts = new List<TextMeshProUGUI>();
         public string tooltipText;
 
         public virtual string GetTooltip()
@@ -25,7 +26,7 @@ namespace UI.Highlight
             List<Transform> children = Helper.FindAllChildren(transform);
             foreach (Transform t in children)
             {
-                Text text = t.GetComponent<Text>();
+                TextMeshProUGUI text = t.GetComponent<TextMeshProUGUI>();
                 if (text != null)
                 {
                     childTexts.Add(text);
@@ -59,7 +60,7 @@ namespace UI.Highlight
 
         private void ChangeTextColour(Color c)
         {
-            foreach (Text buttonText in childTexts)
+            foreach (TextMeshProUGUI buttonText in childTexts)
             {
                 buttonText.color = c;
             }

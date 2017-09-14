@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SamsHelper;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ namespace Facilitating.UI.Elements
     [ExecuteInEditMode]
     public class UiAppearanceController : MonoBehaviour
     {
-        public Font UniversalFont;
+        public TMP_FontAsset UniversalFont;
         public Color MainColor, SecondaryColor, BackgroundColor;
         public Image BorderImage;
         public int _smallFontSize, _mediumFontSize, _largeFontSize, _titleFontSize;

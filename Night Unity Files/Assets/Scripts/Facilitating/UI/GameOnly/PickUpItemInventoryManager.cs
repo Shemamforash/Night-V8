@@ -2,21 +2,22 @@
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
+using TMPro;
 using UnityEngine.UI;
 
 namespace Facilitating.UI.GameOnly
 {
     public class PickUpItemInventoryManager : InventoryManager
     {
-        private Text _characterInventoryText, _locationInventoryText;
-        private Text _characterCarryCapacityText;
+        private TextMeshProUGUI _characterInventoryText, _locationInventoryText;
+        private TextMeshProUGUI _characterCarryCapacityText;
 
         public override void Awake()
         {
             base.Awake();
-            _characterCarryCapacityText = Helper.FindChildWithName<Text>(gameObject, "Character Carrying Capacity");
-            _characterInventoryText = Helper.FindChildWithName<Text>(gameObject, "Character Title");
-            _locationInventoryText = Helper.FindChildWithName<Text>(gameObject, "Environment Title");
+            _characterCarryCapacityText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Character Carrying Capacity");
+            _characterInventoryText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Character Title");
+            _locationInventoryText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Environment Title");
             OriginInventoryContainer.SetOnInventoryMoveAction(delegate
             {
                 Inventory inventory = OriginInventoryContainer.GetInventory();

@@ -24,10 +24,10 @@ namespace Articy.Night
     {
         
         [SerializeField()]
-        private Single mAnchorPositionX;
+        private float mAnchorPositionX;
         
         [SerializeField()]
-        private Single mAnchorPositionY;
+        private float mAnchorPositionY;
         
         [SerializeField()]
         private Color mAnchorColor;
@@ -35,7 +35,7 @@ namespace Articy.Night
         [SerializeField()]
         private LocationAnchorSize mAnchorSize = new LocationAnchorSize();
         
-        public Single AnchorPositionX
+        public float AnchorPositionX
         {
             get
             {
@@ -47,7 +47,7 @@ namespace Articy.Night
             }
         }
         
-        public Single AnchorPositionY
+        public float AnchorPositionY
         {
             get
             {

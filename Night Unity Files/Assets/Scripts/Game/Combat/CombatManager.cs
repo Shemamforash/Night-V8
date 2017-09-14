@@ -16,7 +16,7 @@ namespace Game.Combat
 {
     public class CombatManager : StateMachine
     {
-        public static CombatUI CombatUi;
+        public static CombatUi CombatUi;
         private static MyFloat _strengthText;
         private static Character _character;
         private float _reloadStartTime, _cockStartTime;
@@ -44,7 +44,7 @@ namespace Game.Combat
         
         public void Awake()
         {
-            CombatUi = new CombatUI(GameObject.Find("Combat Menu"));
+            CombatUi = new CombatUi(GameObject.Find("Combat Menu"));
             AddState(new Approaching(this, true));
             AddState(new Aiming(this, true));
             AddState(new Cocking(this, true));
@@ -59,7 +59,7 @@ namespace Game.Combat
         public static void EnterCombat(Character c)
         {
             WorldTime.Instance().Pause();
-            MenuStateMachine.Instance.NavigateToState("Combat Menu");
+            MenuStateMachine.Instance().NavigateToState("Combat Menu");
             _character = c;
             CombatUi.CharacterName.text = c.CharacterName;
             CombatUi.WeaponNameText.text = c.GetWeapon().Name();
@@ -72,7 +72,7 @@ namespace Game.Combat
         {
             WorldTime.Instance().UnPause();
             ReturnToDefault();
-            MenuStateMachine.Instance.NavigateToState("Game Menu");
+            MenuStateMachine.Instance().NavigateToState("Game Menu");
         }
 
         public void TakeDamage(float f)

@@ -25,36 +25,36 @@ namespace Articy.Night.Features
     {
         
         [SerializeField()]
-        private Single mMinTemperature;
+        private float mMinTemperature;
         
         [SerializeField()]
-        private Single mMaxTemperature;
+        private float mMaxTemperature;
         
         [SerializeField()]
-        private Single mWaterLevel;
+        private float mWaterLevel;
         
         [SerializeField()]
-        private Single mFoodLevel;
+        private float mFoodLevel;
         
         [SerializeField()]
-        private Single mFuelLevel;
+        private float mFuelLevel;
         
         [SerializeField()]
-        private Single mScrapLevel;
+        private float mScrapLevel;
         
         [SerializeField()]
-        private Single mBanditDanger;
+        private float mBanditDanger;
         
         [SerializeField()]
-        private Single mTerrainAccessibility;
+        private float mTerrainAccessibility;
         
         [SerializeField()]
-        private Single mCampFrequency;
+        private float mCampFrequency;
         
         [SerializeField()]
-        private Single mNormalisedDanger;
+        private float mNormalisedDanger;
         
-        public Single MinTemperature
+        public float MinTemperature
         {
             get
             {
@@ -66,7 +66,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single MaxTemperature
+        public float MaxTemperature
         {
             get
             {
@@ -78,7 +78,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single WaterLevel
+        public float WaterLevel
         {
             get
             {
@@ -90,7 +90,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single FoodLevel
+        public float FoodLevel
         {
             get
             {
@@ -102,7 +102,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single FuelLevel
+        public float FuelLevel
         {
             get
             {
@@ -114,7 +114,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single ScrapLevel
+        public float ScrapLevel
         {
             get
             {
@@ -126,7 +126,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single BanditDanger
+        public float BanditDanger
         {
             get
             {
@@ -138,7 +138,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single TerrainAccessibility
+        public float TerrainAccessibility
         {
             get
             {
@@ -150,7 +150,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single CampFrequency
+        public float CampFrequency
         {
             get
             {
@@ -162,7 +162,7 @@ namespace Articy.Night.Features
             }
         }
         
-        public Single NormalisedDanger
+        public float NormalisedDanger
         {
             get
             {

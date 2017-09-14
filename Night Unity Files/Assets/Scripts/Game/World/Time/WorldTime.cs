@@ -1,6 +1,7 @@
 ﻿using System;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,14 +19,14 @@ namespace Game.World.Time
         public static int Days, Hours = 6, Minutes;
         public const int MinutesPerHour = 12;
         private static bool _isNight, _isPaused;
-        private Text _timeText, _dayText;
+        private TextMeshProUGUI _timeText, _dayText;
         private static WorldTime _instance;
         public static float MinuteInSeconds = .2f;
 
         public void Awake()
         {
-            _timeText = Helper.FindChildWithName(gameObject, "Time").GetComponent<Text>();
-            _dayText = Helper.FindChildWithName(gameObject, "Day").GetComponent<Text>();
+            _timeText = Helper.FindChildWithName(gameObject, "Time").GetComponent<TextMeshProUGUI>();
+            _dayText = Helper.FindChildWithName(gameObject, "Day").GetComponent<TextMeshProUGUI>();
             _instance = this;
         }
 

@@ -1,6 +1,7 @@
 ﻿using Characters;
 using Game.Combat;
 using SamsHelper;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Character = Game.Characters.Character;
@@ -27,7 +28,7 @@ namespace Game.World.Region
             IncrementResource("Fuel", _template.FuelAvailable);
             IncrementResource("Scrap", _template.ScrapAvailable);
             IncrementResource("Ammo", _template.AmmoAvailable);
-            Helper.FindChildWithName<Text>(regionObject, "Text").text = "New Region";
+            Helper.FindChildWithName<TextMeshProUGUI>(regionObject, "Text").text = "New Region";
         }
 
         public void DestroyGameObject()
