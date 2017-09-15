@@ -1,7 +1,7 @@
 ﻿namespace Game.Combat.CombatStates
 {
     public class EnteringCover : CombatState {
-        public EnteringCover(CombatManager parentMachine, bool isPlayerState) : base("EnteringCover", parentMachine, isPlayerState)
+        public EnteringCover(CombatStateMachine parentMachine, bool isPlayerState) : base("EnteringCover", parentMachine, isPlayerState)
         {
         }
 

@@ -1,7 +1,7 @@
 ﻿namespace Game.Combat.CombatStates
 {
     public class ExitingCover : CombatState {
-        public ExitingCover(CombatManager parentMachine, bool isPlayerState) : base("ExitingCover", parentMachine, isPlayerState)
+        public ExitingCover(CombatStateMachine parentMachine, bool isPlayerState) : base("ExitingCover", parentMachine, isPlayerState)
         {
         }
 

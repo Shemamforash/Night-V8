@@ -5,11 +5,17 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 {
     public class MenuStateMachine : StateMachine
     {
-        private static MenuStateMachine _instance;
         public Menu InitialMenu;
+        private static MenuStateMachine _instance;
 
+        public static MenuStateMachine Instance()
+        {
+            return _instance ?? FindObjectOfType<MenuStateMachine>();
+        }
+        
         public void Awake()
         {
+            _instance = this;
             foreach (Menu t in Helper.FindAllComponentsInChildren<Menu>(transform))
             {
                 MenuState menu = new MenuState(t.name, t, this);
@@ -21,11 +27,6 @@ namespace SamsHelper.ReactiveUI.MenuSystem
                 AddState(menu);
             }
             NavigateToState(InitialMenu.name);
-        }
-
-        public static MenuStateMachine Instance()
-        {
-            return _instance ?? (_instance = FindObjectOfType<MenuStateMachine>());
         }
 
         //TODO move me somewhere more suitable

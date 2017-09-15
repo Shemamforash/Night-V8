@@ -55,21 +55,21 @@ namespace Facilitating.Audio
             }
         }
 
-        public void SetMasterVolume(Slider slider)
+        private void SetMasterVolume(float volume)
         {
-            _masterVolume = slider.value;
+            _masterVolume = volume;
             UpdateVolumes();
         }
 
-        public void SetEffectsVolume(Slider slider)
+        private void SetEffectsVolume(float volume)
         {
-            _effectsVolume = slider.value;
+            _effectsVolume = volume;
             UpdateVolumes();
         }
 
-        public void SetMusicVolume(Slider slider)
+        private void SetMusicVolume(float volume)
         {
-            _musicVolume = slider.value;
+            _musicVolume = volume;
             UpdateVolumes();
         }
 
@@ -85,6 +85,10 @@ namespace Facilitating.Audio
             {
                 _effectsSources.Add(e.GetComponent<AudioSource>());
             }
+
+            MasterSlider.onValueChanged.AddListener(SetMasterVolume);
+            MusicSlider.onValueChanged.AddListener(SetMusicVolume);
+            EffectsSlider.onValueChanged.AddListener(SetEffectsVolume);
 
             MasterSlider.value = _masterVolume;
             MusicSlider.value = _musicVolume;

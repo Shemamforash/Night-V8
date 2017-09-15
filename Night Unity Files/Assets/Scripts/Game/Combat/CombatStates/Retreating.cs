@@ -4,7 +4,7 @@ using SamsHelper.Input;
 namespace Game.Combat.CombatStates
 {
     public class Retreating : CombatState {
-        public Retreating(CombatManager parentMachine, bool isPlayerState) : base("Retreating", parentMachine, isPlayerState)
+        public Retreating(CombatStateMachine parentMachine, bool isPlayerState) : base("Retreating", parentMachine, isPlayerState)
         {
         }
 

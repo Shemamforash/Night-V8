@@ -3,7 +3,7 @@ using SamsHelper.ReactiveUI.CustomTypes;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public class InventoryResource : BasicInventoryContents
+    public class InventoryResource : BasicInventoryItem
     {
         private readonly MyInt _quantity = new MyInt(0, 0, int.MaxValue);
 
@@ -37,11 +37,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public float GetWeight(int quantity)
         {
             return quantity * Weight();
-        }
-
-        public float GetTotalWeight()
-        {
-            return Weight() * _quantity.Val;
         }
     }
 }

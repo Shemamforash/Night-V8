@@ -4,36 +4,36 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>90</Val>
-          <Max>90</Max>
+          <Val>105</Val>
+          <Max>105</Max>
         </Strength>
         <Endurance>
-          <Val>56</Val>
-          <Max>56</Max>
+          <Val>55</Val>
+          <Max>31</Max>
         </Endurance>
         <Stability>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>20</Val>
+          <Max>20</Max>
         </Stability>
         <Intelligence>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>22</Val>
+          <Max>22</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
-          <Max>4</Max>
+          <Max>11</Max>
         </Starvation>
         <Dehydration>
           <Val>30</Val>
-          <Max>4</Max>
+          <Max>12</Max>
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>6</Max>
+          <Max>5</Max>
         </Hunger>
         <Thirst>
           <Val>11</Val>
-          <Max>6</Max>
+          <Max>4</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
@@ -42,44 +42,44 @@
       <Name>Iodyne</Name>
       <Attributes>
         <Strength>
-          <Val>85</Val>
-          <Max>85</Max>
+          <Val>131</Val>
+          <Max>131</Max>
         </Strength>
         <Endurance>
-          <Val>84</Val>
-          <Max>84</Max>
+          <Val>63</Val>
+          <Max>63</Max>
         </Endurance>
         <Stability>
-          <Val>24</Val>
-          <Max>24</Max>
+          <Val>11</Val>
+          <Max>11</Max>
         </Stability>
         <Intelligence>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
-          <Max>4</Max>
+          <Max>11</Max>
         </Starvation>
         <Dehydration>
           <Val>30</Val>
-          <Max>4</Max>
+          <Max>12</Max>
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>6</Max>
+          <Max>5</Max>
         </Hunger>
         <Thirst>
           <Val>11</Val>
-          <Max>6</Max>
+          <Max>4</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
   </CharacterManager>
-  <Water>0</Water>
-  <Food>0</Food>
-  <Fuel>0</Fuel>
-  <Scrap>0</Scrap>
-  <Ammo>1360</Ammo>
+  <Water>54</Water>
+  <Food>20</Food>
+  <Fuel>6</Fuel>
+  <Scrap>16</Scrap>
+  <Ammo>2058</Ammo>
 </Game>

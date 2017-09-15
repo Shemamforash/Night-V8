@@ -2,7 +2,7 @@
 {
     public class Approaching : CombatState
     {
-        public Approaching(CombatManager parentMachine, bool isPlayerState) : base("Approaching", parentMachine, isPlayerState)
+        public Approaching(CombatStateMachine parentMachine, bool isPlayerState) : base("Approaching", parentMachine, isPlayerState)
         {
         }
 

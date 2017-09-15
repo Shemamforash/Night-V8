@@ -3,7 +3,7 @@
 namespace Game.Combat.CombatStates
 {
     public class Flanking : CombatState {
-        public Flanking(CombatManager parentMachine, bool isPlayerState) : base("Flanking", parentMachine, isPlayerState)
+        public Flanking(CombatStateMachine parentMachine, bool isPlayerState) : base("Flanking", parentMachine, isPlayerState)
         {
         }
 
@@ -11,7 +11,7 @@ namespace Game.Combat.CombatStates
         {
             if (axis == InputAxis.Horizontal)
             {
-                ((CombatManager)ParentMachine).ReturnToDefault();
+                ParentMachine.ReturnToDefault();
             }
         }
     }

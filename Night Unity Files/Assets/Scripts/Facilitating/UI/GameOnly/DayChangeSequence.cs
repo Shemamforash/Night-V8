@@ -2,11 +2,12 @@
 using Audio;
 using Game.World;
 using Game.World.Time;
+using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
 namespace Facilitating.UI.GameOnly
 {
-    public class DayChangeSequence : MonoBehaviour
+    public class DayChangeSequence : Menu
     {
         public float TimeToRead = 3f;
         public float TimeBetweenLines = 1f;
@@ -14,7 +15,7 @@ namespace Facilitating.UI.GameOnly
         private CanvasGroup _menuScreen, _thisCanvasGroup;
         private ThunderClick _thunderClick;
 
-        public void Awake()
+        protected void Awake()
         {
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _menuScreen = GameObject.Find("Game Menu").GetComponent<CanvasGroup>();
@@ -22,7 +23,7 @@ namespace Facilitating.UI.GameOnly
             WorldTime.Instance().DayEvent += ChangeDay;
         }
 
-        public void ChangeDay()
+        private void ChangeDay()
         {
             WorldTime.Instance().Pause();
             _menuScreen.interactable = false;
@@ -30,7 +31,7 @@ namespace Facilitating.UI.GameOnly
             _thisCanvasGroup.interactable = true;
             _thisCanvasGroup.alpha = 1;
             _thunderClick.InitiateThunder();
-            StartCoroutine("ShowLines");
+            StartCoroutine(nameof(ShowLines));
         }
 
         private IEnumerator WaitToReadText()
@@ -73,7 +74,7 @@ namespace Facilitating.UI.GameOnly
                 }
                 yield return null;
             }
-            yield return StartCoroutine("WaitToReadText");
+            yield return StartCoroutine(nameof(WaitToReadText));
         }
     }
 }

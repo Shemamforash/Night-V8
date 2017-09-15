@@ -17,11 +17,10 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
-            MenuStateMachine.Instance().NavigateToState("Pick Up Menu");
+            MenuStateMachine.Instance().NavigateToState("Inventory Menu");
             _previousCharacter = CharacterManager.SelectedCharacter;
             CharacterManager.SelectedCharacter = GetCharacter();
-            InventoryManager inventoryManager = GameObject.Find("Pick Up Menu").GetComponent<InventoryManager>();
-            inventoryManager.SetInventories(GetCharacter().CharacterInventory, GetCharacter().CurrentRegion, () => GetCharacter().NavigateToState("Return"));
+            InventoryTransferManager.Instance().ShowDualInventories(GetCharacter().CharacterInventory, GetCharacter().CurrentRegion, () => GetCharacter().NavigateToState("Return"));
         }
 
         public override void Interrupt()

@@ -23,11 +23,11 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             {
                 WorldTime.Instance().Pause();
             }
-            if (_lastSelectedItem != null)
+            if (_menu.PreserveLastSelected && _lastSelectedItem != null)
             {
                 _lastSelectedItem.Select();
             }
-            else if (_menu.Interactable)
+            else
             {
                 if (_menu.DefaultSelectable == null)
                 {

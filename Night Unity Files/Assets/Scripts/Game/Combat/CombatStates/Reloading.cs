@@ -4,14 +4,14 @@ using SamsHelper.BaseGameFunctionality.CooldownSystem;
 namespace Game.Combat.CombatStates
 {
     public class Reloading : CombatState {
-        public Reloading(CombatManager parentMachine, bool isPlayerState) : base("Reloading", parentMachine, isPlayerState)
+        public Reloading(CombatStateMachine parentMachine, bool isPlayerState) : base("Reloading", parentMachine, isPlayerState)
         {
         }
 
         public override void Enter()
         {
             CombatManager.CombatUi.EmptyMagazine();
-            new Cooldown(((CombatManager)ParentMachine).Character().GetWeapon().ReloadSpeed, Exit, f => CombatManager.CombatUi.UpdateReloadTime(f));
+            new Cooldown(Character().GetWeapon().ReloadSpeed, Exit, f => CombatManager.CombatUi.UpdateReloadTime(f));
         }
 
         public override void Exit()

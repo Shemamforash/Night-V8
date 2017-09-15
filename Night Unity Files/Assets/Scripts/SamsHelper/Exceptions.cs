@@ -163,13 +163,24 @@ namespace SamsHelper
 
         public class UnknownStateNameException : Exception
         {
-            private string _stateName;
+            private readonly string _stateName;
             public UnknownStateNameException(string stateName)
             {
                 _stateName = stateName;
             }
 
             public override string Message => "Tried to navigate to unknown state '" + _stateName + "'.";
+        }
+
+        public class MultipleInstancesOfSingletonException : Exception
+        {
+            private readonly Type _type;
+            public MultipleInstancesOfSingletonException(Type type)
+            {
+                _type = type;
+            }
+            
+            public override string Message => "Tried to create instance of " + _type + " but instance already exists.";
         }
     }
 }

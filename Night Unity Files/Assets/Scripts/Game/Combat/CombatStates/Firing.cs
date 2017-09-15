@@ -1,4 +1,5 @@
 ﻿using SamsHelper.Input;
+using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
 namespace Game.Combat.CombatStates
@@ -7,7 +8,7 @@ namespace Game.Combat.CombatStates
     {
         private float _timeSinceLastFire;
 
-        public Firing(CombatManager parentMachine, bool isPlayerState) : base("Firing", parentMachine, isPlayerState)
+        public Firing(CombatStateMachine parentMachine, bool isPlayerState) : base("Firing", parentMachine, isPlayerState)
         {
             OnUpdate += FireWeapon;
         }
@@ -27,14 +28,14 @@ namespace Game.Combat.CombatStates
                     {
                         CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
                     }
-                    ((CombatManager) ParentMachine).DecreaseAim();
+                    CombatManager.Instance().DecreaseAim();
                     if (Weapon().Automatic)
                     {
                         _timeSinceLastFire = 1f / Weapon().FireRate;
                     }
                     else
                     {
-                        ((CombatManager) ParentMachine).NavigateToState("Cocking");
+                        ParentMachine.NavigateToState("Cocking");
                     }
                 }
             }
@@ -54,7 +55,7 @@ namespace Game.Combat.CombatStates
         {
             if (inputAxis == InputAxis.Fire)
             {
-                ((CombatManager) ParentMachine).NavigateToState("Aiming");
+                ParentMachine.NavigateToState("Aiming");
             }
         }
     }

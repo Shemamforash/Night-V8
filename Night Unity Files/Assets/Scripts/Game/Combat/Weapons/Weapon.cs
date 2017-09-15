@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Combat.Weapons
 {
-    public class Weapon : InventoryItem
+    public class Weapon : BasicInventoryItem
     {
         public readonly float Damage, Accuracy, ReloadSpeed, CriticalChance, Handling, FireRate;
         public int Capacity;

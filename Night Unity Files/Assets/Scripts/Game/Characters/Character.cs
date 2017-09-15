@@ -38,11 +38,11 @@ namespace Game.Characters
         private readonly MyFloat _weaponCriticalChance = new MyFloat();
         private readonly MyFloat _weaponAccuracy = new MyFloat();
 
-        public DesolationInventory CharacterInventory = new DesolationInventory();
+        public DesolationInventory CharacterInventory;
 
         private Weapon _weapon;
 
-        public void AddItemToInventory(InventoryItem item)
+        public void AddItemToInventory(BasicInventoryItem item)
         {
             CharacterInventory.AddItem(item);
         }
@@ -85,12 +85,10 @@ namespace Game.Characters
         public void Rest(int amount)
         {
             Attributes.Endurance.Val += amount;
-            if (Attributes.Endurance.ReachedMax())
+            if (!Attributes.Endurance.ReachedMax()) return;
+            if (CurrentRegion == null)
             {
-                if (CurrentRegion == null)
-                {
-                    NavigateToState("Idle");
-                }
+                NavigateToState("Idle");
             }
         }
 
@@ -150,6 +148,7 @@ namespace Game.Characters
         public void Initialise(string characterName, Traits.Trait classCharacter, Traits.Trait characterTrait)
         {
             CharacterName = characterName;
+            CharacterInventory = new DesolationInventory(CharacterName);
             CharacterClass = classCharacter;
             CharacterTrait = characterTrait;
             SetCharacterUi(gameObject);

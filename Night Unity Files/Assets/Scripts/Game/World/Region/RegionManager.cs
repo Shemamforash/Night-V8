@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Characters;
 using Game.Characters.CharacterActions;
 using SamsHelper;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -11,20 +10,27 @@ using UnityEngine.UI;
 using Character = Game.Characters.Character;
 using Random = UnityEngine.Random;
 
-namespace Game.World
+namespace Game.World.Region
 {
-    public class RegionManager : MonoBehaviour
+    public class RegionManager : Menu
     {
-        private static List<Region.Region> _unexploredRegions = new List<Region.Region>();
-        private static List<Region.Region> _discoveredRegions = new List<Region.Region>();
-        private static Dictionary<string, RegionTemplate> _templates = new Dictionary<string, RegionTemplate>();
-        private static int _noRegionsToGenerate = 10;
+        private static readonly List<Region> UnexploredRegions = new List<Region>();
+        private static readonly List<Region> DiscoveredRegions = new List<Region>();
+        private static readonly Dictionary<string, RegionTemplate> Templates = new Dictionary<string, RegionTemplate>();
+        private static readonly int NoRegionsToGenerate = 10;
         private static GameObject _regionContainer, _regionPrefab, _backButton, _exploreButton;
         private static TextMeshProUGUI _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
         private static Character _character;
-
-        public void Awake()
+        private static RegionManager _instance;
+        
+        public static RegionManager Instance()
         {
+            return _instance ?? FindObjectOfType<RegionManager>();
+        }
+        
+        protected void Awake()
+        {
+            _instance = this;
             _backButton = Helper.FindChildWithName(gameObject, "Back");
             _backButton.GetComponent<Button>().onClick.AddListener(delegate { ExitManager(false); });
             _regionContainer = Helper.FindChildWithName(gameObject, "Content");
@@ -52,7 +58,7 @@ namespace Game.World
                     Encounters = attributes[8],
                     Items = attributes[9]
                 };
-                _templates[newTemplate.InternalName] = newTemplate;
+                Templates[newTemplate.InternalName] = newTemplate;
             });
         }
 
@@ -64,18 +70,19 @@ namespace Game.World
         
         public static void GenerateNewRegions()
         {
-            _unexploredRegions.ForEach(r => r.DestroyGameObject());
-            _discoveredRegions.ForEach(r => r.DestroyGameObject());
-            _unexploredRegions.Clear();
-            _discoveredRegions.Clear();
-            for (int i = 0; i < _noRegionsToGenerate; ++i)
+            UnexploredRegions.ForEach(r => r.DestroyGameObject());
+            DiscoveredRegions.ForEach(r => r.DestroyGameObject());
+            UnexploredRegions.Clear();
+            DiscoveredRegions.Clear();
+            for (int i = 0; i < NoRegionsToGenerate; ++i)
             {
                 GameObject newRegionObject = AddNewButton();
-                RegionTemplate template = _templates[_templates.Keys.ToList()[Random.Range(0, _templates.Keys.Count)]];
-                Region.Region region = new Region.Region(template, newRegionObject);
+                RegionTemplate template = Templates[Templates.Keys.ToList()[Random.Range(0, Templates.Keys.Count)]];
+                string regionName = template.DisplayName == "" ? template.InternalName : template.DisplayName;
+                Region region = new Region(regionName, template, newRegionObject);
                 newRegionObject.GetComponent<Button>().onClick.AddListener(delegate { UpdateRegionInfo(region); });
                 newRegionObject.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = region.Name();
-                _unexploredRegions.Add(region);
+                UnexploredRegions.Add(region);
                 newRegionObject.SetActive(false);
             }
             RefreshExploreButton();
@@ -83,30 +90,23 @@ namespace Game.World
 
         private static void DiscoverRandomRegion(int distance)
         {
-            foreach (Region.Region region in _unexploredRegions)
+            foreach (Region region in UnexploredRegions)
             {
-                if (region.Distance() <= distance)
-                {
-                    DiscoverRegion(region);
-                    break;
-                }
+                if (region.Distance() > distance) continue;
+                DiscoverRegion(region);
+                break;
             }
         }
 
-        private static void DiscoverRegion(Region.Region region)
+        private static void DiscoverRegion(Region region)
         {
-            _discoveredRegions.Add(region);
-            _unexploredRegions.Remove(region);
+            DiscoveredRegions.Add(region);
+            UnexploredRegions.Remove(region);
             region.GetObject().SetActive(true);
-            for (int i = 0; i < _discoveredRegions.Count; ++i)
+            for (int i = 0; i < DiscoveredRegions.Count; ++i)
             {
-                if (i > 0)
-                {
-                    Helper.SetNavigation(_discoveredRegions[i].GetObject(), _discoveredRegions[i - 1].GetObject(),
-                        Helper.NavigationDirections.Up);
-                    Helper.SetNavigation(_discoveredRegions[i - 1].GetObject(), _discoveredRegions[i].GetObject(),
-                        Helper.NavigationDirections.Down);
-                }
+                if (i <= 0) continue;
+                Helper.SetReciprocalNavigation(DiscoveredRegions[i].GetObject(), DiscoveredRegions[i - 1].GetObject());
             }
             RefreshExploreButton();
         }
@@ -117,13 +117,13 @@ namespace Game.World
             _exploreButton = AddNewButton();
             _exploreButton.GetComponent<Button>().onClick.AddListener(delegate
             {
-                Region.Region targetRegion = _unexploredRegions[Random.Range(0, _unexploredRegions.Count)];
+                Region targetRegion = UnexploredRegions[Random.Range(0, UnexploredRegions.Count)];
                 StartExploration(delegate { DiscoverRegion(targetRegion); }, targetRegion);
             });
             _exploreButton.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = "Explore...";
-            if (_discoveredRegions.Count != 0)
+            if (DiscoveredRegions.Count != 0)
             {
-                GameObject lastRegionInList = _discoveredRegions[_discoveredRegions.Count - 1].GetObject();
+                GameObject lastRegionInList = DiscoveredRegions[DiscoveredRegions.Count - 1].GetObject();
                 Helper.SetNavigation(lastRegionInList, _exploreButton, Helper.NavigationDirections.Down);
                 Helper.SetNavigation(_exploreButton, lastRegionInList, Helper.NavigationDirections.Up);
             }
@@ -136,7 +136,7 @@ namespace Game.World
             return Helper.InstantiateUiObject(_regionPrefab, _regionContainer.transform);
         }
 
-        private static void UpdateRegionInfo(Region.Region region)
+        private static void UpdateRegionInfo(Region region)
         {
             _regionInfoNameText.text = region.Name();
             _regionInfoTypeText.text = region.Type();
@@ -149,7 +149,7 @@ namespace Game.World
             MenuStateMachine.Instance().NavigateToState("Region Menu");
         }
 
-        public static void StartExploration(Action a, Region.Region target)
+        public static void StartExploration(Action a, Region target)
         {
             Travel state = (Travel) _character.NavigateToState("Travel");
             state.AddOnExit(a);

@@ -1,4 +1,5 @@
-﻿using Characters;
+﻿using System.Security;
+using Characters;
 using Game.Combat;
 using SamsHelper;
 using TMPro;
@@ -14,12 +15,14 @@ namespace Game.World.Region
         private string _regionDescription;
         private int _distance;
         private RegionTemplate _template;
+        private string _name;
 
         private GameObject _regionObject;
 //        private List<Encounter> _enemyEncounters = new List<Encounter>();
 
-        public Region(RegionTemplate template, GameObject regionObject) : base()
+        public Region(string name, RegionTemplate template, GameObject regionObject) : base(name)
         {
+            _name = name;
             _template = template;
             _regionObject = regionObject;
             _distance = Random.Range(1, 2);
@@ -38,7 +41,7 @@ namespace Game.World.Region
         
         public string Name()
         {
-            return _template.DisplayName == "" ? _template.InternalName : _template.DisplayName;
+            return _name;
         }
 
         public string Type()

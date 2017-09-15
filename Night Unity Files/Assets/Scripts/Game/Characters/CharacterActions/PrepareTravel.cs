@@ -1,5 +1,6 @@
 ﻿using Characters;
 using Game.World;
+using Game.World.Region;
 
 namespace Game.Characters.CharacterActions
 {

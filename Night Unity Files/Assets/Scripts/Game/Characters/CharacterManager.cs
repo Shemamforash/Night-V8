@@ -4,6 +4,7 @@ using System.Xml;
 using Characters;
 using Facilitating.MenuNavigation;
 using Facilitating.Persistence;
+using Game.World;
 using SamsHelper;
 using SamsHelper.Input;
 using SamsHelper.Persistence;
@@ -36,7 +37,7 @@ namespace Game.Characters
 
         private static void PopulateCharacterUi()
         {
-            GameObject inventoryObject = HomeInventoryDisplay.Instance().GetInventoryObject();
+            GameObject inventoryObject = WorldState.GetInventoryButton();
 
             float currentY = 1f;
             foreach (Character c in _characters)

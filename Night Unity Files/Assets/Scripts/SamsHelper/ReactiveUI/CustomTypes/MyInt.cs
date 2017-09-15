@@ -10,10 +10,6 @@ namespace SamsHelper.ReactiveUI.CustomTypes
         private int _min;
         private int _max;
 
-        public MyInt() : this(0, 0, int.MaxValue)
-        {
-        }
-
         public MyInt(int initialValue) : base(initialValue)
         {
             BroadcastChange();
@@ -79,20 +75,12 @@ namespace SamsHelper.ReactiveUI.CustomTypes
 
         public bool ReachedMin()
         {
-            if (_currentValue <= _min)
-            {
-                return true;
-            }
-            return false;
+            return _currentValue <= _min;
         }
 
         public bool ReachedMax()
         {
-            if (_currentValue >= _max)
-            {
-                return true;
-            }
-            return false;
+            return _currentValue >= _max;
         }
 
         //OPERATORS
@@ -166,7 +154,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
             return a._currentValue != b._currentValue;
         }
 
-        protected bool Equals(MyInt other)
+        private bool Equals(MyInt other)
         {
             return _currentValue.Equals(other._currentValue);
         }
@@ -175,8 +163,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((MyInt) obj);
+            return obj.GetType() == GetType() && Equals((MyInt) obj);
         }
 
         public override int GetHashCode()

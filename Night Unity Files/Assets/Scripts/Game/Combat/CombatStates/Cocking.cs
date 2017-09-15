@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Game.Combat.CombatStates
 {
 	public class Cocking : CombatState {
-		public Cocking(CombatManager parentMachine, bool isPlayerState) : base("Cocking", parentMachine, isPlayerState)
+		public Cocking(CombatStateMachine parentMachine, bool isPlayerState) : base("Cocking", parentMachine, isPlayerState)
 		{
 		}
 

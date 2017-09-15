@@ -1,12 +1,6 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using Characters;
-using Facilitating.MenuNavigation;
-using Game.Combat.CombatStates;
-using Game.World;
+﻿using Game.Combat.CombatStates;
 using Game.World.Time;
-using SamsHelper.BaseGameFunctionality;
 using SamsHelper.BaseGameFunctionality.StateMachines;
-using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.CustomTypes;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
@@ -14,14 +8,21 @@ using Character = Game.Characters.Character;
 
 namespace Game.Combat
 {
-    public class CombatManager : StateMachine
+    public class CombatManager : Menu
     {
         public static CombatUi CombatUi;
         private static MyFloat _strengthText;
         private static Character _character;
         private float _reloadStartTime, _cockStartTime;
         private readonly MyFloat _aimAmount = new MyFloat(0, 0, 100);
-
+        private CombatStateMachine _machine;
+        private static CombatManager _instance;
+        
+        public static CombatManager Instance()
+        {
+            return _instance ?? FindObjectOfType<CombatManager>();
+        }
+        
         public Character Character()
         {
             return _character;
@@ -41,19 +42,12 @@ namespace Game.Combat
             _aimAmount.Val = _aimAmount.Val - amount;
             CombatUi.UpdateAimSlider(_aimAmount.Val);
         }
-        
-        public void Awake()
+
+        protected void Awake()
         {
-            CombatUi = new CombatUi(GameObject.Find("Combat Menu"));
-            AddState(new Approaching(this, true));
-            AddState(new Aiming(this, true));
-            AddState(new Cocking(this, true));
-            AddState(new EnteringCover(this, true));
-            AddState(new ExitingCover(this, true));
-            AddState(new Firing(this, true));
-            AddState(new Flanking(this, true));
-            AddState(new Reloading(this, true));
-            AddState(new Retreating(this, true));
+            _instance = this;
+            _machine = gameObject.AddComponent<CombatStateMachine>();
+            CombatUi = new CombatUi(gameObject);
         }
         
         public static void EnterCombat(Character c)
@@ -71,7 +65,7 @@ namespace Game.Combat
         public void ExitCombat()
         {
             WorldTime.Instance().UnPause();
-            ReturnToDefault();
+            _machine.ReturnToDefault();
             MenuStateMachine.Instance().NavigateToState("Game Menu");
         }
 

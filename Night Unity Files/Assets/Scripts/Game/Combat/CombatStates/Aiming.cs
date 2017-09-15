@@ -1,27 +1,25 @@
-﻿using System;
-using SamsHelper.Input;
+﻿using SamsHelper.Input;
+using SamsHelper.ReactiveUI.MenuSystem;
 
 namespace Game.Combat.CombatStates
 {
     public class Aiming : CombatState
     {
-        public Aiming(CombatManager parentMachine, bool isPlayerState) : base("Aiming", parentMachine, isPlayerState)
+        public Aiming(CombatStateMachine parentMachine, bool isPlayerState) : base("Aiming", parentMachine, isPlayerState)
         {
             OnUpdate += IncreaseAim;
         }
 
         public override void Enter()
         {
-            if (Weapon().GetRemainingAmmo() == 0)
-            {
-                CombatManager.CombatUi.EmptyMagazine();
-                CombatManager.CombatUi.SetMagazineText("NO AMMO");
-            }
+            if (Weapon().GetRemainingAmmo() != 0) return;
+            CombatManager.CombatUi.EmptyMagazine();
+            CombatManager.CombatUi.SetMagazineText("NO AMMO");
         }
         
         private void IncreaseAim()
         {
-            ((CombatManager)ParentMachine).IncreaseAim();
+            CombatManager.Instance().IncreaseAim();
         }
 
         public override void OnInputDown(InputAxis inputAxis)

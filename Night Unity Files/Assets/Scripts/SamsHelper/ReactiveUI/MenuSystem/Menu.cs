@@ -7,6 +7,6 @@ namespace SamsHelper.ReactiveUI.MenuSystem
     {
         public Selectable DefaultSelectable;
         public bool PauseOnOpen;
-        public bool Interactable = true;
+        public bool PreserveLastSelected = true;
     }
 }

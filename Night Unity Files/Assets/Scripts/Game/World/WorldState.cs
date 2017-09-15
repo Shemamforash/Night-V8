@@ -1,14 +1,12 @@
-﻿using System;
-using System.Xml;
-using Audio;
-using Facilitating.Audio;
+﻿using System.Xml;
 using Facilitating.Persistence;
 using Game.World.Environment;
 using Game.World.Time;
-using Persistence;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.InventoryUI;
+using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +19,8 @@ namespace Game.World
 		public static int DaysSpentHere;
 		public static int NoPreviousLocations;
 		public static EnvironmentManager EnvironmentManager;
-	    private static DesolationInventory _homeInventory = new DesolationInventory();
+	    private static readonly DesolationInventory HomeInventory = new DesolationInventory("Vehicle");
+	    private static GameObject _inventoryButton;
 
 	    public void Awake()
 	    {
@@ -31,7 +30,7 @@ namespace Game.World
 		    SetResourceSuffix("Ammo", "rounds");
 		    SetResourceSuffix("Scrap", "bits");
 #if UNITY_EDITOR
-		    _homeInventory.IncrementResource("Ammo", 100);
+		    HomeInventory.IncrementResource("Ammo", 100);
 #endif
 		    SaveController.AddPersistenceListener(this);
 		    SaveController.LoadSettings();
@@ -41,6 +40,14 @@ namespace Game.World
 		    EnvironmentManager = GameObject.Find("Canvas").GetComponent<EnvironmentManager>();
 		    StormDistanceMax = 10;
 		    StormDistanceActual = 10;
+		    
+		    _inventoryButton = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Inventory");
+		    _inventoryButton.GetComponent<Button>().onClick.AddListener(() => InventoryTransferManager.Instance().ShowSingleInventory(Inventory()));
+	    }
+
+	    public static GameObject GetInventoryButton()
+	    {
+		    return _inventoryButton;
 	    }
 
 		private void IncrementDaysSpentHere(){
@@ -71,13 +78,13 @@ namespace Game.World
 	    
 	    public static Inventory Inventory()
 	    {
-		    return _homeInventory;
+		    return HomeInventory;
 	    }
         
 	    private static void SetResourceSuffix(string name, string convention)
 	    {
 		    TextMeshProUGUI resourceText = GameObject.Find(name).GetComponent<TextMeshProUGUI>();
-		    _homeInventory.GetResource(name).AddOnUpdate(f =>
+		    HomeInventory.GetResource(name).AddOnUpdate(f =>
 		    {
 			    resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f) + " " + convention;
 		    });
@@ -87,7 +94,7 @@ namespace Game.World
 	    {
 		    if (saveData == PersistenceType.Game)
 		    {
-			    _homeInventory.Resources().ForEach(r => LoadResource(r.Name(), root));
+			    HomeInventory.Resources().ForEach(r => LoadResource(r.Name(), root));
 		    }
 	    }
 	    
@@ -95,18 +102,18 @@ namespace Game.World
 	    {
 		    if (saveData == PersistenceType.Game)
 		    {
-			    _homeInventory.Resources().ForEach(r => SaveResource(r.Name(), root));
+			    HomeInventory.Resources().ForEach(r => SaveResource(r.Name(), root));
 		    }
 	    }
 
 	    private static void LoadResource(string resourceName, XmlNode root)
 	    {
-		    _homeInventory.IncrementResource(resourceName, SaveController.ParseIntFromNodeAndString(root, resourceName));
+		    HomeInventory.IncrementResource(resourceName, SaveController.ParseIntFromNodeAndString(root, resourceName));
 	    }
 	    
 	    private static void SaveResource(string resourceName, XmlNode root)
 	    {
-		    SaveController.CreateNodeAndAppend(resourceName, root, _homeInventory.GetResourceQuantity(resourceName));
+		    SaveController.CreateNodeAndAppend(resourceName, root, HomeInventory.GetResourceQuantity(resourceName));
 	    }
     }
 }

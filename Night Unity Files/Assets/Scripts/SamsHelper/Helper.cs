@@ -88,7 +88,8 @@ namespace SamsHelper
 
         public static GameObject FindChildWithName(GameObject g, string name)
         {
-            return FindChildWithName(g.transform, name).gameObject;
+            Transform t = FindChildWithName(g.transform, name);
+            return t != null ? t.gameObject : null;
         }
 
         public static Transform FindChildWithName(Transform t, string name)
@@ -163,6 +164,7 @@ namespace SamsHelper
         {
             Button originButton = origin.GetComponent<Button>();
             Button targetButton = target.GetComponent<Button>();
+            if (originButton == null || targetButton == null) return;
             Navigation originButtonNavigation = originButton.navigation;
             switch (d)
             {

@@ -1,24 +1,25 @@
 ﻿using Game.Combat.Weapons;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using SamsHelper.ReactiveUI.MenuSystem;
 using Character = Game.Characters.Character;
 
 namespace Game.Combat.CombatStates
 {
     public abstract class CombatState : State
     {
-        protected bool IsPlayerState;
+        protected readonly bool IsPlayerState;
 
-        protected CombatState(string name, CombatManager parentCombatManager, bool isPlayerState) : base(name, parentCombatManager)
+        protected CombatState(string name, CombatStateMachine parentCombatManager, bool isPlayerState) : base(name, parentCombatManager)
         {
             IsPlayerState = isPlayerState;
         }
 
-        protected Character Character()
+        protected static Character Character()
         {
-            return ((CombatManager)ParentMachine).Character();
+            return CombatManager.Instance().Character();
         }
 
-        protected Weapon Weapon()
+        protected static Weapon Weapon()
         {
             return Character().GetWeapon();
         }
