@@ -16,6 +16,11 @@
             return _name;
         }
 
+        public virtual string ExtendedName()
+        {
+            return _name;
+        }
+
         public float Weight()
         {
             return _weight;

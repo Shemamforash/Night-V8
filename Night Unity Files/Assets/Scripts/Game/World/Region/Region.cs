@@ -1,5 +1,6 @@
 ﻿using System.Security;
 using Characters;
+using Game.Characters;
 using Game.Combat;
 using SamsHelper;
 using TMPro;
@@ -49,7 +50,7 @@ namespace Game.World.Region
             return _template.Type;
         }
 
-        public void ExtractResources(Character c)
+        public void ExtractResources(DesolationCharacter c)
         {
             float maximumCarryingCapacity = c.RemainingCarryCapacity();
         }

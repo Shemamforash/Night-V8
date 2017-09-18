@@ -6,7 +6,7 @@ namespace Game.Characters.CharacterActions
 {
     public class Return : BaseCharacterAction
     {
-        public Return(Character character) : base("Return", character)
+        public Return(DesolationCharacter character) : base("Return", character)
         {
             IsVisible = false;
             HourCallback = GetCharacter().Travel;

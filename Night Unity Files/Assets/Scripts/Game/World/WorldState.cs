@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
+using Game.Combat.Weapons;
 using Game.World.Environment;
 using Game.World.Time;
 using SamsHelper;
@@ -17,7 +18,6 @@ namespace Game.World
     {
 	    public static int StormDistanceMax, StormDistanceActual;
 		public static int DaysSpentHere;
-		public static int NoPreviousLocations;
 		public static EnvironmentManager EnvironmentManager;
 	    private static readonly DesolationInventory HomeInventory = new DesolationInventory("Vehicle");
 	    private static GameObject _inventoryButton;
@@ -31,6 +31,10 @@ namespace Game.World
 		    SetResourceSuffix("Scrap", "bits");
 #if UNITY_EDITOR
 		    HomeInventory.IncrementResource("Ammo", 100);
+		    for(int i = 0; i < 10; ++i)
+		    {
+			    HomeInventory.AddItem(WeaponGenerator.GenerateWeapon());
+		    }
 #endif
 		    SaveController.AddPersistenceListener(this);
 		    SaveController.LoadSettings();

@@ -2,16 +2,16 @@
 {
     public class WorldEvent
     {
-        private readonly string _eventText;
+        protected readonly string EventText;
         
         public WorldEvent(string eventText)
         {
-            _eventText = eventText;
+            EventText = eventText;
         }
 
-        public virtual string EventText()
+        public virtual string Text()
         {
-            return _eventText;
+            return EventText;
         }
     }
 }

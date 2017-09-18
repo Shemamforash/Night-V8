@@ -22,14 +22,14 @@ namespace Game.World.WorldEvents
 
         public static void GenerateEvent(WorldEvent worldEvent)
         {
-            _eventLog.Add(worldEvent.EventText());
+            _eventLog.Add(worldEvent.Text());
             PrintFirstFourEvents();
         }
 
         private static void PrintFirstFourEvents()
         {
             string events = "";
-            int textSize = 40;
+            int textSize = 35;
             string[] colours = {"#ffffffff", "#ffffffdd", "#ffffffbb", "#ffffff99"};
             for (int i = 0; i < 4; ++i)
             {

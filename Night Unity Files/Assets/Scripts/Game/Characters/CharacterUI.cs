@@ -8,26 +8,26 @@ namespace Characters
 {
     public class CharacterUI
     {
-        public GameObject GameObject, SimpleView, DetailedView;
-        public Button EatButton;
-        public Button DrinkButton;
-        public Button CollapseCharacterButton;
-        public GameObject ActionScrollContent, WeaponCard;
+        public readonly GameObject GameObject, SimpleView, DetailedView;
+        public readonly Button EatButton;
+        public readonly Button DrinkButton;
+        public readonly Button CollapseCharacterButton;
+        public readonly GameObject ActionScrollContent, WeaponCard;
 
-        public TextMeshProUGUI CurrentActionText, DetailedCurrentActionText;
-        public TextMeshProUGUI ConditionsText;
-        public TextMeshProUGUI ThirstText, HungerText, StrengthText, IntelligenceText, EnduranceText, StabilityText;
-        public TextMeshProUGUI StrengthTextDetail, IntelligenceTextDetail, EnduranceTextDetail, StabilityTextDetail;
+        public readonly TextMeshProUGUI CurrentActionText, DetailedCurrentActionText;
+        public readonly TextMeshProUGUI ConditionsText;
+        public readonly TextMeshProUGUI ThirstText, HungerText, StrengthText, IntelligenceText, EnduranceText, StabilityText;
+        public readonly TextMeshProUGUI StrengthTextDetail, IntelligenceTextDetail, EnduranceTextDetail, StabilityTextDetail;
 
-        public TextMeshProUGUI NameText, ClassTraitText, DetailedClassText, DetailedTraitText;
-        public TextMeshProUGUI WeightText;
+        public readonly TextMeshProUGUI NameText, ClassTraitText, DetailedClassText, DetailedTraitText;
+        public readonly TextMeshProUGUI WeightText;
 
-        public TextMeshProUGUI WeaponNameTextDetailed,
+        public readonly TextMeshProUGUI WeaponNameTextDetailed,
             WeaponNameTextSimple,
             WeaponModifier1Text,
             WeaponModifier2Text;
 
-        public TextMeshProUGUI WeaponDamageText,
+        public readonly TextMeshProUGUI WeaponDamageText,
             WeaponFireRateText,
             WeaponReloadSpeedText,
             WeaponCapacityText,
@@ -88,12 +88,12 @@ namespace Characters
             WeaponAccuracyText = FindInDetailedView<TextMeshProUGUI>("Accuracy");
         }
 
-        public T FindInSimpleView<T>(string name)
+        private T FindInSimpleView<T>(string name)
         {
             return Helper.FindChildWithName<T>(SimpleView, name);
         }
 
-        public T FindInDetailedView<T>(string name)
+        private T FindInDetailedView<T>(string name)
         {
             return Helper.FindChildWithName<T>(DetailedView, name);
         }

@@ -1,4 +1,5 @@
 ﻿using Game.Combat.Weapons;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI.MenuSystem;
 using Character = Game.Characters.Character;

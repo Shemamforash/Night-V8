@@ -7,8 +7,8 @@ Seeker,Class,-1,2,-2,1
 Ravager,Class,1,-1,1,-1
 Scavenger,Class,-2,1,0,1
 Wanderer,Class,-1,0,-1,2
-Driver,Class,0,1,1,1
-Nomadic,Trait,0,0,0,0
+Crusader,Class,0,1,1,1
+Faithless,Trait,0,0,0,0
 Perceptive,Trait,-10,15,10,-5
 Monolithic,Trait,15,-10,-10,5
 Nimble,Trait,0,0,5,10

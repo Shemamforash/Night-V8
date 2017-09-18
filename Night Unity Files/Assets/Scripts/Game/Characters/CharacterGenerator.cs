@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
-using Characters;
 using Game.Combat.Weapons;
+using Game.Gear.Weapons;
 using SamsHelper;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Characters
 {
-    public class CharacterGenerator
+    public static class CharacterGenerator
     {
         private static List<string> _characterNames;
 
-        public static Character GenerateCharacter()
+        public static DesolationCharacter GenerateCharacter()
         {
             Traits.Trait newClass = Traits.GenerateClass();
             string name = GenerateName(newClass);
             Traits.Trait secondaryTrait = Traits.GenerateTrait();
-            Character c = GenerateCharacterObject().GetComponent<Character>();
+            DesolationCharacter c = GenerateCharacterObject().GetComponent<DesolationCharacter>();
             c.Initialise(name, newClass, secondaryTrait);
             CalculateAttributes(c);
             return c;
@@ -25,10 +25,10 @@ namespace Game.Characters
         private static void TestCharacterGenerator()
         {
             int charactersToTest = 100;
-            Dictionary<Character, List<string>> fails = new Dictionary<Character, List<string>>();
+            Dictionary<DesolationCharacter, List<string>> fails = new Dictionary<DesolationCharacter, List<string>>();
             for (int i = 0; i < charactersToTest; ++i)
             {
-                Character c = GenerateCharacter();
+                DesolationCharacter c = GenerateCharacter();
                 CharacterAttributes attributes = c.Attributes;
                 List<string> failMessages = new List<string>();
                 if (!InBounds(attributes.Strength.Val, 40, 160))
@@ -52,7 +52,7 @@ namespace Game.Characters
                     fails[c] = failMessages;
                 }
             }
-            foreach (Character c in fails.Keys)
+            foreach (DesolationCharacter c in fails.Keys)
             {
                 Debug.Log(c.CharacterName + " class: " + c.CharacterClass.Name + " trait: " + c.CharacterTrait.Name + " failed following tests:");
                 foreach (string s in fails[c])
@@ -67,15 +67,15 @@ namespace Game.Characters
             return value >= lower && value <= upper;
         }
 
-        public static string GenerateName(Traits.Trait classCharacter)
+        private static string GenerateName(Traits.Trait classCharacter)
         {
             return _characterNames[Random.Range(0, _characterNames.Count)];
         }
 
-        public static List<Character> LoadInitialParty()
+        public static List<DesolationCharacter> LoadInitialParty()
         {
             _characterNames = new List<string>(Helper.ReadLinesFromFile("names"));
-            List<Character> characters = new List<Character>();
+            List<DesolationCharacter> characters = new List<DesolationCharacter>();
             characters.Add(GenerateDriver());
             characters.Add(GenerateCharacter());
             
@@ -88,22 +88,19 @@ namespace Game.Characters
 
         private static GameObject GenerateCharacterObject()
         {
-            return Helper.InstantiateUiObject<Character>("Prefabs/Character Template", GameObject.Find("Characters").transform);
+            return Helper.InstantiateUiObject<DesolationCharacter>("Prefabs/Character Template", GameObject.Find("Characters").transform);
         }
 
-        private static Character GenerateDriver()
+        private static DesolationCharacter GenerateDriver()
         {
-            Character theDriver = GenerateCharacterObject().GetComponent<Character>();
-            theDriver.Initialise("Driver", Traits.FindClass("Driver"), Traits.FindTrait("Nomadic"));
-            Weapon w = WeaponGenerator.GenerateWeapon();
-            theDriver.AddItemToInventory(w);
-            theDriver.SetWeapon(w);
+            DesolationCharacter theDriver = GenerateCharacterObject().GetComponent<DesolationCharacter>();
+            theDriver.Initialise("Driver", Traits.FindClass("Crusader"), Traits.FindTrait("Faithless"));
             CalculateAttributes(theDriver);
             theDriver.Attributes.Weight = WeightCategory.Medium;
             return theDriver;
         }
 
-        private static WeightCategory CalculateWeight(Character c)
+        private static WeightCategory CalculateWeight(DesolationCharacter c)
         {
             int weightOffset = c.CharacterClass.WeightModifier + c.CharacterTrait.WeightModifier;
             int targetWeight = 2;
@@ -124,7 +121,7 @@ namespace Game.Characters
             return (WeightCategory) targetWeight;
         }
 
-        private static void CalculateAttributes(Character c)
+        private static void CalculateAttributes(DesolationCharacter c)
         {
             CharacterAttributes attributes = c.Attributes;
             int strengthBonusVal = 15;

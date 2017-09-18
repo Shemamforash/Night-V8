@@ -16,8 +16,8 @@ namespace Game.Characters
 {
     public class CharacterManager : MonoBehaviour , IPersistenceTemplate
     {
-        private static List<Character> _characters = new List<Character>();
-        public static Character SelectedCharacter;
+        private static List<DesolationCharacter> _characters = new List<DesolationCharacter>();
+        public static DesolationCharacter SelectedCharacter;
 
         public void Awake()
         {
@@ -40,7 +40,7 @@ namespace Game.Characters
             GameObject inventoryObject = WorldState.GetInventoryButton();
 
             float currentY = 1f;
-            foreach (Character c in _characters)
+            foreach (DesolationCharacter c in _characters)
             {
                 GameObject newCharacterUi = c.CharacterUi.GameObject;
                 RectTransform uiRect = newCharacterUi.GetComponent<RectTransform>();
@@ -50,12 +50,12 @@ namespace Game.Characters
                 uiRect.anchorMax = new Vector2(1, currentY);
                 currentY -= 0.1f;
                 newCharacterUi.transform.localScale = new Vector2(1, 1);
-                Button b = c.GetCharacterUi().SimpleView.GetComponent<Button>();
+                Button b = c.CharacterUi.SimpleView.GetComponent<Button>();
                 b.onClick.AddListener(delegate { SelectCharacter(b); });
             }
             for (int i = 0; i < _characters.Count; ++i)
             {
-                GameObject currentButton = _characters[i].GetCharacterUi().SimpleView;
+                GameObject currentButton = _characters[i].CharacterUi.SimpleView;
 
                 if (i == 0)
                 {
@@ -67,19 +67,19 @@ namespace Game.Characters
                 }
                 else if (i > 0)
                 {
-                    GameObject previousButton = _characters[i - 1].GetCharacterUi().SimpleView;
+                    GameObject previousButton = _characters[i - 1].CharacterUi.SimpleView;
                     Helper.SetNavigation(currentButton, previousButton, Helper.NavigationDirections.Up);
                     Helper.SetNavigation(previousButton, currentButton, Helper.NavigationDirections.Down);
                 }
             }
         }
 
-        public static Character FindCharacterFromGameObject(GameObject g)
+        private static DesolationCharacter FindCharacterFromGameObject(GameObject g)
         {
-            return _characters.FirstOrDefault(c => c.GetCharacterUi().GameObject == g);
+            return _characters.FirstOrDefault(c => c.CharacterUi.GameObject == g);
         }
 
-        public static void RemoveCharacter(Character c, bool isDriver)
+        public static void RemoveCharacter(DesolationCharacter c, bool isDriver)
         {
             _characters.Remove(c);
             PopulateCharacterUi();
@@ -97,18 +97,18 @@ namespace Game.Characters
             {
                 moveAmount = -moveAmount;
             }
-            foreach (Character c in _characters)
+            foreach (DesolationCharacter c in _characters)
             {
                 if (foundCharacter)
                 {
-                    RectTransform rect = c.GetCharacterUi().GameObject.GetComponent<RectTransform>();
+                    RectTransform rect = c.CharacterUi.GameObject.GetComponent<RectTransform>();
                     rect.anchorMin = new Vector2(rect.anchorMin.x, rect.anchorMin.y + moveAmount);
                     rect.anchorMax = new Vector2(rect.anchorMax.x, rect.anchorMax.y + moveAmount);
                 }
-                else if (c.GetCharacterUi().GameObject == g)
+                else if (c.CharacterUi.GameObject == g)
                 {
                     foundCharacter = true;
-                    CharacterUI foundUi = c.GetCharacterUi();
+                    CharacterUI foundUi = c.CharacterUi;
                     if (expand)
                     {
                         foundUi.SwitchToDetailedView();
@@ -161,13 +161,13 @@ namespace Game.Characters
 
         public void CharacterEat()
         {
-            Character current = FindCharacterFromGameObject(SelectedCharacter.transform.parent.gameObject);
+            DesolationCharacter current = FindCharacterFromGameObject(SelectedCharacter.transform.parent.gameObject);
             current.Eat();
         }
 
         public void CharacterDrink()
         {
-            Character current = FindCharacterFromGameObject(SelectedCharacter.transform.parent.gameObject);
+            DesolationCharacter current = FindCharacterFromGameObject(SelectedCharacter.transform.parent.gameObject);
             current.Drink();
         }
 
@@ -177,7 +177,7 @@ namespace Game.Characters
             XmlNodeList characterNodes = characterManagerNode.SelectNodes("Character");
             foreach (XmlNode characterNode in characterNodes)
             {
-                Character c = new Character();
+                DesolationCharacter c = new DesolationCharacter();
 //                c.Load(characterNode, saveType);
 //                _characters.Add(c);
             }
@@ -186,7 +186,7 @@ namespace Game.Characters
         public void Save(XmlNode doc, PersistenceType saveType)
         {
             XmlNode characterManagerNode = SaveController.CreateNodeAndAppend("CharacterManager", doc);
-            foreach (Character c in _characters)
+            foreach (DesolationCharacter c in _characters)
             {
                 XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", characterManagerNode);
                 c.Save(characterNode, saveType);

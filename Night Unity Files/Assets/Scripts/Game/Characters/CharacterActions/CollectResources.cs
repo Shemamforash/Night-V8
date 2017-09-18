@@ -6,9 +6,9 @@ namespace Game.Characters.CharacterActions
 {
     public class CollectResources : BaseCharacterAction
     {
-        private Character _previousCharacter;
+        private DesolationCharacter _previousCharacter;
 
-        public CollectResources(Character character) : base("Collect Resources", character)
+        public CollectResources(DesolationCharacter character) : base("Collect Resources", character)
         {
             IsVisible = false;
             SetStateTransitionTarget("Return");
@@ -35,7 +35,7 @@ namespace Game.Characters.CharacterActions
             Enter();
         }
 
-        public void ReturnToGameScreen()
+        private void ReturnToGameScreen()
         {
             CharacterManager.SelectedCharacter = _previousCharacter;
             MenuStateMachine.Instance().GoToInitialMenu();

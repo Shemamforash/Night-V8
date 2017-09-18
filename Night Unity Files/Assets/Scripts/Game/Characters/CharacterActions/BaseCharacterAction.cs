@@ -16,20 +16,21 @@ namespace Game.Characters.CharacterActions
     public class BaseCharacterAction : State
     {
         protected int DefaultDuration;
-        protected int TimeRemaining;
-        protected int UpdateInterval = 1;
-        protected bool IsVisible = true, Interrupted = false;
+        private int TimeRemaining;
+        private int UpdateInterval = 1;
+        protected bool IsVisible = true;
+        private bool Interrupted;
         public GameObject ActionButtonGameObject;
         protected Action HourCallback;
         private string _stateTransitionTarget;
 
-        public BaseCharacterAction(string name, Character character) : base(name, character)
+        protected BaseCharacterAction(string name, DesolationCharacter character) : base(name, character)
         {
             DefaultDuration = WorldTime.MinutesPerHour;
             AddOnExit(() => WorldTime.Instance().MinuteEvent -= Update);
         }
 
-        public virtual bool SetDuration(int hours)
+        public bool SetDuration(int hours)
         {
             TimeRemaining = WorldTime.MinutesPerHour * hours;
             return true;
@@ -40,7 +41,7 @@ namespace Game.Characters.CharacterActions
             _stateTransitionTarget = stateTransitionTarget;
         }
 
-        public virtual bool DecreaseDuration()
+        public bool DecreaseDuration()
         {
             if (TimeRemaining == WorldTime.MinutesPerHour)
             {
@@ -67,7 +68,7 @@ namespace Game.Characters.CharacterActions
             Interrupted = false;
         }
 
-        public virtual void UpdateAction()
+        private void UpdateAction()
         {
             --TimeRemaining;
             if (TimeRemaining == 0)
@@ -75,13 +76,8 @@ namespace Game.Characters.CharacterActions
                 WorldTime.Instance().MinuteEvent -= UpdateAction;
                 GetCharacter().NavigateToState(_stateTransitionTarget);
             }
-            if (TimeRemaining % (WorldTime.MinutesPerHour / UpdateInterval) == 0)
-            {
-                if (HourCallback != null)
-                {
-                    HourCallback();
-                }
-            }
+            if (TimeRemaining % (WorldTime.MinutesPerHour / UpdateInterval) != 0) return;
+            HourCallback?.Invoke();
         }
 
         public override void Exit()
@@ -92,7 +88,7 @@ namespace Game.Characters.CharacterActions
             }
         }
 
-        public int TimeRemainingAsHours()
+        private int TimeRemainingAsHours()
         {
             return (int) Math.Ceiling((float) TimeRemaining / WorldTime.MinutesPerHour);
         }
@@ -107,9 +103,9 @@ namespace Game.Characters.CharacterActions
             return IsVisible;
         }
 
-        public Character GetCharacter()
+        protected DesolationCharacter GetCharacter()
         {
-            return (Character) ParentMachine;
+            return (DesolationCharacter) ParentMachine;
         }
     }
 }

@@ -1,41 +1,45 @@
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
+using Game.Gear;
 using Game.World;
 using Game.World.Time;
 using Game.World.WorldEvents;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.CustomTypes;
+using Attribute = Game.Gear.Attribute;
 using Random = UnityEngine.Random;
 
 namespace Game.Characters
 {
-    public class CharacterAttributes : IPersistenceTemplate
+    public class CharacterAttributes : AttributeContainer
     {
         private const int ToleranceThreshold1 = 10, ToleranceThreshold2 = 25, ToleranceThreshold3 = 50, ToleranceThreshold4 = 75;
         private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
-        public MyInt Strength = new MyInt(Random.Range(30, 70));
-        public MyInt Intelligence = new MyInt(Random.Range(30, 70));
-        public MyInt Endurance = new MyInt(Random.Range(30, 70));
-        public MyInt Stability = new MyInt(Random.Range(30, 70));
-        public MyInt Starvation = new MyInt(0, 0, 50);
 
-        public MyInt Dehydration = new MyInt(0, 0, 30);
+        public readonly MyInt Strength = new MyInt(Random.Range(30, 70));
+        public readonly MyInt Intelligence = new MyInt(Random.Range(30, 70));
+        public readonly MyInt Endurance = new MyInt(Random.Range(30, 70));
+        public readonly MyInt Stability = new MyInt(Random.Range(30, 70));
+        public readonly MyInt Starvation = new MyInt(0, 0, 50);
+
+        public readonly MyInt Dehydration = new MyInt(0, 0, 30);
 
         /*instead of consuming x food or water every minutes, consume 1 food or water every x minutes
         use the max value of the hunger and thirst to keep track of the interval at which eating or drinking should occur
         consume 1 food or water whenever the current value reaches the max value, then reset
         this allows the duration to easily change depending on temperature, modifiers, etc.
         */
-        public MyInt Hunger = new MyInt(0, 0, 12);
+        public readonly MyInt Hunger = new MyInt(0, 0, 12);
 
-        public MyInt Thirst = new MyInt(0, 0, 12);
+        public readonly MyInt Thirst = new MyInt(0, 0, 12);
         public WeightCategory Weight;
-        private readonly Character _character;
+        private readonly DesolationCharacter _character;
         private bool _starving, _dehydrated;
 
-        public CharacterAttributes(Character character)
+        public CharacterAttributes(DesolationCharacter character)
         {
             _character = character;
             WorldTime.Instance().HourEvent += Fatigue;

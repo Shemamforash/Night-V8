@@ -6,7 +6,7 @@ namespace Game.Characters.CharacterActions
 {
     public class Travel : BaseCharacterAction
     {
-        public Travel(Character character) : base("Travel", character)
+        public Travel(DesolationCharacter character) : base("Travel", character)
         {
             IsVisible = false;
             HourCallback = GetCharacter().Travel;
@@ -25,7 +25,7 @@ namespace Game.Characters.CharacterActions
             return GetCharacter().CurrentRegion;
         }
 
-        public string CheckForEnterCombat()
+        private string CheckForEnterCombat()
         {
             CombatScenario scenario = GetCharacter().CurrentRegion.GetCombatScenario();
             if (scenario != null)

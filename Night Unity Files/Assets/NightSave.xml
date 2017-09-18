@@ -4,16 +4,16 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>105</Val>
-          <Max>105</Max>
+          <Val>106</Val>
+          <Max>106</Max>
         </Strength>
         <Endurance>
-          <Val>55</Val>
-          <Max>31</Max>
+          <Val>63</Val>
+          <Max>63</Max>
         </Endurance>
         <Stability>
-          <Val>20</Val>
-          <Max>20</Max>
+          <Val>22</Val>
+          <Max>22</Max>
         </Stability>
         <Intelligence>
           <Val>22</Val>
@@ -21,11 +21,11 @@
         </Intelligence>
         <Starvation>
           <Val>50</Val>
-          <Max>11</Max>
+          <Max>3</Max>
         </Starvation>
         <Dehydration>
           <Val>30</Val>
-          <Max>12</Max>
+          <Max>3</Max>
         </Dehydration>
         <Hunger>
           <Val>12</Val>
@@ -39,19 +39,19 @@
       </Attributes>
     </Character>
     <Character>
-      <Name>Iodyne</Name>
+      <Name>Kero</Name>
       <Attributes>
         <Strength>
-          <Val>131</Val>
-          <Max>131</Max>
+          <Val>105</Val>
+          <Max>105</Max>
         </Strength>
         <Endurance>
-          <Val>63</Val>
-          <Max>63</Max>
+          <Val>66</Val>
+          <Max>66</Max>
         </Endurance>
         <Stability>
-          <Val>11</Val>
-          <Max>11</Max>
+          <Val>1</Val>
+          <Max>1</Max>
         </Stability>
         <Intelligence>
           <Val>9</Val>
@@ -59,11 +59,11 @@
         </Intelligence>
         <Starvation>
           <Val>50</Val>
-          <Max>11</Max>
+          <Max>3</Max>
         </Starvation>
         <Dehydration>
           <Val>30</Val>
-          <Max>12</Max>
+          <Max>3</Max>
         </Dehydration>
         <Hunger>
           <Val>12</Val>
@@ -77,9 +77,9 @@
       </Attributes>
     </Character>
   </CharacterManager>
-  <Water>54</Water>
-  <Food>20</Food>
-  <Fuel>6</Fuel>
-  <Scrap>16</Scrap>
-  <Ammo>2058</Ammo>
+  <Water>0</Water>
+  <Food>0</Food>
+  <Fuel>0</Fuel>
+  <Scrap>0</Scrap>
+  <Ammo>0</Ammo>
 </Game>

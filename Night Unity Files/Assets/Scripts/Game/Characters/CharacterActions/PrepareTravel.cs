@@ -6,7 +6,7 @@ namespace Game.Characters.CharacterActions
 {
     public class PrepareTravel : BaseCharacterAction
     {
-        public PrepareTravel(Character character) : base("Prepare Travel", character)
+        public PrepareTravel(DesolationCharacter character) : base("Prepare Travel", character)
         {
         }
 

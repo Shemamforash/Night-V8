@@ -4,7 +4,7 @@ namespace Game.Characters.CharacterActions
 {
     public class Idle : BaseCharacterAction
     {
-        public Idle(Character character) : base("Idle", character)
+        public Idle(DesolationCharacter character) : base("Idle", character)
         {
             IsVisible = false;
             HourCallback = () => GetCharacter().Rest(1);
