@@ -18,18 +18,18 @@ namespace Game.Characters
 
         public WeaponUi(CharacterUI characterUi)
         {
-            _weaponDamage.AddOnValueChange(f => characterUi.WeaponDamageText.text = Helper.Round(f, 2) + " dmg");
-            _weaponAccuracy.AddOnValueChange(f => characterUi.WeaponAccuracyText.text = Helper.Round(f, 2) + "acc");
-            _weaponFireRate.AddOnValueChange(f => characterUi.WeaponFireRateText.text = Helper.Round(f, 2) + "frt");
-            _weaponReloadSpeed.AddOnValueChange(f => characterUi.WeaponReloadSpeedText.text = Helper.Round(f, 2) + "rld");
-            _weaponCapacity.AddOnValueChange(f => characterUi.WeaponCapacityText.text = Helper.Round(f, 2) + "cap");
-            _weaponCriticalChance.AddOnValueChange(f => characterUi.WeaponCriticalChanceText.text = Helper.Round(f, 2) + "crt");
-            _weaponHandling.AddOnValueChange(f => characterUi.WeaponHandlingText.text = Helper.Round(f, 2) + "hnd");
-            _weaponName.AddOnValueChange(t =>
-            {
-                characterUi.WeaponNameTextDetailed.text = t;
-                characterUi.WeaponNameTextSimple.text = t;
-            });
+//            _weaponDamage.AddOnValueChange(f => characterUi.WeaponDamageText.text = Helper.Round(f, 2) + " dmg");
+//            _weaponAccuracy.AddOnValueChange(f => characterUi.WeaponAccuracyText.text = Helper.Round(f, 2) + "acc");
+//            _weaponFireRate.AddOnValueChange(f => characterUi.WeaponFireRateText.text = Helper.Round(f, 2) + "frt");
+//            _weaponReloadSpeed.AddOnValueChange(f => characterUi.WeaponReloadSpeedText.text = Helper.Round(f, 2) + "rld");
+//            _weaponCapacity.AddOnValueChange(f => characterUi.WeaponCapacityText.text = Helper.Round(f, 2) + "cap");
+//            _weaponCriticalChance.AddOnValueChange(f => characterUi.WeaponCriticalChanceText.text = Helper.Round(f, 2) + "crt");
+//            _weaponHandling.AddOnValueChange(f => characterUi.WeaponHandlingText.text = Helper.Round(f, 2) + "hnd");
+//            _weaponName.AddOnValueChange(t =>
+//            {
+//                characterUi.WeaponNameTextDetailed.text = t;
+//                characterUi.WeaponNameTextSimple.text = t;
+//            });
         }
         
         public void Update(Weapon weapon)

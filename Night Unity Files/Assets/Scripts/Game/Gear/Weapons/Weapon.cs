@@ -1,5 +1,9 @@
-﻿using Game.Combat.Weapons;
+﻿using System;
+using Game.Combat.Weapons;
 using Game.World;
+using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Characters;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
 namespace Game.Gear.Weapons
@@ -7,12 +11,13 @@ namespace Game.Gear.Weapons
     public class Weapon : EquippableItem
     {
         public readonly float Damage, Accuracy, ReloadSpeed, CriticalChance, Handling, FireRate;
-        public int Capacity;
+        private readonly float _dps;
+        public readonly int Capacity;
         private readonly WeaponBase _baseWeapon;
         public readonly bool Automatic;
         private int _ammoInMagazine;
         
-        public Weapon(WeaponBase baseWeapon, bool automatic, string name, float weight) : base(name, weight, GearSlot.Weapon)
+        public Weapon(WeaponBase baseWeapon, bool automatic, string name, float weight) : base(name, weight, GearSlot.Weapon, ItemType.Weapon)
         {
             _baseWeapon = baseWeapon;
             Automatic = automatic;
@@ -32,16 +37,25 @@ namespace Game.Gear.Weapons
                 Mathf.Clamp(Accuracy, 0, 100);
                 ReloadSpeed /= 2f;
             }
-            
+
+            float averageShotDamage = CriticalChance / 100 * Damage * 2 + (1 - CriticalChance / 100) * Damage;
+            float magazineDamage = Capacity * averageShotDamage;
+            float magazineDuration = Capacity / FireRate + ReloadSpeed;
+            _dps = magazineDamage / magazineDuration;
+            Debug.Log("mag dam " + magazineDamage + " mag dur " + magazineDuration + " dps " + _dps);
             Reload();
         }
 
         public override string ExtendedName()
         {
-            string automaticString = Automatic ? "Automatic" : "Manual";
-            return Name() + " (" + automaticString + " " + _baseWeapon.Type + ")";
+            return Name() + (Automatic ? " (A)" : "");
         }
 
+        public override string GetItemType()
+        {
+            return _baseWeapon.Type.ToString();
+        }
+        
         public bool Fire()
         {
             if (_ammoInMagazine > 0)
@@ -61,6 +75,11 @@ namespace Game.Gear.Weapons
         public int GetRemainingAmmo()
         {
             return _ammoInMagazine;
+        }
+
+        public override string GetSummary()
+        {
+            return Helper.Round(_dps, 1) + "DPS";
         }
     }
 }

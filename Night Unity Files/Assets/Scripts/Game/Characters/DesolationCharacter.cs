@@ -5,6 +5,7 @@ using Game.World;
 using Game.World.Region;
 using Game.World.Time;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Characters;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -91,25 +92,25 @@ namespace Game.Characters
                     NavigateToState(a.Name());
                 });
 
-                Helper.SetNavigation(newActionButton, CharacterUi.WeaponCard, Helper.NavigationDirections.Left);
+//                Helper.SetNavigation(newActionButton, CharacterUi.WeaponCard, Helper.NavigationDirections.Left);
                 if (i == _availableActions.Count - 1)
                 {
                     Helper.SetNavigation(newActionButton, CharacterUi.CollapseCharacterButton.gameObject,
-                        Helper.NavigationDirections.Down);
+                        Direction.Down);
                     Helper.SetNavigation(CharacterUi.CollapseCharacterButton.gameObject, newActionButton,
-                        Helper.NavigationDirections.Up);
+                        Direction.Up);
                 }
 
                 if (i > 0)
                 {
                     GameObject previousActionButton = _availableActions[i - 1].ActionButtonGameObject;
-                    Helper.SetNavigation(newActionButton, previousActionButton, Helper.NavigationDirections.Up);
-                    Helper.SetNavigation(previousActionButton, newActionButton, Helper.NavigationDirections.Down);
+                    Helper.SetNavigation(newActionButton, previousActionButton, Direction.Up);
+                    Helper.SetNavigation(previousActionButton, newActionButton, Direction.Down);
                 }
                 else if (i == 0)
                 {
-                    Helper.SetNavigation(CharacterUi.WeaponCard.gameObject, newActionButton,
-                        Helper.NavigationDirections.Right);
+//                    Helper.SetNavigation(CharacterUi.WeaponCard.gameObject, newActionButton,
+//                        Helper.NavigationDirections.Right);
                 }
             }
         }
@@ -143,23 +144,23 @@ namespace Game.Characters
 
             Attributes.Strength.AddOnValueChange(delegate(int f)
             {
-                CharacterUi.StrengthText.text = f + " <sprite name=\"Strength\">";
-                CharacterUi.StrengthTextDetail.text = f + "/" + Attributes.Strength.Max + " <sprite name=\"Strength\">";
+                CharacterUi.StrengthText.text = f.ToString();
+                CharacterUi.StrengthTextDetail.text = f + "/" + Attributes.Strength.Max;
             });
             Attributes.Endurance.AddOnValueChange(delegate(int f)
             {
-                CharacterUi.EnduranceText.text = f + " <sprite name=\"Endurance\">";
-                CharacterUi.EnduranceTextDetail.text = f + "/" + Attributes.Endurance.Max + " <sprite name=\"Endurance\">";
+                CharacterUi.EnduranceText.text = f.ToString();
+                CharacterUi.EnduranceTextDetail.text = f + "/" + Attributes.Endurance.Max;
             });
             Attributes.Stability.AddOnValueChange(delegate(int f)
             {
-                CharacterUi.StabilityText.text = f + " <sprite name=\"Stability\">";
-                CharacterUi.StabilityTextDetail.text = f + "/" + Attributes.Stability.Max + " <sprite name=\"Stability\">";
+                CharacterUi.StabilityText.text = f.ToString();
+                CharacterUi.StabilityTextDetail.text = f + "/" + Attributes.Stability.Max;
             });
             Attributes.Intelligence.AddOnValueChange(delegate(int f)
             {
-                CharacterUi.IntelligenceText.text = f + " <sprite name=\"Intelligence\">";
-                CharacterUi.IntelligenceTextDetail.text = f + "/" + Attributes.Intelligence.Max + " <sprite name=\"Intelligence\">";
+                CharacterUi.IntelligenceText.text = f.ToString();
+                CharacterUi.IntelligenceTextDetail.text = f + "/" + Attributes.Intelligence.Max;
             });
             Attributes.Hunger.AddOnValueChange(f => CharacterUi.HungerText.text = Attributes.GetHungerStatus());
             Attributes.Thirst.AddOnValueChange(f => CharacterUi.ThirstText.text = Attributes.GetThirstStatus());

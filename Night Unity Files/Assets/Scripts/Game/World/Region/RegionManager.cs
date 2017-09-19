@@ -7,7 +7,7 @@ using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Character = Game.Characters.Character;
+using Character = SamsHelper.BaseGameFunctionality.Characters.Character;
 using Random = UnityEngine.Random;
 
 namespace Game.World.Region
@@ -124,11 +124,11 @@ namespace Game.World.Region
             if (DiscoveredRegions.Count != 0)
             {
                 GameObject lastRegionInList = DiscoveredRegions[DiscoveredRegions.Count - 1].GetObject();
-                Helper.SetNavigation(lastRegionInList, _exploreButton, Helper.NavigationDirections.Down);
-                Helper.SetNavigation(_exploreButton, lastRegionInList, Helper.NavigationDirections.Up);
+                Helper.SetNavigation(lastRegionInList, _exploreButton, Direction.Down);
+                Helper.SetNavigation(_exploreButton, lastRegionInList, Direction.Up);
             }
-            Helper.SetNavigation(_exploreButton, _backButton, Helper.NavigationDirections.Down);
-            Helper.SetNavigation(_backButton, _exploreButton, Helper.NavigationDirections.Up);
+            Helper.SetNavigation(_exploreButton, _backButton, Direction.Down);
+            Helper.SetNavigation(_backButton, _exploreButton, Direction.Up);
         }
 
         private static GameObject AddNewButton()

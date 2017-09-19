@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml;
 using Characters;
 using Facilitating.Persistence;
+using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Gear;
 using Game.Gear.Weapons;
@@ -12,7 +13,7 @@ using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
 using UnityEngine;
 
-namespace Game.Characters
+namespace SamsHelper.BaseGameFunctionality.Characters
 {
     public abstract class Character : StateMachine, IPersistenceTemplate
     {

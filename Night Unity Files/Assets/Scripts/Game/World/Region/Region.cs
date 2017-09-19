@@ -6,7 +6,7 @@ using SamsHelper;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Character = Game.Characters.Character;
+using Character = SamsHelper.BaseGameFunctionality.Characters.Character;
 
 namespace Game.World.Region
 {

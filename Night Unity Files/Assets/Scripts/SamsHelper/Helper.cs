@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Articy.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -130,16 +129,8 @@ namespace SamsHelper
         {
             PrintList(new List<T>(arr));
         }
-        
-        public enum NavigationDirections
-        {
-            Up,
-            Down,
-            Left,
-            Right
-        }
-        
-        
+
+
         public static GameObject InstantiateUiObject<T>(string prefabLocation, Transform parent) where T : Component
         {
             GameObject newUiObject = InstantiateUiObject(prefabLocation, parent);
@@ -160,7 +151,7 @@ namespace SamsHelper
             return newUiObject;
         }
 
-        public static void SetNavigation(GameObject origin, GameObject target, NavigationDirections d)
+        public static void SetNavigation(GameObject origin, GameObject target, Direction d)
         {
             Button originButton = origin.GetComponent<Button>();
             Button targetButton = target.GetComponent<Button>();
@@ -168,16 +159,16 @@ namespace SamsHelper
             Navigation originButtonNavigation = originButton.navigation;
             switch (d)
             {
-                case NavigationDirections.Up:
+                case Direction.Up:
                     originButtonNavigation.selectOnUp = targetButton;
                     break;
-                case NavigationDirections.Down:
+                case Direction.Down:
                     originButtonNavigation.selectOnDown = targetButton;
                     break;
-                case NavigationDirections.Left:
+                case Direction.Left:
                     originButtonNavigation.selectOnLeft = targetButton;
                     break;
-                case NavigationDirections.Right:
+                case Direction.Right:
                     originButtonNavigation.selectOnRight = targetButton;
                     break;
             }
@@ -186,8 +177,8 @@ namespace SamsHelper
 
         public static void SetReciprocalNavigation(GameObject origin, GameObject target)
         {
-            SetNavigation(origin, target, NavigationDirections.Down);
-            SetNavigation(target, origin, NavigationDirections.Up);
+            SetNavigation(origin, target, Direction.Down);
+            SetNavigation(target, origin, Direction.Up);
         }
     }
 }

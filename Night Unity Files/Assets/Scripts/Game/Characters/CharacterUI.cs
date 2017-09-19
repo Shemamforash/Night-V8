@@ -1,3 +1,4 @@
+using Facilitating.UI.Elements;
 using Game.Characters;
 using SamsHelper;
 using TMPro;
@@ -8,11 +9,11 @@ namespace Characters
 {
     public class CharacterUI
     {
-        public readonly GameObject GameObject, SimpleView, DetailedView;
+        public readonly GameObject GameObject, SimpleView, DetailedView, GearContainer;
         public readonly Button EatButton;
         public readonly Button DrinkButton;
         public readonly Button CollapseCharacterButton;
-        public readonly GameObject ActionScrollContent, WeaponCard;
+        public readonly GameObject ActionScrollContent;
 
         public readonly TextMeshProUGUI CurrentActionText, DetailedCurrentActionText;
         public readonly TextMeshProUGUI ConditionsText;
@@ -21,19 +22,37 @@ namespace Characters
 
         public readonly TextMeshProUGUI NameText, ClassTraitText, DetailedClassText, DetailedTraitText;
         public readonly TextMeshProUGUI WeightText;
+        public readonly GearUi WeaponGearUi, ArmourGearUi, AccessoryGearUi;
 
-        public readonly TextMeshProUGUI WeaponNameTextDetailed,
-            WeaponNameTextSimple,
-            WeaponModifier1Text,
-            WeaponModifier2Text;
+        public class GearUi
+        {
+            public readonly GameObject GearUiObject;
+            public readonly TextMeshProUGUI Type, Name, Summary, EquipButtonText;
+            public readonly EnhancedButton EquipButton;
 
-        public readonly TextMeshProUGUI WeaponDamageText,
-            WeaponFireRateText,
-            WeaponReloadSpeedText,
-            WeaponCapacityText,
-            WeaponHandlingText,
-            WeaponCriticalChanceText,
-            WeaponAccuracyText;
+            public GearUi(string gearType, GameObject gearContainer)
+            {
+                GearUiObject = Helper.FindChildWithName(gearContainer, gearType);
+                Type = Helper.FindChildWithName<TextMeshProUGUI>(GearUiObject, "Type");
+                Name = Helper.FindChildWithName<TextMeshProUGUI>(GearUiObject, "Name");
+                Summary = Helper.FindChildWithName<TextMeshProUGUI>(GearUiObject, "Summary");
+                EquipButton = Helper.FindChildWithName<EnhancedButton>(GearUiObject, "Equip Button");
+                EquipButtonText = Helper.FindChildWithName<TextMeshProUGUI>(EquipButton.gameObject, "Text");
+            }
+        }
+        
+//        public readonly TextMeshProUGUI WeaponNameTextDetailed,
+//            WeaponNameTextSimple,
+//            WeaponModifier1Text,
+//            WeaponModifier2Text;
+
+//        public readonly TextMeshProUGUI WeaponDamageText,
+//            WeaponFireRateText,
+//            WeaponReloadSpeedText,
+//            WeaponCapacityText,
+//            WeaponHandlingText,
+//            WeaponCriticalChanceText,
+//            WeaponAccuracyText;
 
         public CharacterUI(GameObject gameObject)
         {
@@ -66,7 +85,7 @@ namespace Characters
 
             EatButton = FindInDetailedView<Button>("Eat Button");
             DrinkButton = FindInDetailedView<Button>("Drink Button");
-            WeaponCard = Helper.FindChildWithName(DetailedView.transform, "Weapon Card").gameObject;
+//            WeaponCard = Helper.FindChildWithName(DetailedView.transform, "Weapon Card").gameObject;
             ConditionsText = FindInDetailedView<TextMeshProUGUI>("Conditions");
 
             StrengthTextDetail = FindInDetailedView<TextMeshProUGUI>("Strength");
@@ -74,18 +93,23 @@ namespace Characters
             EnduranceTextDetail = FindInDetailedView<TextMeshProUGUI>("Endurance");
             StabilityTextDetail = FindInDetailedView<TextMeshProUGUI>("Stability");
 
-            WeaponNameTextSimple = FindInSimpleView<TextMeshProUGUI>("Weapon Name");
-            WeaponNameTextDetailed = FindInDetailedView<TextMeshProUGUI>("Weapon Name");
-            WeaponModifier1Text = FindInDetailedView<TextMeshProUGUI>("Primary Modifier");
-            WeaponModifier2Text = FindInDetailedView<TextMeshProUGUI>("Secondary Modifier");
+            GearContainer = Helper.FindChildWithName(DetailedView, "Gear");
+            WeaponGearUi = new GearUi("Weapon", GearContainer);
+            ArmourGearUi = new GearUi("Armour", GearContainer);
+            AccessoryGearUi = new GearUi("Accessory", GearContainer);
 
-            WeaponDamageText = FindInDetailedView<TextMeshProUGUI>("Damage");
-            WeaponFireRateText = FindInDetailedView<TextMeshProUGUI>("Fire Rate");
-            WeaponReloadSpeedText = FindInDetailedView<TextMeshProUGUI>("Reload Speed");
-            WeaponCapacityText = FindInDetailedView<TextMeshProUGUI>("Capacity");
-            WeaponHandlingText = FindInDetailedView<TextMeshProUGUI>("Handling");
-            WeaponCriticalChanceText = FindInDetailedView<TextMeshProUGUI>("Critical Chance");
-            WeaponAccuracyText = FindInDetailedView<TextMeshProUGUI>("Accuracy");
+//            WeaponNameTextSimple = FindInSimpleView<TextMeshProUGUI>("Weapon Name");
+//            WeaponNameTextDetailed = FindInDetailedView<TextMeshProUGUI>("Weapon Name");
+//            WeaponModifier1Text = FindInDetailedView<TextMeshProUGUI>("Primary Modifier");
+//            WeaponModifier2Text = FindInDetailedView<TextMeshProUGUI>("Secondary Modifier");
+
+//            WeaponDamageText = FindInDetailedView<TextMeshProUGUI>("Damage");
+//            WeaponFireRateText = FindInDetailedView<TextMeshProUGUI>("Fire Rate");
+//            WeaponReloadSpeedText = FindInDetailedView<TextMeshProUGUI>("Reload Speed");
+//            WeaponCapacityText = FindInDetailedView<TextMeshProUGUI>("Capacity");
+//            WeaponHandlingText = FindInDetailedView<TextMeshProUGUI>("Handling");
+//            WeaponCriticalChanceText = FindInDetailedView<TextMeshProUGUI>("Critical Chance");
+//            WeaponAccuracyText = FindInDetailedView<TextMeshProUGUI>("Accuracy");
         }
 
         private T FindInSimpleView<T>(string name)

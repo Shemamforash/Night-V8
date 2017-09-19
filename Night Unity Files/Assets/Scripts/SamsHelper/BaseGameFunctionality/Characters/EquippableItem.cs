@@ -1,24 +1,25 @@
-﻿using Game.Characters;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
+﻿using SamsHelper.BaseGameFunctionality.InventorySystem;
 
-namespace Game.Gear
+namespace SamsHelper.BaseGameFunctionality.Characters
 {
-    public class EquippableItem : BasicInventoryItem
+    public abstract class EquippableItem : BasicInventoryItem
     {
         private bool _equipped;
         private readonly GearSlot _gearslot;
 
-        protected EquippableItem(string name, float weight, GearSlot gearSlot) : base(name, weight)
+        protected EquippableItem(string name, float weight, GearSlot gearSlot, ItemType itemType) : base(name, weight, itemType)
         {
             _gearslot = gearSlot;
         }
 
-        private void Equip(Character c)
+        public void Equip()
         {
-            if (!c.CharacterInventory.InventoryHasSpace(Weight()) && !c.CharacterInventory.ContainsItem(this)) return;
-            c.AddItemToInventory(this);
-            _equipped = true;
-            c.ReplaceGearInSlot(_gearslot, this);
+            //if in inventory, auto equip and replace
+            //if not in inventory open equip window
+//            if (!Inventory.InventoryHasSpace(Weight()) && !Inventory.ContainsItem(this)) return;
+//            c.AddItemToInventory(this);
+//            _equipped = true;
+//            c.ReplaceGearInSlot(_gearslot, this);
         }
 
         public void Unequip()
@@ -30,5 +31,7 @@ namespace Game.Gear
         {
             return _equipped;
         }
+
+        public abstract string GetSummary();
     }
 }

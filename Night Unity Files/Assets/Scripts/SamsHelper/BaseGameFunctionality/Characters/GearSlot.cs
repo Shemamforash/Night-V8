@@ -1,4 +1,4 @@
-﻿namespace Game.Gear
+﻿namespace SamsHelper.BaseGameFunctionality.Characters
 {
     public enum GearSlot
     {

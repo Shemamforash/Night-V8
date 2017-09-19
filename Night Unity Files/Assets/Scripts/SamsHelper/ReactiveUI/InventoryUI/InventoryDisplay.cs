@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Facilitating.UI.Elements;
+using Facilitating.UI.Inventory;
+using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using TMPro;
 using UnityEngine;
@@ -11,7 +14,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
     public class InventoryDisplay : MonoBehaviour
     {
         private Transform _inventoryContent;
-        private GameObject _itemPrefab;
+        private Direction _inventoryDirection;
         private Inventory _inventory;
         private readonly List<InventoryItemUi> _inventoryItems = new List<InventoryItemUi>();
         private TextMeshProUGUI _titleText, _capacityText;
@@ -24,11 +27,11 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _inventoryContent = Helper.FindChildWithName<Transform>(gameObject, "Content");
         }
 
-        public void SetInventory(Inventory inventory, GameObject itemPrefab, InventoryDisplay moveToInventory)
+        public void SetInventory(Inventory inventory, Direction inventoryDirection, InventoryDisplay moveToInventory)
         {
             _moveToInventory = moveToInventory;
             _titleText.text = inventory.Name();
-            _itemPrefab = itemPrefab;
+            _inventoryDirection = inventoryDirection;
             _inventoryItems.ForEach(i => i.DestroyItem());
             _inventoryItems.Clear();
             _inventory = inventory;
@@ -37,10 +40,10 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         private void UpdateInventoryWeight()
         {
-            _capacityText.text = _inventory.GetInventoryWeight() + " W";
+            _capacityText.text = Helper.Round(_inventory.GetInventoryWeight(), 1) + " kg";
         }
 
-        private UnityAction GetMoveAction(BasicInventoryItem inventoryItem, int quantity)
+        private Action GetMoveAction(BasicInventoryItem inventoryItem, int quantity)
         {
             return () =>
             {
@@ -54,9 +57,16 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         private void UpdateItemUi(BasicInventoryItem inventoryItem)
         {
             UpdateInventoryWeight();
-            InventoryItemUi foundItem = _inventoryItems.FirstOrDefault(i => i.InventoryItem().Name() == inventoryItem.Name());
+            InventoryItemUi foundItem = _inventoryItems.FirstOrDefault(i =>
+            {
+                if (i.GetInventoryItem() is InventoryResource)
+                {
+                    return i.GetInventoryItem().Name() == inventoryItem.Name();
+                }
+                return i.GetInventoryItem() == inventoryItem;
+            });
             if (foundItem == null) return;
-            foundItem.UpdateWeightAndQuantity();
+            foundItem.Update();
             if (inventoryItem.Quantity() != 0 && _inventory.ContainsItem(inventoryItem)) return;
             foundItem.DestroyItem();
             _inventoryItems.Remove(foundItem);
@@ -73,30 +83,44 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             for (int i = 0; i < _inventoryItems.Count; ++i)
             {
                 if (i <= 0) continue;
-                GameObject from = _inventoryItems[i].MoveButton();
-                GameObject to = _inventoryItems[i - 1].MoveButton();
-                Helper.SetReciprocalNavigation(from, to);
+                GameObject from = _inventoryItems[i].GetGameObject();
+                GameObject to = _inventoryItems[i - 1].GetGameObject();
+                if (from == null || to == null) continue;
+                Helper.SetReciprocalNavigation(@from, to);
                 if (i == _inventoryItems.Count - 1)
                 {
-                    Helper.SetReciprocalNavigation(from, InventoryTransferManager.CloseButton());
+                    Helper.SetReciprocalNavigation(@from, InventoryTransferManager.CloseButton());
                 }
             }
         }
 
         private bool IsItemDisplayed(BasicInventoryItem inventoryItem)
         {
-            return _inventoryItems.Any(itemUi => itemUi.InventoryItem() == inventoryItem);
+            return _inventoryItems.Any(itemUi => itemUi.GetInventoryItem() == inventoryItem);
         }
 
         private void CreateNewItem(BasicInventoryItem inventoryItem)
         {
-            GameObject uiObject = Helper.InstantiateUiObject(_itemPrefab, _inventoryContent);
-            InventoryItemUi itemUi = new InventoryItemUi(uiObject, inventoryItem);
+            InventoryItemUi itemUi;
+            if (inventoryItem is EquippableItem)
+            {
+                if (_inventoryDirection == Direction.None)
+                {
+                    itemUi = new GearInventoryUi(inventoryItem, _inventoryContent, true);
+                }
+                else
+                {
+                    itemUi = new GearInventoryUi(inventoryItem, _inventoryContent, false);
+                }
+            }
+            else
+            {
+                itemUi = new InventoryItemUi(inventoryItem, _inventoryContent, _inventoryDirection);
+            }
             if (_moveToInventory != null)
             {
-                EnhancedButton button = itemUi.MoveButton().GetComponent<EnhancedButton>();
-                button.AddOnClick(GetMoveAction(inventoryItem, 1));
-                button.AddOnHold(() => GetMoveAction(inventoryItem, 5), 0.5f);
+                itemUi.OnActionPress(GetMoveAction(inventoryItem, 1));
+                itemUi.OnActionHold(GetMoveAction(inventoryItem, 5), 0.5f);
             }
             _inventoryItems.Add(itemUi);
         }

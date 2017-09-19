@@ -1,4 +1,6 @@
-﻿using SamsHelper.BaseGameFunctionality.InventorySystem;
+﻿using System;
+using Facilitating.UI.Elements;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using TMPro;
 using UnityEngine;
 
@@ -7,24 +9,46 @@ namespace SamsHelper.ReactiveUI.InventoryUI
     public class InventoryItemUi
     {
         private readonly GameObject _gameObject;
-        private readonly BasicInventoryItem _inventoryItem;
-        private readonly TextMeshProUGUI _weightText, _quantityText;
-        private readonly GameObject _moveButton;
+        protected readonly BasicInventoryItem InventoryItem;
+        protected readonly EnhancedButton ActionButton;
+        private readonly TextMeshProUGUI _typeText, _nameText, _weightText;
+        protected readonly TextMeshProUGUI SummaryText, ButtonText;
 
-        public InventoryItemUi(GameObject gameObject, BasicInventoryItem inventoryItem)
+        public InventoryItemUi(BasicInventoryItem inventoryItem, Transform parent, Direction direction = Direction.None)
         {
-            _gameObject = gameObject;
-            _inventoryItem = inventoryItem;
-            Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name").text = inventoryItem.ExtendedName();
-            _weightText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Weight");
-            _quantityText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Quantity");
-            _moveButton = Helper.FindChildWithName(gameObject, "Move");
-            UpdateWeightAndQuantity();
+            InventoryItem = inventoryItem;
+            _gameObject = Helper.InstantiateUiObject("Prefabs/Menu Button", parent);
+            ActionButton = Helper.FindChildWithName<EnhancedButton>(_gameObject, "Action Button");
+            _typeText = Helper.FindChildWithName<TextMeshProUGUI>(_gameObject, "Type");
+            _nameText = Helper.FindChildWithName<TextMeshProUGUI>(_gameObject, "Name");
+            SummaryText = Helper.FindChildWithName<TextMeshProUGUI>(_gameObject, "Summary");
+            _weightText = Helper.FindChildWithName<TextMeshProUGUI>(_gameObject, "Weight");
+            ButtonText = Helper.FindChildWithName<TextMeshProUGUI>(ActionButton.gameObject, "Text");
+            SetActionButtonText(direction);
         }
 
-        public GameObject MoveButton()
+        private void SetActionButtonText(Direction direction)
         {
-            return _moveButton;
+            switch (direction)
+            {
+                case Direction.Up:
+                    ButtonText.text = "^^";
+                    break;
+                case Direction.Down:
+                    ButtonText.text = "\\/\\/";
+                    break;
+                case Direction.Left:
+                    ButtonText.text = "<<";
+                    break;
+                case Direction.Right:
+                    ButtonText.text = ">>";
+                    break;
+                case Direction.None:
+                    ActionButton.gameObject.SetActive(false);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
         }
 
         public GameObject GetGameObject()
@@ -32,9 +56,9 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return _gameObject;
         }
 
-        public BasicInventoryItem InventoryItem()
+        public BasicInventoryItem GetInventoryItem()
         {
-            return _inventoryItem;
+            return InventoryItem;
         }
 
         public void DestroyItem()
@@ -42,13 +66,25 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             GameObject.Destroy(_gameObject);
         }
 
-        public void UpdateWeightAndQuantity()
+        public virtual void Update()
         {
-            float weight = _inventoryItem.Weight() * _inventoryItem.Quantity();
-            Helper.Round(weight, 1);
-            _weightText.text = weight + " <sprite name=\"Weight\">";
-            int quantity = _inventoryItem.Quantity();
-            _quantityText.text = quantity == 0 ? "" : quantity.ToString();
+            if (InventoryItem is InventoryResource)
+            {
+                SummaryText.text = "x" + InventoryItem.Quantity();
+            }
+            _nameText.text = InventoryItem.ExtendedName();
+            _weightText.text = InventoryItem.TotalWeight() + "kg";
+            _typeText.text = InventoryItem.GetItemType().ToString();
+        }
+
+        public void OnActionPress(Action a)
+        {
+            ActionButton.AddOnClick(() => a());
+        }
+
+        public void OnActionHold(Action a, float duration)
+        {
+            ActionButton.AddOnHold(a, duration);
         }
     }
 }

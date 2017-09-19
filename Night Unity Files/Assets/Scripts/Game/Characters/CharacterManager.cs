@@ -60,16 +60,16 @@ namespace Game.Characters
                 if (i == 0)
                 {
                     Helper.SetNavigation(currentButton, inventoryObject,
-                        Helper.NavigationDirections.Up);
+                        Direction.Up);
 
                     Helper.SetNavigation(inventoryObject, currentButton,
-                        Helper.NavigationDirections.Down);
+                        Direction.Down);
                 }
                 else if (i > 0)
                 {
                     GameObject previousButton = _characters[i - 1].CharacterUi.SimpleView;
-                    Helper.SetNavigation(currentButton, previousButton, Helper.NavigationDirections.Up);
-                    Helper.SetNavigation(previousButton, currentButton, Helper.NavigationDirections.Down);
+                    Helper.SetNavigation(currentButton, previousButton, Direction.Up);
+                    Helper.SetNavigation(previousButton, currentButton, Direction.Down);
                 }
             }
         }

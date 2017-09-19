@@ -4,7 +4,7 @@ using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI.CustomTypes;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
-using Character = Game.Characters.Character;
+using Character = SamsHelper.BaseGameFunctionality.Characters.Character;
 
 namespace Game.Combat
 {

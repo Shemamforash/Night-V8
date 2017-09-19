@@ -7,7 +7,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     {
         private readonly MyInt _quantity = new MyInt(0, 0, int.MaxValue);
 
-        public InventoryResource(string name, float weight) : base(name, weight)
+        public InventoryResource(string name, float weight) : base(name, weight, ItemType.Resource)
         {
         }
         
