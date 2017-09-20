@@ -4,16 +4,16 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>104</Val>
-          <Max>104</Max>
+          <Val>113</Val>
+          <Max>113</Max>
         </Strength>
         <Endurance>
-          <Val>68</Val>
-          <Max>68</Max>
+          <Val>52</Val>
+          <Max>52</Max>
         </Endurance>
         <Stability>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>23</Val>
+          <Max>23</Max>
         </Stability>
         <Intelligence>
           <Val>19</Val>
@@ -21,65 +21,65 @@
         </Intelligence>
         <Starvation>
           <Val>50</Val>
-          <Max>0</Max>
+          <Max>3</Max>
         </Starvation>
         <Dehydration>
           <Val>30</Val>
-          <Max>0</Max>
+          <Max>3</Max>
         </Dehydration>
         <Hunger>
           <Val>12</Val>
           <Max>5</Max>
         </Hunger>
         <Thirst>
-          <Val>13</Val>
-          <Max>5</Max>
+          <Val>11</Val>
+          <Max>6</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
     <Character>
-      <Name>Kero</Name>
+      <Name>Panacea</Name>
       <Attributes>
         <Strength>
-          <Val>84</Val>
-          <Max>84</Max>
+          <Val>76</Val>
+          <Max>76</Max>
         </Strength>
         <Endurance>
-          <Val>69</Val>
-          <Max>69</Max>
+          <Val>67</Val>
+          <Max>67</Max>
         </Endurance>
         <Stability>
-          <Val>10</Val>
-          <Max>10</Max>
+          <Val>15</Val>
+          <Max>15</Max>
         </Stability>
         <Intelligence>
-          <Val>27</Val>
-          <Max>27</Max>
+          <Val>19</Val>
+          <Max>19</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
-          <Max>0</Max>
+          <Max>3</Max>
         </Starvation>
         <Dehydration>
           <Val>30</Val>
-          <Max>0</Max>
+          <Max>3</Max>
         </Dehydration>
         <Hunger>
           <Val>12</Val>
           <Max>5</Max>
         </Hunger>
         <Thirst>
-          <Val>13</Val>
-          <Max>5</Max>
+          <Val>11</Val>
+          <Max>6</Max>
         </Thirst>
-        <Weight>2</Weight>
+        <Weight>1</Weight>
       </Attributes>
     </Character>
   </CharacterManager>
-  <Water>0</Water>
-  <Food>0</Food>
-  <Fuel>0</Fuel>
-  <Scrap>0</Scrap>
-  <Ammo>126</Ammo>
+  <Water>8</Water>
+  <Food>25</Food>
+  <Fuel>4</Fuel>
+  <Scrap>22</Scrap>
+  <Ammo>251</Ammo>
 </Game>

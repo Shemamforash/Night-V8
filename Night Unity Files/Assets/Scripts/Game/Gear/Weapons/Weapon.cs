@@ -42,7 +42,6 @@ namespace Game.Gear.Weapons
             float magazineDamage = Capacity * averageShotDamage;
             float magazineDuration = Capacity / FireRate + ReloadSpeed;
             _dps = magazineDamage / magazineDuration;
-            Debug.Log("mag dam " + magazineDamage + " mag dur " + magazineDuration + " dps " + _dps);
             Reload();
         }
 

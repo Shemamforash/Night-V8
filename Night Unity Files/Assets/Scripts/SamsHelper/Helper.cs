@@ -146,7 +146,7 @@ namespace SamsHelper
         public static GameObject InstantiateUiObject(GameObject prefab, Transform parent)
         {
             GameObject newUiObject = GameObject.Instantiate(prefab);
-            newUiObject.transform.SetParent(parent);
+            newUiObject.transform.SetParent(parent, false);
             newUiObject.transform.localScale = new Vector3(1, 1, 1);
             return newUiObject;
         }

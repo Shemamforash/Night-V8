@@ -1,4 +1,5 @@
-﻿using SamsHelper.BaseGameFunctionality.Characters;
+﻿using Facilitating.MenuNavigation;
+using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
@@ -11,8 +12,22 @@ namespace Facilitating.UI.Inventory
         {
             SummaryText.text = ((EquippableItem)inventoryItem).GetSummary();
             if (!equippable) return;
-            ButtonText.text = "Equip";
-            ActionButton.AddOnClick(() => ((EquippableItem)inventoryItem).Equip());
+            ButtonText.text = "Actions";
+            ActionButton.AddOnClick(ShowEquipPopup);
+            ActionButton.gameObject.SetActive(true);
+        }
+
+        private void ShowEquipPopup()
+        {
+            Popup popup = new Popup(InventoryItem.Name());
+            popup.AddOption("Equip",() =>
+            {
+            });
+            popup.AddOption("Move", () =>
+            {
+                
+            });
+            popup.AddOption();
         }
     }
 }
