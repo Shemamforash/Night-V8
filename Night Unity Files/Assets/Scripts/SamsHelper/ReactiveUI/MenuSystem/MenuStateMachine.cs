@@ -1,32 +1,29 @@
 ﻿using Facilitating.Persistence;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using UnityEngine;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
 {
-    public class MenuStateMachine : StateMachine
+    public class MenuStateMachine : MonoBehaviour
     {
         public Menu InitialMenu;
         private static MenuStateMachine _instance;
+        public static readonly StateMachine States = new StateMachine();
 
-        public static MenuStateMachine Instance()
-        {
-            return _instance ?? FindObjectOfType<MenuStateMachine>();
-        }
-        
         public void Awake()
         {
             _instance = this;
             foreach (Menu t in Helper.FindAllComponentsInChildren<Menu>(transform))
             {
-                MenuState menu = new MenuState(t.name, t, this);
+                MenuState menu = new MenuState(t.name, t, States);
                 if (!t.gameObject.activeInHierarchy)
                 {
                     t.gameObject.SetActive(true);
                     t.gameObject.SetActive(false);
                 }
-                AddState(menu);
+                States.AddState(menu);
             }
-            NavigateToState(InitialMenu.name);
+            States.NavigateToState(InitialMenu.name);
         }
 
         //TODO move me somewhere more suitable
@@ -36,14 +33,14 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             SaveController.SaveGame();
         }
 
-        public void GoToMenu(Menu m)
+        public static void GoToMenu(Menu m)
         {
-            NavigateToState(m.gameObject.name);
+            States.NavigateToState(m.gameObject.name);
         }
 
-        public void GoToInitialMenu()
+        public static void GoToInitialMenu()
         {
-            NavigateToState(InitialMenu.name);
+            States.NavigateToState(_instance.InitialMenu.name);
         }
     }
 }

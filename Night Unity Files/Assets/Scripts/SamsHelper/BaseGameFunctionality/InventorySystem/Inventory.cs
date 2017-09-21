@@ -4,26 +4,20 @@ using System.Linq;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public class Inventory
+    public class Inventory : MyGameObject
     {
         private readonly List<InventoryResource> _resources = new List<InventoryResource>();
-        private readonly List<BasicInventoryItem> _items = new List<BasicInventoryItem>();
+        private readonly List<MyGameObject> _items = new List<MyGameObject>();
         private bool _isWeightLimited;
-        private float _inventoryWeight;
         private float _maxWeight;
-        private readonly string _name;
         
-        public Inventory(string name)
+        public Inventory(string name, float maxWeight = 0) : base(name, GameObjectType.Inventory)
         {
-            _name = name;
-            MaxWeight = float.MaxValue;
-        }
-
-        public Inventory(string name, float maxWeight)
-        {
-            _name = name;
-            MaxWeight = maxWeight;
-            _isWeightLimited = true;
+            if (maxWeight != 0)
+            {
+                MaxWeight = maxWeight;
+                _isWeightLimited = true;
+            }
         }
 
         public List<InventoryResource> Resources()
@@ -31,12 +25,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return _resources;
         }
 
-        public string Name()
-        {
-            return _name;
-        }
-        
-        public List<BasicInventoryItem> Items()
+        public List<MyGameObject> Items()
         {
             return _items;
         }
@@ -53,7 +42,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public InventoryResource GetResource(string resourceName)
         {
-            InventoryResource found = _resources.FirstOrDefault(item => item.Name() == resourceName);
+            InventoryResource found = _resources.FirstOrDefault(item => item.Name == resourceName);
             if (found == null)
             {
                 throw new Exceptions.ResourceDoesNotExistException(resourceName);
@@ -63,19 +52,14 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public bool InventoryHasSpace(float weight)
         {
-            if (_inventoryWeight + weight > MaxWeight + 0.0001f && _isWeightLimited)
+            if (Weight + weight > MaxWeight + 0.0001f && _isWeightLimited)
             {
                 return false;
             }
             return true;
         }
 
-        public float GetInventoryWeight()
-        {
-            return _inventoryWeight;
-        }
-
-        public bool ContainsItem(BasicInventoryItem item)
+        public bool ContainsItem(MyGameObject item)
         {
             InventoryResource resource = item as InventoryResource;
             if (resource == null) return _items.Contains(item);
@@ -84,29 +68,29 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         //Returns true if new instance of item was added
         //Returns false if existing instance was incremented
-        public void AddItem(BasicInventoryItem item)
+        public void AddItem(MyGameObject item)
         {
-            _inventoryWeight += item.Weight();
+            Weight += item.Weight;
             _items.Add(item);
         }
 
         //Returns item if the item was successfully removed
         //Returns null if the item could not be removed (stackable but 0)
         //Throws an error if the item was not in the inventory
-        private BasicInventoryItem RemoveItem(BasicInventoryItem item)
+        private MyGameObject RemoveItem(MyGameObject item)
         {
             if (!_items.Contains(item))
             {
-                throw new Exceptions.ItemNotInInventoryException(item.Name());
+                throw new Exceptions.ItemNotInInventoryException(item.Name);
             }
             _items.Remove(item);
-            _inventoryWeight -= item.Weight();
+            Weight -= item.Weight;
             return item;
         }
 
         public void AddResource(string name, float weight)
         {
-            if (_resources.FirstOrDefault(r => r.Name() == name) != null)
+            if (_resources.FirstOrDefault(r => r.Name == name) != null)
             {
                 throw new Exceptions.ResourceAlreadyExistsException(name);
             }
@@ -122,9 +106,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             if (amount < 0)
             {
-                throw new Exceptions.ResourceValueChangeInvalid(resource.Name(), "increment", amount);
+                throw new Exceptions.ResourceValueChangeInvalid(resource.Name, "increment", amount);
             }
-            _inventoryWeight += resource.GetWeight(amount);
+            Weight += resource.GetWeight(amount);
             resource.Increment(amount);
         }
 
@@ -137,9 +121,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             if (amount < 0)
             {
-                throw new Exceptions.ResourceValueChangeInvalid(resource.Name(), "decrement", amount);
+                throw new Exceptions.ResourceValueChangeInvalid(resource.Name, "decrement", amount);
             }
-            _inventoryWeight -= resource.GetWeight(amount);
+            Weight -= resource.GetWeight(amount);
             return resource.Decrement(amount);
         }
 
@@ -148,19 +132,19 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return GetResource(name).Quantity();
         }
 
-        public List<BasicInventoryItem> Contents()
+        public List<MyGameObject> Contents()
         {
-            List<BasicInventoryItem> contents = new List<BasicInventoryItem>();
+            List<MyGameObject> contents = new List<MyGameObject>();
             _items.ForEach(i => contents.Add(i));
             _resources.ForEach(r => contents.Add(r));
             return contents;
         }
 
         //Returns item in target inventory if the item was successfully moved
-        private BasicInventoryItem Move(BasicInventoryItem item, Inventory target)
+        private MyGameObject Move(MyGameObject item, Inventory target)
         {
-            BasicInventoryItem movedItem = null;
-            if (target.InventoryHasSpace(item.Weight()))
+            MyGameObject movedItem = null;
+            if (target.InventoryHasSpace(item.Weight))
             {
                 InventoryResource resource = item as InventoryResource;
                 if (resource == null)
@@ -177,20 +161,20 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         }
 
         //BUG creates new resources when moving resources to fill remainder of inventory
-        public BasicInventoryItem Move(BasicInventoryItem item, Inventory target, int quantity)
+        public MyGameObject Move(MyGameObject item, Inventory target, int quantity)
         {
             InventoryResource resource = item as InventoryResource;
             if (resource != null)
             {
                 if (!target.InventoryHasSpace(resource.GetWeight(quantity)))
                 {
-                    float remainingSpace = target.MaxWeight - target._inventoryWeight;
-                    quantity = (int) Math.Floor(remainingSpace / resource.Weight());
+                    float remainingSpace = target.MaxWeight - target.Weight;
+                    quantity = (int) Math.Floor(remainingSpace / resource.Weight);
                 }
                 if (quantity != 0)
                 {
                     DecrementResource(resource, quantity);
-                    InventoryResource targetResource = target.GetResource(resource.Name());
+                    InventoryResource targetResource = target.GetResource(resource.Name);
                     target.IncrementResource(targetResource, quantity);
                     return targetResource;
                 }

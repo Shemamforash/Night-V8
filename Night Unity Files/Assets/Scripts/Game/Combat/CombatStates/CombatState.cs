@@ -9,18 +9,20 @@ namespace Game.Combat.CombatStates
     public abstract class CombatState : State
     {
         protected readonly bool IsPlayerState;
+        protected CombatStateMachine CombatMachine;
 
-        protected CombatState(string name, CombatStateMachine parentCombatManager, bool isPlayerState) : base(name, parentCombatManager)
+        protected CombatState(string name, CombatStateMachine combatMachine, bool isPlayerState) : base(name, combatMachine)
         {
+            CombatMachine = combatMachine;
             IsPlayerState = isPlayerState;
         }
 
-        protected static Character Character()
+        protected Character Character()
         {
-            return CombatManager.Instance().Character();
+            return CombatMachine.Character;
         }
 
-        protected static Weapon Weapon()
+        protected Weapon Weapon()
         {
             return Character().GetWeapon();
         }

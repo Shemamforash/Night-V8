@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.StateMachines
 {
-    public class StateMachine : MonoBehaviour
+    public class StateMachine
     {
         protected readonly Dictionary<string, State> States = new Dictionary<string, State>();
         private State _currentState;
         private string _defaultState;
 
-        protected List<State> StatesAsList()
+        public List<State> StatesAsList()
         {
             return new List<State>(States.Values);
         }
@@ -20,7 +20,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             return _currentState;
         }
 
-        protected void SetDefaultState(string defaultState)
+        public void SetDefaultState(string defaultState)
         {
             _defaultState = defaultState;
             NavigateToState(defaultState);
@@ -31,7 +31,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             return States[stateName];
         }
 
-        protected void AddState(State state)
+        public void AddState(State state)
         {
             States[state.Name()] = state;
         }

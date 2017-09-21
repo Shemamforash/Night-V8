@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Facilitating.UI.Elements;
 using Facilitating.UI.Inventory;
+using Game.Characters;
+using SamsHelper.BaseGameFunctionality;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using TMPro;
@@ -11,13 +13,12 @@ using UnityEngine.Events;
 
 namespace SamsHelper.ReactiveUI.InventoryUI
 {
-    public class InventoryDisplay : MenuList<InventoryItemUi>
+    public class InventoryDisplay : MenuList
     {
         private Direction _inventoryDirection;
         private Inventory _inventory;
         private TextMeshProUGUI _titleText, _capacityText;
         private InventoryDisplay _moveToInventory;
-        private Func<BasicInventoryItem, bool> _showOnlyAction;
 
         public override void Awake()
         {
@@ -26,106 +27,69 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _capacityText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Carrying Capacity");
         }
 
-        public void SetInventory(Inventory inventory, Direction inventoryDirection, InventoryDisplay moveToInventory, Func<BasicInventoryItem, bool> showOnlyAction)
+        public void SetInventory(Inventory inventory, Direction inventoryDirection, InventoryDisplay moveToInventory)
         {
             _moveToInventory = moveToInventory;
-            _showOnlyAction = showOnlyAction;
-            _titleText.text = inventory.Name();
+            _titleText.text = inventory.Name;
             _inventoryDirection = inventoryDirection;
             _inventory = inventory;
-            PopulateInventoryContents();
+            SetItems(inventory.Contents());
+        }
+
+        protected override BaseInventoryUi RestrictedContentCheck(MyGameObject myGameObject)
+        {
+            BasicInventoryItem o = myGameObject as BasicInventoryItem;
+            BaseInventoryUi itemUi = null;
+            if (myGameObject is InventoryResource)
+            {
+                itemUi = new InventoryItemUi(o, InventoryContent, _inventoryDirection);
+            }
+            if (myGameObject is EquippableItem)
+            {
+                itemUi = new GearInventoryUi((EquippableItem)o, InventoryContent, _inventoryDirection == Direction.None, _inventoryDirection);
+            }
+            if (itemUi != null)
+            {
+                itemUi.OnActionPress(GetMoveAction(myGameObject, 1));
+                itemUi.OnActionHold(GetMoveAction(myGameObject, 5), 0.5f);
+            }
+            return null;
         }
 
         private void UpdateInventoryWeight()
         {
-            _capacityText.text = Helper.Round(_inventory.GetInventoryWeight(), 1) + " kg";
+            _capacityText.text = Helper.Round(_inventory.Weight, 1) + " kg";
         }
 
-        private Action GetMoveAction(BasicInventoryItem inventoryItem, int quantity)
+        private Action GetMoveAction(MyGameObject inventoryItem, int quantity)
         {
             return () =>
             {
-                BasicInventoryItem transferredItem = _inventory.Move(inventoryItem, _moveToInventory._inventory, quantity);
+                MyGameObject transferredItem = _inventory.Move(inventoryItem, _moveToInventory._inventory, quantity);
                 if (transferredItem == null) return;
-                _moveToInventory.AddItem(transferredItem);
-                UpdateItemUi(inventoryItem);
+                _moveToInventory.Add(RestrictedContentCheck(transferredItem));
+                UpdateItem(inventoryItem);
             };
         }
 
-        private void UpdateItemUi(BasicInventoryItem inventoryItem)
+        protected override BaseInventoryUi UpdateItem(MyGameObject inventoryItem)
         {
             UpdateInventoryWeight();
-            InventoryItemUi foundItem = _items.FirstOrDefault(i =>
+            BaseInventoryUi found = base.UpdateItem(inventoryItem);
+            BasicInventoryItem foundItem = found.GetLinkedObject() as BasicInventoryItem;
+            if (foundItem != null && foundItem.Quantity() == 0 && !_inventory.ContainsItem(inventoryItem))
             {
-                if (i.GetInventoryItem() is InventoryResource)
-                {
-                    return i.GetInventoryItem().Name() == inventoryItem.Name();
-                }
-                return i.GetInventoryItem() == inventoryItem;
-            });
-            if (foundItem != null)
-            {
-                foundItem.Update();
-                if (inventoryItem.Quantity() == 0 && !_inventory.ContainsItem(inventoryItem))
-                {
-                    foundItem.Destroy();
-                    RemoveItem(foundItem);
-                }
+                found.Destroy();
+                Remove(found);
             }
-            SetNavigation();
+            return null;
         }
 
-        private void PopulateInventoryContents()
+        protected override BaseInventoryUi SetNavigation()
         {
-            _inventory.Contents().ForEach(AddItem);
-        }
-
-        protected override InventoryItemUi SetNavigation()
-        {
-            InventoryItemUi last = base.SetNavigation();
+            BaseInventoryUi last = base.SetNavigation();
             Helper.SetReciprocalNavigation(last.GetButton(), InventoryTransferManager.CloseButton());
             return last;
-        }
-
-        private bool IsItemDisplayed(BasicInventoryItem inventoryItem)
-        {
-            return _items.Any(itemUi => itemUi.GetInventoryItem() == inventoryItem);
-        }
-
-        private void CreateNewItem(BasicInventoryItem inventoryItem)
-        {
-            InventoryItemUi itemUi;
-            if (inventoryItem is EquippableItem)
-            {
-                if (_inventoryDirection == Direction.None)
-                {
-                    itemUi = new GearInventoryUi(inventoryItem, _inventoryContent, true);
-                }
-                else
-                {
-                    itemUi = new GearInventoryUi(inventoryItem, _inventoryContent, false);
-                }
-            }
-            else
-            {
-                itemUi = new InventoryItemUi(inventoryItem, _inventoryContent, _inventoryDirection);
-            }
-            if (_moveToInventory != null)
-            {
-                itemUi.OnActionPress(GetMoveAction(inventoryItem, 1));
-                itemUi.OnActionHold(GetMoveAction(inventoryItem, 5), 0.5f);
-            }
-            _items.Add(itemUi);
-        }
-
-        private void AddItem(BasicInventoryItem inventoryItem)
-        {
-            if (_showOnlyAction != null && !_showOnlyAction(inventoryItem)) return;
-            if (!IsItemDisplayed(inventoryItem))
-            {
-                CreateNewItem(inventoryItem);
-            }
-            UpdateItemUi(inventoryItem);
         }
     }
 }

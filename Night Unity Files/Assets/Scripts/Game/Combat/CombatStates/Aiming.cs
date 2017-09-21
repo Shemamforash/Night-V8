@@ -19,7 +19,7 @@ namespace Game.Combat.CombatStates
         
         private void IncreaseAim()
         {
-            CombatManager.Instance().IncreaseAim();
+            CombatMachine.IncreaseAim();
         }
 
         public override void OnInputDown(InputAxis inputAxis)

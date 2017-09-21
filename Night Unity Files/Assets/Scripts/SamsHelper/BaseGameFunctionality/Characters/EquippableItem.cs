@@ -7,7 +7,7 @@ namespace SamsHelper.BaseGameFunctionality.Characters
         private bool _equipped;
         private readonly GearSlot _gearslot;
 
-        protected EquippableItem(string name, float weight, GearSlot gearSlot, ItemType itemType) : base(name, weight, itemType)
+        protected EquippableItem(string name, float weight, GearSlot gearSlot, GameObjectType gameObjectType) : base(name, gameObjectType, weight)
         {
             _gearslot = gearSlot;
         }
@@ -33,5 +33,10 @@ namespace SamsHelper.BaseGameFunctionality.Characters
         }
 
         public abstract string GetSummary();
+
+        public GearSlot Slot()
+        {
+            return _gearslot;
+        }
     }
 }

@@ -23,9 +23,11 @@ namespace Game.Characters.CharacterActions
         public GameObject ActionButtonGameObject;
         protected Action HourCallback;
         private string _stateTransitionTarget;
-
-        protected BaseCharacterAction(string name, DesolationCharacter character) : base(name, character)
+        protected DesolationCharacter Character;
+        
+        protected BaseCharacterAction(string name, DesolationCharacter character) : base(name, character.ActionStates)
         {
+            Character = character;
             DefaultDuration = WorldTime.MinutesPerHour;
             AddOnExit(() => WorldTime.Instance().MinuteEvent -= Update);
         }
@@ -74,7 +76,7 @@ namespace Game.Characters.CharacterActions
             if (TimeRemaining == 0)
             {
                 WorldTime.Instance().MinuteEvent -= UpdateAction;
-                GetCharacter().NavigateToState(_stateTransitionTarget);
+                GetCharacter().ActionStates.NavigateToState(_stateTransitionTarget);
             }
             if (TimeRemaining % (WorldTime.MinutesPerHour / UpdateInterval) != 0) return;
             HourCallback?.Invoke();
@@ -105,7 +107,7 @@ namespace Game.Characters.CharacterActions
 
         protected DesolationCharacter GetCharacter()
         {
-            return (DesolationCharacter) ParentMachine;
+            return Character;
         }
     }
 }

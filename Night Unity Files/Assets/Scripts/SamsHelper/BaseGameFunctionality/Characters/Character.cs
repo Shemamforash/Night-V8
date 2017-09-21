@@ -6,8 +6,10 @@ using Characters;
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Characters.CharacterActions;
+using Game.Combat;
 using Game.Gear;
 using Game.Gear.Weapons;
+using Game.World;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
@@ -15,17 +17,29 @@ using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.Characters
 {
-    public abstract class Character : StateMachine, IPersistenceTemplate
+    public abstract class Character : MyGameObject, IPersistenceTemplate
     {
         public CharacterUI CharacterUi;
         public WeaponUi WeaponUi;
-        public string CharacterName;
+        
         public CharacterAttributes Attributes;
-
+        
+        public readonly StateMachine ActionStates = new StateMachine();
+        public readonly CombatStateMachine CombatStates;
+        
         private readonly Dictionary<GearSlot, EquippableItem> _equippedGear = new Dictionary<GearSlot, EquippableItem>();
         public Inventory CharacterInventory;
         private Weapon _weapon;
         
+        protected Character(string name, GameObject gameObject = null) : base(name, GameObjectType.Character, gameObject)
+        {
+            CombatStates = new CombatStateMachine(this);
+            foreach (GearSlot gearSlot in Enum.GetValues(typeof(GearSlot)))
+            {
+                _equippedGear[gearSlot] = null;
+            }
+        }
+
         public void AddItemToInventory(BasicInventoryItem item)
         {
             CharacterInventory.AddItem(item);
@@ -46,21 +60,6 @@ namespace SamsHelper.BaseGameFunctionality.Characters
             return _weapon;
         }
 
-        protected virtual void Awake()
-        {
-            foreach (GearSlot gearSlot in Enum.GetValues(typeof(GearSlot)))
-            {
-                _equippedGear[gearSlot] = null;
-            }
-        }
-
-        protected void Initialise(string characterName)
-        {
-            CharacterName = characterName;
-            SetCharacterUi(gameObject);
-            CharacterInventory.MaxWeight = 50;
-        }
-        
         protected virtual void SetCharacterUi(GameObject g)
         {
             CharacterUi = new CharacterUI(g);
@@ -69,19 +68,19 @@ namespace SamsHelper.BaseGameFunctionality.Characters
 
         protected List<State> StatesAsList(bool includeInactiveStates)
         {
-            return (from BaseCharacterAction s in StatesAsList() where s.IsStateVisible() || includeInactiveStates select s).Cast<State>().ToList();
+            return (from BaseCharacterAction s in ActionStates.StatesAsList() where s.IsStateVisible() || includeInactiveStates select s).Cast<State>().ToList();
         }
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
-            CharacterName = doc.SelectSingleNode("Name").InnerText;
+            Name = doc.SelectSingleNode("Name").InnerText;
             XmlNode attributesNode = doc.SelectSingleNode("Attributes");
             Attributes.Load(attributesNode, saveType);
         }
 
         public void Save(XmlNode doc, PersistenceType saveType)
         {
-            SaveController.CreateNodeAndAppend("Name", doc, CharacterName);
+            SaveController.CreateNodeAndAppend("Name", doc, Name);
             XmlNode attributesNode = SaveController.CreateNodeAndAppend("Attributes", doc);
             Attributes.Save(attributesNode, saveType);
         }

@@ -3,6 +3,7 @@ using Facilitating.Persistence;
 using Game.Combat.Weapons;
 using Game.World.Environment;
 using Game.World.Time;
+using Game.World.Weather;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
@@ -18,12 +19,15 @@ namespace Game.World
     {
 	    public static int StormDistanceMax, StormDistanceActual;
 		public static int DaysSpentHere;
-		public static EnvironmentManager EnvironmentManager;
 	    private static readonly DesolationInventory HomeInventory = new DesolationInventory("Vehicle");
 	    private static GameObject _inventoryButton;
+	    public static EnvironmentManager EnvironmentManager = new EnvironmentManager();
+	    private WeatherManager Weather = new WeatherManager();
 
 	    public void Awake()
 	    {
+		    EnvironmentManager.Start();
+		    Weather.Start();
 		    SetResourceSuffix("Water", "sips");
 		    SetResourceSuffix("Food", "meals");
 		    SetResourceSuffix("Fuel", "dregs");
@@ -41,7 +45,6 @@ namespace Game.World
             SaveController.LoadGame();
 
 		    WorldTime.Instance().DayEvent += IncrementDaysSpentHere;
-		    EnvironmentManager = GameObject.Find("Canvas").GetComponent<EnvironmentManager>();
 		    StormDistanceMax = 10;
 		    StormDistanceActual = 10;
 		    
@@ -98,7 +101,7 @@ namespace Game.World
 	    {
 		    if (saveData == PersistenceType.Game)
 		    {
-			    HomeInventory.Resources().ForEach(r => LoadResource(r.Name(), root));
+			    HomeInventory.Resources().ForEach(r => LoadResource(r.Name, root));
 		    }
 	    }
 	    
@@ -106,7 +109,7 @@ namespace Game.World
 	    {
 		    if (saveData == PersistenceType.Game)
 		    {
-			    HomeInventory.Resources().ForEach(r => SaveResource(r.Name(), root));
+			    HomeInventory.Resources().ForEach(r => SaveResource(r.Name, root));
 		    }
 	    }
 

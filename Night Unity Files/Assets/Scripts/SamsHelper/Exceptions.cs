@@ -1,4 +1,7 @@
 using System;
+using Game.Gear;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 
 namespace SamsHelper
 {
@@ -181,6 +184,28 @@ namespace SamsHelper
             }
             
             public override string Message => "Tried to create instance of " + _type + " but instance already exists.";
+        }
+
+        public class AttributeContainerAlreadyContainsAttributeException : Exception
+        {
+            private readonly AttributeType _type;
+            public AttributeContainerAlreadyContainsAttributeException(AttributeType type)
+            {
+                _type = type;
+            }
+
+            public override string Message => "Tried to add existing attribute to container " + _type;
+        }
+
+        public class CannotAddItemTypeToInventoryException : Exception
+        {
+            private readonly GameObjectType _gameObjectType;
+            public CannotAddItemTypeToInventoryException(GameObjectType gameObjectType)
+            {
+                _gameObjectType = gameObjectType;
+            }
+
+            public override string Message => "Tried to add " + _gameObjectType + " to inventory, but no UI has been created to hold it";
         }
     }
 }

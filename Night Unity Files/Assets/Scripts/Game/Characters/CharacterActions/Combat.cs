@@ -12,7 +12,7 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
-            CombatManager.EnterCombat(GetCharacter());
+//            CombatManager.EnterCombat();
         }
     }
 }

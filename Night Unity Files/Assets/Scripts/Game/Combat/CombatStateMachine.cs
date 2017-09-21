@@ -1,12 +1,21 @@
-﻿using Game.Combat.CombatStates;
+﻿using Game.Characters;
+using Game.Combat.CombatStates;
+using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using SamsHelper.ReactiveUI.CustomTypes;
+using UnityEngine;
 
 namespace Game.Combat
 {
     public class CombatStateMachine : StateMachine
     {
-        public void Awake()
+        private float _reloadStartTime, _cockStartTime;
+        private readonly MyFloat _aimAmount = new MyFloat(0, 0, 100);
+        public readonly Character Character;
+        
+        public CombatStateMachine(Character character)
         {
+            Character = character;
             AddState(new Approaching(this, true));
             AddState(new Aiming(this, true));
             AddState(new Cocking(this, true));
@@ -16,6 +25,21 @@ namespace Game.Combat
             AddState(new Flanking(this, true));
             AddState(new Reloading(this, true));
             AddState(new Retreating(this, true));
+        }
+        
+        public void IncreaseAim()
+        {
+            float amount = 5f + Character.GetWeapon().Handling / 10f;
+            amount *= Time.deltaTime;
+            _aimAmount.Val = _aimAmount.Val + amount;
+//            CombatUi.UpdateAimSlider(_aimAmount.Val);
+        }
+
+        public void DecreaseAim()
+        {
+            float amount = 100f / Character.GetWeapon().Capacity;
+            _aimAmount.Val = _aimAmount.Val - amount;
+//            CombatUi.UpdateAimSlider(_aimAmount.Val);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Game.Characters.CharacterActions
+﻿namespace Game.Characters.CharacterActions
 {
     public class Idle : BaseCharacterAction
     {

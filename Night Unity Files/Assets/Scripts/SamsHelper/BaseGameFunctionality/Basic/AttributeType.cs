@@ -1,4 +1,4 @@
-﻿namespace Game.Gear
+﻿namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public enum AttributeType
     {

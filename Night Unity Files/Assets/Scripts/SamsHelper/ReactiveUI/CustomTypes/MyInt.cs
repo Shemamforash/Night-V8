@@ -9,17 +9,22 @@ namespace SamsHelper.ReactiveUI.CustomTypes
     {
         private int _min;
         private int _max;
-
-        public MyInt(int initialValue) : base(initialValue)
-        {
-            BroadcastChange();
-        }
-
-        public MyInt(int initialValue, int min, int max) : this(initialValue)
+        private Action _onMax;
+        private Action _onMin;
+        
+        public MyInt(int initialValue, int min = 0, int max = int.MaxValue) : base(initialValue)
         {
             _min = min;
             _max = max;
+            BroadcastChange();
         }
+
+        public float AsPercent() => 100f / _max * _currentValue;
+
+        public void OnMax(Action a)=> _onMax = a;
+        public void OnMin(Action a) => _onMin = a;
+        
+        public int RandomInRange() => Random.Range(_min, _max);
 
         public int Max
         {
@@ -68,19 +73,18 @@ namespace SamsHelper.ReactiveUI.CustomTypes
             }
         }
 
-        public int RandomInRange()
-        {
-            return Random.Range(_min, _max);
-        }
-
         public bool ReachedMin()
         {
-            return _currentValue <= _min;
+            bool reached = _currentValue <= _min;
+            _onMin?.Invoke();
+            return reached;
         }
 
         public bool ReachedMax()
         {
-            return _currentValue >= _max;
+            bool reached = _currentValue >= _max;
+            _onMax?.Invoke();
+            return reached;
         }
 
         //OPERATORS

@@ -14,7 +14,7 @@ namespace Game.Characters.CharacterActions
 
         public void ShowDurationMenu()
         {
-            MenuStateMachine.Instance().NavigateToState("Action Duration Menu");
+            MenuStateMachine.States.NavigateToState("Action Duration Menu");
         }
         
         public override string GetCostAsString()

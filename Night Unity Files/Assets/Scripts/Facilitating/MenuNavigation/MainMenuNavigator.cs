@@ -22,7 +22,7 @@ namespace Facilitating.MenuNavigation
         {
             if (SaveController.SaveExists())
             {
-                MenuStateMachine.Instance().NavigateToState("Overwrite Save Warning");
+                MenuStateMachine.States.NavigateToState("Overwrite Save Warning");
             }
             else
             {
@@ -53,7 +53,7 @@ namespace Facilitating.MenuNavigation
             }
             else
             {
-                MenuStateMachine.Instance().NavigateToState("No Save Warning");
+                MenuStateMachine.States.NavigateToState("No Save Warning");
             }
         }
 

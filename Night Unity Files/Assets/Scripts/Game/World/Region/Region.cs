@@ -52,7 +52,7 @@ namespace Game.World.Region
 
         public void ExtractResources(DesolationCharacter c)
         {
-            float maximumCarryingCapacity = c.RemainingCarryCapacity();
+            float maximumCarryingCapacity = c.Attributes.RemainingCarryCapacity();
         }
 
         public string Description()

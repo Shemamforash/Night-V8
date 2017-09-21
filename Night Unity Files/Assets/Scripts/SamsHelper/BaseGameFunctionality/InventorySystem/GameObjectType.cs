@@ -1,10 +1,12 @@
 ﻿namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public enum ItemType
+    public enum GameObjectType
     {
         Weapon,
         Armour,
         Accessory,
-        Resource
+        Resource,
+        Character,
+        Inventory
     }
 }

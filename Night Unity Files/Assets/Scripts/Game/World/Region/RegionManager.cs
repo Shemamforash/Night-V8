@@ -146,12 +146,12 @@ namespace Game.World.Region
         public static void EnterManager(Character character)
         {
             _character = character;
-            MenuStateMachine.Instance().NavigateToState("Region Menu");
+            MenuStateMachine.States.NavigateToState("Region Menu");
         }
 
         public static void StartExploration(Action a, Region target)
         {
-            Travel state = (Travel) _character.NavigateToState("Travel");
+            Travel state = (Travel) _character.ActionStates.NavigateToState("Travel");
             state.AddOnExit(a);
             state.SetTargetRegion(target);
             ExitManager(true);
@@ -161,10 +161,10 @@ namespace Game.World.Region
         {
             if (!characterIsExploring)
             {
-                _character.ReturnToDefault();
+                _character.ActionStates.ReturnToDefault();
             }
             _character = null;
-            MenuStateMachine.Instance().GoToInitialMenu();
+            MenuStateMachine.GoToInitialMenu();
         }
     }
 }

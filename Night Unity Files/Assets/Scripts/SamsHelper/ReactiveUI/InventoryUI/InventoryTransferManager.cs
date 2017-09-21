@@ -1,4 +1,5 @@
 ﻿using System;
+using SamsHelper.BaseGameFunctionality;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
@@ -46,7 +47,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         private void Close()
         {
-            MenuStateMachine.Instance().NavigateToState("Game Menu");
+            MenuStateMachine.States.NavigateToState("Game Menu");
             _closeAction?.Invoke();
             _closeAction = null;
         }
@@ -57,13 +58,13 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             ShowDualInventories(left, right);
         }
 
-        public void ShowSingleInventory(Inventory inventory, Func<BasicInventoryItem, bool> showOnlyAction = null)
+        public void ShowSingleInventory(Inventory inventory)
         {
-            MenuStateMachine.Instance().NavigateToState("Inventory Menu");
+            MenuStateMachine.States.NavigateToState("Inventory Menu");
             InventoryLeft.gameObject.SetActive(true);
             InventoryRight.gameObject.SetActive(false);
             SetAnchors(InventoryLeft, _singleInventoryAnchorsMin, _singleInventoryAnchorsMax);
-            InventoryLeft.SetInventory(inventory, Direction.None, null, showOnlyAction);
+            InventoryLeft.SetInventory(inventory, Direction.None, null);
         }
 
         private void SetAnchors<T>(T uiObject, Vector2 minAnchors, Vector2 maxAnchors) where T : MonoBehaviour
@@ -75,13 +76,13 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         public void ShowDualInventories(Inventory left, Inventory right)
         {
-            MenuStateMachine.Instance().NavigateToState("Inventory Menu");
+            MenuStateMachine.States.NavigateToState("Inventory Menu");
             InventoryLeft.gameObject.SetActive(true);
             InventoryRight.gameObject.SetActive(true);
             SetAnchors(InventoryLeft, _dualInventoryAnchorsMinLeft, _dualInventoryAnchorsMaxLeft);
             SetAnchors(InventoryRight, _dualInventoryAnchorsMinRight, _dualInventoryAnchorsMaxRight);
-            InventoryLeft.SetInventory(left, Direction.Right, InventoryRight, null);
-            InventoryRight.SetInventory(right, Direction.Left, InventoryLeft, null);
+            InventoryLeft.SetInventory(left, Direction.Right, InventoryRight);
+            InventoryRight.SetInventory(right, Direction.Left, InventoryLeft);
         }
     }
 }

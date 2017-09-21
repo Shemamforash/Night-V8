@@ -13,8 +13,8 @@
           <Max>113</Max>
         </Strength>
         <Endurance>
-          <Val>52</Val>
-          <Max>52</Max>
+          <Val>78</Val>
+          <Max>78</Max>
         </Endurance>
         <Stability>
           <Val>23</Val>
@@ -26,57 +26,57 @@
         </Intelligence>
         <Starvation>
           <Val>50</Val>
-          <Max>3</Max>
+          <Max>0</Max>
         </Starvation>
         <Dehydration>
-          <Val>30</Val>
-          <Max>3</Max>
+          <Val>50</Val>
+          <Max>0</Max>
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>5</Max>
+          <Max>12</Max>
         </Hunger>
         <Thirst>
           <Val>11</Val>
-          <Max>6</Max>
+          <Max>11</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
     <Character>
-      <Name>Panacea</Name>
+      <Name>Balm</Name>
       <Attributes>
         <Strength>
-          <Val>76</Val>
-          <Max>76</Max>
+          <Val>108</Val>
+          <Max>108</Max>
         </Strength>
         <Endurance>
-          <Val>67</Val>
-          <Max>67</Max>
+          <Val>48</Val>
+          <Max>48</Max>
         </Endurance>
         <Stability>
-          <Val>15</Val>
-          <Max>15</Max>
+          <Val>4</Val>
+          <Max>4</Max>
         </Stability>
         <Intelligence>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>12</Val>
+          <Max>12</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
-          <Max>3</Max>
+          <Max>0</Max>
         </Starvation>
         <Dehydration>
-          <Val>30</Val>
-          <Max>3</Max>
+          <Val>50</Val>
+          <Max>0</Max>
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>5</Max>
+          <Max>12</Max>
         </Hunger>
         <Thirst>
           <Val>11</Val>
-          <Max>6</Max>
+          <Max>11</Max>
         </Thirst>
         <Weight>1</Weight>
       </Attributes>

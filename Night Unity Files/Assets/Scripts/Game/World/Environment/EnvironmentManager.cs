@@ -15,14 +15,10 @@ namespace Game.World.Environment
         private TextMeshProUGUI _environmentText, _temperatureText;
         private List<string> _visitedEnvironments = new List<string>();
 
-        public void Awake()
+        public void Start()
         {
             _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();
             _temperatureText = GameObject.Find("Temperature").GetComponent<TextMeshProUGUI>();
-        }
-
-        public void Start()
-        {
             VisitAllStates();
             LoadEnvironments();
             LoadProbabilities("EnvironmentProbabilityTable");

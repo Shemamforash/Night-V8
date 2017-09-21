@@ -12,16 +12,16 @@ namespace Game.World.Weather
     public class WeatherManager : ProbabalisticStateMachine
     {
         private static WeatherManager _instance;
-        private TextMeshProUGUI _weatherText;
+        private static TextMeshProUGUI _weatherText;
 
-        public void Awake()
+        public WeatherManager()
         {
             _instance = this;
-            _weatherText = GameObject.Find("Weather").GetComponent<TextMeshProUGUI>();
         }
 
         public void Start()
         {
+            _weatherText = GameObject.Find("Weather").GetComponent<TextMeshProUGUI>();
             LoadWeather();
             LoadProbabilities("WeatherProbabilityTable");
             NavigateToState("Clear");
@@ -37,11 +37,7 @@ namespace Game.World.Weather
 
         public static WeatherManager Instance()
         {
-            if (_instance != null)
-            {
-                return _instance;
-            }
-            return FindObjectOfType<WeatherManager>();
+            return _instance;
         }
 
         private void LoadWeather()

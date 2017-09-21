@@ -17,10 +17,10 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
-            MenuStateMachine.Instance().NavigateToState("Inventory Menu");
+            MenuStateMachine.States.NavigateToState("Inventory Menu");
             _previousCharacter = CharacterManager.SelectedCharacter;
             CharacterManager.SelectedCharacter = GetCharacter();
-            InventoryTransferManager.Instance().ShowDualInventories(GetCharacter().CharacterInventory, GetCharacter().CurrentRegion, () => GetCharacter().NavigateToState("Return"));
+            InventoryTransferManager.Instance().ShowDualInventories(GetCharacter().CharacterInventory, GetCharacter().CurrentRegion, () => GetCharacter().ActionStates.NavigateToState("Return"));
         }
 
         public override void Interrupt()
@@ -38,7 +38,7 @@ namespace Game.Characters.CharacterActions
         private void ReturnToGameScreen()
         {
             CharacterManager.SelectedCharacter = _previousCharacter;
-            MenuStateMachine.Instance().GoToInitialMenu();
+            MenuStateMachine.GoToInitialMenu();
         }
     }
 }

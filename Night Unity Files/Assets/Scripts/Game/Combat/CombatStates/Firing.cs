@@ -28,7 +28,7 @@ namespace Game.Combat.CombatStates
                     {
                         CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
                     }
-                    CombatManager.Instance().DecreaseAim();
+                    CombatMachine.DecreaseAim();
                     if (Weapon().Automatic)
                     {
                         _timeSinceLastFire = 1f / Weapon().FireRate;

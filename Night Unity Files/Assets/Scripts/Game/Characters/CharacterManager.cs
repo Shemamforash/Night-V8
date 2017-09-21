@@ -85,7 +85,7 @@ namespace Game.Characters
             PopulateCharacterUi();
             if (isDriver)
             {
-                MenuStateMachine.Instance().NavigateToState("Game Over Menu");
+                MenuStateMachine.States.NavigateToState("Game Over Menu");
             }
         }
 
@@ -125,7 +125,7 @@ namespace Game.Characters
         {
             if (SelectedCharacter != null)
             {
-                SetDetailedViewActive(false, SelectedCharacter.transform);
+                SetDetailedViewActive(false, SelectedCharacter.GameObject.transform);
                 SelectedCharacter = null;
             }
         }
@@ -161,14 +161,14 @@ namespace Game.Characters
 
         public void CharacterEat()
         {
-            DesolationCharacter current = FindCharacterFromGameObject(SelectedCharacter.transform.parent.gameObject);
-            current.Eat();
+            DesolationCharacter current = FindCharacterFromGameObject(SelectedCharacter.GameObject.transform.parent.gameObject);
+            current.Attributes.Eat();
         }
 
         public void CharacterDrink()
         {
-            DesolationCharacter current = FindCharacterFromGameObject(SelectedCharacter.transform.parent.gameObject);
-            current.Drink();
+            DesolationCharacter current = FindCharacterFromGameObject(SelectedCharacter.GameObject.transform.parent.gameObject);
+            current.Attributes.Drink();
         }
 
         public void Load(XmlNode doc, PersistenceType saveType)
@@ -177,7 +177,7 @@ namespace Game.Characters
             XmlNodeList characterNodes = characterManagerNode.SelectNodes("Character");
             foreach (XmlNode characterNode in characterNodes)
             {
-                DesolationCharacter c = new DesolationCharacter();
+//                DesolationCharacter c = new DesolationCharacter();
 //                c.Load(characterNode, saveType);
 //                _characters.Add(c);
             }

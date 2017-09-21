@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security;
 using Game.Combat.Weapons;
 using Game.Gear.Weapons;
 using SamsHelper;
@@ -10,17 +11,6 @@ namespace Game.Characters
     public static class CharacterGenerator
     {
         private static List<string> _characterNames;
-
-        public static DesolationCharacter GenerateCharacter()
-        {
-            Traits.Trait newClass = Traits.GenerateClass();
-            string name = GenerateName(newClass);
-            Traits.Trait secondaryTrait = Traits.GenerateTrait();
-            DesolationCharacter c = GenerateCharacterObject().GetComponent<DesolationCharacter>();
-            c.Initialise(name, newClass, secondaryTrait);
-            CalculateAttributes(c);
-            return c;
-        }
 
         private static void TestCharacterGenerator()
         {
@@ -54,7 +44,7 @@ namespace Game.Characters
             }
             foreach (DesolationCharacter c in fails.Keys)
             {
-                Debug.Log(c.CharacterName + " class: " + c.CharacterClass.Name + " trait: " + c.CharacterTrait.Name + " failed following tests:");
+                Debug.Log(c.Name + " class: " + c.CharacterClass.Name + " trait: " + c.CharacterTrait.Name + " failed following tests:");
                 foreach (string s in fails[c])
                 {
                     Debug.Log(s);
@@ -86,16 +76,26 @@ namespace Game.Characters
             return characters;
         }
 
-        private static GameObject GenerateCharacterObject()
+        private static DesolationCharacter GenerateCharacterObject(string name, Traits.Trait characterClass, Traits.Trait characterTrait)
         {
-            return Helper.InstantiateUiObject<DesolationCharacter>("Prefabs/Character Template", GameObject.Find("Characters").transform);
+            GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", GameObject.Find("Characters").transform);
+            DesolationCharacter newCharacter = new DesolationCharacter(name, characterClass, characterTrait, characterObject);
+            CalculateAttributes(newCharacter);
+            return newCharacter;
+        }
+        
+        public static DesolationCharacter GenerateCharacter()
+        {
+            Traits.Trait newClass = Traits.GenerateClass();
+            Traits.Trait secondaryTrait = Traits.GenerateTrait();
+            string name = GenerateName(newClass);
+            DesolationCharacter c = GenerateCharacterObject(name, newClass, secondaryTrait);
+            return c;
         }
 
         private static DesolationCharacter GenerateDriver()
         {
-            DesolationCharacter theDriver = GenerateCharacterObject().GetComponent<DesolationCharacter>();
-            theDriver.Initialise("Driver", Traits.FindClass("Crusader"), Traits.FindTrait("Faithless"));
-            CalculateAttributes(theDriver);
+            DesolationCharacter theDriver = GenerateCharacterObject("Driver", Traits.FindClass("Crusader"), Traits.FindTrait("Faithless"));
             theDriver.Attributes.Weight = WeightCategory.Medium;
             return theDriver;
         }
@@ -116,7 +116,7 @@ namespace Game.Characters
             targetWeight += weightOffset;
             if (targetWeight < 0 || targetWeight > 4)
             {
-                throw new Exceptions.MaxOrMinWeightExceededException(c.name, targetWeight, c.CharacterClass.Name, c.CharacterTrait.Name);
+                throw new Exceptions.MaxOrMinWeightExceededException(c.Name, targetWeight, c.CharacterClass.Name, c.CharacterTrait.Name);
             }
             return (WeightCategory) targetWeight;
         }

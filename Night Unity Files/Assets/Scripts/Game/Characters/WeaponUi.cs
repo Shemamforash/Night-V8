@@ -34,7 +34,7 @@ namespace Game.Characters
         
         public void Update(Weapon weapon)
         {
-            _weaponName.Text = weapon.Name();
+            _weaponName.Text = weapon.Name;
             _weaponDamage.Val = weapon.Damage;
             _weaponAccuracy.Val = weapon.Accuracy;
             _weaponCapacity.Val = weapon.Capacity;

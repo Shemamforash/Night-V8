@@ -5,10 +5,20 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class InventoryResource : BasicInventoryItem
     {
-        private readonly MyInt _quantity = new MyInt(0, 0, int.MaxValue);
+        private readonly MyInt _quantity = new MyInt(0);
 
-        public InventoryResource(string name, float weight) : base(name, weight, ItemType.Resource)
+        public InventoryResource(string name, float weight) : base(name, GameObjectType.Resource, weight)
         {
+        }
+
+        public override bool Equals(object obj)
+        {
+            InventoryResource other = obj as InventoryResource;
+            if (other != null)
+            {
+                return other.Name == Name;
+            }
+            return false;
         }
         
         public void AddOnUpdate(Action<int> action)
@@ -36,7 +46,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public float GetWeight(int quantity)
         {
-            return quantity * Weight();
+            return quantity * Weight;
         }
     }
 }

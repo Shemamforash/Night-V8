@@ -16,8 +16,8 @@ namespace Game.Gear.Weapons
         private readonly WeaponBase _baseWeapon;
         public readonly bool Automatic;
         private int _ammoInMagazine;
-        
-        public Weapon(WeaponBase baseWeapon, bool automatic, string name, float weight) : base(name, weight, GearSlot.Weapon, ItemType.Weapon)
+
+        public Weapon(WeaponBase baseWeapon, bool automatic, string name, float weight) : base(name, weight, GearSlot.Weapon, GameObjectType.Weapon)
         {
             _baseWeapon = baseWeapon;
             Automatic = automatic;
@@ -27,12 +27,12 @@ namespace Game.Gear.Weapons
             CriticalChance = baseWeapon.GetAttributeValue(WeaponBase.Attributes.CriticalChance);
             Handling = baseWeapon.GetAttributeValue(WeaponBase.Attributes.Handling);
             FireRate = baseWeapon.GetAttributeValue(WeaponBase.Attributes.FireRate);
-            Capacity = (int)baseWeapon.GetAttributeValue(WeaponBase.Attributes.Capacity);
+            Capacity = (int) baseWeapon.GetAttributeValue(WeaponBase.Attributes.Capacity);
 
             if (!automatic)
             {
                 Damage *= 2;
-                Capacity = (int)Mathf.Ceil(Capacity / 2f);
+                Capacity = (int) Mathf.Ceil(Capacity / 2f);
                 Accuracy *= 1.5f;
                 Mathf.Clamp(Accuracy, 0, 100);
                 ReloadSpeed /= 2f;
@@ -43,18 +43,14 @@ namespace Game.Gear.Weapons
             float magazineDuration = Capacity / FireRate + ReloadSpeed;
             _dps = magazineDamage / magazineDuration;
             Reload();
+            SetExtendedName(Name + (Automatic ? " (A)" : ""));
         }
 
-        public override string ExtendedName()
-        {
-            return Name() + (Automatic ? " (A)" : "");
-        }
-
-        public override string GetItemType()
+        public string GetItemType()
         {
             return _baseWeapon.Type.ToString();
         }
-        
+
         public bool Fire()
         {
             if (_ammoInMagazine > 0)
@@ -68,7 +64,7 @@ namespace Game.Gear.Weapons
         public void Reload()
         {
             float ammoAvailable = WorldState.Inventory().DecrementResource("Ammo", Capacity);
-            _ammoInMagazine += (int)ammoAvailable;
+            _ammoInMagazine += (int) ammoAvailable;
         }
 
         public int GetRemainingAmmo()
