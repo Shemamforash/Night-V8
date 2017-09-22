@@ -16,14 +16,14 @@ namespace Game.Characters
     public class DesolationCharacter : Character
     {
         public Region CurrentRegion;
-        public Traits.Trait CharacterClass, CharacterTrait;
+        public TraitLoader.Trait CharacterClass, CharacterTrait;
 
-        public DesolationCharacter(string name, Traits.Trait characterClass, Traits.Trait characterTrait, GameObject gameObject) : base(name, gameObject)
+        public DesolationCharacter(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait, GameObject gameObject) : base(name, gameObject)
         {
             CharacterInventory = new DesolationInventory(name);
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
-            Attributes = new CharacterAttributes(this);
+            Attributes = new DesolationCharacterAttributes(this);
             SetCharacterUi(gameObject);
             UpdateActionUi();
             
@@ -56,7 +56,7 @@ namespace Game.Characters
 
         public override void Kill()
         {
-            CharacterManager.RemoveCharacter(this, Name == "Driver");
+            DesolationCharacterManager.RemoveCharacter(this, Name == "Driver");
         }
 
         

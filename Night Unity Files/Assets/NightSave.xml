@@ -4,20 +4,20 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>113</Val>
-          <Max>113</Max>
+          <Val>98</Val>
+          <Max>98</Max>
         </Strength>
         <Endurance>
-          <Val>78</Val>
-          <Max>78</Max>
+          <Val>59</Val>
+          <Max>59</Max>
         </Endurance>
         <Stability>
-          <Val>23</Val>
-          <Max>23</Max>
-        </Stability>
-        <Intelligence>
           <Val>19</Val>
           <Max>19</Max>
+        </Stability>
+        <Intelligence>
+          <Val>20</Val>
+          <Max>20</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -32,30 +32,30 @@
           <Max>12</Max>
         </Hunger>
         <Thirst>
-          <Val>11</Val>
-          <Max>11</Max>
+          <Val>12</Val>
+          <Max>12</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
     <Character>
-      <Name>Balm</Name>
+      <Name>Salva</Name>
       <Attributes>
         <Strength>
-          <Val>108</Val>
-          <Max>108</Max>
+          <Val>123</Val>
+          <Max>123</Max>
         </Strength>
         <Endurance>
-          <Val>48</Val>
-          <Max>48</Max>
+          <Val>60</Val>
+          <Max>60</Max>
         </Endurance>
         <Stability>
-          <Val>4</Val>
-          <Max>4</Max>
+          <Val>28</Val>
+          <Max>28</Max>
         </Stability>
         <Intelligence>
-          <Val>12</Val>
-          <Max>12</Max>
+          <Val>14</Val>
+          <Max>14</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -70,10 +70,10 @@
           <Max>12</Max>
         </Hunger>
         <Thirst>
-          <Val>11</Val>
-          <Max>11</Max>
+          <Val>12</Val>
+          <Max>12</Max>
         </Thirst>
-        <Weight>1</Weight>
+        <Weight>3</Weight>
       </Attributes>
     </Character>
   </CharacterManager>
@@ -81,5 +81,5 @@
   <Food>25</Food>
   <Fuel>4</Fuel>
   <Scrap>22</Scrap>
-  <Ammo>277</Ammo>
+  <Ammo>436</Ammo>
 </Game>

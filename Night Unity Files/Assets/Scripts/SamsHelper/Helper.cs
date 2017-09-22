@@ -180,5 +180,24 @@ namespace SamsHelper
             SetNavigation(origin, target, Direction.Down);
             SetNavigation(target, origin, Direction.Up);
         }
+
+        public static Direction OppositeDirection(Direction inventoryDirection)
+        {
+            switch (inventoryDirection)
+            {
+                case Direction.Up:
+                    return Direction.Down;
+                case Direction.Down:
+                    return Direction.Up;
+                case Direction.Left:
+                    return Direction.Right;
+                case Direction.Right:
+                    return Direction.Left;
+                case Direction.None:
+                    return Direction.None;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(inventoryDirection), inventoryDirection, null);
+            }
+        }
     }
 }

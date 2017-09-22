@@ -65,7 +65,7 @@ namespace Characters
 
             ActionScrollContent = Helper.FindChildWithName(gameObject.transform, "Content").gameObject;
             CollapseCharacterButton = FindInDetailedView<Button>("Back Button");
-            CollapseCharacterButton.onClick.AddListener(CharacterManager.ExitCharacter);
+            CollapseCharacterButton.onClick.AddListener(DesolationCharacterManager.ExitCharacter);
 
             ThirstText = FindInSimpleView<TextMeshProUGUI>("Thirst");
             HungerText = FindInSimpleView<TextMeshProUGUI>("Hunger");

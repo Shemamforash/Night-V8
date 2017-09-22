@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using Facilitating.UI.Inventory;
 using Game.World.Time;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,24 +15,19 @@ namespace Facilitating.MenuNavigation
 {
     public class Popup
     {
-        private static string _optionPrefabName = "Prefabs/Button Border";
-        private readonly Transform _optionContainer;
         private readonly GameObject _popupObject;
-        private readonly List<GameObject> _options = new List<GameObject>();
+        private readonly Transform _container;
         private readonly GameObject _previousSelectable;
-
+        private static string _optionPrefabName = "Prefabs/Button Border";
+        private readonly List<GameObject> _options = new List<GameObject>();
+        
         public Popup(string title)
         {
             WorldTime.Instance().Pause();
             _popupObject = Helper.InstantiateUiObject("Prefabs/Popup Menu", GameObject.Find("Canvas").transform);
-            Helper.FindChildWithName<TextMeshProUGUI>(_popupObject, "Title").text = title;
-            _optionContainer = _popupObject.transform.Find("Bar");
+            _container = _popupObject.transform.Find("Bar");
             _previousSelectable = EventSystem.current.currentSelectedGameObject;
-        }
-
-        public Popup(string title, string optionPrefabName) : this(title)
-        {
-            _optionPrefabName = optionPrefabName;
+            Helper.FindChildWithName<TextMeshProUGUI>(_popupObject, "Title").text = title;
         }
 
         private void Destroy()
@@ -39,9 +37,28 @@ namespace Facilitating.MenuNavigation
             _previousSelectable.GetComponent<Selectable>().Select();
         }
 
-        public void AddOption(string optionText = "Cancel", Action optionOnClick = null)
+        public void AddList(List<MyGameObject> items, Action<MyGameObject> callback)
         {
-            GameObject newOption = Helper.InstantiateUiObject(_optionPrefabName, _optionContainer);
+            MenuList menuList = Helper.InstantiateUiObject("Prefabs/Simple Menu", _container).GetComponent<MenuList>();
+            menuList.SetItems(items, c => new CharacterInventoryUi(c, menuList.));
+            menuList.GetItems().ForEach(item =>
+            {
+                item.OnActionPress(() =>
+                {
+                    Destroy();
+                    callback(item.GetLinkedObject());
+                });
+            });
+        }
+
+        public void AddCancelButton()
+        {
+            AddButton("Cancel", null);
+        }
+        
+        public void AddButton(string optionText, Action optionOnClick)
+        {
+            GameObject newOption = Helper.InstantiateUiObject(_optionPrefabName, _container);
             Button b = newOption.GetComponent<Button>();
             b.onClick.AddListener(() =>
             {

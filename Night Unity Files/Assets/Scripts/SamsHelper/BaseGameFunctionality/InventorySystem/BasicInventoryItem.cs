@@ -1,4 +1,6 @@
-﻿namespace SamsHelper.BaseGameFunctionality.InventorySystem
+﻿using SamsHelper.BaseGameFunctionality.Basic;
+
+namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public abstract class BasicInventoryItem : MyGameObject
     {

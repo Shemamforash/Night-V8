@@ -1,9 +1,13 @@
-﻿using Facilitating.MenuNavigation;
-using Game.Gear.Armour;
+﻿using System.Collections.Generic;
+using Facilitating.MenuNavigation;
+using Game.Characters;
 using Game.Gear.Weapons;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Facilitating.UI.Inventory
 {
@@ -16,29 +20,35 @@ namespace Facilitating.UI.Inventory
             _item = item;
             SummaryText.text = item.GetSummary();
             if (!equippable) return;
-            ButtonText.text = "Actions";
             Weapon weapon = _item as Weapon;
             TypeText.text = weapon != null ? weapon.GetItemType() : _item.Slot().ToString();
-            ActionButton.AddOnClick(ShowEquipPopup);
-            ActionButton.gameObject.SetActive(true);
+            RightActionButton.AddOnClick(ShowEquipPopup);
+            RightActionButton.gameObject.SetActive(true);
+            RightButtonText.text = "Equip";
+            SummaryText.GetComponent<LayoutElement>().minWidth = 200;
+            Bookends.SetActive(false);
         }
 
         private void ShowEquipPopup()
         {
             Popup popup = new Popup(_item.Name);
-            popup.AddOption("Equip", () => { });
-            popup.AddOption("Move", () => { });
-            popup.AddOption();
+            popup.AddButton("Equip", ShowCharacterPopup);
+            popup.AddButton("Move", () => { });
+            popup.AddCancelButton();
         }
 
-        protected override void CacheUiElements()
+        private void ShowCharacterPopup()
         {
-            throw new System.NotImplementedException();
+            Popup popupWithList = new Popup("Equip " + _item.Name);
+            popupWithList.AddList(new List<MyGameObject>(DesolationCharacterManager.Characters()), EquipItem);
+            popupWithList.AddCancelButton();
         }
 
-        public override void Update()
+        private void EquipItem(MyGameObject item)
         {
-            throw new System.NotImplementedException();
+            
         }
+
+        public override GameObject GetNavigationButton() => Direction == Direction.None ? RightActionButton.gameObject : base.GetNavigationButton();
     }
 }

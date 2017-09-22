@@ -10,8 +10,8 @@ namespace SamsHelper.ReactiveUI.InventoryUI
     public class InventoryTransferManager : Menu
     {
         private GameObject _inventory1, _inventory2;
-        private readonly Vector2 _singleInventoryAnchorsMin = new Vector2(0.2f, 0.2f);
-        private readonly Vector2 _singleInventoryAnchorsMax = new Vector2(0.8f, 0.9f);
+        private readonly Vector2 _singleInventoryAnchorsMin = new Vector2(0, 0.1f);
+        private readonly Vector2 _singleInventoryAnchorsMax = new Vector2(1, 1);
 
         private readonly Vector2 _dualInventoryAnchorsMinLeft = new Vector2(0.1f, 0.2f);
         private readonly Vector2 _dualInventoryAnchorsMaxLeft = new Vector2(0.5f, 0.9f);

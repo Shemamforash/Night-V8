@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using Facilitating.Persistence;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Persistence;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public class Inventory : MyGameObject
+    public class Inventory : MyGameObject, IPersistenceTemplate
     {
         private readonly List<InventoryResource> _resources = new List<InventoryResource>();
         private readonly List<MyGameObject> _items = new List<MyGameObject>();
@@ -68,7 +72,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         //Returns true if new instance of item was added
         //Returns false if existing instance was incremented
-        public void AddItem(MyGameObject item)
+        public virtual void AddItem(MyGameObject item)
         {
             Weight += item.Weight;
             _items.Add(item);
@@ -77,7 +81,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         //Returns item if the item was successfully removed
         //Returns null if the item could not be removed (stackable but 0)
         //Throws an error if the item was not in the inventory
-        private MyGameObject RemoveItem(MyGameObject item)
+        public virtual MyGameObject RemoveItem(MyGameObject item)
         {
             if (!_items.Contains(item))
             {
@@ -192,6 +196,34 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             {
                 Move(resource, target, resource.Quantity());
             }
+        }
+        
+        public void Load(XmlNode root, PersistenceType saveType)
+        {
+            if (saveType == PersistenceType.Game)
+            {
+                XmlNode inventoryNode = root.SelectSingleNode(Name);
+                Resources().ForEach(r => LoadResource(r.Name, inventoryNode));
+            }
+        }
+
+        public void Save(XmlNode root, PersistenceType saveType)
+        {
+            if (saveType == PersistenceType.Game)
+            {
+                XmlNode inventoryNode = SaveController.CreateNodeAndAppend(Name, root);
+                Resources().ForEach(r => SaveResource(r.Name, inventoryNode));
+            }
+        }
+
+        private void LoadResource(string resourceName, XmlNode root)
+        {
+            IncrementResource(resourceName, SaveController.ParseIntFromNodeAndString(root, resourceName));
+        }
+	    
+        private void SaveResource(string resourceName, XmlNode root)
+        {
+            SaveController.CreateNodeAndAppend(resourceName, root, GetResourceQuantity(resourceName));
         }
     }
 }

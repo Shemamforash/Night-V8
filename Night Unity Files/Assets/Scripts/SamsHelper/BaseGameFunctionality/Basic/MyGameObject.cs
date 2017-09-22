@@ -1,7 +1,7 @@
 ﻿using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
-namespace SamsHelper.BaseGameFunctionality
+namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public class MyGameObject
     {

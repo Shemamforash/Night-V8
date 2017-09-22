@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
+using Game.Characters;
 using Game.Combat.Weapons;
 using Game.World.Environment;
 using Game.World.Time;
@@ -15,17 +16,18 @@ using UnityEngine.UI;
 
 namespace Game.World
 {
-	public class WorldState : MonoBehaviour , IPersistenceTemplate
+	public class WorldState : MonoBehaviour
     {
 	    public static int StormDistanceMax, StormDistanceActual;
 		public static int DaysSpentHere;
-	    private static readonly DesolationInventory HomeInventory = new DesolationInventory("Vehicle");
 	    private static GameObject _inventoryButton;
 	    public static EnvironmentManager EnvironmentManager = new EnvironmentManager();
+	    public static DesolationCharacterManager HomeInventory = new DesolationCharacterManager();
 	    private WeatherManager Weather = new WeatherManager();
 
 	    public void Awake()
 	    {
+		    HomeInventory.Start();
 		    EnvironmentManager.Start();
 		    Weather.Start();
 		    SetResourceSuffix("Water", "sips");
@@ -40,7 +42,6 @@ namespace Game.World
 			    HomeInventory.AddItem(WeaponGenerator.GenerateWeapon());
 		    }
 #endif
-		    SaveController.AddPersistenceListener(this);
 		    SaveController.LoadSettings();
             SaveController.LoadGame();
 
@@ -49,13 +50,10 @@ namespace Game.World
 		    StormDistanceActual = 10;
 		    
 		    _inventoryButton = Helper.FindChildWithName(GameObject.Find("Game Menu"), "Inventory");
-		    _inventoryButton.GetComponent<Button>().onClick.AddListener(() => InventoryTransferManager.Instance().ShowSingleInventory(Inventory()));
+		    _inventoryButton.GetComponent<Button>().onClick.AddListener(() => InventoryTransferManager.Instance().ShowSingleInventory(Home()));
 	    }
 
-	    public static GameObject GetInventoryButton()
-	    {
-		    return _inventoryButton;
-	    }
+	    public static GameObject GetInventoryButton() => _inventoryButton;
 
 		private void IncrementDaysSpentHere(){
 			++DaysSpentHere;
@@ -83,7 +81,7 @@ namespace Game.World
 		    //TODO
 	    }
 	    
-	    public static Inventory Inventory()
+	    public static Inventory Home()
 	    {
 		    return HomeInventory;
 	    }
@@ -95,32 +93,6 @@ namespace Game.World
 		    {
 			    resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f) + " " + convention;
 		    });
-	    }
-        
-	    public void Load(XmlNode root, PersistenceType saveData)
-	    {
-		    if (saveData == PersistenceType.Game)
-		    {
-			    HomeInventory.Resources().ForEach(r => LoadResource(r.Name, root));
-		    }
-	    }
-	    
-	    public void Save(XmlNode root, PersistenceType saveData)
-	    {
-		    if (saveData == PersistenceType.Game)
-		    {
-			    HomeInventory.Resources().ForEach(r => SaveResource(r.Name, root));
-		    }
-	    }
-
-	    private static void LoadResource(string resourceName, XmlNode root)
-	    {
-		    HomeInventory.IncrementResource(resourceName, SaveController.ParseIntFromNodeAndString(root, resourceName));
-	    }
-	    
-	    private static void SaveResource(string resourceName, XmlNode root)
-	    {
-		    SaveController.CreateNodeAndAppend(resourceName, root, HomeInventory.GetResourceQuantity(resourceName));
 	    }
     }
 }

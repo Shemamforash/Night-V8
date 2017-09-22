@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SamsHelper.BaseGameFunctionality;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
-using TMPro;
+using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
 namespace SamsHelper.ReactiveUI.InventoryUI
 {
     public class MenuList : MonoBehaviour
     {
-        protected readonly List<BaseInventoryUi> Items = new List<BaseInventoryUi>();
+        private readonly List<BaseInventoryUi> Items = new List<BaseInventoryUi>();
         protected Transform InventoryContent;
 
         public virtual void Awake()
@@ -18,16 +16,21 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             InventoryContent = Helper.FindChildWithName<Transform>(gameObject, "Content");
         }
 
-        public void SetItems(List<MyGameObject> newItems)
+        public List<BaseInventoryUi> GetItems()
+        {
+            return Items;
+        }
+
+        public void SetItems(List<MyGameObject> newItems, Func<MyGameObject, BaseInventoryUi> uiCreationMethod = null)
         {
             Items.ForEach(item => item.Destroy());
             Items.Clear();
             newItems.ForEach(item =>
             {
-                BaseInventoryUi uiElement = RestrictedContentCheck(item);
+                BaseInventoryUi uiElement = uiCreationMethod == null ? new BaseInventoryUi(item, InventoryContent) : uiCreationMethod(item);
                 if (uiElement != null)
                 {
-                    Items.Add(uiElement);
+                    Add(uiElement);
                 }
             });
             SetNavigation();
@@ -41,42 +44,26 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return foundItem;
         }
 
-        protected virtual BaseInventoryUi RestrictedContentCheck(MyGameObject myGameObject)
-        {
-            return new BaseInventoryUi(myGameObject, InventoryContent);
-        }
-        
-        protected bool IsItemDisplayed(MyGameObject inventoryItem)
+        private bool IsItemDisplayed(MyGameObject inventoryItem)
         {
             return Items.Any(itemUi => itemUi.GetLinkedObject() == inventoryItem);
         }
-        
-        public void Add(BaseInventoryUi item)
+
+        protected virtual void Add(BaseInventoryUi item)
         {
             if (IsItemDisplayed(item.GetLinkedObject())) return;
             Items.Add(item);
             SetNavigation();
         }
 
-        public void Remove(BaseInventoryUi item)
+        protected void Remove(BaseInventoryUi item)
         {
             if (!Items.Contains(item)) return;
             Items.Remove(item);
             SetNavigation();
         }
 
-        private List<BaseInventoryUi> GetNavigatableItems(List<BaseInventoryUi> items)
-        {
-            List<BaseInventoryUi> navigatableItems = new List<BaseInventoryUi>();
-            items.ForEach(i =>
-            {
-                if (i.GetButton().activeInHierarchy)
-                {
-                    navigatableItems.Add(i);
-                }
-            });
-            return navigatableItems;
-        }
+        protected virtual List<BaseInventoryUi> GetNavigatableItems(List<BaseInventoryUi> items) => items;
         
         protected virtual BaseInventoryUi SetNavigation()
         {
@@ -84,8 +71,8 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             for (int i = 0; i < navigatableItems.Count; ++i)
             {
                 if (i <= 0) continue;
-                GameObject from = navigatableItems[i - 1].GetButton().gameObject;
-                GameObject to = navigatableItems[i].GetButton().gameObject;
+                GameObject from = navigatableItems[i - 1].GetNavigationButton();
+                GameObject to = navigatableItems[i].GetNavigationButton();
                 Helper.SetReciprocalNavigation(from, to);
             }
             return navigatableItems.Last();

@@ -10,6 +10,7 @@ using Game.Combat;
 using Game.Gear;
 using Game.Gear.Weapons;
 using Game.World;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
@@ -22,7 +23,7 @@ namespace SamsHelper.BaseGameFunctionality.Characters
         public CharacterUI CharacterUi;
         public WeaponUi WeaponUi;
         
-        public CharacterAttributes Attributes;
+        public DesolationCharacterAttributes Attributes;
         
         public readonly StateMachine ActionStates = new StateMachine();
         public readonly CombatStateMachine CombatStates;
