@@ -1,5 +1,8 @@
 ﻿using System;
+using Facilitating.UI.Inventory;
 using SamsHelper.ReactiveUI.CustomTypes;
+using SamsHelper.ReactiveUI.InventoryUI;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -19,6 +22,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 return other.Name == Name;
             }
             return false;
+        }
+
+        public override BaseInventoryUi CreateUi(Transform parent)
+        {
+            return new InventoryResourceUi(this, parent);
         }
         
         public void AddOnUpdate(Action<int> action)

@@ -54,12 +54,12 @@ namespace Game.Characters
 
         private static void PopulateCharacterUi()
         {
-            GameObject inventoryObject = WorldState.GetInventoryButton();
+            GameObject inventoryObject = World.WorldState.GetInventoryButton();
 
             float currentY = 1f;
             foreach (DesolationCharacter c in _characters)
             {
-                GameObject newCharacterUi = c.CharacterUi.GameObject;
+                GameObject newCharacterUi = c.CharacterUiDetailed.GameObject;
                 RectTransform uiRect = newCharacterUi.GetComponent<RectTransform>();
                 uiRect.offsetMin = new Vector2(5, 5);
                 uiRect.offsetMax = new Vector2(-5, -5);
@@ -67,12 +67,12 @@ namespace Game.Characters
                 uiRect.anchorMax = new Vector2(1, currentY);
                 currentY -= 0.1f;
                 newCharacterUi.transform.localScale = new Vector2(1, 1);
-                Button b = c.CharacterUi.SimpleView.GetComponent<Button>();
+                Button b = c.CharacterUiDetailed.SimpleView.GetComponent<Button>();
                 b.onClick.AddListener(delegate { SelectCharacter(b); });
             }
             for (int i = 0; i < _characters.Count; ++i)
             {
-                GameObject currentButton = _characters[i].CharacterUi.SimpleView;
+                GameObject currentButton = _characters[i].CharacterUiDetailed.SimpleView;
 
                 if (i == 0)
                 {
@@ -84,7 +84,7 @@ namespace Game.Characters
                 }
                 else if (i > 0)
                 {
-                    GameObject previousButton = _characters[i - 1].CharacterUi.SimpleView;
+                    GameObject previousButton = _characters[i - 1].CharacterUiDetailed.SimpleView;
                     Helper.SetNavigation(currentButton, previousButton, Direction.Up);
                     Helper.SetNavigation(previousButton, currentButton, Direction.Down);
                 }
@@ -93,19 +93,23 @@ namespace Game.Characters
 
         private static DesolationCharacter FindCharacterFromGameObject(GameObject g)
         {
-            return _characters.FirstOrDefault(c => c.CharacterUi.GameObject == g);
+            return _characters.FirstOrDefault(c => c.CharacterUiDetailed.GameObject == g);
         }
 
-        public override MyGameObject RemoveItem(DesolationCharacter c)
+        public override MyGameObject RemoveItem(MyGameObject item)
         {
-            base.RemoveItem(c);
-            _characters.Remove(c);
-            PopulateCharacterUi();
-            if (c.Name == "Driver")
+            base.RemoveItem(item);
+            DesolationCharacter c = item as DesolationCharacter;
+            if (c != null)
             {
-                MenuStateMachine.States.NavigateToState("Game Over Menu");
+                _characters.Remove(c);
+                PopulateCharacterUi();
+                if (c.Name == "Driver")
+                {
+                    MenuStateMachine.States.NavigateToState("Game Over Menu");
+                }
             }
-            return c;
+            return item;
         }
 
         private static void ChangeCharacterPanel(GameObject g, bool expand)
@@ -120,21 +124,21 @@ namespace Game.Characters
             {
                 if (foundCharacter)
                 {
-                    RectTransform rect = c.CharacterUi.GameObject.GetComponent<RectTransform>();
+                    RectTransform rect = c.CharacterUiDetailed.GameObject.GetComponent<RectTransform>();
                     rect.anchorMin = new Vector2(rect.anchorMin.x, rect.anchorMin.y + moveAmount);
                     rect.anchorMax = new Vector2(rect.anchorMax.x, rect.anchorMax.y + moveAmount);
                 }
-                else if (c.CharacterUi.GameObject == g)
+                else if (c.CharacterUiDetailed.GameObject == g)
                 {
                     foundCharacter = true;
-                    CharacterUI foundUi = c.CharacterUi;
+                    CharacterUiDetailed foundUiDetailed = c.CharacterUiDetailed;
                     if (expand)
                     {
-                        foundUi.SwitchToDetailedView();
+                        foundUiDetailed.SwitchToDetailedView();
                     }
                     else
                     {
-                        foundUi.SwitchToSimpleView();
+                        foundUiDetailed.SwitchToSimpleView();
                     }
                 }
             }
@@ -167,7 +171,7 @@ namespace Game.Characters
             {
                 ExitCharacter();
             }
-            SelectedCharacter = _characters.FirstOrDefault(c => c.CharacterUi.SimpleView.GetComponent<Button>() == s);
+            SelectedCharacter = _characters.FirstOrDefault(c => c.CharacterUiDetailed.SimpleView.GetComponent<Button>() == s);
             SetDetailedViewActive(true, s.transform.parent);
         }
 

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Characters.CharacterActions;
 using Game.World;
 using Game.World.Region;
-using Game.World.Time;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
+using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,8 +24,8 @@ namespace Game.Characters
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
             Attributes = new DesolationCharacterAttributes(this);
+            
             SetCharacterUi(gameObject);
-            UpdateActionUi();
             
             ActionStates.AddState(new CollectResources(this));
             ActionStates.AddState(new CharacterActions.Combat(this));
@@ -36,13 +36,15 @@ namespace Game.Characters
             ActionStates.AddState(new Return(this));
             ActionStates.SetDefaultState("Idle");
             
+            UpdateActionUi();
+            
             CharacterInventory.MaxWeight = 50;
         }
 
         public void SetActionListActive(bool active)
         {
-            CharacterUi.ActionScrollContent.SetActive(active);
-            CharacterUi.DetailedCurrentActionText.gameObject.SetActive(!active);
+            CharacterUiDetailed.ActionMenuList.gameObject.SetActive(active);
+            CharacterUiDetailed.DetailedCurrentActionText.gameObject.SetActive(!active);
         }
         
         public override void TakeDamage(int amount)
@@ -56,46 +58,34 @@ namespace Game.Characters
 
         public override void Kill()
         {
-            DesolationCharacterManager.RemoveCharacter(this, Name == "Driver");
+            WorldState.HomeInventory.RemoveItem(this);
         }
-
-        
         
         private void UpdateActionUi()
         {
-            List<BaseCharacterAction> _availableActions = StatesAsList(false).Cast<BaseCharacterAction>().ToList();
-            for (int i = 0; i < _availableActions.Count; ++i)
+            List<BaseCharacterAction> availableActions = StatesAsList(false).Cast<BaseCharacterAction>().ToList();
+            Debug.Log(StatesAsList(false).Count);
+            CharacterUiDetailed.ActionMenuList.SetItems(new List<MyGameObject>(availableActions));
+
+            List<BaseInventoryUi> actionUiList = CharacterUiDetailed.ActionMenuList.GetItems();
+            for (int i = 0; i < actionUiList.Count; ++i)
             {
-                BaseCharacterAction a = _availableActions[i];
-                GameObject newActionButton = Helper.InstantiateUiObject("Prefabs/Action Button", CharacterUi.ActionScrollContent.transform);
-                a.ActionButtonGameObject = newActionButton;
-                newActionButton.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = a.Name();
-                Button currentButton = newActionButton.GetComponent<Button>();
-                currentButton.GetComponent<Button>().onClick.AddListener(() =>
+                BaseInventoryUi actionUi = actionUiList[i];
+                
+                Helper.SetNavigation(actionUi.GetNavigationButton(), CharacterUiDetailed.WeaponGearUi.GearUiObject, Direction.Left);
+                if (i == availableActions.Count - 1)
                 {
-                    CharacterUi.CollapseCharacterButton.Select();
-                    ActionStates.NavigateToState(a.Name());
-                });
-
-//                Helper.SetNavigation(newActionButton, CharacterUi.WeaponCard, Helper.NavigationDirections.Left);
-                if (i == _availableActions.Count - 1)
-                {
-                    Helper.SetNavigation(newActionButton, CharacterUi.CollapseCharacterButton.gameObject,
-                        Direction.Down);
-                    Helper.SetNavigation(CharacterUi.CollapseCharacterButton.gameObject, newActionButton,
-                        Direction.Up);
+                    Helper.SetReciprocalNavigation(actionUi.GetNavigationButton(), CharacterUiDetailed.CollapseCharacterButton.gameObject);
                 }
 
-                if (i > 0)
-                {
-                    GameObject previousActionButton = _availableActions[i - 1].ActionButtonGameObject;
-                    Helper.SetNavigation(newActionButton, previousActionButton, Direction.Up);
-                    Helper.SetNavigation(previousActionButton, newActionButton, Direction.Down);
-                }
                 else if (i == 0)
                 {
-//                    Helper.SetNavigation(CharacterUi.WeaponCard.gameObject, newActionButton,
-//                        Helper.NavigationDirections.Right);
+                    Helper.SetNavigation(CharacterUiDetailed.WeaponGearUi.GearUiObject, actionUi.GetNavigationButton(),
+                       Direction.Right);
+                    Helper.SetNavigation(CharacterUiDetailed.ArmourGearUi.GearUiObject, actionUi.GetNavigationButton(),
+                        Direction.Right);
+                    Helper.SetNavigation(CharacterUiDetailed.AccessoryGearUi.GearUiObject, actionUi.GetNavigationButton(),
+                        Direction.Right);
                 }
             }
         }
@@ -112,17 +102,17 @@ namespace Game.Characters
         {
             base.SetCharacterUi(g);
 
-            CharacterUi.NameText.text = Name;
-            CharacterUi.ClassTraitText.text = CharacterTrait.Name + " " + CharacterClass.Name;
-            CharacterUi.DetailedClassText.text = CharacterClass.GetTraitDetails();
-            CharacterUi.DetailedTraitText.text = CharacterTrait.GetTraitDetails();
-            CharacterUi.WeightText.text = "Weight: " + Attributes.Weight + " (requires " + ((int) Attributes.Weight + 5) + " fuel)";
+            CharacterUiDetailed.NameText.text = Name;
+            CharacterUiDetailed.ClassTraitText.text = CharacterTrait.Name + " " + CharacterClass.Name;
+            CharacterUiDetailed.DetailedClassText.text = CharacterClass.GetTraitDetails();
+            CharacterUiDetailed.DetailedTraitText.text = CharacterTrait.GetTraitDetails();
+            CharacterUiDetailed.WeightText.text = "Weight: " + Attributes.Weight + " (requires " + ((int) Attributes.Weight + 5) + " fuel)";
 
-            WorldTime.Instance().MinuteEvent += delegate
+            WorldState.Instance().MinuteEvent += delegate
             {
-                string currentActionString = ActionStates.GetCurrentState().Name() + " " + ((BaseCharacterAction) ActionStates.GetCurrentState()).GetCostAsString();
-                CharacterUi.CurrentActionText.text = currentActionString;
-                CharacterUi.DetailedCurrentActionText.text = currentActionString;
+                string currentActionString = ActionStates.GetCurrentState().Name + " " + ((BaseCharacterAction) ActionStates.GetCurrentState()).GetCostAsString();
+                CharacterUiDetailed.CurrentActionText.text = currentActionString;
+                CharacterUiDetailed.DetailedCurrentActionText.text = currentActionString;
             };
             Attributes.BindUi();
         }
@@ -145,7 +135,7 @@ namespace Game.Characters
             action.Interrupt();
             Sleep sleepAction = ActionStates.NavigateToState("Sleep") as Sleep;
             sleepAction.SetDuration((int)(Attributes.Endurance.Max / 5f));
-            sleepAction.SetStateTransitionTarget(action.Name());
+            sleepAction.SetStateTransitionTarget(action.Name);
             sleepAction.AddOnExit(() =>
             {
                 action.Resume();

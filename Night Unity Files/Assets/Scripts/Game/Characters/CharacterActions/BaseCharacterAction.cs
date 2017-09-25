@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Threading;
-using Characters;
-using Facilitating.MenuNavigation;
 using Game.World;
-using Game.World.Time;
-using SamsHelper.BaseGameFunctionality;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
-using SamsHelper.ReactiveUI;
-using SamsHelper.ReactiveUI.CustomTypes;
-using SamsHelper.ReactiveUI.MenuSystem;
+using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
 namespace Game.Characters.CharacterActions
@@ -25,16 +19,28 @@ namespace Game.Characters.CharacterActions
         private string _stateTransitionTarget;
         protected DesolationCharacter Character;
         
-        protected BaseCharacterAction(string name, DesolationCharacter character) : base(name, character.ActionStates)
+        protected BaseCharacterAction(string name, DesolationCharacter character) : base(name, StateSubtype.Character, character.ActionStates)
         {
             Character = character;
-            DefaultDuration = WorldTime.MinutesPerHour;
-            AddOnExit(() => WorldTime.Instance().MinuteEvent -= Update);
+            DefaultDuration = WorldState.MinutesPerHour;
+            AddOnExit(() => WorldState.Instance().MinuteEvent -= Update);
+        }
+
+        public override BaseInventoryUi CreateUi(Transform parent)
+        {
+            BaseInventoryUi ui = base.CreateUi(parent);
+            ui.DisableBorder();
+            ui.OnActionPress(() =>
+            {
+                Character.CharacterUiDetailed.CollapseCharacterButton.Select();
+                ParentMachine.NavigateToState(Name);
+            });
+            return ui;
         }
 
         public bool SetDuration(int hours)
         {
-            TimeRemaining = WorldTime.MinutesPerHour * hours;
+            TimeRemaining = WorldState.MinutesPerHour * hours;
             return true;
         }
 
@@ -45,28 +51,28 @@ namespace Game.Characters.CharacterActions
 
         public bool DecreaseDuration()
         {
-            if (TimeRemaining == WorldTime.MinutesPerHour)
+            if (TimeRemaining == WorldState.MinutesPerHour)
             {
                 return false;
             }
-            TimeRemaining -= WorldTime.MinutesPerHour;
+            TimeRemaining -= WorldState.MinutesPerHour;
             return true;
         }
 
         public void Start()
         {
-            WorldTime.Instance().MinuteEvent += UpdateAction;
+            WorldState.Instance().MinuteEvent += UpdateAction;
         }
 
         public virtual void Interrupt()
         {
-            WorldTime.Instance().MinuteEvent -= UpdateAction;
+            WorldState.Instance().MinuteEvent -= UpdateAction;
             Interrupted = true;
         }
 
         public virtual void Resume()
         {
-            WorldTime.Instance().MinuteEvent += UpdateAction;
+            WorldState.Instance().MinuteEvent += UpdateAction;
             Interrupted = false;
         }
 
@@ -75,10 +81,10 @@ namespace Game.Characters.CharacterActions
             --TimeRemaining;
             if (TimeRemaining == 0)
             {
-                WorldTime.Instance().MinuteEvent -= UpdateAction;
+                WorldState.Instance().MinuteEvent -= UpdateAction;
                 GetCharacter().ActionStates.NavigateToState(_stateTransitionTarget);
             }
-            if (TimeRemaining % (WorldTime.MinutesPerHour / UpdateInterval) != 0) return;
+            if (TimeRemaining % (WorldState.MinutesPerHour / UpdateInterval) != 0) return;
             HourCallback?.Invoke();
         }
 
@@ -92,7 +98,7 @@ namespace Game.Characters.CharacterActions
 
         private int TimeRemainingAsHours()
         {
-            return (int) Math.Ceiling((float) TimeRemaining / WorldTime.MinutesPerHour);
+            return (int) Math.Ceiling((float) TimeRemaining / WorldState.MinutesPerHour);
         }
 
         public virtual string GetCostAsString()

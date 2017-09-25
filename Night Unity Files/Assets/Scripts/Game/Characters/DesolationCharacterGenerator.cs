@@ -69,8 +69,8 @@ namespace Game.Characters
 #if UNITY_EDITOR
 //            TestCharacterGenerator();
 #endif
-            WorldState.HomeInventory.AddItem(GenerateDriver());
-            WorldState.HomeInventory.AddItem(GenerateCharacter());
+            World.WorldState.HomeInventory.AddItem(GenerateDriver());
+            World.WorldState.HomeInventory.AddItem(GenerateCharacter());
         }
 
         private static DesolationCharacter GenerateCharacterObject(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait)

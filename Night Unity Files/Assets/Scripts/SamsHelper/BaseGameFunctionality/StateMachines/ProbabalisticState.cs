@@ -7,7 +7,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         private readonly Dictionary<string, float> _transitionProbabilities = new Dictionary<string, float>();
         private readonly ProbabalisticStateMachine _parentProbabalisticMachine;
 
-        public ProbabalisticState(string name, ProbabalisticStateMachine parentMachine) : base(name, parentMachine)
+        protected ProbabalisticState(string name, StateSubtype subType, ProbabalisticStateMachine parentMachine) : base(name, subType, parentMachine)
         {
             _parentProbabalisticMachine = parentMachine;
         }
@@ -17,17 +17,12 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             _transitionProbabilities[stateName] = probability;
         }
 
-        public string NextState()
-        {
-            return NextState("");
-        }
-
-        public string NextState(string lastState)
+        protected string NextState(string lastState)
         {
             return NextState(new List<string> {lastState});
         }
 
-        public string NextState(List<string> disallowedStates)
+        protected string NextState(List<string> disallowedStates)
         {
             float cumulativeSum = 0;
             float targetValue = UnityEngine.Random.Range(0f, 1.0f);
@@ -48,11 +43,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
                 }
                 fallBack = stateName;
             }
-            if (_parentProbabalisticMachine.StrictSampling())
-            {
-                return "";
-            }
-            return fallBack;
+            return _parentProbabalisticMachine.StrictSampling() ? "" : fallBack;
         }
     }
 }

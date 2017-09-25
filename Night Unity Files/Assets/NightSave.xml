@@ -4,20 +4,20 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>98</Val>
-          <Max>98</Max>
+          <Val>95</Val>
+          <Max>95</Max>
         </Strength>
         <Endurance>
-          <Val>59</Val>
-          <Max>59</Max>
+          <Val>54</Val>
+          <Max>54</Max>
         </Endurance>
         <Stability>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>21</Val>
+          <Max>21</Max>
         </Stability>
         <Intelligence>
-          <Val>20</Val>
-          <Max>20</Max>
+          <Val>23</Val>
+          <Max>23</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -39,23 +39,23 @@
       </Attributes>
     </Character>
     <Character>
-      <Name>Salva</Name>
+      <Name>Balm</Name>
       <Attributes>
         <Strength>
-          <Val>123</Val>
-          <Max>123</Max>
+          <Val>76</Val>
+          <Max>76</Max>
         </Strength>
         <Endurance>
-          <Val>60</Val>
-          <Max>60</Max>
+          <Val>52</Val>
+          <Max>52</Max>
         </Endurance>
         <Stability>
-          <Val>28</Val>
-          <Max>28</Max>
-        </Stability>
-        <Intelligence>
           <Val>14</Val>
           <Max>14</Max>
+        </Stability>
+        <Intelligence>
+          <Val>22</Val>
+          <Max>22</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -77,9 +77,4 @@
       </Attributes>
     </Character>
   </CharacterManager>
-  <Water>8</Water>
-  <Food>25</Food>
-  <Fuel>4</Fuel>
-  <Scrap>22</Scrap>
-  <Ammo>436</Ammo>
 </Game>

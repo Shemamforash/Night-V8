@@ -11,7 +11,7 @@
         public override void Enter()
         {
             GetCharacter().CurrentRegion = null;
-            GetCharacter().CharacterUi.CurrentActionText.text = Name();
+            GetCharacter().CharacterUiDetailed.CurrentActionText.text = Name;
             GetCharacter().SetActionListActive(true);
         }
 

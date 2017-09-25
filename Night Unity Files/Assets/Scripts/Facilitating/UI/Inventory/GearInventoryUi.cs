@@ -13,15 +13,15 @@ namespace Facilitating.UI.Inventory
 {
     public class GearInventoryUi : InventoryItemUi
     {
-        private readonly EquippableItem _item;
+        private readonly GearItem _item;
 
-        public GearInventoryUi(EquippableItem item, Transform parent, bool equippable, Direction direction = Direction.None) : base(item, parent, direction)
+        public GearInventoryUi(GearItem item, Transform parent, bool equippable, Direction direction = Direction.None) : base(item, parent, direction)
         {
             _item = item;
             SummaryText.text = item.GetSummary();
             if (!equippable) return;
             Weapon weapon = _item as Weapon;
-            TypeText.text = weapon != null ? weapon.GetItemType() : _item.Slot().ToString();
+            TypeText.text = weapon != null ? weapon.GetWeaponType() : _item.GetGearType().ToString();
             RightActionButton.AddOnClick(ShowEquipPopup);
             RightActionButton.gameObject.SetActive(true);
             RightButtonText.text = "Equip";

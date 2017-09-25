@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
-    public class Weapon : EquippableItem
+    public class Weapon : GearItem
     {
         public readonly float Damage, Accuracy, ReloadSpeed, CriticalChance, Handling, FireRate;
         private readonly float _dps;
@@ -17,7 +17,7 @@ namespace Game.Gear.Weapons
         public readonly bool Automatic;
         private int _ammoInMagazine;
 
-        public Weapon(WeaponBase baseWeapon, bool automatic, string name, float weight) : base(name, weight, GearSlot.Weapon, GameObjectType.Weapon)
+        public Weapon(WeaponBase baseWeapon, bool automatic, string name, float weight) : base(name, weight, GearSubtype.Weapon)
         {
             _baseWeapon = baseWeapon;
             Automatic = automatic;
@@ -46,11 +46,11 @@ namespace Game.Gear.Weapons
             SetExtendedName(Name + (Automatic ? " (A)" : ""));
         }
 
-        public string GetItemType()
+        public string GetWeaponType()
         {
             return _baseWeapon.Type.ToString();
         }
-
+        
         public bool Fire()
         {
             if (_ammoInMagazine > 0)
@@ -63,7 +63,7 @@ namespace Game.Gear.Weapons
 
         public void Reload()
         {
-            float ammoAvailable = WorldState.Home().DecrementResource("Ammo", Capacity);
+            float ammoAvailable = World.WorldState.Home().DecrementResource("Ammo", Capacity);
             _ammoInMagazine += (int) ammoAvailable;
         }
 

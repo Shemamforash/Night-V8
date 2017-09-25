@@ -81,8 +81,8 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             InventoryRight.gameObject.SetActive(true);
             SetAnchors(InventoryLeft, _dualInventoryAnchorsMinLeft, _dualInventoryAnchorsMaxLeft);
             SetAnchors(InventoryRight, _dualInventoryAnchorsMinRight, _dualInventoryAnchorsMaxRight);
-            InventoryLeft.SetInventory(left, Direction.Right, InventoryRight);
-            InventoryRight.SetInventory(right, Direction.Left, InventoryLeft);
+            InventoryLeft.SetInventory(left, Direction.Left, InventoryRight);
+            InventoryRight.SetInventory(right, Direction.Right, InventoryLeft);
         }
     }
 }

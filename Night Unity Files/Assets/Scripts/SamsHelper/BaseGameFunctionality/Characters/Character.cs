@@ -20,22 +20,22 @@ namespace SamsHelper.BaseGameFunctionality.Characters
 {
     public abstract class Character : MyGameObject, IPersistenceTemplate
     {
-        public CharacterUI CharacterUi;
-        public WeaponUi WeaponUi;
+        public CharacterUiDetailed CharacterUiDetailed;
+        public WeaponUiSimple WeaponUiSimple;
         
         public DesolationCharacterAttributes Attributes;
         
         public readonly StateMachine ActionStates = new StateMachine();
         public readonly CombatStateMachine CombatStates;
         
-        private readonly Dictionary<GearSlot, EquippableItem> _equippedGear = new Dictionary<GearSlot, EquippableItem>();
+        private readonly Dictionary<GearSubtype, GearItem> _equippedGear = new Dictionary<GearSubtype, GearItem>();
         public Inventory CharacterInventory;
         private Weapon _weapon;
         
         protected Character(string name, GameObject gameObject = null) : base(name, GameObjectType.Character, gameObject)
         {
             CombatStates = new CombatStateMachine(this);
-            foreach (GearSlot gearSlot in Enum.GetValues(typeof(GearSlot)))
+            foreach (GearSubtype gearSlot in Enum.GetValues(typeof(GearSubtype)))
             {
                 _equippedGear[gearSlot] = null;
             }
@@ -53,7 +53,7 @@ namespace SamsHelper.BaseGameFunctionality.Characters
         public void SetWeapon(Weapon weapon)
         {
             _weapon = weapon;
-            WeaponUi.Update(weapon);
+            WeaponUiSimple.Update(weapon);
         }
 
         public Weapon GetWeapon()
@@ -63,8 +63,8 @@ namespace SamsHelper.BaseGameFunctionality.Characters
 
         protected virtual void SetCharacterUi(GameObject g)
         {
-            CharacterUi = new CharacterUI(g);
-            WeaponUi = new WeaponUi(CharacterUi);
+            CharacterUiDetailed = new CharacterUiDetailed(g);
+            WeaponUiSimple = new WeaponUiSimple(CharacterUiDetailed);
         }
 
         protected List<State> StatesAsList(bool includeInactiveStates)
@@ -86,14 +86,14 @@ namespace SamsHelper.BaseGameFunctionality.Characters
             Attributes.Save(attributesNode, saveType);
         }
 
-        public void ReplaceGearInSlot(GearSlot gearSlot, EquippableItem equippableItem)
+        public void ReplaceGearInSlot(GearSubtype gearSubtype, GearItem gearItem)
         {
-            EquippableItem equipped = _equippedGear[gearSlot];
+            GearItem equipped = _equippedGear[gearSubtype];
             if (equipped != null)
             {
                 equipped.Unequip();
             }
-            _equippedGear[gearSlot] = equippableItem;
+            _equippedGear[gearSubtype] = gearItem;
         }
     }
 }

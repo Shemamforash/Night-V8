@@ -3,9 +3,9 @@ using SamsHelper.BaseGameFunctionality.InventorySystem;
 
 namespace Game.Gear.Armour
 {
-    public class Armour : EquippableItem
+    public class Armour : GearItem
     {
-        protected Armour(string name, float weight) : base(name, weight, GearSlot.Body, GameObjectType.Armour)
+        protected Armour(string name, float weight) : base(name, weight, GearSubtype.Armour)
         {
         }
 

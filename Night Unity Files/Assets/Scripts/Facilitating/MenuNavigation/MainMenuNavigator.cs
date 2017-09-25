@@ -1,13 +1,9 @@
 ﻿using Facilitating.Persistence;
 using Game.World;
-using Game.World.Time;
-using Persistence;
-using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace Facilitating.MenuNavigation
 {
@@ -39,7 +35,7 @@ namespace Facilitating.MenuNavigation
 
         private void LoadGame()
         {
-            WorldTime.Instance().UnPause();
+            WorldState.Instance().UnPause();
             SceneManager.LoadScene("Game");
         }
 

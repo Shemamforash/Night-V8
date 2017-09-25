@@ -1,5 +1,4 @@
 ﻿using Game.World;
-using Game.World.Time;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,7 +10,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         private readonly Menu _menu;
         private Selectable _lastSelectedItem;
 
-        public MenuState(string name, Menu menu, StateMachine parentMachine) : base(name, parentMachine)
+        public MenuState(string name, Menu menu, StateMachine parentMachine) : base(name, StateSubtype.Menu, parentMachine)
         {
             _menu = menu;
         }
@@ -21,7 +20,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             _menu.gameObject.SetActive(true);
             if (_menu.PauseOnOpen)
             {
-                WorldTime.Instance().Pause();
+                WorldState.Instance().Pause();
             }
             if (_menu.PreserveLastSelected && _lastSelectedItem != null)
             {
@@ -31,7 +30,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             {
                 if (_menu.DefaultSelectable == null)
                 {
-                    throw new Exceptions.DefaultSelectableNotProvidedForMenu(Name());
+                    throw new Exceptions.DefaultSelectableNotProvidedForMenu(Name);
                 }
                 _menu.DefaultSelectable.Select();
             }
@@ -42,7 +41,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             _lastSelectedItem = EventSystem.current.currentSelectedGameObject.GetComponent<Selectable>();
             if (_menu.PauseOnOpen)
             {
-                WorldTime.Instance().UnPause();
+                WorldState.Instance().UnPause();
             }
             _menu.gameObject.SetActive(false);
         }

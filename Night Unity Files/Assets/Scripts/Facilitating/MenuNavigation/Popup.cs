@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Facilitating.UI.Inventory;
-using Game.World.Time;
+using Game.World;
 using SamsHelper;
-using SamsHelper.BaseGameFunctionality;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
@@ -23,7 +21,7 @@ namespace Facilitating.MenuNavigation
         
         public Popup(string title)
         {
-            WorldTime.Instance().Pause();
+            WorldState.Instance().Pause();
             _popupObject = Helper.InstantiateUiObject("Prefabs/Popup Menu", GameObject.Find("Canvas").transform);
             _container = _popupObject.transform.Find("Bar");
             _previousSelectable = EventSystem.current.currentSelectedGameObject;
@@ -32,7 +30,7 @@ namespace Facilitating.MenuNavigation
 
         private void Destroy()
         {
-            WorldTime.Instance().UnPause();
+            WorldState.Instance().UnPause();
             GameObject.Destroy(_popupObject);
             _previousSelectable.GetComponent<Selectable>().Select();
         }
@@ -40,7 +38,7 @@ namespace Facilitating.MenuNavigation
         public void AddList(List<MyGameObject> items, Action<MyGameObject> callback)
         {
             MenuList menuList = Helper.InstantiateUiObject("Prefabs/Simple Menu", _container).GetComponent<MenuList>();
-            menuList.SetItems(items, c => new CharacterInventoryUi(c, menuList.));
+            menuList.SetItems(items);
             menuList.GetItems().ForEach(item =>
             {
                 item.OnActionPress(() =>

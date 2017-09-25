@@ -1,29 +1,31 @@
 ﻿using System;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 
 namespace SamsHelper.BaseGameFunctionality.StateMachines
 {
-    public abstract class State
+    public abstract class State : MyGameObject
     {
-        private readonly string _name;
         protected StateMachine ParentMachine;
         public event Action OnUpdate;
         private event Action OnExit;
+        public readonly StateSubtype Type;
 
-        protected State(string name, StateMachine parentMachine)
+        protected State(string name, StateSubtype type, StateMachine parentMachine) : base(name, GameObjectType.State)
         {
-            _name = name;
+            Type = type;
             ParentMachine = parentMachine;
-        }
-
-        public string Name()
-        {
-            return _name;
         }
 
         public void AddOnExit(Action exitCallback)
         {
             OnExit += exitCallback;
+        }
+
+        public StateSubtype StateType()
+        {
+            return Type;
         }
 
         public void ClearOnExit()

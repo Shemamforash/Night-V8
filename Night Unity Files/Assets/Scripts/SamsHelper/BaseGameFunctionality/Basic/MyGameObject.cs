@@ -1,4 +1,5 @@
 ﻿using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.Basic
@@ -24,5 +25,10 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public Inventory Inventory() => _inventory;
         public string ExtendedName() => _extendedName ?? Name;
         public void SetExtendedName(string name) => _extendedName = name;
+
+        public virtual BaseInventoryUi CreateUi(Transform parent)
+        {
+            return new BaseInventoryUi(this, parent);
+        }
     }
 }

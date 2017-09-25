@@ -11,7 +11,7 @@ namespace Game.Combat.CombatStates
         protected readonly bool IsPlayerState;
         protected CombatStateMachine CombatMachine;
 
-        protected CombatState(string name, CombatStateMachine combatMachine, bool isPlayerState) : base(name, combatMachine)
+        protected CombatState(string name, CombatStateMachine combatMachine, bool isPlayerState) : base(name, StateSubtype.Combat, combatMachine)
         {
             CombatMachine = combatMachine;
             IsPlayerState = isPlayerState;

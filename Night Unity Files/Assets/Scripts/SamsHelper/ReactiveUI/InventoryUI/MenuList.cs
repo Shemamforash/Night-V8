@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Facilitating.UI.Inventory;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
@@ -21,26 +22,31 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return Items;
         }
 
-        public void SetItems(List<MyGameObject> newItems, Func<MyGameObject, BaseInventoryUi> uiCreationMethod = null)
+        public Transform ContentTransform()
+        {
+            return InventoryContent;
+        }
+
+        public void SetItems(List<MyGameObject> newItems)
         {
             Items.ForEach(item => item.Destroy());
             Items.Clear();
             newItems.ForEach(item =>
             {
-                BaseInventoryUi uiElement = uiCreationMethod == null ? new BaseInventoryUi(item, InventoryContent) : uiCreationMethod(item);
+                BaseInventoryUi uiElement = item.CreateUi(InventoryContent);
                 if (uiElement != null)
                 {
                     Add(uiElement);
                 }
             });
-            SetNavigation();
+            RefreshNavigation();
         }
 
         protected virtual BaseInventoryUi UpdateItem(MyGameObject item)
         {
             BaseInventoryUi foundItem = Items.FirstOrDefault(i => i.GetLinkedObject().Equals(item));
             foundItem?.Update();
-            SetNavigation();
+            RefreshNavigation();
             return foundItem;
         }
 
@@ -49,23 +55,36 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return Items.Any(itemUi => itemUi.GetLinkedObject() == inventoryItem);
         }
 
-        protected virtual void Add(BaseInventoryUi item)
+        public virtual BaseInventoryUi Add(BaseInventoryUi item)
         {
-            if (IsItemDisplayed(item.GetLinkedObject())) return;
+            if (IsItemDisplayed(item.GetLinkedObject()))
+            {
+                Debug.Log(item.GetLinkedObject().Name + "    NAMAMAMA");
+                Items.ForEach(itemUi => Debug.Log(item.GetLinkedObject().Name));
+                item.Destroy();
+                return null;
+            }
             Items.Add(item);
-            SetNavigation();
+            RefreshNavigation();
+            return item;
+        }
+
+        public BaseInventoryUi Add(MyGameObject item)
+        {
+            BaseInventoryUi itemUi = item.CreateUi(InventoryContent);
+            return Add(itemUi);
         }
 
         protected void Remove(BaseInventoryUi item)
         {
             if (!Items.Contains(item)) return;
             Items.Remove(item);
-            SetNavigation();
+            RefreshNavigation();
         }
 
         protected virtual List<BaseInventoryUi> GetNavigatableItems(List<BaseInventoryUi> items) => items;
-        
-        protected virtual BaseInventoryUi SetNavigation()
+
+        public virtual BaseInventoryUi RefreshNavigation()
         {
             List<BaseInventoryUi> navigatableItems = GetNavigatableItems(Items);
             for (int i = 0; i < navigatableItems.Count; ++i)
@@ -75,7 +94,18 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 GameObject to = navigatableItems[i].GetNavigationButton();
                 Helper.SetReciprocalNavigation(from, to);
             }
-            return navigatableItems.Last();
+            return navigatableItems.Count > 0 ? navigatableItems.Last() : null;
+        }
+
+        public void SendToLast(BaseInventoryUi exploreButton)
+        {
+            int index = Items.IndexOf(exploreButton);
+            for (int i = index + 1; i < Items.Count; ++i)
+            {
+                Items[i - 1] = Items[i];
+            }
+            Items[Items.Count - 1] = exploreButton;
+            exploreButton.GetGameObject().transform.SetAsLastSibling();
         }
     }
 }

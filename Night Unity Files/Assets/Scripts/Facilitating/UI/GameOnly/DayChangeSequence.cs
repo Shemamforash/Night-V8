@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using Audio;
 using Game.World;
-using Game.World.Time;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
@@ -20,12 +19,12 @@ namespace Facilitating.UI.GameOnly
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _menuScreen = GameObject.Find("Game Menu").GetComponent<CanvasGroup>();
             _thunderClick = GetComponent<ThunderClick>();
-            WorldTime.Instance().DayEvent += ChangeDay;
+            WorldState.Instance().DayEvent += ChangeDay;
         }
 
         private void ChangeDay()
         {
-            WorldTime.Instance().Pause();
+            WorldState.Instance().Pause();
             _menuScreen.interactable = false;
             _menuScreen.alpha = 0;
             _thisCanvasGroup.interactable = true;
@@ -50,7 +49,7 @@ namespace Facilitating.UI.GameOnly
             _thunderClick.InitiateThunder();
             _menuScreen.alpha = 1;
             _thisCanvasGroup.alpha = 0;
-            WorldTime.Instance().UnPause();
+            WorldState.Instance().UnPause();
             _menuScreen.interactable = true;
             _thisCanvasGroup.interactable = false;
         }

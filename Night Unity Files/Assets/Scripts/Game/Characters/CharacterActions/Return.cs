@@ -23,7 +23,7 @@ namespace Game.Characters.CharacterActions
         public void ReturnToVehicle()
         {
             GetCharacter().Travel();
-            GetCharacter().CharacterInventory.MoveAllResources(WorldState.Home());
+            GetCharacter().CharacterInventory.MoveAllResources(World.WorldState.Home());
         }
     }
 }

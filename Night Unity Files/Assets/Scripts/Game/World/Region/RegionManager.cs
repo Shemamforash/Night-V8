@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Game.Characters.CharacterActions;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
@@ -15,13 +17,15 @@ namespace Game.World.Region
     public class RegionManager : Menu
     {
         private static readonly List<Region> UnexploredRegions = new List<Region>();
-        private static readonly List<Region> DiscoveredRegions = new List<Region>();
+        private static readonly List<RegionUi> DiscoveredRegions = new List<RegionUi>();
         private static readonly Dictionary<string, RegionTemplate> Templates = new Dictionary<string, RegionTemplate>();
         private static readonly int NoRegionsToGenerate = 10;
-        private static GameObject _regionContainer, _regionPrefab, _backButton, _exploreButton;
+        private static GameObject _backButton;
+        private static BaseInventoryUi _exploreButton;
         private static TextMeshProUGUI _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
         private static Character _character;
         private static RegionManager _instance;
+        private static MenuList _menuList;
         
         public static RegionManager Instance()
         {
@@ -31,13 +35,22 @@ namespace Game.World.Region
         protected void Awake()
         {
             _instance = this;
+            _menuList = gameObject.AddComponent<MenuList>();
             _backButton = Helper.FindChildWithName(gameObject, "Back");
             _backButton.GetComponent<Button>().onClick.AddListener(delegate { ExitManager(false); });
-            _regionContainer = Helper.FindChildWithName(gameObject, "Content");
             _regionInfoNameText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
             _regionInfoTypeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Type");
             _regionInfoDescriptionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Description");
-            _regionPrefab = Resources.Load("Prefabs/Region") as GameObject;
+            _exploreButton = new BaseInventoryUi(null,_menuList.ContentTransform());
+            _exploreButton.SetDefaultText("Explore...");
+            _exploreButton.DisableBorder();
+            Helper.SetReciprocalNavigation(_exploreButton.GetNavigationButton(), _backButton);
+            _exploreButton.OnActionPress(delegate
+            {
+                Region targetRegion = UnexploredRegions[Random.Range(0, UnexploredRegions.Count)];
+                StartExploration(delegate { DiscoverRegion(targetRegion); }, targetRegion);
+            });
+            _menuList.Add(_exploreButton);
             LoadRegionTemplates();
         }
 
@@ -65,25 +78,19 @@ namespace Game.World.Region
         public void OnEnable()
         {
             RefreshExploreButton();
-            _exploreButton.GetComponent<Button>().Select();
         }
         
         public static void GenerateNewRegions()
         {
-            UnexploredRegions.ForEach(r => r.DestroyGameObject());
-            DiscoveredRegions.ForEach(r => r.DestroyGameObject());
+            DiscoveredRegions.ForEach(r => r.Destroy());
             UnexploredRegions.Clear();
             DiscoveredRegions.Clear();
             for (int i = 0; i < NoRegionsToGenerate; ++i)
             {
-                GameObject newRegionObject = AddNewButton();
                 RegionTemplate template = Templates[Templates.Keys.ToList()[Random.Range(0, Templates.Keys.Count)]];
                 string regionName = template.DisplayName == "" ? template.InternalName : template.DisplayName;
-                Region region = new Region(regionName, template, newRegionObject);
-                newRegionObject.GetComponent<Button>().onClick.AddListener(delegate { UpdateRegionInfo(region); });
-                newRegionObject.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = region.Name();
+                Region region = new Region(regionName, template);
                 UnexploredRegions.Add(region);
-                newRegionObject.SetActive(false);
             }
             RefreshExploreButton();
         }
@@ -100,45 +107,20 @@ namespace Game.World.Region
 
         private static void DiscoverRegion(Region region)
         {
-            DiscoveredRegions.Add(region);
+            _menuList.Add(region);
             UnexploredRegions.Remove(region);
-            region.GetObject().SetActive(true);
-            for (int i = 0; i < DiscoveredRegions.Count; ++i)
-            {
-                if (i <= 0) continue;
-                Helper.SetReciprocalNavigation(DiscoveredRegions[i].GetObject(), DiscoveredRegions[i - 1].GetObject());
-            }
             RefreshExploreButton();
         }
 
         private static void RefreshExploreButton()
         {
-            Destroy(_exploreButton);
-            _exploreButton = AddNewButton();
-            _exploreButton.GetComponent<Button>().onClick.AddListener(delegate
-            {
-                Region targetRegion = UnexploredRegions[Random.Range(0, UnexploredRegions.Count)];
-                StartExploration(delegate { DiscoverRegion(targetRegion); }, targetRegion);
-            });
-            _exploreButton.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = "Explore...";
-            if (DiscoveredRegions.Count != 0)
-            {
-                GameObject lastRegionInList = DiscoveredRegions[DiscoveredRegions.Count - 1].GetObject();
-                Helper.SetNavigation(lastRegionInList, _exploreButton, Direction.Down);
-                Helper.SetNavigation(_exploreButton, lastRegionInList, Direction.Up);
-            }
-            Helper.SetNavigation(_exploreButton, _backButton, Direction.Down);
-            Helper.SetNavigation(_backButton, _exploreButton, Direction.Up);
+            _menuList.SendToLast(_exploreButton);
+            _menuList.RefreshNavigation();
         }
 
-        private static GameObject AddNewButton()
+        public static void UpdateRegionInfo(Region region)
         {
-            return Helper.InstantiateUiObject(_regionPrefab, _regionContainer.transform);
-        }
-
-        private static void UpdateRegionInfo(Region region)
-        {
-            _regionInfoNameText.text = region.Name();
+            _regionInfoNameText.text = region.Name;
             _regionInfoTypeText.text = region.Type();
             _regionInfoDescriptionText.text = region.Description();
         }

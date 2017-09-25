@@ -1,35 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
-using Game.Gear.Weapons;
+using Game.Combat.Weapons;
 using Game.World.WorldEvents;
 using UnityEngine;
 
-namespace Game.Combat.Weapons
+namespace Game.Gear.Weapons
 {
     public class WeaponGenerator : MonoBehaviour
     {
         private static readonly Dictionary<WeaponType, Dictionary<WeaponRarity, WeaponBase>> WeaponDictionary =
             new Dictionary<WeaponType, Dictionary<WeaponRarity, WeaponBase>>();
-
-        public enum WeaponRarity
-        {
-            Rusty,
-            Tarnished,
-            Shiny,
-            Gleaming,
-            Radiant
-        }
-
-        public enum WeaponType
-        {
-            Pistol,
-            Rifle,
-            Shotgun,
-            SMG,
-            LMG,
-            Explosive
-        }
 
         public void Awake()
         {

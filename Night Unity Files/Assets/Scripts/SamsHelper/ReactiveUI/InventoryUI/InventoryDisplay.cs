@@ -8,6 +8,7 @@ using SamsHelper.BaseGameFunctionality;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -45,41 +46,30 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 rect.offsetMin = new Vector2(0, 0);
                 rect.offsetMax = new Vector2(0, 0);
             }
-            SetItems(inventory.Contents());
-        }
-
-        protected override BaseInventoryUi RestrictedContentCheck(MyGameObject myGameObject)
-        {
-            BasicInventoryItem o = myGameObject as BasicInventoryItem;
-            InventoryItemUi itemUi = null;
-            if (myGameObject is InventoryResource)
+            List<MyGameObject> inventoryContents = new List<MyGameObject>();
+            inventory.Contents().ForEach(item =>
             {
-                itemUi = new InventoryItemUi(o, InventoryContent, _inventoryDirection);
-            }
-            if (myGameObject is EquippableItem)
-            {
-                itemUi = new GearInventoryUi((EquippableItem)o, InventoryContent, _inventoryDirection == Direction.None, _inventoryDirection);
-            }
-            if (itemUi != null && _moveToInventory != null)
-            {
-                switch (_inventoryDirection)
+                InventoryResource resource = item as InventoryResource;
+                if (resource == null || resource.Quantity() != 0)
                 {
-                    case Direction.Left:
-                        itemUi.OnRightButtonPress(GetMoveAction(myGameObject, 1));
-                        itemUi.OnRightButtonHold(GetMoveAction(myGameObject, 5), 0.5f);
-                        break;
-                    case Direction.Right:
-                        itemUi.OnLeftButtonPress(GetMoveAction(myGameObject, 1));
-                        itemUi.OnRightButtonHold(GetMoveAction(myGameObject, 5), 0.5f);
-                        break;
+                    inventoryContents.Add(resource);
                 }
-            }
-            return itemUi;
+            });
+            SetItems(inventoryContents);
         }
 
         private void UpdateInventoryWeight()
         {
             _capacityText.text = Helper.Round(_inventory.Weight, 1) + " kg";
+        }
+
+        public override BaseInventoryUi Add(BaseInventoryUi item)
+        {
+            InventoryItemUi inventoryItemUi = (InventoryItemUi) base.Add(item);
+            inventoryItemUi.SetDirection(_inventoryDirection);
+            inventoryItemUi.GetNavigationButton().GetComponent<EnhancedButton>().AddOnClick(() => GetMoveAction(item.GetLinkedObject(), 1)());
+            inventoryItemUi.GetNavigationButton().GetComponent<EnhancedButton>().AddOnHold(GetMoveAction(item.GetLinkedObject(), 5), 0.5f);
+            return inventoryItemUi;
         }
 
         private Action GetMoveAction(MyGameObject inventoryItem, int quantity)
@@ -88,7 +78,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             {
                 MyGameObject transferredItem = _inventory.Move(inventoryItem, _moveToInventory._inventory, quantity);
                 if (transferredItem == null) return;
-                _moveToInventory.Add(RestrictedContentCheck(transferredItem));
+                _moveToInventory.Add(transferredItem);
                 UpdateItem(inventoryItem);
             };
         }
@@ -100,8 +90,8 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             BasicInventoryItem foundItem = found.GetLinkedObject() as BasicInventoryItem;
             if (foundItem != null && foundItem.Quantity() == 0 && !_inventory.ContainsItem(inventoryItem))
             {
-                found.Destroy();
                 Remove(found);
+                found.Destroy();
             }
             return null;
         }
@@ -111,7 +101,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             List<BaseInventoryUi> navigatableItems = new List<BaseInventoryUi>();
             items.ForEach(item =>
             {
-                InventoryItemUi itemUi = (InventoryItemUi)item;
+                InventoryItemUi itemUi = (InventoryItemUi) item;
                 if (itemUi.GetRightButton().activeInHierarchy || itemUi.GetLeftButton().activeInHierarchy)
                 {
                     navigatableItems.Add(itemUi);
@@ -121,9 +111,9 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return navigatableItems;
         }
 
-        protected override BaseInventoryUi SetNavigation()
+        public override BaseInventoryUi RefreshNavigation()
         {
-            BaseInventoryUi last = base.SetNavigation();
+            BaseInventoryUi last = base.RefreshNavigation();
             Helper.SetReciprocalNavigation(last.GetNavigationButton(), InventoryTransferManager.CloseButton());
             return last;
         }

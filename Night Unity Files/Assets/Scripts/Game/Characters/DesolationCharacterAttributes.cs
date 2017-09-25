@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Xml;
 using Characters;
 using Facilitating.Persistence;
-using Game.Gear;
 using Game.World;
-using Game.World.Time;
 using Game.World.WorldEvents;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.CustomTypes;
 using TMPro;
@@ -46,8 +42,8 @@ namespace Game.Characters
         public DesolationCharacterAttributes(DesolationCharacter character)
         {
             _character = character;
-            WorldTime.Instance().HourEvent += Fatigue;
-            WorldTime.Instance().MinuteEvent += UpdateThirstAndHunger;
+            WorldState.Instance().HourEvent += Fatigue;
+            WorldState.Instance().MinuteEvent += UpdateThirstAndHunger;
             AddAttribute(Strength);
             AddAttribute(Intelligence);
             AddAttribute(Endurance);
@@ -81,20 +77,20 @@ namespace Game.Characters
         
         public void BindUi()
         {
-            CharacterUI characterUi = _character.CharacterUi;
-            characterUi.EatButton.onClick.AddListener(Eat);
-            characterUi.DrinkButton.onClick.AddListener(Drink);
-            BindUiToAttribute(Strength, characterUi.StrengthText, characterUi.StrengthTextDetail);
-            BindUiToAttribute(Endurance, characterUi.EnduranceText, characterUi.EnduranceTextDetail);
-            BindUiToAttribute(Stability, characterUi.StabilityText, characterUi.StabilityTextDetail);
-            BindUiToAttribute(Intelligence, characterUi.IntelligenceText, characterUi.IntelligenceTextDetail);
-            Hunger.AddOnValueChange(f => characterUi.HungerText.text = GetHungerStatus());
-            Thirst.AddOnValueChange(f => characterUi.ThirstText.text = GetThirstStatus());
+            CharacterUiDetailed characterUiDetailed = _character.CharacterUiDetailed;
+            characterUiDetailed.EatButton.onClick.AddListener(Eat);
+            characterUiDetailed.DrinkButton.onClick.AddListener(Drink);
+            BindUiToAttribute(Strength, characterUiDetailed.StrengthText, characterUiDetailed.StrengthTextDetail);
+            BindUiToAttribute(Endurance, characterUiDetailed.EnduranceText, characterUiDetailed.EnduranceTextDetail);
+            BindUiToAttribute(Stability, characterUiDetailed.StabilityText, characterUiDetailed.StabilityTextDetail);
+            BindUiToAttribute(Intelligence, characterUiDetailed.IntelligenceText, characterUiDetailed.IntelligenceTextDetail);
+            Hunger.AddOnValueChange(f => characterUiDetailed.HungerText.text = GetHungerStatus());
+            Thirst.AddOnValueChange(f => characterUiDetailed.ThirstText.text = GetThirstStatus());
         }
 
         private void UpdateThirstAndHunger()
         {
-            Thirst.Max = (int) (-0.2f * WorldState.EnvironmentManager.GetTemperature() + 16f);
+            Thirst.Max = (int) (-0.2f * World.WorldState.EnvironmentManager.GetTemperature() + 16f);
             UpdateConsumableTolerance(Hunger, Starvation, Eat);
             UpdateConsumableTolerance(Thirst, Dehydration, Drink);
         }
@@ -156,13 +152,13 @@ namespace Game.Characters
         
         public void Drink()
         {
-            int consumed = WorldState.Home().DecrementResource("Water", 1);
+            int consumed = World.WorldState.Home().DecrementResource("Water", 1);
             Dehydration.Val -= consumed;
         }
 
         public void Eat()
         {
-            int consumed = WorldState.Home().DecrementResource("Food", 1);
+            int consumed = World.WorldState.Home().DecrementResource("Food", 1);
             Starvation.Val -= consumed;
         }
 

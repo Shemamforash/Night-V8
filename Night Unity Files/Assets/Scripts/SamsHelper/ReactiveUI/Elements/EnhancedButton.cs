@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using SamsHelper;
+using Facilitating.UI.Elements;
 using SamsHelper.Input;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Facilitating.UI.Elements
+namespace SamsHelper.ReactiveUI.Elements
 {
     [RequireComponent(typeof(Button))]
     public class EnhancedButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
@@ -18,6 +18,8 @@ namespace Facilitating.UI.Elements
         private List<EnhancedText> _textChildren = new List<EnhancedText>();
         private Button _button;
         public GameObject Border;
+        [SerializeField]
+        private bool _useBorder = true;
         public float FadeDuration = 0.5f;
 
         private class HoldAction
@@ -90,9 +92,14 @@ namespace Facilitating.UI.Elements
             UseDeselectedColours();
         }
 
+        public void DisableBorder()
+        {
+            _useBorder = false;
+        }
+
         private void UseSelectedColours()
         {
-            if (Border != null)
+            if (Border != null && _useBorder)
             {
                 Border.SetActive(true);
                 StartCoroutine(Fade(1));
@@ -128,7 +135,7 @@ namespace Facilitating.UI.Elements
 
         private void UseDeselectedColours()
         {
-            if (Border != null)
+            if (Border != null && _useBorder)
             {
                 Border.SetActive(false);
                 StartCoroutine(Fade(0));

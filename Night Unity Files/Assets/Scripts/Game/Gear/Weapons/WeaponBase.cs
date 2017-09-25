@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Gear;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
@@ -55,15 +56,15 @@ namespace Game.Combat.Weapons
         private int _capacityMin, _ammoMax;
         private bool _automatic;
         public string Suffix;
-        public WeaponGenerator.WeaponType Type;
-        public WeaponGenerator.WeaponRarity Rarity;
+        public WeaponType Type;
+        public WeaponRarity Rarity;
         private WeaponClass _weaponClass;
         private AttributeModifier _primaryAttributeModifier, _secondaryAttributeModifier;
 
         private Dictionary<Attributes, WeaponAttribute> attributeDictionary =
             new Dictionary<Attributes, WeaponAttribute>();
 
-        public WeaponBase(WeaponGenerator.WeaponType type, WeaponGenerator.WeaponRarity rarity, string suffix)
+        public WeaponBase(WeaponType type, WeaponRarity rarity, string suffix)
         {
             Type = type;
             Rarity = rarity;

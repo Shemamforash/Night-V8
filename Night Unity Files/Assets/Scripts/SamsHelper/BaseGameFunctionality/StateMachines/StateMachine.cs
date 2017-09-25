@@ -33,7 +33,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public void AddState(State state)
         {
-            States[state.Name()] = state;
+            States[state.Name] = state;
         }
 
         public virtual State NavigateToState(string stateName)
@@ -50,7 +50,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         private bool IsInState(string statename)
         {
-            return _currentState.Name() == statename;
+            return _currentState.Name == statename;
         }
 
         public bool IsInState(string[] stateNames)
@@ -65,7 +65,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public void ReturnToDefault()
         {
-            if (_defaultState != null && _currentState.Name() != _defaultState)
+            if (_defaultState != null && _currentState.Name != _defaultState)
             {
                 NavigateToState(_defaultState);
             }

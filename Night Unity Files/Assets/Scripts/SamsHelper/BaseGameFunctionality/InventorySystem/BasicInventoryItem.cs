@@ -1,4 +1,7 @@
-﻿using SamsHelper.BaseGameFunctionality.Basic;
+﻿using Facilitating.UI.Inventory;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.ReactiveUI.InventoryUI;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -16,6 +19,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public float TotalWeight()
         {
             return Helper.Round(Weight * Quantity(), 1);
+        }
+        
+        public override BaseInventoryUi CreateUi(Transform parent)
+        {
+            return new InventoryItemUi(this, parent);
         }
     }
 }
