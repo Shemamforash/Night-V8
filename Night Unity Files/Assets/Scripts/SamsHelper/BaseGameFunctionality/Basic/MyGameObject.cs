@@ -6,7 +6,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public class MyGameObject
     {
-        public readonly GameObject GameObject;
+        public GameObject GameObject;
         public string Name { get; set; }
         private string _extendedName;
         public float Weight { get; set; }

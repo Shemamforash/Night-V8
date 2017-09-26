@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Facilitating.UI.Elements;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Facilitating.UI.Inventory
+namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class InventoryItemUi : BaseInventoryUi
     {
@@ -88,7 +84,7 @@ namespace Facilitating.UI.Inventory
 
         public override void Update()
         {
-            BasicInventoryItem item = (BasicInventoryItem) LinkedObject;
+            InventoryItem item = (InventoryItem) LinkedObject;
             if (item.Quantity() == 0)
             {
                 Destroy();

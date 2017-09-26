@@ -17,9 +17,12 @@ namespace Game.Characters
     {
         public Region CurrentRegion;
         public TraitLoader.Trait CharacterClass, CharacterTrait;
+        private CharacterThoughts Thoughts = new CharacterThoughts();
 
         public DesolationCharacter(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait, GameObject gameObject) : base(name, gameObject)
         {
+            Thoughts.Start();
+            
             CharacterInventory = new DesolationInventory(name);
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;

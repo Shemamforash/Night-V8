@@ -1,5 +1,6 @@
 ﻿using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
 namespace Facilitating.UI.Inventory

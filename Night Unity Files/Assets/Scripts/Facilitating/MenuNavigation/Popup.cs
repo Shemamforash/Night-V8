@@ -4,6 +4,7 @@ using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.InventoryUI;
+using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -26,10 +27,12 @@ namespace Facilitating.MenuNavigation
             _container = _popupObject.transform.Find("Bar");
             _previousSelectable = EventSystem.current.currentSelectedGameObject;
             Helper.FindChildWithName<TextMeshProUGUI>(_popupObject, "Title").text = title;
+            MenuStateMachine.HideCurrentMenu();
         }
 
         private void Destroy()
         {
+            MenuStateMachine.ShowCurrentMenu();
             WorldState.Instance().UnPause();
             GameObject.Destroy(_popupObject);
             _previousSelectable.GetComponent<Selectable>().Select();
@@ -74,6 +77,18 @@ namespace Facilitating.MenuNavigation
             {
                 Helper.SetReciprocalNavigation(_options[i - 1], newOption);
             }
+        }
+
+        public void Hide()
+        {
+            Debug.Log("banana");
+            _popupObject.SetActive(false);
+        }
+        
+        public void Show()
+        {
+            Debug.Log("not babanana");
+            _popupObject.SetActive(true);
         }
     }
 }

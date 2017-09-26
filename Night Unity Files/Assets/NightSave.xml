@@ -4,12 +4,12 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>95</Val>
-          <Max>95</Max>
+          <Val>88</Val>
+          <Max>88</Max>
         </Strength>
         <Endurance>
-          <Val>54</Val>
-          <Max>54</Max>
+          <Val>73</Val>
+          <Max>73</Max>
         </Endurance>
         <Stability>
           <Val>21</Val>
@@ -32,30 +32,30 @@
           <Max>12</Max>
         </Hunger>
         <Thirst>
-          <Val>12</Val>
-          <Max>12</Max>
+          <Val>13</Val>
+          <Max>13</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
     <Character>
-      <Name>Balm</Name>
+      <Name>Petro</Name>
       <Attributes>
         <Strength>
-          <Val>76</Val>
-          <Max>76</Max>
+          <Val>75</Val>
+          <Max>75</Max>
         </Strength>
         <Endurance>
-          <Val>52</Val>
-          <Max>52</Max>
+          <Val>92</Val>
+          <Max>92</Max>
         </Endurance>
         <Stability>
-          <Val>14</Val>
-          <Max>14</Max>
+          <Val>15</Val>
+          <Max>15</Max>
         </Stability>
         <Intelligence>
-          <Val>22</Val>
-          <Max>22</Max>
+          <Val>27</Val>
+          <Max>27</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -70,10 +70,10 @@
           <Max>12</Max>
         </Hunger>
         <Thirst>
-          <Val>12</Val>
-          <Max>12</Max>
+          <Val>13</Val>
+          <Max>13</Max>
         </Thirst>
-        <Weight>3</Weight>
+        <Weight>2</Weight>
       </Attributes>
     </Character>
   </CharacterManager>

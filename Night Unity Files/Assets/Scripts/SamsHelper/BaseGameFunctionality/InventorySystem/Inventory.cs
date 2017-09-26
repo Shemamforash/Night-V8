@@ -5,6 +5,7 @@ using System.Xml;
 using Facilitating.Persistence;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -164,12 +165,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return movedItem;
         }
 
-        //BUG creates new resources when moving resources to fill remainder of inventory
         public MyGameObject Move(MyGameObject item, Inventory target, int quantity)
         {
             InventoryResource resource = item as InventoryResource;
             if (resource != null)
             {
+                if (quantity > resource.Quantity())
+                {
+                    quantity = resource.Quantity();
+                }
                 if (!target.InventoryHasSpace(resource.GetWeight(quantity)))
                 {
                     float remainingSpace = target.MaxWeight - target.Weight;

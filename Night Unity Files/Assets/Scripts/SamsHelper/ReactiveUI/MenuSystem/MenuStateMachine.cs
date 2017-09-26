@@ -38,6 +38,16 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             States.NavigateToState(m.gameObject.name);
         }
 
+        public static void HideCurrentMenu()
+        {
+            States.GetCurrentState().GameObject.SetActive(false);
+        }
+
+        public static void ShowCurrentMenu()
+        {
+            States.GetCurrentState().GameObject.SetActive(true);
+        }
+
         public static void GoToInitialMenu()
         {
             States.NavigateToState(_instance.InitialMenu.name);

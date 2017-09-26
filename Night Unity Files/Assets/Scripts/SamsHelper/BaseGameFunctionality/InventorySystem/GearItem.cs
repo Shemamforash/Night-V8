@@ -1,8 +1,11 @@
-﻿using SamsHelper.BaseGameFunctionality.InventorySystem;
+﻿using Facilitating.UI.Inventory;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI.InventoryUI;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.Characters
 {
-    public abstract class GearItem : BasicInventoryItem
+    public abstract class GearItem : InventoryItem
     {
         private bool _equipped;
         private readonly GearSubtype _gearType;
@@ -37,6 +40,11 @@ namespace SamsHelper.BaseGameFunctionality.Characters
         public GearSubtype GetGearType()
         {
             return _gearType;
+        }
+
+        public override BaseInventoryUi CreateUi(Transform parent)
+        {
+            return new GearInventoryUi(this, parent);
         }
     }
 }

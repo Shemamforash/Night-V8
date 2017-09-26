@@ -41,7 +41,7 @@ namespace SamsHelper.BaseGameFunctionality.Characters
             }
         }
 
-        public void AddItemToInventory(BasicInventoryItem item)
+        public void AddItemToInventory(InventoryItem item)
         {
             CharacterInventory.AddItem(item);
         }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public class InventoryResource : BasicInventoryItem
+    public class InventoryResource : InventoryItem
     {
         private readonly MyInt _quantity = new MyInt(0);
 

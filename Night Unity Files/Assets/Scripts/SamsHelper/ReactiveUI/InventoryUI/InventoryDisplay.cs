@@ -15,6 +15,7 @@ using UnityEngine.Events;
 
 namespace SamsHelper.ReactiveUI.InventoryUI
 {
+    //this class should ONLY before for items that extend from InventoryItem
     public class InventoryDisplay : MenuList
     {
         private Direction _inventoryDirection;
@@ -35,27 +36,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _titleText.text = inventory.Name;
             _inventoryDirection = inventoryDirection;
             _inventory = inventory;
-            RectTransform rect = InventoryContent.GetComponent<RectTransform>();
-            if (inventoryDirection == Direction.None)
-            {
-                rect.offsetMin = new Vector2(200, 0);
-                rect.offsetMax = new Vector2(-200, 0);
-            }
-            else
-            {
-                rect.offsetMin = new Vector2(0, 0);
-                rect.offsetMax = new Vector2(0, 0);
-            }
-            List<MyGameObject> inventoryContents = new List<MyGameObject>();
-            inventory.Contents().ForEach(item =>
-            {
-                InventoryResource resource = item as InventoryResource;
-                if (resource == null || resource.Quantity() != 0)
-                {
-                    inventoryContents.Add(resource);
-                }
-            });
-            SetItems(inventoryContents);
+            SetItems(inventory.Contents());
         }
 
         private void UpdateInventoryWeight()
@@ -63,22 +44,30 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _capacityText.text = Helper.Round(_inventory.Weight, 1) + " kg";
         }
 
-        public override BaseInventoryUi Add(BaseInventoryUi item)
+        public override BaseInventoryUi AddItem(MyGameObject item)
         {
-            InventoryItemUi inventoryItemUi = (InventoryItemUi) base.Add(item);
-            inventoryItemUi.SetDirection(_inventoryDirection);
-            inventoryItemUi.GetNavigationButton().GetComponent<EnhancedButton>().AddOnClick(() => GetMoveAction(item.GetLinkedObject(), 1)());
-            inventoryItemUi.GetNavigationButton().GetComponent<EnhancedButton>().AddOnHold(GetMoveAction(item.GetLinkedObject(), 5), 0.5f);
+            if (!(item is InventoryItem))
+            {
+                throw new Exceptions.InvalidInventoryItemException(item, "InventoryItem");
+            }
+            if (((InventoryItem) item).Quantity() == 0) return null;
+            InventoryItemUi inventoryItemUi = (InventoryItemUi) base.AddItem(item);
+            if (inventoryItemUi != null) //item is already added
+            {
+                inventoryItemUi.SetDirection(_inventoryDirection);
+                inventoryItemUi.GetNavigationButton().GetComponent<EnhancedButton>().AddOnClick(() => GetMoveAction(item, 1)());
+                inventoryItemUi.GetNavigationButton().GetComponent<EnhancedButton>().AddOnHold(GetMoveAction(item, 5), 0.5f);
+            }
             return inventoryItemUi;
         }
-
+        
         private Action GetMoveAction(MyGameObject inventoryItem, int quantity)
         {
             return () =>
             {
                 MyGameObject transferredItem = _inventory.Move(inventoryItem, _moveToInventory._inventory, quantity);
                 if (transferredItem == null) return;
-                _moveToInventory.Add(transferredItem);
+                _moveToInventory.AddItem(transferredItem);
                 UpdateItem(inventoryItem);
             };
         }
@@ -87,7 +76,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         {
             UpdateInventoryWeight();
             BaseInventoryUi found = base.UpdateItem(inventoryItem);
-            BasicInventoryItem foundItem = found.GetLinkedObject() as BasicInventoryItem;
+            InventoryItem foundItem = found.GetLinkedObject() as InventoryItem;
             if (foundItem != null && foundItem.Quantity() == 0 && !_inventory.ContainsItem(inventoryItem))
             {
                 Remove(found);
@@ -96,25 +85,13 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return null;
         }
 
-        protected override List<BaseInventoryUi> GetNavigatableItems(List<BaseInventoryUi> items)
-        {
-            List<BaseInventoryUi> navigatableItems = new List<BaseInventoryUi>();
-            items.ForEach(item =>
-            {
-                InventoryItemUi itemUi = (InventoryItemUi) item;
-                if (itemUi.GetRightButton().activeInHierarchy || itemUi.GetLeftButton().activeInHierarchy)
-                {
-                    navigatableItems.Add(itemUi);
-                }
-            });
-            return items;
-            return navigatableItems;
-        }
-
         public override BaseInventoryUi RefreshNavigation()
         {
             BaseInventoryUi last = base.RefreshNavigation();
-            Helper.SetReciprocalNavigation(last.GetNavigationButton(), InventoryTransferManager.CloseButton());
+            if (last != null)
+            {
+                Helper.SetReciprocalNavigation(last.GetNavigationButton(), InventoryTransferManager.CloseButton());
+            }
             return last;
         }
     }

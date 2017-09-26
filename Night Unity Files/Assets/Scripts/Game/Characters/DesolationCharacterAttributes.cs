@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using Characters;
 using Facilitating.Persistence;
@@ -90,7 +91,7 @@ namespace Game.Characters
 
         private void UpdateThirstAndHunger()
         {
-            Thirst.Max = (int) (-0.2f * World.WorldState.EnvironmentManager.GetTemperature() + 16f);
+            Thirst.Max = (int) (-0.2f * WorldState.EnvironmentManager.GetTemperature() + 16f);
             UpdateConsumableTolerance(Hunger, Starvation, Eat);
             UpdateConsumableTolerance(Thirst, Dehydration, Drink);
         }
@@ -152,13 +153,13 @@ namespace Game.Characters
         
         public void Drink()
         {
-            int consumed = World.WorldState.Home().DecrementResource("Water", 1);
+            int consumed = WorldState.Home().DecrementResource("Water", 1);
             Dehydration.Val -= consumed;
         }
 
         public void Eat()
         {
-            int consumed = World.WorldState.Home().DecrementResource("Food", 1);
+            int consumed = WorldState.Home().DecrementResource("Food", 1);
             Starvation.Val -= consumed;
         }
 

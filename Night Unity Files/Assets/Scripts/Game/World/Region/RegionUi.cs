@@ -1,5 +1,6 @@
 ﻿using Facilitating.UI.Inventory;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
 namespace Game.World.Region

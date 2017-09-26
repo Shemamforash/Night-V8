@@ -31,14 +31,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         {
             Items.ForEach(item => item.Destroy());
             Items.Clear();
-            newItems.ForEach(item =>
-            {
-                BaseInventoryUi uiElement = item.CreateUi(InventoryContent);
-                if (uiElement != null)
-                {
-                    Add(uiElement);
-                }
-            });
+            newItems.ForEach(item => AddItem(item));
             RefreshNavigation();
         }
 
@@ -50,29 +43,28 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return foundItem;
         }
 
-        private bool IsItemDisplayed(MyGameObject inventoryItem)
+        private BaseInventoryUi IsItemDisplayed(MyGameObject inventoryItem)
         {
-            return Items.Any(itemUi => itemUi.GetLinkedObject() == inventoryItem);
+            return Items.FirstOrDefault(itemUi => itemUi.GetLinkedObject() == inventoryItem);
         }
 
-        public virtual BaseInventoryUi Add(BaseInventoryUi item)
+        public virtual BaseInventoryUi AddItem(MyGameObject item)
         {
-            if (IsItemDisplayed(item.GetLinkedObject()))
+            BaseInventoryUi existingUi = IsItemDisplayed(item);
+            if (existingUi != null)
             {
-                Debug.Log(item.GetLinkedObject().Name + "    NAMAMAMA");
-                Items.ForEach(itemUi => Debug.Log(item.GetLinkedObject().Name));
-                item.Destroy();
+                UpdateItem(item);
                 return null;
             }
-            Items.Add(item);
+            BaseInventoryUi itemUi = item.CreateUi(InventoryContent);
+            Items.Add(itemUi);
             RefreshNavigation();
-            return item;
+            return itemUi;
         }
 
-        public BaseInventoryUi Add(MyGameObject item)
+        public void AddPlainButton(BaseInventoryUi button)
         {
-            BaseInventoryUi itemUi = item.CreateUi(InventoryContent);
-            return Add(itemUi);
+            Items.Add(button);
         }
 
         protected void Remove(BaseInventoryUi item)

@@ -20,7 +20,7 @@ namespace Game.Characters.CharacterActions
             MenuStateMachine.States.NavigateToState("Inventory Menu");
             _previousCharacter = DesolationCharacterManager.SelectedCharacter;
             DesolationCharacterManager.SelectedCharacter = GetCharacter();
-            InventoryTransferManager.Instance().ShowDualInventories(GetCharacter().CharacterInventory, GetCharacter().CurrentRegion, () => GetCharacter().ActionStates.NavigateToState("Return"));
+            InventoryTransferManager.Instance().ShowInventories(GetCharacter().CharacterInventory, GetCharacter().CurrentRegion, () => GetCharacter().ActionStates.NavigateToState("Return"));
         }
 
         public override void Interrupt()

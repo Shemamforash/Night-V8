@@ -1,4 +1,5 @@
 ﻿using System;
+using Facilitating.MenuNavigation;
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Gear.Weapons;
@@ -18,9 +19,9 @@ namespace Game.World
         public static int StormDistanceMax, StormDistanceActual;
         public static int DaysSpentHere;
         private static GameObject _inventoryButton;
-        public static EnvironmentManager EnvironmentManager = new EnvironmentManager();
+        public static readonly EnvironmentManager EnvironmentManager = new EnvironmentManager();
         public static DesolationCharacterManager HomeInventory;
-        private WeatherManager Weather = new WeatherManager();
+        private readonly WeatherManager Weather = new WeatherManager();
         public event Action MinuteEvent;
         public event Action HourEvent;
         public event Action DayEvent;
@@ -41,7 +42,12 @@ namespace Game.World
             _timeText = Helper.FindChildWithName(gameObject, "Time").GetComponent<TextMeshProUGUI>();
             _dayText = Helper.FindChildWithName(gameObject, "Day").GetComponent<TextMeshProUGUI>();
             _inventoryButton = Helper.FindChildWithName(gameObject, "Inventory");
-            _inventoryButton.GetComponent<Button>().onClick.AddListener(() => InventoryTransferManager.Instance().ShowSingleInventory(Home()));
+            _inventoryButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                Popup popup = new Popup("Vehicle Inventory");
+                popup.AddList(HomeInventory.Contents(), null);
+                popup.AddCancelButton();
+            });
             _instance = this;
         }
 

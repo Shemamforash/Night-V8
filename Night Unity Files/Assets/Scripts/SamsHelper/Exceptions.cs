@@ -207,5 +207,19 @@ namespace SamsHelper
 
             public override string Message => "Tried to add " + _gameObjectType + " to inventory, but no UI has been created to hold it";
         }
+
+        public class InvalidInventoryItemException : Exception
+        {
+            private readonly string _desiredType;
+            private readonly MyGameObject _item;
+            
+            public InvalidInventoryItemException(MyGameObject item, string desiredType)
+            {
+                _item = item;
+                _desiredType = desiredType;
+            }
+
+            public override string Message => "Tried to add " + _item.Name + " with type " + _item.GetType() + " to inventory but only " + _desiredType + " can be added to this inventory.";
+        }
     }
 }

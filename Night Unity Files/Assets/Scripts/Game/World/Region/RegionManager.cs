@@ -50,7 +50,7 @@ namespace Game.World.Region
                 Region targetRegion = UnexploredRegions[Random.Range(0, UnexploredRegions.Count)];
                 StartExploration(delegate { DiscoverRegion(targetRegion); }, targetRegion);
             });
-            _menuList.Add(_exploreButton);
+            _menuList.AddPlainButton(_exploreButton);
             LoadRegionTemplates();
         }
 
@@ -107,7 +107,7 @@ namespace Game.World.Region
 
         private static void DiscoverRegion(Region region)
         {
-            _menuList.Add(region);
+            _menuList.AddItem(region);
             UnexploredRegions.Remove(region);
             RefreshExploreButton();
         }
