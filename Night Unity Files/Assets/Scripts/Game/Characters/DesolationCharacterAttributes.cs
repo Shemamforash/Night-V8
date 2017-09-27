@@ -6,6 +6,7 @@ using Facilitating.Persistence;
 using Game.World;
 using Game.World.WorldEvents;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.CustomTypes;
 using TMPro;
@@ -153,13 +154,13 @@ namespace Game.Characters
         
         public void Drink()
         {
-            int consumed = WorldState.Home().DecrementResource("Water", 1);
+            int consumed = WorldState.Home().DecrementResource(InventoryResourceType.Water, 1);
             Dehydration.Val -= consumed;
         }
 
         public void Eat()
         {
-            int consumed = WorldState.Home().DecrementResource("Food", 1);
+            int consumed = WorldState.Home().DecrementResource(InventoryResourceType.Food, 1);
             Starvation.Val -= consumed;
         }
 

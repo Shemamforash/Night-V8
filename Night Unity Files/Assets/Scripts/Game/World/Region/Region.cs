@@ -1,5 +1,6 @@
 ﻿using Game.Characters;
 using Game.Combat;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -18,11 +19,11 @@ namespace Game.World.Region
         {
             _template = template;
             _distance = Random.Range(1, 2);
-            IncrementResource("Water", _template.WaterAvailable);
-            IncrementResource("Food", _template.FoodAvailable);
-            IncrementResource("Fuel", _template.FuelAvailable);
-            IncrementResource("Scrap", _template.ScrapAvailable);
-            IncrementResource("Ammo", _template.AmmoAvailable);
+            IncrementResource(InventoryResourceType.Water, _template.WaterAvailable);
+            IncrementResource(InventoryResourceType.Food, _template.FoodAvailable);
+            IncrementResource(InventoryResourceType.Fuel, _template.FuelAvailable);
+            IncrementResource(InventoryResourceType.Scrap, _template.ScrapAvailable);
+            IncrementResource(InventoryResourceType.Ammo, _template.AmmoAvailable);
         }
 
         public string Type()
@@ -43,11 +44,11 @@ namespace Game.World.Region
         public string Description()
         {
             string description = "";
-            description += "Water: " + GetAmountRemainingDescripter(GetResource("Water").Quantity());
-            description += "\nFood: " + GetAmountRemainingDescripter(GetResource("Food").Quantity());
-            description += "\nFuel: " + GetAmountRemainingDescripter(GetResource("Fuel").Quantity());
-            description += "\nScrap: " + GetAmountRemainingDescripter(GetResource("Scrap").Quantity());
-            description += "\nAmmo: " + GetAmountRemainingDescripter(GetResource("Ammo").Quantity());
+            description += "Water: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Water).Quantity());
+            description += "\nFood: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Food).Quantity());
+            description += "\nFuel: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Fuel).Quantity());
+            description += "\nScrap: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Scrap).Quantity());
+            description += "\nAmmo: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Ammo).Quantity());
             description += "\nEncounters: " + _template.Encounters;
             description += "\nPossible items: " + _template.Items;
             return description;

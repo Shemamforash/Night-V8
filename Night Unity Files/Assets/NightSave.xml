@@ -4,20 +4,20 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>88</Val>
-          <Max>88</Max>
+          <Val>115</Val>
+          <Max>115</Max>
         </Strength>
         <Endurance>
-          <Val>73</Val>
-          <Max>73</Max>
+          <Val>52</Val>
+          <Max>52</Max>
         </Endurance>
         <Stability>
-          <Val>21</Val>
-          <Max>21</Max>
-        </Stability>
-        <Intelligence>
           <Val>23</Val>
           <Max>23</Max>
+        </Stability>
+        <Intelligence>
+          <Val>21</Val>
+          <Max>21</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -39,23 +39,23 @@
       </Attributes>
     </Character>
     <Character>
-      <Name>Petro</Name>
+      <Name>Lux</Name>
       <Attributes>
         <Strength>
-          <Val>75</Val>
-          <Max>75</Max>
+          <Val>66</Val>
+          <Max>66</Max>
         </Strength>
         <Endurance>
-          <Val>92</Val>
-          <Max>92</Max>
+          <Val>62</Val>
+          <Max>62</Max>
         </Endurance>
         <Stability>
-          <Val>15</Val>
-          <Max>15</Max>
+          <Val>6</Val>
+          <Max>6</Max>
         </Stability>
         <Intelligence>
-          <Val>27</Val>
-          <Max>27</Max>
+          <Val>12</Val>
+          <Max>12</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -73,7 +73,7 @@
           <Val>13</Val>
           <Max>13</Max>
         </Thirst>
-        <Weight>2</Weight>
+        <Weight>3</Weight>
       </Attributes>
     </Character>
   </CharacterManager>

@@ -37,6 +37,7 @@ namespace Game.Characters
             ActionStates.AddState(new PrepareTravel(this));
             ActionStates.AddState(new Travel(this));
             ActionStates.AddState(new Return(this));
+            ActionStates.AddState(new LightFire(this));
             ActionStates.SetDefaultState("Idle");
             
             UpdateActionUi();
@@ -67,7 +68,6 @@ namespace Game.Characters
         private void UpdateActionUi()
         {
             List<BaseCharacterAction> availableActions = StatesAsList(false).Cast<BaseCharacterAction>().ToList();
-            Debug.Log(StatesAsList(false).Count);
             CharacterUiDetailed.ActionMenuList.SetItems(new List<MyGameObject>(availableActions));
 
             List<BaseInventoryUi> actionUiList = CharacterUiDetailed.ActionMenuList.GetItems();

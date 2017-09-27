@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using Facilitating.MenuNavigation;
 using Game.Characters;
-using Game.Gear.Weapons;
 using SamsHelper;
-using SamsHelper.BaseGameFunctionality;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -31,17 +29,16 @@ namespace Facilitating.UI.Inventory
         private void ShowEquipPopup()
         {
             Popup popup = new Popup(_item.Name);
-            popup.AddButton("Equip", () => ShowCharacterPopup(popup));
-            popup.AddButton("Move", () => { });
-            popup.AddCancelButton();
+            popup.AddButton("Equip", ShowCharacterPopup);
+            popup.AddButton("Move", ShowCharacterPopup);
+            popup.AddBackButton();
         }
 
-        private void ShowCharacterPopup(Popup previous)
+        private void ShowCharacterPopup()
         {
-            previous.Hide();
             Popup popupWithList = new Popup("Equip " + _item.Name);
             popupWithList.AddList(new List<MyGameObject>(DesolationCharacterManager.Characters()), EquipItem);
-            popupWithList.AddButton("Back", previous.Show);
+            popupWithList.AddBackButton();
         }
 
         private void EquipItem(MyGameObject item)

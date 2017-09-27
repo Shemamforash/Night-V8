@@ -6,11 +6,11 @@ namespace Game.World
     {
         public DesolationInventory(string name) : base(name)
         {
-            AddResource("Water", 1);
-            AddResource("Food", 1);
-            AddResource("Fuel", 1);
-            AddResource("Scrap", 0.5f);
-            AddResource("Ammo", 0.1f);
+            AddResource(InventoryResourceType.Water, 1);
+            AddResource(InventoryResourceType.Food, 1);
+            AddResource(InventoryResourceType.Fuel, 1);
+            AddResource(InventoryResourceType.Scrap, 0.5f);
+            AddResource(InventoryResourceType.Ammo, 0.1f);
         }
     }
 }

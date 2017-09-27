@@ -26,7 +26,6 @@ namespace Game.World
         public event Action HourEvent;
         public event Action DayEvent;
         public event Action TravelEvent;
-        public event Action<bool> PauseEvent;
 
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
@@ -46,7 +45,7 @@ namespace Game.World
             {
                 Popup popup = new Popup("Vehicle Inventory");
                 popup.AddList(HomeInventory.Contents(), null);
-                popup.AddCancelButton();
+                popup.AddBackButton();
             });
             _instance = this;
         }
@@ -57,11 +56,11 @@ namespace Game.World
             EnvironmentManager.Start();
             Weather.Start();
 
-            SetResourceSuffix("Water", "sips");
-            SetResourceSuffix("Food", "meals");
-            SetResourceSuffix("Fuel", "dregs");
-            SetResourceSuffix("Ammo", "rounds");
-            SetResourceSuffix("Scrap", "bits");
+            SetResourceSuffix(InventoryResourceType.Water, "sips");
+            SetResourceSuffix(InventoryResourceType.Food, "meals");
+            SetResourceSuffix(InventoryResourceType.Fuel, "dregs");
+            SetResourceSuffix(InventoryResourceType.Ammo, "rounds");
+            SetResourceSuffix(InventoryResourceType.Scrap, "bits");
 
             SaveController.LoadSettings();
             SaveController.LoadGame();
@@ -71,7 +70,11 @@ namespace Game.World
             StormDistanceActual = 10;
 
 #if UNITY_EDITOR
-            HomeInventory.IncrementResource("Ammo", 100);
+            HomeInventory.IncrementResource(InventoryResourceType.Ammo, 100);
+            HomeInventory.IncrementResource(InventoryResourceType.Food, 100);
+            HomeInventory.IncrementResource(InventoryResourceType.Fuel, 100);
+            HomeInventory.IncrementResource(InventoryResourceType.Scrap, 100);
+            HomeInventory.IncrementResource(InventoryResourceType.Water, 100);
             for (int i = 0; i < 10; ++i)
             {
                 HomeInventory.AddItem(WeaponGenerator.GenerateWeapon());
@@ -115,9 +118,9 @@ namespace Game.World
             return HomeInventory;
         }
 
-        private static void SetResourceSuffix(string name, string convention)
+        private static void SetResourceSuffix(InventoryResourceType name, string convention)
         {
-            TextMeshProUGUI resourceText = GameObject.Find(name).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI resourceText = GameObject.Find(name.ToString()).GetComponent<TextMeshProUGUI>();
             HomeInventory.GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f) + " " + convention; });
         }
 
@@ -130,21 +133,19 @@ namespace Game.World
             return _instance;
         }
 
-        public void Pause()
+        public static void Pause()
         {
             _isPaused = true;
-            if (PauseEvent != null) PauseEvent(true);
         }
 
-        public void UnPause()
+        public static void UnPause()
         {
             _isPaused = false;
-            if (PauseEvent != null) PauseEvent(false);
         }
 
         private void IncrementWorld()
         {
-            _currentTime += UnityEngine.Time.deltaTime;
+            _currentTime += Time.deltaTime;
             if (_currentTime >= MinuteInSeconds)
             {
                 _currentTime = 0;

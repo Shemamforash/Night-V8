@@ -17,7 +17,7 @@ namespace Game.Combat
         
         public static void EnterCombat(CombatScenario scenario)
         {
-            WorldState.Instance().Pause();
+            WorldState.Pause();
             MenuStateMachine.States.NavigateToState("Combat Menu");
             _scenario = scenario;
             CombatUi.CharacterName.text = _scenario.Character.Name;
@@ -29,7 +29,7 @@ namespace Game.Combat
 
         public static void ExitCombat()
         {
-            WorldState.Instance().UnPause();
+            WorldState.UnPause();
             _scenario.Resolve();
             MenuStateMachine.States.NavigateToState("Game Menu");
         }

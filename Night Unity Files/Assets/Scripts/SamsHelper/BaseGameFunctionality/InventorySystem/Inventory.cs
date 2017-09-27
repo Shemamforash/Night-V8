@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
+using Game.World;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
 using UnityEngine;
@@ -45,12 +46,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
         }
 
-        public InventoryResource GetResource(string resourceName)
+        public InventoryResource GetResource(InventoryResourceType resourceType)
         {
-            InventoryResource found = _resources.FirstOrDefault(item => item.Name == resourceName);
+            InventoryResource found = _resources.FirstOrDefault(item => item.GetResourceType() == resourceType);
             if (found == null)
             {
-                throw new Exceptions.ResourceDoesNotExistException(resourceName);
+                throw new Exceptions.ResourceDoesNotExistException(resourceType.ToString());
             }
             return found;
         }
@@ -93,18 +94,18 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return item;
         }
 
-        public void AddResource(string name, float weight)
+        public void AddResource(InventoryResourceType type, float weight)
         {
-            if (_resources.FirstOrDefault(r => r.Name == name) != null)
+            if (_resources.FirstOrDefault(r => r.GetResourceType() == type) != null)
             {
-                throw new Exceptions.ResourceAlreadyExistsException(name);
+                throw new Exceptions.ResourceAlreadyExistsException(type.ToString());
             }
-            _resources.Add(new InventoryResource(name, weight));
+            _resources.Add(new InventoryResource(type, weight));
         }
 
-        public void IncrementResource(string name, int amount)
+        public void IncrementResource(InventoryResourceType type, int amount)
         {
-            IncrementResource(GetResource(name), amount);
+            IncrementResource(GetResource(type), amount);
         }
 
         public void IncrementResource(InventoryResource resource, int amount)
@@ -117,9 +118,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             resource.Increment(amount);
         }
 
-        public int DecrementResource(string name, int amount)
+        public int DecrementResource(InventoryResourceType type, int amount)
         {
-            return DecrementResource(GetResource(name), amount);
+            return DecrementResource(GetResource(type), amount);
         }
 
         public int DecrementResource(InventoryResource resource, int amount)
@@ -132,9 +133,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return resource.Decrement(amount);
         }
 
-        public int GetResourceQuantity(string name)
+        public int GetResourceQuantity(InventoryResourceType type)
         {
-            return GetResource(name).Quantity();
+            return GetResource(type).Quantity();
         }
 
         public List<MyGameObject> Contents()
@@ -182,7 +183,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 if (quantity != 0)
                 {
                     DecrementResource(resource, quantity);
-                    InventoryResource targetResource = target.GetResource(resource.Name);
+                    InventoryResource targetResource = target.GetResource(resource.GetResourceType());
                     target.IncrementResource(targetResource, quantity);
                     return targetResource;
                 }
@@ -207,7 +208,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (saveType == PersistenceType.Game)
             {
                 XmlNode inventoryNode = root.SelectSingleNode(Name);
-                Resources().ForEach(r => LoadResource(r.Name, inventoryNode));
+                Resources().ForEach(r => LoadResource(r.GetResourceType(), inventoryNode));
             }
         }
 
@@ -216,18 +217,18 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (saveType == PersistenceType.Game)
             {
                 XmlNode inventoryNode = SaveController.CreateNodeAndAppend(Name, root);
-                Resources().ForEach(r => SaveResource(r.Name, inventoryNode));
+                Resources().ForEach(r => SaveResource(r.GetResourceType(), inventoryNode));
             }
         }
 
-        private void LoadResource(string resourceName, XmlNode root)
+        private void LoadResource(InventoryResourceType type, XmlNode root)
         {
-            IncrementResource(resourceName, SaveController.ParseIntFromNodeAndString(root, resourceName));
+            IncrementResource(type, SaveController.ParseIntFromNodeAndString(root, type.ToString()));
         }
 	    
-        private void SaveResource(string resourceName, XmlNode root)
+        private void SaveResource(InventoryResourceType type, XmlNode root)
         {
-            SaveController.CreateNodeAndAppend(resourceName, root, GetResourceQuantity(resourceName));
+            SaveController.CreateNodeAndAppend(type.ToString(), root, GetResourceQuantity(type));
         }
     }
 }

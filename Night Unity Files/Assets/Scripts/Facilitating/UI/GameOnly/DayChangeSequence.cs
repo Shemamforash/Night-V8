@@ -24,7 +24,7 @@ namespace Facilitating.UI.GameOnly
 
         private void ChangeDay()
         {
-            WorldState.Instance().Pause();
+            WorldState.Pause();
             _menuScreen.interactable = false;
             _menuScreen.alpha = 0;
             _thisCanvasGroup.interactable = true;
@@ -49,7 +49,7 @@ namespace Facilitating.UI.GameOnly
             _thunderClick.InitiateThunder();
             _menuScreen.alpha = 1;
             _thisCanvasGroup.alpha = 0;
-            WorldState.Instance().UnPause();
+            WorldState.UnPause();
             _menuScreen.interactable = true;
             _thisCanvasGroup.interactable = false;
         }

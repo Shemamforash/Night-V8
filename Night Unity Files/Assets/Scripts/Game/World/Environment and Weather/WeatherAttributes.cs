@@ -2,14 +2,15 @@
 {
     public class WeatherAttributes
     {
-        public float FogAmount, RainAmount, HailAmount, DustAmount;
+        public readonly float FogAmount, RainAmount, HailAmount, DustAmount, SunAmount;
 
-        public WeatherAttributes(float rain, float fog, float dust, float hail)
+        public WeatherAttributes(float rain, float fog, float dust, float hail, float sun)
         {
             RainAmount = rain;
             FogAmount = fog;
             DustAmount = dust;
             HailAmount = hail;
+            SunAmount = sun;
         }
     }
 }

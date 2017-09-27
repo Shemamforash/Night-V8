@@ -69,7 +69,8 @@ namespace Game.World.Environment_and_Weather
                 float fogAmount = float.Parse(attributes[14]);
                 float dustAmount = float.Parse(attributes[15]);
                 float hailAmount = float.Parse(attributes[16]);
-                weather.Attributes = new WeatherAttributes(rainAmount, fogAmount, dustAmount, hailAmount);
+                float sunAmount = float.Parse(attributes[17]);
+                weather.Attributes = new WeatherAttributes(rainAmount, fogAmount, dustAmount, hailAmount, sunAmount);
             });
         }
 

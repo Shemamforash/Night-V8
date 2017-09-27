@@ -10,7 +10,6 @@ namespace Game.Characters.CharacterActions
         {
             IsVisible = false;
             HourCallback = GetCharacter().Travel;
-            SetStateTransitionTarget("Idle");
             AddOnExit(ReturnToVehicle);
         }
 

@@ -4,6 +4,7 @@ using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Characters.CharacterActions
 {
@@ -16,9 +17,10 @@ namespace Game.Characters.CharacterActions
         private bool Interrupted;
         public GameObject ActionButtonGameObject;
         protected Action HourCallback;
-        private string _stateTransitionTarget;
+        protected Action MinuteCallback;
+        private string _stateTransitionTarget = "Idle";
         protected DesolationCharacter Character;
-        
+
         protected BaseCharacterAction(string name, DesolationCharacter character) : base(name, StateSubtype.Character, character.ActionStates)
         {
             Character = character;
@@ -29,6 +31,7 @@ namespace Game.Characters.CharacterActions
         public override BaseInventoryUi CreateUi(Transform parent)
         {
             BaseInventoryUi ui = base.CreateUi(parent);
+            ui.GetGameObject().GetComponent<LayoutElement>().preferredHeight = 30;
             ui.DisableBorder();
             ui.OnActionPress(() =>
             {
@@ -82,8 +85,16 @@ namespace Game.Characters.CharacterActions
             if (TimeRemaining == 0)
             {
                 WorldState.Instance().MinuteEvent -= UpdateAction;
-                GetCharacter().ActionStates.NavigateToState(_stateTransitionTarget);
+                if (_stateTransitionTarget != null)
+                {
+                    GetCharacter().ActionStates.NavigateToState(_stateTransitionTarget);
+                }
+                else
+                {
+                    GetCharacter().ActionStates.ReturnToDefault();
+                }
             }
+            MinuteCallback?.Invoke();
             if (TimeRemaining % (WorldState.MinutesPerHour / UpdateInterval) != 0) return;
             HourCallback?.Invoke();
         }

@@ -43,6 +43,8 @@ namespace Game.World.Environment_and_Weather
             }
         }
 
+        
+
         private IEnumerator UpdateWeather()
         {
             float startTime = Time.time;
@@ -51,6 +53,7 @@ namespace Game.World.Environment_and_Weather
             while (Time.time < targetTime)
             {
                 float percentComplete = 1 / totalTime * (Time.time - startTime);
+                SunController.SetWeatherModifier(_targetAttributes.SunAmount);
                 SetFog(CalculateWeatherAmount(percentComplete, _prevAttributes.FogAmount, _targetAttributes.FogAmount));
                 SetRain(CalculateWeatherAmount(percentComplete, _prevAttributes.RainAmount, _targetAttributes.RainAmount));
                 SetHail(CalculateWeatherAmount(percentComplete, _prevAttributes.HailAmount, _targetAttributes.HailAmount));
@@ -77,14 +80,15 @@ namespace Game.World.Environment_and_Weather
             }
             weatherChangeAction(amount);
         }
-    
+        
         private void SetFog(float amount)
         {
             amount /= 255f;
             SetWeather(amount, FogMax, Fog, f =>
             {
                 ParticleSystem.MainModule mainModule = Fog.main;
-                mainModule.startColor = new ParticleSystem.MinMaxGradient(new Color(0.3f, 0.3f, 0.3f, 0), new Color(0.3f, 0.3f, 0.3f, f));
+                float value = 0.3f;
+                mainModule.startColor = new ParticleSystem.MinMaxGradient(new Color(value, value, value, 0), new Color(value, value, value, f));
             });
         }
 
