@@ -75,7 +75,7 @@ namespace Game.Characters
             {
                 InventoryUi actionUi = actionUiList[i];
                 
-                Helper.SetNavigation(actionUi.GetNavigationButton(), CharacterUiDetailed.WeaponGearUi.GearUiObject, Direction.Left);
+                Helper.SetNavigation(actionUi.GetNavigationButton(), CharacterUiDetailed.WeaponGearUi.GearButton.gameObject, Direction.Left);
                 if (i == availableActions.Count - 1)
                 {
                     Helper.SetReciprocalNavigation(actionUi.GetNavigationButton(), CharacterUiDetailed.CollapseCharacterButton.gameObject);
@@ -83,11 +83,11 @@ namespace Game.Characters
 
                 else if (i == 0)
                 {
-                    Helper.SetNavigation(CharacterUiDetailed.WeaponGearUi.GearUiObject, actionUi.GetNavigationButton(),
+                    Helper.SetNavigation(CharacterUiDetailed.WeaponGearUi.GearButton.gameObject, actionUi.GetNavigationButton(),
                        Direction.Right);
-                    Helper.SetNavigation(CharacterUiDetailed.ArmourGearUi.GearUiObject, actionUi.GetNavigationButton(),
+                    Helper.SetNavigation(CharacterUiDetailed.ArmourGearUi.GearButton.gameObject, actionUi.GetNavigationButton(),
                         Direction.Right);
-                    Helper.SetNavigation(CharacterUiDetailed.AccessoryGearUi.GearUiObject, actionUi.GetNavigationButton(),
+                    Helper.SetNavigation(CharacterUiDetailed.AccessoryGearUi.GearButton.gameObject, actionUi.GetNavigationButton(),
                         Direction.Right);
                 }
             }

@@ -70,7 +70,7 @@ namespace Facilitating.MenuNavigation
             AddButton(title, null, true);
         }
 
-        public void AddList(List<MyGameObject> items, Action<MyGameObject> callback, bool autoDestruct = false)
+        public void AddList(List<MyGameObject> items, Action<MyGameObject> callback, bool autoDestruct = false, bool closeAll = false)
         {
             MenuList menuList = Helper.InstantiateUiObject("Prefabs/Simple Menu", _container).GetComponent<MenuList>();
             menuList.SetItems(items);
@@ -78,19 +78,19 @@ namespace Facilitating.MenuNavigation
             {
                 item.OnPress(() =>
                 {
-                    if(autoDestruct) Destroy();
+                    if(autoDestruct) Destroy(closeAll);
                     callback(item.GetLinkedObject());
                 });
             });
         }
 
-        public void AddButton(string optionText, Action optionOnClick = null, bool autoDestruct = false)
+        public void AddButton(string optionText, Action optionOnClick = null, bool autoDestruct = false, bool closeAll = false)
         {
             GameObject newOption = Helper.InstantiateUiObject(_optionPrefabName, _container);
             Button b = newOption.GetComponent<Button>();
             b.onClick.AddListener(() =>
             {
-                if(autoDestruct) Destroy();
+                if(autoDestruct) Destroy(closeAll);
                 optionOnClick?.Invoke();
             });
             if (_options.Count == 0)

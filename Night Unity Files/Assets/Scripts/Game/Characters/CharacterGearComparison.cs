@@ -19,14 +19,14 @@ namespace Game.Characters
         public override InventoryUi CreateUi(Transform parent)
         {
             InventoryUi ui = base.CreateUi(parent);
-            ui.DisableBorder();
             ui.SetLeftButtonTextCallback(() => GearItem.GetGearType().ToString());
             ui.SetLeftButtonActive(false);
             ui.SetLeftTextCallback(() => Character.Name);
             ui.SetCentralTextCallback(() => GearItem.Name);
             ui.SetRightTextCallback(() => "^");
             ui.SetRightButtonTextCallback(() => "Equip");
-            ui.OnRightButtonPress(() => Character.Equip(GearItem));
+            ui.SetRightButtonActive(false);
+            ui.OnPress(() => Character.Equip(GearItem));
             return ui;
         }
     }

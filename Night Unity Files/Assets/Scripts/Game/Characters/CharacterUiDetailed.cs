@@ -1,3 +1,4 @@
+using Facilitating.MenuNavigation;
 using Facilitating.UI.Elements;
 using Game.Characters;
 using SamsHelper;
@@ -27,18 +28,18 @@ namespace Characters
 
         public class GearUi
         {
-            public readonly GameObject GearUiObject;
-            public readonly TextMeshProUGUI Type, Name, Summary, EquipButtonText;
-            public readonly EnhancedButton EquipButton;
+            private readonly TextMeshProUGUI _type, _name, _summary;
+            private string _gearType;
+            public readonly EnhancedButton GearButton;
 
             public GearUi(string gearType, GameObject gearContainer)
             {
-                GearUiObject = Helper.FindChildWithName(gearContainer, gearType);
-                Type = Helper.FindChildWithName<TextMeshProUGUI>(GearUiObject, "Type");
-                Name = Helper.FindChildWithName<TextMeshProUGUI>(GearUiObject, "Name");
-                Summary = Helper.FindChildWithName<TextMeshProUGUI>(GearUiObject, "Summary");
-                EquipButton = Helper.FindChildWithName<EnhancedButton>(GearUiObject, "Equip Button");
-                EquipButtonText = Helper.FindChildWithName<TextMeshProUGUI>(EquipButton.gameObject, "Text");
+                gearContainer = Helper.FindChildWithName(gearContainer, gearType);
+                _gearType = gearType;
+                GearButton = gearContainer.GetComponent<EnhancedButton>();
+                _type = Helper.FindChildWithName<TextMeshProUGUI>(gearContainer, "Slot");
+                _name = Helper.FindChildWithName<TextMeshProUGUI>(gearContainer, "Name");
+                _summary = Helper.FindChildWithName<TextMeshProUGUI>(gearContainer, "Summary");
             }
         }
         

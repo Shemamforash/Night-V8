@@ -9,20 +9,20 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>83</Val>
-          <Max>83</Max>
+          <Val>99</Val>
+          <Max>99</Max>
         </Strength>
         <Endurance>
-          <Val>64</Val>
-          <Max>56</Max>
+          <Val>45</Val>
+          <Max>45</Max>
         </Endurance>
         <Stability>
-          <Val>23</Val>
-          <Max>23</Max>
-        </Stability>
-        <Intelligence>
           <Val>20</Val>
           <Max>20</Max>
+        </Stability>
+        <Intelligence>
+          <Val>22</Val>
+          <Max>22</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -34,33 +34,33 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>7</Max>
+          <Max>9</Max>
         </Hunger>
         <Thirst>
-          <Val>11</Val>
-          <Max>7</Max>
+          <Val>10</Val>
+          <Max>0</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
     <Character>
-      <Name>Petro</Name>
+      <Name>Lig</Name>
       <Attributes>
         <Strength>
-          <Val>96</Val>
-          <Max>96</Max>
+          <Val>101</Val>
+          <Max>101</Max>
         </Strength>
         <Endurance>
-          <Val>39</Val>
-          <Max>39</Max>
+          <Val>69</Val>
+          <Max>69</Max>
         </Endurance>
         <Stability>
-          <Val>6</Val>
-          <Max>6</Max>
+          <Val>13</Val>
+          <Max>13</Max>
         </Stability>
         <Intelligence>
-          <Val>7</Val>
-          <Max>7</Max>
+          <Val>13</Val>
+          <Max>13</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -72,13 +72,13 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>7</Max>
+          <Max>9</Max>
         </Hunger>
         <Thirst>
-          <Val>11</Val>
-          <Max>7</Max>
+          <Val>10</Val>
+          <Max>0</Max>
         </Thirst>
-        <Weight>1</Weight>
+        <Weight>2</Weight>
       </Attributes>
     </Character>
   </CharacterManager>

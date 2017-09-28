@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,6 +26,11 @@ namespace SamsHelper
             return lines;
         }
 
+        public static string[] SplitAndRemoveWhiteSpace(string line)
+        {
+            return line.Split(',').Where(str => str != "").ToArray();
+        }
+        
         public static void ConstructObjectsFromCsv(string fileName, Action<string[]> constructionMethod)
         {
             List<string> lines = ReadLinesFromFile(fileName);
@@ -34,6 +41,19 @@ namespace SamsHelper
             }
         }
 
+        public static void Shuffle<T>(ref List<T> list)
+        {
+            List<T> randomList = new List<T>();
+            while (list.Count > 0)
+            {
+                int removePosition = UnityEngine.Random.Range(0, list.Count);
+                T element = list[removePosition];
+                randomList.Add(element);
+                list.RemoveAt(removePosition);
+            }
+            list = randomList;
+        }
+        
         public static void Log<T>(List<T> aList)
         {
             foreach (T t in aList)

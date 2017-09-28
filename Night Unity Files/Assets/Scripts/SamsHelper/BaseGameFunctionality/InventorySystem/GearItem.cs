@@ -37,9 +37,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public override InventoryUi CreateUi(Transform parent)
         {
             InventoryUi ui = base.CreateUi(parent);
-            ui.DisableBorder();
             ui.SetRightButtonTextCallback(() => "Equip");
-            ui.OnRightButtonPress(ShowEquipPopup);
+            ui.SetRightButtonActive(false);
+            ui.OnPress(ShowEquipPopup);
             ui.SetRightTextCallback(GetSummary);
             ui.SetLeftTextCallback(() => GetGearType().ToString());
             ui.SetCentralTextCallback(() => Name);
@@ -59,7 +59,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             Popup popupWithList = new Popup("Equip " + Name);
             List<MyGameObject> characterGear = new List<MyGameObject>();
             DesolationCharacterManager.Characters().ForEach(c => characterGear.Add(new CharacterGearComparison(c, this)));
-            popupWithList.AddList(characterGear, null, true);
+            popupWithList.AddList(characterGear, null, true, true);
             popupWithList.AddBackButton();
         }
 

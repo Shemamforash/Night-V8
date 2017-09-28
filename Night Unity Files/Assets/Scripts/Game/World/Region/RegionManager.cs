@@ -26,22 +26,50 @@ namespace Game.World.Region
         private static Character _character;
         private static RegionManager _instance;
         private static MenuList _menuList;
-        
+        private static readonly List<string> NamePool = new List<string>();
+
         public static RegionManager Instance()
         {
             return _instance ?? FindObjectOfType<RegionManager>();
         }
-        
+
+        private static void LoadNames()
+        {
+            List<string> lines = Helper.ReadLinesFromFile("RegionNames");
+            List<string> prefixList = new List<string>();
+            List<string> suffixList = new List<string>();
+            for (int i = 0; i < 3; ++i)
+            {
+                prefixList.AddRange(Helper.SplitAndRemoveWhiteSpace(lines[i]));
+                suffixList.AddRange(Helper.SplitAndRemoveWhiteSpace(lines[i + 3]));
+            }
+            List<string> combinations = (from prefix in prefixList from suffix in suffixList select prefix + "'s " + suffix).ToList();
+            Helper.Shuffle(ref combinations);
+            for (int i = 0; i < 500; ++i)
+            {
+                NamePool.Add(combinations[i]);
+            }
+        }
+
+        private static string GenerateName()
+        {
+            int pos = Random.Range(0, NamePool.Count);
+            string chosenName = NamePool[pos];
+            NamePool.RemoveAt(pos);
+            return chosenName;
+        }
+
         protected void Awake()
         {
             _instance = this;
+            LoadNames();
             _menuList = gameObject.AddComponent<MenuList>();
             _backButton = Helper.FindChildWithName(gameObject, "Back");
             _backButton.GetComponent<Button>().onClick.AddListener(delegate { ExitManager(false); });
             _regionInfoNameText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
             _regionInfoTypeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Type");
             _regionInfoDescriptionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Description");
-            _exploreButton = new InventoryUi(null,_menuList.ContentTransform());
+            _exploreButton = new InventoryUi(null, _menuList.ContentTransform());
             _exploreButton.SetCentralTextCallback(() => "Explore...");
             Helper.SetReciprocalNavigation(_exploreButton.GetNavigationButton(), _backButton);
             _exploreButton.OnPress(delegate
@@ -78,7 +106,7 @@ namespace Game.World.Region
         {
             RefreshExploreButton();
         }
-        
+
         public static void GenerateNewRegions()
         {
             DiscoveredRegions.ForEach(r => r.Destroy());
@@ -87,9 +115,12 @@ namespace Game.World.Region
             for (int i = 0; i < NoRegionsToGenerate; ++i)
             {
                 RegionTemplate template = Templates[Templates.Keys.ToList()[Random.Range(0, Templates.Keys.Count)]];
-                string regionName = template.DisplayName == "" ? template.InternalName : template.DisplayName;
+                string regionName = GenerateName(); //template.DisplayName == "" ? template.InternalName : template.DisplayName;
                 Region region = new Region(regionName, template);
                 UnexploredRegions.Add(region);
+#if UNITY_EDITOR
+                DiscoverRegion(region);
+#endif
             }
             RefreshExploreButton();
         }
