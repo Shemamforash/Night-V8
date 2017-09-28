@@ -28,12 +28,12 @@ namespace Game.Characters.CharacterActions
             AddOnExit(() => WorldState.Instance().MinuteEvent -= Update);
         }
 
-        public override BaseInventoryUi CreateUi(Transform parent)
+        public override InventoryUi CreateUi(Transform parent)
         {
-            BaseInventoryUi ui = base.CreateUi(parent);
-            ui.GetGameObject().GetComponent<LayoutElement>().preferredHeight = 30;
-            ui.DisableBorder();
-            ui.OnActionPress(() =>
+            InventoryUi ui = base.CreateUi(parent);
+            ui.SetPreferredHeight(30);
+            ui.SetCentralTextCallback(() => Name);
+            ui.OnPress(() =>
             {
                 Character.CharacterUiDetailed.CollapseCharacterButton.Select();
                 ParentMachine.NavigateToState(Name);

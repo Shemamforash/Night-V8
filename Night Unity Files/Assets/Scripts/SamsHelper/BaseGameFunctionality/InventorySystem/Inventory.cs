@@ -77,6 +77,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public virtual void AddItem(MyGameObject item)
         {
             Weight += item.Weight;
+            item.Inventory = this;
             _items.Add(item);
         }
 

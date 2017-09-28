@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Resources;
 using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -20,12 +19,12 @@ namespace Facilitating.MenuNavigation
         private readonly GameObject _previousSelectable;
         private static string _optionPrefabName = "Prefabs/Button Border";
         private readonly List<GameObject> _options = new List<GameObject>();
-        private static Stack<Popup> _popupStack = new Stack<Popup>();
-        private Popup _previousPopup;
+        private static readonly Stack<Popup> PopupStack = new Stack<Popup>();
+        private readonly Popup _previousPopup;
 
         public Popup(string title)
         {
-            _previousPopup = _popupStack.Count == 0 ? null : _popupStack.Peek();
+            _previousPopup = PopupStack.Count == 0 ? null : PopupStack.Peek();
             if (_previousPopup == null)
             {
                 MenuStateMachine.HideCurrentMenu();
@@ -39,15 +38,14 @@ namespace Facilitating.MenuNavigation
             _container = _popupObject.transform.Find("Bar");
             _previousSelectable = EventSystem.current.currentSelectedGameObject;
             Helper.FindChildWithName<TextMeshProUGUI>(_popupObject, "Title").text = title;
-            _popupStack.Push(this);
-            Helper.PrintList(_popupStack.ToArray());
+            PopupStack.Push(this);
         }
 
         private void Destroy(bool clearStack = false)
         {
             GameObject.Destroy(_popupObject);
             _previousSelectable.GetComponent<Selectable>().Select();
-            Popup thisPopup = _popupStack.Pop();
+            Popup thisPopup = PopupStack.Pop();
             if (thisPopup != this)
             {
                 throw new Exception("Next popup in popup stack should have been this element, but ,uh, it wasn't.");
@@ -78,7 +76,7 @@ namespace Facilitating.MenuNavigation
             menuList.SetItems(items);
             menuList.GetItems().ForEach(item =>
             {
-                item.OnActionPress(() =>
+                item.OnPress(() =>
                 {
                     if(autoDestruct) Destroy();
                     callback(item.GetLinkedObject());

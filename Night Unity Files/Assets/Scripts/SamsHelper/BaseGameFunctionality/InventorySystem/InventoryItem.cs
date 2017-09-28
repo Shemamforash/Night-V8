@@ -19,10 +19,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             return Helper.Round(Weight * Quantity(), 1);
         }
-        
-        public override BaseInventoryUi CreateUi(Transform parent)
+
+        public override InventoryUi CreateUi(Transform parent)
         {
-            return new InventoryItemUi(this, parent);
+            InventoryUi ui = base.CreateUi(parent);
+            ui.SetCentralTextCallback(() => Name);
+            ui.SetLeftTextCallback(() => Type.ToString());
+            ui.SetRightTextCallback(() => TotalWeight() + "kg");
+            ui.SetDestroyCondition(() => Quantity() == 0);
+            return ui;
         }
     }
 }

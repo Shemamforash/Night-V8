@@ -83,8 +83,6 @@
             <e p="ArticyDebugFlowPlayer.cs" t="Include" />
           </e>
         </e>
-        <e p="Campfire.cs" t="Include" />
-        <e p="FireBurst.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Plugins" t="Include">
@@ -225,6 +223,8 @@
               <e p="GlobalAudioManager.cs" t="Include" />
               <e p="ThunderClick.cs" t="Include" />
             </e>
+            <e p="Campfire.cs" t="Include" />
+            <e p="FireBurst.cs" t="Include" />
             <e p="MenuNavigation" t="Include">
               <e p="MainMenuNavigator.cs" t="Include" />
               <e p="Popup.cs" t="Include" />
@@ -234,6 +234,7 @@
               <e p="SaveController.cs" t="Include" />
               <e p="StatsTracker.cs" t="Include" />
             </e>
+            <e p="SunController.cs" t="Include" />
             <e p="UI" t="Include">
               <e p="ButtonGroup.cs" t="Include" />
               <e p="GameOnly" t="Include">
@@ -245,9 +246,6 @@
                 <e p="ManualScrollbar.cs" t="Include" />
                 <e p="ManualSlider.cs" t="Include" />
                 <e p="Toggler.cs" t="Include" />
-              </e>
-              <e p="Inventory" t="Include">
-                <e p="GearInventoryUi.cs" t="Include" />
               </e>
               <e p="Main Menu Only" t="Include">
                 <e p="PermadeathToggler.cs" t="Include" />
@@ -272,6 +270,7 @@
                 <e p="Sleep.cs" t="Include" />
                 <e p="Travel.cs" t="Include" />
               </e>
+              <e p="CharacterGearComparison.cs" t="Include" />
               <e p="CharacterThoughts.cs" t="Include" />
               <e p="CharacterUiDetailed.cs" t="Include" />
               <e p="CharacterUiSimple.cs" t="Include" />
@@ -344,7 +343,6 @@
                 <e p="Region.cs" t="Include" />
                 <e p="RegionManager.cs" t="Include" />
                 <e p="RegionTemplate.cs" t="Include" />
-                <e p="RegionUi.cs" t="Include" />
               </e>
               <e p="WorldEvents" t="Include">
                 <e p="WeaponFindEvent.cs" t="Include" />
@@ -376,10 +374,8 @@
                 <e p="GearSubtype.cs" t="Include" />
                 <e p="Inventory.cs" t="Include" />
                 <e p="InventoryItem.cs" t="Include" />
-                <e p="InventoryItemUi.cs" t="Include" />
                 <e p="InventoryResource.cs" t="Include" />
                 <e p="InventoryResourceType.cs" t="Include" />
-                <e p="InventoryResourceUi.cs" t="Include" />
               </e>
               <e p="StateMachines" t="Include">
                 <e p="ProbabalisticState.cs" t="Include" />
@@ -414,9 +410,9 @@
                 <e p="UiAppearanceController.cs" t="Include" />
               </e>
               <e p="InventoryUI" t="Include">
-                <e p="BaseInventoryUi.cs" t="Include" />
                 <e p="InventoryDisplay.cs" t="Include" />
                 <e p="InventoryTransferManager.cs" t="Include" />
+                <e p="InventoryUi.cs" t="Include" />
                 <e p="MenuList.cs" t="Include" />
               </e>
               <e p="MenuSystem" t="Include">
@@ -428,7 +424,6 @@
             </e>
           </e>
         </e>
-        <e p="SunController.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />

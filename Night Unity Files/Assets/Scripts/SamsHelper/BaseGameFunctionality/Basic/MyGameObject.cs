@@ -10,7 +10,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public string Name { get; set; }
         private string _extendedName;
         public float Weight { get; set; }
-        private readonly Inventory _inventory;
+        public Inventory Inventory { get; set; }
         public readonly GameObjectType Type;
 
         protected MyGameObject(string name, GameObjectType type, GameObject gameObject = null, float weight = 0, Inventory inventory = null)
@@ -18,17 +18,16 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             Name = name;
             GameObject = gameObject;
             Weight = weight;
-            _inventory = inventory;
+            Inventory = inventory;
             Type = type;
         }
 
-        public Inventory Inventory() => _inventory;
         public string ExtendedName() => _extendedName ?? Name;
         public void SetExtendedName(string name) => _extendedName = name;
 
-        public virtual BaseInventoryUi CreateUi(Transform parent)
+        public virtual InventoryUi CreateUi(Transform parent)
         {
-            return new BaseInventoryUi(this, parent);
+            return new InventoryUi(this, parent);
         }
     }
 }

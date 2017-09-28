@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using Facilitating.MenuNavigation;
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Gear.Weapons;
 using Game.World.Environment_and_Weather;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
@@ -44,7 +47,13 @@ namespace Game.World
             _inventoryButton.GetComponent<Button>().onClick.AddListener(() =>
             {
                 Popup popup = new Popup("Vehicle Inventory");
-                popup.AddList(HomeInventory.Contents(), null);
+                List<MyGameObject> visibleContents = new List<MyGameObject>();
+                HomeInventory.Contents().ForEach(i =>
+                {
+                    if (i is Character) return;
+                    visibleContents.Add(i);
+                });
+                popup.AddList(visibleContents, null);
                 popup.AddBackButton();
             });
             _instance = this;

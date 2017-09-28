@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Xml;
 using Characters;
 using Facilitating.Persistence;
@@ -10,6 +9,7 @@ using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.CustomTypes;
 using TMPro;
+using UnityEngine;
 using Attribute = SamsHelper.BaseGameFunctionality.Basic.Attribute;
 using Random = UnityEngine.Random;
 
@@ -54,15 +54,18 @@ namespace Game.Characters
             AddAttribute(Dehydration);
             AddAttribute(Hunger);
             AddAttribute(Thirst);
-            SetConsumptionEvents(Hunger, Starvation);
-            SetConsumptionEvents(Thirst, Dehydration);
+            SetConsumptionEvents(Hunger, Starvation, WorldState.HomeInventory.GetResource(InventoryResourceType.Food));
+            SetConsumptionEvents(Thirst, Dehydration, WorldState.HomeInventory.GetResource(InventoryResourceType.Water));
         }
 
-        private void SetConsumptionEvents(Attribute need, Attribute tolerance)
+        private void SetConsumptionEvents(Attribute need, Attribute tolerance, InventoryResource resource)
         {
             need.OnMax(() =>
             {
-                ++tolerance.Val;
+                if (resource.Decrement(1) != 1)
+                {
+                    ++tolerance.Val;                    
+                }
                 need.Val = 0;
             });
             tolerance.OnMax(_character.Kill);
@@ -80,8 +83,6 @@ namespace Game.Characters
         public void BindUi()
         {
             CharacterUiDetailed characterUiDetailed = _character.CharacterUiDetailed;
-            characterUiDetailed.EatButton.onClick.AddListener(Eat);
-            characterUiDetailed.DrinkButton.onClick.AddListener(Drink);
             BindUiToAttribute(Strength, characterUiDetailed.StrengthText, characterUiDetailed.StrengthTextDetail);
             BindUiToAttribute(Endurance, characterUiDetailed.EnduranceText, characterUiDetailed.EnduranceTextDetail);
             BindUiToAttribute(Stability, characterUiDetailed.StabilityText, characterUiDetailed.StabilityTextDetail);

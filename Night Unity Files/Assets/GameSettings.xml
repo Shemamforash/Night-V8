@@ -9,20 +9,20 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>115</Val>
-          <Max>115</Max>
+          <Val>83</Val>
+          <Max>83</Max>
         </Strength>
         <Endurance>
-          <Val>52</Val>
-          <Max>52</Max>
+          <Val>64</Val>
+          <Max>56</Max>
         </Endurance>
         <Stability>
           <Val>23</Val>
           <Max>23</Max>
         </Stability>
         <Intelligence>
-          <Val>21</Val>
-          <Max>21</Max>
+          <Val>20</Val>
+          <Max>20</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -34,33 +34,33 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>12</Max>
+          <Max>7</Max>
         </Hunger>
         <Thirst>
-          <Val>13</Val>
-          <Max>13</Max>
+          <Val>11</Val>
+          <Max>7</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
     <Character>
-      <Name>Lux</Name>
+      <Name>Petro</Name>
       <Attributes>
         <Strength>
-          <Val>66</Val>
-          <Max>66</Max>
+          <Val>96</Val>
+          <Max>96</Max>
         </Strength>
         <Endurance>
-          <Val>62</Val>
-          <Max>62</Max>
+          <Val>39</Val>
+          <Max>39</Max>
         </Endurance>
         <Stability>
           <Val>6</Val>
           <Max>6</Max>
         </Stability>
         <Intelligence>
-          <Val>12</Val>
-          <Max>12</Max>
+          <Val>7</Val>
+          <Max>7</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -72,13 +72,13 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>12</Max>
+          <Max>7</Max>
         </Hunger>
         <Thirst>
-          <Val>13</Val>
-          <Max>13</Max>
+          <Val>11</Val>
+          <Max>7</Max>
         </Thirst>
-        <Weight>3</Weight>
+        <Weight>1</Weight>
       </Attributes>
     </Character>
   </CharacterManager>

@@ -77,7 +77,7 @@ namespace SamsHelper.ReactiveUI.Elements
             UseSelectedColours();
         }
 
-        public virtual void OnDeselect(BaseEventData eventData)
+        public void OnDeselect(BaseEventData eventData)
         {
             UseDeselectedColours();
         }

@@ -86,14 +86,13 @@ namespace SamsHelper.BaseGameFunctionality.Characters
             Attributes.Save(attributesNode, saveType);
         }
 
-        public void ReplaceGearInSlot(GearSubtype gearSubtype, GearItem gearItem)
+        public void Equip(GearItem gearItem)
         {
-            GearItem equipped = _equippedGear[gearSubtype];
-            if (equipped != null)
+            if (!CharacterInventory.ContainsItem(gearItem))
             {
-                equipped.Unequip();
+                gearItem.MoveTo(CharacterInventory);
             }
-            _equippedGear[gearSubtype] = gearItem;
+            _equippedGear[gearItem.GetGearType()] = gearItem;
         }
     }
 }

@@ -1,13 +1,15 @@
-﻿using Facilitating.UI.Inventory;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
+﻿using System.Collections.Generic;
+using Facilitating.MenuNavigation;
+using Game.Characters;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
-namespace SamsHelper.BaseGameFunctionality.Characters
+namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public abstract class GearItem : InventoryItem
     {
-        private bool _equipped;
         private readonly GearSubtype _gearType;
 
         protected GearItem(string name, float weight, GearSubtype gearSubtype) : base(name, GameObjectType.Gear, weight)
@@ -25,16 +27,6 @@ namespace SamsHelper.BaseGameFunctionality.Characters
 //            c.ReplaceGearInSlot(_gearslot, this);
         }
 
-        public void Unequip()
-        {
-            _equipped = false;
-        }
-
-        public bool IsEquipped()
-        {
-            return _equipped;
-        }
-
         public abstract string GetSummary();
 
         public GearSubtype GetGearType()
@@ -42,9 +34,38 @@ namespace SamsHelper.BaseGameFunctionality.Characters
             return _gearType;
         }
 
-        public override BaseInventoryUi CreateUi(Transform parent)
+        public override InventoryUi CreateUi(Transform parent)
         {
-            return new GearInventoryUi(this, parent);
+            InventoryUi ui = base.CreateUi(parent);
+            ui.DisableBorder();
+            ui.SetRightButtonTextCallback(() => "Equip");
+            ui.OnRightButtonPress(ShowEquipPopup);
+            ui.SetRightTextCallback(GetSummary);
+            ui.SetLeftTextCallback(() => GetGearType().ToString());
+            ui.SetCentralTextCallback(() => Name);
+            return ui;
+        }
+        
+        private void ShowEquipPopup()
+        {
+            Popup popup = new Popup(Name);
+            popup.AddButton("Equip", ShowCharacterPopup);
+            popup.AddButton("Move", ShowCharacterPopup);
+            popup.AddBackButton();
+        }
+
+        private void ShowCharacterPopup()
+        {
+            Popup popupWithList = new Popup("Equip " + Name);
+            List<MyGameObject> characterGear = new List<MyGameObject>();
+            DesolationCharacterManager.Characters().ForEach(c => characterGear.Add(new CharacterGearComparison(c, this)));
+            popupWithList.AddList(characterGear, null, true);
+            popupWithList.AddBackButton();
+        }
+
+        public void MoveTo(Inventory targetInventory)
+        {
+            Inventory.Move(this, targetInventory, 1);
         }
     }
 }

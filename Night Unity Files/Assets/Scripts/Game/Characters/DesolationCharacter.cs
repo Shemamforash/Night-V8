@@ -70,10 +70,10 @@ namespace Game.Characters
             List<BaseCharacterAction> availableActions = StatesAsList(false).Cast<BaseCharacterAction>().ToList();
             CharacterUiDetailed.ActionMenuList.SetItems(new List<MyGameObject>(availableActions));
 
-            List<BaseInventoryUi> actionUiList = CharacterUiDetailed.ActionMenuList.GetItems();
+            List<InventoryUi> actionUiList = CharacterUiDetailed.ActionMenuList.GetItems();
             for (int i = 0; i < actionUiList.Count; ++i)
             {
-                BaseInventoryUi actionUi = actionUiList[i];
+                InventoryUi actionUi = actionUiList[i];
                 
                 Helper.SetNavigation(actionUi.GetNavigationButton(), CharacterUiDetailed.WeaponGearUi.GearUiObject, Direction.Left);
                 if (i == availableActions.Count - 1)

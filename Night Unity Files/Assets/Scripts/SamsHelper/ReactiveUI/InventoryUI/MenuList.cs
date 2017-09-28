@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Facilitating.UI.Inventory;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
@@ -9,7 +7,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 {
     public class MenuList : MonoBehaviour
     {
-        private readonly List<BaseInventoryUi> Items = new List<BaseInventoryUi>();
+        private readonly List<InventoryUi> Items = new List<InventoryUi>();
         protected Transform InventoryContent;
 
         public virtual void Awake()
@@ -17,7 +15,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             InventoryContent = Helper.FindChildWithName<Transform>(gameObject, "Content");
         }
 
-        public List<BaseInventoryUi> GetItems()
+        public List<InventoryUi> GetItems()
         {
             return Items;
         }
@@ -35,50 +33,50 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             RefreshNavigation();
         }
 
-        protected virtual BaseInventoryUi UpdateItem(MyGameObject item)
+        protected virtual InventoryUi UpdateItem(MyGameObject item)
         {
-            BaseInventoryUi foundItem = Items.FirstOrDefault(i => i.GetLinkedObject().Equals(item));
+            InventoryUi foundItem = Items.FirstOrDefault(i => i.GetLinkedObject().Equals(item));
             foundItem?.Update();
             RefreshNavigation();
             return foundItem;
         }
 
-        private BaseInventoryUi IsItemDisplayed(MyGameObject inventoryItem)
+        private InventoryUi IsItemDisplayed(MyGameObject inventoryItem)
         {
             return Items.FirstOrDefault(itemUi => itemUi.GetLinkedObject() == inventoryItem);
         }
 
-        public virtual BaseInventoryUi AddItem(MyGameObject item)
+        public virtual InventoryUi AddItem(MyGameObject item)
         {
-            BaseInventoryUi existingUi = IsItemDisplayed(item);
+            InventoryUi existingUi = IsItemDisplayed(item);
             if (existingUi != null)
             {
                 UpdateItem(item);
                 return null;
             }
-            BaseInventoryUi itemUi = item.CreateUi(InventoryContent);
+            InventoryUi itemUi = item.CreateUi(InventoryContent);
             Items.Add(itemUi);
             RefreshNavigation();
             return itemUi;
         }
 
-        public void AddPlainButton(BaseInventoryUi button)
+        public void AddPlainButton(InventoryUi button)
         {
             Items.Add(button);
         }
 
-        protected void Remove(BaseInventoryUi item)
+        protected void Remove(InventoryUi item)
         {
             if (!Items.Contains(item)) return;
             Items.Remove(item);
             RefreshNavigation();
         }
 
-        protected virtual List<BaseInventoryUi> GetNavigatableItems(List<BaseInventoryUi> items) => items;
+        protected virtual List<InventoryUi> GetNavigatableItems(List<InventoryUi> items) => items;
 
-        public virtual BaseInventoryUi RefreshNavigation()
+        public virtual InventoryUi RefreshNavigation()
         {
-            List<BaseInventoryUi> navigatableItems = GetNavigatableItems(Items);
+            List<InventoryUi> navigatableItems = GetNavigatableItems(Items);
             for (int i = 0; i < navigatableItems.Count; ++i)
             {
                 if (i <= 0) continue;
@@ -89,7 +87,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return navigatableItems.Count > 0 ? navigatableItems.Last() : null;
         }
 
-        public void SendToLast(BaseInventoryUi exploreButton)
+        public void SendToLast(InventoryUi exploreButton)
         {
             int index = Items.IndexOf(exploreButton);
             for (int i = index + 1; i < Items.Count; ++i)

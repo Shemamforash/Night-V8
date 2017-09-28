@@ -60,10 +60,12 @@ namespace SamsHelper.ReactiveUI.CustomTypes
                 if (value > _max)
                 {
                     _currentValue = _max;
+                    _onMax?.Invoke();
                 }
                 else if (value < _min)
                 {
                     _currentValue = _min;
+                    _onMin?.Invoke();
                 }
                 else
                 {
@@ -76,14 +78,12 @@ namespace SamsHelper.ReactiveUI.CustomTypes
         public bool ReachedMin()
         {
             bool reached = _currentValue <= _min;
-            _onMin?.Invoke();
             return reached;
         }
 
         public bool ReachedMax()
         {
             bool reached = _currentValue >= _max;
-            _onMax?.Invoke();
             return reached;
         }
 

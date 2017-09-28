@@ -17,11 +17,11 @@ namespace Game.World.Region
     public class RegionManager : Menu
     {
         private static readonly List<Region> UnexploredRegions = new List<Region>();
-        private static readonly List<RegionUi> DiscoveredRegions = new List<RegionUi>();
+        private static readonly List<InventoryUi> DiscoveredRegions = new List<InventoryUi>();
         private static readonly Dictionary<string, RegionTemplate> Templates = new Dictionary<string, RegionTemplate>();
         private static readonly int NoRegionsToGenerate = 10;
         private static GameObject _backButton;
-        private static BaseInventoryUi _exploreButton;
+        private static InventoryUi _exploreButton;
         private static TextMeshProUGUI _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
         private static Character _character;
         private static RegionManager _instance;
@@ -41,11 +41,10 @@ namespace Game.World.Region
             _regionInfoNameText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
             _regionInfoTypeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Type");
             _regionInfoDescriptionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Description");
-            _exploreButton = new BaseInventoryUi(null,_menuList.ContentTransform());
-            _exploreButton.SetDefaultText("Explore...");
-            _exploreButton.DisableBorder();
+            _exploreButton = new InventoryUi(null,_menuList.ContentTransform());
+            _exploreButton.SetCentralTextCallback(() => "Explore...");
             Helper.SetReciprocalNavigation(_exploreButton.GetNavigationButton(), _backButton);
-            _exploreButton.OnActionPress(delegate
+            _exploreButton.OnPress(delegate
             {
                 Region targetRegion = UnexploredRegions[Random.Range(0, UnexploredRegions.Count)];
                 StartExploration(delegate { DiscoverRegion(targetRegion); }, targetRegion);

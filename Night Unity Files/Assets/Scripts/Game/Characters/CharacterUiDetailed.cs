@@ -12,8 +12,6 @@ namespace Characters
     public class CharacterUiDetailed
     {
         public readonly GameObject GameObject, SimpleView, DetailedView, GearContainer;
-        public readonly Button EatButton;
-        public readonly Button DrinkButton;
         public readonly Button CollapseCharacterButton;
 
         public readonly TextMeshProUGUI CurrentActionText, DetailedCurrentActionText;
@@ -86,8 +84,6 @@ namespace Characters
             DetailedTraitText = FindInDetailedView<TextMeshProUGUI>("Trait");
             WeightText = FindInDetailedView<TextMeshProUGUI>("Weight");
 
-            EatButton = FindInDetailedView<Button>("Eat Button");
-            DrinkButton = FindInDetailedView<Button>("Drink Button");
 //            WeaponCard = Helper.FindChildWithName(DetailedView.transform, "Weapon Card").gameObject;
             ConditionsText = FindInDetailedView<TextMeshProUGUI>("Conditions");
 
@@ -129,7 +125,7 @@ namespace Characters
         {
             DetailedView.SetActive(true);
             SimpleView.SetActive(false);
-            EatButton.Select();
+            CollapseCharacterButton.Select();
         }
 
         public void SwitchToSimpleView()

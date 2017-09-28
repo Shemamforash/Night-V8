@@ -1,6 +1,4 @@
 ﻿using System;
-using Facilitating.UI.Inventory;
-using Game.World;
 using SamsHelper.ReactiveUI.CustomTypes;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
@@ -32,9 +30,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return _inventoryResourceType;
         }
 
-        public override BaseInventoryUi CreateUi(Transform parent)
+        public override InventoryUi CreateUi(Transform parent)
         {
-            return new InventoryResourceUi(this, parent);
+            InventoryUi ui = base.CreateUi(parent);
+            ui.SetRightTextCallback(() => "x" + Quantity());
+            return ui;
         }
         
         public void AddOnUpdate(Action<int> action)

@@ -12,6 +12,7 @@ namespace Game.World.Region
         private string _regionDescription;
         private readonly int _distance;
         private readonly RegionTemplate _template;
+        private bool _discovered;
 
 //        private List<Encounter> _enemyEncounters = new List<Encounter>();
 
@@ -36,10 +37,18 @@ namespace Game.World.Region
             float maximumCarryingCapacity = c.Attributes.RemainingCarryCapacity();
         }
 
-        public override BaseInventoryUi CreateUi(Transform parent)
+        public override InventoryUi CreateUi(Transform parent)
         {
-            return new RegionUi(this, parent);
+            InventoryUi ui = new InventoryUi(this, parent);
+            ui.OnPress(() => RegionManager.UpdateRegionInfo(this));
+            ui.SetCentralTextCallback(() => Name);
+            ui.SetLeftTextCallback(Type);
+            ui.SetRightTextCallback(() => Distance() + " hrs");
+            return ui;
         }
+
+        public bool Discover() => _discovered = true;
+        public bool Discovered() => _discovered;
         
         public string Description()
         {
