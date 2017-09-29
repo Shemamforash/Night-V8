@@ -53,10 +53,26 @@ namespace Game.World
                     if (i is Character) return;
                     visibleContents.Add(i);
                 });
-                popup.AddList(visibleContents, null);
+                popup.AddList(visibleContents, g =>
+                {
+                    GearItem item = g as GearItem;
+                    if (item != null)
+                    {
+                        ShowCharacterPopup(item.Name, item);
+                    }
+                });
                 popup.AddBackButton();
             });
             _instance = this;
+        }
+        
+        private void ShowCharacterPopup(string name, GearItem gearItem)
+        {
+            Popup popupWithList = new Popup("Equip " + name);
+            List<MyGameObject> characterGear = new List<MyGameObject>();
+            DesolationCharacterManager.Characters().ForEach(c => characterGear.Add(new CharacterGearComparison(c, gearItem)));
+            popupWithList.AddList(characterGear, null, true, true);
+            popupWithList.AddBackButton();
         }
 
         public void Start()

@@ -40,7 +40,7 @@ namespace Game.World.Region
         public override InventoryUi CreateUi(Transform parent)
         {
             InventoryUi ui = new InventoryUi(this, parent);
-            ui.OnPress(() => RegionManager.UpdateRegionInfo(this));
+            ui.OnHover(() => RegionManager.UpdateRegionInfo(this));
             ui.SetCentralTextCallback(() => Name);
             ui.SetLeftTextCallback(Type);
             ui.SetRightTextCallback(() => Distance() + " hrs");

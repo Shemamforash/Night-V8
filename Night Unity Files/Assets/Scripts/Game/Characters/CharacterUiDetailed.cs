@@ -1,17 +1,23 @@
+using System;
+using System.Collections.Generic;
 using Facilitating.MenuNavigation;
-using Facilitating.UI.Elements;
-using Game.Characters;
+using Game.Gear.Weapons;
+using Game.World;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.Characters;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Characters
+namespace Game.Characters
 {
     public class CharacterUiDetailed
     {
+        public readonly Character _character;
         public readonly GameObject GameObject, SimpleView, DetailedView, GearContainer;
         public readonly Button CollapseCharacterButton;
 
@@ -28,18 +34,52 @@ namespace Characters
 
         public class GearUi
         {
-            private readonly TextMeshProUGUI _type, _name, _summary;
-            private string _gearType;
+            private readonly TextMeshProUGUI _name, _summary;
+            private GearSubtype _gearType;
             public readonly EnhancedButton GearButton;
 
-            public GearUi(string gearType, GameObject gearContainer)
+            public GearUi(GearSubtype gearType, GameObject gearContainer, Character c)
             {
-                gearContainer = Helper.FindChildWithName(gearContainer, gearType);
+                gearContainer = Helper.FindChildWithName(gearContainer, gearType.ToString());
                 _gearType = gearType;
                 GearButton = gearContainer.GetComponent<EnhancedButton>();
-                _type = Helper.FindChildWithName<TextMeshProUGUI>(gearContainer, "Slot");
+                Helper.FindChildWithName<TextMeshProUGUI>(gearContainer, "Slot").text = _gearType.ToString();
                 _name = Helper.FindChildWithName<TextMeshProUGUI>(gearContainer, "Name");
                 _summary = Helper.FindChildWithName<TextMeshProUGUI>(gearContainer, "Summary");
+                GearButton.AddOnClick(() => OpenEquipMenu(c));
+            }
+
+            private void OpenEquipMenu(Character character)
+            {
+                Popup popup = new Popup("Equip " + _gearType);
+                List<MyGameObject> availableGear = new List<MyGameObject>();
+                List<MyGameObject> allGear = new List<MyGameObject>();
+                allGear.AddRange(character.Inventory.Contents());
+                allGear.AddRange(WorldState.HomeInventory.Contents());
+                foreach (MyGameObject item in allGear)
+                {
+                    GearItem gear = item as GearItem;
+                    if (gear != null && gear.GetGearType() == _gearType && !gear.Equipped)
+                    {
+                        availableGear.Add(gear);
+                    }
+                }
+                popup.AddList(availableGear, g => character.Equip((GearItem) g), true);
+                popup.AddBackButton();
+            }
+
+            public void Update(GearItem item)
+            {
+                if (item != null)
+                {
+                    _name.text = item.Name;
+                    _summary.text = item.GetSummary();
+                }
+                else
+                {
+                    _name.text = "- Not Equipped -";
+                    _summary.text = "--";
+                }
             }
         }
         
@@ -56,10 +96,11 @@ namespace Characters
 //            WeaponCriticalChanceText,
 //            WeaponAccuracyText;
 
-        public CharacterUiDetailed(GameObject gameObject)
+        public CharacterUiDetailed(Character character)
         {
-            GameObject = gameObject;
-            gameObject.SetActive(true);
+            _character = character; 
+            GameObject = _character.GameObject;
+            GameObject.SetActive(true);
             SimpleView = GameObject.transform.Find("Simple").gameObject;
             SimpleView.SetActive(true);
             DetailedView = GameObject.transform.Find("Detailed").gameObject;
@@ -94,9 +135,9 @@ namespace Characters
             StabilityTextDetail = FindInDetailedView<TextMeshProUGUI>("Stability");
 
             GearContainer = Helper.FindChildWithName(DetailedView, "Gear");
-            WeaponGearUi = new GearUi("Weapon", GearContainer);
-            ArmourGearUi = new GearUi("Armour", GearContainer);
-            AccessoryGearUi = new GearUi("Accessory", GearContainer);
+            WeaponGearUi = new GearUi(GearSubtype.Weapon, GearContainer, _character);
+            ArmourGearUi = new GearUi(GearSubtype.Armour, GearContainer, _character);
+            AccessoryGearUi = new GearUi(GearSubtype.Accessory, GearContainer, _character);
 
 //            WeaponNameTextSimple = FindInSimpleView<TextMeshProUGUI>("Weapon Name");
 //            WeaponNameTextDetailed = FindInDetailedView<TextMeshProUGUI>("Weapon Name");
@@ -124,6 +165,7 @@ namespace Characters
 
         public void SwitchToDetailedView()
         {
+            GameObject.GetComponent<LayoutElement>().preferredHeight = 200;
             DetailedView.SetActive(true);
             SimpleView.SetActive(false);
             CollapseCharacterButton.Select();
@@ -131,6 +173,7 @@ namespace Characters
 
         public void SwitchToSimpleView()
         {
+            GameObject.GetComponent<LayoutElement>().preferredHeight = 50;
             DetailedView.SetActive(false);
             SimpleView.SetActive(true);
             SimpleView.GetComponent<Button>().Select();

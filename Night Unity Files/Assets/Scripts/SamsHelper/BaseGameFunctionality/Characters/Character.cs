@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Characters;
 using Facilitating.Persistence;
 using Game.Characters;
 using Game.Characters.CharacterActions;
@@ -22,22 +21,22 @@ namespace SamsHelper.BaseGameFunctionality.Characters
     {
         public CharacterUiDetailed CharacterUiDetailed;
         public WeaponUiSimple WeaponUiSimple;
-        
+
         public DesolationCharacterAttributes Attributes;
-        
+
         public readonly StateMachine ActionStates = new StateMachine();
         public readonly CombatStateMachine CombatStates;
-        
-        private readonly Dictionary<GearSubtype, GearItem> _equippedGear = new Dictionary<GearSubtype, GearItem>();
+
+        public readonly Dictionary<GearSubtype, GearItem> EquippedGear = new Dictionary<GearSubtype, GearItem>();
         public Inventory CharacterInventory;
         private Weapon _weapon;
-        
+
         protected Character(string name, GameObject gameObject = null) : base(name, GameObjectType.Character, gameObject)
         {
             CombatStates = new CombatStateMachine(this);
             foreach (GearSubtype gearSlot in Enum.GetValues(typeof(GearSubtype)))
             {
-                _equippedGear[gearSlot] = null;
+                EquippedGear[gearSlot] = null;
             }
         }
 
@@ -61,9 +60,9 @@ namespace SamsHelper.BaseGameFunctionality.Characters
             return _weapon;
         }
 
-        protected virtual void SetCharacterUi(GameObject g)
+        protected virtual void SetCharacterUi()
         {
-            CharacterUiDetailed = new CharacterUiDetailed(g);
+            CharacterUiDetailed = new CharacterUiDetailed(this);
             WeaponUiSimple = new WeaponUiSimple(CharacterUiDetailed);
         }
 
@@ -88,11 +87,33 @@ namespace SamsHelper.BaseGameFunctionality.Characters
 
         public void Equip(GearItem gearItem)
         {
+            Inventory previousInventory = gearItem.Inventory;
+            GearItem previousEquipped = EquippedGear[gearItem.GetGearType()];
             if (!CharacterInventory.ContainsItem(gearItem))
             {
                 gearItem.MoveTo(CharacterInventory);
             }
-            _equippedGear[gearItem.GetGearType()] = gearItem;
+            if (previousEquipped != null)
+            {
+                previousEquipped.Equipped = false;
+                previousEquipped.MoveTo(previousInventory);
+            }
+            gearItem.Equipped = true;
+            EquippedGear[gearItem.GetGearType()] = gearItem;
+            switch (gearItem.GetGearType())
+            {
+                case GearSubtype.Weapon:
+                    CharacterUiDetailed.WeaponGearUi.Update(gearItem);
+                    break;
+                case GearSubtype.Armour:
+                    CharacterUiDetailed.ArmourGearUi.Update(gearItem);
+                    break;
+                case GearSubtype.Accessory:
+                    CharacterUiDetailed.AccessoryGearUi.Update(gearItem);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

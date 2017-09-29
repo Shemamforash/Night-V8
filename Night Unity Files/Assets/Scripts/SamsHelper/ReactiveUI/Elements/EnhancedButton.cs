@@ -75,6 +75,7 @@ namespace SamsHelper.ReactiveUI.Elements
         public void OnSelect(BaseEventData eventData)
         {
             UseSelectedColours();
+            OnSelectActions?.Invoke();
         }
 
         public void OnDeselect(BaseEventData eventData)
@@ -84,6 +85,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void OnPointerEnter(PointerEventData p)
         {
+            OnSelectActions?.Invoke();
             UseSelectedColours();
         }
 

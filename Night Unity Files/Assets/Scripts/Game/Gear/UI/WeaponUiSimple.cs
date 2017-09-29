@@ -1,5 +1,4 @@
-﻿using Characters;
-using Game.Gear.Weapons;
+﻿using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.ReactiveUI.CustomTypes;
 

@@ -11,6 +11,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public abstract class GearItem : InventoryItem
     {
         private readonly GearSubtype _gearType;
+        public bool Equipped { get; set; }
 
         protected GearItem(string name, float weight, GearSubtype gearSubtype) : base(name, GameObjectType.Gear, weight)
         {
@@ -39,30 +40,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             InventoryUi ui = base.CreateUi(parent);
             ui.SetRightButtonTextCallback(() => "Equip");
             ui.SetRightButtonActive(false);
-            ui.OnPress(ShowEquipPopup);
             ui.SetRightTextCallback(GetSummary);
             ui.SetLeftTextCallback(() => GetGearType().ToString());
             ui.SetCentralTextCallback(() => Name);
             return ui;
         }
         
-        private void ShowEquipPopup()
-        {
-            Popup popup = new Popup(Name);
-            popup.AddButton("Equip", ShowCharacterPopup);
-            popup.AddButton("Move", ShowCharacterPopup);
-            popup.AddBackButton();
-        }
-
-        private void ShowCharacterPopup()
-        {
-            Popup popupWithList = new Popup("Equip " + Name);
-            List<MyGameObject> characterGear = new List<MyGameObject>();
-            DesolationCharacterManager.Characters().ForEach(c => characterGear.Add(new CharacterGearComparison(c, this)));
-            popupWithList.AddList(characterGear, null, true, true);
-            popupWithList.AddBackButton();
-        }
-
         public void MoveTo(Inventory targetInventory)
         {
             Inventory.Move(this, targetInventory, 1);

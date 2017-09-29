@@ -1,5 +1,4 @@
-﻿using Characters;
-using Game.Combat;
+﻿using Game.Combat;
 using Game.World.Region;
 
 namespace Game.Characters.CharacterActions

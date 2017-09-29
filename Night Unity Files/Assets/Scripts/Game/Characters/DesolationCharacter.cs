@@ -17,18 +17,18 @@ namespace Game.Characters
     {
         public Region CurrentRegion;
         public TraitLoader.Trait CharacterClass, CharacterTrait;
-        private CharacterThoughts Thoughts = new CharacterThoughts();
+        private CharacterThoughts Thoughts;
 
         public DesolationCharacter(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait, GameObject gameObject) : base(name, gameObject)
         {
-            Thoughts.Start();
+            Thoughts = new CharacterThoughts(this);
             
             CharacterInventory = new DesolationInventory(name);
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
             Attributes = new DesolationCharacterAttributes(this);
             
-            SetCharacterUi(gameObject);
+            SetCharacterUi();
             
             ActionStates.AddState(new CollectResources(this));
             ActionStates.AddState(new CharacterActions.Combat(this));
@@ -93,17 +93,9 @@ namespace Game.Characters
             }
         }
 
-        public string GetConditions()
+        protected override void SetCharacterUi()
         {
-            string conditions = "";
-            conditions += Attributes.GetThirstStatus() + "(" + Mathf.Round(Attributes.Thirst.Val / 1.2f) / 10f + " litres/hr)\n";
-            conditions += Attributes.GetThirstStatus() + "(" + Mathf.Round(Attributes.Hunger.Val / 1.2f) / 10f + " meals/hr)";
-            return conditions;
-        }
-        
-        protected override void SetCharacterUi(GameObject g)
-        {
-            base.SetCharacterUi(g);
+            base.SetCharacterUi();
 
             CharacterUiDetailed.NameText.text = Name;
             CharacterUiDetailed.ClassTraitText.text = CharacterTrait.Name + " " + CharacterClass.Name;

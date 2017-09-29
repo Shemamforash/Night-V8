@@ -69,13 +69,13 @@ namespace Game.Characters
 #if UNITY_EDITOR
 //            TestCharacterGenerator();
 #endif
-            World.WorldState.HomeInventory.AddItem(GenerateDriver());
-            World.WorldState.HomeInventory.AddItem(GenerateCharacter());
+            WorldState.HomeInventory.AddItem(GenerateDriver());
+            WorldState.HomeInventory.AddItem(GenerateCharacter());
         }
 
         private static DesolationCharacter GenerateCharacterObject(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait)
         {
-            GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", GameObject.Find("Characters").transform);
+            GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", GameObject.Find("Character Section").transform.Find("Content").transform);
             DesolationCharacter newCharacter = new DesolationCharacter(name, characterClass, characterTrait, characterObject);
             CalculateAttributes(newCharacter);
             return newCharacter;

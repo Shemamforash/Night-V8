@@ -29,7 +29,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             CacheUiElements();
             Update();
         }
-        
+
         protected void CacheUiElements()
         {
             _rightText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Right Text");
@@ -87,7 +87,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 textMesh.text = textCallback();
             }
         }
-        
+
         public GameObject GetNavigationButton()
         {
             switch (Direction)
@@ -100,7 +100,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                     return _primaryButton.gameObject;
             }
         }
-        
+
         public void SetDirection(Direction direction)
         {
 //            Direction = direction;
@@ -118,14 +118,16 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         //Misc
         public void DisableBorder() => _primaryButton.DisableBorder();
+
         public void Destroy() => Object.Destroy(GameObject);
-        public void SetDestroyCondition(Func<bool> destroyCheck) => _destroyCheck = destroyCheck; 
+        public void SetDestroyCondition(Func<bool> destroyCheck) => _destroyCheck = destroyCheck;
         public void SetPreferredHeight(float height) => GameObject.GetComponent<LayoutElement>().preferredHeight = height;
-        
+
         //Button activation
         public void SetLeftButtonActive(bool active) => _leftButton.GetComponent<Button>().enabled = active;
+
         public void SetRightButtonActive(bool active) => _leftButton.GetComponent<Button>().enabled = active;
-        
+
         //Text Callbacks
         public void SetLeftButtonTextCallback(Func<string> a)
         {
@@ -136,7 +138,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Update();
         }
 
-        
+
         public void SetRightButtonTextCallback(Func<string> a)
         {
             if (a == null) return;
@@ -173,18 +175,19 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         //Button presses
         public void OnLeftButtonPress(Action a) => _leftButton.AddOnClick(() => a());
+
         public void OnLeftButtonHold(Action a, float duration) => _leftButton.AddOnHold(a, duration);
         public void OnRightButtonPress(Action a) => _rightButton.AddOnClick(() => a());
         public void OnRightButtonHold(Action a, float duration) => _rightButton.AddOnHold(a, duration);
         public void OnPress(Action a) => _primaryButton.AddOnClick(() => a());
         public void OnHold(Action a, float duration) => _primaryButton.AddOnHold(a, duration);
-        
+        public void OnHover(Action a) => _primaryButton.AddOnSelectEvent(a);
+
         //Getters
         public GameObject GetLeftButton() => _leftButton.gameObject;
+
         public GameObject GetRightButton() => _rightButton.gameObject;
         public MyGameObject GetLinkedObject() => LinkedObject;
         public GameObject GetGameObject() => GameObject;
-        
-     
     }
 }

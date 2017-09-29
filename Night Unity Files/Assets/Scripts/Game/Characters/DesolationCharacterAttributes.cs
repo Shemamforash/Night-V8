@@ -1,6 +1,5 @@
 using System;
 using System.Xml;
-using Characters;
 using Facilitating.Persistence;
 using Game.World;
 using Game.World.WorldEvents;
@@ -20,7 +19,7 @@ namespace Game.Characters
         private int[] _toleranceThresholds = { 0, 10, 25, 50, 75};
         private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
-
+        
         public readonly Attribute Strength = new Attribute(AttributeType.Strength, Random.Range(30, 70));
         public readonly Attribute Intelligence = new Attribute(AttributeType.Intelligence, Random.Range(30, 70));
         public readonly Attribute Endurance = new Attribute(AttributeType.Endurance, Random.Range(30, 70));
@@ -143,12 +142,12 @@ namespace Game.Characters
             return levels[_toleranceThresholds.Length];
         }
 
-        public string GetHungerStatus()
+        private string GetHungerStatus()
         {
             return GetAttributeStatus(Starvation, _starvationLevels);
         }
 
-        public string GetThirstStatus()
+        private string GetThirstStatus()
         {
             return GetAttributeStatus(Dehydration, _dehydrationLevels);
         }

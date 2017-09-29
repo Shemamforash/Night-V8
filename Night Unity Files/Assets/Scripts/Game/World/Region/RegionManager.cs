@@ -150,9 +150,16 @@ namespace Game.World.Region
 
         public static void UpdateRegionInfo(Region region)
         {
-            _regionInfoNameText.text = region.Name;
-            _regionInfoTypeText.text = region.Type();
-            _regionInfoDescriptionText.text = region.Description();
+            string nameText = "Undiscovered Region", typeText = "", descriptionText = "Explore to discover new regions";
+            if (region != null)
+            {
+                nameText = region.Name;
+                typeText = region.Type();
+                descriptionText = region.Description();
+            }
+            _regionInfoNameText.text = nameText;
+            _regionInfoTypeText.text = typeText;
+            _regionInfoDescriptionText.text = descriptionText;
         }
 
         public static void EnterManager(Character character)
@@ -161,7 +168,7 @@ namespace Game.World.Region
             MenuStateMachine.States.NavigateToState("Region Menu");
         }
 
-        public static void StartExploration(Action a, Region target)
+        private static void StartExploration(Action a, Region target)
         {
             Travel state = (Travel) _character.ActionStates.NavigateToState("Travel");
             state.AddOnExit(a);
@@ -169,7 +176,7 @@ namespace Game.World.Region
             ExitManager(true);
         }
 
-        public static void ExitManager(bool characterIsExploring)
+        private static void ExitManager(bool characterIsExploring)
         {
             if (!characterIsExploring)
             {

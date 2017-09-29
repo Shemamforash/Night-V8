@@ -1,5 +1,4 @@
 ﻿using System;
-using Characters;
 using Game.World;
 
 namespace Game.Characters.CharacterActions

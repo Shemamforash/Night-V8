@@ -274,7 +274,7 @@
               <e p="CharacterThoughts.cs" t="Include" />
               <e p="CharacterUiDetailed.cs" t="Include" />
               <e p="CharacterUiSimple.cs" t="Include" />
-              <e p="Condition.cs" t="Include" />
+              <e p="ConditionType.cs" t="Include" />
               <e p="DesolationCharacter.cs" t="Include" />
               <e p="DesolationCharacterAttributes.cs" t="Include" />
               <e p="DesolationCharacterGenerator.cs" t="Include" />

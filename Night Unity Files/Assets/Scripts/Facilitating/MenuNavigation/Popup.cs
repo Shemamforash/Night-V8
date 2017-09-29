@@ -79,7 +79,7 @@ namespace Facilitating.MenuNavigation
                 item.OnPress(() =>
                 {
                     if(autoDestruct) Destroy(closeAll);
-                    callback(item.GetLinkedObject());
+                    callback?.Invoke(item.GetLinkedObject());
                 });
             });
         }

@@ -1,60 +1,96 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Characters;
 using UnityEngine;
 
 namespace Game.Characters
 {
     public class CharacterThoughts
     {
-        private readonly Dictionary<Condition, Thought> _thoughtDictionary = new Dictionary<Condition, Thought>();
-        private readonly Dictionary<Condition, string> _thoughts = new Dictionary<Condition, string>();
+        private readonly Dictionary<ConditionType, Condition> _thoughtDictionary = new Dictionary<ConditionType, Condition>();
+        private readonly Character _character;
 
-        public void Start()
+        public CharacterThoughts(Character character)
         {
-            foreach (Condition c in Enum.GetValues(typeof(Condition)))
+            _character = character;
+            Start();
+        }
+        
+        private void Start()
+        {
+            foreach (ConditionType c in Enum.GetValues(typeof(ConditionType)))
             {
-                _thoughtDictionary[c] = new Thought(c);
-                _thoughts[c] = "";
+                if (c != ConditionType.Unknown)
+                {
+                    _thoughtDictionary[c] = new Condition(this, c);
+                }
             }
             Helper.ConstructObjectsFromCsv("Conditions", strings =>
             {
-                string conditionName = strings[0];
+                ConditionType conditionType = StringToConditionType(strings[0]);
                 string[] conditions = {strings[1], strings[2], strings[3], strings[4], strings[5]};
-                switch (conditionName)
+                if (conditionType != ConditionType.Unknown)
                 {
-                    case "Hunger":
-                        _thoughtDictionary[Condition.Hunger].SetStrings(conditions);
-                        break;
-                    case "Thirst":
-                        _thoughtDictionary[Condition.Thirst].SetStrings(conditions);
-                        break;
-                    default:
-                        Debug.Log("Unknown condition " + conditionName);
-                        break;
+                    _thoughtDictionary[conditionType].SetStrings(conditions);
+                }
+                else
+                {
+                    Debug.Log("Unknown condition type: " + conditionType);
                 }
             });
         }
 
-        public void GenerateThought(Condition t, Intensity intensity)
+        private static ConditionType StringToConditionType(string s)
         {
-            _thoughts[t] = _thoughtDictionary[t].GetThought(intensity);
+            foreach (ConditionType c in Enum.GetValues(typeof(ConditionType)))
+            {
+                if (c.ToString() == s)
+                {
+                    return c;
+                }
+            }
+            return ConditionType.Unknown;
         }
 
-        private class Thought
+        private void UpdateCharacterThoughts()
         {
-            private readonly Condition Type;
-            private readonly Dictionary<Intensity, string> _intensityStrings = new Dictionary<Intensity, string>();
-
-            public Thought(Condition type)
+            string thoughtString = "";
+            foreach (Condition condition in _thoughtDictionary.Values)
             {
-                Type = type;
+                string conditionString = condition.GetConditionString();
+                if (conditionString != "")
+                {
+                    thoughtString += condition.GetConditionString() + " ";    
+                }
+            }
+            _character.CharacterUiDetailed.ConditionsText.text = thoughtString;
+        }
+
+        private class Condition
+        {
+            private readonly ConditionType _type;
+            private readonly Dictionary<Intensity, string> _intensityStrings = new Dictionary<Intensity, string>();
+            private Intensity _intensity;
+            private readonly CharacterThoughts _thoughts;
+
+            public Condition(CharacterThoughts thoughts, ConditionType type)
+            {
+                _type = type;
+                _thoughts = thoughts;
             }
 
-            public string GetThought(Intensity intensity)
+            public void SetConditionLevel(Intensity intensity)
             {
-                return _intensityStrings[intensity];
+                _intensity = intensity;
+                _thoughts.UpdateCharacterThoughts();
+            }
+
+            public string GetConditionString()
+            {
+                return _intensityStrings[_intensity];
             }
 
             public void SetStrings(string[] strings)

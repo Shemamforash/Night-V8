@@ -1,5 +1,4 @@
-﻿using Characters;
-using Game.Combat;
+﻿using Game.Combat;
 
 namespace Game.Characters.CharacterActions
 {

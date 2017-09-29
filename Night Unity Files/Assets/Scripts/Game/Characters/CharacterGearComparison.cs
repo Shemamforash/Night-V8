@@ -22,7 +22,11 @@ namespace Game.Characters
             ui.SetLeftButtonTextCallback(() => GearItem.GetGearType().ToString());
             ui.SetLeftButtonActive(false);
             ui.SetLeftTextCallback(() => Character.Name);
-            ui.SetCentralTextCallback(() => GearItem.Name);
+            ui.SetCentralTextCallback(() =>
+            {
+                GearItem equippedGear = Character.EquippedGear[GearItem.GetGearType()];
+                return equippedGear == null ? "Nothing equipped" : equippedGear.Name;
+            });
             ui.SetRightTextCallback(() => "^");
             ui.SetRightButtonTextCallback(() => "Equip");
             ui.SetRightButtonActive(false);

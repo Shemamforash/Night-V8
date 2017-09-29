@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Characters;
 using Facilitating.MenuNavigation;
 using Facilitating.Persistence;
 using Game.World;
@@ -10,13 +9,14 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.Persistence;
+using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.Characters
 {
-    public class DesolationCharacterManager : DesolationInventory , IPersistenceTemplate
+    public class DesolationCharacterManager : DesolationInventory, IPersistenceTemplate
     {
         private static List<DesolationCharacter> _characters = new List<DesolationCharacter>();
         public static DesolationCharacter SelectedCharacter;
@@ -26,7 +26,7 @@ namespace Game.Characters
             TraitLoader.LoadTraits();
             SaveController.AddPersistenceListener(this);
         }
-        
+
         public void Start()
         {
             InputSpeaker.Instance().AddOnPressEvent(InputAxis.Cancel, ExitCharacter);
@@ -46,7 +46,7 @@ namespace Game.Characters
                 _characters.Add(item);
             }
         }
-        
+
         public static List<DesolationCharacter> Characters()
         {
             return _characters;
@@ -54,115 +54,62 @@ namespace Game.Characters
 
         private static void PopulateCharacterUi()
         {
-            GameObject inventoryObject = World.WorldState.GetInventoryButton();
+            GameObject inventoryObject = WorldState.GetInventoryButton();
 
-            float currentY = 1f;
             foreach (DesolationCharacter c in _characters)
             {
-                GameObject newCharacterUi = c.CharacterUiDetailed.GameObject;
-                RectTransform uiRect = newCharacterUi.GetComponent<RectTransform>();
-                uiRect.offsetMin = new Vector2(5, 5);
-                uiRect.offsetMax = new Vector2(-5, -5);
-                uiRect.anchorMin = new Vector2(0, currentY - 0.1f);
-                uiRect.anchorMax = new Vector2(1, currentY);
-                currentY -= 0.1f;
-                newCharacterUi.transform.localScale = new Vector2(1, 1);
                 Button b = c.CharacterUiDetailed.SimpleView.GetComponent<Button>();
                 b.onClick.AddListener(delegate { SelectCharacter(b); });
             }
-            for (int i = 0; i < _characters.Count; ++i)
+            for (int i = 1; i < _characters.Count; ++i)
             {
-                GameObject currentButton = _characters[i].CharacterUiDetailed.SimpleView;
-
-                if (i == 0)
-                {
-                    Helper.SetNavigation(currentButton, inventoryObject,
-                        Direction.Up);
-
-                    Helper.SetNavigation(inventoryObject, currentButton,
-                        Direction.Down);
-                }
-                else if (i > 0)
-                {
-                    GameObject previousButton = _characters[i - 1].CharacterUiDetailed.SimpleView;
-                    Helper.SetNavigation(currentButton, previousButton, Direction.Up);
-                    Helper.SetNavigation(previousButton, currentButton, Direction.Down);
-                }
+                GameObject previousButton = _characters[i - 1].CharacterUiDetailed.SimpleView;
+                Helper.SetReciprocalNavigation(_characters[i].CharacterUiDetailed.SimpleView, previousButton);
             }
-        }
-
-        private static DesolationCharacter FindCharacterFromGameObject(GameObject g)
-        {
-            return _characters.FirstOrDefault(c => c.CharacterUiDetailed.GameObject == g);
+            Helper.SetReciprocalNavigation(inventoryObject, _characters[0].CharacterUiDetailed.SimpleView);
         }
 
         public override MyGameObject RemoveItem(MyGameObject item)
         {
             base.RemoveItem(item);
             DesolationCharacter c = item as DesolationCharacter;
-            if (c != null)
+            if (c == null) return item;
+            _characters.Remove(c);
+            PopulateCharacterUi();
+            if (c.Name == "Driver")
             {
-                _characters.Remove(c);
-                PopulateCharacterUi();
-                if (c.Name == "Driver")
-                {
-                    MenuStateMachine.States.NavigateToState("Game Over Menu");
-                }
+                MenuStateMachine.States.NavigateToState("Game Over Menu");
             }
             return item;
         }
 
         private static void ChangeCharacterPanel(GameObject g, bool expand)
         {
-            bool foundCharacter = false;
-            float moveAmount = 0.3f;
-            if (expand)
-            {
-                moveAmount = -moveAmount;
-            }
             foreach (DesolationCharacter c in _characters)
             {
-                if (foundCharacter)
+                if (c.CharacterUiDetailed.GameObject != g) continue;
+                CharacterUiDetailed foundUiDetailed = c.CharacterUiDetailed;
+                if (expand)
                 {
-                    RectTransform rect = c.CharacterUiDetailed.GameObject.GetComponent<RectTransform>();
-                    rect.anchorMin = new Vector2(rect.anchorMin.x, rect.anchorMin.y + moveAmount);
-                    rect.anchorMax = new Vector2(rect.anchorMax.x, rect.anchorMax.y + moveAmount);
+                    foundUiDetailed.SwitchToDetailedView();
                 }
-                else if (c.CharacterUiDetailed.GameObject == g)
+                else
                 {
-                    foundCharacter = true;
-                    CharacterUiDetailed foundUiDetailed = c.CharacterUiDetailed;
-                    if (expand)
-                    {
-                        foundUiDetailed.SwitchToDetailedView();
-                    }
-                    else
-                    {
-                        foundUiDetailed.SwitchToSimpleView();
-                    }
+                    foundUiDetailed.SwitchToSimpleView();
                 }
             }
         }
 
         public static void ExitCharacter()
         {
-            if (SelectedCharacter != null)
-            {
-                SetDetailedViewActive(false, SelectedCharacter.GameObject.transform);
-                SelectedCharacter = null;
-            }
+            if (SelectedCharacter == null) return;
+            SetDetailedViewActive(false, SelectedCharacter.GameObject.transform);
+            SelectedCharacter = null;
         }
 
         private static void SetDetailedViewActive(bool active, Transform characterUiObject)
         {
-            if (active)
-            {
-                ChangeCharacterPanel(characterUiObject.gameObject, true);
-            }
-            else
-            {
-                ChangeCharacterPanel(characterUiObject.gameObject, false);
-            }
+            ChangeCharacterPanel(characterUiObject.gameObject, active);
         }
 
         public static void SelectCharacter(Selectable s)
@@ -180,18 +127,6 @@ namespace Game.Characters
 //            _actionSelectable = s;
 //            _actionContainer.gameObject.SetActive(true);
 //            _actionContainer.GetChild(0).GetComponent<Selectable>().Select();
-        }
-
-        public void CharacterEat()
-        {
-            DesolationCharacter current = FindCharacterFromGameObject(SelectedCharacter.GameObject.transform.parent.gameObject);
-            current.Attributes.Eat();
-        }
-
-        public void CharacterDrink()
-        {
-            DesolationCharacter current = FindCharacterFromGameObject(SelectedCharacter.GameObject.transform.parent.gameObject);
-            current.Attributes.Drink();
         }
 
         public void Load(XmlNode doc, PersistenceType saveType)

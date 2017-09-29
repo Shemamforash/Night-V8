@@ -1,5 +1,4 @@
-﻿using Characters;
-using SamsHelper.ReactiveUI.MenuSystem;
+﻿using SamsHelper.ReactiveUI.MenuSystem;
 
 namespace Game.Characters.CharacterActions
 {
