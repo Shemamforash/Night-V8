@@ -6,7 +6,6 @@
         Rifle,
         Shotgun,
         SMG,
-        LMG,
-        Explosive
+        LMG
     }
 }

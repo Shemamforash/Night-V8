@@ -27,7 +27,7 @@ namespace Game.Combat.CombatStates
 			if (inputAxis == InputAxis.Cancel)
 			{
 				CombatManager.CombatUi.EmptyMagazine();
-				new Cooldown(Weapon().FireRate, Exit, f => CombatManager.CombatUi.UpdateReloadTime(f));
+				new Cooldown(Weapon().WeaponAttributes.FireRate.CalculatedValue(), Exit, f => CombatManager.CombatUi.UpdateReloadTime(f));
 			}
 		}
 	}

@@ -1,61 +1,97 @@
 ﻿using System;
+using Game.Characters;
 using Game.Combat.Weapons;
 using Game.World;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI.CustomTypes;
 using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
     public class Weapon : GearItem
     {
-        public readonly float Damage, Accuracy, ReloadSpeed, CriticalChance, Handling, FireRate;
-        private readonly float _dps;
-        public readonly int Capacity;
-        private readonly WeaponBase _baseWeapon;
+        public readonly WeaponClass WeaponClass;
+        public readonly WeaponSubClass SubClass;
         public readonly bool Automatic;
-        private int _ammoInMagazine;
+        public readonly MyInt AmmoInMagazine = new MyInt(0);
+        public readonly MyInt Durability;
+        private const int MaxDurability = 20;
+        private bool _canEquip;
+        public readonly WeaponAttributes WeaponAttributes;
 
-        public Weapon(WeaponBase baseWeapon, bool automatic, string name, float weight) : base(name, weight, GearSubtype.Weapon)
+        public Weapon(WeaponClass weaponClass, WeaponSubClass subClass, bool automatic, float weight, int durability) : base(weaponClass.Type.ToString(), weight, GearSubtype.Weapon)
         {
-            _baseWeapon = baseWeapon;
+            WeaponClass = weaponClass;
+            SubClass = subClass;
             Automatic = automatic;
-            Damage = baseWeapon.GetAttributeValue(WeaponBase.Attributes.Damage);
-            Accuracy = baseWeapon.GetAttributeValue(WeaponBase.Attributes.Accuracy);
-            ReloadSpeed = baseWeapon.GetAttributeValue(WeaponBase.Attributes.ReloadSpeed);
-            CriticalChance = baseWeapon.GetAttributeValue(WeaponBase.Attributes.CriticalChance);
-            Handling = baseWeapon.GetAttributeValue(WeaponBase.Attributes.Handling);
-            FireRate = baseWeapon.GetAttributeValue(WeaponBase.Attributes.FireRate);
-            Capacity = (int) baseWeapon.GetAttributeValue(WeaponBase.Attributes.Capacity);
+
+            AmmoInMagazine.Max = subClass.Capacity;
+            Durability = new MyInt(durability, 0, MaxDurability);
+            Durability.OnMin(() => { _canEquip = false; });
 
             if (!automatic)
             {
-                Damage *= 2;
-                Capacity = (int) Mathf.Ceil(Capacity / 2f);
-                Accuracy *= 1.5f;
-                Mathf.Clamp(Accuracy, 0, 100);
-                ReloadSpeed /= 2f;
+//                Damage *= 2;
+//                AmmoInMagazine.Max = (int) Mathf.Ceil(AmmoInMagazine.Max / 2f);
+//                Accuracy *= 1.5f;
+//                Mathf.Clamp(Accuracy, 0, 100);
+//                ReloadSpeed /= 2f;
             }
-
-            float averageShotDamage = CriticalChance / 100 * Damage * 2 + (1 - CriticalChance / 100) * Damage;
-            float magazineDamage = Capacity * averageShotDamage;
-            float magazineDuration = Capacity / FireRate + ReloadSpeed;
-            _dps = magazineDamage / magazineDuration;
+            WeaponAttributes = new WeaponAttributes(this);
+#if UNITY_EDITOR
+            Print();
+#endif
             Reload();
             SetExtendedName(Name + (Automatic ? " (A)" : ""));
         }
 
+        private void Print()
+        {
+            Debug.Log(WeaponClass.Type + " " + SubClass.Name
+                      + "\nAutomatic:  " + Automatic
+                      + "\nDurability: " + Durability.Val
+                      + "\nAmmo Left:  " + AmmoInMagazine.Val
+                      + "\nDamage:     " + AttributeVal(AttributeType.Damage)
+                      + "\nAccuracy:   " + AttributeVal(AttributeType.Accuracy)
+                      + "\nReload:     " + AttributeVal(AttributeType.ReloadSpeed)
+                      + "\nCritChance: " + AttributeVal(AttributeType.CriticalChance)
+                      + "\nHandling:   " + AttributeVal(AttributeType.Handling)
+                      + "\nFire Rate:  " + AttributeVal(AttributeType.FireRate)
+                      + "\nCapacity:   " + AttributeVal(AttributeType.Capacity)
+                      + "\nPellets:    " + AttributeVal(AttributeType.Pellets) + "\n\n");
+        }
+
+        public float AttributeVal(AttributeType attributeType)
+        {
+            return WeaponAttributes.Get(attributeType).CalculatedValue();
+        }
+
+        public void IncreaseDurability()
+        {
+            _canEquip = true;
+            ++Durability.Val;
+            WeaponAttributes.RecalculateAttributeValues();
+        }
+
+        public void DecreaseDurability()
+        {
+            --Durability.Val;
+            WeaponAttributes.RecalculateAttributeValues();
+        }
+
         public string GetWeaponType()
         {
-            return _baseWeapon.Type.ToString();
+            return WeaponClass.Type.ToString();
         }
-        
+
         public bool Fire()
         {
-            if (_ammoInMagazine > 0)
+            if (AmmoInMagazine > 0)
             {
-                --_ammoInMagazine;
+                --AmmoInMagazine.Val;
                 return true;
             }
             return false;
@@ -63,18 +99,18 @@ namespace Game.Gear.Weapons
 
         public void Reload()
         {
-            float ammoAvailable = World.WorldState.Home().DecrementResource(InventoryResourceType.Ammo, Capacity);
-            _ammoInMagazine += (int) ammoAvailable;
+            float ammoAvailable = WorldState.Home().DecrementResource(InventoryResourceType.Ammo, (int) WeaponAttributes.Capacity.CalculatedValue());
+            AmmoInMagazine.Val += (int) ammoAvailable;
         }
 
         public int GetRemainingAmmo()
         {
-            return _ammoInMagazine;
+            return AmmoInMagazine.Val;
         }
 
         public override string GetSummary()
         {
-            return Helper.Round(_dps, 1) + "DPS";
+            return Helper.Round(WeaponAttributes.DPS(), 1) + "DPS";
         }
     }
 }

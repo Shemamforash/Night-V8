@@ -23,7 +23,7 @@ namespace Game.Combat
             CombatUi.CharacterName.text = _scenario.Character.Name;
             CombatUi.WeaponNameText.text = _scenario.Character.GetWeapon().Name;
 
-            CombatUi.ResetMagazine(_scenario.Character.GetWeapon().Capacity);
+            CombatUi.ResetMagazine(_scenario.Character.GetWeapon().WeaponAttributes.Capacity.Val);
             CombatUi.UpdateMagazine(_scenario.Character.GetWeapon().GetRemainingAmmo());
         }
 

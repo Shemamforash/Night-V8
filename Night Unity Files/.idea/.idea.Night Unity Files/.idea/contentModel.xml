@@ -7,82 +7,6 @@
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="ArticyContent" t="Include">
-          <e p="Generated" t="Include">
-            <e p="ArticyGlobalVariables.cs" t="Include" />
-            <e p="ArticyScriptFragments.cs" t="Include" />
-            <e p="ArticyValues.cs" t="Include" />
-            <e p="Asset.cs" t="Include" />
-            <e p="Comment.cs" t="Include" />
-            <e p="Condition.cs" t="Include" />
-            <e p="Dialogue.cs" t="Include" />
-            <e p="DialogueFragment.cs" t="Include" />
-            <e p="Document.cs" t="Include" />
-            <e p="Entity.cs" t="Include" />
-            <e p="EnumValue.cs" t="Include" />
-            <e p="EnvironmentTemplate.cs" t="Include" />
-            <e p="EnvironmentTemplate_02.cs" t="Include" />
-            <e p="EnvironmentTemplate_03.cs" t="Include" />
-            <e p="Features" t="Include">
-              <e p="Basic_WeaponFeature.cs" t="Include" />
-              <e p="Basic_WeaponFeatureConstraint.cs" t="Include" />
-              <e p="EnvironmentFeature.cs" t="Include" />
-              <e p="EnvironmentFeatureConstraint.cs" t="Include" />
-              <e p="IObjectWithFeatureBasic_Weapon.cs" t="Include" />
-              <e p="IObjectWithFeatureEnvironment.cs" t="Include" />
-              <e p="IObjectWithFeatureJournalEntry.cs" t="Include" />
-              <e p="IObjectWithFeatureWeather.cs" t="Include" />
-              <e p="JournalEntryFeature.cs" t="Include" />
-              <e p="JournalEntryFeatureConstraint.cs" t="Include" />
-              <e p="WeatherFeature.cs" t="Include" />
-              <e p="WeatherFeatureConstraint.cs" t="Include" />
-            </e>
-            <e p="FlowFragment.cs" t="Include" />
-            <e p="GlobalVariablesNamespaces.cs" t="Include" />
-            <e p="Hub.cs" t="Include" />
-            <e p="IncomingConnection.cs" t="Include" />
-            <e p="InputPin.cs" t="Include" />
-            <e p="Instruction.cs" t="Include" />
-            <e p="IScriptMethodProvider.cs" t="Include" />
-            <e p="Journal_Entry_Template.cs" t="Include" />
-            <e p="Jump.cs" t="Include" />
-            <e p="Link.cs" t="Include" />
-            <e p="Location.cs" t="Include" />
-            <e p="LocationAnchor.cs" t="Include" />
-            <e p="LocationAnchorSize.cs" t="Include" />
-            <e p="LocationImage.cs" t="Include" />
-            <e p="LocationText.cs" t="Include" />
-            <e p="OutgoingConnection.cs" t="Include" />
-            <e p="OutlineStyle.cs" t="Include" />
-            <e p="OutputPin.cs" t="Include" />
-            <e p="Path.cs" t="Include" />
-            <e p="PathCaps.cs" t="Include" />
-            <e p="SelectabilityModes.cs" t="Include" />
-            <e p="ShapeType.cs" t="Include" />
-            <e p="Spot.cs" t="Include" />
-            <e p="Templates" t="Include">
-              <e p="EnvironmentTemplate_02Template.cs" t="Include" />
-              <e p="EnvironmentTemplate_02TemplateConstraint.cs" t="Include" />
-              <e p="EnvironmentTemplate_03Template.cs" t="Include" />
-              <e p="EnvironmentTemplate_03TemplateConstraint.cs" t="Include" />
-              <e p="EnvironmentTemplateTemplate.cs" t="Include" />
-              <e p="EnvironmentTemplateTemplateConstraint.cs" t="Include" />
-              <e p="Journal_Entry_TemplateTemplate.cs" t="Include" />
-              <e p="Journal_Entry_TemplateTemplateConstraint.cs" t="Include" />
-            </e>
-            <e p="TextObject.cs" t="Include" />
-            <e p="UserFolder.cs" t="Include" />
-            <e p="VisibilityModes.cs" t="Include" />
-            <e p="WeaponRarity.cs" t="Include" />
-            <e p="Zone.cs" t="Include" />
-          </e>
-        </e>
-        <e p="ArticyImporter" t="Include">
-          <e p="Helper" t="Include">
-            <e p="ArticyDebugBranch.cs" t="Include" />
-            <e p="ArticyDebugFlowPlayer.cs" t="Include" />
-          </e>
-        </e>
         <e p="GameSettings.xml" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Plugins" t="Include">
@@ -323,10 +247,10 @@
               </e>
               <e p="Weapons" t="Include">
                 <e p="Weapon.cs" t="Include" />
-                <e p="WeaponBase.cs" t="Include" />
+                <e p="WeaponAttributes.cs" t="Include" />
                 <e p="WeaponClass.cs" t="Include" />
                 <e p="WeaponGenerator.cs" t="Include" />
-                <e p="WeaponRarity.cs" t="Include" />
+                <e p="WeaponSubClass.cs" t="Include" />
                 <e p="WeaponType.cs" t="Include" />
               </e>
             </e>
@@ -356,11 +280,14 @@
           <e p="SamsHelper" t="Include">
             <e p="BaseGameFunctionality" t="Include">
               <e p="Basic" t="Include">
-                <e p="Attribute.cs" t="Include" />
                 <e p="AttributeContainer.cs" t="Include" />
-                <e p="AttributeModifier.cs" t="Include" />
+                <e p="AttributesModifier.cs" t="Include" />
                 <e p="AttributeType.cs" t="Include" />
+                <e p="FloatAttribute.cs" t="Include" />
+                <e p="IAttribute.cs" t="Include" />
+                <e p="IntAttribute.cs" t="Include" />
                 <e p="MyGameObject.cs" t="Include" />
+                <e p="ScaleableValue.cs" t="Include" />
               </e>
               <e p="Characters" t="Include">
                 <e p="Character.cs" t="Include" />
@@ -402,7 +329,6 @@
               <e p="CustomTypes" t="Include">
                 <e p="MyFloat.cs" t="Include" />
                 <e p="MyInt.cs" t="Include" />
-                <e p="MyString.cs" t="Include" />
                 <e p="MyValue.cs" t="Include" />
               </e>
               <e p="Elements" t="Include">

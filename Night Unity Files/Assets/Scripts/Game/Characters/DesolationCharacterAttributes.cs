@@ -9,7 +9,6 @@ using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.CustomTypes;
 using TMPro;
 using UnityEngine;
-using Attribute = SamsHelper.BaseGameFunctionality.Basic.Attribute;
 using Random = UnityEngine.Random;
 
 namespace Game.Characters
@@ -20,22 +19,22 @@ namespace Game.Characters
         private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
         
-        public readonly Attribute Strength = new Attribute(AttributeType.Strength, Random.Range(30, 70));
-        public readonly Attribute Intelligence = new Attribute(AttributeType.Intelligence, Random.Range(30, 70));
-        public readonly Attribute Endurance = new Attribute(AttributeType.Endurance, Random.Range(30, 70));
-        public readonly Attribute Stability = new Attribute(AttributeType.Stability, Random.Range(30, 70));
-        public readonly Attribute Starvation = new Attribute(AttributeType.Starvation, 0, 0, 50);
+        public readonly IntAttribute Strength = new IntAttribute(AttributeType.Strength, Random.Range(30, 70));
+        public readonly IntAttribute Intelligence = new IntAttribute(AttributeType.Intelligence, Random.Range(30, 70));
+        public readonly IntAttribute Endurance = new IntAttribute(AttributeType.Endurance, Random.Range(30, 70));
+        public readonly IntAttribute Stability = new IntAttribute(AttributeType.Stability, Random.Range(30, 70));
+        public readonly IntAttribute Starvation = new IntAttribute(AttributeType.Starvation, 0, 0, 50);
 
-        public readonly Attribute Dehydration = new Attribute(AttributeType.Dehydration, 0, 0, 50);
+        public readonly IntAttribute Dehydration = new IntAttribute(AttributeType.Dehydration, 0, 0, 50);
 
         /*instead of consuming x food or water every minutes, consume 1 food or water every x minutes
         use the max value of the hunger and thirst to keep track of the interval at which eating or drinking should occur
         consume 1 food or water whenever the current value reaches the max value, then reset
         this allows the duration to easily change depending on temperature, modifiers, etc.
         */
-        public readonly Attribute Hunger = new Attribute(AttributeType.Hunger, 0, 0, 12);
+        public readonly IntAttribute Hunger = new IntAttribute(AttributeType.Hunger, 0, 0, 12);
 
-        public readonly Attribute Thirst = new Attribute(AttributeType.Thirst, 0, 0, 12);
+        public readonly IntAttribute Thirst = new IntAttribute(AttributeType.Thirst, 0, 0, 12);
         public WeightCategory Weight;
         private readonly DesolationCharacter _character;
         private bool _starving, _dehydrated;
@@ -75,7 +74,7 @@ namespace Game.Characters
             return Intensity.None;
         }
         
-        private void SetConsumptionEvents(Attribute need, Attribute tolerance, InventoryResource resource)
+        private void SetConsumptionEvents(IntAttribute need, IntAttribute tolerance, InventoryResource resource)
         {
             need.OnMax(() =>
             {
@@ -88,7 +87,7 @@ namespace Game.Characters
             tolerance.OnMax(_character.Kill);
         }
 
-        private void BindUiToAttribute(Attribute a, TextMeshProUGUI simpleText, TextMeshProUGUI detailText)
+        private void BindUiToAttribute(IntAttribute a, TextMeshProUGUI simpleText, TextMeshProUGUI detailText)
         {
             a.AddOnValueChange(delegate(int f)
             {
@@ -147,9 +146,9 @@ namespace Game.Characters
             }
         }
 
-        public string GetAttributeStatus(Attribute attribute, string[] levels)
+        public string GetAttributeStatus(IntAttribute intAttribute, string[] levels)
         {
-            float tolerancePercentage = attribute.AsPercent();
+            float tolerancePercentage = intAttribute.AsPercent();
             for(int i = 1; i < _toleranceThresholds.Length; ++i)
             {
                 int threshold = _toleranceThresholds[i];
@@ -204,13 +203,13 @@ namespace Game.Characters
             Weight = (WeightCategory) SaveController.ParseIntFromSubNode(weightNode);
         }
 
-        private void LoadAttribute(XmlNode root, string attributeName, Attribute attribute)
+        private void LoadAttribute(XmlNode root, string attributeName, IntAttribute intAttribute)
         {
             XmlNode attributeNode = root.SelectSingleNode(attributeName);
             XmlNode maxNode = attributeNode.SelectSingleNode("Max");
-            attribute.Max = SaveController.ParseIntFromSubNode(maxNode);
+            intAttribute.Max = SaveController.ParseIntFromSubNode(maxNode);
             XmlNode valNode = attributeNode.SelectSingleNode("Val");
-            attribute.Val = SaveController.ParseIntFromSubNode(valNode);
+            intAttribute.Val = SaveController.ParseIntFromSubNode(valNode);
         }
 
         public void Save(XmlNode doc, PersistenceType saveType)
@@ -228,11 +227,11 @@ namespace Game.Characters
             SaveController.CreateNodeAndAppend("Weight", doc, (int) Weight);
         }
 
-        private void SaveAttribute(XmlNode root, string attributeName, Attribute attribute)
+        private void SaveAttribute(XmlNode root, string attributeName, IntAttribute intAttribute)
         {
             XmlNode attributeNode = SaveController.CreateNodeAndAppend(attributeName, root);
-            SaveController.CreateNodeAndAppend("Val", attributeNode, attribute.Max);
-            SaveController.CreateNodeAndAppend("Max", attributeNode, attribute.Val);
+            SaveController.CreateNodeAndAppend("Val", attributeNode, intAttribute.Max);
+            SaveController.CreateNodeAndAppend("Max", attributeNode, intAttribute.Val);
         }
     }
 }

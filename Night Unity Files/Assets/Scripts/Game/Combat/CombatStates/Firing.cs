@@ -1,4 +1,5 @@
-﻿using SamsHelper.Input;
+﻿using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Input;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ namespace Game.Combat.CombatStates
                     CombatMachine.DecreaseAim();
                     if (Weapon().Automatic)
                     {
-                        _timeSinceLastFire = 1f / Weapon().FireRate;
+                        _timeSinceLastFire = 1f / Weapon().AttributeVal(AttributeType.FireRate);
                     }
                     else
                     {

@@ -13,7 +13,7 @@ namespace Game.Characters
         private readonly MyFloat _weaponHandling = new MyFloat();
         private readonly MyFloat _weaponCriticalChance = new MyFloat();
         private readonly MyFloat _weaponAccuracy = new MyFloat();
-        private readonly MyString _weaponName = new MyString();
+        private readonly string _weaponName;
 
         public WeaponUiSimple(CharacterUiDetailed characterUiDetailed)
         {
@@ -33,14 +33,14 @@ namespace Game.Characters
         
         public void Update(Weapon weapon)
         {
-            _weaponName.Text = weapon.Name;
-            _weaponDamage.Val = weapon.Damage;
-            _weaponAccuracy.Val = weapon.Accuracy;
-            _weaponCapacity.Val = weapon.Capacity;
-            _weaponCriticalChance.Val = weapon.CriticalChance;
-            _weaponFireRate.Val = weapon.FireRate;
-            _weaponHandling.Val = weapon.Handling;
-            _weaponReloadSpeed.Val = weapon.ReloadSpeed;
+//            _weaponName.Text = weapon.Name;
+//            _weaponDamage.Val = weapon.Damage;
+//            _weaponAccuracy.Val = weapon.Accuracy;
+//            _weaponCapacity.Val = weapon.Capacity;
+//            _weaponCriticalChance.Val = weapon.CriticalChance;
+//            _weaponFireRate.Val = weapon.FireRate;
+//            _weaponHandling.Val = weapon.Handling;
+//            _weaponReloadSpeed.Val = weapon.ReloadSpeed;
         }
     }
 }

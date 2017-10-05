@@ -1,5 +1,5 @@
-﻿using Game.Characters;
-using Game.Combat.CombatStates;
+﻿using Game.Combat.CombatStates;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI.CustomTypes;
@@ -29,7 +29,7 @@ namespace Game.Combat
         
         public void IncreaseAim()
         {
-            float amount = 5f + Character.GetWeapon().Handling / 10f;
+            float amount = 5f + Character.GetWeapon().AttributeVal(AttributeType.Handling) / 10f;
             amount *= Time.deltaTime;
             _aimAmount.Val = _aimAmount.Val + amount;
 //            CombatUi.UpdateAimSlider(_aimAmount.Val);
@@ -37,7 +37,7 @@ namespace Game.Combat
 
         public void DecreaseAim()
         {
-            float amount = 100f / Character.GetWeapon().Capacity;
+            float amount = 100f / Character.GetWeapon().AttributeVal(AttributeType.Capacity);
             _aimAmount.Val = _aimAmount.Val - amount;
 //            CombatUi.UpdateAimSlider(_aimAmount.Val);
         }

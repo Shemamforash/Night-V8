@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Xml;
 using Game.Combat.Weapons;
 using Game.World.WorldEvents;
+using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
     public class WeaponGenerator : MonoBehaviour
     {
-        private static readonly Dictionary<WeaponType, Dictionary<WeaponRarity, WeaponBase>> WeaponDictionary =
-            new Dictionary<WeaponType, Dictionary<WeaponRarity, WeaponBase>>();
+        private static readonly Dictionary<WeaponType, WeaponClass> WeaponDictionary =
+            new Dictionary<WeaponType, WeaponClass>();
 
         public void Awake()
         {
@@ -24,54 +25,49 @@ namespace Game.Gear.Weapons
             weaponXml.LoadXml(weaponFile.text);
             foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
             {
-                Dictionary<WeaponRarity, WeaponBase> rarityWeaponDictionary =
-                    new Dictionary<WeaponRarity, WeaponBase>();
-                WeaponDictionary[type] = rarityWeaponDictionary;
                 XmlNode classNode = weaponXml.SelectSingleNode("//Class[@name='" + type + "']");
-                foreach (WeaponRarity rarity in Enum.GetValues(typeof(WeaponRarity)))
+                bool canBeManual = classNode.Attributes["manualAllowed"].Value == "True";
+                
+                WeaponClass baseWeapon = new WeaponClass(type, canBeManual);
+                WeaponDictionary[type] = baseWeapon;
+
+                XmlNode baseStats = classNode.SelectSingleNode("BaseStats");
+                SetScaleableValue(ref baseWeapon.Damage, baseStats.SelectSingleNode("Damage"));
+                SetScaleableValue(ref baseWeapon.Accuracy, baseStats.SelectSingleNode("Accuracy"));
+                SetScaleableValue(ref baseWeapon.FireRate, baseStats.SelectSingleNode("FireRate"));
+                SetScaleableValue(ref baseWeapon.Handling, baseStats.SelectSingleNode("Handling"));
+                SetScaleableValue(ref baseWeapon.ReloadSpeed, baseStats.SelectSingleNode("ReloadSpeed"));
+                SetScaleableValue(ref baseWeapon.CriticalChance, baseStats.SelectSingleNode("CriticalChance"));
+                
+                foreach (XmlNode subtypeNode in classNode.SelectNodes("Subtype"))
                 {
-                    XmlNode rarityNode = classNode.SelectSingleNode(rarity.ToString());
-                    string suffix = rarityNode.SelectSingleNode("Suffix").InnerText;
-                    XmlNode statsNode = rarityNode.SelectSingleNode("BaseStats");
-
-
-                    WeaponBase baseWeapon = new WeaponBase(type, rarity, suffix);
-                    ReadMinMaxValuesFromLine(baseWeapon, WeaponBase.Attributes.Damage, statsNode);
-                    ReadMinMaxValuesFromLine(baseWeapon, WeaponBase.Attributes.Accuracy, statsNode);
-                    ReadMinMaxValuesFromLine(baseWeapon, WeaponBase.Attributes.FireRate, statsNode);
-                    ReadMinMaxValuesFromLine(baseWeapon, WeaponBase.Attributes.Handling, statsNode);
-                    ReadMinMaxValuesFromLine(baseWeapon, WeaponBase.Attributes.ReloadSpeed, statsNode);
-                    ReadMinMaxValuesFromLine(baseWeapon, WeaponBase.Attributes.Capacity, statsNode);
-                    ReadMinMaxValuesFromLine(baseWeapon, WeaponBase.Attributes.CriticalChance, statsNode);
-
-                    rarityWeaponDictionary[rarity] = baseWeapon;
+                    string subtypeName = subtypeNode.Attributes?["name"].Value;
+                    int noPellets = int.Parse(subtypeNode.SelectSingleNode("Pellets").InnerText);
+                    int capacity = int.Parse(subtypeNode.SelectSingleNode("Capacity").InnerText);
+                    AttributesModifier modifier = new AttributesModifier();
+                    ReadModifierValue(AttributeType.Damage, subtypeNode, modifier);
+                    ReadModifierValue(AttributeType.Accuracy, subtypeNode, modifier);
+                    ReadModifierValue(AttributeType.FireRate, subtypeNode, modifier);
+                    ReadModifierValue(AttributeType.Handling, subtypeNode, modifier);
+                    ReadModifierValue(AttributeType.ReloadSpeed, subtypeNode, modifier);
+                    ReadModifierValue(AttributeType.CriticalChance, subtypeNode, modifier);
+                    baseWeapon.AddSubtype(new WeaponSubClass(subtypeName, capacity, noPellets, modifier));
                 }
             }
         }
 
-        private void ReadMinMaxValuesFromLine(WeaponBase weapon,
-            WeaponBase.Attributes attribute, XmlNode attributeNode)
+        private void ReadModifierValue(AttributeType attributeType, XmlNode node, AttributesModifier modifier)
         {
-            string[] text = attributeNode.SelectSingleNode(attribute.ToString()).InnerText.Split('-');
-            float min = 0, max = 10;
-            if (text.Length == 2)
-            {
-                if (text[0] != "")
-                {
-                    min = float.Parse(text[0]);
-                }
-                if (text[1] != "")
-                {
-                    max = float.Parse(text[1]);
-                }
-                else
-                {
-                    max = min + 10;
-                }
-            }
-            weapon.SetAttribute(attribute, min, max);
+            modifier.AddModifier(attributeType, float.Parse(node.SelectSingleNode(attributeType.ToString()).InnerText));
         }
 
+        private void SetScaleableValue(ref ScaleableValue value, XmlNode attributeNode)
+        {
+            float xCoefficient = float.Parse(attributeNode.SelectSingleNode("XCoefficient").InnerText);
+            float intercept = float.Parse(attributeNode.SelectSingleNode("Intercept").InnerText);
+            value = new ScaleableValue(xCoefficient, intercept);
+        }
+        
         public static Weapon GenerateWeapon()
         {
             bool automatic = true;
@@ -85,12 +81,10 @@ namespace Game.Gear.Weapons
 //                automatic = false;
 //            }
 #endif
-            Array rarities = Enum.GetValues(typeof(WeaponRarity));
-            WeaponRarity weaponRarity =
-                (WeaponRarity) rarities.GetValue(UnityEngine.Random.Range(0, rarities.Length));
-            WeaponBase baseWeapon = WeaponDictionary[weaponType][weaponRarity];
+            WeaponClass weaponClass = WeaponDictionary[weaponType];
+            WeaponSubClass weaponSubClass = weaponClass.GetSubtype();
 
-            if (weaponType == WeaponType.Pistol || weaponType == WeaponType.Rifle)
+            if (weaponClass.CanBeManual)
             {
                 if (UnityEngine.Random.Range(0.0f, 1.0f) > 0.6f)
                 {
@@ -98,14 +92,14 @@ namespace Game.Gear.Weapons
                 }
             }
 
-            string weaponName = GenerateName(baseWeapon);
+            string weaponName = GenerateName(weaponClass, weaponSubClass);
             WorldEventManager.GenerateEvent(new WeaponFindEvent(weaponName));
-            return new Weapon(baseWeapon, automatic, weaponName, 10f);
+            return new Weapon(weaponClass, weaponSubClass, automatic, 10f, 20);
         }
 
-        private static string GenerateName(WeaponBase baseWeapon)
+        private static string GenerateName(WeaponClass weaponClass, WeaponSubClass weaponSubClass)
         {
-            string name = baseWeapon.Rarity + " " + baseWeapon.Suffix;
+            string name = weaponClass.Type + " " + weaponSubClass.Name;
             return name;
         }
     }

@@ -9,6 +9,15 @@
         Thirst,
         Hunger,
         Starvation,
-        Dehydration
+        Dehydration,
+        
+        Damage,
+        Accuracy,
+        FireRate,
+        ReloadSpeed,
+        CriticalChance,
+        Handling,
+        Capacity,
+        Pellets
     }
 }

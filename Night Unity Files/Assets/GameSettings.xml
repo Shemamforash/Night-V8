@@ -9,20 +9,20 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>89</Val>
-          <Max>89</Max>
+          <Val>95</Val>
+          <Max>95</Max>
         </Strength>
         <Endurance>
-          <Val>51</Val>
-          <Max>51</Max>
+          <Val>68</Val>
+          <Max>68</Max>
         </Endurance>
         <Stability>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>23</Val>
+          <Max>23</Max>
         </Stability>
         <Intelligence>
-          <Val>21</Val>
-          <Max>21</Max>
+          <Val>22</Val>
+          <Max>22</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -34,11 +34,11 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>9</Max>
+          <Max>1</Max>
         </Hunger>
         <Thirst>
           <Val>12</Val>
-          <Max>9</Max>
+          <Max>1</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
@@ -47,20 +47,20 @@
       <Name>Rev</Name>
       <Attributes>
         <Strength>
-          <Val>87</Val>
-          <Max>87</Max>
+          <Val>113</Val>
+          <Max>113</Max>
         </Strength>
         <Endurance>
-          <Val>34</Val>
-          <Max>34</Max>
+          <Val>48</Val>
+          <Max>48</Max>
         </Endurance>
         <Stability>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>22</Val>
+          <Max>22</Max>
         </Stability>
         <Intelligence>
-          <Val>15</Val>
-          <Max>15</Max>
+          <Val>19</Val>
+          <Max>19</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -72,13 +72,13 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>9</Max>
+          <Max>1</Max>
         </Hunger>
         <Thirst>
           <Val>12</Val>
-          <Max>9</Max>
+          <Max>1</Max>
         </Thirst>
-        <Weight>3</Weight>
+        <Weight>2</Weight>
       </Attributes>
     </Character>
   </CharacterManager>

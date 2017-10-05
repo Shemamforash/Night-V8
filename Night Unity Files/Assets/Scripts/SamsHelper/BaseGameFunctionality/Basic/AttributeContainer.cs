@@ -6,8 +6,9 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public abstract class AttributeContainer : IPersistenceTemplate
     {
-        private Dictionary<AttributeType, Attribute> _attributes = new Dictionary<AttributeType, Attribute>();
-        
+        private readonly Dictionary<AttributeType, IntAttribute> _intAttributes = new Dictionary<AttributeType, IntAttribute>();
+        private readonly Dictionary<AttributeType, FloatAttribute> _floatAttributes = new Dictionary<AttributeType, FloatAttribute>();
+
         public virtual void Load(XmlNode doc, PersistenceType saveType)
         {
             throw new System.NotImplementedException();
@@ -18,23 +19,33 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             throw new System.NotImplementedException();
         }
 
-        public Attribute Get(AttributeType type)
+        public IAttribute Get(AttributeType type)
         {
-            return _attributes.ContainsKey(type) ? _attributes[type] : null;
+            if (_intAttributes.ContainsKey(type))
+            {
+                return _intAttributes[type];
+            }
+            return _floatAttributes.ContainsKey(type) ? _floatAttributes[type] : null;
         }
 
-        public int GetCalculatedValue(AttributeType type)
-        {
-            return Get(type).CalculatedValue();
-        }
+        public float GetCalculatedValue(AttributeType type) => Get(type).CalculatedValue();
 
-        public void AddAttribute(Attribute a)
+        protected void AddAttribute(IntAttribute a)
         {
-            if (_attributes.ContainsKey(a.AttributeType))
+            if (_intAttributes.ContainsKey(a.AttributeType))
             {
                 throw new Exceptions.AttributeContainerAlreadyContainsAttributeException(a.AttributeType);
             }
-            _attributes[a.AttributeType] = a;
+            _intAttributes[a.AttributeType] = a;
+        }
+
+        protected void AddAttribute(FloatAttribute a)
+        {
+            if (_floatAttributes.ContainsKey(a.AttributeType))
+            {
+                throw new Exceptions.AttributeContainerAlreadyContainsAttributeException(a.AttributeType);
+            }
+            _floatAttributes[a.AttributeType] = a;
         }
     }
 }
