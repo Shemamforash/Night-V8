@@ -43,6 +43,7 @@ namespace Game.World.Region
             ui.OnHover(() => RegionManager.UpdateRegionInfo(this));
             ui.SetCentralTextCallback(() => Name);
             ui.SetLeftTextCallback(Type);
+            ui.SetLeftTextWidth(200);
             ui.SetRightTextCallback(() => Distance() + " hrs");
             return ui;
         }

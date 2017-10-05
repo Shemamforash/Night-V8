@@ -28,6 +28,7 @@ namespace Facilitating.UI.Elements
             TryReplaceText();
             _text.richText = true;
             UpdateFontSize();
+            _text.extraPadding = true;
             _text.font = UiAppearanceController.Instance.UniversalFont;
         }
 

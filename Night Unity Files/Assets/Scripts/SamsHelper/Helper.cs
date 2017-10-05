@@ -142,7 +142,6 @@ namespace SamsHelper
                 }
                 listString += list[i];
             }
-            Debug.Log(listString);
         }
 
         public static void PrintList<T>(T[] arr)

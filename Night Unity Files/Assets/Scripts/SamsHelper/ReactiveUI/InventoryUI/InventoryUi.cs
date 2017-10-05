@@ -189,5 +189,10 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         public GameObject GetRightButton() => _rightButton.gameObject;
         public MyGameObject GetLinkedObject() => LinkedObject;
         public GameObject GetGameObject() => GameObject;
+
+        public void SetLeftTextWidth(int i)
+        {
+            _leftText.GetComponent<LayoutElement>().minWidth = i;
+        }
     }
 }

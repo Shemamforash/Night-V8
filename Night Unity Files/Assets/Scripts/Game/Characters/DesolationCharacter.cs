@@ -17,12 +17,10 @@ namespace Game.Characters
     {
         public Region CurrentRegion;
         public TraitLoader.Trait CharacterClass, CharacterTrait;
-        private CharacterThoughts Thoughts;
+        private CharacterConditions _conditions;
 
         public DesolationCharacter(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait, GameObject gameObject) : base(name, gameObject)
         {
-            Thoughts = new CharacterThoughts(this);
-            
             CharacterInventory = new DesolationInventory(name);
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
@@ -42,7 +40,13 @@ namespace Game.Characters
             
             UpdateActionUi();
             
+            _conditions = new CharacterConditions(this);
             CharacterInventory.MaxWeight = 50;
+        }
+
+        public Condition GetCondition(ConditionType type)
+        {
+            return _conditions.Conditions[type];
         }
 
         public void SetActionListActive(bool active)

@@ -57,6 +57,24 @@ namespace Game.Characters
             SetConsumptionEvents(Thirst, Dehydration, WorldState.HomeInventory.GetResource(InventoryResourceType.Water));
         }
 
+        private Intensity GetIntensity(float percent)
+        {
+            for (int i = _toleranceThresholds.Length - 1; i >= 0; --i)
+            {
+                int threshold = _toleranceThresholds[i];
+                if (!(percent > threshold)) continue;
+                foreach (Intensity intensity in Enum.GetValues(typeof(Intensity)))
+                {
+                    if (intensity == (Intensity) i)
+                    {
+                        return intensity;
+                    }
+                }
+                break;
+            }
+            return Intensity.None;
+        }
+        
         private void SetConsumptionEvents(Attribute need, Attribute tolerance, InventoryResource resource)
         {
             need.OnMax(() =>
@@ -93,19 +111,20 @@ namespace Game.Characters
         private void UpdateThirstAndHunger()
         {
             Thirst.Max = (int) (-0.2f * WorldState.EnvironmentManager.GetTemperature() + 16f);
-            UpdateConsumableTolerance(Hunger, Starvation, Eat);
-            UpdateConsumableTolerance(Thirst, Dehydration, Drink);
+            UpdateConsumableTolerance(Hunger, Starvation, Eat, _character.GetCondition(ConditionType.Hunger));
+            UpdateConsumableTolerance(Thirst, Dehydration, Drink, _character.GetCondition(ConditionType.Thirst));
         }
 
-        private void UpdateConsumableTolerance(MyInt requirement, MyInt tolerance, Action consume)
+        private void UpdateConsumableTolerance(MyInt requirement, MyInt tolerance, Action consume, Condition condition)
         {
             float previousTolerance = tolerance.AsPercent();
+            Intensity previousIntensity = GetIntensity(previousTolerance);
             ++requirement.Val;
             float tolerancePercentage = tolerance.AsPercent();
-            if (!(tolerancePercentage >= _toleranceThresholds[4])) return;
-            if (previousTolerance < _toleranceThresholds[4])
+            Intensity currentIntensity = GetIntensity(tolerancePercentage);
+            if (previousIntensity != currentIntensity)
             {
-                WorldEventManager.GenerateEvent(new WorldEvent(_character.Name + " is dying of thirst"));
+                condition.SetConditionLevel(currentIntensity);
             }
             consume();
         }

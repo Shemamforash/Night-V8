@@ -19,7 +19,7 @@ namespace Game.World.Region
         private static readonly List<Region> UnexploredRegions = new List<Region>();
         private static readonly List<InventoryUi> DiscoveredRegions = new List<InventoryUi>();
         private static readonly Dictionary<string, RegionTemplate> Templates = new Dictionary<string, RegionTemplate>();
-        private static readonly int NoRegionsToGenerate = 10;
+        private static readonly int NoRegionsToGenerate = 40;
         private static GameObject _backButton;
         private static InventoryUi _exploreButton;
         private static TextMeshProUGUI _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
@@ -43,7 +43,17 @@ namespace Game.World.Region
                 prefixList.AddRange(Helper.SplitAndRemoveWhiteSpace(lines[i]));
                 suffixList.AddRange(Helper.SplitAndRemoveWhiteSpace(lines[i + 3]));
             }
-            List<string> combinations = (from prefix in prefixList from suffix in suffixList select prefix + "'s " + suffix).ToList();
+            List<string> combinations = new List<string>();
+            foreach (string prefix in prefixList)
+            {
+                foreach (string suffix in suffixList)
+                {
+                    if (prefix != suffix)
+                    {
+                        combinations.Add(prefix +"'s " + suffix);
+                    }
+                }
+            }
             Helper.Shuffle(ref combinations);
             for (int i = 0; i < 500; ++i)
             {
