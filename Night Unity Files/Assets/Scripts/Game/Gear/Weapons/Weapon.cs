@@ -2,11 +2,13 @@
 using Game.Characters;
 using Game.Combat.Weapons;
 using Game.World;
+using Game.World.WorldEvents;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.CustomTypes;
+using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
 namespace Game.Gear.Weapons
@@ -14,24 +16,27 @@ namespace Game.Gear.Weapons
     public class Weapon : GearItem
     {
         public readonly WeaponClass WeaponClass;
-        public readonly WeaponSubClass SubClass;
+        public readonly WeaponModifier SubClass, SecondaryModifier;
         public readonly bool Automatic;
         public readonly MyInt AmmoInMagazine = new MyInt(0);
         public readonly MyInt Durability;
         private const int MaxDurability = 20;
         private bool _canEquip;
         public readonly WeaponAttributes WeaponAttributes;
+        public readonly int Capacity, Pellets;
 
-        public Weapon(WeaponClass weaponClass, WeaponSubClass subClass, bool automatic, float weight, int durability) : base(weaponClass.Type.ToString(), weight, GearSubtype.Weapon)
+        public Weapon(WeaponClass weaponClass, WeaponModifier subClass, WeaponModifier secondaryModifier, bool automatic, float weight, int durability) : base(weaponClass.Type.ToString(), weight, GearSubtype.Weapon)
         {
             WeaponClass = weaponClass;
             SubClass = subClass;
+            SecondaryModifier = secondaryModifier;
             Automatic = automatic;
 
-            AmmoInMagazine.Max = subClass.Capacity;
             Durability = new MyInt(durability, 0, MaxDurability);
             Durability.OnMin(() => { _canEquip = false; });
-
+            Capacity = (int) Math.Ceiling((double) subClass.Capacity * secondaryModifier.CapacityModifier);
+            Pellets = (int) Math.Ceiling((double) (subClass.Pellets * secondaryModifier.Pellets));
+            
             if (!automatic)
             {
 //                Damage *= 2;
@@ -41,11 +46,13 @@ namespace Game.Gear.Weapons
 //                ReloadSpeed /= 2f;
             }
             WeaponAttributes = new WeaponAttributes(this);
+            AmmoInMagazine.Max = Capacity;
 #if UNITY_EDITOR
             Print();
 #endif
             Reload();
-            SetExtendedName(Name + (Automatic ? " (A)" : ""));
+            UpdateDurability();
+            WorldEventManager.GenerateEvent(new WeaponFindEvent(Name));
         }
 
         private void Print()
@@ -54,17 +61,17 @@ namespace Game.Gear.Weapons
                       + "\nAutomatic:  " + Automatic
                       + "\nDurability: " + Durability.Val
                       + "\nAmmo Left:  " + AmmoInMagazine.Val
-                      + "\nDamage:     " + AttributeVal(AttributeType.Damage)
-                      + "\nAccuracy:   " + AttributeVal(AttributeType.Accuracy)
-                      + "\nReload:     " + AttributeVal(AttributeType.ReloadSpeed)
-                      + "\nCritChance: " + AttributeVal(AttributeType.CriticalChance)
-                      + "\nHandling:   " + AttributeVal(AttributeType.Handling)
-                      + "\nFire Rate:  " + AttributeVal(AttributeType.FireRate)
-                      + "\nCapacity:   " + AttributeVal(AttributeType.Capacity)
-                      + "\nPellets:    " + AttributeVal(AttributeType.Pellets) + "\n\n");
+                      + "\nCapacity:   " + Capacity
+                      + "\nPellets:    " + Pellets
+                      + "\nDamage:     " + GetAttributeValue(AttributeType.Damage)
+                      + "\nAccuracy:   " + GetAttributeValue(AttributeType.Accuracy)
+                      + "\nFire Rate:  " + GetAttributeValue(AttributeType.FireRate)
+                      + "\nHandling:   " + GetAttributeValue(AttributeType.Handling)
+                      + "\nReload:     " + GetAttributeValue(AttributeType.ReloadSpeed)
+                      + "\nCritChance: " + GetAttributeValue(AttributeType.CriticalChance) + "\n\n");
         }
 
-        public float AttributeVal(AttributeType attributeType)
+        public float GetAttributeValue(AttributeType attributeType)
         {
             return WeaponAttributes.Get(attributeType).CalculatedValue();
         }
@@ -73,13 +80,37 @@ namespace Game.Gear.Weapons
         {
             _canEquip = true;
             ++Durability.Val;
+            UpdateDurability();
+        }
+
+        private void UpdateDurability()
+        {
+            string quality = "Perfected";
+            if (Durability < 4)
+            {
+                quality = "Flawed";
+            }
+            else if (Durability < 8)
+            {
+                quality = "Worn";
+            }
+            else if (Durability < 12)
+            {
+                quality = "Fresh";
+            }
+            else if (Durability < 16)
+            {
+                quality = "Faultless";
+            }
+            Name = SecondaryModifier.Name + " " + SubClass.Name + " -- (" + quality + ")";
             WeaponAttributes.RecalculateAttributeValues();
+
         }
 
         public void DecreaseDurability()
         {
             --Durability.Val;
-            WeaponAttributes.RecalculateAttributeValues();
+            UpdateDurability();
         }
 
         public string GetWeaponType()
@@ -99,7 +130,7 @@ namespace Game.Gear.Weapons
 
         public void Reload()
         {
-            float ammoAvailable = WorldState.Home().DecrementResource(InventoryResourceType.Ammo, (int) WeaponAttributes.Capacity.CalculatedValue());
+            float ammoAvailable = WorldState.Home().DecrementResource(InventoryResourceType.Ammo, Capacity);
             AmmoInMagazine.Val += (int) ammoAvailable;
         }
 
@@ -111,6 +142,11 @@ namespace Game.Gear.Weapons
         public override string GetSummary()
         {
             return Helper.Round(WeaponAttributes.DPS(), 1) + "DPS";
+        }
+
+        public override InventoryUi CreateUi(Transform parent)
+        {
+            return new WeaponUi(this, parent);
         }
     }
 }

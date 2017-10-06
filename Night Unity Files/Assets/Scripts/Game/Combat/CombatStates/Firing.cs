@@ -32,7 +32,7 @@ namespace Game.Combat.CombatStates
                     CombatMachine.DecreaseAim();
                     if (Weapon().Automatic)
                     {
-                        _timeSinceLastFire = 1f / Weapon().AttributeVal(AttributeType.FireRate);
+                        _timeSinceLastFire = 1f / Weapon().GetAttributeValue(AttributeType.FireRate);
                     }
                     else
                     {

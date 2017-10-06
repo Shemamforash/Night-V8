@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace SamsHelper.BaseGameFunctionality.Basic
+﻿namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public class ScaleableValue
     {
@@ -19,7 +17,6 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
         public float GetScaledValue(float value)
         {
-            Debug.Log(value + " " + _xCoefficient +" " +_intercept);
             return _xSquaredCoefficient * value * value +_xCoefficient * value + _intercept;
         }
     }

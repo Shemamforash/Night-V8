@@ -242,7 +242,7 @@
                 <e p="AccessoryUiSimple.cs" t="Include" />
                 <e p="ArmourUiDetailed.cs" t="Include" />
                 <e p="ArmourUiSimple.cs" t="Include" />
-                <e p="WeaponUiDetailed.cs" t="Include" />
+                <e p="WeaponUi.cs" t="Include" />
                 <e p="WeaponUiSimple.cs" t="Include" />
               </e>
               <e p="Weapons" t="Include">
@@ -250,7 +250,7 @@
                 <e p="WeaponAttributes.cs" t="Include" />
                 <e p="WeaponClass.cs" t="Include" />
                 <e p="WeaponGenerator.cs" t="Include" />
-                <e p="WeaponSubClass.cs" t="Include" />
+                <e p="WeaponModifier.cs" t="Include" />
                 <e p="WeaponType.cs" t="Include" />
               </e>
             </e>

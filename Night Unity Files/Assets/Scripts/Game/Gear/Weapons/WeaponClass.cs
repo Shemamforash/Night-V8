@@ -12,7 +12,7 @@ namespace Game.Combat.Weapons
         public ScaleableValue Damage, Accuracy, FireRate, Handling, ReloadSpeed, CriticalChance;
         public readonly bool CanBeManual;
         public readonly WeaponType Type;
-        private readonly List<WeaponSubClass> _subtypes = new List<WeaponSubClass>();
+        private readonly List<WeaponModifier> _subtypes = new List<WeaponModifier>();
 
         public WeaponClass(WeaponType type, bool canBeManual)
         {
@@ -20,12 +20,12 @@ namespace Game.Combat.Weapons
             CanBeManual = canBeManual;
         }
 
-        public void AddSubtype(WeaponSubClass subtype)
+        public void AddSubtype(WeaponModifier subtype)
         {
             _subtypes.Add(subtype);
         }
 
-        public WeaponSubClass GetSubtype()
+        public WeaponModifier GetSubtype()
         {
             return _subtypes[Random.Range(0, _subtypes.Count)];
         }

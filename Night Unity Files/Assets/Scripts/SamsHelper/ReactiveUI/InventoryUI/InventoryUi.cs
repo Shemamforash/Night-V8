@@ -30,7 +30,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Update();
         }
 
-        protected void CacheUiElements()
+        protected virtual void CacheUiElements()
         {
             _rightText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Right Text");
             _rightText.gameObject.SetActive(false);
@@ -51,7 +51,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Bookends = Helper.FindChildWithName(GameObject, "Bookends").gameObject;
         }
 
-        public void Update()
+        public virtual void Update()
         {
             if (_destroyCheck != null && _destroyCheck())
             {
@@ -181,7 +181,8 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         public void OnRightButtonHold(Action a, float duration) => _rightButton.AddOnHold(a, duration);
         public void OnPress(Action a) => _primaryButton.AddOnClick(() => a());
         public void OnHold(Action a, float duration) => _primaryButton.AddOnHold(a, duration);
-        public void OnHover(Action a) => _primaryButton.AddOnSelectEvent(a);
+        public void OnEnter(Action a) => _primaryButton.AddOnSelectEvent(a);
+        public void OnExit(Action a) => _primaryButton.AddOnDeselectEvent(a);
 
         //Getters
         public GameObject GetLeftButton() => _leftButton.gameObject;

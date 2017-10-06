@@ -29,7 +29,7 @@ namespace Game.Combat
         
         public void IncreaseAim()
         {
-            float amount = 5f + Character.GetWeapon().AttributeVal(AttributeType.Handling) / 10f;
+            float amount = 5f + Character.GetWeapon().GetAttributeValue(AttributeType.Handling) / 10f;
             amount *= Time.deltaTime;
             _aimAmount.Val = _aimAmount.Val + amount;
 //            CombatUi.UpdateAimSlider(_aimAmount.Val);
@@ -37,7 +37,7 @@ namespace Game.Combat
 
         public void DecreaseAim()
         {
-            float amount = 100f / Character.GetWeapon().AttributeVal(AttributeType.Capacity);
+            float amount = 100f / Character.GetWeapon().Capacity;
             _aimAmount.Val = _aimAmount.Val - amount;
 //            CombatUi.UpdateAimSlider(_aimAmount.Val);
         }

@@ -4,20 +4,20 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>95</Val>
-          <Max>95</Max>
+          <Val>116</Val>
+          <Max>116</Max>
         </Strength>
         <Endurance>
-          <Val>68</Val>
-          <Max>68</Max>
+          <Val>50</Val>
+          <Max>50</Max>
         </Endurance>
         <Stability>
-          <Val>23</Val>
-          <Max>23</Max>
+          <Val>21</Val>
+          <Max>21</Max>
         </Stability>
         <Intelligence>
-          <Val>22</Val>
-          <Max>22</Max>
+          <Val>20</Val>
+          <Max>20</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -29,33 +29,33 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>1</Max>
+          <Max>2</Max>
         </Hunger>
         <Thirst>
           <Val>12</Val>
-          <Max>1</Max>
+          <Max>2</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
     <Character>
-      <Name>Rev</Name>
+      <Name>Holo</Name>
       <Attributes>
         <Strength>
-          <Val>113</Val>
-          <Max>113</Max>
+          <Val>75</Val>
+          <Max>75</Max>
         </Strength>
         <Endurance>
-          <Val>48</Val>
-          <Max>48</Max>
+          <Val>54</Val>
+          <Max>54</Max>
         </Endurance>
         <Stability>
-          <Val>22</Val>
-          <Max>22</Max>
-        </Stability>
-        <Intelligence>
           <Val>19</Val>
           <Max>19</Max>
+        </Stability>
+        <Intelligence>
+          <Val>22</Val>
+          <Max>22</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -67,11 +67,11 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>1</Max>
+          <Max>2</Max>
         </Hunger>
         <Thirst>
           <Val>12</Val>
-          <Max>1</Max>
+          <Max>2</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>

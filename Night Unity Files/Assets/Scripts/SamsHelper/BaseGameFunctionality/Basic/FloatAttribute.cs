@@ -1,14 +1,15 @@
 ﻿using SamsHelper.ReactiveUI.CustomTypes;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public class FloatAttribute : MyFloat, IAttribute
     {
         public readonly AttributeType AttributeType;
-        private float _summativeModifier, _multiplicativeModifier;
+        private float _summativeModifier, _multiplicativeModifier = 1;
         private float _calculatedValue;
 
-        public FloatAttribute(AttributeType attributeType, float value, float min = 0, float max = 0) : base(value, min, max)
+        public FloatAttribute(AttributeType attributeType, float value, float min = 0, float max = float.MaxValue) : base(value, min, max)
         {
             AttributeType = attributeType;
         }

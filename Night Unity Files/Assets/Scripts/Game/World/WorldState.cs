@@ -65,7 +65,7 @@ namespace Game.World
             });
             _instance = this;
         }
-        
+
         private void ShowCharacterPopup(string name, GearItem gearItem)
         {
             Popup popupWithList = new Popup("Equip " + name);

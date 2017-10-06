@@ -6,10 +6,10 @@ namespace SamsHelper.BaseGameFunctionality.Basic
     public class IntAttribute : MyInt, IAttribute
     {
         public readonly AttributeType AttributeType;
-        private float _summativeModifier, _multiplicativeModifier;
+        private float _summativeModifier, _multiplicativeModifier = 1;
         private float _calculatedValue;
 
-        public IntAttribute(AttributeType attributeType, int value, int min = 0, int max = 0) : base(value, min, max)
+        public IntAttribute(AttributeType attributeType, int value, int min = 0, int max = int.MaxValue) : base(value, min, max)
         {
             AttributeType = attributeType;
         }

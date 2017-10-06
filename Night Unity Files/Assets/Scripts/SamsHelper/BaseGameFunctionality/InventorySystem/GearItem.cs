@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using Facilitating.MenuNavigation;
-using Game.Characters;
-using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.Characters;
+﻿using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
@@ -38,8 +34,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public override InventoryUi CreateUi(Transform parent)
         {
             InventoryUi ui = base.CreateUi(parent);
-            ui.SetRightButtonTextCallback(() => "Equip");
-            ui.SetRightButtonActive(false);
+//            ui.SetRightButtonTextCallback(() => "Equip");
+//            ui.SetRightButtonActive(false);
             ui.SetRightTextCallback(GetSummary);
             ui.SetLeftTextCallback(() => GetGearType().ToString());
             ui.SetCentralTextCallback(() => Name);

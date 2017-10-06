@@ -204,7 +204,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
         }
         
-        public void Load(XmlNode root, PersistenceType saveType)
+        public virtual void Load(XmlNode root, PersistenceType saveType)
         {
             if (saveType == PersistenceType.Game)
             {
@@ -213,7 +213,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
         }
 
-        public void Save(XmlNode root, PersistenceType saveType)
+        public virtual void Save(XmlNode root, PersistenceType saveType)
         {
             if (saveType == PersistenceType.Game)
             {

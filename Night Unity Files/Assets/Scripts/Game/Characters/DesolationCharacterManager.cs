@@ -129,7 +129,7 @@ namespace Game.Characters
 //            _actionContainer.GetChild(0).GetComponent<Selectable>().Select();
         }
 
-        public void Load(XmlNode doc, PersistenceType saveType)
+        public override void Load(XmlNode doc, PersistenceType saveType)
         {
             XmlNode characterManagerNode = doc.SelectSingleNode("CharacterManager");
             XmlNodeList characterNodes = characterManagerNode.SelectNodes("Character");

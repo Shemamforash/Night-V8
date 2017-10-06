@@ -14,6 +14,7 @@ namespace SamsHelper.ReactiveUI.Elements
     public class EnhancedButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
     {
         private event Action OnSelectActions;
+        private event Action OnDeselectActions;
         private readonly List<HoldAction> OnHoldActions = new List<HoldAction>();
         private List<EnhancedText> _textChildren = new List<EnhancedText>();
         private Button _button;
@@ -50,10 +51,6 @@ namespace SamsHelper.ReactiveUI.Elements
             }
         }
 
-        public void AddOnClick(UnityAction a)
-        {
-            _button.onClick.AddListener(a);
-        }
         
         public void Awake()
         {
@@ -67,37 +64,28 @@ namespace SamsHelper.ReactiveUI.Elements
             InputSpeaker.Instance().AddOnPressEvent(InputAxis.Submit, () => OnHoldActions.ForEach(a => a.Reset()));
         }
 
-        public void AddOnSelectEvent(Action a)
-        {
-            OnSelectActions += a;
-        }
-
-        public void OnSelect(BaseEventData eventData)
+        private void Enter()
         {
             UseSelectedColours();
             OnSelectActions?.Invoke();
         }
 
-        public void OnDeselect(BaseEventData eventData)
+        private void Exit()
         {
             UseDeselectedColours();
+            OnDeselectActions?.Invoke();
         }
+        
+        public void AddOnClick(UnityAction a) => _button.onClick.AddListener(a);
+        public void AddOnSelectEvent(Action a) => OnSelectActions += a;
+        public void AddOnDeselectEvent(Action a) => OnDeselectActions += a;
+        public void OnSelect(BaseEventData eventData) => Enter();
+        public void OnDeselect(BaseEventData eventData) => Exit();
+        public void OnPointerEnter(PointerEventData p) => Enter();
+        public void OnPointerExit(PointerEventData p) => Exit();
+        public void AddOnHold(Action a, float duration) => OnHoldActions.Add(new HoldAction(a, duration));
 
-        public void OnPointerEnter(PointerEventData p)
-        {
-            OnSelectActions?.Invoke();
-            UseSelectedColours();
-        }
-
-        public void OnPointerExit(PointerEventData p)
-        {
-            UseDeselectedColours();
-        }
-
-        public void DisableBorder()
-        {
-            _useBorder = false;
-        }
+        public void DisableBorder() => _useBorder = false;
 
         private void UseSelectedColours()
         {
@@ -158,11 +146,6 @@ namespace SamsHelper.ReactiveUI.Elements
             {
                 text.SetColor(c);
             }
-        }
-
-        public void AddOnHold(Action a, float duration)
-        {
-            OnHoldActions.Add(new HoldAction(a, duration));
         }
 
         public void OnHold()

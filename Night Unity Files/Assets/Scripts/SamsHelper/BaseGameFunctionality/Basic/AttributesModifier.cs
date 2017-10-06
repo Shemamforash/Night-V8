@@ -4,20 +4,20 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public class AttributesModifier
     {
-        private readonly Dictionary<AttributeType, float> _summativeModifiers = new Dictionary<AttributeType, float>();
-        private readonly Dictionary<AttributeType, float> _multiplicativeModifiers = new Dictionary<AttributeType, float>();
+        protected readonly Dictionary<AttributeType, float> SummativeModifiers = new Dictionary<AttributeType, float>();
+        protected readonly Dictionary<AttributeType, float> MultiplicativeModifiers = new Dictionary<AttributeType, float>();
         private bool _applied;
         
         public void Apply(AttributeContainer attributes)
         {
             if (_applied) return;
-            foreach (AttributeType attributeType in _summativeModifiers.Keys)
+            foreach (AttributeType attributeType in SummativeModifiers.Keys)
             {
-                attributes.Get(attributeType).AddModifier(_summativeModifiers[attributeType], true);
+                attributes.Get(attributeType).AddModifier(SummativeModifiers[attributeType], true);
             }
-            foreach (AttributeType attributeType in _multiplicativeModifiers.Keys)
+            foreach (AttributeType attributeType in MultiplicativeModifiers.Keys)
             {
-                attributes.Get(attributeType).AddModifier(_multiplicativeModifiers[attributeType]);
+                attributes.Get(attributeType).AddModifier(MultiplicativeModifiers[attributeType]);
             }
             _applied = true;
         }
@@ -25,21 +25,21 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public void Remove(AttributeContainer attributes)
         {
             if (!_applied) return;
-            foreach (AttributeType attributeType in _summativeModifiers.Keys)
+            foreach (AttributeType attributeType in SummativeModifiers.Keys)
             {
-                attributes.Get(attributeType).RemoveModifier(_summativeModifiers[attributeType], true);
+                attributes.Get(attributeType).RemoveModifier(SummativeModifiers[attributeType], true);
             }
-            foreach (AttributeType attributeType in _multiplicativeModifiers.Keys)
+            foreach (AttributeType attributeType in MultiplicativeModifiers.Keys)
             {
-                attributes.Get(attributeType).RemoveModifier(_multiplicativeModifiers[attributeType]);
+                attributes.Get(attributeType).RemoveModifier(MultiplicativeModifiers[attributeType]);
             }
             _applied = false;
         }
 
         public void AddModifier(AttributeType type, float value, bool summative = false)
         {
-            if (summative) _summativeModifiers[type] = value;
-            else _multiplicativeModifiers[type] = value;
+            if (summative) SummativeModifiers[type] = value;
+            else MultiplicativeModifiers[type] = value;
         }
     }
 }

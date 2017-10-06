@@ -27,7 +27,7 @@ namespace Game.World.Region
             IncrementResource(InventoryResourceType.Ammo, _template.AmmoAvailable);
         }
 
-        public string Type()
+        public string RegionType()
         {
             return _template.Type;
         }
@@ -40,9 +40,9 @@ namespace Game.World.Region
         public override InventoryUi CreateUi(Transform parent)
         {
             InventoryUi ui = new InventoryUi(this, parent);
-            ui.OnHover(() => RegionManager.UpdateRegionInfo(this));
+            ui.OnEnter(() => RegionManager.UpdateRegionInfo(this));
             ui.SetCentralTextCallback(() => Name);
-            ui.SetLeftTextCallback(Type);
+            ui.SetLeftTextCallback(RegionType);
             ui.SetLeftTextWidth(200);
             ui.SetRightTextCallback(() => Distance() + " hrs");
             return ui;

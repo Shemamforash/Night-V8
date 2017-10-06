@@ -17,7 +17,5 @@
         ReloadSpeed,
         CriticalChance,
         Handling,
-        Capacity,
-        Pellets
     }
 }

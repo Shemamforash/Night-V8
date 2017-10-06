@@ -164,7 +164,7 @@ namespace Game.World.Region
             if (region != null)
             {
                 nameText = region.Name;
-                typeText = region.Type();
+                typeText = region.RegionType();
                 descriptionText = region.Description();
             }
             _regionInfoNameText.text = nameText;
