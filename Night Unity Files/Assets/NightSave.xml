@@ -4,58 +4,20 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>116</Val>
-          <Max>116</Max>
+          <Val>110</Val>
+          <Max>110</Max>
         </Strength>
         <Endurance>
-          <Val>50</Val>
-          <Max>50</Max>
-        </Endurance>
-        <Stability>
-          <Val>21</Val>
-          <Max>21</Max>
-        </Stability>
-        <Intelligence>
-          <Val>20</Val>
-          <Max>20</Max>
-        </Intelligence>
-        <Starvation>
-          <Val>50</Val>
-          <Max>0</Max>
-        </Starvation>
-        <Dehydration>
-          <Val>50</Val>
-          <Max>0</Max>
-        </Dehydration>
-        <Hunger>
-          <Val>12</Val>
-          <Max>2</Max>
-        </Hunger>
-        <Thirst>
-          <Val>12</Val>
-          <Max>2</Max>
-        </Thirst>
-        <Weight>2</Weight>
-      </Attributes>
-    </Character>
-    <Character>
-      <Name>Holo</Name>
-      <Attributes>
-        <Strength>
-          <Val>75</Val>
-          <Max>75</Max>
-        </Strength>
-        <Endurance>
-          <Val>54</Val>
-          <Max>54</Max>
+          <Val>47</Val>
+          <Max>47</Max>
         </Endurance>
         <Stability>
           <Val>19</Val>
           <Max>19</Max>
         </Stability>
         <Intelligence>
-          <Val>22</Val>
-          <Max>22</Max>
+          <Val>19</Val>
+          <Max>19</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -67,11 +29,49 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>2</Max>
+          <Max>0</Max>
         </Hunger>
         <Thirst>
           <Val>12</Val>
+          <Max>0</Max>
+        </Thirst>
+        <Weight>2</Weight>
+      </Attributes>
+    </Character>
+    <Character>
+      <Name>Lux</Name>
+      <Attributes>
+        <Strength>
+          <Val>92</Val>
+          <Max>92</Max>
+        </Strength>
+        <Endurance>
+          <Val>45</Val>
+          <Max>45</Max>
+        </Endurance>
+        <Stability>
+          <Val>2</Val>
           <Max>2</Max>
+        </Stability>
+        <Intelligence>
+          <Val>10</Val>
+          <Max>10</Max>
+        </Intelligence>
+        <Starvation>
+          <Val>50</Val>
+          <Max>0</Max>
+        </Starvation>
+        <Dehydration>
+          <Val>50</Val>
+          <Max>0</Max>
+        </Dehydration>
+        <Hunger>
+          <Val>12</Val>
+          <Max>0</Max>
+        </Hunger>
+        <Thirst>
+          <Val>12</Val>
+          <Max>0</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>

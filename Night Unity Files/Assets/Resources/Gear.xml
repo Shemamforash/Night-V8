@@ -1,0 +1,102 @@
+<GearList>
+    <Accessory>
+        <Name>Bandolier</Name>
+        <Weight>1</Weight>
+        <Effect>Ammo weighs half as much when carried</Effect>
+    </Accessory>
+    <Accessory>
+        <Name>Wrapped Mags</Name>
+        <Weight>1</Weight>
+        <Effect>Every other reload is twice as fast</Effect>
+    </Accessory>
+    <Accessory>
+        <Name>Rusty Nails</Name>
+        <Weight>1</Weight>
+        <Effect>Melee attacks apply bleeding</Effect>
+    </Accessory>
+    <Accessory>
+        <Name>Empty Flask</Name>
+        <Weight>1</Weight>
+        <Effect>Water weighs half as much when carried</Effect>
+    </Accessory>
+    <Accessory>
+        <Name>Mending Instruments</Name>
+        <Weight>1</Weight>
+        <Effect>50% chance gun suffers no degredation</Effect>
+    </Accessory>
+    <Accessory>
+        <Name>Vision Edge</Name>
+        <Weight>1</Weight>
+        <Effect>Increase effective range of weapon by 25%</Effect>
+    </Accessory>
+    <Armour>
+        <Name>Hunter's Sheath</Name>
+        <Weight>1</Weight>
+        <Armour>10</Armour>
+        <Intelligence>0</Intelligence>
+        <Stability>0</Stability>
+        <Strength>0</Strength>
+        <Endurance>0</Endurance>
+    </Armour>
+    <Armour>
+        <Name>Longshot's Pauldrons</Name>
+        <Weight>1</Weight>
+        <Armour>20</Armour>
+        <Intelligence>10</Intelligence>
+        <Stability>0</Stability>
+        <Strength>0</Strength>
+        <Endurance>0</Endurance>
+    </Armour>
+    <Accessory>
+        <Name>Blighted Marrow</Name>
+        <Weight>1</Weight>
+        <Effect>Apply poison on critical</Effect>
+    </Accessory>
+    <Accessory>
+        <Name>Obscuring Aura</Name>
+        <Weight>1</Weight>
+        <Effect>Blind enemies when receiving melee</Effect>
+    </Accessory>
+    <Accessory>
+        <Name>Enkindling Flask</Name>
+        <Weight>1</Weight>
+        <Effect>Apply fire on critical</Effect>
+    </Accessory>
+    <Accessory>
+        <Name>Staggering Barb</Name>
+        <Weight>1</Weight>
+        <Effect>Knock enemy down on critical</Effect>
+    </Accessory>
+    <Accessory>
+        <Name>Stinging Edges</Name>
+        <Weight>1</Weight>
+        <Effect>Apply bleed on critical</Effect>
+    </Accessory>
+    <Armour>
+        <Name>Forerunner's Garb</Name>
+        <Weight>1</Weight>
+        <Armour>25</Armour>
+        <Intelligence>0</Intelligence>
+        <Stability>0</Stability>
+        <Strength>0</Strength>
+        <Endurance>10</Endurance>
+    </Armour>
+    <Armour>
+        <Name>Pugilist's Gauntlets</Name>
+        <Weight>1</Weight>
+        <Armour>20</Armour>
+        <Intelligence>0</Intelligence>
+        <Stability>0</Stability>
+        <Strength>10</Strength>
+        <Endurance>0</Endurance>
+    </Armour>
+    <Armour>
+        <Name>Afflictor's Resistance</Name>
+        <Weight>1</Weight>
+        <Armour>15</Armour>
+        <Intelligence>0</Intelligence>
+        <Stability>10</Stability>
+        <Strength>0</Strength>
+        <Endurance>0</Endurance>
+    </Armour>
+</GearList>

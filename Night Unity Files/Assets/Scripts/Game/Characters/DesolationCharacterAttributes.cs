@@ -169,15 +169,17 @@ namespace Game.Characters
         {
             return GetAttributeStatus(Dehydration, _dehydrationLevels);
         }
-        
-        public void Drink()
+
+        private void Drink()
         {
+            if (Dehydration.Val == 0) return;
             int consumed = WorldState.Home().DecrementResource(InventoryResourceType.Water, 1);
             Dehydration.Val -= consumed;
         }
 
-        public void Eat()
+        private void Eat()
         {
+            if (Starvation.Val == 0) return;
             int consumed = WorldState.Home().DecrementResource(InventoryResourceType.Food, 1);
             Starvation.Val -= consumed;
         }
