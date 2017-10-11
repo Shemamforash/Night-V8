@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using Game.Combat.Weapons;
+using Game.Gear.Armour;
 using Game.World.WorldEvents;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace Game.Gear.Weapons
 
         public void Awake()
         {
+            GearReader.LoadGear();
             LoadBaseWeapons();
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using Game.Characters;
 using Game.Combat.Weapons;
+using Game.Gear.UI;
 using Game.World;
 using Game.World.WorldEvents;
 using SamsHelper;

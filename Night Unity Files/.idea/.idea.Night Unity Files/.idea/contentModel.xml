@@ -134,6 +134,7 @@
         </e>
         <e p="Resources" t="Include">
           <e p="classes.txt" t="Include" />
+          <e p="Gear.xml" t="Include" />
           <e p="Images" t="Include">
             <e p="MapShader.shader" t="Include" />
           </e>
@@ -236,14 +237,13 @@
               <e p="Armour" t="Include">
                 <e p="Accessory.cs" t="Include" />
                 <e p="Armour.cs" t="Include" />
+                <e p="GearReader.cs" t="Include" />
               </e>
               <e p="UI" t="Include">
-                <e p="AccessoryUiDetailed.cs" t="Include" />
-                <e p="AccessoryUiSimple.cs" t="Include" />
-                <e p="ArmourUiDetailed.cs" t="Include" />
-                <e p="ArmourUiSimple.cs" t="Include" />
+                <e p="AccessoryUi.cs" t="Include" />
+                <e p="ArmourUi.cs" t="Include" />
+                <e p="GearUi.cs" t="Include" />
                 <e p="WeaponUi.cs" t="Include" />
-                <e p="WeaponUiSimple.cs" t="Include" />
               </e>
               <e p="Weapons" t="Include">
                 <e p="Weapon.cs" t="Include" />

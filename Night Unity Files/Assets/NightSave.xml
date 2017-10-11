@@ -4,20 +4,20 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>110</Val>
-          <Max>110</Max>
+          <Val>91</Val>
+          <Max>91</Max>
         </Strength>
         <Endurance>
-          <Val>47</Val>
-          <Max>47</Max>
+          <Val>46</Val>
+          <Max>46</Max>
         </Endurance>
         <Stability>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>20</Val>
+          <Max>20</Max>
         </Stability>
         <Intelligence>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>20</Val>
+          <Max>20</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -29,33 +29,33 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>0</Max>
+          <Max>7</Max>
         </Hunger>
         <Thirst>
-          <Val>12</Val>
-          <Max>0</Max>
+          <Val>13</Val>
+          <Max>7</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
     <Character>
-      <Name>Lux</Name>
+      <Name>Panacea</Name>
       <Attributes>
         <Strength>
-          <Val>92</Val>
-          <Max>92</Max>
+          <Val>100</Val>
+          <Max>100</Max>
         </Strength>
         <Endurance>
-          <Val>45</Val>
-          <Max>45</Max>
+          <Val>68</Val>
+          <Max>68</Max>
         </Endurance>
         <Stability>
-          <Val>2</Val>
-          <Max>2</Max>
+          <Val>19</Val>
+          <Max>19</Max>
         </Stability>
         <Intelligence>
-          <Val>10</Val>
-          <Max>10</Max>
+          <Val>23</Val>
+          <Max>23</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -67,13 +67,13 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>0</Max>
+          <Max>7</Max>
         </Hunger>
         <Thirst>
-          <Val>12</Val>
-          <Max>0</Max>
+          <Val>13</Val>
+          <Max>7</Max>
         </Thirst>
-        <Weight>2</Weight>
+        <Weight>3</Weight>
       </Attributes>
     </Character>
   </CharacterManager>

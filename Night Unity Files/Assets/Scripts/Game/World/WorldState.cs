@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Facilitating.MenuNavigation;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.World.Environment_and_Weather;
 using SamsHelper;
@@ -103,6 +104,8 @@ namespace Game.World
             for (int i = 0; i < 10; ++i)
             {
                 HomeInventory.AddItem(WeaponGenerator.GenerateWeapon());
+                HomeInventory.AddItem(GearReader.GenerateArmour());
+                HomeInventory.AddItem(GearReader.GenerateAccessory());
             }
 #endif
         }

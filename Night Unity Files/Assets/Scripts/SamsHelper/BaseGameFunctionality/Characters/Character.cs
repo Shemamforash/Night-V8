@@ -20,7 +20,6 @@ namespace SamsHelper.BaseGameFunctionality.Characters
     public abstract class Character : MyGameObject, IPersistenceTemplate
     {
         public CharacterUiDetailed CharacterUiDetailed;
-        public WeaponUiSimple WeaponUiSimple;
 
         public DesolationCharacterAttributes Attributes;
 
@@ -52,7 +51,6 @@ namespace SamsHelper.BaseGameFunctionality.Characters
         public void SetWeapon(Weapon weapon)
         {
             _weapon = weapon;
-            WeaponUiSimple.Update(weapon);
         }
 
         public Weapon GetWeapon()
@@ -63,7 +61,6 @@ namespace SamsHelper.BaseGameFunctionality.Characters
         protected virtual void SetCharacterUi()
         {
             CharacterUiDetailed = new CharacterUiDetailed(this);
-            WeaponUiSimple = new WeaponUiSimple(CharacterUiDetailed);
         }
 
         protected List<State> StatesAsList(bool includeInactiveStates)
