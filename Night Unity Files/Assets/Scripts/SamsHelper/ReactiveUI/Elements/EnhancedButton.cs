@@ -96,7 +96,6 @@ namespace SamsHelper.ReactiveUI.Elements
             }
             else
             {
-                if (OnSelectActions != null) OnSelectActions();
                 ChangeTextColor(UiAppearanceController.Instance.SecondaryColor);
                 if (_button.image != null)
                 {
@@ -140,7 +139,7 @@ namespace SamsHelper.ReactiveUI.Elements
             }
         }
 
-        private void ChangeTextColor(Color c)
+        public void ChangeTextColor(Color c)
         {
             foreach (EnhancedText text in _textChildren)
             {

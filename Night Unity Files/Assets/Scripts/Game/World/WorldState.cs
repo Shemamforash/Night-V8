@@ -48,12 +48,7 @@ namespace Game.World
             _inventoryButton.GetComponent<Button>().onClick.AddListener(() =>
             {
                 Popup popup = new Popup("Vehicle Inventory");
-                List<MyGameObject> visibleContents = new List<MyGameObject>();
-                HomeInventory.Contents().ForEach(i =>
-                {
-                    if (i is Character) return;
-                    visibleContents.Add(i);
-                });
+                List<MyGameObject> visibleContents = HomeInventory.SortByType();
                 popup.AddList(visibleContents, g =>
                 {
                     GearItem item = g as GearItem;
@@ -61,7 +56,7 @@ namespace Game.World
                     {
                         ShowCharacterPopup(item.Name, item);
                     }
-                });
+                }, true);
                 popup.AddBackButton();
             });
             _instance = this;
@@ -72,7 +67,7 @@ namespace Game.World
             Popup popupWithList = new Popup("Equip " + name);
             List<MyGameObject> characterGear = new List<MyGameObject>();
             DesolationCharacterManager.Characters().ForEach(c => characterGear.Add(new CharacterGearComparison(c, gearItem)));
-            popupWithList.AddList(characterGear, null, true, true);
+            popupWithList.AddList(characterGear, null, true, true, true);
             popupWithList.AddBackButton();
         }
 

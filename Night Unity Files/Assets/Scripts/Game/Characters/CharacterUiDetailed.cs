@@ -64,7 +64,7 @@ namespace Game.Characters
                         availableGear.Add(gear);
                     }
                 }
-                popup.AddList(availableGear, g => character.Equip((GearItem) g), true);
+                popup.AddList(availableGear, g => character.Equip((GearItem) g), false, true);
                 popup.AddBackButton();
             }
 

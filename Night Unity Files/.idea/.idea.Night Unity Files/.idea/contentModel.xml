@@ -198,7 +198,6 @@
               <e p="CharacterConditions.cs" t="Include" />
               <e p="CharacterGearComparison.cs" t="Include" />
               <e p="CharacterUiDetailed.cs" t="Include" />
-              <e p="CharacterUiSimple.cs" t="Include" />
               <e p="Condition.cs" t="Include" />
               <e p="ConditionType.cs" t="Include" />
               <e p="DesolationCharacter.cs" t="Include" />

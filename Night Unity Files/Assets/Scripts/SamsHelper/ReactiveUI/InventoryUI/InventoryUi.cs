@@ -22,12 +22,19 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         protected readonly MyGameObject LinkedObject;
         private Func<bool> _destroyCheck;
 
+        private MenuList _menuList;
+
         public InventoryUi(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/FlexibleItem")
         {
             LinkedObject = linkedObject;
             GameObject = Helper.InstantiateUiObject(prefabLocation, parent);
             CacheUiElements();
             Update();
+        }
+
+        public void AddToMenuList(MenuList menuList)
+        {
+            _menuList = menuList;
         }
 
         protected virtual void CacheUiElements()

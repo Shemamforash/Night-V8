@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 namespace SamsHelper.ReactiveUI.InventoryUI
@@ -9,10 +11,16 @@ namespace SamsHelper.ReactiveUI.InventoryUI
     {
         private readonly List<InventoryUi> Items = new List<InventoryUi>();
         protected Transform InventoryContent;
+        private bool _fadeFromCenter;
 
         public virtual void Awake()
         {
             InventoryContent = Helper.FindChildWithName<Transform>(gameObject, "Content");
+        }
+
+        public void EnableFadeFromCenter()
+        {
+            _fadeFromCenter = true;
         }
 
         public List<InventoryUi> GetItems()
@@ -56,6 +64,29 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             }
             InventoryUi itemUi = item.CreateUi(InventoryContent);
             Items.Add(itemUi);
+            itemUi.OnEnter(() =>
+            {
+                float itemYPosition = itemUi.GetGameObject().GetComponent<RectTransform>().anchoredPosition.y;
+                RectTransform rect = InventoryContent.GetComponent<RectTransform>();
+                Vector2 rectPosition = rect.anchoredPosition;
+                rectPosition.y = -itemYPosition + itemUi.GetGameObject().GetComponent<RectTransform>().rect.height / 2;
+                rect.anchoredPosition = rectPosition;
+                for (int i = 0; i < Items.Count; ++i)
+                {
+                    float maxDistance = 6;
+                    if (Items[i].GetGameObject() != null)
+                    {
+//                        float distance = Math.Abs(Items[i].GetGameObject().GetComponent<RectTransform>().anchoredPosition.y + rectPosition.y);
+                        float distance = Math.Abs(i - Items.IndexOf(itemUi));
+                        float alpha = 1 - distance / maxDistance;
+                        if (alpha < 0f)
+                        {
+                            alpha = 0f;
+                        }
+                        Items[i].GetGameObject().GetComponent<EnhancedButton>().ChangeTextColor(new Color(1, 1, 1, alpha));
+                    }
+                }
+            });
             RefreshNavigation();
             return itemUi;
         }
@@ -65,14 +96,14 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Items.Add(button);
         }
 
-        protected void Remove(InventoryUi item)
+        public void Remove(InventoryUi item)
         {
             if (!Items.Contains(item)) return;
             Items.Remove(item);
             RefreshNavigation();
         }
 
-        protected virtual List<InventoryUi> GetNavigatableItems(List<InventoryUi> items) => items;
+        private List<InventoryUi> GetNavigatableItems(List<InventoryUi> items) => items;
 
         public virtual InventoryUi RefreshNavigation()
         {

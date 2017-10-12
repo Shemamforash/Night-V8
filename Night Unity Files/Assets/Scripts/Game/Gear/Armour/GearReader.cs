@@ -29,8 +29,9 @@ namespace Game.Gear.Armour
         {
             string name = node.SelectSingleNode("Name").InnerText;
             int weight = int.Parse(node.SelectSingleNode("Weight").InnerText);
+            string description = node.SelectSingleNode("Description").InnerText;
             string effect = node.SelectSingleNode("Effect").InnerText;
-            Accessory a = new Accessory(name, weight, effect);
+            Accessory a = new Accessory(name, weight, description, effect);
             _accessoryList.Add(a);
         }
 
@@ -38,12 +39,13 @@ namespace Game.Gear.Armour
         {
             string name = node.SelectSingleNode("Name").InnerText;
             int weight = int.Parse(node.SelectSingleNode("Weight").InnerText);
+            string description = node.SelectSingleNode("Description").InnerText;
             int armour = int.Parse(node.SelectSingleNode("Armour").InnerText);
             int intelligenceModifier = int.Parse(node.SelectSingleNode("Intelligence").InnerText);
             int stabilityModifier = int.Parse(node.SelectSingleNode("Stability").InnerText);
             int strengthModifier = int.Parse(node.SelectSingleNode("Strength").InnerText);
             int enduranceModifier = int.Parse(node.SelectSingleNode("Endurance").InnerText);
-            Armour a = new Armour(name, weight, armour, intelligenceModifier, stabilityModifier, strengthModifier, enduranceModifier);
+            Armour a = new Armour(name, weight, description, armour, intelligenceModifier, stabilityModifier, strengthModifier, enduranceModifier);
             _armourList.Add(a);
         }
 

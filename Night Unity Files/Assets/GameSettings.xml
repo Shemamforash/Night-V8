@@ -9,20 +9,20 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>91</Val>
-          <Max>91</Max>
+          <Val>96</Val>
+          <Max>96</Max>
         </Strength>
         <Endurance>
-          <Val>46</Val>
-          <Max>46</Max>
+          <Val>84</Val>
+          <Max>84</Max>
         </Endurance>
         <Stability>
-          <Val>20</Val>
-          <Max>20</Max>
+          <Val>23</Val>
+          <Max>23</Max>
         </Stability>
         <Intelligence>
-          <Val>20</Val>
-          <Max>20</Max>
+          <Val>19</Val>
+          <Max>19</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -34,33 +34,33 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>7</Max>
+          <Max>8</Max>
         </Hunger>
         <Thirst>
-          <Val>13</Val>
-          <Max>7</Max>
+          <Val>11</Val>
+          <Max>3</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
     <Character>
-      <Name>Panacea</Name>
+      <Name>Caliber</Name>
       <Attributes>
         <Strength>
-          <Val>100</Val>
-          <Max>100</Max>
+          <Val>73</Val>
+          <Max>73</Max>
         </Strength>
         <Endurance>
-          <Val>68</Val>
-          <Max>68</Max>
+          <Val>72</Val>
+          <Max>72</Max>
         </Endurance>
         <Stability>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>30</Val>
+          <Max>30</Max>
         </Stability>
         <Intelligence>
-          <Val>23</Val>
-          <Max>23</Max>
+          <Val>36</Val>
+          <Max>36</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -72,13 +72,13 @@
         </Dehydration>
         <Hunger>
           <Val>12</Val>
-          <Max>7</Max>
+          <Max>8</Max>
         </Hunger>
         <Thirst>
-          <Val>13</Val>
-          <Max>7</Max>
+          <Val>11</Val>
+          <Max>3</Max>
         </Thirst>
-        <Weight>3</Weight>
+        <Weight>2</Weight>
       </Attributes>
     </Character>
   </CharacterManager>

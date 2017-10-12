@@ -1,6 +1,7 @@
 ﻿using Game.Gear.Armour;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Gear.UI
 {
@@ -8,16 +9,17 @@ namespace Game.Gear.UI
     {
         public AccessoryUi(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/WeaponItem") : base(linkedObject, parent, prefabLocation)
         {
+            DetailedSection.GetComponent<LayoutElement>().minHeight = 100;
         }
 
         public override void Update()
         {
             base.Update();
             Accessory accessory = (Accessory)LinkedObject;
-            TitleText.gameObject.SetActive(false);
+            TitleText.text = accessory.Description;
             SubTitleText.text = accessory.Effect;
-            _modifierSection.SetActive(false);
-            _statsSection.SetActive(false);
+            ModifierSection.SetActive(false);
+            StatsSection.SetActive(false);
         }
     }
 }

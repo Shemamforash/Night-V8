@@ -35,6 +35,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             return _items;
         }
+
+        public List<MyGameObject> GetItemsOfType(Func<MyGameObject, bool> typeCheck)
+        {
+            return _items.Where(typeCheck).ToList();
+        }
         
         public float MaxWeight
         {

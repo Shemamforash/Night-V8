@@ -8,10 +8,11 @@ namespace Game.Gear.Armour
 {
     public class Accessory : GearItem
     {
-        public readonly string Effect;
+        public readonly string Effect, Description;
         
-        public Accessory(string name, float weight, string effect) : base(name, weight, GearSubtype.Accessory)
+        public Accessory(string name, float weight, string description, string effect) : base(name, weight, GearSubtype.Accessory)
         {
+            Description = description;
             Effect = effect;
         }
 

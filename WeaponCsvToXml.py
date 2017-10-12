@@ -86,14 +86,15 @@ class GearImporter(XMLWriter):
     def read_single_gear(self, name, gear_type, row):
         write_single_value(self, "Name", name)
         write_single_value(self, "Weight", get_value(self, "D", row))
+        write_single_value(self, "Description", get_value(self, "E", row))
         if gear_type == "Accessory":
-            write_single_value(self, "Effect", get_value(self, "E", row))
+            write_single_value(self, "Effect", get_value(self, "F", row) + get_value(self, "G", row))
         else:
-            write_single_value(self, "Armour", get_value(self, "F", row, 0))
-            write_single_value(self, "Intelligence", get_value(self, "G", row, 0))
-            write_single_value(self, "Stability", get_value(self, "H", row, 0))
-            write_single_value(self, "Strength", get_value(self, "I", row, 0))
-            write_single_value(self, "Endurance", get_value(self, "J", row, 0))
+            write_single_value(self, "Armour", get_value(self, "H", row, 0))
+            write_single_value(self, "Intelligence", get_value(self, "I", row, 0))
+            write_single_value(self, "Stability", get_value(self, "J", row, 0))
+            write_single_value(self, "Strength", get_value(self, "K", row, 0))
+            write_single_value(self, "Endurance", get_value(self, "L", row, 0))
 
 
 def write_tag(xml_writer, tag_name, nested_method=None, args=None, parameters=[], values=[]):
