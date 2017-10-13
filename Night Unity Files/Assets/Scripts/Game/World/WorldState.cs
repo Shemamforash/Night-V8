@@ -144,7 +144,7 @@ namespace Game.World
         private static void SetResourceSuffix(InventoryResourceType name, string convention)
         {
             TextMeshProUGUI resourceText = GameObject.Find(name.ToString()).GetComponent<TextMeshProUGUI>();
-            HomeInventory.GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f) + " " + convention; });
+            HomeInventory.GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f.GetCurrentValue()) + " " + convention; });
         }
 
         public static WorldState Instance()

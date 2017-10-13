@@ -7,7 +7,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class InventoryResource : InventoryItem
     {
-        private readonly MyInt _quantity = new MyInt(0);
+        public readonly MyInt Quantity = new MyInt(0);
         private readonly InventoryResourceType _inventoryResourceType;
 
         public InventoryResource(InventoryResourceType inventoryResourceType, float weight) : base(inventoryResourceType.ToString(), GameObjectType.Resource, weight)
@@ -37,27 +37,22 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return ui;
         }
         
-        public void AddOnUpdate(Action<int> action)
+        public void AddOnUpdate(Action<MyValue<int>> action)
         {
-            _quantity.AddOnValueChange(action);
+            Quantity.AddOnValueChange(action);
         }
 
         public int Decrement(int amount)
         {
-            int previousQuantity = _quantity.Val;
-            _quantity.Val = _quantity.Val - amount;
-            int consumption = previousQuantity - _quantity.Val;
+            int previousQuantity = Quantity.GetCurrentValue();
+            Quantity.SetCurrentValue(Quantity.GetCurrentValue() - amount);
+            int consumption = previousQuantity - Quantity.GetCurrentValue();
             return consumption;
         }
 
         public void Increment(int amount)
         {
-            _quantity.Val += amount;
-        }
-
-        public override int Quantity()
-        {
-            return _quantity.Val;
+            Quantity.SetCurrentValue(Quantity.GetCurrentValue() + amount);
         }
 
         public float GetWeight(int quantity)

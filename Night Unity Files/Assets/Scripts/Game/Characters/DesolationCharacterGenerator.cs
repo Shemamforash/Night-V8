@@ -22,19 +22,19 @@ namespace Game.Characters
                 DesolationCharacter c = GenerateCharacter();
                 DesolationCharacterAttributes attributes = c.Attributes;
                 List<string> failMessages = new List<string>();
-                if (!InBounds(attributes.Strength.Val, 40, 160))
+                if (!InBounds(attributes.Strength.GetCurrentValue(), 40, 160))
                 {
                     failMessages.Add("Strength out of bounds");
                 }
-                if (!InBounds(attributes.Endurance.Val, 40, 160))
+                if (!InBounds(attributes.Endurance.GetCurrentValue(), 40, 160))
                 {
                     failMessages.Add("Endurance out of bounds");
                 }
-                if (!InBounds(attributes.Stability.Val, 5, 25))
+                if (!InBounds(attributes.Stability.GetCurrentValue(), 5, 25))
                 {
                     failMessages.Add("Stability out of bounds");
                 }
-                if (!InBounds(attributes.Intelligence.Val, 5, 25))
+                if (!InBounds(attributes.Intelligence.GetCurrentValue(), 5, 25))
                 {
                     failMessages.Add("Intelligence out of bounds");
                 }
@@ -126,13 +126,13 @@ namespace Game.Characters
             int stabilityBonusVal = 4;
             int intelligenceBonusVal = 4;
             attributes.Strength.Max = Random.Range(80, 120) + c.CharacterClass.StrengthBonus * strengthBonusVal + c.CharacterTrait.StrengthBonus;
-            attributes.Strength.Val = attributes.Strength.Max;
+            attributes.Strength.SetCurrentValue(attributes.Strength.Max);
             attributes.Endurance.Max = Random.Range(30, 70) + c.CharacterClass.EnduranceBonus * enduranceBonusVal + c.CharacterTrait.EnduranceBonus;
-            attributes.Endurance.Val = attributes.Endurance.Max;
+            attributes.Endurance.SetCurrentValue(attributes.Endurance.Max);
             attributes.Stability.Max = Random.Range(15, 20) + c.CharacterClass.StabilityBonus * stabilityBonusVal + c.CharacterTrait.StabilityBonus;
-            attributes.Stability.Val = attributes.Stability.Max;
+            attributes.Stability.SetCurrentValue(attributes.Stability.Max);
             attributes.Intelligence.Max = Random.Range(15, 20) + c.CharacterClass.IntelligenceBonus * intelligenceBonusVal + c.CharacterTrait.IntelligenceBonus;
-            attributes.Intelligence.Val = attributes.Intelligence.Max;
+            attributes.Intelligence.SetCurrentValue(attributes.Intelligence.Max);
             attributes.Weight = CalculateWeight(c);
         }
     }

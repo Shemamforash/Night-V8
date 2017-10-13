@@ -17,7 +17,7 @@ namespace Game.Gear.UI
             base.Update();
             Weapon weapon = (Weapon)LinkedObject;
             TitleText.text = Helper.Round(weapon.WeaponAttributes.DPS(), 1) + "DPS";
-            SubTitleText.text = "Magazine " + weapon.AmmoInMagazine.Val + "/" + weapon.Capacity;
+            SubTitleText.text = "Magazine " + weapon.AmmoInMagazine.GetCurrentValue() + "/" + weapon.Capacity;
             ModifierColumnOneText.text = weapon.SubClass.GetDescription();
             ModifierColumn2Text.text = weapon.SecondaryModifier.GetDescription(true);
             TopLeftAttributeText.text = weapon.GetAttributeValue(AttributeType.Damage) + "DMG";

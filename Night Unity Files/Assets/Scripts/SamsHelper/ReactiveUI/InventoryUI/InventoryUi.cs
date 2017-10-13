@@ -21,8 +21,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         protected readonly GameObject GameObject;
         protected readonly MyGameObject LinkedObject;
         private Func<bool> _destroyCheck;
-
-        private MenuList _menuList;
+        private bool _isDestroyed;       
 
         public InventoryUi(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/FlexibleItem")
         {
@@ -32,10 +31,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Update();
         }
 
-        public void AddToMenuList(MenuList menuList)
-        {
-            _menuList = menuList;
-        }
+        public bool IsDestroyed() => _isDestroyed;
 
         protected virtual void CacheUiElements()
         {
@@ -62,6 +58,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         {
             if (_destroyCheck != null && _destroyCheck())
             {
+                _isDestroyed = true;
                 Destroy();
             }
             UpdateText(_centralText, _centralTextCallback);

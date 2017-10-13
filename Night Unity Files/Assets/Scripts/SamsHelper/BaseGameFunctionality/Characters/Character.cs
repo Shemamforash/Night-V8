@@ -7,6 +7,7 @@ using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Combat;
 using Game.Gear;
+using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -86,6 +87,7 @@ namespace SamsHelper.BaseGameFunctionality.Characters
         {
             Inventory previousInventory = gearItem.Inventory;
             GearItem previousEquipped = EquippedGear[gearItem.GetGearType()];
+            previousEquipped?.Modifier.Remove(Attributes);
             if (!CharacterInventory.ContainsItem(gearItem))
             {
                 gearItem.MoveTo(CharacterInventory);
@@ -97,6 +99,7 @@ namespace SamsHelper.BaseGameFunctionality.Characters
             }
             gearItem.Equipped = true;
             EquippedGear[gearItem.GetGearType()] = gearItem;
+            gearItem.Modifier.Apply(Attributes);
             switch (gearItem.GetGearType())
             {
                 case GearSubtype.Weapon:

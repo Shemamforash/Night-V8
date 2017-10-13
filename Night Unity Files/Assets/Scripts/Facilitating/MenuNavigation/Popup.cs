@@ -72,8 +72,8 @@ namespace Facilitating.MenuNavigation
 
         public void AddList(List<MyGameObject> items, Action<MyGameObject> callback, bool centered = false, bool autoDestruct = false, bool closeAll = false)
         {
-            MenuList menuList = Helper.InstantiateUiObject("Prefabs/Simple Menu", _container).GetComponent<MenuList>();
-            if(centered) menuList.EnableFadeFromCenter();
+            GameObject menuObject = Helper.InstantiateUiObject("Prefabs/Simple Menu", _container);
+            MenuList menuList = centered ? menuObject.AddComponent<ScrollingMenuList>() : menuObject.AddComponent<MenuList>();
             menuList.SetItems(items);
             menuList.GetItems().ForEach(item =>
             {
@@ -104,8 +104,10 @@ namespace Facilitating.MenuNavigation
             int i = _options.IndexOf(newOption);
             if (i > 0)
             {
+                Helper.SetReciprocalNavigation(newOption, _options[0]);
                 Helper.SetReciprocalNavigation(_options[i - 1], newOption);
             }
+            b.Select();
         }
 
         private void Hide()

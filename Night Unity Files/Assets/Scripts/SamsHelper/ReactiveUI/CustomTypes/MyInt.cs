@@ -17,7 +17,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
             BroadcastChange();
         }
 
-        public float AsPercent() => 100f / _max * _currentValue;
+        public float AsPercent() => 100f / _max * CurrentValue;
 
         public void OnMax(Action a)=> _onMax = a;
         public void OnMin(Action a) => _onMin = a;
@@ -30,9 +30,9 @@ namespace SamsHelper.ReactiveUI.CustomTypes
             set
             {
                 _max = value;
-                if (_currentValue > _max)
+                if (CurrentValue > _max)
                 {
-                    Val = _max;
+                    SetCurrentValue(_max);
                 }
             }
         }
@@ -43,122 +43,118 @@ namespace SamsHelper.ReactiveUI.CustomTypes
             set
             {
                 _min = value;
-                if (_currentValue < _min)
+                if (CurrentValue < _min)
                 {
-                    Val = _min;
+                    SetCurrentValue(_min);
                 }
             }
         }
 
-        public int Val
+        public override void SetCurrentValue(int value)
         {
-            get { return _currentValue; }
-            set
+            if (value > _max)
             {
-                if (value > _max)
-                {
-                    _currentValue = _max;
-                    _onMax?.Invoke();
-                }
-                else if (value < _min)
-                {
-                    _currentValue = _min;
-                    _onMin?.Invoke();
-                }
-                else
-                {
-                    _currentValue = value;
-                }
-                BroadcastChange();
+                CurrentValue = _max;
+                _onMax?.Invoke();
             }
+            else if (value < _min)
+            {
+                CurrentValue = _min;
+                _onMin?.Invoke();
+            }
+            else
+            {
+                CurrentValue = value;
+            }
+            BroadcastChange();
         }
 
         public bool ReachedMin()
         {
-            bool reached = _currentValue <= _min;
+            bool reached = CurrentValue <= _min;
             return reached;
         }
 
         public bool ReachedMax()
         {
-            bool reached = _currentValue >= _max;
+            bool reached = CurrentValue >= _max;
             return reached;
         }
 
         //OPERATORS
         public static int operator +(MyInt a, MyInt b)
         {
-            return a._currentValue + b._currentValue;
+            return a.CurrentValue + b.CurrentValue;
         }
 
         public static int operator +(MyInt a, int b)
         {
-            return a._currentValue + b;
+            return a.CurrentValue + b;
         }
 
         public static int operator /(MyInt a, int b)
         {
-            return a._currentValue / b;
+            return a.CurrentValue / b;
         }
 
         public static bool operator <(MyInt a, MyInt b)
         {
-            return a._currentValue < b._currentValue;
+            return a.CurrentValue < b.CurrentValue;
         }
 
         public static bool operator <(MyInt a, int b)
         {
-            return a._currentValue < b;
+            return a.CurrentValue < b;
         }
 
         public static bool operator <(int a, MyInt b)
         {
-            return a < b._currentValue;
+            return a < b.CurrentValue;
         }
 
         public static bool operator >(MyInt a, MyInt b)
         {
-            return a._currentValue > b._currentValue;
+            return a.CurrentValue > b.CurrentValue;
         }
 
         public static bool operator >(MyInt a, int b)
         {
-            return a._currentValue > b;
+            return a.CurrentValue > b;
         }
 
         public static bool operator >(int a, MyInt b)
         {
-            return a > b._currentValue;
+            return a > b.CurrentValue;
         }
 
         public static int operator *(MyInt a, int b)
         {
-            return a._currentValue + b;
+            return a.CurrentValue + b;
         }
 
         public static bool operator ==(MyInt a, int b)
         {
-            return a._currentValue == b;
+            return a.CurrentValue == b;
         }
 
         public static bool operator !=(MyInt a, int b)
         {
-            return a._currentValue != b;
+            return a.CurrentValue != b;
         }
 
         public static bool operator ==(MyInt a, MyInt b)
         {
-            return a._currentValue == b._currentValue;
+            return a.CurrentValue == b.CurrentValue;
         }
 
         public static bool operator !=(MyInt a, MyInt b)
         {
-            return a._currentValue != b._currentValue;
+            return a.CurrentValue != b.CurrentValue;
         }
 
         private bool Equals(MyInt other)
         {
-            return _currentValue.Equals(other._currentValue);
+            return CurrentValue.Equals(other.CurrentValue);
         }
 
         public override bool Equals(object obj)
@@ -170,7 +166,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
 
         public override int GetHashCode()
         {
-            return _currentValue.GetHashCode();
+            return CurrentValue.GetHashCode();
         }
     }
 }

@@ -31,14 +31,14 @@ namespace Game.Combat
         {
             float amount = 5f + Character.GetWeapon().GetAttributeValue(AttributeType.Handling) / 10f;
             amount *= Time.deltaTime;
-            _aimAmount.Val = _aimAmount.Val + amount;
+            _aimAmount.SetCurrentValue(_aimAmount.GetCurrentValue() + amount);
 //            CombatUi.UpdateAimSlider(_aimAmount.Val);
         }
 
         public void DecreaseAim()
         {
             float amount = 100f / Character.GetWeapon().Capacity;
-            _aimAmount.Val = _aimAmount.Val - amount;
+            _aimAmount.SetCurrentValue(_aimAmount.GetCurrentValue() - amount);
 //            CombatUi.UpdateAimSlider(_aimAmount.Val);
         }
     }

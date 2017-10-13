@@ -73,6 +73,7 @@ namespace Facilitating.UI.Elements
 
         public void SetColor(Color color)
         {
+            TryReplaceText();
             _text.color = color;
         }
     }

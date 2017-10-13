@@ -1,4 +1,5 @@
 ﻿using Game.Gear.UI;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
@@ -19,11 +20,15 @@ namespace Game.Gear.Armour
             StabilityModifier = stabilityModifier;
             StrengthModifier = strengthModifier;
             EnduranceModifier = enduranceModifier;
+            Modifier.AddModifier(AttributeType.Intelligence, intelligenceModifier, true);
+            Modifier.AddModifier(AttributeType.Stability, stabilityModifier, true);
+            Modifier.AddModifier(AttributeType.Strength, strengthModifier, true);
+            Modifier.AddModifier(AttributeType.Endurance, enduranceModifier, true);
         }
 
         public override string GetSummary()
         {
-            return "Armour";
+            return ArmourRating + " Armour";
         }
         
         public override InventoryUi CreateUi(Transform parent)

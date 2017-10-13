@@ -28,9 +28,9 @@ namespace SamsHelper.ReactiveUI.CustomTypes
             set
             {
                 _max = value;
-                if (_currentValue > _max)
+                if (CurrentValue > _max)
                 {
-                    Val = _max;
+                    SetCurrentValue(_max);
                 }
             }
         }
@@ -41,32 +41,28 @@ namespace SamsHelper.ReactiveUI.CustomTypes
             set
             {
                 _min = value;
-                if (_currentValue < _min)
+                if (CurrentValue < _min)
                 {
-                    Val = _min;
+                    SetCurrentValue(_min);
                 }
             }
         }
 
-        public float Val
+        public override void SetCurrentValue(float value)
         {
-            get { return _currentValue; }
-            set
+            if (value > _max)
             {
-                if (value > _max)
-                {
-                    _currentValue = _max;
-                }
-                else if (value < _min)
-                {
-                    _currentValue = _min;
-                }
-                else
-                {
-                    _currentValue = value;
-                }
-                BroadcastChange();
+                CurrentValue = _max;
             }
+            else if (value < _min)
+            {
+                CurrentValue = _min;
+            }
+            else
+            {
+                CurrentValue = value;
+            }
+            BroadcastChange();
         }
 
         public float RandomInRange()
@@ -76,7 +72,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
 
         public bool ReachedMin()
         {
-            if (_currentValue == _min)
+            if (CurrentValue == _min)
             {
                 return true;
             }
@@ -85,7 +81,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
 
         public bool ReachedMax()
         {
-            if (_currentValue == _max)
+            if (CurrentValue == _max)
             {
                 return true;
             }
@@ -95,77 +91,77 @@ namespace SamsHelper.ReactiveUI.CustomTypes
         //OPERATORS
         public static float operator +(MyFloat a, MyFloat b)
         {
-            return a._currentValue + b._currentValue;
+            return a.CurrentValue + b.CurrentValue;
         }
 
         public static float operator +(MyFloat a, float b)
         {
-            return a._currentValue + b;
+            return a.CurrentValue + b;
         }
 
         public static float operator /(MyFloat a, float b)
         {
-            return a._currentValue / b;
+            return a.CurrentValue / b;
         }
 
         public static bool operator <(MyFloat a, MyFloat b)
         {
-            return a._currentValue < b._currentValue;
+            return a.CurrentValue < b.CurrentValue;
         }
 
         public static bool operator <(MyFloat a, float b)
         {
-            return a._currentValue < b;
+            return a.CurrentValue < b;
         }
 
         public static bool operator <(float a, MyFloat b)
         {
-            return a < b._currentValue;
+            return a < b.CurrentValue;
         }
 
         public static bool operator >(MyFloat a, MyFloat b)
         {
-            return a._currentValue > b._currentValue;
+            return a.CurrentValue > b.CurrentValue;
         }
 
         public static bool operator >(MyFloat a, float b)
         {
-            return a._currentValue > b;
+            return a.CurrentValue > b;
         }
 
         public static bool operator >(float a, MyFloat b)
         {
-            return a > b._currentValue;
+            return a > b.CurrentValue;
         }
 
         public static float operator *(MyFloat a, float b)
         {
-            return a._currentValue + b;
+            return a.CurrentValue + b;
         }
 
         public static bool operator ==(MyFloat a, float b)
         {
-            return a._currentValue == b;
+            return a.CurrentValue == b;
         }
 
         public static bool operator !=(MyFloat a, float b)
         {
-            return a._currentValue != b;
+            return a.CurrentValue != b;
         }
 
         public static bool operator ==(MyFloat a, MyFloat b)
         {
-            return a._currentValue == b._currentValue;
+            return a.CurrentValue == b.CurrentValue;
         }
 
         public static bool operator !=(MyFloat a, MyFloat b)
         {
-            return a._currentValue != b._currentValue;
+            return a.CurrentValue != b.CurrentValue;
         }
 
         protected bool Equals(MyFloat other)
         {
-            return _currentValue.Equals(other._currentValue);
+            return CurrentValue.Equals(other.CurrentValue);
         }
 
         public override bool Equals(object obj)
@@ -178,7 +174,7 @@ namespace SamsHelper.ReactiveUI.CustomTypes
 
         public override int GetHashCode()
         {
-            return _currentValue.GetHashCode();
+            return CurrentValue.GetHashCode();
         }
     }
 }

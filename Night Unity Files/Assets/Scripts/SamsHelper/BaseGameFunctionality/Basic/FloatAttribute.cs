@@ -14,7 +14,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             AttributeType = attributeType;
         }
 
-        public float CalculatedValue()
+        public float GetCalculatedValue()
         {
             Recalculate();
             return _calculatedValue;
@@ -29,7 +29,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
         public void Recalculate()
         {
-            _calculatedValue = (Val + _summativeModifier) * _multiplicativeModifier;
+            _calculatedValue = (GetCurrentValue() + _summativeModifier) * _multiplicativeModifier;
         }
 
         public void RemoveModifier(float modifier, bool summative = false)

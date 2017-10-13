@@ -36,7 +36,7 @@ namespace Game.Combat
 
         public static void TakeDamage(float f)
         {
-            _strengthText.Val -= f;
+            _strengthText.SetCurrentValue(_strengthText.GetCurrentValue() - f);
         }
     }
 }

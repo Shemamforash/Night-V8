@@ -2,9 +2,8 @@
 {
     public interface IAttribute
     {
-        float CalculatedValue();
+        float GetCalculatedValue();
         void AddModifier(float modifier, bool summative = false);
         void RemoveModifier(float modifier, bool summative = false);
-        void Recalculate();
     }
 }

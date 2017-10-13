@@ -4,26 +4,26 @@ namespace SamsHelper.ReactiveUI.CustomTypes
 {
     public abstract class MyValue<T>
     {
-        protected event Action<T> OnValueChange;
-        protected T _currentValue;
+        protected event Action<MyValue<T>> OnValueChange;
+        protected T CurrentValue;
 
-        public MyValue(T initialValue)
+        protected MyValue(T initialValue)
         {
-            _currentValue = initialValue;
+            CurrentValue = initialValue;
         }
 
-        public void AddOnValueChange(Action<T> a)
+        public void AddOnValueChange(Action<MyValue<T>> a)
         {
-            a(_currentValue);
+            a(this);
             OnValueChange += a;
         }
 
-        public void BroadcastChange()
+        protected void BroadcastChange()
         {
-            if (OnValueChange != null)
-            {
-                OnValueChange(_currentValue);
-            }
+            OnValueChange?.Invoke(this);
         }
+
+        public T GetCurrentValue() => CurrentValue;
+        public abstract void SetCurrentValue(T value);
     }
 }

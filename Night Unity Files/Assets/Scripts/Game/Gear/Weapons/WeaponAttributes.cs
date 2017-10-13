@@ -29,13 +29,13 @@ namespace Game.Gear.Weapons
 
         public void RecalculateAttributeValues()
         {
-            Damage.Val = (int) _weapon.WeaponClass.Damage.GetScaledValue(_weapon.Durability.Val);
-            Accuracy.Val = (int) _weapon.WeaponClass.Accuracy.GetScaledValue(_weapon.Durability.Val);
-            CriticalChance.Val = (int) _weapon.WeaponClass.CriticalChance.GetScaledValue(_weapon.Durability.Val);
-            Handling.Val = (int) _weapon.WeaponClass.Handling.GetScaledValue(_weapon.Durability.Val);
+            Damage.SetCurrentValue((int) _weapon.WeaponClass.Damage.GetScaledValue(_weapon.Durability.GetCurrentValue()));
+            Accuracy.SetCurrentValue((int) _weapon.WeaponClass.Accuracy.GetScaledValue(_weapon.Durability.GetCurrentValue()));
+            CriticalChance.SetCurrentValue((int) _weapon.WeaponClass.CriticalChance.GetScaledValue(_weapon.Durability.GetCurrentValue()));
+            Handling.SetCurrentValue((int) _weapon.WeaponClass.Handling.GetScaledValue(_weapon.Durability.GetCurrentValue()));
             
-            FireRate.Val = _weapon.WeaponClass.FireRate.GetScaledValue(_weapon.Durability.Val);
-            ReloadSpeed.Val = _weapon.WeaponClass.ReloadSpeed.GetScaledValue(_weapon.Durability.Val);
+            FireRate.SetCurrentValue(_weapon.WeaponClass.FireRate.GetScaledValue(_weapon.Durability.GetCurrentValue()));
+            ReloadSpeed.SetCurrentValue(_weapon.WeaponClass.ReloadSpeed.GetScaledValue(_weapon.Durability.GetCurrentValue()));
             
             _weapon.SubClass.Apply(this);
             _weapon.SecondaryModifier.Apply(this);
@@ -44,9 +44,9 @@ namespace Game.Gear.Weapons
 
         private void CalculateDPS()
         {
-            float averageShotDamage = CriticalChance.CalculatedValue() / 100 * Damage.CalculatedValue() * 2 + (1 - CriticalChance.CalculatedValue() / 100) * Damage.CalculatedValue();
-            float magazineDamage = _weapon.Capacity * averageShotDamage * _weapon.Pellets * Accuracy.CalculatedValue() / 100;
-            float magazineDuration =  _weapon.Capacity / FireRate.CalculatedValue() + ReloadSpeed.CalculatedValue();
+            float averageShotDamage = CriticalChance.GetCalculatedValue() / 100 * Damage.GetCalculatedValue() * 2 + (1 - CriticalChance.GetCalculatedValue() / 100) * Damage.GetCalculatedValue();
+            float magazineDamage = _weapon.Capacity * averageShotDamage * _weapon.Pellets * Accuracy.GetCalculatedValue() / 100;
+            float magazineDuration =  _weapon.Capacity / FireRate.GetCalculatedValue() + ReloadSpeed.GetCalculatedValue();
             _dps = magazineDamage / magazineDuration;
         }
 

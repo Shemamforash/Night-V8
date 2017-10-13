@@ -1,4 +1,5 @@
-﻿using SamsHelper.BaseGameFunctionality.Characters;
+﻿using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     {
         private readonly GearSubtype _gearType;
         public bool Equipped { get; set; }
+        public readonly AttributesModifier Modifier = new AttributesModifier();
 
         protected GearItem(string name, float weight, GearSubtype gearSubtype) : base(name, GameObjectType.Gear, weight)
         {

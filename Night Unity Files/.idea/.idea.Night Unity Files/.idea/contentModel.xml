@@ -340,6 +340,7 @@
                 <e p="InventoryTransferManager.cs" t="Include" />
                 <e p="InventoryUi.cs" t="Include" />
                 <e p="MenuList.cs" t="Include" />
+                <e p="ScrollingMenuList.cs" t="Include" />
               </e>
               <e p="MenuSystem" t="Include">
                 <e p="Menu.cs" t="Include" />

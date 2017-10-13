@@ -27,14 +27,14 @@ namespace Game.World.Environment_and_Weather
 
         public override void Enter()
         {
-            _temperature.Val = _temperature.RandomInRange();
+            _temperature.SetCurrentValue(_temperature.RandomInRange());
             _timeRemaining = _duration.RandomInRange() * WorldState.MinutesPerHour;
             WeatherSystemController.Instance().ChangeWeather(this, _timeRemaining);
         }
 
         public int Temperature()
         {
-            return _temperature.Val;
+            return _temperature.GetCurrentValue();
         }
 
         public void UpdateWeather()

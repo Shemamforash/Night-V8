@@ -4,20 +4,20 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>96</Val>
-          <Max>96</Max>
+          <Val>86</Val>
+          <Max>86</Max>
         </Strength>
         <Endurance>
-          <Val>84</Val>
-          <Max>84</Max>
+          <Val>82</Val>
+          <Max>82</Max>
         </Endurance>
         <Stability>
-          <Val>23</Val>
-          <Max>23</Max>
+          <Val>20</Val>
+          <Max>20</Max>
         </Stability>
         <Intelligence>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>20</Val>
+          <Max>20</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -32,30 +32,30 @@
           <Max>8</Max>
         </Hunger>
         <Thirst>
-          <Val>11</Val>
-          <Max>3</Max>
+          <Val>13</Val>
+          <Max>13</Max>
         </Thirst>
         <Weight>2</Weight>
       </Attributes>
     </Character>
     <Character>
-      <Name>Caliber</Name>
+      <Name>Iodyne</Name>
       <Attributes>
         <Strength>
-          <Val>73</Val>
-          <Max>73</Max>
+          <Val>66</Val>
+          <Max>66</Max>
         </Strength>
         <Endurance>
-          <Val>72</Val>
-          <Max>72</Max>
+          <Val>69</Val>
+          <Max>69</Max>
         </Endurance>
         <Stability>
-          <Val>30</Val>
-          <Max>30</Max>
+          <Val>17</Val>
+          <Max>17</Max>
         </Stability>
         <Intelligence>
-          <Val>36</Val>
-          <Max>36</Max>
+          <Val>23</Val>
+          <Max>23</Max>
         </Intelligence>
         <Starvation>
           <Val>50</Val>
@@ -70,10 +70,10 @@
           <Max>8</Max>
         </Hunger>
         <Thirst>
-          <Val>11</Val>
-          <Max>3</Max>
+          <Val>13</Val>
+          <Max>13</Max>
         </Thirst>
-        <Weight>2</Weight>
+        <Weight>3</Weight>
       </Attributes>
     </Character>
   </CharacterManager>

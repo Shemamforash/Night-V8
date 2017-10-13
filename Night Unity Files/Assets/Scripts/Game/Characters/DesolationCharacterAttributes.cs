@@ -80,19 +80,20 @@ namespace Game.Characters
             {
                 if (resource.Decrement(1) != 1)
                 {
-                    ++tolerance.Val;                    
+                    tolerance.SetCurrentValue(tolerance.GetCurrentValue() + 1);                    
                 }
-                need.Val = 0;
+                need.SetCurrentValue(0);
             });
             tolerance.OnMax(_character.Kill);
         }
 
         private void BindUiToAttribute(IntAttribute a, TextMeshProUGUI simpleText, TextMeshProUGUI detailText)
         {
-            a.AddOnValueChange(delegate(int f)
+            a.AddOnValueChange(delegate(MyValue<int> f)
             {
-                simpleText.text = f.ToString();
-                detailText.text = f + "/" + a.Max;
+                int calculatedValue = (int)((IntAttribute) f).GetCalculatedValue();
+                simpleText.text = calculatedValue.ToString();
+                detailText.text = calculatedValue + "/" + a.Max;
             });
         }
         
@@ -118,7 +119,7 @@ namespace Game.Characters
         {
             float previousTolerance = tolerance.AsPercent();
             Intensity previousIntensity = GetIntensity(previousTolerance);
-            ++requirement.Val;
+            requirement.SetCurrentValue(requirement.GetCurrentValue() + 1);
             float tolerancePercentage = tolerance.AsPercent();
             Intensity currentIntensity = GetIntensity(tolerancePercentage);
             if (previousIntensity != currentIntensity)
@@ -134,15 +135,15 @@ namespace Game.Characters
             float dehydrationLevel = Dehydration.AsPercent();
             if (starvationLevel >= _toleranceThresholds[4] || dehydrationLevel >= _toleranceThresholds[4])
             {
-                Intelligence.Val -= 2;
+                Intelligence.SetCurrentValue(Intelligence.GetCurrentValue() - 2);
             }
             else if (starvationLevel >= _toleranceThresholds[3] || dehydrationLevel >= _toleranceThresholds[3])
             {
-                Intelligence.Val -= 1;
+                Intelligence.SetCurrentValue(Intelligence.GetCurrentValue() - 1);
             }
             else
             {
-                Intelligence.Val += 1;
+                Intelligence.SetCurrentValue(Intelligence.GetCurrentValue() + 1);
             }
         }
 
@@ -172,21 +173,21 @@ namespace Game.Characters
 
         private void Drink()
         {
-            if (Dehydration.Val == 0) return;
+            if (Dehydration.GetCurrentValue() == 0) return;
             int consumed = WorldState.Home().DecrementResource(InventoryResourceType.Water, 1);
-            Dehydration.Val -= consumed;
+            Dehydration.SetCurrentValue(Dehydration.GetCurrentValue() - consumed);
         }
 
         private void Eat()
         {
-            if (Starvation.Val == 0) return;
+            if (Starvation.GetCurrentValue() == 0) return;
             int consumed = WorldState.Home().DecrementResource(InventoryResourceType.Food, 1);
-            Starvation.Val -= consumed;
+            Starvation.SetCurrentValue(Starvation.GetCurrentValue() - consumed);
         }
 
         public float RemainingCarryCapacity()
         {
-            return Strength.Val;
+            return Strength.GetCurrentValue();
         }
 
         public void Load(XmlNode doc, PersistenceType saveType)
@@ -211,7 +212,7 @@ namespace Game.Characters
             XmlNode maxNode = attributeNode.SelectSingleNode("Max");
             intAttribute.Max = SaveController.ParseIntFromSubNode(maxNode);
             XmlNode valNode = attributeNode.SelectSingleNode("Val");
-            intAttribute.Val = SaveController.ParseIntFromSubNode(valNode);
+            intAttribute.SetCurrentValue(SaveController.ParseIntFromSubNode(valNode));
         }
 
         public void Save(XmlNode doc, PersistenceType saveType)
@@ -233,7 +234,7 @@ namespace Game.Characters
         {
             XmlNode attributeNode = SaveController.CreateNodeAndAppend(attributeName, root);
             SaveController.CreateNodeAndAppend("Val", attributeNode, intAttribute.Max);
-            SaveController.CreateNodeAndAppend("Max", attributeNode, intAttribute.Val);
+            SaveController.CreateNodeAndAppend("Max", attributeNode, intAttribute.GetCurrentValue());
         }
     }
 }

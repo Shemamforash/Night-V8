@@ -49,7 +49,7 @@ namespace Game.Gear.Weapons
             WeaponAttributes = new WeaponAttributes(this);
             AmmoInMagazine.Max = Capacity;
 #if UNITY_EDITOR
-            Print();
+//            Print();
 #endif
             Reload();
             UpdateDurability();
@@ -60,8 +60,8 @@ namespace Game.Gear.Weapons
         {
             Debug.Log(WeaponClass.Type + " " + SubClass.Name
                       + "\nAutomatic:  " + Automatic
-                      + "\nDurability: " + Durability.Val
-                      + "\nAmmo Left:  " + AmmoInMagazine.Val
+                      + "\nDurability: " + Durability.GetCurrentValue()
+                      + "\nAmmo Left:  " + AmmoInMagazine.GetCurrentValue()
                       + "\nCapacity:   " + Capacity
                       + "\nPellets:    " + Pellets
                       + "\nDamage:     " + GetAttributeValue(AttributeType.Damage)
@@ -74,13 +74,13 @@ namespace Game.Gear.Weapons
 
         public float GetAttributeValue(AttributeType attributeType)
         {
-            return WeaponAttributes.Get(attributeType).CalculatedValue();
+            return WeaponAttributes.Get(attributeType).GetCalculatedValue();
         }
 
         public void IncreaseDurability()
         {
             _canEquip = true;
-            ++Durability.Val;
+            Durability.SetCurrentValue(Durability.GetCurrentValue() + 1);
             UpdateDurability();
         }
 
@@ -110,7 +110,7 @@ namespace Game.Gear.Weapons
 
         public void DecreaseDurability()
         {
-            --Durability.Val;
+            Durability.SetCurrentValue(Durability.GetCurrentValue() - 1);
             UpdateDurability();
         }
 
@@ -123,7 +123,7 @@ namespace Game.Gear.Weapons
         {
             if (AmmoInMagazine > 0)
             {
-                --AmmoInMagazine.Val;
+                AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() - 1);
                 return true;
             }
             return false;
@@ -132,12 +132,12 @@ namespace Game.Gear.Weapons
         public void Reload()
         {
             float ammoAvailable = WorldState.Home().DecrementResource(InventoryResourceType.Ammo, Capacity);
-            AmmoInMagazine.Val += (int) ammoAvailable;
+            AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() + (int) ammoAvailable);
         }
 
         public int GetRemainingAmmo()
         {
-            return AmmoInMagazine.Val;
+            return AmmoInMagazine.GetCurrentValue();
         }
 
         public override string GetSummary()

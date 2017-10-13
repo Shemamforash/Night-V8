@@ -28,7 +28,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             return _floatAttributes.ContainsKey(type) ? _floatAttributes[type] : null;
         }
 
-        public float GetCalculatedValue(AttributeType type) => Get(type).CalculatedValue();
+        public float GetCalculatedValue(AttributeType type) => Get(type).GetCalculatedValue();
 
         protected void AddAttribute(IntAttribute a)
         {

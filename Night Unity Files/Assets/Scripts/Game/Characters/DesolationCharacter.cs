@@ -57,7 +57,7 @@ namespace Game.Characters
         
         public override void TakeDamage(int amount)
         {
-            Attributes.Strength.Val -= amount;
+            Attributes.Strength.SetCurrentValue(Attributes.Strength.GetCurrentValue() - amount);
             if (Attributes.Strength.ReachedMin())
             {
                 //TODO kill character
@@ -118,12 +118,12 @@ namespace Game.Characters
         
         protected override bool IsOverburdened()
         {
-            return CharacterInventory.Weight > Attributes.Strength.Val;
+            return CharacterInventory.Weight > Attributes.Strength.GetCurrentValue();
         }
         
         private void Tire(int amount)
         {
-            Attributes.Endurance.Val -= IsOverburdened() ? amount * 2 : amount;
+            Attributes.Endurance.SetCurrentValue(Attributes.Endurance.GetCurrentValue() - (IsOverburdened() ? amount * 2 : amount));
             CheckEnduranceZero();
         }
 
@@ -144,7 +144,7 @@ namespace Game.Characters
 
         public void Rest(int amount)
         {
-            Attributes.Endurance.Val += amount;
+            Attributes.Endurance.SetCurrentValue(Attributes.Endurance.GetCurrentValue() + amount);
             if (!Attributes.Endurance.ReachedMax()) return;
             if (CurrentRegion == null)
             {
