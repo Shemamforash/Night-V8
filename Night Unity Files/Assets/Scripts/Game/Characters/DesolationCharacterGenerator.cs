@@ -4,6 +4,7 @@ using Game.Combat.Weapons;
 using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,7 +12,7 @@ namespace Game.Characters
 {
     public static class DesolationCharacterGenerator
     {
-        private static List<string> _characterNames;
+        private static readonly List<string> _characterNames;
 
         private static void TestCharacterGenerator()
         {
@@ -53,39 +54,36 @@ namespace Game.Characters
             }
         }
 
-        private static bool InBounds(int value, int lower, int upper)
-        {
-            return value >= lower && value <= upper;
-        }
+        private static bool InBounds(float value, int lower, int upper) => value >= lower && value <= upper;
 
-        private static string GenerateName(TraitLoader.Trait classCharacter)
-        {
-            return _characterNames[Random.Range(0, _characterNames.Count)];
-        }
-
-        public static void LoadInitialParty()
+        static DesolationCharacterGenerator()
         {
             _characterNames = new List<string>(Helper.ReadLinesFromFile("names"));
+        }
+
+        private static string GenerateName() => _characterNames[Random.Range(0, _characterNames.Count)];
+        
+        public static void LoadInitialParty()
+        {
 #if UNITY_EDITOR
 //            TestCharacterGenerator();
 #endif
-            WorldState.HomeInventory.AddItem(GenerateDriver());
-            WorldState.HomeInventory.AddItem(GenerateCharacter());
+            WorldState.HomeInventory().AddItem(GenerateDriver());
+            WorldState.HomeInventory().AddItem(GenerateCharacter());
         }
 
         private static DesolationCharacter GenerateCharacterObject(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait)
         {
-            GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", GameObject.Find("Character Section").transform.Find("Content").transform);
-            DesolationCharacter newCharacter = new DesolationCharacter(name, characterClass, characterTrait, characterObject);
+            DesolationCharacter newCharacter = new DesolationCharacter(name, characterClass, characterTrait);
             CalculateAttributes(newCharacter);
             return newCharacter;
         }
-        
+
         public static DesolationCharacter GenerateCharacter()
         {
             TraitLoader.Trait newClass = TraitLoader.GenerateClass();
             TraitLoader.Trait secondaryTrait = TraitLoader.GenerateTrait();
-            string name = GenerateName(newClass);
+            string name = GenerateName();
             DesolationCharacter c = GenerateCharacterObject(name, newClass, secondaryTrait);
             return c;
         }

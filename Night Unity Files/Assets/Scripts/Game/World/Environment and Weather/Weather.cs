@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using SamsHelper.BaseGameFunctionality.StateMachines;
-using SamsHelper.ReactiveUI.CustomTypes;
+using SamsHelper.ReactiveUI;
 
 namespace Game.World.Environment_and_Weather
 {
     public class Weather : ProbabalisticState
     {
-        private MyInt _temperature, _visibility, _water, _duration;
+        private MyValue _temperature, _visibility, _water, _duration;
         private List<Danger> _dangers = new List<Danger>();
         private int _timeRemaining;
         public WeatherAttributes Attributes;
         
-        public Weather(string name, MyInt temperature, MyInt visibility, MyInt water, MyInt duration) : base(name, StateSubtype.Weather, WeatherManager.Instance())
+        public Weather(string name, MyValue temperature, MyValue visibility, MyValue water, MyValue duration) : base(name, StateSubtype.Weather, WeatherManager.Instance())
         {
             _temperature = temperature;
             _visibility = visibility;
@@ -28,13 +28,13 @@ namespace Game.World.Environment_and_Weather
         public override void Enter()
         {
             _temperature.SetCurrentValue(_temperature.RandomInRange());
-            _timeRemaining = _duration.RandomInRange() * WorldState.MinutesPerHour;
+            _timeRemaining = (int)(_duration.RandomInRange() * WorldState.MinutesPerHour);
             WeatherSystemController.Instance().ChangeWeather(this, _timeRemaining);
         }
 
         public int Temperature()
         {
-            return _temperature.GetCurrentValue();
+            return (int) _temperature.GetCurrentValue();
         }
 
         public void UpdateWeather()

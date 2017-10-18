@@ -12,11 +12,11 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
-            if (WorldState.HomeInventory.GetResource(InventoryResourceType.Fuel).Quantity() > 0)
+            if (WorldState.HomeInventory().GetResource(InventoryResourceType.Fuel).Quantity() > 0)
             {
                 SetDuration(1);
                 MinuteCallback = Campfire.Tend;
-                WorldState.HomeInventory.DecrementResource(InventoryResourceType.Fuel, 1);
+                WorldState.HomeInventory().DecrementResource(InventoryResourceType.Fuel, 1);
                 Start();
             }
             else

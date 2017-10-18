@@ -161,25 +161,17 @@
             </e>
             <e p="SunController.cs" t="Include" />
             <e p="UI" t="Include">
+              <e p="BorderHighlight.cs" t="Include" />
               <e p="ButtonGroup.cs" t="Include" />
-              <e p="GameOnly" t="Include">
-                <e p="DayChangeSequence.cs" t="Include" />
-              </e>
-              <e p="Highlight" t="Include">
-                <e p="BorderHighlight.cs" t="Include" />
-                <e p="Highlight.cs" t="Include" />
-                <e p="ManualScrollbar.cs" t="Include" />
-                <e p="ManualSlider.cs" t="Include" />
-                <e p="Toggler.cs" t="Include" />
-              </e>
-              <e p="Main Menu Only" t="Include">
-                <e p="PermadeathToggler.cs" t="Include" />
-              </e>
-              <e p="Options Only" t="Include">
-                <e p="WindowSizer.cs" t="Include" />
-              </e>
+              <e p="DayChangeSequence.cs" t="Include" />
+              <e p="Highlight.cs" t="Include" />
+              <e p="ManualScrollbar.cs" t="Include" />
+              <e p="ManualSlider.cs" t="Include" />
+              <e p="PermadeathToggler.cs" t="Include" />
               <e p="RefocusKeyboardInput.cs" t="Include" />
+              <e p="Toggler.cs" t="Include" />
               <e p="TooltipController.cs" t="Include" />
+              <e p="WindowSizer.cs" t="Include" />
             </e>
           </e>
           <e p="Game" t="Include">
@@ -197,7 +189,7 @@
               </e>
               <e p="CharacterConditions.cs" t="Include" />
               <e p="CharacterGearComparison.cs" t="Include" />
-              <e p="CharacterUiDetailed.cs" t="Include" />
+              <e p="CharacterView.cs" t="Include" />
               <e p="Condition.cs" t="Include" />
               <e p="ConditionType.cs" t="Include" />
               <e p="DesolationCharacter.cs" t="Include" />
@@ -224,6 +216,7 @@
                 <e p="Reloading.cs" t="Include" />
                 <e p="Retreating.cs" t="Include" />
               </e>
+              <e p="CombatTester.cs" t="Include" />
               <e p="CombatUI.cs" t="Include" />
               <e p="Enemies" t="Include">
                 <e p="Encounter.cs" t="Include" />
@@ -282,9 +275,7 @@
                 <e p="AttributeContainer.cs" t="Include" />
                 <e p="AttributesModifier.cs" t="Include" />
                 <e p="AttributeType.cs" t="Include" />
-                <e p="FloatAttribute.cs" t="Include" />
-                <e p="IAttribute.cs" t="Include" />
-                <e p="IntAttribute.cs" t="Include" />
+                <e p="CharacterAttribute.cs" t="Include" />
                 <e p="MyGameObject.cs" t="Include" />
                 <e p="ScaleableValue.cs" t="Include" />
               </e>
@@ -325,11 +316,6 @@
               <e p="PersistenceType.cs" t="Include" />
             </e>
             <e p="ReactiveUI" t="Include">
-              <e p="CustomTypes" t="Include">
-                <e p="MyFloat.cs" t="Include" />
-                <e p="MyInt.cs" t="Include" />
-                <e p="MyValue.cs" t="Include" />
-              </e>
               <e p="Elements" t="Include">
                 <e p="EnhancedButton.cs" t="Include" />
                 <e p="EnhancedText.cs" t="Include" />
@@ -347,7 +333,8 @@
                 <e p="MenuState.cs" t="Include" />
                 <e p="MenuStateMachine.cs" t="Include" />
               </e>
-              <e p="ReactiveText.cs" t="Include" />
+              <e p="MyValue.cs" t="Include" />
+              <e p="ValueTextLink.cs" t="Include" />
             </e>
           </e>
         </e>

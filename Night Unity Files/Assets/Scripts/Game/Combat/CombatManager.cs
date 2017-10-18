@@ -1,5 +1,7 @@
-﻿using Game.World;
-using SamsHelper.ReactiveUI.CustomTypes;
+﻿using Game.Gear.Weapons;
+using Game.World;
+using SamsHelper.BaseGameFunctionality.Characters;
+using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 
 namespace Game.Combat
@@ -7,7 +9,7 @@ namespace Game.Combat
     public class CombatManager : Menu
     {
         public static CombatUi CombatUi;
-        private static MyFloat _strengthText;
+        private static MyValue _strengthText;
         private static CombatScenario _scenario;
         
         protected void Awake()
@@ -17,14 +19,15 @@ namespace Game.Combat
         
         public static void EnterCombat(CombatScenario scenario)
         {
+            Weapon equippedWeapon = (Weapon) _scenario.Character.EquippedGear[GearSubtype.Weapon];
             WorldState.Pause();
             MenuStateMachine.States.NavigateToState("Combat Menu");
             _scenario = scenario;
             CombatUi.CharacterName.text = _scenario.Character.Name;
-            CombatUi.WeaponNameText.text = _scenario.Character.GetWeapon().Name;
+            CombatUi.WeaponNameText.text = equippedWeapon.Name;
 
-            CombatUi.ResetMagazine(_scenario.Character.GetWeapon().Capacity);
-            CombatUi.UpdateMagazine(_scenario.Character.GetWeapon().GetRemainingAmmo());
+            CombatUi.ResetMagazine(equippedWeapon.Capacity);
+            CombatUi.UpdateMagazine(equippedWeapon.GetRemainingAmmo());
         }
 
         public static void ExitCombat()

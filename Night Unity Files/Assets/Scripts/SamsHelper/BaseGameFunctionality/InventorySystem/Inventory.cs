@@ -109,12 +109,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _resources.Add(new InventoryResource(type, weight));
         }
 
-        public void IncrementResource(InventoryResourceType type, int amount)
+        public void IncrementResource(InventoryResourceType type, float amount)
         {
             IncrementResource(GetResource(type), amount);
         }
 
-        public void IncrementResource(InventoryResource resource, int amount)
+        public void IncrementResource(InventoryResource resource, float amount)
         {
             if (amount < 0)
             {
@@ -124,12 +124,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             resource.Increment(amount);
         }
 
-        public int DecrementResource(InventoryResourceType type, int amount)
+        public float DecrementResource(InventoryResourceType type, float amount)
         {
             return DecrementResource(GetResource(type), amount);
         }
 
-        public int DecrementResource(InventoryResource resource, int amount)
+        public float DecrementResource(InventoryResource resource, float amount)
         {
             if (amount < 0)
             {
@@ -139,7 +139,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return resource.Decrement(amount);
         }
 
-        public int GetResourceQuantity(InventoryResourceType type)
+        public float GetResourceQuantity(InventoryResourceType type)
         {
             return GetResource(type).Quantity();
         }
@@ -172,7 +172,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return movedItem;
         }
 
-        public MyGameObject Move(MyGameObject item, Inventory target, int quantity)
+        public MyGameObject Move(MyGameObject item, Inventory target, float quantity)
         {
             InventoryResource resource = item as InventoryResource;
             if (resource != null)

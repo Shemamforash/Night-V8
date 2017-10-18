@@ -23,7 +23,10 @@ namespace SamsHelper.ReactiveUI.MenuSystem
                 }
                 States.AddState(menu);
             }
-            States.NavigateToState(InitialMenu.name);
+            if (InitialMenu != null)
+            {
+                States.NavigateToState(InitialMenu.name);
+            }
         }
 
         //TODO move me somewhere more suitable
@@ -40,12 +43,12 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public static void HideCurrentMenu()
         {
-            States.GetCurrentState().GameObject.SetActive(false);
+            States.GetCurrentState().GetGameObject().SetActive(false);
         }
 
         public static void ShowCurrentMenu()
         {
-            States.GetCurrentState().GameObject.SetActive(true);
+            States.GetCurrentState().GetGameObject().SetActive(true);
         }
 
         public static void GoToInitialMenu()

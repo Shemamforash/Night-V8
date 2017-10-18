@@ -9,20 +9,20 @@ using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
-    public class WeaponGenerator : MonoBehaviour
+    public static class WeaponGenerator
     {
         private static readonly Dictionary<WeaponType, WeaponClass> WeaponDictionary =
             new Dictionary<WeaponType, WeaponClass>();
 
-        private static List<WeaponModifier> _generalModifiers = new List<WeaponModifier>();
+        private static readonly List<WeaponModifier> _generalModifiers = new List<WeaponModifier>();
 
-        public void Awake()
+        static WeaponGenerator()
         {
             GearReader.LoadGear();
             LoadBaseWeapons();
         }
 
-        private void LoadBaseWeapons()
+        private static void LoadBaseWeapons()
         {
             TextAsset weaponFile = Resources.Load<TextAsset>("WeaponClasses");
             XmlDocument weaponXml = new XmlDocument();
@@ -56,7 +56,7 @@ namespace Game.Gear.Weapons
             }
         }
 
-        private WeaponModifier CreateModifier(XmlNode modifierNode, bool isSubclass = false)
+        private static WeaponModifier CreateModifier(XmlNode modifierNode, bool isSubclass = false)
         {
             string modifierName = modifierNode.Attributes?["name"].Value;
             int noPellets = int.Parse(modifierNode.SelectSingleNode("Pellets").InnerText);
@@ -79,14 +79,14 @@ namespace Game.Gear.Weapons
             return modifier;
         }
 
-        private void ReadModifierValue(AttributeType attributeType, XmlNode node, AttributesModifier modifier, bool summative = false)
+        private static void ReadModifierValue(AttributeType attributeType, XmlNode node, AttributesModifier modifier, bool summative = false)
         {
             float modifierValue = float.Parse(node.SelectSingleNode(attributeType.ToString()).InnerText);
             if (!summative) modifierValue -= 1;
             modifier.AddModifier(attributeType, modifierValue, summative);
         }
 
-        private void SetScaleableValue(ref ScaleableValue value, XmlNode attributeNode)
+        private static void SetScaleableValue(ref ScaleableValue value, XmlNode attributeNode)
         {
             float xCoefficient = float.Parse(attributeNode.SelectSingleNode("XCoefficient").InnerText);
             float intercept = float.Parse(attributeNode.SelectSingleNode("Intercept").InnerText);

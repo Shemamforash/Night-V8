@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Characters;
+using SamsHelper.ReactiveUI;
 using UnityEngine;
 
 namespace Game.Characters
@@ -11,11 +12,10 @@ namespace Game.Characters
     public class CharacterConditions
     {
         public readonly Dictionary<ConditionType, Condition> Conditions = new Dictionary<ConditionType, Condition>();
-        private readonly Character _character;
+        public readonly ValueTextLink<string> Thoughts = new ValueTextLink<string>();
 
-        public CharacterConditions(Character character)
+        public CharacterConditions()
         {
-            _character = character;
             Start();
         }
         
@@ -63,7 +63,7 @@ namespace Game.Characters
             {
                 thoughtString = "Need to do something.";
             }
-            _character.CharacterUiDetailed.ConditionsText.text = thoughtString;
+            Thoughts.Value(thoughtString);
         }
     }
 }

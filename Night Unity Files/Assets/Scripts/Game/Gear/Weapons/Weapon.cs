@@ -8,7 +8,7 @@ using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.ReactiveUI.CustomTypes;
+using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
@@ -19,8 +19,8 @@ namespace Game.Gear.Weapons
         public readonly WeaponClass WeaponClass;
         public readonly WeaponModifier SubClass, SecondaryModifier;
         public readonly bool Automatic;
-        public readonly MyInt AmmoInMagazine = new MyInt(0);
-        public readonly MyInt Durability;
+        public readonly MyValue AmmoInMagazine = new MyValue(0);
+        public readonly MyValue Durability;
         private const int MaxDurability = 20;
         private bool _canEquip;
         public readonly WeaponAttributes WeaponAttributes;
@@ -33,7 +33,7 @@ namespace Game.Gear.Weapons
             SecondaryModifier = secondaryModifier;
             Automatic = automatic;
 
-            Durability = new MyInt(durability, 0, MaxDurability);
+            Durability = new MyValue(durability, 0, MaxDurability);
             Durability.OnMin(() => { _canEquip = false; });
             Capacity = (int) Math.Ceiling((double) subClass.Capacity * secondaryModifier.CapacityModifier);
             Pellets = (int) Math.Ceiling((double) (subClass.Pellets * secondaryModifier.Pellets));
@@ -121,23 +121,22 @@ namespace Game.Gear.Weapons
 
         public bool Fire()
         {
-            if (AmmoInMagazine > 0)
-            {
-                AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() - 1);
-                return true;
-            }
-            return false;
+            if (AmmoInMagazine.GetCurrentValue() <= 0) return false;
+            AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() - 1);
+            return true;
         }
 
         public void Reload()
         {
-            float ammoAvailable = WorldState.Home().DecrementResource(InventoryResourceType.Ammo, Capacity);
+            Inventory inventory = WorldState.HomeInventory();
+            if (inventory == null) return;
+            float ammoAvailable = inventory.DecrementResource(InventoryResourceType.Ammo, Capacity);
             AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() + (int) ammoAvailable);
         }
 
         public int GetRemainingAmmo()
         {
-            return AmmoInMagazine.GetCurrentValue();
+            return (int)AmmoInMagazine.GetCurrentValue();
         }
 
         public override string GetSummary()

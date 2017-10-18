@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
+
 using Game.Characters.CharacterActions;
 using SamsHelper;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
 using Character = SamsHelper.BaseGameFunctionality.Characters.Character;
 using Random = UnityEngine.Random;
 

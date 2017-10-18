@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class SunController : MonoBehaviour
 {
-    public GameObject Sun, Stars;
+    public GameObject Sun, Stars, Moon;
     public int MinBrightness, MaxBrightness;
     private const float Value = 1f;
     private static float _weatherModifier = 1f;
+    private float radius = 10;
+    private Vector2 origin;
 
     public static void SetWeatherModifier(float weatherModifier) => _weatherModifier = weatherModifier;
 
+    public void Awake()
+    {
+        origin = new Vector2(0, -radius);
+    }
+    
     public void Update()
     {
         ParticleSystem.EmissionModule starEmission = Stars.GetComponent<ParticleSystem>().emission;
@@ -22,17 +29,27 @@ public class SunController : MonoBehaviour
         else
         {
             starEmission.rateOverTime = 50;
+            UpdateMoon();
         }
+    }
+
+    private float GetTime()
+    {
+        float time = WorldState.Hours;
+        float minutes = (float) WorldState.Minutes / WorldState.MinutesPerHour;
+        minutes /= 5f;
+        time += minutes;
+        return time;
+    }
+
+    private void UpdateMoon()
+    {
     }
 
     private void UpdateSun()
     {
-        float hours = WorldState.Hours;
-        float minutes = (float) WorldState.Minutes / WorldState.MinutesPerHour;
-        minutes /= 5f;
-        hours += minutes;
-        
-        float timeOfDayModifier = (float) (-0.028f * Math.Pow(hours - 12, 2) + 1f);
+        float time = GetTime();
+        float timeOfDayModifier = (float) (-0.028f * Math.Pow(time - 12, 2) + 1f);
         timeOfDayModifier *= _weatherModifier;
         
         float minBrightness = MinBrightness * timeOfDayModifier / 255f;

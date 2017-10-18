@@ -18,7 +18,7 @@ namespace Game.Characters
         {
             _conditions = conditions;
             SetStrings(strings);
-            WorldState.Instance().MinuteEvent += OnIntensity;
+            WorldState.RegisterMinuteEvent(OnIntensity);
             SetConditionLevel(Intensity.None);
         }
 

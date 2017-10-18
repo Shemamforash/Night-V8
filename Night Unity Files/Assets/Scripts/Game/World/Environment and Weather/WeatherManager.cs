@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.StateMachines;
-using SamsHelper.ReactiveUI.CustomTypes;
+using SamsHelper.ReactiveUI;
 using TMPro;
 using UnityEngine;
 
@@ -23,7 +23,7 @@ namespace Game.World.Environment_and_Weather
             LoadWeather();
             LoadProbabilities("WeatherProbabilityTable");
             NavigateToState("Clear");
-            WorldState.Instance().MinuteEvent += () => ((Weather) GetCurrentState()).UpdateWeather();
+            WorldState.RegisterMinuteEvent(() => ((Weather) GetCurrentState()).UpdateWeather());
 //            GenerateWeatherString(2000);
         }
 
@@ -45,16 +45,16 @@ namespace Game.World.Environment_and_Weather
                 string weatherName = attributes[0];
                 int temperatureMin = int.Parse(attributes[1]);
                 int temperatureMax = int.Parse(attributes[2]);
-                MyInt temperature = new MyInt(temperatureMax, temperatureMin, temperatureMax);
+                MyValue temperature = new MyValue(temperatureMax, temperatureMin, temperatureMax);
                 int visibilityMin = int.Parse(attributes[3]);
                 int visibilityMax = int.Parse(attributes[4]);
-                MyInt visibility = new MyInt(visibilityMax, visibilityMin, visibilityMax);
+                MyValue visibility = new MyValue(visibilityMax, visibilityMin, visibilityMax);
                 int waterMin = int.Parse(attributes[5]);
                 int waterMax = int.Parse(attributes[6]);
-                MyInt water = new MyInt(waterMax, waterMin, waterMax);
+                MyValue water = new MyValue(waterMax, waterMin, waterMax);
                 int durationMin = int.Parse(attributes[7]);
                 int durationMax = int.Parse(attributes[8]);
-                MyInt duration = new MyInt(durationMax, durationMin, durationMax);
+                MyValue duration = new MyValue(durationMax, durationMin, durationMax);
                 Weather weather = new Weather(weatherName, temperature, visibility, water, duration);
                 AddState(weather);
                 if (attributes[9] != "0")

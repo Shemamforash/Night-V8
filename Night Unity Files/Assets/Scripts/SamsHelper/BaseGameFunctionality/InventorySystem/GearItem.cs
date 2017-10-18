@@ -46,7 +46,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         
         public void MoveTo(Inventory targetInventory)
         {
-            Inventory.Move(this, targetInventory, 1);
+            Inventory?.Move(this, targetInventory, 1);
         }
     }
 }

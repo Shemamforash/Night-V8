@@ -13,7 +13,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         public MenuState(string name, Menu menu, StateMachine parentMachine) : base(name, StateSubtype.Menu, parentMachine)
         {
             _menu = menu;
-            GameObject = menu.gameObject;
+            SetGameObject(menu.gameObject);
         }
 
         public override void Enter()

@@ -23,16 +23,21 @@ namespace Game.Characters
 
         public DesolationCharacterManager() : base("Vehicle")
         {
-            TraitLoader.LoadTraits();
-            SaveController.AddPersistenceListener(this);
         }
-
+        
         public void Start()
         {
+            TraitLoader.LoadTraits();
+            SaveController.AddPersistenceListener(this);
             InputSpeaker.Instance().AddOnPressEvent(InputAxis.Cancel, ExitCharacter);
             if (_characters.Count == 0)
             {
                 DesolationCharacterGenerator.LoadInitialParty();
+            }
+            foreach (DesolationCharacter character in _characters)
+            {
+                GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", GameObject.Find("Character Section").transform.Find("Content").transform);
+                character.SetGameObject(characterObject);
             }
             PopulateCharacterUi();
         }
@@ -58,15 +63,15 @@ namespace Game.Characters
 
             foreach (DesolationCharacter c in _characters)
             {
-                Button b = c.CharacterUiDetailed.SimpleView.GetComponent<Button>();
+                Button b = c.CharacterView.SimpleView.GetComponent<Button>();
                 b.onClick.AddListener(delegate { SelectCharacter(b); });
             }
             for (int i = 1; i < _characters.Count; ++i)
             {
-                GameObject previousButton = _characters[i - 1].CharacterUiDetailed.SimpleView;
-                Helper.SetReciprocalNavigation(_characters[i].CharacterUiDetailed.SimpleView, previousButton);
+                GameObject previousButton = _characters[i - 1].CharacterView.SimpleView;
+                Helper.SetReciprocalNavigation(_characters[i].CharacterView.SimpleView, previousButton);
             }
-            Helper.SetReciprocalNavigation(inventoryObject, _characters[0].CharacterUiDetailed.SimpleView);
+            Helper.SetReciprocalNavigation(inventoryObject, _characters[0].CharacterView.SimpleView);
         }
 
         public override MyGameObject RemoveItem(MyGameObject item)
@@ -87,15 +92,15 @@ namespace Game.Characters
         {
             foreach (DesolationCharacter c in _characters)
             {
-                if (c.CharacterUiDetailed.GameObject != g) continue;
-                CharacterUiDetailed foundUiDetailed = c.CharacterUiDetailed;
+                if (c.CharacterView.GameObject != g) continue;
+                CharacterView foundView = c.CharacterView;
                 if (expand)
                 {
-                    foundUiDetailed.SwitchToDetailedView();
+                    foundView.SwitchToDetailedView();
                 }
                 else
                 {
-                    foundUiDetailed.SwitchToSimpleView();
+                    foundView.SwitchToSimpleView();
                 }
             }
         }
@@ -103,7 +108,7 @@ namespace Game.Characters
         public static void ExitCharacter()
         {
             if (SelectedCharacter == null) return;
-            SetDetailedViewActive(false, SelectedCharacter.GameObject.transform);
+            SetDetailedViewActive(false, SelectedCharacter.GetGameObject().transform);
             SelectedCharacter = null;
         }
 
@@ -118,7 +123,7 @@ namespace Game.Characters
             {
                 ExitCharacter();
             }
-            SelectedCharacter = _characters.FirstOrDefault(c => c.CharacterUiDetailed.SimpleView.GetComponent<Button>() == s);
+            SelectedCharacter = _characters.FirstOrDefault(c => c.CharacterView.SimpleView.GetComponent<Button>() == s);
             SetDetailedViewActive(true, s.transform.parent);
         }
 

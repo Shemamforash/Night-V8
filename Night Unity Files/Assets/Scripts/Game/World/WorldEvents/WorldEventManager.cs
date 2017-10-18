@@ -3,6 +3,7 @@ using System.Xml;
 using Facilitating.Persistence;
 using SamsHelper;
 using SamsHelper.Persistence;
+using SamsHelper.ReactiveUI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,12 +12,12 @@ namespace Game.World.WorldEvents
 {
     public class WorldEventManager : MonoBehaviour, IPersistenceTemplate
     {
-        private static TextMeshProUGUI _eventLogText;
+        private static ValueTextLink<string> _eventLogText = new ValueTextLink<string>();
         private static List<string> _eventLog = new List<string>();
 
         public void Awake()
         {
-            _eventLogText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Event Log");
+            _eventLogText.AddTextObject(Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Event Log"));
             PrintFirstFourEvents();
         }
 
@@ -44,7 +45,7 @@ namespace Game.World.WorldEvents
                 }
                 textSize -= 5;
             }
-            _eventLogText.text = events;
+            _eventLogText.Value(events);
         }
 
         public void Load(XmlNode doc, PersistenceType saveType)

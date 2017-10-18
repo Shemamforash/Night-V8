@@ -1,5 +1,6 @@
 ﻿using Game.Combat.Weapons;
 using Game.Gear.Weapons;
+using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI.MenuSystem;
 using Character = SamsHelper.BaseGameFunctionality.Characters.Character;
@@ -24,7 +25,7 @@ namespace Game.Combat.CombatStates
 
         protected Weapon Weapon()
         {
-            return Character().GetWeapon();
+            return (Weapon)Character().EquippedGear[GearSubtype.Weapon];
         }
     }
 }

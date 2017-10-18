@@ -24,12 +24,9 @@ namespace Game.World
         public static int DaysSpentHere;
         private static GameObject _inventoryButton;
         public static readonly EnvironmentManager EnvironmentManager = new EnvironmentManager();
-        public static DesolationCharacterManager HomeInventory;
+        private static DesolationCharacterManager _homeInventory = new DesolationCharacterManager();
         private readonly WeatherManager Weather = new WeatherManager();
-        public event Action MinuteEvent;
-        public event Action HourEvent;
-        public event Action DayEvent;
-        public event Action TravelEvent;
+        private event Action MinuteEvent, HourEvent, DayEvent, TravelEvent;
 
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
@@ -41,14 +38,13 @@ namespace Game.World
 
         public void Awake()
         {
-            HomeInventory = new DesolationCharacterManager();
             _timeText = Helper.FindChildWithName(gameObject, "Time").GetComponent<TextMeshProUGUI>();
             _dayText = Helper.FindChildWithName(gameObject, "Day").GetComponent<TextMeshProUGUI>();
             _inventoryButton = Helper.FindChildWithName(gameObject, "Inventory");
             _inventoryButton.GetComponent<Button>().onClick.AddListener(() =>
             {
                 Popup popup = new Popup("Vehicle Inventory");
-                List<MyGameObject> visibleContents = HomeInventory.SortByType();
+                List<MyGameObject> visibleContents = _homeInventory.SortByType();
                 popup.AddList(visibleContents, g =>
                 {
                     GearItem item = g as GearItem;
@@ -73,7 +69,7 @@ namespace Game.World
 
         public void Start()
         {
-            HomeInventory.Start();
+            _homeInventory.Start();
             EnvironmentManager.Start();
             Weather.Start();
 
@@ -91,16 +87,16 @@ namespace Game.World
             StormDistanceActual = 10;
 
 #if UNITY_EDITOR
-            HomeInventory.IncrementResource(InventoryResourceType.Ammo, 100);
-            HomeInventory.IncrementResource(InventoryResourceType.Food, 100);
-            HomeInventory.IncrementResource(InventoryResourceType.Fuel, 100);
-            HomeInventory.IncrementResource(InventoryResourceType.Scrap, 100);
-            HomeInventory.IncrementResource(InventoryResourceType.Water, 100);
+            _homeInventory.IncrementResource(InventoryResourceType.Ammo, 100);
+            _homeInventory.IncrementResource(InventoryResourceType.Food, 100);
+            _homeInventory.IncrementResource(InventoryResourceType.Fuel, 100);
+            _homeInventory.IncrementResource(InventoryResourceType.Scrap, 100);
+            _homeInventory.IncrementResource(InventoryResourceType.Water, 100);
             for (int i = 0; i < 10; ++i)
             {
-                HomeInventory.AddItem(WeaponGenerator.GenerateWeapon());
-                HomeInventory.AddItem(GearReader.GenerateArmour());
-                HomeInventory.AddItem(GearReader.GenerateAccessory());
+                _homeInventory.AddItem(WeaponGenerator.GenerateWeapon());
+                _homeInventory.AddItem(GearReader.GenerateArmour());
+                _homeInventory.AddItem(GearReader.GenerateAccessory());
             }
 #endif
         }
@@ -136,24 +132,20 @@ namespace Game.World
             //TODO
         }
 
-        public static Inventory Home()
+        public static Inventory HomeInventory()
         {
-            return HomeInventory;
+            return _homeInventory;
         }
 
         private static void SetResourceSuffix(InventoryResourceType name, string convention)
         {
             TextMeshProUGUI resourceText = GameObject.Find(name.ToString()).GetComponent<TextMeshProUGUI>();
-            HomeInventory.GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f.GetCurrentValue()) + " " + convention; });
+            _homeInventory.GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f.GetCurrentValue()) + " " + convention; });
         }
 
         public static WorldState Instance()
         {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType(typeof(WorldState)) as WorldState;
-            }
-            return _instance;
+            return _instance ?? (_instance = (WorldState) FindObjectOfType(typeof(WorldState)));
         }
 
         public static void Pause()
@@ -207,13 +199,53 @@ namespace Game.World
             _dayText.text = "Day " + Days;
         }
 
-        void Update()
+        public void Update()
         {
             if (!_isPaused)
             {
                 IncrementWorld();
             }
             CooldownManager.UpdateCooldowns();
+        }
+        
+        
+        public static void RegisterMinuteEvent(Action a)
+        {
+            if (Instance() != null) Instance().MinuteEvent += a;
+        }
+        
+        public static void UnregisterMinuteEvent(Action a)
+        {
+            if (Instance() != null) Instance().MinuteEvent -= a;
+        }
+
+        public static void RegisterHourEvent(Action a)
+        {
+            if (Instance() != null) Instance().HourEvent += a;
+        }
+        
+        public static void UnregisterHourEvent(Action a)
+        {
+            if (Instance() != null) Instance().HourEvent -= a;
+        }
+
+        public static void RegisterDayEvent(Action a)
+        {
+            if (Instance() != null) Instance().DayEvent += a;
+        }
+        public static void UnregisterDayEvent(Action a)
+        {
+            if (Instance() != null) Instance().DayEvent -= a;
+        }
+
+        public static void RegisterTravelEvent(Action a)
+        {
+            if (Instance() != null) Instance().TravelEvent += a;
+        }
+
+        public static void UnregisterTravelEvent(Action a)
+        {
+            if (Instance() != null) Instance().TravelEvent -= a;
         }
     }
 }

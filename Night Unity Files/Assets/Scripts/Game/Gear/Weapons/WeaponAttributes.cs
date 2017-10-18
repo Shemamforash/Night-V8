@@ -4,26 +4,13 @@ namespace Game.Gear.Weapons
 {
     public class WeaponAttributes : AttributeContainer
     {
-        public readonly IntAttribute Damage, Accuracy, CriticalChance, Handling;
-        public readonly FloatAttribute FireRate, ReloadSpeed;
+        public CharacterAttribute Damage, Accuracy, CriticalChance, Handling, FireRate, ReloadSpeed;
         private readonly Weapon _weapon;
         private float _dps;
         
         public WeaponAttributes(Weapon weapon)
         {
             _weapon = weapon;
-            Damage = new IntAttribute(AttributeType.Damage, 0);
-            Accuracy= new IntAttribute(AttributeType.Accuracy, 0, 0, 100);
-            CriticalChance = new IntAttribute(AttributeType.CriticalChance, 0, 0, 100);
-            Handling = new IntAttribute(AttributeType.Handling, 0, 0, 100);
-            FireRate = new FloatAttribute(AttributeType.FireRate, 0);
-            ReloadSpeed = new FloatAttribute(AttributeType.ReloadSpeed, 0);
-            AddAttribute(Damage);
-            AddAttribute(Accuracy);
-            AddAttribute(ReloadSpeed);
-            AddAttribute(CriticalChance);
-            AddAttribute(Handling);
-            AddAttribute(FireRate);
             RecalculateAttributeValues();
         }
 
@@ -53,6 +40,22 @@ namespace Game.Gear.Weapons
         public float DPS()
         {
             return _dps;
+        }
+
+        protected override void CacheAttributes()
+        {
+            Damage = new CharacterAttribute(AttributeType.Damage, 0);
+            Accuracy= new CharacterAttribute(AttributeType.Accuracy, 0, 0, 100);
+            CriticalChance = new CharacterAttribute(AttributeType.CriticalChance, 0, 0, 100);
+            Handling = new CharacterAttribute(AttributeType.Handling, 0, 0, 100);
+            FireRate = new CharacterAttribute(AttributeType.FireRate, 0);
+            ReloadSpeed = new CharacterAttribute(AttributeType.ReloadSpeed, 0);
+            AddAttribute(Damage);
+            AddAttribute(Accuracy);
+            AddAttribute(ReloadSpeed);
+            AddAttribute(CriticalChance);
+            AddAttribute(Handling);
+            AddAttribute(FireRate);
         }
     }
 }

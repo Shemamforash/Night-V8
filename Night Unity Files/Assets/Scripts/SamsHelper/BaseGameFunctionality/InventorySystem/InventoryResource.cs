@@ -1,13 +1,14 @@
 ﻿using System;
-using SamsHelper.ReactiveUI.CustomTypes;
+using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
+using UnityEngine.Assertions.Comparers;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class InventoryResource : InventoryItem
     {
-        public readonly MyInt Quantity = new MyInt(0);
+        private readonly MyValue _quantity = new MyValue();
         private readonly InventoryResourceType _inventoryResourceType;
 
         public InventoryResource(InventoryResourceType inventoryResourceType, float weight) : base(inventoryResourceType.ToString(), GameObjectType.Resource, weight)
@@ -15,6 +16,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _inventoryResourceType = inventoryResourceType;
         }
 
+        public override float Quantity()
+        {
+            return _quantity.GetCurrentValue();
+        }
+        
         public override bool Equals(object obj)
         {
             InventoryResource other = obj as InventoryResource;
@@ -37,25 +43,25 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return ui;
         }
         
-        public void AddOnUpdate(Action<MyValue<int>> action)
+        public void AddOnUpdate(Action<MyValue> action)
         {
-            Quantity.AddOnValueChange(action);
+            _quantity.AddOnValueChange(action);
         }
 
-        public int Decrement(int amount)
+        public float Decrement(float amount)
         {
-            int previousQuantity = Quantity.GetCurrentValue();
-            Quantity.SetCurrentValue(Quantity.GetCurrentValue() - amount);
-            int consumption = previousQuantity - Quantity.GetCurrentValue();
+            float previousQuantity = _quantity.GetCurrentValue();
+            _quantity.SetCurrentValue(_quantity.GetCurrentValue() - amount);
+            float consumption = previousQuantity - _quantity.GetCurrentValue();
             return consumption;
         }
 
-        public void Increment(int amount)
+        public void Increment(float amount)
         {
-            Quantity.SetCurrentValue(Quantity.GetCurrentValue() + amount);
+            _quantity.SetCurrentValue(_quantity.GetCurrentValue() + amount);
         }
 
-        public float GetWeight(int quantity)
+        public float GetWeight(float quantity)
         {
             return quantity * Weight;
         }

@@ -11,13 +11,12 @@
         public override void Enter()
         {
             GetCharacter().CurrentRegion = null;
-            GetCharacter().CharacterUiDetailed.CurrentActionText.text = Name;
-            GetCharacter().SetActionListActive(true);
+            GetCharacter().CharacterView.SetActionListActive(true);
         }
 
         public override void Exit()
         {
-            GetCharacter().SetActionListActive(false);
+            GetCharacter().CharacterView.SetActionListActive(false);
         }
         
         public override string GetCostAsString()

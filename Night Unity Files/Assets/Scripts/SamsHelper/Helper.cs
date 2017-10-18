@@ -64,16 +64,7 @@ namespace SamsHelper
 
         public static List<T> FindAllComponentsInChildren<T>(Transform t)
         {
-            List<T> childrenWithComponents = new List<T>();
-            foreach (Transform child in FindAllChildren(t))
-            {
-                T component = child.GetComponent<T>();
-                if (component != null)
-                {
-                    childrenWithComponents.Add(component);
-                }
-            }
-            return childrenWithComponents;
+            return FindAllChildren(t).Select(child => child.GetComponent<T>()).Where(component => component != null).ToList();
         }
         
         public static List<Transform> FindAllChildren(Transform t)
@@ -95,14 +86,15 @@ namespace SamsHelper
             return (float)(Math.Round(val * precisionDivider) / precisionDivider);
         }
 
-        public static T FindChildWithName<T>(GameObject g, string name)
+        public static T FindChildWithName<T>(GameObject g, string name) where T : class
         {
             if (typeof(T) == typeof(GameObject))
             {
                 throw new Exceptions.CannotGetGameObjectComponent();
             }
             Transform t = g.transform;
-            return FindChildWithName(t, name).GetComponent<T>();
+            Transform foundChild = FindChildWithName(t, name);
+            return foundChild != null ? foundChild.GetComponent<T>() : null;
         }
 
         public static GameObject FindChildWithName(GameObject g, string name)
@@ -118,11 +110,9 @@ namespace SamsHelper
             int noNameOccurences = 0;
             foreach (Transform child in children)
             {
-                if (child.name == name)
-                {
-                    ++noNameOccurences;
-                    foundChild = child;
-                }
+                if (child.name != name) continue;
+                ++noNameOccurences;
+                foundChild = child;
             }
             if (noNameOccurences > 1)
             {

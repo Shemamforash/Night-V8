@@ -25,7 +25,7 @@ namespace Game.Characters.CharacterActions
         {
             Character = character;
             DefaultDuration = WorldState.MinutesPerHour;
-            AddOnExit(() => WorldState.Instance().MinuteEvent -= Update);
+            AddOnExit(() => WorldState.UnregisterMinuteEvent(Update));
         }
 
         public override InventoryUi CreateUi(Transform parent)
@@ -35,7 +35,7 @@ namespace Game.Characters.CharacterActions
             ui.SetCentralTextCallback(() => Name);
             ui.OnPress(() =>
             {
-                Character.CharacterUiDetailed.CollapseCharacterButton.Select();
+                Character.CharacterView.CollapseCharacterButton.Select();
                 ParentMachine.NavigateToState(Name);
             });
             return ui;
@@ -64,18 +64,18 @@ namespace Game.Characters.CharacterActions
 
         public void Start()
         {
-            WorldState.Instance().MinuteEvent += UpdateAction;
+            WorldState.RegisterMinuteEvent(UpdateAction);
         }
 
         public virtual void Interrupt()
         {
-            WorldState.Instance().MinuteEvent -= UpdateAction;
+            WorldState.UnregisterMinuteEvent(UpdateAction);
             Interrupted = true;
         }
 
         public virtual void Resume()
         {
-            WorldState.Instance().MinuteEvent += UpdateAction;
+            WorldState.RegisterMinuteEvent(UpdateAction);
             Interrupted = false;
         }
 
@@ -84,7 +84,7 @@ namespace Game.Characters.CharacterActions
             --TimeRemaining;
             if (TimeRemaining == 0)
             {
-                WorldState.Instance().MinuteEvent -= UpdateAction;
+                WorldState.UnregisterMinuteEvent(UpdateAction);
                 if (_stateTransitionTarget != null)
                 {
                     GetCharacter().ActionStates.NavigateToState(_stateTransitionTarget);

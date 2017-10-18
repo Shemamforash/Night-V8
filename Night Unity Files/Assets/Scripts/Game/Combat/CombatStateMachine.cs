@@ -1,8 +1,9 @@
 ﻿using Game.Combat.CombatStates;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.StateMachines;
-using SamsHelper.ReactiveUI.CustomTypes;
+using SamsHelper.ReactiveUI;
 using UnityEngine;
 
 namespace Game.Combat
@@ -10,7 +11,7 @@ namespace Game.Combat
     public class CombatStateMachine : StateMachine
     {
         private float _reloadStartTime, _cockStartTime;
-        private readonly MyFloat _aimAmount = new MyFloat(0, 0, 100);
+        private readonly MyValue _aimAmount = new MyValue(0, 0, 100);
         public readonly Character Character;
         
         public CombatStateMachine(Character character)
@@ -29,7 +30,7 @@ namespace Game.Combat
         
         public void IncreaseAim()
         {
-            float amount = 5f + Character.GetWeapon().GetAttributeValue(AttributeType.Handling) / 10f;
+            float amount = 5f + ((Weapon)Character.EquippedGear[GearSubtype.Weapon]).GetAttributeValue(AttributeType.Handling) / 10f;
             amount *= Time.deltaTime;
             _aimAmount.SetCurrentValue(_aimAmount.GetCurrentValue() + amount);
 //            CombatUi.UpdateAimSlider(_aimAmount.Val);
@@ -37,7 +38,7 @@ namespace Game.Combat
 
         public void DecreaseAim()
         {
-            float amount = 100f / Character.GetWeapon().Capacity;
+            float amount = 100f / ((Weapon)Character.EquippedGear[GearSubtype.Weapon]).Capacity;
             _aimAmount.SetCurrentValue(_aimAmount.GetCurrentValue() - amount);
 //            CombatUi.UpdateAimSlider(_aimAmount.Val);
         }

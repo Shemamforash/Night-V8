@@ -1,33 +1,52 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.World;
 using Game.World.Region;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
-using SamsHelper.ReactiveUI.InventoryUI;
-using TMPro;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Persistence;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Characters
 {
     public class DesolationCharacter : Character
     {
         public Region CurrentRegion;
-        public TraitLoader.Trait CharacterClass, CharacterTrait;
-        private CharacterConditions _conditions;
+        public readonly TraitLoader.Trait CharacterClass, CharacterTrait;
+        public readonly CharacterConditions Conditions;
+        public CharacterView CharacterView;
+        public readonly DesolationCharacterAttributes Attributes;
 
-        public DesolationCharacter(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait, GameObject gameObject) : base(name, gameObject)
+        
+        //Create Character in code only- no view section, no references to objects in the scene
+        public DesolationCharacter(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait) : base(name)
         {
             CharacterInventory = new DesolationInventory(name);
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
             Attributes = new DesolationCharacterAttributes(this);
-            
+            Conditions = new CharacterConditions();
+            CharacterInventory.MaxWeight = 50;
+        }
+
+        //Links character to object in scene
+        public override void SetGameObject(GameObject gameObject)
+        {
+            base.SetGameObject(gameObject);
             SetCharacterUi();
-            
+            AddStates();
+        }
+
+        private void SetCharacterUi()
+        {
+            CharacterView = new CharacterView(this);
+        }
+
+        private void AddStates()
+        {
             ActionStates.AddState(new CollectResources(this));
             ActionStates.AddState(new CharacterActions.Combat(this));
             ActionStates.AddState(new Sleep(this));
@@ -37,24 +56,19 @@ namespace Game.Characters
             ActionStates.AddState(new Return(this));
             ActionStates.AddState(new LightFire(this));
             ActionStates.SetDefaultState("Idle");
-            
-            UpdateActionUi();
-            
-            _conditions = new CharacterConditions(this);
-            CharacterInventory.MaxWeight = 50;
+            CharacterView.UpdateActionUi();
+        }
+
+        public override AttributeContainer GetAttributes()
+        {
+            return Attributes;
         }
 
         public Condition GetCondition(ConditionType type)
         {
-            return _conditions.Conditions[type];
+            return Conditions.Conditions[type];
         }
 
-        public void SetActionListActive(bool active)
-        {
-            CharacterUiDetailed.ActionMenuList.gameObject.SetActive(active);
-            CharacterUiDetailed.DetailedCurrentActionText.gameObject.SetActive(!active);
-        }
-        
         public override void TakeDamage(int amount)
         {
             Attributes.Strength.SetCurrentValue(Attributes.Strength.GetCurrentValue() - amount);
@@ -64,63 +78,35 @@ namespace Game.Characters
             }
         }
 
-        public override void Kill()
+        public override void Equip(GearItem gearItem)
         {
-            WorldState.HomeInventory.RemoveItem(this);
-        }
-        
-        private void UpdateActionUi()
-        {
-            List<BaseCharacterAction> availableActions = StatesAsList(false).Cast<BaseCharacterAction>().ToList();
-            CharacterUiDetailed.ActionMenuList.SetItems(new List<MyGameObject>(availableActions));
-
-            List<InventoryUi> actionUiList = CharacterUiDetailed.ActionMenuList.GetItems();
-            for (int i = 0; i < actionUiList.Count; ++i)
+            base.Equip(gearItem);
+            switch (gearItem.GetGearType())
             {
-                InventoryUi actionUi = actionUiList[i];
-                
-                Helper.SetNavigation(actionUi.GetNavigationButton(), CharacterUiDetailed.WeaponGearUi.GearButton.gameObject, Direction.Left);
-                if (i == availableActions.Count - 1)
-                {
-                    Helper.SetReciprocalNavigation(actionUi.GetNavigationButton(), CharacterUiDetailed.CollapseCharacterButton.gameObject);
-                }
-
-                else if (i == 0)
-                {
-                    Helper.SetNavigation(CharacterUiDetailed.WeaponGearUi.GearButton.gameObject, actionUi.GetNavigationButton(),
-                       Direction.Right);
-                    Helper.SetNavigation(CharacterUiDetailed.ArmourGearUi.GearButton.gameObject, actionUi.GetNavigationButton(),
-                        Direction.Right);
-                    Helper.SetNavigation(CharacterUiDetailed.AccessoryGearUi.GearButton.gameObject, actionUi.GetNavigationButton(),
-                        Direction.Right);
-                }
+                case GearSubtype.Weapon:
+                    CharacterView?.WeaponGearUi.Update(gearItem);
+                    break;
+                case GearSubtype.Armour:
+                    CharacterView?.ArmourGearUi.Update(gearItem);
+                    break;
+                case GearSubtype.Accessory:
+                    CharacterView?.AccessoryGearUi.Update(gearItem);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
-        protected override void SetCharacterUi()
+        public override void Kill()
         {
-            base.SetCharacterUi();
-
-            CharacterUiDetailed.NameText.text = Name;
-            CharacterUiDetailed.ClassTraitText.text = CharacterTrait.Name + " " + CharacterClass.Name;
-            CharacterUiDetailed.DetailedClassText.text = CharacterClass.GetTraitDetails();
-            CharacterUiDetailed.DetailedTraitText.text = CharacterTrait.GetTraitDetails();
-            CharacterUiDetailed.WeightText.text = "Weight: " + Attributes.Weight + " (requires " + ((int) Attributes.Weight + 5) + " fuel)";
-
-            WorldState.Instance().MinuteEvent += delegate
-            {
-                string currentActionString = ActionStates.GetCurrentState().Name + " " + ((BaseCharacterAction) ActionStates.GetCurrentState()).GetCostAsString();
-                CharacterUiDetailed.CurrentActionText.text = currentActionString;
-                CharacterUiDetailed.DetailedCurrentActionText.text = currentActionString;
-            };
-            Attributes.BindUi();
+            WorldState.HomeInventory().RemoveItem(this);
         }
-        
+
         protected override bool IsOverburdened()
         {
             return CharacterInventory.Weight > Attributes.Strength.GetCurrentValue();
         }
-        
+
         private void Tire(int amount)
         {
             Attributes.Endurance.SetCurrentValue(Attributes.Endurance.GetCurrentValue() - (IsOverburdened() ? amount * 2 : amount));
@@ -133,12 +119,9 @@ namespace Game.Characters
             BaseCharacterAction action = ActionStates.GetCurrentState() as BaseCharacterAction;
             action.Interrupt();
             Sleep sleepAction = ActionStates.NavigateToState("Sleep") as Sleep;
-            sleepAction.SetDuration((int)(Attributes.Endurance.Max / 5f));
+            sleepAction.SetDuration((int) (Attributes.Endurance.Max / 5f));
             sleepAction.SetStateTransitionTarget(action.Name);
-            sleepAction.AddOnExit(() =>
-            {
-                action.Resume();
-            });
+            sleepAction.AddOnExit(() => { action.Resume(); });
             sleepAction.Start();
         }
 
@@ -151,7 +134,7 @@ namespace Game.Characters
                 ActionStates.NavigateToState("Idle");
             }
         }
-        
+
         public void Travel()
         {
             Tire(CalculateEnduranceCostForDistance(1));
@@ -160,13 +143,27 @@ namespace Game.Characters
         public int CalculateTotalWeight()
         {
             int characterWeight = 5 + (int) Attributes.Weight;
-            int inventoryWeight = (int)(CharacterInventory.Weight / 10);
+            int inventoryWeight = (int) (CharacterInventory.Weight / 10);
             return characterWeight + inventoryWeight;
         }
-        
+
         public int CalculateEnduranceCostForDistance(int distance)
         {
             return distance * CalculateTotalWeight();
+        }
+
+        public override void Load(XmlNode doc, PersistenceType saveType)
+        {
+            base.Load(doc, saveType);
+            XmlNode attributesNode = doc.SelectSingleNode("Attributes");
+            Attributes.Load(attributesNode, saveType);
+        }
+
+        public override void Save(XmlNode doc, PersistenceType saveType)
+        {
+            base.Save(doc, saveType);
+            XmlNode attributesNode = SaveController.CreateNodeAndAppend("Attributes", doc);
+            Attributes.Save(attributesNode, saveType);
         }
     }
 }

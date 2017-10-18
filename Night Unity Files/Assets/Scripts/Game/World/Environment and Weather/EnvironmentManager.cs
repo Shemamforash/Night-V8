@@ -20,8 +20,8 @@ namespace Game.World.Environment_and_Weather
             LoadEnvironments();
             LoadProbabilities("EnvironmentProbabilityTable");
             NavigateToState("Oasis");
-            WorldState.Instance().TravelEvent += GenerateEnvironment;
-            WorldState.Instance().MinuteEvent += UpdateTemperature;
+            WorldState.RegisterTravelEvent(GenerateEnvironment);
+            WorldState.RegisterMinuteEvent(UpdateTemperature);
 //            TestEnvironmentGenerator();
         }
 

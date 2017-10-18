@@ -20,7 +20,7 @@ public class Campfire : MonoBehaviour
     public void Start()
     {
         _fireImage = GetComponent<Image>();
-        WorldState.Instance().HourEvent += Die;
+        WorldState.RegisterHourEvent(Die);
         _intensityLoss = 1f / (TimeToDie * WorldState.MinutesPerHour);
     }
 
