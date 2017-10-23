@@ -36,9 +36,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return _inventoryResourceType;
         }
 
-        public override InventoryUi CreateUi(Transform parent)
+        public override ViewParent CreateUi(Transform parent)
         {
-            InventoryUi ui = base.CreateUi(parent);
             ui.SetRightTextCallback(() => "x" + Quantity());
             return ui;
         }

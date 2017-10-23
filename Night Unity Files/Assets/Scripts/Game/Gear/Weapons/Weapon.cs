@@ -144,7 +144,7 @@ namespace Game.Gear.Weapons
             return Helper.Round(WeaponAttributes.DPS(), 1) + "DPS";
         }
 
-        public override InventoryUi CreateUi(Transform parent)
+        public override ViewParent CreateUi(Transform parent)
         {
             return new WeaponUi(this, parent);
         }

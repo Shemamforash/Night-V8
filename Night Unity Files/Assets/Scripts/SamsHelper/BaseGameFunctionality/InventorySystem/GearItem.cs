@@ -33,9 +33,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return _gearType;
         }
 
-        public override InventoryUi CreateUi(Transform parent)
+        public override ViewParent CreateUi(Transform parent)
         {
-            InventoryUi ui = base.CreateUi(parent);
+            InventoryUi ui = (InventoryUi) base.CreateUi(parent);
 //            ui.SetRightButtonTextCallback(() => "Equip");
 //            ui.SetRightButtonActive(false);
             ui.SetRightTextCallback(GetSummary);

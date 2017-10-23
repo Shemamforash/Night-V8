@@ -221,5 +221,20 @@ namespace SamsHelper
 
             public override string Message => "Tried to add " + _item.Name + " with type " + _item.GetType() + " to inventory but only " + _desiredType + " can be added to this inventory.";
         }
+
+        public class ThresholdValueNotReachableException : Exception
+        {
+            private readonly string _name;
+            private readonly float _thresholdValue, _min, _max;
+            public ThresholdValueNotReachableException(string thresholdName, float thresholdValue, float min, float max)
+            {
+                _name = thresholdName;
+                _thresholdValue = thresholdValue;
+                _min = min;
+                _max = max;
+            }
+
+            public override string Message => "Tried to add threshold '" + _name + "' at value '" + _thresholdValue + "' exceeds min-max range (" + _min + "-" + _max + ")";
+        }
     }
 }

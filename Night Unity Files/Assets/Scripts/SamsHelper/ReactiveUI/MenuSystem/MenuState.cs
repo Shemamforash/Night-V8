@@ -31,6 +31,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             {
                 if (_menu.DefaultSelectable == null)
                 {
+                    return;
                     throw new Exceptions.DefaultSelectableNotProvidedForMenu(Name);
                 }
                 _menu.DefaultSelectable.Select();
@@ -39,7 +40,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public override void Exit()
         {
-            _lastSelectedItem = EventSystem.current.currentSelectedGameObject.GetComponent<Selectable>();
+            _lastSelectedItem = EventSystem.current.currentSelectedGameObject?.GetComponent<Selectable>();
             if (_menu.PauseOnOpen)
             {
                 WorldState.UnPause();

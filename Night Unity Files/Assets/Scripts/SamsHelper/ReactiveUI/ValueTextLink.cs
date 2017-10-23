@@ -13,6 +13,7 @@ namespace SamsHelper.ReactiveUI
 
         public void AddTextObject(TextMeshProUGUI textObject, Func<T, string> formattingFunction = null)
         {
+            if (textObject == null) return;
             Tuple<TextMeshProUGUI, Func<T, string>> existingTuple = _textAssociations.FirstOrDefault(tup => tup.Item1 == textObject);
             Tuple<TextMeshProUGUI, Func<T, string>> newTuple = Tuple.Create(textObject, formattingFunction);
             if (existingTuple != null)
@@ -29,7 +30,6 @@ namespace SamsHelper.ReactiveUI
         private void SetTextObjectText(Tuple<TextMeshProUGUI, Func<T, string>> tup, string defaultValue)
         {
             TextMeshProUGUI textObject = tup.Item1;
-            if(textObject.name == "Conditions") Debug.Log(_value + " banana");
             textObject.text = tup.Item2 != null ? tup.Item2(_value) : defaultValue;
         }
 

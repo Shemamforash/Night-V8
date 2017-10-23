@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
-    public class MyGameObject
+    public abstract class MyGameObject
     {
         private GameObject _gameObject;
         public string Name { get; set; }
@@ -34,9 +34,9 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public string ExtendedName() => _extendedName ?? Name;
         public void SetExtendedName(string name) => _extendedName = name;
 
-        public virtual InventoryUi CreateUi(Transform parent)
+        public virtual ViewParent CreateUi(Transform parent)
         {
-            return new InventoryUi(this, parent);
+            return new SimpleView(this, parent);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 {
     public class MenuList : MonoBehaviour
     {
-        protected readonly List<InventoryUi> Items = new List<InventoryUi>();
+        protected readonly List<ViewParent> Items = new List<ViewParent>();
         protected Transform InventoryContent;
 
         public virtual void Awake()
@@ -15,7 +15,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             InventoryContent = Helper.FindChildWithName<Transform>(gameObject, "Content");
         }
 
-        public List<InventoryUi> GetItems()
+        public List<ViewParent> GetItems()
         {
             return Items;
         }
@@ -33,28 +33,28 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             RefreshNavigation();
         }
         
-        protected virtual InventoryUi UpdateItem(MyGameObject item)
+        protected virtual ViewParent UpdateItem(MyGameObject item)
         {
-            InventoryUi foundItem = Items.FirstOrDefault(i => i.GetLinkedObject().Equals(item));
+            ViewParent foundItem = Items.FirstOrDefault(i => i.GetLinkedObject().Equals(item));
             foundItem?.Update();
             RefreshNavigation();
             return foundItem;
         }
 
-        private InventoryUi IsItemDisplayed(MyGameObject inventoryItem)
+        private ViewParent IsItemDisplayed(MyGameObject inventoryItem)
         {
             return Items.FirstOrDefault(itemUi => itemUi.GetLinkedObject() == inventoryItem);
         }
 
-        public virtual InventoryUi AddItem(MyGameObject item)
+        public virtual ViewParent AddItem(MyGameObject item)
         {
-            InventoryUi existingUi = IsItemDisplayed(item);
+            ViewParent existingUi = IsItemDisplayed(item);
             if (existingUi != null)
             {
                 UpdateItem(item);
                 return null;
             }
-            InventoryUi itemUi = item.CreateUi(InventoryContent);
+            ViewParent itemUi = item.CreateUi(InventoryContent);
             if (itemUi.IsDestroyed()) return null;
             Items.Add(itemUi);
             RefreshNavigation();
@@ -66,18 +66,18 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Items.Add(button);
         }
 
-        public void Remove(InventoryUi item)
+        public void Remove(ViewParent item)
         {
             if (!Items.Contains(item)) return;
             Items.Remove(item);
             RefreshNavigation();
         }
 
-        private List<InventoryUi> GetNavigatableItems(List<InventoryUi> items) => items;
+        private List<ViewParent> GetNavigatableItems(List<ViewParent> items) => items;
 
-        public virtual InventoryUi RefreshNavigation()
+        public virtual ViewParent RefreshNavigation()
         {
-            List<InventoryUi> navigatableItems = GetNavigatableItems(Items);
+            List<ViewParent> navigatableItems = GetNavigatableItems(Items);
             for (int i = 0; i < navigatableItems.Count; ++i)
             {
                 if (i <= 0) continue;

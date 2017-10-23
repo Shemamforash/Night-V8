@@ -3,6 +3,7 @@ using Game.World;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.MenuSystem;
+using UnityEngine;
 
 namespace Game.Combat
 {
@@ -19,15 +20,16 @@ namespace Game.Combat
         
         public static void EnterCombat(CombatScenario scenario)
         {
-            Weapon equippedWeapon = (Weapon) _scenario.Character.EquippedGear[GearSubtype.Weapon];
+            _scenario = scenario;
+            Weapon equippedWeapon = _scenario.Character().EquippedGear[GearSubtype.Weapon] as Weapon;
             WorldState.Pause();
             MenuStateMachine.States.NavigateToState("Combat Menu");
-            _scenario = scenario;
-            CombatUi.CharacterName.text = _scenario.Character.Name;
+            CombatUi.CharacterName.text = _scenario.Character().Name;
             CombatUi.WeaponNameText.text = equippedWeapon.Name;
 
             CombatUi.ResetMagazine(equippedWeapon.Capacity);
             CombatUi.UpdateMagazine(equippedWeapon.GetRemainingAmmo());
+            CombatUi.SetEncounter(scenario);
         }
 
         public static void ExitCombat()

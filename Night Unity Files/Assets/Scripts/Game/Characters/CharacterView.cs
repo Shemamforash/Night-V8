@@ -157,10 +157,10 @@ namespace Game.Characters
             List<BaseCharacterAction> availableActions = _character.StatesAsList(false).Cast<BaseCharacterAction>().ToList();
             _actionMenuList.SetItems(new List<MyGameObject>(availableActions));
 
-            List<InventoryUi> actionUiList = _actionMenuList.GetItems();
+            List<ViewParent> actionUiList = _actionMenuList.GetItems();
             for (int i = 0; i < actionUiList.Count; ++i)
             {
-                InventoryUi actionUi = actionUiList[i];
+                ViewParent actionUi = actionUiList[i];
 
                 Helper.SetNavigation(actionUi.GetNavigationButton(), WeaponGearUi.GearButton.gameObject, Direction.Left);
                 if (i == availableActions.Count - 1)

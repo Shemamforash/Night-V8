@@ -102,7 +102,7 @@ namespace Game.Characters
             WorldState.HomeInventory().RemoveItem(this);
         }
 
-        protected override bool IsOverburdened()
+        private bool IsOverburdened()
         {
             return CharacterInventory.Weight > Attributes.Strength.GetCurrentValue();
         }

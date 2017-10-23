@@ -12,7 +12,7 @@ namespace Game.World.WorldEvents
 {
     public class WorldEventManager : MonoBehaviour, IPersistenceTemplate
     {
-        private static ValueTextLink<string> _eventLogText = new ValueTextLink<string>();
+        private static readonly ValueTextLink<string> _eventLogText = new ValueTextLink<string>();
         private static List<string> _eventLog = new List<string>();
 
         public void Awake()

@@ -35,14 +35,14 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _capacityText.text = Helper.Round(_inventory.Weight, 1) + " kg";
         }
 
-        public override InventoryUi AddItem(MyGameObject item)
+        public override ViewParent AddItem(MyGameObject item)
         {
             if (!(item is InventoryItem))
             {
                 throw new Exceptions.InvalidInventoryItemException(item, "InventoryItem");
             }
             if (((InventoryItem) item).Quantity() == 0) return null;
-            InventoryUi inventoryItemUi = base.AddItem(item);
+            InventoryUi inventoryItemUi = (InventoryUi) base.AddItem(item);
             if (inventoryItemUi != null) //item is already added
             {
                 inventoryItemUi.SetDirection(_inventoryDirection);
@@ -63,10 +63,10 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             };
         }
 
-        protected override InventoryUi UpdateItem(MyGameObject inventoryItem)
+        protected override ViewParent UpdateItem(MyGameObject inventoryItem)
         {
             UpdateInventoryWeight();
-            InventoryUi found = base.UpdateItem(inventoryItem);
+            ViewParent found = base.UpdateItem(inventoryItem);
             InventoryItem foundItem = found.GetLinkedObject() as InventoryItem;
             if (foundItem != null && foundItem.Quantity() == 0 && !_inventory.ContainsItem(inventoryItem))
             {
@@ -76,9 +76,9 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return null;
         }
 
-        public override InventoryUi RefreshNavigation()
+        public override ViewParent RefreshNavigation()
         {
-            InventoryUi last = base.RefreshNavigation();
+            ViewParent last = base.RefreshNavigation();
             if (last != null)
             {
                 Helper.SetReciprocalNavigation(last.GetNavigationButton(), InventoryTransferManager.CloseButton());

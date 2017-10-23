@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Sam\AppData\Local\JetBrains\Transient\ReSharperHost\v10\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2017.2\system\resharper-host\Local\Transient\ReSharperHost\v10\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
     <e p="C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
@@ -219,10 +219,8 @@
               <e p="CombatTester.cs" t="Include" />
               <e p="CombatUI.cs" t="Include" />
               <e p="Enemies" t="Include">
-                <e p="Encounter.cs" t="Include" />
                 <e p="Enemy.cs" t="Include" />
-                <e p="EnemyUiDetailed.cs" t="Include" />
-                <e p="EnemyUiSimple.cs" t="Include" />
+                <e p="EnemyView.cs" t="Include" />
               </e>
             </e>
             <e p="Gear" t="Include">
@@ -327,6 +325,8 @@
                 <e p="InventoryUi.cs" t="Include" />
                 <e p="MenuList.cs" t="Include" />
                 <e p="ScrollingMenuList.cs" t="Include" />
+                <e p="SimpleView.cs" t="Include" />
+                <e p="ViewParent.cs" t="Include" />
               </e>
               <e p="MenuSystem" t="Include">
                 <e p="Menu.cs" t="Include" />

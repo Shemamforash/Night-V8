@@ -23,8 +23,8 @@ namespace Game.Characters
         public readonly CharacterAttribute Intelligence = new CharacterAttribute(AttributeType.Intelligence, Random.Range(30, 70));
         public readonly CharacterAttribute Endurance = new CharacterAttribute(AttributeType.Endurance, Random.Range(30, 70));
         public readonly CharacterAttribute Stability = new CharacterAttribute(AttributeType.Stability, Random.Range(30, 70));
+        
         public readonly CharacterAttribute Starvation = new CharacterAttribute(AttributeType.Starvation, 0, 0, 50);
-
         public readonly CharacterAttribute Dehydration = new CharacterAttribute(AttributeType.Dehydration, 0, 0, 50);
 
         /*instead of consuming x food or water every minutes, consume 1 food or water every x minutes

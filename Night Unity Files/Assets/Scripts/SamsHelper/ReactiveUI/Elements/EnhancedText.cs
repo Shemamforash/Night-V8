@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Facilitating.UI.Elements
 {
-    [ExecuteInEditMode]
+//    [ExecuteInEditMode]
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class EnhancedText : MonoBehaviour
     {

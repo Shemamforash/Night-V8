@@ -36,7 +36,6 @@ namespace SamsHelper.BaseGameFunctionality.Characters
         }
 
         public abstract void TakeDamage(int amount);
-        protected abstract bool IsOverburdened();
         public abstract void Kill();
 
         public Inventory Inventory()

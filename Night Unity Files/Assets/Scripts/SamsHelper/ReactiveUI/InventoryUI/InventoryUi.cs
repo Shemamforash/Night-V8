@@ -8,41 +8,29 @@ using Object = UnityEngine.Object;
 
 namespace SamsHelper.ReactiveUI.InventoryUI
 {
-    public class InventoryUi
+    public class InventoryUi : SimpleView
     {
-        private EnhancedButton _leftButton, _rightButton, _primaryButton;
+        private EnhancedButton _leftButton, _rightButton;
         private TextMeshProUGUI _leftButtonText, _rightButtonText;
-        private TextMeshProUGUI _leftText, _centralText, _rightText;
+        private TextMeshProUGUI _leftText, _rightText;
 
-        private Func<string> _leftButtonTextCallback, _rightButtonTextCallback, _leftTextCallback, _rightTextCallback, _centralTextCallback;
+        private Func<string> _leftButtonTextCallback, _rightButtonTextCallback, _leftTextCallback, _rightTextCallback;
         protected Direction Direction;
         protected GameObject Bookends;
 
-        protected readonly GameObject GameObject;
-        protected readonly MyGameObject LinkedObject;
-        private Func<bool> _destroyCheck;
-        private bool _isDestroyed;       
 
-        public InventoryUi(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/FlexibleItem")
+        public InventoryUi(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/FlexibleItem") : base(linkedObject, parent, prefabLocation)
         {
-            LinkedObject = linkedObject;
-            GameObject = Helper.InstantiateUiObject(prefabLocation, parent);
-            CacheUiElements();
-            Update();
         }
 
-        public bool IsDestroyed() => _isDestroyed;
-
-        protected virtual void CacheUiElements()
+        protected override void CacheUiElements()
         {
+            base.CacheUiElements();
             _rightText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Right Text");
             _rightText.gameObject.SetActive(false);
             _leftText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Left Text");
             _leftText.gameObject.SetActive(false);
-            _centralText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Centre Text");
-            _centralText.gameObject.SetActive(false);
 
-            _primaryButton = GameObject.GetComponent<EnhancedButton>();
             _leftButton = Helper.FindChildWithName<EnhancedButton>(GameObject, "Left Button");
             _leftButton.gameObject.SetActive(false);
             _rightButton = Helper.FindChildWithName<EnhancedButton>(GameObject, "Right Button");
@@ -54,14 +42,9 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Bookends = Helper.FindChildWithName(GameObject, "Bookends").gameObject;
         }
 
-        public virtual void Update()
+        public override void Update()
         {
-            if (_destroyCheck != null && _destroyCheck())
-            {
-                _isDestroyed = true;
-                Destroy();
-            }
-            UpdateText(_centralText, _centralTextCallback);
+            base.Update();
             UpdateText(_leftText, _leftTextCallback);
             UpdateText(_rightText, _rightTextCallback);
             UpdateText(_leftButtonText, _leftButtonTextCallback);
@@ -80,19 +63,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             SetRightButtonTextCallback(newRightButtonTextCallback);
         }
 
-        private void UpdateText(TextMeshProUGUI textMesh, Func<string> textCallback)
-        {
-            if (textCallback == null)
-            {
-                textMesh.gameObject.SetActive(false);
-            }
-            else
-            {
-                textMesh.text = textCallback();
-            }
-        }
-
-        public GameObject GetNavigationButton()
+        public override GameObject GetNavigationButton()
         {
             switch (Direction)
             {
@@ -101,7 +72,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 case Direction.Left:
                     return GetRightButton();
                 default:
-                    return _primaryButton.gameObject;
+                    return base.GetNavigationButton();
             }
         }
 
@@ -119,13 +90,6 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                     break;
             }
         }
-
-        //Misc
-        public void DisableBorder() => _primaryButton.DisableBorder();
-
-        public void Destroy() => Object.Destroy(GameObject);
-        public void SetDestroyCondition(Func<bool> destroyCheck) => _destroyCheck = destroyCheck;
-        public void SetPreferredHeight(float height) => GameObject.GetComponent<LayoutElement>().preferredHeight = height;
 
         //Button activation
         public void SetLeftButtonActive(bool active) => _leftButton.GetComponent<Button>().enabled = active;
@@ -168,32 +132,17 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Update();
         }
 
-        public void SetCentralTextCallback(Func<string> a)
-        {
-            if (a == null) return;
-            _centralText.gameObject.SetActive(true);
-            _centralTextCallback = a;
-            Update();
-        }
-
-
         //Button presses
         public void OnLeftButtonPress(Action a) => _leftButton.AddOnClick(() => a());
 
         public void OnLeftButtonHold(Action a, float duration) => _leftButton.AddOnHold(a, duration);
         public void OnRightButtonPress(Action a) => _rightButton.AddOnClick(() => a());
         public void OnRightButtonHold(Action a, float duration) => _rightButton.AddOnHold(a, duration);
-        public void OnPress(Action a) => _primaryButton.AddOnClick(() => a());
-        public void OnHold(Action a, float duration) => _primaryButton.AddOnHold(a, duration);
-        public void OnEnter(Action a) => _primaryButton.AddOnSelectEvent(a);
-        public void OnExit(Action a) => _primaryButton.AddOnDeselectEvent(a);
 
         //Getters
         public GameObject GetLeftButton() => _leftButton.gameObject;
 
         public GameObject GetRightButton() => _rightButton.gameObject;
-        public MyGameObject GetLinkedObject() => LinkedObject;
-        public GameObject GetGameObject() => GameObject;
 
         public void SetLeftTextWidth(int i)
         {

@@ -37,7 +37,7 @@ namespace Game.World.Region
             float maximumCarryingCapacity = c.Attributes.RemainingCarryCapacity();
         }
 
-        public override InventoryUi CreateUi(Transform parent)
+        public override ViewParent CreateUi(Transform parent)
         {
             InventoryUi ui = new InventoryUi(this, parent);
             ui.OnEnter(() => RegionManager.UpdateRegionInfo(this));

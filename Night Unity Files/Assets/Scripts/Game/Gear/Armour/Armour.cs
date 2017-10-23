@@ -31,7 +31,7 @@ namespace Game.Gear.Armour
             return ArmourRating + " Armour";
         }
         
-        public override InventoryUi CreateUi(Transform parent)
+        public override ViewParent CreateUi(Transform parent)
         {
             return new ArmourUi(this, parent);
         }

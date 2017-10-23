@@ -9,9 +9,20 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 {
     public class ScrollingMenuList : MenuList
     {
-        public override InventoryUi AddItem(MyGameObject item)
+        public int MaxDistance = 6;
+        public float MinFade;
+        private Action<ViewParent, bool> _unselectedItemAction;
+
+        public override void Awake()
         {
-            InventoryUi itemUi = base.AddItem(item);
+            base.Awake();
+            RectTransform rect = ContentTransform().GetComponent<RectTransform>();
+            rect.pivot = new Vector2(0.5f, 1);
+        }
+
+        public override ViewParent AddItem(MyGameObject item)
+        {
+            ViewParent itemUi = base.AddItem(item);
             itemUi?.OnEnter(() =>
             {
                 CentreContentOnItem(itemUi);
@@ -20,13 +31,15 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return itemUi;
         }
 
+        public void SetUnselectedItemAction(Action<ViewParent, bool> a) => _unselectedItemAction = a;
+
         public override void SetItems(List<MyGameObject> newItems)
         {
             base.SetItems(newItems);
             Items[0].GetGameObject().GetComponent<Selectable>().Select();
         }
 
-        private void CentreContentOnItem(InventoryUi itemUi)
+        private void CentreContentOnItem(ViewParent itemUi)
         {
             float itemYPosition = itemUi.GetGameObject().GetComponent<RectTransform>().anchoredPosition.y;
             RectTransform rect = InventoryContent.GetComponent<RectTransform>();
@@ -35,18 +48,17 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             rect.anchoredPosition = rectPosition;
         }
 
-        private void FadeOtherItems(InventoryUi itemUi)
+        private void FadeOtherItems(ViewParent itemUi)
         {
             for (int i = 0; i < Items.Count; ++i)
             {
-                float maxDistance = 6;
                 if (Items[i].GetGameObject() == null) continue;
-//                        float distance = Math.Abs(Items[i].GetGameObject().GetComponent<RectTransform>().anchoredPosition.y + rectPosition.y);
-                float distance = Math.Abs(i - Items.IndexOf(itemUi));
-                float alpha = 1 - distance / maxDistance;
-                if (alpha < 0f)
+                int distance = Math.Abs(i - Items.IndexOf(itemUi));
+                _unselectedItemAction?.Invoke(Items[i], distance == 0);
+                float alpha = 1f - (float) distance / MaxDistance;
+                if (alpha < MinFade)
                 {
-                    alpha = 0f;
+                    alpha = MinFade;
                 }
                 Items[i].GetGameObject().GetComponent<EnhancedButton>().ChangeTextColor(new Color(1, 1, 1, alpha));
             }

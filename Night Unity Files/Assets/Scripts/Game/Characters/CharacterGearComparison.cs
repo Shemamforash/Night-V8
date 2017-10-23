@@ -16,9 +16,9 @@ namespace Game.Characters
             GearItem = gearItem;
         }
 
-        public override InventoryUi CreateUi(Transform parent)
+        public override ViewParent CreateUi(Transform parent)
         {
-            InventoryUi ui = base.CreateUi(parent);
+            InventoryUi ui = (InventoryUi) base.CreateUi(parent);
             ui.SetLeftButtonTextCallback(() => GearItem.GetGearType().ToString());
             ui.SetLeftButtonActive(false);
             ui.SetLeftTextCallback(() => Character.Name);

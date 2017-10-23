@@ -28,9 +28,9 @@ namespace Game.Characters.CharacterActions
             AddOnExit(() => WorldState.UnregisterMinuteEvent(Update));
         }
 
-        public override InventoryUi CreateUi(Transform parent)
+        public override ViewParent CreateUi(Transform parent)
         {
-            InventoryUi ui = base.CreateUi(parent);
+            SimpleView ui = new SimpleView(this, parent);
             ui.SetPreferredHeight(30);
             ui.SetCentralTextCallback(() => Name);
             ui.OnPress(() =>
