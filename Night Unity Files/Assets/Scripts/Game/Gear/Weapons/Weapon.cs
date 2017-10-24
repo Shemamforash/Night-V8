@@ -1,4 +1,5 @@
 ﻿using System;
+using Facilitating.Audio;
 using Game.Characters;
 using Game.Combat.Weapons;
 using Game.Gear.UI;
@@ -123,6 +124,7 @@ namespace Game.Gear.Weapons
         {
             if (AmmoInMagazine.GetCurrentValue() <= 0) return false;
             AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() - 1);
+            GunFire.Fire();
             return true;
         }
 

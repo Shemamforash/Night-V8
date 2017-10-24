@@ -1,7 +1,4 @@
-﻿using SamsHelper.Input;
-using SamsHelper.ReactiveUI.MenuSystem;
-
-namespace Game.Combat.CombatStates
+﻿namespace Game.Combat.CombatStates
 {
     public class Aiming : CombatState
     {
@@ -20,25 +17,6 @@ namespace Game.Combat.CombatStates
         private void IncreaseAim()
         {
             CombatMachine.IncreaseAim();
-        }
-
-        public override void OnInputDown(InputAxis inputAxis)
-        {
-            switch (inputAxis)
-            {
-                case InputAxis.Fire:
-                    ParentMachine.NavigateToState("Firing");
-                    break;
-                case InputAxis.Reload:
-                    ParentMachine.NavigateToState("Reloading");
-                    break;
-                case InputAxis.Vertical:
-                    ParentMachine.NavigateToState(InputSpeaker.LastInputValue() > 0 ? "Approaching" : "Retreating");
-                    break;
-                case InputAxis.Horizontal:
-                    ParentMachine.NavigateToState(InputSpeaker.LastInputValue() > 0 ? "Flanking" : "EnteringCover");
-                    break;
-            }
         }
     }
 }

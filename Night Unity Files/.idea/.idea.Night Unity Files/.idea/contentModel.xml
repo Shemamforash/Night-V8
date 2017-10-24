@@ -146,6 +146,7 @@
           <e p="Facilitating" t="Include">
             <e p="Audio" t="Include">
               <e p="GlobalAudioManager.cs" t="Include" />
+              <e p="GunFire.cs" t="Include" />
               <e p="ThunderClick.cs" t="Include" />
             </e>
             <e p="Campfire.cs" t="Include" />
@@ -306,8 +307,7 @@
             <e p="Helper.cs" t="Include" />
             <e p="Input" t="Include">
               <e p="InputAxis.cs" t="Include" />
-              <e p="InputListener.cs" t="Include" />
-              <e p="InputSpeaker.cs" t="Include" />
+              <e p="InputHandler.cs" t="Include" />
             </e>
             <e p="Persistence" t="Include">
               <e p="IPersistenceTemplate.cs" t="Include" />

@@ -1,4 +1,5 @@
 ﻿using Game.Combat.CombatStates;
+using Game.Combat.Enemies;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
@@ -17,15 +18,16 @@ namespace Game.Combat
         public CombatStateMachine(Character character)
         {
             Character = character;
-            AddState(new Approaching(this, true));
-            AddState(new Aiming(this, true));
-            AddState(new Cocking(this, true));
-            AddState(new EnteringCover(this, true));
-            AddState(new ExitingCover(this, true));
-            AddState(new Firing(this, true));
-            AddState(new Flanking(this, true));
-            AddState(new Reloading(this, true));
-            AddState(new Retreating(this, true));
+            bool isCharacter = !(Character is Enemy);
+            AddState(new Approaching(this, isCharacter));
+            AddState(new Aiming(this, isCharacter));
+            AddState(new Cocking(this, isCharacter));
+            AddState(new EnteringCover(this, isCharacter));
+            AddState(new ExitingCover(this, isCharacter));
+            AddState(new Firing(this, isCharacter));
+            AddState(new Flanking(this, isCharacter));
+            AddState(new Reloading(this, isCharacter));
+            AddState(new Retreating(this, isCharacter));
         }
         
         public void IncreaseAim()

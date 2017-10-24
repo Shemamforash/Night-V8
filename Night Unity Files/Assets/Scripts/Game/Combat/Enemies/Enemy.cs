@@ -10,7 +10,7 @@ namespace Game.Combat.Enemies
     public class Enemy : Character
     {
         private MyValue _enemyHp;
-        private MyValue _distanceToCharacter = new MyValue(0, 0, MaxDistance);
+        public readonly MyValue DistanceToCharacter = new MyValue(0, 0, MaxDistance);
         private MyValue _sightToCharacter;
         private MyValue _exposure;
         
@@ -23,33 +23,33 @@ namespace Game.Combat.Enemies
             _enemyHp = new MyValue(enemyHp, 0, enemyHp);
             _enemyHp.OnMin(Kill);
             _encounter = encounter;
-            _distanceToCharacter.SetCurrentValue(Random.Range(CloseDistance, FarDistance));
-            _distanceToCharacter.AddThreshold(ImmediateDistance, "Immediate");
-            _distanceToCharacter.AddThreshold(CloseDistance, "Close");
-            _distanceToCharacter.AddThreshold(MidDistance, "Medium");
-            _distanceToCharacter.AddThreshold(FarDistance, "Far");
-            _distanceToCharacter.AddThreshold(MaxDistance, "Out of Range");
+            DistanceToCharacter.SetCurrentValue(Random.Range(CloseDistance, FarDistance));
+            DistanceToCharacter.AddThreshold(ImmediateDistance, "Immediate");
+            DistanceToCharacter.AddThreshold(CloseDistance, "Close");
+            DistanceToCharacter.AddThreshold(MidDistance, "Medium");
+            DistanceToCharacter.AddThreshold(FarDistance, "Far");
+            DistanceToCharacter.AddThreshold(MaxDistance, "Out of Range");
         }
 
-        public void IncreaseDistance()
+        public override void IncreaseDistance(float speedModifier)
         {
-            float distance = _movementSpeed * Time.deltaTime;
-            _distanceToCharacter.SetCurrentValue(_distanceToCharacter.GetCurrentValue() + distance);
+            float distance = _movementSpeed * Time.deltaTime * speedModifier * 5f;
+            DistanceToCharacter.SetCurrentValue(DistanceToCharacter.GetCurrentValue() + distance);
             if (distance > MaxDistance)
             {
                 Flee();    
             }
         }
 
+        public override void DecreaseDistance(float speedModifier)
+        {
+            float distance = _movementSpeed * Time.deltaTime * speedModifier * 5f;
+            DistanceToCharacter.SetCurrentValue(DistanceToCharacter.GetCurrentValue() - distance);
+        }
+
         private void Flee()
         {
             _encounter.Remove(this);
-        }
-
-        public void DecreaseDistance()
-        {
-            float distance = _movementSpeed * Time.deltaTime;
-            _distanceToCharacter.SetCurrentValue(_distanceToCharacter.GetCurrentValue() - distance);
         }
 
         public override void TakeDamage(int amount)
@@ -70,8 +70,8 @@ namespace Game.Combat.Enemies
         public override ViewParent CreateUi(Transform parent)
         {
             EnemyView enemyView = new EnemyView(this, parent);
-            _enemyHp.AddOnValueChange(f => enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 1).ToString());
-            _distanceToCharacter.AddOnValueChange(f => enemyView.DistanceText.text = Helper.Round(f.GetCurrentValue(), 1) + "m " + f.GetThresholdName());
+            _enemyHp.AddOnValueChange(f => enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString());
+            DistanceToCharacter.AddOnValueChange(f => enemyView.DistanceText.text = Helper.Round(f.GetCurrentValue(), 0) + "m " + f.GetThresholdName());
             return enemyView;
         }
 

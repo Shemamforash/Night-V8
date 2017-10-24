@@ -48,7 +48,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             return _currentState;
         }
 
-        private bool IsInState(string statename)
+        public bool IsInState(string statename)
         {
             return _currentState.Name == statename;
         }
@@ -60,7 +60,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public void Update()
         {
-            _currentState.Update();
+            _currentState?.Update();
         }
 
         public void ReturnToDefault()

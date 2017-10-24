@@ -1,6 +1,8 @@
-﻿using Game.Gear.Weapons;
+﻿using Game.Combat.Enemies;
+using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper.BaseGameFunctionality.Characters;
+using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
@@ -12,10 +14,21 @@ namespace Game.Combat
         public static CombatUi CombatUi;
         private static MyValue _strengthText;
         private static CombatScenario _scenario;
-        
+
         protected void Awake()
         {
             CombatUi = new CombatUi(gameObject);
+        }
+
+        public void Update()
+        {
+            _scenario.Character().CombatStates.Update();
+            _scenario.Enemies().ForEach(e => e.CombatStates.Update());
+        }
+
+        public static CombatScenario Scenario()
+        {
+            return _scenario;
         }
         
         public static void EnterCombat(CombatScenario scenario)
@@ -30,6 +43,7 @@ namespace Game.Combat
             CombatUi.ResetMagazine(equippedWeapon.Capacity);
             CombatUi.UpdateMagazine(equippedWeapon.GetRemainingAmmo());
             CombatUi.SetEncounter(scenario);
+            scenario.Character().CombatStates.NavigateToState("Aiming");
         }
 
         public static void ExitCombat()

@@ -1,5 +1,7 @@
 ﻿using Game.Characters;
 using Game.Gear.Weapons;
+using Game.World;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
 namespace Game.Combat
@@ -13,6 +15,7 @@ namespace Game.Combat
         public void Start()
         {
             new DesolationCharacterManager();
+            WorldState.AddTestingResources();
             TraitLoader.LoadTraits();
             character = DesolationCharacterGenerator.GenerateCharacter();
             character.Equip(WeaponGenerator.GenerateWeapon());

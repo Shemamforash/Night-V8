@@ -14,30 +14,26 @@ namespace Game.Combat.CombatStates
             OnUpdate += FireWeapon;
         }
 
-        public void FireWeapon()
+        private void FireWeapon()
         {
+            Debug.Log("Update");
             if (Weapon().GetRemainingAmmo() > 0)
             {
-                if (_timeSinceLastFire > 0)
+                _timeSinceLastFire -= Time.deltaTime;
+                if (_timeSinceLastFire > 0) return;
+                Weapon().Fire();
+                if (IsPlayerState)
                 {
-                    _timeSinceLastFire -= Time.deltaTime;
+                    CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
+                }
+                CombatMachine.DecreaseAim();
+                if (Weapon().Automatic)
+                {
+                    _timeSinceLastFire = 1f / Weapon().GetAttributeValue(AttributeType.FireRate);
                 }
                 else
                 {
-                    Weapon().Fire();
-                    if (IsPlayerState)
-                    {
-                        CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
-                    }
-                    CombatMachine.DecreaseAim();
-                    if (Weapon().Automatic)
-                    {
-                        _timeSinceLastFire = 1f / Weapon().GetAttributeValue(AttributeType.FireRate);
-                    }
-                    else
-                    {
-                        ParentMachine.NavigateToState("Cocking");
-                    }
+                    ParentMachine.NavigateToState("Cocking");
                 }
             }
             else
@@ -50,14 +46,6 @@ namespace Game.Combat.CombatStates
         public override void Enter()
         {
             _timeSinceLastFire = 0f;
-        }
-
-        public override void OnInputUp(InputAxis inputAxis)
-        {
-            if (inputAxis == InputAxis.Fire)
-            {
-                ParentMachine.NavigateToState("Aiming");
-            }
         }
     }
 }

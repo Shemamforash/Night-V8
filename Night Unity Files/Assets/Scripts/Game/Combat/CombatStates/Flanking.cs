@@ -7,12 +7,8 @@ namespace Game.Combat.CombatStates
         {
         }
 
-        public override void OnInputUp(InputAxis axis)
+        public override void Enter()
         {
-            if (axis == InputAxis.Horizontal)
-            {
-                ParentMachine.ReturnToDefault();
-            }
         }
     }
 }

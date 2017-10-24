@@ -7,14 +7,14 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 {
     public abstract class State : MyGameObject
     {
-        protected StateMachine ParentMachine;
+        protected readonly StateMachine ParentMachine;
         public event Action OnUpdate;
         private event Action OnExit;
-        public readonly StateSubtype Type;
+        private readonly StateSubtype _type;
 
         protected State(string name, StateSubtype type, StateMachine parentMachine) : base(name, GameObjectType.State)
         {
-            Type = type;
+            _type = type;
             ParentMachine = parentMachine;
         }
 
@@ -25,17 +25,17 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public StateSubtype StateType()
         {
-            return Type;
+            return _type;
         }
 
-        public void ClearOnExit()
+        protected void ClearOnExit()
         {
             OnExit = null;
         }
 
         public void Update()
         {
-            if (OnUpdate != null) OnUpdate();
+            OnUpdate?.Invoke();
         }
 
         public virtual void Enter()
@@ -44,15 +44,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public virtual void Exit()
         {
-            if (OnExit != null) OnExit();
-        }
-
-        public virtual void OnInputDown(InputAxis inputAxis)
-        {
-        }
-
-        public virtual void OnInputUp(InputAxis inputAxis)
-        {
+            OnExit?.Invoke();
         }
     }
 }

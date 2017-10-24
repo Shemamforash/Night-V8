@@ -20,7 +20,7 @@ namespace SamsHelper.BaseGameFunctionality.Characters
 {
     public abstract class Character : MyGameObject, IPersistenceTemplate
     {
-        public readonly StateMachine ActionStates = new StateMachine();
+        public readonly StateMachine States = new StateMachine();
         public readonly CombatStateMachine CombatStates;
 
         public readonly Dictionary<GearSubtype, GearItem> EquippedGear = new Dictionary<GearSubtype, GearItem>();
@@ -37,6 +37,8 @@ namespace SamsHelper.BaseGameFunctionality.Characters
 
         public abstract void TakeDamage(int amount);
         public abstract void Kill();
+        public abstract void IncreaseDistance(float speedModifier = 0);
+        public abstract void DecreaseDistance(float speedModifier = 0);
 
         public Inventory Inventory()
         {
@@ -45,7 +47,7 @@ namespace SamsHelper.BaseGameFunctionality.Characters
 
         public List<State> StatesAsList(bool includeInactiveStates)
         {
-            return (from BaseCharacterAction s in ActionStates.StatesAsList() where s.IsStateVisible() || includeInactiveStates select s).Cast<State>().ToList();
+            return (from BaseCharacterAction s in States.StatesAsList() where s.IsStateVisible() || includeInactiveStates select s).Cast<State>().ToList();
         }
 
         public virtual void Load(XmlNode doc, PersistenceType saveType)

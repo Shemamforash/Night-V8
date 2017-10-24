@@ -29,7 +29,7 @@ namespace Game.Characters
         {
             TraitLoader.LoadTraits();
             SaveController.AddPersistenceListener(this);
-            InputSpeaker.Instance().AddOnPressEvent(InputAxis.Cancel, ExitCharacter);
+            InputHandler.Instance().AddOnPressEvent(InputAxis.Cancel, ExitCharacter);
             if (_characters.Count == 0)
             {
                 DesolationCharacterGenerator.LoadInitialParty();

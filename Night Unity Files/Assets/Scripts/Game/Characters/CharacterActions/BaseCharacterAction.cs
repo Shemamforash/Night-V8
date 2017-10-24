@@ -21,7 +21,7 @@ namespace Game.Characters.CharacterActions
         private string _stateTransitionTarget = "Idle";
         protected DesolationCharacter Character;
 
-        protected BaseCharacterAction(string name, DesolationCharacter character) : base(name, StateSubtype.Character, character.ActionStates)
+        protected BaseCharacterAction(string name, DesolationCharacter character) : base(name, StateSubtype.Character, character.States)
         {
             Character = character;
             DefaultDuration = WorldState.MinutesPerHour;
@@ -87,11 +87,11 @@ namespace Game.Characters.CharacterActions
                 WorldState.UnregisterMinuteEvent(UpdateAction);
                 if (_stateTransitionTarget != null)
                 {
-                    GetCharacter().ActionStates.NavigateToState(_stateTransitionTarget);
+                    GetCharacter().States.NavigateToState(_stateTransitionTarget);
                 }
                 else
                 {
-                    GetCharacter().ActionStates.ReturnToDefault();
+                    GetCharacter().States.ReturnToDefault();
                 }
             }
             MinuteCallback?.Invoke();

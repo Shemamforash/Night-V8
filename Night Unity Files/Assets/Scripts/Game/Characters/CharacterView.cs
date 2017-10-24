@@ -190,7 +190,7 @@ namespace Game.Characters
             BindUi();
             WorldState.RegisterMinuteEvent(delegate
             {
-                string currentActionString = _character.ActionStates.GetCurrentState().Name + " " + ((BaseCharacterAction) _character.ActionStates.GetCurrentState()).GetCostAsString();
+                string currentActionString = _character.States.GetCurrentState().Name + " " + ((BaseCharacterAction) _character.States.GetCurrentState()).GetCostAsString();
                 _currentActionText.Value(currentActionString);
                 _detailedCurrentActionText.Value(currentActionString);
             });

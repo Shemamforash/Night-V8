@@ -60,8 +60,8 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void Start()
         {
-            InputSpeaker.Instance().AddOnHoldEvent(InputAxis.Submit, OnHold);
-            InputSpeaker.Instance().AddOnPressEvent(InputAxis.Submit, () => OnHoldActions.ForEach(a => a.Reset()));
+            InputHandler.Instance().AddOnHoldEvent(InputAxis.Submit, OnHold);
+            InputHandler.Instance().AddOnPressEvent(InputAxis.Submit, () => OnHoldActions.ForEach(a => a.Reset()));
         }
 
         private void Enter()
@@ -147,11 +147,11 @@ namespace SamsHelper.ReactiveUI.Elements
             }
         }
 
-        public void OnHold()
+        private void OnHold()
         {
             if (_button == null)
             {
-                InputSpeaker.Instance().RemoveOnHoldEvent(OnHold, InputAxis.Submit);
+                InputHandler.Instance().RemoveOnHoldEvent(InputAxis.Submit, OnHold);
             }
             else if(_button.gameObject == EventSystem.current.currentSelectedGameObject) OnHoldActions.ForEach(a => a.ExecuteIfDone());
         }

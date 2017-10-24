@@ -2,6 +2,7 @@
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
+using Game.Combat;
 using Game.World;
 using Game.World.Region;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -47,15 +48,15 @@ namespace Game.Characters
 
         private void AddStates()
         {
-            ActionStates.AddState(new CollectResources(this));
-            ActionStates.AddState(new CharacterActions.Combat(this));
-            ActionStates.AddState(new Sleep(this));
-            ActionStates.AddState(new Idle(this));
-            ActionStates.AddState(new PrepareTravel(this));
-            ActionStates.AddState(new Travel(this));
-            ActionStates.AddState(new Return(this));
-            ActionStates.AddState(new LightFire(this));
-            ActionStates.SetDefaultState("Idle");
+            States.AddState(new CollectResources(this));
+            States.AddState(new CharacterActions.Combat(this));
+            States.AddState(new Sleep(this));
+            States.AddState(new Idle(this));
+            States.AddState(new PrepareTravel(this));
+            States.AddState(new Travel(this));
+            States.AddState(new Return(this));
+            States.AddState(new LightFire(this));
+            States.SetDefaultState("Idle");
             CharacterView.UpdateActionUi();
         }
 
@@ -102,6 +103,21 @@ namespace Game.Characters
             WorldState.HomeInventory().RemoveItem(this);
         }
 
+        private float GetSpeedModifier()
+        {
+            return 1f + Attributes.Endurance.GetCalculatedValue() / 100f;
+        }
+        
+        public override void IncreaseDistance(float speedModifier)
+        {
+            CombatManager.Scenario().Enemies().ForEach(e => e.IncreaseDistance(GetSpeedModifier()));
+        }
+
+        public override void DecreaseDistance(float speedmodifier)
+        {
+            CombatManager.Scenario().Enemies().ForEach(e => e.DecreaseDistance(GetSpeedModifier()));
+        }
+
         private bool IsOverburdened()
         {
             return CharacterInventory.Weight > Attributes.Strength.GetCurrentValue();
@@ -116,9 +132,9 @@ namespace Game.Characters
         private void CheckEnduranceZero()
         {
             if (!Attributes.Endurance.ReachedMin()) return;
-            BaseCharacterAction action = ActionStates.GetCurrentState() as BaseCharacterAction;
+            BaseCharacterAction action = States.GetCurrentState() as BaseCharacterAction;
             action.Interrupt();
-            Sleep sleepAction = ActionStates.NavigateToState("Sleep") as Sleep;
+            Sleep sleepAction = States.NavigateToState("Sleep") as Sleep;
             sleepAction.SetDuration((int) (Attributes.Endurance.Max / 5f));
             sleepAction.SetStateTransitionTarget(action.Name);
             sleepAction.AddOnExit(() => { action.Resume(); });
@@ -131,7 +147,7 @@ namespace Game.Characters
             if (!Attributes.Endurance.ReachedMax()) return;
             if (CurrentRegion == null)
             {
-                ActionStates.NavigateToState("Idle");
+                States.NavigateToState("Idle");
             }
         }
 

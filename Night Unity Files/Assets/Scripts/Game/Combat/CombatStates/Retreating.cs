@@ -1,19 +1,13 @@
-﻿using System;
-using SamsHelper.Input;
-
-namespace Game.Combat.CombatStates
+﻿namespace Game.Combat.CombatStates
 {
     public class Retreating : CombatState {
         public Retreating(CombatStateMachine parentMachine, bool isPlayerState) : base("Retreating", parentMachine, isPlayerState)
         {
+            OnUpdate += () => CombatMachine.Character.IncreaseDistance();
         }
 
-        public override void OnInputUp(InputAxis inputAxis)
+        public override void Enter()
         {
-            if (inputAxis == InputAxis.Vertical)
-            {
-                ParentMachine.ReturnToDefault();
-            }
         }
     }
 }

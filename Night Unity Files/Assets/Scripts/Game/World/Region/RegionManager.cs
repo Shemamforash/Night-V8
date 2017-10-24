@@ -180,7 +180,7 @@ namespace Game.World.Region
 
         private static void StartExploration(Action a, Region target)
         {
-            Travel state = (Travel) _character.ActionStates.NavigateToState("Travel");
+            Travel state = (Travel) _character.States.NavigateToState("Travel");
             state.AddOnExit(a);
             state.SetTargetRegion(target);
             ExitManager(true);
@@ -190,7 +190,7 @@ namespace Game.World.Region
         {
             if (!characterIsExploring)
             {
-                _character.ActionStates.ReturnToDefault();
+                _character.States.ReturnToDefault();
             }
             _character = null;
             MenuStateMachine.GoToInitialMenu();
