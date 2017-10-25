@@ -20,6 +20,7 @@ namespace Game.Gear.Weapons
         public readonly WeaponClass WeaponClass;
         public readonly WeaponModifier SubClass, SecondaryModifier;
         public readonly bool Automatic;
+        public bool Cocked = true;
         public readonly MyValue AmmoInMagazine = new MyValue(0);
         public readonly MyValue Durability;
         private const int MaxDurability = 20;

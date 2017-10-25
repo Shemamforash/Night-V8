@@ -211,7 +211,6 @@
                 <e p="Cocking.cs" t="Include" />
                 <e p="CombatState.cs" t="Include" />
                 <e p="EnteringCover.cs" t="Include" />
-                <e p="Exiting Cover.cs" t="Include" />
                 <e p="Firing.cs" t="Include" />
                 <e p="Flanking.cs" t="Include" />
                 <e p="Reloading.cs" t="Include" />
@@ -306,6 +305,7 @@
             <e p="Exceptions.cs" t="Include" />
             <e p="Helper.cs" t="Include" />
             <e p="Input" t="Include">
+              <e p="IInputListener.cs" t="Include" />
               <e p="InputAxis.cs" t="Include" />
               <e p="InputHandler.cs" t="Include" />
             </e>

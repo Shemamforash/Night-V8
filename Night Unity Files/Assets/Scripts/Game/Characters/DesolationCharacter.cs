@@ -25,6 +25,7 @@ namespace Game.Characters
         //Create Character in code only- no view section, no references to objects in the scene
         public DesolationCharacter(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait) : base(name)
         {
+            CombatStates.EnableInput();
             CharacterInventory = new DesolationInventory(name);
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;

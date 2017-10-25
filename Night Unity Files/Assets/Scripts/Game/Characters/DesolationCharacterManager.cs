@@ -16,20 +16,20 @@ using UnityEngine.UI;
 
 namespace Game.Characters
 {
-    public class DesolationCharacterManager : DesolationInventory, IPersistenceTemplate
+    public class DesolationCharacterManager : DesolationInventory, IPersistenceTemplate, IInputListener
     {
         private static List<DesolationCharacter> _characters = new List<DesolationCharacter>();
         public static DesolationCharacter SelectedCharacter;
 
         public DesolationCharacterManager() : base("Vehicle")
         {
+            InputHandler.RegisterInputListener(this);
         }
         
         public void Start()
         {
             TraitLoader.LoadTraits();
             SaveController.AddPersistenceListener(this);
-            InputHandler.Instance().AddOnPressEvent(InputAxis.Cancel, ExitCharacter);
             if (_characters.Count == 0)
             {
                 DesolationCharacterGenerator.LoadInitialParty();
@@ -40,6 +40,18 @@ namespace Game.Characters
                 character.SetGameObject(characterObject);
             }
             PopulateCharacterUi();
+        }
+        
+        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+            if (axis == InputAxis.Cancel && !isHeld)
+            {
+                ExitCharacter();
+            }
+        }
+
+        public void OnInputUp(InputAxis axis)
+        {
         }
 
         public override void AddItem(MyGameObject g)

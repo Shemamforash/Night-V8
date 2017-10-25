@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Game.Combat.CombatStates;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using UnityEngine;
 
@@ -12,16 +13,22 @@ namespace SamsHelper.Input
         private static float _lastInputValue;
         private static InputHandler _instance;
         private static List<InputPress> _pressedKeys = new List<InputPress>();
+        private event Action OnNoPress;
+        private static readonly List<IInputListener> InputListeners = new List<IInputListener>();
+
 
         public void Awake()
         {
-            _inputPressList[InputAxis.Submit] = new InputPress("Submit");
-            _inputPressList[InputAxis.Cancel] = new InputPress("Cancel");
-            _inputPressList[InputAxis.Fire] = new InputPress("Fire");
-            _inputPressList[InputAxis.Reload] = new InputPress("Reload");
-            _inputPressList[InputAxis.Vertical] = new InputPress("Vertical");
-            _inputPressList[InputAxis.Horizontal] = new InputPress("Horizontal");
+            foreach (InputAxis axis in Enum.GetValues(typeof(InputAxis)))
+            {
+                AddInputPress(axis);
+            }
             _instance = this;
+        }
+
+        private void AddInputPress(InputAxis axis)
+        {
+            _inputPressList[axis] = new InputPress(axis);
         }
 
         public static InputHandler Instance()
@@ -37,86 +44,38 @@ namespace SamsHelper.Input
             }
         }
 
-        //Add Events
-        public void AddOnPressEvent(InputAxis axis, Action a) => _inputPressList[axis].OnPressAny += a;
-        public void AddOnPositivePressEvent(InputAxis axis, Action a) => _inputPressList[axis].OnPressPositive += a;
-        public void AddOnNegativePressEvent(InputAxis axis, Action a) => _inputPressList[axis].OnPressNegative += a;
-        public void AddOnHoldEvent(InputAxis axis, Action a) => _inputPressList[axis].OnHoldAny += a;
-        public void AddOnPositiveHoldEvent(InputAxis axis, Action a) => _inputPressList[axis].OnHoldPositive += a;
-        public void AddOnNegativeHoldEvent(InputAxis axis, Action a) => _inputPressList[axis].OnHoldNegative += a;
-        public void AddOnReleaseEvent(InputAxis axis, Action a) => _inputPressList[axis].OnRelease += a;
-
-        //Remove Events
-        public void RemoveOnPressEvent(InputAxis axis, Action a) => _inputPressList[axis].OnPressAny -= a;
-        public void RemoveOnPositivePressEvent(InputAxis axis, Action a) => _inputPressList[axis].OnPressPositive -= a;
-        public void RemoveOnNegativePressEvent(InputAxis axis, Action a) => _inputPressList[axis].OnPressNegative -= a;
-        public void RemoveOnHoldEvent(InputAxis axis, Action a) => _inputPressList[axis].OnHoldAny -= a;
-        public void RemoveOnPositiveHoldEvent(InputAxis axis, Action a) => _inputPressList[axis].OnHoldPositive -= a;
-        public void RemoveOnNegativeHoldEvent(InputAxis axis, Action a) => _inputPressList[axis].OnHoldNegative -= a;
-        public void RemoveOnReleaseEvent(InputAxis axis, Action a) => _inputPressList[axis].OnRelease -= a;
-
         private class InputPress
         {
             private bool _pressed;
-            private readonly string _axisName;
-            public event Action OnRelease;
-            public event Action OnPressAny, OnHoldAny;
-            public event Action OnPressPositive, OnHoldPositive;
-            public event Action OnPressNegative, OnHoldNegative;
+            private readonly InputAxis _axis;
 
-
-            public InputPress(string axisName)
+            public InputPress(InputAxis axis)
             {
-                _axisName = axisName;
+                _axis = axis;
             }
 
             public void CheckPress()
             {
-                _lastInputValue = UnityEngine.Input.GetAxisRaw(_axisName);
+                _lastInputValue = UnityEngine.Input.GetAxisRaw(_axis.ToString());
                 if (Math.Abs(_lastInputValue) > 0.0001f)
                 {
                     if (!_pressed)
                     {
                         _pressed = true;
                         AddPressedKey(this);
-                        BroadcastPress();
+                        BroadcastInputDown(_axis, false);
                     }
-                    BroadcastHeld();
+                    else
+                    {
+                        BroadcastInputDown(_axis, true);
+                    }
                 }
                 else
                 {
                     _pressed = false;
                     RemovePressedKey(this);
-                    BroadcastRelease();
+                    BroadcastInputUp(_axis);
                 }
-            }
-
-            private void BroadcastPress()
-            {
-                if (_lastInputValue < 0)
-                {
-                    OnPressPositive?.Invoke();
-                }
-                else if (_lastInputValue > 0)
-                {
-                    OnPressNegative?.Invoke();
-                }
-                OnPressAny?.Invoke();
-            }
-
-            private void BroadcastRelease() => OnRelease?.Invoke();
-
-            private void BroadcastHeld()
-            {
-                if (_lastInputValue < 0)
-                {
-                    OnHoldPositive?.Invoke();
-                }
-                else if (_lastInputValue > 0)
-                {
-                    OnHoldNegative?.Invoke();
-                }
-                OnHoldAny?.Invoke();
             }
         }
 
@@ -137,7 +96,22 @@ namespace SamsHelper.Input
         }
 
         private static void BroadcastNoPress() => Instance().OnNoPress?.Invoke();
-        public void AddOnNoPress(Action a) => OnNoPress += a;
-        public event Action OnNoPress;
+        public void AddOnNoPress(Action a) => Instance().OnNoPress += a;
+
+        private static void BroadcastInputDown(InputAxis axis, bool isHeld)
+        {
+            InputListeners.ForEach(l => l.OnInputDown(axis, isHeld, _lastInputValue));
+        }
+
+        private static void BroadcastInputUp(InputAxis axis)
+        {
+            InputListeners.ForEach(l => l.OnInputUp(axis));
+        }
+
+        public static void RegisterInputListener(IInputListener inputListener)
+        {
+            if (InputListeners.Contains(inputListener)) return;
+            InputListeners.Add(inputListener);
+        }
     }
 }

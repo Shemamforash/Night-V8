@@ -18,16 +18,14 @@ namespace Game.Combat
         public CombatStateMachine(Character character)
         {
             Character = character;
-            bool isCharacter = !(Character is Enemy);
-            AddState(new Approaching(this, isCharacter));
-            AddState(new Aiming(this, isCharacter));
-            AddState(new Cocking(this, isCharacter));
-            AddState(new EnteringCover(this, isCharacter));
-            AddState(new ExitingCover(this, isCharacter));
-            AddState(new Firing(this, isCharacter));
-            AddState(new Flanking(this, isCharacter));
-            AddState(new Reloading(this, isCharacter));
-            AddState(new Retreating(this, isCharacter));
+            AddState(new Approaching(this));
+            AddState(new Aiming(this));
+            AddState(new Cocking(this));
+            AddState(new EnteringCover(this));
+            AddState(new Firing(this));
+            AddState(new Flanking(this));
+            AddState(new Reloading(this));
+            AddState(new Retreating(this));
         }
         
         public void IncreaseAim()

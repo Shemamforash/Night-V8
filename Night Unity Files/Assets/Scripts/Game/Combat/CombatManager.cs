@@ -2,6 +2,7 @@
 using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper.BaseGameFunctionality.Characters;
+using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -14,6 +15,7 @@ namespace Game.Combat
         public static CombatUi CombatUi;
         private static MyValue _strengthText;
         private static CombatScenario _scenario;
+        public static CooldownManager CombatCooldowns = new CooldownManager();
 
         protected void Awake()
         {
@@ -24,6 +26,7 @@ namespace Game.Combat
         {
             _scenario.Character().CombatStates.Update();
             _scenario.Enemies().ForEach(e => e.CombatStates.Update());
+            CombatCooldowns.UpdateCooldowns();
         }
 
         public static CombatScenario Scenario()

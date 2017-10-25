@@ -2,25 +2,30 @@
 
 namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 {
-    public static class CooldownManager
+    public class CooldownManager
     {
-        private static List<Cooldown> activeCooldowns = new List<Cooldown>();
+        private readonly List<Cooldown> _activeCooldowns = new List<Cooldown>();
         
-        public static void UpdateCooldowns()
+        public void UpdateCooldowns()
         {
-            for (int i = activeCooldowns.Count - 1; i >= 0; --i)
+            for (int i = _activeCooldowns.Count - 1; i >= 0; --i)
             {
-                Cooldown cooldown = activeCooldowns[i];
+                Cooldown cooldown = _activeCooldowns[i];
                 if (cooldown.Update())
                 {
-                    activeCooldowns.RemoveAt(i);
+                    _activeCooldowns.RemoveAt(i);
                 }
             }
         }
 
-        public static void RegisterCooldown(Cooldown c)
+        public void RegisterCooldown(Cooldown c)
         {
-            activeCooldowns.Add(c);
+            _activeCooldowns.Add(c);
+        }
+
+        public void RemoveCooldown(Cooldown cooldown)
+        {
+            _activeCooldowns.Remove(cooldown);
         }
     }
 }

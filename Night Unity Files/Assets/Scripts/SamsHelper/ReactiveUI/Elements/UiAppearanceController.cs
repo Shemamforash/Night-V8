@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using SamsHelper;
+using Facilitating.UI.Elements;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Facilitating.UI.Elements
+namespace SamsHelper.ReactiveUI.Elements
 {
     [ExecuteInEditMode]
     public class UiAppearanceController : MonoBehaviour
@@ -12,7 +12,7 @@ namespace Facilitating.UI.Elements
         public TMP_FontAsset UniversalFont;
         public Color MainColor, SecondaryColor, BackgroundColor;
         public Image BorderImage;
-        public int _smallFontSize, _mediumFontSize, _largeFontSize, _titleFontSize;
+        public int SmallFontSize, MediumFontSize, LargeFontSize, TitleFontSize;
         private static UiAppearanceController _instance;
 
         public void Awake()
@@ -73,13 +73,13 @@ namespace Facilitating.UI.Elements
             switch (fontSizes)
             {
                 case EnhancedText.FontSizes.Small:
-                    return _smallFontSize;
+                    return SmallFontSize;
                 case EnhancedText.FontSizes.Medium:
-                    return _mediumFontSize;
+                    return MediumFontSize;
                 case EnhancedText.FontSizes.Large:
-                    return _largeFontSize;
+                    return LargeFontSize;
                 case EnhancedText.FontSizes.Title:
-                    return _titleFontSize;
+                    return TitleFontSize;
             }
             return 0;
         }

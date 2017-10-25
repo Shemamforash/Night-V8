@@ -20,6 +20,7 @@ namespace Game.World
 {
     public class WorldState : MonoBehaviour
     {
+        public static CooldownManager WorldCooldownManager;
         public static int StormDistanceMax, StormDistanceActual;
         public static int DaysSpentHere;
         private static GameObject _inventoryButton;
@@ -210,7 +211,7 @@ namespace Game.World
             {
                 IncrementWorld();
             }
-            CooldownManager.UpdateCooldowns();
+            WorldCooldownManager.UpdateCooldowns();
         }
         
         

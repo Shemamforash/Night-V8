@@ -11,7 +11,7 @@ using UnityEngine.UI;
 namespace SamsHelper.ReactiveUI.Elements
 {
     [RequireComponent(typeof(Button))]
-    public class EnhancedButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
+    public class EnhancedButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler, IInputListener
     {
         private event Action OnSelectActions;
         private event Action OnDeselectActions;
@@ -54,14 +54,9 @@ namespace SamsHelper.ReactiveUI.Elements
         
         public void Awake()
         {
+            InputHandler.RegisterInputListener(this);
             _button = GetComponent<Button>();
             _textChildren = Helper.FindAllComponentsInChildren<EnhancedText>(transform);
-        }
-
-        public void Start()
-        {
-            InputHandler.Instance().AddOnHoldEvent(InputAxis.Submit, OnHold);
-            InputHandler.Instance().AddOnPressEvent(InputAxis.Submit, () => OnHoldActions.ForEach(a => a.Reset()));
         }
 
         private void Enter()
@@ -147,13 +142,24 @@ namespace SamsHelper.ReactiveUI.Elements
             }
         }
 
-        private void OnHold()
+        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
-            if (_button == null)
+            if (_button == null || axis != InputAxis.Submit) return;
+            if (isHeld)
             {
-                InputHandler.Instance().RemoveOnHoldEvent(InputAxis.Submit, OnHold);
+                if (_button.gameObject == EventSystem.current.currentSelectedGameObject)
+                {
+                    OnHoldActions.ForEach(a => a.ExecuteIfDone());
+                }
             }
-            else if(_button.gameObject == EventSystem.current.currentSelectedGameObject) OnHoldActions.ForEach(a => a.ExecuteIfDone());
+            else
+            {
+                OnHoldActions.ForEach(a => a.Reset());
+            }
+        }
+
+        public void OnInputUp(InputAxis axis)
+        {
         }
     }
 }

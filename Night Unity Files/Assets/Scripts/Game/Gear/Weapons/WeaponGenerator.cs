@@ -93,18 +93,17 @@ namespace Game.Gear.Weapons
             value = new ScaleableValue(xCoefficient, intercept);
         }
 
-        public static Weapon GenerateWeapon()
+        public static Weapon GenerateWeapon(bool manualOnly = false)
         {
             bool automatic = true;
             Array types = Enum.GetValues(typeof(WeaponType));
             WeaponType weaponType = (WeaponType) types.GetValue(UnityEngine.Random.Range(0, types.Length));
 #if UNITY_EDITOR
-//            bool manualRequired = true;
-//            if (manualRequired)
-//            {
-//                weaponType = WeaponType.Rifle;
-//                automatic = false;
-//            }
+            if (manualOnly)
+            {
+                weaponType = WeaponType.Rifle;
+                automatic = false;
+            }
 #endif
             WeaponClass weaponClass = WeaponDictionary[weaponType];
             WeaponModifier subClass = weaponClass.GetSubtype();

@@ -5,7 +5,7 @@ using SamsHelper.Input;
 
 namespace SamsHelper.BaseGameFunctionality.StateMachines
 {
-    public abstract class State : MyGameObject
+    public abstract class State : MyGameObject, IInputListener
     {
         protected readonly StateMachine ParentMachine;
         public event Action OnUpdate;
@@ -45,6 +45,14 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         public virtual void Exit()
         {
             OnExit?.Invoke();
+        }
+
+        public virtual void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+        }
+
+        public virtual void OnInputUp(InputAxis axis)
+        {
         }
     }
 }

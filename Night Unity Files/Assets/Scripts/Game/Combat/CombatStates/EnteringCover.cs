@@ -1,18 +1,26 @@
-﻿namespace Game.Combat.CombatStates
+﻿using SamsHelper.Input;
+
+namespace Game.Combat.CombatStates
 {
     public class EnteringCover : CombatState {
-        public EnteringCover(CombatStateMachine parentMachine, bool isPlayerState) : base("EnteringCover", parentMachine, isPlayerState)
+        public EnteringCover(CombatStateMachine parentMachine) : base("EnteringCover", parentMachine)
         {
         }
 
         public override void Enter()
         {
-            throw new System.NotImplementedException();
         }
 
         public override void Exit()
         {
-            throw new System.NotImplementedException();
+        }
+
+        public override void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+        }
+
+        public override void OnInputUp(InputAxis axis)
+        {
         }
     }
 }

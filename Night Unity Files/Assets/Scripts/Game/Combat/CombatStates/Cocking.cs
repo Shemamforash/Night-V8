@@ -6,9 +6,10 @@ namespace Game.Combat.CombatStates
 {
     public class Cocking : CombatState
     {
-        public Cocking(CombatStateMachine parentMachine, bool isPlayerState) : base("Cocking", parentMachine, isPlayerState, false)
+        private Cooldown _cockingCooldown;
+        
+        public Cocking(CombatStateMachine parentMachine) : base("Cocking", parentMachine)
         {
-            InputHandler.Instance().AddOnPressEvent(InputAxis.Cancel, Cock);
         }
 
         public override void Enter()
@@ -17,18 +18,44 @@ namespace Game.Combat.CombatStates
             CombatManager.CombatUi.SetMagazineText("EJECT CARTRIDGE");
         }
 
-        public override void Exit()
+        private void SetCock()
         {
+            Weapon().Cocked = true;
             CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
-            ParentMachine.ReturnToDefault();
-            InputHandler.Instance().RemoveOnPressEvent(InputAxis.Cancel, Cock);
+            ParentMachine.NavigateToState("Aiming");
+            Debug.Log("cocked");
         }
 
-        private void Cock()
+        private void StartCocking()
         {
-            Debug.Log("banana");
             CombatManager.CombatUi.EmptyMagazine();
-            new Cooldown(Weapon().WeaponAttributes.FireRate.GetCalculatedValue(), Exit, f => CombatManager.CombatUi.UpdateReloadTime(f));
+            float fireRate = Weapon().WeaponAttributes.FireRate.GetCalculatedValue();
+            _cockingCooldown = new Cooldown(CombatManager.CombatCooldowns, fireRate, SetCock, f => CombatManager.CombatUi.UpdateReloadTime(f));
+        }
+
+        public override void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+            switch (axis)
+            {
+                case InputAxis.Cancel:
+                    if (!isHeld)
+                    {
+                        StartCocking();
+                    }
+                    break;
+                case InputAxis.Vertical:
+                    _cockingCooldown?.Cancel();
+                    ParentMachine.NavigateToState(direction > 0 ? "Approaching" : "Retreating");
+                    break;
+                case InputAxis.Horizontal:
+                    _cockingCooldown?.Cancel();
+                    ParentMachine.NavigateToState(direction > 0 ? "Flanking" : "Entering Cover");
+                    break;
+            }
+        }
+
+        public override void OnInputUp(InputAxis axis)
+        {
         }
     }
 }
