@@ -2,7 +2,7 @@
 {
     public class Idle : BaseCharacterAction
     {
-        public Idle(DesolationCharacter character) : base("Idle", character)
+        public Idle(Player playerCharacter) : base("Idle", playerCharacter)
         {
             IsVisible = false;
             HourCallback = () => GetCharacter().Rest(1);

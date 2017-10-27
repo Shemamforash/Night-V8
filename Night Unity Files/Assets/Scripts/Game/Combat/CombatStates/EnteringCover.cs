@@ -4,23 +4,16 @@ namespace Game.Combat.CombatStates
 {
     public class EnteringCover : CombatState {
         public EnteringCover(CombatStateMachine parentMachine) : base("EnteringCover", parentMachine)
-        {
-        }
-
-        public override void Enter()
-        {
-        }
-
-        public override void Exit()
-        {
-        }
-
-        public override void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
+        { 
+            OnUpdate += () => CombatMachine.Character.TakeCover();
         }
 
         public override void OnInputUp(InputAxis axis)
         {
+            if (axis == InputAxis.Horizontal)
+            {
+                ParentMachine.NavigateToState("Aiming");
+            }
         }
     }
 }

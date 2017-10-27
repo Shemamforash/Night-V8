@@ -8,14 +8,6 @@ namespace Game.Combat.CombatStates
             OnUpdate += () => CombatMachine.Character.IncreaseDistance();
         }
 
-        public override void Enter()
-        {
-        }
-
-        public override void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-        }
-
         public override void OnInputUp(InputAxis axis)
         {
             if (axis == InputAxis.Vertical)

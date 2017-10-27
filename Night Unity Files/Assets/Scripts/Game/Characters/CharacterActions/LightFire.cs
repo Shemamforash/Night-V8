@@ -5,7 +5,7 @@ namespace Game.Characters.CharacterActions
 {
     public class LightFire : BaseCharacterAction
     {
-        public LightFire(DesolationCharacter character) : base("Tend Fire", character)
+        public LightFire(Player playerCharacter) : base("Tend Fire", playerCharacter)
         {
             
         }

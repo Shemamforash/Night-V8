@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using Game.Characters;
 using UnityEngine;
-using Character = SamsHelper.BaseGameFunctionality.Characters.Character;
 
 namespace Facilitating.Persistence
 {

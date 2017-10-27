@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Facilitating.MenuNavigation;
+using Game.Characters.Attributes;
 using Game.Characters.CharacterActions;
 using Game.World;
 using SamsHelper;
@@ -19,7 +20,7 @@ namespace Game.Characters
 {
     public class CharacterView
     {
-        private readonly DesolationCharacter _character;
+        private readonly Player _character;
         public readonly GameObject GameObject;
         public GameObject SimpleView;
         private GameObject _detailedView;
@@ -94,13 +95,14 @@ namespace Game.Characters
 
         private void BindUi()
         {
-            DesolationCharacterAttributes attributes = _character.Attributes;
-            BindUiToAttribute(attributes.Strength,  "Strength");
-            BindUiToAttribute(attributes.Endurance, "Endurance");
-            BindUiToAttribute(attributes.Stability, "Stability");
-            BindUiToAttribute(attributes.Intelligence, "Intelligence");
-            attributes.Hunger.AddOnValueChange(f => _hungerText.text = attributes.GetHungerStatus());
-            attributes.Thirst.AddOnValueChange(f => _thirstText.text = attributes.GetThirstStatus());
+            BaseAttributes baseAttributes = _character.BaseAttributes;
+            BindUiToAttribute(baseAttributes.Strength,  "Strength");
+            BindUiToAttribute(baseAttributes.Endurance, "Endurance");
+            BindUiToAttribute(baseAttributes.Stability, "Stability");
+            BindUiToAttribute(baseAttributes.Intelligence, "Intelligence");
+            SurvivalAttributes survivalAttributes = _character.SurvivalAttributes;
+            survivalAttributes.Hunger.AddOnValueChange(f => _hungerText.text = survivalAttributes.GetHungerStatus());
+            survivalAttributes.Thirst.AddOnValueChange(f => _thirstText.text = survivalAttributes.GetThirstStatus());
         }
         
         private void BindUiToAttribute(CharacterAttribute a, string attributeName)
@@ -135,14 +137,14 @@ namespace Game.Characters
             
             _actionMenuList = FindInDetailedView<MenuList>("Action List");
             CollapseCharacterButton = FindInDetailedView<Button>("Back Button");
-            CollapseCharacterButton.onClick.AddListener(DesolationCharacterManager.ExitCharacter);
+            CollapseCharacterButton.onClick.AddListener(CharacterManager.ExitCharacter);
             
             _detailedCurrentActionText.AddTextObject(FindInDetailedView<TextMeshProUGUI>("CurrentAction"));
 
             FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _character.Name;
             FindInDetailedView<TextMeshProUGUI>("Class").text = _character.CharacterClass.GetTraitDetails();
             FindInDetailedView<TextMeshProUGUI>("Trait").text = _character.CharacterTrait.GetTraitDetails();
-            FindInDetailedView<TextMeshProUGUI>("Weight").text = "Weight: " + _character.Attributes.Weight + " (requires " + ((int)_character.Attributes.Weight + 5) + "fuel)";
+            FindInDetailedView<TextMeshProUGUI>("Weight").text = "Weight: " + _character.SurvivalAttributes.Weight + " (requires " + ((int)_character.SurvivalAttributes.Weight + 5) + "fuel)";
             
             _character.Conditions.Thoughts.AddTextObject(FindInDetailedView<TextMeshProUGUI>("Conditions"));
 
@@ -180,7 +182,7 @@ namespace Game.Characters
             }
         }
         
-        public CharacterView(DesolationCharacter character)
+        public CharacterView(Player character)
         {
             _character = character; 
             GameObject = _character.GetGameObject();

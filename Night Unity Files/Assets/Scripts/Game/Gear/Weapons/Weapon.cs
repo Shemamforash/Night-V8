@@ -123,7 +123,8 @@ namespace Game.Gear.Weapons
             return WeaponClass.Type.ToString();
         }
 
-        public void Fire(Enemy target)
+        //Returns damage
+        public int Fire(float distanceToTarget)
         {
             if (AmmoInMagazine.GetCurrentValue() <= 0)
             {
@@ -131,22 +132,21 @@ namespace Game.Gear.Weapons
             }
             AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() - 1);
             GunFire.Fire();
-            float range = target.DistanceToCharacter.GetCurrentValue();
+            float range = distanceToTarget;
             float accuracy = WeaponAttributes.Accuracy.GetCalculatedValue();
             float hitProbability = Mathf.Pow(accuracy / range, 2);
             if (Random.Range(0f, 1f) > hitProbability)
             {
                 CombatManager.CombatUi.ShowHitMessage("Miss");
-                return;
+                return 0;
             }
             float damageDealt = WeaponAttributes.Damage.GetCalculatedValue();
             if (Random.Range(0f, 1f) < WeaponAttributes.CriticalChance.GetCalculatedValue() / 100f)
             {
-                CombatManager.CombatUi.ShowHitMessage("!Critical!");
+                CombatManager.CombatUi.ShowHitMessage("Critical!");
                 damageDealt *= 2;
             }
-            CombatManager.CombatUi.ShowHitMessage("Hit!");
-            target.TakeDamage((int) damageDealt);
+            return (int) damageDealt;
         }
 
         public void Reload(Inventory inventory)

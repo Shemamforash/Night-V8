@@ -25,7 +25,7 @@ namespace Game.World
         public static int DaysSpentHere;
         private static GameObject _inventoryButton;
         public static readonly EnvironmentManager EnvironmentManager = new EnvironmentManager();
-        private static DesolationCharacterManager _homeInventory = new DesolationCharacterManager();
+        private static CharacterManager _homeInventory = new CharacterManager();
         private readonly WeatherManager Weather = new WeatherManager();
         private event Action MinuteEvent, HourEvent, DayEvent, TravelEvent;
 
@@ -63,7 +63,7 @@ namespace Game.World
         {
             Popup popupWithList = new Popup("Equip " + name);
             List<MyGameObject> characterGear = new List<MyGameObject>();
-            DesolationCharacterManager.Characters().ForEach(c => characterGear.Add(new CharacterGearComparison(c, gearItem)));
+            CharacterManager.Characters().ForEach(c => characterGear.Add(new CharacterGearComparison(c, gearItem)));
             popupWithList.AddList(characterGear, null, true, true, true);
             popupWithList.AddBackButton();
         }

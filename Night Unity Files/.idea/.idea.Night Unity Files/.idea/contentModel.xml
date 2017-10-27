@@ -177,6 +177,12 @@
           </e>
           <e p="Game" t="Include">
             <e p="Characters" t="Include">
+              <e p="Attributes" t="Include">
+                <e p="BaseAttributes.cs" t="Include" />
+                <e p="DesolationAttributes.cs" t="Include" />
+                <e p="SurvivalAttributes.cs" t="Include" />
+              </e>
+              <e p="Character.cs" t="Include" />
               <e p="CharacterActions" t="Include">
                 <e p="BaseCharacterAction.cs" t="Include" />
                 <e p="CollectResources.cs" t="Include" />
@@ -193,11 +199,10 @@
               <e p="CharacterView.cs" t="Include" />
               <e p="Condition.cs" t="Include" />
               <e p="ConditionType.cs" t="Include" />
-              <e p="DesolationCharacter.cs" t="Include" />
-              <e p="DesolationCharacterAttributes.cs" t="Include" />
               <e p="DesolationCharacterGenerator.cs" t="Include" />
               <e p="DesolationCharacterManager.cs" t="Include" />
               <e p="Intensity.cs" t="Include" />
+              <e p="Player.cs" t="Include" />
               <e p="TraitLoader.cs" t="Include" />
               <e p="WeightCategory.cs" t="Include" />
             </e>
@@ -276,9 +281,6 @@
                 <e p="CharacterAttribute.cs" t="Include" />
                 <e p="MyGameObject.cs" t="Include" />
                 <e p="ScaleableValue.cs" t="Include" />
-              </e>
-              <e p="Characters" t="Include">
-                <e p="Character.cs" t="Include" />
               </e>
               <e p="CooldownSystem" t="Include">
                 <e p="Cooldown.cs" t="Include" />

@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using Game.Characters;
 using Game.Combat.Enemies;
+using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Character = Game.Characters.Character;
 
 namespace Game.Combat
 {
@@ -14,35 +18,21 @@ namespace Game.Combat
     {
         private readonly GameObject _ammoPrefab, _magazineContent;
         private readonly ScrollingMenuList _enemyList;
-        private float _hitInfoTimerCurrent, _hitInfoTimerMax = 1f;
+        private float _hitInfoTimerCurrent;
+        private const float HitInfoTimerMax = 1f;
 
-        public readonly TextMeshProUGUI CharacterName,
-            CharacterHealthText,
-            RegularRoundsText,
-            WeaponNameText,
-            ReloadTimeRemaining,
-            HitInfo;
+        private readonly TextMeshProUGUI _characterName,
+            _characterHealthText,
+            _regularRoundsText,
+            _weaponNameText,
+            _reloadTimeRemaining,
+            _hitInfo;
 
         private readonly Slider _characterHealthSlider, _aimSlider;
         private readonly List<GameObject> _magazineAmmo = new List<GameObject>();
-
-        public void ShowHitMessage(string message)
-        {
-            HitInfo.text = message;
-            _hitInfoTimerCurrent = _hitInfoTimerMax;
-        }
-
-        public void UpdateHitMessage()
-        {
-            if (!(_hitInfoTimerCurrent > 0)) return;
-            _hitInfoTimerCurrent -= Time.deltaTime;
-            float opacity = _hitInfoTimerCurrent / _hitInfoTimerMax;
-            if (opacity < 0)
-            {
-                opacity = 0;
-            }
-            HitInfo.color = new Color(1, 1, 1, opacity);
-        }
+        private readonly RectTransform CriticalBar;
+        private Character _character;
+        private float _criticalTarget;
 
         public CombatUi(GameObject combatMenu)
         {
@@ -51,19 +41,58 @@ namespace Game.Combat
             _magazineContent = Helper.FindChildWithName<Transform>(playerContainer, "Magazine").Find("Content").gameObject;
             _ammoPrefab = Resources.Load("Prefabs/Combat/Ammo Prefab") as GameObject;
 
-            CharacterName = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Name");
-            CharacterHealthText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Strength Remaining");
-            RegularRoundsText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Ammo Stock");
-            WeaponNameText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Weapon");
-            ReloadTimeRemaining = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Time Remaining");
-            HitInfo = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Hit Info");
-            HitInfo.color = new Color(1, 1, 1, 0);
+            _characterName = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Name");
+            _characterHealthText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Strength Remaining");
+            _regularRoundsText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Ammo Stock");
+            _weaponNameText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Weapon");
+            _reloadTimeRemaining = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Time Remaining");
+            _hitInfo = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Hit Info");
+            CriticalBar = Helper.FindChildWithName<RectTransform>(playerContainer, "Critical Bar");
+            _hitInfo.color = new Color(1, 1, 1, 0);
 
             _characterHealthSlider = Helper.FindChildWithName<Slider>(playerContainer, "Health Bar");
             _aimSlider = Helper.FindChildWithName<Slider>(playerContainer, "Aim Bar");
         }
 
-        public void ResetMagazine(int capacity)
+        private void UpdateAimSlider()
+        {
+            _aimSlider.value = _character.CombatStates.AimAmount.GetCurrentValue();
+            if (_aimSlider.value / 100 > _criticalTarget)
+            {
+                Helper.FindChildWithName<Image>(_aimSlider.gameObject, "Fill").color = Color.red;
+            }
+            else
+            {
+                Helper.FindChildWithName<Image>(_aimSlider.gameObject, "Fill").color = Color.white;
+            }
+        }
+
+        private void SetCriticalBar()
+        {
+            _criticalTarget = 1 - _character.Weapon().GetAttributeValue(AttributeType.CriticalChance) / 100;
+            CriticalBar.anchorMin = new Vector2(_criticalTarget, 0);
+            CriticalBar.anchorMax = new Vector2(_criticalTarget, 1);
+        }
+
+        public void ShowHitMessage(string message)
+        {
+            _hitInfo.text = message;
+            _hitInfoTimerCurrent = HitInfoTimerMax;
+        }
+
+        private void UpdateHitMessage()
+        {
+            if (!(_hitInfoTimerCurrent > 0)) return;
+            _hitInfoTimerCurrent -= Time.deltaTime;
+            float opacity = _hitInfoTimerCurrent / HitInfoTimerMax;
+            if (opacity < 0)
+            {
+                opacity = 0;
+            }
+            _hitInfo.color = new Color(1, 1, 1, opacity);
+        }
+
+        private void ResetMagazine(int capacity)
         {
             EnableReloadTime(false);
             foreach (GameObject round in _magazineAmmo)
@@ -78,6 +107,7 @@ namespace Game.Combat
             }
         }
 
+
         public void EmptyMagazine()
         {
             EnableReloadTime(true);
@@ -85,12 +115,12 @@ namespace Game.Combat
 
         public void UpdateReloadTime(float time)
         {
-            ReloadTimeRemaining.text = (Mathf.Round(time * 10f) / 10f).ToString("0.0") + "secs remaining";
+            _reloadTimeRemaining.text = (Mathf.Round(time * 10f) / 10f).ToString("0.0") + "secs remaining";
         }
 
         private void EnableReloadTime(bool enable)
         {
-            ReloadTimeRemaining.gameObject.SetActive(enable);
+            _reloadTimeRemaining.gameObject.SetActive(enable);
             _magazineContent.SetActive(!enable);
         }
 
@@ -102,16 +132,28 @@ namespace Game.Combat
                 GameObject round = _magazineAmmo[i].transform.Find("Round").gameObject;
                 round.SetActive(i < remaining);
             }
-            RegularRoundsText.text = _magazineAmmo.Count + "/" + CombatManager.Scenario().Character().Inventory().GetResourceQuantity(InventoryResourceType.Ammo);
+            _regularRoundsText.text = _magazineAmmo.Count + "/" + CombatManager.Scenario().Player().Inventory().GetResourceQuantity(InventoryResourceType.Ammo);
         }
 
         public void SetMagazineText(string text)
         {
-            ReloadTimeRemaining.text = text;
+            _reloadTimeRemaining.text = text;
         }
 
-        public void SetEncounter(CombatScenario scenario)
+        public void Update()
         {
+            UpdateHitMessage();
+            UpdateAimSlider();
+        }
+
+        public void Start(CombatScenario scenario)
+        {
+            _character = scenario.Player();
+            SetCriticalBar();
+            ResetMagazine(_character.Weapon().Capacity);
+            UpdateMagazine(_character.Weapon().GetRemainingAmmo());
+            _characterName.text = _character.Name;
+            _weaponNameText.text = _character.Weapon().Name;
             _enemyList.SetUnselectedItemAction((enemyView, isSelected) =>
             {
                 RectTransform rect = enemyView.GetGameObject().GetComponent<RectTransform>();

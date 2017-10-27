@@ -19,11 +19,11 @@ namespace Game.Characters.CharacterActions
         protected Action HourCallback;
         protected Action MinuteCallback;
         private string _stateTransitionTarget = "Idle";
-        protected DesolationCharacter Character;
+        protected Player PlayerCharacter;
 
-        protected BaseCharacterAction(string name, DesolationCharacter character) : base(name, StateSubtype.Character, character.States)
+        protected BaseCharacterAction(string name, Player playerCharacter) : base(name, StateSubtype.Character, playerCharacter.States)
         {
-            Character = character;
+            PlayerCharacter = playerCharacter;
             DefaultDuration = WorldState.MinutesPerHour;
             AddOnExit(() => WorldState.UnregisterMinuteEvent(Update));
         }
@@ -35,7 +35,7 @@ namespace Game.Characters.CharacterActions
             ui.SetCentralTextCallback(() => Name);
             ui.OnPress(() =>
             {
-                Character.CharacterView.CollapseCharacterButton.Select();
+                PlayerCharacter.CharacterView.CollapseCharacterButton.Select();
                 ParentMachine.NavigateToState(Name);
             });
             return ui;
@@ -122,9 +122,9 @@ namespace Game.Characters.CharacterActions
             return IsVisible;
         }
 
-        protected DesolationCharacter GetCharacter()
+        protected Player GetCharacter()
         {
-            return Character;
+            return PlayerCharacter;
         }
     }
 }

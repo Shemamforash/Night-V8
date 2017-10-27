@@ -6,7 +6,7 @@ namespace Game.Characters.CharacterActions
     {
         private int _enduranceRecoveryAmount = 5;
         
-        public Sleep(DesolationCharacter character) : base("Sleep", character)
+        public Sleep(Player playerCharacter) : base("Sleep", playerCharacter)
         {
             HourCallback = () => GetCharacter().Rest(_enduranceRecoveryAmount);
         }

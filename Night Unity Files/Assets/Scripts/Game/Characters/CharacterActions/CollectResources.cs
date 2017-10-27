@@ -6,9 +6,9 @@ namespace Game.Characters.CharacterActions
 {
     public class CollectResources : BaseCharacterAction
     {
-        private DesolationCharacter _previousCharacter;
+        private Character _previousCharacter;
 
-        public CollectResources(DesolationCharacter character) : base("Collect Resources", character)
+        public CollectResources(Player playerCharacter) : base("Collect Resources", playerCharacter)
         {
             IsVisible = false;
             SetStateTransitionTarget("Return");
@@ -18,8 +18,8 @@ namespace Game.Characters.CharacterActions
         public override void Enter()
         {
             MenuStateMachine.States.NavigateToState("Inventory Menu");
-            _previousCharacter = DesolationCharacterManager.SelectedCharacter;
-            DesolationCharacterManager.SelectedCharacter = GetCharacter();
+            _previousCharacter = CharacterManager.SelectedCharacter;
+            CharacterManager.SelectedCharacter = GetCharacter();
             InventoryTransferManager.Instance().ShowInventories(GetCharacter().Inventory(), GetCharacter().CurrentRegion, () => GetCharacter().States.NavigateToState("Return"));
         }
 
@@ -37,7 +37,7 @@ namespace Game.Characters.CharacterActions
 
         private void ReturnToGameScreen()
         {
-            DesolationCharacterManager.SelectedCharacter = _previousCharacter;
+            CharacterManager.SelectedCharacter = _previousCharacter;
             MenuStateMachine.GoToInitialMenu();
         }
     }

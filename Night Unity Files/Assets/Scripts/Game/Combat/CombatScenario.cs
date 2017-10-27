@@ -6,12 +6,12 @@ namespace Game.Combat
 {
     public class CombatScenario
     {
-        private DesolationCharacter _character;
+        private Player _playerCharacter;
         private readonly List<Enemy> _enemies = new List<Enemy>();
 
         public void Resolve()
         {
-            _character.CombatStates.ReturnToDefault();
+            _playerCharacter.CombatStates.ReturnToDefault();
             _enemies.ForEach(e => e.CombatStates.ReturnToDefault());
         }
 
@@ -25,9 +25,9 @@ namespace Game.Combat
             _enemies.Add(enemy);
         }
 
-        public void SetCharacter(DesolationCharacter character)
+        public void SetCharacter(Player playerCharacter)
         {
-            _character = character;
+            _playerCharacter = playerCharacter;
         }
 
         public static CombatScenario Generate(int size)
@@ -40,9 +40,9 @@ namespace Game.Combat
             return scenario;
         }
 
-        public DesolationCharacter Character()
+        public Player Player()
         {
-            return _character;
+            return _playerCharacter;
         }
 
         public List<Enemy> Enemies()

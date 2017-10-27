@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Game.Characters;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,6 @@ using SamsHelper;
 using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
-using Character = SamsHelper.BaseGameFunctionality.Characters.Character;
 using Random = UnityEngine.Random;
 
 namespace Game.World.Region
@@ -172,7 +172,7 @@ namespace Game.World.Region
             _regionInfoDescriptionText.text = descriptionText;
         }
 
-        public static void EnterManager(Character character)
+        public static void EnterManager(Characters.Character character)
         {
             _character = character;
             MenuStateMachine.States.NavigateToState("Region Menu");

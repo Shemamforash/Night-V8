@@ -32,9 +32,9 @@ namespace Game.World.Region
             return _template.Type;
         }
 
-        public void ExtractResources(DesolationCharacter c)
+        public void ExtractResources(Player playerCharacter)
         {
-            float maximumCarryingCapacity = c.Attributes.RemainingCarryCapacity();
+            float maximumCarryingCapacity = playerCharacter.BaseAttributes.RemainingCarryCapacity();
         }
 
         public override ViewParent CreateUi(Transform parent)

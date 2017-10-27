@@ -5,7 +5,7 @@ namespace Game.Characters.CharacterActions
 {
     public class Travel : BaseCharacterAction
     {
-        public Travel(DesolationCharacter character) : base("Travel", character)
+        public Travel(Player playerCharacter) : base("Travel", playerCharacter)
         {
             IsVisible = false;
             HourCallback = GetCharacter().Travel;

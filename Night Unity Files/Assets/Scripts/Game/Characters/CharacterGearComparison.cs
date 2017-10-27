@@ -7,10 +7,10 @@ namespace Game.Characters
 {
     public class CharacterGearComparison : MyGameObject
     {
-        public readonly DesolationCharacter Character;
+        public readonly Character Character;
         public readonly GearItem GearItem;
 
-        public CharacterGearComparison(DesolationCharacter character, GearItem gearItem) : base(gearItem.Name, GameObjectType.Gear)
+        public CharacterGearComparison(Character character, GearItem gearItem) : base(gearItem.Name, GameObjectType.Gear)
         {
             Character = character;
             GearItem = gearItem;
@@ -24,7 +24,7 @@ namespace Game.Characters
             ui.SetLeftTextCallback(() => Character.Name);
             ui.SetCentralTextCallback(() =>
             {
-                GearItem equippedGear = Character.EquippedGear[GearItem.GetGearType()];
+                GearItem equippedGear = Character.GetGearItem(GearItem.GetGearType());
                 return equippedGear == null ? "Nothing equipped" : equippedGear.Name;
             });
             ui.SetRightTextCallback(() => "^");

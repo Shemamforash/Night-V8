@@ -1,7 +1,7 @@
-﻿using Game.Gear.Weapons;
+﻿using Game.Characters;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.StateMachines;
-using Character = SamsHelper.BaseGameFunctionality.Characters.Character;
 
 namespace Game.Combat.CombatStates
 {
@@ -21,7 +21,7 @@ namespace Game.Combat.CombatStates
 
         protected Weapon Weapon()
         {
-            return (Weapon)Character().EquippedGear[GearSubtype.Weapon];
+            return (Weapon)Character().GetGearItem(GearSubtype.Weapon);
         }
     }
 }

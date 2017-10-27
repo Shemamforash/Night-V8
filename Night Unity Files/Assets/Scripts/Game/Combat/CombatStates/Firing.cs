@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Combat.Enemies;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using UnityEngine;
@@ -10,7 +12,7 @@ namespace Game.Combat.CombatStates
 {
     public class Firing : CombatState
     {
-        private float _timeSinceLastFire;
+        private long _timeAtLastFire;
 
         public Firing(CombatStateMachine parentMachine) : base("Firing", parentMachine)
         {
@@ -29,11 +31,16 @@ namespace Game.Combat.CombatStates
             }
         }
 
+        private long TimeInMillis()
+        {
+            return DateTime.Now.Ticks / 10000;
+        }
+
         private void TryRepeatFire()
         {
             if (Weapon().Automatic)
             {
-                _timeSinceLastFire = 1f / Weapon().GetAttributeValue(AttributeType.FireRate);
+                _timeAtLastFire = TimeInMillis();
             }
             else
             {
@@ -52,18 +59,17 @@ namespace Game.Combat.CombatStates
 
         private void FireWeapon()
         {
-            Debug.Log("firing" + Weapon().Name);
             if (Weapon().GetRemainingAmmo() > 0 && Weapon().Cocked)
             {
-                _timeSinceLastFire -= Time.deltaTime;
-                if (_timeSinceLastFire > 0) return;
+                long timeElapsed = TimeInMillis() - _timeAtLastFire;
+                float targetTime = 1f / Weapon().GetAttributeValue(AttributeType.FireRate) * 1000;
+                if (timeElapsed < targetTime) return;
                 List<Enemy> enemies = CombatManager.Scenario().Enemies();
                 for (int i = enemies.Count - 1; i >= 0; --i)
                 {
-                    Debug.Log("banana");
-                    Weapon().Fire(enemies[i]);
+                    CombatManager.FireWeapon(Character());
                 }
-                CombatMachine.DecreaseAim();
+                DecreaseAim();
                 UpdateMagazineUi();
                 TryRepeatFire();
             }
@@ -73,13 +79,23 @@ namespace Game.Combat.CombatStates
             }
         }
 
+        private void DecreaseAim()
+        {
+            float amount = 100f / Character().Weapon().Capacity;
+            CombatMachine.AimAmount.Decrement(amount);
+        }
+
         public override void Enter()
         {
-            _timeSinceLastFire = 0f;
+            _timeAtLastFire = 0;
         }
 
         public override void OnInputUp(InputAxis axis)
         {
+            if (axis == InputAxis.Fire)
+            {
+                ParentMachine.NavigateToState("Aiming");
+            }
         }
     }
 }

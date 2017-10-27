@@ -1,4 +1,7 @@
-﻿using SamsHelper.Input;
+﻿using Game.Gear.Weapons;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.Characters;
+using SamsHelper.Input;
 using UnityEngine;
 
 namespace Game.Combat.CombatStates
@@ -20,7 +23,9 @@ namespace Game.Combat.CombatStates
 
         private void IncreaseAim()
         {
-            CombatMachine.IncreaseAim();
+            float amount = 5f + ((Weapon)Character().GetGearItem(GearSubtype.Weapon)).GetAttributeValue(AttributeType.Handling) / 10f;
+            amount *= Time.deltaTime;
+            CombatMachine.AimAmount.Increment(amount);
         }
 
         public override void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)

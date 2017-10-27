@@ -16,12 +16,12 @@ using UnityEngine.UI;
 
 namespace Game.Characters
 {
-    public class DesolationCharacterManager : DesolationInventory, IPersistenceTemplate, IInputListener
+    public class CharacterManager : DesolationInventory, IPersistenceTemplate, IInputListener
     {
-        private static List<DesolationCharacter> _characters = new List<DesolationCharacter>();
-        public static DesolationCharacter SelectedCharacter;
+        private static List<Player> _characters = new List<Player>();
+        public static Character SelectedCharacter;
 
-        public DesolationCharacterManager() : base("Vehicle")
+        public CharacterManager() : base("Vehicle")
         {
             InputHandler.RegisterInputListener(this);
         }
@@ -32,12 +32,12 @@ namespace Game.Characters
             SaveController.AddPersistenceListener(this);
             if (_characters.Count == 0)
             {
-                DesolationCharacterGenerator.LoadInitialParty();
+                CharacterGenerator.LoadInitialParty();
             }
-            foreach (DesolationCharacter character in _characters)
+            foreach (Player playerCharacter in _characters)
             {
                 GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", GameObject.Find("Character Section").transform.Find("Content").transform);
-                character.SetGameObject(characterObject);
+                playerCharacter.SetGameObject(characterObject);
             }
             PopulateCharacterUi();
         }
@@ -57,14 +57,14 @@ namespace Game.Characters
         public override void AddItem(MyGameObject g)
         {
             base.AddItem(g);
-            DesolationCharacter item = g as DesolationCharacter;
+            Player item = g as Player;
             if (item != null)
             {
                 _characters.Add(item);
             }
         }
 
-        public static List<DesolationCharacter> Characters()
+        public static List<Player> Characters()
         {
             return _characters;
         }
@@ -73,9 +73,9 @@ namespace Game.Characters
         {
             GameObject inventoryObject = WorldState.GetInventoryButton();
 
-            foreach (DesolationCharacter c in _characters)
+            foreach (Player playerCharacter in _characters)
             {
-                Button b = c.CharacterView.SimpleView.GetComponent<Button>();
+                Button b = playerCharacter.CharacterView.SimpleView.GetComponent<Button>();
                 b.onClick.AddListener(delegate { SelectCharacter(b); });
             }
             for (int i = 1; i < _characters.Count; ++i)
@@ -89,11 +89,11 @@ namespace Game.Characters
         public override MyGameObject RemoveItem(MyGameObject item)
         {
             base.RemoveItem(item);
-            DesolationCharacter c = item as DesolationCharacter;
-            if (c == null) return item;
-            _characters.Remove(c);
+            Player playerCharacter = item as Player;
+            if (playerCharacter == null) return item;
+            _characters.Remove(playerCharacter);
             PopulateCharacterUi();
-            if (c.Name == "Driver")
+            if (playerCharacter.Name == "Driver")
             {
                 MenuStateMachine.States.NavigateToState("Game Over Menu");
             }
@@ -102,10 +102,10 @@ namespace Game.Characters
 
         private static void ChangeCharacterPanel(GameObject g, bool expand)
         {
-            foreach (DesolationCharacter c in _characters)
+            foreach (Player playerCharacter in _characters)
             {
-                if (c.CharacterView.GameObject != g) continue;
-                CharacterView foundView = c.CharacterView;
+                if (playerCharacter.CharacterView.GameObject != g) continue;
+                CharacterView foundView = playerCharacter.CharacterView;
                 if (expand)
                 {
                     foundView.SwitchToDetailedView();
@@ -152,7 +152,7 @@ namespace Game.Characters
             XmlNodeList characterNodes = characterManagerNode.SelectNodes("Character");
             foreach (XmlNode characterNode in characterNodes)
             {
-//                DesolationCharacter c = new DesolationCharacter();
+//                Character c = new Character();
 //                c.Load(characterNode, saveType);
 //                _characters.Add(c);
             }
@@ -161,7 +161,7 @@ namespace Game.Characters
         public void Save(XmlNode doc, PersistenceType saveType)
         {
             XmlNode characterManagerNode = SaveController.CreateNodeAndAppend("CharacterManager", doc);
-            foreach (DesolationCharacter c in _characters)
+            foreach (Character c in _characters)
             {
                 XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", characterManagerNode);
                 c.Save(characterNode, saveType);

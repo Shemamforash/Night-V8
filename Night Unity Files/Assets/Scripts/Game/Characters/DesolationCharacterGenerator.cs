@@ -10,18 +10,18 @@ using Random = UnityEngine.Random;
 
 namespace Game.Characters
 {
-    public static class DesolationCharacterGenerator
+    public static class CharacterGenerator
     {
         private static readonly List<string> _characterNames;
 
         private static void TestCharacterGenerator()
         {
             int charactersToTest = 100;
-            Dictionary<DesolationCharacter, List<string>> fails = new Dictionary<DesolationCharacter, List<string>>();
+            Dictionary<Character, List<string>> fails = new Dictionary<Character, List<string>>();
             for (int i = 0; i < charactersToTest; ++i)
             {
-                DesolationCharacter c = GenerateCharacter();
-                DesolationCharacterAttributes attributes = c.Attributes;
+                Character c = GenerateCharacter();
+                BaseAttributes attributes = c.BaseAttributes;
                 List<string> failMessages = new List<string>();
                 if (!InBounds(attributes.Strength.GetCurrentValue(), 40, 160))
                 {
@@ -44,10 +44,10 @@ namespace Game.Characters
                     fails[c] = failMessages;
                 }
             }
-            foreach (DesolationCharacter c in fails.Keys)
+            foreach (Player playerCharacter in fails.Keys)
             {
-                Debug.Log(c.Name + " class: " + c.CharacterClass.Name + " trait: " + c.CharacterTrait.Name + " failed following tests:");
-                foreach (string s in fails[c])
+                Debug.Log(playerCharacter.Name + " class: " + playerCharacter.CharacterClass.Name + " trait: " + playerCharacter.CharacterTrait.Name + " failed following tests:");
+                foreach (string s in fails[playerCharacter])
                 {
                     Debug.Log(s);
                 }
@@ -56,7 +56,7 @@ namespace Game.Characters
 
         private static bool InBounds(float value, int lower, int upper) => value >= lower && value <= upper;
 
-        static DesolationCharacterGenerator()
+        static CharacterGenerator()
         {
             _characterNames = new List<string>(Helper.ReadLinesFromFile("names"));
         }
@@ -72,32 +72,32 @@ namespace Game.Characters
             WorldState.HomeInventory().AddItem(GenerateCharacter());
         }
 
-        private static DesolationCharacter GenerateCharacterObject(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait)
+        private static Player GenerateCharacterObject(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait)
         {
-            DesolationCharacter newCharacter = new DesolationCharacter(name, characterClass, characterTrait);
-            CalculateAttributes(newCharacter);
-            return newCharacter;
+            Player playerCharacter = new Player(name, characterClass, characterTrait);
+            CalculateAttributes(playerCharacter);
+            return playerCharacter;
         }
 
-        public static DesolationCharacter GenerateCharacter()
+        public static Player GenerateCharacter()
         {
             TraitLoader.Trait newClass = TraitLoader.GenerateClass();
             TraitLoader.Trait secondaryTrait = TraitLoader.GenerateTrait();
             string name = GenerateName();
-            DesolationCharacter c = GenerateCharacterObject(name, newClass, secondaryTrait);
-            return c;
+            Player playerCharacter = GenerateCharacterObject(name, newClass, secondaryTrait);
+            return playerCharacter;
         }
 
-        private static DesolationCharacter GenerateDriver()
+        private static Character GenerateDriver()
         {
-            DesolationCharacter theDriver = GenerateCharacterObject("Driver", TraitLoader.FindClass("Crusader"), TraitLoader.FindTrait("Faithless"));
-            theDriver.Attributes.Weight = WeightCategory.Medium;
+            Player theDriver = GenerateCharacterObject("Driver", TraitLoader.FindClass("Crusader"), TraitLoader.FindTrait("Faithless"));
+            theDriver.SurvivalAttributes.Weight = WeightCategory.Medium;
             return theDriver;
         }
 
-        private static WeightCategory CalculateWeight(DesolationCharacter c)
+        private static WeightCategory CalculateWeight(Player playerCharacter)
         {
-            int weightOffset = c.CharacterClass.WeightModifier + c.CharacterTrait.WeightModifier;
+            int weightOffset = playerCharacter.CharacterClass.WeightModifier + playerCharacter.CharacterTrait.WeightModifier;
             int targetWeight = 2;
             float rand = Random.Range(0f, 1.0f);
             if (rand < 0.25f)
@@ -111,27 +111,27 @@ namespace Game.Characters
             targetWeight += weightOffset;
             if (targetWeight < 0 || targetWeight > 4)
             {
-                throw new Exceptions.MaxOrMinWeightExceededException(c.Name, targetWeight, c.CharacterClass.Name, c.CharacterTrait.Name);
+                throw new Exceptions.MaxOrMinWeightExceededException(playerCharacter.Name, targetWeight, playerCharacter.CharacterClass.Name, playerCharacter.CharacterTrait.Name);
             }
             return (WeightCategory) targetWeight;
         }
 
-        private static void CalculateAttributes(DesolationCharacter c)
+        private static void CalculateAttributes(Player playerCharacter)
         {
-            DesolationCharacterAttributes attributes = c.Attributes;
+            BaseAttributes attributes = playerCharacter.BaseAttributes;
             int strengthBonusVal = 15;
             int enduranceBonusVal = 15;
             int stabilityBonusVal = 4;
             int intelligenceBonusVal = 4;
-            attributes.Strength.Max = Random.Range(80, 120) + c.CharacterClass.StrengthBonus * strengthBonusVal + c.CharacterTrait.StrengthBonus;
+            attributes.Strength.Max = Random.Range(80, 120) + playerCharacter.CharacterClass.StrengthBonus * strengthBonusVal + playerCharacter.CharacterTrait.StrengthBonus;
             attributes.Strength.SetCurrentValue(attributes.Strength.Max);
-            attributes.Endurance.Max = Random.Range(30, 70) + c.CharacterClass.EnduranceBonus * enduranceBonusVal + c.CharacterTrait.EnduranceBonus;
+            attributes.Endurance.Max = Random.Range(30, 70) + playerCharacter.CharacterClass.EnduranceBonus * enduranceBonusVal + playerCharacter.CharacterTrait.EnduranceBonus;
             attributes.Endurance.SetCurrentValue(attributes.Endurance.Max);
-            attributes.Stability.Max = Random.Range(15, 20) + c.CharacterClass.StabilityBonus * stabilityBonusVal + c.CharacterTrait.StabilityBonus;
+            attributes.Stability.Max = Random.Range(15, 20) + playerCharacter.CharacterClass.StabilityBonus * stabilityBonusVal + playerCharacter.CharacterTrait.StabilityBonus;
             attributes.Stability.SetCurrentValue(attributes.Stability.Max);
-            attributes.Intelligence.Max = Random.Range(15, 20) + c.CharacterClass.IntelligenceBonus * intelligenceBonusVal + c.CharacterTrait.IntelligenceBonus;
+            attributes.Intelligence.Max = Random.Range(15, 20) + playerCharacter.CharacterClass.IntelligenceBonus * intelligenceBonusVal + playerCharacter.CharacterTrait.IntelligenceBonus;
             attributes.Intelligence.SetCurrentValue(attributes.Intelligence.Max);
-            attributes.Weight = CalculateWeight(c);
+            playerCharacter.SurvivalAttributes.Weight = CalculateWeight(playerCharacter);
         }
     }
 }

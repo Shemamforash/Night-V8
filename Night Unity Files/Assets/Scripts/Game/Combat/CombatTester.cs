@@ -8,18 +8,18 @@ namespace Game.Combat
 {
     public class CombatTester : MonoBehaviour
     {
-        private DesolationCharacter character;
-        private CombatScenario encounter;
+        private Player _playerCharacter;
+        private CombatScenario _encounter;
         public int Size = 3;
         public bool ManualOnly;
         public bool Smg = true, Lmg = true, Rifle = true, Pistol = true, Shotgun = true;
     
         public void Start()
         {
-            new DesolationCharacterManager();
+            new CharacterManager();
             TraitLoader.LoadTraits();
-            character = DesolationCharacterGenerator.GenerateCharacter();
-            ((DesolationInventory)character.Inventory()).AddTestingResources();
+            _playerCharacter = CharacterGenerator.GenerateCharacter();
+            ((DesolationInventory)_playerCharacter.Inventory()).AddTestingResources();
             List<WeaponType> weaponsWanted = new List<WeaponType>();
             if(Smg) weaponsWanted.Add(WeaponType.SMG);
             if(Lmg) weaponsWanted.Add(WeaponType.LMG);
@@ -27,11 +27,11 @@ namespace Game.Combat
             if(Pistol) weaponsWanted.Add(WeaponType.Shotgun);
             if(Shotgun) weaponsWanted.Add(WeaponType.Pistol);
             Weapon weapon = WeaponGenerator.GenerateWeapon(weaponsWanted, ManualOnly);
-            character.Equip(weapon);
-            weapon.Reload(character.Inventory());
-            encounter = CombatScenario.Generate(Size);
-            encounter.SetCharacter(character);
-            CombatManager.EnterCombat(encounter);
+            _playerCharacter.Equip(weapon);
+            weapon.Reload(_playerCharacter.Inventory());
+            _encounter = CombatScenario.Generate(Size);
+            _encounter.SetCharacter(_playerCharacter);
+            CombatManager.EnterCombat(_encounter);
         }
     }
 }
