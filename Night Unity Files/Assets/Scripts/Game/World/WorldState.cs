@@ -68,21 +68,6 @@ namespace Game.World
             popupWithList.AddBackButton();
         }
 
-        public static void AddTestingResources()
-        {
-            _homeInventory.IncrementResource(InventoryResourceType.Ammo, 100);
-            _homeInventory.IncrementResource(InventoryResourceType.Food, 100);
-            _homeInventory.IncrementResource(InventoryResourceType.Fuel, 100);
-            _homeInventory.IncrementResource(InventoryResourceType.Scrap, 100);
-            _homeInventory.IncrementResource(InventoryResourceType.Water, 100);
-            for (int i = 0; i < 0; ++i)
-            {
-                _homeInventory.AddItem(WeaponGenerator.GenerateWeapon());
-                _homeInventory.AddItem(GearReader.GenerateArmour());
-                _homeInventory.AddItem(GearReader.GenerateAccessory());
-            }
-        }
-        
         public void Start()
         {
             _homeInventory.Start();
@@ -103,7 +88,7 @@ namespace Game.World
             StormDistanceActual = 10;
 
 #if UNITY_EDITOR
-           AddTestingResources();
+           _homeInventory.AddTestingResources();
 #endif
         }
 

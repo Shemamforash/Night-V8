@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Game.Combat.Enemies;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
@@ -50,12 +52,17 @@ namespace Game.Combat.CombatStates
 
         private void FireWeapon()
         {
-            Debug.Log("firing");
+            Debug.Log("firing" + Weapon().Name);
             if (Weapon().GetRemainingAmmo() > 0 && Weapon().Cocked)
             {
                 _timeSinceLastFire -= Time.deltaTime;
                 if (_timeSinceLastFire > 0) return;
-                Weapon().Fire();
+                List<Enemy> enemies = CombatManager.Scenario().Enemies();
+                for (int i = enemies.Count - 1; i >= 0; --i)
+                {
+                    Debug.Log("banana");
+                    Weapon().Fire(enemies[i]);
+                }
                 CombatMachine.DecreaseAim();
                 UpdateMagazineUi();
                 TryRepeatFire();

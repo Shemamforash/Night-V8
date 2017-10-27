@@ -4,6 +4,7 @@ using System.Xml;
 using Game.Combat.Weapons;
 using Game.Gear.Armour;
 using Game.World.WorldEvents;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
@@ -93,11 +94,20 @@ namespace Game.Gear.Weapons
             value = new ScaleableValue(xCoefficient, intercept);
         }
 
-        public static Weapon GenerateWeapon(bool manualOnly = false)
+        public static Weapon GenerateWeapon(List<WeaponType> weaponsWanted = null, bool manualOnly = false)
         {
             bool automatic = true;
-            Array types = Enum.GetValues(typeof(WeaponType));
-            WeaponType weaponType = (WeaponType) types.GetValue(UnityEngine.Random.Range(0, types.Length));
+            WeaponType weaponType;
+            if (weaponsWanted != null)
+            {
+                weaponType = weaponsWanted[UnityEngine.Random.Range(0, weaponsWanted.Count)];
+            }
+            else
+            {
+                Array types = Enum.GetValues(typeof(WeaponType));
+                weaponType = (WeaponType) types.GetValue(UnityEngine.Random.Range(0, types.Length));
+
+            }
 #if UNITY_EDITOR
             if (manualOnly)
             {
@@ -105,6 +115,7 @@ namespace Game.Gear.Weapons
                 automatic = false;
             }
 #endif
+            Helper.PrintList(weaponsWanted);
             WeaponClass weaponClass = WeaponDictionary[weaponType];
             WeaponModifier subClass = weaponClass.GetSubtype();
 

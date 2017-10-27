@@ -236,5 +236,10 @@ namespace SamsHelper
 
             public override string Message => "Tried to add threshold '" + _name + "' at value '" + _thresholdValue + "' exceeds min-max range (" + _min + "-" + _max + ")";
         }
+
+        public class FiredWithNoAmmoException : Exception
+        {
+            public override string Message => "Tried to fire but weapon had no ammo on firing.";
+        }
     }
 }

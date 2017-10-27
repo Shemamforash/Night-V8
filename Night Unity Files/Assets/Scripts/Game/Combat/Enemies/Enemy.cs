@@ -70,7 +70,11 @@ namespace Game.Combat.Enemies
         public override ViewParent CreateUi(Transform parent)
         {
             EnemyView enemyView = new EnemyView(this, parent);
-            _enemyHp.AddOnValueChange(f => enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString());
+            _enemyHp.AddOnValueChange(f =>
+            {
+                enemyView.HealthSlider.value = _enemyHp.GetCurrentValue() / _enemyHp.Max;
+                enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString();
+            });
             DistanceToCharacter.AddOnValueChange(f => enemyView.DistanceText.text = Helper.Round(f.GetCurrentValue(), 0) + "m " + f.GetThresholdName());
             return enemyView;
         }

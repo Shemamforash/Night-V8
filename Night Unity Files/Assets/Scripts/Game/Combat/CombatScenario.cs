@@ -35,7 +35,7 @@ namespace Game.Combat
             CombatScenario scenario = new CombatScenario();
             for (int i = 0; i < size; ++i)
             {
-                scenario.AddEnemy(new Enemy("Enemy" + (i == 0 ? "" : i.ToString()), 100, scenario));
+                scenario.AddEnemy(new Enemy("Enemy" + (i == 0 ? "" : i.ToString()), 10000, scenario));
             }
             return scenario;
         }

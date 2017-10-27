@@ -27,6 +27,7 @@ namespace Game.Combat
             _scenario.Character().CombatStates.Update();
             _scenario.Enemies().ForEach(e => e.CombatStates.Update());
             CombatCooldowns.UpdateCooldowns();
+            CombatUi.UpdateHitMessage();
         }
 
         public static CombatScenario Scenario()

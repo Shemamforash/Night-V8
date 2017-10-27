@@ -1,6 +1,8 @@
 ﻿using System;
 using Facilitating.Audio;
 using Game.Characters;
+using Game.Combat;
+using Game.Combat.Enemies;
 using Game.Combat.Weapons;
 using Game.Gear.UI;
 using Game.World;
@@ -12,6 +14,7 @@ using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Gear.Weapons
 {
@@ -53,7 +56,6 @@ namespace Game.Gear.Weapons
 #if UNITY_EDITOR
 //            Print();
 #endif
-            Reload();
             UpdateDurability();
             WorldEventManager.GenerateEvent(new WeaponFindEvent(Name));
         }
@@ -121,17 +123,34 @@ namespace Game.Gear.Weapons
             return WeaponClass.Type.ToString();
         }
 
-        public bool Fire()
+        public void Fire(Enemy target)
         {
-            if (AmmoInMagazine.GetCurrentValue() <= 0) return false;
+            if (AmmoInMagazine.GetCurrentValue() <= 0)
+            {
+                throw new Exceptions.FiredWithNoAmmoException();
+            }
             AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() - 1);
             GunFire.Fire();
-            return true;
+            float range = target.DistanceToCharacter.GetCurrentValue();
+            float accuracy = WeaponAttributes.Accuracy.GetCalculatedValue();
+            float hitProbability = Mathf.Pow(accuracy / range, 2);
+            if (Random.Range(0f, 1f) > hitProbability)
+            {
+                CombatManager.CombatUi.ShowHitMessage("Miss");
+                return;
+            }
+            float damageDealt = WeaponAttributes.Damage.GetCalculatedValue();
+            if (Random.Range(0f, 1f) < WeaponAttributes.CriticalChance.GetCalculatedValue() / 100f)
+            {
+                CombatManager.CombatUi.ShowHitMessage("!Critical!");
+                damageDealt *= 2;
+            }
+            CombatManager.CombatUi.ShowHitMessage("Hit!");
+            target.TakeDamage((int) damageDealt);
         }
 
-        public void Reload()
+        public void Reload(Inventory inventory)
         {
-            Inventory inventory = WorldState.HomeInventory();
             if (inventory == null) return;
             float ammoAvailable = inventory.DecrementResource(InventoryResourceType.Ammo, Capacity);
             AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() + (int) ammoAvailable);

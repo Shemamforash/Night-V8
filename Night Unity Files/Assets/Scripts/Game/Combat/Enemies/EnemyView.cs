@@ -3,6 +3,7 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Combat.Enemies
 {
@@ -10,6 +11,7 @@ namespace Game.Combat.Enemies
     {
         public TextMeshProUGUI CoverText, DistanceText, VisionText, StrengthText, ArmourText;
         private TextMeshProUGUI _nameText, _typeText;
+        public Slider HealthSlider;
         
         public EnemyView(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/EnemyItem") : base(linkedObject, parent, prefabLocation)
         {
@@ -25,6 +27,7 @@ namespace Game.Combat.Enemies
             ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour");
             _nameText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Name");
             _typeText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Type");
+            HealthSlider = Helper.FindChildWithName<Slider>(GameObject, "Health Bar");
         }
 
         public override void Update()

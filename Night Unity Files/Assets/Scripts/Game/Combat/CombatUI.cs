@@ -2,6 +2,7 @@
 using Game.Combat.Enemies;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
@@ -13,15 +14,35 @@ namespace Game.Combat
     {
         private readonly GameObject _ammoPrefab, _magazineContent;
         private readonly ScrollingMenuList _enemyList;
+        private float _hitInfoTimerCurrent, _hitInfoTimerMax = 1f;
 
         public readonly TextMeshProUGUI CharacterName,
             CharacterHealthText,
             RegularRoundsText,
             WeaponNameText,
-            ReloadTimeRemaining;
+            ReloadTimeRemaining,
+            HitInfo;
 
         private readonly Slider _characterHealthSlider, _aimSlider;
         private readonly List<GameObject> _magazineAmmo = new List<GameObject>();
+
+        public void ShowHitMessage(string message)
+        {
+            HitInfo.text = message;
+            _hitInfoTimerCurrent = _hitInfoTimerMax;
+        }
+
+        public void UpdateHitMessage()
+        {
+            if (!(_hitInfoTimerCurrent > 0)) return;
+            _hitInfoTimerCurrent -= Time.deltaTime;
+            float opacity = _hitInfoTimerCurrent / _hitInfoTimerMax;
+            if (opacity < 0)
+            {
+                opacity = 0;
+            }
+            HitInfo.color = new Color(1, 1, 1, opacity);
+        }
 
         public CombatUi(GameObject combatMenu)
         {
@@ -35,6 +56,8 @@ namespace Game.Combat
             RegularRoundsText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Ammo Stock");
             WeaponNameText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Weapon");
             ReloadTimeRemaining = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Time Remaining");
+            HitInfo = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Hit Info");
+            HitInfo.color = new Color(1, 1, 1, 0);
 
             _characterHealthSlider = Helper.FindChildWithName<Slider>(playerContainer, "Health Bar");
             _aimSlider = Helper.FindChildWithName<Slider>(playerContainer, "Aim Bar");
@@ -53,11 +76,6 @@ namespace Game.Combat
                 GameObject newRound = Helper.InstantiateUiObject(_ammoPrefab, _magazineContent.transform);
                 _magazineAmmo.Add(newRound);
             }
-        }
-
-        public void UpdateAimSlider(float value)
-        {
-            _aimSlider.value = value;
         }
 
         public void EmptyMagazine()
@@ -84,6 +102,7 @@ namespace Game.Combat
                 GameObject round = _magazineAmmo[i].transform.Find("Round").gameObject;
                 round.SetActive(i < remaining);
             }
+            RegularRoundsText.text = _magazineAmmo.Count + "/" + CombatManager.Scenario().Character().Inventory().GetResourceQuantity(InventoryResourceType.Ammo);
         }
 
         public void SetMagazineText(string text)

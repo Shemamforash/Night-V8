@@ -26,5 +26,21 @@ namespace Game.World
             sortedItems.AddRange(GetItemsOfType(item => item is Accessory));
             return sortedItems;
         }
+        
+        public void AddTestingResources(int noItems = 0)
+        {
+            IncrementResource(InventoryResourceType.Ammo, 100);
+            IncrementResource(InventoryResourceType.Food, 100);
+            IncrementResource(InventoryResourceType.Fuel, 100);
+            IncrementResource(InventoryResourceType.Scrap, 100);
+            IncrementResource(InventoryResourceType.Water, 100);
+            for (int i = 0; i < noItems; ++i)
+            {
+                AddItem(WeaponGenerator.GenerateWeapon());
+                AddItem(GearReader.GenerateArmour());
+                AddItem(GearReader.GenerateAccessory());
+            }
+        }
+        
     }
 }
