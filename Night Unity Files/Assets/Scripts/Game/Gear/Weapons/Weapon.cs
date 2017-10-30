@@ -68,12 +68,12 @@ namespace Game.Gear.Weapons
                       + "\nAmmo Left:  " + AmmoInMagazine.GetCurrentValue()
                       + "\nCapacity:   " + Capacity
                       + "\nPellets:    " + Pellets
-                      + "\nDamage:     " + GetAttributeValue(AttributeType.Damage)
-                      + "\nAccuracy:   " + GetAttributeValue(AttributeType.Accuracy)
-                      + "\nFire Rate:  " + GetAttributeValue(AttributeType.FireRate)
-                      + "\nHandling:   " + GetAttributeValue(AttributeType.Handling)
-                      + "\nReload:     " + GetAttributeValue(AttributeType.ReloadSpeed)
-                      + "\nCritChance: " + GetAttributeValue(AttributeType.CriticalChance) + "\n\n");
+                      + "\nDamage:     " + WeaponAttributes.Damage.GetCalculatedValue()
+                      + "\nAccuracy:   " + WeaponAttributes.Accuracy.GetCalculatedValue()
+                      + "\nFire Rate:  " + WeaponAttributes.FireRate.GetCalculatedValue()
+                      + "\nHandling:   " + WeaponAttributes.Handling.GetCalculatedValue()
+                      + "\nReload:     " + WeaponAttributes.ReloadSpeed.GetCalculatedValue()
+                      + "\nCritChance: " + WeaponAttributes.CriticalChance.GetCalculatedValue() + "\n\n");
         }
 
         public float GetAttributeValue(AttributeType attributeType)

@@ -125,10 +125,5 @@ namespace Game.Characters
             EquippedGear[gearItem.GetGearType()] = gearItem;
             gearItem.Modifier.Apply(BaseAttributes);
         }
-
-        public void TakeCover()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

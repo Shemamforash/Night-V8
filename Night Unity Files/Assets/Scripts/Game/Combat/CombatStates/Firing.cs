@@ -64,11 +64,7 @@ namespace Game.Combat.CombatStates
                 long timeElapsed = TimeInMillis() - _timeAtLastFire;
                 float targetTime = 1f / Weapon().GetAttributeValue(AttributeType.FireRate) * 1000;
                 if (timeElapsed < targetTime) return;
-                List<Enemy> enemies = CombatManager.Scenario().Enemies();
-                for (int i = enemies.Count - 1; i >= 0; --i)
-                {
-                    CombatManager.FireWeapon(Character());
-                }
+                CombatManager.FireWeapon(Character());
                 DecreaseAim();
                 UpdateMagazineUi();
                 TryRepeatFire();
@@ -87,6 +83,7 @@ namespace Game.Combat.CombatStates
 
         public override void Enter()
         {
+            base.Enter();
             _timeAtLastFire = 0;
         }
 

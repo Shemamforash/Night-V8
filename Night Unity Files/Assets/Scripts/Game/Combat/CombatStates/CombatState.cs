@@ -2,6 +2,7 @@
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using UnityEngine;
 
 namespace Game.Combat.CombatStates
 {
@@ -12,6 +13,11 @@ namespace Game.Combat.CombatStates
         protected CombatState(string name, CombatStateMachine combatMachine) : base(name, StateSubtype.Combat, combatMachine)
         {
             CombatMachine = combatMachine;
+        }
+
+        public override void Enter()
+        {
+            Debug.Log(Name);
         }
         
         protected Character Character()

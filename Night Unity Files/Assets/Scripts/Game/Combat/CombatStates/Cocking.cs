@@ -7,13 +7,14 @@ namespace Game.Combat.CombatStates
     public class Cocking : CombatState
     {
         private Cooldown _cockingCooldown;
-        
+
         public Cocking(CombatStateMachine parentMachine) : base("Cocking", parentMachine)
         {
         }
 
         public override void Enter()
         {
+            base.Enter();
             CombatManager.CombatUi.EmptyMagazine();
             CombatManager.CombatUi.SetMagazineText("EJECT CARTRIDGE");
         }
@@ -24,6 +25,7 @@ namespace Game.Combat.CombatStates
             CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
             ParentMachine.NavigateToState("Aiming");
             Debug.Log("cocked");
+            _cockingCooldown = null;
         }
 
         private void StartCocking()
@@ -37,19 +39,23 @@ namespace Game.Combat.CombatStates
         {
             switch (axis)
             {
-                case InputAxis.Cancel:
-                    if (!isHeld)
+                case InputAxis.Reload:
+                    if (!isHeld && _cockingCooldown == null)
                     {
                         StartCocking();
                     }
                     break;
-                case InputAxis.Vertical:
+                case InputAxis.Horizontal:
                     _cockingCooldown?.Cancel();
                     ParentMachine.NavigateToState(direction > 0 ? "Approaching" : "Retreating");
                     break;
-                case InputAxis.Horizontal:
+                case InputAxis.CancelCover:
                     _cockingCooldown?.Cancel();
-                    ParentMachine.NavigateToState(direction > 0 ? "Flanking" : "Entering Cover");
+                    ParentMachine.NavigateToState("Entering Cover");
+                    break;
+                case InputAxis.Flank:
+                    _cockingCooldown?.Cancel();
+                    ParentMachine.NavigateToState("Flanking");
                     break;
             }
         }

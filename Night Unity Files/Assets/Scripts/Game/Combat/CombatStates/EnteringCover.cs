@@ -3,14 +3,14 @@
 namespace Game.Combat.CombatStates
 {
     public class EnteringCover : CombatState {
-        public EnteringCover(CombatStateMachine parentMachine) : base("EnteringCover", parentMachine)
+        public EnteringCover(CombatStateMachine parentMachine) : base("Entering Cover", parentMachine)
         { 
-            OnUpdate += () => CombatMachine.Character.TakeCover();
+            OnUpdate += () => CombatManager.TakeCover(Character());
         }
 
         public override void OnInputUp(InputAxis axis)
         {
-            if (axis == InputAxis.Horizontal)
+            if (axis == InputAxis.CancelCover)
             {
                 ParentMachine.NavigateToState("Aiming");
             }

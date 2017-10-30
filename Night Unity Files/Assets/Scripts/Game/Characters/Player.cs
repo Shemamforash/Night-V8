@@ -106,6 +106,7 @@ namespace Game.Characters
 
         public override void Equip(GearItem gearItem)
         {
+            base.Equip(gearItem);
             switch (gearItem.GetGearType())
             {
                 case GearSubtype.Weapon:

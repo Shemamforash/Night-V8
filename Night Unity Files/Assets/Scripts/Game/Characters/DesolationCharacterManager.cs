@@ -44,7 +44,7 @@ namespace Game.Characters
         
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
-            if (axis == InputAxis.Cancel && !isHeld)
+            if (axis == InputAxis.CancelCover && !isHeld)
             {
                 ExitCharacter();
             }

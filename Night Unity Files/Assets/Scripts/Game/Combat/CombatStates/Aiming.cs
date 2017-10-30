@@ -15,7 +15,8 @@ namespace Game.Combat.CombatStates
 
         public override void Enter()
         {
-            Debug.Log("aiming");
+            base.Enter();
+            if (!Weapon().Cocked) ParentMachine.NavigateToState("Cocking");
             if (Weapon().GetRemainingAmmo() != 0) return;
             CombatManager.CombatUi.EmptyMagazine();
             CombatManager.CombatUi.SetMagazineText("NO AMMO");
@@ -32,8 +33,8 @@ namespace Game.Combat.CombatStates
         {
             switch (axis)
             {
-                case InputAxis.Cancel:
-                    ParentMachine.NavigateToState("Cocking");
+                case InputAxis.CancelCover:
+                    ParentMachine.NavigateToState("Entering Cover");
                     break;
                 case InputAxis.Fire:
                     ParentMachine.NavigateToState("Firing");
@@ -41,11 +42,11 @@ namespace Game.Combat.CombatStates
                 case InputAxis.Reload:
                     ParentMachine.NavigateToState("Reloading");
                     break;
-                case InputAxis.Vertical:
+                case InputAxis.Horizontal:
                     ParentMachine.NavigateToState(direction > 0 ? "Approaching" : "Retreating");
                     break;
-                case InputAxis.Horizontal:
-                    ParentMachine.NavigateToState(direction > 0 ? "Flanking" : "Entering Cover");
+                case InputAxis.Flank:
+                    ParentMachine.NavigateToState("Flanking");
                     break;
             }
         }

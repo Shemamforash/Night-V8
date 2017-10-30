@@ -15,6 +15,7 @@ namespace Game.Combat.Enemies
         
         public EnemyView(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/EnemyItem") : base(linkedObject, parent, prefabLocation)
         {
+            GameObject.SetActive(true);
         }
 
         protected override void CacheUiElements()

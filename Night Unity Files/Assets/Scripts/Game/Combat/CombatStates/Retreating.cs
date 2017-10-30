@@ -10,7 +10,7 @@ namespace Game.Combat.CombatStates
 
         public override void OnInputUp(InputAxis axis)
         {
-            if (axis == InputAxis.Vertical)
+            if (axis == InputAxis.Horizontal)
             {
                 ParentMachine.NavigateToState("Aiming");
             }

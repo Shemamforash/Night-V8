@@ -1,13 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game.Characters;
 using Game.Combat.CombatStates;
 using Game.Combat.Enemies;
 using Game.World;
+using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat
 {
@@ -33,7 +37,7 @@ namespace Game.Combat
             public EnemyPlayerRelation(Enemy enemy, Player player)
             {
                 Enemy = enemy;
-                Distance.AddOnValueChange(a => enemy.EnemyView().DistanceText.text = Distance.GetCurrentValue() + "m (" + a.GetThresholdName() + ")");
+                Distance.AddOnValueChange(a => enemy.EnemyView().DistanceText.text = Helper.Round(Distance.GetCurrentValue(), 1) + "m (" + a.GetThresholdName() + ")");
                 Distance.AddOnValueChange(a =>
                 {
                     if (a.GetCurrentValue() <= MaxDistance) return;
@@ -47,6 +51,8 @@ namespace Game.Combat
                 Distance.AddThreshold(MidDistance, "Medium");
                 Distance.AddThreshold(FarDistance, "Far");
                 Distance.AddThreshold(MaxDistance, "Out of Range");
+                EnemyCover.AddOnValueChange(a => enemy.EnemyView().VisionText.text = "Sight: " + Helper.Round(100 - EnemyCover.GetCurrentValue(), 0) + "%");
+                PlayerCover.AddOnValueChange(a => enemy.EnemyView().CoverText.text = "Cover: " + Helper.Round(PlayerCover.GetCurrentValue(), 0) + "%");
             }
         }
 
@@ -125,6 +131,7 @@ namespace Game.Combat
             {
                 _enemyPlayerRelations.Add(new EnemyPlayerRelation(e, scenario.Player()));
             }
+            _currentTarget = _enemyPlayerRelations[0];
             scenario.Player().CombatStates.NavigateToState("Aiming");
         }
 
@@ -149,6 +156,7 @@ namespace Game.Combat
             }
             else
             {
+                Debug.Log("here");
                 _currentTarget.EnemyCover.Decrement(1f);
             }
         }
@@ -177,6 +185,11 @@ namespace Game.Combat
             {
                 _currentTarget.Enemy.TakeDamage(c.Weapon().Fire(_currentTarget.Distance.GetCurrentValue()));
             }
+        }
+
+        public static void SetCurrentTarget(MyGameObject enemy)
+        {
+            _currentTarget = FindRelation((Enemy) enemy);
         }
     }
 }

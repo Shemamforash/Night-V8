@@ -69,7 +69,7 @@ namespace Game.Combat
 
         private void SetCriticalBar()
         {
-            _criticalTarget = 1 - _character.Weapon().GetAttributeValue(AttributeType.CriticalChance) / 100;
+            _criticalTarget = 1 - _character.Weapon().WeaponAttributes.CriticalChance.GetCalculatedValue() / 100;
             CriticalBar.anchorMin = new Vector2(_criticalTarget, 0);
             CriticalBar.anchorMax = new Vector2(_criticalTarget, 1);
         }
@@ -167,6 +167,8 @@ namespace Game.Combat
                 rect.localScale = new Vector2(0.8f, 0.8f);
             });
             _enemyList.SetItems(new List<MyGameObject>(scenario.Enemies()));
+            _enemyList.GetItems().ForEach(e => e.OnEnter(() => CombatManager.SetCurrentTarget(e.GetLinkedObject())));
+            _enemyList.GetItems()[0].GetNavigationButton().GetComponent<Button>().Select();
         }
     }
 }

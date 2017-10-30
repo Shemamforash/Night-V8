@@ -2,9 +2,10 @@
 {
     public enum InputAxis
     {
-        Cancel,
+        CancelCover,
         Submit,
         Fire,
+        Flank,
         Reload,
         Vertical,
         Horizontal
