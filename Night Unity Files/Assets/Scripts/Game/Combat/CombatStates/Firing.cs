@@ -81,12 +81,6 @@ namespace Game.Combat.CombatStates
             CombatMachine.AimAmount.Decrement(amount);
         }
 
-        public override void Enter()
-        {
-            base.Enter();
-            _timeAtLastFire = 0;
-        }
-
         public override void OnInputUp(InputAxis axis)
         {
             if (axis == InputAxis.Fire)

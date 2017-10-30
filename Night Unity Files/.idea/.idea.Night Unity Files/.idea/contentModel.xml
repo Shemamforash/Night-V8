@@ -225,8 +225,14 @@
               <e p="CombatUI.cs" t="Include" />
               <e p="Enemies" t="Include">
                 <e p="Enemy.cs" t="Include" />
+                <e p="EnemyBehaviours" t="Include">
+                  <e p="EnemyBehaviour.cs" t="Include" />
+                  <e p="Herd.cs" t="Include" />
+                  <e p="Snipe.cs" t="Include" />
+                </e>
                 <e p="EnemyView.cs" t="Include" />
               </e>
+              <e p="EnemyPlayerRelation.cs" t="Include" />
             </e>
             <e p="Gear" t="Include">
               <e p="Armour" t="Include">

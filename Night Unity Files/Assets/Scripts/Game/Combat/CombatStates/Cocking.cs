@@ -40,7 +40,11 @@ namespace Game.Combat.CombatStates
             switch (axis)
             {
                 case InputAxis.Reload:
-                    if (!isHeld && _cockingCooldown == null)
+                    if (Weapon().GetRemainingAmmo() == 0)
+                    {
+                        ParentMachine.NavigateToState("Reloading");
+                    }
+                    else if (!isHeld && _cockingCooldown == null)
                     {
                         StartCocking();
                     }

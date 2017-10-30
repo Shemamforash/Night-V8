@@ -5,13 +5,11 @@ using Game.Characters;
 using Game.Combat.CombatStates;
 using Game.Combat.Enemies;
 using Game.World;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Combat
 {
@@ -23,40 +21,8 @@ namespace Game.Combat
         public static CooldownManager CombatCooldowns = new CooldownManager();
         private static List<EnemyPlayerRelation> _enemyPlayerRelations = new List<EnemyPlayerRelation>();
         private static EnemyPlayerRelation _currentTarget;
-        private const float ImmediateDistance = 1f, CloseDistance = 10f, MidDistance = 50f, FarDistance = 100f, MaxDistance = 150f;
-        
-        private class EnemyPlayerRelation
-        {
-            public readonly Enemy Enemy;
-            public readonly Player Player;
-            public readonly MyValue Distance = new MyValue(0, 0, 150);
-            public readonly MyValue EnemyCover = new MyValue(0, 0, 100);
-            public readonly MyValue PlayerCover = new MyValue(0, 0, 100);
-            private bool _hasFled, _isDead;
 
-            public EnemyPlayerRelation(Enemy enemy, Player player)
-            {
-                Enemy = enemy;
-                Distance.AddOnValueChange(a => enemy.EnemyView().DistanceText.text = Helper.Round(Distance.GetCurrentValue(), 1) + "m (" + a.GetThresholdName() + ")");
-                Distance.AddOnValueChange(a =>
-                {
-                    if (a.GetCurrentValue() <= MaxDistance) return;
-                    Scenario().Remove(enemy);
-                    _hasFled = true;
-                });
-                Player = player;
-                Distance.SetCurrentValue(Random.Range(CloseDistance, FarDistance));
-                Distance.AddThreshold(ImmediateDistance, "Immediate");
-                Distance.AddThreshold(CloseDistance, "Close");
-                Distance.AddThreshold(MidDistance, "Medium");
-                Distance.AddThreshold(FarDistance, "Far");
-                Distance.AddThreshold(MaxDistance, "Out of Range");
-                EnemyCover.AddOnValueChange(a => enemy.EnemyView().VisionText.text = "Sight: " + Helper.Round(100 - EnemyCover.GetCurrentValue(), 0) + "%");
-                PlayerCover.AddOnValueChange(a => enemy.EnemyView().CoverText.text = "Cover: " + Helper.Round(PlayerCover.GetCurrentValue(), 0) + "%");
-            }
-        }
-
-        private static EnemyPlayerRelation FindRelation(Enemy enemy)
+        public static EnemyPlayerRelation FindRelation(Enemy enemy)
         {
             return _enemyPlayerRelations.FirstOrDefault(e => e.Enemy == enemy);
         }
@@ -113,11 +79,19 @@ namespace Game.Combat
             _scenario.Enemies().ForEach(e => e.CombatStates.Update());
             CombatCooldowns.UpdateCooldowns();
             CombatUi.Update();
+            _enemyPlayerRelations.ForEach(r => r.UpdateRelation());
         }
 
         public static CombatScenario Scenario()
         {
             return _scenario;
+        }
+
+        private static void CreateRelation(Enemy e)
+        {
+            EnemyPlayerRelation relation = new EnemyPlayerRelation(e, _scenario.Player());
+            _enemyPlayerRelations.Add(relation);
+            e.InitialiseBehaviour(relation);
         }
 
         public static void EnterCombat(CombatScenario scenario)
@@ -127,10 +101,7 @@ namespace Game.Combat
             WorldState.Pause();
             MenuStateMachine.States.NavigateToState("Combat Menu");
             CombatUi.Start(scenario);
-            foreach (Enemy e in _scenario.Enemies())
-            {
-                _enemyPlayerRelations.Add(new EnemyPlayerRelation(e, scenario.Player()));
-            }
+            _scenario.Enemies().ForEach(CreateRelation);
             _currentTarget = _enemyPlayerRelations[0];
             scenario.Player().CombatStates.NavigateToState("Aiming");
         }
@@ -181,7 +152,8 @@ namespace Game.Combat
             {
                 EnemyPlayerRelation relation = FindRelation(enemy);
                 FindRelation(enemy).Player.TakeDamage(enemy.Weapon().Fire(relation.Distance.GetCurrentValue()));
-            } else 
+            }
+            else
             {
                 _currentTarget.Enemy.TakeDamage(c.Weapon().Fire(_currentTarget.Distance.GetCurrentValue()));
             }
@@ -190,6 +162,12 @@ namespace Game.Combat
         public static void SetCurrentTarget(MyGameObject enemy)
         {
             _currentTarget = FindRelation((Enemy) enemy);
+        }
+
+        public static void Flee(Enemy enemy)
+        {
+            FindRelation(enemy).MarkFled();
+            CombatUi.Remove(enemy);
         }
     }
 }

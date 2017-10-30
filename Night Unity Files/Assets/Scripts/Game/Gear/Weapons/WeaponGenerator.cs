@@ -98,7 +98,7 @@ namespace Game.Gear.Weapons
         {
             bool automatic = true;
             WeaponType weaponType;
-            if (weaponsWanted != null)
+            if (weaponsWanted != null && weaponsWanted.Count != 0)
             {
                 weaponType = weaponsWanted[UnityEngine.Random.Range(0, weaponsWanted.Count)];
             }
@@ -115,7 +115,6 @@ namespace Game.Gear.Weapons
                 automatic = false;
             }
 #endif
-            Helper.PrintList(weaponsWanted);
             WeaponClass weaponClass = WeaponDictionary[weaponType];
             WeaponModifier subClass = weaponClass.GetSubtype();
 

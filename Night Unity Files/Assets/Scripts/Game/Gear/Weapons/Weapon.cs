@@ -31,7 +31,8 @@ namespace Game.Gear.Weapons
         public readonly WeaponAttributes WeaponAttributes;
         public readonly int Capacity, Pellets;
 
-        public Weapon(WeaponClass weaponClass, WeaponModifier subClass, WeaponModifier secondaryModifier, bool automatic, float weight, int durability) : base(weaponClass.Type.ToString(), weight, GearSubtype.Weapon)
+        public Weapon(WeaponClass weaponClass, WeaponModifier subClass, WeaponModifier secondaryModifier, bool automatic, float weight, int durability) : base(weaponClass.Type.ToString(), weight,
+            GearSubtype.Weapon)
         {
             WeaponClass = weaponClass;
             SubClass = subClass;
@@ -42,7 +43,7 @@ namespace Game.Gear.Weapons
             Durability.OnMin(() => { _canEquip = false; });
             Capacity = (int) Math.Ceiling((double) subClass.Capacity * secondaryModifier.CapacityModifier);
             Pellets = (int) Math.Ceiling((double) (subClass.Pellets * secondaryModifier.Pellets));
-            
+
             if (!automatic)
             {
 //                Damage *= 2;
@@ -109,7 +110,6 @@ namespace Game.Gear.Weapons
             }
             Name = SecondaryModifier.Name + " " + SubClass.Name + " -- (" + quality + ")";
             WeaponAttributes.RecalculateAttributeValues();
-
         }
 
         public void DecreaseDurability()
@@ -123,6 +123,65 @@ namespace Game.Gear.Weapons
             return WeaponClass.Type.ToString();
         }
 
+        public float HitProbability(float distanceToTarget)
+        {
+            float range = distanceToTarget;
+            float accuracy = WeaponAttributes.Accuracy.GetCalculatedValue();
+            float hitProbability = Mathf.Pow(accuracy / range, 2);
+            return hitProbability;
+        }
+
+        private float GetPelletDamage(float distanceToTarget)
+        {
+            if (Random.Range(0f, 1f) <= CalculateMissProbability(distanceToTarget))
+            {
+                CombatManager.CombatUi.ShowHitMessage("Miss");
+                return 0;
+            }
+            float pelletDamage = WeaponAttributes.Damage.GetCalculatedValue();
+            if (Random.Range(0f, 1f) < CalculateCriticalProbability(distanceToTarget))
+            {
+                CombatManager.CombatUi.ShowHitMessage("Critical!");
+                pelletDamage *= 2;
+            }
+            return pelletDamage;
+        }
+
+        private float LogAndClamp(float normalisedRange, float extra = 0)
+        {
+            float probability = (float) (-0.35f * Math.Log(normalisedRange));
+            probability += extra;
+            if (probability < 0)
+            {
+                probability = 0;
+            }
+            else if (probability > 1)
+            {
+                probability = 1;
+            }
+            return probability;
+        }
+
+        private float CalculateCriticalProbability(float distanceToTarget)
+        {
+            float maxRange = WeaponAttributes.Accuracy.GetCalculatedValue();
+            float normalisedRange = distanceToTarget / maxRange;
+            float probability = LogAndClamp(normalisedRange, WeaponAttributes.CriticalChance.GetCalculatedValue() / 100f);
+            return probability;
+        }
+
+        private float CalculateMissProbability(float distanceToTarget)
+        {
+            float maxRange = WeaponAttributes.Accuracy.GetCalculatedValue();
+            float normalisedRange = maxRange / distanceToTarget;
+            if (normalisedRange > 1)
+            {
+                return 0;
+            }
+            float probability = LogAndClamp(normalisedRange);
+            return probability;
+        }
+
         //Returns damage
         public int Fire(float distanceToTarget)
         {
@@ -132,19 +191,10 @@ namespace Game.Gear.Weapons
             }
             AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() - 1);
             GunFire.Fire();
-            float range = distanceToTarget;
-            float accuracy = WeaponAttributes.Accuracy.GetCalculatedValue();
-            float hitProbability = Mathf.Pow(accuracy / range, 2);
-            if (Random.Range(0f, 1f) > hitProbability)
+            float damageDealt = 0f;
+            for (int i = 0; i < Pellets; ++i)
             {
-                CombatManager.CombatUi.ShowHitMessage("Miss");
-                return 0;
-            }
-            float damageDealt = WeaponAttributes.Damage.GetCalculatedValue();
-            if (Random.Range(0f, 1f) < WeaponAttributes.CriticalChance.GetCalculatedValue() / 100f)
-            {
-                CombatManager.CombatUi.ShowHitMessage("Critical!");
-                damageDealt *= 2;
+                damageDealt += GetPelletDamage(distanceToTarget);
             }
             return (int) damageDealt;
         }
@@ -158,7 +208,7 @@ namespace Game.Gear.Weapons
 
         public int GetRemainingAmmo()
         {
-            return (int)AmmoInMagazine.GetCurrentValue();
+            return (int) AmmoInMagazine.GetCurrentValue();
         }
 
         public override string GetSummary()

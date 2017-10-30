@@ -28,7 +28,6 @@ namespace Game.Combat
             if(Shotgun) weaponsWanted.Add(WeaponType.Pistol);
             Weapon weapon = WeaponGenerator.GenerateWeapon(weaponsWanted, ManualOnly);
             _playerCharacter.Equip(weapon);
-            Debug.Log(_playerCharacter.Weapon());
             weapon.Reload(_playerCharacter.Inventory());
             _encounter = CombatScenario.Generate(Size);
             _encounter.SetCharacter(_playerCharacter);

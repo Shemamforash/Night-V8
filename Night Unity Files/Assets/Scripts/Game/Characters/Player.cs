@@ -1,11 +1,13 @@
 ﻿using System;
 using Game.Characters.Attributes;
 using Game.Characters.CharacterActions;
+using Game.Combat;
 using Game.World;
 using Game.World.Region;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Game.Characters
 {
@@ -15,18 +17,17 @@ namespace Game.Characters
         public Region CurrentRegion;
         public CharacterView CharacterView;
         public readonly SurvivalAttributes SurvivalAttributes;
-        
+
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait) : base(name)
         {
             SurvivalAttributes = new SurvivalAttributes(this);
             CombatStates.EnableInput();
-            CharacterInventory = new DesolationInventory(name);
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
             CharacterInventory.MaxWeight = 50;
         }
-        
+
         //Links character to object in scene
         public override void SetGameObject(GameObject gameObject)
         {
@@ -53,12 +54,12 @@ namespace Game.Characters
             States.SetDefaultState("Idle");
             CharacterView.UpdateActionUi();
         }
-        
+
         private bool IsOverburdened()
         {
             return CharacterInventory.Weight > BaseAttributes.Strength.GetCurrentValue();
         }
-        
+
         private void Tire(int amount)
         {
             BaseAttributes.Endurance.SetCurrentValue(BaseAttributes.Endurance.GetCurrentValue() - (IsOverburdened() ? amount * 2 : amount));

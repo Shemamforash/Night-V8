@@ -31,6 +31,7 @@ namespace Game.Characters
 
         protected Character(string name) : base(name, GameObjectType.Character)
         {
+            CharacterInventory = new DesolationInventory(name);
             Conditions = new CharacterConditions();
             BaseAttributes = new BaseAttributes(this);
             CombatStates = new CombatStateMachine(this);
@@ -65,7 +66,7 @@ namespace Game.Characters
 
         private float GetSpeedModifier()
         {
-            return 1f + BaseAttributes.Endurance.GetCalculatedValue() / 100f * Time.deltaTime;
+            return (1f + BaseAttributes.Endurance.GetCalculatedValue() / 100f) * Time.deltaTime;
         }
 
         public void IncreaseDistance()

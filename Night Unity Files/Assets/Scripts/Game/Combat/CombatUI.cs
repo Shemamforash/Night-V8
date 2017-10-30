@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Gear.Weapons;
@@ -169,6 +170,35 @@ namespace Game.Combat
             _enemyList.SetItems(new List<MyGameObject>(scenario.Enemies()));
             _enemyList.GetItems().ForEach(e => e.OnEnter(() => CombatManager.SetCurrentTarget(e.GetLinkedObject())));
             _enemyList.GetItems()[0].GetNavigationButton().GetComponent<Button>().Select();
+        }
+
+        private void SetTarget(Enemy e)
+        {
+            CombatManager.SetCurrentTarget(e);
+            e.EnemyView().GetNavigationButton().GetComponent<Button>().Select();
+        }
+
+        public void Remove(Enemy enemy)
+        {
+            EnemyView v = (EnemyView) _enemyList.GetItems().FirstOrDefault(i => i.GetLinkedObject() == enemy);
+            v.Destroy();
+            for (int i = 0; i < _enemyList.GetItems().Count; ++i)
+            {
+                EnemyView enemyView = (EnemyView) _enemyList.GetItems()[i];
+                if (enemyView.GetLinkedObject() != enemy) continue;
+                int newTarget = i + 1;
+                if (newTarget == _enemyList.GetItems().Count)
+                {
+                    newTarget = i - 1;
+                }
+                if (newTarget != -1)
+                {
+                    SetTarget((Enemy) _enemyList.GetItems()[newTarget].GetLinkedObject());
+                }
+                _enemyList.Remove(enemyView);
+                enemyView.Destroy();
+                break;
+            }
         }
     }
 }
