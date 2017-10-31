@@ -31,6 +31,7 @@ namespace Game.Combat.CombatStates
 
         public override void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
+            base.OnInputDown(axis, isHeld, direction);
             switch (axis)
             {
                 case InputAxis.CancelCover:

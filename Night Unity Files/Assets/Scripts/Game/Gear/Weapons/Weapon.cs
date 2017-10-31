@@ -131,7 +131,7 @@ namespace Game.Gear.Weapons
             return hitProbability;
         }
 
-        private float GetPelletDamage(float distanceToTarget)
+        private float GetPelletDamage(float distanceToTarget, bool rageModeOn)
         {
             if (Random.Range(0f, 1f) <= CalculateMissProbability(distanceToTarget))
             {
@@ -139,7 +139,7 @@ namespace Game.Gear.Weapons
                 return 0;
             }
             float pelletDamage = WeaponAttributes.Damage.GetCalculatedValue();
-            if (Random.Range(0f, 1f) < CalculateCriticalProbability(distanceToTarget))
+            if (Random.Range(0f, 1f) < CalculateCriticalProbability(distanceToTarget) || rageModeOn)
             {
                 CombatManager.CombatUi.ShowHitMessage("Critical!");
                 pelletDamage *= 2;
@@ -183,7 +183,7 @@ namespace Game.Gear.Weapons
         }
 
         //Returns damage
-        public int Fire(float distanceToTarget)
+        public int Fire(float distanceToTarget, bool rageModeOn)
         {
             if (AmmoInMagazine.GetCurrentValue() <= 0)
             {
@@ -194,7 +194,7 @@ namespace Game.Gear.Weapons
             float damageDealt = 0f;
             for (int i = 0; i < Pellets; ++i)
             {
-                damageDealt += GetPelletDamage(distanceToTarget);
+                damageDealt += GetPelletDamage(distanceToTarget, rageModeOn);
             }
             return (int) damageDealt;
         }

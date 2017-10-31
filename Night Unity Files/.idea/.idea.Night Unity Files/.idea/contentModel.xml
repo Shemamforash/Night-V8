@@ -160,6 +160,7 @@
               <e p="SaveController.cs" t="Include" />
               <e p="StatsTracker.cs" t="Include" />
             </e>
+            <e p="RageBarController.cs" t="Include" />
             <e p="SunController.cs" t="Include" />
             <e p="UI" t="Include">
               <e p="BorderHighlight.cs" t="Include" />

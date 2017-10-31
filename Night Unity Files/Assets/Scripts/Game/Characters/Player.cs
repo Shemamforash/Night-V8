@@ -1,13 +1,11 @@
 ﻿using System;
 using Game.Characters.Attributes;
 using Game.Characters.CharacterActions;
-using Game.Combat;
-using Game.World;
 using Game.World.Region;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI;
 using UnityEngine;
-using Random = System.Random;
 
 namespace Game.Characters
 {

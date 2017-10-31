@@ -29,9 +29,8 @@ namespace Game.Combat
             _reloadTimeRemaining,
             _hitInfo;
 
-        private readonly Slider _characterHealthSlider, _aimSlider;
+        private readonly Slider _characterHealthSlider;
         private readonly List<GameObject> _magazineAmmo = new List<GameObject>();
-        private readonly RectTransform CriticalBar;
         private Character _character;
         private float _criticalTarget;
 
@@ -39,7 +38,7 @@ namespace Game.Combat
         {
             GameObject playerContainer = combatMenu.transform.Find("Player").gameObject;
             _enemyList = Helper.FindChildWithName<ScrollingMenuList>(combatMenu, "Enemies");
-            _magazineContent = Helper.FindChildWithName<Transform>(playerContainer, "Magazine").Find("Content").gameObject;
+            _magazineContent = Helper.FindChildWithName<Transform>(playerContainer, "Magazine").gameObject;
             _ammoPrefab = Resources.Load("Prefabs/Combat/Ammo Prefab") as GameObject;
 
             _characterName = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Name");
@@ -48,31 +47,9 @@ namespace Game.Combat
             _weaponNameText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Weapon");
             _reloadTimeRemaining = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Time Remaining");
             _hitInfo = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Hit Info");
-            CriticalBar = Helper.FindChildWithName<RectTransform>(playerContainer, "Critical Bar");
             _hitInfo.color = new Color(1, 1, 1, 0);
 
             _characterHealthSlider = Helper.FindChildWithName<Slider>(playerContainer, "Health Bar");
-            _aimSlider = Helper.FindChildWithName<Slider>(playerContainer, "Aim Bar");
-        }
-
-        private void UpdateAimSlider()
-        {
-            _aimSlider.value = _character.CombatStates.AimAmount.GetCurrentValue();
-            if (_aimSlider.value / 100 > _criticalTarget)
-            {
-                Helper.FindChildWithName<Image>(_aimSlider.gameObject, "Fill").color = Color.red;
-            }
-            else
-            {
-                Helper.FindChildWithName<Image>(_aimSlider.gameObject, "Fill").color = Color.white;
-            }
-        }
-
-        private void SetCriticalBar()
-        {
-            _criticalTarget = 1 - _character.Weapon().WeaponAttributes.CriticalChance.GetCalculatedValue() / 100;
-            CriticalBar.anchorMin = new Vector2(_criticalTarget, 0);
-            CriticalBar.anchorMax = new Vector2(_criticalTarget, 1);
         }
 
         public void ShowHitMessage(string message)
@@ -144,13 +121,11 @@ namespace Game.Combat
         public void Update()
         {
             UpdateHitMessage();
-            UpdateAimSlider();
         }
 
         public void Start(CombatScenario scenario)
         {
             _character = scenario.Player();
-            SetCriticalBar();
             ResetMagazine(_character.Weapon().Capacity);
             UpdateMagazine(_character.Weapon().GetRemainingAmmo());
             _characterName.text = _character.Name;
@@ -160,11 +135,9 @@ namespace Game.Combat
                 RectTransform rect = enemyView.GetGameObject().GetComponent<RectTransform>();
                 if (isSelected)
                 {
-                    enemyView.GetGameObject().GetComponent<HorizontalLayoutGroup>().padding.left = 0;
                     rect.localScale = new Vector2(1, 1);
                     return;
                 }
-                enemyView.GetGameObject().GetComponent<HorizontalLayoutGroup>().padding.left = 300;
                 rect.localScale = new Vector2(0.8f, 0.8f);
             });
             _enemyList.SetItems(new List<MyGameObject>(scenario.Enemies()));

@@ -52,7 +52,8 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         {
             for (int i = 0; i < Items.Count; ++i)
             {
-                if (Items[i].GetGameObject() == null) continue;
+                GameObject itemObject = Items[i].GetGameObject();
+                if (itemObject == null) continue;
                 int distance = Math.Abs(i - Items.IndexOf(itemUi));
                 _unselectedItemAction?.Invoke(Items[i], distance == 0);
                 float alpha = 1f - (float) distance / MaxDistance;
@@ -60,7 +61,18 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 {
                     alpha = MinFade;
                 }
-                Items[i].GetGameObject().GetComponent<EnhancedButton>().ChangeTextColor(new Color(1, 1, 1, alpha));
+                if (alpha == 0 && itemObject.activeInHierarchy)
+                {
+                    itemObject.SetActive(false);
+                }
+                else if(alpha != 0)
+                {
+                    if (!itemObject.activeInHierarchy)
+                    {
+                        itemObject.SetActive(true);    
+                    }
+                    itemObject.GetComponent<EnhancedButton>().ChangeTextColor(new Color(1, 1, 1, alpha));
+                }
             }
         }
     }

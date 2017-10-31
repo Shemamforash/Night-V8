@@ -2,6 +2,7 @@
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using SamsHelper.Input;
 using UnityEngine;
 
 namespace Game.Combat.CombatStates
@@ -28,6 +29,12 @@ namespace Game.Combat.CombatStates
         protected Weapon Weapon()
         {
             return (Weapon)Character().GetGearItem(GearSubtype.Weapon);
+        }
+
+        public override void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+            if (axis != InputAxis.Submit) return;
+            CombatManager.TryStartRageMode();
         }
     }
 }

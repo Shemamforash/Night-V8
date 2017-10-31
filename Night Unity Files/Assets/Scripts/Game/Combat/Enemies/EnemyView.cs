@@ -34,6 +34,7 @@ namespace Game.Combat.Enemies
 
         public override void Update()
         {
+            base.Update();
             _nameText.text = LinkedObject.Name;
             _typeText.text = ((Enemy) LinkedObject).EnemyType();
         }

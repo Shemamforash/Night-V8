@@ -9,10 +9,6 @@ namespace Game.Combat.CombatStates
             OnUpdate += () => CombatMachine.Character.DecreaseDistance();
         }
 
-        public override void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-        }
-
         public override void OnInputUp(InputAxis axis)
         {
             if (axis == InputAxis.Horizontal)

@@ -4,6 +4,7 @@ using System.Linq;
 using Game.Characters;
 using Game.Combat.CombatStates;
 using Game.Combat.Enemies;
+using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -21,8 +22,34 @@ namespace Game.Combat
         public static CooldownManager CombatCooldowns = new CooldownManager();
         private static List<EnemyPlayerRelation> _enemyPlayerRelations = new List<EnemyPlayerRelation>();
         private static EnemyPlayerRelation _currentTarget;
+        private static MyValue _rage = new MyValue(0, 0, 1);
+        private static bool _rageActivated;
 
-        public static EnemyPlayerRelation FindRelation(Enemy enemy)
+        private static void IncreaseRage()
+        {
+            if (!_rageActivated)
+            {
+                _rage.Increment(0.05f);
+            }
+        }
+        
+        public static bool RageActivated => _rageActivated;
+
+        private static void DecreaseRage()
+        {
+            float decreaseAmount = 0f;
+            if (_rage.GetCurrentValue() < 1 && !_rageActivated)
+            {
+                decreaseAmount = 0.04f;
+            }
+            else if (_rageActivated)
+            {
+                decreaseAmount = 0.1f;
+            }
+            _rage.Decrement(decreaseAmount * Time.deltaTime);
+        }
+
+        private static EnemyPlayerRelation FindRelation(Enemy enemy)
         {
             return _enemyPlayerRelations.FirstOrDefault(e => e.Enemy == enemy);
         }
@@ -71,6 +98,8 @@ namespace Game.Combat
         protected void Awake()
         {
             CombatUi = new CombatUi(gameObject);
+            _rage.AddOnValueChange(a => RageBarController.SetRageBarFill(a.GetCurrentValue()));
+            _rage.OnMin(EndRageMode);
         }
 
         public void Update()
@@ -80,6 +109,7 @@ namespace Game.Combat
             CombatCooldowns.UpdateCooldowns();
             CombatUi.Update();
             _enemyPlayerRelations.ForEach(r => r.UpdateRelation());
+            DecreaseRage();
         }
 
         public static CombatScenario Scenario()
@@ -151,11 +181,14 @@ namespace Game.Combat
             if (enemy != null)
             {
                 EnemyPlayerRelation relation = FindRelation(enemy);
-                FindRelation(enemy).Player.TakeDamage(enemy.Weapon().Fire(relation.Distance.GetCurrentValue()));
+                FindRelation(enemy).Player.TakeDamage(enemy.Weapon().Fire(relation.Distance.GetCurrentValue(), false));
             }
             else
             {
-                _currentTarget.Enemy.TakeDamage(c.Weapon().Fire(_currentTarget.Distance.GetCurrentValue()));
+                int damage = c.Weapon().Fire(_currentTarget.Distance.GetCurrentValue(), _rageActivated);
+                if (damage == 0) return;
+                IncreaseRage();
+                _currentTarget.Enemy.TakeDamage(damage);
             }
         }
 
@@ -168,6 +201,27 @@ namespace Game.Combat
         {
             FindRelation(enemy).MarkFled();
             CombatUi.Remove(enemy);
+        }
+
+        private static void EndRageMode()
+        {
+            if (!_rageActivated) return;
+            _rageActivated = false;
+            Weapon weapon = _scenario.Player().Weapon();
+            weapon.WeaponAttributes.ReloadSpeed.RemoveModifier(-0.5f);
+            weapon.WeaponAttributes.FireRate.RemoveModifier(0.5f);
+        }
+
+        public static void TryStartRageMode()
+        {
+            if (_rage.GetCurrentValue() == 1)
+            {
+                Debug.Log("rage mode active!");
+                _rageActivated = true;
+                Weapon weapon = _scenario.Player().Weapon();
+                weapon.WeaponAttributes.ReloadSpeed.AddModifier(-0.5f);
+                weapon.WeaponAttributes.FireRate.AddModifier(0.5f);
+            }
         }
     }
 }
