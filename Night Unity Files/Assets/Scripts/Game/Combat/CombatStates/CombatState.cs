@@ -11,7 +11,7 @@ namespace Game.Combat.CombatStates
     {
         protected readonly CombatStateMachine CombatMachine;
 
-        protected CombatState(string name, CombatStateMachine combatMachine) : base(name, StateSubtype.Combat, combatMachine)
+        protected CombatState(string name, CombatStateMachine combatMachine) : base(name, StateSubtype.Combat)
         {
             CombatMachine = combatMachine;
         }
@@ -24,6 +24,16 @@ namespace Game.Combat.CombatStates
         protected Character Character()
         {
             return CombatMachine.Character;
+        }
+
+        protected override void ReturnToDefault()
+        {
+            CombatMachine.ReturnToDefault();
+        }
+
+        protected override void NavigateToState(string name)
+        {
+            CombatMachine.NavigateToState(name);
         }
 
         protected Weapon Weapon()

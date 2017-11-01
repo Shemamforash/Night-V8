@@ -9,7 +9,7 @@ namespace Game.Combat.Enemies
 {
     public class EnemyView : ViewParent
     {
-        public TextMeshProUGUI CoverText, DistanceText, VisionText, StrengthText, ArmourText, StatusEffects;
+        public TextMeshProUGUI CoverText, DistanceText, VisionText, StrengthText, ArmourText, AlertText, ActionText;
         private TextMeshProUGUI _nameText, _typeText;
         public Slider HealthSlider;
         
@@ -29,7 +29,8 @@ namespace Game.Combat.Enemies
             _nameText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Name");
             _typeText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Type");
             HealthSlider = Helper.FindChildWithName<Slider>(GameObject, "Health Bar");
-            StatusEffects = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Status Effects");
+            AlertText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Alert");
+            ActionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Action");
         }
 
         public override void Update()

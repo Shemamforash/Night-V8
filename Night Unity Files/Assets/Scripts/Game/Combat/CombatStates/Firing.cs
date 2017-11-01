@@ -45,7 +45,7 @@ namespace Game.Combat.CombatStates
             else
             {
                 Weapon().Cocked = false;
-                ParentMachine.NavigateToState("Cocking");
+                NavigateToState("Cocking");
             }
         }
 
@@ -72,7 +72,7 @@ namespace Game.Combat.CombatStates
             }
             else if (Weapon().GetRemainingAmmo() == 0 && Character().Inventory().GetResourceQuantity(InventoryResourceType.Ammo) != 0)
             {
-                ParentMachine.NavigateToState("Reloading");
+                NavigateToState("Reloading");
             }
         }
 
@@ -86,7 +86,7 @@ namespace Game.Combat.CombatStates
         {
             if (axis == InputAxis.Fire)
             {
-                ParentMachine.NavigateToState("Aiming");
+                NavigateToState(nameof(Waiting));
             }
         }
     }

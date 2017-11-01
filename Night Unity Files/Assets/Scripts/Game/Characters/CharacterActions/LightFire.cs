@@ -21,7 +21,7 @@ namespace Game.Characters.CharacterActions
             }
             else
             {
-                ParentMachine.ReturnToDefault();
+                ReturnToDefault();
             }
         }
     }

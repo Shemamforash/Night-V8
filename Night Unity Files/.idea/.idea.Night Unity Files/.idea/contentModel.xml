@@ -212,7 +212,6 @@
               <e p="CombatScenario.cs" t="Include" />
               <e p="CombatStateMachine.cs" t="Include" />
               <e p="CombatStates" t="Include">
-                <e p="Aiming.cs" t="Include" />
                 <e p="Approaching.cs" t="Include" />
                 <e p="Cocking.cs" t="Include" />
                 <e p="CombatState.cs" t="Include" />
@@ -221,6 +220,7 @@
                 <e p="Flanking.cs" t="Include" />
                 <e p="Reloading.cs" t="Include" />
                 <e p="Retreating.cs" t="Include" />
+                <e p="Waiting.cs" t="Include" />
               </e>
               <e p="CombatTester.cs" t="Include" />
               <e p="CombatUI.cs" t="Include" />
@@ -228,8 +228,15 @@
                 <e p="Enemy.cs" t="Include" />
                 <e p="EnemyBehaviours" t="Include">
                   <e p="EnemyBehaviour.cs" t="Include" />
+                  <e p="Flee.cs" t="Include" />
+                  <e p="Graze.cs" t="Include" />
                   <e p="Herd.cs" t="Include" />
-                  <e p="Snipe.cs" t="Include" />
+                  <e p="Wander.cs" t="Include" />
+                  <e p="Watch.cs" t="Include" />
+                </e>
+                <e p="EnemyTypes" t="Include">
+                  <e p="Grazer.cs" t="Include" />
+                  <e p="Watcher.cs" t="Include" />
                 </e>
                 <e p="EnemyView.cs" t="Include" />
               </e>

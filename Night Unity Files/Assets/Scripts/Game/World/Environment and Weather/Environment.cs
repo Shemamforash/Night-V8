@@ -10,10 +10,12 @@ namespace Game.World.Environment_and_Weather
         private readonly float _defaultMinTemperature, _defaultMaxTemperature;
         private readonly List<float> _temperatureArray = new List<float>();
         private string _displayName;
+        private EnvironmentManager _environmentManager;
 
         public Environment(string name, string displayName, EnvironmentManager environmentManager, float waterAbundance, float foodAbundance, float fuelAbundance, float scrapAbundance,
-            float defaultMinTemperature, float defaultMaxTemperature) : base(name, StateSubtype.Environment, environmentManager)
+            float defaultMinTemperature, float defaultMaxTemperature) : base(name, StateSubtype.Environment)
         {
+            _environmentManager = environmentManager;
             _displayName = displayName;
             _waterAbundance = waterAbundance;
             _foodAbundance = foodAbundance;
@@ -48,11 +50,6 @@ namespace Game.World.Environment_and_Weather
             }
         }
 
-        public void NextEnvironment(List<string> visitedEnvironments)
-        {
-            ParentMachine.NavigateToState(NextState(visitedEnvironments));
-        }
-
         public int GetTemperature()
         {
             int hours = WorldState.Hours;
@@ -63,6 +60,11 @@ namespace Game.World.Environment_and_Weather
             }
             int arrayPosition = hours * 12 + (minutes / 5) - 1;
             return (int)_temperatureArray[arrayPosition];
+        }
+
+        protected override void NavigateToState(string stateName)
+        {
+            _environmentManager.NavigateToState(stateName);
         }
     }
 }

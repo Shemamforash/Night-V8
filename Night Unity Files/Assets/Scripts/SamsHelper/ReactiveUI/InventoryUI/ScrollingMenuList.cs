@@ -11,6 +11,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
     {
         public int MaxDistance = 6;
         public float MinFade;
+        public float UnselectedItemScale = 1f;
         private Action<ViewParent, bool> _unselectedItemAction;
 
         public override void Awake()
@@ -23,10 +24,11 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         public override ViewParent AddItem(MyGameObject item)
         {
             ViewParent itemUi = base.AddItem(item);
-            itemUi?.OnEnter(() =>
+            itemUi.GetGameObject().name = GetItems().IndexOf(itemUi).ToString();
+            itemUi.OnEnter(() =>
             {
-                CentreContentOnItem(itemUi);
                 FadeOtherItems(itemUi);
+                CentreContentOnItem(itemUi);
             });
             return itemUi;
         }
@@ -41,13 +43,37 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         private void CentreContentOnItem(ViewParent itemUi)
         {
-            float itemYPosition = itemUi.GetGameObject().GetComponent<RectTransform>().anchoredPosition.y;
+            float targetPosition = 0;
+            foreach (ViewParent otherItem in GetItems())
+            {
+                float targetHeight = otherItem.GetGameObject().GetComponent<LayoutElement>().preferredHeight;
+                if (otherItem == itemUi)
+                {
+                    targetPosition += targetHeight / 2;
+                    break;
+                }
+                if (otherItem.GetGameObject().activeInHierarchy)
+                {
+                    targetPosition += targetHeight;
+                }
+            }
             RectTransform rect = InventoryContent.GetComponent<RectTransform>();
             Vector2 rectPosition = rect.anchoredPosition;
-            rectPosition.y = -itemYPosition + itemUi.GetGameObject().GetComponent<RectTransform>().rect.height / 2;
+            rectPosition.y = targetPosition;
             rect.anchoredPosition = rectPosition;
         }
 
+        private void ScaleItem(ViewParent itemUi, bool isSelected)
+        {
+            RectTransform rect = itemUi.GetGameObject().GetComponent<RectTransform>();
+            if (isSelected)
+            {
+                rect.localScale = new Vector2(1, 1);
+                return;
+            }
+            rect.localScale = new Vector2(UnselectedItemScale, UnselectedItemScale);
+        }
+        
         private void FadeOtherItems(ViewParent itemUi)
         {
             for (int i = 0; i < Items.Count; ++i)
@@ -55,6 +81,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 GameObject itemObject = Items[i].GetGameObject();
                 if (itemObject == null) continue;
                 int distance = Math.Abs(i - Items.IndexOf(itemUi));
+                ScaleItem(Items[i], distance == 0);
                 _unselectedItemAction?.Invoke(Items[i], distance == 0);
                 float alpha = 1f - (float) distance / MaxDistance;
                 if (alpha < MinFade)

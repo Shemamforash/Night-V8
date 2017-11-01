@@ -11,8 +11,8 @@ namespace Game.World.Environment_and_Weather
         private List<Danger> _dangers = new List<Danger>();
         private int _timeRemaining;
         public WeatherAttributes Attributes;
-        
-        public Weather(string name, MyValue temperature, MyValue visibility, MyValue water, MyValue duration) : base(name, StateSubtype.Weather, WeatherManager.Instance())
+
+        public Weather(string name, MyValue temperature, MyValue visibility, MyValue water, MyValue duration) : base(name, StateSubtype.Weather)
         {
             _temperature = temperature;
             _visibility = visibility;
@@ -28,7 +28,7 @@ namespace Game.World.Environment_and_Weather
         public override void Enter()
         {
             _temperature.SetCurrentValue(_temperature.RandomInRange());
-            _timeRemaining = (int)(_duration.RandomInRange() * WorldState.MinutesPerHour);
+            _timeRemaining = (int) (_duration.RandomInRange() * WorldState.MinutesPerHour);
             WeatherSystemController.Instance().ChangeWeather(this, _timeRemaining);
         }
 
@@ -42,8 +42,13 @@ namespace Game.World.Environment_and_Weather
             --_timeRemaining;
             if (_timeRemaining == 0)
             {
-                WeatherManager.Instance().NavigateToState(NextState(Name));
+                NavigateToState(Name);
             }
+        }
+
+        protected override void NavigateToState(string name)
+        {
+            WeatherManager.Instance().NavigateToState(Name);
         }
 
         private class Danger

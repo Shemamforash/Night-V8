@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Characters;
 using Game.Combat.Enemies.EnemyBehaviours;
 using Game.Gear.Weapons;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
@@ -16,32 +17,79 @@ namespace Game.Combat.Enemies
         private MyValue _enemyHp;
         private MyValue _sightToCharacter;
         private MyValue _exposure;
-        public readonly float VisionRange = 30f, DetectionRange = 20f;
+        public CharacterAttribute VisionRange = new CharacterAttribute(AttributeType.Vision, 30f);
+        public CharacterAttribute DetectionRange = new CharacterAttribute(AttributeType.Detection, 15f);
+        protected readonly ValueTextLink<string> ActionTextLink = new ValueTextLink<string>();
+        protected readonly ValueTextLink<string> AlertTextLink = new ValueTextLink<string>();
 
         private const float _movementSpeed = 1;
-        private CombatScenario _encounter;
         private EnemyView _enemyView;
-        private List<EnemyBehaviour> _behaviours = new List<EnemyBehaviour>();
+        public readonly StateMachine<EnemyBehaviour> BehaviourMachine = new StateMachine<EnemyBehaviour>();
         private const int EnemyBehaviourTick = 4;
         private int _timeSinceLastBehaviourUpdate = 0;
+        private bool _alerted;
+        private EnemyPlayerRelation _relation;
+        private EnemyBehaviour _currentBehaviour;
 
-        public Enemy(string name, int enemyHp, CombatScenario encounter) : base(name)
+        public bool IsAlerted()
+        {
+            return _alerted;
+        }
+
+        public void Alert()
+        {
+            if (_alerted) return;
+            _alerted = true;
+            BehaviourMachine.StatesAsList().ForEach(b => b.OnDetect());
+        }
+
+        public void SetActionText(string action)
+        {
+            ActionTextLink.Value(action);
+        }
+
+        private void SetAlertText(string alert)
+        {
+            AlertTextLink.Value(alert);
+        }
+
+        private void UpdateDetection()
+        {
+            if (_relation.Distance < DetectionRange)
+            {
+                SetAlertText("Detected");
+            }
+            else if (_relation.Distance < VisionRange)
+            {
+                SetAlertText("Alerted");
+            }
+            else
+            {
+                SetAlertText("Unaware");
+            }
+        }
+
+        protected void SetReciprocralBehaviour(EnemyBehaviour behaviour1, EnemyBehaviour behaviour2)
+        {
+            behaviour1.AddExitTransition(behaviour2);
+            behaviour2.AddExitTransition(behaviour1);
+        }
+
+        public Enemy(string name, int enemyHp) : base(name)
         {
             _enemyHp = new MyValue(enemyHp, 0, enemyHp);
             _enemyHp.OnMin(Kill);
-            _encounter = encounter;
             Equip(WeaponGenerator.GenerateWeapon());
         }
 
         public EnemyBehaviour GetBehaviour(EnemyBehaviour behaviour)
         {
-            return _behaviours.FirstOrDefault(b => b.GetType() == behaviour.GetType());
+            return BehaviourMachine.StatesAsList().FirstOrDefault(b => b.GetType() == behaviour.GetType());
         }
 
-        public void InitialiseBehaviour(EnemyPlayerRelation relation)
+        public virtual void InitialiseBehaviour(EnemyPlayerRelation relation)
         {
-//            _behaviours.Add(new Snipe(relation));
-            _behaviours.Add(new Herd(relation));
+            _relation = relation;
         }
 
         public EnemyView EnemyView()
@@ -67,26 +115,16 @@ namespace Game.Combat.Enemies
                 _enemyView.HealthSlider.value = _enemyHp.GetCurrentValue() / _enemyHp.Max;
                 _enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString();
             });
+            ActionTextLink.AddTextObject(_enemyView.ActionText);
+            AlertTextLink.AddTextObject(_enemyView.AlertText);
             return _enemyView;
         }
 
         public void UpdateBehaviour()
         {
-            if (_timeSinceLastBehaviourUpdate == 0)
-            {
-                foreach (EnemyBehaviour behaviour in _behaviours)
-                {
-                    behaviour.Execute();
-                }
-            }
-            else
-            {
-                ++_timeSinceLastBehaviourUpdate;
-                if (_timeSinceLastBehaviourUpdate == EnemyBehaviourTick)
-                {
-                    _timeSinceLastBehaviourUpdate = 0;
-                }
-            }
+            UpdateDetection();
+            CombatStates.Update();
+            BehaviourMachine.Update();
         }
 
         public string EnemyType()

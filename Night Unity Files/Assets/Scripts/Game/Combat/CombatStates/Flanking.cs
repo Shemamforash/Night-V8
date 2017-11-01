@@ -6,14 +6,18 @@ namespace Game.Combat.CombatStates
     {
         public Flanking(CombatStateMachine parentMachine) : base("Flanking", parentMachine)
         {
-            OnUpdate += () => CombatManager.Flank(CombatMachine.Character);
+        }
+
+        public override void Update()
+        {
+            CombatManager.Flank(CombatMachine.Character);
         }
 
         public override void OnInputUp(InputAxis axis)
         {
             if (axis == InputAxis.Flank)
             {
-                ParentMachine.NavigateToState("Aiming");
+                NavigateToState(nameof(Waiting));
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies;
+using Game.Combat.Enemies.EnemyTypes;
 using UnityEngine;
 
 namespace Game.Combat
@@ -36,7 +37,12 @@ namespace Game.Combat
             CombatScenario scenario = new CombatScenario();
             for (int i = 0; i < size; ++i)
             {
-                scenario.AddEnemy(new Enemy("Enemy" + (i == 0 ? "" : i.ToString()), Random.Range(1000, 3000), scenario));
+                if (Random.Range(0, 2) == 0)
+                {
+                    scenario.AddEnemy(new Watcher());
+                    continue;
+                }
+                scenario.AddEnemy(new Grazer());
             }
             return scenario;
         }

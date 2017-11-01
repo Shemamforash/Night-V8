@@ -23,7 +23,7 @@ namespace Game.Combat.CombatStates
         {
             Weapon().Cocked = true;
             CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
-            ParentMachine.NavigateToState("Aiming");
+            NavigateToState(nameof(Waiting));
             Debug.Log("cocked");
             _cockingCooldown = null;
         }
@@ -43,7 +43,7 @@ namespace Game.Combat.CombatStates
                 case InputAxis.Reload:
                     if (Weapon().GetRemainingAmmo() == 0)
                     {
-                        ParentMachine.NavigateToState("Reloading");
+                        NavigateToState("Reloading");
                     }
                     else if (!isHeld && _cockingCooldown == null)
                     {
@@ -52,15 +52,15 @@ namespace Game.Combat.CombatStates
                     break;
                 case InputAxis.Horizontal:
                     _cockingCooldown?.Cancel();
-                    ParentMachine.NavigateToState(direction > 0 ? "Approaching" : "Retreating");
+                    NavigateToState(direction > 0 ? "Approaching" : "Retreating");
                     break;
                 case InputAxis.CancelCover:
                     _cockingCooldown?.Cancel();
-                    ParentMachine.NavigateToState("Entering Cover");
+                    NavigateToState("Entering Cover");
                     break;
                 case InputAxis.Flank:
                     _cockingCooldown?.Cancel();
-                    ParentMachine.NavigateToState("Flanking");
+                    NavigateToState("Flanking");
                     break;
             }
         }

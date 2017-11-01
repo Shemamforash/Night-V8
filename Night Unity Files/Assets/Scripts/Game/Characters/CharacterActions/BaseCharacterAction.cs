@@ -21,7 +21,7 @@ namespace Game.Characters.CharacterActions
         private string _stateTransitionTarget = "Idle";
         protected Player PlayerCharacter;
 
-        protected BaseCharacterAction(string name, Player playerCharacter) : base(name, StateSubtype.Character, playerCharacter.States)
+        protected BaseCharacterAction(string name, Player playerCharacter) : base(name, StateSubtype.Character)
         {
             PlayerCharacter = playerCharacter;
             DefaultDuration = WorldState.MinutesPerHour;
@@ -36,9 +36,19 @@ namespace Game.Characters.CharacterActions
             ui.OnPress(() =>
             {
                 PlayerCharacter.CharacterView.CollapseCharacterButton.Select();
-                ParentMachine.NavigateToState(Name);
+                NavigateToState(Name);
             });
             return ui;
+        }
+
+        protected override void NavigateToState(string stateName)
+        {
+            PlayerCharacter.States.NavigateToState(stateName);
+        }
+
+        protected override void ReturnToDefault()
+        {
+            PlayerCharacter.States.ReturnToDefault();
         }
 
         public bool SetDuration(int hours)

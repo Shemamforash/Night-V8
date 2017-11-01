@@ -17,5 +17,7 @@
         ReloadSpeed,
         CriticalChance,
         Handling,
+        Detection,
+        Vision
     }
 }

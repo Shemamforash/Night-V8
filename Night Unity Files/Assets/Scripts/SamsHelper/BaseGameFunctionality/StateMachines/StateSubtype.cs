@@ -6,6 +6,7 @@
         Combat,
         Weather,
         Environment,
-        Menu
+        Menu,
+        EnemyBehaviour
     }
 }

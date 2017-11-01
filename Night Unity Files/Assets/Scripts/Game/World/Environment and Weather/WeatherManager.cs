@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Game.World.Environment_and_Weather
 {
-    public class WeatherManager : ProbabalisticStateMachine
+    public class WeatherManager : ProbabalisticStateMachine<Weather>
     {
         private static WeatherManager _instance;
         private static TextMeshProUGUI _weatherText;
@@ -23,11 +23,11 @@ namespace Game.World.Environment_and_Weather
             LoadWeather();
             LoadProbabilities("WeatherProbabilityTable");
             NavigateToState("Clear");
-            WorldState.RegisterMinuteEvent(() => ((Weather) GetCurrentState()).UpdateWeather());
+            WorldState.RegisterMinuteEvent(() => GetCurrentState().UpdateWeather());
 //            GenerateWeatherString(2000);
         }
 
-        public override State NavigateToState(string stateName)
+        public override Weather NavigateToState(string stateName)
         {
             _weatherText.text = stateName;
             return base.NavigateToState(stateName);

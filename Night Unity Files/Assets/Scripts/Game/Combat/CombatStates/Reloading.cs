@@ -19,7 +19,7 @@ namespace Game.Combat.CombatStates
             _interrupted = false;
             if (Weapon().GetRemainingAmmo() == Weapon().Capacity)
             {
-                ParentMachine.NavigateToState("Aiming");
+                NavigateToState(nameof(Waiting));
                 return;
             }
             CombatManager.CombatUi.EmptyMagazine();
@@ -34,7 +34,7 @@ namespace Game.Combat.CombatStates
                 Weapon().Reload(Character().Inventory());
             }
             CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
-            ParentMachine.NavigateToState("Aiming");
+            NavigateToState(nameof(Waiting));
         }
 
         private void Interrupt()
@@ -51,11 +51,11 @@ namespace Game.Combat.CombatStates
             {
                 case InputAxis.Vertical:
                     Interrupt();
-                    ParentMachine.NavigateToState(direction > 0 ? "Approaching" : "Retreating");
+                    NavigateToState(direction > 0 ? "Approaching" : "Retreating");
                     break;
                 case InputAxis.Horizontal:
                     Interrupt();
-                    ParentMachine.NavigateToState(direction > 0 ? "Flanking" : "Entering Cover");
+                    NavigateToState(direction > 0 ? "Flanking" : "Entering Cover");
                     break;
             }
         }

@@ -167,6 +167,7 @@ namespace SamsHelper
         public class UnknownStateNameException : Exception
         {
             private readonly string _stateName;
+
             public UnknownStateNameException(string stateName)
             {
                 _stateName = stateName;
@@ -178,17 +179,19 @@ namespace SamsHelper
         public class MultipleInstancesOfSingletonException : Exception
         {
             private readonly Type _type;
+
             public MultipleInstancesOfSingletonException(Type type)
             {
                 _type = type;
             }
-            
+
             public override string Message => "Tried to create instance of " + _type + " but instance already exists.";
         }
 
         public class AttributeContainerAlreadyContainsAttributeException : Exception
         {
             private readonly AttributeType _type;
+
             public AttributeContainerAlreadyContainsAttributeException(AttributeType type)
             {
                 _type = type;
@@ -200,6 +203,7 @@ namespace SamsHelper
         public class CannotAddItemTypeToInventoryException : Exception
         {
             private readonly GameObjectType _gameObjectType;
+
             public CannotAddItemTypeToInventoryException(GameObjectType gameObjectType)
             {
                 _gameObjectType = gameObjectType;
@@ -212,7 +216,7 @@ namespace SamsHelper
         {
             private readonly string _desiredType;
             private readonly MyGameObject _item;
-            
+
             public InvalidInventoryItemException(MyGameObject item, string desiredType)
             {
                 _item = item;
@@ -226,6 +230,7 @@ namespace SamsHelper
         {
             private readonly string _name;
             private readonly float _thresholdValue, _min, _max;
+
             public ThresholdValueNotReachableException(string thresholdName, float thresholdValue, float min, float max)
             {
                 _name = thresholdName;
@@ -240,6 +245,16 @@ namespace SamsHelper
         public class FiredWithNoAmmoException : Exception
         {
             public override string Message => "Tried to fire but weapon had no ammo on firing.";
+        }
+
+        public class ProbabalisticMachineHasNoDefaultStateException : Exception
+        {
+            public override string Message => "Tried to use method \"ReturnToDefault\" when ProbabalisticStateMachine has no default state.";
+        }
+
+        public class DefaultStateNotSpecifiedException : Exception
+        {
+            public override string Message => "Default state not set.";
         }
     }
 }

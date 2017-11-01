@@ -130,16 +130,6 @@ namespace Game.Combat
             UpdateMagazine(_character.Weapon().GetRemainingAmmo());
             _characterName.text = _character.Name;
             _weaponNameText.text = _character.Weapon().Name;
-            _enemyList.SetUnselectedItemAction((enemyView, isSelected) =>
-            {
-                RectTransform rect = enemyView.GetGameObject().GetComponent<RectTransform>();
-                if (isSelected)
-                {
-                    rect.localScale = new Vector2(1, 1);
-                    return;
-                }
-                rect.localScale = new Vector2(0.8f, 0.8f);
-            });
             _enemyList.SetItems(new List<MyGameObject>(scenario.Enemies()));
             _enemyList.GetItems().ForEach(e => e.OnEnter(() => CombatManager.SetCurrentTarget(e.GetLinkedObject())));
             _enemyList.GetItems()[0].GetNavigationButton().GetComponent<Button>().Select();

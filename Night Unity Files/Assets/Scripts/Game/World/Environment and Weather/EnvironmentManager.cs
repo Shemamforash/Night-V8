@@ -7,10 +7,9 @@ using UnityEngine;
 
 namespace Game.World.Environment_and_Weather
 {
-    public class EnvironmentManager : ProbabalisticStateMachine
+    public class EnvironmentManager : ProbabalisticStateMachine<Environment>
     {
         private TextMeshProUGUI _environmentText, _temperatureText;
-        private List<string> _visitedEnvironments = new List<string>();
 
         public void Start()
         {
@@ -22,29 +21,28 @@ namespace Game.World.Environment_and_Weather
             NavigateToState("Oasis");
             WorldState.RegisterTravelEvent(GenerateEnvironment);
             WorldState.RegisterMinuteEvent(UpdateTemperature);
+            OnlyVisitOnce();
 //            TestEnvironmentGenerator();
         }
 
-        public override State NavigateToState(string stateName)
+        public override Environment NavigateToState(string stateName)
         {
-            State newState = base.NavigateToState(stateName);
-            _visitedEnvironments.Add(stateName);
+            Environment newState = base.NavigateToState(stateName);
             RegionManager.GenerateNewRegions();
-            _environmentText.text = ((Environment) GetCurrentState()).GetDisplayName();
+            _environmentText.text = GetCurrentState().GetDisplayName();
             return newState;
         }
 
         private void TestEnvironmentGenerator()
         {
             int expectedTransitions = StatesAsList().Count;
-            int totalTransitions;
             int fails = 0;
-            int trials = 10000;
+            const int trials = 10000;
             for (int i = 0; i < trials; ++i)
             {
-                _visitedEnvironments.Clear();
+                ClearVisitedStates();
                 NavigateToState("Oasis");
-                totalTransitions = 1;
+                int totalTransitions = 1;
                 try
                 {
                     while (true)
@@ -55,11 +53,8 @@ namespace Game.World.Environment_and_Weather
                 }
                 catch (KeyNotFoundException e)
                 {
-                    if (totalTransitions != expectedTransitions)
-                    {
-                        Helper.PrintList(_visitedEnvironments);
-                        ++fails;
-                    }
+                    if (totalTransitions == expectedTransitions) continue;
+                    ++fails;
                 }
             }
             Debug.Log(fails + " failed tests from " + trials + " trials.");
@@ -91,12 +86,12 @@ namespace Game.World.Environment_and_Weather
 
         public int GetTemperature()
         {
-            return ((Environment) GetCurrentState()).GetTemperature() + ((Weather)WeatherManager.Instance().GetCurrentState()).Temperature();
+            return GetCurrentState().GetTemperature() + WeatherManager.Instance().GetCurrentState().Temperature();
         }
 
         private void GenerateEnvironment()
         {
-            ((Environment) GetCurrentState()).NextEnvironment(_visitedEnvironments);
+            NavigateToState(GetCurrentState().Name);
         }
 
 #if UNITY_EDITOR

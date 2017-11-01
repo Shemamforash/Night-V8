@@ -8,14 +8,14 @@ namespace SamsHelper.ReactiveUI.MenuSystem
     {
         public Menu InitialMenu;
         private static MenuStateMachine _instance;
-        public static readonly StateMachine States = new StateMachine();
+        public static readonly StateMachine<MenuState> States = new StateMachine<MenuState>();
 
         public void Awake()
         {
             _instance = this;
             foreach (Menu t in Helper.FindAllComponentsInChildren<Menu>(transform))
             {
-                MenuState menu = new MenuState(t.name, t, States);
+                MenuState menu = new MenuState(t.name, t);
                 if (!t.gameObject.activeInHierarchy)
                 {
                     t.gameObject.SetActive(true);

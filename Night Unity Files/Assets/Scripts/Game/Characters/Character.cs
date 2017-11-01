@@ -20,13 +20,13 @@ namespace Game.Characters
 {
     public class Character : MyGameObject, IPersistenceTemplate
     {
-        public readonly StateMachine States = new StateMachine();
+        public readonly StateMachine<BaseCharacterAction> States = new StateMachine<BaseCharacterAction>();
         public readonly CombatStateMachine CombatStates;
         public readonly CharacterConditions Conditions;
 
         protected readonly Dictionary<GearSubtype, GearItem> EquippedGear = new Dictionary<GearSubtype, GearItem>();
         protected Inventory CharacterInventory;
-        
+
         public readonly BaseAttributes BaseAttributes;
 
         protected Character(string name) : base(name, GameObjectType.Character)
@@ -46,9 +46,9 @@ namespace Game.Characters
             return Conditions.Conditions[type];
         }
 
-        public Weapon Weapon() => (Weapon) EquippedGear[GearSubtype.Weapon];
-        public Armour Armour() => (Armour) EquippedGear[GearSubtype.Armour];
-        public Accessory Accessory() => (Accessory) EquippedGear[GearSubtype.Accessory];
+        public Weapon Weapon() => GetGearItem(GearSubtype.Weapon) as Weapon;
+        public Armour Armour() => GetGearItem(GearSubtype.Armour) as Armour;
+        public Accessory Accessory() => GetGearItem(GearSubtype.Accessory) as Accessory;
 
         public virtual void TakeDamage(int amount)
         {
@@ -95,7 +95,7 @@ namespace Game.Characters
 
         public GearItem GetGearItem(GearSubtype type)
         {
-            return EquippedGear[type];
+            return EquippedGear.ContainsKey(type) ? EquippedGear[type] : null;
         }
 
         public Inventory Inventory()
@@ -103,9 +103,9 @@ namespace Game.Characters
             return CharacterInventory;
         }
 
-        public List<State> StatesAsList(bool includeInactiveStates)
+        public List<BaseCharacterAction> StatesAsList(bool includeInactiveStates)
         {
-            return (from BaseCharacterAction s in States.StatesAsList() where s.IsStateVisible() || includeInactiveStates select s).Cast<State>().ToList();
+            return (from BaseCharacterAction s in States.StatesAsList() where s.IsStateVisible() || includeInactiveStates select s).ToList();
         }
 
         public virtual void Equip(GearItem gearItem)
