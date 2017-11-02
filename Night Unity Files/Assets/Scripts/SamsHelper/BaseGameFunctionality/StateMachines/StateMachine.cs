@@ -9,6 +9,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         protected readonly Dictionary<string, T> States = new Dictionary<string, T>();
         private T _currentState;
         private string _defaultState;
+        private bool _acceptInput = true;
 
         public void EnableInput()
         {
@@ -86,11 +87,18 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
+            if (!_acceptInput) return;
             _currentState?.OnInputDown(axis, isHeld, direction);
+        }
+
+        public void CanAcceptInput(bool acceptInput)
+        {
+            _acceptInput = acceptInput;
         }
 
         public void OnInputUp(InputAxis axis)
         {
+            if (!_acceptInput) return;
             _currentState?.OnInputUp(axis);
         }
     }

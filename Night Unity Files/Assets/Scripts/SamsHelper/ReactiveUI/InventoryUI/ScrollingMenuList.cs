@@ -13,12 +13,18 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         public float MinFade;
         public float UnselectedItemScale = 1f;
         private Action<ViewParent, bool> _unselectedItemAction;
+        private bool _fadeItems = true;
 
         public override void Awake()
         {
             base.Awake();
             RectTransform rect = ContentTransform().GetComponent<RectTransform>();
             rect.pivot = new Vector2(0.5f, 1);
+        }
+
+        public void DontFadeItems()
+        {
+            _fadeItems = false;
         }
 
         public override ViewParent AddItem(MyGameObject item)
@@ -73,7 +79,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             }
             rect.localScale = new Vector2(UnselectedItemScale, UnselectedItemScale);
         }
-        
+
         private void FadeOtherItems(ViewParent itemUi)
         {
             for (int i = 0; i < Items.Count; ++i)
@@ -83,6 +89,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 int distance = Math.Abs(i - Items.IndexOf(itemUi));
                 ScaleItem(Items[i], distance == 0);
                 _unselectedItemAction?.Invoke(Items[i], distance == 0);
+                if (!_fadeItems) continue;
                 float alpha = 1f - (float) distance / MaxDistance;
                 if (alpha < MinFade)
                 {
@@ -92,13 +99,13 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 {
                     itemObject.SetActive(false);
                 }
-                else if(alpha != 0)
+                else if (alpha != 0)
                 {
                     if (!itemObject.activeInHierarchy)
                     {
-                        itemObject.SetActive(true);    
+                        itemObject.SetActive(true);
                     }
-                    itemObject.GetComponent<EnhancedButton>().ChangeTextColor(new Color(1, 1, 1, alpha));
+                    itemObject.GetComponent<EnhancedButton>().SetColor(new Color(1, 1, 1, alpha));
                 }
             }
         }

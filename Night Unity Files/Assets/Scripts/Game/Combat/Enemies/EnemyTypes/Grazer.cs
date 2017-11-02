@@ -19,10 +19,6 @@ namespace Game.Combat.Enemies.EnemyTypes
             Flee flee = new Flee(relation);
             herd.SetOnDetectBehaviour(flee);
             SetReciprocralBehaviour(wander, graze);
-            BehaviourMachine.AddState(wander);
-            BehaviourMachine.AddState(graze);
-            BehaviourMachine.AddState(herd);
-            BehaviourMachine.AddState(flee);
             BehaviourMachine.NavigateToState(wander.Name);
         }
     }

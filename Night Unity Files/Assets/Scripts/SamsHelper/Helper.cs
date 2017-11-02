@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace SamsHelper
 {
@@ -46,7 +47,7 @@ namespace SamsHelper
             List<T> randomList = new List<T>();
             while (list.Count > 0)
             {
-                int removePosition = UnityEngine.Random.Range(0, list.Count);
+                int removePosition = Random.Range(0, list.Count);
                 T element = list[removePosition];
                 randomList.Add(element);
                 list.RemoveAt(removePosition);
@@ -207,6 +208,11 @@ namespace SamsHelper
                 default:
                     throw new ArgumentOutOfRangeException(nameof(inventoryDirection), inventoryDirection, null);
             }
+        }
+
+        public static long TimeInMillis()
+        {
+            return DateTime.Now.Ticks / 10000;
         }
     }
 }

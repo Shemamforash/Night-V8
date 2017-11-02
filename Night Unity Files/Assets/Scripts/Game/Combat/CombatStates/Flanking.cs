@@ -4,7 +4,7 @@ namespace Game.Combat.CombatStates
 {
     public class Flanking : CombatState
     {
-        public Flanking(CombatStateMachine parentMachine) : base("Flanking", parentMachine)
+        public Flanking(CombatStateMachine parentMachine) : base(nameof(Flanking), parentMachine)
         {
         }
 
@@ -15,10 +15,8 @@ namespace Game.Combat.CombatStates
 
         public override void OnInputUp(InputAxis axis)
         {
-            if (axis == InputAxis.Flank)
-            {
-                NavigateToState(nameof(Waiting));
-            }
+            base.OnInputUp(axis);
+            if (axis == InputAxis.Flank) NavigateToState(nameof(Waiting));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Game.Combat.CombatStates
         private bool _interrupted;
         private Cooldown _reloadCooldown;
         
-        public Reloading(CombatStateMachine parentMachine) : base("Reloading", parentMachine)
+        public Reloading(CombatStateMachine parentMachine) : base(nameof(Reloading), parentMachine)
         {
         }
 
@@ -22,8 +22,9 @@ namespace Game.Combat.CombatStates
                 NavigateToState(nameof(Waiting));
                 return;
             }
-            CombatManager.CombatUi.EmptyMagazine();
             _reloadCooldown = new Cooldown(CombatManager.CombatCooldowns, Weapon().GetAttributeValue(AttributeType.ReloadSpeed), Reload, f => CombatManager.CombatUi.UpdateReloadTime(f));
+            if (!IsPlayer) return;
+            CombatManager.CombatUi.EmptyMagazine();
         }
 
         private void Reload()
@@ -33,8 +34,17 @@ namespace Game.Combat.CombatStates
                 Weapon().Cocked = true;
                 Weapon().Reload(Character().Inventory());
             }
-            CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
             NavigateToState(nameof(Waiting));
+            if (!IsPlayer) return;
+            CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
+        }
+
+        public override void Exit()
+        {
+            if (!_reloadCooldown.IsFinished())
+            {
+                Interrupt();
+            }
         }
 
         private void Interrupt()
@@ -42,26 +52,6 @@ namespace Game.Combat.CombatStates
             _interrupted = true;
             _reloadCooldown.Cancel();
             Reload();
-        }
-        
-        public override void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-            base.OnInputDown(axis, isHeld, direction);
-            switch (axis)
-            {
-                case InputAxis.Vertical:
-                    Interrupt();
-                    NavigateToState(direction > 0 ? "Approaching" : "Retreating");
-                    break;
-                case InputAxis.Horizontal:
-                    Interrupt();
-                    NavigateToState(direction > 0 ? "Flanking" : "Entering Cover");
-                    break;
-            }
-        }
-
-        public override void OnInputUp(InputAxis axis)
-        {
         }
     }
 }

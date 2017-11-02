@@ -1,4 +1,5 @@
-﻿using SamsHelper.Input;
+﻿using Game.Characters;
+using SamsHelper.Input;
 
 namespace Game.Combat.CombatStates
 {
@@ -11,8 +12,9 @@ namespace Game.Combat.CombatStates
         public override void Enter()
         {
             base.Enter();
-            if (!Weapon().Cocked) NavigateToState("Cocking");
+            if (!Weapon().Cocked) NavigateToState(nameof(Cocking));
             if (Weapon().GetRemainingAmmo() != 0) return;
+            if (!(Character() is Player)) return;
             CombatManager.CombatUi.EmptyMagazine();
             CombatManager.CombatUi.SetMagazineText("NO AMMO");
         }
@@ -23,25 +25,21 @@ namespace Game.Combat.CombatStates
             switch (axis)
             {
                 case InputAxis.CancelCover:
-                    NavigateToState("Entering Cover");
+                    CombatManager.TakeCover(Character());
                     break;
                 case InputAxis.Fire:
-                    NavigateToState("Firing");
+                    NavigateToState(nameof(Firing));
                     break;
                 case InputAxis.Reload:
-                    NavigateToState("Reloading");
+                    NavigateToState(nameof(Reloading));
                     break;
                 case InputAxis.Horizontal:
-                    NavigateToState(direction > 0 ? "Approaching" : "Retreating");
+                    NavigateToState(direction > 0 ? nameof(Approaching) : nameof(Retreating));
                     break;
                 case InputAxis.Flank:
-                    NavigateToState("Flanking");
+                    NavigateToState(nameof(Flanking));
                     break;
             }
-        }
-
-        public override void OnInputUp(InputAxis axis)
-        {
         }
     }
 }

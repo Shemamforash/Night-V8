@@ -9,6 +9,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         private readonly Action _endOfCooldown;
         private readonly Action<float> _duringCooldown;
         private CooldownManager _manager;
+        private bool _finished;
 
         public Cooldown(CooldownManager manager, float duration, Action endOfCooldown)
         {
@@ -24,16 +25,22 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             _duringCooldown = duringCooldown;
         }
 
+        public bool IsFinished()
+        {
+            return _finished;
+        }
+
         public void Cancel()
         {
             _manager.RemoveCooldown(this);
         }
-        
+
         public bool Update()
         {
             float elapsed = Time.time - _startTime;
             if (elapsed >= _duration)
             {
+                _finished = true;
                 _endOfCooldown();
                 return true;
             }

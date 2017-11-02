@@ -105,11 +105,6 @@ namespace SamsHelper.ReactiveUI
             SetCurrentValue(_currentValue + amount);
         }
 
-        public void Decrement(float amount)
-        {
-            SetCurrentValue(_currentValue - amount);
-        }
-
         public void SetCurrentValue(float value)
         {
             if (value > _max)

@@ -1,4 +1,5 @@
-﻿using SamsHelper.BaseGameFunctionality.CooldownSystem;
+﻿using Facilitating.Audio;
+using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using UnityEngine;
 
@@ -8,13 +9,14 @@ namespace Game.Combat.CombatStates
     {
         private Cooldown _cockingCooldown;
 
-        public Cocking(CombatStateMachine parentMachine) : base("Cocking", parentMachine)
+        public Cocking(CombatStateMachine parentMachine) : base(nameof(Cocking), parentMachine)
         {
         }
 
         public override void Enter()
         {
             base.Enter();
+            if (!IsPlayer) return;
             CombatManager.CombatUi.EmptyMagazine();
             CombatManager.CombatUi.SetMagazineText("EJECT CARTRIDGE");
         }
@@ -22,17 +24,20 @@ namespace Game.Combat.CombatStates
         private void SetCock()
         {
             Weapon().Cocked = true;
-            CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
             NavigateToState(nameof(Waiting));
             Debug.Log("cocked");
             _cockingCooldown = null;
+            if (!IsPlayer) return;
+            CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
         }
 
         private void StartCocking()
         {
-            CombatManager.CombatUi.EmptyMagazine();
             float fireRate = Weapon().WeaponAttributes.FireRate.GetCalculatedValue();
+            GunFire.Cock(fireRate);
             _cockingCooldown = new Cooldown(CombatManager.CombatCooldowns, fireRate, SetCock, f => CombatManager.CombatUi.UpdateReloadTime(f));
+            if (!IsPlayer) return;
+            CombatManager.CombatUi.EmptyMagazine();
         }
 
         public override void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -43,7 +48,7 @@ namespace Game.Combat.CombatStates
                 case InputAxis.Reload:
                     if (Weapon().GetRemainingAmmo() == 0)
                     {
-                        NavigateToState("Reloading");
+                        NavigateToState(nameof(Reloading));
                     }
                     else if (!isHeld && _cockingCooldown == null)
                     {
@@ -52,21 +57,17 @@ namespace Game.Combat.CombatStates
                     break;
                 case InputAxis.Horizontal:
                     _cockingCooldown?.Cancel();
-                    NavigateToState(direction > 0 ? "Approaching" : "Retreating");
+                    NavigateToState(direction > 0 ? nameof(Approaching) : nameof(Retreating));
                     break;
                 case InputAxis.CancelCover:
                     _cockingCooldown?.Cancel();
-                    NavigateToState("Entering Cover");
+                    CombatManager.TakeCover(Character());
                     break;
                 case InputAxis.Flank:
                     _cockingCooldown?.Cancel();
-                    NavigateToState("Flanking");
+                    NavigateToState(nameof(Flanking));
                     break;
             }
-        }
-
-        public override void OnInputUp(InputAxis axis)
-        {
         }
     }
 }

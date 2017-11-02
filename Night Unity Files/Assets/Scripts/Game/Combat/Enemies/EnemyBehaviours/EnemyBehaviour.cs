@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.EnemyBehaviours
@@ -16,6 +17,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
         {
             Relation = relation;
             IsPassive = isPassive;
+            relation.Enemy.BehaviourMachine.AddState(this);
         }
 
         public void SetOnDetectBehaviour(EnemyBehaviour behaviour)
@@ -58,6 +60,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         public virtual void OnDetect()
         {
+            if (_onDetectBehaviour == null) return;
             NavigateToState(_onDetectBehaviour.Name);
         }
     }

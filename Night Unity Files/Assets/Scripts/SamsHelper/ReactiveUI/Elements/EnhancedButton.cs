@@ -17,10 +17,10 @@ namespace SamsHelper.ReactiveUI.Elements
         private event Action OnDeselectActions;
         private readonly List<HoldAction> OnHoldActions = new List<HoldAction>();
         private List<EnhancedText> _textChildren = new List<EnhancedText>();
+        private List<Image> _imageChildren = new List<Image>();
         private Button _button;
         public GameObject Border;
-        [SerializeField]
-        private bool _useBorder = true;
+        [SerializeField] private bool _useBorder = true;
         public float FadeDuration = 0.5f;
 
         private class HoldAction
@@ -35,7 +35,7 @@ namespace SamsHelper.ReactiveUI.Elements
                 _duration = duration;
                 Reset();
             }
-            
+
             public void Reset()
             {
                 _startTime = Time.time;
@@ -51,12 +51,13 @@ namespace SamsHelper.ReactiveUI.Elements
             }
         }
 
-        
+
         public void Awake()
         {
             InputHandler.RegisterInputListener(this);
             _button = GetComponent<Button>();
             _textChildren = Helper.FindAllComponentsInChildren<EnhancedText>(transform);
+            _imageChildren = Helper.FindAllComponentsInChildren<Image>(transform);
         }
 
         private void Enter()
@@ -70,7 +71,7 @@ namespace SamsHelper.ReactiveUI.Elements
             UseDeselectedColours();
             OnDeselectActions?.Invoke();
         }
-        
+
         public void AddOnClick(UnityAction a) => _button.onClick.AddListener(a);
         public void AddOnSelectEvent(Action a) => OnSelectActions += a;
         public void AddOnDeselectEvent(Action a) => OnDeselectActions += a;
@@ -91,7 +92,7 @@ namespace SamsHelper.ReactiveUI.Elements
             }
             else
             {
-                ChangeTextColor(UiAppearanceController.Instance.SecondaryColor);
+                SetColor(UiAppearanceController.Instance.SecondaryColor);
                 if (_button.image != null)
                 {
                     _button.image.color = UiAppearanceController.Instance.MainColor;
@@ -126,7 +127,7 @@ namespace SamsHelper.ReactiveUI.Elements
             }
             else
             {
-                ChangeTextColor(UiAppearanceController.Instance.MainColor);
+                SetColor(UiAppearanceController.Instance.MainColor);
                 if (_button.image != null)
                 {
                     _button.image.color = UiAppearanceController.Instance.BackgroundColor;
@@ -134,12 +135,10 @@ namespace SamsHelper.ReactiveUI.Elements
             }
         }
 
-        public void ChangeTextColor(Color c)
+        public void SetColor(Color c)
         {
-            foreach (EnhancedText text in _textChildren)
-            {
-                text.SetColor(c);
-            }
+            _textChildren.ForEach(t => t.SetColor(c));
+            _imageChildren.ForEach(i => i.color = c);
         }
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)

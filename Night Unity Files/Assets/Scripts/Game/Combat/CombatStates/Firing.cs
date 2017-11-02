@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Game.Combat.Enemies;
 using Game.Gear.Weapons;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -14,7 +15,7 @@ namespace Game.Combat.CombatStates
     {
         private long _timeAtLastFire;
 
-        public Firing(CombatStateMachine parentMachine) : base("Firing", parentMachine)
+        public Firing(CombatStateMachine parentMachine) : base(nameof(Firing), parentMachine)
         {
         }
 
@@ -31,21 +32,16 @@ namespace Game.Combat.CombatStates
             }
         }
 
-        private long TimeInMillis()
-        {
-            return DateTime.Now.Ticks / 10000;
-        }
-
         private void TryRepeatFire()
         {
             if (Weapon().Automatic)
             {
-                _timeAtLastFire = TimeInMillis();
+                _timeAtLastFire = Helper.TimeInMillis();
             }
             else
             {
                 Weapon().Cocked = false;
-                NavigateToState("Cocking");
+                NavigateToState(nameof(Cocking));
             }
         }
 
@@ -62,32 +58,23 @@ namespace Game.Combat.CombatStates
         {
             if (Weapon().GetRemainingAmmo() > 0 && Weapon().Cocked)
             {
-                long timeElapsed = TimeInMillis() - _timeAtLastFire;
+                long timeElapsed = Helper.TimeInMillis() - _timeAtLastFire;
                 float targetTime = 1f / Weapon().GetAttributeValue(AttributeType.FireRate) * 1000;
                 if (timeElapsed < targetTime) return;
                 CombatManager.FireWeapon(Character());
-                DecreaseAim();
-                UpdateMagazineUi();
+                if (IsPlayer) UpdateMagazineUi();
                 TryRepeatFire();
             }
             else if (Weapon().GetRemainingAmmo() == 0 && Character().Inventory().GetResourceQuantity(InventoryResourceType.Ammo) != 0)
             {
-                NavigateToState("Reloading");
+                NavigateToState(nameof(Reloading));
             }
-        }
-
-        private void DecreaseAim()
-        {
-            float amount = 100f / Character().Weapon().Capacity;
-            CombatMachine.AimAmount.Decrement(amount);
         }
 
         public override void OnInputUp(InputAxis axis)
         {
-            if (axis == InputAxis.Fire)
-            {
-                NavigateToState(nameof(Waiting));
-            }
+            base.OnInputUp(axis);
+            if (axis == InputAxis.Fire) NavigateToState(nameof(Waiting));
         }
     }
 }

@@ -8,6 +8,7 @@
         Flank,
         Reload,
         Vertical,
-        Horizontal
+        Horizontal,
+        Sprint
     }
 }

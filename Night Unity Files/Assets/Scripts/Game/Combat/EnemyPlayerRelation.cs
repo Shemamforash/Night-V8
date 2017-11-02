@@ -1,9 +1,9 @@
-﻿using System;
-using Game.Characters;
+﻿using Game.Characters;
 using Game.Combat.Enemies;
-using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.Elements;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat
@@ -51,7 +51,16 @@ namespace Game.Combat
             Distance.AddThreshold(MaxDistance, "Out of Range");
             Distance.AddOnValueChange(a =>
             {
+                if (_hasFled || _isDead) return;
                 Enemy.EnemyView().DistanceText.text = Helper.Round(Distance.GetCurrentValue(), 0) + "m (" + a.GetThresholdName() + ")";
+                float normalisedDistance = Distance.GetCurrentValue() / MaxDistance;
+                float alpha = 1 - normalisedDistance;
+                alpha *= alpha;
+                if (alpha < 0)
+                {
+                    alpha = 0;
+                }
+                Enemy.EnemyView().SetColour(new Color(1,1,1,alpha));
                 if (a.GetCurrentValue() <= MaxDistance) return;
                 CombatManager.Scenario().Remove(Enemy);
                 _hasFled = true;

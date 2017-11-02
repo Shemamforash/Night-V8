@@ -1,4 +1,6 @@
-﻿namespace Game.Combat.Enemies.EnemyBehaviours
+﻿using Game.Combat.CombatStates;
+
+namespace Game.Combat.Enemies.EnemyBehaviours
 {
     public class Flee : EnemyBehaviour
     {
@@ -8,7 +10,9 @@
 
         public override void Enter()
         {
-            NavigateToState("Retreating");
+            NavigateToCombatState(nameof(Retreating));
+            SetStatusText("Fleeing");
+            Relation.Enemy.StartSprinting();
         }
     }
 }

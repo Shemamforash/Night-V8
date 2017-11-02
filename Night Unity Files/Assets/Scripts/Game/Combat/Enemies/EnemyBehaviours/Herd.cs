@@ -2,44 +2,21 @@
 {
     public class Herd : EnemyBehaviour
     {
-        private bool _herdAlerted;
-
-        public Herd(EnemyPlayerRelation relation) : base(relation)
+        public Herd(EnemyPlayerRelation relation) : base(nameof(Herd), relation, true)
         {
         }
 
-        public override void Execute()
+        public override void OnDetect()
         {
-            if (_herdAlerted) return;
-            if (Relation.Distance < Relation.Enemy.DetectionRange)
+            base.OnDetect();
+            CombatManager.Scenario().Enemies().ForEach(e =>
             {
-                CombatManager.Scenario().Enemies().ForEach(e =>
+                Herd otherHerdBehaviour = (Herd) e.GetBehaviour(this);
+                if (otherHerdBehaviour != null)
                 {
-                    Herd otherHerdBehaviour = (Herd) e.GetBehaviour(this);
-                    otherHerdBehaviour.Alert();
-                });
-                Alert();
-            }
-            else if (Relation.Distance < Relation.Enemy.VisionRange)
-            {
-                StatusTextLink.Value("Alerted");
-            }
-            else
-            {
-                StatusTextLink.Value("Grazing");
-            }
-        }
-
-        public override float Evaluate()
-        {
-            return 0;
-        }
-
-        private void Alert()
-        {
-            _herdAlerted = true;
-            StatusTextLink.Value("Fleeing");
-            NavigateToState("Retreating");
+                    e.Alert();
+                }
+            });
         }
     }
 }

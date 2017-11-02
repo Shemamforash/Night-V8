@@ -18,6 +18,8 @@
         CriticalChance,
         Handling,
         Detection,
-        Vision
+        Vision,
+        WalkSpeed,
+        SprintSpeed
     }
 }

@@ -5,12 +5,15 @@ using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.Combat;
+using Game.Combat.CombatStates;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.World;
 using Game.World.Region;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
+using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
@@ -28,6 +31,8 @@ namespace Game.Characters
         protected Inventory CharacterInventory;
 
         public readonly BaseAttributes BaseAttributes;
+        private bool _sprinting;
+        private bool _knockedDown;
 
         protected Character(string name) : base(name, GameObjectType.Character)
         {
@@ -53,10 +58,42 @@ namespace Game.Characters
         public virtual void TakeDamage(int amount)
         {
             BaseAttributes.Strength.SetCurrentValue(BaseAttributes.Strength.GetCurrentValue() - amount);
+            CombatManager.CombatUi.UpdateCharacterHealth(BaseAttributes.Strength);
             if (BaseAttributes.Strength.ReachedMin())
             {
                 //TODO kill character
             }
+        }
+
+        public void KnockDown()
+        {
+            if (_knockedDown) return;
+            _knockedDown = true;
+            CombatStates.CanAcceptInput(false);
+            CombatStates.NavigateToState(nameof(Waiting));
+            new Cooldown(CombatManager.CombatCooldowns, 3f, () =>
+            {
+                _knockedDown = false;
+                CombatStates.CanAcceptInput(true);
+                if (this is Player) CombatManager.CombatUi.ConditionsText.text = "";
+            }, f =>
+            {
+                if (this is Player) CombatManager.CombatUi.ConditionsText.text = "Knocked down " + Helper.Round(f, 1) + "s";
+            });
+        }
+
+        public void StartSprinting()
+        {
+            if (_sprinting) return;
+            BaseAttributes.Endurance.AddModifier(2);
+            _sprinting = true;
+        }
+
+        public void StopSprinting()
+        {
+            if (!_sprinting) return;
+            BaseAttributes.Endurance.RemoveModifier(2);
+            _sprinting = false;
         }
 
         public virtual void Kill()

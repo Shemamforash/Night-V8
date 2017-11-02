@@ -1,4 +1,5 @@
-﻿using Game.Characters;
+﻿using System;
+using Game.Characters;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.StateMachines;
@@ -10,14 +11,17 @@ namespace Game.Combat.CombatStates
     public abstract class CombatState : State
     {
         protected readonly CombatStateMachine CombatMachine;
+        protected readonly bool IsPlayer;
 
         protected CombatState(string name, CombatStateMachine combatMachine) : base(name, StateSubtype.Combat)
         {
             CombatMachine = combatMachine;
+            IsPlayer = CombatMachine.Character is Player;
         }
 
         public override void Enter()
         {
+            if (!IsPlayer) return;
             Debug.Log(Name);
         }
         
@@ -45,6 +49,11 @@ namespace Game.Combat.CombatStates
         {
             if (axis != InputAxis.Submit) return;
             CombatManager.TryStartRageMode();
+        }
+
+        public override void OnInputUp(InputAxis axis)
+        {
+            if(axis == InputAxis.Sprint) Character().StopSprinting();
         }
     }
 }

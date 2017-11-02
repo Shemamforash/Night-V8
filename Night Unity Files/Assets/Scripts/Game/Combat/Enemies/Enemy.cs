@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Game.Characters;
 using Game.Combat.Enemies.EnemyBehaviours;
 using Game.Gear.Weapons;
@@ -55,18 +54,18 @@ namespace Game.Combat.Enemies
 
         private void UpdateDetection()
         {
-            if (_relation.Distance < DetectionRange)
+            if (_relation.Distance < DetectionRange || _alerted)
             {
                 SetAlertText("Detected");
+                Alert();
+                return;
             }
-            else if (_relation.Distance < VisionRange)
+            if (_relation.Distance < VisionRange)
             {
                 SetAlertText("Alerted");
+                return;
             }
-            else
-            {
-                SetAlertText("Unaware");
-            }
+            SetAlertText("Unaware");
         }
 
         protected void SetReciprocralBehaviour(EnemyBehaviour behaviour1, EnemyBehaviour behaviour2)
@@ -99,6 +98,7 @@ namespace Game.Combat.Enemies
 
         public override void TakeDamage(int amount)
         {
+            Alert();
             _enemyHp.SetCurrentValue(_enemyHp.GetCurrentValue() - amount);
         }
 
@@ -112,7 +112,8 @@ namespace Game.Combat.Enemies
             _enemyView = new EnemyView(this, parent);
             _enemyHp.AddOnValueChange(f =>
             {
-                _enemyView.HealthSlider.value = _enemyHp.GetCurrentValue() / _enemyHp.Max;
+                float normalisedHealth = _enemyHp.GetCurrentValue() / _enemyHp.Max;
+                _enemyView.SetHealth(normalisedHealth);
                 _enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString();
             });
             ActionTextLink.AddTextObject(_enemyView.ActionText);
