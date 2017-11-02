@@ -1,4 +1,5 @@
 ﻿using Game.Combat.CombatStates;
+using SamsHelper.Input;
 
 namespace Game.Combat.Enemies.EnemyBehaviours
 {
@@ -10,9 +11,9 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         public override void Enter()
         {
-            NavigateToCombatState(nameof(Approaching));
+            Relation.Enemy.CombatController.OnInputDown(InputAxis.Horizontal, false, 1f);
             SetStatusText("Charging");
-            Relation.Enemy.StartSprinting();
+//            Relation.Enemy.StartSprinting();
         }
 
         public override void Update()
@@ -25,8 +26,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         public override void Exit()
         {
-            Relation.Enemy.StopSprinting();
-            NavigateToCombatState(nameof(Waiting));
+//            Relation.Enemy.StopSprinting();
         }
     }
 }

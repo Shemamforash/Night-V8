@@ -11,12 +11,6 @@ namespace Game.Combat
         private Player _playerCharacter;
         private readonly List<Enemy> _enemies = new List<Enemy>();
 
-        public void Resolve()
-        {
-            _playerCharacter.CombatStates.ReturnToDefault();
-            _enemies.ForEach(e => e.CombatStates.ReturnToDefault());
-        }
-
         public void Remove(Enemy enemy)
         {
             _enemies.Remove(enemy);
@@ -37,12 +31,19 @@ namespace Game.Combat
             CombatScenario scenario = new CombatScenario();
             for (int i = 0; i < size; ++i)
             {
-                if (Random.Range(0, 2) == 0)
+                int rand = Random.Range(0, 3);
+                switch (rand)
                 {
-                    scenario.AddEnemy(new Watcher());
-                    continue;
+                    case 0:
+                        scenario.AddEnemy(new Watcher());
+                        break;
+                    case 1:
+                        scenario.AddEnemy(new Grazer());
+                        break;
+                    case 2:
+                        scenario.AddEnemy(new Fighter());
+                        break;
                 }
-                scenario.AddEnemy(new Grazer());
             }
             return scenario;
         }

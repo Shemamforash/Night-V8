@@ -21,13 +21,8 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             if (Duration > 0) return;
             SelectRandomTransition();
             if (Relation.PlayerCover.ReachedMax()) return;
-            Relation.Player.KnockDown();
+            Relation.Player.CombatController.KnockDown();
             Relation.Player.TakeDamage(10);
-        }
-
-        public override void Exit()
-        {
-            NavigateToCombatState(nameof(Waiting));
         }
     }
 }

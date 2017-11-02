@@ -24,7 +24,7 @@ namespace Game.Characters
     public class Character : MyGameObject, IPersistenceTemplate
     {
         public readonly StateMachine<BaseCharacterAction> States = new StateMachine<BaseCharacterAction>();
-        public readonly CombatStateMachine CombatStates;
+        public readonly CombatController CombatController;
         public readonly CharacterConditions Conditions;
 
         protected readonly Dictionary<GearSubtype, GearItem> EquippedGear = new Dictionary<GearSubtype, GearItem>();
@@ -39,7 +39,7 @@ namespace Game.Characters
             CharacterInventory = new DesolationInventory(name);
             Conditions = new CharacterConditions();
             BaseAttributes = new BaseAttributes(this);
-            CombatStates = new CombatStateMachine(this);
+            CombatController = new CombatController(this);
             foreach (GearSubtype gearSlot in Enum.GetValues(typeof(GearSubtype)))
             {
                 EquippedGear[gearSlot] = null;
@@ -65,55 +65,9 @@ namespace Game.Characters
             }
         }
 
-        public void KnockDown()
-        {
-            if (_knockedDown) return;
-            _knockedDown = true;
-            CombatStates.CanAcceptInput(false);
-            CombatStates.NavigateToState(nameof(Waiting));
-            new Cooldown(CombatManager.CombatCooldowns, 3f, () =>
-            {
-                _knockedDown = false;
-                CombatStates.CanAcceptInput(true);
-                if (this is Player) CombatManager.CombatUi.ConditionsText.text = "";
-            }, f =>
-            {
-                if (this is Player) CombatManager.CombatUi.ConditionsText.text = "Knocked down " + Helper.Round(f, 1) + "s";
-            });
-        }
-
-        public void StartSprinting()
-        {
-            if (_sprinting) return;
-            BaseAttributes.Endurance.AddModifier(2);
-            _sprinting = true;
-        }
-
-        public void StopSprinting()
-        {
-            if (!_sprinting) return;
-            BaseAttributes.Endurance.RemoveModifier(2);
-            _sprinting = false;
-        }
-
         public virtual void Kill()
         {
             WorldState.HomeInventory().RemoveItem(this);
-        }
-
-        private float GetSpeedModifier()
-        {
-            return (1f + BaseAttributes.Endurance.GetCalculatedValue() / 100f) * Time.deltaTime;
-        }
-
-        public void IncreaseDistance()
-        {
-            CombatManager.IncreaseDistance(this, GetSpeedModifier());
-        }
-
-        public void DecreaseDistance()
-        {
-            CombatManager.DecreaseDistance(this, GetSpeedModifier());
         }
 
         public void Load(XmlNode doc, PersistenceType saveType)

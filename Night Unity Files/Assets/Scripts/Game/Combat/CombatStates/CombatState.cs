@@ -51,9 +51,9 @@ namespace Game.Combat.CombatStates
             CombatManager.TryStartRageMode();
         }
 
-        public override void OnInputUp(InputAxis axis)
-        {
-            if(axis == InputAxis.Sprint) Character().StopSprinting();
-        }
+//        public override void OnInputUp(InputAxis axis)
+//        {
+//            if(axis == InputAxis.Sprint) Character().StopSprinting();
+//        }
     }
 }

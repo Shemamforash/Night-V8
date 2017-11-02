@@ -86,7 +86,6 @@ namespace Game.Combat
 
         public void Update()
         {
-            _scenario.Player().CombatStates.Update();
             _scenario.Enemies().ForEach(e => e.UpdateBehaviour());
             CombatCooldowns.UpdateCooldowns();
             CombatUi.Update();
@@ -115,13 +114,11 @@ namespace Game.Combat
             CombatUi.Start(scenario);
             _scenario.Enemies().ForEach(CreateRelation);
             _currentTarget = EnemyPlayerRelations[0];
-            scenario.Player().CombatStates.NavigateToState(nameof(Waiting));
         }
 
         public static void ExitCombat()
         {
             WorldState.UnPause();
-            _scenario.Resolve();
             MenuStateMachine.States.NavigateToState("Game Menu");
         }
 

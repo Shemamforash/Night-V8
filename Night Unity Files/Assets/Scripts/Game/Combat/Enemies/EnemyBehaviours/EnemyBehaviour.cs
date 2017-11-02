@@ -27,14 +27,9 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         protected override void ReturnToDefault()
         {
-            Relation.Enemy.CombatStates.ReturnToDefault();
+//            Relation.Enemy.CombatController.ReturnToDefault();
         }
         
-        protected void NavigateToCombatState(string stateName)
-        {
-            Relation.Enemy.CombatStates.NavigateToState(stateName);
-        }
-
         protected override void NavigateToState(string stateName)
         {
             Relation.Enemy.BehaviourMachine.NavigateToState(stateName);

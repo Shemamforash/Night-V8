@@ -1,5 +1,6 @@
 ﻿using Game.Combat.CombatStates;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Input;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.EnemyBehaviours
@@ -14,7 +15,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         public override void Enter()
         {
-            NavigateToCombatState(nameof(Retreating));
+            Relation.Enemy.CombatController.OnInputDown(InputAxis.Horizontal, false, -1f);
             if (Relation.Enemy.Weapon() != null)
             {
                 _targetDistance = Relation.Enemy.Weapon().GetAttributeValue(AttributeType.Accuracy) * 0.9f;
@@ -32,11 +33,6 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             {
                 SelectRandomTransition();
             }
-        }
-
-        public override void Exit()
-        {
-            NavigateToCombatState(nameof(Waiting));
         }
     }
 }

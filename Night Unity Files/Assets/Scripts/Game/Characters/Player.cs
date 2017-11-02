@@ -20,7 +20,6 @@ namespace Game.Characters
         public Player(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait) : base(name)
         {
             SurvivalAttributes = new SurvivalAttributes(this);
-            CombatStates.EnableInput();
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
             CharacterInventory.MaxWeight = 50;

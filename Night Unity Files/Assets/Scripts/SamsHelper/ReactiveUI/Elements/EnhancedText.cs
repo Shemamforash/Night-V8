@@ -13,13 +13,15 @@ namespace Facilitating.UI.Elements
     public class EnhancedText : MonoBehaviour
     {
         private TextMeshProUGUI _text;
+        public int CustomFontSize;
 
         public enum FontSizes
         {
             Small,
             Medium,
             Large,
-            Title
+            Title,
+            Custom
         }
 
         public FontSizes FontSize;
@@ -69,7 +71,14 @@ namespace Facilitating.UI.Elements
         private void UpdateFontSize()
         {
             TryReplaceText();
-            _text.fontSize = UiAppearanceController.Instance.GetFontSize(FontSize);
+            if (FontSize != FontSizes.Custom)
+            {
+                _text.fontSize = UiAppearanceController.Instance.GetFontSize(FontSize);
+            }
+            else
+            {
+                _text.fontSize = CustomFontSize;
+            }
         }
 
         public void SetColor(Color color)

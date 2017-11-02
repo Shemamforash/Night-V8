@@ -124,7 +124,7 @@ namespace Game.Combat.Enemies
         public void UpdateBehaviour()
         {
             UpdateDetection();
-            CombatStates.Update();
+//            CombatController.Update();
             BehaviourMachine.Update();
         }
 

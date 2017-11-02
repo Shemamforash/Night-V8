@@ -206,6 +206,17 @@ namespace Game.Gear.Weapons
             AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() + (int) ammoAvailable);
         }
 
+        public bool FullyLoaded()
+        {
+            //TODO check if character has any ammo left
+            return GetRemainingAmmo() == Capacity;
+        }
+
+        public bool Empty()
+        {
+            return GetRemainingAmmo() == 0;
+        }
+
         public int GetRemainingAmmo()
         {
             return (int) AmmoInMagazine.GetCurrentValue();
