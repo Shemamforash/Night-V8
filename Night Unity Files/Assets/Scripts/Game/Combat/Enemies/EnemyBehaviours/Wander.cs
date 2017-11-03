@@ -1,5 +1,4 @@
-﻿using Game.Combat.CombatStates;
-using SamsHelper.Input;
+﻿using SamsHelper;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,7 +6,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 {
     public class Wander : EnemyBehaviour
     {
-        private float _direction;
+        private Direction _direction;
         
         public Wander(EnemyPlayerRelation relation) : base(nameof(Wander), relation)
         {
@@ -15,7 +14,14 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         public override void Update()
         {
-            Relation.Enemy.CombatController.OnInputDown(InputAxis.Horizontal, false, _direction);
+            if (_direction == Direction.Left)
+            {
+                EnemyCombatController.Retreat();
+            }
+            else
+            {
+                EnemyCombatController.Approach();
+            }
             Duration -= Time.deltaTime;
             if (Duration < 0)
             {
@@ -26,7 +32,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
         public override void Enter()
         {
             Duration = Random.Range(3, 5);
-            _direction = Random.Range(0, 2) == 0 ? -1 : 1;
+            _direction = Random.Range(0, 2) == 0 ? Direction.Left : Direction.Right;
             SetStatusText("Wandering");
         }
 

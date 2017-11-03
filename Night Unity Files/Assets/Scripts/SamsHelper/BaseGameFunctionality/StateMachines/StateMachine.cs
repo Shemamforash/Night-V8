@@ -101,5 +101,11 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             if (!_acceptInput) return;
             _currentState?.OnInputUp(axis);
         }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
+            if (!_acceptInput) return;
+            _currentState?.OnDoubleTap(axis, direction);
+        }
     }
 }

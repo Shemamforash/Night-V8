@@ -160,5 +160,9 @@ namespace SamsHelper.ReactiveUI.Elements
         public void OnInputUp(InputAxis axis)
         {
         }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
+        }
     }
 }

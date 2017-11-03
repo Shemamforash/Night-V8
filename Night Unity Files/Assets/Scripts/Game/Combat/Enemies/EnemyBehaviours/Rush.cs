@@ -1,7 +1,4 @@
-﻿using Game.Combat.CombatStates;
-using SamsHelper.Input;
-
-namespace Game.Combat.Enemies.EnemyBehaviours
+﻿namespace Game.Combat.Enemies.EnemyBehaviours
 {
     public class Rush : EnemyBehaviour
     {
@@ -11,13 +8,13 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         public override void Enter()
         {
-            Relation.Enemy.CombatController.OnInputDown(InputAxis.Horizontal, false, 1f);
             SetStatusText("Charging");
-//            Relation.Enemy.StartSprinting();
+            EnemyCombatController.StartSprinting();
         }
 
         public override void Update()
         {
+            EnemyCombatController.Approach();
             if (Relation.Distance.GetCurrentValue() == 0)
             {
                 SelectRandomTransition();
@@ -26,7 +23,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         public override void Exit()
         {
-//            Relation.Enemy.StopSprinting();
+            EnemyCombatController.StopSprinting();
         }
     }
 }

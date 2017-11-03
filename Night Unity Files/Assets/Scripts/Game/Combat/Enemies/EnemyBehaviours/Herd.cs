@@ -8,15 +8,15 @@
 
         public override void OnDetect()
         {
-            base.OnDetect();
-            CombatManager.Scenario().Enemies().ForEach(e =>
-            {
-                Herd otherHerdBehaviour = (Herd) e.GetBehaviour(this);
-                if (otherHerdBehaviour != null)
-                {
-                    e.Alert();
-                }
-            });
+//            base.OnDetect();
+//            CombatManager.Scenario().Enemies().ForEach(e =>
+//            {
+//                Herd otherHerdBehaviour = (Herd) e.GetBehaviour(this);
+//                if (otherHerdBehaviour != null)
+//                {
+//                    e.Alert();
+//                }
+//            });
         }
     }
 }

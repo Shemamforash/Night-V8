@@ -20,7 +20,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             Duration -= Time.deltaTime;
             if (Duration > 0) return;
             SelectRandomTransition();
-            if (Relation.PlayerCover.ReachedMax()) return;
+            if (Relation.Player.CombatController.InCover()) return;
             Relation.Player.CombatController.KnockDown();
             Relation.Player.TakeDamage(10);
         }

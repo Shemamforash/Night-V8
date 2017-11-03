@@ -15,20 +15,20 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         public override void Enter()
         {
-            Relation.Enemy.CombatController.OnInputDown(InputAxis.Horizontal, false, -1f);
-            if (Relation.Enemy.Weapon() != null)
+            if (EnemyWeapon != null)
             {
-                _targetDistance = Relation.Enemy.Weapon().GetAttributeValue(AttributeType.Accuracy) * 0.9f;
+                _targetDistance = EnemyWeapon.GetAttributeValue(AttributeType.Accuracy) * 0.9f;
             }
             else
             {
                 _targetDistance = Random.Range(20f, 50f);
             }
-            SetStatusText(nameof(Retreating));
+            SetStatusText(nameof(Retreat));
         }
 
         public override void Update()
         {
+            EnemyCombatController.Retreat();
             if (Relation.Distance.GetCurrentValue() >= _targetDistance)
             {
                 SelectRandomTransition();

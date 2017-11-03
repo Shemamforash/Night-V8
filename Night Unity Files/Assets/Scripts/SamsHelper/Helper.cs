@@ -31,7 +31,7 @@ namespace SamsHelper
         {
             return line.Split(',').Where(str => str != "").ToArray();
         }
-        
+
         public static void ConstructObjectsFromCsv(string fileName, Action<string[]> constructionMethod)
         {
             List<string> lines = ReadLinesFromFile(fileName);
@@ -54,7 +54,7 @@ namespace SamsHelper
             }
             list = randomList;
         }
-        
+
         public static void Log<T>(List<T> aList)
         {
             foreach (T t in aList)
@@ -67,7 +67,7 @@ namespace SamsHelper
         {
             return FindAllChildren(t).Select(child => child.GetComponent<T>()).Where(component => component != null).ToList();
         }
-        
+
         public static List<Transform> FindAllChildren(Transform t)
         {
             List<Transform> children = new List<Transform>();
@@ -83,8 +83,8 @@ namespace SamsHelper
 
         public static float Round(float val, int precision)
         {
-            float precisionDivider = (float)Math.Pow(10f, precision);
-            return (float)(Math.Round(val * precisionDivider) / precisionDivider);
+            float precisionDivider = (float) Math.Pow(10f, precision);
+            return (float) (Math.Round(val * precisionDivider) / precisionDivider);
         }
 
         public static T FindChildWithName<T>(GameObject g, string name) where T : class
@@ -147,12 +147,12 @@ namespace SamsHelper
             newUiObject.AddComponent<T>();
             return newUiObject;
         }
-        
+
         public static GameObject InstantiateUiObject(string prefabLocation, Transform parent)
-         {
-             return InstantiateUiObject(Resources.Load(prefabLocation) as GameObject, parent);
-         }
-        
+        {
+            return InstantiateUiObject(Resources.Load(prefabLocation) as GameObject, parent);
+        }
+
         public static GameObject InstantiateUiObject(GameObject prefab, Transform parent)
         {
             GameObject newUiObject = GameObject.Instantiate(prefab);
@@ -213,6 +213,15 @@ namespace SamsHelper
         public static long TimeInMillis()
         {
             return DateTime.Now.Ticks / 10000;
+        }
+
+        public static bool ValuesHaveSameSign(float a, float b)
+        {
+            if (a > 0 && b <= 0 || a < 0 && b >= 0)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

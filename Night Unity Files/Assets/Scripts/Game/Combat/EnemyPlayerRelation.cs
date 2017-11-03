@@ -13,32 +13,32 @@ namespace Game.Combat
         public readonly Enemy Enemy;
         public readonly Player Player;
         public readonly MyValue Distance = new MyValue(0, 0, 150);
-        public readonly MyValue EnemyCover = new MyValue(0, 0, 100);
-        public readonly MyValue PlayerCover = new MyValue(0, 0, 100);
+//        public readonly MyValue EnemyCover = new MyValue(0, 0, 100);
+//        public readonly MyValue PlayerCover = new MyValue(0, 0, 100);
         private bool _hasFled, _isDead;
         private const float ImmediateDistance = 1f, CloseDistance = 10f, MidDistance = 50f, FarDistance = 100f, MaxDistance = 150f;
-        private ValueTextLink<string> PlayerSightLink = new ValueTextLink<string>();
-        private ValueTextLink<string> EnemySightLink = new ValueTextLink<string>();
+//        private ValueTextLink<string> PlayerSightLink = new ValueTextLink<string>();
+//        private ValueTextLink<string> EnemySightLink = new ValueTextLink<string>();
 
         public EnemyPlayerRelation(Enemy enemy, Player player)
         {
             Enemy = enemy;
             Player = player;
             SetDistanceData();
-            EnemySightLink.AddTextObject(enemy.EnemyView().VisionText);
-            EnemyCover.AddThreshold(100, "Obscured");
-            EnemyCover.AddThreshold(80, "Barely Visible");
-            EnemyCover.AddThreshold(50, "Partial Sight");
-            EnemyCover.AddThreshold(20, "Clear shot");
-            EnemyCover.AddThreshold(00, "Totally Exposed");
-            PlayerSightLink.AddTextObject(enemy.EnemyView().CoverText);
-            PlayerCover.AddThreshold(100, "Obscured");
-            PlayerCover.AddThreshold(80, "Barely Visible");
-            PlayerCover.AddThreshold(50, "Partial Sight");
-            PlayerCover.AddThreshold(20, "Clear shot");
-            PlayerCover.AddThreshold(0, "Totally Exposed");
-            PlayerCover.AddOnValueChange(a => UpdateEnemySight());
-            PlayerCover.AddOnValueChange(a => UpdatePlayerCover());
+//            EnemySightLink.AddTextObject(enemy.EnemyView().VisionText);
+//            EnemyCover.AddThreshold(100, "Obscured");
+//            EnemyCover.AddThreshold(80, "Barely Visible");
+//            EnemyCover.AddThreshold(50, "Partial Sight");
+//            EnemyCover.AddThreshold(20, "Clear shot");
+//            EnemyCover.AddThreshold(00, "Totally Exposed");
+//            PlayerSightLink.AddTextObject(enemy.EnemyView().CoverText);
+//            PlayerCover.AddThreshold(100, "Obscured");
+//            PlayerCover.AddThreshold(80, "Barely Visible");
+//            PlayerCover.AddThreshold(50, "Partial Sight");
+//            PlayerCover.AddThreshold(20, "Clear shot");
+//            PlayerCover.AddThreshold(0, "Totally Exposed");
+//            PlayerCover.AddOnValueChange(a => UpdateEnemySight());
+//            PlayerCover.AddOnValueChange(a => UpdatePlayerCover());
         }
 
         private void SetDistanceData()
@@ -67,15 +67,15 @@ namespace Game.Combat
             });
         }
 
-        private void UpdateEnemySight()
-        {
-            EnemySightLink.Value(EnemyCover.GetThresholdName() + " " + Helper.Round(100 - EnemyCover.GetCurrentValue(), 0) + "%");
-        }
+//        private void UpdateEnemySight()
+//        {
+//            EnemySightLink.Value(EnemyCover.GetThresholdName() + " " + Helper.Round(100 - EnemyCover.GetCurrentValue(), 0) + "%");
+//        }
 
-        private void UpdatePlayerCover()
-        {
-            PlayerSightLink.Value(PlayerCover.GetThresholdName() + " " + Helper.Round(PlayerCover.GetCurrentValue(), 0) + "%");
-        }
+//        private void UpdatePlayerCover()
+//        {
+//            PlayerSightLink.Value(PlayerCover.GetThresholdName() + " " + Helper.Round(PlayerCover.GetCurrentValue(), 0) + "%");
+//        }
 
         public void MarkFled()
         {

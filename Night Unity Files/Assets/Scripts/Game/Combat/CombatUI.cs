@@ -36,6 +36,7 @@ namespace Game.Combat
         private readonly List<GameObject> _magazineAmmo = new List<GameObject>();
         private Character _character;
         private float _criticalTarget;
+        public readonly CooldownController DashCooldownController;
 
         public CombatUi(GameObject combatMenu)
         {
@@ -53,6 +54,10 @@ namespace Game.Combat
             _hitInfo = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Hit Info");
             ConditionsText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Conditions");
             _hitInfo.color = new Color(1, 1, 1, 0);
+
+            GameObject cooldownContainer = Helper.FindChildWithName(playerContainer, "Cooldowns");
+            DashCooldownController = Helper.FindChildWithName<CooldownController>(cooldownContainer, "Dash");
+            DashCooldownController.UpdateCooldownFill(1);
 
             _characterHealthSlider = Helper.FindChildWithName<Slider>(playerContainer, "Health Bar");
         }

@@ -1,7 +1,4 @@
-﻿using Game.Combat.CombatStates;
-using SamsHelper.Input;
-
-namespace Game.Combat.Enemies.EnemyBehaviours
+﻿namespace Game.Combat.Enemies.EnemyBehaviours
 {
     public class Flee : EnemyBehaviour
     {
@@ -11,9 +8,13 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         public override void Enter()
         {
-            Relation.Enemy.CombatController.OnInputDown(InputAxis.Horizontal, false, -1f);
             SetStatusText("Fleeing");
-//            Relation.Enemy.CombatController.StartSprinting();
+            EnemyCombatController.StartSprinting();
+        }
+
+        public override void Update()
+        {
+            EnemyCombatController.Retreat();
         }
     }
 }

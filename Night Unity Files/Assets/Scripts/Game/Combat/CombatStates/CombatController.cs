@@ -13,85 +13,171 @@ namespace Game.Combat.CombatStates
     public class CombatController : IInputListener
     {
         private Character _character;
-        private bool _cocking, _reloading, _sprinting, _knockedDown;
-        private Cooldown _cockingCooldown, _reloadingCooldown;
-        private float _knockdownDuration = 3f;
+        private bool _sprinting;
+        private Cooldown _cockingCooldown, _reloadingCooldown, _dashCooldown, _knockdownCooldown;
+        private const float KnockdownDuration = 3f, DashDuration = 2f;
         private long _timeAtLastFire;
         private bool _isPlayer;
+
+        private enum CoverLevel
+        {
+            None,
+            Partial,
+            Total
+        };
+
+        private CoverLevel _coverLevel;
 
         public CombatController(Character character)
         {
             _character = character;
+            SetReloadCooldown();
+            SetKnockdownCooldown();
+            SetCockCooldown();
+            SetDashCooldown();
             if (!(_character is Player)) return;
             _isPlayer = true;
             InputHandler.RegisterInputListener(this);
         }
+
+        //Cooldowns
+
+        private void SetDashCooldown()
+        {
+            _dashCooldown = CombatManager.CombatCooldowns.CreateCooldown(DashDuration);
+            if (!_isPlayer) return;
+            _dashCooldown.SetDuringAction(f => CombatManager.CombatUi.DashCooldownController.UpdateCooldownFill(1 - f / DashDuration));
+            _dashCooldown.SetEndAction(() => CombatManager.CombatUi.DashCooldownController.Reset());
+        }
+
+        private void SetCockCooldown()
+        {
+            _cockingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
+            if (!_isPlayer) return;
+            _cockingCooldown.SetEndAction(UpdateMagazineUi);
+            _cockingCooldown.SetDuringAction(f => CombatManager.CombatUi.UpdateReloadTime(f));
+        }
+
+        private void SetKnockdownCooldown()
+        {
+            _knockdownCooldown = CombatManager.CombatCooldowns.CreateCooldown(KnockdownDuration);
+            if (!_isPlayer) return;
+            _knockdownCooldown.SetEndAction(() => { CombatManager.CombatUi.ConditionsText.text = ""; });
+            _knockdownCooldown.SetDuringAction(f => CombatManager.CombatUi.ConditionsText.text = "Knocked down! " + Helper.Round(f, 1) + "s");
+        }
+
+        private void SetReloadCooldown()
+        {
+            _reloadingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
+            _reloadingCooldown.SetEndAction(() =>
+            {
+                _character.Weapon().Cocked = true;
+                _character.Weapon().Reload(_character.Inventory());
+                if (!_isPlayer) return;
+                UpdateMagazineUi();
+            });
+            if (!_isPlayer) return;
+            _reloadingCooldown.SetDuringAction(f => CombatManager.CombatUi.UpdateReloadTime(f));
+        }
+
+        //MOVEMENT
 
         private float GetSpeedModifier()
         {
             return (1f + _character.BaseAttributes.Endurance.GetCalculatedValue() / 100f) * Time.deltaTime;
         }
 
-        private void Approach()
+        public void Approach()
         {
             if (Immobilised()) return;
             LeaveCover();
             CombatManager.DecreaseDistance(_character, GetSpeedModifier());
         }
 
-        private void Retreat()
+        public void Retreat()
         {
             if (Immobilised()) return;
             LeaveCover();
             CombatManager.IncreaseDistance(_character, GetSpeedModifier());
         }
 
-        private void TakeCover()
+        private void Move(float direction)
         {
+            if (direction > 0)
+            {
+                Approach();
+            }
+            else
+            {
+                Retreat();
+            }
+        }
+
+        //SPRINTING
+
+        public void StartSprinting()
+        {
+            if (_sprinting) return;
+            _character.BaseAttributes.Endurance.AddModifier(2);
+            _sprinting = true;
+        }
+
+        public void StopSprinting()
+        {
+            if (!_sprinting) return;
+            _character.BaseAttributes.Endurance.RemoveModifier(2);
+            _sprinting = false;
+        }
+
+//        public void SetFlanked()
+//        {
+//            _coverLevel = CoverLevel.Partial;
+//        }
+
+        //COVER
+        public bool InCover()
+        {
+            return _coverLevel == CoverLevel.Total;
+        }
+
+        public void TakeCover()
+        {
+            if (Immobilised()) return;
+            _coverLevel = CoverLevel.Total;
             CombatManager.TakeCover(_character);
         }
 
-        private void LeaveCover()
+        public void LeaveCover()
         {
+            if (Immobilised()) return;
+            if (!InCover()) return;
+            _coverLevel = CoverLevel.None;
             CombatManager.LeaveCover(_character);
         }
 
-        private void CockWeapon()
+        public bool InPartialCover()
+        {
+            return _coverLevel == CoverLevel.Partial;
+        }
+
+        //COCKING
+        public void CockWeapon()
         {
             if (Immobilised()) return;
-            if (_cocking) return;
+            if (!_cockingCooldown.Finished()) return;
             float cockTime = _character.Weapon().WeaponAttributes.FireRate.GetCalculatedValue();
             GunFire.Cock(cockTime);
-            _cocking = true;
-            new Cooldown(CombatManager.CombatCooldowns, cockTime, () =>
-            {
-                _cocking = false;
-                UpdateMagazineUi();
-            }, f => CombatManager.CombatUi.UpdateReloadTime(f));
+            _cockingCooldown.SetDuration(cockTime);
+            _cockingCooldown.Start();
         }
 
         private void StopCocking()
         {
-            if (_cockingCooldown == null || _cockingCooldown.IsFinished()) return;
+            if (_cockingCooldown == null || _cockingCooldown.Finished()) return;
             _cockingCooldown.Cancel();
-            _cocking = false;
         }
 
-        private void StopReloading()
-        {
-            if (_reloadingCooldown == null || _reloadingCooldown.IsFinished()) return;
-            _reloadingCooldown.Cancel();
-            _reloading = false;
-        }
-
-        public void Interrupt()
-        {
-            StopCocking();
-            StopReloading();
-            StopSprinting();
-            UpdateMagazineUi();
-        }
-
+        //RELOADING
         private void TryReload()
         {
             if (Immobilised()) return;
@@ -105,46 +191,27 @@ namespace Game.Combat.CombatStates
             }
         }
 
-        private void ReloadWeapon()
+        public void ReloadWeapon()
         {
             if (Immobilised()) return;
-            if (_reloading) return;
+            if (_reloadingCooldown.Running()) return;
             if (_character.Weapon().FullyLoaded()) return;
             if (_character.Inventory().GetResourceQuantity(InventoryResourceType.Ammo) == 0) return;
             float reloadSpeed = _character.Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
-            _reloading = true;
             CombatManager.CombatUi.EmptyMagazine();
-            new Cooldown(CombatManager.CombatCooldowns, reloadSpeed, () =>
-            {
-                _reloading = false;
-                _character.Weapon().Cocked = true;
-                _character.Weapon().Reload(_character.Inventory());
-                UpdateMagazineUi();
-            }, f =>
-            {
-                Debug.Log("reloaded");
-                CombatManager.CombatUi.UpdateReloadTime(f);
-            });
+            _reloadingCooldown.SetDuration(reloadSpeed);
+            _reloadingCooldown.Start();
         }
 
-        private void UpdateMagazineUi()
+        private void StopReloading()
         {
-            string magazineMessage = "";
-            if (!_character.Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
-            else if (_character.Weapon().Empty()) magazineMessage = "NO AMMO";
-
-            if (magazineMessage == "")
-            {
-                CombatManager.CombatUi.UpdateMagazine(_character.Weapon().GetRemainingAmmo());
-            }
-            else
-            {
-                CombatManager.CombatUi.EmptyMagazine();
-                CombatManager.CombatUi.SetMagazineText(magazineMessage);
-            }
+            if (_reloadingCooldown == null || _reloadingCooldown.Finished()) return;
+            _reloadingCooldown.Cancel();
         }
 
-        private void FireWeapon()
+        //FIRING
+
+        public void FireWeapon()
         {
             if (Immobilised()) return;
             if (!_character.Weapon().Cocked) return;
@@ -165,44 +232,10 @@ namespace Game.Combat.CombatStates
             if (_isPlayer) UpdateMagazineUi();
         }
 
-        private void Flank()
-        {
-            if (Immobilised()) return;
-            CombatManager.Flank(_character);
-        }
-
-        private void Dodge()
-        {
-        }
-
-        private void DashForward()
-        {
-        }
-
-        private void DashBackward()
-        {
-        }
-
-        private bool Immobilised()
-        {
-            return _reloading || _cocking || _knockedDown;
-        }
-
-        public void KnockDown()
-        {
-            if (_knockedDown) return;
-            _knockedDown = true;
-            new Cooldown(CombatManager.CombatCooldowns, _knockdownDuration, () =>
-                {
-                    _knockedDown = false;
-                    CombatManager.CombatUi.ConditionsText.text = "";
-                },
-                f => CombatManager.CombatUi.ConditionsText.text = "Knocked down! " + Helper.Round(f, 1) + "s");
-        }
+        //DASHING
 
         private void Dash(float direction)
         {
-            if (Immobilised()) return;
             if (direction < 0)
             {
                 DashBackward();
@@ -211,31 +244,73 @@ namespace Game.Combat.CombatStates
             DashForward();
         }
 
-        private void StartSprinting()
+        private bool CanDash()
         {
-            if (_sprinting) return;
-            _character.BaseAttributes.Endurance.AddModifier(2);
-            _sprinting = true;
+            return _dashCooldown.Finished();
         }
 
-        private void StopSprinting()
+        private void DashForward()
         {
-            if (!_sprinting) return;
-            _character.BaseAttributes.Endurance.RemoveModifier(2);
-            _sprinting = false;
+            if (Immobilised()) return;
+            if (!CanDash()) return;
+            CombatManager.DashForward(_character);
+            _dashCooldown.Start();
         }
 
-        private void Move(float direction)
+        private void DashBackward()
         {
-            if (direction > 0)
+            if (Immobilised()) return;
+            if (!CanDash()) return;
+            CombatManager.DashBackward(_character);
+            _dashCooldown.Start();
+        }
+
+        //MISC
+
+        public void Interrupt()
+        {
+            StopCocking();
+            StopReloading();
+            StopSprinting();
+            UpdateMagazineUi();
+        }
+
+        private void UpdateMagazineUi()
+        {
+            string magazineMessage = "";
+            if (!_character.Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
+            else if (_character.Inventory().GetResourceQuantity(InventoryResourceType.Ammo) == 0) magazineMessage = "NO AMMO";
+            else if (_character.Weapon().Empty()) magazineMessage = "RELOAD";
+
+            if (magazineMessage == "")
             {
-                Approach();
+                CombatManager.CombatUi.UpdateMagazine(_character.Weapon().GetRemainingAmmo());
             }
             else
             {
-                Retreat();
+                CombatManager.CombatUi.EmptyMagazine();
+                CombatManager.CombatUi.SetMagazineText(magazineMessage);
             }
         }
+
+        private void Flank()
+        {
+            if (Immobilised()) return;
+            CombatManager.Flank(_character);
+        }
+
+        private bool Immobilised()
+        {
+            return _reloadingCooldown.Running() || _cockingCooldown.Running() || _knockdownCooldown.Running();
+        }
+
+        public void KnockDown()
+        {
+            if (_knockdownCooldown.Running()) return;
+            _knockdownCooldown.Start();
+        }
+
+        //INPUT
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -293,6 +368,14 @@ namespace Game.Combat.CombatStates
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(axis), axis, null);
+            }
+        }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
+            if (axis == InputAxis.Horizontal)
+            {
+                Dash(direction);
             }
         }
     }

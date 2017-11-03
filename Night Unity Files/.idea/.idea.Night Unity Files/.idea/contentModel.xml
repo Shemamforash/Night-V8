@@ -6,6 +6,7 @@
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="CooldownController.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="HealthBarController.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
@@ -91,17 +92,8 @@
             <e p="Combat" t="Include">
               <e p="CombatManager.cs" t="Include" />
               <e p="CombatScenario.cs" t="Include" />
-              <e p="CombatStateMachine.cs" t="Include" />
               <e p="CombatStates" t="Include">
-                <e p="Approaching.cs" t="Include" />
-                <e p="Cocking.cs" t="Include" />
                 <e p="CombatController.cs" t="Include" />
-                <e p="CombatState.cs" t="Include" />
-                <e p="Firing.cs" t="Include" />
-                <e p="Flanking.cs" t="Include" />
-                <e p="Reloading.cs" t="Include" />
-                <e p="Retreating.cs" t="Include" />
-                <e p="Waiting.cs" t="Include" />
               </e>
               <e p="CombatTester.cs" t="Include" />
               <e p="CombatUI.cs" t="Include" />
@@ -111,6 +103,7 @@
                   <e p="BasicFire.cs" t="Include" />
                   <e p="EnemyBehaviour.cs" t="Include" />
                   <e p="Flee.cs" t="Include" />
+                  <e p="GenericBehaviour.cs" t="Include" />
                   <e p="Graze.cs" t="Include" />
                   <e p="Herd.cs" t="Include" />
                   <e p="Melee.cs" t="Include" />

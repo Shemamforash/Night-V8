@@ -54,6 +54,10 @@ namespace Game.Characters
         {
         }
 
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
+        }
+
         public override void AddItem(MyGameObject g)
         {
             base.AddItem(g);

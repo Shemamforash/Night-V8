@@ -5,6 +5,7 @@ using Game.Combat.CombatStates;
 using Game.Combat.Enemies;
 using Game.Gear.Weapons;
 using Game.World;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.ReactiveUI;
@@ -86,7 +87,6 @@ namespace Game.Combat
 
         public void Update()
         {
-            _scenario.Enemies().ForEach(e => e.UpdateBehaviour());
             CombatCooldowns.UpdateCooldowns();
             CombatUi.Update();
             EnemyPlayerRelations.ForEach(r => r.UpdateRelation());
@@ -100,6 +100,7 @@ namespace Game.Combat
 
         private static void CreateRelation(Enemy e)
         {
+            Debug.Log(e.Name);
             EnemyPlayerRelation relation = new EnemyPlayerRelation(e, _scenario.Player());
             EnemyPlayerRelations.Add(relation);
             e.InitialiseBehaviour(relation);
@@ -129,15 +130,16 @@ namespace Game.Combat
 
         public static void Flank(Character c)
         {
-            Enemy enemy = c as Enemy;
-            if (enemy != null)
-            {
-                FindRelation(enemy).PlayerCover.Increment(-1f);
-            }
-            else
-            {
-                _currentTarget.EnemyCover.Increment(-1f);
-            }
+            //TODO Flank
+//            Enemy enemy = c as Enemy;
+//            if (enemy != null)
+//            {
+//                FindRelation(enemy).PlayerCover.Increment(-1f);
+//            }
+//            else
+//            {
+//                _currentTarget.EnemyCover.Increment(-1f);
+//            }
         }
 
         public static void LeaveCover(Character character)
@@ -145,25 +147,24 @@ namespace Game.Combat
             Enemy enemy = character as Enemy;
             if (enemy != null)
             {
-                FindRelation(enemy).EnemyCover.Increment(-100f);
+                FindRelation(enemy).Enemy.EnemyView().VisionText.text = "No Cover (Enemy)";
             }
             else
             {
-                EnemyPlayerRelations.ForEach(relation => relation.PlayerCover.Increment(-100f));
+                EnemyPlayerRelations.ForEach(relation => { relation.Enemy.EnemyView().CoverText.text = "No Cover (Player)"; });
             }
         }
-
 
         public static void TakeCover(Character c)
         {
             Enemy enemy = c as Enemy;
             if (enemy != null)
             {
-                FindRelation(enemy).EnemyCover.Increment(100f);
+                FindRelation(enemy).Enemy.EnemyView().VisionText.text = "Full Cover (Enemy)";
             }
             else
             {
-                EnemyPlayerRelations.ForEach(relation => relation.PlayerCover.Increment(100f));
+                EnemyPlayerRelations.ForEach(relation => { relation.Enemy.EnemyView().CoverText.text = "Full Cover (Player)"; });
             }
         }
 
@@ -178,6 +179,7 @@ namespace Game.Combat
             else
             {
                 int damage = c.Weapon().Fire(_currentTarget.Distance.GetCurrentValue(), _rageActivated);
+                _currentTarget.Enemy.EnemyBehaviour.TakeFire();
                 if (damage == 0) return;
                 IncreaseRage();
                 _currentTarget.Enemy.TakeDamage(damage);
@@ -212,6 +214,34 @@ namespace Game.Combat
             Weapon weapon = _scenario.Player().Weapon();
             weapon.WeaponAttributes.ReloadSpeed.AddModifier(-0.5f);
             weapon.WeaponAttributes.FireRate.AddModifier(0.5f);
+        }
+
+        public static void DashForward(Character character)
+        {
+            Dash(character, Direction.Right);
+        }
+
+        private static void Dash(Character c, Direction direction)
+        {
+            float dashAmount = 5;
+            if (direction == Direction.Left)
+            {
+                dashAmount = -dashAmount;
+            }
+            Enemy enemy = c as Enemy;
+            if (enemy != null)
+            {
+                FindRelation(enemy).Distance.Increment(dashAmount);
+            }
+            else
+            {
+                EnemyPlayerRelations.ForEach(relation => relation.Distance.Increment(dashAmount));
+            }
+        }
+
+        public static void DashBackward(Character character)
+        {
+            Dash(character, Direction.Left);
         }
     }
 }

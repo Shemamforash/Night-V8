@@ -10,11 +10,11 @@ namespace SamsHelper.Input
     public class InputHandler : MonoBehaviour
     {
         private readonly Dictionary<InputAxis, InputPress> _inputPressList = new Dictionary<InputAxis, InputPress>();
-        private static float _lastInputValue;
         private static InputHandler _instance;
         private static List<InputPress> _pressedKeys = new List<InputPress>();
         private event Action OnNoPress;
         private static readonly List<IInputListener> InputListeners = new List<IInputListener>();
+        private const float _doubleTapDuration = 300;
 
 
         public void Awake()
@@ -48,12 +48,28 @@ namespace SamsHelper.Input
         {
             private bool _pressed;
             private readonly InputAxis _axis;
+            private float _lastInputValue;
+            private long _timeAtLastPress;
+            private float _directionAtLastPress;
 
             public InputPress(InputAxis axis)
             {
                 _axis = axis;
             }
 
+            private void CheckDoubleTap()
+            {
+                long currentTime = Helper.TimeInMillis();
+                float timeBetweenClicks = currentTime - _timeAtLastPress;
+                if (timeBetweenClicks < _doubleTapDuration && Helper.ValuesHaveSameSign(_directionAtLastPress, _lastInputValue))
+                {
+                    BroadCastDoubleTap(_axis, _lastInputValue);
+                    currentTime = 0;
+                }
+                _directionAtLastPress = _lastInputValue;
+                _timeAtLastPress = currentTime;
+            }
+            
             public void CheckPress()
             {
                 _lastInputValue = UnityEngine.Input.GetAxisRaw(_axis.ToString());
@@ -63,11 +79,12 @@ namespace SamsHelper.Input
                     {
                         _pressed = true;
                         AddPressedKey(this);
-                        BroadcastInputDown(_axis, false);
+                        BroadcastInputDown(_axis, false, _lastInputValue);
+                        CheckDoubleTap();                        
                     }
                     else
                     {
-                        BroadcastInputDown(_axis, true);
+                        BroadcastInputDown(_axis, true, _lastInputValue);
                     }
                 }
                 else
@@ -78,8 +95,11 @@ namespace SamsHelper.Input
                 }
             }
         }
-
-        public static float LastInputValue() => _lastInputValue;
+        
+        private static void BroadCastDoubleTap(InputAxis axis, float lastInputValue)
+        {
+            InputListeners.ForEach(l => l.OnDoubleTap(axis, lastInputValue));
+        }
 
         private static void AddPressedKey(InputPress key)
         {
@@ -98,7 +118,7 @@ namespace SamsHelper.Input
         private static void BroadcastNoPress() => Instance().OnNoPress?.Invoke();
         public void AddOnNoPress(Action a) => Instance().OnNoPress += a;
 
-        private static void BroadcastInputDown(InputAxis axis, bool isHeld)
+        private static void BroadcastInputDown(InputAxis axis, bool isHeld, float _lastInputValue)
         {
             InputListeners.ForEach(l => l.OnInputDown(axis, isHeld, _lastInputValue));
         }

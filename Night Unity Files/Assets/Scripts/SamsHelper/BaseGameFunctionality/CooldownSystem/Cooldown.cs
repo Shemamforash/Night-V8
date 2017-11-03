@@ -5,47 +5,65 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 {
     public class Cooldown
     {
-        private readonly float _startTime, _duration;
-        private readonly Action _endOfCooldown;
-        private readonly Action<float> _duringCooldown;
+        private float _startTime;
+        private float _duration;
+        private Action _startOfCooldown, _endOfCooldown;
+        private Action<float> _duringCooldown;
         private CooldownManager _manager;
-        private bool _finished;
-
-        public Cooldown(CooldownManager manager, float duration, Action endOfCooldown)
+        private bool _finished, _started;
+        
+        public Cooldown(CooldownManager manager, float duration = 0)
         {
-            _startTime = Time.time;
             _duration = duration;
-            _endOfCooldown = endOfCooldown;
             _manager = manager;
-            manager.RegisterCooldown(this);
         }
 
-        public Cooldown(CooldownManager manager, float duration, Action endOfCooldown, Action<float> duringCooldown) : this(manager, duration, endOfCooldown)
+        public void Start()
         {
-            _duringCooldown = duringCooldown;
+            _manager.RegisterCooldown(this);
+            _startTime = Time.time;
+            _startOfCooldown?.Invoke();
+            _finished = false;
+            _started = true;
+        }
+        
+        public void Restart()
+        {
+            Start();
         }
 
-        public bool IsFinished()
+        public void SetStartAction(Action a) => _startOfCooldown = a;
+        public void SetEndAction(Action a) => _endOfCooldown = a;
+        public void SetDuringAction(Action<float> a) => _duringCooldown = a;
+        public void SetDuration(float duration) => _duration = duration;
+
+        public bool Finished()
         {
-            return _finished;
+            return _finished || !_started;
+        }
+
+        public bool Running()
+        {
+            return !_finished && _started;
         }
 
         public void Cancel()
         {
+            _finished = true;
             _manager.RemoveCooldown(this);
         }
 
-        public bool Update()
+        public void Update()
         {
             float elapsed = Time.time - _startTime;
             if (elapsed >= _duration)
             {
                 _finished = true;
-                _endOfCooldown();
-                return true;
+                _started = false;
+                _endOfCooldown?.Invoke();
+                return;
             }
             _duringCooldown?.Invoke(_duration - elapsed);
-            return false;
         }
     }
 }

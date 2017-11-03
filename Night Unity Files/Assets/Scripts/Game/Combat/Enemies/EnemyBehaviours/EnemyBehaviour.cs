@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Game.Combat.CombatStates;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -12,12 +14,16 @@ namespace Game.Combat.Enemies.EnemyBehaviours
         private readonly List<EnemyBehaviour> _onExitTransitions = new List<EnemyBehaviour>();
         private EnemyBehaviour _onDetectBehaviour; 
         public readonly bool IsPassive;
-
+        protected readonly CombatController EnemyCombatController;
+        protected readonly Weapon EnemyWeapon;
+        
         protected EnemyBehaviour(string name, EnemyPlayerRelation relation, bool isPassive = false) : base(name, StateSubtype.EnemyBehaviour)
         {
             Relation = relation;
+            EnemyCombatController = relation.Enemy.CombatController;
+            EnemyWeapon = Relation.Enemy.Weapon();
             IsPassive = isPassive;
-            relation.Enemy.BehaviourMachine.AddState(this);
+//            relation.Enemy.EnemyBehaviour.AddState(this);
         }
 
         public void SetOnDetectBehaviour(EnemyBehaviour behaviour)
@@ -32,7 +38,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
         
         protected override void NavigateToState(string stateName)
         {
-            Relation.Enemy.BehaviourMachine.NavigateToState(stateName);
+            Relation.Enemy.EnemyBehaviour.NavigateToState(stateName);
         }
 
         protected void SelectRandomTransition()

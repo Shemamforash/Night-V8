@@ -53,5 +53,9 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         public virtual void OnInputUp(InputAxis axis)
         {
         }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
+        }
     }
 }
