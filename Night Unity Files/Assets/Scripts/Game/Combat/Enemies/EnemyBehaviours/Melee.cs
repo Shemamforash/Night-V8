@@ -1,5 +1,4 @@
-﻿using Game.Combat.CombatStates;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.Combat.Enemies.EnemyBehaviours
 {
@@ -20,8 +19,8 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             Duration -= Time.deltaTime;
             if (Duration > 0) return;
             SelectRandomTransition();
-            if (Relation.Player.CombatController.InCover()) return;
-            Relation.Player.CombatController.KnockDown();
+//            if (Relation.Player.CombatController.InCover()) return;
+//            Relation.Player.CombatController.KnockDown();
             Relation.Player.TakeDamage(10);
         }
     }

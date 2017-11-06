@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
-using Game.Combat.Weapons;
 using Game.Gear.Armour;
 using Game.World.WorldEvents;
 using SamsHelper;
@@ -38,12 +37,12 @@ namespace Game.Gear.Weapons
                 WeaponDictionary[type] = baseWeapon;
 
                 XmlNode baseStats = classNode.SelectSingleNode("BaseStats");
-                SetScaleableValue(ref baseWeapon.Damage, baseStats.SelectSingleNode("Damage"));
-                SetScaleableValue(ref baseWeapon.Accuracy, baseStats.SelectSingleNode("Accuracy"));
-                SetScaleableValue(ref baseWeapon.FireRate, baseStats.SelectSingleNode("FireRate"));
-                SetScaleableValue(ref baseWeapon.Handling, baseStats.SelectSingleNode("Handling"));
-                SetScaleableValue(ref baseWeapon.ReloadSpeed, baseStats.SelectSingleNode("ReloadSpeed"));
-                SetScaleableValue(ref baseWeapon.CriticalChance, baseStats.SelectSingleNode("CriticalChance"));
+                baseWeapon.Damage = int.Parse(baseStats.SelectSingleNode("Damage").InnerText);
+                baseWeapon.Accuracy = int.Parse(baseStats.SelectSingleNode("Accuracy").InnerText);
+                baseWeapon.FireRate = float.Parse(baseStats.SelectSingleNode("FireRate").InnerText);
+                baseWeapon.Handling = int.Parse(baseStats.SelectSingleNode("Handling").InnerText);
+                baseWeapon.ReloadSpeed = float.Parse(baseStats.SelectSingleNode("ReloadSpeed").InnerText);
+                baseWeapon.CriticalChance = int.Parse(baseStats.SelectSingleNode("CriticalChance").InnerText);
 
                 foreach (XmlNode subtypeNode in classNode.SelectNodes("Subtype"))
                 {
@@ -85,13 +84,6 @@ namespace Game.Gear.Weapons
             float modifierValue = float.Parse(node.SelectSingleNode(attributeType.ToString()).InnerText);
             if (!summative) modifierValue -= 1;
             modifier.AddModifier(attributeType, modifierValue, summative);
-        }
-
-        private static void SetScaleableValue(ref ScaleableValue value, XmlNode attributeNode)
-        {
-            float xCoefficient = float.Parse(attributeNode.SelectSingleNode("XCoefficient").InnerText);
-            float intercept = float.Parse(attributeNode.SelectSingleNode("Intercept").InnerText);
-            value = new ScaleableValue(xCoefficient, intercept);
         }
 
         public static Weapon GenerateWeapon(List<WeaponType> weaponsWanted = null, bool manualOnly = false)

@@ -1,5 +1,4 @@
-﻿using Game.Combat.Enemies.EnemyBehaviours;
-using Random = UnityEngine.Random;
+﻿using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.EnemyTypes
 {
@@ -10,6 +9,13 @@ namespace Game.Combat.Enemies.EnemyTypes
             BaseAttributes.Intelligence.SetCurrentValue(0);
         }
 
+        public override void InitialiseBehaviour(EnemyPlayerRelation relation)
+        {
+            base.InitialiseBehaviour(relation);
+            EnemyBehaviour.EnableGrazing();
+            EnemyBehaviour.EnableWatching();
+        }
+        
 //        public override void InitialiseBehaviour(EnemyPlayerRelation relation)
 //        {
 //            base.InitialiseBehaviour(relation);

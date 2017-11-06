@@ -2,10 +2,65 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="167d3be1-cdd9-4be3-97f7-467b7a89563b" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatStates.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatStates/CombatController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatStates/CombatController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/40/404cb3464fc041969726ec93c57909c7" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/40/404cb3464fc041969726ec93c57909c7.info" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Desolation Balance Files.xlsx" afterPath="$PROJECT_DIR$/Desolation Balance Files.xlsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Menus/Game Menus/Combat Menu 1.prefab" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Menus/Game Menus/Combat Menu 1.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Combat Tester.unity" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Combat Tester.unity" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/assetDatabase3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/assetDatabase3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/12/1283f7514fce9d240bf70d6f252658dc" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/12/1283f7514fce9d240bf70d6f252658dc" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3f/3f780ce7295578d41852d7c98f208309" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3f/3f780ce7295578d41852d7c98f208309" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/00/00000000000000005100000000000000" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/00/00000000000000005100000000000000" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/00/00000000000000008000000000000000" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/00/00000000000000008000000000000000" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/03/03186fd0000145148ab4735e2483db05" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/03/03186fd0000145148ab4735e2483db05" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/0e/0e2aecbb597f445195e7835d2e530d13" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/0e/0e2aecbb597f445195e7835d2e530d13" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1c/1c0b20b13ede4918b43c745ced6630f6" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1c/1c0b20b13ede4918b43c745ced6630f6" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1d/1d9c30123c6b4214a9baca33c1ea45c1" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1d/1d9c30123c6b4214a9baca33c1ea45c1" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/33/334f341f86cb430cb593523c54f76e0d" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/33/334f341f86cb430cb593523c54f76e0d" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/44/44107be6ef7a482e847c8bdc628d7de3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/44/44107be6ef7a482e847c8bdc628d7de3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/51/51593c6711164fa39c7b502ffa53e54e" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/51/51593c6711164fa39c7b502ffa53e54e" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/7e/7e5edf4e875040749b64c535d6e5b75b" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/7e/7e5edf4e875040749b64c535d6e5b75b" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/84/84b6714a73744316b97a3ef622b261a1" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/84/84b6714a73744316b97a3ef622b261a1" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bd/bd0e4bf0baf624a46916c722248e3a21" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bd/bd0e4bf0baf624a46916c722248e3a21" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c3/c3445f3cecb44ba7a3e70c6cda7ca2b3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c3/c3445f3cecb44ba7a3e70c6cda7ca2b3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/f5/f508cf123bb40b8429637d03dda75e2d" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/f5/f508cf123bb40b8429637d03dda75e2d" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/fc/fc56124f30824293aa313d514015a008" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/fc/fc56124f30824293aa313d514015a008" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Temp/__Backupscenes/0.backup" afterPath="$PROJECT_DIR$/Night Unity Files/Temp/__Backupscenes/0.backup" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/contentModel.xml" afterPath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/contentModel.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/workspace.xml" afterPath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Gear.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Gear.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/WeaponClasses.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/WeaponClasses.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Character.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Character.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatManager.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatManager.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatScenario.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatScenario.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatUI.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatUI.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/Enemy.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/Enemy.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/BasicFire.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/BasicFire.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/EnemyBehaviour.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/EnemyBehaviour.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/Flee.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/Flee.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/GenericBehaviour.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/GenericBehaviour.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/Melee.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/Melee.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/Retreat.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/Retreat.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/Rush.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/Rush.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/Wander.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyBehaviours/Wander.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Grazer.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Grazer.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Watcher.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Watcher.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/DesolationInventory.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/DesolationInventory.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/Basic/MyGameObject.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/Basic/MyGameObject.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/CooldownSystem/Cooldown.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/CooldownSystem/Cooldown.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/GearItem.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/GearItem.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/Inventory.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/Inventory.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/InventoryItem.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/InventoryItem.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/Helper.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/Helper.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/Input/InputHandler.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/Input/InputHandler.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/ViewParent.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/ViewParent.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/EditorInstance.json" afterPath="$PROJECT_DIR$/Night Unity Files/Library/EditorInstance.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WeaponCsvToXml.py" afterPath="$PROJECT_DIR$/WeaponCsvToXml.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,7 +71,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Night-V8$CsvToXml.coverage" NAME="CsvToXml Coverage Results" MODIFIED="1507202347152" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Night-V8$WeaponCsvToXml.coverage" NAME="WeaponCsvToXml Coverage Results" MODIFIED="1507814921567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Night-V8$WeaponCsvToXml.coverage" NAME="WeaponCsvToXml Coverage Results" MODIFIED="1509975345546" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -24,15 +79,14 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="WeaponCsvToXml.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="WeaponCsvToXml.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/WeaponCsvToXml.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="398">
-              <caret line="95" column="78" lean-forward="false" selection-start-line="95" selection-start-column="78" selection-end-line="95" selection-end-column="78" />
+            <state relative-caret-position="306">
+              <caret line="48" column="38" lean-forward="false" selection-start-line="48" selection-start-column="38" selection-end-line="48" selection-end-column="38" />
               <folding>
                 <element signature="e#0#34#0" expanded="true" />
                 <element signature="e#191#441#0" expanded="false" />
-                <element signature="e#481#3235#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -41,8 +95,18 @@
       <file leaf-file-name="Gear.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/Gear.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="37" lean-forward="false" selection-start-line="0" selection-start-column="37" selection-end-line="0" selection-end-column="37" />
+            <state relative-caret-position="-1326">
+              <caret line="3" column="10" lean-forward="false" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WeaponClasses.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/WeaponClasses.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="408">
+              <caret line="24" column="38" lean-forward="true" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -64,6 +128,7 @@
       <find>get_value(self.sheet</find>
       <find>write_tag</find>
       <find>name</find>
+      <find>write_stat_law</find>
     </findStrings>
     <replaceStrings>
       <replace>get_value(weapon_sheet,</replace>
@@ -78,9 +143,9 @@
         <option value="$PROJECT_DIR$/WeaponBalance.xml" />
         <option value="$PROJECT_DIR$/CsvToXml.py" />
         <option value="$PROJECT_DIR$/WeaponBalance.csv" />
+        <option value="$PROJECT_DIR$/WeaponCsvToXml.py" />
         <option value="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Gear.xml" />
         <option value="$PROJECT_DIR$/Night Unity Files/Assets/Resources/WeaponClasses.xml" />
-        <option value="$PROJECT_DIR$/WeaponCsvToXml.py" />
       </list>
     </option>
   </component>
@@ -91,7 +156,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1912" />
+    <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
     <option name="height" value="1066" />
@@ -111,8 +176,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -181,6 +244,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -466,7 +531,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1912" y="-8" width="1936" height="1066" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12708333" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -507,7 +572,25 @@
           <folding>
             <element signature="e#0#34#0" expanded="true" />
             <element signature="e#191#441#0" expanded="false" />
-            <element signature="e#481#3235#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/Gear.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="37" lean-forward="false" selection-start-line="0" selection-start-column="37" selection-end-line="0" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WeaponCsvToXml.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+            <element signature="e#191#441#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -519,7 +602,6 @@
           <folding>
             <element signature="e#0#34#0" expanded="true" />
             <element signature="e#191#441#0" expanded="false" />
-            <element signature="e#481#3235#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -539,7 +621,6 @@
           <folding>
             <element signature="e#0#34#0" expanded="true" />
             <element signature="e#191#441#0" expanded="false" />
-            <element signature="e#481#3235#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -559,7 +640,6 @@
           <folding>
             <element signature="e#0#34#0" expanded="true" />
             <element signature="e#191#441#0" expanded="false" />
-            <element signature="e#481#3235#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -579,7 +659,6 @@
           <folding>
             <element signature="e#0#34#0" expanded="true" />
             <element signature="e#191#441#0" expanded="false" />
-            <element signature="e#481#3235#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -599,7 +678,6 @@
           <folding>
             <element signature="e#0#34#0" expanded="true" />
             <element signature="e#191#441#0" expanded="false" />
-            <element signature="e#481#3235#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -619,31 +697,30 @@
     <entry file="file://$PROJECT_DIR$/WeaponBalance.xml" />
     <entry file="file://$PROJECT_DIR$/CsvToXml.py" />
     <entry file="file://$PROJECT_DIR$/WeaponBalance.csv" />
-    <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/WeaponClasses.xml">
+    <entry file="file://$PROJECT_DIR$/WeaponCsvToXml.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1309">
-          <caret line="77" column="36" lean-forward="true" selection-start-line="77" selection-start-column="36" selection-end-line="77" selection-end-column="36" />
-          <folding />
+        <state relative-caret-position="306">
+          <caret line="48" column="38" lean-forward="false" selection-start-line="48" selection-start-column="38" selection-end-line="48" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+            <element signature="e#191#441#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/Gear.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="37" lean-forward="false" selection-start-line="0" selection-start-column="37" selection-end-line="0" selection-end-column="37" />
+        <state relative-caret-position="-1326">
+          <caret line="3" column="10" lean-forward="false" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WeaponCsvToXml.py">
+    <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/WeaponClasses.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="398">
-          <caret line="95" column="78" lean-forward="false" selection-start-line="95" selection-start-column="78" selection-end-line="95" selection-end-column="78" />
-          <folding>
-            <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#191#441#0" expanded="false" />
-            <element signature="e#481#3235#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="408">
+          <caret line="24" column="38" lean-forward="true" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
+          <folding />
         </state>
       </provider>
     </entry>

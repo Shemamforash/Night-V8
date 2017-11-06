@@ -9,6 +9,10 @@
         Reload,
         Vertical,
         Horizontal,
-        Sprint
+        Sprint,
+        SkillOne,
+        SkillTwo,
+        SkillThree,
+        SkillFour
     }
 }

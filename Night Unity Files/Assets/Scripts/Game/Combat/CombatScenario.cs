@@ -31,7 +31,7 @@ namespace Game.Combat
             CombatScenario scenario = new CombatScenario();
             for (int i = 0; i < size; ++i)
             {
-                int rand = Random.Range(0, 3);
+                int rand = Random.Range(0, 2);
                 switch (rand)
                 {
                     case 0:

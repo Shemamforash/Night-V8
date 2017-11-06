@@ -6,7 +6,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public abstract class InventoryItem : MyGameObject
     {
-        protected InventoryItem(string name, GameObjectType type, float weight, Inventory inventory = null) : base(name, type, weight, inventory)
+        protected InventoryItem(string name, GameObjectType type, float weight, Inventory parentInventory = null) : base(name, type, weight, parentInventory)
         {
         }
 

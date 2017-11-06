@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Security;
-using Game.Combat.Weapons;
 using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper;

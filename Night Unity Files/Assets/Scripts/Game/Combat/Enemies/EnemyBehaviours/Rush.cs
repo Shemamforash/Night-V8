@@ -9,12 +9,12 @@
         public override void Enter()
         {
             SetStatusText("Charging");
-            EnemyCombatController.StartSprinting();
+//            EnemyCombatController.StartSprinting();
         }
 
         public override void Update()
         {
-            EnemyCombatController.Approach();
+//            EnemyCombatController.Approach();
             if (Relation.Distance.GetCurrentValue() == 0)
             {
                 SelectRandomTransition();
@@ -23,7 +23,7 @@
 
         public override void Exit()
         {
-            EnemyCombatController.StopSprinting();
+//            EnemyCombatController.StopSprinting();
         }
     }
 }

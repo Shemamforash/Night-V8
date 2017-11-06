@@ -19,24 +19,24 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             float range = EnemyWeapon.GetAttributeValue(AttributeType.Accuracy);
             if (distance > range)
             {
-                EnemyCombatController.Approach();
+//                EnemyCombatController.Approach();
             }
             else if (distance < range * 0.2f)
             {
-                EnemyCombatController.Retreat();
+//                EnemyCombatController.Retreat();
             }
             else if (distance <= range * 0.8f)
             {
                 if (EnemyWeapon.GetRemainingAmmo() == 0)
                 {
-                    EnemyCombatController.ReloadWeapon();
-                } else if (!EnemyWeapon.Cocked)
-                {
-                    EnemyCombatController.CockWeapon();
-                }
-                else
-                {
-                    EnemyCombatController.FireWeapon();
+//                    EnemyCombatController.ReloadWeapon();
+//                } else if (!EnemyWeapon.Cocked)
+//                {
+//                    EnemyCombatController.CockWeapon();
+//                }
+//                else
+//                {
+//                    EnemyCombatController.FireWeapon();
                 }
             }
         }

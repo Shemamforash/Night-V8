@@ -17,22 +17,22 @@ public class RageBarController : MonoBehaviour
         _bars = Helper.FindAllComponentsInChildren<Image>(transform);
         _barFillAmount = 1f / _bars.Count;
         _rageFire = GameObject.Find("Rage Fire").GetComponent<ParticleSystem>();
-        SetRageBarFill(0f);
+        SetRageBarFill(0f, false);
     }
 
-    public static void SetRageBarFill(float value)
+    public static void SetRageBarFill(float value, bool rageActive)
     {
         if (_bars == null) return;
         Color targetColor = new Color(1, 1, 1, 1);
-        if (Math.Abs(value - 1) < 0.001f || CombatManager.RageActivated)
+        if (Math.Abs(value - 1) < 0.001f || rageActive)
         {
             targetColor = new Color(1, 0, 0, 1);
         }
-        if (CombatManager.RageActivated && !_rageFire.isPlaying)
+        if (rageActive && !_rageFire.isPlaying)
         {
             _rageFire.Play();
         }
-        else if(_rageFire.isPlaying && !CombatManager.RageActivated)
+        else if(_rageFire.isPlaying && !rageActive)
         {
             _rageFire.Stop();
         }

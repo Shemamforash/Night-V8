@@ -35,6 +35,11 @@ namespace Facilitating.UI.Elements
             _text.font = UiAppearanceController.Instance.UniversalFont;
         }
 
+        public void Text(string text)
+        {
+            _text.text = text;
+        }
+
         public void SetFont(TMP_FontAsset universalFont)
         {
             TryReplaceText();

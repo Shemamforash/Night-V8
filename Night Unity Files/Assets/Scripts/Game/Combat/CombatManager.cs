@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Characters;
-using Game.Combat.CombatStates;
 using Game.Combat.Enemies;
-using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -22,34 +20,12 @@ namespace Game.Combat
         public static readonly CooldownManager CombatCooldowns = new CooldownManager();
         private static readonly List<EnemyPlayerRelation> EnemyPlayerRelations = new List<EnemyPlayerRelation>();
         private static EnemyPlayerRelation _currentTarget;
-        private static readonly MyValue _rage = new MyValue(0, 0, 1);
-        private static bool _rageActivated;
-
-        private static void IncreaseRage()
+        
+        public static List<EnemyPlayerRelation> GetEnemyPlayerRelations()
         {
-            if (!_rageActivated)
-            {
-                _rage.Increment(0.05f);
-            }
+            return EnemyPlayerRelations;
         }
-
-        public static bool RageActivated => _rageActivated;
-
-        public static bool DecreaseRage()
-        {
-            float decreaseAmount = 0f;
-            if (_rage.GetCurrentValue() < 1 && !_rageActivated)
-            {
-                decreaseAmount = -0.04f;
-            }
-            else if (_rageActivated)
-            {
-                decreaseAmount = -0.1f;
-            }
-            _rage.Increment(decreaseAmount * Time.deltaTime);
-            return !_rage.ReachedMin();
-        }
-
+        
         private static EnemyPlayerRelation FindRelation(Enemy enemy)
         {
             return EnemyPlayerRelations.FirstOrDefault(e => e.Enemy == enemy);
@@ -81,16 +57,18 @@ namespace Game.Combat
         protected void Awake()
         {
             CombatUi = new CombatUi(gameObject);
-            _rage.AddOnValueChange(a => RageBarController.SetRageBarFill(a.GetCurrentValue()));
-            _rage.OnMin(EndRageMode);
         }
 
         public void Update()
         {
             CombatCooldowns.UpdateCooldowns();
             CombatUi.Update();
-            EnemyPlayerRelations.ForEach(r => r.UpdateRelation());
-            DecreaseRage();
+            EnemyPlayerRelations.ForEach(r =>
+            {
+                r.UpdateRelation();
+                r.Enemy.DecreaseRage();
+            });
+            _scenario.Player().DecreaseRage();
         }
 
         public static CombatScenario Scenario()
@@ -115,12 +93,15 @@ namespace Game.Combat
             CombatUi.Start(scenario);
             _scenario.Enemies().ForEach(CreateRelation);
             _currentTarget = EnemyPlayerRelations[0];
+            _scenario.Player().Rage.AddOnValueChange(a => RageBarController.SetRageBarFill(a.GetCurrentValue(), _scenario.Player().RageActivated()));
+            CombatUi.SetSkillCooldownNames();
         }
 
         public static void ExitCombat()
         {
             WorldState.UnPause();
             MenuStateMachine.States.NavigateToState("Game Menu");
+            _scenario.Player().Rage.ClearOnValueChange();
         }
 
         public static void TakeDamage(float f)
@@ -178,10 +159,10 @@ namespace Game.Combat
             }
             else
             {
-                int damage = c.Weapon().Fire(_currentTarget.Distance.GetCurrentValue(), _rageActivated);
+                int damage = c.Weapon().Fire(_currentTarget.Distance.GetCurrentValue(), c.RageActivated());
                 _currentTarget.Enemy.EnemyBehaviour.TakeFire();
                 if (damage == 0) return;
-                IncreaseRage();
+                c.IncreaseRage();
                 _currentTarget.Enemy.TakeDamage(damage);
             }
         }
@@ -198,24 +179,6 @@ namespace Game.Combat
             CombatUi.Remove(enemy);
         }
 
-        private static void EndRageMode()
-        {
-            if (!_rageActivated) return;
-            _rageActivated = false;
-            Weapon weapon = _scenario.Player().Weapon();
-            weapon.WeaponAttributes.ReloadSpeed.RemoveModifier(-0.5f);
-            weapon.WeaponAttributes.FireRate.RemoveModifier(0.5f);
-        }
-
-        public static void TryStartRageMode()
-        {
-            if (_rage.GetCurrentValue() != 1) return;
-            _rageActivated = true;
-            Weapon weapon = _scenario.Player().Weapon();
-            weapon.WeaponAttributes.ReloadSpeed.AddModifier(-0.5f);
-            weapon.WeaponAttributes.FireRate.AddModifier(0.5f);
-        }
-
         public static void DashForward(Character character)
         {
             Dash(character, Direction.Right);
@@ -224,7 +187,7 @@ namespace Game.Combat
         private static void Dash(Character c, Direction direction)
         {
             float dashAmount = 5;
-            if (direction == Direction.Left)
+            if (direction == Direction.Right)
             {
                 dashAmount = -dashAmount;
             }
@@ -242,6 +205,11 @@ namespace Game.Combat
         public static void DashBackward(Character character)
         {
             Dash(character, Direction.Left);
+        }
+
+        public static EnemyPlayerRelation GetCurrentTarget()
+        {
+            return _currentTarget;
         }
     }
 }

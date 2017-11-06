@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Dynamic;
-using Game.Combat.CombatStates;
+using System.Collections.Generic;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -15,21 +14,69 @@ namespace Game.Combat.Enemies.EnemyBehaviours
         private long _timeAtLastPlayerLastFire;
         private Direction _wanderDirection;
         private readonly bool _isAnimal, _isCoward;
-        private Cooldown _meleeCooldown, _wanderCooldown;
+        private Cooldown _meleeCooldown, _wanderCooldown, _grazeCooldown, _watchCooldown;
+        private Cooldown _currentIdleAction;
+        private readonly List<Action> _idleActions = new List<Action>();
 
         public GenericBehaviour(EnemyPlayerRelation relation) : base(nameof(GenericBehaviour), relation)
         {
             _damageBeforeCover = relation.Enemy._enemyHp.Max / relation.Enemy.BaseAttributes.GetCalculatedValue(AttributeType.Stability) * 10;
-            if (relation.Enemy.BaseAttributes.GetCalculatedValue(AttributeType.Intelligence) == 0)
-            {
-                _isAnimal = true;
-            }
-            if (relation.Enemy.BaseAttributes.GetCalculatedValue(AttributeType.Stability) == 0)
-            {
-                _isCoward = true;
-            }
+            _isAnimal = relation.Enemy.BaseAttributes.Intelligence.ReachedMin();
+            _isCoward = relation.Enemy.BaseAttributes.Stability.ReachedMin();
+            _idleActions.Add(Wander);
             SetMeleeCooldown();
             SetWanderCooldown();
+            SetGrazeCooldown();
+            SetWatchCooldown();
+            _currentIdleAction = _wanderCooldown;
+        }
+
+        public void EnableGrazing()
+        {
+            _idleActions.Add(StartGrazing);
+        }
+
+        public void EnableWatching()
+        {
+            _idleActions.Add(StartWatching);
+        }
+
+        private void StartGrazing()
+        {
+            if (_grazeCooldown.Running()) return;
+            _grazeCooldown.Duration = Random.Range(5, 10);
+            _grazeCooldown.Start();
+            _currentIdleAction = _grazeCooldown;
+        }
+        
+        private void StartWatching()
+        {
+            if (_watchCooldown.Running()) return;
+            _watchCooldown.Duration = Random.Range(5, 10);
+            _watchCooldown.Start();
+            _currentIdleAction = _watchCooldown;
+        }
+
+        private void SetGrazeCooldown()
+        {
+            _grazeCooldown = CombatManager.CombatCooldowns.CreateCooldown();
+            _grazeCooldown.SetStartAction(() =>
+            {
+                Relation.Enemy.AddVisionModifier(-0.5f);
+                SetStatusText("Grazing");
+            });
+            _grazeCooldown.SetEndAction(() => Relation.Enemy.RemoveVisionModifier(-0.5f), true);
+        }
+        
+        private void SetWatchCooldown()
+        {
+            _watchCooldown = CombatManager.CombatCooldowns.CreateCooldown();
+            _watchCooldown.SetStartAction(() =>
+            {
+                Relation.Enemy.AddVisionModifier(1f);
+                SetStatusText("Watching");
+            });
+            _watchCooldown.SetEndAction(() => Relation.Enemy.RemoveVisionModifier(1f), true);
         }
 
         private void SetMeleeCooldown()
@@ -38,13 +85,13 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             _meleeCooldown.SetStartAction(() => SetStatusText("Meleeing"));
             _meleeCooldown.SetEndAction(() =>
             {
-                if (Relation.Player.CombatController.InCover()) return;
+                if (Relation.Player.InCover()) return;
                 if (Relation.Distance > 0) return;
-                Relation.Player.CombatController.KnockDown();
+                Relation.Player.KnockDown();
                 Relation.Player.TakeDamage(10);
             });
         }
-        
+
         private void SetWanderCooldown()
         {
             _wanderCooldown = CombatManager.CombatCooldowns.CreateCooldown();
@@ -53,11 +100,11 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             {
                 if (_wanderDirection == Direction.Left)
                 {
-                    EnemyCombatController.Retreat();
+                    Relation.Enemy.Retreat();
                 }
                 else
                 {
-                    EnemyCombatController.Approach();
+                    Relation.Enemy.Approach();
                 }
             });
         }
@@ -66,19 +113,19 @@ namespace Game.Combat.Enemies.EnemyBehaviours
         {
             if (_damageTakenSinceLastCover >= _damageBeforeCover)
             {
-                if (EnemyCombatController.InCover()) return;
-                EnemyCombatController.TakeCover();
+                if (Relation.Enemy.InCover()) return;
+                Relation.Enemy.TakeCover();
                 _damageTakenSinceLastCover = 0;
             }
         }
 
         private void CheckShouldLeaveCover()
         {
-            if (!EnemyCombatController.InCover()) return;
+            if (!Relation.Enemy.InCover()) return;
             long timeElapsed = Helper.TimeInMillis() - _timeAtLastPlayerLastFire;
             if (timeElapsed > 3000)
             {
-                EnemyCombatController.LeaveCover();
+                Relation.Enemy.LeaveCover();
             }
         }
 
@@ -95,7 +142,8 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             if (_isCoward)
             {
                 SetStatusText("Fleeing");
-                EnemyCombatController.Retreat();
+                Relation.Enemy.StartSprinting();
+                Relation.Enemy.Retreat();
                 return;
             }
             if (Relation.Distance.ReachedMin())
@@ -105,14 +153,14 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             else if (Relation.Distance < 20)
             {
                 SetStatusText("Charging");
-                EnemyCombatController.StartSprinting();
-                EnemyCombatController.Approach();
+                Relation.Enemy.StartSprinting();
+                Relation.Enemy.Approach();
             }
             else
             {
                 SetStatusText("Retreating");
-                EnemyCombatController.StopSprinting();
-                EnemyCombatController.Retreat();
+                Relation.Enemy.StopSprinting();
+                Relation.Enemy.Retreat();
             }
         }
 
@@ -146,7 +194,9 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             }
             else
             {
-                Wander();
+                _currentIdleAction.Update();
+                if (_currentIdleAction.Running()) return;
+                Helper.RandomInList(_idleActions)();
             }
         }
 
@@ -154,8 +204,9 @@ namespace Game.Combat.Enemies.EnemyBehaviours
         {
             if (_wanderCooldown.Running()) return;
             _wanderDirection = Random.Range(0, 2) == 0 ? Direction.Left : Direction.Right;
-            _wanderCooldown.SetDuration(Random.Range(3, 5));
+            _wanderCooldown.Duration = Random.Range(3, 5);
             _wanderCooldown.Start();
+            _currentIdleAction = _wanderCooldown;
         }
 
         public void TakeDamage(int amount)

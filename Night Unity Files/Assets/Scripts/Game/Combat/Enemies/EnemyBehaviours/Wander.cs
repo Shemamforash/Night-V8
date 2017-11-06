@@ -16,11 +16,11 @@ namespace Game.Combat.Enemies.EnemyBehaviours
         {
             if (_direction == Direction.Left)
             {
-                EnemyCombatController.Retreat();
+//                EnemyCombatController.Retreat();
             }
             else
             {
-                EnemyCombatController.Approach();
+//                EnemyCombatController.Approach();
             }
             Duration -= Time.deltaTime;
             if (Duration < 0)

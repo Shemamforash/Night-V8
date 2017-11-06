@@ -6,15 +6,16 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
     public class Cooldown
     {
         private float _startTime;
-        private float _duration;
-        private Action _startOfCooldown, _endOfCooldown;
+        public float Duration;
+        private Action _startOfCooldown, _endOfCooldown, _cancelCooldown;
         private Action<float> _duringCooldown;
         private CooldownManager _manager;
         private bool _finished, _started;
+        protected CooldownController Controller;
         
         public Cooldown(CooldownManager manager, float duration = 0)
         {
-            _duration = duration;
+            Duration = duration;
             _manager = manager;
         }
 
@@ -26,16 +27,27 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             _finished = false;
             _started = true;
         }
-        
+
         public void Restart()
         {
             Start();
         }
 
+        public void SetController(CooldownController controller)
+        {
+            Controller = controller;
+        }
+
         public void SetStartAction(Action a) => _startOfCooldown = a;
-        public void SetEndAction(Action a) => _endOfCooldown = a;
+
+        public void SetEndAction(Action a, bool isCancelAction = false)
+        {
+            if (isCancelAction) _cancelCooldown = a;
+            _endOfCooldown = a;
+        }
+
+        public void SetCancelAction(Action a) => _cancelCooldown = a;
         public void SetDuringAction(Action<float> a) => _duringCooldown = a;
-        public void SetDuration(float duration) => _duration = duration;
 
         public bool Finished()
         {
@@ -50,20 +62,23 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         public void Cancel()
         {
             _finished = true;
+            _cancelCooldown?.Invoke();
             _manager.RemoveCooldown(this);
         }
 
         public void Update()
         {
             float elapsed = Time.time - _startTime;
-            if (elapsed >= _duration)
+            if (elapsed >= Duration)
             {
                 _finished = true;
                 _started = false;
+                Controller?.Reset();
                 _endOfCooldown?.Invoke();
                 return;
             }
-            _duringCooldown?.Invoke(_duration - elapsed);
+            _duringCooldown?.Invoke(Duration - elapsed);
+            Controller?.UpdateCooldownFill(1 - (Duration - elapsed) / Duration);
         }
     }
 }

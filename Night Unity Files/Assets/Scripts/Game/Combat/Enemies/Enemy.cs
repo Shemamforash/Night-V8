@@ -16,8 +16,8 @@ namespace Game.Combat.Enemies
         public MyValue _enemyHp;
         private MyValue _sightToCharacter;
         private MyValue _exposure;
-        public CharacterAttribute VisionRange = new CharacterAttribute(AttributeType.Vision, 30f);
-        public CharacterAttribute DetectionRange = new CharacterAttribute(AttributeType.Detection, 15f);
+        public readonly CharacterAttribute VisionRange = new CharacterAttribute(AttributeType.Vision, 30f);
+        public readonly CharacterAttribute DetectionRange = new CharacterAttribute(AttributeType.Detection, 15f);
         protected readonly ValueTextLink<string> ActionTextLink = new ValueTextLink<string>();
         protected readonly ValueTextLink<string> AlertTextLink = new ValueTextLink<string>();
 
@@ -33,6 +33,18 @@ namespace Game.Combat.Enemies
         public bool IsAlerted()
         {
             return _alerted;
+        }
+
+        public void AddVisionModifier(float amount)
+        {
+            VisionRange.AddModifier(amount);
+            DetectionRange.AddModifier(amount);
+        }
+
+        public void RemoveVisionModifier(float amount)
+        {
+            VisionRange.RemoveModifier(amount);
+            DetectionRange.RemoveModifier(amount);
         }
 
         public void Alert()
@@ -89,7 +101,6 @@ namespace Game.Combat.Enemies
         public virtual void InitialiseBehaviour(EnemyPlayerRelation relation)
         {
             _relation = relation;
-            Debug.Log(_relation);
             EnemyBehaviour = new GenericBehaviour(relation);
         }
 
@@ -100,8 +111,8 @@ namespace Game.Combat.Enemies
 
         public override void TakeDamage(int amount)
         {
-            if (CombatController.InCover()) return;
-            if (CombatController.InPartialCover()) amount /= 2;
+            if (InCover()) return;
+            if (InPartialCover()) amount /= 2;
             Alert();
             _enemyHp.SetCurrentValue(_enemyHp.GetCurrentValue() - amount);
             EnemyBehaviour.TakeDamage(amount);

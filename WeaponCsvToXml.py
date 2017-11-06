@@ -16,7 +16,7 @@ class XMLWriter:
 
 class WeaponImporter(XMLWriter):
     def __init__(self):
-        super(WeaponImporter, self).__init__("New Weapon Data", "WeaponClasses")
+        super(WeaponImporter, self).__init__("Weapon Data V3", "WeaponClasses")
         write_tag(self, "Weapons", self.read)
 
     def write_weapon_stats(self, row):
@@ -36,28 +36,27 @@ class WeaponImporter(XMLWriter):
             subtype_row += 1
 
     def read_weapon_modifiers(self):
-        for i in range(46, 59):
+        for i in range(36, 49):
             modifier_name = get_value(self, "B", i)
             write_tag(self, "Modifier", self.write_weapon_stats, [i], ["name"], [modifier_name])
 
     def read_weapon_classes(self):
-        for i in range(1, 6):
-            row_no = i * 3
+        for row_no in range(3, 8):
             weapon_class = get_value(self, "A", row_no)
             manual_allowed = str(get_value(self, "B", row_no))
-            write_tag(self, "Class", self.read_single_class, [row_no, i], ["name", "manualAllowed"], [weapon_class, manual_allowed])
+            write_tag(self, "Class", self.read_single_class, [row_no], ["name", "manualAllowed"], [weapon_class, manual_allowed])
 
-    def read_single_class(self, row_no, i):
+    def read_single_class(self, row_no):
         write_tag(self, "BaseStats", self.write_base_stats, [row_no])
-        self.read_weapon_subtypes(i * 5 + 16)
+        self.read_weapon_subtypes(row_no * 5 - 4)
 
     def write_base_stats(self, row_no):
-        write_tag(self, "Damage", self.write_stat_law, ["E", "F", row_no])
-        write_tag(self, "Accuracy", self.write_stat_law, ["I", "J", row_no])
-        write_tag(self, "FireRate", self.write_stat_law, ["M", "N", row_no])
-        write_tag(self, "Handling", self.write_stat_law, ["Q", "R", row_no])
-        write_tag(self, "ReloadSpeed", self.write_stat_law, ["U", "V", row_no])
-        write_tag(self, "CriticalChance", self.write_stat_law, ["Y", "Z", row_no])
+        write_single_value(self, "Damage", str(get_value(self, "D", row_no)))
+        write_single_value(self, "Accuracy", str(get_value(self, "E", row_no)))
+        write_single_value(self, "FireRate", str(get_value(self, "F", row_no)))
+        write_single_value(self, "Handling", str(get_value(self, "G", row_no)))
+        write_single_value(self, "ReloadSpeed", str(get_value(self, "H", row_no)))
+        write_single_value(self, "CriticalChance", str(get_value(self, "I", row_no)))
 
     def read(self):
         write_tag(self, "Classes", self.read_weapon_classes)

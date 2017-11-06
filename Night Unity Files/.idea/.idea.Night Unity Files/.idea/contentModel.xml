@@ -6,7 +6,6 @@
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="CooldownController.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="HealthBarController.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
@@ -92,9 +91,6 @@
             <e p="Combat" t="Include">
               <e p="CombatManager.cs" t="Include" />
               <e p="CombatScenario.cs" t="Include" />
-              <e p="CombatStates" t="Include">
-                <e p="CombatController.cs" t="Include" />
-              </e>
               <e p="CombatTester.cs" t="Include" />
               <e p="CombatUI.cs" t="Include" />
               <e p="Enemies" t="Include">
@@ -120,6 +116,9 @@
                 <e p="EnemyView.cs" t="Include" />
               </e>
               <e p="EnemyPlayerRelation.cs" t="Include" />
+              <e p="Skills" t="Include">
+                <e p="Skill.cs" t="Include" />
+              </e>
             </e>
             <e p="Gear" t="Include">
               <e p="Armour" t="Include">
@@ -177,6 +176,7 @@
               </e>
               <e p="CooldownSystem" t="Include">
                 <e p="Cooldown.cs" t="Include" />
+                <e p="CooldownController.cs" t="Include" />
                 <e p="CooldownManager.cs" t="Include" />
               </e>
               <e p="InventorySystem" t="Include">

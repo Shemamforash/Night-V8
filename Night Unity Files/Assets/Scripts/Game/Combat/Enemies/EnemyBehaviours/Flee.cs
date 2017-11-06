@@ -9,12 +9,12 @@
         public override void Enter()
         {
             SetStatusText("Fleeing");
-            EnemyCombatController.StartSprinting();
+//            EnemyCombatController.StartSprinting();
         }
 
         public override void Update()
         {
-            EnemyCombatController.Retreat();
+//            EnemyCombatController.Retreat();
         }
     }
 }

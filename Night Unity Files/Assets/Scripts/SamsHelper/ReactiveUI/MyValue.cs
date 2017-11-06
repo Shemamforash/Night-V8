@@ -60,6 +60,11 @@ namespace SamsHelper.ReactiveUI
             a(this);
             OnValueChange += a;
         }
+        
+        public void ClearOnValueChange()
+        {
+            OnValueChange = null;
+        }
 
         private void BroadcastChange()
         {

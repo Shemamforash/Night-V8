@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
-using Game.Gear;
-using Game.Gear.Weapons;
-using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
-namespace Game.Combat.Weapons
+namespace Game.Gear.Weapons
 {
     public class WeaponClass
     {
-        public ScaleableValue Damage, Accuracy, FireRate, Handling, ReloadSpeed, CriticalChance;
+        public int Damage, Accuracy, Handling, CriticalChance;
+        public float ReloadSpeed, FireRate;
         public readonly bool CanBeManual;
         public readonly WeaponType Type;
         private readonly List<WeaponModifier> _subtypes = new List<WeaponModifier>();

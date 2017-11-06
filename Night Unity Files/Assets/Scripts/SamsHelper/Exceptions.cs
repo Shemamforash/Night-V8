@@ -256,5 +256,31 @@ namespace SamsHelper
         {
             public override string Message => "Default state not set.";
         }
+
+        public class ChildNotFoundException : Exception
+        {
+            private readonly string _parent, _target;
+
+            public ChildNotFoundException(string parent, string target)
+            {
+                _parent = parent;
+                _target = target;
+            }
+
+            public override string Message => "Could not find child '" + _target + "' under '" + _parent + "'.";
+        }
+
+        public class ComponentNotFoundException : Exception
+        {
+            private readonly string _parent, _componentType;
+
+            public ComponentNotFoundException(string parent, Type componentType)
+            {
+                _parent = parent;
+                _componentType = componentType.ToString();
+            }
+
+            public override string Message => "'" + _parent + "' does not have component '" + _componentType + "' but you are trying to access it.";
+        }
     }
 }

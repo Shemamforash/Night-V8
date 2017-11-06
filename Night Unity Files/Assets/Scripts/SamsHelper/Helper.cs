@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = System.Object;
 using Random = UnityEngine.Random;
 
 namespace SamsHelper
@@ -95,7 +97,16 @@ namespace SamsHelper
             }
             Transform t = g.transform;
             Transform foundChild = FindChildWithName(t, name);
-            return foundChild != null ? foundChild.GetComponent<T>() : null;
+            if (foundChild == null)
+            {
+                throw new Exceptions.ChildNotFoundException(g.name, name);
+            }
+            T foundComponent = foundChild.GetComponent<T>();
+            if (foundComponent == null)
+            {
+                throw new Exceptions.ComponentNotFoundException(foundChild.name, foundComponent.GetType());
+            }
+            return foundComponent;
         }
 
         public static GameObject FindChildWithName(GameObject g, string name)
@@ -222,6 +233,11 @@ namespace SamsHelper
                 return false;
             }
             return true;
+        }
+
+        public static T RandomInList<T>(List<T> arr)
+        {
+            return arr[Random.Range(0, arr.Count)];
         }
     }
 }

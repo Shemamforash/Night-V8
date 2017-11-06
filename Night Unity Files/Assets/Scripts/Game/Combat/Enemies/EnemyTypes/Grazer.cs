@@ -1,5 +1,4 @@
-﻿using Game.Combat.Enemies.EnemyBehaviours;
-using UnityEngine;
+﻿using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.EnemyTypes
 {
@@ -9,6 +8,12 @@ namespace Game.Combat.Enemies.EnemyTypes
         {
             BaseAttributes.Intelligence.SetCurrentValue(0);
             BaseAttributes.Stability.SetCurrentValue(0);
+        }
+
+        public override void InitialiseBehaviour(EnemyPlayerRelation relation)
+        {
+            base.InitialiseBehaviour(relation);
+            EnemyBehaviour.EnableGrazing();
         }
 
 //        public override void InitialiseBehaviour(EnemyPlayerRelation relation)

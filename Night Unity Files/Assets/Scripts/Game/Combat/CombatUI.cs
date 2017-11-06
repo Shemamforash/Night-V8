@@ -36,7 +36,11 @@ namespace Game.Combat
         private readonly List<GameObject> _magazineAmmo = new List<GameObject>();
         private Character _character;
         private float _criticalTarget;
-        public readonly CooldownController DashCooldownController;
+        public readonly CooldownController DashCooldownController, 
+            ClassSkillOneCooldownController, 
+            ClassSkillTwoCooldownController, 
+            WeaponSkillOneCooldownController, 
+            WeaponSkillTwoCooldownController;
 
         public CombatUi(GameObject combatMenu)
         {
@@ -57,8 +61,13 @@ namespace Game.Combat
 
             GameObject cooldownContainer = Helper.FindChildWithName(playerContainer, "Cooldowns");
             DashCooldownController = Helper.FindChildWithName<CooldownController>(cooldownContainer, "Dash");
-            DashCooldownController.UpdateCooldownFill(1);
 
+            ClassSkillOneCooldownController = Helper.FindChildWithName<CooldownController>(cooldownContainer, "Skill 1");
+            ClassSkillTwoCooldownController = Helper.FindChildWithName<CooldownController>(cooldownContainer, "Skill 2");
+            WeaponSkillOneCooldownController = Helper.FindChildWithName<CooldownController>(cooldownContainer, "Skill 3");
+            WeaponSkillTwoCooldownController = Helper.FindChildWithName<CooldownController>(cooldownContainer, "Skill 4");
+
+            
             _characterHealthSlider = Helper.FindChildWithName<Slider>(playerContainer, "Health Bar");
         }
 
@@ -145,10 +154,19 @@ namespace Game.Combat
             ResetMagazine(_character.Weapon().Capacity);
             UpdateMagazine(_character.Weapon().GetRemainingAmmo());
             _characterName.text = _character.Name;
-            _weaponNameText.text = _character.Weapon().Name;
+            _weaponNameText.text = _character.Weapon().Name + " (" + _character.Weapon().GetSummary() + ")";
             _enemyList.SetItems(new List<MyGameObject>(scenario.Enemies()));
             _enemyList.GetItems().ForEach(e => e.OnEnter(() => SetTarget((Enemy) e.GetLinkedObject()))); //CombatManager.SetCurrentTarget(e.GetLinkedObject())));
             _enemyList.GetItems()[0].GetNavigationButton().GetComponent<Button>().Select();
+        }
+
+        public void SetSkillCooldownNames()
+        {
+            Player p = CombatManager.Scenario().Player();
+            if (p.ClassSkillOne != null) ClassSkillOneCooldownController.Text(p.ClassSkillOne.Name);
+            if (p.ClassSkillTwo != null) ClassSkillTwoCooldownController.Text(p.ClassSkillTwo.Name);
+            if (p.WeaponSkillOne != null) WeaponSkillOneCooldownController.Text(p.WeaponSkillOne.Name);
+            if (p.WeaponSkillTwo != null) WeaponSkillTwoCooldownController.Text(p.WeaponSkillTwo.Name);
         }
 
         private void SetTarget(Enemy e)

@@ -29,7 +29,7 @@ namespace Game.World
         
         public void AddTestingResources(int noItems = 0)
         {
-            IncrementResource(InventoryResourceType.Ammo, 100);
+            IncrementResource(InventoryResourceType.Ammo, 1000);
             IncrementResource(InventoryResourceType.Food, 100);
             IncrementResource(InventoryResourceType.Fuel, 100);
             IncrementResource(InventoryResourceType.Scrap, 100);

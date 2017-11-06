@@ -1,6 +1,4 @@
-﻿using Game.Combat.CombatStates;
-using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.Input;
+﻿using SamsHelper.BaseGameFunctionality.Basic;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.EnemyBehaviours
@@ -28,7 +26,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         public override void Update()
         {
-            EnemyCombatController.Retreat();
+//            EnemyCombatController.Retreat();
             if (Relation.Distance.GetCurrentValue() >= _targetDistance)
             {
                 SelectRandomTransition();

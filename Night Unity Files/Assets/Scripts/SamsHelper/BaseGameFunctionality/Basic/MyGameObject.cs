@@ -10,14 +10,14 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public string Name { get; set; }
         private string _extendedName;
         public float Weight { get; set; }
-        public Inventory Inventory { get; set; }
+        public Inventory ParentInventory { get; set; }
         public readonly GameObjectType Type;
 
-        protected MyGameObject(string name, GameObjectType type, float weight = 0, Inventory inventory = null)
+        protected MyGameObject(string name, GameObjectType type, float weight = 0, Inventory parentInventory = null)
         {
             Name = name;
             Weight = weight;
-            Inventory = inventory;
+            ParentInventory = parentInventory;
             Type = type;
         }
 
