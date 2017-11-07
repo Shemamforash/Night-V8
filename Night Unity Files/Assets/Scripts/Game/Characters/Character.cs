@@ -350,16 +350,26 @@ namespace Game.Characters
 
         //FIRING
 
-        protected virtual void FireWeapon()
+        public bool CanFire()
         {
-            if (Immobilised()) return;
-            if (!Weapon().Cocked) return;
-            if (Weapon().Empty()) return;
-            if (!Weapon().Cocked) return;
+            return !Immobilised() && Weapon().Cocked && !Weapon().Empty() && FireRateElapsedTimeMet();
+        }
+
+        private bool FireRateElapsedTimeMet()
+        {
             long timeElapsed = Helper.TimeInMillis() - _timeAtLastFire;
             float targetTime = 1f / Weapon().GetAttributeValue(AttributeType.FireRate) * 1000;
-            if (timeElapsed < targetTime) return;
-            CombatManager.FireWeapon(this);
+            return !(timeElapsed < targetTime);
+        }
+
+        public virtual void FireWeapon(int damage = -1)
+        {
+            if (!CanFire()) return;
+            IncreaseRage();
+            EnemyPlayerRelation relation = CombatManager.FindRelation(this);
+            if(damage == -1) damage = Weapon().GetShotDamage(relation.Distance.GetCurrentValue(), _rageActivated);
+            relation.GetTarget(this).TakeDamage(damage);
+            Weapon().Fire();
             if (Weapon().Automatic)
             {
                 _timeAtLastFire = Helper.TimeInMillis();

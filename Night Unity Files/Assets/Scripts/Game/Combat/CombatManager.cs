@@ -25,10 +25,11 @@ namespace Game.Combat
         {
             return EnemyPlayerRelations;
         }
-        
-        private static EnemyPlayerRelation FindRelation(Enemy enemy)
+
+        public static EnemyPlayerRelation FindRelation(Character character)
         {
-            return EnemyPlayerRelations.FirstOrDefault(e => e.Enemy == enemy);
+            if(character is Enemy) return EnemyPlayerRelations.FirstOrDefault(e => e.Enemy == character);
+            return _currentTarget;
         }
 
         public static void IncreaseDistance(Character c, float amount)
@@ -94,7 +95,6 @@ namespace Game.Combat
             _scenario.Enemies().ForEach(CreateRelation);
             _currentTarget = EnemyPlayerRelations[0];
             _scenario.Player().Rage.AddOnValueChange(a => RageBarController.SetRageBarFill(a.GetCurrentValue(), _scenario.Player().RageActivated()));
-            CombatUi.SetSkillCooldownNames();
         }
 
         public static void ExitCombat()
@@ -104,7 +104,7 @@ namespace Game.Combat
             _scenario.Player().Rage.ClearOnValueChange();
         }
 
-        public static void TakeDamage(float f)
+        public static void SetPlayerHealthText(float f)
         {
             _strengthText.SetCurrentValue(_strengthText.GetCurrentValue() - f);
         }
@@ -149,28 +149,11 @@ namespace Game.Combat
             }
         }
 
-        public static void FireWeapon(Character c)
-        {
-            Enemy enemy = c as Enemy;
-            if (enemy != null)
-            {
-                EnemyPlayerRelation relation = FindRelation(enemy);
-                FindRelation(enemy).Player.TakeDamage(enemy.Weapon().Fire(relation.Distance.GetCurrentValue(), false));
-            }
-            else
-            {
-                int damage = c.Weapon().Fire(_currentTarget.Distance.GetCurrentValue(), c.RageActivated());
-                _currentTarget.Enemy.EnemyBehaviour.TakeFire();
-                if (damage == 0) return;
-                c.IncreaseRage();
-                _currentTarget.Enemy.TakeDamage(damage);
-            }
-        }
-
         public static void SetCurrentTarget(MyGameObject enemy)
         {
             _currentTarget.Enemy.EnemyView().MarkUnselected();
             _currentTarget = FindRelation((Enemy) enemy);
+            _currentTarget.Enemy.EnemyView().MarkSelected();
         }
 
         public static void Flee(Enemy enemy)

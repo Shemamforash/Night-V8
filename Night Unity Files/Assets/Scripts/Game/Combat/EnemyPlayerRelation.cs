@@ -41,6 +41,7 @@ namespace Game.Combat
 //            PlayerCover.AddOnValueChange(a => UpdatePlayerCover());
         }
 
+
         private void SetDistanceData()
         {
             Distance.SetCurrentValue(Random.Range(25, 50));
@@ -88,6 +89,12 @@ namespace Game.Combat
             {
                 Enemy.UpdateBehaviour();
             }
+        }
+
+        public Character GetTarget(Character origin)
+        {
+            if (origin == Enemy) return Player;
+            return Enemy;
         }
     }
 }

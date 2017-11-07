@@ -19,7 +19,6 @@ namespace Game.Combat.Enemies
         public readonly CharacterAttribute VisionRange = new CharacterAttribute(AttributeType.Vision, 30f);
         public readonly CharacterAttribute DetectionRange = new CharacterAttribute(AttributeType.Detection, 15f);
         protected readonly ValueTextLink<string> ActionTextLink = new ValueTextLink<string>();
-        protected readonly ValueTextLink<string> AlertTextLink = new ValueTextLink<string>();
 
         private const float _movementSpeed = 1;
         private EnemyView _enemyView;
@@ -59,25 +58,20 @@ namespace Game.Combat.Enemies
             ActionTextLink.Value(action);
         }
 
-        private void SetAlertText(string alert)
-        {
-            AlertTextLink.Value(alert);
-        }
-
         private void UpdateDetection()
         {
             if (_relation.Distance < DetectionRange || _alerted)
             {
-                SetAlertText("Detected");
+                _enemyView.SetDetected();
                 Alert();
                 return;
             }
             if (_relation.Distance < VisionRange)
             {
-                SetAlertText("Alerted");
+                _enemyView.SetAlert();
                 return;
             }
-            SetAlertText("Unaware");
+            _enemyView.SetUnaware();
         }
 
         protected void SetReciprocralBehaviour(EnemyBehaviour behaviour1, EnemyBehaviour behaviour2)
@@ -111,6 +105,8 @@ namespace Game.Combat.Enemies
 
         public override void TakeDamage(int amount)
         {
+            EnemyBehaviour.TakeFire();
+            if (amount == 0) return;
             if (InCover()) return;
             if (InPartialCover()) amount /= 2;
             Alert();
@@ -120,6 +116,7 @@ namespace Game.Combat.Enemies
 
         public override void Kill()
         {
+            _enemyView.MarkDead();
             CombatManager.Flee(this);
         }
 
@@ -133,7 +130,6 @@ namespace Game.Combat.Enemies
                 _enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString();
             });
             ActionTextLink.AddTextObject(_enemyView.ActionText);
-            AlertTextLink.AddTextObject(_enemyView.AlertText);
             return _enemyView;
         }
 

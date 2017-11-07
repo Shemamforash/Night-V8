@@ -21,10 +21,6 @@ namespace Game.Characters
         public Region CurrentRegion;
         public CharacterView CharacterView;
         public readonly SurvivalAttributes SurvivalAttributes;
-        public Skill ClassSkillOne;
-        public Skill ClassSkillTwo;
-        public Skill WeaponSkillOne;
-        public Skill WeaponSkillTwo;
 
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait) : base(name)
@@ -140,9 +136,8 @@ namespace Game.Characters
                 case WeaponType.Pistol:
                     break;
                 case WeaponType.Rifle:
-                    WeaponSkillOne?.Cancel();
-                    WeaponSkillOne = new Skill.PiercingShot(this);
-                    WeaponSkillOne.SetController(CombatManager.CombatUi.WeaponSkillOneCooldownController);
+                    CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.PiercingShot(this));
+                    CombatManager.CombatUi.SkillBar.BindSkill(4, new Skill.FullBlast(this));
                     break;
                 case WeaponType.Shotgun:
                     break;
@@ -195,9 +190,9 @@ namespace Game.Characters
 
         //FIRING
 
-        protected override void FireWeapon()
+        public override void FireWeapon(int damage = -1)
         {
-            base.FireWeapon();
+            base.FireWeapon(damage);
             UpdateMagazineUi();
         }
 
@@ -231,17 +226,6 @@ namespace Game.Characters
                 case InputAxis.Sprint:
                     StartSprinting();
                     break;
-                case InputAxis.SkillOne:
-                    break;
-                case InputAxis.SkillTwo:
-                    break;
-                case InputAxis.SkillThree:
-                    WeaponSkillOne?.Activate();
-                    break;
-                case InputAxis.SkillFour:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(axis), axis, null);
             }
         }
 

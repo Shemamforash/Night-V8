@@ -2,6 +2,7 @@
 using System.Net;
 using Game.Characters;
 using Game.Combat.Enemies;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.ReactiveUI;
 
@@ -37,12 +38,18 @@ namespace Game.Combat.Skills
             Start();
         }
 
-        public virtual void OnFire()
+        protected virtual void OnFire()
         {
             if (_character.Weapon().Empty())
             {
                 Deactivate();
             }
+        }
+
+        public override void SetController(CooldownController controller)
+        {
+            base.SetController(controller);
+            controller.Text(Name);
         }
 
         public class PiercingShot : Skill
@@ -52,11 +59,12 @@ namespace Game.Combat.Skills
                 Duration = 2f;
             }
 
-            public override void OnFire()
+            protected override void OnFire()
             {
-                EnemyPlayerRelation relation = CombatManager.GetCurrentTarget();
                 base.OnFire();
-                int damage = _character.Weapon().Fire(relation.Distance.GetCurrentValue(), _character.RageActivated(), true);
+                EnemyPlayerRelation relation = CombatManager.GetCurrentTarget();
+                _character.FireWeapon();
+                int damage = _character.Weapon().GetShotDamage(relation.Distance.GetCurrentValue(), _character.RageActivated(), true);
                 foreach (EnemyPlayerRelation e in CombatManager.GetEnemyPlayerRelations())
                 {
                     if (e.Distance > relation.Distance)
@@ -64,6 +72,24 @@ namespace Game.Combat.Skills
                         e.Enemy.TakeDamage(damage);
                     }
                 }
+            }
+        }
+
+        public class FullBlast : Skill
+        {
+            public FullBlast(Character character) : base(character, true, nameof(FullBlast))
+            {
+            }
+
+            protected override void OnFire()
+            {
+                base.OnFire();
+                EnemyPlayerRelation relation = CombatManager.GetCurrentTarget();
+                int rounds = _character.Weapon().GetRemainingAmmo();
+                int damage = _character.Weapon().GetShotDamage(relation.Distance.GetCurrentValue(), true, true);
+                damage *= rounds;
+                relation.Enemy.TakeDamage(damage);
+                _character.Weapon().AmmoInMagazine.SetCurrentValue(0);
             }
         }
     }

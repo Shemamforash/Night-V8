@@ -122,14 +122,6 @@ namespace Game.Gear.Weapons
             return WeaponClass.Type.ToString();
         }
 
-        public float HitProbability(float distanceToTarget)
-        {
-            float range = distanceToTarget;
-            float accuracy = WeaponAttributes.Accuracy.GetCalculatedValue();
-            float hitProbability = Mathf.Pow(accuracy / range, 2);
-            return hitProbability;
-        }
-
         private float LogAndClamp(float normalisedRange, float extra = 0)
         {
             float probability = (float) (-0.35f * Math.Log(normalisedRange));
@@ -164,7 +156,7 @@ namespace Game.Gear.Weapons
             float probability = LogAndClamp(normalisedRange);
             return probability;
         }
-        
+
         private float GetPelletDamage(float missProbability, float criticalProbability, bool rageModeOn)
         {
             if (Random.Range(0f, 1f) <= missProbability)
@@ -181,23 +173,27 @@ namespace Game.Gear.Weapons
             return pelletDamage;
         }
 
+        public int GetShotDamage(float distanceToTarget, bool rageModeOn, bool guaranteeHit = false, bool guaranteeCritical = false)
+        {
+            float damageDealt = 0f;
+            for (int i = 0; i < Pellets; ++i)
+            {
+                float missProbability = guaranteeHit ? 0 : CalculateMissProbability(distanceToTarget);
+                float criticalProbability = guaranteeCritical ? 1 : CalculateCriticalProbability(distanceToTarget);
+                damageDealt += GetPelletDamage(missProbability, criticalProbability, rageModeOn);
+            }
+            return (int) damageDealt;
+        }
+
         //Returns damage
-        public int Fire(float distanceToTarget, bool rageModeOn, bool guaranteeHit = false, bool guaranteeCritical = false)
+        public void Fire()
         {
             if (AmmoInMagazine.GetCurrentValue() <= 0)
             {
                 throw new Exceptions.FiredWithNoAmmoException();
             }
-            AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() - 1);
+            AmmoInMagazine.Increment(-1);
             GunFire.Fire();
-            float damageDealt = 0f;
-            for (int i = 0; i < Pellets; ++i)
-            {
-                float missProbability = guaranteeHit ? 0 : CalculateMissProbability(distanceToTarget);
-                float criticalProbability = guaranteeCritical ?  1 : CalculateCriticalProbability(distanceToTarget);
-                damageDealt += GetPelletDamage(missProbability, criticalProbability, rageModeOn);
-            }
-            return (int) damageDealt;
         }
 
         public void Reload(Inventory inventory)

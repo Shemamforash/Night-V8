@@ -282,5 +282,18 @@ namespace SamsHelper
 
             public override string Message => "'" + _parent + "' does not have component '" + _componentType + "' but you are trying to access it.";
         }
+
+        public class SkillSlotOutOfRangeException : Exception
+        {
+            private readonly int _slot, _noSlots;
+
+            public SkillSlotOutOfRangeException(int slot, int noSlots)
+            {
+                _slot = slot;
+                _noSlots = noSlots;
+            }
+
+            public override string Message => "Tried to assign skill to slot " + _slot + " in skill bar of size " + _noSlots + ".";
+        }
     }
 }

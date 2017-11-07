@@ -33,7 +33,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             Start();
         }
 
-        public void SetController(CooldownController controller)
+        public virtual void SetController(CooldownController controller)
         {
             Controller = controller;
         }
