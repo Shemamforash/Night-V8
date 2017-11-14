@@ -1,4 +1,5 @@
-﻿using SamsHelper.BaseGameFunctionality.Basic;
+﻿using System;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
@@ -22,11 +23,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public override ViewParent CreateUi(Transform parent)
         {
+            Func<bool> destroyCondition = () => Quantity() == 0;
+            if (destroyCondition()) return null;
             InventoryUi ui = new InventoryUi(this, parent);
             ui.SetCentralTextCallback(() => Name);
             ui.SetLeftTextCallback(() => Type.ToString());
             ui.SetRightTextCallback(() => TotalWeight() + "kg");
-            ui.SetDestroyCondition(() => Quantity() == 0);
+            ui.SetDestroyCondition(destroyCondition);
             return ui;
         }
     }

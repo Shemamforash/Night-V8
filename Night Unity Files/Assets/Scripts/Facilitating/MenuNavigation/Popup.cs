@@ -75,10 +75,10 @@ namespace Facilitating.MenuNavigation
             GameObject menuObject = Helper.InstantiateUiObject("Prefabs/Simple Menu", _container);
             MenuList menuList = centered ? menuObject.AddComponent<ScrollingMenuList>() : menuObject.AddComponent<MenuList>();
             menuList.SetItems(items);
-            menuList.GetItems().ForEach(item =>
+            menuList.Items.ForEach(item =>
             {
                 _options.Add(item.GetGameObject());
-                item.OnPress(() =>
+                item.PrimaryButton.AddOnClick(() =>
                 {
                     if(autoDestruct) Destroy(closeAll);
                     callback?.Invoke(item.GetLinkedObject());
@@ -104,8 +104,8 @@ namespace Facilitating.MenuNavigation
             int i = _options.IndexOf(newOption);
             if (i > 0)
             {
-                Helper.SetReciprocalNavigation(newOption, _options[0]);
-                Helper.SetReciprocalNavigation(_options[i - 1], newOption);
+                Helper.SetReciprocalNavigation(b, _options[0].GetComponent<Button>());
+                Helper.SetReciprocalNavigation(_options[i - 1].GetComponent<Button>(), b);
             }
             b.Select();
         }

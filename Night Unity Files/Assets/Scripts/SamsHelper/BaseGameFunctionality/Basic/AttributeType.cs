@@ -19,7 +19,7 @@
         Handling,
         Detection,
         Vision,
-        WalkSpeed,
-        SprintSpeed
+        Pellets,
+        Capacity
     }
 }

@@ -1,4 +1,5 @@
-﻿using SamsHelper.BaseGameFunctionality.Basic;
+﻿using Game.Characters;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public abstract class GearItem : InventoryItem
     {
         private readonly GearSubtype _gearType;
+        protected Character Owner;
         public bool Equipped { get; set; }
         public readonly AttributesModifier Modifier = new AttributesModifier();
 
@@ -36,17 +38,28 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public override ViewParent CreateUi(Transform parent)
         {
             InventoryUi ui = (InventoryUi) base.CreateUi(parent);
-//            ui.SetRightButtonTextCallback(() => "Equip");
-//            ui.SetRightButtonActive(false);
-            ui.SetRightTextCallback(GetSummary);
-            ui.SetLeftTextCallback(() => GetGearType().ToString());
-            ui.SetCentralTextCallback(() => Name);
+            if (ui != null)
+            {
+                ui.SetRightTextCallback(GetSummary);
+                ui.SetLeftTextCallback(() => GetGearType().ToString());
+                ui.SetCentralTextCallback(() => Name);
+            }
             return ui;
         }
         
         public void MoveTo(Inventory targetInventory)
         {
             ParentInventory?.Move(this, targetInventory, 1);
+        }
+
+        public void SetOwner(Character owner)
+        {
+            Owner = owner;
+        }
+
+        public void RemoveOwner()
+        {
+            Owner = null;
         }
     }
 }

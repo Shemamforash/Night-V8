@@ -2,62 +2,58 @@
 using System.Linq;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SamsHelper.ReactiveUI.InventoryUI
 {
     public class MenuList : MonoBehaviour
     {
-        protected readonly List<ViewParent> Items = new List<ViewParent>();
-        protected Transform InventoryContent;
+        [HideInInspector]
+        public readonly List<ViewParent> Items = new List<ViewParent>();
+        [HideInInspector]
+        public Transform InventoryContent;
 
         public virtual void Awake()
         {
             InventoryContent = Helper.FindChildWithName<Transform>(gameObject, "Content");
         }
 
-        public List<ViewParent> GetItems()
+        private void Clear()
         {
-            return Items;
-        }
-
-        public Transform ContentTransform()
-        {
-            return InventoryContent;
+            Items.ForEach(item => item.Destroy());
+            Items.Clear();
         }
 
         public virtual void SetItems(List<MyGameObject> newItems)
         {
-            Items.ForEach(item => item.Destroy());
-            Items.Clear();
+            Clear();
             newItems.ForEach(item => AddItem(item));
-            RefreshNavigation();
-        }
-        
-        protected virtual ViewParent UpdateItem(MyGameObject item)
-        {
-            ViewParent foundItem = Items.FirstOrDefault(i => i.GetLinkedObject().Equals(item));
-            foundItem?.Update();
-            RefreshNavigation();
-            return foundItem;
         }
 
-        private ViewParent IsItemDisplayed(MyGameObject inventoryItem)
+        protected virtual void UpdateItem(MyGameObject item)
         {
-            return Items.FirstOrDefault(itemUi => itemUi.GetLinkedObject() == inventoryItem);
+            ViewParent foundItem = FindItem(item);
+            if (foundItem == null) return;
+            foundItem.Update();
+            RefreshNavigation();
+        }
+
+        private ViewParent FindItem(MyGameObject item)
+        {
+            return Items.FirstOrDefault(i => i.GetLinkedObject().Equals(item));
         }
 
         public virtual ViewParent AddItem(MyGameObject item)
         {
-            ViewParent existingUi = IsItemDisplayed(item);
-            if (existingUi != null)
-            {
-                UpdateItem(item);
-                return null;
-            }
+            ViewParent existingUi = FindItem(item);
+            if (existingUi != null) throw new Exceptions.ItemAlreadyExistsInMenuListException(item, gameObject);
             ViewParent itemUi = item.CreateUi(InventoryContent);
-            if (itemUi.IsDestroyed()) return null;
-            Items.Add(itemUi);
-            RefreshNavigation();
+            if (itemUi != null)
+            {
+                itemUi.SetMenuList(this);
+                Items.Add(itemUi);
+                RefreshNavigation();
+            }
             return itemUi;
         }
 
@@ -68,21 +64,20 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         public void Remove(ViewParent item)
         {
-            if (!Items.Contains(item)) return;
+            if (!Items.Contains(item)) throw new Exceptions.TryRemoveItemDoesNotExistException(item.GetLinkedObject(), gameObject);
             Items.Remove(item);
+            item.Destroy();
             RefreshNavigation();
         }
 
-        private List<ViewParent> GetNavigatableItems(List<ViewParent> items) => items;
-
         public virtual ViewParent RefreshNavigation()
         {
-            List<ViewParent> navigatableItems = GetNavigatableItems(Items);
-            for (int i = 0; i < navigatableItems.Count; ++i)
+            List<ViewParent> navigatableItems = Items.Where(item => item.Navigatable()).ToList();
+            Items.ForEach(i => Helper.ClearNavigation(i.GetNavigationButton()));
+            for (int i = 1; i < navigatableItems.Count; ++i)
             {
-                if (i <= 0) continue;
-                GameObject from = navigatableItems[i - 1].GetNavigationButton();
-                GameObject to = navigatableItems[i].GetNavigationButton();
+                Button from = navigatableItems[i - 1].GetNavigationButton();
+                Button to = navigatableItems[i].GetNavigationButton();
                 Helper.SetReciprocalNavigation(from, to);
             }
             return navigatableItems.Count > 0 ? navigatableItems.Last() : null;

@@ -63,17 +63,16 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             };
         }
 
-        protected override ViewParent UpdateItem(MyGameObject inventoryItem)
+        protected override void UpdateItem(MyGameObject inventoryItem)
         {
+            base.UpdateItem(inventoryItem);
             UpdateInventoryWeight();
-            ViewParent found = base.UpdateItem(inventoryItem);
-            InventoryItem foundItem = found.GetLinkedObject() as InventoryItem;
-            if (foundItem != null && foundItem.Quantity() == 0 && !_inventory.ContainsItem(inventoryItem))
-            {
-                Remove(found);
-                found.Destroy();
-            }
-            return null;
+//            InventoryItem foundItem = FindItem(inventoryItem).GetLinkedObject() as InventoryItem;
+//            if (foundItem != null && foundItem.Quantity() == 0 && !_inventory.ContainsItem(inventoryItem))
+//            {
+//                Remove(found);
+//                found.Destroy();
+//            }
         }
 
         public override ViewParent RefreshNavigation()

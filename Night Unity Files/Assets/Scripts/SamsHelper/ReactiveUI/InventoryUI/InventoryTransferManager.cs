@@ -40,9 +40,9 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return _instance ?? FindObjectOfType<InventoryTransferManager>();
         }
 
-        public static GameObject CloseButton()
+        public static Button CloseButton()
         {
-            return _closeButton.gameObject;
+            return _closeButton;
         }
 
         private void Close()

@@ -1,5 +1,4 @@
 ﻿using SamsHelper.BaseGameFunctionality.Basic;
-using UnityEngine;
 
 namespace Game.Gear.Weapons
 {

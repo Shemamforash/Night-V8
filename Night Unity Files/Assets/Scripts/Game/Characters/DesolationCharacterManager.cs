@@ -75,7 +75,7 @@ namespace Game.Characters
 
         private static void PopulateCharacterUi()
         {
-            GameObject inventoryObject = WorldState.GetInventoryButton();
+            Button inventoryButton = WorldState.GetInventoryButton();
 
             foreach (Player playerCharacter in _characters)
             {
@@ -84,10 +84,10 @@ namespace Game.Characters
             }
             for (int i = 1; i < _characters.Count; ++i)
             {
-                GameObject previousButton = _characters[i - 1].CharacterView.SimpleView;
-                Helper.SetReciprocalNavigation(_characters[i].CharacterView.SimpleView, previousButton);
+                Button previousButton = _characters[i - 1].CharacterView.SimpleView.GetComponent<Button>();
+                Helper.SetReciprocalNavigation(_characters[i].CharacterView.SimpleView.GetComponent<Button>(), previousButton);
             }
-            Helper.SetReciprocalNavigation(inventoryObject, _characters[0].CharacterView.SimpleView);
+            Helper.SetReciprocalNavigation(inventoryButton, _characters[0].CharacterView.SimpleView.GetComponent<Button>());
         }
 
         public override MyGameObject RemoveItem(MyGameObject item)

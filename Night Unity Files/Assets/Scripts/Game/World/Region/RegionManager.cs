@@ -20,7 +20,7 @@ namespace Game.World.Region
         private static readonly List<InventoryUi> DiscoveredRegions = new List<InventoryUi>();
         private static readonly Dictionary<string, RegionTemplate> Templates = new Dictionary<string, RegionTemplate>();
         private static readonly int NoRegionsToGenerate = 40;
-        private static GameObject _backButton;
+        private static Button _backButton;
         private static InventoryUi _exploreButton;
         private static TextMeshProUGUI _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
         private static Character _character;
@@ -74,15 +74,15 @@ namespace Game.World.Region
             _instance = this;
             LoadNames();
             _menuList = gameObject.AddComponent<MenuList>();
-            _backButton = Helper.FindChildWithName(gameObject, "Back");
-            _backButton.GetComponent<Button>().onClick.AddListener(delegate { ExitManager(false); });
+            _backButton = Helper.FindChildWithName<Button>(gameObject, "Back");
+            _backButton.onClick.AddListener(delegate { ExitManager(false); });
             _regionInfoNameText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
             _regionInfoTypeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Type");
             _regionInfoDescriptionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Description");
-            _exploreButton = new InventoryUi(null, _menuList.ContentTransform());
+            _exploreButton = new InventoryUi(null, _menuList.InventoryContent);
             _exploreButton.SetCentralTextCallback(() => "Explore...");
             Helper.SetReciprocalNavigation(_exploreButton.GetNavigationButton(), _backButton);
-            _exploreButton.OnPress(delegate
+            _exploreButton.PrimaryButton.AddOnClick(delegate
             {
                 Region targetRegion = UnexploredRegions[Random.Range(0, UnexploredRegions.Count)];
                 StartExploration(delegate { DiscoverRegion(targetRegion); }, targetRegion);

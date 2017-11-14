@@ -40,7 +40,7 @@ namespace Game.World.Region
         public override ViewParent CreateUi(Transform parent)
         {
             InventoryUi ui = new InventoryUi(this, parent);
-            ui.OnEnter(() => RegionManager.UpdateRegionInfo(this));
+            ui.PrimaryButton.AddOnSelectEvent(() => RegionManager.UpdateRegionInfo(this));
             ui.SetCentralTextCallback(() => Name);
             ui.SetLeftTextCallback(RegionType);
             ui.SetLeftTextWidth(200);

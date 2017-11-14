@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Game.Characters;
+﻿using System;
+using System.Collections.Generic;
 using Game.Combat.Enemies;
-using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
@@ -43,7 +40,6 @@ namespace Game.Combat
         {
             GameObject playerContainer = combatMenu.transform.Find("Player").gameObject;
             _enemyList = Helper.FindChildWithName<ScrollingMenuList>(combatMenu, "Enemies");
-            _enemyList.DontFadeItems();
             _magazineContent = Helper.FindChildWithName<Transform>(playerContainer, "Magazine").gameObject;
             _ammoPrefab = Resources.Load("Prefabs/Combat/Ammo Prefab") as GameObject;
 
@@ -128,7 +124,7 @@ namespace Game.Combat
                 GameObject round = _magazineAmmo[i].transform.Find("Round").gameObject;
                 round.SetActive(i < remaining);
             }
-            _ammoText.text = CombatManager.Scenario().Player().Inventory().GetResourceQuantity(InventoryResourceType.Ammo).ToString();
+            _ammoText.text = CombatManager.Player().Inventory().GetResourceQuantity(InventoryResourceType.Ammo).ToString();
         }
 
         public void SetMagazineText(string text)
@@ -149,35 +145,31 @@ namespace Game.Combat
             _characterName.text = _character.Name;
             _weaponNameText.text = _character.Weapon().Name + " (" + _character.Weapon().GetSummary() + ")";
             _enemyList.SetItems(new List<MyGameObject>(scenario.Enemies()));
-            _enemyList.GetItems().ForEach(e => e.OnEnter(() => SetTarget((Enemy) e.GetLinkedObject()))); //CombatManager.SetCurrentTarget(e.GetLinkedObject())));
-            _enemyList.GetItems()[0].GetNavigationButton().GetComponent<Button>().Select();
+            _enemyList.Items.ForEach(e => e.PrimaryButton.AddOnSelectEvent(() => SetTarget((Enemy) e.GetLinkedObject()))); //CombatManager.SetCurrentTarget(e.GetLinkedObject())));
+            SetTarget((Enemy) _enemyList.Items[0].GetLinkedObject());
         }
 
         private void SetTarget(Enemy e)
         {
             CombatManager.SetCurrentTarget(e);
-            e.EnemyView().GetNavigationButton().GetComponent<Button>().Select();
+            e?.EnemyView().GetNavigationButton().GetComponent<Button>().Select();
         }
 
         public void Remove(Enemy enemy)
         {
-            for (int i = 0; i < _enemyList.GetItems().Count; ++i)
-            {
-                EnemyView enemyView = (EnemyView) _enemyList.GetItems()[i];
-                if (enemyView.GetLinkedObject() != enemy) continue;
-                int newTarget = i + 1;
-                if (newTarget == _enemyList.GetItems().Count)
-                {
-                    newTarget = i - 1;
-                }
-                if (newTarget != -1)
-                {
-                    SetTarget((Enemy) _enemyList.GetItems()[newTarget].GetLinkedObject());
-                }
-                _enemyList.Remove(enemyView);
-//                enemyView.Destroy();
-                break;
+            Enemy nearestEnemy = null;
+            int distanceToEnemy = 100;
+            int enemyPosition = _enemyList.Items.IndexOf(enemy.EnemyView());
+            for (int i = 0; i < _enemyList.Items.Count; ++i)
+            {    
+                Enemy e = _enemyList.Items[i].GetLinkedObject() as Enemy;
+                if (e == null || !_enemyList.Items[i].Navigatable()) continue;
+                int distance = Math.Abs(enemyPosition - i);
+                if (distance >= distanceToEnemy) continue;
+                nearestEnemy = e;
+                distanceToEnemy = distance;
             }
+            SetTarget(nearestEnemy);
         }
     }
 }

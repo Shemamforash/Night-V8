@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Facilitating.Audio;
 using Game.Characters;
 using Game.Combat;
@@ -23,12 +24,14 @@ namespace Game.Gear.Weapons
         public readonly WeaponModifier SubClass, SecondaryModifier;
         public readonly bool Automatic;
         public bool Cocked = true;
-        public readonly MyValue AmmoInMagazine = new MyValue(0);
+        private int _ammoInMagazine;
         public readonly MyValue Durability;
         private const int MaxDurability = 20;
         private bool _canEquip;
         public readonly WeaponAttributes WeaponAttributes;
         public readonly int Capacity, Pellets;
+        public Action OnFireAction;
+        public Action OnReceiveDamageAction;
 
         public Weapon(WeaponClass weaponClass, WeaponModifier subClass, WeaponModifier secondaryModifier, bool automatic, float weight, int durability) : base(weaponClass.Type.ToString(), weight,
             GearSubtype.Weapon)
@@ -43,16 +46,14 @@ namespace Game.Gear.Weapons
             Capacity = (int) Math.Ceiling((double) subClass.Capacity * secondaryModifier.CapacityModifier);
             Pellets = (int) Math.Ceiling((double) (subClass.Pellets * secondaryModifier.Pellets));
 
+            WeaponAttributes = new WeaponAttributes(this);
             if (!automatic)
             {
-//                Damage *= 2;
-//                AmmoInMagazine.Max = (int) Mathf.Ceil(AmmoInMagazine.Max / 2f);
-//                Accuracy *= 1.5f;
-//                Mathf.Clamp(Accuracy, 0, 100);
-//                ReloadSpeed /= 2f;
+                WeaponAttributes.Damage.AddModifier(1f);
+                Capacity /= 2;
+                WeaponAttributes.Accuracy.AddModifier(0.5f);
+                WeaponAttributes.ReloadSpeed.AddModifier(-0.5f);
             }
-            WeaponAttributes = new WeaponAttributes(this);
-            AmmoInMagazine.Max = Capacity;
 #if UNITY_EDITOR
 //            Print();
 #endif
@@ -60,12 +61,21 @@ namespace Game.Gear.Weapons
             WorldEventManager.GenerateEvent(new WeaponFindEvent(Name));
         }
 
+        public void ConsumeAmmo(int amount = 0)
+        {
+            _ammoInMagazine -= amount;
+            if (_ammoInMagazine < 0)
+            {
+                throw new Exceptions.MoreAmmoConsumedThanAvailableException();
+            }
+        }
+
         private void Print()
         {
             Debug.Log(WeaponClass.Type + " " + SubClass.Name
                       + "\nAutomatic:  " + Automatic
                       + "\nDurability: " + Durability.GetCurrentValue()
-                      + "\nAmmo Left:  " + AmmoInMagazine.GetCurrentValue()
+                      + "\nAmmo Left:  " + _ammoInMagazine
                       + "\nCapacity:   " + Capacity
                       + "\nPellets:    " + Pellets
                       + "\nDamage:     " + WeaponAttributes.Damage.GetCalculatedValue()
@@ -122,85 +132,12 @@ namespace Game.Gear.Weapons
             return WeaponClass.Type.ToString();
         }
 
-        private float LogAndClamp(float normalisedRange, float extra = 0)
-        {
-            float probability = (float) (-0.35f * Math.Log(normalisedRange));
-            probability += extra;
-            if (probability < 0)
-            {
-                probability = 0;
-            }
-            else if (probability > 1)
-            {
-                probability = 1;
-            }
-            return probability;
-        }
-
-        private float CalculateCriticalProbability(float distanceToTarget)
-        {
-            float maxRange = WeaponAttributes.Accuracy.GetCalculatedValue();
-            float normalisedRange = distanceToTarget / maxRange;
-            float probability = LogAndClamp(normalisedRange, WeaponAttributes.CriticalChance.GetCalculatedValue() / 100f);
-            return probability;
-        }
-
-        private float CalculateMissProbability(float distanceToTarget)
-        {
-            float maxRange = WeaponAttributes.Accuracy.GetCalculatedValue();
-            float normalisedRange = maxRange / distanceToTarget;
-            if (normalisedRange > 1)
-            {
-                return 0;
-            }
-            float probability = LogAndClamp(normalisedRange);
-            return probability;
-        }
-
-        private float GetPelletDamage(float missProbability, float criticalProbability, bool rageModeOn)
-        {
-            if (Random.Range(0f, 1f) <= missProbability)
-            {
-                CombatManager.CombatUi.ShowHitMessage("Miss");
-                return 0;
-            }
-            float pelletDamage = WeaponAttributes.Damage.GetCalculatedValue();
-            if (Random.Range(0f, 1f) < criticalProbability || rageModeOn)
-            {
-                CombatManager.CombatUi.ShowHitMessage("Critical!");
-                pelletDamage *= 2;
-            }
-            return pelletDamage;
-        }
-
-        public int GetShotDamage(float distanceToTarget, bool rageModeOn, bool guaranteeHit = false, bool guaranteeCritical = false)
-        {
-            float damageDealt = 0f;
-            for (int i = 0; i < Pellets; ++i)
-            {
-                float missProbability = guaranteeHit ? 0 : CalculateMissProbability(distanceToTarget);
-                float criticalProbability = guaranteeCritical ? 1 : CalculateCriticalProbability(distanceToTarget);
-                damageDealt += GetPelletDamage(missProbability, criticalProbability, rageModeOn);
-            }
-            return (int) damageDealt;
-        }
-
-        //Returns damage
-        public void Fire()
-        {
-            if (AmmoInMagazine.GetCurrentValue() <= 0)
-            {
-                throw new Exceptions.FiredWithNoAmmoException();
-            }
-            AmmoInMagazine.Increment(-1);
-            GunFire.Fire();
-        }
-
         public void Reload(Inventory inventory)
         {
             if (inventory == null) return;
-            float ammoAvailable = inventory.DecrementResource(InventoryResourceType.Ammo, Capacity);
-            AmmoInMagazine.SetCurrentValue(AmmoInMagazine.GetCurrentValue() + (int) ammoAvailable);
+            int ammoRequired = Capacity - GetRemainingAmmo();
+            int ammoAvailable = (int) inventory.DecrementResource(InventoryResourceType.Ammo, ammoRequired);
+            _ammoInMagazine = _ammoInMagazine + ammoAvailable;
         }
 
         public bool FullyLoaded()
@@ -216,7 +153,7 @@ namespace Game.Gear.Weapons
 
         public int GetRemainingAmmo()
         {
-            return (int) AmmoInMagazine.GetCurrentValue();
+            return _ammoInMagazine;
         }
 
         public override string GetSummary()

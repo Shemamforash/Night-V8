@@ -2,6 +2,8 @@ using System;
 using Game.Gear;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI.InventoryUI;
+using UnityEngine;
 
 namespace SamsHelper
 {
@@ -294,6 +296,37 @@ namespace SamsHelper
             }
 
             public override string Message => "Tried to assign skill to slot " + _slot + " in skill bar of size " + _noSlots + ".";
+        }
+
+        public class TryRemoveItemDoesNotExistException : Exception
+        {
+            private readonly string _itemName, _menuListName;
+
+            public TryRemoveItemDoesNotExistException(MyGameObject item, GameObject menuList)
+            {
+                _itemName = item.Name;
+                _menuListName = menuList.name;
+            }
+
+            public override string Message => "Tried to remove item '" + _itemName + "' from MenuList '" + _menuListName + "' but it does not exist.";
+        }
+
+        public class ItemAlreadyExistsInMenuListException : Exception
+        {
+            private readonly string _itemName, _menuListName;
+
+            public ItemAlreadyExistsInMenuListException(MyGameObject item, GameObject menuList)
+            {
+                _itemName = item.Name;
+                _menuListName = menuList.name;
+            }
+
+            public override string Message => "Tried to add item '" + _itemName + "' to MenuList '" + _menuListName + "' but it has already been added.";
+        }
+
+        public class MoreAmmoConsumedThanAvailableException : Exception
+        {
+            public override string Message => "Tried to consume more ammo than was available in the current magazine.";
         }
     }
 }

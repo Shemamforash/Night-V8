@@ -9,12 +9,12 @@ namespace Game.Combat.Enemies.EnemyTypes
             BaseAttributes.Intelligence.SetCurrentValue(0);
         }
 
-        public override void InitialiseBehaviour(EnemyPlayerRelation relation)
-        {
-            base.InitialiseBehaviour(relation);
-            EnemyBehaviour.EnableGrazing();
-            EnemyBehaviour.EnableWatching();
-        }
+//        public override void InitialiseBehaviour(EnemyPlayerRelation relation)
+//        {
+//            base.InitialiseBehaviour(relation);
+//            EnemyBehaviour.EnableGrazing();
+//            EnemyBehaviour.EnableWatching();
+//        }
         
 //        public override void InitialiseBehaviour(EnemyPlayerRelation relation)
 //        {

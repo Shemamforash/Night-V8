@@ -15,7 +15,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         private TextMeshProUGUI _leftText, _rightText;
 
         private Func<string> _leftButtonTextCallback, _rightButtonTextCallback, _leftTextCallback, _rightTextCallback;
-        protected Direction Direction;
+        private Direction Direction;
         protected GameObject Bookends;
 
 
@@ -63,14 +63,14 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             SetRightButtonTextCallback(newRightButtonTextCallback);
         }
 
-        public override GameObject GetNavigationButton()
+        public override Button GetNavigationButton()
         {
             switch (Direction)
             {
                 case Direction.Right:
-                    return GetLeftButton();
+                    return _leftButton.Button();
                 case Direction.Left:
-                    return GetRightButton();
+                    return _rightButton.Button();
                 default:
                     return base.GetNavigationButton();
             }
@@ -78,7 +78,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         public void SetDirection(Direction direction)
         {
-//            Direction = direction;
+            Direction = direction;
             switch (direction)
             {
                 case Direction.Right:
@@ -105,7 +105,6 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _leftButtonTextCallback = a;
             Update();
         }
-
 
         public void SetRightButtonTextCallback(Func<string> a)
         {
@@ -138,11 +137,6 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         public void OnLeftButtonHold(Action a, float duration) => _leftButton.AddOnHold(a, duration);
         public void OnRightButtonPress(Action a) => _rightButton.AddOnClick(() => a());
         public void OnRightButtonHold(Action a, float duration) => _rightButton.AddOnHold(a, duration);
-
-        //Getters
-        public GameObject GetLeftButton() => _leftButton.gameObject;
-
-        public GameObject GetRightButton() => _rightButton.gameObject;
 
         public void SetLeftTextWidth(int i)
         {

@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using Game.Characters;
+﻿using Game.Characters;
 using Game.Combat.Enemies.EnemyBehaviours;
 using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
@@ -13,9 +11,11 @@ namespace Game.Combat.Enemies
 {
     public class Enemy : Character
     {
+        private const float ImmediateDistance = 1f, CloseDistance = 10f, MidDistance = 50f, FarDistance = 100f, MaxDistance = 150f;
         public MyValue _enemyHp;
         private MyValue _sightToCharacter;
         private MyValue _exposure;
+        private bool _hasFled, _isDead;
         public readonly CharacterAttribute VisionRange = new CharacterAttribute(AttributeType.Vision, 30f);
         public readonly CharacterAttribute DetectionRange = new CharacterAttribute(AttributeType.Detection, 15f);
         protected readonly ValueTextLink<string> ActionTextLink = new ValueTextLink<string>();
@@ -23,11 +23,48 @@ namespace Game.Combat.Enemies
         private const float _movementSpeed = 1;
         private EnemyView _enemyView;
         public GenericBehaviour EnemyBehaviour;
-        private const int EnemyBehaviourTick = 4;
-        private int _timeSinceLastBehaviourUpdate = 0;
         private bool _alerted;
-        private EnemyPlayerRelation _relation;
         private EnemyBehaviour _currentBehaviour;
+
+        protected Enemy(string name, int enemyHp) : base(name)
+        {
+            _enemyHp = new MyValue(enemyHp, 0, enemyHp);
+            _enemyHp.OnMin(Kill);
+            Equip(WeaponGenerator.GenerateWeapon());
+            EnemyBehaviour = new GenericBehaviour(this);
+        }
+
+        private void SetDistanceData()
+        {
+            Position.SetCurrentValue(Random.Range(25, 50));
+            Position.AddThreshold(ImmediateDistance, "Immediate");
+            Position.AddThreshold(CloseDistance, "Close");
+            Position.AddThreshold(MidDistance, "Medium");
+            Position.AddThreshold(FarDistance, "Far");
+            Position.AddThreshold(MaxDistance, "Out of Range");
+            Position.AddOnValueChange(a =>
+            {
+                if (_hasFled || _isDead) return;
+                _enemyView.DistanceText.text = Helper.Round(Position.GetCurrentValue(), 0) + "m (" + a.GetThresholdName() + ")";
+                float normalisedDistance = Helper.Normalise(Position.GetCurrentValue(), MaxDistance);
+                float alpha = 1f - normalisedDistance;
+                alpha *= alpha;
+                alpha = Mathf.Clamp(alpha, 1, 0.2f);
+                _enemyView.SetColour(new Color(1, 1, 1, alpha));
+                if (a.GetCurrentValue() <= MaxDistance) return;
+                _hasFled = true;
+            });
+        }
+
+        public bool InCombat()
+        {
+            return !_hasFled && !_isDead;
+        }
+
+        public void MarkFled()
+        {
+            _hasFled = true;
+        }
 
         public bool IsAlerted()
         {
@@ -60,13 +97,13 @@ namespace Game.Combat.Enemies
 
         private void UpdateDetection()
         {
-            if (_relation.Distance < DetectionRange || _alerted)
+            if (Position < DetectionRange || _alerted)
             {
                 _enemyView.SetDetected();
                 Alert();
                 return;
             }
-            if (_relation.Distance < VisionRange)
+            if (Position < VisionRange)
             {
                 _enemyView.SetAlert();
                 return;
@@ -74,44 +111,35 @@ namespace Game.Combat.Enemies
             _enemyView.SetUnaware();
         }
 
-        protected void SetReciprocralBehaviour(EnemyBehaviour behaviour1, EnemyBehaviour behaviour2)
-        {
-            behaviour1.AddExitTransition(behaviour2);
-            behaviour2.AddExitTransition(behaviour1);
-        }
-
-        public Enemy(string name, int enemyHp) : base(name)
-        {
-            _enemyHp = new MyValue(enemyHp, 0, enemyHp);
-            _enemyHp.OnMin(Kill);
-            Equip(WeaponGenerator.GenerateWeapon());
-        }
-
 //        public EnemyBehaviour GetBehaviour(EnemyBehaviour behaviour)
 //        {
 //            return EnemyBehaviour.StatesAsList().FirstOrDefault(b => b.GetType() == behaviour.GetType());
 //        }
-
-        public virtual void InitialiseBehaviour(EnemyPlayerRelation relation)
-        {
-            _relation = relation;
-            EnemyBehaviour = new GenericBehaviour(relation);
-        }
 
         public EnemyView EnemyView()
         {
             return _enemyView;
         }
 
-        public override void TakeDamage(int amount)
+        private int GetCoverProtection(int damage)
+        {
+            bool protectedByCover = Random.Range(0, 2) == 0;
+            if (protectedByCover)
+            {
+                if (InCover()) return (int) (damage * 0.5f);
+                if (InPartialCover()) return (int) (damage * 0.75);
+            }
+            return damage;
+        }
+
+        public override void TakeDamage(Shot shot, int damage)
         {
             EnemyBehaviour.TakeFire();
-            if (amount == 0) return;
-            if (InCover()) return;
-            if (InPartialCover()) amount /= 2;
+            if (damage == 0) return;
+            damage = GetCoverProtection(damage);
             Alert();
-            _enemyHp.SetCurrentValue(_enemyHp.GetCurrentValue() - amount);
-            EnemyBehaviour.TakeDamage(amount);
+            _enemyHp.Increment(-damage);
+            EnemyBehaviour.TakeDamage(damage);
         }
 
         public override void Kill()
@@ -130,11 +158,14 @@ namespace Game.Combat.Enemies
                 _enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString();
             });
             ActionTextLink.AddTextObject(_enemyView.ActionText);
+            SetDistanceData();
             return _enemyView;
         }
 
         public void UpdateBehaviour()
         {
+            if (!InCombat()) return;
+            DecreaseRage();
             UpdateDetection();
             EnemyBehaviour.Update();
         }

@@ -10,9 +10,8 @@ namespace Game.Combat.Enemies.EnemyTypes
             BaseAttributes.Stability.SetCurrentValue(0);
         }
 
-        public override void InitialiseBehaviour(EnemyPlayerRelation relation)
+        public void InitialiseBehaviour(Enemy enemy)
         {
-            base.InitialiseBehaviour(relation);
             EnemyBehaviour.EnableGrazing();
         }
 

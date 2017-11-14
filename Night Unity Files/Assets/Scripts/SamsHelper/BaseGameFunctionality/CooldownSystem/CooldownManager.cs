@@ -33,5 +33,10 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         {
             _activeCooldowns.Remove(cooldown);
         }
+
+        public void Clear()
+        {
+            _activeCooldowns.Clear();
+        }
     }
 }

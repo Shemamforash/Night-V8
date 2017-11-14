@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using SamsHelper.BaseGameFunctionality.CooldownSystem;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = System.Object;
 using Random = UnityEngine.Random;
 
 namespace SamsHelper
@@ -172,34 +169,42 @@ namespace SamsHelper
             return newUiObject;
         }
 
-        public static void SetNavigation(GameObject origin, GameObject target, Direction d)
+        public static void SetNavigation(Button origin, Button target, Direction d)
         {
-            Button originButton = origin.GetComponent<Button>();
-            Button targetButton = target.GetComponent<Button>();
-            if (originButton == null || targetButton == null) return;
-            Navigation originButtonNavigation = originButton.navigation;
+            if (origin == null || target == null) return;
+            Navigation originButtonNavigation = origin.navigation;
             switch (d)
             {
                 case Direction.Up:
-                    originButtonNavigation.selectOnUp = targetButton;
+                    originButtonNavigation.selectOnUp = target;
                     break;
                 case Direction.Down:
-                    originButtonNavigation.selectOnDown = targetButton;
+                    originButtonNavigation.selectOnDown = target;
                     break;
                 case Direction.Left:
-                    originButtonNavigation.selectOnLeft = targetButton;
+                    originButtonNavigation.selectOnLeft = target;
                     break;
                 case Direction.Right:
-                    originButtonNavigation.selectOnRight = targetButton;
+                    originButtonNavigation.selectOnRight = target;
                     break;
             }
-            originButton.navigation = originButtonNavigation;
+            origin.navigation = originButtonNavigation;
         }
 
-        public static void SetReciprocalNavigation(GameObject origin, GameObject target)
+        public static void SetReciprocalNavigation(Button origin, Button target)
         {
             SetNavigation(origin, target, Direction.Down);
             SetNavigation(target, origin, Direction.Up);
+        }
+        
+        public static void ClearNavigation(Button button)
+        {
+            Navigation navigation = button.navigation;
+            navigation.selectOnUp = null;
+            navigation.selectOnDown = null;
+            navigation.selectOnLeft = null;
+            navigation.selectOnRight = null;
+            button.navigation = navigation;
         }
 
         public static Direction OppositeDirection(Direction inventoryDirection)
@@ -238,6 +243,11 @@ namespace SamsHelper
         public static T RandomInList<T>(List<T> arr)
         {
             return arr[Random.Range(0, arr.Count)];
+        }
+
+        public static float Normalise(float value, float maxValue)
+        {
+            return value /= maxValue;
         }
     }
 }

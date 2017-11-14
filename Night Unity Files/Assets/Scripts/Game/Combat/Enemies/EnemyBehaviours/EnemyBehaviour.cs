@@ -7,17 +7,17 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 {
     public abstract class EnemyBehaviour : State
     {
-        protected readonly EnemyPlayerRelation Relation;
+        protected readonly Enemy Enemy;
         protected float Duration;
         private readonly List<EnemyBehaviour> _onExitTransitions = new List<EnemyBehaviour>();
-        private EnemyBehaviour _onDetectBehaviour; 
+        private EnemyBehaviour _onDetectBehaviour;
         public readonly bool IsPassive;
         protected readonly Weapon EnemyWeapon;
-        
-        protected EnemyBehaviour(string name, EnemyPlayerRelation relation, bool isPassive = false) : base(name, StateSubtype.EnemyBehaviour)
+
+        protected EnemyBehaviour(string name, Enemy enemy, bool isPassive = false) : base(name, StateSubtype.EnemyBehaviour)
         {
-            Relation = relation;
-            EnemyWeapon = Relation.Enemy.Weapon();
+            Enemy = enemy;
+            EnemyWeapon = enemy.Weapon();
             IsPassive = isPassive;
 //            relation.Enemy.EnemyBehaviour.AddState(this);
         }
@@ -31,17 +31,17 @@ namespace Game.Combat.Enemies.EnemyBehaviours
         {
 //            Relation.Enemy.CombatController.ReturnToDefault();
         }
-        
+
         protected override void NavigateToState(string stateName)
         {
-            Relation.Enemy.EnemyBehaviour.NavigateToState(stateName);
+            Enemy.EnemyBehaviour.NavigateToState(stateName);
         }
 
         protected void SelectRandomTransition()
         {
             NavigateToState(_onExitTransitions[Random.Range(0, _onExitTransitions.Count)].Name);
         }
-        
+
         public void AddExitTransition(EnemyBehaviour transition)
         {
             if (!_onExitTransitions.Contains(transition))
@@ -52,7 +52,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         protected void SetStatusText(string text)
         {
-            Relation.Enemy.SetActionText(text);
+            Enemy.SetActionText(text);
         }
 
         public virtual void OnDetect()

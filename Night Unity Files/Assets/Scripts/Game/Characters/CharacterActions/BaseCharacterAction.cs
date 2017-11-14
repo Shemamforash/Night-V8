@@ -33,7 +33,7 @@ namespace Game.Characters.CharacterActions
             SimpleView ui = new SimpleView(this, parent);
             ui.SetPreferredHeight(30);
             ui.SetCentralTextCallback(() => Name);
-            ui.OnPress(() =>
+            ui.PrimaryButton.AddOnClick(() =>
             {
                 PlayerCharacter.CharacterView.CollapseCharacterButton.Select();
                 NavigateToState(Name);

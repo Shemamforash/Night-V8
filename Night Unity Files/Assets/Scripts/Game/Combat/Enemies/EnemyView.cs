@@ -18,6 +18,7 @@ namespace Game.Combat.Enemies
         public EnemyView(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/EnemyItem") : base(linkedObject, parent, prefabLocation)
         {
             GameObject.SetActive(true);
+            GameObject.GetComponent<EnhancedButton>().UseGlobalColours = false;
         }
 
         protected override void CacheUiElements()
@@ -83,6 +84,7 @@ namespace Game.Combat.Enemies
             _nameText.text = _nameText.text + " DEAD";
             _typeText.text = "Corpse";
             ActionText.text = "";
+            SetNavigatable(false);
         }
 
         public void SetUnaware()

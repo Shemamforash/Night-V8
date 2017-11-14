@@ -156,27 +156,27 @@ namespace Game.Characters
         
         public void UpdateActionUi()
         {
-            List<BaseCharacterAction> availableActions = _character.StatesAsList(false).Cast<BaseCharacterAction>().ToList();
+            List<BaseCharacterAction> availableActions = _character.StatesAsList(false).ToList();
             _actionMenuList.SetItems(new List<MyGameObject>(availableActions));
 
-            List<ViewParent> actionUiList = _actionMenuList.GetItems();
+            List<ViewParent> actionUiList = _actionMenuList.Items;
             for (int i = 0; i < actionUiList.Count; ++i)
             {
                 ViewParent actionUi = actionUiList[i];
 
-                Helper.SetNavigation(actionUi.GetNavigationButton(), WeaponGearUi.GearButton.gameObject, Direction.Left);
+                Helper.SetNavigation(actionUi.GetNavigationButton(), WeaponGearUi.GearButton.Button(), Direction.Left);
                 if (i == availableActions.Count - 1)
                 {
-                    Helper.SetReciprocalNavigation(actionUi.GetNavigationButton(), CollapseCharacterButton.gameObject);
+                    Helper.SetReciprocalNavigation(actionUi.GetNavigationButton(), CollapseCharacterButton);
                 }
 
                 else if (i == 0)
                 {
-                    Helper.SetNavigation(WeaponGearUi.GearButton.gameObject, actionUi.GetNavigationButton(),
+                    Helper.SetNavigation(WeaponGearUi.GearButton.Button(), actionUi.GetNavigationButton(),
                         Direction.Right);
-                    Helper.SetNavigation(ArmourGearUi.GearButton.gameObject, actionUi.GetNavigationButton(),
+                    Helper.SetNavigation(ArmourGearUi.GearButton.Button(), actionUi.GetNavigationButton(),
                         Direction.Right);
-                    Helper.SetNavigation(AccessoryGearUi.GearButton.gameObject, actionUi.GetNavigationButton(),
+                    Helper.SetNavigation(AccessoryGearUi.GearButton.Button(), actionUi.GetNavigationButton(),
                         Direction.Right);
                 }
             }

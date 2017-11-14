@@ -15,17 +15,19 @@ namespace SamsHelper.ReactiveUI.Elements
     {
         private event Action OnSelectActions;
         private event Action OnDeselectActions;
-        private readonly List<HoldAction> OnHoldActions = new List<HoldAction>();
+        private readonly List<HoldAction> _onHoldActions = new List<HoldAction>();
         private List<EnhancedText> _textChildren = new List<EnhancedText>();
         private List<Image> _imageChildren = new List<Image>();
         private Button _button;
         public GameObject Border;
         [SerializeField] private bool _useBorder = true;
+        [Range(0f, 5f)]
         public float FadeDuration = 0.5f;
+        public bool UseGlobalColours = true;
 
         private class HoldAction
         {
-            private Action _holdAction;
+            private readonly Action _holdAction;
             private readonly float _duration;
             private float _startTime;
 
@@ -43,14 +45,16 @@ namespace SamsHelper.ReactiveUI.Elements
 
             public void ExecuteIfDone()
             {
-                if (Time.time - _startTime > _duration)
-                {
-                    _holdAction();
-                    Reset();
-                }
+                if (!(Time.time - _startTime > _duration)) return;
+                _holdAction();
+                Reset();
             }
         }
 
+        public Button Button()
+        {
+            return _button;
+        }
 
         public void Awake()
         {
@@ -62,13 +66,13 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private void Enter()
         {
-            UseSelectedColours();
+            if(UseGlobalColours) UseSelectedColours();
             OnSelectActions?.Invoke();
         }
 
         private void Exit()
         {
-            UseDeselectedColours();
+            if(UseGlobalColours) UseDeselectedColours();
             OnDeselectActions?.Invoke();
         }
 
@@ -79,7 +83,7 @@ namespace SamsHelper.ReactiveUI.Elements
         public void OnDeselect(BaseEventData eventData) => Exit();
         public void OnPointerEnter(PointerEventData p) => Enter();
         public void OnPointerExit(PointerEventData p) => Exit();
-        public void AddOnHold(Action a, float duration) => OnHoldActions.Add(new HoldAction(a, duration));
+        public void AddOnHold(Action a, float duration) => _onHoldActions.Add(new HoldAction(a, duration));
 
         public void DisableBorder() => _useBorder = false;
 
@@ -148,12 +152,12 @@ namespace SamsHelper.ReactiveUI.Elements
             {
                 if (_button.gameObject == EventSystem.current.currentSelectedGameObject)
                 {
-                    OnHoldActions.ForEach(a => a.ExecuteIfDone());
+                    _onHoldActions.ForEach(a => a.ExecuteIfDone());
                 }
             }
             else
             {
-                OnHoldActions.ForEach(a => a.Reset());
+                _onHoldActions.ForEach(a => a.Reset());
             }
         }
 

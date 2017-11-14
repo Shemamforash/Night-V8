@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game.Characters;
 using Game.Combat.Enemies;
@@ -6,6 +7,7 @@ using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
+using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
@@ -16,44 +18,21 @@ namespace Game.Combat
     {
         public static CombatUi CombatUi;
         private static MyValue _strengthText;
-        private static CombatScenario _scenario;
         public static readonly CooldownManager CombatCooldowns = new CooldownManager();
-        private static readonly List<EnemyPlayerRelation> EnemyPlayerRelations = new List<EnemyPlayerRelation>();
-        private static EnemyPlayerRelation _currentTarget;
-        
-        public static List<EnemyPlayerRelation> GetEnemyPlayerRelations()
+        private static readonly List<Enemy> Enemies = new List<Enemy>();
+        private static Enemy _currentTarget;
+        private static Player _player;
+
+        public static List<Enemy> GetEnemies()
         {
-            return EnemyPlayerRelations;
+            return Enemies;
         }
 
-        public static EnemyPlayerRelation FindRelation(Character character)
-        {
-            if(character is Enemy) return EnemyPlayerRelations.FirstOrDefault(e => e.Enemy == character);
-            return _currentTarget;
-        }
-
-        public static void IncreaseDistance(Character c, float amount)
-        {
-            ChangeDistance(c, amount);
-        }
-
-        private static void ChangeDistance(Character c, float amount)
-        {
-            Enemy enemy = c as Enemy;
-            if (enemy != null)
-            {
-                FindRelation(enemy).Distance.Increment(amount);
-            }
-            else
-            {
-                EnemyPlayerRelations.ForEach(e => e.Distance.Increment(amount));
-            }
-        }
-
-        public static void DecreaseDistance(Character c, float amount)
-        {
-            ChangeDistance(c, -amount);
-        }
+//        public static EnemyPlayerenemy Findenemy(Character character)
+//        {
+//            if(character is Enemy) return Enemies.FirstOrDefault(e => e == character);
+//            return Enemies.FirstOrDefault(e => e == _currentTarget);
+//        }
 
         protected void Awake()
         {
@@ -64,44 +43,41 @@ namespace Game.Combat
         {
             CombatCooldowns.UpdateCooldowns();
             CombatUi.Update();
-            EnemyPlayerRelations.ForEach(r =>
-            {
-                r.UpdateRelation();
-                r.Enemy.DecreaseRage();
-            });
-            _scenario.Player().DecreaseRage();
+            Enemies.ForEach(r => { r.UpdateBehaviour(); });
+            Player().DecreaseRage();
         }
 
-        public static CombatScenario Scenario()
+        public static void ResetCombat()
         {
-            return _scenario;
-        }
-
-        private static void CreateRelation(Enemy e)
-        {
-            Debug.Log(e.Name);
-            EnemyPlayerRelation relation = new EnemyPlayerRelation(e, _scenario.Player());
-            EnemyPlayerRelations.Add(relation);
-            e.InitialiseBehaviour(relation);
+            Enemies.Clear();
+            _currentTarget = null;
+            CombatCooldowns.Clear();
         }
 
         public static void EnterCombat(CombatScenario scenario)
         {
-            _scenario = scenario;
-            EnemyPlayerRelations.Clear();
             WorldState.Pause();
+            _player = scenario.Player();
+            ResetCombat();
+            InputHandler.RegisterInputListener(_player);
+            Enemies.AddRange(scenario.Enemies());
             MenuStateMachine.States.NavigateToState("Combat Menu");
             CombatUi.Start(scenario);
-            _scenario.Enemies().ForEach(CreateRelation);
-            _currentTarget = EnemyPlayerRelations[0];
-            _scenario.Player().Rage.AddOnValueChange(a => RageBarController.SetRageBarFill(a.GetCurrentValue(), _scenario.Player().RageActivated()));
+            _player.Rage.AddOnValueChange(a => RageBarController.SetRageBarFill(a.GetCurrentValue(), _player.RageActivated()));
         }
 
         public static void ExitCombat()
         {
-            WorldState.UnPause();
-            MenuStateMachine.States.NavigateToState("Game Menu");
-            _scenario.Player().Rage.ClearOnValueChange();
+//            WorldState.UnPause();
+//            MenuStateMachine.States.NavigateToState("Game Menu");
+//            _scenario.Player().Rage.ClearOnValueChange();
+            InputHandler.UnregisterInputListener(_player);
+            CombatTester.RestartCombat();
+        }
+
+        public static Player Player()
+        {
+            return _player;
         }
 
         public static void SetPlayerHealthText(float f)
@@ -115,7 +91,7 @@ namespace Game.Combat
 //            Enemy enemy = c as Enemy;
 //            if (enemy != null)
 //            {
-//                FindRelation(enemy).PlayerCover.Increment(-1f);
+//                Findenemy(enemy).PlayerCover.Increment(-1f);
 //            }
 //            else
 //            {
@@ -128,11 +104,11 @@ namespace Game.Combat
             Enemy enemy = character as Enemy;
             if (enemy != null)
             {
-                FindRelation(enemy).Enemy.EnemyView().VisionText.text = "No Cover (Enemy)";
+                enemy.EnemyView().VisionText.text = "No Cover (Enemy)";
             }
             else
             {
-                EnemyPlayerRelations.ForEach(relation => { relation.Enemy.EnemyView().CoverText.text = "No Cover (Player)"; });
+                Enemies.ForEach(e => { e.EnemyView().CoverText.text = "No Cover (Player)"; });
             }
         }
 
@@ -141,58 +117,87 @@ namespace Game.Combat
             Enemy enemy = c as Enemy;
             if (enemy != null)
             {
-                FindRelation(enemy).Enemy.EnemyView().VisionText.text = "Full Cover (Enemy)";
+                enemy.EnemyView().VisionText.text = "Full Cover (Enemy)";
             }
             else
             {
-                EnemyPlayerRelations.ForEach(relation => { relation.Enemy.EnemyView().CoverText.text = "Full Cover (Player)"; });
+                Enemies.ForEach(e => { e.EnemyView().CoverText.text = "Full Cover (Player)"; });
             }
         }
 
-        public static void SetCurrentTarget(MyGameObject enemy)
+        public static float DistanceBetweenCharacter(Character origin, Character target)
         {
-            _currentTarget.Enemy.EnemyView().MarkUnselected();
-            _currentTarget = FindRelation((Enemy) enemy);
-            _currentTarget.Enemy.EnemyView().MarkSelected();
+            return target.RawPosition() - origin.RawPosition();
+        }
+
+        public static Character GetTarget(Character c)
+        {
+            if (c is Player)
+            {
+                return _currentTarget;
+            }
+            return _player;
+        }
+
+        public static void SetCurrentTarget(Enemy enemy)
+        {
+            _currentTarget?.EnemyView().MarkUnselected();
+            if (enemy == null) return;
+            _currentTarget = enemy;
+            _currentTarget.EnemyView().MarkSelected();
         }
 
         public static void Flee(Enemy enemy)
         {
-            FindRelation(enemy).MarkFled();
+            enemy.MarkFled();
             CombatUi.Remove(enemy);
-        }
-
-        public static void DashForward(Character character)
-        {
-            Dash(character, Direction.Right);
-        }
-
-        private static void Dash(Character c, Direction direction)
-        {
-            float dashAmount = 5;
-            if (direction == Direction.Right)
+            if (Enemies.Any(e => e.InCombat()))
             {
-                dashAmount = -dashAmount;
+                return;
             }
-            Enemy enemy = c as Enemy;
-            if (enemy != null)
-            {
-                FindRelation(enemy).Distance.Increment(dashAmount);
-            }
-            else
-            {
-                EnemyPlayerRelations.ForEach(relation => relation.Distance.Increment(dashAmount));
-            }
+            ExitCombat();
         }
 
-        public static void DashBackward(Character character)
-        {
-            Dash(character, Direction.Left);
-        }
-
-        public static EnemyPlayerRelation GetCurrentTarget()
+        public static Enemy GetCurrentTarget()
         {
             return _currentTarget;
+        }
+
+        public static List<Enemy> GetEnemiesBehindTarget(Character target)
+        {
+            List<Enemy> enemiesBehindTarget = new List<Enemy>();
+            if (target is Player)
+            {
+                return enemiesBehindTarget;
+            }
+            foreach (Enemy enemy in Enemies)
+            {
+                if (enemy == target) continue;
+                if (enemy.RawPosition() > target.RawPosition())
+                {
+                    enemiesBehindTarget.Add(enemy);
+                }
+            }
+            return enemiesBehindTarget;
+        }
+
+        public static List<Enemy> GetEnemiesInRange(Character target, int splinterRange)
+        {
+            List<Enemy> enemiesInRange = new List<Enemy>();
+            if (target is Player)
+            {
+                return enemiesInRange;
+            }
+            foreach (Enemy enemy in Enemies)
+            {
+                if (enemy == target) continue;
+                float distanceFromEnemy = Math.Abs(target.RawPosition() - enemy.RawPosition());
+                if (distanceFromEnemy <= splinterRange)
+                {
+                    enemiesInRange.Add(enemy);
+                }
+            }
+            return enemiesInRange;
         }
     }
 }

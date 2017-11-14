@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using Facilitating.Audio;
 using Game.Characters.Attributes;
 using Game.Characters.CharacterActions;
 using Game.Combat;
+using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.Gear.Weapons;
 using Game.World.Region;
@@ -29,7 +32,6 @@ namespace Game.Characters
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
             CharacterInventory.MaxWeight = 50;
-            InputHandler.RegisterInputListener(this);
         }
 
         //Links character to object in scene
@@ -134,16 +136,24 @@ namespace Game.Characters
             switch (weapon.WeaponClass.Type)
             {
                 case WeaponType.Pistol:
+                    CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.Retribution(this));
+                    CombatManager.CombatUi.SkillBar.BindSkill(4, new Skill.Revenge(this));
                     break;
                 case WeaponType.Rifle:
                     CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.PiercingShot(this));
                     CombatManager.CombatUi.SkillBar.BindSkill(4, new Skill.FullBlast(this));
                     break;
                 case WeaponType.Shotgun:
+                    CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.LegSweep(this));
+                    CombatManager.CombatUi.SkillBar.BindSkill(4, new Skill.BulletCloud(this));
                     break;
                 case WeaponType.SMG:
+                    CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.DoubleUp(this));
+                    CombatManager.CombatUi.SkillBar.BindSkill(4, new Skill.Splinter(this));
                     break;
                 case WeaponType.LMG:
+                    CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.TopUp(this));
+                    CombatManager.CombatUi.SkillBar.BindSkill(4, new Skill.HeavyLead(this));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -189,11 +199,43 @@ namespace Game.Characters
         }
 
         //FIRING
-
-        public override void FireWeapon(int damage = -1)
+        public override Shot FireWeapon(Character target)
         {
-            base.FireWeapon(damage);
+            Shot shot = base.FireWeapon(target);
             UpdateMagazineUi();
+            return shot;
+        }
+
+        public override void ConsumeAmmo(int amount)
+        {
+            base.ConsumeAmmo(amount);
+            UpdateMagazineUi();
+        }
+
+        //MISC
+
+        public override void Interrupt()
+        {
+            base.Interrupt();
+            UpdateMagazineUi();
+        }
+
+        public void UpdateMagazineUi()
+        {
+            string magazineMessage = "";
+            if (Inventory().GetResourceQuantity(InventoryResourceType.Ammo) == 0) magazineMessage = "NO AMMO";
+            else if (!Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
+            else if (Weapon().Empty()) magazineMessage = "RELOAD";
+
+            if (magazineMessage == "")
+            {
+                CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
+            }
+            else
+            {
+                CombatManager.CombatUi.EmptyMagazine();
+                CombatManager.CombatUi.SetMagazineText(magazineMessage);
+            }
         }
 
         //INPUT
@@ -210,7 +252,7 @@ namespace Game.Characters
                     TryStartRageMode();
                     break;
                 case InputAxis.Fire:
-                    FireWeapon();
+                    FireWeapon(null);
                     break;
                 case InputAxis.Flank:
                     Flank();

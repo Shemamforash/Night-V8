@@ -97,17 +97,8 @@
               <e p="Enemies" t="Include">
                 <e p="Enemy.cs" t="Include" />
                 <e p="EnemyBehaviours" t="Include">
-                  <e p="BasicFire.cs" t="Include" />
                   <e p="EnemyBehaviour.cs" t="Include" />
-                  <e p="Flee.cs" t="Include" />
                   <e p="GenericBehaviour.cs" t="Include" />
-                  <e p="Graze.cs" t="Include" />
-                  <e p="Herd.cs" t="Include" />
-                  <e p="Melee.cs" t="Include" />
-                  <e p="Retreat.cs" t="Include" />
-                  <e p="Rush.cs" t="Include" />
-                  <e p="Wander.cs" t="Include" />
-                  <e p="Watch.cs" t="Include" />
                 </e>
                 <e p="EnemyTypes" t="Include">
                   <e p="Fighter.cs" t="Include" />
@@ -117,6 +108,7 @@
                 <e p="EnemyView.cs" t="Include" />
               </e>
               <e p="EnemyPlayerRelation.cs" t="Include" />
+              <e p="Shot.cs" t="Include" />
               <e p="SkillBar.cs" t="Include" />
               <e p="Skills" t="Include">
                 <e p="Skill.cs" t="Include" />

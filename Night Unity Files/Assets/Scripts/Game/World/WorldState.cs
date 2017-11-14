@@ -23,7 +23,7 @@ namespace Game.World
         public static CooldownManager WorldCooldownManager;
         public static int StormDistanceMax, StormDistanceActual;
         public static int DaysSpentHere;
-        private static GameObject _inventoryButton;
+        private static Button _inventoryButton;
         public static readonly EnvironmentManager EnvironmentManager = new EnvironmentManager();
         private static CharacterManager _homeInventory = new CharacterManager();
         private readonly WeatherManager Weather = new WeatherManager();
@@ -41,7 +41,7 @@ namespace Game.World
         {
             _timeText = Helper.FindChildWithName(gameObject, "Time").GetComponent<TextMeshProUGUI>();
             _dayText = Helper.FindChildWithName(gameObject, "Day").GetComponent<TextMeshProUGUI>();
-            _inventoryButton = Helper.FindChildWithName(gameObject, "Inventory");
+            _inventoryButton = Helper.FindChildWithName<Button>(gameObject, "Inventory");
             _inventoryButton.GetComponent<Button>().onClick.AddListener(() =>
             {
                 Popup popup = new Popup("Vehicle Inventory");
@@ -92,7 +92,7 @@ namespace Game.World
 #endif
         }
 
-        public static GameObject GetInventoryButton() => _inventoryButton;
+        public static Button GetInventoryButton() => _inventoryButton;
 
         private void IncrementDaysSpentHere()
         {

@@ -30,7 +30,7 @@ namespace Game.Characters
             ui.SetRightTextCallback(() => "^");
             ui.SetRightButtonTextCallback(() => "Equip");
             ui.SetRightButtonActive(false);
-            ui.OnPress(() => Character.Equip(GearItem));
+            ui.PrimaryButton.AddOnClick(() => Character.Equip(GearItem));
             return ui;
         }
     }

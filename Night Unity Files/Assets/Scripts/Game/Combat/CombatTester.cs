@@ -8,28 +8,36 @@ namespace Game.Combat
 {
     public class CombatTester : MonoBehaviour
     {
-        private Player _playerCharacter;
-        private CombatScenario _encounter;
+        private static Player _playerCharacter;
+        private static CombatScenario _encounter;
         public int Size = 3;
         public bool ManualOnly;
         public bool Smg = true, Lmg = true, Rifle = true, Pistol = true, Shotgun = true;
+        private static CombatTester _instance;
     
         public void Start()
         {
             new CharacterManager();
             TraitLoader.LoadTraits();
+            _instance = this;
+            RestartCombat();
+        }
+
+        public static void RestartCombat()
+        {
             _playerCharacter = CharacterGenerator.GenerateCharacter();
             ((DesolationInventory)_playerCharacter.Inventory()).AddTestingResources();
             List<WeaponType> weaponsWanted = new List<WeaponType>();
-            if(Smg) weaponsWanted.Add(WeaponType.SMG);
-            if(Lmg) weaponsWanted.Add(WeaponType.LMG);
-            if(Rifle) weaponsWanted.Add(WeaponType.Rifle);
-            if(Pistol) weaponsWanted.Add(WeaponType.Shotgun);
-            if(Shotgun) weaponsWanted.Add(WeaponType.Pistol);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(weaponsWanted, ManualOnly);
+            if(_instance.Smg) weaponsWanted.Add(WeaponType.SMG);
+            if(_instance.Lmg) weaponsWanted.Add(WeaponType.LMG);
+            if(_instance.Rifle) weaponsWanted.Add(WeaponType.Rifle);
+            if(_instance.Pistol) weaponsWanted.Add(WeaponType.Pistol);
+            if(_instance.Shotgun) weaponsWanted.Add(WeaponType.Shotgun);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(weaponsWanted, _instance.ManualOnly);
             _playerCharacter.Equip(weapon);
             weapon.Reload(_playerCharacter.Inventory());
-            _encounter = CombatScenario.Generate(Size);
+            
+            _encounter = CombatScenario.Generate(_instance.Size);
             _encounter.SetCharacter(_playerCharacter);
             CombatManager.EnterCombat(_encounter);
         }

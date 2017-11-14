@@ -66,7 +66,7 @@ namespace SamsHelper.Input
                 _directionAtLastPress = _lastInputValue;
                 _timeAtLastPress = currentTime;
             }
-            
+
             public void CheckPress()
             {
                 _lastInputValue = UnityEngine.Input.GetAxisRaw(_axis.ToString());
@@ -77,7 +77,7 @@ namespace SamsHelper.Input
                         _pressed = true;
                         AddPressedKey(this);
                         BroadcastInputDown(_axis, false, _lastInputValue);
-                        CheckDoubleTap();                        
+                        CheckDoubleTap();
                     }
                     else
                     {
@@ -91,11 +91,6 @@ namespace SamsHelper.Input
                     BroadcastInputUp(_axis);
                 }
             }
-        }
-        
-        private static void BroadCastDoubleTap(InputAxis axis, float lastInputValue)
-        {
-            InputListeners.ForEach(l => l.OnDoubleTap(axis, lastInputValue));
         }
 
         private static void AddPressedKey(InputPress key)
@@ -115,20 +110,39 @@ namespace SamsHelper.Input
         private static void BroadcastNoPress() => Instance().OnNoPress?.Invoke();
         public void AddOnNoPress(Action a) => Instance().OnNoPress += a;
 
-        private static void BroadcastInputDown(InputAxis axis, bool isHeld, float _lastInputValue)
+        private static void BroadcastInputDown(InputAxis axis, bool isHeld, float lastInputValue)
         {
-            InputListeners.ForEach(l => l.OnInputDown(axis, isHeld, _lastInputValue));
+            for (int i = InputListeners.Count - 1; i >= 0; --i)
+            {
+                InputListeners[i].OnInputDown(axis, isHeld, lastInputValue);
+            }
         }
 
         private static void BroadcastInputUp(InputAxis axis)
         {
-            InputListeners.ForEach(l => l.OnInputUp(axis));
+            for (int i = InputListeners.Count - 1; i >= 0; --i)
+            {
+                InputListeners[i].OnInputUp(axis);
+            }
+        }
+
+        private static void BroadCastDoubleTap(InputAxis axis, float lastInputValue)
+        {
+            for (int i = InputListeners.Count - 1; i >= 0; --i)
+            {
+                InputListeners[i].OnDoubleTap(axis, lastInputValue);
+            }
         }
 
         public static void RegisterInputListener(IInputListener inputListener)
         {
             if (InputListeners.Contains(inputListener)) return;
             InputListeners.Add(inputListener);
+        }
+
+        public static void UnregisterInputListener(IInputListener inputListener)
+        {
+            InputListeners.Remove(inputListener);
         }
     }
 }

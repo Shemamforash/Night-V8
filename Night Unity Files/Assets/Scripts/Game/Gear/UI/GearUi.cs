@@ -29,8 +29,8 @@ namespace Game.Gear.UI
             SetLeftTextCallback(gear.GetGearType().ToString);
             SetCentralTextCallback(linkedObject.ExtendedName);
             SetRightTextCallback(() => linkedObject.Weight + "kg");
-            OnEnter(() => DetailedSection.SetActive(true));
-            OnExit(() => DetailedSection.SetActive(false));
+            PrimaryButton.AddOnSelectEvent(() => DetailedSection.SetActive(true));
+            PrimaryButton.AddOnDeselectEvent(() => DetailedSection.SetActive(false));
         }
 
         protected override void CacheUiElements()

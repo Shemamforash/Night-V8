@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -11,9 +12,11 @@ namespace SamsHelper.ReactiveUI.InventoryUI
     {
         protected readonly MyGameObject LinkedObject;
         protected readonly GameObject GameObject;
-        private Func<bool> _destroyCheck;
+        private Func<bool> _destroyCondition;
         private bool _isDestroyed;
         private EnhancedButton _primaryButton;
+        private bool _navigatable = true;
+        private MenuList _menuList;
 
         protected ViewParent(MyGameObject linkedObject, Transform parent, string prefabLocation)
         {
@@ -23,34 +26,50 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Update();
         }
 
+        public void SetMenuList(MenuList menuList)
+        {
+            _menuList = menuList;
+        }
+
+        protected void SetNavigatable(bool navigatable)
+        {
+            _navigatable = navigatable;
+            _menuList?.RefreshNavigation();
+        }
+
+        public bool Navigatable()
+        {
+            return _navigatable;
+        }
+        
         protected virtual void CacheUiElements()
         {
             _primaryButton = GameObject.GetComponent<EnhancedButton>();
         }
 
-        public virtual void Update()
+        private void CheckToDestroy()
         {
-            if (_destroyCheck == null || !_destroyCheck()) return;
-            _isDestroyed = true;
+            if (_destroyCondition == null || !_destroyCondition()) return;
             Destroy();
         }
 
-        public void Destroy()
+        public virtual void Update()
         {
-            Object.Destroy(GameObject);
+            CheckToDestroy();
+        }
+
+        public virtual void Destroy()
+        {
+            GameObject.Destroy(GameObject);
             _isDestroyed = true;
         }
 
-        public virtual GameObject GetNavigationButton() =>_primaryButton.gameObject;
+        public virtual Button GetNavigationButton() => _primaryButton.Button();
         public bool IsDestroyed() => _isDestroyed;
-        public void SetDestroyCondition(Func<bool> destroyCheck) => _destroyCheck = destroyCheck;
+        public void SetDestroyCondition(Func<bool> destroyCheck) => _destroyCondition = destroyCheck;
         public void SetPreferredHeight(float height) => GameObject.GetComponent<LayoutElement>().preferredHeight = height;
-        public void OnPress(Action a) => _primaryButton.AddOnClick(() => a());
+        public EnhancedButton PrimaryButton => _primaryButton;
         //Misc
-        public void DisableBorder() => _primaryButton.DisableBorder();
-        public void OnHold(Action a, float duration) => _primaryButton.AddOnHold(a, duration);
-        public void OnEnter(Action a) => _primaryButton.AddOnSelectEvent(a);
-        protected void OnExit(Action a) => _primaryButton.AddOnDeselectEvent(a);
         public GameObject GetGameObject() => GameObject;
         public MyGameObject GetLinkedObject() => LinkedObject;
     }
