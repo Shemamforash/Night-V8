@@ -1,5 +1,4 @@
-﻿using Game.Combat.Enemies.EnemyBehaviours;
-using Game.Gear.Weapons;
+﻿using Game.Gear.Weapons;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.EnemyTypes

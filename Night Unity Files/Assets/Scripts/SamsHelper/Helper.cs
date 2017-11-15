@@ -80,7 +80,7 @@ namespace SamsHelper
             return children;
         }
 
-        public static float Round(float val, int precision)
+        public static float Round(float val, int precision = 0)
         {
             float precisionDivider = (float) Math.Pow(10f, precision);
             return (float) (Math.Round(val * precisionDivider) / precisionDivider);

@@ -32,8 +32,18 @@ namespace Game.Combat.Enemies
             _enemyHp.OnMin(Kill);
             Equip(WeaponGenerator.GenerateWeapon());
             EnemyBehaviour = new GenericBehaviour(this);
+            Print();
         }
 
+        private void Print()
+        {
+            Debug.Log(Name);
+            Debug.Log("Strength " + Helper.Round(BaseAttributes.Strength.GetCalculatedValue()));
+            Debug.Log("Intelligence " + Helper.Round(BaseAttributes.Intelligence.GetCalculatedValue()));
+            Debug.Log("Stability " + Helper.Round(BaseAttributes.Stability.GetCalculatedValue()));
+            Debug.Log("Endurance " + Helper.Round(BaseAttributes.Endurance.GetCalculatedValue()));
+        }
+        
         private void SetDistanceData()
         {
             Position.SetCurrentValue(Random.Range(25, 50));
@@ -45,11 +55,14 @@ namespace Game.Combat.Enemies
             Position.AddOnValueChange(a =>
             {
                 if (_hasFled || _isDead) return;
-                _enemyView.DistanceText.text = Helper.Round(Position.GetCurrentValue(), 0) + "m (" + a.GetThresholdName() + ")";
-                float normalisedDistance = Helper.Normalise(Position.GetCurrentValue(), MaxDistance);
+                float distance = -Helper.Round(DistanceToCharacter(CombatManager.Player()));
+                string distanceText = distance.ToString() + "m";
+                if (distance < 0) distanceText += " (Behind)";
+                _enemyView.DistanceText.text = distanceText;
+                float normalisedDistance = Helper.Normalise(distance, MaxDistance);
                 float alpha = 1f - normalisedDistance;
                 alpha *= alpha;
-                alpha = Mathf.Clamp(alpha, 1, 0.2f);
+                alpha = Mathf.Clamp(alpha, 0.2f, 1f);
                 _enemyView.SetColour(new Color(1, 1, 1, alpha));
                 if (a.GetCurrentValue() <= MaxDistance) return;
                 _hasFled = true;
@@ -155,10 +168,12 @@ namespace Game.Combat.Enemies
             {
                 float normalisedHealth = _enemyHp.GetCurrentValue() / _enemyHp.Max;
                 _enemyView.SetHealth(normalisedHealth);
-                _enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString();
+//                _enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString();
             });
             ActionTextLink.AddTextObject(_enemyView.ActionText);
             SetDistanceData();
+            ArmourLevel.AddOnValueChange(a => _enemyView.SetArmour((int)ArmourLevel.GetCurrentValue()));
+            ArmourLevel.SetCurrentValue(Random.Range(2, 10));
             return _enemyView;
         }
 

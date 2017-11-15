@@ -10,9 +10,10 @@ namespace Game.Combat.Enemies
 {
     public class EnemyView : ViewParent
     {
-        public TextMeshProUGUI CoverText, DistanceText, VisionText, StrengthText, ArmourText, ActionText;
+        public TextMeshProUGUI CoverText, DistanceText, VisionText, ActionText;//StrengthText, ArmourText, 
         private TextMeshProUGUI _nameText, _typeText;
-        private HealthBarController _upperHealthBarController, _lowerHealthBarController;
+        private ArmourController _armourController;
+        private HealthBarController _lowerHealthBarController;
         private GameObject _targetObject, _alertedObject, _detectedObject;
         
         public EnemyView(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/EnemyItem") : base(linkedObject, parent, prefabLocation)
@@ -27,11 +28,11 @@ namespace Game.Combat.Enemies
             CoverText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Cover");
             DistanceText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Distance");
             VisionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Vision");
-            StrengthText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Strength Remaining");
-            ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour");
+//            StrengthText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Strength Remaining");
+//            ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour");
             _nameText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Name");
             _typeText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Type");
-            _upperHealthBarController = Helper.FindChildWithName<HealthBarController>(GameObject, "Health Bar Top");
+            _armourController = Helper.FindChildWithName<ArmourController>(GameObject, "Armour Bar");
             _lowerHealthBarController = Helper.FindChildWithName<HealthBarController>(GameObject, "Health Bar Bottom");
             _alertedObject = GameObject.Find("Alert");
             _detectedObject = GameObject.Find("Detected");
@@ -44,8 +45,12 @@ namespace Game.Combat.Enemies
 
         public void SetHealth(float normalisedHealth)
         {
-            _upperHealthBarController.SetValue(normalisedHealth);
             _lowerHealthBarController.SetValue(normalisedHealth);
+        }
+
+        public void SetArmour(int armourLevel)
+        {
+            _armourController.SetArmourValue(armourLevel);
         }
         
         public override void Update()
@@ -58,13 +63,12 @@ namespace Game.Combat.Enemies
         public void SetColour(Color color)
         {
             GetGameObject().GetComponent<EnhancedButton>().SetColor(color);
-            _upperHealthBarController.SetColor(color);
+            _armourController.SetColor(color);
             _lowerHealthBarController.SetColor(color);
         }
 
         public void MarkUnselected()
         {
-            _upperHealthBarController.SetParticleEmissionOverDistance();
             _lowerHealthBarController.SetParticleEmissionOverDistance();
             _targetObject.SetActive(false);
         }
@@ -79,8 +83,8 @@ namespace Game.Combat.Enemies
             CoverText.text = "";
             DistanceText.text = "";
             VisionText.text = "";
-            StrengthText.text = "";
-            ArmourText.text = "";
+//            StrengthText.text = "";
+//            ArmourText.text = "";
             _nameText.text = _nameText.text + " DEAD";
             _typeText.text = "Corpse";
             ActionText.text = "";
