@@ -41,7 +41,7 @@ namespace Game.Combat.Skills
         protected virtual void OnFire()
         {
             Deactivate();
-            shot = new Shot(Player, CombatManager.GetCurrentTarget());
+            shot = new Shot(CombatManager.GetCurrentTarget(), Player);
         }
 
         public override void SetController(CooldownController controller)

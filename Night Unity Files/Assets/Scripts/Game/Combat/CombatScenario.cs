@@ -32,18 +32,21 @@ namespace Game.Combat
             for (int i = 0; i < size; ++i)
             {
                 int rand = Random.Range(0, 2);
-                switch (rand)
-                {
-                    case 0:
-                        scenario.AddEnemy(new Watcher());
-                        break;
-                    case 1:
-                        scenario.AddEnemy(new Grazer());
-                        break;
-                    case 2:
-                        scenario.AddEnemy(new Fighter());
-                        break;
-                }
+//                scenario.AddEnemy(new Sniper(true));
+                scenario.AddEnemy(new Sniper(false));
+                scenario.AddEnemy(new Martyr());
+//                switch (rand)
+//                {
+//                    case 0:
+//                        scenario.AddEnemy(new Watcher());
+//                        break;
+//                    case 1:
+//                        scenario.AddEnemy(new Grazer());
+//                        break;
+//                    case 2:
+//                        scenario.AddEnemy(new Fighter());
+//                        break;
+//                }
             }
             return scenario;
         }

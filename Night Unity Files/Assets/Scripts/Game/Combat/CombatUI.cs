@@ -24,12 +24,12 @@ namespace Game.Combat
             _characterHealthText,
             _ammoText,
             _weaponNameText,
-            _reloadTimeRemaining,
-            _hitInfo;
+            _reloadTimeRemaining;
+//            _hitInfo;
 
         public readonly TextMeshProUGUI ConditionsText;
 
-        private readonly Slider _characterHealthSlider;
+        private readonly HealthBarController _characterHealthController;
         private readonly List<GameObject> _magazineAmmo = new List<GameObject>();
         private Character _character;
         private float _criticalTarget;
@@ -48,21 +48,21 @@ namespace Game.Combat
             _ammoText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Ammo Stock");
             _weaponNameText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Weapon");
             _reloadTimeRemaining = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Time Remaining");
-            _hitInfo = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Hit Info");
+//            _hitInfo = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Hit Info");
             ConditionsText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Conditions");
-            _hitInfo.color = new Color(1, 1, 1, 0);
+//            _hitInfo.color = new Color(1, 1, 1, 0);
 
             GameObject cooldownContainer = Helper.FindChildWithName(playerContainer, "Cooldowns");
             DashCooldownController = Helper.FindChildWithName<CooldownController>(cooldownContainer, "Dash");
             
             SkillBar = Helper.FindChildWithName<SkillBar>(playerContainer, "Skill Bar");
 
-            _characterHealthSlider = Helper.FindChildWithName<Slider>(playerContainer, "Health Bar");
+            _characterHealthController = Helper.FindChildWithName<HealthBarController>(playerContainer, "Health Bar");
         }
 
         public void ShowHitMessage(string message)
         {
-            _hitInfo.text = message;
+//            _hitInfo.text = message;
             _hitInfoTimerCurrent = HitInfoTimerMax;
         }
 
@@ -75,12 +75,12 @@ namespace Game.Combat
             {
                 opacity = 0;
             }
-            _hitInfo.color = new Color(1, 1, 1, opacity);
+//            _hitInfo.color = new Color(1, 1, 1, opacity);
         }
 
         public void UpdateCharacterHealth(MyValue health)
         {
-            _characterHealthSlider.value = health.GetCurrentValue() / health.Max;
+            _characterHealthController.SetValue(health.GetCurrentValue() / health.Max);
             _characterHealthText.text = (int) health.GetCurrentValue() + "/" + (int) health.Max;
         }
 

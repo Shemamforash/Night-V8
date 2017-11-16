@@ -88,7 +88,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             {
                 if (CombatManager.Player().InCover()) return;
                 //TODO melee range
-                if (Enemy.DistanceToCharacter(CombatManager.Player()) > 0) return;
+                if (Enemy.Distance > 0) return;
                 CombatManager.Player().KnockDown();
                 CombatManager.Player().TakeDamage(null, 10);
             });
@@ -148,11 +148,11 @@ namespace Game.Combat.Enemies.EnemyBehaviours
                 Enemy.MoveBackward();
                 return;
             }
-            if (Enemy.DistanceToCharacter(CombatManager.Player()) == 0)
+            if (Enemy.Distance.ReachedMin())
             {
                 Melee();
             }
-            else if (Mathf.Abs(Enemy.DistanceToCharacter(CombatManager.Player())) < 20)
+            else if (Enemy.Distance.GetCurrentValue() < 20)
             {
                 SetStatusText("Charging");
                 Enemy.StartSprinting();

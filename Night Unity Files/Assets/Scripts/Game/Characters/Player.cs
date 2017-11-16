@@ -15,6 +15,7 @@ using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
+using UnityEngine.Assertions.Comparers;
 
 namespace Game.Characters
 {
@@ -34,6 +35,12 @@ namespace Game.Characters
             CharacterInventory.MaxWeight = 50;
         }
 
+        protected override float GetSpeedModifier()
+        {
+            float walkSpeed = 1f + BaseAttributes.Endurance.GetCalculatedValue() / 20f;
+            return walkSpeed * Time.deltaTime;
+        }
+        
         //Links character to object in scene
         public override void SetGameObject(GameObject gameObject)
         {

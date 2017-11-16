@@ -63,7 +63,6 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         {
             _finished = true;
             _cancelCooldown?.Invoke();
-            _manager.RemoveCooldown(this);
         }
 
         public void Update()

@@ -43,7 +43,11 @@ namespace Game.Combat
         {
             CombatCooldowns.UpdateCooldowns();
             CombatUi.Update();
-            Enemies.ForEach(r => { r.UpdateBehaviour(); });
+            Enemies.ForEach(r =>
+            {
+                if (r.IsDead()) return;
+                r.UpdateBehaviour();
+            });
             Player().DecreaseRage();
         }
 
@@ -127,9 +131,33 @@ namespace Game.Combat
 
         public static float DistanceBetweenCharacter(Character origin, Character target)
         {
-            return target.RawPosition() - origin.RawPosition();
+            if (origin is Player) return ((Enemy) target).Distance.GetCurrentValue();
+            if (target is Player) return ((Enemy) origin).Distance.GetCurrentValue();
+            return Mathf.Abs(((Enemy)target).Distance.GetCurrentValue() - ((Enemy)origin).Distance.GetCurrentValue());
         }
 
+        public static void IncreaseDistance(Character c, float distance)
+        {
+            if(c is Player) Enemies.ForEach(e => e.Distance.Increment(distance));
+            else ((Enemy)c).Distance.Increment(distance);
+        }
+
+        public static void ReduceDistance(Character c, float distance)
+        {
+            if (c is Player)
+                Enemies.ForEach(e =>
+                {
+                    e.Distance.Increment(-distance);
+                    //TODO melee
+                    //if(e.Distance.ReachedMin()) EnterMelee(e);
+                });
+            else
+            {
+                ((Enemy)c).Distance.Increment(-distance);
+//                if (((Enemy) c).Distance.ReachedMin()) EnterMelee(c);
+            }
+        }
+        
         public static Character GetTarget(Character c)
         {
             if (c is Player)
@@ -166,14 +194,11 @@ namespace Game.Combat
         public static List<Enemy> GetEnemiesBehindTarget(Character target)
         {
             List<Enemy> enemiesBehindTarget = new List<Enemy>();
-            if (target is Player)
-            {
-                return enemiesBehindTarget;
-            }
+            if (target is Player) return enemiesBehindTarget;
             foreach (Enemy enemy in Enemies)
             {
                 if (enemy == target) continue;
-                if (enemy.RawPosition() > target.RawPosition())
+                if (enemy.Distance > ((Enemy)target).Distance)
                 {
                     enemiesBehindTarget.Add(enemy);
                 }
@@ -181,17 +206,18 @@ namespace Game.Combat
             return enemiesBehindTarget;
         }
 
-        public static List<Enemy> GetEnemiesInRange(Character target, int splinterRange)
+        public static List<Character> GetCharactersInRange(Character target, int splinterRange)
         {
-            List<Enemy> enemiesInRange = new List<Enemy>();
-            if (target is Player)
+            List<Character> enemiesInRange = new List<Character>();
+            Enemy enemy1 = target as Enemy;
+            if (enemy1?.Distance.GetCurrentValue() <= splinterRange)
             {
-                return enemiesInRange;
+                enemiesInRange.Add(_player);
             }
             foreach (Enemy enemy in Enemies)
             {
                 if (enemy == target) continue;
-                float distanceFromEnemy = Math.Abs(target.RawPosition() - enemy.RawPosition());
+                float distanceFromEnemy = DistanceBetweenCharacter(target, enemy);
                 if (distanceFromEnemy <= splinterRange)
                 {
                     enemiesInRange.Add(enemy);

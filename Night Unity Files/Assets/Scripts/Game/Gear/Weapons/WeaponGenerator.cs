@@ -86,6 +86,11 @@ namespace Game.Gear.Weapons
             modifier.AddModifier(attributeType, modifierValue, summative);
         }
 
+        public static Weapon GenerateWeapon(WeaponType type, bool manualOnly = false)
+        {
+            return GenerateWeapon(new List<WeaponType> {type}, manualOnly);
+        }
+
         public static Weapon GenerateWeapon(List<WeaponType> weaponsWanted = null, bool manualOnly = false)
         {
             bool automatic = true;
@@ -98,7 +103,6 @@ namespace Game.Gear.Weapons
             {
                 Array types = Enum.GetValues(typeof(WeaponType));
                 weaponType = (WeaponType) types.GetValue(UnityEngine.Random.Range(0, types.Length));
-
             }
 #if UNITY_EDITOR
             if (manualOnly)

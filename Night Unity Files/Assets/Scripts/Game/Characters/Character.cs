@@ -6,7 +6,6 @@ using Facilitating.Audio;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.Combat;
-using Game.Combat.Skills;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.World;
@@ -22,7 +21,7 @@ using UnityEngine;
 
 namespace Game.Characters
 {
-    public class Character : MyGameObject, IPersistenceTemplate
+    public abstract class Character : MyGameObject, IPersistenceTemplate
     {
         public readonly StateMachine<BaseCharacterAction> States = new StateMachine<BaseCharacterAction>();
         public readonly CharacterConditions Conditions;
@@ -31,18 +30,24 @@ namespace Game.Characters
         protected readonly Inventory CharacterInventory;
 
         public readonly BaseAttributes BaseAttributes;
-        
+
         private bool _sprinting;
         protected Cooldown CockingCooldown;
         protected Cooldown ReloadingCooldown;
         protected Cooldown DashCooldown;
         protected Cooldown KnockdownCooldown;
+        protected Cooldown CoverCooldown;
+
         private const float KnockdownDuration = 3f;
         protected const float DashDuration = 2f;
         private long _timeAtLastFire;
-        
+        protected MyValue ArmourLevel = new MyValue();
+
         public readonly MyValue Rage = new MyValue(1, 0, 1);
         private static bool _rageActivated;
+
+        public Action<Shot> OnFireAction;
+        public bool Retaliate = false;
 
         public void IncreaseRage()
         {
@@ -68,7 +73,7 @@ namespace Game.Characters
             Rage.Increment(decreaseAmount * Time.deltaTime);
             return !Rage.ReachedMin();
         }
-        
+
         private void EndRageMode()
         {
             if (!_rageActivated) return;
@@ -86,7 +91,7 @@ namespace Game.Characters
             weapon.WeaponAttributes.ReloadSpeed.AddModifier(-0.5f);
             weapon.WeaponAttributes.FireRate.AddModifier(0.5f);
         }
-        
+
         private enum CoverLevel
         {
             None,
@@ -95,7 +100,7 @@ namespace Game.Characters
         }
 
         private CoverLevel _coverLevel;
-        
+
         protected Character(string name) : base(name, GameObjectType.Character)
         {
             CharacterInventory = new DesolationInventory(name);
@@ -107,6 +112,7 @@ namespace Game.Characters
             }
             SetReloadCooldown();
             SetKnockdownCooldown();
+            SetCoverCooldown();
             SetCockCooldown();
             SetDashCooldown();
             Rage.OnMin(EndRageMode);
@@ -121,13 +127,20 @@ namespace Game.Characters
         public Armour Armour() => GetGearItem(GearSubtype.Armour) as Armour;
         public Accessory Accessory() => GetGearItem(GearSubtype.Accessory) as Accessory;
 
-        public virtual void TakeDamage(int amount)
+        public virtual void TakeDamage(Shot shot, int damage)
         {
-            BaseAttributes.Strength.SetCurrentValue(BaseAttributes.Strength.GetCurrentValue() - amount);
+            BaseAttributes.Strength.SetCurrentValue(BaseAttributes.Strength.GetCurrentValue() - damage);
             CombatManager.CombatUi.UpdateCharacterHealth(BaseAttributes.Strength);
             if (BaseAttributes.Strength.ReachedMin())
             {
                 //TODO kill character
+            }
+            else
+            {
+                if (Retaliate)
+                {
+                    FireWeapon(shot?.Origin());
+                }
             }
         }
 
@@ -168,22 +181,24 @@ namespace Game.Characters
         public virtual void Equip(GearItem gearItem)
         {
             Inventory previousInventory = gearItem.ParentInventory;
-            GearItem previousEquipped = _equippedGear[gearItem.GetGearType()];
-            previousEquipped?.Modifier.Remove(BaseAttributes);
             if (!CharacterInventory.ContainsItem(gearItem))
             {
                 gearItem.MoveTo(CharacterInventory);
             }
+            GearItem previousEquipped = _equippedGear[gearItem.GetGearType()];
             if (previousEquipped != null)
             {
+                previousEquipped.RemoveOwner();
+                previousEquipped.Modifier.Remove(BaseAttributes);
                 previousEquipped.Equipped = false;
                 previousEquipped.MoveTo(previousInventory);
             }
+            gearItem.SetOwner(this);
             gearItem.Equipped = true;
             _equippedGear[gearItem.GetGearType()] = gearItem;
             gearItem.Modifier.Apply(BaseAttributes);
         }
-        
+
         //Cooldowns
 
         protected virtual void SetDashCooldown()
@@ -194,15 +209,22 @@ namespace Game.Characters
         protected virtual void SetCockCooldown()
         {
             CockingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
-            CockingCooldown.SetEndAction(() =>
-            {
-                Weapon().Cocked = true;
-            });
+            CockingCooldown.SetEndAction(() => { Weapon().Cocked = true; });
         }
 
         protected virtual void SetKnockdownCooldown()
         {
             KnockdownCooldown = CombatManager.CombatCooldowns.CreateCooldown(KnockdownDuration);
+        }
+
+        protected virtual void SetCoverCooldown()
+        {
+            CoverCooldown = CombatManager.CombatCooldowns.CreateCooldown(2f);
+            CoverCooldown.SetEndAction(() =>
+            {
+                _coverLevel = CoverLevel.Total;
+                CombatManager.TakeCover(this);
+            });
         }
 
         protected virtual void SetReloadCooldown()
@@ -217,19 +239,16 @@ namespace Game.Characters
 
         //MOVEMENT
 
-        private float GetSpeedModifier()
-        {
-            return (1f + BaseAttributes.Endurance.GetCalculatedValue() / 100f) * Time.deltaTime;
-        }
+        protected abstract float GetSpeedModifier();
 
-        public void Approach()
+        public void MoveForward()
         {
             if (Immobilised()) return;
             LeaveCover();
-            CombatManager.DecreaseDistance(this, GetSpeedModifier());
+            CombatManager.ReduceDistance(this, GetSpeedModifier());
         }
 
-        public void Retreat()
+        public void MoveBackward()
         {
             if (Immobilised()) return;
             LeaveCover();
@@ -240,11 +259,11 @@ namespace Game.Characters
         {
             if (direction > 0)
             {
-                Approach();
+                MoveForward();
             }
             else
             {
-                Retreat();
+                MoveBackward();
             }
         }
 
@@ -278,8 +297,7 @@ namespace Game.Characters
         public void TakeCover()
         {
             if (Immobilised()) return;
-            _coverLevel = CoverLevel.Total;
-            CombatManager.TakeCover(this);
+            CoverCooldown.Start();
         }
 
         public void LeaveCover()
@@ -317,7 +335,7 @@ namespace Game.Characters
         {
             return !Weapon().Automatic && !Weapon().Cocked && !Weapon().Empty();
         }
-        
+
         //RELOADING
         protected void TryReload()
         {
@@ -336,6 +354,8 @@ namespace Game.Characters
             if (ReloadingCooldown.Running()) return;
             if (Weapon().FullyLoaded()) return;
             if (Inventory().GetResourceQuantity(InventoryResourceType.Ammo) == 0) return;
+            OnFireAction = null;
+            Retaliate = false;
             float reloadSpeed = Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
             CombatManager.CombatUi.EmptyMagazine();
             ReloadingCooldown.Duration = reloadSpeed;
@@ -355,21 +375,30 @@ namespace Game.Characters
             return !Immobilised() && Weapon().Cocked && !Weapon().Empty() && FireRateElapsedTimeMet();
         }
 
+        public virtual void ConsumeAmmo(int amount = 1)
+        {
+            Weapon().ConsumeAmmo(amount);
+        }
+
         private bool FireRateElapsedTimeMet()
         {
             long timeElapsed = Helper.TimeInMillis() - _timeAtLastFire;
-            float targetTime = 1f / Weapon().GetAttributeValue(AttributeType.FireRate) * 1000;
+            long targetTime = (long) (1f / Weapon().GetAttributeValue(AttributeType.FireRate) * 1000);
             return !(timeElapsed < targetTime);
         }
 
-        public virtual void FireWeapon(int damage = -1)
+        //Returns true if target hit
+        public virtual Shot FireWeapon(Character target)
         {
-            if (!CanFire()) return;
-            IncreaseRage();
-            EnemyPlayerRelation relation = CombatManager.FindRelation(this);
-            if(damage == -1) damage = Weapon().GetShotDamage(relation.Distance.GetCurrentValue(), _rageActivated);
-            relation.GetTarget(this).TakeDamage(damage);
-            Weapon().Fire();
+            if (!CanFire()) return null;
+            if (target == null) target = CombatManager.GetTarget(this);
+            Shot normalShot = new Shot(target, this);
+            OnFireAction?.Invoke(normalShot);
+            normalShot.Fire();
+            if (normalShot.DidHit())
+            {
+                IncreaseRage();
+            }
             if (Weapon().Automatic)
             {
                 _timeAtLastFire = Helper.TimeInMillis();
@@ -378,6 +407,7 @@ namespace Game.Characters
             {
                 Weapon().Cocked = false;
             }
+            return normalShot;
         }
 
         //DASHING
@@ -397,11 +427,13 @@ namespace Game.Characters
             return DashCooldown.Finished();
         }
 
+        private float _dashDistance = 5f;
+
         private void DashForward()
         {
             if (Immobilised()) return;
             if (!CanDash()) return;
-            CombatManager.DashForward(this);
+            CombatManager.ReduceDistance(this, _dashDistance);
             DashCooldown.Start();
         }
 
@@ -409,36 +441,17 @@ namespace Game.Characters
         {
             if (Immobilised()) return;
             if (!CanDash()) return;
-            CombatManager.DashBackward(this);
+            CombatManager.IncreaseDistance(this, _dashDistance);
             DashCooldown.Start();
         }
 
         //MISC
 
-        public void Interrupt()
+        public virtual void Interrupt()
         {
             StopCocking();
             StopReloading();
             StopSprinting();
-            UpdateMagazineUi();
-        }
-
-        protected void UpdateMagazineUi()
-        {
-            string magazineMessage = "";
-            if (Inventory().GetResourceQuantity(InventoryResourceType.Ammo) == 0) magazineMessage = "NO AMMO";
-            else if (!Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
-            else if (Weapon().Empty()) magazineMessage = "RELOAD";
-
-            if (magazineMessage == "")
-            {
-                CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
-            }
-            else
-            {
-                CombatManager.CombatUi.EmptyMagazine();
-                CombatManager.CombatUi.SetMagazineText(magazineMessage);
-            }
         }
 
         protected void Flank()
@@ -449,13 +462,20 @@ namespace Game.Characters
 
         protected bool Immobilised()
         {
-            return ReloadingCooldown.Running() || CockingCooldown.Running() || KnockdownCooldown.Running();
+            return ReloadingCooldown.Running() || CockingCooldown.Running() || KnockdownCooldown.Running() || CoverCooldown.Running();
         }
 
         public void KnockDown()
         {
             if (KnockdownCooldown.Running()) return;
             KnockdownCooldown.Start();
+            Interrupt();
+        }
+
+        public void Knockback(float knockbackDistance)
+        {
+            Interrupt();
+            CombatManager.IncreaseDistance(this, knockbackDistance);
         }
     }
 }

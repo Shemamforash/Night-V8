@@ -3,6 +3,7 @@ using Game.Combat.Enemies.EnemyBehaviours;
 using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
@@ -20,19 +21,24 @@ namespace Game.Combat.Enemies
         public readonly CharacterAttribute DetectionRange = new CharacterAttribute(AttributeType.Detection, 15f);
         protected readonly ValueTextLink<string> ActionTextLink = new ValueTextLink<string>();
 
-        private const float _movementSpeed = 1;
         private EnemyView _enemyView;
         public GenericBehaviour EnemyBehaviour;
         private bool _alerted;
         private EnemyBehaviour _currentBehaviour;
+        public readonly MyValue Distance = new MyValue(0, 0, 150);
 
         protected Enemy(string name, int enemyHp) : base(name)
         {
             _enemyHp = new MyValue(enemyHp, 0, enemyHp);
             _enemyHp.OnMin(Kill);
-            Equip(WeaponGenerator.GenerateWeapon());
             EnemyBehaviour = new GenericBehaviour(this);
-            Print();
+            CharacterInventory.IncrementResource(InventoryResourceType.Ammo, 10000000);
+//            Print();
+        }
+
+        protected override float GetSpeedModifier()
+        {
+            return BaseAttributes.Endurance.GetCalculatedValue() * Time.deltaTime;
         }
 
         private void Print()
@@ -43,21 +49,20 @@ namespace Game.Combat.Enemies
             Debug.Log("Stability " + Helper.Round(BaseAttributes.Stability.GetCalculatedValue()));
             Debug.Log("Endurance " + Helper.Round(BaseAttributes.Endurance.GetCalculatedValue()));
         }
-        
+
         private void SetDistanceData()
         {
-            Position.SetCurrentValue(Random.Range(25, 50));
-            Position.AddThreshold(ImmediateDistance, "Immediate");
-            Position.AddThreshold(CloseDistance, "Close");
-            Position.AddThreshold(MidDistance, "Medium");
-            Position.AddThreshold(FarDistance, "Far");
-            Position.AddThreshold(MaxDistance, "Out of Range");
-            Position.AddOnValueChange(a =>
+            Distance.SetCurrentValue(Random.Range(25, 50));
+            Distance.AddThreshold(ImmediateDistance, "Immediate");
+            Distance.AddThreshold(CloseDistance, "Close");
+            Distance.AddThreshold(MidDistance, "Medium");
+            Distance.AddThreshold(FarDistance, "Far");
+            Distance.AddThreshold(MaxDistance, "Out of Range");
+            Distance.AddOnValueChange(a =>
             {
                 if (_hasFled || _isDead) return;
-                float distance = -Helper.Round(DistanceToCharacter(CombatManager.Player()));
+                float distance = Helper.Round(Distance.GetCurrentValue());
                 string distanceText = distance.ToString() + "m";
-                if (distance < 0) distanceText += " (Behind)";
                 _enemyView.DistanceText.text = distanceText;
                 float normalisedDistance = Helper.Normalise(distance, MaxDistance);
                 float alpha = 1f - normalisedDistance;
@@ -96,7 +101,7 @@ namespace Game.Combat.Enemies
             DetectionRange.RemoveModifier(amount);
         }
 
-        public void Alert()
+        public virtual void Alert()
         {
             if (_alerted) return;
             _alerted = true;
@@ -110,13 +115,13 @@ namespace Game.Combat.Enemies
 
         private void UpdateDetection()
         {
-            if (Position < DetectionRange || _alerted)
+            if (Distance < DetectionRange && !_alerted)
             {
                 _enemyView.SetDetected();
                 Alert();
                 return;
             }
-            if (Position < VisionRange)
+            if (Distance < VisionRange)
             {
                 _enemyView.SetAlert();
                 return;
@@ -172,22 +177,26 @@ namespace Game.Combat.Enemies
             });
             ActionTextLink.AddTextObject(_enemyView.ActionText);
             SetDistanceData();
-            ArmourLevel.AddOnValueChange(a => _enemyView.SetArmour((int)ArmourLevel.GetCurrentValue()));
+            ArmourLevel.AddOnValueChange(a => _enemyView.SetArmour((int) ArmourLevel.GetCurrentValue()));
             ArmourLevel.SetCurrentValue(Random.Range(2, 10));
             return _enemyView;
         }
 
-        public void UpdateBehaviour()
+        public virtual void UpdateBehaviour()
         {
             if (!InCombat()) return;
             DecreaseRage();
             UpdateDetection();
-            EnemyBehaviour.Update();
+//            EnemyBehaviour.Update();
         }
 
         public string EnemyType()
         {
             return "Default Enemy";
         }
+
+        public bool IsDead() => _isDead;
+
+        public bool HasFled() => _hasFled;
     }
 }

@@ -17,10 +17,8 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             {
                 Cooldown cooldown = _activeCooldowns[i];
                 cooldown.Update();
-                if (cooldown.Finished())
-                {
-                    _activeCooldowns.RemoveAt(i);
-                }
+                if (cooldown.Running()) continue;
+                _activeCooldowns.RemoveAt(i);
             }
         }
 
@@ -29,14 +27,9 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             _activeCooldowns.Add(c);
         }
 
-        public void RemoveCooldown(Cooldown cooldown)
-        {
-            _activeCooldowns.Remove(cooldown);
-        }
-
         public void Clear()
         {
-            _activeCooldowns.Clear();
+            _activeCooldowns.ForEach(a => a.Cancel());
         }
     }
 }
