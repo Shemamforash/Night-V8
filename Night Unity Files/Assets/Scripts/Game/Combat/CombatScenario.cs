@@ -35,6 +35,7 @@ namespace Game.Combat
 //                scenario.AddEnemy(new Sniper(true));
                 scenario.AddEnemy(new Sniper(false));
                 scenario.AddEnemy(new Martyr());
+                scenario.AddEnemy(new Medic());
 //                switch (rand)
 //                {
 //                    case 0:

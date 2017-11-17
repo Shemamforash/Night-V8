@@ -1,15 +1,7 @@
-using System;
 using System.Xml;
-using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
-using Game.World;
-using Game.World.WorldEvents;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI;
-using TMPro;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Characters

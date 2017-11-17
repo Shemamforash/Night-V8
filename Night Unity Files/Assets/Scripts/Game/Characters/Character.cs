@@ -134,14 +134,9 @@ namespace Game.Characters
             if (BaseAttributes.Strength.ReachedMin())
             {
                 //TODO kill character
+                return;
             }
-            else
-            {
-                if (Retaliate)
-                {
-                    FireWeapon(shot?.Origin());
-                }
-            }
+            if (Retaliate) FireWeapon(shot?.Origin());
         }
 
         public virtual void Kill()
@@ -331,7 +326,7 @@ namespace Game.Characters
             CockingCooldown.Cancel();
         }
 
-        private bool NeedsCocking()
+        protected bool NeedsCocking()
         {
             return !Weapon().Automatic && !Weapon().Cocked && !Weapon().Empty();
         }
@@ -340,7 +335,7 @@ namespace Game.Characters
         protected void TryReload()
         {
             if (Immobilised()) return;
-            if (NeedsCocking())
+            if (NeedsCocking() && !Weapon().Empty())
             {
                 CockWeapon();
                 return;
@@ -373,11 +368,6 @@ namespace Game.Characters
         public bool CanFire()
         {
             return !Immobilised() && Weapon().Cocked && !Weapon().Empty() && FireRateElapsedTimeMet();
-        }
-
-        public virtual void ConsumeAmmo(int amount = 1)
-        {
-            Weapon().ConsumeAmmo(amount);
         }
 
         private bool FireRateElapsedTimeMet()

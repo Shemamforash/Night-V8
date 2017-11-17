@@ -21,7 +21,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
 
         public GenericBehaviour(Enemy enemy) : base(nameof(GenericBehaviour), enemy)
         {
-            _damageBeforeCover = enemy._enemyHp.Max / enemy.BaseAttributes.GetCalculatedValue(AttributeType.Stability) * 10;
+            _damageBeforeCover = enemy.BaseAttributes.Strength.Max / enemy.BaseAttributes.GetCalculatedValue(AttributeType.Stability) * 10;
             _isAnimal = enemy.BaseAttributes.Intelligence.ReachedMin();
             _isCoward = enemy.BaseAttributes.Stability.ReachedMin();
             _idleActions.Add(Wander);

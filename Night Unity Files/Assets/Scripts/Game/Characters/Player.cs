@@ -213,12 +213,6 @@ namespace Game.Characters
             return shot;
         }
 
-        public override void ConsumeAmmo(int amount)
-        {
-            base.ConsumeAmmo(amount);
-            UpdateMagazineUi();
-        }
-
         //MISC
 
         public override void Interrupt()

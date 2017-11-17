@@ -1,19 +1,20 @@
 ﻿using Game.Characters;
 using Game.Combat.Enemies.EnemyBehaviours;
-using Game.Gear.Weapons;
+using Game.Combat.Enemies.EnemyTypes;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Game.Combat.Enemies
 {
-    public class Enemy : Character
+    public partial class Enemy : Character
     {
         private const float ImmediateDistance = 1f, CloseDistance = 10f, MidDistance = 50f, FarDistance = 100f, MaxDistance = 150f;
-        public MyValue _enemyHp;
         private MyValue _sightToCharacter;
         private MyValue _exposure;
         private bool _hasFled, _isDead;
@@ -27,12 +28,55 @@ namespace Game.Combat.Enemies
         private EnemyBehaviour _currentBehaviour;
         public readonly MyValue Distance = new MyValue(0, 0, 150);
 
+        private void MakeHealRequest()
+        {
+            foreach (Enemy enemy in CombatManager.GetEnemies())
+            {
+                Medic medic = enemy as Medic;
+                medic?.RequestHeal(this);
+            }
+        }
+
         protected Enemy(string name, int enemyHp) : base(name)
         {
-            _enemyHp = new MyValue(enemyHp, 0, enemyHp);
-            _enemyHp.OnMin(Kill);
+            BaseAttributes.Strength.Max = enemyHp;
+            BaseAttributes.Strength.SetCurrentValue(enemyHp);
+            if (!(this is Medic))
+            {
+                BaseAttributes.Strength.AddOnValueChange(a =>
+                {
+                    if (a.GetCurrentValue() <= a.Max / 2)
+                    {
+                        MakeHealRequest();
+                    }
+                });
+            }
+            BaseAttributes.Strength.OnMin(Kill);
             EnemyBehaviour = new GenericBehaviour(this);
             CharacterInventory.IncrementResource(InventoryResourceType.Ammo, 10000000);
+            
+            _fireCooldown = CombatManager.CombatCooldowns.CreateCooldown();
+            _fireCooldown.SetStartAction(() => SetActionText("Firing"));
+            _fireCooldown.SetDuringAction(f => TryFire());
+            
+            _aimCooldown = new Cooldown(CombatManager.CombatCooldowns, _aimTime);
+            _aimCooldown.SetStartAction(() => SetActionText("Aiming"));
+            _aimCooldown.SetDuringAction(f =>
+            {
+                float normalisedTime = Helper.Normalise(f, _aimTime);
+                _enemyView.SetAimTimerValue(1 - normalisedTime);
+            });
+            _aimCooldown.SetEndAction(() =>
+            {
+                _fireCooldown.Duration = Random.Range(1, 3);
+                _fireCooldown.Start();
+                _enemyView.SetAimTimerValue(0);
+            });
+
+            ReloadingCooldown.SetStartAction(() => SetActionText("Reloading"));
+            CoverCooldown.SetStartAction(() => SetActionText("Taking Cover"));
+            SetWanderCooldown();
+            CurrentAction = Wander;
 //            Print();
         }
 
@@ -101,11 +145,10 @@ namespace Game.Combat.Enemies
             DetectionRange.RemoveModifier(amount);
         }
 
-        public virtual void Alert()
+        public void TryAlert()
         {
             if (_alerted) return;
-            _alerted = true;
-//            EnemyBehaviour.StatesAsList().ForEach(b => b.OnDetect());
+            Alert();
         }
 
         public void SetActionText(string action)
@@ -118,7 +161,7 @@ namespace Game.Combat.Enemies
             if (Distance < DetectionRange && !_alerted)
             {
                 _enemyView.SetDetected();
-                Alert();
+                TryAlert();
                 return;
             }
             if (Distance < VisionRange)
@@ -155,8 +198,8 @@ namespace Game.Combat.Enemies
             EnemyBehaviour.TakeFire();
             if (damage == 0) return;
             damage = GetCoverProtection(damage);
-            Alert();
-            _enemyHp.Increment(-damage);
+            TryAlert();
+            BaseAttributes.Strength.Increment(-damage);
             EnemyBehaviour.TakeDamage(damage);
         }
 
@@ -169,9 +212,9 @@ namespace Game.Combat.Enemies
         public override ViewParent CreateUi(Transform parent)
         {
             _enemyView = new EnemyView(this, parent);
-            _enemyHp.AddOnValueChange(f =>
+            BaseAttributes.Strength.AddOnValueChange(f =>
             {
-                float normalisedHealth = _enemyHp.GetCurrentValue() / _enemyHp.Max;
+                float normalisedHealth = f.GetCurrentValue() / f.Max;
                 _enemyView.SetHealth(normalisedHealth);
 //                _enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString();
             });
@@ -180,14 +223,6 @@ namespace Game.Combat.Enemies
             ArmourLevel.AddOnValueChange(a => _enemyView.SetArmour((int) ArmourLevel.GetCurrentValue()));
             ArmourLevel.SetCurrentValue(Random.Range(2, 10));
             return _enemyView;
-        }
-
-        public virtual void UpdateBehaviour()
-        {
-            if (!InCombat()) return;
-            DecreaseRage();
-            UpdateDetection();
-//            EnemyBehaviour.Update();
         }
 
         public string EnemyType()
