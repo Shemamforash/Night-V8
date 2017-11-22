@@ -1,41 +1,45 @@
-﻿using SamsHelper.BaseGameFunctionality.Basic;
+﻿using System.Collections.Generic;
+using Game.Characters;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.ReactiveUI;
+using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
     public class WeaponAttributes : AttributeContainer
     {
-        public CharacterAttribute Damage, Accuracy, CriticalChance, Handling, FireRate, ReloadSpeed;
-        private readonly Weapon _weapon;
+        public readonly WeaponClass WeaponClass;
+        public readonly GearModifier SubClass, SecondaryModifier;
+        public CharacterAttribute Damage, Accuracy, CriticalChance, Handling, FireRate, ReloadSpeed, Capacity, Pellets;
         private float _dps;
-        private const float MaxDurability = 20;
+        private AttributeModifier _durabilityModifier = new AttributeModifier();
+        public readonly MyValue Durability;
+        private const int MaxDurability = 20;
 
-        public WeaponAttributes(Weapon weapon)
+        public WeaponAttributes(WeaponClass weaponClass, GearModifier subClass, GearModifier secondaryModifier)
         {
-            _weapon = weapon;
+            Durability = new MyValue(Random.Range(0, MaxDurability), 0, MaxDurability);
+            WeaponClass = weaponClass;
+            WeaponClass.ApplyToGear(this);
+            SubClass = subClass;
+            SubClass.ApplyToGear(this);
+            SecondaryModifier = secondaryModifier;
+            SecondaryModifier.ApplyToGear(this);
             RecalculateAttributeValues();
         }
 
         public void RecalculateAttributeValues()
         {
-            float durabilityModifier = 1f / (MaxDurability * 2) * (_weapon.Durability.GetCurrentValue() + MaxDurability);
-
-            Damage.SetCurrentValue(_weapon.WeaponClass.Damage * durabilityModifier);
-            Accuracy.SetCurrentValue(_weapon.WeaponClass.Accuracy * durabilityModifier);
-            CriticalChance.SetCurrentValue(_weapon.WeaponClass.CriticalChance * durabilityModifier);
-            Handling.SetCurrentValue(_weapon.WeaponClass.Handling * durabilityModifier);
-            FireRate.SetCurrentValue(_weapon.WeaponClass.FireRate * durabilityModifier);
-            ReloadSpeed.SetCurrentValue(_weapon.WeaponClass.ReloadSpeed * durabilityModifier);
-
-            _weapon.SubClass.Apply(this);
-            _weapon.SecondaryModifier.Apply(this);
+            float durabilityModifierValue = 1f / (MaxDurability * 2) * (Durability.CurrentValue() + MaxDurability);
+            _durabilityModifier.SetMultiplicative(durabilityModifierValue);
             CalculateDPS();
         }
 
         private void CalculateDPS()
         {
-            float averageShotDamage = CriticalChance.GetCalculatedValue() / 100 * Damage.GetCalculatedValue() * 2 + (1 - CriticalChance.GetCalculatedValue() / 100) * Damage.GetCalculatedValue();
-            float magazineDamage = _weapon.Capacity * averageShotDamage * _weapon.Pellets * Accuracy.GetCalculatedValue() / 100;
-            float magazineDuration = _weapon.Capacity / FireRate.GetCalculatedValue() + ReloadSpeed.GetCalculatedValue();
+            float averageShotDamage = CriticalChance.CurrentValue() / 100 * Damage.CurrentValue() * 2 + (1 - CriticalChance.CurrentValue() / 100) * Damage.CurrentValue();
+            float magazineDamage = (int) Capacity.CurrentValue() * averageShotDamage * (int) Pellets.CurrentValue() * Accuracy.CurrentValue() / 100;
+            float magazineDuration = (int) Capacity.CurrentValue() / FireRate.CurrentValue() + ReloadSpeed.CurrentValue();
             _dps = magazineDamage / magazineDuration;
         }
 
@@ -52,12 +56,17 @@ namespace Game.Gear.Weapons
             Handling = new CharacterAttribute(AttributeType.Handling, 0, 0, 100);
             FireRate = new CharacterAttribute(AttributeType.FireRate, 0);
             ReloadSpeed = new CharacterAttribute(AttributeType.ReloadSpeed, 0);
+            Capacity = new CharacterAttribute(AttributeType.Capacity, 0);
+            Pellets = new CharacterAttribute(AttributeType.Pellets, 0);
             AddAttribute(Damage);
             AddAttribute(Accuracy);
             AddAttribute(ReloadSpeed);
             AddAttribute(CriticalChance);
             AddAttribute(Handling);
             AddAttribute(FireRate);
+            AddAttribute(Capacity);
+            AddAttribute(Pellets);
+            _durabilityModifier.AddTargetAttributes(new List<CharacterAttribute> {Damage, Accuracy, CriticalChance, Handling, FireRate, ReloadSpeed});
         }
     }
 }

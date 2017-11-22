@@ -15,6 +15,11 @@ namespace Game.Combat.Enemies.EnemyTypes
             _detonateCooldown.SetEndAction(Detonate);
             BaseAttributes.Endurance.SetCurrentValue(3);
             AcceptsHealing = false;
+            HealthController.AddOnTakeDamage(damage =>
+            {
+                if (_detonated) return;
+                Detonate();
+            });
         }
 
         protected override void Alert()
@@ -35,19 +40,12 @@ namespace Game.Combat.Enemies.EnemyTypes
         private void Detonate()
         {
             _detonated = true;
-            Shot s = new Shot(this);
+            Shot s = new Shot(this, null);
             s.SetSplinterRange(10);
             s.SetSplinterFalloff(0.5f);
             s.SetKnockbackDistance(10);
             s.SetDamage(50);
             s.Fire();
-        }
-        
-        public override void TakeDamage(Shot shot, int damage)
-        {
-            base.TakeDamage(shot, damage);
-            if (_detonated) return;
-            Detonate();
         }
     }    
 }

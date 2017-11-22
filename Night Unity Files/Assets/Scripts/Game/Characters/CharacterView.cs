@@ -111,7 +111,7 @@ namespace Game.Characters
             TextMeshProUGUI detailText = FindInDetailedView<TextMeshProUGUI>(attributeName);
             a.AddOnValueChange(delegate(MyValue f)
             {
-                int calculatedValue = (int) ((CharacterAttribute) f).GetCalculatedValue();
+                int calculatedValue = (int) ((CharacterAttribute) f).CurrentValue();
                 simpleText.text = calculatedValue.ToString();
                 detailText.text = calculatedValue + "/" + a.Max;
             });
@@ -192,7 +192,7 @@ namespace Game.Characters
             BindUi();
             WorldState.RegisterMinuteEvent(delegate
             {
-                string currentActionString = _character.States.GetCurrentState().Name + " " + ((BaseCharacterAction) _character.States.GetCurrentState()).GetCostAsString();
+                string currentActionString = _character?.States?.GetCurrentState()?.Name + " " + _character?.States?.GetCurrentState()?.GetCostAsString();
                 _currentActionText.Value(currentActionString);
                 _detailedCurrentActionText.Value(currentActionString);
             });

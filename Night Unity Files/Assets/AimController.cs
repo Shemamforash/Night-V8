@@ -7,6 +7,7 @@ public class AimController : MonoBehaviour
 	private RectTransform _rightTransform, _leftTransform;
 	private Image _rightImage, _leftImage;
 	private float _currentTime;
+	private float _currentAlpha;
 	
 	// Use this for initialization
 	public void Awake ()
@@ -28,5 +29,24 @@ public class AimController : MonoBehaviour
 		_rightImage.color = new Color(1,1,1,alpha);
 		_leftTransform.anchoredPosition = new Vector2(position, 0);
 		_rightTransform.anchoredPosition = new Vector2(-position, 0);
+	}
+
+	public void Update()
+	{
+		if (_currentAlpha == 0) return;
+		_currentAlpha -= Time.deltaTime;
+		if (_currentAlpha < 0)
+		{
+			_currentAlpha = 0;
+			SetValue(0);
+		}
+		_leftImage.color = new Color(1,1,1,_currentAlpha);
+		_rightImage.color = new Color(1,1,1,_currentAlpha);
+	}
+
+	public void Fire()
+	{
+		SetValue(1);
+		_currentAlpha = 1f;
 	}
 }

@@ -28,7 +28,7 @@ namespace Game.Characters
         
         public float RemainingCarryCapacity()
         {
-            return Strength.GetCurrentValue();
+            return Strength.CurrentValue();
         }
 
         public override void Load(XmlNode doc, PersistenceType saveType)

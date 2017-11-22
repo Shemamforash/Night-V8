@@ -18,7 +18,7 @@ namespace Game.World.Environment_and_Weather
             VisitAllStates();
             LoadEnvironments();
             LoadProbabilities("EnvironmentProbabilityTable");
-            NavigateToState("Oasis");
+            ReturnToDefault();
             WorldState.RegisterTravelEvent(GenerateEnvironment);
             WorldState.RegisterMinuteEvent(UpdateTemperature);
             OnlyVisitOnce();
@@ -77,6 +77,7 @@ namespace Game.World.Environment_and_Weather
                 );
                 AddState(environment);
             });
+            SetDefaultState("Oasis");
         }
 
         private void UpdateTemperature()

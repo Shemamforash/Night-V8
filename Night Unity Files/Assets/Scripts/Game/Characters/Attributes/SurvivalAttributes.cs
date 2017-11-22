@@ -52,15 +52,15 @@ namespace Game.Characters.Attributes
             CharacterAttribute Intelligence = Character.BaseAttributes.Intelligence;
             if (starvationLevel >= _toleranceThresholds[4] || dehydrationLevel >= _toleranceThresholds[4])
             {
-                Intelligence.SetCurrentValue(Intelligence.GetCurrentValue() - 2);
+                Intelligence.SetCurrentValue(Intelligence.CurrentValue() - 2);
             }
             else if (starvationLevel >= _toleranceThresholds[3] || dehydrationLevel >= _toleranceThresholds[3])
             {
-                Intelligence.SetCurrentValue(Intelligence.GetCurrentValue() - 1);
+                Intelligence.SetCurrentValue(Intelligence.CurrentValue() - 1);
             }
             else
             {
-                Intelligence.SetCurrentValue(Intelligence.GetCurrentValue() + 1);
+                Intelligence.SetCurrentValue(Intelligence.CurrentValue() + 1);
             }
         }
         
@@ -87,16 +87,16 @@ namespace Game.Characters.Attributes
         
         private void Drink()
         {
-            if (Dehydration.GetCurrentValue() == 0) return;
+            if (Dehydration.CurrentValue() == 0) return;
             float consumed = WorldState.HomeInventory().DecrementResource(InventoryResourceType.Water, 1);
-            Dehydration.SetCurrentValue(Dehydration.GetCurrentValue() - consumed);
+            Dehydration.SetCurrentValue(Dehydration.CurrentValue() - consumed);
         }
 
         private void Eat()
         {
-            if (Starvation.GetCurrentValue() == 0) return;
+            if (Starvation.CurrentValue() == 0) return;
             float consumed = WorldState.HomeInventory().DecrementResource(InventoryResourceType.Food, 1);
-            Starvation.SetCurrentValue(Starvation.GetCurrentValue() - consumed);
+            Starvation.SetCurrentValue(Starvation.CurrentValue() - consumed);
         }
 
         private void SetConsumptionEvents(CharacterAttribute need, CharacterAttribute tolerance, InventoryResourceType resourceType)
@@ -107,7 +107,7 @@ namespace Game.Characters.Attributes
             {
                 if (resource.Decrement(1) != 1)
                 {
-                    tolerance.SetCurrentValue(tolerance.GetCurrentValue() + 1);
+                    tolerance.SetCurrentValue(tolerance.CurrentValue() + 1);
                 }
                 need.SetCurrentValue(0);
             });
@@ -153,7 +153,7 @@ namespace Game.Characters.Attributes
         {
             float previousTolerance = tolerance.AsPercent();
             Intensity previousIntensity = GetIntensity(previousTolerance);
-            requirement.SetCurrentValue(requirement.GetCurrentValue() + 1);
+            requirement.SetCurrentValue(requirement.CurrentValue() + 1);
             float tolerancePercentage = tolerance.AsPercent();
             Intensity currentIntensity = GetIntensity(tolerancePercentage);
             if (previousIntensity != currentIntensity)

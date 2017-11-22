@@ -20,7 +20,7 @@ namespace Game.World
 {
     public class WorldState : MonoBehaviour
     {
-        public static CooldownManager WorldCooldownManager;
+        public static CooldownManager WorldCooldownManager = new CooldownManager();
         public static int StormDistanceMax, StormDistanceActual;
         public static int DaysSpentHere;
         private static Button _inventoryButton;
@@ -131,7 +131,7 @@ namespace Game.World
         private static void SetResourceSuffix(InventoryResourceType name, string convention)
         {
             TextMeshProUGUI resourceText = GameObject.Find(name.ToString()).GetComponent<TextMeshProUGUI>();
-            _homeInventory.GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f.GetCurrentValue()) + " " + convention; });
+            _homeInventory.GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f.CurrentValue()) + " " + convention; });
         }
 
         public static WorldState Instance()
@@ -196,7 +196,7 @@ namespace Game.World
             {
                 IncrementWorld();
             }
-            WorldCooldownManager.UpdateCooldowns();
+            WorldCooldownManager?.UpdateCooldowns();
         }
         
         

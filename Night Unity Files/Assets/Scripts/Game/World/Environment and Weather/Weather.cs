@@ -34,7 +34,7 @@ namespace Game.World.Environment_and_Weather
 
         public int Temperature()
         {
-            return (int) _temperature.GetCurrentValue();
+            return (int) _temperature.CurrentValue();
         }
 
         public void UpdateWeather()

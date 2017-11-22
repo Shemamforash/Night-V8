@@ -16,6 +16,7 @@ namespace Game.Combat.Enemies.EnemyTypes
             BaseAttributes.Endurance.SetCurrentValue(7);
             PreferredCoverDistance = Weapon().GetAttributeValue(AttributeType.Accuracy) * 0.9f;
             AlertOthers = true;
+            ArmourLevel.SetCurrentValue(4);
         }
 
         protected override void Alert()

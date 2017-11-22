@@ -48,7 +48,7 @@ namespace Game.Combat
                 if (r.IsDead()) return;
                 r.UpdateBehaviour();
             });
-            Player().DecreaseRage();
+            Player().RageController.Decrease();
         }
 
         public static void ResetCombat()
@@ -67,7 +67,6 @@ namespace Game.Combat
             Enemies.AddRange(scenario.Enemies());
             MenuStateMachine.States.NavigateToState("Combat Menu");
             CombatUi.Start(scenario);
-            _player.Rage.AddOnValueChange(a => RageBarController.SetRageBarFill(a.GetCurrentValue(), _player.RageActivated()));
         }
 
         public static void ExitCombat()
@@ -86,7 +85,7 @@ namespace Game.Combat
 
         public static void SetPlayerHealthText(float f)
         {
-            _strengthText.SetCurrentValue(_strengthText.GetCurrentValue() - f);
+            _strengthText.SetCurrentValue(_strengthText.CurrentValue() - f);
         }
 
         public static void Flank(Character c)
@@ -131,9 +130,9 @@ namespace Game.Combat
 
         public static float DistanceBetweenCharacter(Character origin, Character target)
         {
-            if (origin is Player) return ((Enemy) target).Distance.GetCurrentValue();
-            if (target is Player) return ((Enemy) origin).Distance.GetCurrentValue();
-            return Mathf.Abs(((Enemy)target).Distance.GetCurrentValue() - ((Enemy)origin).Distance.GetCurrentValue());
+            if (origin is Player) return ((Enemy) target).Distance.CurrentValue();
+            if (target is Player) return ((Enemy) origin).Distance.CurrentValue();
+            return Mathf.Abs(((Enemy)target).Distance.CurrentValue() - ((Enemy)origin).Distance.CurrentValue());
         }
 
         public static void IncreaseDistance(Character c, float distance)
@@ -210,7 +209,7 @@ namespace Game.Combat
         {
             List<Character> enemiesInRange = new List<Character>();
             Enemy enemy1 = target as Enemy;
-            if (enemy1?.Distance.GetCurrentValue() <= splinterRange)
+            if (enemy1?.Distance.CurrentValue() <= splinterRange)
             {
                 enemiesInRange.Add(_player);
             }

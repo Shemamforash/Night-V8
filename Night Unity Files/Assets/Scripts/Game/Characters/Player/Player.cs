@@ -37,7 +37,7 @@ namespace Game.Characters
 
         protected override float GetSpeedModifier()
         {
-            float walkSpeed = 1f + BaseAttributes.Endurance.GetCalculatedValue() / 20f;
+            float walkSpeed = 1f + BaseAttributes.Endurance.CurrentValue() / 20f;
             return walkSpeed * Time.deltaTime;
         }
         
@@ -70,12 +70,12 @@ namespace Game.Characters
 
         private bool IsOverburdened()
         {
-            return CharacterInventory.Weight > BaseAttributes.Strength.GetCurrentValue();
+            return CharacterInventory.Weight > BaseAttributes.Strength.CurrentValue();
         }
 
         private void Tire(int amount)
         {
-            BaseAttributes.Endurance.SetCurrentValue(BaseAttributes.Endurance.GetCurrentValue() - (IsOverburdened() ? amount * 2 : amount));
+            BaseAttributes.Endurance.SetCurrentValue(BaseAttributes.Endurance.CurrentValue() - (IsOverburdened() ? amount * 2 : amount));
             CheckEnduranceZero();
         }
 
@@ -93,7 +93,7 @@ namespace Game.Characters
 
         public void Rest(int amount)
         {
-            BaseAttributes.Endurance.SetCurrentValue(BaseAttributes.Endurance.GetCurrentValue() + amount);
+            BaseAttributes.Endurance.SetCurrentValue(BaseAttributes.Endurance.CurrentValue() + amount);
             if (!BaseAttributes.Endurance.ReachedMax()) return;
             if (CurrentRegion == null)
             {
@@ -140,7 +140,7 @@ namespace Game.Characters
 
         private void SwapWeaponSkills(Weapon weapon)
         {
-            switch (weapon.WeaponClass.Type)
+            switch (weapon.WeaponType())
             {
                 case WeaponType.Pistol:
                     CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.Retribution(this));
@@ -180,7 +180,7 @@ namespace Game.Characters
             base.SetCockCooldown();
             CockingCooldown.SetEndAction(() =>
             {
-                Weapon().Cocked = true;
+                EquipmentController.Weapon().Cocked = true;
                 UpdateMagazineUi();
             });
             CockingCooldown.SetDuringAction(f => CombatManager.CombatUi.UpdateReloadTime(f));
@@ -198,8 +198,8 @@ namespace Game.Characters
             base.SetReloadCooldown();
             ReloadingCooldown.SetEndAction(() =>
             {
-                Weapon().Cocked = true;
-                Weapon().Reload(Inventory());
+                EquipmentController.Weapon().Cocked = true;
+                EquipmentController.Weapon().Reload(Inventory());
                 UpdateMagazineUi();
             });
             ReloadingCooldown.SetDuringAction(f => CombatManager.CombatUi.UpdateReloadTime(f));
@@ -225,12 +225,12 @@ namespace Game.Characters
         {
             string magazineMessage = "";
             if (Inventory().GetResourceQuantity(InventoryResourceType.Ammo) == 0) magazineMessage = "NO AMMO";
-            else if (!Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
-            else if (Weapon().Empty()) magazineMessage = "RELOAD";
+            else if (!EquipmentController.Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
+            else if (EquipmentController.Weapon().Empty()) magazineMessage = "RELOAD";
 
             if (magazineMessage == "")
             {
-                CombatManager.CombatUi.UpdateMagazine(Weapon().GetRemainingAmmo());
+                CombatManager.CombatUi.UpdateMagazine(EquipmentController.Weapon().GetRemainingAmmo());
             }
             else
             {
@@ -250,7 +250,7 @@ namespace Game.Characters
                     TakeCover();
                     break;
                 case InputAxis.Submit:
-                    TryStartRageMode();
+                    RageController.TryStart();
                     break;
                 case InputAxis.Fire:
                     FireWeapon(null);

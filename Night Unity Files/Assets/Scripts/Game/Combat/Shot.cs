@@ -11,11 +11,12 @@ namespace Game.Combat
 {
     public class Shot
     {
-        private int _damage;
+        private int _damage, _damageDealt;
         private readonly Character _target, _origin;
         private readonly float _distanceToTarget;
         private Weapon _weapon;
 
+        private int _noPellets = 1, _noShots = 1;
         private float _maxRange;
         private int _pierceDepth;
         private float _pierceFalloff = 1;
@@ -26,7 +27,6 @@ namespace Game.Combat
         private bool _guaranteeHit, _guaranteeCritical;
 
         private float _criticalChance, _hitChance;
-        private int _noPellets = 1, _noShots = 1;
 
         private float _knockbackDistance;
 
@@ -35,7 +35,7 @@ namespace Game.Combat
         private Action _onHitAction;
         private bool _didHit;
 
-        public Shot(Character target, Character origin = null)
+        public Shot(Character target, Character origin)
         {
             _origin = origin;
             _target = target;
@@ -43,7 +43,7 @@ namespace Game.Combat
             if (_origin != null)
             {
                 _distanceToTarget = CombatManager.DistanceBetweenCharacter(_origin, _target);
-                if (_origin.RageActivated()) _guaranteeCritical = true;
+                if (_origin.RageController.Active()) _guaranteeCritical = true;
                 CacheWeaponAttributes();
                 CalculateHitProbability();
                 CalculateCriticalProbability();
@@ -54,18 +54,19 @@ namespace Game.Combat
             }
         }
 
+        private void CacheWeaponAttributes()
+        {
+            WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
+            _damage = (int) attributes.Damage.CurrentValue();
+            _maxRange = attributes.Accuracy.CurrentValue();
+            _noPellets = (int) _origin.Weapon().WeaponAttributes.Pellets.CurrentValue();
+        }
+
         public void SetDamage(int damage)
         {
             _damage = damage;
         }
 
-        private void CacheWeaponAttributes()
-        {
-            WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
-            _damage = (int) attributes.Damage.GetCalculatedValue();
-            _maxRange = attributes.Accuracy.GetCalculatedValue();
-            _noPellets = _origin.Weapon().Pellets;
-        }
 
         private bool WillHitTarget()
         {
@@ -85,8 +86,11 @@ namespace Game.Combat
             {
                 for (int i = 0; i < _noPellets; ++i)
                 {
-                    if (!WillHitTarget()) continue;
-                    _didHit = true;
+                    if (!WillHitTarget())
+                    {
+                        _target.OnMiss();
+                        continue;
+                    }
                     ApplyDamage();
                     ApplyConditions();
                 }
@@ -96,17 +100,20 @@ namespace Game.Combat
 
         private void ApplyDamage()
         {
-            int pelletDamage = WillCrit() ? _damage * 2 : _damage;
+            bool isCritical = WillCrit();
+            int pelletDamage = isCritical ? _damage * 2 : _damage;
+            _damageDealt += pelletDamage;
             ApplyPierce(pelletDamage);
             ApplySplinter(pelletDamage);
             _onHitAction?.Invoke();
-            _target.TakeDamage(this, pelletDamage);
+            _origin?.RageController.Increase(pelletDamage);
+            _target.OnHit(this, pelletDamage, isCritical);
         }
 
         private void ApplyPierce(int pelletDamage)
         {
             if (_pierceDepth == 0) return;
-            _pierceChance = pelletDamage;
+            if (Random.Range(0f, 1f) > _pierceChance) return;
             List<Enemy> enemiesBehindTarget = CombatManager.GetEnemiesBehindTarget(_target);
             for (int i = 0; i < enemiesBehindTarget.Count; ++i)
             {
@@ -114,8 +121,11 @@ namespace Game.Combat
                 {
                     break;
                 }
-                _pierceChance = (int) (_pierceChance * _pierceFalloff);
-                enemiesBehindTarget[i].TakeDamage(this, pelletDamage);
+                int pierceDamage = (int) (pelletDamage * Math.Pow(_pierceFalloff, i + 1));
+                Shot s = new Shot(enemiesBehindTarget[i], null);
+                s.SetDamage(pierceDamage);
+                s.GuaranteeHit();
+                s.Fire();
             }
         }
 
@@ -130,7 +140,7 @@ namespace Game.Combat
                 damageModifier = damageModifier * (1 - _splinterFalloff);
                 damageModifier += _splinterFalloff;
                 int splinterDamage = (int) (damageModifier * pelletDamage);
-                Shot s = new Shot(character);
+                Shot s = new Shot(character, null);
                 s.SetDamage(splinterDamage);
                 s.SetKnockbackDistance(_knockbackDistance * _splinterFalloff);
                 s.Fire();
@@ -174,7 +184,7 @@ namespace Game.Combat
             else
             {
                 float normalisedRange = Helper.Normalise(_distanceToTarget, _maxRange);
-                _criticalChance = LogAndClamp(normalisedRange, _origin.Weapon().WeaponAttributes.CriticalChance.GetCalculatedValue() / 100);
+                _criticalChance = LogAndClamp(normalisedRange, _origin.Weapon().WeaponAttributes.CriticalChance.CurrentValue() / 100);
             }
         }
 
@@ -182,7 +192,7 @@ namespace Game.Combat
         {
             float probability = (float) (-0.35f * Math.Log(normalisedRange));
             probability += extra;
-            probability = Mathf.Clamp(probability, 1, 0);
+            probability = Mathf.Clamp(probability, 0, 1);
             return probability;
         }
 
@@ -237,11 +247,6 @@ namespace Game.Combat
         public void SetKnockbackDistance(float distance)
         {
             _knockbackDistance = distance < 0 ? 0 : distance;
-        }
-
-        public bool DidHit()
-        {
-            return _didHit;
         }
 
         public Character Origin()

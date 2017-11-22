@@ -24,7 +24,7 @@ namespace Game.Characters
             ui.SetLeftTextCallback(() => Character.Name);
             ui.SetCentralTextCallback(() =>
             {
-                GearItem equippedGear = Character.GetGearItem(GearItem.GetGearType());
+                GearItem equippedGear = Character.EquipmentController.GetGearItem(GearItem.GetGearType());
                 return equippedGear == null ? "Nothing equipped" : equippedGear.Name;
             });
             ui.SetRightTextCallback(() => "^");

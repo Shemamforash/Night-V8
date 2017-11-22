@@ -196,7 +196,7 @@ namespace SamsHelper
             SetNavigation(origin, target, Direction.Down);
             SetNavigation(target, origin, Direction.Up);
         }
-        
+
         public static void ClearNavigation(Button button)
         {
             Navigation navigation = button.navigation;
@@ -248,6 +248,15 @@ namespace SamsHelper
         public static float Normalise(float value, float maxValue)
         {
             return value /= maxValue;
+        }
+
+        public static string AddSignPrefix(float value)
+        {
+            if (value <= 0)
+            {
+                return value.ToString();
+            }
+            return "+" + value;
         }
     }
 }

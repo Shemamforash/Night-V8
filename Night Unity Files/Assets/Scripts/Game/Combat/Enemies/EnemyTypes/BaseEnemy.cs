@@ -74,12 +74,12 @@ namespace Game.Combat.Enemies
 
         protected void MoveToTargetDistance()
         {
-            float currentDistance = Distance.GetCurrentValue();
+            float currentDistance = Distance.CurrentValue();
             if (currentDistance > TargetDistance)
             {
                 MoveForward();
                 if(ShowMovementText) SetActionText("Approaching");
-                float newDistance = Distance.GetCurrentValue();
+                float newDistance = Distance.CurrentValue();
                 if (!(newDistance <= TargetDistance)) return;
                 ReachTarget();
             }
@@ -87,7 +87,7 @@ namespace Game.Combat.Enemies
             {
                 MoveBackward();
                 if(ShowMovementText) SetActionText("Retreating");
-                float newDistance = Distance.GetCurrentValue();
+                float newDistance = Distance.CurrentValue();
                 if (!(newDistance >= TargetDistance)) return;
                 ReachTarget();
             }
@@ -138,7 +138,7 @@ namespace Game.Combat.Enemies
         public virtual void UpdateBehaviour()
         {
             if (!InCombat()) return;
-            DecreaseRage();
+            RageController.Decrease();
             UpdateDetection();
             if (IsDead()) return;
             CurrentAction?.Invoke();

@@ -79,7 +79,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             {
                 throw new Exceptions.DefaultStateNotSpecifiedException();
             }
-            if (_currentState.Name != _defaultState)
+            if (_currentState == null || _currentState.Name != _defaultState)
             {
                 NavigateToState(_defaultState);
             }

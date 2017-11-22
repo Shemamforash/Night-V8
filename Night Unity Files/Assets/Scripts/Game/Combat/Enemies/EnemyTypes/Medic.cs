@@ -25,6 +25,7 @@ namespace Game.Combat.Enemies.EnemyTypes
             _applyHealCooldown = CombatManager.CombatCooldowns.CreateCooldown(2f);
             _applyHealCooldown.SetStartAction(() => SetActionText("Healing " + _healTarget.Name));
             _applyHealCooldown.SetEndAction(Heal);
+            ArmourLevel.SetCurrentValue(2);
         }
 
         protected override void Alert()
@@ -37,9 +38,6 @@ namespace Game.Combat.Enemies.EnemyTypes
         {
             base.UpdateBehaviour();
             if (!IsAlerted()) return;
-            if (_recoverHealCooldown.Running()) return;
-            if (_healTarget == null) return;
-            CurrentAction = TryHeal;
         }
 
         private void CheckForDamagedEnemies()
@@ -51,10 +49,10 @@ namespace Game.Combat.Enemies.EnemyTypes
                 if (enemy == this) continue;
                 if (!enemy.AcceptsHealing) continue;
                 CharacterAttribute enemyHealth = BaseAttributes.Strength;
-                Debug.Log(enemyHealth.GetCalculatedValue() + " " + enemyHealth.Max + " " + _healAmount);
-                if (enemyHealth.GetCurrentValue() > enemyHealth.Max - _healAmount) continue;
+                Debug.Log(enemyHealth.CurrentValue() + " " + enemyHealth.Max + " " + _healAmount);
+                if (enemyHealth.CurrentValue() > enemyHealth.Max - _healAmount) continue;
                 if (enemyHealth > weakestEnemyHealth) continue;
-                weakestEnemyHealth = enemyHealth.GetCurrentValue();
+                weakestEnemyHealth = enemyHealth.CurrentValue();
                 weakestEnemy = enemy;
             }
             _healTarget = weakestEnemy;
@@ -65,10 +63,9 @@ namespace Game.Combat.Enemies.EnemyTypes
 
         public void RequestHeal(Enemy healTarget)
         {
-            if (_healTarget != null)
-            {
-                _healTarget = healTarget;
-            }
+            if (_healTarget != null && _recoverHealCooldown.Finished()) return;
+            _healTarget = healTarget;
+            CurrentAction = TryHeal;
         }
         
         private void Heal()
@@ -82,14 +79,14 @@ namespace Game.Combat.Enemies.EnemyTypes
         
         private void TryHeal()
         {
-            if (_healTarget.IsDead())
+            if (_healTarget == null || _healTarget.IsDead())
             {
                 FindCover();
                 ShowMovementText = true;
                 return;
             }
             if (_applyHealCooldown.Running()) return;
-            TargetDistance = _healTarget.Distance.GetCurrentValue();
+            TargetDistance = _healTarget.Distance.CurrentValue();
             SetActionText("Running to " + _healTarget.Name);
             MoveToTargetDistance();
             if (!Moving()) _applyHealCooldown.Start();

@@ -40,7 +40,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         private ViewParent FindItem(MyGameObject item)
         {
-            return Items.FirstOrDefault(i => i.GetLinkedObject().Equals(item));
+            return Items.FirstOrDefault(i => i.GetLinkedObject() != null && i.GetLinkedObject().Equals(item));
         }
 
         public virtual ViewParent AddItem(MyGameObject item)

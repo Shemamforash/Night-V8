@@ -18,7 +18,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public override float Quantity()
         {
-            return _quantity.GetCurrentValue();
+            return _quantity.CurrentValue();
         }
         
         public override bool Equals(object obj)
@@ -50,15 +50,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public float Decrement(float amount)
         {
-            float previousQuantity = _quantity.GetCurrentValue();
-            _quantity.SetCurrentValue(_quantity.GetCurrentValue() - amount);
-            float consumption = previousQuantity - _quantity.GetCurrentValue();
+            float previousQuantity = _quantity.CurrentValue();
+            _quantity.SetCurrentValue(_quantity.CurrentValue() - amount);
+            float consumption = previousQuantity - _quantity.CurrentValue();
             return consumption;
         }
 
         public void Increment(float amount)
         {
-            _quantity.SetCurrentValue(_quantity.GetCurrentValue() + amount);
+            _quantity.SetCurrentValue(_quantity.CurrentValue() + amount);
         }
 
         public float GetWeight(float quantity)

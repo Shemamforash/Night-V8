@@ -22,19 +22,19 @@ namespace Game.Characters
                 Character c = GenerateCharacter();
                 BaseAttributes attributes = c.BaseAttributes;
                 List<string> failMessages = new List<string>();
-                if (!InBounds(attributes.Strength.GetCurrentValue(), 40, 160))
+                if (!InBounds(attributes.Strength.CurrentValue(), 40, 160))
                 {
                     failMessages.Add("Strength out of bounds");
                 }
-                if (!InBounds(attributes.Endurance.GetCurrentValue(), 40, 160))
+                if (!InBounds(attributes.Endurance.CurrentValue(), 40, 160))
                 {
                     failMessages.Add("Endurance out of bounds");
                 }
-                if (!InBounds(attributes.Stability.GetCurrentValue(), 5, 25))
+                if (!InBounds(attributes.Stability.CurrentValue(), 5, 25))
                 {
                     failMessages.Add("Stability out of bounds");
                 }
-                if (!InBounds(attributes.Intelligence.GetCurrentValue(), 5, 25))
+                if (!InBounds(attributes.Intelligence.CurrentValue(), 5, 25))
                 {
                     failMessages.Add("Intelligence out of bounds");
                 }

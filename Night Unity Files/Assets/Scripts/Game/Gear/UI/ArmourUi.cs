@@ -18,7 +18,7 @@ namespace Game.Gear.UI
             base.Update();
             Armour armour = (Armour) LinkedObject;
             TitleText.text = armour.ArmourRating + " Armour";
-            SubTitleText.text = "-" + armour.ArmourRating / 100 + "% damage";
+           //TODO SubTitleText.text = "-" + armour.ArmourRating / 100 + "% damage";
             ModifierColumnOneText.text = armour.Description;
             ModifierColumn2Text.gameObject.SetActive(false);
 

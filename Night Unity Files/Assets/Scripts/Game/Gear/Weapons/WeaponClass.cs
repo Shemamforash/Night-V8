@@ -3,26 +3,24 @@ using Random = UnityEngine.Random;
 
 namespace Game.Gear.Weapons
 {
-    public class WeaponClass
+    public class WeaponClass : GearModifier
     {
-        public int Damage, Accuracy, Handling, CriticalChance;
-        public float ReloadSpeed, FireRate;
         public readonly bool CanBeManual;
         public readonly WeaponType Type;
-        private readonly List<WeaponModifier> _subtypes = new List<WeaponModifier>();
+        private readonly List<GearModifier> _subtypes = new List<GearModifier>();
 
-        public WeaponClass(WeaponType type, bool canBeManual)
+        public WeaponClass(WeaponType type, bool canBeManual) : base(type.ToString())
         {
             Type = type;
             CanBeManual = canBeManual;
         }
 
-        public void AddSubtype(WeaponModifier subtype)
+        public void AddSubtype(GearModifier subtype)
         {
             _subtypes.Add(subtype);
         }
 
-        public WeaponModifier GetSubtype()
+        public GearModifier GetSubtype()
         {
             return _subtypes[Random.Range(0, _subtypes.Count)];
         }

@@ -33,7 +33,7 @@ namespace Game.Characters.CharacterActions
         {
             XmlNode attributeNode = SaveController.CreateNodeAndAppend(attributeName, root);
             SaveController.CreateNodeAndAppend("Val", attributeNode, characterAttribute.Max);
-            SaveController.CreateNodeAndAppend("Max", attributeNode, characterAttribute.GetCurrentValue());
+            SaveController.CreateNodeAndAppend("Max", attributeNode, characterAttribute.CurrentValue());
         }
     }
 }

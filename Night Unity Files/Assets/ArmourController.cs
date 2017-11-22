@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class ArmourController : MonoBehaviour
 {
-    private const int ArmourDivisions = 15;
+    private const int ArmourDivisions = 10;
     private const int MaxDivisionSize = 20;
     private readonly List<GameObject> _armourSegments = new List<GameObject>();
     private const int SegmentSpacing = 5;

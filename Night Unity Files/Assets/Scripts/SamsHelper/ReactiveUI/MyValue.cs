@@ -71,7 +71,7 @@ namespace SamsHelper.ReactiveUI
             OnValueChange?.Invoke(this);
         }
 
-        public float GetCurrentValue() => _currentValue;
+        public virtual float CurrentValue() => _currentValue;
         public float AsPercent() => 100f / _max * _currentValue;
         public void OnMax(Action a) => _onMax = a;
         public void OnMin(Action a) => _onMin = a;
@@ -110,7 +110,12 @@ namespace SamsHelper.ReactiveUI
             SetCurrentValue(_currentValue + amount);
         }
 
-        public void SetCurrentValue(float value)
+        public void Decrement(float amount)
+        {
+            SetCurrentValue(_currentValue - amount);
+        }
+
+        public virtual void SetCurrentValue(float value)
         {
             if (value > _max)
             {

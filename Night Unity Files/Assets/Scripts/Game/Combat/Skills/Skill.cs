@@ -24,9 +24,7 @@ namespace Game.Combat.Skills
         public void Activate()
         {
             if (Running() || Player.Weapon().Empty()) return;
-            MyValue rage = Player.Rage;
-            if (rage.ReachedMin() || rage.GetCurrentValue() < RageCostInitial) return;
-            rage.Increment(-RageCostInitial);
+            if (!Player.RageController.Spend(RageCostInitial)) return;
             if (!_instant) return;
             OnFire();
             Deactivate();
@@ -182,8 +180,8 @@ namespace Game.Combat.Skills
                 base.OnFire();
                 Player.OnFireAction = s =>
                 {
-                    Player.IncreaseRage();
-                    Player.TryStartRageMode();
+                    Player.RageController.Increase(100);
+                    Player.RageController.TryStart();
                 };
             }
         }

@@ -90,7 +90,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
                 //TODO melee range
                 if (Enemy.Distance > 0) return;
                 CombatManager.Player().KnockDown();
-                CombatManager.Player().TakeDamage(null, 10);
+                CombatManager.Player().HealthController.TakeDamage(10);
             });
         }
 
@@ -152,7 +152,7 @@ namespace Game.Combat.Enemies.EnemyBehaviours
             {
                 Melee();
             }
-            else if (Enemy.Distance.GetCurrentValue() < 20)
+            else if (Enemy.Distance.CurrentValue() < 20)
             {
                 SetStatusText("Charging");
                 Enemy.StartSprinting();

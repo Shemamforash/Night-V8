@@ -1,4 +1,5 @@
-﻿using Game.Characters;
+﻿using System;
+using Game.Characters;
 using Game.Combat.Enemies.EnemyBehaviours;
 using Game.Combat.Enemies.EnemyTypes;
 using SamsHelper;
@@ -8,7 +9,7 @@ using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
-using UnityEngine.Assertions;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
@@ -45,7 +46,7 @@ namespace Game.Combat.Enemies
             {
                 BaseAttributes.Strength.AddOnValueChange(a =>
                 {
-                    if (a.GetCurrentValue() <= a.Max / 2)
+                    if (a.CurrentValue() <= a.Max / 2)
                     {
                         MakeHealRequest();
                     }
@@ -64,34 +65,48 @@ namespace Game.Combat.Enemies
             _aimCooldown.SetDuringAction(f =>
             {
                 float normalisedTime = Helper.Normalise(f, _aimTime);
-                _enemyView.SetAimTimerValue(1 - normalisedTime);
+                _enemyView.AimController.SetValue(1 - normalisedTime);
             });
             _aimCooldown.SetEndAction(() =>
             {
                 _fireCooldown.Duration = Random.Range(1, 3);
                 _fireCooldown.Start();
-                _enemyView.SetAimTimerValue(0);
+                _enemyView.AimController.SetValue(0);
             });
 
             ReloadingCooldown.SetStartAction(() => SetActionText("Reloading"));
             CoverCooldown.SetStartAction(() => SetActionText("Taking Cover"));
             SetWanderCooldown();
             CurrentAction = Wander;
+
+            HealthController.AddOnTakeDamage(f =>
+            {
+                _enemyView.SpawnDamageText(f, false);
+                TryAlert();
+            });
 //            Print();
         }
 
+        public override Shot FireWeapon(Character target)
+        {
+            Shot s = base.FireWeapon(target);
+            if (s != null) _enemyView.AimController.Fire();
+            return s;
+        }
+        
+
         protected override float GetSpeedModifier()
         {
-            return BaseAttributes.Endurance.GetCalculatedValue() * Time.deltaTime;
+            return BaseAttributes.Endurance.CurrentValue() * Time.deltaTime;
         }
 
         private void Print()
         {
             Debug.Log(Name);
-            Debug.Log("Strength " + Helper.Round(BaseAttributes.Strength.GetCalculatedValue()));
-            Debug.Log("Intelligence " + Helper.Round(BaseAttributes.Intelligence.GetCalculatedValue()));
-            Debug.Log("Stability " + Helper.Round(BaseAttributes.Stability.GetCalculatedValue()));
-            Debug.Log("Endurance " + Helper.Round(BaseAttributes.Endurance.GetCalculatedValue()));
+            Debug.Log("Strength " + Helper.Round(BaseAttributes.Strength.CurrentValue()));
+            Debug.Log("Intelligence " + Helper.Round(BaseAttributes.Intelligence.CurrentValue()));
+            Debug.Log("Stability " + Helper.Round(BaseAttributes.Stability.CurrentValue()));
+            Debug.Log("Endurance " + Helper.Round(BaseAttributes.Endurance.CurrentValue()));
         }
 
         private void SetDistanceData()
@@ -105,7 +120,7 @@ namespace Game.Combat.Enemies
             Distance.AddOnValueChange(a =>
             {
                 if (_hasFled || _isDead) return;
-                float distance = Helper.Round(Distance.GetCurrentValue());
+                float distance = Helper.Round(Distance.CurrentValue());
                 string distanceText = distance.ToString() + "m";
                 _enemyView.DistanceText.text = distanceText;
                 float normalisedDistance = Helper.Normalise(distance, MaxDistance);
@@ -113,7 +128,7 @@ namespace Game.Combat.Enemies
                 alpha *= alpha;
                 alpha = Mathf.Clamp(alpha, 0.2f, 1f);
                 _enemyView.SetColour(new Color(1, 1, 1, alpha));
-                if (a.GetCurrentValue() <= MaxDistance) return;
+                if (a.CurrentValue() <= MaxDistance) return;
                 _hasFled = true;
             });
         }
@@ -135,14 +150,14 @@ namespace Game.Combat.Enemies
 
         public void AddVisionModifier(float amount)
         {
-            VisionRange.AddModifier(amount);
-            DetectionRange.AddModifier(amount);
+//            VisionRange.AddModifier(amount);
+//            DetectionRange.AddModifier(amount);
         }
 
         public void RemoveVisionModifier(float amount)
         {
-            VisionRange.RemoveModifier(amount);
-            DetectionRange.RemoveModifier(amount);
+//            VisionRange.RemoveModifier(amount);
+//            DetectionRange.RemoveModifier(amount);
         }
 
         public void TryAlert()
@@ -182,27 +197,12 @@ namespace Game.Combat.Enemies
             return _enemyView;
         }
 
-        private int GetCoverProtection(int damage)
-        {
-            bool protectedByCover = Random.Range(0, 2) == 0;
-            if (protectedByCover)
-            {
-                if (InCover()) return (int) (damage * 0.5f);
-                if (InPartialCover()) return (int) (damage * 0.75);
-            }
-            return damage;
-        }
-
-        public override void TakeDamage(Shot shot, int damage)
+        public override void OnMiss()
         {
             EnemyBehaviour.TakeFire();
-            if (damage == 0) return;
-            damage = GetCoverProtection(damage);
-            TryAlert();
-            BaseAttributes.Strength.Increment(-damage);
-            EnemyBehaviour.TakeDamage(damage);
+            _enemyView.SpawnDamageText(0, false);
         }
-
+        
         public override void Kill()
         {
             _enemyView.MarkDead();
@@ -214,14 +214,13 @@ namespace Game.Combat.Enemies
             _enemyView = new EnemyView(this, parent);
             BaseAttributes.Strength.AddOnValueChange(f =>
             {
-                float normalisedHealth = f.GetCurrentValue() / f.Max;
+                float normalisedHealth = f.CurrentValue() / f.Max;
                 _enemyView.SetHealth(normalisedHealth);
 //                _enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString();
             });
             ActionTextLink.AddTextObject(_enemyView.ActionText);
             SetDistanceData();
-            ArmourLevel.AddOnValueChange(a => _enemyView.SetArmour((int) ArmourLevel.GetCurrentValue()));
-            ArmourLevel.SetCurrentValue(Random.Range(2, 10));
+            ArmourLevel.AddOnValueChange(a => _enemyView.SetArmour((int) ArmourLevel.CurrentValue()));
             return _enemyView;
         }
 

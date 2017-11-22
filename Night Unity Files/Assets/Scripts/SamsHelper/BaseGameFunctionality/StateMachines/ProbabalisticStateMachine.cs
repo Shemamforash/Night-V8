@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace SamsHelper.BaseGameFunctionality.StateMachines
@@ -50,6 +51,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public override T NavigateToState(string previousState)
         {
+            return base.NavigateToState(previousState);
             string nextState = CalculateNextState();
             if(_onlyVisitOnce) _visitedStates.Add(previousState);
             return base.NavigateToState(nextState);

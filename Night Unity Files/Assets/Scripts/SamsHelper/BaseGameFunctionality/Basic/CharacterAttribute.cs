@@ -1,41 +1,55 @@
 ﻿using SamsHelper.ReactiveUI;
-using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public class CharacterAttribute : MyValue
     {
         public readonly AttributeType AttributeType;
-        private float _summativeModifier, _multiplicativeModifier = 1;
+        public float _summativeModifier, _multiplicativeModifier = 1;
         private float _calculatedValue;
 
         public CharacterAttribute(AttributeType attributeType, float value, float min = 0, float max = float.MaxValue) : base(value, min, max)
         {
             AttributeType = attributeType;
+            AddOnValueChange(a => Recalculate());
         }
 
-        public float GetCalculatedValue()
+        public override float CurrentValue()
         {
-            Recalculate();
             return _calculatedValue;
         }
 
-        public void AddModifier(float modifier, bool summative = false)
+        public float OriginalValue()
         {
-            if (summative) _summativeModifier += modifier;
-            else _multiplicativeModifier += modifier;
+            return base.CurrentValue();
+        }
+
+        private void Recalculate()
+        {
+            _calculatedValue = (OriginalValue() + _summativeModifier) * _multiplicativeModifier;
+        }
+
+        public void ApplySummativeModifier(float summativeModifier)
+        {
+            _summativeModifier += summativeModifier;
             Recalculate();
         }
 
-        public void Recalculate()
+        public void ApplyMultiplicativeModifier(float multiplicativeModifier)
         {
-            _calculatedValue = (GetCurrentValue() + _summativeModifier) * _multiplicativeModifier;
+            _multiplicativeModifier += multiplicativeModifier;
+            Recalculate();
         }
 
-        public void RemoveModifier(float modifier, bool summative = false)
+        public void RemoveSummativeModifier(float summativeModifier)
         {
-            if (summative) _summativeModifier -= modifier;
-            else _multiplicativeModifier -= modifier;
+            _summativeModifier -= summativeModifier;
+            Recalculate();
+        }
+
+        public void RemoveMultiplicativeModifier(float multiplicativeModifier)
+        {
+            _multiplicativeModifier -= multiplicativeModifier;
             Recalculate();
         }
     }

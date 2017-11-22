@@ -1,4 +1,5 @@
-﻿using Game.Characters;
+﻿using System.Collections.Generic;
+using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.ReactiveUI.InventoryUI;
@@ -9,9 +10,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public abstract class GearItem : InventoryItem
     {
         private readonly GearSubtype _gearType;
-        protected Character Owner;
         public bool Equipped { get; set; }
-        public readonly AttributesModifier Modifier = new AttributesModifier();
+        protected readonly List<AttributeModifier> Modifiers = new List<AttributeModifier>();
 
         protected GearItem(string name, float weight, GearSubtype gearSubtype) : base(name, GameObjectType.Gear, weight)
         {
@@ -26,6 +26,14 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 //            c.AddItemToInventory(this);
 //            _equipped = true;
 //            c.ReplaceGearInSlot(_gearslot, this);
+            Modifiers.ForEach(a => a.Apply());
+            Equipped = true;
+        }
+        
+        public void Unequip()
+        {
+            Modifiers.ForEach(a => a.Remove());
+            Equipped = false;
         }
 
         public abstract string GetSummary();
@@ -50,16 +58,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public void MoveTo(Inventory targetInventory)
         {
             ParentInventory?.Move(this, targetInventory, 1);
-        }
-
-        public void SetOwner(Character owner)
-        {
-            Owner = owner;
-        }
-
-        public void RemoveOwner()
-        {
-            Owner = null;
-        }
+        }   
     }
 }

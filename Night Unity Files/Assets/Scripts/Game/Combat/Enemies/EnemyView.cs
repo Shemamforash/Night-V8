@@ -16,7 +16,8 @@ namespace Game.Combat.Enemies
         private ArmourController _armourController;
         private HealthBarController _lowerHealthBarController;
         private GameObject _targetObject, _alertedObject, _detectedObject;
-        private AimController _aimController;
+        public AimController AimController;
+        private GameObject _damageTextObject;
         
         public EnemyView(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/EnemyItem") : base(linkedObject, parent, prefabLocation)
         {
@@ -32,7 +33,7 @@ namespace Game.Combat.Enemies
             VisionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Vision");
 //            StrengthText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Strength Remaining");
 //            ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour");
-            _aimController = Helper.FindChildWithName<AimController>(GameObject, "Aim Timer");
+            AimController = Helper.FindChildWithName<AimController>(GameObject, "Aim Timer");
             _nameText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Name");
             _typeText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Type");
             _armourController = Helper.FindChildWithName<ArmourController>(GameObject, "Armour Bar");
@@ -44,11 +45,13 @@ namespace Game.Combat.Enemies
             _alertedObject.SetActive(false);
             _detectedObject.SetActive(false);
             ActionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Action");
+            _damageTextObject = Resources.Load<GameObject>("Prefabs/Damage Text");
         }
 
-        public void SetAimTimerValue(float value)
+        public void SpawnDamageText(int value, bool critical)
         {
-            _aimController.SetValue(value);
+            GameObject damageText = Helper.InstantiateUiObject(_damageTextObject, GameObject.transform);
+            damageText.GetComponent<NumberPopupController>().ShowValue(value, critical);
         }
 
         public void SetHealth(float normalisedHealth)

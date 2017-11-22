@@ -19,26 +19,26 @@ class WeaponImporter(XMLWriter):
         super(WeaponImporter, self).__init__("Weapon Data V3", "WeaponClasses")
         write_tag(self, "Weapons", self.read)
 
-    def write_weapon_stats(self, row):
-        write_single_value(self, "Damage", get_value(self, "D", row))
-        write_single_value(self, "Accuracy", get_value(self, "E", row))
-        write_single_value(self, "FireRate", get_value(self, "F", row))
-        write_single_value(self, "Handling", get_value(self, "G", row))
-        write_single_value(self, "ReloadSpeed", get_value(self, "H", row))
-        write_single_value(self, "CriticalChance", get_value(self, "I", row))
-        write_single_value(self, "Capacity", get_value(self, "J", row))
-        write_single_value(self, "Pellets", get_value(self, "K", row))
+    def write_weapon_stats(self, row, modprefix):
+        write_single_value(self, "Damage", "x" + get_value(self, "D", row))
+        write_single_value(self, "Accuracy", "x" + get_value(self, "E", row))
+        write_single_value(self, "FireRate", "x" + get_value(self, "F", row))
+        write_single_value(self, "Handling", "x" + get_value(self, "G", row))
+        write_single_value(self, "ReloadSpeed", "x" + get_value(self, "H", row))
+        write_single_value(self, "CriticalChance", "x" + get_value(self, "I", row))
+        write_single_value(self, "Capacity", modprefix + get_value(self, "J", row))
+        write_single_value(self, "Pellets", modprefix + get_value(self, "K", row))
 
     def read_weapon_subtypes(self, subtype_row):
         for i in range(0, 5):
             subtype_name = get_value(self, "B", subtype_row)
-            write_tag(self, "Subtype", self.write_weapon_stats, [subtype_row], ["name"], [subtype_name])
+            write_tag(self, "Subtype", self.write_weapon_stats, [subtype_row, "+"], ["name"], [subtype_name])
             subtype_row += 1
 
     def read_weapon_modifiers(self):
         for i in range(36, 49):
             modifier_name = get_value(self, "B", i)
-            write_tag(self, "Modifier", self.write_weapon_stats, [i], ["name"], [modifier_name])
+            write_tag(self, "Modifier", self.write_weapon_stats, [i, "x"], ["name"], [modifier_name])
 
     def read_weapon_classes(self):
         for row_no in range(3, 8):
@@ -51,22 +51,16 @@ class WeaponImporter(XMLWriter):
         self.read_weapon_subtypes(row_no * 5 - 4)
 
     def write_base_stats(self, row_no):
-        write_single_value(self, "Damage", str(get_value(self, "D", row_no)))
-        write_single_value(self, "Accuracy", str(get_value(self, "E", row_no)))
-        write_single_value(self, "FireRate", str(get_value(self, "F", row_no)))
-        write_single_value(self, "Handling", str(get_value(self, "G", row_no)))
-        write_single_value(self, "ReloadSpeed", str(get_value(self, "H", row_no)))
-        write_single_value(self, "CriticalChance", str(get_value(self, "I", row_no)))
+        write_single_value(self, "Damage", "+" + get_value(self, "D", row_no))
+        write_single_value(self, "Accuracy", "+" + get_value(self, "E", row_no))
+        write_single_value(self, "FireRate", "+" + get_value(self, "F", row_no))
+        write_single_value(self, "Handling", "+" + get_value(self, "G", row_no))
+        write_single_value(self, "ReloadSpeed", "+" + get_value(self, "H", row_no))
+        write_single_value(self, "CriticalChance", "+" + get_value(self, "I", row_no))
 
     def read(self):
         write_tag(self, "Classes", self.read_weapon_classes)
         write_tag(self, "Modifiers", self.read_weapon_modifiers)
-
-    def write_stat_law(self, coefficient_column, intercept_column, row):
-        x_coefficient = get_value(self, coefficient_column, row)
-        intercept = get_value(self, intercept_column, row)
-        write_single_value(self, "XCoefficient", str(x_coefficient))
-        write_single_value(self, "Intercept", str(intercept))
 
 
 class GearImporter(XMLWriter):
@@ -84,16 +78,16 @@ class GearImporter(XMLWriter):
 
     def read_single_gear(self, name, gear_type, row):
         write_single_value(self, "Name", name)
-        write_single_value(self, "Weight", get_value(self, "D", row))
+        write_single_value(self, "Weight", "+" + get_value(self, "D", row))
         write_single_value(self, "Description", get_value(self, "E", row))
         if gear_type == "Accessory":
             write_single_value(self, "Effect", get_value(self, "F", row) + get_value(self, "G", row))
         else:
-            write_single_value(self, "Armour", get_value(self, "H", row, 0))
-            write_single_value(self, "Intelligence", get_value(self, "I", row, 0))
-            write_single_value(self, "Stability", get_value(self, "J", row, 0))
-            write_single_value(self, "Strength", get_value(self, "K", row, 0))
-            write_single_value(self, "Endurance", get_value(self, "L", row, 0))
+            write_single_value(self, "Armour", "+" + get_value(self, "H", row, 0))
+            write_single_value(self, "Intelligence", "+" + get_value(self, "I", row, 0))
+            write_single_value(self, "Stability", "+" + get_value(self, "J", row, 0))
+            write_single_value(self, "Strength", "+" + get_value(self, "K", row, 0))
+            write_single_value(self, "Endurance", "+" + get_value(self, "L", row, 0))
 
 
 def write_tag(xml_writer, tag_name, nested_method=None, args=None, parameters=[], values=[]):
@@ -115,12 +109,12 @@ def get_value(xml_writer, column, row, default_value=1):
         column = num2alpha[row]
     value = xml_writer.sheet[column + str(row)].value
     if value is None:
-        return default_value
-    return value
+        return str(default_value)
+    return str(value)
 
 
 def write_single_value(xml_writer, stat_name, value):
-    xml_writer.output_file.writelines("<" + stat_name + ">" + str(value) + "</" + stat_name + ">")
+    xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
 WeaponImporter()

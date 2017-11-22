@@ -12,6 +12,7 @@
         <e p="GameSettings.xml" t="Include" />
         <e p="HealthBarController.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
+        <e p="NumberPopupController.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="Editor" t="Include">
             <e p="JetBrains" t="Include">
@@ -62,6 +63,7 @@
           </e>
           <e p="Game" t="Include">
             <e p="Characters" t="Include">
+              <e p="AttributeModifier.cs" t="Include" />
               <e p="Attributes" t="Include">
                 <e p="BaseAttributes.cs" t="Include" />
                 <e p="DesolationAttributes.cs" t="Include" />
@@ -87,7 +89,12 @@
               <e p="DesolationCharacterGenerator.cs" t="Include" />
               <e p="DesolationCharacterManager.cs" t="Include" />
               <e p="Intensity.cs" t="Include" />
-              <e p="Player.cs" t="Include" />
+              <e p="Player" t="Include">
+                <e p="EquipmentController.cs" t="Include" />
+                <e p="HealthController.cs" t="Include" />
+                <e p="Player.cs" t="Include" />
+                <e p="RageController.cs" t="Include" />
+              </e>
               <e p="TraitLoader.cs" t="Include" />
               <e p="WeightCategory.cs" t="Include" />
             </e>
@@ -126,6 +133,7 @@
                 <e p="Armour.cs" t="Include" />
                 <e p="GearReader.cs" t="Include" />
               </e>
+              <e p="GearModifier.cs" t="Include" />
               <e p="UI" t="Include">
                 <e p="AccessoryUi.cs" t="Include" />
                 <e p="ArmourUi.cs" t="Include" />
@@ -137,7 +145,6 @@
                 <e p="WeaponAttributes.cs" t="Include" />
                 <e p="WeaponClass.cs" t="Include" />
                 <e p="WeaponGenerator.cs" t="Include" />
-                <e p="WeaponModifier.cs" t="Include" />
                 <e p="WeaponType.cs" t="Include" />
               </e>
             </e>

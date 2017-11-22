@@ -80,8 +80,8 @@ namespace Game.Combat
 
         public void UpdateCharacterHealth(MyValue health)
         {
-            _characterHealthController.SetValue(health.GetCurrentValue() / health.Max);
-            _characterHealthText.text = (int) health.GetCurrentValue() + "/" + (int) health.Max;
+            _characterHealthController.SetValue(health.CurrentValue() / health.Max);
+            _characterHealthText.text = (int) health.CurrentValue() + "/" + (int) health.Max;
         }
 
         private void ResetMagazine(int capacity)
@@ -140,7 +140,7 @@ namespace Game.Combat
         public void Start(CombatScenario scenario)
         {
             _character = scenario.Player();
-            ResetMagazine(_character.Weapon().Capacity);
+            ResetMagazine((int) _character.Weapon().WeaponAttributes.Capacity.CurrentValue());
             UpdateMagazine(_character.Weapon().GetRemainingAmmo());
             _characterName.text = _character.Name;
             _weaponNameText.text = _character.Weapon().Name + " (" + _character.Weapon().GetSummary() + ")";

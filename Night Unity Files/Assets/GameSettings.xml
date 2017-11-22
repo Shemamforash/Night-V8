@@ -4,4 +4,48 @@
     <_effectsVolume>0</_effectsVolume>
     <_masterVolume>0</_masterVolume>
   </SoundSettings>
+  <CharacterManager>
+    <Character>
+      <Name>Driver</Name>
+      <Attributes>
+        <Strength>
+          <Val>108</Val>
+          <Max>108</Max>
+        </Strength>
+        <Endurance>
+          <Val>77</Val>
+          <Max>77</Max>
+        </Endurance>
+        <Stability>
+          <Val>19</Val>
+          <Max>19</Max>
+        </Stability>
+        <Intelligence>
+          <Val>19</Val>
+          <Max>19</Max>
+        </Intelligence>
+      </Attributes>
+    </Character>
+    <Character>
+      <Name>Ambule</Name>
+      <Attributes>
+        <Strength>
+          <Val>87</Val>
+          <Max>87</Max>
+        </Strength>
+        <Endurance>
+          <Val>87</Val>
+          <Max>87</Max>
+        </Endurance>
+        <Stability>
+          <Val>24</Val>
+          <Max>24</Max>
+        </Stability>
+        <Intelligence>
+          <Val>20</Val>
+          <Max>20</Max>
+        </Intelligence>
+      </Attributes>
+    </Character>
+  </CharacterManager>
 </Settings>
