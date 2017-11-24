@@ -28,6 +28,7 @@ namespace Game.Characters
         public int DistanceFromHome;
         public CharacterView CharacterView;
         public readonly SurvivalAttributes SurvivalAttributes;
+        public readonly MyValue Energy = new MyValue();
 
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait) : base(name)
@@ -36,6 +37,9 @@ namespace Game.Characters
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
             CharacterInventory.MaxWeight = 50;
+            BaseAttributes.Endurance.AddOnValueChange(a => Energy.Max = a.CurrentValue());
+            Energy.OnMin(Sleep);
+            Energy.SetCurrentValue(BaseAttributes.Endurance.CurrentValue());
         }
 
         protected override float GetSpeedModifier()
@@ -90,13 +94,12 @@ namespace Game.Characters
 
         private void Tire(int amount)
         {
-            BaseAttributes.Endurance.SetCurrentValue(BaseAttributes.Endurance.CurrentValue() - (IsOverburdened() ? amount * 2 : amount));
-            CheckEnduranceZero();
+            if (IsOverburdened()) amount *= 2;
+            Energy.Decrement(amount);
         }
 
-        private void CheckEnduranceZero()
+        private void Sleep()
         {
-            if (!BaseAttributes.Endurance.ReachedMin()) return;
             BaseCharacterAction action = States.GetCurrentState();
             action.Interrupt();
             Sleep sleepAction = States.NavigateToState("Sleep") as Sleep;
@@ -108,7 +111,7 @@ namespace Game.Characters
 
         public void Rest(int amount)
         {
-            BaseAttributes.Endurance.SetCurrentValue(BaseAttributes.Endurance.CurrentValue() + amount);
+            Energy.Increment(amount);
             if (!BaseAttributes.Endurance.ReachedMax()) return;
             if (DistanceFromHome == 0)
             {
@@ -147,13 +150,13 @@ namespace Game.Characters
             {
                 case GearSubtype.Weapon:
                     SwapWeaponSkills((Weapon) gearItem);
-                    CharacterView?.WeaponGearUi.Update(gearItem);
+                    CharacterView?.WeaponGearUi.SetGearItem(gearItem);
                     break;
                 case GearSubtype.Armour:
-                    CharacterView?.ArmourGearUi.Update(gearItem);
+                    CharacterView?.ArmourGearUi.SetGearItem(gearItem);
                     break;
                 case GearSubtype.Accessory:
-                    CharacterView?.AccessoryGearUi.Update(gearItem);
+                    CharacterView?.AccessoryGearUi.SetGearItem(gearItem);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

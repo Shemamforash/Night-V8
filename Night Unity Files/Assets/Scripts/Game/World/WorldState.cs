@@ -88,7 +88,7 @@ namespace Game.World
             StormDistanceActual = 10;
 
 #if UNITY_EDITOR
-            _homeInventory.AddTestingResources();
+            _homeInventory.AddTestingResources(3);
 #endif
         }
 

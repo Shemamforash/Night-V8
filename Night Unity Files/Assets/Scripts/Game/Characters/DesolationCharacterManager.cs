@@ -94,7 +94,7 @@ namespace Game.Characters
             for (int i = 1; i < _characters.Count; ++i)
             {
                 Button previousButton = _characters[i - 1].CharacterView.SimpleView.GetComponent<Button>();
-                Helper.SetReciprocalNavigation(_characters[i].CharacterView.SimpleView.GetComponent<Button>(), previousButton);
+                Helper.SetReciprocalNavigation(previousButton, _characters[i].CharacterView.SimpleView.GetComponent<Button>());
             }
             Helper.SetReciprocalNavigation(inventoryButton, _characters[0].CharacterView.SimpleView.GetComponent<Button>());
         }

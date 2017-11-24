@@ -4,5 +4,48 @@
     <_effectsVolume>0</_effectsVolume>
     <_masterVolume>0</_masterVolume>
   </SoundSettings>
-  <CharacterManager />
+  <CharacterManager>
+    <Character>
+      <Name>Driver</Name>
+      <Attributes>
+        <Strength>
+          <Val>104</Val>
+          <Max>104</Max>
+        </Strength>
+        <Endurance>
+          <Val>77</Val>
+          <Max>77</Max>
+        </Endurance>
+        <Stability>
+          <Val>21</Val>
+          <Max>21</Max>
+        </Stability>
+        <Intelligence>
+          <Val>20</Val>
+          <Max>20</Max>
+        </Intelligence>
+      </Attributes>
+    </Character>
+    <Character>
+      <Name>Rev</Name>
+      <Attributes>
+        <Strength>
+          <Val>93</Val>
+          <Max>93</Max>
+        </Strength>
+        <Endurance>
+          <Val>75</Val>
+          <Max>75</Max>
+        </Endurance>
+        <Stability>
+          <Val>1</Val>
+          <Max>1</Max>
+        </Stability>
+        <Intelligence>
+          <Val>14</Val>
+          <Max>14</Max>
+        </Intelligence>
+      </Attributes>
+    </Character>
+  </CharacterManager>
 </Settings>

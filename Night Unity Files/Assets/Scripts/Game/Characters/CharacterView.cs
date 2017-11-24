@@ -25,12 +25,11 @@ namespace Game.Characters
         public GameObject SimpleView;
         private GameObject _detailedView;
         private GameObject _gearContainer;
-        public Button CollapseCharacterButton;
 
         private readonly ValueTextLink<string> _currentActionText = new ValueTextLink<string>();
         private readonly ValueTextLink<string> _detailedCurrentActionText = new ValueTextLink<string>();
 
-        public GearUi WeaponGearUi, ArmourGearUi, AccessoryGearUi;
+        public UIGearController WeaponGearUi, ArmourGearUi, AccessoryGearUi;
 
         private MenuList _actionMenuList;
 
@@ -40,64 +39,16 @@ namespace Game.Characters
             _detailedCurrentActionText.SetEnabled(!active);
         }
         
-        public class GearUi
-        {
-            private readonly TextMeshProUGUI _name, _summary;
-            private readonly GearSubtype _gearType;
-            public readonly EnhancedButton GearButton;
-
-            public GearUi(GearSubtype gearType, GameObject gearContainer, Character c)
-            {
-                gearContainer = Helper.FindChildWithName(gearContainer, gearType.ToString());
-                _gearType = gearType;
-                GearButton = gearContainer.GetComponent<EnhancedButton>();
-                Helper.FindChildWithName<TextMeshProUGUI>(gearContainer, "Slot").text = _gearType.ToString();
-                _name = Helper.FindChildWithName<TextMeshProUGUI>(gearContainer, "Name");
-                _summary = Helper.FindChildWithName<TextMeshProUGUI>(gearContainer, "Summary");
-                GearButton.AddOnClick(() => OpenEquipMenu(c));
-            }
-
-            private void OpenEquipMenu(Character character)
-            {
-                Popup popup = new Popup("Equip " + _gearType);
-                List<MyGameObject> availableGear = new List<MyGameObject>();
-                List<MyGameObject> allGear = new List<MyGameObject>();
-                allGear.AddRange(character.Inventory().Contents());
-                allGear.AddRange(WorldState.HomeInventory().Contents());
-                foreach (MyGameObject item in allGear)
-                {
-                    GearItem gear = item as GearItem;
-                    if (gear != null && gear.GetGearType() == _gearType && !gear.Equipped)
-                    {
-                        availableGear.Add(gear);
-                    }
-                }
-                popup.AddList(availableGear, g => character.Equip((GearItem) g), true, true, true);
-                popup.AddBackButton();
-            }
-
-            public void Update(GearItem item)
-            {
-                if (item != null)
-                {
-                    _name.text = item.Name;
-                    _summary.text = item.GetSummary();
-                }
-                else
-                {
-                    _name.text = "- Not Equipped -";
-                    _summary.text = "--";
-                }
-            }
-        }
-
         private void BindUi()
         {
             FindInSimpleView<UIAttributeController>("Attributes").HookValues(_character.BaseAttributes);
             FindInDetailedView<UIAttributeController>("Attributes").HookValues(_character.BaseAttributes);
+            _character.Energy.AddOnValueChange(a => FindInDetailedView<UIEnergyController>("Energy").SetValue((int) a.CurrentValue()));
             
-            FindInDetailedView<UIConditionController>("Thirst").HookThirst(_character.SurvivalAttributes);
-            FindInDetailedView<UIConditionController>("Hunger").HookHunger(_character.SurvivalAttributes);
+            FindInDetailedView<UIConditionController>("Thirst").HookDehydration(_character.SurvivalAttributes);
+            FindInDetailedView<UIConditionController>("Hunger").HookStarvation(_character.SurvivalAttributes);
+            FindInSimpleView<UIConditionController>("Thirst").HookDehydration(_character.SurvivalAttributes);
+            FindInSimpleView<UIConditionController>("Hunger").HookStarvation(_character.SurvivalAttributes);
         }
         
         private void SetSimpleView()
@@ -117,8 +68,6 @@ namespace Game.Characters
             _detailedView.SetActive(false);
             
             _actionMenuList = FindInDetailedView<MenuList>("Action List");
-            CollapseCharacterButton = FindInDetailedView<Button>("Back Button");
-            CollapseCharacterButton.onClick.AddListener(CharacterManager.ExitCharacter);
             
             _detailedCurrentActionText.AddTextObject(FindInDetailedView<TextMeshProUGUI>("CurrentAction"));
 
@@ -127,12 +76,10 @@ namespace Game.Characters
             FindInDetailedView<TextMeshProUGUI>("Trait").text = _character.CharacterTrait.GetTraitDetails();
             FindInDetailedView<TextMeshProUGUI>("Weight").text = "Weight: " + _character.SurvivalAttributes.Weight + " (requires " + ((int)_character.SurvivalAttributes.Weight + 5) + "fuel)";
             
-            _character.Conditions.Thoughts.AddTextObject(FindInDetailedView<TextMeshProUGUI>("Conditions"));
-
             _gearContainer = Helper.FindChildWithName(_detailedView, "Gear");
-            WeaponGearUi = new GearUi(GearSubtype.Weapon, _gearContainer, _character);
-            ArmourGearUi = new GearUi(GearSubtype.Armour, _gearContainer, _character);
-            AccessoryGearUi = new GearUi(GearSubtype.Accessory, _gearContainer, _character);
+            WeaponGearUi = FindInDetailedView<UIGearController>("Weapon");
+            ArmourGearUi = FindInDetailedView<UIGearController>("Armour");
+            AccessoryGearUi = FindInDetailedView<UIGearController>("Accessory");
         }
         
         public void UpdateActionUi()
@@ -145,21 +92,15 @@ namespace Game.Characters
             {
                 ViewParent actionUi = actionUiList[i];
 
-                Helper.SetNavigation(actionUi.GetNavigationButton(), WeaponGearUi.GearButton.Button(), Direction.Left);
-                if (i == availableActions.Count - 1)
-                {
-                    Helper.SetReciprocalNavigation(actionUi.GetNavigationButton(), CollapseCharacterButton);
-                }
-
-                else if (i == 0)
-                {
-                    Helper.SetNavigation(WeaponGearUi.GearButton.Button(), actionUi.GetNavigationButton(),
-                        Direction.Right);
-                    Helper.SetNavigation(ArmourGearUi.GearButton.Button(), actionUi.GetNavigationButton(),
-                        Direction.Right);
-                    Helper.SetNavigation(AccessoryGearUi.GearButton.Button(), actionUi.GetNavigationButton(),
-                        Direction.Right);
-                }
+                Button weaponGearUiButton = WeaponGearUi.GetComponent<Button>();
+                Helper.SetNavigation(actionUi.GetNavigationButton(), weaponGearUiButton, Direction.Left);
+                if (i != 0) continue;
+                Helper.SetNavigation(weaponGearUiButton, actionUi.GetNavigationButton(),
+                    Direction.Right);
+                Helper.SetNavigation(weaponGearUiButton, actionUi.GetNavigationButton(),
+                    Direction.Right);
+                Helper.SetNavigation(weaponGearUiButton, actionUi.GetNavigationButton(),
+                    Direction.Right);
             }
         }
         
@@ -177,6 +118,7 @@ namespace Game.Characters
                 _currentActionText.Value(currentActionString);
                 _detailedCurrentActionText.Value(currentActionString);
             });
+            SwitchToSimpleView();
         }
 
         private T FindInSimpleView<T>(string name) where T : class
@@ -194,12 +136,11 @@ namespace Game.Characters
             GameObject.GetComponent<LayoutElement>().preferredHeight = 200;
             _detailedView.SetActive(true);
             SimpleView.SetActive(false);
-            CollapseCharacterButton.Select();
         }
 
         public void SwitchToSimpleView()
         {
-            GameObject.GetComponent<LayoutElement>().preferredHeight = 50;
+            GameObject.GetComponent<LayoutElement>().preferredHeight = 60;
             _detailedView.SetActive(false);
             SimpleView.SetActive(true);
             SimpleView.GetComponent<Button>().Select();

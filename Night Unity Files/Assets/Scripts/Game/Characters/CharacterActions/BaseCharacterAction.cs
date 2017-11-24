@@ -28,12 +28,11 @@ namespace Game.Characters.CharacterActions
 
         public override ViewParent CreateUi(Transform parent)
         {
-            SimpleView ui = new SimpleView(this, parent);
+            SimpleView ui = new SimpleView(this, parent, "Prefabs/Player Action");
             ui.SetPreferredHeight(30);
             ui.SetCentralTextCallback(() => Name);
             ui.PrimaryButton.AddOnClick(() =>
             {
-                PlayerCharacter.CharacterView.CollapseCharacterButton.Select();
                 NavigateToState(Name);
             });
             return ui;

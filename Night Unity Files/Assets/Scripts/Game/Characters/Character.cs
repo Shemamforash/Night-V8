@@ -22,7 +22,6 @@ namespace Game.Characters
 {
     public abstract class Character : MyGameObject, IPersistenceTemplate
     {
-        public readonly CharacterConditions Conditions;
         protected readonly DesolationInventory CharacterInventory;
         public readonly BaseAttributes BaseAttributes;
         protected Cooldown CockingCooldown;
@@ -63,7 +62,6 @@ namespace Game.Characters
         {
             _sprintModifier.SetMultiplicative(2);
             CharacterInventory = new DesolationInventory(name);
-            Conditions = new CharacterConditions();
             BaseAttributes = new BaseAttributes(this);
             
             _sprintModifier.AddTargetAttribute(BaseAttributes.Endurance);
@@ -81,11 +79,6 @@ namespace Game.Characters
         public virtual void Equip(GearItem gearItem)
         {
             EquipmentController.Equip(gearItem);
-        }
-
-        public Condition GetCondition(ConditionType type)
-        {
-            return Conditions.Conditions[type];
         }
 
         public void OnHit(Shot shot, int damage, bool isCritical)

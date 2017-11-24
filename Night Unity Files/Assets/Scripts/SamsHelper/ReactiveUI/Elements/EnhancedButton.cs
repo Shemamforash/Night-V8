@@ -21,8 +21,7 @@ namespace SamsHelper.ReactiveUI.Elements
         private Button _button;
         public GameObject Border;
         [SerializeField] private bool _useBorder = true;
-        [Range(0f, 5f)]
-        public float FadeDuration = 0.5f;
+        [Range(0f, 5f)] public float FadeDuration = 0.5f;
         public bool UseGlobalColours = true;
 
         private class HoldAction
@@ -66,17 +65,21 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private void Enter()
         {
-            if(UseGlobalColours) UseSelectedColours();
+            if (UseGlobalColours) UseSelectedColours();
             OnSelectActions?.Invoke();
         }
 
         private void Exit()
         {
-            if(UseGlobalColours) UseDeselectedColours();
+            if (UseGlobalColours) UseDeselectedColours();
             OnDeselectActions?.Invoke();
         }
 
-        public void AddOnClick(UnityAction a) => _button.onClick.AddListener(a);
+        public void AddOnClick(UnityAction a)
+        {
+            _button.onClick.AddListener(a);
+        }
+
         public void AddOnSelectEvent(Action a) => OnSelectActions += a;
         public void AddOnDeselectEvent(Action a) => OnDeselectActions += a;
         public void OnSelect(BaseEventData eventData) => Enter();
@@ -92,7 +95,7 @@ namespace SamsHelper.ReactiveUI.Elements
             if (Border != null && _useBorder)
             {
                 Border.SetActive(true);
-                StartCoroutine(Fade(1));
+                TryStartFade(1);
             }
             else
             {
@@ -102,6 +105,14 @@ namespace SamsHelper.ReactiveUI.Elements
                     _button.image.color = UiAppearanceController.Instance.MainColor;
                 }
             }
+        }
+
+        private Coroutine _fadeCoroutine;
+
+        private void TryStartFade(int target)
+        {
+            if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
+            _fadeCoroutine = StartCoroutine(Fade(target));
         }
 
         private IEnumerator Fade(float targetVal)
@@ -127,7 +138,7 @@ namespace SamsHelper.ReactiveUI.Elements
             if (Border != null && _useBorder)
             {
                 Border.SetActive(false);
-                StartCoroutine(Fade(0));
+                TryStartFade(0);
             }
             else
             {

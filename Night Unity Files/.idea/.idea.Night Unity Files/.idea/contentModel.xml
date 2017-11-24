@@ -76,10 +76,8 @@
                 <e p="Sleep.cs" t="Include" />
                 <e p="Travel.cs" t="Include" />
               </e>
-              <e p="CharacterConditions.cs" t="Include" />
               <e p="CharacterGearComparison.cs" t="Include" />
               <e p="CharacterView.cs" t="Include" />
-              <e p="Condition.cs" t="Include" />
               <e p="ConditionType.cs" t="Include" />
               <e p="DesolationCharacterGenerator.cs" t="Include" />
               <e p="DesolationCharacterManager.cs" t="Include" />
@@ -257,12 +255,14 @@
             </e>
           </e>
         </e>
-        <e p="UIConditionController.cs" t="Include" />
         <e p="UIControllers" t="Include">
           <e p="UIAimController.cs" t="Include" />
           <e p="UIArmourController.cs" t="Include" />
           <e p="UIAttributeController.cs" t="Include" />
+          <e p="UIConditionController.cs" t="Include" />
           <e p="UIEnemyShieldController.cs" t="Include" />
+          <e p="UIEnergyController.cs" t="Include" />
+          <e p="UIGearController.cs" t="Include" />
           <e p="UIHealthBarController.cs" t="Include" />
           <e p="UINumberPopupController.cs" t="Include" />
         </e>

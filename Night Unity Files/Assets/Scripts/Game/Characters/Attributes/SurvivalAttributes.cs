@@ -117,8 +117,8 @@ namespace Game.Characters.Attributes
         private void UpdateThirstAndHunger()
         {
             Thirst.Max = (int) (-0.2f * WorldState.EnvironmentManager.GetTemperature() + 16f);
-            UpdateConsumableTolerance(Hunger, Starvation, Eat, Character.GetCondition(ConditionType.Hunger));
-            UpdateConsumableTolerance(Thirst, Dehydration, Drink, Character.GetCondition(ConditionType.Thirst));
+            UpdateConsumableTolerance(Hunger, Starvation, Eat);
+            UpdateConsumableTolerance(Thirst, Dehydration, Drink);
         }
 
         public SurvivalAttributes(Character character) : base(character)
@@ -149,17 +149,13 @@ namespace Game.Characters.Attributes
             return GetAttributeStatus(Dehydration, _dehydrationLevels);
         }
         
-        private void UpdateConsumableTolerance(MyValue requirement, MyValue tolerance, Action consume, Condition condition)
+        private void UpdateConsumableTolerance(MyValue requirement, MyValue tolerance, Action consume)
         {
             float previousTolerance = tolerance.AsPercent();
             Intensity previousIntensity = GetIntensity(previousTolerance);
             requirement.SetCurrentValue(requirement.CurrentValue() + 1);
             float tolerancePercentage = tolerance.AsPercent();
             Intensity currentIntensity = GetIntensity(tolerancePercentage);
-            if (previousIntensity != currentIntensity)
-            {
-                condition.SetConditionLevel(currentIntensity);
-            }
             consume();
         }
 

@@ -26,7 +26,7 @@ namespace Game.Combat
         public static void RestartCombat()
         {
             _playerCharacter = CharacterGenerator.GenerateCharacter();
-            ((DesolationInventory)_playerCharacter.Inventory()).AddTestingResources();
+            _playerCharacter.Inventory().AddTestingResources();
             List<WeaponType> weaponsWanted = new List<WeaponType>();
             if(_instance.Smg) weaponsWanted.Add(WeaponType.SMG);
             if(_instance.Lmg) weaponsWanted.Add(WeaponType.LMG);
