@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
-public class EnemyShield : MonoBehaviour
+public class UIEnemyShieldController : MonoBehaviour
 {
 	public Image ShieldImage;
 	public float ShieldDecayRate = 0.2f;

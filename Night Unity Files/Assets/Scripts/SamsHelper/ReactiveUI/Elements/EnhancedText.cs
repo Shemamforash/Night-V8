@@ -59,7 +59,7 @@ namespace Facilitating.UI.Elements
                 newtext.text = textContent;
             }
             _text = gameObject.GetComponent<TextMeshProUGUI>();
-            _text.spriteAsset = Resources.Load("Sprites/Icons") as TMP_SpriteAsset;
+            _text.spriteAsset = Resources.Load("Icons") as TMP_SpriteAsset;
         }
         
         public void Update()

@@ -1,25 +1,23 @@
 ﻿using System;
 using Game.World;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Characters.CharacterActions
 {
     public class BaseCharacterAction : State
     {
-        protected int DefaultDuration;
-        private int TimeRemaining;
-        private int UpdateInterval = 1;
-        protected bool IsVisible = true;
-        private bool Interrupted;
-        public GameObject ActionButtonGameObject;
-        protected Action HourCallback;
-        protected Action MinuteCallback;
         private string _stateTransitionTarget = "Idle";
+        public GameObject ActionButtonGameObject;
+        protected int DefaultDuration;
+        protected Action HourCallback;
+        private bool Interrupted;
+        protected bool IsVisible = true;
+        protected Action MinuteCallback;
         protected Player PlayerCharacter;
+        private int TimeRemaining;
+        private readonly int UpdateInterval = 1;
 
         protected BaseCharacterAction(string name, Player playerCharacter) : base(name, StateSubtype.Character)
         {
@@ -64,10 +62,8 @@ namespace Game.Characters.CharacterActions
 
         public bool DecreaseDuration()
         {
-            if (TimeRemaining == WorldState.MinutesPerHour)
-            {
+            if (TimeRemaining == WorldState.MinutesPerHour) 
                 return false;
-            }
             TimeRemaining -= WorldState.MinutesPerHour;
             return true;
         }
@@ -89,21 +85,20 @@ namespace Game.Characters.CharacterActions
             Interrupted = false;
         }
 
+        private void FinishUpdate()
+        {
+            WorldState.UnregisterMinuteEvent(UpdateAction);
+            if (_stateTransitionTarget != null)
+                GetCharacter().States.NavigateToState(_stateTransitionTarget);
+            else
+                GetCharacter().States.ReturnToDefault();
+        }
+
         private void UpdateAction()
         {
             --TimeRemaining;
-            if (TimeRemaining == 0)
-            {
-                WorldState.UnregisterMinuteEvent(UpdateAction);
-                if (_stateTransitionTarget != null)
-                {
-                    GetCharacter().States.NavigateToState(_stateTransitionTarget);
-                }
-                else
-                {
-                    GetCharacter().States.ReturnToDefault();
-                }
-            }
+            if (TimeRemaining <= 0)
+                FinishUpdate();
             MinuteCallback?.Invoke();
             if (TimeRemaining % (WorldState.MinutesPerHour / UpdateInterval) != 0) return;
             HourCallback?.Invoke();
@@ -112,9 +107,7 @@ namespace Game.Characters.CharacterActions
         public override void Exit()
         {
             if (!Interrupted)
-            {
                 base.Exit();
-            }
         }
 
         private int TimeRemainingAsHours()

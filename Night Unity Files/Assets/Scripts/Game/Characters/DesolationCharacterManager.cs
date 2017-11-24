@@ -25,23 +25,21 @@ namespace Game.Characters
         {
             InputHandler.RegisterInputListener(this);
         }
-        
+
         public void Start()
         {
             TraitLoader.LoadTraits();
             SaveController.AddPersistenceListener(this);
             if (_characters.Count == 0)
             {
-                CharacterGenerator.LoadInitialParty();
-            }
-            foreach (Player playerCharacter in _characters)
-            {
-                GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", GameObject.Find("Character Section").transform.Find("Content").transform);
-                playerCharacter.SetGameObject(characterObject);
+                foreach (Player playerCharacter in CharacterGenerator.LoadInitialParty())
+                {
+                    AddCharacter(playerCharacter);
+                }
             }
             PopulateCharacterUi();
         }
-        
+
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
             if (axis == InputAxis.CancelCover && !isHeld)
@@ -58,14 +56,25 @@ namespace Game.Characters
         {
         }
 
-        public override void AddItem(MyGameObject g)
+        public void AddCharacter(Player playerCharacter)
         {
-            base.AddItem(g);
-            Player item = g as Player;
-            if (item != null)
+            Transform characterAreaTransform = GameObject.Find("Character Section").transform.Find("Content").transform;
+            if (Items().Count > 0)
             {
-                _characters.Add(item);
+                GameObject delineator = new GameObject();
+                delineator.AddComponent<RectTransform>();
+                Image i = delineator.AddComponent<Image>();
+                i.color = new Color(1, 1, 1, 0.2f);
+                LayoutElement layout = delineator.AddComponent<LayoutElement>();
+                layout.minHeight = 2;
+                layout.preferredWidth = 2000;
+                delineator.transform.SetParent(characterAreaTransform);
+                delineator.transform.localScale = new Vector3(1, 1, 1);
             }
+            GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", characterAreaTransform);
+            playerCharacter.SetGameObject(characterObject);
+            AddItem(playerCharacter);
+            _characters.Add(playerCharacter);
         }
 
         public static List<Player> Characters()

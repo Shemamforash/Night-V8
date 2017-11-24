@@ -1,4 +1,6 @@
-﻿namespace Game.Characters.CharacterActions
+﻿using UnityEngine.Assertions;
+
+namespace Game.Characters.CharacterActions
 {
     public class Idle : BaseCharacterAction
     {
@@ -10,7 +12,7 @@
 
         public override void Enter()
         {
-            GetCharacter().CurrentRegion = null;
+            Assert.AreEqual(GetCharacter().DistanceFromHome, 0);
             GetCharacter().CharacterView.SetActionListActive(true);
         }
 

@@ -2,7 +2,7 @@
 using Facilitating.UI.Elements;
 using UnityEngine;
 
-public class NumberPopupController : MonoBehaviour
+public class UINumberPopupController : MonoBehaviour
 {
 	private EnhancedText _enhancedText;
 	private Color _criticalColor = Color.red;

@@ -12,7 +12,6 @@ namespace Game.Combat.Enemies.EnemyTypes
 
         public void InitialiseBehaviour(Enemy enemy)
         {
-            EnemyBehaviour.EnableGrazing();
         }
 
 //        public override void InitialiseBehaviour(EnemyPlayerRelation relation)

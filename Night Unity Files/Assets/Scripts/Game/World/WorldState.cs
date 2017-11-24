@@ -88,7 +88,7 @@ namespace Game.World
             StormDistanceActual = 10;
 
 #if UNITY_EDITOR
-           _homeInventory.AddTestingResources();
+            _homeInventory.AddTestingResources();
 #endif
         }
 
@@ -149,35 +149,13 @@ namespace Game.World
             _isPaused = false;
         }
 
-        private void IncrementWorld()
+        private void IncrementWorldTime()
         {
             _currentTime += Time.deltaTime;
             if (_currentTime >= MinuteInSeconds)
             {
-                _currentTime = 0;
-                Minutes += 60 / MinutesPerHour;
-                MinuteEvent?.Invoke();
-                if (Minutes == 60)
-                {
-                    Minutes = 0;
-                    ++Hours;
-                    HourEvent?.Invoke();
-                    if (Hours == 24)
-                    {
-                        ++Days;
-                        DayEvent?.Invoke();
-                        Hours = 0;
-                    }
-                    //TODO make me make sense
-                    if (Hours >= 6 && Hours < 20 && _isNight)
-                    {
-                        _isNight = false;
-                    }
-                    else if ((Hours < 6 || Hours >= 20) && !_isNight)
-                    {
-                        _isNight = true;
-                    }
-                }
+                _currentTime = _currentTime - MinuteInSeconds;
+                IncrementMinutes();
             }
             if (Minutes < 10)
             {
@@ -189,22 +167,56 @@ namespace Game.World
             }
             _dayText.text = "Day " + Days;
         }
+        
+        private void IncrementMinutes()
+        {
+            Minutes += 60 / MinutesPerHour;
+            MinuteEvent?.Invoke();
+            if (Minutes != 60) return;
+            Minutes = 0;
+            IncrementHours();
+        }
+
+        private void IncrementHours()
+        {
+            ++Hours;
+            HourEvent?.Invoke();
+            if (Hours == 24)
+            {
+                IncrementDays();
+                Hours = 0;
+            }
+            if (Hours >= 6 && Hours < 20 && _isNight)
+            {
+                _isNight = false;
+            }
+            else if ((Hours < 6 || Hours >= 20) && !_isNight)
+            {
+                _isNight = true;
+            }
+        }
+
+        private void IncrementDays()
+        {
+            ++Days;
+            DayEvent?.Invoke();
+        }
 
         public void Update()
         {
             if (!_isPaused)
             {
-                IncrementWorld();
+                IncrementWorldTime();
             }
             WorldCooldownManager?.UpdateCooldowns();
         }
-        
-        
+
+
         public static void RegisterMinuteEvent(Action a)
         {
             if (Instance() != null) Instance().MinuteEvent += a;
         }
-        
+
         public static void UnregisterMinuteEvent(Action a)
         {
             if (Instance() != null) Instance().MinuteEvent -= a;
@@ -214,7 +226,7 @@ namespace Game.World
         {
             if (Instance() != null) Instance().HourEvent += a;
         }
-        
+
         public static void UnregisterHourEvent(Action a)
         {
             if (Instance() != null) Instance().HourEvent -= a;
@@ -224,6 +236,7 @@ namespace Game.World
         {
             if (Instance() != null) Instance().DayEvent += a;
         }
+
         public static void UnregisterDayEvent(Action a)
         {
             if (Instance() != null) Instance().DayEvent -= a;

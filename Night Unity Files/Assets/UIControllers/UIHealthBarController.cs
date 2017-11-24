@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBarController : MonoBehaviour
+public class UIHealthBarController : MonoBehaviour
 {
     private Slider _slider;
     private ParticleSystem _healthParticles;

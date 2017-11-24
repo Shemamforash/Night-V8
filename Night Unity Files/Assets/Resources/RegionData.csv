@@ -1,10 +1,10 @@
-Camp,,Human,10,20,2,15,10,Bandits,Low Level Guns
-Convoy,,Human,20,40,4,30,20,Warriors,Mid Level Guns
-Stronghold,,Human,30,60,8,45,30,Warlord,High Level Guns
-Greatbacks,,Hunting Ground,60,0,0,10,10,Greatback Herd,
-River,,Water Source,10,100,0,0,0,None,
-Well,,Water Source,0,100,0,10,0,None,
-Lake,,Water Source,20,100,0,0,0,Surface Dwellers,
-Wreck,,Scavenging Area,0,0,10,60,20,Bandits,"Tank, Weapon Mount"
-Rig,,Scavenging Area,0,0,20,100,30,Warriors,Machining Tools
-Metal Temple,,Scavenging Area,0,0,20,200,100,Demons,
+Camp,,Human,1,1,2,2,1,Bandits,Low Level Guns
+Convoy,,Human,1,1,3,3,2,Warriors,Mid Level Guns
+Stronghold,,Human,2,2,4,4,3,Warlord,High Level Guns
+Greatbacks,,Hunting Ground,3,1,0,0,0,Greatback Herd,
+Trickle,,Water Source,1,3,0,0,0,None,
+Stream,,Water Source,1,4,0,0,0,None,
+Well,,Water Source,0,5,0,0,0,Surface Dwellers,
+Wreck,,Scavenging Area,1,0,2,3,1,Bandits,"Tank, Weapon Mount"
+Rig,,Scavenging Area,0,0,3,4,2,Warriors,Machining Tools
+Metal Temple,,Scavenging Area,0,0,3,5,3,Demons,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Facilitating.Audio;
 using Game.Characters.Attributes;
 using Game.Characters.CharacterActions;
@@ -12,6 +13,7 @@ using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
@@ -21,8 +23,9 @@ namespace Game.Characters
 {
     public class Player : Character, IInputListener
     {
+        public readonly StateMachine<BaseCharacterAction> States = new StateMachine<BaseCharacterAction>();
         public readonly TraitLoader.Trait CharacterClass, CharacterTrait;
-        public Region CurrentRegion;
+        public int DistanceFromHome;
         public CharacterView CharacterView;
         public readonly SurvivalAttributes SurvivalAttributes;
 
@@ -54,6 +57,18 @@ namespace Game.Characters
             CharacterView = new CharacterView(this);
         }
 
+        public void StartExploration(Action explorationEndAction, int duration)
+        {
+            Travel state = (Travel) States.NavigateToState("Travel");
+            state.AddOnExit(explorationEndAction);
+            state.SetTravelTime(duration);
+        }
+        
+        public List<BaseCharacterAction> StatesAsList(bool includeInactiveStates)
+        {
+            return (from BaseCharacterAction s in States.StatesAsList() where s.IsStateVisible() || includeInactiveStates select s).ToList();
+        }
+        
         private void AddStates()
         {
             States.AddState(new CollectResources(this));
@@ -82,7 +97,7 @@ namespace Game.Characters
         private void CheckEnduranceZero()
         {
             if (!BaseAttributes.Endurance.ReachedMin()) return;
-            BaseCharacterAction action = States.GetCurrentState() as BaseCharacterAction;
+            BaseCharacterAction action = States.GetCurrentState();
             action.Interrupt();
             Sleep sleepAction = States.NavigateToState("Sleep") as Sleep;
             sleepAction.SetDuration((int) (BaseAttributes.Endurance.Max / 5f));
@@ -95,7 +110,7 @@ namespace Game.Characters
         {
             BaseAttributes.Endurance.SetCurrentValue(BaseAttributes.Endurance.CurrentValue() + amount);
             if (!BaseAttributes.Endurance.ReachedMax()) return;
-            if (CurrentRegion == null)
+            if (DistanceFromHome == 0)
             {
                 States.NavigateToState("Idle");
             }
@@ -103,6 +118,13 @@ namespace Game.Characters
 
         public void Travel()
         {
+            DistanceFromHome++;
+            Tire(CalculateEnduranceCostForDistance(1));
+        }
+
+        public void Return()
+        {
+            --DistanceFromHome;
             Tire(CalculateEnduranceCostForDistance(1));
         }
 

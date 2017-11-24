@@ -62,13 +62,13 @@ namespace Game.Characters
 
         private static string GenerateName() => _characterNames[Random.Range(0, _characterNames.Count)];
         
-        public static void LoadInitialParty()
+        public static List<Player> LoadInitialParty()
         {
 #if UNITY_EDITOR
 //            TestCharacterGenerator();
 #endif
-            WorldState.HomeInventory().AddItem(GenerateDriver());
-            WorldState.HomeInventory().AddItem(GenerateCharacter());
+            List<Player> initialParty = new List<Player> {GenerateDriver(), GenerateCharacter()};
+            return initialParty;
         }
 
         private static Player GenerateCharacterObject(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait)
@@ -87,7 +87,7 @@ namespace Game.Characters
             return playerCharacter;
         }
 
-        private static Character GenerateDriver()
+        private static Player GenerateDriver()
         {
             Player theDriver = GenerateCharacterObject("Driver", TraitLoader.FindClass("Crusader"), TraitLoader.FindTrait("Faithless"));
             theDriver.SurvivalAttributes.Weight = WeightCategory.Medium;

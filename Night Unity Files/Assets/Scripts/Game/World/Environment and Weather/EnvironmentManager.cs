@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.World.Region;
+using NUnit.Framework;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using TMPro;
@@ -7,21 +8,30 @@ using UnityEngine;
 
 namespace Game.World.Environment_and_Weather
 {
-    public class EnvironmentManager : ProbabalisticStateMachine<Environment>
+    public class EnvironmentManager : StateMachine<Environment>
     {
         private TextMeshProUGUI _environmentText, _temperatureText;
+        private static EnvironmentManager _instance;
+
+        public void Awake()
+        {
+            _instance = this;
+        }
+
+        public static EnvironmentManager Instance()
+        {
+            Assert.NotNull(_instance);
+            return _instance;
+        }
 
         public void Start()
         {
             _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();
             _temperatureText = GameObject.Find("Temperature").GetComponent<TextMeshProUGUI>();
-            VisitAllStates();
             LoadEnvironments();
-            LoadProbabilities("EnvironmentProbabilityTable");
-            ReturnToDefault();
+            NavigateToState("Oasis");
             WorldState.RegisterTravelEvent(GenerateEnvironment);
             WorldState.RegisterMinuteEvent(UpdateTemperature);
-            OnlyVisitOnce();
 //            TestEnvironmentGenerator();
         }
 
@@ -29,7 +39,7 @@ namespace Game.World.Environment_and_Weather
         {
             Environment newState = base.NavigateToState(stateName);
             RegionManager.GenerateNewRegions();
-            _environmentText.text = GetCurrentState().GetDisplayName();
+            _environmentText.text = GetCurrentState().Name;
             return newState;
         }
 
@@ -40,7 +50,6 @@ namespace Game.World.Environment_and_Weather
             const int trials = 10000;
             for (int i = 0; i < trials; ++i)
             {
-                ClearVisitedStates();
                 NavigateToState("Oasis");
                 int totalTransitions = 1;
                 try
@@ -64,17 +73,15 @@ namespace Game.World.Environment_and_Weather
         {
             Helper.ConstructObjectsFromCsv("EnvironmentBalance", delegate(string[] attributes)
             {
-                Environment environment = new Environment(
-                    attributes[0],
-                    attributes[1],
-                    this,
-                    float.Parse(attributes[2]),
-                    float.Parse(attributes[3]),
-                    float.Parse(attributes[4]),
-                    float.Parse(attributes[5]),
-                    float.Parse(attributes[6]),
-                    float.Parse(attributes[7])
-                );
+                string name = attributes[0];
+                int temperature = int.Parse(attributes[1]);
+                int climate = int.Parse(attributes[2]);
+                int waterAbundance = int.Parse(attributes[3]);
+                int foodAbundance = int.Parse(attributes[4]);
+                int fuelAbundance = int.Parse(attributes[5]);
+                int scrapAbundance = int.Parse(attributes[6]);
+
+                Environment environment = new Environment(name, temperature, climate, waterAbundance, foodAbundance, fuelAbundance, scrapAbundance);
                 AddState(environment);
             });
             SetDefaultState("Oasis");
@@ -94,15 +101,5 @@ namespace Game.World.Environment_and_Weather
         {
             NavigateToState(GetCurrentState().Name);
         }
-
-#if UNITY_EDITOR
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                GenerateEnvironment();
-            }
-        }
-#endif
     }
 }

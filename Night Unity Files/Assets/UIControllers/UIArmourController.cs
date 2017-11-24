@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ArmourController : MonoBehaviour
+public class UIArmourController : MonoBehaviour
 {
     private const int ArmourDivisions = 10;
     private const int MaxDivisionSize = 20;

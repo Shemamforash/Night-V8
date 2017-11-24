@@ -29,7 +29,7 @@ namespace Game.Combat
 
         public readonly TextMeshProUGUI ConditionsText;
 
-        private readonly HealthBarController _characterHealthController;
+        private readonly UIHealthBarController _characterUiHealthController;
         private readonly List<GameObject> _magazineAmmo = new List<GameObject>();
         private Character _character;
         private float _criticalTarget;
@@ -57,7 +57,7 @@ namespace Game.Combat
             
             SkillBar = Helper.FindChildWithName<SkillBar>(playerContainer, "Skill Bar");
 
-            _characterHealthController = Helper.FindChildWithName<HealthBarController>(playerContainer, "Health Bar");
+            _characterUiHealthController = Helper.FindChildWithName<UIHealthBarController>(playerContainer, "Health Bar");
         }
 
         public void ShowHitMessage(string message)
@@ -80,7 +80,7 @@ namespace Game.Combat
 
         public void UpdateCharacterHealth(MyValue health)
         {
-            _characterHealthController.SetValue(health.CurrentValue() / health.Max);
+            _characterUiHealthController.SetValue(health.CurrentValue() / health.Max);
             _characterHealthText.text = (int) health.CurrentValue() + "/" + (int) health.Max;
         }
 

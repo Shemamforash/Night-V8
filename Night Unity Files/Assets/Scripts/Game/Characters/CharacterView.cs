@@ -30,8 +30,6 @@ namespace Game.Characters
         private readonly ValueTextLink<string> _currentActionText = new ValueTextLink<string>();
         private readonly ValueTextLink<string> _detailedCurrentActionText = new ValueTextLink<string>();
 
-        private TextMeshProUGUI _thirstText, _hungerText;
-
         public GearUi WeaponGearUi, ArmourGearUi, AccessoryGearUi;
 
         private MenuList _actionMenuList;
@@ -95,34 +93,17 @@ namespace Game.Characters
 
         private void BindUi()
         {
-            BaseAttributes baseAttributes = _character.BaseAttributes;
-            BindUiToAttribute(baseAttributes.Strength,  "Strength");
-            BindUiToAttribute(baseAttributes.Endurance, "Endurance");
-            BindUiToAttribute(baseAttributes.Stability, "Stability");
-            BindUiToAttribute(baseAttributes.Intelligence, "Intelligence");
-            SurvivalAttributes survivalAttributes = _character.SurvivalAttributes;
-            survivalAttributes.Hunger.AddOnValueChange(f => _hungerText.text = survivalAttributes.GetHungerStatus());
-            survivalAttributes.Thirst.AddOnValueChange(f => _thirstText.text = survivalAttributes.GetThirstStatus());
-        }
-        
-        private void BindUiToAttribute(CharacterAttribute a, string attributeName)
-        {
-            TextMeshProUGUI simpleText = FindInSimpleView<TextMeshProUGUI>(attributeName);
-            TextMeshProUGUI detailText = FindInDetailedView<TextMeshProUGUI>(attributeName);
-            a.AddOnValueChange(delegate(MyValue f)
-            {
-                int calculatedValue = (int) ((CharacterAttribute) f).CurrentValue();
-                simpleText.text = calculatedValue.ToString();
-                detailText.text = calculatedValue + "/" + a.Max;
-            });
+            FindInSimpleView<UIAttributeController>("Attributes").HookValues(_character.BaseAttributes);
+            FindInDetailedView<UIAttributeController>("Attributes").HookValues(_character.BaseAttributes);
+            
+            FindInDetailedView<UIConditionController>("Thirst").HookThirst(_character.SurvivalAttributes);
+            FindInDetailedView<UIConditionController>("Hunger").HookHunger(_character.SurvivalAttributes);
         }
         
         private void SetSimpleView()
         {
             SimpleView = GameObject.transform.Find("Simple").gameObject;
             SimpleView.SetActive(true);
-            _thirstText = FindInSimpleView<TextMeshProUGUI>("Thirst");
-            _hungerText = FindInSimpleView<TextMeshProUGUI>("Hunger");
 
             FindInSimpleView<TextMeshProUGUI>("Simple Name").text = _character.Name;
             FindInSimpleView<TextMeshProUGUI>("ClassTrait").text = _character.CharacterTrait.Name + " " + _character.CharacterClass.Name;

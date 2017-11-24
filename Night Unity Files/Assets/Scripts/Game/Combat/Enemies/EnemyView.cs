@@ -13,10 +13,10 @@ namespace Game.Combat.Enemies
     {
         public TextMeshProUGUI CoverText, DistanceText, VisionText, ActionText;//StrengthText, ArmourText, 
         private TextMeshProUGUI _nameText, _typeText;
-        private ArmourController _armourController;
-        private HealthBarController _lowerHealthBarController;
+        private UIArmourController _uiArmourController;
+        private UIHealthBarController _lowerUiHealthBarController;
         private GameObject _targetObject, _alertedObject, _detectedObject;
-        public AimController AimController;
+        public UIAimController UiAimController;
         private GameObject _damageTextObject;
         
         public EnemyView(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/EnemyItem") : base(linkedObject, parent, prefabLocation)
@@ -33,11 +33,11 @@ namespace Game.Combat.Enemies
             VisionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Vision");
 //            StrengthText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Strength Remaining");
 //            ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour");
-            AimController = Helper.FindChildWithName<AimController>(GameObject, "Aim Timer");
+            UiAimController = Helper.FindChildWithName<UIAimController>(GameObject, "Aim Timer");
             _nameText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Name");
             _typeText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Type");
-            _armourController = Helper.FindChildWithName<ArmourController>(GameObject, "Armour Bar");
-            _lowerHealthBarController = Helper.FindChildWithName<HealthBarController>(GameObject, "Health Bar Bottom");
+            _uiArmourController = Helper.FindChildWithName<UIArmourController>(GameObject, "Armour Bar");
+            _lowerUiHealthBarController = Helper.FindChildWithName<UIHealthBarController>(GameObject, "Health Bar Bottom");
             _alertedObject = GameObject.Find("Alert");
             _detectedObject = GameObject.Find("Detected");
             _targetObject = GameObject.Find("Target");
@@ -51,17 +51,17 @@ namespace Game.Combat.Enemies
         public void SpawnDamageText(int value, bool critical)
         {
             GameObject damageText = Helper.InstantiateUiObject(_damageTextObject, GameObject.transform);
-            damageText.GetComponent<NumberPopupController>().ShowValue(value, critical);
+            damageText.GetComponent<UINumberPopupController>().ShowValue(value, critical);
         }
 
         public void SetHealth(float normalisedHealth)
         {
-            _lowerHealthBarController.SetValue(normalisedHealth);
+            _lowerUiHealthBarController.SetValue(normalisedHealth);
         }
 
         public void SetArmour(int armourLevel)
         {
-            _armourController.SetArmourValue(armourLevel);
+            _uiArmourController.SetArmourValue(armourLevel);
         }
         
         public override void Update()
@@ -74,13 +74,13 @@ namespace Game.Combat.Enemies
         public void SetColour(Color color)
         {
             GetGameObject().GetComponent<EnhancedButton>().SetColor(color);
-            _armourController.SetColor(color);
-            _lowerHealthBarController.SetColor(color);
+            _uiArmourController.SetColor(color);
+            _lowerUiHealthBarController.SetColor(color);
         }
 
         public void MarkUnselected()
         {
-            _lowerHealthBarController.SetParticleEmissionOverDistance();
+            _lowerUiHealthBarController.SetParticleEmissionOverDistance();
             _targetObject.SetActive(false);
         }
 

@@ -12,7 +12,7 @@ namespace SamsHelper.ReactiveUI.Elements
         public TMP_FontAsset UniversalFont;
         public Color MainColor, SecondaryColor, BackgroundColor;
         public Image BorderImage;
-        public int SmallFontSize, MediumFontSize, LargeFontSize, TitleFontSize;
+        public int SmallFontSize = 10, MediumFontSize = 15, LargeFontSize = 30, TitleFontSize= 45;
         private static UiAppearanceController _instance;
 
         public void Awake()

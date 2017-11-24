@@ -1,12 +1,13 @@
-﻿using SamsHelper.ReactiveUI.InventoryUI;
+﻿using Game.World.Region;
+using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
-using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
     public class CollectResources : BaseCharacterAction
     {
         private Character _previousCharacter;
+        private Region _targetRegion;
 
         public CollectResources(Player playerCharacter) : base("Collect Resources", playerCharacter)
         {
@@ -15,12 +16,17 @@ namespace Game.Characters.CharacterActions
             AddOnExit(ReturnToGameScreen);
         }
 
+        public void SetTargetRegion(Region targetRegion)
+        {
+            _targetRegion = targetRegion;
+        }
+
         public override void Enter()
         {
             MenuStateMachine.States.NavigateToState("Inventory Menu");
             _previousCharacter = CharacterManager.SelectedCharacter;
             CharacterManager.SelectedCharacter = GetCharacter();
-            InventoryTransferManager.Instance().ShowInventories(GetCharacter().Inventory(), GetCharacter().CurrentRegion, () => GetCharacter().States.NavigateToState("Return"));
+            InventoryTransferManager.Instance().ShowInventories(GetCharacter().Inventory(), _targetRegion, () => GetCharacter().States.NavigateToState("Return"));
         }
 
         public override void Interrupt()

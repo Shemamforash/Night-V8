@@ -23,10 +23,11 @@ namespace Game.World.Region
         private static Button _backButton;
         private static InventoryUi _exploreButton;
         private static TextMeshProUGUI _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
-        private static Character _character;
+        private static Player _character;
         private static RegionManager _instance;
         private static MenuList _menuList;
         private static readonly List<string> NamePool = new List<string>();
+        private static MapGenerator.Node MapNode;
 
         public static RegionManager Instance()
         {
@@ -69,6 +70,11 @@ namespace Game.World.Region
             return chosenName;
         }
 
+        private Player Character()
+        {
+            return _character;
+        }
+        
         protected void Awake()
         {
             _instance = this;
@@ -84,8 +90,9 @@ namespace Game.World.Region
             Helper.SetReciprocalNavigation(_exploreButton.GetNavigationButton(), _backButton);
             _exploreButton.PrimaryButton.AddOnClick(delegate
             {
-                Region targetRegion = UnexploredRegions[Random.Range(0, UnexploredRegions.Count)];
-                StartExploration(delegate { DiscoverRegion(targetRegion); }, targetRegion);
+                Player currentCharacter = Character();
+                currentCharacter.StartExploration(() => MapNode.Discover(currentCharacter), 0);
+                ExitManager(true);
             });
             _menuList.AddPlainButton(_exploreButton);
             LoadRegionTemplates();
@@ -119,19 +126,20 @@ namespace Game.World.Region
 
         public static void GenerateNewRegions()
         {
+            MapNode = MapGenerator.Generate();
             DiscoveredRegions.ForEach(r => r.Destroy());
             UnexploredRegions.Clear();
             DiscoveredRegions.Clear();
-            for (int i = 0; i < NoRegionsToGenerate; ++i)
-            {
-                RegionTemplate template = Templates[Templates.Keys.ToList()[Random.Range(0, Templates.Keys.Count)]];
-                string regionName = GenerateName(); //template.DisplayName == "" ? template.InternalName : template.DisplayName;
-                Region region = new Region(regionName, template);
-                UnexploredRegions.Add(region);
-#if UNITY_EDITOR
-                DiscoverRegion(region);
-#endif
-            }
+//            for (int i = 0; i < NoRegionsToGenerate; ++i)
+//            {
+//                RegionTemplate template = Templates[Templates.Keys.ToList()[Random.Range(0, Templates.Keys.Count)]];
+//                string regionName = GenerateName(); //template.DisplayName == "" ? template.InternalName : template.DisplayName;
+//                Region region = new Region(regionName, template);
+//                UnexploredRegions.Add(region);
+//#if UNITY_EDITOR
+//                DiscoverRegion(region);
+//#endif
+//            }
             RefreshExploreButton();
         }
 
@@ -172,18 +180,10 @@ namespace Game.World.Region
             _regionInfoDescriptionText.text = descriptionText;
         }
 
-        public static void EnterManager(Characters.Character character)
+        public static void EnterManager(Player character)
         {
             _character = character;
             MenuStateMachine.States.NavigateToState("Region Menu");
-        }
-
-        private static void StartExploration(Action a, Region target)
-        {
-            Travel state = (Travel) _character.States.NavigateToState("Travel");
-            state.AddOnExit(a);
-            state.SetTargetRegion(target);
-            ExitManager(true);
         }
 
         private static void ExitManager(bool characterIsExploring)

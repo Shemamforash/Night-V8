@@ -8,19 +8,18 @@ namespace Game.Characters.CharacterActions
         public Return(Player playerCharacter) : base("Return", playerCharacter)
         {
             IsVisible = false;
-            HourCallback = GetCharacter().Travel;
+            HourCallback = GetCharacter().Return;
             AddOnExit(ReturnToVehicle);
         }
 
         public override void Enter()
         {
-            SetDuration(GetCharacter().CurrentRegion.Distance());
+            SetDuration(GetCharacter().DistanceFromHome);
             Start();
         }
 
         public void ReturnToVehicle()
         {
-            GetCharacter().Travel();
             GetCharacter().Inventory().MoveAllResources(WorldState.HomeInventory());
         }
     }

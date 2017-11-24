@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AimController : MonoBehaviour
+public class UIAimController : MonoBehaviour
 {
 	private RectTransform _rightTransform, _leftTransform;
 	private Image _rightImage, _leftImage;

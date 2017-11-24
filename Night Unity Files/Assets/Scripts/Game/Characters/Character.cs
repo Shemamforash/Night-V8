@@ -22,7 +22,6 @@ namespace Game.Characters
 {
     public abstract class Character : MyGameObject, IPersistenceTemplate
     {
-        public readonly StateMachine<BaseCharacterAction> States = new StateMachine<BaseCharacterAction>();
         public readonly CharacterConditions Conditions;
         protected readonly DesolationInventory CharacterInventory;
         public readonly BaseAttributes BaseAttributes;
@@ -137,11 +136,6 @@ namespace Game.Characters
         public DesolationInventory Inventory()
         {
             return CharacterInventory;
-        }
-
-        public List<BaseCharacterAction> StatesAsList(bool includeInactiveStates)
-        {
-            return (from BaseCharacterAction s in States.StatesAsList() where s.IsStateVisible() || includeInactiveStates select s).ToList();
         }
 
         //Cooldowns

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using UnityEngine;
 
@@ -9,32 +10,29 @@ namespace Game.World.Environment_and_Weather
         private float _waterAbundance, _foodAbundance, _fuelAbundance, _scrapAbundance;
         private readonly float _defaultMinTemperature, _defaultMaxTemperature;
         private readonly List<float> _temperatureArray = new List<float>();
-        private string _displayName;
-        private EnvironmentManager _environmentManager;
+        private Climate _climate;
 
-        public Environment(string name, string displayName, EnvironmentManager environmentManager, float waterAbundance, float foodAbundance, float fuelAbundance, float scrapAbundance,
-            float defaultMinTemperature, float defaultMaxTemperature) : base(name, StateSubtype.Environment)
+        private enum Climate
         {
-            _environmentManager = environmentManager;
-            _displayName = displayName;
+            Dry,
+            Normal,
+            Wet
+        }
+
+        public Environment(string name, int temperature, int climate, int waterAbundance, int foodAbundance, int fuelAbundance, int scrapAbundance) : base(name, StateSubtype.Environment)
+        {
             _waterAbundance = waterAbundance;
             _foodAbundance = foodAbundance;
             _fuelAbundance = fuelAbundance;
             _scrapAbundance = scrapAbundance;
-            _defaultMinTemperature = defaultMinTemperature;
-            _defaultMaxTemperature = defaultMaxTemperature;
+            if (climate == 0) _climate = Climate.Dry;
+            else if (climate == 1) _climate = Climate.Normal;
+            else _climate = Climate.Wet;
+            _defaultMaxTemperature = temperature * 10;
+            _defaultMinTemperature = temperature - 20;
             CalculateTemperatures();
         }
 
-        public string GetDisplayName()
-        {
-            if (_displayName != "")
-            {
-                return _displayName;
-            }
-            return Name;
-        }
-        
         private void CalculateTemperatures(){
             float temperatureVariation = _defaultMaxTemperature - _defaultMinTemperature;
             for(int i = 0; i < 24 * 12; ++i){
@@ -58,13 +56,13 @@ namespace Game.World.Environment_and_Weather
             if(hours < 0){
                 hours = 24 + hours;
             }
-            int arrayPosition = hours * 12 + (minutes / 5) - 1;
+            int arrayPosition = hours * 12 + minutes / 5 - 1;
             return (int)_temperatureArray[arrayPosition];
         }
 
         protected override void NavigateToState(string stateName)
         {
-            _environmentManager.NavigateToState(stateName);
+            EnvironmentManager.Instance().NavigateToState(stateName);
         }
     }
 }

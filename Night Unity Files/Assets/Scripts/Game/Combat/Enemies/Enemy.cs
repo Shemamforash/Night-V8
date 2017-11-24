@@ -1,6 +1,4 @@
-﻿using System;
-using Game.Characters;
-using Game.Combat.Enemies.EnemyBehaviours;
+﻿using Game.Characters;
 using Game.Combat.Enemies.EnemyTypes;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -24,9 +22,7 @@ namespace Game.Combat.Enemies
         protected readonly ValueTextLink<string> ActionTextLink = new ValueTextLink<string>();
 
         private EnemyView _enemyView;
-        public GenericBehaviour EnemyBehaviour;
         private bool _alerted;
-        private EnemyBehaviour _currentBehaviour;
         public readonly MyValue Distance = new MyValue(0, 0, 150);
 
         private void MakeHealRequest()
@@ -53,7 +49,6 @@ namespace Game.Combat.Enemies
                 });
             }
             BaseAttributes.Strength.OnMin(Kill);
-            EnemyBehaviour = new GenericBehaviour(this);
             CharacterInventory.IncrementResource(InventoryResourceType.Ammo, 10000000);
             
             _fireCooldown = CombatManager.CombatCooldowns.CreateCooldown();
@@ -65,13 +60,13 @@ namespace Game.Combat.Enemies
             _aimCooldown.SetDuringAction(f =>
             {
                 float normalisedTime = Helper.Normalise(f, _aimTime);
-                _enemyView.AimController.SetValue(1 - normalisedTime);
+                _enemyView.UiAimController.SetValue(1 - normalisedTime);
             });
             _aimCooldown.SetEndAction(() =>
             {
                 _fireCooldown.Duration = Random.Range(1, 3);
                 _fireCooldown.Start();
-                _enemyView.AimController.SetValue(0);
+                _enemyView.UiAimController.SetValue(0);
             });
 
             ReloadingCooldown.SetStartAction(() => SetActionText("Reloading"));
@@ -90,7 +85,7 @@ namespace Game.Combat.Enemies
         public override Shot FireWeapon(Character target)
         {
             Shot s = base.FireWeapon(target);
-            if (s != null) _enemyView.AimController.Fire();
+            if (s != null) _enemyView.UiAimController.Fire();
             return s;
         }
         
@@ -199,7 +194,7 @@ namespace Game.Combat.Enemies
 
         public override void OnMiss()
         {
-            EnemyBehaviour.TakeFire();
+//            EnemyBehaviour.TakeFire();
             _enemyView.SpawnDamageText(0, false);
         }
         

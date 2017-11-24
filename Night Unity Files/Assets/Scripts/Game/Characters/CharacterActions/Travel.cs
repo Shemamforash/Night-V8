@@ -1,7 +1,4 @@
-﻿using Game.Combat;
-using Game.World.Region;
-
-namespace Game.Characters.CharacterActions
+﻿namespace Game.Characters.CharacterActions
 {
     public class Travel : BaseCharacterAction
     {
@@ -11,27 +8,10 @@ namespace Game.Characters.CharacterActions
             HourCallback = GetCharacter().Travel;
         }
 
-        public void SetTargetRegion(Region targetRegion)
+        public void SetTravelTime(int distance)
         {
-            GetCharacter().CurrentRegion = targetRegion;
-            SetDuration(GetCharacter().CurrentRegion.Distance());
+            SetDuration(distance);
             Start();
-            SetStateTransitionTarget(CheckForEnterCombat());
-        }
-
-        public Region GetTargetRegion()
-        {
-            return GetCharacter().CurrentRegion;
-        }
-
-        private string CheckForEnterCombat()
-        {
-            CombatScenario scenario = GetCharacter().CurrentRegion.GetCombatScenario();
-            if (scenario != null)
-            {
-                return "Combat";
-            }
-            return "Collect Resources";
         }
     }
 }

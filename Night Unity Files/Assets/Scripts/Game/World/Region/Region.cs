@@ -66,23 +66,12 @@ namespace Game.World.Region
 
         private static string GetAmountRemainingDescripter(float amount)
         {
-            if (amount == 0)
+            string amountRemaining = "";
+            for (int i = 0; i < amount; ++i)
             {
-                return "Barren";
+                amountRemaining += "+";
             }
-            if (amount < 10)
-            {
-                return "Scarce";
-            }
-            if (amount < 25)
-            {
-                return "Some";
-            }
-            if (amount < 100)
-            {
-                return "Plentiful";
-            }
-            return "Bounteous";
+            return amountRemaining;
         }
 
         public int Distance()
