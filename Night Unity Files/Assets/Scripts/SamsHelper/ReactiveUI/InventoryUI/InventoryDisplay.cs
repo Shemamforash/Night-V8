@@ -45,7 +45,6 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             InventoryUi inventoryItemUi = (InventoryUi) base.AddItem(item);
             if (inventoryItemUi != null) //item is already added
             {
-                inventoryItemUi.SetDirection(_inventoryDirection);
                 inventoryItemUi.GetNavigationButton().GetComponent<EnhancedButton>().AddOnClick(() => GetMoveAction(item, 1)());
                 inventoryItemUi.GetNavigationButton().GetComponent<EnhancedButton>().AddOnHold(GetMoveAction(item, 5), 0.5f);
             }

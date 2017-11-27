@@ -70,22 +70,6 @@ namespace Facilitating.MenuNavigation
             AddButton(title, null, true);
         }
 
-        public void AddList(List<MyGameObject> items, Action<MyGameObject> callback, bool centered = false, bool autoDestruct = false, bool closeAll = false)
-        {
-            GameObject menuObject = Helper.InstantiateUiObject("Prefabs/Simple Menu", _container);
-            MenuList menuList = centered ? menuObject.AddComponent<ScrollingMenuList>() : menuObject.AddComponent<MenuList>();
-            menuList.SetItems(items);
-            menuList.Items.ForEach(item =>
-            {
-                _options.Add(item.GetGameObject());
-                item.PrimaryButton.AddOnClick(() =>
-                {
-                    if(autoDestruct) Destroy(closeAll);
-                    callback?.Invoke(item.GetLinkedObject());
-                });
-            });
-        }
-
         public void AddButton(string optionText, Action optionOnClick = null, bool autoDestruct = false, bool closeAll = false)
         {
             GameObject newOption = Helper.InstantiateUiObject(_optionPrefabName, _container);

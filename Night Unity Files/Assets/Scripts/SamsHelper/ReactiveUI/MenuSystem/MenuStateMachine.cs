@@ -36,11 +36,6 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             SaveController.SaveGame();
         }
 
-        public static void GoToMenu(Menu m)
-        {
-            States.NavigateToState(m.gameObject.name);
-        }
-
         public static void HideCurrentMenu()
         {
             States.GetCurrentState().GetGameObject().SetActive(false);

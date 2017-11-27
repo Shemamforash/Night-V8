@@ -6,44 +6,23 @@
   </SoundSettings>
   <CharacterManager>
     <Character>
-      <Name>Driver</Name>
-      <Attributes>
-        <Strength>
-          <Val>104</Val>
-          <Max>104</Max>
-        </Strength>
-        <Endurance>
-          <Val>77</Val>
-          <Max>77</Max>
-        </Endurance>
-        <Stability>
-          <Val>21</Val>
-          <Max>21</Max>
-        </Stability>
-        <Intelligence>
-          <Val>20</Val>
-          <Max>20</Max>
-        </Intelligence>
-      </Attributes>
-    </Character>
-    <Character>
       <Name>Rev</Name>
       <Attributes>
         <Strength>
-          <Val>93</Val>
-          <Max>93</Max>
+          <Val>73</Val>
+          <Max>73</Max>
         </Strength>
         <Endurance>
-          <Val>75</Val>
-          <Max>75</Max>
+          <Val>63</Val>
+          <Max>63</Max>
         </Endurance>
         <Stability>
-          <Val>1</Val>
-          <Max>1</Max>
+          <Val>20</Val>
+          <Max>20</Max>
         </Stability>
         <Intelligence>
-          <Val>14</Val>
-          <Max>14</Max>
+          <Val>21</Val>
+          <Max>10</Max>
         </Intelligence>
       </Attributes>
     </Character>

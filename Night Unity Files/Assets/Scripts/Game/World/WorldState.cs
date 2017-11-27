@@ -20,65 +20,31 @@ namespace Game.World
 {
     public class WorldState : MonoBehaviour
     {
-        public static CooldownManager WorldCooldownManager = new CooldownManager();
+        public static readonly CooldownManager WorldCooldownManager = new CooldownManager();
         public static int StormDistanceMax, StormDistanceActual;
         public static int DaysSpentHere;
-        private static Button _inventoryButton;
         public static readonly EnvironmentManager EnvironmentManager = new EnvironmentManager();
-        private static CharacterManager _homeInventory = new CharacterManager();
-        private readonly WeatherManager Weather = new WeatherManager();
+        private static readonly CharacterManager _homeInventory = new CharacterManager();
+        private readonly WeatherManager _weather = new WeatherManager();
         private event Action MinuteEvent, HourEvent, DayEvent, TravelEvent;
 
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
         public const int MinutesPerHour = 12;
         private static bool _isNight, _isPaused;
-        private TextMeshProUGUI _timeText, _dayText;
         private static WorldState _instance;
         public static float MinuteInSeconds = .2f;
 
         public void Awake()
         {
-            _timeText = Helper.FindChildWithName(gameObject, "Time").GetComponent<TextMeshProUGUI>();
-            _dayText = Helper.FindChildWithName(gameObject, "Day").GetComponent<TextMeshProUGUI>();
-            _inventoryButton = Helper.FindChildWithName<Button>(gameObject, "Inventory");
-            _inventoryButton.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                Popup popup = new Popup("Vehicle Inventory");
-                List<MyGameObject> visibleContents = _homeInventory.SortByType();
-                popup.AddList(visibleContents, g =>
-                {
-                    GearItem item = g as GearItem;
-                    if (item != null)
-                    {
-                        ShowCharacterPopup(item.Name, item);
-                    }
-                }, true);
-                popup.AddBackButton();
-            });
             _instance = this;
-        }
-
-        private void ShowCharacterPopup(string name, GearItem gearItem)
-        {
-            Popup popupWithList = new Popup("Equip " + name);
-            List<MyGameObject> characterGear = new List<MyGameObject>();
-            CharacterManager.Characters().ForEach(c => characterGear.Add(new CharacterGearComparison(c, gearItem)));
-            popupWithList.AddList(characterGear, null, true, true, true);
-            popupWithList.AddBackButton();
         }
 
         public void Start()
         {
             _homeInventory.Start();
             EnvironmentManager.Start();
-            Weather.Start();
-
-            SetResourceSuffix(InventoryResourceType.Water, "sips");
-            SetResourceSuffix(InventoryResourceType.Food, "meals");
-            SetResourceSuffix(InventoryResourceType.Fuel, "dregs");
-            SetResourceSuffix(InventoryResourceType.Ammo, "rounds");
-            SetResourceSuffix(InventoryResourceType.Scrap, "bits");
+            _weather.Start();
 
             SaveController.LoadSettings();
             SaveController.LoadGame();
@@ -91,8 +57,6 @@ namespace Game.World
             _homeInventory.AddTestingResources(3);
 #endif
         }
-
-        public static Button GetInventoryButton() => _inventoryButton;
 
         private void IncrementDaysSpentHere()
         {
@@ -123,15 +87,9 @@ namespace Game.World
             //TODO
         }
 
-        public static Inventory HomeInventory()
+        public static CharacterManager HomeInventory()
         {
             return _homeInventory;
-        }
-
-        private static void SetResourceSuffix(InventoryResourceType name, string convention)
-        {
-            TextMeshProUGUI resourceText = GameObject.Find(name.ToString()).GetComponent<TextMeshProUGUI>();
-            _homeInventory.GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f.CurrentValue()) + " " + convention; });
         }
 
         public static WorldState Instance()
@@ -156,16 +114,8 @@ namespace Game.World
             {
                 _currentTime = _currentTime - MinuteInSeconds;
                 IncrementMinutes();
+                WorldView.SetTime(Hours, Minutes);
             }
-            if (Minutes < 10)
-            {
-                _timeText.text = Hours + ":0" + Minutes;
-            }
-            else
-            {
-                _timeText.text = Hours + ":" + Minutes;
-            }
-            _dayText.text = "Day " + Days;
         }
         
         private void IncrementMinutes()
@@ -200,6 +150,7 @@ namespace Game.World
         {
             ++Days;
             DayEvent?.Invoke();
+            WorldView.SetDay(Days);
         }
 
         public void Update()

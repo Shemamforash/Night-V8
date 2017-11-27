@@ -258,5 +258,18 @@ namespace SamsHelper
             }
             return "+" + value;
         }
+        
+        public static void AddDelineator(Transform parent)
+        {
+            GameObject delineator = new GameObject();
+            delineator.AddComponent<RectTransform>();
+            Image i = delineator.AddComponent<Image>();
+            i.color = new Color(1, 1, 1, 0.2f);
+            LayoutElement layout = delineator.AddComponent<LayoutElement>();
+            layout.minHeight = 2;
+            layout.preferredWidth = 2000;
+            delineator.transform.SetParent(parent);
+            delineator.transform.localScale = new Vector3(1, 1, 1);
+        }
     }
 }

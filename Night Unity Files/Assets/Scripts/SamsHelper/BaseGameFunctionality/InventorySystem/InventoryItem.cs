@@ -32,5 +32,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             ui.SetDestroyCondition(destroyCondition);
             return ui;
         }
+        
+        public virtual bool IsStackable()
+        {
+            return true;
+        }
     }
 }

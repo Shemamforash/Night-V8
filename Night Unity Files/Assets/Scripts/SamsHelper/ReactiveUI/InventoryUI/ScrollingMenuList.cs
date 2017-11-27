@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Game.Gear.UI;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -40,12 +42,22 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         private void CentreContentOnItem(ViewParent itemUi)
         {
             float targetPosition = 0;
-            foreach (ViewParent otherItem in Items)
+            int itemIndex = Items.IndexOf(itemUi);
+            for(int i  = 0; i < Items.Count; ++i)
             {
-                float targetHeight = otherItem.GetGameObject().GetComponent<LayoutElement>().preferredHeight;
-                if (otherItem.GetGameObject().activeInHierarchy) targetHeight = 0f;
-                else if (otherItem == itemUi) targetHeight /= 2;
+                ViewParent otherItem = Items[i];
+                float targetHeight = otherItem.GetGameObject().GetComponent<RectTransform>().rect.height;
+                if (i == itemIndex - 1 && otherItem is GearUi)
+                {
+                    targetHeight = 40f;
+                }
+                if (i == itemIndex && otherItem is GearUi)
+                {
+                    targetHeight = 190f;
+                }
+                if (i == itemIndex) targetHeight /= 2;
                 targetPosition += targetHeight;
+                if (otherItem == itemUi) break;
             }
             RectTransform rect = InventoryContent.GetComponent<RectTransform>();
             Vector2 rectPosition = rect.anchoredPosition;

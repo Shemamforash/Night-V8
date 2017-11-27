@@ -52,6 +52,11 @@ namespace Game.Gear.Weapons
             WorldEventManager.GenerateEvent(new WeaponFindEvent(Name));
         }
 
+        public override bool IsStackable()
+        {
+            return false;
+        }
+
         public WeaponType WeaponType()
         {
             return WeaponAttributes.WeaponClass.Type;

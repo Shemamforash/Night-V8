@@ -160,6 +160,7 @@
                 <e p="WorldEventManager.cs" t="Include" />
               </e>
               <e p="WorldState.cs" t="Include" />
+              <e p="WorldView.cs" t="Include" />
             </e>
           </e>
           <e p="SamsHelper" t="Include">
@@ -264,6 +265,7 @@
           <e p="UIEnergyController.cs" t="Include" />
           <e p="UIGearController.cs" t="Include" />
           <e p="UIHealthBarController.cs" t="Include" />
+          <e p="UIInventoryController.cs" t="Include" />
           <e p="UINumberPopupController.cs" t="Include" />
         </e>
       </e>
