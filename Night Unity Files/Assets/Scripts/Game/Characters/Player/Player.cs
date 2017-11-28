@@ -40,6 +40,7 @@ namespace Game.Characters
             BaseAttributes.Endurance.AddOnValueChange(a => Energy.Max = a.CurrentValue());
             Energy.OnMin(Sleep);
             Energy.SetCurrentValue(BaseAttributes.Endurance.CurrentValue());
+            Inventory().AddTestingResources();
         }
 
         protected override float GetSpeedModifier()

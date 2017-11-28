@@ -13,6 +13,7 @@ namespace Game.World.Region
         private readonly int _distance;
         private readonly RegionTemplate _template;
         private bool _discovered;
+        private CombatScenario _combatScenario;
 
 //        private List<Encounter> _enemyEncounters = new List<Encounter>();
 
@@ -79,10 +80,14 @@ namespace Game.World.Region
             return _distance;
         }
 
+        public void GenerateCombatScenario()
+        {
+            _combatScenario = CombatScenario.Generate(Random.Range(1, 3));
+        }
+
         public CombatScenario GetCombatScenario()
         {
-            //TODO combat scenarios
-            return null;
+            return _combatScenario;
         }
     }
 }

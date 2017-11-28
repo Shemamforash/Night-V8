@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Facilitating.MenuNavigation;
 using Game.Characters;
 using Game.Characters.CharacterActions;
+using Game.Combat;
 using Random = UnityEngine.Random;
 
 namespace Game.World.Region
@@ -44,28 +45,36 @@ namespace Game.World.Region
                 TotalDistance = totalDistance;
                 float maxConnections = MaxGenerationDistance - TotalDistance;
                 for (int i = 0; i < maxConnections; ++i) _nonFullNodes.Add(this);
-                GenerateType();
+                NodeType = GenerateType();
                 _enterNodeAction = player =>
                 {
                     Popup p = new Popup("Reached Node " + NodeType);
                     foreach (Edge e in Connections)
                     {
                         p.AddButton("Explore " + e.Target.NodeType,
-                            () => player.StartExploration(() => e.Target._enterNodeAction(player), 1));
+                            () => player.StartExploration(() => e.Target.Discover(player), 1), true, true);
                     }
                     if (_regionHere != null)
                     {
-                        p.AddButton("Look around " + _regionHere.Name, () =>
+                        if (_regionHere.GetCombatScenario() == null)
+                        {
+                            p.AddButton("Look around " + _regionHere.Name, () =>
+                                {
+                                    ((CollectResources) player.States.GetState("Collect Resources")).SetTargetRegion(_regionHere);
+                                    player.States.NavigateToState("Collect Resources");
+                                    RegionManager.DiscoverRegion(_regionHere);
+                                }
+                                , true, true);
+                        }
+                        else
+                        {
+                            p.AddButton("Fight at " + _regionHere.Name, () =>
                             {
-                                ((CollectResources)player.States.GetState(nameof(CollectResources))).SetTargetRegion(_regionHere);
-                                player.States.NavigateToState(nameof(CollectResources));
-                            }
-                        );
+                                CombatManager.EnterCombat(player, _regionHere.GetCombatScenario());
+                            }, true, true);
+                        }
                     }
-                    p.AddButton("Return", () =>
-                    {
-                        player.States.NavigateToState(nameof(Return));
-                    });
+                    p.AddButton("Return", () => { player.States.NavigateToState(nameof(Return)); }, true, true);
                 };
             }
 
@@ -92,25 +101,26 @@ namespace Game.World.Region
                 if (Connections.Count == 0) Delete();
             }
 
-            private void GenerateType()
+            private string GenerateType()
             {
-                float rand = Random.Range(0f, 1f);
-                if (rand < RegionChance)
+                if (TotalDistance != 0)
                 {
-                    NodeType = "Region";
+                    float rand = Random.Range(0f, 1f);
+                    if (rand < RegionChance)
+                    {
+                        _regionHere = RegionManager.GenerateNewRegion();
+                        return "Region";
+                    }
+                    if (rand < CacheChance)
+                        return "Cache";
+                    if (rand < CombatChance)
+                    {
+                        _regionHere = RegionManager.GenerateNewRegion();
+                        _regionHere.GenerateCombatScenario();
+                        return "Combat";
+                    }
                 }
-                else if (rand < CacheChance)
-                {
-                    NodeType = "Cache";
-                }
-                else if (rand < CombatChance)
-                {
-                    NodeType = "Combat";
-                }
-                else
-                {
-                    NodeType = "Nothing";
-                }
+                return "Nothing";
             }
 
             public void AddEdge()

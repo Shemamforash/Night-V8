@@ -29,7 +29,7 @@ public class UINumberPopupController : MonoBehaviour
 		}
 		_enhancedText.Text(valueString);
 		_enhancedText.SetColor(critical ? _criticalColor : Color.white);
-		StartCoroutine(MoveText());
+//		StartCoroutine(MoveText());
 	}
 
 	private IEnumerator MoveText()

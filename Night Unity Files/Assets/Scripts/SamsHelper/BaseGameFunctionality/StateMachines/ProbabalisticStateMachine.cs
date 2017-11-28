@@ -52,12 +52,9 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         public override T NavigateToState(string previousState)
         {
             return base.NavigateToState(previousState);
-            string nextState = CalculateNextState();
-            if(_onlyVisitOnce) _visitedStates.Add(previousState);
-            return base.NavigateToState(nextState);
         }
 
-        private string CalculateNextState()
+        public string CalculateNextState()
         {
             float cumulativeSum = 0;
             float targetValue = Random.Range(0f, 1.0f);

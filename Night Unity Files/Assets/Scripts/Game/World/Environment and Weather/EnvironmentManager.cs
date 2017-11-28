@@ -89,7 +89,24 @@ namespace Game.World.Environment_and_Weather
 
         private void UpdateTemperature()
         {
-            _temperatureText.text = GetTemperature() + "\u00B0" + "C";
+            int temperature = GetTemperature();
+            TemperatureCategory temperatureCategory;
+            if (temperature < -20)
+                temperatureCategory = TemperatureCategory.Freezing;
+            else if (temperature < 0)
+                temperatureCategory = TemperatureCategory.Cold;
+            else if (temperature < 20)
+                temperatureCategory = TemperatureCategory.Warm;
+            else if (temperature < 40)
+                temperatureCategory = TemperatureCategory.Hot;
+            else
+                temperatureCategory = TemperatureCategory.Boiling;
+            int targetLength = 6;
+            string currentTemperature = GetTemperature() + "\u00B0" + "C";
+            int lengthDifference = targetLength - currentTemperature.Length;
+            string seperators = "";
+            for (int i = 0; i < lengthDifference; ++i) seperators += " ";
+            _temperatureText.text = temperatureCategory + seperators + "(" + currentTemperature  + ")";
         }
 
         public int GetTemperature()

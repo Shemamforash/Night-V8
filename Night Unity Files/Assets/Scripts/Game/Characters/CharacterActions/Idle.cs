@@ -1,6 +1,4 @@
-﻿using UnityEngine.Assertions;
-
-namespace Game.Characters.CharacterActions
+﻿namespace Game.Characters.CharacterActions
 {
     public class Idle : BaseCharacterAction
     {
@@ -10,17 +8,6 @@ namespace Game.Characters.CharacterActions
             HourCallback = () => GetCharacter().Rest(1);
         }
 
-        public override void Enter()
-        {
-            Assert.AreEqual(GetCharacter().DistanceFromHome, 0);
-            GetCharacter().CharacterView.SetActionListActive(true);
-        }
-
-        public override void Exit()
-        {
-            GetCharacter().CharacterView.SetActionListActive(false);
-        }
-        
         public override string GetCostAsString()
         {
             return "";

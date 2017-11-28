@@ -139,7 +139,7 @@ namespace Game.Combat
 
         public void Start(CombatScenario scenario)
         {
-            _character = scenario.Player();
+            _character = CombatManager.Player();
             ResetMagazine((int) _character.Weapon().WeaponAttributes.Capacity.CurrentValue());
             UpdateMagazine(_character.Weapon().GetRemainingAmmo());
             _characterName.text = _character.Name;

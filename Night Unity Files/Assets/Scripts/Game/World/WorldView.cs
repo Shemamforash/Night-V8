@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using Facilitating.MenuNavigation;
 using Game.Characters;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine.UI;
 using TMPro;
@@ -16,12 +14,11 @@ namespace Game.World
     public class WorldView : Menu
     {
         private static Button _inventoryButton;
-        private static TextMeshProUGUI _timeText, _dayText;
+        private static TextMeshProUGUI _timeText;
 
         public void Awake()
         {
             _timeText = Helper.FindChildWithName(gameObject, "Time").GetComponent<TextMeshProUGUI>();
-            _dayText = Helper.FindChildWithName(gameObject, "Day").GetComponent<TextMeshProUGUI>();
             _inventoryButton = Helper.FindChildWithName<Button>(gameObject, "Inventory");
             DefaultSelectable = _inventoryButton;
             PreserveLastSelected = true;
@@ -39,19 +36,19 @@ namespace Game.World
             });
         }
 
-        public static void SetTime(int hours, int minutes)
+        public static void SetTime(int days, int hours, int minutes)
         {
+            string dayTime;
             if (minutes < 10)
             {
-                _timeText.text = hours + ":0" + minutes;
-                return;
+                dayTime = hours + ":0" + minutes;
             }
-            _timeText.text = hours + ":" + minutes;
-        }
-
-        public static void SetDay(int days)
-        {
-            _dayText.text = "Day " + days;
+            else
+            {
+                dayTime = hours + ":" + minutes;
+            }
+            dayTime += "   Day " + days;
+            _timeText.text = dayTime;
         }
 
         public void Start()

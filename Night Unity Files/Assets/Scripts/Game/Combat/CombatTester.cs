@@ -38,8 +38,7 @@ namespace Game.Combat
             weapon.Reload(_playerCharacter.Inventory());
             
             _encounter = CombatScenario.Generate(_instance.Size);
-            _encounter.SetCharacter(_playerCharacter);
-            CombatManager.EnterCombat(_encounter);
+            CombatManager.EnterCombat(_playerCharacter, _encounter);
         }
     }
 }

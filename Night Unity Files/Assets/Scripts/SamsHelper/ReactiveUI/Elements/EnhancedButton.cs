@@ -61,6 +61,7 @@ namespace SamsHelper.ReactiveUI.Elements
             _button = GetComponent<Button>();
             _textChildren = Helper.FindAllComponentsInChildren<EnhancedText>(transform);
             _imageChildren = Helper.FindAllComponentsInChildren<Image>(transform);
+            if(Border != null) Border.SetActive(false);
         }
 
         private void Enter()

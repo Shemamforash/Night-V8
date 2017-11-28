@@ -23,7 +23,6 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
-            MenuStateMachine.States.NavigateToState("Inventory Menu");
             _previousCharacter = CharacterManager.SelectedCharacter;
             CharacterManager.SelectedCharacter = GetCharacter();
             InventoryTransferManager.Instance().ShowInventories(GetCharacter().Inventory(), _targetRegion, () => GetCharacter().States.NavigateToState("Return"));

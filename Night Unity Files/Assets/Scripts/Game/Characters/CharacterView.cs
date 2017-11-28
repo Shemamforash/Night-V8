@@ -19,18 +19,12 @@ namespace Game.Characters
         public GameObject SimpleView;
         private GameObject _detailedView;
 
-        private readonly ValueTextLink<string> _currentActionText = new ValueTextLink<string>();
-        private readonly ValueTextLink<string> _detailedCurrentActionText = new ValueTextLink<string>();
+        private TextMeshProUGUI _currentActionText;
+        private TextMeshProUGUI _detailedCurrentActionText;
 
         public UIGearController WeaponGearUi, ArmourGearUi, AccessoryGearUi;
 
         private MenuList _actionMenuList;
-
-        public void SetActionListActive(bool active)
-        {
-            _actionMenuList.gameObject.SetActive(active);
-            _detailedCurrentActionText.SetEnabled(!active);
-        }
 
         private void BindUi()
         {
@@ -52,7 +46,7 @@ namespace Game.Characters
             FindInSimpleView<TextMeshProUGUI>("Simple Name").text = _character.Name;
             FindInSimpleView<TextMeshProUGUI>("ClassTrait").text = _character.CharacterTrait.Name + " " + _character.CharacterClass.Name;
 
-            _currentActionText.AddTextObject(FindInSimpleView<TextMeshProUGUI>("Current Action"));
+            _currentActionText = FindInSimpleView<TextMeshProUGUI>("Current Action");
         }
 
         private void CacheDetailedViewElements()
@@ -62,7 +56,7 @@ namespace Game.Characters
 
             _actionMenuList = FindInDetailedView<MenuList>("Action List");
 
-            _detailedCurrentActionText.AddTextObject(FindInDetailedView<TextMeshProUGUI>("CurrentAction"));
+            _detailedCurrentActionText = FindInDetailedView<TextMeshProUGUI>("CurrentAction");
 
             FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _character.Name;
             FindInDetailedView<TextMeshProUGUI>("Class").text = _character.CharacterClass.GetTraitDetails();
@@ -101,13 +95,31 @@ namespace Game.Characters
             CacheSimpleViewElements();
             CacheDetailedViewElements();
             BindUi();
-            WorldState.RegisterMinuteEvent(delegate
-            {
-                string currentActionString = _character?.States?.GetCurrentState()?.Name + " " + _character?.States?.GetCurrentState()?.GetCostAsString();
-                _currentActionText.Value(currentActionString);
-                _detailedCurrentActionText.Value(currentActionString);
-            });
+            WorldState.RegisterMinuteEvent(UpdateCurrentActionText);
             SwitchToSimpleView();
+        }
+        
+        private void UpdateCurrentActionText()
+        {
+            BaseCharacterAction currentState = _character.States.GetCurrentState();
+            if (currentState == null) return;
+            string currentActionString = currentState.Name + " " + currentState.GetCostAsString();
+            _currentActionText.text = currentActionString;
+            if (currentState.Name == "Idle")
+            {
+                SetActionListActive(true);
+            }
+            else
+            {
+                SetActionListActive(false);
+                _detailedCurrentActionText.text = currentActionString;
+            }
+        }
+        
+        private void SetActionListActive(bool active)
+        {
+            _actionMenuList.InventoryContent.gameObject.SetActive(active);
+            _detailedCurrentActionText.gameObject.SetActive(!active);
         }
 
         private T FindInSimpleView<T>(string name) where T : class

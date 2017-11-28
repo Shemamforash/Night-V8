@@ -1,5 +1,4 @@
-﻿using System;
-using Game.World;
+﻿using Game.World;
 
 namespace Game.Characters.CharacterActions
 {
@@ -7,6 +6,7 @@ namespace Game.Characters.CharacterActions
     {
         public Return(Player playerCharacter) : base("Return", playerCharacter)
         {
+            if(playerCharacter.DistanceFromHome == 0) Exit();
             IsVisible = false;
             HourCallback = GetCharacter().Return;
             AddOnExit(ReturnToVehicle);
@@ -18,8 +18,9 @@ namespace Game.Characters.CharacterActions
             Start();
         }
 
-        public void ReturnToVehicle()
+        private void ReturnToVehicle()
         {
+            GetCharacter().Return();
             GetCharacter().Inventory().MoveAllResources(WorldState.HomeInventory());
         }
     }

@@ -67,7 +67,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         public void ShowInventories(Inventory left, Inventory right)
         {
-            MenuStateMachine.States.NavigateToState("Inventory Menu");
+            MenuStateMachine.States.NavigateToState("Inventory Transfer Menu");
             InventoryLeft.gameObject.SetActive(true);
             InventoryRight.gameObject.SetActive(true);
 //            SetAnchors(InventoryLeft, _dualInventoryAnchorsMinLeft, _dualInventoryAnchorsMaxLeft);

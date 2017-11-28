@@ -18,7 +18,7 @@ namespace SamsHelper.ReactiveUI
             Tuple<TextMeshProUGUI, Func<T, string>> newTuple = Tuple.Create(textObject, formattingFunction);
             if (existingTuple != null)
             {
-                existingTuple = newTuple;
+                _textAssociations[_textAssociations.IndexOf(existingTuple)] = newTuple;
             }
             else
             {

@@ -114,7 +114,7 @@ namespace Game.World
             {
                 _currentTime = _currentTime - MinuteInSeconds;
                 IncrementMinutes();
-                WorldView.SetTime(Hours, Minutes);
+                WorldView.SetTime(Days, Hours, Minutes);
             }
         }
         
@@ -150,7 +150,6 @@ namespace Game.World
         {
             ++Days;
             DayEvent?.Invoke();
-            WorldView.SetDay(Days);
         }
 
         public void Update()

@@ -58,10 +58,10 @@ namespace Game.Combat
             CombatCooldowns.Clear();
         }
 
-        public static void EnterCombat(CombatScenario scenario)
+        public static void EnterCombat(Player player, CombatScenario scenario)
         {
             WorldState.Pause();
-            _player = scenario.Player();
+            _player = player;
             ResetCombat();
             InputHandler.RegisterInputListener(_player);
             Enemies.AddRange(scenario.Enemies());
@@ -73,9 +73,8 @@ namespace Game.Combat
         {
 //            WorldState.UnPause();
 //            MenuStateMachine.States.NavigateToState("Game Menu");
-//            _scenario.Player().Rage.ClearOnValueChange();
-            InputHandler.UnregisterInputListener(_player);
-            CombatTester.RestartCombat();
+//            InputHandler.UnregisterInputListener(_player);
+//            CombatTester.RestartCombat();
         }
 
         public static Player Player()

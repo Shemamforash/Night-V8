@@ -48,7 +48,7 @@ namespace Game.World.Environment_and_Weather
 
         protected override void NavigateToState(string name)
         {
-            WeatherManager.Instance().NavigateToState(Name);
+            WeatherManager.Instance().NavigateToState(WeatherManager.Instance().CalculateNextState());
         }
 
         private class Danger

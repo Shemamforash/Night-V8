@@ -4,7 +4,6 @@ using System.Linq;
 using Game.Characters;
 using UnityEngine;
 using UnityEngine.UI;
-
 using Game.Characters.CharacterActions;
 using SamsHelper;
 using SamsHelper.ReactiveUI.InventoryUI;
@@ -51,7 +50,7 @@ namespace Game.World.Region
                 {
                     if (prefix != suffix)
                     {
-                        combinations.Add(prefix +"'s " + suffix);
+                        combinations.Add(prefix + "'s " + suffix);
                     }
                 }
             }
@@ -74,7 +73,7 @@ namespace Game.World.Region
         {
             return _character;
         }
-        
+
         protected void Awake()
         {
             _instance = this;
@@ -91,8 +90,8 @@ namespace Game.World.Region
             _exploreButton.PrimaryButton.AddOnClick(delegate
             {
                 Player currentCharacter = Character();
-                currentCharacter.StartExploration(() => MapNode.Discover(currentCharacter), 0);
                 ExitManager(true);
+                MapNode.Discover(currentCharacter);
             });
             _menuList.AddPlainButton(_exploreButton);
             LoadRegionTemplates();
@@ -143,17 +142,16 @@ namespace Game.World.Region
             RefreshExploreButton();
         }
 
-        private static void DiscoverRandomRegion(int distance)
+        public static Region GenerateNewRegion()
         {
-            foreach (Region region in UnexploredRegions)
-            {
-                if (region.Distance() > distance) continue;
-                DiscoverRegion(region);
-                break;
-            }
+            RegionTemplate template = Templates[Templates.Keys.ToList()[Random.Range(0, Templates.Keys.Count)]];
+            string regionName = GenerateName();
+            Region region = new Region(regionName, template);
+            UnexploredRegions.Add(region);
+            return region;
         }
 
-        private static void DiscoverRegion(Region region)
+        public static void DiscoverRegion(Region region)
         {
             _menuList.AddItem(region);
             UnexploredRegions.Remove(region);

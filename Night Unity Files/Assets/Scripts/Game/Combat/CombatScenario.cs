@@ -8,7 +8,6 @@ namespace Game.Combat
 {
     public class CombatScenario
     {
-        private Player _playerCharacter;
         private readonly List<Enemy> _enemies = new List<Enemy>();
 
         public void Remove(Enemy enemy)
@@ -21,41 +20,39 @@ namespace Game.Combat
             _enemies.Add(enemy);
         }
 
-        public void SetCharacter(Player playerCharacter)
-        {
-            _playerCharacter = playerCharacter;
-        }
-
-        public static CombatScenario Generate(int size)
+        public static CombatScenario Generate(int size = 0)
         {
             CombatScenario scenario = new CombatScenario();
-            for (int i = 0; i < size; ++i)
+            if (size == 0)
             {
-                int rand = Random.Range(0, 2);
-//                scenario.AddEnemy(new Sniper(true));
                 scenario.AddEnemy(new Sniper(false));
                 scenario.AddEnemy(new Martyr());
                 scenario.AddEnemy(new Medic());
                 scenario.AddEnemy(new Fighter());
-//                switch (rand)
-//                {
-//                    case 0:
-//                        scenario.AddEnemy(new Watcher());
-//                        break;
-//                    case 1:
-//                        scenario.AddEnemy(new Grazer());
-//                        break;
-//                    case 2:
-//                        scenario.AddEnemy(new Fighter());
-//                        break;
-//                }
+            }
+            for (int i = 0; i < size; ++i)
+            {
+                int rand = Random.Range(0, 5);
+                switch (rand)
+                {
+                    case 0:
+                        scenario.AddEnemy(new Watcher());
+                        break;
+                    case 1:
+                        scenario.AddEnemy(new Grazer());
+                        break;
+                    case 2:
+                        scenario.AddEnemy(new Fighter());
+                        break;
+                    case 3:
+                        scenario.AddEnemy(new Martyr());
+                        break;
+                    case 4:
+                        scenario.AddEnemy(new Medic());
+                        break;
+                }
             }
             return scenario;
-        }
-
-        public Player Player()
-        {
-            return _playerCharacter;
         }
 
         public List<Enemy> Enemies()

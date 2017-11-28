@@ -17,7 +17,7 @@ namespace Facilitating.MenuNavigation
         private readonly GameObject _popupObject;
         private readonly Transform _container;
         private readonly GameObject _previousSelectable;
-        private static string _optionPrefabName = "Prefabs/Button Border";
+        private static string _optionPrefabName = "Prefabs/Inventory/SimpleItem";
         private readonly List<GameObject> _options = new List<GameObject>();
         private static readonly Stack<Popup> PopupStack = new Stack<Popup>();
         private readonly Popup _previousPopup;
