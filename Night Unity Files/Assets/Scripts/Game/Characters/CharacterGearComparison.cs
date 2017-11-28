@@ -1,6 +1,7 @@
 ﻿using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
+using UIControllers;
 using UnityEngine;
 
 namespace Game.Characters
@@ -18,19 +19,19 @@ namespace Game.Characters
 
         public override ViewParent CreateUi(Transform parent)
         {
-            InventoryUi ui = (InventoryUi) base.CreateUi(parent);
-            ui.SetLeftButtonTextCallback(() => GearItem.GetGearType().ToString());
-            ui.SetLeftButtonActive(false);
+            ViewParent uiParent = base.CreateUi(parent);
+            InventoryUi ui = uiParent as InventoryUi;
+            if (ui == null) return uiParent;
+            ui.SetLeftTextCallback(() => GearItem.GetGearType().ToString());
             ui.SetLeftTextCallback(() => Character.Name);
             ui.SetCentralTextCallback(() =>
             {
                 GearItem equippedGear = Character.EquipmentController.GetGearItem(GearItem.GetGearType());
                 return equippedGear == null ? "Nothing equipped" : equippedGear.Name;
             });
-            ui.SetRightTextCallback(() => "^");
-            ui.SetRightButtonTextCallback(() => "Equip");
-            ui.SetRightButtonActive(false);
+            ui.SetRightTextCallback(() => "Equip");
             ui.PrimaryButton.AddOnClick(() => Character.Equip(GearItem));
+            UIInventoryController.CloseMenu();
             return ui;
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Game.Characters.CharacterActions;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,7 +48,14 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         public virtual ViewParent AddItem(MyGameObject item)
         {
             ViewParent existingUi = FindItem(item);
-            if (existingUi != null) throw new Exceptions.ItemAlreadyExistsInMenuListException(item, gameObject);
+            InventoryItem inventoryItem = item as InventoryItem;
+            
+            if (existingUi != null)
+            {
+                if (inventoryItem == null || !inventoryItem.IsStackable()) throw new Exceptions.ItemAlreadyExistsInMenuListException(item, gameObject);
+                existingUi.Update();
+                return existingUi;
+            }
             ViewParent itemUi = item.CreateUi(InventoryContent);
             if (itemUi != null)
             {

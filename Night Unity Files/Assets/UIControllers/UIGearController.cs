@@ -8,6 +8,7 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.Elements;
+using UIControllers;
 using UnityEngine;
 
 public class UIGearController : MonoBehaviour
@@ -24,7 +25,6 @@ public class UIGearController : MonoBehaviour
     
     private void OpenEquipMenu(Character character)
     {
-        Popup popup = new Popup("Equip " + _gearType);
         List<MyGameObject> availableGear = new List<MyGameObject>();
         List<MyGameObject> allGear = new List<MyGameObject>();
         allGear.AddRange(character.Inventory().Contents());
@@ -37,8 +37,11 @@ public class UIGearController : MonoBehaviour
                 availableGear.Add(gear);
             }
         }
-        popup.AddList(availableGear, g => character.Equip((GearItem) g), true, true, true);
-        popup.AddBackButton();
+        UIInventoryController.ShowInventory("Equip " + _gearType, availableGear, g =>
+        {
+            character.Equip((GearItem) g);
+            UIInventoryController.CloseMenu();
+        });
     }
     
     public void SetGearItem(GearItem item)

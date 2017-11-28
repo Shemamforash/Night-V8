@@ -9,6 +9,7 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.Persistence;
+using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
@@ -61,15 +62,7 @@ namespace Game.Characters
             Transform characterAreaTransform = GameObject.Find("Character Section").transform.Find("Content").transform;
             if (Items().Count > 0)
             {
-                GameObject delineator = new GameObject();
-                delineator.AddComponent<RectTransform>();
-                Image i = delineator.AddComponent<Image>();
-                i.color = new Color(1, 1, 1, 0.2f);
-                LayoutElement layout = delineator.AddComponent<LayoutElement>();
-                layout.minHeight = 2;
-                layout.preferredWidth = 2000;
-                delineator.transform.SetParent(characterAreaTransform);
-                delineator.transform.localScale = new Vector3(1, 1, 1);
+                Helper.AddDelineator(characterAreaTransform);
             }
             GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", characterAreaTransform);
             playerCharacter.SetGameObject(characterObject);
@@ -84,7 +77,7 @@ namespace Game.Characters
 
         private static void PopulateCharacterUi()
         {
-            Button inventoryButton = WorldState.GetInventoryButton();
+            Button inventoryButton = WorldView.GetInventoryButton();
 
             foreach (Player playerCharacter in _characters)
             {
