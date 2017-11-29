@@ -39,6 +39,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         {
             if (!(item is InventoryItem))
             {
+                return null;
                 throw new Exceptions.InvalidInventoryItemException(item, "InventoryItem");
             }
             if (((InventoryItem) item).Quantity() == 0) return null;

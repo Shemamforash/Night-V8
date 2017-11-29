@@ -91,7 +91,10 @@ namespace Game.World.Region
             {
                 Player currentCharacter = Character();
                 ExitManager(true);
-                MapNode.Discover(currentCharacter);
+                InventoryTransferManager.Instance().ShowInventories(WorldState.HomeInventory(), currentCharacter.Inventory(), () =>
+                {
+                    MapNode.Discover(currentCharacter);
+                });
             });
             _menuList.AddPlainButton(_exploreButton);
             LoadRegionTemplates();

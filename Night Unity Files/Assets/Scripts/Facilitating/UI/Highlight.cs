@@ -14,12 +14,6 @@ namespace UI.Highlight
         */
 
         protected List<TextMeshProUGUI> childTexts = new List<TextMeshProUGUI>();
-        public string tooltipText;
-
-        public virtual string GetTooltip()
-        {
-            return tooltipText;
-        }
 
         public virtual void Awake()
         {
@@ -37,25 +31,21 @@ namespace UI.Highlight
         public virtual void OnSelect(BaseEventData eventData)
         {
             ChangeTextColour(Color.black);
-            GetComponent<Image>().color = Color.white;
         }
 
         public virtual void OnDeselect(BaseEventData eventData)
         {
             ChangeTextColour(Color.white);
-            GetComponent<Image>().color = Color.black;
         }
 
         public void OnPointerEnter(PointerEventData p)
         {
             ChangeTextColour(Color.black);
-            GetComponent<Image>().color = Color.white;
         }
 
         public void OnPointerExit(PointerEventData p)
         {
             ChangeTextColour(Color.white);
-            GetComponent<Image>().color = Color.black;
         }
 
         private void ChangeTextColour(Color c)

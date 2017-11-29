@@ -1,52 +1,37 @@
-﻿using UnityEngine.UI;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
-namespace UI.Highlight
+namespace Facilitating.UI
 {
-    public class ManualScrollbar : BorderHighlight
+    public class ManualScrollbar : MonoBehaviour
     {
-        public ScrollRect scrollrect;
-        private bool selected = false;
-        private float scrollRectYPos;
+        public ScrollRect Scrollrect;
+        private readonly bool _selected = false;
+        private float _scrollRectYPos;
 
-        public override void OnSelect(BaseEventData eventData)
+        public void Update()
         {
-            base.OnSelect(eventData);
-            BorderOn();
-            selected = true;
-        }
-
-        public override void OnDeselect(BaseEventData eventData)
-        {
-            base.OnDeselect(eventData);
-            BorderOff();
-            selected = false;
-        }
-
-        void Update()
-        {
-            if (selected)
+            if (_selected)
             {
                 float scrollAmount = Input.GetAxis("Scroll Keyboard");
-                scrollRectYPos = scrollrect.verticalNormalizedPosition;
+                _scrollRectYPos = Scrollrect.verticalNormalizedPosition;
                 if (scrollAmount < 0)
                 {
-                    scrollRectYPos += 0.02f;
-                    if (scrollRectYPos > 1)
+                    _scrollRectYPos += 0.02f;
+                    if (_scrollRectYPos > 1)
                     {
-                        scrollRectYPos = 1;
+                        _scrollRectYPos = 1;
                     }
-                    scrollrect.verticalNormalizedPosition = scrollRectYPos;
+                    Scrollrect.verticalNormalizedPosition = _scrollRectYPos;
                 }
                 else if (scrollAmount > 0)
                 {
-                    scrollRectYPos -= 0.02f;
-                    if (scrollRectYPos < 0)
+                    _scrollRectYPos -= 0.02f;
+                    if (_scrollRectYPos < 0)
                     {
-                        scrollRectYPos = 0;
+                        _scrollRectYPos = 0;
                     }
-                    scrollrect.verticalNormalizedPosition = scrollRectYPos;
+                    Scrollrect.verticalNormalizedPosition = _scrollRectYPos;
                 }
             }
         }

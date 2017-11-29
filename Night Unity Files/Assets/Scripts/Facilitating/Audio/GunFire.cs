@@ -17,15 +17,15 @@ namespace Facilitating.Audio
         
         public static void Fire()
         {
-            _instance.GunSource.pitch = Random.Range(0.9f, 1.1f);
-            _instance.GunSource.volume = Random.Range(0.9f, 1f);
-            _instance.GunSource.PlayOneShot(_instance.RifleFire[Random.Range(0, _instance.RifleFire.Length)]);
+//            _instance.GunSource.pitch = Random.Range(0.9f, 1.1f);
+//            _instance.GunSource.volume = Random.Range(0.9f, 1f);
+//            _instance.GunSource.PlayOneShot(_instance.RifleFire[Random.Range(0, _instance.RifleFire.Length)]);
         }
 
         public static void Cock(float duration)
         {
-            _instance.GunSource.volume = 1;
-            _instance.GunSource.PlayOneShot(_instance.BoltPull, duration);
+//            _instance.GunSource.volume = 1;
+//            _instance.GunSource.PlayOneShot(_instance.BoltPull, duration);
         }
     }
 }

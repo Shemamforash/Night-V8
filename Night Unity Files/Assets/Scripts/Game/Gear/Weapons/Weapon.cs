@@ -20,7 +20,6 @@ namespace Game.Gear.Weapons
 {
     public class Weapon : GearItem
     {
-        public readonly bool Automatic;
         public bool Cocked = true;
         private int _ammoInMagazine;
         private bool _canEquip;
@@ -28,30 +27,12 @@ namespace Game.Gear.Weapons
         public Action OnFireAction;
         public Action OnReceiveDamageAction;
 
-        public Weapon(WeaponClass weaponClass, GearModifier subClass, GearModifier secondaryModifier, bool automatic, float weight, int durability) : base(weaponClass.Type.ToString(), weight,
-            GearSubtype.Weapon)
+        public Weapon(string name, float weight) : base(name, weight, GearSubtype.Weapon)
         {
-            WeaponAttributes = new WeaponAttributes(weaponClass, subClass, secondaryModifier);
-            Automatic = automatic;
+            WeaponAttributes = new WeaponAttributes();
 //            Durability.OnMin(() => { _canEquip = false; });
-            GearModifier manualModifier = new GearModifier("Manual");
-            manualModifier.CreateAndAddAttributeModifier(WeaponAttributes.Capacity, 0, 1);
-            manualModifier.CreateAndAddAttributeModifier(WeaponAttributes.Damage, 0, 1);
-            manualModifier.CreateAndAddAttributeModifier(WeaponAttributes.Accuracy, 0, 0.5f);
-            manualModifier.CreateAndAddAttributeModifier(WeaponAttributes.ReloadSpeed, 0, -0.5f);
-
-            if (!automatic)
-            {
-                manualModifier.Apply();
-            }
-            UpdateDurability();
-            WeaponAttributes.RecalculateAttributeValues();
-#if UNITY_EDITOR
-            Print();
-#endif
-            WorldEventManager.GenerateEvent(new WeaponFindEvent(Name));
         }
-
+        
         public override bool IsStackable()
         {
             return false;
@@ -59,7 +40,7 @@ namespace Game.Gear.Weapons
 
         public WeaponType WeaponType()
         {
-            return WeaponAttributes.WeaponClass.Type;
+            return WeaponAttributes.WeaponType;
         }
 
         public void ConsumeAmmo(int amount = 0)
@@ -71,22 +52,6 @@ namespace Game.Gear.Weapons
             }
         }
 
-        private void Print()
-        {
-            Debug.Log(WeaponAttributes.WeaponClass.Type + " " + WeaponAttributes.SubClass.Name
-                      + "\nAutomatic:  " + Automatic
-                      + "\nDurability: " + WeaponAttributes.Durability.CurrentValue()
-                      + "\nAmmo Left:  " + _ammoInMagazine
-                      + "\nCapacity:   " + WeaponAttributes.Capacity.CurrentValue()
-                      + "\nPellets:    " + WeaponAttributes.Pellets.CurrentValue()
-                      + "\nDamage:     " + WeaponAttributes.Damage.CurrentValue()
-                      + "\nAccuracy:   " + WeaponAttributes.Accuracy.CurrentValue()
-                      + "\nFire Rate:  " + WeaponAttributes.FireRate.CurrentValue()
-                      + "\nHandling:   " + WeaponAttributes.Handling.CurrentValue()
-                      + "\nReload:     " + WeaponAttributes.ReloadSpeed.CurrentValue()
-                      + "\nCritChance: " + WeaponAttributes.CriticalChance.CurrentValue() + "\n\n");
-        }
-
         public float GetAttributeValue(AttributeType attributeType)
         {
             return WeaponAttributes.Get(attributeType).CurrentValue();
@@ -96,41 +61,24 @@ namespace Game.Gear.Weapons
         {
             _canEquip = true;
 //            Durability.SetCurrentValue(Durability.CurrentValue() + 1);
-            UpdateDurability();
+            SetName();
         }
 
-        private void UpdateDurability()
+        public void SetName()
         {
-            string quality = "Perfected";
-            if (WeaponAttributes.Durability < 4)
-            {
-                quality = "Flawed";
-            }
-            else if (WeaponAttributes.Durability < 8)
-            {
-                quality = "Worn";
-            }
-            else if (WeaponAttributes.Durability < 12)
-            {
-                quality = "Fresh";
-            }
-            else if (WeaponAttributes.Durability < 16)
-            {
-                quality = "Faultless";
-            }
-            Name = WeaponAttributes.SecondaryModifier.Name + " " + WeaponAttributes.SubClass.Name + " -- (" + quality + ")";
-            WeaponAttributes.RecalculateAttributeValues();
+            string quality = WeaponAttributes.Durability.GetThresholdName();
+            Name = WeaponAttributes.GetName() + " -- (" + quality + ")";
         }
 
         public void DecreaseDurability()
         {
 //            Durability.SetCurrentValue(Durability.CurrentValue() - 1);
-            UpdateDurability();
+            SetName();
         }
 
         public string GetWeaponType()
         {
-            return WeaponAttributes.WeaponClass.Type.ToString();
+            return WeaponAttributes.WeaponType.ToString();
         }
 
         public void Reload(Inventory inventory)

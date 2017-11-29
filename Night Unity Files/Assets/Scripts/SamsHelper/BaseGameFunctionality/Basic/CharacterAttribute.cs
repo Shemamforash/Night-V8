@@ -1,11 +1,10 @@
 ﻿using SamsHelper.ReactiveUI;
-
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public class CharacterAttribute : MyValue
     {
         public readonly AttributeType AttributeType;
-        public float _summativeModifier, _multiplicativeModifier = 1;
+        private float _summativeModifier, _multiplicativeModifier = 1;
         private float _calculatedValue;
 
         public CharacterAttribute(AttributeType attributeType, float value, float min = 0, float max = float.MaxValue) : base(value, min, max)

@@ -29,6 +29,11 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             }
         }
 
+        public void GoToMenu(Menu menu)
+        {
+            States.NavigateToState(menu.name);
+        }
+        
         //TODO move me somewhere more suitable
         public void OnApplicationQuit()
         {

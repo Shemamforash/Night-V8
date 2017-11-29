@@ -16,7 +16,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private readonly List<MyGameObject> _items = new List<MyGameObject>();
         private bool _isWeightLimited;
         private float _maxWeight;
-        
+
         public Inventory(string name, float maxWeight = 0) : base(name, GameObjectType.Inventory)
         {
             if (maxWeight != 0)
@@ -40,7 +40,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             return _items.Where(typeCheck).ToList();
         }
-        
+
         public float MaxWeight
         {
             get { return _maxWeight; }
@@ -186,19 +186,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                     float remainingSpace = target.MaxWeight - target.Weight;
                     quantity = (int) Math.Floor(remainingSpace / resource.Weight);
                 }
-                if (quantity != 0)
-                {
-                    DecrementResource(resource, quantity);
-                    InventoryResource targetResource = target.GetResource(resource.GetResourceType());
-                    target.IncrementResource(targetResource, quantity);
-                    return targetResource;
-                }
+                if (!(quantity > 0)) return null;
+                DecrementResource(resource, quantity);
+                InventoryResource targetResource = target.GetResource(resource.GetResourceType());
+                target.IncrementResource(targetResource, quantity);
+                return targetResource;
             }
-            else
-            {
-                return Move(item, target);
-            }
-            return null;
+            return Move(item, target);
         }
 
         public void MoveAllResources(Inventory target)
@@ -208,7 +202,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 Move(resource, target, resource.Quantity());
             }
         }
-        
+
         public virtual void Load(XmlNode root, PersistenceType saveType)
         {
             if (saveType == PersistenceType.Game)
@@ -231,7 +225,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             IncrementResource(type, SaveController.ParseIntFromNodeAndString(root, type.ToString()));
         }
-	    
+
         private void SaveResource(InventoryResourceType type, XmlNode root)
         {
             SaveController.CreateNodeAndAppend(type.ToString(), root, GetResourceQuantity(type));

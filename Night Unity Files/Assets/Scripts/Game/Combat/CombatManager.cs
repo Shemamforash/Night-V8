@@ -69,12 +69,11 @@ namespace Game.Combat
             CombatUi.Start(scenario);
         }
 
-        public static void ExitCombat()
+        private static void ExitCombat()
         {
-//            WorldState.UnPause();
-//            MenuStateMachine.States.NavigateToState("Game Menu");
-//            InputHandler.UnregisterInputListener(_player);
-//            CombatTester.RestartCombat();
+            WorldState.UnPause();
+            MenuStateMachine.States.NavigateToState("Game Menu");
+            InputHandler.UnregisterInputListener(_player);
         }
 
         public static Player Player()

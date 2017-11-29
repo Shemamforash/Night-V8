@@ -43,16 +43,13 @@
             <e p="RageBarController.cs" t="Include" />
             <e p="SunController.cs" t="Include" />
             <e p="UI" t="Include">
-              <e p="BorderHighlight.cs" t="Include" />
               <e p="ButtonGroup.cs" t="Include" />
               <e p="DayChangeSequence.cs" t="Include" />
               <e p="Highlight.cs" t="Include" />
               <e p="ManualScrollbar.cs" t="Include" />
-              <e p="ManualSlider.cs" t="Include" />
               <e p="PermadeathToggler.cs" t="Include" />
               <e p="RefocusKeyboardInput.cs" t="Include" />
               <e p="Toggler.cs" t="Include" />
-              <e p="TooltipController.cs" t="Include" />
               <e p="WindowSizer.cs" t="Include" />
             </e>
           </e>

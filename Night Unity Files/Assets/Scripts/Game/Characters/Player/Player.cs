@@ -40,7 +40,7 @@ namespace Game.Characters
             BaseAttributes.Endurance.AddOnValueChange(a => Energy.Max = a.CurrentValue());
             Energy.OnMin(Sleep);
             Energy.SetCurrentValue(BaseAttributes.Endurance.CurrentValue());
-            Inventory().AddTestingResources();
+            Inventory().IncrementResource(InventoryResourceType.Ammo, 200);
         }
 
         protected override float GetSpeedModifier()
@@ -151,6 +151,7 @@ namespace Game.Characters
             {
                 case GearSubtype.Weapon:
                     SwapWeaponSkills((Weapon) gearItem);
+                    ((Weapon)gearItem).Reload(Inventory());
                     CharacterView?.WeaponGearUi.SetGearItem(gearItem);
                     break;
                 case GearSubtype.Armour:

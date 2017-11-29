@@ -26,12 +26,18 @@ namespace Game.Characters
 
         public void AddTargetAttributes(List<CharacterAttribute> targetAttributes)
         {
-         _targetAttributes.AddRange(targetAttributes);   
+             _targetAttributes.AddRange(targetAttributes);   
         }
         
         public void AddTargetAttribute(CharacterAttribute targetAttribute)
         {
             _targetAttributes.Add(targetAttribute);
+        }
+
+        public void RemoveTargetAttribute(CharacterAttribute targetAttribute)
+        {
+            _targetAttributes.Remove(targetAttribute);
+            _applied = false;
         }
 
         public void Apply()
@@ -69,7 +75,7 @@ namespace Game.Characters
 
         public string MultiplicativeModifierString()
         {
-            string multiplicativeModifierString = ModifierToString(_multiplicativeModifier);
+            string multiplicativeModifierString = ModifierToString(_multiplicativeModifier * 100);
             if (multiplicativeModifierString == "") return multiplicativeModifierString;
             return multiplicativeModifierString +  "% " + AttributeType;
         }

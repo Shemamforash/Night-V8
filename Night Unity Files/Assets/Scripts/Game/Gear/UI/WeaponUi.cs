@@ -18,8 +18,8 @@ namespace Game.Gear.UI
             Weapon weapon = (Weapon)LinkedObject;
             TitleText.text = Helper.Round(weapon.WeaponAttributes.DPS(), 1) + "DPS";
             SubTitleText.text = "Magazine " + weapon.GetRemainingAmmo() + "/" + (int)weapon.WeaponAttributes.Capacity.CurrentValue();
-            ModifierColumnOneText.text = weapon.WeaponAttributes.SubClass.GetDescription();
-            ModifierColumn2Text.text = weapon.WeaponAttributes.SecondaryModifier.GetDescription();
+            ModifierColumnOneText.text = weapon.WeaponAttributes.SubClassDescription;
+            ModifierColumn2Text.text = weapon.WeaponAttributes.ModifierDescription;
             TopLeftAttributeText.text = weapon.GetAttributeValue(AttributeType.Damage) + "DMG";
             TopRightAttributeText.text = weapon.GetAttributeValue(AttributeType.Accuracy) + "ACC";
             CentreLeftAttributeText.text = Helper.Round(weapon.GetAttributeValue(AttributeType.FireRate), 1) + "ROF";

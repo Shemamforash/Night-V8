@@ -4,6 +4,7 @@ using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Gear.Weapons;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -57,9 +58,9 @@ namespace Game.Combat
         private void CacheWeaponAttributes()
         {
             WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
-            _damage = (int) attributes.Damage.CurrentValue();
-            _maxRange = attributes.Accuracy.CurrentValue();
-            _noPellets = (int) _origin.Weapon().WeaponAttributes.Pellets.CurrentValue();
+            _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
+            _maxRange = attributes.GetCalculatedValue(AttributeType.Accuracy);
+            _noPellets = (int) attributes.GetCalculatedValue(AttributeType.Pellets);
         }
 
         public void SetDamage(int damage)

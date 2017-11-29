@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI;
@@ -8,30 +9,76 @@ namespace Game.Gear.Weapons
 {
     public class WeaponAttributes : AttributeContainer
     {
-        public readonly WeaponClass WeaponClass;
-        public readonly GearModifier SubClass, SecondaryModifier;
-        public CharacterAttribute Damage, Accuracy, CriticalChance, Handling, FireRate, ReloadSpeed, Capacity, Pellets;
+        public CharacterAttribute FireRate, ReloadSpeed, Damage, Accuracy, CriticalChance, Handling, Capacity, Pellets;
         private float _dps;
         private AttributeModifier _durabilityModifier = new AttributeModifier();
         public readonly MyValue Durability;
         private const int MaxDurability = 20;
+        public float DurabilityModifier;
+        public bool Automatic = true;
 
-        public WeaponAttributes(WeaponClass weaponClass, GearModifier subClass, GearModifier secondaryModifier)
+        public string WeaponClassDescription;
+        public string SubClassName, SubClassDescription;
+        public string ModifierName, ModifierDescription;
+        public WeaponType WeaponType;
+
+        public WeaponAttributes()
         {
             Durability = new MyValue(Random.Range(0, MaxDurability), 0, MaxDurability);
-            WeaponClass = weaponClass;
-            WeaponClass.ApplyToGear(this);
-            SubClass = subClass;
-            SubClass.ApplyToGear(this);
-            SecondaryModifier = secondaryModifier;
-            SecondaryModifier.ApplyToGear(this);
+            Durability.AddThreshold(4, "Flawed");
+            Durability.AddThreshold(8, "Worn");
+            Durability.AddThreshold(12, "Fresh");
+            Durability.AddThreshold(16, "Faultless");
+            Durability.AddThreshold(20, "Perfected");
+        }
+
+        public void SetClass(WeaponClass weaponClass)
+        {
+            weaponClass.ApplyToGear(this);
+            WeaponType = weaponClass.Type;
+            WeaponClassDescription = weaponClass.GetDescription();
             RecalculateAttributeValues();
+//            Print();
+        }
+
+        public void SetSubClass(GearModifier subClass)
+        {
+            subClass.ApplyToGear(this);
+            SubClassName = subClass.Name;
+            SubClassDescription = subClass.GetDescription();
+            RecalculateAttributeValues();
+//            Print();
+        }
+
+        public void SetModifier(GearModifier secondaryModifier)
+        {
+            secondaryModifier.ApplyToGear(this);
+            ModifierName = secondaryModifier.Name;
+            ModifierDescription = secondaryModifier.GetDescription();
+            RecalculateAttributeValues();
+//            Print();
+        }
+        
+        public void AddManualModifier()
+        {
+            Capacity.ApplyMultiplicativeModifier(1);
+            Damage.ApplyMultiplicativeModifier(1);
+            Accuracy.ApplyMultiplicativeModifier(0.5f);
+            ReloadSpeed.ApplyMultiplicativeModifier(-0.5f);
+            FireRate.ApplyMultiplicativeModifier(-0.5f);
+            Automatic = false;
+//            Print();
+        }
+
+        public string GetName()
+        {
+            return ModifierName + " " + SubClassName;
         }
 
         public void RecalculateAttributeValues()
         {
-            float durabilityModifierValue = 1f / (MaxDurability * 2) * (Durability.CurrentValue() + MaxDurability);
-            _durabilityModifier.SetMultiplicative(durabilityModifierValue);
+            DurabilityModifier = 1f / (MaxDurability * 2) * (Durability.CurrentValue() + MaxDurability);
+            _durabilityModifier.SetMultiplicative(DurabilityModifier);
             CalculateDPS();
         }
 
@@ -67,6 +114,24 @@ namespace Game.Gear.Weapons
             AddAttribute(Capacity);
             AddAttribute(Pellets);
             _durabilityModifier.AddTargetAttributes(new List<CharacterAttribute> {Damage, Accuracy, CriticalChance, Handling, FireRate, ReloadSpeed});
+        }
+
+        private void Print()
+        {
+            Debug.Log(WeaponType + " " + SubClassName + " " + ModifierName
+                      + "\nDurability: " + Durability.CurrentValue() + " (" + DurabilityModifier + ")"
+                      + "\nAutomatic: " + Automatic
+                      + "\nCapacity:   " + Capacity.CurrentValue()
+                      + "\nPellets:    " + Pellets.CurrentValue()
+                      + "\nDamage:     " + Damage.CurrentValue()
+                      + "\nAccuracy:   " + Accuracy.CurrentValue()
+                      + "\nFire Rate:  " + FireRate.CurrentValue()
+                      + "\nHandling:   " + Handling.CurrentValue()
+                      + "\nReload:     " + ReloadSpeed.CurrentValue()
+                      + "\nCritChance: " + CriticalChance.CurrentValue()
+                      + "\n" + WeaponClassDescription?.Replace("\n", " ")
+                      + "\n" + SubClassDescription?.Replace("\n", " ")
+                      + "\n" + ModifierDescription?.Replace("\n", " ") + "\n\n");
         }
     }
 }

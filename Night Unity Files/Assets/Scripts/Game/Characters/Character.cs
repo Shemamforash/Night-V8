@@ -250,7 +250,7 @@ namespace Game.Characters
         {
             if (Immobilised()) return;
             if (!CockingCooldown.Finished()) return;
-            float cockTime = EquipmentController.Weapon().WeaponAttributes.FireRate.CurrentValue();
+            float cockTime = EquipmentController.Weapon().WeaponAttributes.GetCalculatedValue(AttributeType.FireRate);
             GunFire.Cock(cockTime);
             CockingCooldown.Duration = cockTime;
             CockingCooldown.Start();
@@ -266,7 +266,8 @@ namespace Game.Characters
         protected bool NeedsCocking()
         {
             Weapon weapon = EquipmentController.Weapon();
-            return !weapon.Automatic && !weapon.Cocked && !weapon.Empty();
+            bool automatic = weapon.WeaponAttributes.Automatic;
+            return !automatic && !weapon.Cocked && !weapon.Empty();
         }
 
         //RELOADING
@@ -324,7 +325,7 @@ namespace Game.Characters
             Shot normalShot = new Shot(target, this);
             OnFireAction?.Invoke(normalShot);
             normalShot.Fire();
-            if (EquipmentController.Weapon().Automatic)
+            if (EquipmentController.Weapon().WeaponAttributes.Automatic)
             {
                 _timeAtLastFire = Helper.TimeInMillis();
             }
