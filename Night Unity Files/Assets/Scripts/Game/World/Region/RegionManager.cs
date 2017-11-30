@@ -15,8 +15,7 @@ namespace Game.World.Region
 {
     public class RegionManager : Menu
     {
-        private static readonly List<Region> UnexploredRegions = new List<Region>();
-        private static readonly List<InventoryUi> DiscoveredRegions = new List<InventoryUi>();
+        private static readonly List<Region> DiscoveredRegions = new List<Region>();
         private static readonly Dictionary<string, RegionTemplate> Templates = new Dictionary<string, RegionTemplate>();
         private static readonly int NoRegionsToGenerate = 40;
         private static Button _backButton;
@@ -129,19 +128,8 @@ namespace Game.World.Region
         public static void GenerateNewRegions()
         {
             MapNode = MapGenerator.Generate();
-            DiscoveredRegions.ForEach(r => r.Destroy());
-            UnexploredRegions.Clear();
+            _menuList.Items.ForEach(i => i.Destroy());
             DiscoveredRegions.Clear();
-//            for (int i = 0; i < NoRegionsToGenerate; ++i)
-//            {
-//                RegionTemplate template = Templates[Templates.Keys.ToList()[Random.Range(0, Templates.Keys.Count)]];
-//                string regionName = GenerateName(); //template.DisplayName == "" ? template.InternalName : template.DisplayName;
-//                Region region = new Region(regionName, template);
-//                UnexploredRegions.Add(region);
-//#if UNITY_EDITOR
-//                DiscoverRegion(region);
-//#endif
-//            }
             RefreshExploreButton();
         }
 
@@ -150,14 +138,13 @@ namespace Game.World.Region
             RegionTemplate template = Templates[Templates.Keys.ToList()[Random.Range(0, Templates.Keys.Count)]];
             string regionName = GenerateName();
             Region region = new Region(regionName, template);
-            UnexploredRegions.Add(region);
             return region;
         }
 
         public static void DiscoverRegion(Region region)
         {
             _menuList.AddItem(region);
-            UnexploredRegions.Remove(region);
+            DiscoveredRegions.Add(region);
             RefreshExploreButton();
         }
 
@@ -195,6 +182,11 @@ namespace Game.World.Region
             }
             _character = null;
             MenuStateMachine.GoToInitialMenu();
+        }
+
+        public static List<Region> GetDiscoveredRegions()
+        {
+            return DiscoveredRegions;
         }
     }
 }

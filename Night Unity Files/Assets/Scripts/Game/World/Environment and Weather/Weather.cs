@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.World.Region;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI;
 
@@ -7,16 +8,17 @@ namespace Game.World.Environment_and_Weather
 {
     public class Weather : ProbabalisticState
     {
-        private MyValue _temperature, _visibility, _water, _duration;
+        private int _temperature, _visibility, _water, _food, _duration;
         private List<Danger> _dangers = new List<Danger>();
         private int _timeRemaining;
         public WeatherAttributes Attributes;
 
-        public Weather(string name, MyValue temperature, MyValue visibility, MyValue water, MyValue duration) : base(name, StateSubtype.Weather)
+        public Weather(string name, int temperature, int visibility, int water, int food, int duration) : base(name, StateSubtype.Weather)
         {
             _temperature = temperature;
             _visibility = visibility;
             _water = water;
+            _food = food;
             _duration = duration;
         }
 
@@ -27,23 +29,31 @@ namespace Game.World.Environment_and_Weather
 
         public override void Enter()
         {
-            _temperature.SetCurrentValue(_temperature.RandomInRange());
-            _timeRemaining = (int) (_duration.RandomInRange() * WorldState.MinutesPerHour);
+            _timeRemaining = _duration * WorldState.MinutesPerHour;
             WeatherSystemController.Instance().ChangeWeather(this, _timeRemaining);
         }
 
         public int Temperature()
         {
-            return (int) _temperature.CurrentValue();
+            return _temperature;
         }
 
         public void UpdateWeather()
         {
             --_timeRemaining;
-            if (_timeRemaining == 0)
+            if (_timeRemaining != 0) return;
+            UpdateEnvironmentResources();
+            NavigateToState(Name);
+        }
+
+        private void UpdateEnvironmentResources()
+        {
+            List<Region.Region> discoveredRegions = RegionManager.GetDiscoveredRegions();
+            discoveredRegions.ForEach(r =>
             {
-                NavigateToState(Name);
-            }
+                r.AddWater(_water);
+                r.AddFood(_food);
+            });
         }
 
         protected override void NavigateToState(string name)

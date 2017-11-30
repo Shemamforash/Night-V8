@@ -90,6 +90,91 @@ class GearImporter(XMLWriter):
             write_single_value(self, "Endurance", "+" + get_value(self, "L", row, 0))
 
 
+class WeatherImporter(XMLWriter):
+    def __init__(self):
+        super(WeatherImporter, self).__init__("Weather", "Weather")
+        write_tag(self, "WeatherTypes", self.read_weather)
+
+    def read_weather(self):
+        for row in range(3, 24):
+            write_tag(self, "Weather", self.read_single_weather, [row])
+
+    def read_single_weather(self, row):
+        write_single_value(self, "Name", get_value(self, "A", row))
+        write_single_value(self, "Type", get_value(self, "C", row))
+        write_single_value(self, "Temperature", get_value(self, "D", row))
+        write_single_value(self, "Visibility", get_value(self, "E", row))
+        write_single_value(self, "Water", get_value(self, "F", row))
+        write_single_value(self, "Food", get_value(self, "G", row))
+        write_single_value(self, "Duration", get_value(self, "H", row))
+        write_tag(self, "Particles", self.read_particle_values, [row])
+
+    def read_particle_values(self, row):
+        write_single_value(self, "Rain", get_value(self, "I", row))
+        write_single_value(self, "Fog", get_value(self, "J", row))
+        write_single_value(self, "Dust", get_value(self, "K", row))
+        write_single_value(self, "Hail", get_value(self, "L", row))
+        write_single_value(self, "Sun", get_value(self, "M", row))
+
+
+class EnvironmentImporter(XMLWriter):
+    def __init__(self):
+        super(EnvironmentImporter, self).__init__("Environments", "Environments")
+        write_tag(self, "EnvironmentTypes", self.read_environment)
+
+    def read_environment(self):
+        for row in range(3, 8):
+            write_tag(self, get_value(self, "A", row), self.read_single_environment, [row])
+
+    def read_single_environment(self, row):
+        write_single_value(self, "Temperature", get_value(self, "B", row))
+        write_single_value(self, "Wetness", get_value(self, "C", row))
+        write_single_value(self, "Water", get_value(self, "D", row))
+        write_single_value(self, "Food", get_value(self, "E", row))
+        write_single_value(self, "Fuel", get_value(self, "F", row))
+        write_single_value(self, "Scrap", get_value(self, "G", row))
+
+
+class RegionImporter(XMLWriter):
+    def __init__(self):
+        super(RegionImporter, self).__init__("Regions", "Regions")
+        write_tag(self, "RegionType", self.read_regions)
+
+    def read_regions(self):
+        for offset in range(0, 5):
+            column = 2 + offset * 3
+            column_letter = num2alpha[column]
+            write_tag(self, get_value(self, column_letter, 2), self.read_region_type, [column])
+
+    def read_region_type(self, column):
+        self.read_region_names(num2alpha[column], "Prefixes")
+        self.read_region_names(num2alpha[column + 1], "Suffixes")
+        write_tag(self, "Region", self.read_single_region, [column])
+        write_tag(self, "Region", self.read_single_region, [column + 1])
+        write_tag(self, "Region", self.read_single_region, [column + 2])
+
+    def read_region_names(self, column_letter, name_type):
+        prefix_string = ""
+        for row in range(11, 38):
+            prefix = get_value(self, column_letter, row)
+            if prefix == "1":
+                break
+            if prefix_string != "":
+                prefix_string += ","
+            prefix_string += prefix
+        write_single_value(self, name_type, prefix_string)
+
+    def read_single_region(self, column):
+        column_letter = num2alpha[column]
+        write_single_value(self, "Name", get_value(self, column_letter, 1))
+        write_single_value(self, "Type", get_value(self, column_letter, 2))
+        write_single_value(self, "Food", get_value(self, column_letter, 3))
+        write_single_value(self, "Water", get_value(self, column_letter, 4))
+        write_single_value(self, "Fuel", get_value(self, column_letter, 5))
+        write_single_value(self, "Scrap", get_value(self, column_letter, 6))
+        write_single_value(self, "Ammo", get_value(self, column_letter, 7))
+
+
 def write_tag(xml_writer, tag_name, nested_method=None, args=None, parameters=[], values=[]):
     tag = "<" + tag_name
     for parameter_value in zip(parameters, values):
@@ -119,3 +204,5 @@ def write_single_value(xml_writer, stat_name, value):
 
 WeaponImporter()
 GearImporter()
+WeatherImporter()
+RegionImporter()

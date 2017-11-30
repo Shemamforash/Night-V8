@@ -4,4 +4,48 @@
     <_effectsVolume>0</_effectsVolume>
     <_masterVolume>0</_masterVolume>
   </SoundSettings>
+  <CharacterManager>
+    <Character>
+      <Name>Driver</Name>
+      <Attributes>
+        <Strength>
+          <Val>99</Val>
+          <Max>99</Max>
+        </Strength>
+        <Endurance>
+          <Val>47</Val>
+          <Max>47</Max>
+        </Endurance>
+        <Stability>
+          <Val>23</Val>
+          <Max>23</Max>
+        </Stability>
+        <Intelligence>
+          <Val>21</Val>
+          <Max>21</Max>
+        </Intelligence>
+      </Attributes>
+    </Character>
+    <Character>
+      <Name>Lux</Name>
+      <Attributes>
+        <Strength>
+          <Val>88</Val>
+          <Max>88</Max>
+        </Strength>
+        <Endurance>
+          <Val>47</Val>
+          <Max>47</Max>
+        </Endurance>
+        <Stability>
+          <Val>20</Val>
+          <Max>20</Max>
+        </Stability>
+        <Intelligence>
+          <Val>21</Val>
+          <Max>21</Max>
+        </Intelligence>
+      </Attributes>
+    </Character>
+  </CharacterManager>
 </Settings>

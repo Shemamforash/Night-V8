@@ -65,5 +65,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             return quantity * Weight;
         }
+
+        public void SetMax(float max)
+        {
+            _quantity.Max = max;
+        }
     }
 }

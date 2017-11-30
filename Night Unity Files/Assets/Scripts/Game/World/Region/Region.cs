@@ -21,11 +21,19 @@ namespace Game.World.Region
         {
             _template = template;
             _distance = Random.Range(1, 2);
-            IncrementResource(InventoryResourceType.Water, _template.WaterAvailable);
-            IncrementResource(InventoryResourceType.Food, _template.FoodAvailable);
-            IncrementResource(InventoryResourceType.Fuel, _template.FuelAvailable);
-            IncrementResource(InventoryResourceType.Scrap, _template.ScrapAvailable);
-            IncrementResource(InventoryResourceType.Ammo, _template.AmmoAvailable);
+            SetInitialResourceValues(InventoryResourceType.Water, _template.WaterAvailable);
+            SetInitialResourceValues(InventoryResourceType.Food, _template.FoodAvailable);
+            SetInitialResourceValues(InventoryResourceType.Fuel, _template.FuelAvailable);
+            SetInitialResourceValues(InventoryResourceType.Scrap, _template.ScrapAvailable);
+            SetInitialResourceValues(InventoryResourceType.Ammo, _template.AmmoAvailable);
+        }
+
+        private void SetInitialResourceValues(InventoryResourceType resourceType, float resourceRating)
+        {
+            InventoryResource resource = GetResource(resourceType);
+            float initialQuantity = resourceRating * 10;
+            resource.SetMax(initialQuantity);
+            IncrementResource(resourceType, initialQuantity);
         }
 
         public string RegionType()
@@ -65,10 +73,20 @@ namespace Game.World.Region
             return description;
         }
 
+        public void AddWater(int ratingPoints)
+        {
+            IncrementResource(InventoryResourceType.Water, 10 * ratingPoints);
+        }
+
+        public void AddFood(int ratingPoints)
+        {
+            IncrementResource(InventoryResourceType.Food, 10 * ratingPoints);
+        }
+        
         private static string GetAmountRemainingDescripter(float amount)
         {
             string amountRemaining = "";
-            for (int i = 0; i < amount; ++i)
+            for (int i = 0; i < amount; i += 10)
             {
                 amountRemaining += "+";
             }
