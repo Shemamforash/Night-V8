@@ -1,33 +1,73 @@
 ﻿using System;
+using System.Collections.Generic;
+using Game.Gear.Armour;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
+using System.Linq;
+using SamsHelper.ReactiveUI.MenuSystem;
+using UnityEngine;
 
 namespace SamsHelper.ReactiveUI.InventoryUI
 {
-    //this class should ONLY before for items that extend from InventoryItem
+    //this class should ONLY be for items that extend from InventoryItem
     public class InventoryDisplay : MenuList
     {
-        private Direction _inventoryDirection;
         private Inventory _inventory;
         private TextMeshProUGUI _titleText, _capacityText;
         private InventoryDisplay _moveToInventory;
+        public EnhancedButton AllButton, WeaponButton, ArmourButton, AccesoryButton, ResourceButton, CharacterButton, CloseButton;
 
         public override void Awake()
         {
             base.Awake();
             _titleText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Inventory Title");
-            _capacityText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Carrying Capacity");
+            _capacityText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Weight");
         }
 
-        public void SetInventory(Inventory inventory, Direction inventoryDirection, InventoryDisplay moveToInventory)
+        public void SetTitleText(string titleText)
+        {
+            _titleText.text = titleText;
+        }
+        
+        public void Start()
+        {
+            AllButton.AddOnClick(() =>
+            {
+                SelectTab(AllButton, "");
+                SetItems(_inventory.Contents());
+            });
+            if(WeaponButton != null) WeaponButton.AddOnClick(() => SetItems(SelectTab(WeaponButton, typeof(Weapon).ToString())));
+            if(ArmourButton != null) ArmourButton.AddOnClick(() => SetItems(SelectTab(ArmourButton, typeof(Armour).ToString())));
+            if(AccesoryButton != null) AccesoryButton.AddOnClick(() => SetItems(SelectTab(AccesoryButton, typeof(Armour).ToString())));
+            if(ResourceButton != null) ResourceButton.AddOnClick(() => SetItems(SelectTab(ResourceButton, typeof(Armour).ToString())));
+            if(CharacterButton != null) CharacterButton.AddOnClick(() => SetItems(SelectTab(CharacterButton, typeof(Armour).ToString())));
+            if(CloseButton != null)CloseButton.AddOnClick(MenuStateMachine.GoToInitialMenu);
+        }
+
+        private List<MyGameObject> SelectTab(EnhancedButton button, string itemType)
+        {
+            button.SetColor(Color.white);
+            if(AllButton != button) AllButton.SetColor(new Color(1,1,1,0.4f));
+            if(WeaponButton != button) WeaponButton.SetColor(new Color(1,1,1,0.4f));
+            if(ArmourButton != button) ArmourButton.SetColor(new Color(1,1,1,0.4f));
+            if(AccesoryButton != button) AccesoryButton.SetColor(new Color(1,1,1,0.4f));
+            if(ResourceButton != button) ResourceButton.SetColor(new Color(1,1,1,0.4f));
+            if(CharacterButton != button) CharacterButton.SetColor(new Color(1,1,1,0.4f));
+            return _inventory.Contents().Where(item => item.GetType().ToString() == itemType).ToList();
+        }
+
+        public void SetInventory(Inventory inventory, InventoryDisplay moveToInventory)
         {
             _moveToInventory = moveToInventory;
             _titleText.text = inventory.Name;
-            _inventoryDirection = inventoryDirection;
             _inventory = inventory;
-            SetItems(inventory.Contents());
+            SetItems(inventory.SortByType());
+            AllButton.Button().Select();
+            SelectTab(AllButton, "");
+            Helper.SetReciprocalNavigation(AllButton, Items[0].PrimaryButton);
         }
 
         private void UpdateInventoryWeight()

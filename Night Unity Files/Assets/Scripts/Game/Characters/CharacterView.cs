@@ -137,7 +137,7 @@ namespace Game.Characters
             GameObject.GetComponent<LayoutElement>().preferredHeight = 200;
             _detailedView.SetActive(true);
             SimpleView.SetActive(false);
-            _actionMenuList.Items[0].GetNavigationButton().Select();
+            _actionMenuList.Items[0].Select();
         }
 
         public void SwitchToSimpleView()

@@ -128,7 +128,11 @@ namespace Game.World.Region
         public static void GenerateNewRegions()
         {
             MapNode = MapGenerator.Generate();
-            _menuList.Items.ForEach(i => i.Destroy());
+            _menuList.Items.ForEach(i =>
+            {
+                if (i == _exploreButton) return;
+                i.Destroy();
+            });
             DiscoveredRegions.Clear();
             RefreshExploreButton();
         }

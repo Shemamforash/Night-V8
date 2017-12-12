@@ -17,7 +17,7 @@ namespace Game.World
             AddResource(InventoryResourceType.Ammo, 0.1f);
         }
 
-        public List<MyGameObject> SortByType()
+        public override List<MyGameObject> SortByType()
         {
             List<MyGameObject> sortedItems = new List<MyGameObject>();
             sortedItems.AddRange(Resources());

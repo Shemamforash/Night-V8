@@ -4,41 +4,41 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>99</Val>
-          <Max>99</Max>
+          <Val>118</Val>
+          <Max>118</Max>
         </Strength>
         <Endurance>
-          <Val>47</Val>
-          <Max>47</Max>
+          <Val>57</Val>
+          <Max>57</Max>
         </Endurance>
         <Stability>
           <Val>23</Val>
           <Max>23</Max>
         </Stability>
         <Intelligence>
-          <Val>21</Val>
-          <Max>21</Max>
+          <Val>23</Val>
+          <Max>23</Max>
         </Intelligence>
       </Attributes>
     </Character>
     <Character>
-      <Name>Lux</Name>
+      <Name>Aquifer</Name>
       <Attributes>
         <Strength>
-          <Val>88</Val>
-          <Max>88</Max>
+          <Val>82</Val>
+          <Max>82</Max>
         </Strength>
         <Endurance>
-          <Val>47</Val>
-          <Max>47</Max>
+          <Val>48</Val>
+          <Max>48</Max>
         </Endurance>
         <Stability>
-          <Val>20</Val>
-          <Max>20</Max>
+          <Val>16</Val>
+          <Max>16</Max>
         </Stability>
         <Intelligence>
-          <Val>21</Val>
-          <Max>21</Max>
+          <Val>22</Val>
+          <Max>22</Max>
         </Intelligence>
       </Attributes>
     </Character>

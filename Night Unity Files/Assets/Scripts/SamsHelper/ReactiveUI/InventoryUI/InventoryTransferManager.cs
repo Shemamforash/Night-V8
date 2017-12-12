@@ -1,6 +1,7 @@
 ﻿using System;
 using SamsHelper.BaseGameFunctionality;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,6 +34,8 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _instance = this;
             _closeButton = Helper.FindChildWithName<Button>(gameObject, "Confirm");
             _closeButton.onClick.AddListener(Close);
+            InventoryLeft.AddOnContentChange(RefreshNavigation);
+            InventoryRight.AddOnContentChange(RefreshNavigation);
         }
 
         public static InventoryTransferManager Instance()
@@ -58,22 +61,35 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             ShowInventories(left, right);
         }
 
-//        private void SetAnchors<T>(T uiObject, Vector2 minAnchors, Vector2 maxAnchors) where T : MonoBehaviour
-//        {
-//            RectTransform inventoryTransform = uiObject.GetComponent<RectTransform>();
-//            inventoryTransform.anchorMin = minAnchors;
-//            inventoryTransform.anchorMax = maxAnchors;
-//        }
+        private void SetNavigation(InventoryDisplay inventoryRight, Direction direction, ViewParent inventoryLeftItem)
+        {
+            EnhancedButton target = inventoryLeftItem.GetNavigationButton();
+            inventoryRight.Items.ForEach(i =>
+            {
+                EnhancedButton origin = i.GetNavigationButton();
+                if (direction == Direction.Left)
+                {
+                    origin.SetLeftNavigation(target);
+                    return;
+                }
+                origin.SetRightNavigation(target);
+            });
+        }
 
-        public void ShowInventories(Inventory left, Inventory right)
+        private void ShowInventories(Inventory left, Inventory right)
         {
             MenuStateMachine.States.NavigateToState("Inventory Transfer Menu");
             InventoryLeft.gameObject.SetActive(true);
             InventoryRight.gameObject.SetActive(true);
-//            SetAnchors(InventoryLeft, _dualInventoryAnchorsMinLeft, _dualInventoryAnchorsMaxLeft);
-//            SetAnchors(InventoryRight, _dualInventoryAnchorsMinRight, _dualInventoryAnchorsMaxRight);
-            InventoryLeft.SetInventory(left, Direction.Left, InventoryRight);
-            InventoryRight.SetInventory(right, Direction.Right, InventoryLeft);
+            InventoryLeft.SetInventory(left, InventoryRight);
+            InventoryRight.SetInventory(right, InventoryLeft);
+        }
+
+        private void RefreshNavigation()
+        {
+            if (InventoryRight.Items.Count == 0 || InventoryLeft.Items.Count == 0) return;
+            SetNavigation(InventoryLeft, Direction.Right, InventoryRight.Items[0]);
+            SetNavigation(InventoryRight, Direction.Left, InventoryLeft.Items[0]);
         }
     }
 }

@@ -9,9 +9,9 @@
         <Duration>2</Duration>
         <Particles>
             <Rain>0.3</Rain>
-            <Fog>1</Fog>
-            <Dust>1</Dust>
-            <Hail>1</Hail>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
             <Sun>1</Sun>
         </Particles>
     </Weather>
@@ -25,9 +25,9 @@
         <Duration>2</Duration>
         <Particles>
             <Rain>0.7</Rain>
-            <Fog>1</Fog>
-            <Dust>1</Dust>
-            <Hail>1</Hail>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
             <Sun>0.8</Sun>
         </Particles>
     </Weather>
@@ -41,9 +41,9 @@
         <Duration>2</Duration>
         <Particles>
             <Rain>1</Rain>
-            <Fog>1</Fog>
-            <Dust>1</Dust>
-            <Hail>1</Hail>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
             <Sun>0.6</Sun>
         </Particles>
     </Weather>
@@ -56,10 +56,10 @@
         <Food>0</Food>
         <Duration>2</Duration>
         <Particles>
-            <Rain>1</Rain>
+            <Rain>0</Rain>
             <Fog>0.3</Fog>
-            <Dust>1</Dust>
-            <Hail>1</Hail>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
             <Sun>1</Sun>
         </Particles>
     </Weather>
@@ -72,10 +72,10 @@
         <Food>0</Food>
         <Duration>2</Duration>
         <Particles>
-            <Rain>1</Rain>
+            <Rain>0</Rain>
             <Fog>0.7</Fog>
-            <Dust>1</Dust>
-            <Hail>1</Hail>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
             <Sun>0.8</Sun>
         </Particles>
     </Weather>
@@ -88,10 +88,10 @@
         <Food>0</Food>
         <Duration>2</Duration>
         <Particles>
-            <Rain>1</Rain>
+            <Rain>0</Rain>
             <Fog>1</Fog>
-            <Dust>1</Dust>
-            <Hail>1</Hail>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
             <Sun>0.6</Sun>
         </Particles>
     </Weather>
@@ -104,10 +104,10 @@
         <Food>1</Food>
         <Duration>2</Duration>
         <Particles>
-            <Rain>1</Rain>
-            <Fog>1</Fog>
-            <Dust>1</Dust>
-            <Hail>1</Hail>
+            <Rain>0</Rain>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
             <Sun>1</Sun>
         </Particles>
     </Weather>
@@ -120,10 +120,10 @@
         <Food>1</Food>
         <Duration>2</Duration>
         <Particles>
-            <Rain>1</Rain>
-            <Fog>1</Fog>
+            <Rain>0</Rain>
+            <Fog>0</Fog>
             <Dust>0.2</Dust>
-            <Hail>1</Hail>
+            <Hail>0</Hail>
             <Sun>0.8</Sun>
         </Particles>
     </Weather>
@@ -136,10 +136,10 @@
         <Food>1</Food>
         <Duration>2</Duration>
         <Particles>
-            <Rain>1</Rain>
-            <Fog>1</Fog>
+            <Rain>0</Rain>
+            <Fog>0</Fog>
             <Dust>0.4</Dust>
-            <Hail>1</Hail>
+            <Hail>0</Hail>
             <Sun>0.6</Sun>
         </Particles>
     </Weather>
@@ -152,9 +152,9 @@
         <Food>0</Food>
         <Duration>1</Duration>
         <Particles>
-            <Rain>1</Rain>
-            <Fog>1</Fog>
-            <Dust>1</Dust>
+            <Rain>0</Rain>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
             <Hail>1</Hail>
             <Sun>0.6</Sun>
         </Particles>
@@ -169,9 +169,9 @@
         <Duration>2</Duration>
         <Particles>
             <Rain>0.5</Rain>
-            <Fog>1</Fog>
-            <Dust>1</Dust>
-            <Hail>1</Hail>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
             <Sun>1</Sun>
         </Particles>
     </Weather>
@@ -184,10 +184,10 @@
         <Food>-1</Food>
         <Duration>6</Duration>
         <Particles>
-            <Rain>1</Rain>
-            <Fog>1</Fog>
+            <Rain>0</Rain>
+            <Fog>0</Fog>
             <Dust>1</Dust>
-            <Hail>1</Hail>
+            <Hail>0</Hail>
             <Sun>0.4</Sun>
         </Particles>
     </Weather>
@@ -201,8 +201,8 @@
         <Duration>1</Duration>
         <Particles>
             <Rain>0.5</Rain>
-            <Fog>1</Fog>
-            <Dust>1</Dust>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
             <Hail>0.2</Hail>
             <Sun>0.4</Sun>
         </Particles>
@@ -217,8 +217,8 @@
         <Duration>1</Duration>
         <Particles>
             <Rain>0.7</Rain>
-            <Fog>1</Fog>
-            <Dust>1</Dust>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
             <Hail>0.4</Hail>
             <Sun>0.4</Sun>
         </Particles>
@@ -232,10 +232,10 @@
         <Food>0</Food>
         <Duration>3</Duration>
         <Particles>
-            <Rain>1</Rain>
-            <Fog>1</Fog>
+            <Rain>0</Rain>
+            <Fog>0</Fog>
             <Dust>0.5</Dust>
-            <Hail>1</Hail>
+            <Hail>0</Hail>
             <Sun>1</Sun>
         </Particles>
     </Weather>
@@ -248,10 +248,10 @@
         <Food>-2</Food>
         <Duration>3</Duration>
         <Particles>
-            <Rain>1</Rain>
-            <Fog>1</Fog>
+            <Rain>0</Rain>
+            <Fog>0</Fog>
             <Dust>0.4</Dust>
-            <Hail>1</Hail>
+            <Hail>0</Hail>
             <Sun>1</Sun>
         </Particles>
     </Weather>
@@ -265,8 +265,8 @@
         <Duration>1</Duration>
         <Particles>
             <Rain>1</Rain>
-            <Fog>1</Fog>
-            <Dust>1</Dust>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
             <Hail>0.1</Hail>
             <Sun>0.6</Sun>
         </Particles>
@@ -280,9 +280,9 @@
         <Food>-2</Food>
         <Duration>3</Duration>
         <Particles>
-            <Rain>1</Rain>
-            <Fog>1</Fog>
-            <Dust>1</Dust>
+            <Rain>0</Rain>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
             <Hail>1</Hail>
             <Sun>0.6</Sun>
         </Particles>
@@ -297,8 +297,8 @@
         <Duration>2</Duration>
         <Particles>
             <Rain>0.5</Rain>
-            <Fog>1</Fog>
-            <Dust>1</Dust>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
             <Hail>0.2</Hail>
             <Sun>0.4</Sun>
         </Particles>
@@ -312,10 +312,10 @@
         <Food>-2</Food>
         <Duration>1</Duration>
         <Particles>
-            <Rain>1</Rain>
+            <Rain>0</Rain>
             <Fog>0.3</Fog>
-            <Dust>1</Dust>
-            <Hail>1</Hail>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
             <Sun>0.2</Sun>
         </Particles>
     </Weather>
@@ -328,10 +328,10 @@
         <Food>-1</Food>
         <Duration>1</Duration>
         <Particles>
-            <Rain>1</Rain>
+            <Rain>0</Rain>
             <Fog>0.5</Fog>
-            <Dust>1</Dust>
-            <Hail>1</Hail>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
             <Sun>0.2</Sun>
         </Particles>
     </Weather>

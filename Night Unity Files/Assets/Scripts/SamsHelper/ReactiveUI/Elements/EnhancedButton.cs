@@ -61,7 +61,7 @@ namespace SamsHelper.ReactiveUI.Elements
             _button = GetComponent<Button>();
             _textChildren = Helper.FindAllComponentsInChildren<EnhancedText>(transform);
             _imageChildren = Helper.FindAllComponentsInChildren<Image>(transform);
-            if(Border != null) Border.SetActive(false);
+            if (Border != null) Border.SetActive(false);
         }
 
         private void Enter()
@@ -179,6 +179,61 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void OnDoubleTap(InputAxis axis, float direction)
         {
+        }
+
+        public void SetRightNavigation(EnhancedButton target)
+        {
+            ModifyNavigation(target, (o, t) =>
+            {
+                o.selectOnRight = target.Button();
+                t.selectOnLeft = _button;
+            });
+        }
+
+        public void SetLeftNavigation(EnhancedButton target)
+        {
+            ModifyNavigation(target, (o, t) =>
+            {
+                o.selectOnLeft = target.Button();
+                t.selectOnRight = _button;
+            });
+        }
+
+        public void SetUpNavigation(EnhancedButton target)
+        {
+            ModifyNavigation(target, (o, t) =>
+            {
+                o.selectOnUp = target.Button();
+                t.selectOnDown = _button;
+            });
+        }
+
+        public void SetDownNavigation(EnhancedButton target)
+        {
+            ModifyNavigation(target, (o, t) =>
+            {
+                o.selectOnDown = target.Button();
+                t.selectOnUp = _button;
+            });
+        }
+
+        private void ModifyNavigation(EnhancedButton target, Action<Navigation, Navigation> modifyAction)
+        {
+            Navigation originNavigation = _button.navigation;
+            Navigation targetNavigation = target.Button().navigation;
+            modifyAction(originNavigation, targetNavigation);
+            _button.navigation = originNavigation;
+            target.Button().navigation = targetNavigation;
+        }
+
+        public void ClearNavigation()
+        {
+            Navigation navigation = _button.navigation;
+            navigation.selectOnUp = null;
+            navigation.selectOnDown = null;
+            navigation.selectOnLeft = null;
+            navigation.selectOnRight = null;
+            _button.navigation = navigation;
         }
     }
 }

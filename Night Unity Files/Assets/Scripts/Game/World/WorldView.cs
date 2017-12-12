@@ -3,6 +3,7 @@ using Game.Characters;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine.UI;
 using TMPro;
@@ -15,6 +16,7 @@ namespace Game.World
     {
         private static Button _inventoryButton;
         private static TextMeshProUGUI _timeText;
+        
 
         public void Awake()
         {
@@ -25,7 +27,7 @@ namespace Game.World
             PauseOnOpen = false;
             _inventoryButton.onClick.AddListener(() =>
             {
-                UIInventoryController.ShowInventory("Vehicle Inventory", WorldState.HomeInventory().SortByType(), g =>
+                UIInventoryController.ShowInventory(WorldState.HomeInventory(), g =>
                 {
                     GearItem item = g as GearItem;
                     if (item != null)
@@ -36,6 +38,14 @@ namespace Game.World
             });
         }
 
+        private void ShowCharacterPopup(string name, GearItem gearItem)
+        {
+            List<MyGameObject> characterGear = new List<MyGameObject>();
+            CharacterManager.Characters().ForEach(c => characterGear.Add(new CharacterGearComparison(c, gearItem)));
+//            UIInventoryController.ShowInventory(characterGear);
+//            UIInventoryController.SetInventoryTitle("Equip " + name);
+        }
+        
         public static void SetTime(int days, int hours, int minutes)
         {
             string dayTime;
@@ -64,13 +74,6 @@ namespace Game.World
         {
             TextMeshProUGUI resourceText = GameObject.Find(name.ToString()).GetComponent<TextMeshProUGUI>();
             WorldState.HomeInventory().GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f.CurrentValue()) + " " + convention; });
-        }
-
-        private void ShowCharacterPopup(string name, GearItem gearItem)
-        {
-            List<MyGameObject> characterGear = new List<MyGameObject>();
-            CharacterManager.Characters().ForEach(c => characterGear.Add(new CharacterGearComparison(c, gearItem)));
-            UIInventoryController.ShowInventory("Equip " + name, characterGear);
         }
 
         public static Button GetInventoryButton() => _inventoryButton;

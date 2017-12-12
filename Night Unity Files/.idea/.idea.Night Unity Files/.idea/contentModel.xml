@@ -19,8 +19,10 @@
           <e p="classes.txt" t="Include" />
           <e p="Gear.xml" t="Include" />
           <e p="names.txt" t="Include" />
+          <e p="Regions.xml" t="Include" />
           <e p="traits.txt" t="Include" />
           <e p="WeaponClasses.xml" t="Include" />
+          <e p="Weather.xml" t="Include" />
         </e>
         <e p="Scripts" t="Include">
           <e p="Facilitating" t="Include">
@@ -215,7 +217,6 @@
                 <e p="InventoryTransferManager.cs" t="Include" />
                 <e p="InventoryUi.cs" t="Include" />
                 <e p="MenuList.cs" t="Include" />
-                <e p="ScrollingMenuList.cs" t="Include" />
                 <e p="SimpleView.cs" t="Include" />
                 <e p="ViewParent.cs" t="Include" />
               </e>
@@ -262,9 +263,9 @@
           <e p="UIEnergyController.cs" t="Include" />
           <e p="UIGearController.cs" t="Include" />
           <e p="UIHealthBarController.cs" t="Include" />
-          <e p="UIInventoryController.cs" t="Include" />
           <e p="UINumberPopupController.cs" t="Include" />
         </e>
+        <e p="UIInventoryController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

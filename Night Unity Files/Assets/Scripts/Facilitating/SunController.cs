@@ -5,7 +5,8 @@ using UnityEngine;
 public class SunController : MonoBehaviour
 {
     public GameObject Sun, Stars, Moon;
-    public int MinBrightness, MaxBrightness;
+    [Range(0, 1)]
+    public float MinBrightness, MaxBrightness;
     private const float Value = 1f;
     private static float _weatherModifier = 1f;
     private float radius = 10;
@@ -51,9 +52,8 @@ public class SunController : MonoBehaviour
         float time = GetTime();
         float timeOfDayModifier = (float) (-0.028f * Math.Pow(time - 12, 2) + 1f);
         timeOfDayModifier *= _weatherModifier;
-        
-        float minBrightness = MinBrightness * timeOfDayModifier / 255f;
-        float maxBrightness = MaxBrightness * timeOfDayModifier / 255f;
+        float minBrightness = MinBrightness * timeOfDayModifier;
+        float maxBrightness = MaxBrightness * timeOfDayModifier;
         ParticleSystem.MainModule sunMain = Sun.GetComponent<ParticleSystem>().main;
         sunMain.startColor = new ParticleSystem.MinMaxGradient(new Color(Value, Value, Value, maxBrightness), new Color(Value, Value, Value, minBrightness));
     }

@@ -1,7 +1,6 @@
 ﻿using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
-using UIControllers;
 using UnityEngine;
 
 namespace Game.Characters
@@ -31,7 +30,6 @@ namespace Game.Characters
             });
             ui.SetRightTextCallback(() => "Equip");
             ui.PrimaryButton.AddOnClick(() => Character.Equip(GearItem));
-            UIInventoryController.CloseMenu();
             return ui;
         }
     }

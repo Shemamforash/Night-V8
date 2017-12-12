@@ -16,7 +16,7 @@ namespace Game.Combat
     public class CombatUi
     {
         private readonly GameObject _ammoPrefab, _magazineContent;
-        private readonly ScrollingMenuList _enemyList;
+        private readonly MenuList _enemyList;
         private float _hitInfoTimerCurrent;
         private const float HitInfoTimerMax = 1f;
 
@@ -39,7 +39,7 @@ namespace Game.Combat
         public CombatUi(GameObject combatMenu)
         {
             GameObject playerContainer = combatMenu.transform.Find("Player").gameObject;
-            _enemyList = Helper.FindChildWithName<ScrollingMenuList>(combatMenu, "Enemies");
+            _enemyList = Helper.FindChildWithName<MenuList>(combatMenu, "Enemies");
             _magazineContent = Helper.FindChildWithName<Transform>(playerContainer, "Magazine").gameObject;
             _ammoPrefab = Resources.Load("Prefabs/Combat/Ammo Prefab") as GameObject;
 

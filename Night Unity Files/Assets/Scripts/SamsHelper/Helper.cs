@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -169,6 +170,21 @@ namespace SamsHelper
             return newUiObject;
         }
 
+        public static void SetNavigation(EnhancedButton origin, EnhancedButton target, Direction d)
+        {
+            SetNavigation(origin.Button(), target.Button(), d);
+        }
+        
+        public static void SetNavigation(Button origin, EnhancedButton target, Direction d)
+        {
+            SetNavigation(origin, target.Button(), d);
+        }
+        
+        public static void SetNavigation(EnhancedButton origin, Button target, Direction d)
+        {
+            SetNavigation(origin.Button(), target, d);
+        }
+
         public static void SetNavigation(Button origin, Button target, Direction d)
         {
             if (origin == null || target == null) return;
@@ -191,20 +207,31 @@ namespace SamsHelper
             origin.navigation = originButtonNavigation;
         }
 
-        public static void SetReciprocalNavigation(Button origin, Button target)
+        public static void SetReciprocalNavigation(EnhancedButton origin, EnhancedButton target, Direction direction = Direction.Down)
         {
-            SetNavigation(origin, target, Direction.Down);
-            SetNavigation(target, origin, Direction.Up);
+            SetReciprocalNavigation(origin.Button(), target.Button(), direction);
+        }
+        
+        public static void SetReciprocalNavigation(EnhancedButton origin, Button target, Direction direction = Direction.Down)
+        {
+            SetReciprocalNavigation(origin.Button(), target, direction);
+        }
+        
+        public static void SetReciprocalNavigation(Button origin, EnhancedButton target, Direction direction = Direction.Down)
+        {
+            SetReciprocalNavigation(origin, target.Button(), direction);
         }
 
-        public static void ClearNavigation(Button button)
+        public static void SetReciprocalNavigation(Button origin, Button target, Direction direction = Direction.Down)
         {
-            Navigation navigation = button.navigation;
-            navigation.selectOnUp = null;
-            navigation.selectOnDown = null;
-            navigation.selectOnLeft = null;
-            navigation.selectOnRight = null;
-            button.navigation = navigation;
+            if (direction == Direction.Down)
+            {
+                SetNavigation(origin, target, Direction.Down);
+                SetNavigation(target, origin, Direction.Up);
+                return;
+            }
+            SetNavigation(origin, target, Direction.Left);
+            SetNavigation(target, origin, Direction.Right);
         }
 
         public static Direction OppositeDirection(Direction inventoryDirection)
@@ -258,7 +285,7 @@ namespace SamsHelper
             }
             return "+" + value;
         }
-        
+
         public static void AddDelineator(Transform parent)
         {
             GameObject delineator = new GameObject();

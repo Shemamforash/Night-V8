@@ -64,7 +64,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _isDestroyed = true;
         }
 
-        public virtual Button GetNavigationButton() => _primaryButton.Button();
+        public virtual EnhancedButton GetNavigationButton() => _primaryButton;
         public bool IsDestroyed() => _isDestroyed;
         public void SetDestroyCondition(Func<bool> destroyCheck) => _destroyCondition = destroyCheck;
         public void SetPreferredHeight(float height) => GameObject.GetComponent<LayoutElement>().preferredHeight = height;
@@ -72,5 +72,10 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         //Misc
         public GameObject GetGameObject() => GameObject;
         public MyGameObject GetLinkedObject() => LinkedObject;
+
+        public void Select()
+        {
+            _primaryButton.Button().Select();
+        }
     }
 }

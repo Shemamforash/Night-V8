@@ -26,6 +26,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
         }
 
+        public virtual List<MyGameObject> SortByType()
+        {
+            return null;
+        }
+
         public List<InventoryResource> Resources()
         {
             return _resources;

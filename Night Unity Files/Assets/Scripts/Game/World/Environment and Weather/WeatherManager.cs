@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI;
@@ -40,38 +41,29 @@ namespace Game.World.Environment_and_Weather
 
         private void LoadWeather()
         {
-            Helper.ConstructObjectsFromCsv("WeatherBalance", delegate(string[] attributes)
+            TextAsset weatherFile = Resources.Load<TextAsset>("Weather");
+            XmlDocument weatherXml = new XmlDocument();
+            weatherXml.LoadXml(weatherFile.text);
+            XmlNode root = weatherXml.SelectSingleNode("WeatherTypes");
+            foreach (XmlNode weatherNode in root.SelectNodes("Weather"))
             {
-                string weatherName = attributes[0];
-                int temperatureMin = int.Parse(attributes[1]);
-                int temperatureMax = int.Parse(attributes[2]);
-                MyValue temperature = new MyValue(temperatureMax, temperatureMin, temperatureMax);
-                int visibilityMin = int.Parse(attributes[3]);
-                int visibilityMax = int.Parse(attributes[4]);
-                MyValue visibility = new MyValue(visibilityMax, visibilityMin, visibilityMax);
-                int waterMin = int.Parse(attributes[5]);
-                int waterMax = int.Parse(attributes[6]);
-                MyValue water = new MyValue(waterMax, waterMin, waterMax);
-                int durationMin = int.Parse(attributes[7]);
-                int durationMax = int.Parse(attributes[8]);
-                MyValue duration = new MyValue(durationMax, durationMin, durationMax);
-                Weather weather = new Weather(weatherName, temperature, visibility, water, duration);
-                AddState(weather);
-                if (attributes[9] != "0")
-                {
-                    weather.AddDanger(attributes[9], float.Parse(attributes[10]));
-                }
-                if (attributes[11] != "0")
-                {
-                    weather.AddDanger(attributes[11], float.Parse(attributes[12]));
-                }
-                float rainAmount = float.Parse(attributes[13]);
-                float fogAmount = float.Parse(attributes[14]);
-                float dustAmount = float.Parse(attributes[15]);
-                float hailAmount = float.Parse(attributes[16]);
-                float sunAmount = float.Parse(attributes[17]);
-                weather.Attributes = new WeatherAttributes(rainAmount, fogAmount, dustAmount, hailAmount, sunAmount);
-            });
+                string name = weatherNode.SelectSingleNode("Name").InnerText;
+                string type = weatherNode.SelectSingleNode("Type").InnerText;
+                int temperature = int.Parse(weatherNode.SelectSingleNode("Temperature").InnerText);
+                int visibility = int.Parse(weatherNode.SelectSingleNode("Visibility").InnerText);
+                int water = int.Parse(weatherNode.SelectSingleNode("Water").InnerText);
+                int food = int.Parse(weatherNode.SelectSingleNode("Food").InnerText);
+                int duration = int.Parse(weatherNode.SelectSingleNode("Duration").InnerText);
+                XmlNode particleNode = weatherNode.SelectSingleNode("Particles");
+                float rain = float.Parse(particleNode.SelectSingleNode("Rain").InnerText);
+                float fog = float.Parse(particleNode.SelectSingleNode("Fog").InnerText);
+                float dust = float.Parse(particleNode.SelectSingleNode("Dust").InnerText);
+                float hail = float.Parse(particleNode.SelectSingleNode("Hail").InnerText);
+                float sun = float.Parse(particleNode.SelectSingleNode("Sun").InnerText);
+                Weather weather = new Weather(name, temperature, visibility, water, food, duration);
+                if (type == "Phenomena") AddState(weather);
+                weather.Attributes = new WeatherAttributes(rain, fog, dust, hail, sun);
+            }
         }
 
         private void GenerateWeatherString(int stringLength)

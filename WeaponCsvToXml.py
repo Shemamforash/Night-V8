@@ -100,21 +100,21 @@ class WeatherImporter(XMLWriter):
             write_tag(self, "Weather", self.read_single_weather, [row])
 
     def read_single_weather(self, row):
-        write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "Type", get_value(self, "C", row))
-        write_single_value(self, "Temperature", get_value(self, "D", row))
-        write_single_value(self, "Visibility", get_value(self, "E", row))
-        write_single_value(self, "Water", get_value(self, "F", row))
-        write_single_value(self, "Food", get_value(self, "G", row))
-        write_single_value(self, "Duration", get_value(self, "H", row))
+        write_single_value(self, "Name", get_value(self, "A", row, 0))
+        write_single_value(self, "Type", get_value(self, "C", row, 0))
+        write_single_value(self, "Temperature", get_value(self, "D", row, 0))
+        write_single_value(self, "Visibility", get_value(self, "E", row, 0))
+        write_single_value(self, "Water", get_value(self, "F", row, 0))
+        write_single_value(self, "Food", get_value(self, "G", row, 0))
+        write_single_value(self, "Duration", get_value(self, "H", row, 0))
         write_tag(self, "Particles", self.read_particle_values, [row])
 
     def read_particle_values(self, row):
-        write_single_value(self, "Rain", get_value(self, "I", row))
-        write_single_value(self, "Fog", get_value(self, "J", row))
-        write_single_value(self, "Dust", get_value(self, "K", row))
-        write_single_value(self, "Hail", get_value(self, "L", row))
-        write_single_value(self, "Sun", get_value(self, "M", row))
+        write_single_value(self, "Rain", get_value(self, "I", row, 0))
+        write_single_value(self, "Fog", get_value(self, "J", row, 0))
+        write_single_value(self, "Dust", get_value(self, "K", row, 0))
+        write_single_value(self, "Hail", get_value(self, "L", row, 0))
+        write_single_value(self, "Sun", get_value(self, "M", row, 0))
 
 
 class EnvironmentImporter(XMLWriter):
