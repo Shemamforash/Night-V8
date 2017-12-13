@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using TMPro;
 using UIControllers;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Game.World
 {
@@ -17,7 +18,6 @@ namespace Game.World
         private static Button _inventoryButton;
         private static TextMeshProUGUI _timeText;
         
-
         public void Awake()
         {
             _timeText = Helper.FindChildWithName(gameObject, "Time").GetComponent<TextMeshProUGUI>();

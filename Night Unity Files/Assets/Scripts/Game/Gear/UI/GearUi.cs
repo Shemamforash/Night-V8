@@ -11,7 +11,6 @@ namespace Game.Gear.UI
     {
         protected GameObject DetailedSection;
         protected GameObject SummarySection, ModifierSection, StatsSection;
-
         protected TextMeshProUGUI TitleText,
             SubTitleText,
             ModifierColumnOneText,
@@ -29,8 +28,8 @@ namespace Game.Gear.UI
             SetLeftTextCallback(gear.GetGearType().ToString);
             SetCentralTextCallback(linkedObject.ExtendedName);
             SetRightTextCallback(() => linkedObject.Weight + "kg");
-            PrimaryButton.AddOnSelectEvent(() => DetailedSection.SetActive(true));
-            PrimaryButton.AddOnDeselectEvent(() => DetailedSection.SetActive(false));
+//            PrimaryButton.AddOnSelectEvent(() => DetailedSection.SetActive(true));
+//            PrimaryButton.AddOnDeselectEvent(() => DetailedSection.SetActive(false));
         }
 
         protected override void CacheUiElements()

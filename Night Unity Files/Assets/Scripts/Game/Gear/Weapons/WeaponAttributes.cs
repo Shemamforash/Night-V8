@@ -79,6 +79,7 @@ namespace Game.Gear.Weapons
         {
             DurabilityModifier = 1f / (MaxDurability * 2) * (Durability.CurrentValue() + MaxDurability);
             _durabilityModifier.SetMultiplicative(DurabilityModifier);
+            _durabilityModifier.Apply();
             CalculateDPS();
         }
 

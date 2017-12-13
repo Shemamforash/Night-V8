@@ -60,7 +60,9 @@ namespace Game.Gear.Weapons
         public void IncreaseDurability()
         {
             _canEquip = true;
-//            Durability.SetCurrentValue(Durability.CurrentValue() + 1);
+            WeaponAttributes.Durability.Increment(1);
+            WeaponAttributes.RecalculateAttributeValues();
+            WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Decrement(GetUpgradeCost());
             SetName();
         }
 
@@ -72,7 +74,8 @@ namespace Game.Gear.Weapons
 
         public void DecreaseDurability()
         {
-//            Durability.SetCurrentValue(Durability.CurrentValue() - 1);
+            WeaponAttributes.Durability.Decrement(1);
+            WeaponAttributes.RecalculateAttributeValues();
             SetName();
         }
 
@@ -113,6 +116,11 @@ namespace Game.Gear.Weapons
         public override ViewParent CreateUi(Transform parent)
         {
             return new WeaponUi(this, parent);
+        }
+
+        public int GetUpgradeCost()
+        {
+            return (int) (WeaponAttributes.Durability.CurrentValue() * 10 + 100);
         }
     }
 }

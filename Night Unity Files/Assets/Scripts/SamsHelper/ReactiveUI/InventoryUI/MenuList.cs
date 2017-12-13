@@ -46,8 +46,14 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         public void SetItems(List<MyGameObject> newItems)
         {
             Clear();
-            newItems.ForEach(item => AddItem(item));
-            Items[0].GetGameObject().GetComponent<Selectable>().Select();
+            if (newItems.Count != 0)
+            {
+                newItems.ForEach(item => AddItem(item));
+                return;
+            }
+            InventoryUi emptyButton = new InventoryUi(null, InventoryContent);
+            emptyButton.SetCentralTextCallback(() => "None");
+            AddPlainButton(emptyButton);
         }
 
         protected virtual void UpdateItem(MyGameObject item)

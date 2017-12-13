@@ -2,79 +2,55 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="167d3be1-cdd9-4be3-97f7-467b7a89563b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Project Files/ProjectInfo.lck" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Basic Templates/Inventory.prefab" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Basic Templates/Inventory.prefab.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIAimController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIAimController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIArmourController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIArmourController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIAttributeController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIAttributeController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIConditionController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIConditionController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIEnemyShieldController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIEnemyShieldController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIEnergyController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIEnergyController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIGearController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIGearController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIHealthBarController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIHealthBarController.cs.meta" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIInventoryController.cs" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIInventoryController.cs.meta" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/66/66da7243d37a50743a77a5fcf4fa38c3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/66/66da7243d37a50743a77a5fcf4fa38c3.info" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Desolation Balance Files.xlsx" afterPath="$PROJECT_DIR$/Desolation Balance Files.xlsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Project Files/Partitions/'Documents'-TypedPartition(dcce2560-d843-4486-a317-0e47b9afd6e5).adpd" afterPath="$PROJECT_DIR$/Night Project Files/Partitions/'Documents'-TypedPartition(dcce2560-d843-4486-a317-0e47b9afd6e5).adpd" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Project Files/Sessions/SessionData_LocalUser.adpd" afterPath="$PROJECT_DIR$/Night Project Files/Sessions/SessionData_LocalUser.adpd" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Images/God Ray.png" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Images/God Ray.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Inventory/Inventory Template.prefab" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Inventory/Inventory Template.prefab" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UINumberPopupController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UINumberPopupController.cs.meta" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Menus/Game Menus/Inventory Menu 1.prefab" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Menus/Game Menus/Inventory Menu 1.prefab" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Menus/Game Menus/Inventory Menu.prefab" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Menus/Game Menus/Inventory Menu.prefab" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Game.unity" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Game.unity" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/InspectorExpandedItems.asset" afterPath="$PROJECT_DIR$/Night Unity Files/Library/InspectorExpandedItems.asset" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll.mdb" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll.mdb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/assetDatabase3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/assetDatabase3" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/00/00000000000000005100000000000000" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/00/00000000000000005100000000000000" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/00/00000000000000008000000000000000" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/00/00000000000000008000000000000000" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/10/10cda9041e3f4443a0094e251085f936" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/10/10cda9041e3f4443a0094e251085f936" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/12/1283f7514fce9d240bf70d6f252658dc" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/12/1283f7514fce9d240bf70d6f252658dc" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/17/17052ff5ccb0446d9c247a13653fe53b" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/17/17052ff5ccb0446d9c247a13653fe53b" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1c/1c0b20b13ede4918b43c745ced6630f6" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1c/1c0b20b13ede4918b43c745ced6630f6" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1d/1d9c30123c6b4214a9baca33c1ea45c1" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1d/1d9c30123c6b4214a9baca33c1ea45c1" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/34/3473a9718e9fa6f42a1d25dace4748d0" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/34/3473a9718e9fa6f42a1d25dace4748d0" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3f/3f456d6d212c48edbd84b188d9d289bc" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3f/3f456d6d212c48edbd84b188d9d289bc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/27/274e1c874b364cb1a16c7d28c86e13ba" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/27/274e1c874b364cb1a16c7d28c86e13ba" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3f/3f780ce7295578d41852d7c98f208309" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3f/3f780ce7295578d41852d7c98f208309" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/46/46ee540cd2b345cabc12c019ac058850" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/46/46ee540cd2b345cabc12c019ac058850" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/65/651120d55617473a877f7846fdd01f55" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/65/651120d55617473a877f7846fdd01f55" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/6d/6d5f6e0d152ae19409c6599604169791" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/6d/6d5f6e0d152ae19409c6599604169791" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/6d/6d5f6e0d152ae19409c6599604169791.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/6d/6d5f6e0d152ae19409c6599604169791.info" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/74/7421ff47e6d04c569b3046d4382154b4" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/74/7421ff47e6d04c569b3046d4382154b4" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/77/77e68aa26a269e24099190a2eddca6b7.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/77/77e68aa26a269e24099190a2eddca6b7.info" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b0/b00411df61e24d2c9149c5c8cb41d94c" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b0/b00411df61e24d2c9149c5c8cb41d94c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d0/d08f9a963fa546e98d9916c29f6e9f43" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d0/d08f9a963fa546e98d9916c29f6e9f43" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/fc/fc56124f30824293aa313d514015a008" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/fc/fc56124f30824293aa313d514015a008" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/f2/f27addc0f8d44b25806273864c095dd3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/f2/f27addc0f8d44b25806273864c095dd3" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Temp/__Backupscenes/0.backup" afterPath="$PROJECT_DIR$/Night Unity Files/Temp/__Backupscenes/0.backup" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp-Editor-firstpass.dll" afterPath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp-Editor-firstpass.dll" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp-Editor-firstpass.pdb" afterPath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp-Editor-firstpass.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp.csprojResolveAssemblyReference.cache" afterPath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp.csprojResolveAssemblyReference.cache" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp.dll" afterPath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp.dll" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp.pdb" afterPath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/contentModel.xml" afterPath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/contentModel.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/workspace.xml" afterPath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/GameSettings.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/GameSettings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/NightSave.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/NightSave.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Plugins/Editor/JetBrains/Unity3DRider.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Plugins/Editor/JetBrains/Unity3DRider.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Regions.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Regions.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Weather.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Weather.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/SunController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/SunController.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterGearComparison.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterGearComparison.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterView.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterView.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/DesolationInventory.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/DesolationInventory.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/WeatherManager.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/WeatherManager.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RegionManager.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RegionManager.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/UI/GearUi.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/UI/GearUi.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/UI/WeaponUi.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/UI/WeaponUi.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/Weapon.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/Weapon.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponAttributes.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponAttributes.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldView.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldView.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/Inventory.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/Inventory.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/Helper.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/Helper.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/Elements/EnhancedButton.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/Elements/EnhancedButton.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/InventoryDisplay.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/InventoryDisplay.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/InventoryTransferManager.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/InventoryTransferManager.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/MenuList.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/MenuList.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/ScrollingMenuList.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/ScrollingMenuList.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/ViewParent.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/InventoryUI/ViewParent.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIGearController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/UIControllers/UIGearController.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/EditorInstance.json" afterPath="$PROJECT_DIR$/Night Unity Files/Library/EditorInstance.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp-Editor-firstpass.csproj.FileListAbsolute.txt" afterPath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp-Editor-firstpass.csproj.FileListAbsolute.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp.csproj.FileListAbsolute.txt" afterPath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp.csproj.FileListAbsolute.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WeaponCsvToXml.py" afterPath="$PROJECT_DIR$/WeaponCsvToXml.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />

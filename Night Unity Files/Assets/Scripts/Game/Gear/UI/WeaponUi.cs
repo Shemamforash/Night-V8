@@ -1,4 +1,5 @@
-﻿using Game.Gear.Weapons;
+﻿using Facilitating.UIControllers;
+using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Game.Gear.UI
         public WeaponUi(Weapon linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/WeaponItem") : base(linkedObject, parent, prefabLocation)
         {
             SetLeftTextCallback(linkedObject.GetWeaponType);
+            PrimaryButton.AddOnClick(() => UiWeaponUpgradeController.Show(linkedObject));
         }
 
         public override void Update()

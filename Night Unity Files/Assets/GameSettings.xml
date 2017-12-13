@@ -9,41 +9,41 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>118</Val>
-          <Max>118</Max>
+          <Val>111</Val>
+          <Max>111</Max>
         </Strength>
         <Endurance>
-          <Val>57</Val>
-          <Max>57</Max>
+          <Val>53</Val>
+          <Max>53</Max>
         </Endurance>
         <Stability>
-          <Val>23</Val>
-          <Max>23</Max>
+          <Val>19</Val>
+          <Max>19</Max>
         </Stability>
         <Intelligence>
-          <Val>23</Val>
-          <Max>23</Max>
+          <Val>19</Val>
+          <Max>19</Max>
         </Intelligence>
       </Attributes>
     </Character>
     <Character>
-      <Name>Aquifer</Name>
+      <Name>Ambule</Name>
       <Attributes>
         <Strength>
-          <Val>82</Val>
-          <Max>82</Max>
+          <Val>85</Val>
+          <Max>85</Max>
         </Strength>
         <Endurance>
-          <Val>48</Val>
-          <Max>48</Max>
+          <Val>82</Val>
+          <Max>82</Max>
         </Endurance>
         <Stability>
-          <Val>16</Val>
-          <Max>16</Max>
+          <Val>14</Val>
+          <Max>14</Max>
         </Stability>
         <Intelligence>
-          <Val>22</Val>
-          <Max>22</Max>
+          <Val>17</Val>
+          <Max>17</Max>
         </Intelligence>
       </Attributes>
     </Character>

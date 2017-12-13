@@ -23,6 +23,7 @@ namespace SamsHelper.ReactiveUI.Elements
         [SerializeField] private bool _useBorder = true;
         [Range(0f, 5f)] public float FadeDuration = 0.5f;
         public bool UseGlobalColours = true;
+        private AudioSource _buttonClickSource;
 
         private class HoldAction
         {
@@ -61,6 +62,7 @@ namespace SamsHelper.ReactiveUI.Elements
             _button = GetComponent<Button>();
             _textChildren = Helper.FindAllComponentsInChildren<EnhancedText>(transform);
             _imageChildren = Helper.FindAllComponentsInChildren<Image>(transform);
+            _buttonClickSource = Camera.main.GetComponent<AudioSource>();
             if (Border != null) Border.SetActive(false);
         }
 
@@ -68,6 +70,7 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             if (UseGlobalColours) UseSelectedColours();
             OnSelectActions?.Invoke();
+            _buttonClickSource.Play();
         }
 
         private void Exit()
