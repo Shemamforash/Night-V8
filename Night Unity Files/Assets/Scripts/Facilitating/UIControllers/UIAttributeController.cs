@@ -5,27 +5,26 @@ using UnityEngine;
 
 public class UIAttributeController : MonoBehaviour
 {
-    private EnhancedText _strengthText, _intelligenceText, _enduranceText, _stabilityText;
+    private UIAttributeMarkerController _strengthMarker, _intelligenceMarker, _enduranceMarker, _stabilityMarker;
 
     public void Awake()
     {
-        _strengthText = CacheText("Strength");
-        _intelligenceText = CacheText("Intelligence");
-        _enduranceText = CacheText("Endurance");
-        _stabilityText = CacheText("Stability");
+        _strengthMarker = CacheText("Strength");
+        _intelligenceMarker = CacheText("Intelligence");
+        _enduranceMarker = CacheText("Endurance");
+        _stabilityMarker = CacheText("Stability");
     }
 
-    private EnhancedText CacheText(string name)
+    private UIAttributeMarkerController CacheText(string name)
     {
-        return Helper.FindChildWithName(gameObject, name).transform.Find("Text").GetComponent<EnhancedText>();
+        return Helper.FindChildWithName(gameObject, name).transform.Find("Marker Container").GetComponent<UIAttributeMarkerController>();
     }
 
     public void HookValues(BaseAttributes attributes)
     {
-        attributes.Endurance.AddOnValueChange(a => _enduranceText.Text(((int)a.CurrentValue()).ToString() + " end"));
-        attributes.Strength.AddOnValueChange(a => _strengthText.Text(((int)a.CurrentValue()).ToString() + " str"));
-        attributes.Stability.AddOnValueChange(a => _stabilityText.Text(((int)a.CurrentValue()).ToString() + " stb"));
-        attributes.Intelligence.AddOnValueChange(a => _intelligenceText.Text(((int)a.CurrentValue()).ToString() + " int"));
-
+        attributes.Endurance.AddOnValueChange(a => _enduranceMarker.SetValue((int)a.CurrentValue(), (int)a.Max));
+        attributes.Strength.AddOnValueChange(a => _strengthMarker.SetValue((int)a.CurrentValue(), (int)a.Max));
+        attributes.Stability.AddOnValueChange(a => _stabilityMarker.SetValue((int)a.CurrentValue(), (int)a.Max));
+        attributes.Intelligence.AddOnValueChange(a => _intelligenceMarker.SetValue((int)a.CurrentValue(), (int)a.Max));
     }
 }

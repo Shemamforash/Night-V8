@@ -22,7 +22,7 @@ namespace Game.Characters.Attributes
         */
         public readonly CharacterAttribute Hunger = new CharacterAttribute(AttributeType.Hunger, 0, 0, 12);
         public readonly CharacterAttribute Thirst = new CharacterAttribute(AttributeType.Thirst, 0, 0, 12);
-        public WeightCategory Weight;
+        public int Weight;
         
         private bool _starving, _dehydrated;
         private readonly int[] _toleranceThresholds = {0, 10, 25, 50, 75};
@@ -72,7 +72,7 @@ namespace Game.Characters.Attributes
             LoadAttribute(doc, nameof(Thirst), Thirst);
 
             XmlNode weightNode = doc.SelectSingleNode("Weight");
-            Weight = (WeightCategory) SaveController.ParseIntFromSubNode(weightNode);
+            Weight = SaveController.ParseIntFromSubNode(weightNode);
         }
 
         public override void Save(XmlNode doc, PersistenceType saveType)

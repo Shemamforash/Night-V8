@@ -36,7 +36,7 @@ namespace Facilitating.UIControllers
 		private static bool _upgradingAllowed;
 
 		public void Awake () {
-			Helper.FindChildWithName<EnhancedButton>(gameObject, "Cancel").AddOnClick(ReturnToPreviousMenu);
+			Helper.FindChildWithName<EnhancedButton>(gameObject, "Cancel")?.AddOnClick(ReturnToPreviousMenu);
 			_upgradeText = Helper.FindChildWithName<Button>(gameObject, "Upgrade").transform.Find("Text").GetComponent<EnhancedText>();
 			_rightText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Right Text");
 			_leftText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Left Text");

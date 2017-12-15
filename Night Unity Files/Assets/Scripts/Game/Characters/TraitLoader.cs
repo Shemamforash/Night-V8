@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Xml;
 using SamsHelper;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Characters
@@ -7,7 +10,7 @@ namespace Game.Characters
     public static class TraitLoader
     {
         private static readonly Dictionary<string, Trait> TraitDictionary = new Dictionary<string, Trait>();
-        private static readonly Dictionary<string, Trait> ClassDictionary = new Dictionary<string, Trait>();
+        private static readonly Dictionary<string, CharacterClass> ClassDictionary = new Dictionary<string, CharacterClass>();
         private static readonly List<string> TraitNames = new List<string>();
         private static readonly List<string> ClassNames = new List<string>();
 
@@ -25,36 +28,34 @@ namespace Game.Characters
         {
             return arr[position] == "" ? defaultString : arr[position];
         }
-        
+
         public static void LoadTraits()
         {
-            Helper.ConstructObjectsFromCsv("traits", arr =>
+            string traitText = Resources.Load<TextAsset>("Traits").text;
+            XmlDocument traitXml = new XmlDocument();
+            traitXml.LoadXml(traitText);
+            XmlNode root = traitXml.SelectSingleNode("Traits");
+            foreach (XmlNode classNode in root.SelectNodes("Class"))
             {
-                string name = arr[0];
-                string traitType = arr[1];
-                int strength = int.Parse(DefaultValueIfEmpty(arr, 2, "0"));
-                int intelligence = int.Parse(DefaultValueIfEmpty(arr, 3, "0"));
-                int stability = int.Parse(DefaultValueIfEmpty(arr, 4, "0"));
-                int endurance = int.Parse(DefaultValueIfEmpty(arr, 5, "0"));
-                Trait newTrait = new Trait
-                {
-                    Name = name,
-                    StrengthBonus = strength,
-                    IntelligenceBonus =  intelligence,
-                    StabilityBonus = stability,
-                    EnduranceBonus = endurance
-                };
-                if (traitType == "Trait")
-                {
-                    TraitDictionary[newTrait.Name] = newTrait;
-                    TraitNames.Add(name);
-                }
-                else
-                {
-                    ClassNames.Add(name);
-                    ClassDictionary[name] = newTrait;
-                }
-            });
+                string name = classNode.SelectSingleNode("Name").InnerText;
+                int healthRatio = int.Parse(classNode.SelectSingleNode("HealthRatio").InnerText);
+                int endurance = int.Parse(classNode.SelectSingleNode("Endurance").InnerText);
+                int stability = int.Parse(classNode.SelectSingleNode("Stability").InnerText);
+                int weight = int.Parse(classNode.SelectSingleNode("Weight").InnerText);
+                CharacterClass newClass = new CharacterClass(name, stability, endurance, healthRatio, weight);
+                ClassDictionary[name] = newClass;
+                ClassNames.Add(name);
+            }
+            foreach (XmlNode traitNode in root.SelectNodes("Trait"))
+            {
+                string name = traitNode.SelectSingleNode("Name").InnerText;
+                int endurance = int.Parse(traitNode.SelectSingleNode("Endurance").InnerText);
+                int stability = int.Parse(traitNode.SelectSingleNode("Stability").InnerText);
+                int weight = int.Parse(traitNode.SelectSingleNode("Weight").InnerText);
+                Trait newTrait = new Trait(name, endurance, stability, weight);
+                TraitDictionary[name] = newTrait;
+                TraitNames.Add(name);
+            }
         }
 
         public static Trait FindTrait(string traitName)
@@ -81,34 +82,46 @@ namespace Game.Characters
             }
         }
 
+        public class CharacterClass : Trait
+        {
+            public readonly int HealthRatio;
+
+            public CharacterClass(string name, int stability, int endurance, int healthRatio, int weight) : base(name, stability, endurance, weight)
+            {
+                HealthRatio = healthRatio;
+            }
+
+            public override string GetTraitDetails()
+            {
+                return base.GetTraitDetails() + "\n" + HealthRatio + " str-health ratio";
+            }
+        }
+
         public class Trait
         {
             public string Name;
 
-            public int StrengthBonus,
-                IntelligenceBonus,
-                StabilityBonus,
-                EnduranceBonus,
-                WeightModifier,
-                ThirstToleranceModifier,
-                HungerToleranceModifier,
-                SightModifier;
+            public int Stability,
+                Endurance,
+                Weight;
 
-            public string GetTraitDetails()
+            public Trait(string name, int stability, int endurance, int weight)
+            {
+                Name = name;
+                Endurance = endurance;
+                Stability = stability;
+                Weight = weight;
+            }
+
+            public virtual string GetTraitDetails()
             {
                 string traitDetails = Name + ":";
-                traitDetails += GetValueAsString(WeightModifier, "weight");
-                traitDetails += GetValueAsString(StrengthBonus, " str");
-                traitDetails += GetValueAsString(IntelligenceBonus, " int");
-                traitDetails += GetValueAsString(StabilityBonus, " stb");
-                traitDetails += GetValueAsString(EnduranceBonus, " end");
-                traitDetails += GetValueAsString(ThirstToleranceModifier, "% thrst");
-                traitDetails += GetValueAsString(HungerToleranceModifier, "% hungr");
-                traitDetails += GetValueAsString(SightModifier, "% sight");
+                traitDetails += GetValueAsString(Stability, " stb");
+                traitDetails += GetValueAsString(Endurance, " end");
                 return traitDetails;
             }
 
-            public static string GetValueAsString(int value, string suffix)
+            private static string GetValueAsString(int value, string suffix)
             {
                 string roundedValue = value.ToString();
                 if (value == 0)

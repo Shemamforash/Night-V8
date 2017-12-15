@@ -20,7 +20,7 @@
           <e p="Gear.xml" t="Include" />
           <e p="names.txt" t="Include" />
           <e p="Regions.xml" t="Include" />
-          <e p="traits.txt" t="Include" />
+          <e p="Traits.xml" t="Include" />
           <e p="WeaponClasses.xml" t="Include" />
           <e p="Weather.xml" t="Include" />
         </e>
@@ -101,7 +101,6 @@
                 <e p="RageController.cs" t="Include" />
               </e>
               <e p="TraitLoader.cs" t="Include" />
-              <e p="WeightCategory.cs" t="Include" />
             </e>
             <e p="Combat" t="Include">
               <e p="CombatManager.cs" t="Include" />
@@ -267,6 +266,7 @@
             </e>
           </e>
         </e>
+        <e p="UIAttributeMarkerController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

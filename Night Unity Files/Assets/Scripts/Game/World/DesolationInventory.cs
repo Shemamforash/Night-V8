@@ -30,10 +30,10 @@ namespace Game.World
         public void AddTestingResources(int noItems = 0)
         {
             IncrementResource(InventoryResourceType.Ammo, 1000);
-            IncrementResource(InventoryResourceType.Food, 100);
-            IncrementResource(InventoryResourceType.Fuel, 100);
-            IncrementResource(InventoryResourceType.Scrap, 100);
-            IncrementResource(InventoryResourceType.Water, 100);
+            IncrementResource(InventoryResourceType.Food, 1000);
+            IncrementResource(InventoryResourceType.Fuel, 1000);
+            IncrementResource(InventoryResourceType.Scrap, 1000);
+            IncrementResource(InventoryResourceType.Water, 1000);
             for (int i = 0; i < noItems; ++i)
             {
                 AddItem(WeaponGenerator.GenerateWeapon());

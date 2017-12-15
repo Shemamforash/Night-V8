@@ -4,41 +4,41 @@
       <Name>Driver</Name>
       <Attributes>
         <Strength>
-          <Val>111</Val>
-          <Max>111</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Strength>
         <Endurance>
-          <Val>53</Val>
-          <Max>53</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Endurance>
         <Stability>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Stability>
         <Intelligence>
-          <Val>19</Val>
-          <Max>19</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Intelligence>
       </Attributes>
     </Character>
     <Character>
-      <Name>Ambule</Name>
+      <Name>Lig</Name>
       <Attributes>
         <Strength>
-          <Val>85</Val>
-          <Max>85</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Strength>
         <Endurance>
-          <Val>82</Val>
-          <Max>82</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Endurance>
         <Stability>
-          <Val>14</Val>
-          <Max>14</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Stability>
         <Intelligence>
-          <Val>17</Val>
-          <Max>17</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Intelligence>
       </Attributes>
     </Character>

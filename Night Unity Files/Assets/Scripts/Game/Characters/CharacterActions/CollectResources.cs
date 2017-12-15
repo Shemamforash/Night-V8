@@ -6,7 +6,7 @@ namespace Game.Characters.CharacterActions
 {
     public class CollectResources : BaseCharacterAction
     {
-        private Character _previousCharacter;
+        private Player _previousCharacter;
         private Region _targetRegion;
 
         public CollectResources(Player playerCharacter) : base("Collect Resources", playerCharacter)

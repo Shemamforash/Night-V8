@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Game.Characters;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,7 +25,6 @@ namespace Game.World.Region
         private static Player _character;
         private static RegionManager _instance;
         private static MenuList _menuList;
-        private static readonly List<string> NamePool = new List<string>();
         private static MapGenerator.Node MapNode;
 
         public static RegionManager Instance()
@@ -32,20 +32,12 @@ namespace Game.World.Region
             return _instance ?? FindObjectOfType<RegionManager>();
         }
 
-        private static void LoadNames()
+        private static void LoadNames(RegionTemplate template, string[] prefixes, string[] suffixes)
         {
-            List<string> lines = Helper.ReadLinesFromFile("RegionNames");
-            List<string> prefixList = new List<string>();
-            List<string> suffixList = new List<string>();
-            for (int i = 0; i < 3; ++i)
-            {
-                prefixList.AddRange(Helper.SplitAndRemoveWhiteSpace(lines[i]));
-                suffixList.AddRange(Helper.SplitAndRemoveWhiteSpace(lines[i + 3]));
-            }
             List<string> combinations = new List<string>();
-            foreach (string prefix in prefixList)
+            foreach (string prefix in prefixes)
             {
-                foreach (string suffix in suffixList)
+                foreach (string suffix in suffixes)
                 {
                     if (prefix != suffix)
                     {
@@ -54,18 +46,7 @@ namespace Game.World.Region
                 }
             }
             Helper.Shuffle(ref combinations);
-            for (int i = 0; i < 500; ++i)
-            {
-                NamePool.Add(combinations[i]);
-            }
-        }
-
-        private static string GenerateName()
-        {
-            int pos = Random.Range(0, NamePool.Count);
-            string chosenName = NamePool[pos];
-            NamePool.RemoveAt(pos);
-            return chosenName;
+            template.Names = combinations;
         }
 
         private Player Character()
@@ -76,7 +57,6 @@ namespace Game.World.Region
         protected void Awake()
         {
             _instance = this;
-            LoadNames();
             _menuList = gameObject.AddComponent<MenuList>();
             _backButton = Helper.FindChildWithName<Button>(gameObject, "Back");
             _backButton.onClick.AddListener(delegate { ExitManager(false); });
@@ -101,23 +81,37 @@ namespace Game.World.Region
 
         private void LoadRegionTemplates()
         {
-            Helper.ConstructObjectsFromCsv("RegionData", delegate(string[] attributes)
+            string regionText = Resources.Load<TextAsset>("Regions").text;
+            XmlDocument regionXml = new XmlDocument();
+            regionXml.LoadXml(regionText);
+            XmlNode root = regionXml.SelectSingleNode("RegionType");
+            foreach (XmlNode regionTypeNode in root.ChildNodes)
             {
-                RegionTemplate newTemplate = new RegionTemplate
+                string[] prefixes = regionTypeNode.SelectSingleNode("Prefixes").InnerText.Split(',');
+                string[] suffixes = regionTypeNode.SelectSingleNode("Suffixes").InnerText.Split(',');
+                foreach (XmlNode regionNode in regionTypeNode.SelectNodes("Region"))
                 {
-                    InternalName = attributes[0],
-                    DisplayName = attributes[1],
-                    Type = attributes[2],
-                    WaterAvailable = int.Parse(attributes[3]),
-                    FoodAvailable = int.Parse(attributes[4]),
-                    FuelAvailable = int.Parse(attributes[5]),
-                    ScrapAvailable = int.Parse(attributes[6]),
-                    AmmoAvailable = int.Parse(attributes[7]),
-                    Encounters = attributes[8],
-                    Items = attributes[9]
-                };
-                Templates[newTemplate.InternalName] = newTemplate;
-            });
+                    string name = regionNode.SelectSingleNode("Name").InnerText;
+                    string type = regionNode.SelectSingleNode("Type").InnerText;
+                    int food = int.Parse(regionNode.SelectSingleNode("Food").InnerText);
+                    int water = int.Parse(regionNode.SelectSingleNode("Water").InnerText);
+                    int fuel = int.Parse(regionNode.SelectSingleNode("Fuel").InnerText);
+                    int scrap = int.Parse(regionNode.SelectSingleNode("Scrap").InnerText);
+                    int ammo = int.Parse(regionNode.SelectSingleNode("Ammo").InnerText);
+                    RegionTemplate template = new RegionTemplate
+                    {
+                        DisplayName = name,
+                        Type = type,
+                        WaterAvailable = water,
+                        FoodAvailable = food,
+                        FuelAvailable = fuel,
+                        ScrapAvailable = scrap,
+                        AmmoAvailable = ammo,
+                    };
+                    LoadNames(template, prefixes, suffixes);
+                    Templates[name] = template;
+                }
+            }
         }
 
         public void OnEnable()
@@ -140,7 +134,7 @@ namespace Game.World.Region
         public static Region GenerateNewRegion()
         {
             RegionTemplate template = Templates[Templates.Keys.ToList()[Random.Range(0, Templates.Keys.Count)]];
-            string regionName = GenerateName();
+            string regionName = template.GenerateName();
             Region region = new Region(regionName, template);
             return region;
         }

@@ -51,5 +51,10 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             _multiplicativeModifier -= multiplicativeModifier;
             Recalculate();
         }
+
+        public void SetToMax()
+        {
+            SetCurrentValue(Max);
+        }
     }
 }

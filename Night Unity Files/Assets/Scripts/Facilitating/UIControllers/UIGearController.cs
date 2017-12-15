@@ -43,7 +43,7 @@ public class UIGearController : MonoBehaviour
 //            UIInventoryController.CloseMenu();
 //        });
     }
-    
+
     public void SetGearItem(GearItem item)
     {
         if (item != null)

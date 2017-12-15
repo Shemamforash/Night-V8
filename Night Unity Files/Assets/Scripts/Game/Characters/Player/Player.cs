@@ -85,7 +85,7 @@ namespace Game.Characters
             States.AddState(new Return(this));
             States.AddState(new LightFire(this));
             States.SetDefaultState("Idle");
-            CharacterView.ResetGearToActionNavigation();
+            CharacterView.FillActionList();
         }
 
         private bool IsOverburdened()

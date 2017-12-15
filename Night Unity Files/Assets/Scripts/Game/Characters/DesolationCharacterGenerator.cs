@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security;
+using System.Security.AccessControl;
 using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper;
@@ -89,48 +90,37 @@ namespace Game.Characters
 
         private static Player GenerateDriver()
         {
-            Player theDriver = GenerateCharacterObject("Driver", TraitLoader.FindClass("Crusader"), TraitLoader.FindTrait("Faithless"));
-            theDriver.SurvivalAttributes.Weight = WeightCategory.Medium;
-            return theDriver;
+            return GenerateCharacterObject("Driver", TraitLoader.FindClass("Crusader"), TraitLoader.FindTrait("Faithless"));
         }
 
-        private static WeightCategory CalculateWeight(Player playerCharacter)
+        private static void CalculateWeight(Player playerCharacter)
         {
-            int weightOffset = playerCharacter.CharacterClass.WeightModifier + playerCharacter.CharacterTrait.WeightModifier;
-            int targetWeight = 2;
-            float rand = Random.Range(0f, 1.0f);
-            if (rand < 0.25f)
-            {
-                targetWeight = 1;
-            }
-            if (rand > 0.75f)
-            {
-                targetWeight = 3;
-            }
-            targetWeight += weightOffset;
-            if (targetWeight < 0 || targetWeight > 4)
-            {
-                throw new Exceptions.MaxOrMinWeightExceededException(playerCharacter.Name, targetWeight, playerCharacter.CharacterClass.Name, playerCharacter.CharacterTrait.Name);
-            }
-            return (WeightCategory) targetWeight;
+            int weight = 5;
+            weight += playerCharacter.CharacterClass.Weight + playerCharacter.CharacterTrait.Weight;
+            playerCharacter.SurvivalAttributes.Weight = weight;
         }
 
         private static void CalculateAttributes(Player playerCharacter)
         {
             BaseAttributes attributes = playerCharacter.BaseAttributes;
-            int strengthBonusVal = 15;
-            int enduranceBonusVal = 15;
-            int stabilityBonusVal = 4;
-            int intelligenceBonusVal = 4;
-            attributes.Strength.Max = Random.Range(80, 120) + playerCharacter.CharacterClass.StrengthBonus * strengthBonusVal + playerCharacter.CharacterTrait.StrengthBonus;
-            attributes.Strength.SetCurrentValue(attributes.Strength.Max);
-            attributes.Endurance.Max = Random.Range(30, 70) + playerCharacter.CharacterClass.EnduranceBonus * enduranceBonusVal + playerCharacter.CharacterTrait.EnduranceBonus;
-            attributes.Endurance.SetCurrentValue(attributes.Endurance.Max);
-            attributes.Stability.Max = Random.Range(15, 20) + playerCharacter.CharacterClass.StabilityBonus * stabilityBonusVal + playerCharacter.CharacterTrait.StabilityBonus;
-            attributes.Stability.SetCurrentValue(attributes.Stability.Max);
-            attributes.Intelligence.Max = Random.Range(15, 20) + playerCharacter.CharacterClass.IntelligenceBonus * intelligenceBonusVal + playerCharacter.CharacterTrait.IntelligenceBonus;
-            attributes.Intelligence.SetCurrentValue(attributes.Intelligence.Max);
-            playerCharacter.SurvivalAttributes.Weight = CalculateWeight(playerCharacter);
+            
+            attributes.Endurance.Max = playerCharacter.CharacterClass.Endurance + playerCharacter.CharacterTrait.Endurance;
+            attributes.Endurance.AddOnValueChange(v =>
+            {
+                attributes.Strength.Max = v.CurrentValue();
+            });
+            attributes.Endurance.SetToMax();
+            attributes.Strength.SetToMax();
+            
+            attributes.Stability.Max = playerCharacter.CharacterClass.Stability + playerCharacter.CharacterTrait.Stability;
+            attributes.Stability.AddOnValueChange(v =>
+            {
+                attributes.Intelligence.Max = v.CurrentValue();
+            });
+            attributes.Stability.SetToMax();
+            attributes.Intelligence.SetToMax();
+            
+            CalculateWeight(playerCharacter);
         }
     }
 }

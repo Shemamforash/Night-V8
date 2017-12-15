@@ -19,8 +19,8 @@ namespace Game.Characters
 {
     public class CharacterManager : DesolationInventory, IPersistenceTemplate, IInputListener
     {
-        private static List<Player> _characters = new List<Player>();
-        public static Character SelectedCharacter;
+        private static readonly List<Player> _characters = new List<Player>();
+        public static Player SelectedCharacter;
 
         public CharacterManager() : base("Vehicle")
         {
@@ -45,7 +45,7 @@ namespace Game.Characters
         {
             if (axis == InputAxis.CancelCover && !isHeld)
             {
-                ExitCharacter();
+//                ExitCharacter();
             }
         }
 
@@ -65,9 +65,11 @@ namespace Game.Characters
                 Helper.AddDelineator(characterAreaTransform);
             }
             GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", characterAreaTransform);
+            characterObject.name = playerCharacter.Name;
             playerCharacter.SetGameObject(characterObject);
             AddItem(playerCharacter);
             _characters.Add(playerCharacter);
+            _characters.ForEach(c => c.CharacterView.RefreshNavigation());
         }
 
         public static List<Player> Characters()
@@ -77,19 +79,23 @@ namespace Game.Characters
 
         private static void PopulateCharacterUi()
         {
-            Button inventoryButton = WorldView.GetInventoryButton();
+//            Button inventoryButton = WorldView.GetInventoryButton();
 
-            foreach (Player playerCharacter in _characters)
-            {
-                Button b = playerCharacter.CharacterView.SimpleView.GetComponent<Button>();
-                b.onClick.AddListener(delegate { SelectCharacter(b); });
-            }
-            for (int i = 1; i < _characters.Count; ++i)
-            {
-                Button previousButton = _characters[i - 1].CharacterView.SimpleView.GetComponent<Button>();
-                Helper.SetReciprocalNavigation(previousButton, _characters[i].CharacterView.SimpleView.GetComponent<Button>());
-            }
-            Helper.SetReciprocalNavigation(inventoryButton, _characters[0].CharacterView.SimpleView.GetComponent<Button>());
+//            foreach (Player playerCharacter in _characters)
+//            {
+//                EnhancedButton b = playerCharacter.CharacterView.SimpleView.GetComponent<EnhancedButton>();
+//                b.AddOnSelectEvent(delegate
+//                {
+//                    ExitCharacter();
+//                    SelectCharacter(b.Button());
+//                });
+//            }
+//            for (int i = 1; i < _characters.Count; ++i)
+//            {
+//                Button previousButton = _characters[i - 1].CharacterView.SimpleView.GetComponent<Button>();
+//                Helper.SetReciprocalNavigation(previousButton, _characters[i].CharacterView.SimpleView.GetComponent<Button>());
+//            }
+//            Helper.SetReciprocalNavigation(inventoryButton, _characters[0].CharacterView.SimpleView.GetComponent<Button>());
         }
 
         public override MyGameObject RemoveItem(MyGameObject item)
@@ -99,6 +105,7 @@ namespace Game.Characters
             if (playerCharacter == null) return item;
             _characters.Remove(playerCharacter);
             PopulateCharacterUi();
+            _characters.ForEach(c => c.CharacterView.RefreshNavigation());
             if (playerCharacter.Name == "Driver")
             {
                 MenuStateMachine.States.NavigateToState("Game Over Menu");
@@ -106,50 +113,15 @@ namespace Game.Characters
             return item;
         }
 
-        private static void ChangeCharacterPanel(GameObject g, bool expand)
+        public static void ExitCharacter(Player character)
         {
-            foreach (Player playerCharacter in _characters)
-            {
-                if (playerCharacter.CharacterView.GameObject != g) continue;
-                CharacterView foundView = playerCharacter.CharacterView;
-                if (expand)
-                {
-                    foundView.SwitchToDetailedView();
-                }
-                else
-                {
-                    foundView.SwitchToSimpleView();
-                }
-            }
+            character.CharacterView.SwitchToSimpleView();
         }
 
-        public static void ExitCharacter()
+        public static void SelectCharacter(Player player)
         {
-            if (SelectedCharacter == null) return;
-            SetDetailedViewActive(false, SelectedCharacter.GetGameObject().transform);
-            SelectedCharacter = null;
-        }
-
-        private static void SetDetailedViewActive(bool active, Transform characterUiObject)
-        {
-            ChangeCharacterPanel(characterUiObject.gameObject, active);
-        }
-
-        public static void SelectCharacter(Selectable s)
-        {
-            if (SelectedCharacter != null)
-            {
-                ExitCharacter();
-            }
-            SelectedCharacter = _characters.FirstOrDefault(c => c.CharacterView.SimpleView.GetComponent<Button>() == s);
-            SetDetailedViewActive(true, s.transform.parent);
-        }
-
-        public void SelectActions(Selectable s)
-        {
-//            _actionSelectable = s;
-//            _actionContainer.gameObject.SetActive(true);
-//            _actionContainer.GetChild(0).GetComponent<Selectable>().Select();
+            SelectedCharacter = player;
+            player.CharacterView.SwitchToDetailedView();
         }
 
         public override void Load(XmlNode doc, PersistenceType saveType)
@@ -167,11 +139,39 @@ namespace Game.Characters
         public void Save(XmlNode doc, PersistenceType saveType)
         {
             XmlNode characterManagerNode = SaveController.CreateNodeAndAppend("CharacterManager", doc);
-            foreach (Character c in _characters)
+            foreach (Player c in _characters)
             {
                 XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", characterManagerNode);
                 c.Save(characterNode, saveType);
             }
+        }
+
+        public static Player PreviousCharacter(Player character)
+        {
+            for (int i = 0; i < _characters.Count; ++i)
+            {
+                if (_characters[i] != character) continue;
+                if (i != 0)
+                {
+                    return _characters[i - 1];
+                }
+                break;
+            }
+            return null;
+        }
+
+        public static Player NextCharacter(Player character)
+        {
+            for (int i = 0; i < _characters.Count; ++i)
+            {
+                if (_characters[i] != character) continue;
+                if (i != _characters.Count - 1)
+                {
+                    return _characters[i + 1];
+                }
+                break;
+            }
+            return null;
         }
     }
 }

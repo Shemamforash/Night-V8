@@ -3,6 +3,7 @@ using Game.Characters;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine.UI;
@@ -15,17 +16,17 @@ namespace Game.World
 {
     public class WorldView : Menu
     {
-        private static Button _inventoryButton;
+        private static EnhancedButton _inventoryButton;
         private static TextMeshProUGUI _timeText;
         
         public void Awake()
         {
             _timeText = Helper.FindChildWithName(gameObject, "Time").GetComponent<TextMeshProUGUI>();
-            _inventoryButton = Helper.FindChildWithName<Button>(gameObject, "Inventory");
-            DefaultSelectable = _inventoryButton;
+            _inventoryButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inventory");
+            DefaultSelectable = _inventoryButton.Button();
             PreserveLastSelected = true;
             PauseOnOpen = false;
-            _inventoryButton.onClick.AddListener(() =>
+            _inventoryButton.AddOnClick(() =>
             {
                 UIInventoryController.ShowInventory(WorldState.HomeInventory(), g =>
                 {
@@ -76,6 +77,6 @@ namespace Game.World
             WorldState.HomeInventory().GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f.CurrentValue()) + " " + convention; });
         }
 
-        public static Button GetInventoryButton() => _inventoryButton;
+        public static EnhancedButton GetInventoryButton() => _inventoryButton;
     }
 }

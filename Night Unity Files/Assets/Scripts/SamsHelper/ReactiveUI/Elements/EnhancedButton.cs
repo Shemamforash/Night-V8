@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Facilitating.UI.Elements;
 using SamsHelper.Input;
+using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -24,6 +26,7 @@ namespace SamsHelper.ReactiveUI.Elements
         [Range(0f, 5f)] public float FadeDuration = 0.5f;
         public bool UseGlobalColours = true;
         private AudioSource _buttonClickSource;
+        private bool _justEntered;
 
         private class HoldAction
         {
@@ -53,7 +56,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public Button Button()
         {
-            return _button;
+            return _button == null ? GetComponent<Button>() : _button;
         }
 
         public void Awake()
@@ -63,7 +66,11 @@ namespace SamsHelper.ReactiveUI.Elements
             _textChildren = Helper.FindAllComponentsInChildren<EnhancedText>(transform);
             _imageChildren = Helper.FindAllComponentsInChildren<Image>(transform);
             _buttonClickSource = Camera.main.GetComponent<AudioSource>();
-            if (Border != null) Border.SetActive(false);
+            if (Border != null)
+            {
+                Border.SetActive(false);
+                _borderImages.AddRange(Helper.FindAllComponentsInChildren<Image>(Border.transform));
+            }
         }
 
         private void Enter()
@@ -71,17 +78,20 @@ namespace SamsHelper.ReactiveUI.Elements
             if (UseGlobalColours) UseSelectedColours();
             OnSelectActions?.Invoke();
             _buttonClickSource.Play();
+            _justEntered = true;
         }
 
         private void Exit()
         {
             if (UseGlobalColours) UseDeselectedColours();
             OnDeselectActions?.Invoke();
+            if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
+            SetBorderColor(new Color(1, 1, 1, 0f));
         }
 
         public void AddOnClick(UnityAction a)
         {
-            _button.onClick.AddListener(a);
+            GetComponent<Button>().onClick.AddListener(a);
         }
 
         public void AddOnSelectEvent(Action a) => OnSelectActions += a;
@@ -116,23 +126,23 @@ namespace SamsHelper.ReactiveUI.Elements
         private void TryStartFade(int target)
         {
             if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
-            _fadeCoroutine = StartCoroutine(Fade(target));
+            if(gameObject.activeInHierarchy) _fadeCoroutine = StartCoroutine(Fade(target));
+        }
+
+        private readonly List<Image> _borderImages = new List<Image>();
+
+        private void SetBorderColor(Color c)
+        {
+            _borderImages.ForEach(b => b.color = c);
         }
 
         private IEnumerator Fade(float targetVal)
         {
             float alpha = 1 - targetVal;
-            foreach (Transform child in Helper.FindAllChildren(Border.transform))
-            {
-                child.GetComponent<Image>().color = new Color(1, 1, 1, alpha);
-            }
+            SetBorderColor(new Color(1, 1, 1, alpha));
             for (float t = 0; t < 1; t += Time.deltaTime / FadeDuration)
             {
-                Color newColor = new Color(1, 1, 1, Mathf.Lerp(alpha, targetVal, t));
-                foreach (Transform child in Helper.FindAllChildren(Border.transform))
-                {
-                    child.GetComponent<Image>().color = newColor;
-                }
+                SetBorderColor(new Color(1, 1, 1, Mathf.Lerp(alpha, targetVal, t)));
                 yield return null;
             }
         }
@@ -160,24 +170,49 @@ namespace SamsHelper.ReactiveUI.Elements
             _imageChildren.ForEach(i => i.color = c);
         }
 
+        private bool IsSelected()
+        {
+            return EventSystem.current.currentSelectedGameObject == gameObject;
+        }
+
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
-            if (_button == null || axis != InputAxis.Submit) return;
-            if (isHeld)
+            if (_button == null || !IsSelected()) return;
+            if (axis == InputAxis.Submit)
             {
-                if (_button.gameObject == EventSystem.current.currentSelectedGameObject)
+                if (isHeld)
                 {
-                    _onHoldActions.ForEach(a => a.ExecuteIfDone());
+                    if (_button.gameObject == EventSystem.current.currentSelectedGameObject)
+                    {
+                        _onHoldActions.ForEach(a => a.ExecuteIfDone());
+                    }
+                }
+                else
+                {
+                    _onHoldActions.ForEach(a => a.Reset());
                 }
             }
-            else
+            else if (axis == InputAxis.Vertical && !isHeld && !_justEntered)
             {
-                _onHoldActions.ForEach(a => a.Reset());
+                if (direction > 0)
+                {
+                    OnUpAction?.Invoke();
+                    Exit();
+                }
+                else
+                {
+                    OnDownAction?.Invoke();
+                    Exit();
+                }
             }
         }
 
         public void OnInputUp(InputAxis axis)
         {
+            if (IsSelected() && axis == InputAxis.Vertical)
+            {
+                _justEntered = false;
+            }
         }
 
         public void OnDoubleTap(InputAxis axis, float direction)
@@ -186,47 +221,64 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void SetRightNavigation(EnhancedButton target)
         {
-            ModifyNavigation(target, (o, t) =>
-            {
-                o.selectOnRight = target.Button();
-                t.selectOnLeft = _button;
-            });
+            if (target == null) return;
+
+            Navigation navigation = GetNavigation();
+            navigation.selectOnRight = target.Button();
+            SetNavigation(navigation);
+
+            navigation = target.GetNavigation();
+            navigation.selectOnLeft = _button;
+            target.SetNavigation(navigation);
         }
 
         public void SetLeftNavigation(EnhancedButton target)
         {
-            ModifyNavigation(target, (o, t) =>
-            {
-                o.selectOnLeft = target.Button();
-                t.selectOnRight = _button;
-            });
+            if (target == null) return;
+
+            Navigation navigation = GetNavigation();
+            navigation.selectOnLeft = target.Button();
+            SetNavigation(navigation);
+
+            navigation = target.GetNavigation();
+            navigation.selectOnRight = _button;
+            target.SetNavigation(navigation);
         }
 
         public void SetUpNavigation(EnhancedButton target)
         {
-            ModifyNavigation(target, (o, t) =>
-            {
-                o.selectOnUp = target.Button();
-                t.selectOnDown = _button;
-            });
+            if (target == null) return;
+
+            Navigation navigation = GetNavigation();
+            navigation.selectOnUp = target.Button();
+            SetNavigation(navigation);
+
+            navigation = target.GetNavigation();
+            navigation.selectOnDown = _button;
+            target.SetNavigation(navigation);
         }
 
         public void SetDownNavigation(EnhancedButton target)
         {
-            ModifyNavigation(target, (o, t) =>
-            {
-                o.selectOnDown = target.Button();
-                t.selectOnUp = _button;
-            });
+            if (target == null) return;
+
+            Navigation navigation = GetNavigation();
+            navigation.selectOnDown = target.Button();
+            SetNavigation(navigation);
+
+            navigation = target.GetNavigation();
+            navigation.selectOnUp = _button;
+            target.SetNavigation(navigation);
         }
 
-        private void ModifyNavigation(EnhancedButton target, Action<Navigation, Navigation> modifyAction)
+        private Navigation GetNavigation()
         {
-            Navigation originNavigation = _button.navigation;
-            Navigation targetNavigation = target.Button().navigation;
-            modifyAction(originNavigation, targetNavigation);
-            _button.navigation = originNavigation;
-            target.Button().navigation = targetNavigation;
+            return _button.navigation;
+        }
+
+        private void SetNavigation(Navigation navigation)
+        {
+            _button.navigation = navigation;
         }
 
         public void ClearNavigation()
@@ -237,6 +289,18 @@ namespace SamsHelper.ReactiveUI.Elements
             navigation.selectOnLeft = null;
             navigation.selectOnRight = null;
             _button.navigation = navigation;
+        }
+
+        private Action OnDownAction, OnUpAction;
+
+        public void SetOnDownAction(Action a)
+        {
+            OnDownAction = a;
+        }
+
+        public void SetOnUpAction(Action a)
+        {
+            OnUpAction = a;
         }
     }
 }

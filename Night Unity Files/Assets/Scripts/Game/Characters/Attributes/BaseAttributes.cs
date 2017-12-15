@@ -8,10 +8,10 @@ namespace Game.Characters
 {
     public class BaseAttributes : DesolationAttributes
     {
-        public readonly CharacterAttribute Strength = new CharacterAttribute(AttributeType.Strength, Random.Range(30, 70));
-        public readonly CharacterAttribute Intelligence = new CharacterAttribute(AttributeType.Intelligence, Random.Range(30, 70));
-        public readonly CharacterAttribute Endurance = new CharacterAttribute(AttributeType.Endurance, Random.Range(30, 70));
-        public readonly CharacterAttribute Stability = new CharacterAttribute(AttributeType.Stability, Random.Range(30, 70));
+        public readonly CharacterAttribute Strength = new CharacterAttribute(AttributeType.Strength, 0);
+        public readonly CharacterAttribute Intelligence = new CharacterAttribute(AttributeType.Intelligence, 0);
+        public readonly CharacterAttribute Endurance = new CharacterAttribute(AttributeType.Endurance, 0);
+        public readonly CharacterAttribute Stability = new CharacterAttribute(AttributeType.Stability, 0);
         
 
         protected override void RegisterTimedEvents()

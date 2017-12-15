@@ -5,6 +5,7 @@ using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace Game.Characters
     {
         private readonly Player _character;
         public readonly GameObject GameObject;
-        public GameObject SimpleView;
+        private GameObject SimpleView;
         private GameObject _detailedView;
 
         private TextMeshProUGUI _currentActionText;
@@ -52,6 +53,7 @@ namespace Game.Characters
         private void CacheDetailedViewElements()
         {
             _detailedView = GameObject.transform.Find("Detailed").gameObject;
+            _detailedView.SetActive(true);
             _detailedView.SetActive(false);
 
             _actionMenuList = FindInDetailedView<MenuList>("Action List");
@@ -68,23 +70,116 @@ namespace Game.Characters
             AccessoryGearUi = FindInDetailedView<UIGearController>("Accessory");
         }
 
-        public void ResetGearToActionNavigation()
+        public void FillActionList()
         {
             List<BaseCharacterAction> availableActions = _character.StatesAsList(false).ToList();
             _actionMenuList.SetItems(new List<MyGameObject>(availableActions));
+//            foreach (ViewParent action in _actionMenuList.Items)
+//            {
+//                action.PrimaryButton.AddOnSelectEvent(() =>
+//                {
+//                    CharacterManager.SelectCharacter(_character);
+//                });
+//                action.PrimaryButton.AddOnDeselectEvent(() => CharacterManager.ExitCharacter(_character));
+//            }
 
             List<ViewParent> actionUiList = _actionMenuList.Items;
+            EnhancedButton weaponGearUiButton = WeaponGearUi.GetComponent<EnhancedButton>();
+            EnhancedButton armourGearUiButton = ArmourGearUi.GetComponent<EnhancedButton>();
+            EnhancedButton accessoryGearuiButton = AccessoryGearUi.GetComponent<EnhancedButton>();
+
             for (int i = 0; i < actionUiList.Count; ++i)
             {
                 ViewParent actionUi = actionUiList[i];
 
-                Button weaponGearUiButton = WeaponGearUi.GetComponent<Button>();
                 Helper.SetNavigation(actionUi.GetNavigationButton(), weaponGearUiButton, Direction.Left);
                 if (i != 0) continue;
                 Helper.SetNavigation(weaponGearUiButton, actionUi.GetNavigationButton(), Direction.Right);
-                Helper.SetNavigation(ArmourGearUi.GetComponent<Button>(), actionUi.GetNavigationButton(), Direction.Right);
-                Helper.SetNavigation(AccessoryGearUi.GetComponent<Button>(), actionUi.GetNavigationButton(), Direction.Right);
+                Helper.SetNavigation(armourGearUiButton.GetComponent<Button>(), actionUi.GetNavigationButton(), Direction.Right);
+                Helper.SetNavigation(accessoryGearuiButton.GetComponent<Button>(), actionUi.GetNavigationButton(), Direction.Right);
             }
+        }
+
+        //actions[0], weaponui, & consumption toggle navigate to actions[last], accessoryui, & consumption buttons respectively
+        //inverse is true to navigate to character below
+        //if no character above, all navigate to inventory button
+        //if no character below do nothing
+        public void RefreshNavigation()
+        {
+            CharacterView _previousCharacterView = CharacterManager.PreviousCharacter(_character)?.CharacterView;
+
+            if (_previousCharacterView == null)
+            {
+                WorldView.GetInventoryButton().SetOnDownAction(() =>
+                {
+                    CharacterManager.SelectCharacter(_character);
+                    _actionMenuList.Items[0].PrimaryButton.Button().Select();
+                });
+                _actionMenuList.Items[0].PrimaryButton.SetOnUpAction(() =>
+                {
+                    CharacterManager.ExitCharacter(_character);
+                    WorldView.GetInventoryButton().Button().Select();
+                });
+                WeaponGearUi.GetComponent<EnhancedButton>().SetOnUpAction(() =>
+                {
+                    CharacterManager.ExitCharacter(_character);
+                    WorldView.GetInventoryButton().Button().Select();
+                });
+            }
+            else
+            {
+                _previousCharacterView.GetLastActionButton().SetOnDownAction(() =>
+                {
+                    CharacterManager.ExitCharacter(_previousCharacterView._character);
+                    CharacterManager.SelectCharacter(_character);
+                    _actionMenuList.Items[0].PrimaryButton.Button().Select();
+                });
+                GetFirstActionButton().SetOnUpAction(() =>
+                {
+                    CharacterManager.ExitCharacter(_character);
+                    CharacterManager.SelectCharacter(_previousCharacterView._character);
+                    _previousCharacterView.GetLastActionButton().Button().Select();
+                });
+                WeaponGearUi.GetComponent<EnhancedButton>().SetOnUpAction(() =>
+                {
+                    CharacterManager.ExitCharacter(_character);
+                    CharacterManager.SelectCharacter(_previousCharacterView._character);
+                    _previousCharacterView.AccessoryGearUi.GetComponent<EnhancedButton>().Button().Select();
+                });
+                _previousCharacterView.AccessoryGearUi.GetComponent<EnhancedButton>().SetOnDownAction(() =>
+                {
+                    CharacterManager.ExitCharacter(_previousCharacterView._character);
+                    CharacterManager.SelectCharacter(_character);
+                    WeaponGearUi.GetComponent<EnhancedButton>().Button().Select();
+                });
+            }
+        }
+
+        private EnhancedButton GetLastActionButton()
+        {
+            return _actionMenuList.Items[_actionMenuList.Items.Count - 1].PrimaryButton;
+        }
+
+        private EnhancedButton GetFirstActionButton()
+        {
+            return _actionMenuList.Items[0].PrimaryButton;
+        }
+        
+        private void NavigateToButtonInOtherCharacterView(CharacterView other, EnhancedButton b)
+        {
+            SwitchToSimpleView();
+            other.SwitchToDetailedView();
+            b.Button().Select();
+        }
+
+        private EnhancedButton GetCharacterButtonAbove()
+        {
+            return CharacterManager.PreviousCharacter(_character)?.CharacterView.SimpleView.GetComponent<EnhancedButton>();
+        }
+
+        private EnhancedButton GetCharacterButtonBelow()
+        {
+            return CharacterManager.NextCharacter(_character)?.CharacterView.SimpleView.GetComponent<EnhancedButton>();
         }
 
         public CharacterView(Player character)
@@ -145,7 +240,7 @@ namespace Game.Characters
             GameObject.GetComponent<LayoutElement>().preferredHeight = 60;
             _detailedView.SetActive(false);
             SimpleView.SetActive(true);
-            SimpleView.GetComponent<Button>().Select();
+//            SimpleView.GetComponent<Button>().Select();
         }
     }
 }

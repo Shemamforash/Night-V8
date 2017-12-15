@@ -175,6 +175,31 @@ class RegionImporter(XMLWriter):
         write_single_value(self, "Ammo", get_value(self, column_letter, 7))
 
 
+class CharacterImporter(XMLWriter):
+    def __init__(self):
+        super(CharacterImporter, self).__init__("Traits", "Traits")
+        write_tag(self, "Traits", self.read_classes_and_traits)
+
+    def read_classes_and_traits(self):
+        for row in range(3, 13):
+            write_tag(self, "Class", self.read_class, [row])
+        for row in range(14, 22):
+            write_tag(self, "Trait", self.read_trait, [row])
+
+    def read_class(self, row):
+        write_single_value(self, "Name", get_value(self, "A", row))
+        write_single_value(self, "HealthRatio", get_value(self, "D", row))
+        write_single_value(self, "Endurance", get_value(self, "E", row))
+        write_single_value(self, "Stability", get_value(self, "F", row))
+        write_single_value(self, "Weight", get_value(self, "H", row))
+
+    def read_trait(self, row):
+        write_single_value(self, "Name", get_value(self, "A", row))
+        write_single_value(self, "Endurance", get_value(self, "E", row))
+        write_single_value(self, "Stability", get_value(self, "F", row))
+        write_single_value(self, "Weight", get_value(self, "H", row))
+
+
 def write_tag(xml_writer, tag_name, nested_method=None, args=None, parameters=[], values=[]):
     tag = "<" + tag_name
     for parameter_value in zip(parameters, values):
@@ -206,3 +231,4 @@ WeaponImporter()
 GearImporter()
 WeatherImporter()
 RegionImporter()
+CharacterImporter()
