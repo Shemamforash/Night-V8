@@ -22,23 +22,23 @@
       </Attributes>
     </Character>
     <Character>
-      <Name>Lig</Name>
+      <Name>Aquifer</Name>
       <Attributes>
         <Strength>
-          <Val>9</Val>
-          <Max>9</Max>
+          <Val>5</Val>
+          <Max>5</Max>
         </Strength>
         <Endurance>
-          <Val>9</Val>
-          <Max>9</Max>
+          <Val>5</Val>
+          <Max>5</Max>
         </Endurance>
         <Stability>
-          <Val>9</Val>
-          <Max>9</Max>
+          <Val>8</Val>
+          <Max>8</Max>
         </Stability>
         <Intelligence>
-          <Val>9</Val>
-          <Max>9</Max>
+          <Val>8</Val>
+          <Max>8</Max>
         </Intelligence>
       </Attributes>
     </Character>

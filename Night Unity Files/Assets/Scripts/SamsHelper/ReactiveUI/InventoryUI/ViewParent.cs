@@ -58,13 +58,12 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             CheckToDestroy();
         }
 
-        public virtual void Destroy()
+        public void Destroy()
         {
             GameObject.Destroy(GameObject);
             _isDestroyed = true;
         }
 
-        public virtual EnhancedButton GetNavigationButton() => _primaryButton;
         public bool IsDestroyed() => _isDestroyed;
         public void SetDestroyCondition(Func<bool> destroyCheck) => _destroyCondition = destroyCheck;
         public void SetPreferredHeight(float height) => GameObject.GetComponent<LayoutElement>().preferredHeight = height;

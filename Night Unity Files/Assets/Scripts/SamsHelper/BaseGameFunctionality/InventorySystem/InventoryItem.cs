@@ -16,7 +16,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return 1;
         }
 
-        private float TotalWeight()
+        public float TotalWeight()
         {
             return Helper.Round(Weight * Quantity(), 1);
         }

@@ -89,14 +89,14 @@ namespace Game.Characters.Attributes
         {
             if (Dehydration.CurrentValue() == 0) return;
             float consumed = WorldState.HomeInventory().DecrementResource(InventoryResourceType.Water, 1);
-            Dehydration.SetCurrentValue(Dehydration.CurrentValue() - consumed);
+            if(consumed == 1) Dehydration.Decrement(1);
         }
 
         private void Eat()
         {
             if (Starvation.CurrentValue() == 0) return;
             float consumed = WorldState.HomeInventory().DecrementResource(InventoryResourceType.Food, 1);
-            Starvation.SetCurrentValue(Starvation.CurrentValue() - consumed);
+            if(consumed == 1) Starvation.Decrement(1);
         }
 
         private void SetConsumptionEvents(CharacterAttribute need, CharacterAttribute tolerance, InventoryResourceType resourceType)
@@ -117,8 +117,8 @@ namespace Game.Characters.Attributes
         private void UpdateThirstAndHunger()
         {
             Thirst.Max = (int) (-0.2f * WorldState.EnvironmentManager.GetTemperature() + 16f);
-            UpdateConsumableTolerance(Hunger, Starvation, Eat);
-            UpdateConsumableTolerance(Thirst, Dehydration, Drink);
+            UpdateConsumableTolerance(Hunger, Eat);
+            UpdateConsumableTolerance(Thirst, Drink);
         }
 
         public SurvivalAttributes(Character character) : base(character)
@@ -149,32 +149,10 @@ namespace Game.Characters.Attributes
             return GetAttributeStatus(Dehydration, _dehydrationLevels);
         }
         
-        private void UpdateConsumableTolerance(MyValue requirement, MyValue tolerance, Action consume)
+        private void UpdateConsumableTolerance(MyValue requirement, Action consume)
         {
-            float previousTolerance = tolerance.AsPercent();
-            Intensity previousIntensity = GetIntensity(previousTolerance);
-            requirement.SetCurrentValue(requirement.CurrentValue() + 1);
-            float tolerancePercentage = tolerance.AsPercent();
-            Intensity currentIntensity = GetIntensity(tolerancePercentage);
+            requirement.Increment(1);
             consume();
-        }
-
-        private Intensity GetIntensity(float percent)
-        {
-            for (int i = _toleranceThresholds.Length - 1; i >= 0; --i)
-            {
-                int threshold = _toleranceThresholds[i];
-                if (!(percent > threshold)) continue;
-                foreach (Intensity intensity in Enum.GetValues(typeof(Intensity)))
-                {
-                    if (intensity == (Intensity) i)
-                    {
-                        return intensity;
-                    }
-                }
-                break;
-            }
-            return Intensity.None;
         }
     }
 }

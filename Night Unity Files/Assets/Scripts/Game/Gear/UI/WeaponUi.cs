@@ -8,7 +8,7 @@ namespace Game.Gear.UI
 {
     public class WeaponUi : GearUi
     {
-        public WeaponUi(Weapon linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/WeaponItem") : base(linkedObject, parent, prefabLocation)
+        public WeaponUi(Weapon linkedObject, Transform parent) : base(linkedObject, parent)
         {
             SetLeftTextCallback(linkedObject.GetWeaponType);
             PrimaryButton.AddOnClick(() => UiWeaponUpgradeController.Show(linkedObject));

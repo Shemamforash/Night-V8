@@ -11,29 +11,18 @@ namespace SamsHelper.ReactiveUI.InventoryUI
     public class InventoryTransferManager : Menu
     {
         private GameObject _inventory1, _inventory2;
-//        private readonly Vector2 _singleInventoryAnchorsMin = new Vector2(0, 0.1f);
-//        private readonly Vector2 _singleInventoryAnchorsMax = new Vector2(1, 1);
-//
-//        private readonly Vector2 _dualInventoryAnchorsMinLeft = new Vector2(0.1f, 0.2f);
-//        private readonly Vector2 _dualInventoryAnchorsMaxLeft = new Vector2(0.5f, 0.9f);
-//
-//        private readonly Vector2 _dualInventoryAnchorsMinRight = new Vector2(0.5f, 0.2f);
-//        private readonly Vector2 _dualInventoryAnchorsMaxRight = new Vector2(0.9f, 0.9f);
-//
-//        private readonly int _dualInventorySeparationOffset = 20;
-
         public InventoryDisplay InventoryLeft, InventoryRight;
 
         private Action _closeAction;
-        private static Button _closeButton;
+        private static EnhancedButton _closeButton;
 
         private static InventoryTransferManager _instance;
 
         protected void Awake()
         {
             _instance = this;
-            _closeButton = Helper.FindChildWithName<Button>(gameObject, "Confirm");
-            _closeButton.onClick.AddListener(Close);
+            _closeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Confirm");
+            _closeButton.AddOnClick(Close);
             InventoryLeft.AddOnContentChange(RefreshNavigation);
             InventoryRight.AddOnContentChange(RefreshNavigation);
         }
@@ -41,11 +30,6 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         public static InventoryTransferManager Instance()
         {
             return _instance ?? FindObjectOfType<InventoryTransferManager>();
-        }
-
-        public static Button CloseButton()
-        {
-            return _closeButton;
         }
 
         private void Close()
@@ -61,18 +45,18 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             ShowInventories(left, right);
         }
 
-        private void SetNavigation(InventoryDisplay inventoryRight, Direction direction, ViewParent inventoryLeftItem)
+        private void SetNavigation(InventoryDisplay inventory, Direction direction, ViewParent targetItem)
         {
-            EnhancedButton target = inventoryLeftItem.GetNavigationButton();
-            inventoryRight.Items.ForEach(i =>
+            EnhancedButton targetButton = targetItem.PrimaryButton;
+            inventory.Items.ForEach(i =>
             {
-                EnhancedButton origin = i.GetNavigationButton();
+                EnhancedButton origin = i.PrimaryButton;
                 if (direction == Direction.Left)
                 {
-                    origin.SetLeftNavigation(target);
+                    origin.SetLeftNavigation(targetButton);
                     return;
                 }
-                origin.SetRightNavigation(target);
+                origin.SetRightNavigation(targetButton);
             });
         }
 
@@ -81,8 +65,8 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             MenuStateMachine.States.NavigateToState("Inventory Transfer Menu");
             InventoryLeft.gameObject.SetActive(true);
             InventoryRight.gameObject.SetActive(true);
-            InventoryLeft.SetInventory(left, InventoryRight);
-            InventoryRight.SetInventory(right, InventoryLeft);
+            InventoryLeft.SetInventory(left, InventoryRight, _closeButton);
+            InventoryRight.SetInventory(right, InventoryLeft, _closeButton);
         }
 
         private void RefreshNavigation()

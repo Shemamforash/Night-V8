@@ -152,7 +152,7 @@ namespace Game.Combat
         private void SetTarget(Enemy e)
         {
             CombatManager.SetCurrentTarget(e);
-            e?.EnemyView().GetNavigationButton().GetComponent<Button>().Select();
+            e?.EnemyView().PrimaryButton.GetComponent<Button>().Select();
         }
 
         public void Remove(Enemy enemy)

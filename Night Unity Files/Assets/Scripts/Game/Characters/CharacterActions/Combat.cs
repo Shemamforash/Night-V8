@@ -1,11 +1,10 @@
-﻿using Game.Combat;
-
-namespace Game.Characters.CharacterActions
+﻿namespace Game.Characters.CharacterActions
 {
     public class Combat : BaseCharacterAction
     {
         public Combat(Player playerCharacter) : base("Combat", playerCharacter)
         {
+            IsVisible = false;
             DefaultDuration = 0;
         }
 

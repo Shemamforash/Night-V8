@@ -70,6 +70,7 @@ namespace Game.Characters.CharacterActions
         public void Start()
         {
             WorldState.RegisterMinuteEvent(UpdateAction);
+            if(TimeRemaining == 0) FinishUpdate();
         }
 
         public virtual void Interrupt()
@@ -96,11 +97,10 @@ namespace Game.Characters.CharacterActions
         private void UpdateAction()
         {
             --TimeRemaining;
-            if (TimeRemaining <= 0)
-                FinishUpdate();
             MinuteCallback?.Invoke();
-            if (TimeRemaining % (WorldState.MinutesPerHour / UpdateInterval) != 0) return;
-            HourCallback?.Invoke();
+            if (TimeRemaining % (WorldState.MinutesPerHour / UpdateInterval) == 0) HourCallback?.Invoke();
+            if (TimeRemaining == 0)
+                FinishUpdate();
         }
 
         public override void Exit()

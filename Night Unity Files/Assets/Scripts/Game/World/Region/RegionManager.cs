@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Game.Characters.CharacterActions;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
@@ -49,7 +50,7 @@ namespace Game.World.Region
             template.Names = combinations;
         }
 
-        private Player Character()
+        private static Player Character()
         {
             return _character;
         }
@@ -65,11 +66,12 @@ namespace Game.World.Region
             _regionInfoDescriptionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Description");
             _exploreButton = new InventoryUi(null, _menuList.InventoryContent);
             _exploreButton.SetCentralTextCallback(() => "Explore...");
-            Helper.SetReciprocalNavigation(_exploreButton.GetNavigationButton(), _backButton);
+            Helper.SetReciprocalNavigation(_exploreButton.PrimaryButton, _backButton);
             _exploreButton.PrimaryButton.AddOnClick(delegate
             {
                 Player currentCharacter = Character();
                 ExitManager(true);
+                AllocateTravelResources(currentCharacter, 6);
                 InventoryTransferManager.Instance().ShowInventories(WorldState.HomeInventory(), currentCharacter.Inventory(), () =>
                 {
                     MapNode.Discover(currentCharacter);
@@ -77,6 +79,14 @@ namespace Game.World.Region
             });
             _menuList.AddPlainButton(_exploreButton);
             LoadRegionTemplates();
+        }
+
+        private static void AllocateTravelResources(Player currentCharacter, int duration)
+        {
+            int foodRequired = (int) (currentCharacter.SurvivalAttributes.Hunger.Max / 12f * duration);
+            int waterRequired = (int) (currentCharacter.SurvivalAttributes.Thirst.Max / 12f * duration);
+            currentCharacter.Inventory().IncrementResource(InventoryResourceType.Food, foodRequired);
+            currentCharacter.Inventory().IncrementResource(InventoryResourceType.Water, waterRequired);
         }
 
         private void LoadRegionTemplates()
@@ -141,7 +151,22 @@ namespace Game.World.Region
 
         public static void DiscoverRegion(Region region)
         {
-            _menuList.AddItem(region);
+            ViewParent regionUi = _menuList.AddItem(region);
+            regionUi.PrimaryButton.AddOnClick(() =>
+            {
+                Player currentCharacter = Character();
+                ExitManager(true);
+                AllocateTravelResources(currentCharacter, region.Distance());
+                InventoryTransferManager.Instance().ShowInventories(WorldState.HomeInventory(), currentCharacter.Inventory(), () =>
+                {
+                    currentCharacter.StartExploration(() =>
+                    {
+                        CollectResources collectResources = (CollectResources) currentCharacter.States.GetState("Collect Resources");
+                        collectResources.SetTargetRegion(region);
+                        currentCharacter.States.NavigateToState("Collect Resources");
+                    }, region.Distance());
+                });
+            });
             DiscoveredRegions.Add(region);
             RefreshExploreButton();
         }

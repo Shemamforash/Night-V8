@@ -31,7 +31,11 @@ namespace Game.Characters
         {
             FindInSimpleView<UIAttributeController>("Attributes").HookValues(_character.BaseAttributes);
             FindInDetailedView<UIAttributeController>("Attributes").HookValues(_character.BaseAttributes);
-            _character.Energy.AddOnValueChange(a => FindInDetailedView<UIEnergyController>("Energy").SetValue((int) a.CurrentValue()));
+            UIEnergyController energyController = FindInDetailedView<UIEnergyController>("Energy");
+            _character.Energy.AddOnValueChange(a =>
+            {
+                energyController.SetValue((int) a.CurrentValue(), (int) a.Max);
+            });
 
             FindInDetailedView<UIConditionController>("Thirst").HookDehydration(_character.SurvivalAttributes);
             FindInDetailedView<UIConditionController>("Hunger").HookStarvation(_character.SurvivalAttributes);
@@ -92,11 +96,11 @@ namespace Game.Characters
             {
                 ViewParent actionUi = actionUiList[i];
 
-                Helper.SetNavigation(actionUi.GetNavigationButton(), weaponGearUiButton, Direction.Left);
+                Helper.SetNavigation(actionUi.PrimaryButton, weaponGearUiButton, Direction.Left);
                 if (i != 0) continue;
-                Helper.SetNavigation(weaponGearUiButton, actionUi.GetNavigationButton(), Direction.Right);
-                Helper.SetNavigation(armourGearUiButton.GetComponent<Button>(), actionUi.GetNavigationButton(), Direction.Right);
-                Helper.SetNavigation(accessoryGearuiButton.GetComponent<Button>(), actionUi.GetNavigationButton(), Direction.Right);
+                Helper.SetNavigation(weaponGearUiButton, actionUi.PrimaryButton, Direction.Right);
+                Helper.SetNavigation(armourGearUiButton.GetComponent<Button>(), actionUi.PrimaryButton, Direction.Right);
+                Helper.SetNavigation(accessoryGearuiButton.GetComponent<Button>(), actionUi.PrimaryButton, Direction.Right);
             }
         }
 

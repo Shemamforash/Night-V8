@@ -6,7 +6,6 @@ namespace Game.Characters.CharacterActions
     {
         public Return(Player playerCharacter) : base("Return", playerCharacter)
         {
-            if(playerCharacter.DistanceFromHome == 0) Exit();
             IsVisible = false;
             HourCallback = GetCharacter().Return;
             AddOnExit(ReturnToVehicle);
@@ -20,7 +19,10 @@ namespace Game.Characters.CharacterActions
 
         private void ReturnToVehicle()
         {
-            GetCharacter().Return();
+            if (PlayerCharacter.DistanceFromHome == 1)
+            {
+                GetCharacter().Return();
+            }
             GetCharacter().Inventory().MoveAllResources(WorldState.HomeInventory());
         }
     }

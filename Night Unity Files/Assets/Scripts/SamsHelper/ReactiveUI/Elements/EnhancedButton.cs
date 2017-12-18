@@ -27,6 +27,7 @@ namespace SamsHelper.ReactiveUI.Elements
         public bool UseGlobalColours = true;
         private AudioSource _buttonClickSource;
         private bool _justEntered;
+        private Action OnDownAction, OnUpAction, OnLeftAction, OnRightAction;
 
         private class HoldAction
         {
@@ -126,7 +127,7 @@ namespace SamsHelper.ReactiveUI.Elements
         private void TryStartFade(int target)
         {
             if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
-            if(gameObject.activeInHierarchy) _fadeCoroutine = StartCoroutine(Fade(target));
+            if (gameObject.activeInHierarchy) _fadeCoroutine = StartCoroutine(Fade(target));
         }
 
         private readonly List<Image> _borderImages = new List<Image>();
@@ -192,19 +193,24 @@ namespace SamsHelper.ReactiveUI.Elements
                     _onHoldActions.ForEach(a => a.Reset());
                 }
             }
-            else if (axis == InputAxis.Vertical && !isHeld && !_justEntered)
+            if (isHeld || _justEntered) return;
+            if (direction > 0)
             {
-                if (direction > 0)
-                {
-                    OnUpAction?.Invoke();
-                    Exit();
-                }
-                else
-                {
-                    OnDownAction?.Invoke();
-                    Exit();
-                }
+                if (axis == InputAxis.Vertical) OnUpAction?.Invoke();
+//                else if (axis == InputAxis.Horizontal) OnRightAction?.Invoke();
+                Exit();
             }
+            else
+            {
+                if (axis == InputAxis.Vertical) OnDownAction?.Invoke();
+//                else if (axis == InputAxis.Horizontal) OnLeftAction?.Invoke();
+                Exit();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            InputHandler.UnregisterInputListener(this);
         }
 
         public void OnInputUp(InputAxis axis)
@@ -291,8 +297,6 @@ namespace SamsHelper.ReactiveUI.Elements
             _button.navigation = navigation;
         }
 
-        private Action OnDownAction, OnUpAction;
-
         public void SetOnDownAction(Action a)
         {
             OnDownAction = a;
@@ -301,6 +305,16 @@ namespace SamsHelper.ReactiveUI.Elements
         public void SetOnUpAction(Action a)
         {
             OnUpAction = a;
+        }
+
+        public void SetOnRightAction(Action a)
+        {
+            OnRightAction = a;
+        }
+
+        public void SetOnLeftAction(Action a)
+        {
+            OnLeftAction = a;
         }
     }
 }

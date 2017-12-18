@@ -26,6 +26,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
         }
 
+        public bool IsBottomless()
+        {
+            return !_isWeightLimited;
+        }
+
         public virtual List<MyGameObject> SortByType()
         {
             return null;

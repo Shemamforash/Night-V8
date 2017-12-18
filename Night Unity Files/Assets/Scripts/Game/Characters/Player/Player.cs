@@ -39,7 +39,6 @@ namespace Game.Characters
             CharacterInventory.MaxWeight = 50;
             BaseAttributes.Endurance.AddOnValueChange(a => Energy.Max = a.CurrentValue());
             Energy.OnMin(Sleep);
-            Energy.SetCurrentValue(BaseAttributes.Endurance.CurrentValue());
             Inventory().IncrementResource(InventoryResourceType.Ammo, 200);
         }
 
@@ -90,11 +89,12 @@ namespace Game.Characters
 
         private bool IsOverburdened()
         {
-            return CharacterInventory.Weight > BaseAttributes.Strength.CurrentValue();
+            return CharacterInventory.Weight >= CharacterInventory.MaxWeight;
         }
 
-        private void Tire(int amount)
+        private void Tire()
         {
+            int amount = 1;
             if (IsOverburdened()) amount *= 2;
             Energy.Decrement(amount);
         }
@@ -103,17 +103,16 @@ namespace Game.Characters
         {
             BaseCharacterAction action = States.GetCurrentState();
             action.Interrupt();
-            Sleep sleepAction = States.NavigateToState("Sleep") as Sleep;
-            sleepAction.SetDuration((int) (BaseAttributes.Endurance.Max / 5f));
+            Sleep sleepAction = States.GetState("Sleep") as Sleep;
             sleepAction.SetStateTransitionTarget(action.Name);
             sleepAction.AddOnExit(() => { action.Resume(); });
-            sleepAction.Start();
+            States.NavigateToState("Sleep");
         }
 
         public void Rest(int amount)
         {
             Energy.Increment(amount);
-            if (!BaseAttributes.Endurance.ReachedMax()) return;
+            if (!Energy.ReachedMax()) return;
             if (DistanceFromHome == 0)
             {
                 States.NavigateToState("Idle");
@@ -123,25 +122,20 @@ namespace Game.Characters
         public void Travel()
         {
             DistanceFromHome++;
-            Tire(CalculateEnduranceCostForDistance(1));
+            Tire();
         }
 
         public void Return()
         {
             --DistanceFromHome;
-            Tire(CalculateEnduranceCostForDistance(1));
+            Tire();
         }
 
         public int CalculateTotalWeight()
         {
-            int characterWeight = 5 + (int) SurvivalAttributes.Weight;
+            int characterWeight = 5 + SurvivalAttributes.Weight;
             int inventoryWeight = (int) (CharacterInventory.Weight / 10);
             return characterWeight + inventoryWeight;
-        }
-
-        public int CalculateEnduranceCostForDistance(int distance)
-        {
-            return distance * CalculateTotalWeight();
         }
 
         public override void Equip(GearItem gearItem)

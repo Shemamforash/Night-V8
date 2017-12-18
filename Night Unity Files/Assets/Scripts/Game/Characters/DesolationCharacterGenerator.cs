@@ -109,6 +109,8 @@ namespace Game.Characters
             {
                 attributes.Strength.Max = v.CurrentValue();
             });
+            playerCharacter.Energy.Max = attributes.Endurance.Max;
+            playerCharacter.Energy.SetCurrentValue(attributes.Endurance.Max);
             attributes.Endurance.SetToMax();
             attributes.Strength.SetToMax();
             

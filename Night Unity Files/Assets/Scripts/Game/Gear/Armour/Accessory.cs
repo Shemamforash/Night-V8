@@ -21,9 +21,9 @@ namespace Game.Gear.Armour
             return Effect;
         }
 
-        public override ViewParent CreateUi(Transform parent)
-        {
-            return new AccessoryUi(this, parent);
-        }
+//        public override ViewParent CreateUi(Transform parent)
+//        {
+//            return new AccessoryUi(this, parent);
+//        }
     }
 }

@@ -113,11 +113,6 @@ namespace Game.Gear.Weapons
             return Helper.Round(WeaponAttributes.DPS(), 1) + "DPS";
         }
 
-        public override ViewParent CreateUi(Transform parent)
-        {
-            return new WeaponUi(this, parent);
-        }
-
         public int GetUpgradeCost()
         {
             return (int) (WeaponAttributes.Durability.CurrentValue() * 10 + 100);

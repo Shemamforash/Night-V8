@@ -13,6 +13,7 @@
         SkillOne,
         SkillTwo,
         SkillThree,
-        SkillFour
+        SkillFour,
+        SwitchTab
     }
 }

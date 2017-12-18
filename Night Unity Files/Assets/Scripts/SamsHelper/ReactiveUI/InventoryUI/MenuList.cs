@@ -64,7 +64,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             RefreshNavigation();
         }
 
-        private ViewParent FindItem(MyGameObject item)
+        protected ViewParent FindItem(MyGameObject item)
         {
             return Items.FirstOrDefault(i => i.GetLinkedObject() != null && i.GetLinkedObject().Equals(item));
         }
@@ -109,11 +109,11 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         public virtual ViewParent RefreshNavigation()
         {
             List<ViewParent> navigatableItems = Items.Where(item => item.Navigatable()).ToList();
-            Items.ForEach(i => i.GetNavigationButton().ClearNavigation());
+            Items.ForEach(i => i.PrimaryButton.ClearNavigation());
             for (int i = 1; i < navigatableItems.Count; ++i)
             {
-                EnhancedButton from = navigatableItems[i - 1].GetNavigationButton();
-                EnhancedButton to = navigatableItems[i].GetNavigationButton();
+                EnhancedButton from = navigatableItems[i - 1].PrimaryButton;
+                EnhancedButton to = navigatableItems[i].PrimaryButton;
                 Helper.SetReciprocalNavigation(from, to);
             }
             OnContentChange?.Invoke();
