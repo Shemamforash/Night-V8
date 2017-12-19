@@ -193,17 +193,17 @@ namespace SamsHelper.ReactiveUI.Elements
                     _onHoldActions.ForEach(a => a.Reset());
                 }
             }
-            if (isHeld || _justEntered) return;
+            if (isHeld || _justEntered || axis != InputAxis.Vertical) return;
             if (direction > 0)
             {
-                if (axis == InputAxis.Vertical) OnUpAction?.Invoke();
-//                else if (axis == InputAxis.Horizontal) OnRightAction?.Invoke();
+                if (_button.navigation.selectOnUp == null && OnUpAction == null) return;
+                OnUpAction?.Invoke();
                 Exit();
             }
-            else
+            else if (direction < 0)
             {
-                if (axis == InputAxis.Vertical) OnDownAction?.Invoke();
-//                else if (axis == InputAxis.Horizontal) OnLeftAction?.Invoke();
+                if (_button.navigation.selectOnDown == null && OnDownAction == null) return;
+                OnDownAction?.Invoke();
                 Exit();
             }
         }

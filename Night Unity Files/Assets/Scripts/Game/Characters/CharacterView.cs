@@ -77,7 +77,7 @@ namespace Game.Characters
         public void FillActionList()
         {
             List<BaseCharacterAction> availableActions = _character.StatesAsList(false).ToList();
-            _actionMenuList.SetItems(new List<MyGameObject>(availableActions));
+            _actionMenuList.SetItems(new List<MyGameObject>(availableActions), false);
 //            foreach (ViewParent action in _actionMenuList.Items)
 //            {
 //                action.PrimaryButton.AddOnSelectEvent(() =>

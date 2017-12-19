@@ -37,11 +37,7 @@ public class UIGearController : MonoBehaviour
                 availableGear.Add(gear);
             }
         }
-//        UIInventoryController.ShowInventory("Equip " + _gearType, availableGear, g =>
-//        {
-//            character.Equip((GearItem) g);
-//            UIInventoryController.CloseMenu();
-//        });
+        UIGearEquipController.DisplayGear(character, availableGear);
     }
 
     public void SetGearItem(GearItem item)

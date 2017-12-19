@@ -14,6 +14,7 @@ using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Game.World
@@ -154,6 +155,7 @@ namespace Game.World
 
         public void Update()
         {
+            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
             if (!_isPaused)
             {
                 IncrementWorldTime();

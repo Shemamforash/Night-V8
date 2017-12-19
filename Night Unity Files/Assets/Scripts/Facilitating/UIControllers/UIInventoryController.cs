@@ -43,10 +43,5 @@ namespace UIControllers
 			});
 			Helper.SetReciprocalNavigation(_inventoryDisplay.Items.Last().PrimaryButton.Button(), _closeButton);
 		}
-
-		public static void CloseMenu()
-		{
-			MenuStateMachine.GoToInitialMenu();
-		}
 	}
 }

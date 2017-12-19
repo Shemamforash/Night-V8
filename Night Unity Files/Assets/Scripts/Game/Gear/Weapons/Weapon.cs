@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Facilitating.Audio;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat;
 using Game.Combat.Enemies;
@@ -116,6 +117,13 @@ namespace Game.Gear.Weapons
         public int GetUpgradeCost()
         {
             return (int) (WeaponAttributes.Durability.CurrentValue() * 10 + 100);
+        }
+
+        public override ViewParent CreateUi(Transform parent)
+        {
+            ViewParent weaponUi = base.CreateUi(parent);
+            weaponUi.PrimaryButton.AddOnClick(() => UiWeaponUpgradeController.Show(this));
+            return weaponUi;
         }
     }
 }

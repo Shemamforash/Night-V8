@@ -22,6 +22,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         {
             LinkedObject = linkedObject;
             GameObject = Helper.InstantiateUiObject(prefabLocation, parent);
+            if (linkedObject != null) GameObject.name = linkedObject.Name;
             CacheUiElements();
             Update();
         }

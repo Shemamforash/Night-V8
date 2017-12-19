@@ -27,23 +27,23 @@
       </Attributes>
     </Character>
     <Character>
-      <Name>Aquifer</Name>
+      <Name>Salva</Name>
       <Attributes>
         <Strength>
-          <Val>5</Val>
-          <Max>5</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Strength>
         <Endurance>
-          <Val>5</Val>
-          <Max>5</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Endurance>
         <Stability>
-          <Val>8</Val>
-          <Max>8</Max>
+          <Val>6</Val>
+          <Max>6</Max>
         </Stability>
         <Intelligence>
-          <Val>8</Val>
-          <Max>8</Max>
+          <Val>6</Val>
+          <Max>6</Max>
         </Intelligence>
       </Attributes>
     </Character>

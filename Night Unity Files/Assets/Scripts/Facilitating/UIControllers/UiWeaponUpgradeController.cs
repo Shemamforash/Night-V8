@@ -103,7 +103,7 @@ namespace Facilitating.UIControllers
 
 		public void EquipWeapon()
 		{
-		
+			UIGearEquipController.DisplayCharacters(_weapon);
 		}
 	}
 }

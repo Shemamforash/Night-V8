@@ -18,9 +18,9 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         private Inventory _inventory;
         private TextMeshProUGUI _titleText, _capacityText;
         private InventoryDisplay _moveToInventory;
-        public EnhancedButton AllButton, WeaponButton, ArmourButton, AccesoryButton, ResourceButton, CharacterButton, CloseButton;
+        public EnhancedButton AllButton, WeaponButton, ArmourButton, AccesoryButton, ResourceButton, CharacterButton;
         private List<Action> _tabActions = new List<Action>();
-        private int _currentTab = 0;
+        private int _currentTab;
         private bool _selected;
 
         public override void Awake()
@@ -62,23 +62,15 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 filteredItems = _inventory.Contents().Where(item => item.GetType().ToString() == itemType).ToList();
             }
             SetItems(filteredItems);
-            if (filteredItems.Count != 0)
-            {
-                Items[0].PrimaryButton.Button().Select();
-            }
-            else
-            {
-                CloseButton?.Button().Select();
-            }
         }
 
         public void SetInventory(Inventory inventory, InventoryDisplay moveToInventory, EnhancedButton closeButton = null)
         {
             if (closeButton != null) CloseButton = closeButton;
             _moveToInventory = moveToInventory;
+            if (moveToInventory == null) _selected = true;
             _titleText.text = inventory.Name;
             _inventory = inventory;
-            SetItems(inventory.SortByType());
             SelectTab(AllButton, "");
             Helper.SetReciprocalNavigation(AllButton, Items[0].PrimaryButton);
             UpdateInventoryWeight();
@@ -141,23 +133,6 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 Remove(itemUi);
                 itemUi.Destroy();
             }
-        }
-
-        public override ViewParent RefreshNavigation()
-        {
-            ViewParent last = base.RefreshNavigation();
-            if (CloseButton != null)
-            {
-                if (last != null)
-                {
-                    Helper.SetReciprocalNavigation(last.PrimaryButton, CloseButton);
-                }
-                else
-                {
-                    CloseButton.Button().Select();
-                }
-            }
-            return last;
         }
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)

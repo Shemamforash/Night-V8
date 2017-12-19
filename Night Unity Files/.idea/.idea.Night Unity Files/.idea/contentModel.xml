@@ -58,10 +58,12 @@
               <e p="UIAimController.cs" t="Include" />
               <e p="UIArmourController.cs" t="Include" />
               <e p="UIAttributeController.cs" t="Include" />
+              <e p="UIAttributeMarkerController.cs" t="Include" />
               <e p="UIConditionController.cs" t="Include" />
               <e p="UIEnemyShieldController.cs" t="Include" />
               <e p="UIEnergyController.cs" t="Include" />
               <e p="UIGearController.cs" t="Include" />
+              <e p="UIGearEquipController.cs" t="Include" />
               <e p="UIHealthBarController.cs" t="Include" />
               <e p="UIInventoryController.cs" t="Include" />
               <e p="UINumberPopupController.cs" t="Include" />
@@ -266,7 +268,6 @@
             </e>
           </e>
         </e>
-        <e p="UIAttributeMarkerController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

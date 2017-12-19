@@ -27,13 +27,6 @@ public class UIEnergyController : MonoBehaviour
     private void CreateEnergyTick(bool energyAvailable)
     {
         GameObject energyTick = Helper.InstantiateUiObject("Prefabs/AttributeMarkerPrefab", _energyContainer);
-//        energyTick.AddComponent<RectTransform>();
-//        energyTick.transform.SetParent(_energyContainer);
-//        energyTick.transform.localScale = Vector3.one;
-//        energyTick.AddComponent<Image>();
-//        LayoutElement layout = energyTick.AddComponent<LayoutElement>();
-//        layout.preferredWidth = 2;
-//        layout.preferredHeight = 10;
         if (!energyAvailable)
         {
             energyTick.GetComponent<Image>().color = new Color(1, 1, 1, 0.4f);

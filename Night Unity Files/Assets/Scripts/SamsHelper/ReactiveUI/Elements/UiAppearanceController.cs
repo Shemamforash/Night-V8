@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Facilitating.UI.Elements;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,7 @@ namespace SamsHelper.ReactiveUI.Elements
         public TMP_FontAsset UniversalFont;
         public Color MainColor, SecondaryColor, BackgroundColor;
         public Image BorderImage;
-        public int SmallFontSize = 10, MediumFontSize = 15, LargeFontSize = 30, TitleFontSize= 45;
+        public int SmallFontSize = 10, MediumFontSize = 15, LargeFontSize = 30, TitleFontSize = 45;
         private static UiAppearanceController _instance;
 
         public void Awake()
@@ -38,14 +39,13 @@ namespace SamsHelper.ReactiveUI.Elements
             _texts.ForEach(t => t.SetFont(UniversalFont));
         }
 
+#if UNITY_EDITOR
         [ExecuteInEditMode]
         public void Update()
         {
-//            if (!EditorApplication.isPlaying)
-//            {
-                UpdateTextFont();
-//            }
+            UpdateTextFont();
         }
+#endif
 
 //        public void SetFontSize(EnhancedText.FontSizes fontSize, int newSize)
 //        {

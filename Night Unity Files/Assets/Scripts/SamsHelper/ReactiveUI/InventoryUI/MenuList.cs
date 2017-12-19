@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Game.Gear.UI;
+using Game.World;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.Elements;
+using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,16 +14,15 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 {
     public class MenuList : MonoBehaviour
     {
-        [HideInInspector]
-        public readonly List<ViewParent> Items = new List<ViewParent>();
-        [HideInInspector]
-        public Transform InventoryContent;
+        [HideInInspector] public readonly List<ViewParent> Items = new List<ViewParent>();
+        [HideInInspector] public Transform InventoryContent;
         public int MaxDistance;
         [Range(0f, 1f)] public float MinFade = 1f;
         [Range(0, 1f)] public float UnselectedItemScale = 1f;
         public bool CentreOnSelectedItem;
+        public EnhancedButton CloseButton;
 
-        private event Action OnContentChange; 
+        private event Action OnContentChange;
 
         public virtual void Awake()
         {
@@ -30,6 +31,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             RectTransform r = InventoryContent.GetComponent<RectTransform>();
             r.anchorMin = new Vector2(0, 0.5f);
             r.anchorMax = new Vector2(1, 0.5f);
+            CloseButton.AddOnClick(MenuStateMachine.GoToInitialMenu);
         }
 
         public void AddOnContentChange(Action a)
@@ -43,17 +45,19 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Items.Clear();
         }
 
-        public void SetItems(List<MyGameObject> newItems)
+        public void SetItems<T>(List<T> newItems, bool autoSelectFirst = true) where T : MyGameObject
         {
             Clear();
             if (newItems.Count != 0)
             {
                 newItems.ForEach(item => AddItem(item));
+                if(autoSelectFirst) Items[0].PrimaryButton.Button().Select();
                 return;
             }
             InventoryUi emptyButton = new InventoryUi(null, InventoryContent);
             emptyButton.SetCentralTextCallback(() => "None");
             AddPlainButton(emptyButton);
+            if(autoSelectFirst) CloseButton?.Button().Select();
         }
 
         protected virtual void UpdateItem(MyGameObject item)
@@ -88,7 +92,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 itemUi.GetGameObject().name = Items.IndexOf(itemUi).ToString();
                 if (MinFade != 1f && MaxDistance != 0) itemUi.PrimaryButton.AddOnSelectEvent(() => FadeItems(itemUi));
                 if (UnselectedItemScale != 1) itemUi.PrimaryButton.AddOnSelectEvent(() => ScaleItems(itemUi));
-                if(CentreOnSelectedItem) itemUi.PrimaryButton.AddOnSelectEvent(() => CentreContentOnItem(itemUi));
+                if (CentreOnSelectedItem) itemUi.PrimaryButton.AddOnSelectEvent(() => CentreContentOnItem(itemUi));
             }
             return itemUi;
         }
@@ -106,7 +110,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             RefreshNavigation();
         }
 
-        public virtual ViewParent RefreshNavigation()
+        public void RefreshNavigation()
         {
             List<ViewParent> navigatableItems = Items.Where(item => item.Navigatable()).ToList();
             Items.ForEach(i => i.PrimaryButton.ClearNavigation());
@@ -117,7 +121,18 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 Helper.SetReciprocalNavigation(from, to);
             }
             OnContentChange?.Invoke();
-            return navigatableItems.Count > 0 ? navigatableItems.Last() : null;
+            if (CloseButton != null)
+            {
+                ViewParent lastItem = navigatableItems.Count > 0 ? navigatableItems.Last() : null;
+                if (lastItem != null)
+                {
+                    Helper.SetReciprocalNavigation(lastItem.PrimaryButton, CloseButton);
+                }
+                else
+                {
+                    CloseButton.Button().Select();
+                }
+            }
         }
 
         public void SendToLast(InventoryUi button)
@@ -131,12 +146,12 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Items[Items.Count - 1] = button;
             button.GetGameObject().transform.SetAsLastSibling();
         }
-        
+
         private void CentreContentOnItem(ViewParent itemUi)
         {
             float targetPosition = 0;
             int itemIndex = Items.IndexOf(itemUi);
-            for(int i  = 0; i < Items.Count; ++i)
+            for (int i = 0; i < Items.Count; ++i)
             {
                 ViewParent otherItem = Items[i];
                 float targetHeight = otherItem.GetGameObject().GetComponent<RectTransform>().rect.height;
@@ -168,7 +183,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 rect.localScale = rectScale;
             }
         }
-        
+
         private void FadeItems(ViewParent itemUi)
         {
             for (int i = 0; i < Items.Count; ++i)

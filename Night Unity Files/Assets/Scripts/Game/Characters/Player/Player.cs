@@ -16,6 +16,7 @@ using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 
@@ -46,6 +47,11 @@ namespace Game.Characters
         {
             float walkSpeed = 1f + BaseAttributes.Endurance.CurrentValue() / 20f;
             return walkSpeed * Time.deltaTime;
+        }
+
+        public override ViewParent CreateUi(Transform parent)
+        {
+            return new InventoryUi(this, parent);
         }
         
         //Links character to object in scene
