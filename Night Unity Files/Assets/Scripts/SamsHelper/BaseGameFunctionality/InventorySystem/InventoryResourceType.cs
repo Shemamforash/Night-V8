@@ -6,6 +6,10 @@
         Water,
         Fuel,
         Scrap,
-        Ammo
+        PistolMag,
+        RifleMag,
+        ShotgunMag,
+        SmgMag,
+        LmgMag
     }
 }

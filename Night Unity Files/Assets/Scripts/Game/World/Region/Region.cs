@@ -25,7 +25,6 @@ namespace Game.World.Region
             SetInitialResourceValues(InventoryResourceType.Food, _template.FoodAvailable);
             SetInitialResourceValues(InventoryResourceType.Fuel, _template.FuelAvailable);
             SetInitialResourceValues(InventoryResourceType.Scrap, _template.ScrapAvailable);
-            SetInitialResourceValues(InventoryResourceType.Ammo, _template.AmmoAvailable);
         }
 
         private void SetInitialResourceValues(InventoryResourceType resourceType, float resourceRating)
@@ -67,7 +66,7 @@ namespace Game.World.Region
             description += "\nFood: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Food).Quantity());
             description += "\nFuel: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Fuel).Quantity());
             description += "\nScrap: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Scrap).Quantity());
-            description += "\nAmmo: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Ammo).Quantity());
+//            description += "\nAmmo: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Ammo).Quantity());
             description += "\nEncounters: " + _template.Encounters;
             description += "\nPossible items: " + _template.Items;
             return description;

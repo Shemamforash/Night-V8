@@ -287,7 +287,7 @@ namespace Game.Characters
             if (Immobilised()) return;
             if (ReloadingCooldown.Running()) return;
             if (EquipmentController.Weapon().FullyLoaded()) return;
-            if (Inventory().GetResourceQuantity(InventoryResourceType.Ammo) == 0) return;
+            if (Weapon().GetAmmoAvailable() == 0) return;
             OnFireAction = null;
             Retaliate = false;
             float reloadSpeed = EquipmentController.Weapon().GetAttributeValue(AttributeType.ReloadSpeed);

@@ -44,6 +44,11 @@ namespace Game.Gear.Weapons
             return WeaponAttributes.WeaponType;
         }
 
+        public int GetAmmoAvailable()
+        {
+            return (int)ParentInventory.GetResourceQuantity(WeaponAttributes.AmmoType);
+        }
+
         public void ConsumeAmmo(int amount = 0)
         {
             _ammoInMagazine -= amount;
@@ -89,7 +94,7 @@ namespace Game.Gear.Weapons
         {
             if (inventory == null) return;
             int ammoRequired = (int)WeaponAttributes.Capacity.CurrentValue() - GetRemainingAmmo();
-            int ammoAvailable = (int) inventory.DecrementResource(InventoryResourceType.Ammo, ammoRequired);
+            int ammoAvailable = (int) inventory.DecrementResource(WeaponAttributes.AmmoType, ammoRequired);
             _ammoInMagazine = _ammoInMagazine + ammoAvailable;
         }
 

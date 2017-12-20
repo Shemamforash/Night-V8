@@ -49,7 +49,7 @@ namespace Game.Combat.Enemies
                 });
             }
             BaseAttributes.Strength.OnMin(Kill);
-            CharacterInventory.IncrementResource(InventoryResourceType.Ammo, 10000000);
+            CharacterInventory.SetEnemyResources();
             
             _fireCooldown = CombatManager.CombatCooldowns.CreateCooldown();
             _fireCooldown.SetStartAction(() => SetActionText("Firing"));

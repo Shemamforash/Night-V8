@@ -124,7 +124,7 @@ namespace Game.Combat
                 GameObject round = _magazineAmmo[i].transform.Find("Round").gameObject;
                 round.SetActive(i < remaining);
             }
-            _ammoText.text = CombatManager.Player().Inventory().GetResourceQuantity(InventoryResourceType.Ammo).ToString();
+            _ammoText.text = CombatManager.Player().Weapon().GetRemainingAmmo().ToString();
         }
 
         public void SetMagazineText(string text)

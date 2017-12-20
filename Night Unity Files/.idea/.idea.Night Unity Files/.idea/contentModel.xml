@@ -60,6 +60,7 @@
               <e p="UIAttributeController.cs" t="Include" />
               <e p="UIAttributeMarkerController.cs" t="Include" />
               <e p="UIConditionController.cs" t="Include" />
+              <e p="UICreateAmmoController.cs" t="Include" />
               <e p="UIEnemyShieldController.cs" t="Include" />
               <e p="UIEnergyController.cs" t="Include" />
               <e p="UIGearController.cs" t="Include" />
@@ -83,6 +84,7 @@
                 <e p="BaseCharacterAction.cs" t="Include" />
                 <e p="CollectResources.cs" t="Include" />
                 <e p="Combat.cs" t="Include" />
+                <e p="CraftAmmo.cs" t="Include" />
                 <e p="Idle.cs" t="Include" />
                 <e p="LightFire.cs" t="Include" />
                 <e p="PrepareTravel.cs" t="Include" />

@@ -27,23 +27,23 @@
       </Attributes>
     </Character>
     <Character>
-      <Name>Salva</Name>
+      <Name>Lux</Name>
       <Attributes>
         <Strength>
-          <Val>9</Val>
-          <Max>9</Max>
+          <Val>6</Val>
+          <Max>6</Max>
         </Strength>
         <Endurance>
-          <Val>9</Val>
-          <Max>9</Max>
+          <Val>6</Val>
+          <Max>6</Max>
         </Endurance>
         <Stability>
-          <Val>6</Val>
-          <Max>6</Max>
+          <Val>11</Val>
+          <Max>11</Max>
         </Stability>
         <Intelligence>
-          <Val>6</Val>
-          <Max>6</Max>
+          <Val>11</Val>
+          <Max>11</Max>
         </Intelligence>
       </Attributes>
     </Character>

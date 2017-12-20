@@ -5,7 +5,6 @@
         public Combat(Player playerCharacter) : base("Combat", playerCharacter)
         {
             IsVisible = false;
-            DefaultDuration = 0;
         }
 
         public override void Enter()

@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Gear.Weapons
 {
@@ -21,6 +24,7 @@ namespace Game.Gear.Weapons
         public string SubClassName, SubClassDescription;
         public string ModifierName, ModifierDescription;
         public WeaponType WeaponType;
+        public InventoryResourceType AmmoType;
 
         public WeaponAttributes()
         {
@@ -38,6 +42,26 @@ namespace Game.Gear.Weapons
             WeaponType = weaponClass.Type;
             WeaponClassDescription = weaponClass.GetDescription();
             RecalculateAttributeValues();
+            switch (WeaponType)
+            {
+                case WeaponType.Pistol:
+                    AmmoType = InventoryResourceType.PistolMag;
+                    break;
+                case WeaponType.Rifle:
+                    AmmoType = InventoryResourceType.RifleMag;
+                    break;
+                case WeaponType.Shotgun:
+                    AmmoType = InventoryResourceType.ShotgunMag;
+                    break;
+                case WeaponType.SMG:
+                    AmmoType = InventoryResourceType.SmgMag;
+                    break;
+                case WeaponType.LMG:
+                    AmmoType = InventoryResourceType.LmgMag;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 //            Print();
         }
 

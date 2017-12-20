@@ -10,19 +10,17 @@ namespace Game.Characters.CharacterActions
     {
         private string _stateTransitionTarget = "Idle";
         public GameObject ActionButtonGameObject;
-        protected int DefaultDuration;
         protected Action HourCallback;
         private bool Interrupted;
         protected bool IsVisible = true;
         protected Action MinuteCallback;
         protected Player PlayerCharacter;
-        private int TimeRemaining;
+        private int _timeRemaining;
         private readonly int UpdateInterval = 1;
 
         protected BaseCharacterAction(string name, Player playerCharacter) : base(name, StateSubtype.Character)
         {
             PlayerCharacter = playerCharacter;
-            DefaultDuration = WorldState.MinutesPerHour;
             AddOnExit(() => WorldState.UnregisterMinuteEvent(Update));
         }
 
@@ -48,10 +46,9 @@ namespace Game.Characters.CharacterActions
             PlayerCharacter.States.ReturnToDefault();
         }
 
-        public bool SetDuration(int hours)
+        public void SetDuration(int hours)
         {
-            TimeRemaining = WorldState.MinutesPerHour * hours;
-            return true;
+            _timeRemaining = WorldState.MinutesPerHour * hours;
         }
 
         public void SetStateTransitionTarget(string stateTransitionTarget)
@@ -61,16 +58,16 @@ namespace Game.Characters.CharacterActions
 
         public bool DecreaseDuration()
         {
-            if (TimeRemaining == WorldState.MinutesPerHour) 
+            if (_timeRemaining == WorldState.MinutesPerHour) 
                 return false;
-            TimeRemaining -= WorldState.MinutesPerHour;
+            _timeRemaining -= WorldState.MinutesPerHour;
             return true;
         }
 
-        public void Start()
+        protected void Start()
         {
             WorldState.RegisterMinuteEvent(UpdateAction);
-            if(TimeRemaining == 0) FinishUpdate();
+            if(_timeRemaining == 0) FinishUpdate();
         }
 
         public virtual void Interrupt()
@@ -96,10 +93,10 @@ namespace Game.Characters.CharacterActions
 
         private void UpdateAction()
         {
-            --TimeRemaining;
+            --_timeRemaining;
             MinuteCallback?.Invoke();
-            if (TimeRemaining % (WorldState.MinutesPerHour / UpdateInterval) == 0) HourCallback?.Invoke();
-            if (TimeRemaining == 0)
+            if (_timeRemaining % (WorldState.MinutesPerHour / UpdateInterval) == 0) HourCallback?.Invoke();
+            if (_timeRemaining == 0)
                 FinishUpdate();
         }
 
@@ -111,7 +108,7 @@ namespace Game.Characters.CharacterActions
 
         private int TimeRemainingAsHours()
         {
-            return (int) Math.Ceiling((float) TimeRemaining / WorldState.MinutesPerHour);
+            return (int) Math.Ceiling((float) _timeRemaining / WorldState.MinutesPerHour);
         }
 
         public virtual string GetCostAsString()

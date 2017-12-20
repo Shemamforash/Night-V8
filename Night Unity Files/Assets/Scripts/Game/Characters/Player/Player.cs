@@ -40,7 +40,6 @@ namespace Game.Characters
             CharacterInventory.MaxWeight = 50;
             BaseAttributes.Endurance.AddOnValueChange(a => Energy.Max = a.CurrentValue());
             Energy.OnMin(Sleep);
-            Inventory().IncrementResource(InventoryResourceType.Ammo, 200);
         }
 
         protected override float GetSpeedModifier()
@@ -89,6 +88,7 @@ namespace Game.Characters
             States.AddState(new Travel(this));
             States.AddState(new Return(this));
             States.AddState(new LightFire(this));
+            States.AddState(new CraftAmmo(this));
             States.SetDefaultState("Idle");
             CharacterView.FillActionList();
         }
@@ -251,8 +251,8 @@ namespace Game.Characters
         public void UpdateMagazineUi()
         {
             string magazineMessage = "";
-            if (Inventory().GetResourceQuantity(InventoryResourceType.Ammo) == 0) magazineMessage = "NO AMMO";
-            else if (!EquipmentController.Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
+            if (Weapon().GetAmmoAvailable() == 0) magazineMessage = "NO AMMO";
+            if (!EquipmentController.Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
             else if (EquipmentController.Weapon().Empty()) magazineMessage = "RELOAD";
 
             if (magazineMessage == "")

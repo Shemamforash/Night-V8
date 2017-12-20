@@ -15,13 +15,18 @@ namespace Game.Gear.Weapons
             new Dictionary<WeaponType, WeaponClass>();
 
         private static readonly List<GearModifier> GeneralModifiers = new List<GearModifier>();
-        
+
         static WeaponGenerator()
         {
             LoadBaseWeapons();
             GearReader.LoadGear();
         }
-        
+
+        public static WeaponClass GetWeaponClassWithType(WeaponType type)
+        {
+            return WeaponDictionary[type];
+        }
+
         public static Weapon GenerateWeapon(WeaponType type, bool manualOnly = false)
         {
             return GenerateWeapon(new List<WeaponType> {type}, manualOnly);
@@ -47,14 +52,14 @@ namespace Game.Gear.Weapons
                 automatic = false;
             }
 #endif
-            WeaponClass weaponClass = WeaponDictionary[weaponType];            
+            WeaponClass weaponClass = WeaponDictionary[weaponType];
             GearModifier modifier = GeneralModifiers[UnityEngine.Random.Range(0, GeneralModifiers.Count)];
             Weapon weapon = weaponClass.CreateWeapon(modifier, manualOnly);
             WorldEventManager.GenerateEvent(new WeaponFindEvent(weapon.Name));
             weapon.SetName();
             return weapon;
         }
-        
+
         private static void LoadBaseWeapons()
         {
             TextAsset weaponFile = Resources.Load<TextAsset>("WeaponClasses");
@@ -65,10 +70,10 @@ namespace Game.Gear.Weapons
             {
                 XmlNode classNode = classesNode.SelectSingleNode("Class[@name='" + type + "']");
                 bool canBeManual = classNode.Attributes["manualAllowed"].Value == "True";
-
-                WeaponClass baseWeapon = new WeaponClass(type, canBeManual);
+                int ammoCost = int.Parse(classNode.Attributes["ammoCost"].Value);
+                WeaponClass baseWeapon = new WeaponClass(type, canBeManual, ammoCost);
                 WeaponDictionary[type] = baseWeapon;
-                
+
                 LoadModifierValues(classNode.SelectSingleNode("BaseStats"), baseWeapon);
 
                 foreach (XmlNode subtypeNode in classNode.SelectNodes("Subtype"))
@@ -82,7 +87,7 @@ namespace Game.Gear.Weapons
                 GeneralModifiers.Add(CreateModifier(modifierNode));
             }
         }
-        
+
         private static GearModifier CreateModifier(XmlNode modifierNode)
         {
             string modifierName = modifierNode.Attributes?["name"].Value;

@@ -10,11 +10,13 @@ namespace Game.Gear.Weapons
         private readonly bool _canBeManual;
         public readonly WeaponType Type;
         private readonly List<GearModifier> _subtypes = new List<GearModifier>();
-
-        public WeaponClass(WeaponType type, bool canBeManual) : base(type.ToString())
+        public readonly int AmmoCost;
+        
+        public WeaponClass(WeaponType type, bool canBeManual, int ammoCost) : base(type.ToString())
         {
             Type = type;
             _canBeManual = canBeManual;
+            AmmoCost = ammoCost;
         }
 
         public void AddSubtype(GearModifier subtype)

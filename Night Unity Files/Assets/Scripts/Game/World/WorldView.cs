@@ -67,7 +67,8 @@ namespace Game.World
             SetResourceSuffix(InventoryResourceType.Water, "sips");
             SetResourceSuffix(InventoryResourceType.Food, "meals");
             SetResourceSuffix(InventoryResourceType.Fuel, "dregs");
-            SetResourceSuffix(InventoryResourceType.Ammo, "rounds");
+            //TODO show magazines
+//            SetResourceSuffix(InventoryResourceType.Ammo, "rounds");
             SetResourceSuffix(InventoryResourceType.Scrap, "bits");
         }
 

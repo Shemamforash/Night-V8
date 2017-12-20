@@ -155,7 +155,7 @@ namespace Game.World
 
         public void Update()
         {
-            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
+//            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
             if (!_isPaused)
             {
                 IncrementWorldTime();

@@ -12,12 +12,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private readonly GearSubtype _gearType;
         public bool Equipped { get; set; }
         protected readonly List<AttributeModifier> Modifiers = new List<AttributeModifier>();
+        private Character _equippedOnCharacter; 
 
         protected GearItem(string name, float weight, GearSubtype gearSubtype) : base(name, GameObjectType.Gear, weight)
         {
             _gearType = gearSubtype;
         }
-
+        
         public void Equip()
         {
             //if in inventory, auto equip and replace
