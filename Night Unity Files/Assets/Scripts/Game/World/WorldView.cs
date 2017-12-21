@@ -67,8 +67,11 @@ namespace Game.World
             SetResourceSuffix(InventoryResourceType.Water, "sips");
             SetResourceSuffix(InventoryResourceType.Food, "meals");
             SetResourceSuffix(InventoryResourceType.Fuel, "dregs");
-            //TODO show magazines
-//            SetResourceSuffix(InventoryResourceType.Ammo, "rounds");
+            WorldState.HomeInventory().GetResource(InventoryResourceType.PistolMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetPistolText(((int)f.CurrentValue()).ToString()));
+            WorldState.HomeInventory().GetResource(InventoryResourceType.RifleMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetRifleText(((int)f.CurrentValue()).ToString()));
+            WorldState.HomeInventory().GetResource(InventoryResourceType.ShotgunMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetShotgunText(((int)f.CurrentValue()).ToString()));
+            WorldState.HomeInventory().GetResource(InventoryResourceType.SmgMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetSmgText(((int)f.CurrentValue()).ToString()));
+            WorldState.HomeInventory().GetResource(InventoryResourceType.LmgMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetLmgText(((int)f.CurrentValue()).ToString()));
             SetResourceSuffix(InventoryResourceType.Scrap, "bits");
         }
 

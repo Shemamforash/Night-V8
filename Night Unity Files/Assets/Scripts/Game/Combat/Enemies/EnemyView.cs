@@ -22,7 +22,6 @@ namespace Game.Combat.Enemies
         public EnemyView(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/EnemyItem") : base(linkedObject, parent, prefabLocation)
         {
             GameObject.SetActive(true);
-            GameObject.GetComponent<EnhancedButton>().UseGlobalColours = false;
         }
 
         protected override void CacheUiElements()
@@ -71,11 +70,9 @@ namespace Game.Combat.Enemies
             _typeText.text = ((Enemy) LinkedObject).EnemyType();
         }
 
-        public void SetColour(Color color)
+        public void SetAlpha(float alpha)
         {
-            GetGameObject().GetComponent<EnhancedButton>().SetColor(color);
-            _uiArmourController.SetColor(color);
-            _lowerUiHealthBarController.SetColor(color);
+            GetGameObject().GetComponent<CanvasGroup>().alpha = alpha;
         }
 
         public void MarkUnselected()

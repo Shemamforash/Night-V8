@@ -29,20 +29,5 @@ public class UINumberPopupController : MonoBehaviour
 		}
 		_enhancedText.Text(valueString);
 		_enhancedText.SetColor(critical ? _criticalColor : Color.white);
-//		StartCoroutine(MoveText());
-	}
-
-	private IEnumerator MoveText()
-	{
-		while (_alpha > 0)
-		{
-			_enhancedText.SetAlpha(_alpha);
-			_alpha -= Time.deltaTime / _duration;
-			Vector3 position = transform.position;
-			position.y += Time.deltaTime * _speed;
-			transform.position = position;
-			yield return null;
-		}
-		Destroy(gameObject);
 	}
 }

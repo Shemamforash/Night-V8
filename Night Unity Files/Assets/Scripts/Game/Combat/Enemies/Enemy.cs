@@ -122,7 +122,7 @@ namespace Game.Combat.Enemies
                 float alpha = 1f - normalisedDistance;
                 alpha *= alpha;
                 alpha = Mathf.Clamp(alpha, 0.2f, 1f);
-                _enemyView.SetColour(new Color(1, 1, 1, alpha));
+                _enemyView.SetAlpha(alpha);
                 if (a.CurrentValue() <= MaxDistance) return;
                 _hasFled = true;
             });

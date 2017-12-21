@@ -91,12 +91,5 @@ namespace Facilitating.UI.Elements
             TryReplaceText();
             _text.color = color;
         }
-
-        public void SetAlpha(float alpha)
-        {
-            Color _oldColor = _text.color;
-            _oldColor.a = alpha;
-            _text.color = _oldColor;
-        }
     }
 }

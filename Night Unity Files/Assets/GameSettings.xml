@@ -27,23 +27,23 @@
       </Attributes>
     </Character>
     <Character>
-      <Name>Lux</Name>
+      <Name>Kero</Name>
       <Attributes>
         <Strength>
-          <Val>6</Val>
-          <Max>6</Max>
+          <Val>11</Val>
+          <Max>11</Max>
         </Strength>
         <Endurance>
-          <Val>6</Val>
-          <Max>6</Max>
+          <Val>11</Val>
+          <Max>11</Max>
         </Endurance>
         <Stability>
-          <Val>11</Val>
-          <Max>11</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Stability>
         <Intelligence>
-          <Val>11</Val>
-          <Max>11</Max>
+          <Val>9</Val>
+          <Max>9</Max>
         </Intelligence>
       </Attributes>
     </Character>

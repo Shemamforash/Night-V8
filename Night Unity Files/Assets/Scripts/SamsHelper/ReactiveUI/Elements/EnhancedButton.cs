@@ -18,16 +18,14 @@ namespace SamsHelper.ReactiveUI.Elements
         private event Action OnSelectActions;
         private event Action OnDeselectActions;
         private readonly List<HoldAction> _onHoldActions = new List<HoldAction>();
-        private List<EnhancedText> _textChildren = new List<EnhancedText>();
-        private List<Image> _imageChildren = new List<Image>();
         private Button _button;
         public GameObject Border;
-        [SerializeField] private bool _useBorder = true;
         [Range(0f, 5f)] public float FadeDuration = 0.5f;
-        public bool UseGlobalColours = true;
         private AudioSource _buttonClickSource;
         private bool _justEntered;
-        private Action OnDownAction, OnUpAction, OnLeftAction, OnRightAction;
+        private Action _onDownAction, _onUpAction;
+        private Coroutine _fadeCoroutine;
+        private readonly List<Image> _borderImages = new List<Image>();
 
         private class HoldAction
         {
@@ -64,19 +62,14 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             InputHandler.RegisterInputListener(this);
             _button = GetComponent<Button>();
-            _textChildren = Helper.FindAllComponentsInChildren<EnhancedText>(transform);
-            _imageChildren = Helper.FindAllComponentsInChildren<Image>(transform);
             _buttonClickSource = Camera.main.GetComponent<AudioSource>();
-            if (Border != null)
-            {
-                Border.SetActive(false);
-                _borderImages.AddRange(Helper.FindAllComponentsInChildren<Image>(Border.transform));
-            }
+            Border.SetActive(false);
+            _borderImages.AddRange(Helper.FindAllComponentsInChildren<Image>(Border.transform));
         }
 
         private void Enter()
         {
-            if (UseGlobalColours) UseSelectedColours();
+            UseSelectedColours();
             OnSelectActions?.Invoke();
             _buttonClickSource.Play();
             _justEntered = true;
@@ -84,7 +77,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private void Exit()
         {
-            if (UseGlobalColours) UseDeselectedColours();
+            UseDeselectedColours();
             OnDeselectActions?.Invoke();
             if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
             SetBorderColor(new Color(1, 1, 1, 0f));
@@ -103,34 +96,17 @@ namespace SamsHelper.ReactiveUI.Elements
         public void OnPointerExit(PointerEventData p) => Exit();
         public void AddOnHold(Action a, float duration) => _onHoldActions.Add(new HoldAction(a, duration));
 
-        public void DisableBorder() => _useBorder = false;
-
         private void UseSelectedColours()
         {
-            if (Border != null && _useBorder)
-            {
-                Border.SetActive(true);
-                TryStartFade(1);
-            }
-            else
-            {
-                SetColor(UiAppearanceController.Instance.SecondaryColor);
-                if (_button.image != null)
-                {
-                    _button.image.color = UiAppearanceController.Instance.MainColor;
-                }
-            }
+            Border.SetActive(true);
+            TryStartFade(1);
         }
-
-        private Coroutine _fadeCoroutine;
 
         private void TryStartFade(int target)
         {
             if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
             if (gameObject.activeInHierarchy) _fadeCoroutine = StartCoroutine(Fade(target));
         }
-
-        private readonly List<Image> _borderImages = new List<Image>();
 
         private void SetBorderColor(Color c)
         {
@@ -150,25 +126,8 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private void UseDeselectedColours()
         {
-            if (Border != null && _useBorder)
-            {
-                Border.SetActive(false);
-                TryStartFade(0);
-            }
-            else
-            {
-                SetColor(UiAppearanceController.Instance.MainColor);
-                if (_button.image != null)
-                {
-                    _button.image.color = UiAppearanceController.Instance.BackgroundColor;
-                }
-            }
-        }
-
-        public void SetColor(Color c)
-        {
-            _textChildren.ForEach(t => t.SetColor(c));
-            _imageChildren.ForEach(i => i.color = c);
+            Border.SetActive(false);
+            TryStartFade(0);
         }
 
         private bool IsSelected()
@@ -196,14 +155,14 @@ namespace SamsHelper.ReactiveUI.Elements
             if (isHeld || _justEntered || axis != InputAxis.Vertical) return;
             if (direction > 0)
             {
-                if (_button.navigation.selectOnUp == null && OnUpAction == null) return;
-                OnUpAction?.Invoke();
+                if (_button.navigation.selectOnUp == null && _onUpAction == null) return;
+                _onUpAction?.Invoke();
                 Exit();
             }
             else if (direction < 0)
             {
-                if (_button.navigation.selectOnDown == null && OnDownAction == null) return;
-                OnDownAction?.Invoke();
+                if (_button.navigation.selectOnDown == null && _onDownAction == null) return;
+                _onDownAction?.Invoke();
                 Exit();
             }
         }
@@ -299,22 +258,12 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void SetOnDownAction(Action a)
         {
-            OnDownAction = a;
+            _onDownAction = a;
         }
 
         public void SetOnUpAction(Action a)
         {
-            OnUpAction = a;
-        }
-
-        public void SetOnRightAction(Action a)
-        {
-            OnRightAction = a;
-        }
-
-        public void SetOnLeftAction(Action a)
-        {
-            OnLeftAction = a;
+            _onUpAction = a;
         }
     }
 }

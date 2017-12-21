@@ -52,8 +52,7 @@ namespace Game.Combat
             ConditionsText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Conditions");
 //            _hitInfo.color = new Color(1, 1, 1, 0);
 
-            GameObject cooldownContainer = Helper.FindChildWithName(playerContainer, "Cooldowns");
-            DashCooldownController = Helper.FindChildWithName<CooldownController>(cooldownContainer, "Dash");
+            DashCooldownController = Helper.FindChildWithName<CooldownController>(playerContainer, "Dash");
             
             SkillBar = Helper.FindChildWithName<SkillBar>(playerContainer, "Skill Bar");
 

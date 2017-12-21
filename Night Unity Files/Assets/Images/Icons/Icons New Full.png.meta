@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 940c058aa52a264498ef2e2f26f270b3
-timeCreated: 1505745623
+timeCreated: 1513873849
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -18,6 +18,7 @@ TextureImporter:
     21300022: Icons New Full_11
     21300024: Icons New Full_12
     21300026: Icons New Full_13
+  externalObjects: {}
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -71,28 +72,34 @@ TextureImporter:
   platformSettings:
   - buildTarget: DefaultTexturePlatform
     maxTextureSize: 4096
+    resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    androidETC2FallbackOverride: 0
   - buildTarget: Standalone
     maxTextureSize: 4096
+    resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    androidETC2FallbackOverride: 0
   - buildTarget: WebGL
     maxTextureSize: 4096
+    resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    androidETC2FallbackOverride: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -142,8 +149,8 @@ TextureImporter:
       name: Icons New Full_3
       rect:
         serializedVersion: 2
-        x: 1200
-        y: 1200
+        x: 0
+        y: 800
         width: 400
         height: 400
       alignment: 0
@@ -156,7 +163,7 @@ TextureImporter:
       name: Icons New Full_4
       rect:
         serializedVersion: 2
-        x: 0
+        x: 400
         y: 800
         width: 400
         height: 400
@@ -170,7 +177,7 @@ TextureImporter:
       name: Icons New Full_5
       rect:
         serializedVersion: 2
-        x: 400
+        x: 800
         y: 800
         width: 400
         height: 400
@@ -184,34 +191,6 @@ TextureImporter:
       name: Icons New Full_6
       rect:
         serializedVersion: 2
-        x: 800
-        y: 800
-        width: 400
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Icons New Full_7
-      rect:
-        serializedVersion: 2
-        x: 1200
-        y: 800
-        width: 400
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Icons New Full_8
-      rect:
-        serializedVersion: 2
         x: 0
         y: 400
         width: 400
@@ -223,7 +202,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Icons New Full_9
+      name: Icons New Full_7
       rect:
         serializedVersion: 2
         x: 400
@@ -237,7 +216,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Icons New Full_10
+      name: Icons New Full_8
       rect:
         serializedVersion: 2
         x: 800
@@ -251,21 +230,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Icons New Full_11
-      rect:
-        serializedVersion: 2
-        x: 1200
-        y: 400
-        width: 400
-        height: 400
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: Icons New Full_12
+      name: Icons New Full_9
       rect:
         serializedVersion: 2
         x: 0
@@ -279,7 +244,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Icons New Full_13
+      name: Icons New Full_10
       rect:
         serializedVersion: 2
         x: 400

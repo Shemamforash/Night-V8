@@ -19,7 +19,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         private TextMeshProUGUI _titleText, _capacityText;
         private InventoryDisplay _moveToInventory;
         public EnhancedButton AllButton, WeaponButton, ArmourButton, AccesoryButton, ResourceButton, CharacterButton;
-        private List<Action> _tabActions = new List<Action>();
+        private readonly List<Action> _tabActions = new List<Action>();
         private int _currentTab;
         private bool _selected;
 
@@ -49,13 +49,13 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         private void SelectTab(EnhancedButton button, string itemType)
         {
-            button.SetColor(Color.white);
-            if (AllButton != button) AllButton.SetColor(new Color(1, 1, 1, 0.4f));
-            if (WeaponButton != button) WeaponButton.SetColor(new Color(1, 1, 1, 0.4f));
-            if (ArmourButton != button) ArmourButton.SetColor(new Color(1, 1, 1, 0.4f));
-            if (AccesoryButton != button) AccesoryButton.SetColor(new Color(1, 1, 1, 0.4f));
-            if (ResourceButton != button) ResourceButton.SetColor(new Color(1, 1, 1, 0.4f));
-            if (CharacterButton != button) CharacterButton.SetColor(new Color(1, 1, 1, 0.4f));
+            button.GetComponent<CanvasGroup>().alpha = 1;
+            if (AllButton != button) AllButton.GetComponent<CanvasGroup>().alpha = 0.4f;
+            if (WeaponButton != button) WeaponButton.GetComponent<CanvasGroup>().alpha = 0.4f;
+            if (ArmourButton != button) ArmourButton.GetComponent<CanvasGroup>().alpha = 0.4f;
+            if (AccesoryButton != button) AccesoryButton.GetComponent<CanvasGroup>().alpha = 0.4f;
+            if (ResourceButton != button) ResourceButton.GetComponent<CanvasGroup>().alpha = 0.4f;
+            if (CharacterButton != button) CharacterButton.GetComponent<CanvasGroup>().alpha = 0.4f;
             List<MyGameObject> filteredItems = _inventory.Contents();
             if (itemType != "")
             {
@@ -128,11 +128,9 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             UpdateInventoryWeight();
             ViewParent itemUi = FindItem(inventoryItem);
             InventoryItem foundItem = itemUi.GetLinkedObject() as InventoryItem;
-            if (foundItem != null && !_inventory.ContainsItem(inventoryItem))
-            {
-                Remove(itemUi);
-                itemUi.Destroy();
-            }
+            if (foundItem == null || _inventory.ContainsItem(inventoryItem)) return;
+            Remove(itemUi);
+            itemUi.Destroy();
         }
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -168,7 +166,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         {
         }
 
-        public void Deselect()
+        private void Deselect()
         {
             _selected = false;
         }

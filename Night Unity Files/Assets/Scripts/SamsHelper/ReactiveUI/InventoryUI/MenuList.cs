@@ -192,7 +192,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 distance = Helper.Normalise(distance, MaxDistance);
                 float alpha = 1f - distance;
                 alpha = Mathf.Clamp(alpha, MinFade, 1);
-                Items[i].PrimaryButton.GetComponent<EnhancedButton>().SetColor(new Color(1, 1, 1, alpha));
+                Items[i].PrimaryButton.GetComponent<CanvasGroup>().alpha = alpha;
             }
         }
     }
