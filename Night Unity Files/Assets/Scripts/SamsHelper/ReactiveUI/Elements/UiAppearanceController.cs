@@ -11,8 +11,6 @@ namespace SamsHelper.ReactiveUI.Elements
     public class UiAppearanceController : MonoBehaviour
     {
         public TMP_FontAsset UniversalFont;
-        public Color MainColor, SecondaryColor, BackgroundColor;
-        public Image BorderImage;
         public int SmallFontSize = 10, MediumFontSize = 15, LargeFontSize = 30, TitleFontSize = 45;
         private static UiAppearanceController _instance;
 
@@ -40,7 +38,6 @@ namespace SamsHelper.ReactiveUI.Elements
         }
 
 #if UNITY_EDITOR
-        [ExecuteInEditMode]
         public void Update()
         {
             UpdateTextFont();

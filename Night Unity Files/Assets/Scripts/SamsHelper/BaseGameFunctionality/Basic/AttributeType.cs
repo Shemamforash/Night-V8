@@ -4,8 +4,8 @@
     {
         Strength,
         Endurance,
-        Intelligence,
-        Stability,
+        Perception,
+        Willpower,
         Thirst,
         Hunger,
         Starvation,

@@ -33,6 +33,7 @@ namespace Facilitating.UI.Elements
             UpdateFontSize();
             _text.extraPadding = true;
             _text.font = UiAppearanceController.Instance.UniversalFont;
+            _text = GetComponent<TextMeshProUGUI>();
         }
 
         public void Text(string text)

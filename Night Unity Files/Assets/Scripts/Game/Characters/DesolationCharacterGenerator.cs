@@ -31,13 +31,13 @@ namespace Game.Characters
                 {
                     failMessages.Add("Endurance out of bounds");
                 }
-                if (!InBounds(attributes.Stability.CurrentValue(), 5, 25))
+                if (!InBounds(attributes.Willpower.CurrentValue(), 5, 25))
                 {
-                    failMessages.Add("Stability out of bounds");
+                    failMessages.Add("Willpower out of bounds");
                 }
-                if (!InBounds(attributes.Intelligence.CurrentValue(), 5, 25))
+                if (!InBounds(attributes.Perception.CurrentValue(), 5, 25))
                 {
-                    failMessages.Add("Intelligence out of bounds");
+                    failMessages.Add("Perception out of bounds");
                 }
                 if (failMessages.Count != 0)
                 {
@@ -105,22 +105,18 @@ namespace Game.Characters
             BaseAttributes attributes = playerCharacter.BaseAttributes;
             
             attributes.Endurance.Max = playerCharacter.CharacterClass.Endurance + playerCharacter.CharacterTrait.Endurance;
-            attributes.Endurance.AddOnValueChange(v =>
-            {
-                attributes.Strength.Max = v.CurrentValue();
-            });
             playerCharacter.Energy.Max = attributes.Endurance.Max;
             playerCharacter.Energy.SetCurrentValue(attributes.Endurance.Max);
             attributes.Endurance.SetToMax();
+
+            attributes.Strength.Max = playerCharacter.CharacterClass.Strength + playerCharacter.CharacterTrait.Strength;
             attributes.Strength.SetToMax();
             
-            attributes.Stability.Max = playerCharacter.CharacterClass.Stability + playerCharacter.CharacterTrait.Stability;
-            attributes.Stability.AddOnValueChange(v =>
-            {
-                attributes.Intelligence.Max = v.CurrentValue();
-            });
-            attributes.Stability.SetToMax();
-            attributes.Intelligence.SetToMax();
+            attributes.Perception.Max = playerCharacter.CharacterClass.Perception + playerCharacter.CharacterTrait.Perception;
+            attributes.Perception.SetToMax();
+            
+            attributes.Willpower.Max = playerCharacter.CharacterClass.Willpower + playerCharacter.CharacterTrait.Willpower;
+            attributes.Willpower.SetToMax();
             
             CalculateWeight(playerCharacter);
         }

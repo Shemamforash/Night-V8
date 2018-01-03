@@ -10,7 +10,7 @@ namespace Game.Characters
     public static class TraitLoader
     {
         private static readonly Dictionary<string, Trait> TraitDictionary = new Dictionary<string, Trait>();
-        private static readonly Dictionary<string, CharacterClass> ClassDictionary = new Dictionary<string, CharacterClass>();
+        private static readonly Dictionary<string, Trait> ClassDictionary = new Dictionary<string, Trait>();
         private static readonly List<string> TraitNames = new List<string>();
         private static readonly List<string> ClassNames = new List<string>();
 
@@ -38,21 +38,23 @@ namespace Game.Characters
             foreach (XmlNode classNode in root.SelectNodes("Class"))
             {
                 string name = classNode.SelectSingleNode("Name").InnerText;
-                int healthRatio = int.Parse(classNode.SelectSingleNode("HealthRatio").InnerText);
                 int endurance = int.Parse(classNode.SelectSingleNode("Endurance").InnerText);
-                int stability = int.Parse(classNode.SelectSingleNode("Stability").InnerText);
+                int willpower = int.Parse(classNode.SelectSingleNode("Willpower").InnerText);
+                int strength = int.Parse(classNode.SelectSingleNode("Strength").InnerText);
+                int perception = int.Parse(classNode.SelectSingleNode("Perception").InnerText);
                 int weight = int.Parse(classNode.SelectSingleNode("Weight").InnerText);
-                CharacterClass newClass = new CharacterClass(name, stability, endurance, healthRatio, weight);
+                Trait newClass = new Trait(name, strength, endurance, willpower, perception, weight);
                 ClassDictionary[name] = newClass;
                 ClassNames.Add(name);
             }
             foreach (XmlNode traitNode in root.SelectNodes("Trait"))
             {
+                //TODO strength and perception import
                 string name = traitNode.SelectSingleNode("Name").InnerText;
                 int endurance = int.Parse(traitNode.SelectSingleNode("Endurance").InnerText);
-                int stability = int.Parse(traitNode.SelectSingleNode("Stability").InnerText);
+                int willpower = int.Parse(traitNode.SelectSingleNode("Willpower").InnerText);
                 int weight = int.Parse(traitNode.SelectSingleNode("Weight").InnerText);
-                Trait newTrait = new Trait(name, endurance, stability, weight);
+                Trait newTrait = new Trait(name, 0, endurance, willpower, 0, weight);
                 TraitDictionary[name] = newTrait;
                 TraitNames.Add(name);
             }
@@ -82,41 +84,26 @@ namespace Game.Characters
             }
         }
 
-        public class CharacterClass : Trait
-        {
-            public readonly int HealthRatio;
-
-            public CharacterClass(string name, int stability, int endurance, int healthRatio, int weight) : base(name, stability, endurance, weight)
-            {
-                HealthRatio = healthRatio;
-            }
-
-            public override string GetTraitDetails()
-            {
-                return base.GetTraitDetails() + "\n" + HealthRatio + " str-health ratio";
-            }
-        }
-
         public class Trait
         {
             public string Name;
 
-            public int Stability,
-                Endurance,
-                Weight;
+            public int Strength, Endurance, Willpower, Perception, Weight;
 
-            public Trait(string name, int stability, int endurance, int weight)
+            public Trait(string name, int strength, int endurance, int willpower, int perception, int weight)
             {
                 Name = name;
+                Strength = strength;
                 Endurance = endurance;
-                Stability = stability;
+                Willpower = willpower;
+                Perception = perception;
                 Weight = weight;
             }
 
             public virtual string GetTraitDetails()
             {
                 string traitDetails = Name + ":";
-                traitDetails += GetValueAsString(Stability, " stb");
+                traitDetails += GetValueAsString(Willpower, " stb");
                 traitDetails += GetValueAsString(Endurance, " end");
                 return traitDetails;
             }

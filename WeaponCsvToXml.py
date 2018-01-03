@@ -44,7 +44,8 @@ class WeaponImporter(XMLWriter):
         for row_no in range(3, 8):
             weapon_class = get_value(self, "A", row_no)
             manual_allowed = str(get_value(self, "B", row_no))
-            write_tag(self, "Class", self.read_single_class, [row_no], ["name", "manualAllowed"], [weapon_class, manual_allowed])
+            magazine_cost = get_value(self, "N", row_no)
+            write_tag(self, "Class", self.read_single_class, [row_no], ["name", "manualAllowed", "ammoCost"], [weapon_class, manual_allowed, magazine_cost])
 
     def read_single_class(self, row_no):
         write_tag(self, "BaseStats", self.write_base_stats, [row_no])
@@ -84,8 +85,8 @@ class GearImporter(XMLWriter):
             write_single_value(self, "Effect", get_value(self, "F", row) + get_value(self, "G", row))
         else:
             write_single_value(self, "Armour", "+" + get_value(self, "H", row, 0))
-            write_single_value(self, "Intelligence", "+" + get_value(self, "I", row, 0))
-            write_single_value(self, "Stability", "+" + get_value(self, "J", row, 0))
+            write_single_value(self, "Perception", "+" + get_value(self, "I", row, 0))
+            write_single_value(self, "Willpower", "+" + get_value(self, "J", row, 0))
             write_single_value(self, "Strength", "+" + get_value(self, "K", row, 0))
             write_single_value(self, "Endurance", "+" + get_value(self, "L", row, 0))
 
@@ -183,20 +184,22 @@ class CharacterImporter(XMLWriter):
     def read_classes_and_traits(self):
         for row in range(3, 13):
             write_tag(self, "Class", self.read_class, [row])
-        for row in range(14, 22):
+        for row in range(14, 23):
             write_tag(self, "Trait", self.read_trait, [row])
 
     def read_class(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "HealthRatio", get_value(self, "D", row))
-        write_single_value(self, "Endurance", get_value(self, "E", row))
-        write_single_value(self, "Stability", get_value(self, "F", row))
-        write_single_value(self, "Weight", get_value(self, "H", row))
+        # write_single_value(self, "HealthRatio", get_value(self, "D", row))
+        write_single_value(self, "Endurance", get_value(self, "F", row))
+        write_single_value(self, "Strength", get_value(self, "G", row))
+        write_single_value(self, "Willpower", get_value(self, "H", row))
+        write_single_value(self, "Perception", get_value(self, "I", row))
+        write_single_value(self, "Weight", get_value(self, "K", row))
 
     def read_trait(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
         write_single_value(self, "Endurance", get_value(self, "E", row))
-        write_single_value(self, "Stability", get_value(self, "F", row))
+        write_single_value(self, "Willpower", get_value(self, "F", row))
         write_single_value(self, "Weight", get_value(self, "H", row))
 
 

@@ -11,35 +11,35 @@
           <Val>9</Val>
           <Max>9</Max>
         </Endurance>
-        <Stability>
+        <Willpower>
           <Val>9</Val>
           <Max>9</Max>
-        </Stability>
-        <Intelligence>
+        </Willpower>
+        <Perception>
           <Val>9</Val>
           <Max>9</Max>
-        </Intelligence>
+        </Perception>
       </Attributes>
     </Character>
     <Character>
-      <Name>Kero</Name>
+      <Name>Ambule</Name>
       <Attributes>
         <Strength>
-          <Val>11</Val>
-          <Max>11</Max>
+          <Val>7</Val>
+          <Max>7</Max>
         </Strength>
         <Endurance>
-          <Val>11</Val>
-          <Max>11</Max>
+          <Val>10</Val>
+          <Max>10</Max>
         </Endurance>
-        <Stability>
-          <Val>9</Val>
-          <Max>9</Max>
-        </Stability>
-        <Intelligence>
-          <Val>9</Val>
-          <Max>9</Max>
-        </Intelligence>
+        <Willpower>
+          <Val>8</Val>
+          <Max>8</Max>
+        </Willpower>
+        <Perception>
+          <Val>6</Val>
+          <Max>6</Max>
+        </Perception>
       </Attributes>
     </Character>
   </CharacterManager>

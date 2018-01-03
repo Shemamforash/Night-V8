@@ -6,7 +6,7 @@ namespace Game.Combat.Enemies.EnemyTypes
     {
         public Watcher() : base(nameof(Watcher), Random.Range(500, 1000))
         {
-            BaseAttributes.Intelligence.SetCurrentValue(0);
+            BaseAttributes.Perception.SetCurrentValue(0);
         }
 
 //        public override void InitialiseBehaviour(EnemyPlayerRelation relation)

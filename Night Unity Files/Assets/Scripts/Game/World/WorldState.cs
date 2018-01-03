@@ -11,6 +11,7 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace Game.World
     public class WorldState : MonoBehaviour
     {
         public static readonly CooldownManager WorldCooldownManager = new CooldownManager();
-        public static int StormDistanceMax, StormDistanceActual;
+        public static MyValue StormDistance;
         public static int DaysSpentHere;
         public static readonly EnvironmentManager EnvironmentManager = new EnvironmentManager();
         private static readonly CharacterManager _homeInventory = new CharacterManager();
@@ -51,9 +52,8 @@ namespace Game.World
             SaveController.LoadGame();
 
             DayEvent += IncrementDaysSpentHere;
-            StormDistanceMax = 10;
-            StormDistanceActual = 10;
-
+            StormDistance = new MyValue(15);
+            StormDistance.AddOnValueChange(value => WorldView.SetStormDistance((int) value.CurrentValue()));
 #if UNITY_EDITOR
             _homeInventory.AddTestingResources(3);
 #endif
@@ -62,25 +62,29 @@ namespace Game.World
         private void IncrementDaysSpentHere()
         {
             ++DaysSpentHere;
-            --StormDistanceActual;
-            if (StormDistanceActual == 10)
-            {
-                FindNewLocation();
-            }
+            StormDistance.Decrement();
             if (DaysSpentHere == 7)
             {
                 //TODO gameover
             }
         }
 
+        public float GetCurrentDanger()
+        {
+            if (StormDistance.CurrentValue() <= 30f) return StormDistance / 30f;
+            return 1;
+        }
+
         private void FindNewLocation()
         {
-            StormDistanceMax--;
-            StormDistanceActual = StormDistanceMax;
-            if (StormDistanceMax == 0)
+            if (StormDistance.ReachedMin())
             {
                 InitiateFinalEncounter();
+                return;
             }
+            if (DaysSpentHere >= 4) StormDistance.Increment(2);
+            else if(DaysSpentHere >= 3) StormDistance.Increment();
+            TravelEvent?.Invoke();
         }
 
         private void InitiateFinalEncounter()
@@ -118,7 +122,7 @@ namespace Game.World
                 WorldView.SetTime(Days, Hours, Minutes);
             }
         }
-        
+
         private void IncrementMinutes()
         {
             Minutes += 60 / MinutesPerHour;

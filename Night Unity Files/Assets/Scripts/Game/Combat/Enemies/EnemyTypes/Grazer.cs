@@ -6,8 +6,8 @@ namespace Game.Combat.Enemies.EnemyTypes
     {
         public Grazer() : base(nameof(Grazer), Random.Range(1000, 2500))
         {
-            BaseAttributes.Intelligence.SetCurrentValue(0);
-            BaseAttributes.Stability.SetCurrentValue(0);
+            BaseAttributes.Perception.SetCurrentValue(0);
+            BaseAttributes.Willpower.SetCurrentValue(0);
         }
 
         public void InitialiseBehaviour(Enemy enemy)

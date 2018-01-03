@@ -22,8 +22,8 @@ namespace Game.Gear.UI
             ModifierColumnOneText.text = armour.Description;
             ModifierColumn2Text.gameObject.SetActive(false);
 
-            TopLeftAttributeText.text = "+" + armour.IntelligenceModifier + "INT";
-            TopRightAttributeText.text = "+" + armour.StabilityModifier + "STAB";
+            TopLeftAttributeText.text = "+" + armour.PerceptionModifier + "INT";
+            TopRightAttributeText.text = "+" + armour.WillpowerModifier + "STAB";
             CentreLeftAttributeText.text = "+" + armour.StrengthModifier + "STR";
             CentreRightAttributeText.text = "+" + armour.EnduranceModifier + "END";
             BottomLeftAttributeText.gameObject.SetActive(false);

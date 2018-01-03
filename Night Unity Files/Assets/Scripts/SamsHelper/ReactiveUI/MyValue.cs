@@ -105,12 +105,12 @@ namespace SamsHelper.ReactiveUI
             }
         }
 
-        public void Increment(float amount)
+        public void Increment(float amount = 1)
         {
             SetCurrentValue(_currentValue + amount);
         }
 
-        public void Decrement(float amount)
+        public void Decrement(float amount = 1)
         {
             SetCurrentValue(_currentValue - amount);
         }

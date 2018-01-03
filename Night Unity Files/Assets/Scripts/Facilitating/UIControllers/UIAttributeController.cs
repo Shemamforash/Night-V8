@@ -1,18 +1,17 @@
-﻿using Facilitating.UI.Elements;
-using Game.Characters;
+﻿using Game.Characters;
 using SamsHelper;
 using UnityEngine;
 
 public class UIAttributeController : MonoBehaviour
 {
-    private UIAttributeMarkerController _strengthMarker, _intelligenceMarker, _enduranceMarker, _stabilityMarker;
+    private UIAttributeMarkerController _strengthMarker, _perceptionMarker, _enduranceMarker, _willpowerMarker;
 
     public void Awake()
     {
         _strengthMarker = CacheText("Strength");
-        _intelligenceMarker = CacheText("Intelligence");
+        _perceptionMarker = CacheText("Perception");
         _enduranceMarker = CacheText("Endurance");
-        _stabilityMarker = CacheText("Stability");
+        _willpowerMarker = CacheText("Willpower");
     }
 
     private UIAttributeMarkerController CacheText(string name)
@@ -24,7 +23,7 @@ public class UIAttributeController : MonoBehaviour
     {
         attributes.Endurance.AddOnValueChange(a => _enduranceMarker.SetValue((int)a.CurrentValue(), (int)a.Max));
         attributes.Strength.AddOnValueChange(a => _strengthMarker.SetValue((int)a.CurrentValue(), (int)a.Max));
-        attributes.Stability.AddOnValueChange(a => _stabilityMarker.SetValue((int)a.CurrentValue(), (int)a.Max));
-        attributes.Intelligence.AddOnValueChange(a => _intelligenceMarker.SetValue((int)a.CurrentValue(), (int)a.Max));
+        attributes.Willpower.AddOnValueChange(a => _willpowerMarker.SetValue((int)a.CurrentValue(), (int)a.Max));
+        attributes.Perception.AddOnValueChange(a => _perceptionMarker.SetValue((int)a.CurrentValue(), (int)a.Max));
     }
 }

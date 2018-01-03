@@ -99,8 +99,8 @@ namespace Game.Combat.Enemies
         {
             Debug.Log(Name);
             Debug.Log("Strength " + Helper.Round(BaseAttributes.Strength.CurrentValue()));
-            Debug.Log("Intelligence " + Helper.Round(BaseAttributes.Intelligence.CurrentValue()));
-            Debug.Log("Stability " + Helper.Round(BaseAttributes.Stability.CurrentValue()));
+            Debug.Log("Perception " + Helper.Round(BaseAttributes.Perception.CurrentValue()));
+            Debug.Log("Willpower " + Helper.Round(BaseAttributes.Willpower.CurrentValue()));
             Debug.Log("Endurance " + Helper.Round(BaseAttributes.Endurance.CurrentValue()));
         }
 

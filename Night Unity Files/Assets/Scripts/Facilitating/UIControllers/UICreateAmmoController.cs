@@ -21,7 +21,7 @@ public class UICreateAmmoController : Menu
     private List<EnhancedButton> _canAfford;
     private List<EnhancedButton> _cantAfford;
 
-    public void Awake()
+    public void Start()
     {
         PistolButton.AddOnClick(() => CraftAmmo(InventoryResourceType.PistolMag));
         RifleButton.AddOnClick(() => CraftAmmo(InventoryResourceType.RifleMag));

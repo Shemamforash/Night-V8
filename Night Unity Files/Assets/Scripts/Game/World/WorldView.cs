@@ -18,10 +18,12 @@ namespace Game.World
     {
         private static EnhancedButton _inventoryButton;
         private static TextMeshProUGUI _timeText;
+        private static TextMeshProUGUI _stormDistanceText;
         
         public void Awake()
         {
-            _timeText = Helper.FindChildWithName(gameObject, "Time").GetComponent<TextMeshProUGUI>();
+            _timeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Time");
+            _stormDistanceText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Storm Distance");
             _inventoryButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inventory");
             DefaultSelectable = _inventoryButton.Button();
             PreserveLastSelected = true;
@@ -58,10 +60,26 @@ namespace Game.World
             {
                 dayTime = hours + ":" + minutes;
             }
+            dayTime = TimeToName(hours);
             dayTime += "   Day " + days;
             _timeText.text = dayTime;
         }
 
+        private static string TimeToName(int hours)
+        {
+            if (hours >= 5 && hours <= 7) return "Dawn";
+            if (hours > 7 && hours <= 11)return "Morning";
+            if (hours > 11 && hours <= 13) return "Noon";
+            if (hours > 13 && hours <= 17) return "Afternoon";
+            if (hours > 17 && hours < 20) return "Evening";
+            return "Night";
+        }
+
+        public static void SetStormDistance(int distance)
+        {
+            _stormDistanceText.text = "Storm is " + distance + " days away";
+        }
+        
         public void Start()
         {
             SetResourceSuffix(InventoryResourceType.Water, "sips");

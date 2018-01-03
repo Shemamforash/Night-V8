@@ -10,20 +10,20 @@ namespace Game.Gear.Armour
 {
     public class Armour : GearItem
     {
-        public readonly AttributeModifier ArmourRating, IntelligenceModifier, StabilityModifier, StrengthModifier, EnduranceModifier;
+        public readonly AttributeModifier ArmourRating, PerceptionModifier, WillpowerModifier, StrengthModifier, EnduranceModifier;
         public readonly string Description;
         
-        public Armour(string name, int weight, string description, int armourRating, int intelligenceModifier, int stabilityModifier, int strengthModifier, int enduranceModifier) : base(name, weight, GearSubtype.Armour)
+        public Armour(string name, int weight, string description, int armourRating, int perceptionModifier, int willpowerModifier, int strengthModifier, int enduranceModifier) : base(name, weight, GearSubtype.Armour)
         {
             Description = description;
             //TODO fill me in
 //            ArmourRating = armourRating;
-//            IntelligenceModifier = intelligenceModifier;
-//            StabilityModifier = stabilityModifier;
+//            PerceptionModifier = perceptionModifier;
+//            WillpowerModifier = willpowerModifier;
 //            StrengthModifier = strengthModifier;
 //            EnduranceModifier = enduranceModifier;
-//            Modifiers.AddModifier(AttributeType.Intelligence, intelligenceModifier, true);
-//            Modifiers.AddModifier(AttributeType.Stability, stabilityModifier, true);
+//            Modifiers.AddModifier(AttributeType.Perception, perceptionModifier, true);
+//            Modifiers.AddModifier(AttributeType.Willpower, willpowerModifier, true);
 //            Modifiers.AddModifier(AttributeType.Strength, strengthModifier, true);
 //            Modifiers.AddModifier(AttributeType.Endurance, enduranceModifier, true);
         }

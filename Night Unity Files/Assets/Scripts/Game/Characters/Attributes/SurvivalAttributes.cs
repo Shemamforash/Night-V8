@@ -49,18 +49,18 @@ namespace Game.Characters.Attributes
         {
             float starvationLevel = Starvation.AsPercent();
             float dehydrationLevel = Dehydration.AsPercent();
-            CharacterAttribute Intelligence = Character.BaseAttributes.Intelligence;
+            CharacterAttribute Perception = Character.BaseAttributes.Perception;
             if (starvationLevel >= _toleranceThresholds[4] || dehydrationLevel >= _toleranceThresholds[4])
             {
-                Intelligence.SetCurrentValue(Intelligence.CurrentValue() - 2);
+                Perception.SetCurrentValue(Perception.CurrentValue() - 2);
             }
             else if (starvationLevel >= _toleranceThresholds[3] || dehydrationLevel >= _toleranceThresholds[3])
             {
-                Intelligence.SetCurrentValue(Intelligence.CurrentValue() - 1);
+                Perception.SetCurrentValue(Perception.CurrentValue() - 1);
             }
             else
             {
-                Intelligence.SetCurrentValue(Intelligence.CurrentValue() + 1);
+                Perception.SetCurrentValue(Perception.CurrentValue() + 1);
             }
         }
         
