@@ -26,7 +26,7 @@ namespace Game.World.Region
         private static Player _character;
         private static RegionManager _instance;
         private static MenuList _menuList;
-        private static MapGenerator.Node MapNode;
+        private static Region _initialRegion;
 
         public static RegionManager Instance()
         {
@@ -74,7 +74,7 @@ namespace Game.World.Region
                 AllocateTravelResources(currentCharacter, 6);
                 InventoryTransferManager.Instance().ShowInventories(WorldState.HomeInventory(), currentCharacter.Inventory(), () =>
                 {
-                    MapNode.Discover(currentCharacter);
+                    _initialRegion.Discover(currentCharacter);
                 });
             });
             _menuList.AddPlainButton(_exploreButton);
@@ -102,7 +102,8 @@ namespace Game.World.Region
                 foreach (XmlNode regionNode in regionTypeNode.SelectNodes("Region"))
                 {
                     string name = regionNode.SelectSingleNode("Name").InnerText;
-                    string type = regionNode.SelectSingleNode("Type").InnerText;
+                    //TODO import type and tier separately
+                    string type = regionNode.SelectSingleNode("Type").InnerText.Split(' ')[0];
                     int food = int.Parse(regionNode.SelectSingleNode("Food").InnerText);
                     int water = int.Parse(regionNode.SelectSingleNode("Water").InnerText);
                     int fuel = int.Parse(regionNode.SelectSingleNode("Fuel").InnerText);
@@ -111,7 +112,7 @@ namespace Game.World.Region
                     RegionTemplate template = new RegionTemplate
                     {
                         DisplayName = name,
-                        Type = type,
+                        Type = StringToRegionType(type),
                         WaterAvailable = water,
                         FoodAvailable = food,
                         FuelAvailable = fuel,
@@ -124,6 +125,18 @@ namespace Game.World.Region
             }
         }
 
+        private RegionType StringToRegionType(string type)
+        {
+            foreach (RegionType regionType in Enum.GetValues(typeof(RegionType)))
+            {
+                if (regionType.ToString() == type)
+                {
+                    return regionType;
+                }
+            }
+            throw new Exceptions.UnknownRegionTypeException(type);
+        }
+
         public void OnEnable()
         {
             RefreshExploreButton();
@@ -131,7 +144,7 @@ namespace Game.World.Region
 
         public static void GenerateNewRegions()
         {
-            MapNode = MapGenerator.Generate();
+            _initialRegion = MapGenerator.Generate();
             _menuList.Items.ForEach(i =>
             {
                 if (i == _exploreButton) return;
@@ -141,11 +154,11 @@ namespace Game.World.Region
             RefreshExploreButton();
         }
 
-        public static Region GenerateNewRegion()
+        public static Region GenerateNewRegion(Region origin, int regionNumber)
         {
             RegionTemplate template = Templates[Templates.Keys.ToList()[Random.Range(0, Templates.Keys.Count)]];
             string regionName = template.GenerateName();
-            Region region = new Region(regionName, template);
+            Region region = new Region(regionName, origin, regionNumber, template);
             return region;
         }
 
@@ -156,15 +169,10 @@ namespace Game.World.Region
             {
                 Player currentCharacter = Character();
                 ExitManager(true);
-                AllocateTravelResources(currentCharacter, region.Distance());
+                AllocateTravelResources(currentCharacter, region.Distance);
                 InventoryTransferManager.Instance().ShowInventories(WorldState.HomeInventory(), currentCharacter.Inventory(), () =>
                 {
-                    currentCharacter.StartExploration(() =>
-                    {
-                        CollectResources collectResources = (CollectResources) currentCharacter.States.GetState("Collect Resources");
-                        collectResources.SetTargetRegion(region);
-                        currentCharacter.States.NavigateToState("Collect Resources");
-                    }, region.Distance());
+                    currentCharacter.StartExploration(() => region.Enter(currentCharacter), region.Distance);
                 });
             });
             DiscoveredRegions.Add(region);
@@ -183,7 +191,7 @@ namespace Game.World.Region
             if (region != null)
             {
                 nameText = region.Name;
-                typeText = region.RegionType();
+                typeText = region.GetRegionType().ToString();
                 descriptionText = region.Description();
             }
             _regionInfoNameText.text = nameText;

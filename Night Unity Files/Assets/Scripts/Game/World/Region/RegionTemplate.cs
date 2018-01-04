@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
+using Game.World.Region;
 using UnityEngine;
 
 namespace Game.World
 {
     public class RegionTemplate
     {
-        public string InternalName, DisplayName, Type, Encounters, Items;
+        public string InternalName, DisplayName;
+        public RegionType Type;
+        public string Encounters, Items;
         public int WaterAvailable, FoodAvailable, FuelAvailable, ScrapAvailable, AmmoAvailable;
         public List<string> Names;
         

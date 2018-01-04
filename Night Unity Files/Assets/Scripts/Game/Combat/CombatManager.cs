@@ -59,6 +59,7 @@ namespace Game.Combat
         {
             WorldState.Pause();
             _player = player;
+            _player.HealthController.EnterCombat();
             ResetCombat();
             InputHandler.RegisterInputListener(_player);
             Enemies.AddRange(scenario.Enemies());
@@ -71,6 +72,7 @@ namespace Game.Combat
             WorldState.UnPause();
             MenuStateMachine.States.NavigateToState("Game Menu");
             InputHandler.UnregisterInputListener(_player);
+            _player.HealthController.ExitCombat();
         }
 
         public static Player Player()

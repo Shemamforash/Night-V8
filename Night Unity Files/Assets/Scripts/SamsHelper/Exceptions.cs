@@ -328,5 +328,17 @@ namespace SamsHelper
         {
             public override string Message => "Tried to consume more ammo than was available in the current magazine.";
         }
+
+        public class UnknownRegionTypeException : Exception
+        {
+            private readonly string _type;
+            
+            public UnknownRegionTypeException(string type)
+            {
+                _type = type;
+            }
+
+            public override string Message => "Unknown region type '" + _type + "'";
+        }
     }
 }

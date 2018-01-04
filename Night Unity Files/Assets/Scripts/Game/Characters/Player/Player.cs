@@ -330,5 +330,11 @@ namespace Game.Characters
                 Dash(direction);
             }
         }
+
+        public void CollectResourcesInRegion(Region region)
+        {
+            ((CollectResources) States.GetState("Collect Resources")).SetTargetRegion(region);
+            States.NavigateToState("Collect Resources");
+        }
     }
 }

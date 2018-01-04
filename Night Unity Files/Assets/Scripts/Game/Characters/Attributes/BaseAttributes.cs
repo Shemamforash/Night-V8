@@ -2,6 +2,7 @@ using System.Xml;
 using Game.Characters.CharacterActions;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
+using SamsHelper.ReactiveUI;
 using Random = UnityEngine.Random;
 
 namespace Game.Characters
@@ -12,7 +13,6 @@ namespace Game.Characters
         public readonly CharacterAttribute Perception = new CharacterAttribute(AttributeType.Perception, 0);
         public readonly CharacterAttribute Endurance = new CharacterAttribute(AttributeType.Endurance, 0);
         public readonly CharacterAttribute Willpower = new CharacterAttribute(AttributeType.Willpower, 0);
-        
 
         protected override void RegisterTimedEvents()
         {

@@ -9,6 +9,7 @@ namespace Game.Combat
     public class CombatScenario
     {
         private readonly List<Enemy> _enemies = new List<Enemy>();
+        private bool _finished = false;
 
         public void Remove(Enemy enemy)
         {
@@ -58,6 +59,16 @@ namespace Game.Combat
         public List<Enemy> Enemies()
         {
             return _enemies;
+        }
+
+        public void FinishCombat()
+        {
+            _finished = true;
+        }
+
+        public bool IsFinished()
+        {
+            return _finished;
         }
     }
 }
