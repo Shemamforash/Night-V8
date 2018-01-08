@@ -7,45 +7,89 @@
   <CharacterManager>
     <Character>
       <Name>Driver</Name>
-      <Attributes>
-        <Strength>
-          <Val>9</Val>
-          <Max>9</Max>
-        </Strength>
-        <Endurance>
-          <Val>9</Val>
-          <Max>9</Max>
-        </Endurance>
-        <Willpower>
-          <Val>9</Val>
-          <Max>9</Max>
-        </Willpower>
-        <Perception>
-          <Val>9</Val>
-          <Max>9</Max>
-        </Perception>
-      </Attributes>
+      <Strength>
+        <Val>9</Val>
+        <Max>9</Max>
+      </Strength>
+      <Endurance>
+        <Val>9</Val>
+        <Max>9</Max>
+      </Endurance>
+      <Willpower>
+        <Val>9</Val>
+        <Max>9</Max>
+      </Willpower>
+      <Perception>
+        <Val>9</Val>
+        <Max>9</Max>
+      </Perception>
+      <Weapon />
+      <Armour />
+      <Accessory />
+      <Class>Crusader</Class>
+      <Trait>Faithless</Trait>
+      <Distance>5</Distance>
+      <Energy>4</Energy>
+      <Starvation>
+        <Val>50</Val>
+        <Max>0</Max>
+      </Starvation>
+      <Dehydration>
+        <Val>50</Val>
+        <Max>0</Max>
+      </Dehydration>
+      <Hunger>
+        <Val>12</Val>
+        <Max>8</Max>
+      </Hunger>
+      <Thirst>
+        <Val>9</Val>
+        <Max>3</Max>
+      </Thirst>
+      <Weight>5</Weight>
     </Character>
     <Character>
-      <Name>Lux</Name>
-      <Attributes>
-        <Strength>
-          <Val>9</Val>
-          <Max>9</Max>
-        </Strength>
-        <Endurance>
-          <Val>8</Val>
-          <Max>8</Max>
-        </Endurance>
-        <Willpower>
-          <Val>10</Val>
-          <Max>10</Max>
-        </Willpower>
-        <Perception>
-          <Val>7</Val>
-          <Max>7</Max>
-        </Perception>
-      </Attributes>
+      <Name>Rev</Name>
+      <Strength>
+        <Val>10</Val>
+        <Max>10</Max>
+      </Strength>
+      <Endurance>
+        <Val>8</Val>
+        <Max>8</Max>
+      </Endurance>
+      <Willpower>
+        <Val>8</Val>
+        <Max>8</Max>
+      </Willpower>
+      <Perception>
+        <Val>6</Val>
+        <Max>6</Max>
+      </Perception>
+      <Weapon />
+      <Armour />
+      <Accessory />
+      <Class>Conqueror</Class>
+      <Trait>Perceptive</Trait>
+      <Distance>0</Distance>
+      <Energy>8</Energy>
+      <Starvation>
+        <Val>50</Val>
+        <Max>0</Max>
+      </Starvation>
+      <Dehydration>
+        <Val>50</Val>
+        <Max>0</Max>
+      </Dehydration>
+      <Hunger>
+        <Val>12</Val>
+        <Max>8</Max>
+      </Hunger>
+      <Thirst>
+        <Val>9</Val>
+        <Max>3</Max>
+      </Thirst>
+      <Weight>7</Weight>
     </Character>
   </CharacterManager>
 </Settings>

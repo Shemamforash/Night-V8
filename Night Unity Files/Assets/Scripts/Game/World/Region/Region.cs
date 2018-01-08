@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -21,7 +22,6 @@ namespace Game.World.Region
         public readonly int PerceptionRequirement;
         public readonly Region Origin;
         public readonly List<Region> Connections = new List<Region>();
-        private Action<Player> _enterNodeAction;
         public readonly int RegionNumber;
 
         public override XmlNode Save(XmlNode doc, PersistenceType type)
@@ -66,7 +66,6 @@ namespace Game.World.Region
             {
                 _combatScenario = CombatScenario.Generate(Random.Range(1, 3));
             }
-            _enterNodeAction = player => UIExploreMenuController.Instance().SetRegion(this, player);
         }
 
         public void AddConnection(Region region)
@@ -115,7 +114,7 @@ namespace Game.World.Region
             if (_discovered) return;
             _discovered = true;
             RegionManager.DiscoverRegion(this);
-            _enterNodeAction(player);
+            UIExploreMenuController.Instance().SetRegion(this, player);
             if (Connections.Count != 0) return;
             Origin?.Connections.Remove(this);
         }

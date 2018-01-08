@@ -73,7 +73,7 @@ public class UICreateAmmoController : Menu
             CloseButton.SetUpNavigation(null);
         }
 
-        MenuStateMachine.States.NavigateToState("Create Ammo Menu");
+        MenuStateMachine.ShowMenu("Create Ammo Menu");
     }
 
     private void CheckCanAfford(WeaponType type, EnhancedButton button)

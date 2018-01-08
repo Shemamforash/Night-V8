@@ -108,7 +108,7 @@ namespace Game.Characters
             _characters.ForEach(c => c.CharacterView.RefreshNavigation());
             if (playerCharacter.Name == "Driver")
             {
-                MenuStateMachine.States.NavigateToState("Game Over Menu");
+                MenuStateMachine.ShowMenu("Game Over Menu");
             }
             return item;
         }

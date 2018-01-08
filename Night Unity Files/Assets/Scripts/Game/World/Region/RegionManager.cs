@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
+using Facilitating.UIControllers;
 using Game.Characters;
 using UnityEngine;
 using UnityEngine.UI;
@@ -111,7 +112,7 @@ namespace Game.World.Region
                 AllocateTravelResources(currentCharacter, 6);
                 InventoryTransferManager.Instance().ShowInventories(WorldState.HomeInventory(), currentCharacter.Inventory(), () =>
                 {
-                    _initialRegion.Discover(currentCharacter);
+                    UIExploreMenuController.Instance().SetRegion(_initialRegion, currentCharacter);
                 });
             });
             _menuList.AddPlainButton(_exploreButton);
@@ -204,12 +205,13 @@ namespace Game.World.Region
             ViewParent regionUi = _menuList.AddItem(region);
             regionUi.PrimaryButton.AddOnClick(() =>
             {
+                //Travel to particular region
                 Player currentCharacter = Character();
                 ExitManager(true);
                 AllocateTravelResources(currentCharacter, region.Distance);
                 InventoryTransferManager.Instance().ShowInventories(WorldState.HomeInventory(), currentCharacter.Inventory(), () =>
                 {
-                    currentCharacter.StartExploration(() => region.Enter(currentCharacter), region.Distance);
+                    currentCharacter.TravelAction.TravelToAndEnter(region);
                 });
             });
             RefreshExploreButton();
@@ -238,7 +240,7 @@ namespace Game.World.Region
         public static void EnterManager(Player character)
         {
             _character = character;
-            MenuStateMachine.States.NavigateToState("Region Menu");
+            MenuStateMachine.ShowMenu("Region Menu");
         }
 
         private static void ExitManager(bool characterIsExploring)

@@ -63,14 +63,14 @@ namespace Game.Combat
             ResetCombat();
             InputHandler.RegisterInputListener(_player);
             Enemies.AddRange(scenario.Enemies());
-            MenuStateMachine.States.NavigateToState("Combat Menu");
+            MenuStateMachine.ShowMenu("Combat Menu");
             CombatUi.Start(scenario);
         }
 
         private static void ExitCombat()
         {
             WorldState.UnPause();
-            MenuStateMachine.States.NavigateToState("Game Menu");
+            MenuStateMachine.ShowMenu("Game Menu");
             InputHandler.UnregisterInputListener(_player);
             _player.HealthController.ExitCombat();
         }

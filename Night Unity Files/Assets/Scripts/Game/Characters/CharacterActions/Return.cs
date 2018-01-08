@@ -13,6 +13,7 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
+            base.Enter();
             SetDuration(GetCharacter().DistanceFromHome);
             Start();
         }

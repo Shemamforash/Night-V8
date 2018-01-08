@@ -44,9 +44,9 @@ namespace Game.World
 
         public void Start()
         {
-            _homeInventory.Start();
             EnvironmentManager.Start();
             _weather.Start();
+            _homeInventory.Start();
 
             SaveController.LoadSettings();
             SaveController.LoadGame();

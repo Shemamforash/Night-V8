@@ -8,14 +8,14 @@ namespace SamsHelper.ReactiveUI.MenuSystem
     {
         public Menu InitialMenu;
         private static MenuStateMachine _instance;
-        public static readonly StateMachine<MenuState> States = new StateMachine<MenuState>();
+        public static readonly StateMachine States = new StateMachine();
 
         public void Awake()
         {
             _instance = this;
             foreach (Menu t in Helper.FindAllComponentsInChildren<Menu>(transform))
             {
-                MenuState menu = new MenuState(t.name, t);
+                MenuState menu = new MenuState(States, t.name, t);
                 if (!t.gameObject.activeInHierarchy)
                 {
                     t.gameObject.SetActive(true);
@@ -25,15 +25,15 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             }
             if (InitialMenu != null)
             {
-                States.NavigateToState(InitialMenu.name);
+                ShowMenu(InitialMenu.name);
             }
         }
 
-        public void GoToMenu(Menu menu)
+        public static void ShowMenu(string menuName)
         {
-            States.NavigateToState(menu.name);
+            States.GetState(menuName).Enter();
         }
-        
+
         //TODO move me somewhere more suitable
         public void OnApplicationQuit()
         {
@@ -53,7 +53,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public static void GoToInitialMenu()
         {
-            States.NavigateToState(_instance.InitialMenu.name);
+            ShowMenu(_instance.InitialMenu.name);
         }
     }
 }

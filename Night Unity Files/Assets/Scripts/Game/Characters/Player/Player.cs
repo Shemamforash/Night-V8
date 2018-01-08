@@ -28,12 +28,21 @@ namespace Game.Characters
 {
     public class Player : Character, IInputListener
     {
-        public readonly StateMachine<BaseCharacterAction> States = new StateMachine<BaseCharacterAction>();
+        public readonly StateMachine States = new StateMachine();
         public readonly TraitLoader.Trait CharacterClass, CharacterTrait;
         public int DistanceFromHome;
         public CharacterView CharacterView;
         public readonly SurvivalAttributes SurvivalAttributes;
         public readonly MyValue Energy = new MyValue();
+
+        public CollectResources CollectResourcesAction;
+        public Sleep SleepAction;
+        public Idle IdleAction;
+        public Travel TravelAction;
+        public Return ReturnAction;
+        public CraftAmmo CraftAmmoAction;
+        public CharacterActions.Combat CombatAction;
+        public LightFire LightFireAction;
 
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait) : base(name)
@@ -67,7 +76,7 @@ namespace Game.Characters
         {
             return new InventoryUi(this, parent);
         }
-        
+
         //Links character to object in scene
         public override void SetGameObject(GameObject gameObject)
         {
@@ -81,30 +90,22 @@ namespace Game.Characters
             CharacterView = new CharacterView(this);
         }
 
-        public void StartExploration(Action explorationEndAction, int duration)
-        {
-            Travel state = (Travel) States.NavigateToState("Travel");
-            state.AddOnExit(explorationEndAction);
-            state.SetTravelTime(duration);
-        }
-        
         public List<BaseCharacterAction> StatesAsList(bool includeInactiveStates)
         {
             return (from BaseCharacterAction s in States.StatesAsList() where s.IsStateVisible() || includeInactiveStates select s).ToList();
         }
-        
+
         private void AddStates()
         {
-            States.AddState(new CollectResources(this));
-            States.AddState(new CharacterActions.Combat(this));
-            States.AddState(new Sleep(this));
-            States.AddState(new Idle(this));
-            States.AddState(new PrepareTravel(this));
-            States.AddState(new Travel(this));
-            States.AddState(new Return(this));
-            States.AddState(new LightFire(this));
-            States.AddState(new CraftAmmo(this));
-            States.SetDefaultState("Idle");
+            CollectResourcesAction = new CollectResources(this);
+            CombatAction = new CharacterActions.Combat(this);
+            SleepAction = new Sleep(this);
+            IdleAction = new Idle(this);
+            TravelAction = new Travel(this);
+            ReturnAction = new Return(this);
+            LightFireAction = new LightFire(this);
+            CraftAmmoAction = new CraftAmmo(this);
+            States.SetDefaultState(IdleAction);
             CharacterView.FillActionList();
         }
 
@@ -122,12 +123,12 @@ namespace Game.Characters
 
         private void Sleep()
         {
-            BaseCharacterAction action = States.GetCurrentState();
+            BaseCharacterAction action = (BaseCharacterAction) States.GetCurrentState();
             action.Interrupt();
             Sleep sleepAction = States.GetState("Sleep") as Sleep;
-            sleepAction.SetStateTransitionTarget(action.Name);
+            sleepAction.SetStateTransitionTarget(action);
             sleepAction.AddOnExit(() => { action.Resume(); });
-            States.NavigateToState("Sleep");
+            SleepAction.Enter();
         }
 
         public void Rest(int amount)
@@ -136,7 +137,7 @@ namespace Game.Characters
             if (!Energy.ReachedMax()) return;
             if (DistanceFromHome == 0)
             {
-                States.NavigateToState("Idle");
+                IdleAction.Enter();
             }
         }
 
@@ -166,7 +167,7 @@ namespace Game.Characters
             {
                 case GearSubtype.Weapon:
                     SwapWeaponSkills((Weapon) gearItem);
-                    ((Weapon)gearItem).Reload(Inventory());
+                    ((Weapon) gearItem).Reload(Inventory());
                     CharacterView?.WeaponGearUi.SetGearItem(gearItem);
                     break;
                 case GearSubtype.Armour:
@@ -348,8 +349,7 @@ namespace Game.Characters
 
         public void CollectResourcesInRegion(Region region)
         {
-            ((CollectResources) States.GetState("Collect Resources")).SetTargetRegion(region);
-            States.NavigateToState("Collect Resources");
+            CollectResourcesAction.SetTargetRegion(region);
         }
     }
 }

@@ -10,24 +10,15 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         private readonly Menu _menu;
         private Selectable _lastSelectedItem;
 
-        public MenuState(string name, Menu menu) : base(name, StateSubtype.Menu)
+        public MenuState(StateMachine stateMachine, string name, Menu menu) : base(stateMachine, name, StateSubtype.Menu)
         {
             _menu = menu;
             SetGameObject(menu.gameObject);
         }
 
-        protected override void ReturnToDefault()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected override void NavigateToState(string stateName)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override void Enter()
         {
+            base.Enter();
             _menu.gameObject.SetActive(true);
             if (_menu.PauseOnOpen)
             {

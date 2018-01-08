@@ -8,7 +8,7 @@ namespace Game.Characters.CharacterActions
 {
     public class BaseCharacterAction : State
     {
-        private string _stateTransitionTarget = "Idle";
+        private BaseCharacterAction _stateTransitionTarget;
         public GameObject ActionButtonGameObject;
         protected Action HourCallback;
         private bool Interrupted;
@@ -18,10 +18,9 @@ namespace Game.Characters.CharacterActions
         private int _timeRemaining;
         private readonly int UpdateInterval = 1;
 
-        protected BaseCharacterAction(string name, Player playerCharacter) : base(name, StateSubtype.Character)
+        protected BaseCharacterAction(string name, Player playerCharacter) : base(playerCharacter.States, name, StateSubtype.Character)
         {
             PlayerCharacter = playerCharacter;
-            AddOnExit(() => WorldState.UnregisterMinuteEvent(Update));
         }
 
         public override ViewParent CreateUi(Transform parent)
@@ -29,21 +28,8 @@ namespace Game.Characters.CharacterActions
             SimpleView ui = new SimpleView(this, parent, "Prefabs/Player Action");
             ui.SetPreferredHeight(30);
             ui.SetCentralTextCallback(() => Name);
-            ui.PrimaryButton.AddOnClick(() =>
-            {
-                NavigateToState(Name);
-            });
+            ui.PrimaryButton.AddOnClick(Enter);
             return ui;
-        }
-
-        protected override void NavigateToState(string stateName)
-        {
-            PlayerCharacter.States.NavigateToState(stateName);
-        }
-
-        protected override void ReturnToDefault()
-        {
-            PlayerCharacter.States.ReturnToDefault();
         }
 
         public void SetDuration(int hours)
@@ -51,7 +37,7 @@ namespace Game.Characters.CharacterActions
             _timeRemaining = WorldState.MinutesPerHour * hours;
         }
 
-        public void SetStateTransitionTarget(string stateTransitionTarget)
+        public void SetStateTransitionTarget(BaseCharacterAction stateTransitionTarget)
         {
             _stateTransitionTarget = stateTransitionTarget;
         }
@@ -86,9 +72,13 @@ namespace Game.Characters.CharacterActions
         {
             WorldState.UnregisterMinuteEvent(UpdateAction);
             if (_stateTransitionTarget != null)
-                GetCharacter().States.NavigateToState(_stateTransitionTarget);
+            {
+                _stateTransitionTarget.Enter();
+            }
             else
+            {
                 GetCharacter().States.ReturnToDefault();
+            }
         }
 
         private void UpdateAction()
@@ -100,8 +90,15 @@ namespace Game.Characters.CharacterActions
                 FinishUpdate();
         }
 
+        public override void Enter()
+        {
+            Debug.Log(Name);
+            base.Enter();
+        }
+        
         public override void Exit()
         {
+            Debug.Log(Name);
             if (!Interrupted)
                 base.Exit();
         }

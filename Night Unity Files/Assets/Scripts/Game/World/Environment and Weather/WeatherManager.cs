@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Game.World.Environment_and_Weather
 {
-    public class WeatherManager : ProbabalisticStateMachine<Weather>
+    public class WeatherManager : ProbabalisticStateMachine
     {
         private static WeatherManager _instance;
         private static TextMeshProUGUI _weatherText;
@@ -23,20 +23,19 @@ namespace Game.World.Environment_and_Weather
             _weatherText = GameObject.Find("Weather").GetComponent<TextMeshProUGUI>();
             LoadWeather();
             LoadProbabilities("WeatherProbabilityTable");
-            NavigateToState("Clear");
-            WorldState.RegisterMinuteEvent(() => GetCurrentState().UpdateWeather());
+            GetState("Clear").Enter();
+            WorldState.RegisterMinuteEvent(() => ((Weather)GetCurrentState()).UpdateWeather());
 //            GenerateWeatherString(2000);
-        }
-
-        public override Weather NavigateToState(string stateName)
-        {
-            _weatherText.text = stateName;
-            return base.NavigateToState(stateName);
         }
 
         public static WeatherManager Instance()
         {
             return _instance;
+        }
+
+        public void GoToWeather()
+        {
+            GetState(CalculateNextState()).Enter();
         }
 
         private void LoadWeather()
@@ -60,7 +59,7 @@ namespace Game.World.Environment_and_Weather
                 float dust = float.Parse(particleNode.SelectSingleNode("Dust").InnerText);
                 float hail = float.Parse(particleNode.SelectSingleNode("Hail").InnerText);
                 float sun = float.Parse(particleNode.SelectSingleNode("Sun").InnerText);
-                Weather weather = new Weather(name, temperature, visibility, water, food, duration);
+                Weather weather = new Weather(this, name, temperature, visibility, water, food, duration);
                 if (type == "Phenomena") AddState(weather);
                 weather.Attributes = new WeatherAttributes(rain, fog, dust, hail, sun);
             }

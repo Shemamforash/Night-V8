@@ -55,14 +55,14 @@ namespace Facilitating.UIControllers
 	
 		private void ReturnToPreviousMenu()
 		{
-			MenuStateMachine.States.NavigateToState(_previousMenu);
+			MenuStateMachine.ShowMenu(_previousMenu);
 		}
 
 		public static void Show(Weapon weapon)
 		{
 			_weapon = weapon;
 			_previousMenu = MenuStateMachine.States.GetCurrentState().Name;
-			MenuStateMachine.States.NavigateToState("Weapon Upgrade Menu");
+			MenuStateMachine.ShowMenu("Weapon Upgrade Menu");
 			SetWeaponText();
 		}
 	

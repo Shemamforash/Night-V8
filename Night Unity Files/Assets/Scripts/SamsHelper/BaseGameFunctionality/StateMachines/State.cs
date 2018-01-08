@@ -2,6 +2,7 @@
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.StateMachines
 {
@@ -9,9 +10,12 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
     {
         private event Action OnExit;
         private readonly StateSubtype _type;
+        private readonly StateMachine _stateMachine;
 
-        protected State(string name, StateSubtype type) : base(name, GameObjectType.State)
+        protected State(StateMachine stateMachine, string name, StateSubtype type) : base(name, GameObjectType.State)
         {
+            _stateMachine = stateMachine;
+            _stateMachine.AddState(this);
             _type = type;
         }
 
@@ -25,20 +29,20 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             return _type;
         }
 
-        protected abstract void ReturnToDefault();
-        protected abstract void NavigateToState(string stateName);
-
         protected void ClearOnExit()
         {
             OnExit = null;
         }
 
-        public virtual void Update()
-        {
-        }
-
         public virtual void Enter()
         {
+            _stateMachine.GetCurrentState()?.Exit();
+            _stateMachine.SetCurrentState(this);
+        }
+
+        public bool IsCurrentState()
+        {
+            return _stateMachine.GetCurrentState() == this;
         }
 
         public virtual void Exit()

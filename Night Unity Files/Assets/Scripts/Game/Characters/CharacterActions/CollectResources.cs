@@ -12,20 +12,22 @@ namespace Game.Characters.CharacterActions
         public CollectResources(Player playerCharacter) : base("Collect Resources", playerCharacter)
         {
             IsVisible = false;
-            SetStateTransitionTarget("Return");
+            SetStateTransitionTarget(playerCharacter.ReturnAction);
             AddOnExit(ReturnToGameScreen);
         }
 
         public void SetTargetRegion(Region targetRegion)
         {
             _targetRegion = targetRegion;
+            Enter();
         }
 
         public override void Enter()
         {
+            base.Enter();
             _previousCharacter = CharacterManager.SelectedCharacter;
             CharacterManager.SelectedCharacter = GetCharacter();
-            InventoryTransferManager.Instance().ShowInventories(GetCharacter().Inventory(), _targetRegion, () => GetCharacter().States.NavigateToState("Return"));
+            InventoryTransferManager.Instance().ShowInventories(GetCharacter().Inventory(), _targetRegion, () => GetCharacter().ReturnAction.Enter());
         }
 
         public override void Interrupt()

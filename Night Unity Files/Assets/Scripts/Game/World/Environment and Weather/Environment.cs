@@ -19,7 +19,8 @@ namespace Game.World.Environment_and_Weather
             Wet
         }
 
-        public Environment(string name, int temperature, int climate, int waterAbundance, int foodAbundance, int fuelAbundance, int scrapAbundance) : base(name, StateSubtype.Environment)
+        public Environment(StateMachine stateMachine, string name, int temperature, int climate, int waterAbundance, int foodAbundance, int fuelAbundance, int scrapAbundance) : base(stateMachine,
+            name, StateSubtype.Environment)
         {
             _waterAbundance = waterAbundance;
             _foodAbundance = foodAbundance;
@@ -33,9 +34,11 @@ namespace Game.World.Environment_and_Weather
             CalculateTemperatures();
         }
 
-        private void CalculateTemperatures(){
+        private void CalculateTemperatures()
+        {
             float temperatureVariation = _defaultMaxTemperature - _defaultMinTemperature;
-            for(int i = 0; i < 24 * 12; ++i){
+            for (int i = 0; i < 24 * 12; ++i)
+            {
                 float normalisedTime = i / (24f * 12f);
                 float tempAtTime = Mathf.Pow(normalisedTime, 3);
                 tempAtTime -= 2f * Mathf.Pow(normalisedTime, 2);
@@ -53,16 +56,12 @@ namespace Game.World.Environment_and_Weather
             int hours = WorldState.Hours;
             int minutes = WorldState.Minutes;
             hours -= 6;
-            if(hours < 0){
+            if (hours < 0)
+            {
                 hours = 24 + hours;
             }
             int arrayPosition = hours * 12 + minutes / 5 - 1;
-            return (int)_temperatureArray[arrayPosition];
-        }
-
-        protected override void NavigateToState(string stateName)
-        {
-            EnvironmentManager.Instance().NavigateToState(stateName);
+            return (int) _temperatureArray[arrayPosition];
         }
     }
 }

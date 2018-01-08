@@ -13,7 +13,7 @@ namespace Game.World.Environment_and_Weather
         private int _timeRemaining;
         public WeatherAttributes Attributes;
 
-        public Weather(string name, int temperature, int visibility, int water, int food, int duration) : base(name, StateSubtype.Weather)
+        public Weather(StateMachine stateMachine, string name, int temperature, int visibility, int water, int food, int duration) : base(stateMachine, name, StateSubtype.Weather)
         {
             _temperature = temperature;
             _visibility = visibility;
@@ -29,6 +29,7 @@ namespace Game.World.Environment_and_Weather
 
         public override void Enter()
         {
+            base.Enter();
             _timeRemaining = _duration * WorldState.MinutesPerHour;
             WeatherSystemController.Instance().ChangeWeather(this, _timeRemaining);
         }
@@ -43,7 +44,7 @@ namespace Game.World.Environment_and_Weather
             --_timeRemaining;
             if (_timeRemaining != 0) return;
             UpdateEnvironmentResources();
-            NavigateToState(Name);
+            WeatherManager.Instance().GoToWeather();
         }
 
         private void UpdateEnvironmentResources()
@@ -54,11 +55,6 @@ namespace Game.World.Environment_and_Weather
                 r.AddWater(_water);
                 r.AddFood(_food);
             });
-        }
-
-        protected override void NavigateToState(string name)
-        {
-            WeatherManager.Instance().NavigateToState(WeatherManager.Instance().CalculateNextState());
         }
 
         private class Danger

@@ -34,7 +34,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         private void Close()
         {
-            MenuStateMachine.States.NavigateToState("Game Menu");
+            MenuStateMachine.States.GetState("Game Menu").Enter();
             _closeAction?.Invoke();
             _closeAction = null;
         }
@@ -62,7 +62,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         private void ShowInventories(Inventory left, Inventory right)
         {
-            MenuStateMachine.States.NavigateToState("Inventory Transfer Menu");
+            MenuStateMachine.ShowMenu("Inventory Transfer Menu");
             InventoryLeft.gameObject.SetActive(true);
             InventoryRight.gameObject.SetActive(true);
             InventoryLeft.SetInventory(left, InventoryRight, _closeButton);

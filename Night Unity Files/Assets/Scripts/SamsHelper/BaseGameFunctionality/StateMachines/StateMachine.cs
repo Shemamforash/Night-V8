@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-using System.Linq;
 using SamsHelper.Input;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.StateMachines
 {
-    public class StateMachine<T>: IInputListener where T : State
+    public class StateMachine: IInputListener
     {
-        protected readonly Dictionary<string, T> States = new Dictionary<string, T>();
-        private T _currentState;
-        private string _defaultState;
+        protected readonly Dictionary<string, State> States = new Dictionary<string, State>();
+        private State _currentState;
+        private State _defaultState;
         private bool _acceptInput = true;
 
         public void EnableInput()
@@ -16,61 +16,34 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             InputHandler.RegisterInputListener(this);
         }
 
-        public List<T> StatesAsList()
+        public List<State> StatesAsList()
         {
-            return new List<T>(States.Values);
+            return new List<State>(States.Values);
         }
 
-        public T GetCurrentState()
+        public State GetCurrentState()
         {
             return _currentState;
         }
 
-        public void SetDefaultState(string defaultState)
+        public void SetDefaultState(State defaultState)
         {
             _defaultState = defaultState;
         }
 
-        public T GetState(string stateName)
+        public State GetState(string stateName)
         {
             return States[stateName];
         }
 
-        public void AddState(T state)
+        public void AddState(State state)
         {
             States[state.Name] = state;
         }
 
-        public virtual T NavigateToState(string stateName)
+        public void SetCurrentState(State state)
         {
-            _currentState?.Exit();
-            if (!States.ContainsKey(stateName))
-            {
-                throw new Exceptions.UnknownStateNameException(stateName);
-            }
-            _currentState = States[stateName];
-            _currentState.Enter();
-            return _currentState;
-        }
-
-        public bool IsInState(T state)
-        {
-            return _currentState == state;
-        }
-        
-        public bool IsInState(string statename)
-        {
-            return _currentState?.Name == statename;
-        }
-
-        public bool IsInState(string[] stateNames)
-        {
-            return stateNames.Any(IsInState);
-        }
-
-        public void Update()
-        {
-            _currentState?.Update();
+            _currentState = state;
         }
 
         public void ReturnToDefault()
@@ -79,9 +52,9 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             {
                 throw new Exceptions.DefaultStateNotSpecifiedException();
             }
-            if (_currentState == null || _currentState.Name != _defaultState)
+            if (_currentState == null || !_defaultState.IsCurrentState())
             {
-                NavigateToState(_defaultState);
+                _defaultState.Enter();
             }
         }
 
@@ -89,11 +62,6 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         {
             if (!_acceptInput) return;
             _currentState?.OnInputDown(axis, isHeld, direction);
-        }
-
-        public void CanAcceptInput(bool acceptInput)
-        {
-            _acceptInput = acceptInput;
         }
 
         public void OnInputUp(InputAxis axis)

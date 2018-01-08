@@ -16,7 +16,7 @@ public class UIGearEquipController : Menu
 
     public static void DisplayCharacters(GearItem gear)
     {
-        MenuStateMachine.States.NavigateToState("Equip Menu");
+        MenuStateMachine.ShowMenu("Equip Menu");
         _menuList.SetItems(CharacterManager.Characters());
         foreach (ViewParent viewParent in _menuList.Items)
         {
@@ -37,7 +37,7 @@ public class UIGearEquipController : Menu
 
     public static void DisplayGear(Character character, List<MyGameObject> availableGear)
     {
-        MenuStateMachine.States.NavigateToState("Equip Menu");
+        MenuStateMachine.ShowMenu("Equip Menu");
         _menuList.SetItems(availableGear);
         foreach (ViewParent viewParent in _menuList.Items)
         {

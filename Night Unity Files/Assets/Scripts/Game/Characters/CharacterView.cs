@@ -200,7 +200,7 @@ namespace Game.Characters
         
         private void UpdateCurrentActionText()
         {
-            BaseCharacterAction currentState = _character.States.GetCurrentState();
+            BaseCharacterAction currentState = (BaseCharacterAction) _character.States.GetCurrentState();
             if (currentState == null) return;
             string currentActionString = currentState.Name + " " + currentState.GetCostAsString();
             _currentActionText.text = currentActionString;

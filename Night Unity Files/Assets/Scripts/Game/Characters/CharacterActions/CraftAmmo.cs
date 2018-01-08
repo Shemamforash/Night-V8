@@ -14,6 +14,7 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
+            base.Enter();
             UICreateAmmoController.Instance().ShowMenu(GetCharacter());
         }
         

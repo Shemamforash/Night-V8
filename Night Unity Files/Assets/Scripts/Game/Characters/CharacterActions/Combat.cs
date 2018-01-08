@@ -9,6 +9,7 @@
 
         public override void Enter()
         {
+            base.Enter();
 //            CombatManager.EnterCombat();
         }
     }

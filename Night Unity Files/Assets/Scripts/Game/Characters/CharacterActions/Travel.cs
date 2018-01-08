@@ -1,16 +1,31 @@
-﻿namespace Game.Characters.CharacterActions
+﻿using Game.World.Region;
+
+namespace Game.Characters.CharacterActions
 {
     public class Travel : BaseCharacterAction
     {
         public Travel(Player playerCharacter) : base("Travel", playerCharacter)
         {
-            IsVisible = false;
             HourCallback = GetCharacter().Travel;
         }
-
-        public void SetTravelTime(int distance)
+        
+        public override void Enter()
         {
-            SetDuration(distance);
+            base.Enter();
+            RegionManager.EnterManager(GetCharacter());
+        }
+
+        public void TravelToAndEnter(Region region)
+        {
+            SetDuration(region.Distance);
+            AddOnExit(() => region.Enter(PlayerCharacter));
+            Start();
+        }
+
+        public void TravelTo(Region region)
+        {
+            SetDuration(region.Distance);
+            AddOnExit(() => region.Discover(PlayerCharacter));
             Start();
         }
     }

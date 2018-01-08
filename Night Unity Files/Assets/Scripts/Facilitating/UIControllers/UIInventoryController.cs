@@ -32,7 +32,7 @@ namespace UIControllers
 		
 		public static void ShowInventory(DesolationInventory inventory, Action<MyGameObject> callback = null)
 		{
-			MenuStateMachine.States.NavigateToState("Inventory Menu");
+			MenuStateMachine.ShowMenu("Inventory Menu");
 			_inventoryDisplay.SetInventory(inventory, null);
 			_inventoryDisplay.Items.ForEach(item =>
 			{

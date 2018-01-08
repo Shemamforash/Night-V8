@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Game.World.Environment_and_Weather
 {
-    public class EnvironmentManager : StateMachine<Environment>
+    public class EnvironmentManager : StateMachine
     {
         private TextMeshProUGUI _environmentText, _temperatureText;
         private static EnvironmentManager _instance;
@@ -35,12 +35,11 @@ namespace Game.World.Environment_and_Weather
 //            TestEnvironmentGenerator();
         }
 
-        public override Environment NavigateToState(string stateName)
+        private void NavigateToState(string stateName)
         {
-            Environment newState = base.NavigateToState(stateName);
+            GetState(stateName).Enter();
             RegionManager.GenerateNewRegions();
             _environmentText.text = GetCurrentState().Name;
-            return newState;
         }
 
         private void TestEnvironmentGenerator()
@@ -81,10 +80,10 @@ namespace Game.World.Environment_and_Weather
                 int fuelAbundance = int.Parse(attributes[5]);
                 int scrapAbundance = int.Parse(attributes[6]);
 
-                Environment environment = new Environment(name, temperature, climate, waterAbundance, foodAbundance, fuelAbundance, scrapAbundance);
+                Environment environment = new Environment(this, name, temperature, climate, waterAbundance, foodAbundance, fuelAbundance, scrapAbundance);
                 AddState(environment);
             });
-            SetDefaultState("Oasis");
+            SetDefaultState(GetState("Oasis"));
         }
 
         private void UpdateTemperature()
@@ -111,7 +110,9 @@ namespace Game.World.Environment_and_Weather
 
         public int GetTemperature()
         {
-            return GetCurrentState().GetTemperature() + WeatherManager.Instance().GetCurrentState().Temperature();
+            Environment currentEnvironment = (Environment) GetCurrentState();
+            Weather currenWeather = (Weather) WeatherManager.Instance().GetCurrentState();
+            return  currentEnvironment.GetTemperature() + currenWeather.Temperature();
         }
 
         private void GenerateEnvironment()

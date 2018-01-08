@@ -12,6 +12,7 @@ namespace Game.Characters.CharacterActions
 
         public override void Enter()
         {
+            base.Enter();
             if (WorldState.HomeInventory().GetResource(InventoryResourceType.Fuel).Quantity() > 0)
             {
                 SetDuration(1);
@@ -21,7 +22,7 @@ namespace Game.Characters.CharacterActions
             }
             else
             {
-                ReturnToDefault();
+                PlayerCharacter.IdleAction.Enter();
             }
         }
     }

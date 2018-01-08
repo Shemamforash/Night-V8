@@ -16,6 +16,7 @@
 
         public override void Enter()
         {
+            base.Enter();
             SetDuration((int) (GetCharacter().Energy.Max - GetCharacter().Energy.CurrentValue()));
             Start();
         }
