@@ -136,7 +136,7 @@ namespace Game.Characters
             }
         }
 
-        public void Save(XmlNode doc, PersistenceType saveType)
+        public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             XmlNode characterManagerNode = SaveController.CreateNodeAndAppend("CharacterManager", doc);
             foreach (Player c in _characters)
@@ -144,6 +144,7 @@ namespace Game.Characters
                 XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", characterManagerNode);
                 c.Save(characterNode, saveType);
             }
+            return characterManagerNode;
         }
 
         public static Player PreviousCharacter(Player character)

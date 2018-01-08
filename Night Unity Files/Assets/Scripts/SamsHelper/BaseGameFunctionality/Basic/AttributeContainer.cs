@@ -18,7 +18,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             throw new System.NotImplementedException();
         }
 
-        public virtual void Save(XmlNode doc, PersistenceType saveType)
+        public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             throw new System.NotImplementedException();
         }

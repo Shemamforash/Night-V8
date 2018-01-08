@@ -166,7 +166,6 @@
                 <e p="WeatherSystemController.cs" t="Include" />
               </e>
               <e p="Region" t="Include">
-                <e p="MapGenerator.cs" t="Include" />
                 <e p="Region.cs" t="Include" />
                 <e p="RegionManager.cs" t="Include" />
                 <e p="RegionTemplate.cs" t="Include" />
@@ -274,6 +273,7 @@
           </e>
         </e>
         <e p="UIExploreMenuController.cs" t="Include" />
+        <e p="UIRegionItem.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

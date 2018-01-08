@@ -215,20 +215,18 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public virtual void Load(XmlNode root, PersistenceType saveType)
         {
-            if (saveType == PersistenceType.Game)
-            {
-                XmlNode inventoryNode = root.SelectSingleNode(Name);
-                Resources().ForEach(r => LoadResource(r.GetResourceType(), inventoryNode));
-            }
+            if (saveType != PersistenceType.Game) return;
+            XmlNode inventoryNode = root.SelectSingleNode(Name);
+            Resources().ForEach(r => LoadResource(r.GetResourceType(), inventoryNode));
         }
 
-        public virtual void Save(XmlNode root, PersistenceType saveType)
+        public virtual XmlNode Save(XmlNode root, PersistenceType saveType)
         {
-            if (saveType == PersistenceType.Game)
-            {
-                XmlNode inventoryNode = SaveController.CreateNodeAndAppend(Name, root);
-                Resources().ForEach(r => SaveResource(r.GetResourceType(), inventoryNode));
-            }
+            if (saveType != PersistenceType.Game) return null;
+            XmlNode inventoryNode = SaveController.CreateNodeAndAppend(GetType().ToString(), root);
+            SaveController.CreateNodeAndAppend("Name", inventoryNode, Name);
+            Resources().ForEach(r => SaveResource(r.GetResourceType(), inventoryNode));
+            return inventoryNode;
         }
 
         private void LoadResource(InventoryResourceType type, XmlNode root)

@@ -18,7 +18,7 @@ namespace Facilitating.Persistence
         public static void AddPersistenceListener(IPersistenceTemplate persistentObject)
         {
             OnLoad.Add(persistentObject.Load);
-            OnSave.Add(persistentObject.Save);
+            OnSave.Add((doc, saveType) => persistentObject.Save(doc, saveType));
         }
 
         public static void BroadcastLoad(XmlNode root, PersistenceType persistenceType)

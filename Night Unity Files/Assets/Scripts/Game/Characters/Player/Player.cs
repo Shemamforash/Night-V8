@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Facilitating.Audio;
+using Facilitating.Persistence;
 using Game.Characters.Attributes;
 using Game.Characters.CharacterActions;
 using Game.Combat;
@@ -15,8 +17,10 @@ using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Input;
+using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 
@@ -40,6 +44,17 @@ namespace Game.Characters
             CharacterInventory.MaxWeight = 50;
             BaseAttributes.Endurance.AddOnValueChange(a => Energy.Max = a.CurrentValue());
             Energy.OnMin(Sleep);
+        }
+
+        public override XmlNode Save(XmlNode doc, PersistenceType saveType)
+        {
+            base.Save(doc, saveType);
+            SaveController.CreateNodeAndAppend("Class", doc, CharacterClass.Name);
+            SaveController.CreateNodeAndAppend("Trait", doc, CharacterTrait.Name);
+            SaveController.CreateNodeAndAppend("Distance", doc, DistanceFromHome);
+            SaveController.CreateNodeAndAppend("Energy", doc, Energy.CurrentValue());
+            SurvivalAttributes.Save(doc, saveType);
+            return doc;
         }
 
         protected override float GetSpeedModifier()

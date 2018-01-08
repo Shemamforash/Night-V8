@@ -55,7 +55,7 @@ namespace Game.World.WorldEvents
             PrintFirstFourEvents();
         }
 
-        public void Save(XmlNode doc, PersistenceType saveType)
+        public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             string commaSeperatedEvents = "";
             for (int i = 0; i < _eventLog.Count; ++i)
@@ -67,6 +67,7 @@ namespace Game.World.WorldEvents
                 }
             }
             SaveController.CreateNodeAndAppend("WorldEvents", doc, commaSeperatedEvents);
+            return doc;
         }
     }
 }

@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
+using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public abstract class GearItem : InventoryItem
+    public abstract class GearItem : InventoryItem, IPersistenceTemplate
     {
         private readonly GearSubtype _gearType;
         public bool Equipped { get; set; }
@@ -47,18 +49,25 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public override ViewParent CreateUi(Transform parent)
         {
             InventoryUi ui = (InventoryUi) base.CreateUi(parent);
-            if (ui != null)
-            {
-                ui.SetRightTextCallback(GetSummary);
-                ui.SetLeftTextCallback(() => GetGearType().ToString());
-                ui.SetCentralTextCallback(() => Name);
-            }
+            if (ui == null) return ui;
+            ui.SetRightTextCallback(GetSummary);
+            ui.SetLeftTextCallback(() => GetGearType().ToString());
+            ui.SetCentralTextCallback(() => Name);
             return ui;
         }
         
         public void MoveTo(Inventory targetInventory)
         {
             ParentInventory?.Move(this, targetInventory, 1);
-        }   
+        }
+
+        public void Load(XmlNode doc, PersistenceType saveType)
+        {
+        }
+
+        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        {
+            return doc;
+        }
     }
 }

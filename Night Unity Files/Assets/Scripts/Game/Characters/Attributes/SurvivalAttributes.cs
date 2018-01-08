@@ -81,8 +81,7 @@ namespace Game.Characters.Attributes
             SaveAttribute(doc, nameof(Dehydration), Dehydration);
             SaveAttribute(doc, nameof(Hunger), Hunger);
             SaveAttribute(doc, nameof(Thirst), Thirst);
-
-            SaveController.CreateNodeAndAppend("Weight", doc, (int) Weight);
+            SaveController.CreateNodeAndAppend("Weight", doc, Weight);
         }
         
         private void Drink()

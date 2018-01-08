@@ -35,12 +35,10 @@ namespace Facilitating.UI.Main_Menu_Only
             }
         }
 
-        public void Save(XmlNode doc, PersistenceType saveType)
+        public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
-            if (saveType == PersistenceType.Game)
-            {
-                SaveController.CreateNodeAndAppend(nameof(_permadeathOn), doc);
-            }
+            if (saveType == PersistenceType.Game) SaveController.CreateNodeAndAppend(nameof(_permadeathOn), doc);
+            return doc;
         }
     }
 }

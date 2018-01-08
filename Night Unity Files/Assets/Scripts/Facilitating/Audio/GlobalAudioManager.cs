@@ -19,7 +19,7 @@ namespace Facilitating.Audio
         {
             SaveController.AddPersistenceListener(this);
         }
-        
+
         public void Load(XmlNode root, PersistenceType saveType)
         {
             if (saveType == PersistenceType.Settings)
@@ -32,15 +32,14 @@ namespace Facilitating.Audio
             }
         }
 
-        public void Save(XmlNode root, PersistenceType saveType)
+        public XmlNode Save(XmlNode root, PersistenceType saveType)
         {
-            if (saveType == PersistenceType.Settings)
-            {
-                XmlNode node = SaveController.CreateNodeAndAppend("SoundSettings", root);
-                SaveController.CreateNodeAndAppend(nameof(_musicVolume), node, _musicVolume);
-                SaveController.CreateNodeAndAppend(nameof(_effectsVolume), node, _effectsVolume);
-                SaveController.CreateNodeAndAppend(nameof(_masterVolume), node, _masterVolume);
-            }
+            if (saveType != PersistenceType.Settings) return null;
+            XmlNode node = SaveController.CreateNodeAndAppend("SoundSettings", root);
+            SaveController.CreateNodeAndAppend(nameof(_musicVolume), node, _musicVolume);
+            SaveController.CreateNodeAndAppend(nameof(_effectsVolume), node, _effectsVolume);
+            SaveController.CreateNodeAndAppend(nameof(_masterVolume), node, _masterVolume);
+            return node;
         }
 
         private void UpdateVolumes()

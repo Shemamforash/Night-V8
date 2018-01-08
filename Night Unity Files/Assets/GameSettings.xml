@@ -27,23 +27,23 @@
       </Attributes>
     </Character>
     <Character>
-      <Name>Ambule</Name>
+      <Name>Lux</Name>
       <Attributes>
         <Strength>
           <Val>9</Val>
           <Max>9</Max>
         </Strength>
         <Endurance>
-          <Val>10</Val>
-          <Max>10</Max>
-        </Endurance>
-        <Willpower>
           <Val>8</Val>
           <Max>8</Max>
+        </Endurance>
+        <Willpower>
+          <Val>10</Val>
+          <Max>10</Max>
         </Willpower>
         <Perception>
-          <Val>9</Val>
-          <Max>9</Max>
+          <Val>7</Val>
+          <Max>7</Max>
         </Perception>
       </Attributes>
     </Character>

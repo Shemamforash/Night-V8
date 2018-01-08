@@ -43,6 +43,15 @@ namespace Game.Characters
         public HealthController HealthController;
         public EquipmentController EquipmentController;
         private AttributeModifier _sprintModifier = new AttributeModifier();
+        private CoverLevel _coverLevel;
+        
+        public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
+        {
+            SaveController.CreateNodeAndAppend("Name", doc, Name);
+            BaseAttributes.Save(doc, saveType);
+            EquipmentController.Save(doc, saveType);
+            return doc;
+        }
         
         private enum CoverLevel
         {
@@ -50,8 +59,6 @@ namespace Game.Characters
             Partial,
             Total
         }
-
-        private CoverLevel _coverLevel;
 
         public Weapon Weapon()
         {
@@ -117,13 +124,6 @@ namespace Game.Characters
             Name = doc.SelectSingleNode("Name").InnerText;
             XmlNode attributesNode = doc.SelectSingleNode("Attributes");
             BaseAttributes.Load(attributesNode, saveType);
-        }
-
-        public void Save(XmlNode doc, PersistenceType saveType)
-        {
-            SaveController.CreateNodeAndAppend("Name", doc, Name);
-            XmlNode attributesNode = SaveController.CreateNodeAndAppend("Attributes", doc);
-            BaseAttributes.Save(attributesNode, saveType);
         }
 
         public DesolationInventory Inventory()

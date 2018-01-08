@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Facilitating.MenuNavigation;
+using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -12,7 +14,6 @@ namespace Game.World.Region
 {
     public class Region : DesolationInventory
     {
-        private string _regionDescription;
         public readonly int Distance;
         private readonly RegionTemplate _template;
         private bool _discovered;
@@ -22,6 +23,25 @@ namespace Game.World.Region
         public readonly List<Region> Connections = new List<Region>();
         private Action<Player> _enterNodeAction;
         public readonly int RegionNumber;
+
+        public override XmlNode Save(XmlNode doc, PersistenceType type)
+        {
+            XmlNode regionNode = base.Save(doc, type);
+            SaveController.CreateNodeAndAppend("Distance", regionNode, Distance);
+            SaveController.CreateNodeAndAppend("Discovered", regionNode, _discovered);
+            SaveController.CreateNodeAndAppend("PerceptionReq", regionNode, PerceptionRequirement);
+            SaveController.CreateNodeAndAppend("Origin", regionNode, Origin?.RegionNumber.ToString() ?? "None");
+            SaveController.CreateNodeAndAppend("ID", regionNode, RegionNumber);
+            SaveController.CreateNodeAndAppend("Type", regionNode, _template.Type);
+            XmlNode connectionNode = SaveController.CreateNodeAndAppend("Connections",regionNode);
+            foreach (Region region in Connections)
+            {
+                SaveController.CreateNodeAndAppend("RegionID", connectionNode, region.RegionNumber);
+            }
+            XmlNode combatNode = SaveController.CreateNodeAndAppend("Scenario", regionNode);
+            _combatScenario?.Save(combatNode, type);
+            return regionNode;
+        }
         
         public Region(string name, Region origin, int regionNumber, RegionTemplate template) : base(name)
         {
@@ -46,30 +66,7 @@ namespace Game.World.Region
             {
                 _combatScenario = CombatScenario.Generate(Random.Range(1, 3));
             }
-            AddNodeEnterAction();
-        }
-
-        private void AddNodeEnterAction()
-        {
-            _enterNodeAction = player =>
-            {
-                Popup p = new Popup("Reached Node " + _template.Type);
-                foreach (Region e in Connections)
-                {
-                    if (e.PerceptionRequirement <= player.BaseAttributes.Perception.CurrentValue())
-                    {
-                        p.AddButton("Explore " + e._template.Type,
-                            () => player.StartExploration(() => e.Discover(player), 1), true, true);
-                    }
-                    else
-                    {
-                        p.AddButton(e._template.Type + " (requires perception " + e.PerceptionRequirement + ")");
-                    }
-                }
-                string eventHere = "Look Around";
-                if (_combatScenario != null) eventHere = "Fight";
-                p.AddButton(eventHere + Name, () => Enter(player), true, true);
-            };
+            _enterNodeAction = player => UIExploreMenuController.Instance().SetRegion(this, player);
         }
 
         public void AddConnection(Region region)

@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.EnemyTypes;
+using SamsHelper.Persistence;
 using UnityEngine;
 
 namespace Game.Combat
 {
-    public class CombatScenario
+    public class CombatScenario : IPersistenceTemplate
     {
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private bool _finished = false;
@@ -69,6 +71,17 @@ namespace Game.Combat
         public bool IsFinished()
         {
             return _finished;
+        }
+
+        public void Load(XmlNode doc, PersistenceType saveType)
+        {
+//            throw new System.NotImplementedException();
+        }
+
+        public XmlNode Save(XmlNode doc, PersistenceType type)
+        {
+//            throw new System.NotImplementedException();
+            return doc;
         }
     }
 }

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using UnityEngine;
 using UnityEngine.UI;
 using Game.Characters.CharacterActions;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
@@ -15,22 +17,57 @@ using Random = UnityEngine.Random;
 
 namespace Game.World.Region
 {
-    public class RegionManager : Menu
+    public class RegionManager : Menu, IPersistenceTemplate
     {
-        private static readonly List<Region> DiscoveredRegions = new List<Region>();
         private static readonly Dictionary<string, RegionTemplate> Templates = new Dictionary<string, RegionTemplate>();
-        private static readonly int NoRegionsToGenerate = 40;
         private static Button _backButton;
         private static InventoryUi _exploreButton;
         private static TextMeshProUGUI _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
         private static Player _character;
-        private static RegionManager _instance;
         private static MenuList _menuList;
         private static Region _initialRegion;
+        private const int MaxGenerationDistance = 5;
+        private static string _graphString;
+        private const int TargetNodeNumber = 50;
+        private static readonly List<Region> NonFullNodes = new List<Region>();
+        private static readonly List<Region> _regionList = new List<Region>();
 
-        public static RegionManager Instance()
+        public static Region Generate()
         {
-            return _instance ?? FindObjectOfType<RegionManager>();
+            int _totalNodes = 0;
+            Region initialRegionNode = GenerateNewRegion(null, _totalNodes);
+            for(int i = 0; i < Random.Range(3, 5); ++i) NonFullNodes.Add(initialRegionNode);
+            while (_totalNodes < TargetNodeNumber)
+            {
+                Region originRegion = NonFullNodes[Random.Range(0, NonFullNodes.Count)];
+                ++_totalNodes;
+                Region newRegion = GenerateNewRegion(originRegion, _totalNodes);
+                originRegion.AddConnection(newRegion);
+                float maxConnections = newRegion.Distance > MaxGenerationDistance ? 0 : 4;
+//                float maxConnections = MaxGenerationDistance - newRegion.Distance + 1;
+                for (int i = 0; i < maxConnections; ++i) NonFullNodes.Add(newRegion);
+                NonFullNodes.Remove(originRegion);
+                _graphString += GetNodeName(originRegion) + "->" + GetNodeName(newRegion) + "\n";
+            }
+            Debug.Log(_graphString);
+            return initialRegionNode;
+        }
+
+        private static string GetNodeName(Region n)
+        {
+            return "\"Id:" + n.RegionNumber + " PReq:" + n.PerceptionRequirement + "\"";
+//                return "\"Id:" + n.NodeNumber + " Type:" + n.NodeType + " PReq:" + n.PerceptionRequirement+"\"";
+        }
+        
+        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        {
+            if (saveType != PersistenceType.Game) return null;
+            XmlNode regionNode = SaveController.CreateNodeAndAppend("Regions", doc);
+            foreach (Region region in _regionList)
+            {
+                region.Save(regionNode, saveType);
+            }
+            return regionNode;
         }
 
         private static void LoadNames(RegionTemplate template, string[] prefixes, string[] suffixes)
@@ -57,7 +94,7 @@ namespace Game.World.Region
 
         protected void Awake()
         {
-            _instance = this;
+            SaveController.AddPersistenceListener(this);
             _menuList = gameObject.AddComponent<MenuList>();
             _backButton = Helper.FindChildWithName<Button>(gameObject, "Back");
             _backButton.onClick.AddListener(delegate { ExitManager(false); });
@@ -144,21 +181,21 @@ namespace Game.World.Region
 
         public static void GenerateNewRegions()
         {
-            _initialRegion = MapGenerator.Generate();
+            _initialRegion = Generate();
             _menuList.Items.ForEach(i =>
             {
                 if (i == _exploreButton) return;
                 i.Destroy();
             });
-            DiscoveredRegions.Clear();
             RefreshExploreButton();
         }
 
-        public static Region GenerateNewRegion(Region origin, int regionNumber)
+        private static Region GenerateNewRegion(Region origin, int regionNumber)
         {
             RegionTemplate template = Templates[Templates.Keys.ToList()[Random.Range(0, Templates.Keys.Count)]];
             string regionName = template.GenerateName();
             Region region = new Region(regionName, origin, regionNumber, template);
+            _regionList.Add(region);
             return region;
         }
 
@@ -175,7 +212,6 @@ namespace Game.World.Region
                     currentCharacter.StartExploration(() => region.Enter(currentCharacter), region.Distance);
                 });
             });
-            DiscoveredRegions.Add(region);
             RefreshExploreButton();
         }
 
@@ -217,7 +253,11 @@ namespace Game.World.Region
 
         public static List<Region> GetDiscoveredRegions()
         {
-            return DiscoveredRegions;
+            return _regionList.FindAll(r => r.Discovered());
+        }
+
+        public void Load(XmlNode doc, PersistenceType saveType)
+        {
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
+using Facilitating.Persistence;
 using SamsHelper;
+using SamsHelper.Persistence;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -100,7 +102,7 @@ namespace Game.Characters
                 Weight = weight;
             }
 
-            public virtual string GetTraitDetails()
+            public string GetTraitDetails()
             {
                 string traitDetails = Name + ":";
                 traitDetails += GetValueAsString(Willpower, " stb");
