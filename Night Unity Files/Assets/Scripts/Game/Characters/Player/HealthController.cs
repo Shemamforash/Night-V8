@@ -22,7 +22,6 @@ namespace Game.Characters
             _healthRemaining = (int) (_character.BaseAttributes.Strength.CurrentValue() * _healthChunkSize);
             _healthAtStartOfCombat = _healthRemaining;
             HeartBeatController.Enable();
-
         }
 
         public void TakeDamage(int amount)

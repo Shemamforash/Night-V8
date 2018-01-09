@@ -33,24 +33,23 @@ namespace Game.World.Region
         private static readonly List<Region> NonFullNodes = new List<Region>();
         private static readonly List<Region> _regionList = new List<Region>();
 
-        public static Region Generate()
+        private static Region Generate()
         {
-            int _totalNodes = 0;
-            Region initialRegionNode = GenerateNewRegion(null, _totalNodes);
+            int totalNodes = 0;
+            Region initialRegionNode = GenerateNewRegion(null, totalNodes);
             for(int i = 0; i < Random.Range(3, 5); ++i) NonFullNodes.Add(initialRegionNode);
-            while (_totalNodes < TargetNodeNumber)
+            while (totalNodes < TargetNodeNumber)
             {
                 Region originRegion = NonFullNodes[Random.Range(0, NonFullNodes.Count)];
-                ++_totalNodes;
-                Region newRegion = GenerateNewRegion(originRegion, _totalNodes);
+                ++totalNodes;
+                Region newRegion = GenerateNewRegion(originRegion, totalNodes);
                 originRegion.AddConnection(newRegion);
                 float maxConnections = newRegion.Distance > MaxGenerationDistance ? 0 : 4;
-//                float maxConnections = MaxGenerationDistance - newRegion.Distance + 1;
                 for (int i = 0; i < maxConnections; ++i) NonFullNodes.Add(newRegion);
                 NonFullNodes.Remove(originRegion);
                 _graphString += GetNodeName(originRegion) + "->" + GetNodeName(newRegion) + "\n";
             }
-            Debug.Log(_graphString);
+//            Debug.Log(_graphString);
             return initialRegionNode;
         }
 
@@ -211,7 +210,7 @@ namespace Game.World.Region
                 AllocateTravelResources(currentCharacter, region.Distance);
                 InventoryTransferManager.Instance().ShowInventories(WorldState.HomeInventory(), currentCharacter.Inventory(), () =>
                 {
-                    currentCharacter.TravelAction.TravelToAndEnter(region);
+                    currentCharacter.TravelAction.TravelTo(region);
                 });
             });
             RefreshExploreButton();

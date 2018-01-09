@@ -1,17 +1,25 @@
-﻿namespace Game.Characters.CharacterActions
+﻿using Game.World.WorldEvents;
+
+namespace Game.Characters.CharacterActions
 {
     public class Sleep : BaseCharacterAction
     {
-        private int _enduranceRecoveryAmount = 1;
-        
         public Sleep(Player playerCharacter) : base("Sleep", playerCharacter)
         {
-            HourCallback = () => GetCharacter().Rest(_enduranceRecoveryAmount);
+            HourCallback = () =>
+            {
+                string storyProgress = playerCharacter.GetCurrentStoryProgress();
+                if (storyProgress != null)
+                {
+                    WorldEventManager.GenerateEvent(new WorldEvent(storyProgress));
+                }
+                GetCharacter().Rest(1);
+            };
         }
 
         public override string GetCostAsString()
         {
-            return "+" +_enduranceRecoveryAmount + " energy/hr";
+            return "Resting";
         }
 
         public override void Enter()

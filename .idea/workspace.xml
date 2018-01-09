@@ -3,61 +3,60 @@
   <component name="ChangeListManager">
     <list default="true" id="167d3be1-cdd9-4be3-97f7-467b7a89563b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Desolation Balance Files.xlsx" afterPath="$PROJECT_DIR$/Desolation Balance Files.xlsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Images/LMG Mag.png" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Images/LMG Mag.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Images/Pistol Mag.png" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Images/Pistol Mag.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Images/Rifle Mag.png" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Images/Rifle Mag.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Images/SMG Mag.png" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Images/SMG Mag.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Images/Shotgun Mag.png" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Images/Shotgun Mag.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Menus/Game Menus/Combat Menu 1.prefab" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Menus/Game Menus/Combat Menu 1.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Player Combat.prefab" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Prefabs/UIPrefabs/Player Combat.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Prefabs/Inventory/EnemyItem.prefab" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Prefabs/Inventory/EnemyItem.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Combat Tester.unity" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Combat Tester.unity" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Game.unity" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Game.unity" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll.mdb" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll.mdb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ShaderCache.db" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ShaderCache.db" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/assetDatabase3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/assetDatabase3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/expandedItems" afterPath="$PROJECT_DIR$/Night Unity Files/Library/expandedItems" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/08/081aa75e75b640dd90db7e6449bd4d31" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/08/081aa75e75b640dd90db7e6449bd4d31" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/05/05bd5945ab98411eab60ea0a6548fe83" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/05/05bd5945ab98411eab60ea0a6548fe83" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/12/1283f7514fce9d240bf70d6f252658dc" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/12/1283f7514fce9d240bf70d6f252658dc" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/34/3473a9718e9fa6f42a1d25dace4748d0" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/34/3473a9718e9fa6f42a1d25dace4748d0" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/33/334f341f86cb430cb593523c54f76e0d" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/33/334f341f86cb430cb593523c54f76e0d" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3d/3db6c973cea141b7bffa1ac7cb09d0b5" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3d/3db6c973cea141b7bffa1ac7cb09d0b5" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3f/3f780ce7295578d41852d7c98f208309" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3f/3f780ce7295578d41852d7c98f208309" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/51/51593c6711164fa39c7b502ffa53e54e" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/51/51593c6711164fa39c7b502ffa53e54e" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/55/5539d8618fea41b39aab87809081b732" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/55/5539d8618fea41b39aab87809081b732" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/65/651120d55617473a877f7846fdd01f55" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/65/651120d55617473a877f7846fdd01f55" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/73/73f1184449d44719855969c37cba027f" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/73/73f1184449d44719855969c37cba027f" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/88/886cf9657f11418481cac4b429f03ee8" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/88/886cf9657f11418481cac4b429f03ee8" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/5c/5c6e2dec3444492a8709dcb0c78587e5" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/5c/5c6e2dec3444492a8709dcb0c78587e5" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/72/723ba06d8c3f40a08dca2d1236150762" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/72/723ba06d8c3f40a08dca2d1236150762" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/74/7421ff47e6d04c569b3046d4382154b4" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/74/7421ff47e6d04c569b3046d4382154b4" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/84/84b6714a73744316b97a3ef622b261a1" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/84/84b6714a73744316b97a3ef622b261a1" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/8c/8c3099d540e04c6448d2dfcd895f034e" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/8c/8c3099d540e04c6448d2dfcd895f034e" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bc/bc5b6e23f76f4d73a37ecab2dd33d4c3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bc/bc5b6e23f76f4d73a37ecab2dd33d4c3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d1/d11e84199d5f4e51af20f635845e954b" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d1/d11e84199d5f4e51af20f635845e954b" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b9/b94b8cf7fc094432b49d6aa8d4d079a1" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b9/b94b8cf7fc094432b49d6aa8d4d079a1" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bd/bd0e4bf0baf624a46916c722248e3a21" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bd/bd0e4bf0baf624a46916c722248e3a21" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c3/c3445f3cecb44ba7a3e70c6cda7ca2b3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c3/c3445f3cecb44ba7a3e70c6cda7ca2b3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c6/c6b8e2cde3c155d4db7bff20f60a054a.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c6/c6b8e2cde3c155d4db7bff20f60a054a.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d1/d17a6383cd1d47d19ba2ee0e7244da2a" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d1/d17a6383cd1d47d19ba2ee0e7244da2a" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/ee/ee9a0046910cc3148903833fb8d0d8ed" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/ee/ee9a0046910cc3148903833fb8d0d8ed" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Temp/__Backupscenes/0.backup" afterPath="$PROJECT_DIR$/Night Unity Files/Temp/__Backupscenes/0.backup" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp.csprojResolveAssemblyReference.cache" afterPath="$PROJECT_DIR$/Night Unity Files/obj/Debug/Assembly-CSharp.csprojResolveAssemblyReference.cache" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/f2/f27addc0f8d44b25806273864c095dd3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/f2/f27addc0f8d44b25806273864c095dd3" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/workspace.xml" afterPath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/GameSettings.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/GameSettings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/NightSave.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/NightSave.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Plugins/Editor/JetBrains/Unity3DRider.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Plugins/Editor/JetBrains/Unity3DRider.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Gear.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Gear.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Regions.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Regions.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Traits.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Traits.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/WeaponClasses.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/WeaponClasses.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIAttributeController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIAttributeController.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UICreateAmmoController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UICreateAmmoController.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Attributes/BaseAttributes.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Attributes/BaseAttributes.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Attributes/SurvivalAttributes.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Attributes/SurvivalAttributes.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIExploreMenuController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIExploreMenuController.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIRegionItem.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIRegionItem.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Character.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Character.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterActions/BaseCharacterAction.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterActions/BaseCharacterAction.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterActions/Idle.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterActions/Idle.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterActions/Sleep.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterActions/Sleep.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterActions/Travel.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterActions/Travel.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/DesolationCharacterGenerator.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/DesolationCharacterGenerator.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/EquipmentController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/EquipmentController.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/HealthController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/HealthController.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/Player.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/Player.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/TraitLoader.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/TraitLoader.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/Enemy.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/Enemy.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Grazer.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Grazer.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Watcher.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Watcher.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Armour/Armour.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Armour/Armour.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Armour/GearReader.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Armour/GearReader.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/UI/ArmourUi.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/UI/ArmourUi.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/Basic/AttributeType.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/Basic/AttributeType.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/Elements/EnhancedText.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/Elements/EnhancedText.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/Elements/UiAppearanceController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/ReactiveUI/Elements/UiAppearanceController.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatManager.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatManager.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatTester.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatTester.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatUI.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatUI.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyView.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyView.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/Weapon.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/Weapon.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/Region.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/Region.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RegionManager.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RegionManager.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/GearItem.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/GearItem.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/CurrentLayout.dwlt" afterPath="$PROJECT_DIR$/Night Unity Files/Library/CurrentLayout.dwlt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/EditorInstance.json" afterPath="$PROJECT_DIR$/Night Unity Files/Library/EditorInstance.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/shadercompiler-UnityShaderCompiler.exe0.log" afterPath="$PROJECT_DIR$/Night Unity Files/Library/shadercompiler-UnityShaderCompiler.exe0.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/LastSceneManagerSetup.txt" afterPath="$PROJECT_DIR$/Night Unity Files/Library/LastSceneManagerSetup.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WeaponCsvToXml.py" afterPath="$PROJECT_DIR$/WeaponCsvToXml.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -69,7 +68,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Night-V8$CsvToXml.coverage" NAME="CsvToXml Coverage Results" MODIFIED="1507202347152" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Night-V8$WeaponCsvToXml.coverage" NAME="WeaponCsvToXml Coverage Results" MODIFIED="1514907520791" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Night-V8$WeaponCsvToXml.coverage" NAME="WeaponCsvToXml Coverage Results" MODIFIED="1515513467069" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -80,8 +79,8 @@
       <file leaf-file-name="WeaponCsvToXml.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/WeaponCsvToXml.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="186" column="31" lean-forward="false" selection-start-line="186" selection-start-column="31" selection-end-line="186" selection-end-column="31" />
+            <state relative-caret-position="333">
+              <caret line="185" column="60" lean-forward="false" selection-start-line="185" selection-start-column="60" selection-end-line="185" selection-end-column="60" />
               <folding>
                 <element signature="e#0#34#0" expanded="true" />
                 <element signature="e#191#441#0" expanded="false" />
@@ -90,7 +89,7 @@
                 <element signature="e#4427#5729#0" expanded="false" />
                 <element signature="e#5774#6564#0" expanded="false" />
                 <element signature="e#6604#8390#0" expanded="false" />
-                <element signature="e#9769#10175#0" expanded="false" />
+                <element signature="e#9838#10244#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -99,8 +98,8 @@
       <file leaf-file-name="Traits.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/Traits.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="613">
-              <caret line="124" column="30" lean-forward="true" selection-start-line="124" selection-start-column="30" selection-end-line="124" selection-end-column="30" />
+            <state relative-caret-position="255">
+              <caret line="15" column="20" lean-forward="false" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -119,7 +118,7 @@
       <file leaf-file-name="Regions.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/Regions.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-128">
+            <state relative-caret-position="0">
               <caret line="0" column="16" lean-forward="false" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
               <folding />
             </state>
@@ -232,7 +231,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -301,7 +300,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -633,7 +632,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -682,7 +681,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -731,7 +730,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -764,7 +763,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -797,7 +796,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -830,7 +829,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -855,7 +854,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -872,7 +871,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -897,7 +896,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -922,7 +921,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -947,7 +946,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -972,7 +971,7 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1037,7 +1036,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/Regions.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-128">
+        <state relative-caret-position="0">
           <caret line="0" column="16" lean-forward="false" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
           <folding />
         </state>
@@ -1045,8 +1044,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/WeaponCsvToXml.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="186" column="31" lean-forward="false" selection-start-line="186" selection-start-column="31" selection-end-line="186" selection-end-column="31" />
+        <state relative-caret-position="333">
+          <caret line="185" column="60" lean-forward="false" selection-start-line="185" selection-start-column="60" selection-end-line="185" selection-end-column="60" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
             <element signature="e#191#441#0" expanded="false" />
@@ -1055,15 +1054,15 @@
             <element signature="e#4427#5729#0" expanded="false" />
             <element signature="e#5774#6564#0" expanded="false" />
             <element signature="e#6604#8390#0" expanded="false" />
-            <element signature="e#9769#10175#0" expanded="false" />
+            <element signature="e#9838#10244#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/Traits.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="613">
-          <caret line="124" column="30" lean-forward="true" selection-start-line="124" selection-start-column="30" selection-end-line="124" selection-end-column="30" />
+        <state relative-caret-position="255">
+          <caret line="15" column="20" lean-forward="false" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
           <folding />
         </state>
       </provider>

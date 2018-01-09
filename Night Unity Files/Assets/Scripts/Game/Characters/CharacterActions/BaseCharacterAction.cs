@@ -11,12 +11,12 @@ namespace Game.Characters.CharacterActions
         private BaseCharacterAction _stateTransitionTarget;
         public GameObject ActionButtonGameObject;
         protected Action HourCallback;
-        private bool Interrupted;
+        private bool _interrupted;
         protected bool IsVisible = true;
         protected Action MinuteCallback;
-        protected Player PlayerCharacter;
+        protected readonly Player PlayerCharacter;
         private int _timeRemaining;
-        private readonly int UpdateInterval = 1;
+        private const int UpdateInterval = 1;
 
         protected BaseCharacterAction(string name, Player playerCharacter) : base(playerCharacter.States, name, StateSubtype.Character)
         {
@@ -32,7 +32,7 @@ namespace Game.Characters.CharacterActions
             return ui;
         }
 
-        public void SetDuration(int hours)
+        protected void SetDuration(int hours)
         {
             _timeRemaining = WorldState.MinutesPerHour * hours;
         }
@@ -59,13 +59,13 @@ namespace Game.Characters.CharacterActions
         public virtual void Interrupt()
         {
             WorldState.UnregisterMinuteEvent(UpdateAction);
-            Interrupted = true;
+            _interrupted = true;
         }
 
         public virtual void Resume()
         {
             WorldState.RegisterMinuteEvent(UpdateAction);
-            Interrupted = false;
+            _interrupted = false;
         }
 
         private void FinishUpdate()
@@ -90,16 +90,9 @@ namespace Game.Characters.CharacterActions
                 FinishUpdate();
         }
 
-        public override void Enter()
-        {
-            Debug.Log(Name);
-            base.Enter();
-        }
-        
         public override void Exit()
         {
-            Debug.Log(Name);
-            if (!Interrupted)
+            if (!_interrupted)
                 base.Exit();
         }
 

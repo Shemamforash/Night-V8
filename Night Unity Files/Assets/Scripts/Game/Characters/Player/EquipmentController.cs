@@ -43,7 +43,7 @@ namespace Game.Characters
                 previousEquipped.Unequip();
                 previousEquipped.MoveTo(previousInventory);
             }
-            gearItem.Equip();
+            gearItem.Equip(_inventory);
             _equippedGear[gearItem.GetGearType()] = gearItem;
         }
         

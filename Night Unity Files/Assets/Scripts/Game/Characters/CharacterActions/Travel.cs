@@ -12,19 +12,13 @@ namespace Game.Characters.CharacterActions
         public override void Enter()
         {
             base.Enter();
-            RegionManager.EnterManager(GetCharacter());
-        }
-
-        public void TravelToAndEnter(Region region)
-        {
-            SetDuration(region.Distance);
-            AddOnExit(() => region.Enter(PlayerCharacter));
-            Start();
+            if(PlayerCharacter.DistanceFromHome == 0) RegionManager.EnterManager(GetCharacter());
         }
 
         public void TravelTo(Region region)
         {
-            SetDuration(region.Distance);
+            Enter();
+            SetDuration(region.Distance - PlayerCharacter.DistanceFromHome);
             AddOnExit(() => region.Discover(PlayerCharacter));
             Start();
         }

@@ -168,7 +168,6 @@ namespace Game.Combat
             _currentTarget?.EnemyView().MarkUnselected();
             if (enemy == null) return;
             _currentTarget = enemy;
-            _currentTarget.EnemyView().MarkSelected();
         }
 
         public static void Flee(Enemy enemy)

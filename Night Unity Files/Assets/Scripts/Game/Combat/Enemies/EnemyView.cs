@@ -15,7 +15,7 @@ namespace Game.Combat.Enemies
         private TextMeshProUGUI _nameText, _typeText;
         private UIArmourController _uiArmourController;
         private UIHealthBarController _lowerUiHealthBarController;
-        private GameObject _targetObject, _alertedObject, _detectedObject;
+        private GameObject _alertedObject, _detectedObject;
         public UIAimController UiAimController;
         private GameObject _damageTextObject;
         
@@ -39,8 +39,6 @@ namespace Game.Combat.Enemies
             _lowerUiHealthBarController = Helper.FindChildWithName<UIHealthBarController>(GameObject, "Health Bar Bottom");
             _alertedObject = GameObject.Find("Alert");
             _detectedObject = GameObject.Find("Detected");
-            _targetObject = GameObject.Find("Target");
-            _targetObject.SetActive(false);
             _alertedObject.SetActive(false);
             _detectedObject.SetActive(false);
             ActionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Action");
@@ -78,12 +76,6 @@ namespace Game.Combat.Enemies
         public void MarkUnselected()
         {
             _lowerUiHealthBarController.SetParticleEmissionOverDistance();
-            _targetObject.SetActive(false);
-        }
-
-        public void MarkSelected()
-        {
-            _targetObject.SetActive(true);
         }
 
         public void MarkDead()

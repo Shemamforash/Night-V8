@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
+using Game.World;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.Persistence;
@@ -21,7 +22,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _gearType = gearSubtype;
         }
         
-        public void Equip()
+        public void Equip(DesolationInventory p)
         {
             //if in inventory, auto equip and replace
             //if not in inventory open equip window
@@ -29,6 +30,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 //            c.AddItemToInventory(this);
 //            _equipped = true;
 //            c.ReplaceGearInSlot(_gearslot, this);
+            ParentInventory = p;
             Modifiers.ForEach(a => a.Apply());
             Equipped = true;
         }

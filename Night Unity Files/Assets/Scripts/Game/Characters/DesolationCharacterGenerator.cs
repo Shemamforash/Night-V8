@@ -72,7 +72,7 @@ namespace Game.Characters
             return initialParty;
         }
 
-        private static Player GenerateCharacterObject(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait)
+        private static Player GenerateCharacterObject(string name, TraitLoader.CharacterClass characterClass, TraitLoader.Trait characterTrait)
         {
             Player playerCharacter = new Player(name, characterClass, characterTrait);
             CalculateAttributes(playerCharacter);
@@ -81,7 +81,7 @@ namespace Game.Characters
 
         public static Player GenerateCharacter()
         {
-            TraitLoader.Trait newClass = TraitLoader.GenerateClass();
+            TraitLoader.CharacterClass newClass = TraitLoader.GenerateClass();
             TraitLoader.Trait secondaryTrait = TraitLoader.GenerateTrait();
             string name = GenerateName();
             Player playerCharacter = GenerateCharacterObject(name, newClass, secondaryTrait);

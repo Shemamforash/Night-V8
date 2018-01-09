@@ -190,11 +190,12 @@ class CharacterImporter(XMLWriter):
     def read_class(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
         # write_single_value(self, "HealthRatio", get_value(self, "D", row))
-        write_single_value(self, "Endurance", get_value(self, "F", row))
-        write_single_value(self, "Strength", get_value(self, "G", row))
-        write_single_value(self, "Willpower", get_value(self, "H", row))
-        write_single_value(self, "Perception", get_value(self, "I", row))
-        write_single_value(self, "Weight", get_value(self, "K", row))
+        write_single_value(self, "Endurance", get_value(self, "D", row))
+        write_single_value(self, "Strength", get_value(self, "E", row))
+        write_single_value(self, "Willpower", get_value(self, "F", row))
+        write_single_value(self, "Perception", get_value(self, "G", row))
+        write_single_value(self, "Weight", get_value(self, "I", row))
+        write_single_value(self, "Story", get_value(self, "O", row))
 
     def read_trait(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))

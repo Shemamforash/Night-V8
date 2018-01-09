@@ -12,7 +12,7 @@ namespace Game.Characters
     public static class TraitLoader
     {
         private static readonly Dictionary<string, Trait> TraitDictionary = new Dictionary<string, Trait>();
-        private static readonly Dictionary<string, Trait> ClassDictionary = new Dictionary<string, Trait>();
+        private static readonly Dictionary<string, CharacterClass> ClassDictionary = new Dictionary<string, CharacterClass>();
         private static readonly List<string> TraitNames = new List<string>();
         private static readonly List<string> ClassNames = new List<string>();
 
@@ -21,7 +21,7 @@ namespace Game.Characters
             return TraitDictionary[TraitNames[Random.Range(0, TraitNames.Count)]];
         }
 
-        public static Trait GenerateClass()
+        public static CharacterClass GenerateClass()
         {
             return ClassDictionary[ClassNames[Random.Range(0, ClassNames.Count)]];
         }
@@ -45,7 +45,8 @@ namespace Game.Characters
                 int strength = int.Parse(classNode.SelectSingleNode("Strength").InnerText);
                 int perception = int.Parse(classNode.SelectSingleNode("Perception").InnerText);
                 int weight = int.Parse(classNode.SelectSingleNode("Weight").InnerText);
-                Trait newClass = new Trait(name, strength, endurance, willpower, perception, weight);
+                List<string> storyLines = new List<string>(classNode.SelectSingleNode("Story").InnerText.Split('.'));
+                CharacterClass newClass = new CharacterClass(storyLines, name, strength, endurance, willpower, perception, weight);
                 ClassDictionary[name] = newClass;
                 ClassNames.Add(name);
             }
@@ -74,7 +75,7 @@ namespace Game.Characters
             }
         }
 
-        public static Trait FindClass(string className)
+        public static CharacterClass FindClass(string className)
         {
             try
             {
@@ -86,6 +87,17 @@ namespace Game.Characters
             }
         }
 
+        public class CharacterClass : Trait
+        {
+            public readonly List<string> StoryLines = new List<String>();
+
+            public CharacterClass(List<string> storyLines, string name, int strength, int endurance, int willpower, int perception, int weight) : base(name, strength, endurance, willpower, perception,
+                weight)
+            {
+                StoryLines = storyLines;
+            }
+        }
+        
         public class Trait
         {
             public string Name;

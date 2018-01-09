@@ -3,6 +3,7 @@ using Game.Characters;
 using Game.World.Region;
 using SamsHelper;
 using SamsHelper.ReactiveUI.Elements;
+using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
 
@@ -38,13 +39,13 @@ namespace Facilitating.UIControllers
 			_updateBookends = false;
 		}
 
-		public void SetRegion(Region connection, Player player, Action closeAction)
+		public void SetRegion(Region connection, Player player)
 		{
 			GetComponent<EnhancedButton>().AddOnClick(() =>
 			{
 				//Travel to unknown region
 				player.TravelAction.TravelTo(connection);
-				closeAction();
+				MenuStateMachine.GoToInitialMenu();
 			});
 		}
 	}

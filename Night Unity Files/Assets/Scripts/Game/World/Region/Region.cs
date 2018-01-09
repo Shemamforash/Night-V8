@@ -99,7 +99,7 @@ namespace Game.World.Region
 
         public void Enter(Player player)
         {
-            if (!_combatScenario.IsFinished())
+            if (_combatScenario != null && !_combatScenario.IsFinished())
             {
                 CombatManager.EnterCombat(player, _combatScenario);
             }
@@ -111,9 +111,11 @@ namespace Game.World.Region
 
         public void Discover(Player player)
         {
-            if (_discovered) return;
-            _discovered = true;
-            RegionManager.DiscoverRegion(this);
+            if (!_discovered)
+            {
+                _discovered = true;
+                RegionManager.DiscoverRegion(this);
+            }
             UIExploreMenuController.Instance().SetRegion(this, player);
             if (Connections.Count != 0) return;
             Origin?.Connections.Remove(this);

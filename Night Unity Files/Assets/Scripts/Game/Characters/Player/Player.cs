@@ -29,7 +29,8 @@ namespace Game.Characters
     public class Player : Character, IInputListener
     {
         public readonly StateMachine States = new StateMachine();
-        public readonly TraitLoader.Trait CharacterClass, CharacterTrait;
+        public readonly TraitLoader.Trait CharacterTrait;
+        public readonly TraitLoader.CharacterClass CharacterClass;
         public int DistanceFromHome;
         public CharacterView CharacterView;
         public readonly SurvivalAttributes SurvivalAttributes;
@@ -44,8 +45,18 @@ namespace Game.Characters
         public CharacterActions.Combat CombatAction;
         public LightFire LightFireAction;
 
+        private int _storyProgress;
+
+        public string GetCurrentStoryProgress()
+        {
+            if (_storyProgress == CharacterClass.StoryLines.Count) return null;
+            string currentLine = CharacterClass.StoryLines[_storyProgress];
+            ++_storyProgress;
+            return currentLine;
+        }
+
         //Create Character in code only- no view section, no references to objects in the scene
-        public Player(string name, TraitLoader.Trait characterClass, TraitLoader.Trait characterTrait) : base(name)
+        public Player(string name, TraitLoader.CharacterClass characterClass, TraitLoader.Trait characterTrait) : base(name)
         {
             SurvivalAttributes = new SurvivalAttributes(this);
             CharacterClass = characterClass;
@@ -267,7 +278,7 @@ namespace Game.Characters
         public void UpdateMagazineUi()
         {
             string magazineMessage = "";
-            if (Weapon().GetAmmoAvailable() == 0) magazineMessage = "NO AMMO";
+            if (Weapon().GetRemainingMagazines() == 0) magazineMessage = "NO AMMO";
             if (!EquipmentController.Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
             else if (EquipmentController.Weapon().Empty()) magazineMessage = "RELOAD";
 
