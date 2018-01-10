@@ -1,5 +1,6 @@
 ﻿using SamsHelper.ReactiveUI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Characters
 {
@@ -17,7 +18,7 @@ namespace Game.Characters
             _fireRateModifier.SetMultiplicative(0.5f);
             _character = character;
             _rageLevel.OnMin(End);
-            if (_character is Player)
+            if (_character is Player.Player)
             {
                 _rageLevel.AddOnValueChange(a => RageBarController.SetRageBarFill(a.CurrentValue(), _activated));
             }

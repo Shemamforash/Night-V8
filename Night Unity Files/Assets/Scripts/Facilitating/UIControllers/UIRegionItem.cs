@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Characters;
+using Game.Characters.Player;
 using Game.World.Region;
 using SamsHelper;
 using SamsHelper.ReactiveUI.Elements;

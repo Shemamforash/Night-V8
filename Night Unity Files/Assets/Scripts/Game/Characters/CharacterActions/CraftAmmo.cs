@@ -8,7 +8,7 @@ namespace Game.Characters.CharacterActions
     {
         private InventoryResourceType _magType;
 
-        public CraftAmmo(Player playerCharacter) : base("Craft Ammo", playerCharacter)
+        public CraftAmmo(Player.Player playerCharacter) : base("Craft Ammo", playerCharacter)
         {
         }
 

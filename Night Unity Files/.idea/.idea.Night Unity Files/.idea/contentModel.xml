@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Sam\.Rider2017.2\system\resharper-host\Local\Transient\ReSharperHost\v10\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2017.3\system\resharper-host\Local\Transient\ReSharperHost\v11\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
     <e p="C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
@@ -78,11 +78,6 @@
           <e p="Game" t="Include">
             <e p="Characters" t="Include">
               <e p="AttributeModifier.cs" t="Include" />
-              <e p="Attributes" t="Include">
-                <e p="BaseAttributes.cs" t="Include" />
-                <e p="DesolationAttributes.cs" t="Include" />
-                <e p="SurvivalAttributes.cs" t="Include" />
-              </e>
               <e p="Character.cs" t="Include" />
               <e p="CharacterActions" t="Include">
                 <e p="BaseCharacterAction.cs" t="Include" />
@@ -98,6 +93,7 @@
               <e p="CharacterGearComparison.cs" t="Include" />
               <e p="CharacterView.cs" t="Include" />
               <e p="ConditionType.cs" t="Include" />
+              <e p="DesolationAttributes.cs" t="Include" />
               <e p="DesolationCharacterGenerator.cs" t="Include" />
               <e p="DesolationCharacterManager.cs" t="Include" />
               <e p="Intensity.cs" t="Include" />
@@ -117,13 +113,17 @@
               <e p="Enemies" t="Include">
                 <e p="Enemy.cs" t="Include" />
                 <e p="EnemyTypes" t="Include">
+                  <e p="Animals" t="Include">
+                    <e p="Grazer.cs" t="Include" />
+                    <e p="Watcher.cs" t="Include" />
+                  </e>
                   <e p="BaseEnemy.cs" t="Include" />
-                  <e p="Fighter.cs" t="Include" />
-                  <e p="Grazer.cs" t="Include" />
-                  <e p="Martyr.cs" t="Include" />
-                  <e p="Medic.cs" t="Include" />
-                  <e p="Sniper.cs" t="Include" />
-                  <e p="Watcher.cs" t="Include" />
+                  <e p="Humans" t="Include">
+                    <e p="Fighter.cs" t="Include" />
+                    <e p="Martyr.cs" t="Include" />
+                    <e p="Medic.cs" t="Include" />
+                    <e p="Sniper.cs" t="Include" />
+                  </e>
                 </e>
                 <e p="EnemyView.cs" t="Include" />
               </e>

@@ -17,7 +17,6 @@ namespace Game.Combat.Enemies
         private UIHealthBarController _lowerUiHealthBarController;
         private GameObject _alertedObject, _detectedObject;
         public UIAimController UiAimController;
-        private GameObject _damageTextObject;
         
         public EnemyView(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/EnemyItem") : base(linkedObject, parent, prefabLocation)
         {
@@ -42,13 +41,6 @@ namespace Game.Combat.Enemies
             _alertedObject.SetActive(false);
             _detectedObject.SetActive(false);
             ActionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Action");
-            _damageTextObject = Resources.Load<GameObject>("Prefabs/Damage Text");
-        }
-
-        public void SpawnDamageText(int value, bool critical)
-        {
-            GameObject damageText = Helper.InstantiateUiObject(_damageTextObject, GameObject.transform);
-            damageText.GetComponent<UINumberPopupController>().ShowValue(value, critical);
         }
 
         public void SetHealth(float normalisedHealth)

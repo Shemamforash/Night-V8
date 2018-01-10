@@ -1,5 +1,8 @@
 ﻿using System;
+using Game.Combat;
+using Game.Combat.Enemies;
 using SamsHelper.ReactiveUI;
+using UnityEngine;
 
 namespace Game.Characters
 {
@@ -11,6 +14,7 @@ namespace Game.Characters
         private Character _character;
         private readonly int _healthChunkSize = 10;
         private int _healthAtStartOfCombat;
+        private float _normalisedHealth;
 
         public HealthController(Character character)
         {
@@ -19,28 +23,47 @@ namespace Game.Characters
 
         public void EnterCombat()
         {
-            _healthRemaining = (int) (_character.BaseAttributes.Strength.CurrentValue() * _healthChunkSize);
+            int strengthRating;
+            if (_character is Player.Player)
+            {
+                strengthRating = (int) ((Player.Player) _character).Attributes.Strength.CurrentValue();
+            }
+            else
+            {
+                strengthRating = ((Enemy) _character).MaxHealth;
+            }
+            _healthRemaining = strengthRating * _healthChunkSize;
             _healthAtStartOfCombat = _healthRemaining;
             HeartBeatController.Enable();
+            RecalculateNormalisedHealth();
         }
 
         public void TakeDamage(int amount)
         {
-//            CombatManager.CombatUi.UpdateCharacterHealth(BaseAttributes.Strength);
+            if (_healthRemaining <= 0) return;
             _healthRemaining -= amount;
             if (_healthRemaining <= 0)
             {
                 _healthRemaining = 0;
-                //die in combat
+                _character.Kill();
             }
+            RecalculateNormalisedHealth();
             OnTakeDamage?.Invoke(amount);
-            float percentHealthRemaining = (float)_healthRemaining / _healthAtStartOfCombat;
-            HeartBeatController.SetHealth(percentHealthRemaining);
+            HeartBeatController.SetHealth(_normalisedHealth);
+            if(_character is Player.Player) ;
+        }
+
+        private void RecalculateNormalisedHealth()
+        {
+            _normalisedHealth = (float)_healthRemaining / _healthAtStartOfCombat;
         }
 
         public void ExitCombat()
         {
-            _character.BaseAttributes.Strength.SetCurrentValue(_healthRemaining / _healthChunkSize);
+            if (_character is Player.Player)
+            {
+                ((Player.Player) _character).Attributes.Strength.SetCurrentValue(_healthRemaining / _healthChunkSize);
+            }
             HeartBeatController.Disable();
         }
         
@@ -58,10 +81,26 @@ namespace Game.Characters
                 amount = newAmount - _healthAtStartOfCombat;
             }
             _healthRemaining += amount;
+            RecalculateNormalisedHealth();
             OnHeal?.Invoke(amount);
         }
 
         public void AddOnTakeDamage(Action<int> a) => OnTakeDamage += a;
         public void AddOnHeal(Action<int> a) => OnHeal += a;
+
+        public float GetNormalisedHealthValue()
+        {
+            return _normalisedHealth;
+        }
+
+        public float GetCurrentHealth()
+        {
+            return _healthRemaining;
+        }
+
+        public float GetMaxHealth()
+        {
+            return _healthAtStartOfCombat;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Characters;
+using Game.Characters.Player;
 using Game.Combat.Enemies;
 using Game.World;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -63,6 +64,7 @@ namespace Game.Combat
             ResetCombat();
             InputHandler.RegisterInputListener(_player);
             Enemies.AddRange(scenario.Enemies());
+            Enemies.ForEach(e => e.HealthController.EnterCombat());
             MenuStateMachine.ShowMenu("Combat Menu");
             CombatUi.Start(scenario);
         }

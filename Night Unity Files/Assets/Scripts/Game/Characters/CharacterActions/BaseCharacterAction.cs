@@ -14,11 +14,11 @@ namespace Game.Characters.CharacterActions
         private bool _interrupted;
         protected bool IsVisible = true;
         protected Action MinuteCallback;
-        protected readonly Player PlayerCharacter;
+        protected readonly Player.Player PlayerCharacter;
         private int _timeRemaining;
         private const int UpdateInterval = 1;
 
-        protected BaseCharacterAction(string name, Player playerCharacter) : base(playerCharacter.States, name, StateSubtype.Character)
+        protected BaseCharacterAction(string name, Player.Player playerCharacter) : base(playerCharacter.States, name, StateSubtype.Character)
         {
             PlayerCharacter = playerCharacter;
         }
@@ -111,7 +111,7 @@ namespace Game.Characters.CharacterActions
             return IsVisible;
         }
 
-        protected Player GetCharacter()
+        protected Player.Player GetCharacter()
         {
             return PlayerCharacter;
         }

@@ -77,10 +77,12 @@ namespace Game.Combat
 //            _hitInfo.color = new Color(1, 1, 1, opacity);
         }
 
-        public void UpdateCharacterHealth(MyValue health)
+        public void UpdatePlayerHealth()
         {
-            _characterUiHealthController.SetValue(health.CurrentValue() / health.Max);
-            _characterHealthText.text = (int) health.CurrentValue() + "/" + (int) health.Max;
+            int currentHealth = (int) _character.HealthController.GetCurrentHealth();
+            int maxHealth = (int) _character.HealthController.GetMaxHealth();
+            _characterUiHealthController.SetValue(_character.HealthController.GetNormalisedHealthValue());
+            _characterHealthText.text = currentHealth + "/" + maxHealth;
         }
 
         private void ResetMagazine(int capacity)
@@ -98,7 +100,6 @@ namespace Game.Combat
             }
         }
 
-
         public void EmptyMagazine()
         {
             EnableReloadTime(true);
@@ -106,7 +107,8 @@ namespace Game.Combat
 
         public void UpdateReloadTime(float time)
         {
-            _reloadTimeRemaining.text = (Mathf.Round(time * 10f) / 10f).ToString("0.0") + "secs remaining";
+            string reloadTimeString = (Mathf.Round(time * 10f) / 10f).ToString("0.0") + "secs remaining";
+            _reloadTimeRemaining.text = reloadTimeString;
         }
 
         private void EnableReloadTime(bool enable)
@@ -126,7 +128,7 @@ namespace Game.Combat
             _ammoText.text = CombatManager.Player().Weapon().GetRemainingMagazines() + " mags";
         }
 
-        public void SetMagazineText(string text)
+        public void UpdateReloadTimeText(string text)
         {
             _reloadTimeRemaining.text = text;
         }
@@ -146,6 +148,7 @@ namespace Game.Combat
             _enemyList.SetItems(new List<MyGameObject>(scenario.Enemies()));
             _enemyList.Items.ForEach(e => e.PrimaryButton.AddOnSelectEvent(() => SetTarget((Enemy) e.GetLinkedObject()))); //CombatManager.SetCurrentTarget(e.GetLinkedObject())));
             SetTarget((Enemy) _enemyList.Items[0].GetLinkedObject());
+            UpdatePlayerHealth();
         }
 
         private void SetTarget(Enemy e)

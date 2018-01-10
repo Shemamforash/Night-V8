@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Facilitating.Audio;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Gear.Weapons;
@@ -48,6 +49,7 @@ namespace Game.Combat
                 CacheWeaponAttributes();
                 CalculateHitProbability();
                 CalculateCriticalProbability();
+                GunFire.Fire(origin.Weapon().WeaponType());
             }
             else
             {

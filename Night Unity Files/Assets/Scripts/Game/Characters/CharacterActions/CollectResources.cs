@@ -6,10 +6,10 @@ namespace Game.Characters.CharacterActions
 {
     public class CollectResources : BaseCharacterAction
     {
-        private Player _previousCharacter;
+        private Player.Player _previousCharacter;
         private Region _targetRegion;
 
-        public CollectResources(Player playerCharacter) : base("Collect Resources", playerCharacter)
+        public CollectResources(Player.Player playerCharacter) : base("Collect Resources", playerCharacter)
         {
             IsVisible = false;
             SetStateTransitionTarget(playerCharacter.ReturnAction);

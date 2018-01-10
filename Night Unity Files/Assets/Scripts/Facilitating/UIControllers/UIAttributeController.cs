@@ -19,7 +19,7 @@ public class UIAttributeController : MonoBehaviour
         return Helper.FindChildWithName(gameObject, name).transform.Find("Marker Container").GetComponent<UIAttributeMarkerController>();
     }
 
-    public void HookValues(BaseAttributes attributes)
+    public void HookValues(DesolationAttributes attributes)
     {
         attributes.Endurance.AddOnValueChange(a => _enduranceMarker.SetValue((int)a.CurrentValue(), (int)a.Max));
         attributes.Strength.AddOnValueChange(a => _strengthMarker.SetValue((int)a.CurrentValue(), (int)a.Max));

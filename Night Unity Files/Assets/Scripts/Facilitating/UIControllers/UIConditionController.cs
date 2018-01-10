@@ -1,5 +1,5 @@
 ﻿using Facilitating.UI.Elements;
-using Game.Characters.Attributes;
+using Game.Characters;
 using SamsHelper;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,23 +9,23 @@ public class UIConditionController : MonoBehaviour
     public Slider ConditionSlider;
     public EnhancedText ConditionText;
 
-    public void HookStarvation(SurvivalAttributes survivalAttributes)
+    public void HookStarvation(DesolationAttributes attributes)
     {
-        survivalAttributes.Starvation.AddOnValueChange(a =>
+        attributes.Starvation.AddOnValueChange(a =>
         {
             if(ConditionSlider != null)
                 ConditionSlider.value = 1 - Helper.Normalise(a.CurrentValue(), a.Max);
-            ConditionText.Text(survivalAttributes.GetHungerStatus());
+            ConditionText.Text(attributes.GetHungerStatus());
         });
     }
 
-    public void HookDehydration(SurvivalAttributes survivalAttributes)
+    public void HookDehydration(DesolationAttributes attributes)
     {
-        survivalAttributes.Dehydration.AddOnValueChange(a =>
+        attributes.Dehydration.AddOnValueChange(a =>
         {
             if(ConditionSlider != null)
                 ConditionSlider.value = 1 - Helper.Normalise(a.CurrentValue(), a.Max);
-            ConditionText.Text(survivalAttributes.GetThirstStatus());
+            ConditionText.Text(attributes.GetThirstStatus());
         });
     }
     

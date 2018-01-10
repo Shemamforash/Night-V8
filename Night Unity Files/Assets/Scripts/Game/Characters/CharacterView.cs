@@ -15,7 +15,7 @@ namespace Game.Characters
 {
     public class CharacterView
     {
-        private readonly Player _character;
+        private readonly Player.Player _character;
         public readonly GameObject GameObject;
         private GameObject SimpleView;
         private GameObject _detailedView;
@@ -29,18 +29,18 @@ namespace Game.Characters
 
         private void BindUi()
         {
-            FindInSimpleView<UIAttributeController>("Attributes").HookValues(_character.BaseAttributes);
-            FindInDetailedView<UIAttributeController>("Attributes").HookValues(_character.BaseAttributes);
+            FindInSimpleView<UIAttributeController>("Attributes").HookValues(_character.Attributes);
+            FindInDetailedView<UIAttributeController>("Attributes").HookValues(_character.Attributes);
             UIEnergyController energyController = FindInDetailedView<UIEnergyController>("Energy");
             _character.Energy.AddOnValueChange(a =>
             {
                 energyController.SetValue((int) a.CurrentValue(), (int) a.Max);
             });
 
-            FindInDetailedView<UIConditionController>("Thirst").HookDehydration(_character.SurvivalAttributes);
-            FindInDetailedView<UIConditionController>("Hunger").HookStarvation(_character.SurvivalAttributes);
-            FindInSimpleView<UIConditionController>("Thirst").HookDehydration(_character.SurvivalAttributes);
-            FindInSimpleView<UIConditionController>("Hunger").HookStarvation(_character.SurvivalAttributes);
+            FindInDetailedView<UIConditionController>("Thirst").HookDehydration(_character.Attributes);
+            FindInDetailedView<UIConditionController>("Hunger").HookStarvation(_character.Attributes);
+            FindInSimpleView<UIConditionController>("Thirst").HookDehydration(_character.Attributes);
+            FindInSimpleView<UIConditionController>("Hunger").HookStarvation(_character.Attributes);
         }
 
         private void CacheSimpleViewElements()
@@ -67,7 +67,7 @@ namespace Game.Characters
             FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _character.Name;
             FindInDetailedView<TextMeshProUGUI>("Class").text = _character.CharacterClass.GetTraitDetails();
             FindInDetailedView<TextMeshProUGUI>("Trait").text = _character.CharacterTrait.GetTraitDetails();
-            FindInDetailedView<TextMeshProUGUI>("Weight").text = "Weight: " + _character.SurvivalAttributes.Weight + " (requires " + ((int) _character.SurvivalAttributes.Weight + 5) + "fuel)";
+            FindInDetailedView<TextMeshProUGUI>("Weight").text = "Weight: " + _character.Attributes.Weight + " (requires " + ((int) _character.Attributes.Weight + 5) + "fuel)";
 
             WeaponGearUi = FindInDetailedView<UIGearController>("Weapon");
             ArmourGearUi = FindInDetailedView<UIGearController>("Armour");
@@ -186,7 +186,7 @@ namespace Game.Characters
             return CharacterManager.NextCharacter(_character)?.CharacterView.SimpleView.GetComponent<EnhancedButton>();
         }
 
-        public CharacterView(Player character)
+        public CharacterView(Player.Player character)
         {
             _character = character;
             GameObject = _character.GetGameObject();

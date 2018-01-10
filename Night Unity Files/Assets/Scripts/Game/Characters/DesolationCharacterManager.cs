@@ -19,8 +19,8 @@ namespace Game.Characters
 {
     public class CharacterManager : DesolationInventory, IPersistenceTemplate, IInputListener
     {
-        private static readonly List<Player> _characters = new List<Player>();
-        public static Player SelectedCharacter;
+        private static readonly List<Player.Player> _characters = new List<Player.Player>();
+        public static Player.Player SelectedCharacter;
 
         public CharacterManager() : base("Vehicle")
         {
@@ -33,7 +33,7 @@ namespace Game.Characters
             SaveController.AddPersistenceListener(this);
             if (_characters.Count == 0)
             {
-                foreach (Player playerCharacter in CharacterGenerator.LoadInitialParty())
+                foreach (Player.Player playerCharacter in PlayerGenerator.LoadInitialParty())
                 {
                     AddCharacter(playerCharacter);
                 }
@@ -57,7 +57,7 @@ namespace Game.Characters
         {
         }
 
-        public void AddCharacter(Player playerCharacter)
+        public void AddCharacter(Player.Player playerCharacter)
         {
             Transform characterAreaTransform = GameObject.Find("Character Section").transform.Find("Content").transform;
             if (Items().Count > 0)
@@ -72,7 +72,7 @@ namespace Game.Characters
             _characters.ForEach(c => c.CharacterView.RefreshNavigation());
         }
 
-        public static List<Player> Characters()
+        public static List<Player.Player> Characters()
         {
             return _characters;
         }
@@ -101,7 +101,7 @@ namespace Game.Characters
         public override MyGameObject RemoveItem(MyGameObject item)
         {
             base.RemoveItem(item);
-            Player playerCharacter = item as Player;
+            Player.Player playerCharacter = item as Player.Player;
             if (playerCharacter == null) return item;
             _characters.Remove(playerCharacter);
             PopulateCharacterUi();
@@ -113,12 +113,12 @@ namespace Game.Characters
             return item;
         }
 
-        public static void ExitCharacter(Player character)
+        public static void ExitCharacter(Player.Player character)
         {
             character.CharacterView.SwitchToSimpleView();
         }
 
-        public static void SelectCharacter(Player player)
+        public static void SelectCharacter(Player.Player player)
         {
             SelectedCharacter = player;
             player.CharacterView.SwitchToDetailedView();
@@ -139,7 +139,7 @@ namespace Game.Characters
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             XmlNode characterManagerNode = SaveController.CreateNodeAndAppend("CharacterManager", doc);
-            foreach (Player c in _characters)
+            foreach (Player.Player c in _characters)
             {
                 XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", characterManagerNode);
                 c.Save(characterNode, saveType);
@@ -147,7 +147,7 @@ namespace Game.Characters
             return characterManagerNode;
         }
 
-        public static Player PreviousCharacter(Player character)
+        public static Player.Player PreviousCharacter(Player.Player character)
         {
             for (int i = 0; i < _characters.Count; ++i)
             {
@@ -161,7 +161,7 @@ namespace Game.Characters
             return null;
         }
 
-        public static Player NextCharacter(Player character)
+        public static Player.Player NextCharacter(Player.Player character)
         {
             for (int i = 0; i < _characters.Count; ++i)
             {

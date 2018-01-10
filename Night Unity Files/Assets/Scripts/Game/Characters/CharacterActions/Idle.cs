@@ -2,7 +2,7 @@
 {
     public class Idle : BaseCharacterAction
     {
-        public Idle(Player playerCharacter) : base("Idle", playerCharacter)
+        public Idle(Player.Player playerCharacter) : base("Idle", playerCharacter)
         {
             IsVisible = false;
         }

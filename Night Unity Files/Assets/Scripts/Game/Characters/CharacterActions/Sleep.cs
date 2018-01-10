@@ -4,7 +4,7 @@ namespace Game.Characters.CharacterActions
 {
     public class Sleep : BaseCharacterAction
     {
-        public Sleep(Player playerCharacter) : base("Sleep", playerCharacter)
+        public Sleep(Player.Player playerCharacter) : base("Sleep", playerCharacter)
         {
             HourCallback = () =>
             {

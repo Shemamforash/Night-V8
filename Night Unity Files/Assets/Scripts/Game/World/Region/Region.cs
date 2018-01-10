@@ -4,6 +4,7 @@ using System.Xml;
 using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Game.Characters;
+using Game.Characters.Player;
 using Game.Combat;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;

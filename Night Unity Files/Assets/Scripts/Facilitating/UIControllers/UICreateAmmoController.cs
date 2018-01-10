@@ -4,6 +4,7 @@ using System.Net;
 using Facilitating.UI.Elements;
 using Game.Characters;
 using Game.Characters.CharacterActions;
+using Game.Characters.Player;
 using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper;

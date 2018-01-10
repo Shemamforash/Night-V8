@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
+using Game.Characters.Player;
 using Game.Gear.Weapons;
 using Game.World;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace Game.Combat
 
         public static void RestartCombat()
         {
-            _playerCharacter = CharacterGenerator.GenerateCharacter();
+            _playerCharacter = PlayerGenerator.GenerateCharacter();
             _playerCharacter.Inventory().AddTestingResources();
             List<WeaponType> weaponsWanted = new List<WeaponType>();
             if(_instance.Smg) weaponsWanted.Add(WeaponType.SMG);

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
+using Game.Characters.Player;
 using Game.World.Region;
 using SamsHelper;
 using SamsHelper.ReactiveUI.Elements;
@@ -32,25 +33,42 @@ namespace Facilitating.UIControllers
 
         public void SetRegion(Region region, Player player)
         {
+            _regionUiList.ForEach(Destroy);
+            _regionUiList.Clear();
             _player = player;
             _currentRegion = region;
+            
             bool isInitialRegion = _currentRegion.Origin == null;
             _lookAroundButton.gameObject.SetActive(!isInitialRegion);
             _titleText.text = isInitialRegion ? "Setting Out" : _currentRegion.Name;
-            foreach (Region connection in region.Connections)
+            
+            CreateRegionUi();
+            SetNavigation();
+            
+            if(_regionUiList.Count != 0) _regionUiList[0].GetComponent<Button>().Select();
+            else _lookAroundButton.Button().Select();
+            MenuStateMachine.ShowMenu("Region Explore Menu");
+        }
+
+        private void CreateRegionUi()
+        {
+            foreach (Region connection in _currentRegion.Connections)
             {
                 GameObject regionUi = Helper.InstantiateUiObject("Prefabs/Region Explore UI", _regionContainer.transform);
                 UIRegionItem regionUiController = regionUi.GetComponent<UIRegionItem>();
                 regionUiController.SetText("left text", connection.Name, "right text");
-                regionUiController.SetRegion(connection, _player, CloseMenu);
+                regionUiController.SetRegion(connection, _player);
                 _regionUiList.Add(regionUi);
             }
-
+        }
+        
+        private void SetNavigation()
+        {
             for (int i = 0; i < _regionUiList.Count; ++i)
             {
                 EnhancedButton currentButton = _regionUiList[i].GetComponent<EnhancedButton>();
                 EnhancedButton nextButton;
-                if (i < region.Connections.Count - 1)
+                if (i < _regionUiList.Count - 1)
                 {
                     nextButton = _regionUiList[i + 1].GetComponent<EnhancedButton>();
                 }
@@ -67,9 +85,6 @@ namespace Facilitating.UIControllers
                 currentButton.SetDownNavigation(nextButton);
                 nextButton.SetUpNavigation(currentButton);
             }
-
-            _regionUiList[0].GetComponent<Button>().Select();
-            MenuStateMachine.ShowMenu("Region Explore Menu");
         }
 
         public static UIExploreMenuController Instance()
@@ -85,13 +100,6 @@ namespace Facilitating.UIControllers
         public void CloseAndReturn()
         {
             _player.ReturnAction.Enter();
-            CloseMenu();
-        }
-
-        private void CloseMenu()
-        {
-            _regionUiList.ForEach(Destroy);
-            _regionUiList.Clear();
             MenuStateMachine.GoToInitialMenu();
         }
     }

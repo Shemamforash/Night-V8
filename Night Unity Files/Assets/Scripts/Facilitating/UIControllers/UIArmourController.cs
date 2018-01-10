@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class UIArmourController : MonoBehaviour
 {
     private const int ArmourDivisions = 10;
-    private const int MaxDivisionSize = 20;
     private readonly List<GameObject> _armourSegments = new List<GameObject>();
     private const int SegmentSpacing = 5;
     private HorizontalLayoutGroup _layoutGroup;
@@ -13,9 +12,6 @@ public class UIArmourController : MonoBehaviour
     // Use this for initialization
     public void Awake()
     {
-        float segmentWidth = GetComponent<RectTransform>().rect.width - SegmentSpacing * (ArmourDivisions - 1);
-        segmentWidth /= ArmourDivisions;
-        if (segmentWidth > MaxDivisionSize) segmentWidth = MaxDivisionSize;
         _layoutGroup = GetComponent<HorizontalLayoutGroup>();
         _layoutGroup.spacing = SegmentSpacing;
         for (int i = 0; i < ArmourDivisions; ++i)
@@ -26,16 +22,16 @@ public class UIArmourController : MonoBehaviour
             rectTransform.localScale = new Vector3(1, 1, 1);
             newSegment.AddComponent<Image>();
             LayoutElement layout = newSegment.AddComponent<LayoutElement>();
-            layout.preferredWidth = segmentWidth;
             layout.preferredHeight = GetComponent<RectTransform>().rect.height;
             newSegment.name = "Armour Piece " + (i + 1);
             newSegment.SetActive(false);
             _armourSegments.Add(newSegment);
         }
     }
-    
+
     public void SetArmourValue(int armourLevel)
     {
+        GetComponent<RectTransform>().anchorMin = new Vector2(1 - armourLevel / 10f, 0.5f);
         for (int i = 0; i < _armourSegments.Count; ++i)
         {
             _armourSegments[i].SetActive(i < armourLevel);

@@ -2,7 +2,7 @@
 {
     public class Combat : BaseCharacterAction
     {
-        public Combat(Player playerCharacter) : base("Combat", playerCharacter)
+        public Combat(Player.Player playerCharacter) : base("Combat", playerCharacter)
         {
             IsVisible = false;
         }

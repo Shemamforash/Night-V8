@@ -41,7 +41,7 @@ public class UIHealthBarController : MonoBehaviour
         _healthParticleTransform.localPosition = new Vector3(position, 0, 0);
     }
 
-    public void SetColor(Color color)
+    private void SetColor(Color color)
     {
         ParticleSystem.MainModule main = _healthParticles.main;
         main.startColor = color;

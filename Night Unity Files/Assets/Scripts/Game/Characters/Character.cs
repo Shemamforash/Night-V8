@@ -16,6 +16,7 @@ using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Game.Characters
@@ -23,7 +24,6 @@ namespace Game.Characters
     public abstract class Character : MyGameObject, IPersistenceTemplate
     {
         protected readonly DesolationInventory CharacterInventory;
-        public readonly BaseAttributes BaseAttributes;
         protected Cooldown CockingCooldown;
         protected Cooldown ReloadingCooldown;
         protected Cooldown DashCooldown;
@@ -42,13 +42,12 @@ namespace Game.Characters
         public RageController RageController;
         public HealthController HealthController;
         public EquipmentController EquipmentController;
-        private AttributeModifier _sprintModifier = new AttributeModifier();
+        protected AttributeModifier _sprintModifier = new AttributeModifier();
         private CoverLevel _coverLevel;
         
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             SaveController.CreateNodeAndAppend("Name", doc, Name);
-            BaseAttributes.Save(doc, saveType);
             EquipmentController.Save(doc, saveType);
             return doc;
         }
@@ -69,10 +68,6 @@ namespace Game.Characters
         {
             _sprintModifier.SetMultiplicative(2);
             CharacterInventory = new DesolationInventory(name);
-            BaseAttributes = new BaseAttributes(this);
-            
-            _sprintModifier.AddTargetAttribute(BaseAttributes.Endurance);
-
             RageController = new RageController(this);
             HealthController = new HealthController(this);
             EquipmentController = new EquipmentController(this);
@@ -90,7 +85,7 @@ namespace Game.Characters
 
         public void OnHit(Shot shot, int damage, bool isCritical)
         {
-            float armourModifier = 1- 0.8f / ArmourLevel.Max * ArmourLevel.CurrentValue();
+            float armourModifier = 1 - 0.8f / ArmourLevel.Max * ArmourLevel.CurrentValue();
             damage = (int) (armourModifier * damage);
             damage = GetCoverProtection(damage);
             if(isCritical) HealthController.TakeCriticalDamage(damage);
@@ -116,14 +111,12 @@ namespace Game.Characters
         
         public virtual void Kill()
         {
-            WorldState.HomeInventory().RemoveItem(this);
+            if(SceneManager.GetActiveScene().name == "Game") WorldState.HomeInventory().RemoveItem(this);
         }
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
             Name = doc.SelectSingleNode("Name").InnerText;
-            XmlNode attributesNode = doc.SelectSingleNode("Attributes");
-            BaseAttributes.Load(attributesNode, saveType);
         }
 
         public DesolationInventory Inventory()
@@ -317,8 +310,7 @@ namespace Game.Characters
             return !(timeElapsed < targetTime);
         }
 
-        //Returns true if target hit
-        public virtual Shot FireWeapon(Character target)
+        protected virtual Shot FireWeapon(Character target)
         {
             if (!CanFire()) return null;
             if (target == null) target = CombatManager.GetTarget(this);

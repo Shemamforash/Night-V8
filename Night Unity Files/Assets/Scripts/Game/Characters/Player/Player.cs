@@ -2,29 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Facilitating.Audio;
 using Facilitating.Persistence;
-using Game.Characters.Attributes;
 using Game.Characters.CharacterActions;
 using Game.Combat;
-using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.Gear.Weapons;
 using Game.World.Region;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
-using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Input;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions.Comparers;
 
-namespace Game.Characters
+namespace Game.Characters.Player
 {
     public class Player : Character, IInputListener
     {
@@ -33,7 +28,7 @@ namespace Game.Characters
         public readonly TraitLoader.CharacterClass CharacterClass;
         public int DistanceFromHome;
         public CharacterView CharacterView;
-        public readonly SurvivalAttributes SurvivalAttributes;
+        public readonly DesolationAttributes Attributes;
         public readonly MyValue Energy = new MyValue();
 
         public CollectResources CollectResourcesAction;
@@ -58,11 +53,14 @@ namespace Game.Characters
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(string name, TraitLoader.CharacterClass characterClass, TraitLoader.Trait characterTrait) : base(name)
         {
-            SurvivalAttributes = new SurvivalAttributes(this);
+            Attributes = new DesolationAttributes(this);
+            _sprintModifier.AddTargetAttribute(Attributes.Endurance);
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
             CharacterInventory.MaxWeight = 50;
-            BaseAttributes.Endurance.AddOnValueChange(a => Energy.Max = a.CurrentValue());
+            Attributes.Endurance.AddOnValueChange(a => Energy.Max = a.CurrentValue());
+            HealthController.AddOnHeal(a => CombatManager.CombatUi.UpdatePlayerHealth());
+            HealthController.AddOnTakeDamage(a => CombatManager.CombatUi.UpdatePlayerHealth());
             Energy.OnMin(Sleep);
         }
 
@@ -73,13 +71,13 @@ namespace Game.Characters
             SaveController.CreateNodeAndAppend("Trait", doc, CharacterTrait.Name);
             SaveController.CreateNodeAndAppend("Distance", doc, DistanceFromHome);
             SaveController.CreateNodeAndAppend("Energy", doc, Energy.CurrentValue());
-            SurvivalAttributes.Save(doc, saveType);
+            Attributes.Save(doc, saveType);
             return doc;
         }
 
         protected override float GetSpeedModifier()
         {
-            float walkSpeed = 1f + BaseAttributes.Endurance.CurrentValue() / 20f;
+            float walkSpeed = 1f + Attributes.Endurance.CurrentValue() / 20f;
             return walkSpeed * Time.deltaTime;
         }
 
@@ -166,7 +164,7 @@ namespace Game.Characters
 
         public int CalculateTotalWeight()
         {
-            int characterWeight = 5 + SurvivalAttributes.Weight;
+            int characterWeight = 5 + Attributes.Weight;
             int inventoryWeight = (int) (CharacterInventory.Weight / 10);
             return characterWeight + inventoryWeight;
         }
@@ -260,7 +258,7 @@ namespace Game.Characters
         }
 
         //FIRING
-        public override Shot FireWeapon(Character target)
+        protected override Shot FireWeapon(Character target)
         {
             Shot shot = base.FireWeapon(target);
             UpdateMagazineUi();
@@ -279,9 +277,8 @@ namespace Game.Characters
         {
             string magazineMessage = "";
             if (Weapon().GetRemainingMagazines() == 0) magazineMessage = "NO AMMO";
-            if (!EquipmentController.Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
+            else if (!EquipmentController.Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
             else if (EquipmentController.Weapon().Empty()) magazineMessage = "RELOAD";
-
             if (magazineMessage == "")
             {
                 CombatManager.CombatUi.UpdateMagazine(EquipmentController.Weapon().GetRemainingAmmo());
@@ -289,7 +286,7 @@ namespace Game.Characters
             else
             {
                 CombatManager.CombatUi.EmptyMagazine();
-                CombatManager.CombatUi.SetMagazineText(magazineMessage);
+                CombatManager.CombatUi.UpdateReloadTimeText(magazineMessage);
             }
         }
 

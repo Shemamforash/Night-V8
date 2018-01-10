@@ -4,7 +4,7 @@ namespace Game.Characters.CharacterActions
 {
     public class Travel : BaseCharacterAction
     {
-        public Travel(Player playerCharacter) : base("Travel", playerCharacter)
+        public Travel(Player.Player playerCharacter) : base("Travel", playerCharacter)
         {
             HourCallback = GetCharacter().Travel;
         }

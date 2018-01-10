@@ -24,6 +24,8 @@ namespace Game.Combat.Enemies
         private EnemyView _enemyView;
         private bool _alerted;
         public readonly MyValue Distance = new MyValue(0, 0, 150);
+        public readonly int MaxHealth;
+        public int Speed;
 
         private void MakeHealRequest()
         {
@@ -36,19 +38,17 @@ namespace Game.Combat.Enemies
 
         protected Enemy(string name, int enemyHp) : base(name)
         {
-            BaseAttributes.Strength.Max = enemyHp;
-            BaseAttributes.Strength.SetCurrentValue(enemyHp);
+            MaxHealth = enemyHp;
             if (!(this is Medic))
             {
-                BaseAttributes.Strength.AddOnValueChange(a =>
+                HealthController.AddOnTakeDamage(a =>
                 {
-                    if (a.CurrentValue() <= a.Max / 2)
+                    if (HealthController.GetNormalisedHealthValue() <= 0.5f)
                     {
                         MakeHealRequest();
                     }
                 });
             }
-            BaseAttributes.Strength.OnMin(Kill);
             CharacterInventory.SetEnemyResources();
             
             _fireCooldown = CombatManager.CombatCooldowns.CreateCooldown();
@@ -73,16 +73,14 @@ namespace Game.Combat.Enemies
             CoverCooldown.SetStartAction(() => SetActionText("Taking Cover"));
             SetWanderCooldown();
             CurrentAction = Wander;
-
             HealthController.AddOnTakeDamage(f =>
             {
-                _enemyView.SpawnDamageText(f, false);
                 TryAlert();
             });
 //            Print();
         }
 
-        public override Shot FireWeapon(Character target)
+        protected override Shot FireWeapon(Character target)
         {
             Shot s = base.FireWeapon(target);
             if (s != null) _enemyView.UiAimController.Fire();
@@ -92,17 +90,17 @@ namespace Game.Combat.Enemies
 
         protected override float GetSpeedModifier()
         {
-            return BaseAttributes.Endurance.CurrentValue() * Time.deltaTime;
+            return Speed * Time.deltaTime;
         }
 
-        private void Print()
-        {
-            Debug.Log(Name);
-            Debug.Log("Strength " + Helper.Round(BaseAttributes.Strength.CurrentValue()));
-            Debug.Log("Perception " + Helper.Round(BaseAttributes.Perception.CurrentValue()));
-            Debug.Log("Willpower " + Helper.Round(BaseAttributes.Willpower.CurrentValue()));
-            Debug.Log("Endurance " + Helper.Round(BaseAttributes.Endurance.CurrentValue()));
-        }
+//        private void Print()
+//        {
+//            Debug.Log(Name);
+//            Debug.Log("Strength " + Helper.Round(Attributes.Strength.CurrentValue()));
+//            Debug.Log("Perception " + Helper.Round(Attributes.Perception.CurrentValue()));
+//            Debug.Log("Willpower " + Helper.Round(Attributes.Willpower.CurrentValue()));
+//            Debug.Log("Endurance " + Helper.Round(Attributes.Endurance.CurrentValue()));
+//        }
 
         private void SetDistanceData()
         {
@@ -195,7 +193,6 @@ namespace Game.Combat.Enemies
         public override void OnMiss()
         {
 //            EnemyBehaviour.TakeFire();
-            _enemyView.SpawnDamageText(0, false);
         }
         
         public override void Kill()
@@ -207,10 +204,9 @@ namespace Game.Combat.Enemies
         public override ViewParent CreateUi(Transform parent)
         {
             _enemyView = new EnemyView(this, parent);
-            BaseAttributes.Strength.AddOnValueChange(f =>
+            HealthController.AddOnTakeDamage(f =>
             {
-                float normalisedHealth = f.CurrentValue() / f.Max;
-                _enemyView.SetHealth(normalisedHealth);
+                _enemyView.SetHealth(HealthController.GetNormalisedHealthValue());
 //                _enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString();
             });
             ActionTextLink.AddTextObject(_enemyView.ActionText);

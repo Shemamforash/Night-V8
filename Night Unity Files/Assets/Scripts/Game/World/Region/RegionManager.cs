@@ -8,6 +8,7 @@ using Game.Characters;
 using UnityEngine;
 using UnityEngine.UI;
 using Game.Characters.CharacterActions;
+using Game.Characters.Player;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
@@ -120,8 +121,8 @@ namespace Game.World.Region
 
         private static void AllocateTravelResources(Player currentCharacter, int duration)
         {
-            int foodRequired = (int) (currentCharacter.SurvivalAttributes.Hunger.Max / 12f * duration);
-            int waterRequired = (int) (currentCharacter.SurvivalAttributes.Thirst.Max / 12f * duration);
+            int foodRequired = (int) (currentCharacter.Attributes.Hunger.Max / 12f * duration);
+            int waterRequired = (int) (currentCharacter.Attributes.Thirst.Max / 12f * duration);
             currentCharacter.Inventory().IncrementResource(InventoryResourceType.Food, foodRequired);
             currentCharacter.Inventory().IncrementResource(InventoryResourceType.Water, waterRequired);
         }
