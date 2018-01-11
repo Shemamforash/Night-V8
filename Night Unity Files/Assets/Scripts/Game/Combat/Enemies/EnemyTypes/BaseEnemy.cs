@@ -140,7 +140,7 @@ namespace Game.Combat.Enemies
             if (!InCombat()) return;
             RageController.Decrease();
             UpdateDetection();
-            if (IsDead()) return;
+            if (IsDead() || _waitingForHeal) return;
             CurrentAction?.Invoke();
         }
     }

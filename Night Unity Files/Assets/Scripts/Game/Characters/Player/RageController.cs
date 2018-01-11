@@ -6,7 +6,7 @@ namespace Game.Characters
 {
     public class RageController
     {
-        private readonly MyValue _rageLevel = new MyValue(1, 0, 1);
+        private readonly Number _rageLevel = new Number(1, 0, 1);
         private bool _activated;
         private readonly Character _character;
         private AttributeModifier _reloadModifier = new AttributeModifier();

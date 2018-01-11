@@ -29,7 +29,7 @@ namespace Game.Characters.Player
         public int DistanceFromHome;
         public CharacterView CharacterView;
         public readonly DesolationAttributes Attributes;
-        public readonly MyValue Energy = new MyValue();
+        public readonly Number Energy = new Number();
 
         public CollectResources CollectResourcesAction;
         public Sleep SleepAction;
@@ -59,9 +59,24 @@ namespace Game.Characters.Player
             CharacterTrait = characterTrait;
             CharacterInventory.MaxWeight = 50;
             Attributes.Endurance.AddOnValueChange(a => Energy.Max = a.CurrentValue());
-            HealthController.AddOnHeal(a => CombatManager.CombatUi.UpdatePlayerHealth());
-            HealthController.AddOnTakeDamage(a => CombatManager.CombatUi.UpdatePlayerHealth());
+            HealthController.AddOnHeal(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
+            HealthController.AddOnTakeDamage(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
             Energy.OnMin(Sleep);
+            LinkCooldownsToUi();
+        }
+
+        private void LinkCooldownsToUi()
+        {
+            LinkCockCooldownToUi();
+            LinkDashCooldownToUi();
+            LinkKnockdownCooldownToUi();
+            LinkReloadCooldownToUi();
+        }
+
+        private void UpdateHealthUi(float normalisedHealth)
+        {
+            HeartBeatController.SetHealth(normalisedHealth);
+            CombatManager.CombatUi.UpdatePlayerHealth();
         }
 
         public override XmlNode Save(XmlNode doc, PersistenceType saveType)
@@ -221,15 +236,13 @@ namespace Game.Characters.Player
 
         //COOLDOWNS
 
-        protected override void SetDashCooldown()
+        protected void LinkDashCooldownToUi()
         {
-            base.SetDashCooldown();
             DashCooldown.SetController(CombatManager.CombatUi.DashCooldownController);
         }
 
-        protected override void SetCockCooldown()
+        protected void LinkCockCooldownToUi()
         {
-            base.SetCockCooldown();
             CockingCooldown.SetEndAction(() =>
             {
                 EquipmentController.Weapon().Cocked = true;
@@ -238,16 +251,15 @@ namespace Game.Characters.Player
             CockingCooldown.SetDuringAction(f => CombatManager.CombatUi.UpdateReloadTime(f));
         }
 
-        protected override void SetKnockdownCooldown()
+        protected void LinkKnockdownCooldownToUi()
         {
-            base.SetKnockdownCooldown();
-            KnockdownCooldown.SetEndAction(() => { CombatManager.CombatUi.ConditionsText.text = ""; });
+            KnockdownCooldown.SetStartAction(() => Debug.Log("hi"));
+            KnockdownCooldown.SetEndAction(() => CombatManager.CombatUi.ConditionsText.text = "");
             KnockdownCooldown.SetDuringAction(f => CombatManager.CombatUi.ConditionsText.text = "Knocked down! " + Helper.Round(f, 1) + "s");
         }
 
-        protected override void SetReloadCooldown()
+        protected void LinkReloadCooldownToUi()
         {
-            base.SetReloadCooldown();
             ReloadingCooldown.SetEndAction(() =>
             {
                 EquipmentController.Weapon().Cocked = true;
@@ -277,8 +289,10 @@ namespace Game.Characters.Player
         {
             string magazineMessage = "";
             if (Weapon().GetRemainingMagazines() == 0) magazineMessage = "NO AMMO";
-            else if (!EquipmentController.Weapon().Cocked) magazineMessage = "EJECT CARTRIDGE";
-            else if (EquipmentController.Weapon().Empty()) magazineMessage = "RELOAD";
+            else if (!EquipmentController.Weapon().Cocked)
+                magazineMessage = "EJECT CARTRIDGE";
+            else if (EquipmentController.Weapon().Empty())
+                magazineMessage = "RELOAD";
             if (magazineMessage == "")
             {
                 CombatManager.CombatUi.UpdateMagazine(EquipmentController.Weapon().GetRemainingAmmo());

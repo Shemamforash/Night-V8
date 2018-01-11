@@ -6,6 +6,7 @@ using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game.World.WorldEvents
@@ -17,7 +18,7 @@ namespace Game.World.WorldEvents
 
         public void Awake()
         {
-            _eventLogText.AddTextObject(Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Event Log"));
+            if(SceneManager.GetActiveScene().name == "Game") _eventLogText.AddTextObject(Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Event Log"));
             PrintFirstFourEvents();
         }
 

@@ -19,10 +19,10 @@ namespace Facilitating.Audio
             GunSource = GetComponent<AudioSource>();
         }
         
-        public static void Fire(WeaponType type)
+        public static void Fire(WeaponType type, float normalisedDistance)
         {
             _instance.GunSource.pitch = Random.Range(0.9f, 1.1f);
-            _instance.GunSource.volume = Random.Range(0.9f, 1f);
+            _instance.GunSource.volume = Random.Range(0.9f, 1f) * (1 - normalisedDistance);
             switch (type)
             {
                 case WeaponType.Pistol:

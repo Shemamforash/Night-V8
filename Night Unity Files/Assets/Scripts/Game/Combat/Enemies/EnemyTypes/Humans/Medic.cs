@@ -70,7 +70,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         
         private void Heal()
         {
-            _healTarget.HealthController.Heal(_healAmount);
+            _healTarget.ReceiveHealing(_healAmount);
             _healTarget = null;
             FindCover();
             ShowMovementText = true;

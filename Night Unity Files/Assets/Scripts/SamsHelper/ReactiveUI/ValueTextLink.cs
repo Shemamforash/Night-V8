@@ -35,8 +35,8 @@ namespace SamsHelper.ReactiveUI
 
         private void SetValue(T value)
         {
-            MyValue myValue = value as MyValue;
-            myValue?.AddOnValueChange(val => { _textAssociations.ForEach(tup => { SetTextObjectText(tup, val.CurrentValue().ToString()); }); });
+            Number number = value as Number;
+            number?.AddOnValueChange(val => { _textAssociations.ForEach(tup => { SetTextObjectText(tup, val.CurrentValue().ToString()); }); });
         }
 
         public void SetEnabled(bool enable)

@@ -29,7 +29,7 @@ namespace Game.Characters
         public int Weight;
         
         private bool _starving, _dehydrated;
-        private readonly int[] _toleranceThresholds = {0, 10, 25, 50, 75};
+        private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
         private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
         
@@ -66,8 +66,8 @@ namespace Game.Characters
 
         private void Fatigue()
         {
-            float starvationLevel = Starvation.AsPercent();
-            float dehydrationLevel = Dehydration.AsPercent();
+            float starvationLevel = Starvation.Normalised();
+            float dehydrationLevel = Dehydration.Normalised();
             if (starvationLevel >= _toleranceThresholds[4] || dehydrationLevel >= _toleranceThresholds[4])
             {
                 Perception.SetCurrentValue(Perception.CurrentValue() - 2);
@@ -118,12 +118,12 @@ namespace Game.Characters
             UpdateConsumableTolerance(Thirst, Drink);
         }
 
-        public string GetAttributeStatus(CharacterAttribute characterAttribute, string[] levels)
+        private string GetAttributeStatus(CharacterAttribute characterAttribute, string[] levels)
         {
-            float tolerancePercentage = characterAttribute.AsPercent();
+            float tolerancePercentage = characterAttribute.Normalised();
             for (int i = 1; i < _toleranceThresholds.Length; ++i)
             {
-                int threshold = _toleranceThresholds[i];
+                float threshold = _toleranceThresholds[i];
                 if (tolerancePercentage <= threshold)
                 {
                     return levels[i - 1];
@@ -142,7 +142,7 @@ namespace Game.Characters
             return GetAttributeStatus(Dehydration, _dehydrationLevels);
         }
         
-        private void UpdateConsumableTolerance(MyValue requirement, Action consume)
+        private void UpdateConsumableTolerance(Number requirement, Action consume)
         {
             requirement.Increment();
             consume();

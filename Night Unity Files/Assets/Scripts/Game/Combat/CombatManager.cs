@@ -15,7 +15,7 @@ namespace Game.Combat
     public class CombatManager : Menu
     {
         public static CombatUi CombatUi;
-        private static MyValue _strengthText;
+        private static Number _strengthText;
         public static readonly CooldownManager CombatCooldowns = new CooldownManager();
         private static readonly List<Enemy> Enemies = new List<Enemy>();
         private static Enemy _currentTarget;
@@ -40,7 +40,6 @@ namespace Game.Combat
         public void Update()
         {
             CombatCooldowns.UpdateCooldowns();
-            CombatUi.Update();
             Enemies.ForEach(r =>
             {
                 if (r.IsDead()) return;
@@ -106,11 +105,11 @@ namespace Game.Combat
             Enemy enemy = character as Enemy;
             if (enemy != null)
             {
-                enemy.EnemyView().VisionText.text = "No Cover (Enemy)";
+                enemy.EnemyView().VisionText.text = "No Cover";
             }
             else
             {
-                Enemies.ForEach(e => { e.EnemyView().CoverText.text = "No Cover (Player)"; });
+                CombatUi.SetCoverText("No Cover");
             }
         }
 
@@ -119,11 +118,11 @@ namespace Game.Combat
             Enemy enemy = c as Enemy;
             if (enemy != null)
             {
-                enemy.EnemyView().VisionText.text = "Full Cover (Enemy)";
+                enemy.EnemyView().VisionText.text = "In Cover";
             }
             else
             {
-                Enemies.ForEach(e => { e.EnemyView().CoverText.text = "Full Cover (Player)"; });
+                CombatUi.SetCoverText("In Cover");
             }
         }
 
@@ -203,24 +202,23 @@ namespace Game.Combat
             return enemiesBehindTarget;
         }
 
-        public static List<Character> GetCharactersInRange(Character target, int splinterRange)
+        public static List<Character> GetCharactersInRange(Character target, int range)
         {
-            List<Character> enemiesInRange = new List<Character>();
-            Enemy enemy1 = target as Enemy;
-            if (enemy1?.Distance.CurrentValue() <= splinterRange)
+            List<Character> charactersInRange = new List<Character>();
+            if ((target as Enemy)?.Distance.CurrentValue() <= range)
             {
-                enemiesInRange.Add(_player);
+                charactersInRange.Add(_player);
             }
             foreach (Enemy enemy in Enemies)
             {
                 if (enemy == target) continue;
                 float distanceFromEnemy = DistanceBetweenCharacter(target, enemy);
-                if (distanceFromEnemy <= splinterRange)
+                if (distanceFromEnemy <= range)
                 {
-                    enemiesInRange.Add(enemy);
+                    charactersInRange.Add(enemy);
                 }
             }
-            return enemiesInRange;
+            return charactersInRange;
         }
     }
 }

@@ -44,6 +44,8 @@ namespace Game.Combat.Enemies.EnemyTypes
             s.SetSplinterRange(10);
             s.SetSplinterFalloff(0.5f);
             s.SetKnockbackDistance(10);
+            s.SetKnockdownChance(1);
+            s.SetKnockDownRadius(10);
             s.SetDamage(40);
             s.Fire();
         }

@@ -27,8 +27,10 @@ namespace Game.Combat.Enemies
         {
             base.CacheUiElements();
             CoverText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Cover");
+            CoverText.text = "";
             DistanceText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Distance");
             VisionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Vision");
+            VisionText.text = "No Cover";
 //            StrengthText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Strength Remaining");
 //            ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour");
             UiAimController = Helper.FindChildWithName<UIAimController>(GameObject, "Aim Timer");
@@ -72,7 +74,7 @@ namespace Game.Combat.Enemies
 
         public void MarkDead()
         {
-            CoverText.text = "";
+//            CoverText.text = "";
             DistanceText.text = "";
             VisionText.text = "";
 //            StrengthText.text = "";

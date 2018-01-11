@@ -14,26 +14,33 @@ namespace Game.Combat.Enemies
     public partial class Enemy : Character
     {
         private const float ImmediateDistance = 1f, CloseDistance = 10f, MidDistance = 50f, FarDistance = 100f, MaxDistance = 150f;
-        private MyValue _sightToCharacter;
-        private MyValue _exposure;
         private bool _hasFled, _isDead;
         public readonly CharacterAttribute VisionRange = new CharacterAttribute(AttributeType.Vision, 30f);
         public readonly CharacterAttribute DetectionRange = new CharacterAttribute(AttributeType.Detection, 15f);
         protected readonly ValueTextLink<string> ActionTextLink = new ValueTextLink<string>();
 
         private EnemyView _enemyView;
-        private bool _alerted;
-        public readonly MyValue Distance = new MyValue(0, 0, 150);
+        private bool _alerted, _waitingForHeal;
+        public readonly Number Distance = new Number(0, 0, 150);
         public readonly int MaxHealth;
         public int Speed;
-
+        
         private void MakeHealRequest()
         {
             foreach (Enemy enemy in CombatManager.GetEnemies())
             {
                 Medic medic = enemy as Medic;
                 medic?.RequestHeal(this);
+                SetActionText("Waiting for Healing");
+                TakeCover();
+                _waitingForHeal = true;
             }
+        }
+
+        public void ReceiveHealing(int amount)
+        {
+            HealthController.Heal(amount);
+            _waitingForHeal = false;
         }
 
         protected Enemy(string name, int enemyHp) : base(name)
@@ -70,7 +77,7 @@ namespace Game.Combat.Enemies
             });
 
             ReloadingCooldown.SetStartAction(() => SetActionText("Reloading"));
-            CoverCooldown.SetStartAction(() => SetActionText("Taking Cover"));
+//            CoverCooldown.SetStartAction(() => SetActionText("Taking Cover"));
             SetWanderCooldown();
             CurrentAction = Wander;
             HealthController.AddOnTakeDamage(f =>
@@ -209,6 +216,7 @@ namespace Game.Combat.Enemies
                 _enemyView.SetHealth(HealthController.GetNormalisedHealthValue());
 //                _enemyView.StrengthText.text = Helper.Round(f.GetCurrentValue(), 0).ToString();
             });
+            HealthController.AddOnHeal(f => _enemyView.SetHealth(HealthController.GetNormalisedHealthValue()));
             ActionTextLink.AddTextObject(_enemyView.ActionText);
             SetDistanceData();
             ArmourLevel.AddOnValueChange(a => _enemyView.SetArmour((int) ArmourLevel.CurrentValue()));

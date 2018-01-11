@@ -24,7 +24,8 @@ namespace Game.Combat
             _characterHealthText,
             _ammoText,
             _weaponNameText,
-            _reloadTimeRemaining;
+            _reloadTimeRemaining,
+            _statusText;
 //            _hitInfo;
 
         public readonly TextMeshProUGUI ConditionsText;
@@ -48,6 +49,8 @@ namespace Game.Combat
             _ammoText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Ammo Stock");
             _weaponNameText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Weapon");
             _reloadTimeRemaining = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Time Remaining");
+            _statusText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Status");
+            _statusText.text = "";
 //            _hitInfo = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Hit Info");
             ConditionsText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Conditions");
 //            _hitInfo.color = new Color(1, 1, 1, 0);
@@ -59,22 +62,9 @@ namespace Game.Combat
             _characterUiHealthController = Helper.FindChildWithName<UIHealthBarController>(playerContainer, "Health Bar");
         }
 
-        public void ShowHitMessage(string message)
+        public void SetCoverText(string coverText)
         {
-//            _hitInfo.text = message;
-            _hitInfoTimerCurrent = HitInfoTimerMax;
-        }
-
-        private void UpdateHitMessage()
-        {
-            if (!(_hitInfoTimerCurrent > 0)) return;
-            _hitInfoTimerCurrent -= Time.deltaTime;
-            float opacity = _hitInfoTimerCurrent / HitInfoTimerMax;
-            if (opacity < 0)
-            {
-                opacity = 0;
-            }
-//            _hitInfo.color = new Color(1, 1, 1, opacity);
+            _statusText.text = coverText;
         }
 
         public void UpdatePlayerHealth()
@@ -131,11 +121,6 @@ namespace Game.Combat
         public void UpdateReloadTimeText(string text)
         {
             _reloadTimeRemaining.text = text;
-        }
-
-        public void Update()
-        {
-            UpdateHitMessage();
         }
 
         public void Start(CombatScenario scenario)

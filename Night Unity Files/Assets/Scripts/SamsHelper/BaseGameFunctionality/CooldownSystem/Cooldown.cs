@@ -38,7 +38,10 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             Controller = controller;
         }
 
-        public void SetStartAction(Action a) => _startOfCooldown = a;
+        public void SetStartAction(Action a)
+        {
+            _startOfCooldown = a;
+        }
 
         public void SetEndAction(Action a, bool isCancelAction = false)
         {

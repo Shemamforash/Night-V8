@@ -23,7 +23,7 @@ namespace Game.World
     public class WorldState : MonoBehaviour
     {
         public static readonly CooldownManager WorldCooldownManager = new CooldownManager();
-        public static MyValue StormDistance;
+        public static Number StormDistance;
         public static int DaysSpentHere;
         public static readonly EnvironmentManager EnvironmentManager = new EnvironmentManager();
         private static readonly CharacterManager _homeInventory = new CharacterManager();
@@ -52,7 +52,7 @@ namespace Game.World
             SaveController.LoadGame();
 
             DayEvent += IncrementDaysSpentHere;
-            StormDistance = new MyValue(15);
+            StormDistance = new Number(15);
             StormDistance.AddOnValueChange(value => WorldView.SetStormDistance((int) value.CurrentValue()));
 #if UNITY_EDITOR
             _homeInventory.AddTestingResources(3);

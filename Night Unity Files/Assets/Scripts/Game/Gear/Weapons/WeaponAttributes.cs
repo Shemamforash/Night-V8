@@ -15,7 +15,7 @@ namespace Game.Gear.Weapons
         public CharacterAttribute FireRate, ReloadSpeed, Damage, Accuracy, CriticalChance, Handling, Capacity, Pellets;
         private float _dps;
         private AttributeModifier _durabilityModifier = new AttributeModifier();
-        public readonly MyValue Durability;
+        public readonly Number Durability;
         private const int MaxDurability = 20;
         public float DurabilityModifier;
         public bool Automatic = true;
@@ -28,7 +28,7 @@ namespace Game.Gear.Weapons
 
         public WeaponAttributes()
         {
-            Durability = new MyValue(Random.Range(0, MaxDurability), 0, MaxDurability);
+            Durability = new Number(Random.Range(0, MaxDurability), 0, MaxDurability);
             Durability.AddThreshold(4, "Flawed");
             Durability.AddThreshold(8, "Worn");
             Durability.AddThreshold(12, "Fresh");

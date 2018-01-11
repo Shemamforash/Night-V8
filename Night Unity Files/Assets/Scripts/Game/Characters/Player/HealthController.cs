@@ -1,20 +1,16 @@
 ﻿using System;
-using Game.Combat;
 using Game.Combat.Enemies;
 using SamsHelper.ReactiveUI;
-using UnityEngine;
 
-namespace Game.Characters
+namespace Game.Characters.Player
 {
     public class HealthController
     {
-        private int _healthRemaining;
+        private Number _healthRemaining;
         private event Action<int> OnTakeDamage;
         private event Action<int> OnHeal;
-        private Character _character;
-        private readonly int _healthChunkSize = 10;
-        private int _healthAtStartOfCombat;
-        private float _normalisedHealth;
+        private readonly Character _character;
+        private const int HealthChunkSize = 10;
 
         public HealthController(Character character)
         {
@@ -24,49 +20,36 @@ namespace Game.Characters
         public void EnterCombat()
         {
             int strengthRating;
-            if (_character is Player.Player)
+            Player player = _character as Player;
+            if (player != null)
             {
-                strengthRating = (int) ((Player.Player) _character).Attributes.Strength.CurrentValue();
+                strengthRating = (int) player.Attributes.Strength.CurrentValue();
             }
             else
             {
                 strengthRating = ((Enemy) _character).MaxHealth;
             }
-            _healthRemaining = strengthRating * _healthChunkSize;
-            _healthAtStartOfCombat = _healthRemaining;
+
+            int maxHealth = strengthRating * HealthChunkSize;
+            _healthRemaining = new Number(maxHealth, 0, maxHealth);
+            _healthRemaining.OnMin(_character.Kill);
             HeartBeatController.Enable();
-            RecalculateNormalisedHealth();
+            HeartBeatController.SetHealth(_healthRemaining.Normalised());
         }
 
         public void TakeDamage(int amount)
         {
-            if (_healthRemaining <= 0) return;
-            _healthRemaining -= amount;
-            if (_healthRemaining <= 0)
-            {
-                _healthRemaining = 0;
-                _character.Kill();
-            }
-            RecalculateNormalisedHealth();
+            if (_healthRemaining.ReachedMin()) return;
+            _healthRemaining.Decrement(amount);
             OnTakeDamage?.Invoke(amount);
-            HeartBeatController.SetHealth(_normalisedHealth);
-            if(_character is Player.Player) ;
-        }
-
-        private void RecalculateNormalisedHealth()
-        {
-            _normalisedHealth = (float)_healthRemaining / _healthAtStartOfCombat;
         }
 
         public void ExitCombat()
         {
-            if (_character is Player.Player)
-            {
-                ((Player.Player) _character).Attributes.Strength.SetCurrentValue(_healthRemaining / _healthChunkSize);
-            }
+            (_character as Player)?.Attributes.Strength.SetCurrentValue(_healthRemaining / HealthChunkSize);
             HeartBeatController.Disable();
         }
-        
+
         public void TakeCriticalDamage(int amount)
         {
             TakeDamage(amount);
@@ -75,13 +58,7 @@ namespace Game.Characters
 
         public void Heal(int amount)
         {
-            int newAmount = _healthRemaining + amount;
-            if (newAmount > _healthAtStartOfCombat)
-            {
-                amount = newAmount - _healthAtStartOfCombat;
-            }
-            _healthRemaining += amount;
-            RecalculateNormalisedHealth();
+            _healthRemaining.Increment(amount);
             OnHeal?.Invoke(amount);
         }
 
@@ -90,17 +67,17 @@ namespace Game.Characters
 
         public float GetNormalisedHealthValue()
         {
-            return _normalisedHealth;
+            return _healthRemaining.Normalised();
         }
 
         public float GetCurrentHealth()
         {
-            return _healthRemaining;
+            return _healthRemaining.CurrentValue();
         }
 
         public float GetMaxHealth()
         {
-            return _healthAtStartOfCombat;
+            return _healthRemaining.Max;
         }
     }
 }

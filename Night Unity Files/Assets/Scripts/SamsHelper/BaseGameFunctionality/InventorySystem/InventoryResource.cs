@@ -8,7 +8,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class InventoryResource : InventoryItem
     {
-        private readonly MyValue _quantity = new MyValue();
+        private readonly Number _quantity = new Number();
         private readonly InventoryResourceType _inventoryResourceType;
 
         public InventoryResource(InventoryResourceType inventoryResourceType, float weight) : base(inventoryResourceType.ToString(), GameObjectType.Resource, weight)
@@ -43,7 +43,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return ui;
         }
         
-        public void AddOnUpdate(Action<MyValue> action)
+        public void AddOnUpdate(Action<Number> action)
         {
             _quantity.AddOnValueChange(action);
         }

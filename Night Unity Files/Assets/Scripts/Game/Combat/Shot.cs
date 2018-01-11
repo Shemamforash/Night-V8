@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Facilitating.Audio;
 using Game.Characters;
+using Game.Characters.Player;
 using Game.Combat.Enemies;
 using Game.Gear.Weapons;
 using SamsHelper;
@@ -19,7 +20,7 @@ namespace Game.Combat
         private Weapon _weapon;
 
         private int _noPellets = 1, _noShots = 1;
-        private float _maxRange;
+        private int _maxRange;
         private int _pierceDepth;
         private float _pierceFalloff = 1;
 
@@ -30,7 +31,7 @@ namespace Game.Combat
 
         private float _criticalChance, _hitChance;
 
-        private float _knockbackDistance;
+        private int _knockbackDistance, _knockDownRadius;
 
         private float _pierceChance, _burnChance, _bleedChance, _decayChance, _knockDownChance;
 
@@ -49,7 +50,9 @@ namespace Game.Combat
                 CacheWeaponAttributes();
                 CalculateHitProbability();
                 CalculateCriticalProbability();
-                GunFire.Fire(origin.Weapon().WeaponType());
+                float distance = origin is Player ? 0 : _distanceToTarget;
+                distance = distance / 150f;
+                GunFire.Fire(origin.Weapon().WeaponType(), distance);
             }
             else
             {
@@ -61,7 +64,7 @@ namespace Game.Combat
         {
             WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
-            _maxRange = attributes.GetCalculatedValue(AttributeType.Accuracy);
+            _maxRange = (int) attributes.GetCalculatedValue(AttributeType.Accuracy);
             _noPellets = (int) attributes.GetCalculatedValue(AttributeType.Pellets);
         }
 
@@ -70,6 +73,10 @@ namespace Game.Combat
             _damage = damage;
         }
 
+        public void SetKnockDownRadius(int knockDownRadius)
+        {
+            _knockDownRadius = knockDownRadius;
+        }
 
         private bool WillHitTarget()
         {
@@ -145,7 +152,7 @@ namespace Game.Combat
                 int splinterDamage = (int) (damageModifier * pelletDamage);
                 Shot s = new Shot(character, null);
                 s.SetDamage(splinterDamage);
-                s.SetKnockbackDistance(_knockbackDistance * _splinterFalloff);
+                s.SetKnockbackDistance((int) (_knockbackDistance * _splinterFalloff));
                 s.Fire();
             }
         }
@@ -154,7 +161,14 @@ namespace Game.Combat
         {
             if (Random.Range(0f, 1f) < _knockDownChance && _knockDownChance > 0)
             {
-                _target.KnockDown();
+                if (_knockDownRadius != 0)
+                {
+                    CombatManager.GetCharactersInRange(_target, _knockbackDistance).ForEach(c => c.KnockDown());
+                }
+                else
+                {
+                    _target.KnockDown();
+                }
             }
             if (_knockbackDistance != 0)
             {
@@ -247,7 +261,7 @@ namespace Game.Combat
             _knockDownChance = Mathf.Clamp(chance, 0f, 1f);
         }
 
-        public void SetKnockbackDistance(float distance)
+        public void SetKnockbackDistance(int distance)
         {
             _knockbackDistance = distance < 0 ? 0 : distance;
         }

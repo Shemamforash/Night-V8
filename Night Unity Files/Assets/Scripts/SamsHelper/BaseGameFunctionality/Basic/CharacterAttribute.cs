@@ -1,7 +1,7 @@
 ﻿using SamsHelper.ReactiveUI;
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
-    public class CharacterAttribute : MyValue
+    public class CharacterAttribute : Number
     {
         public readonly AttributeType AttributeType;
         private float _summativeModifier, _multiplicativeModifier = 1;
