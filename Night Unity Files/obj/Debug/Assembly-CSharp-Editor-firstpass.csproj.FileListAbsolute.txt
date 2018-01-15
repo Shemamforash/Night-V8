@@ -64,3 +64,5 @@ C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files\Temp\
 C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files\obj\Debug\Assembly-CSharp-Editor-firstpass.csprojResolveAssemblyReference.cache
 C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files\obj\Debug\Assembly-CSharp-Editor-firstpass.dll
 C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files\obj\Debug\Assembly-CSharp-Editor-firstpass.pdb
+C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files\Temp\bin\Debug\UnityEngine.Advertisements.dll
+C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files\Temp\bin\Debug\UnityEngine.StandardEvents.dll

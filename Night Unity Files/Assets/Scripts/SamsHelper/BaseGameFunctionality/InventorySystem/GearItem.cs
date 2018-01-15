@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using Game.World;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -13,9 +14,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public abstract class GearItem : InventoryItem, IPersistenceTemplate
     {
         private readonly GearSubtype _gearType;
-        public bool Equipped { get; set; }
-        protected readonly List<AttributeModifier> Modifiers = new List<AttributeModifier>();
-        private Character _equippedOnCharacter; 
+        private readonly List<AttributeModifier> _modifiers = new List<AttributeModifier>();
+        public bool Equipped;
 
         protected GearItem(string name, float weight, GearSubtype gearSubtype) : base(name, GameObjectType.Gear, weight)
         {
@@ -31,13 +31,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 //            _equipped = true;
 //            c.ReplaceGearInSlot(_gearslot, this);
             ParentInventory = p;
-            Modifiers.ForEach(a => a.Apply());
+            _modifiers.ForEach(a => a.Apply());
             Equipped = true;
         }
         
         public void Unequip()
         {
-            Modifiers.ForEach(a => a.Remove());
+            _modifiers.ForEach(a => a.Remove());
             Equipped = false;
         }
 
@@ -63,13 +63,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             ParentInventory?.Move(this, targetInventory, 1);
         }
 
-        public void Load(XmlNode doc, PersistenceType saveType)
+        public virtual void Load(XmlNode doc, PersistenceType saveType)
         {
         }
 
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public virtual XmlNode Save(XmlNode root, PersistenceType saveType)
         {
-            return doc;
+            root = base.Save(root, saveType);
+            SaveController.CreateNodeAndAppend("GearType", root, _gearType);
+            return root;
         }
     }
 }

@@ -57,12 +57,9 @@ namespace Game.Characters
 
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
-            XmlNode weaponNode = SaveController.CreateNodeAndAppend("Weapon", doc);
-            Weapon()?.Save(weaponNode, saveType);
-            XmlNode armourNode = SaveController.CreateNodeAndAppend("Armour", doc);
-            Armour()?.Save(weaponNode, saveType);
-            XmlNode accessoryNode = SaveController.CreateNodeAndAppend("Accessory", doc);
-            Accessory()?.Save(weaponNode, saveType);
+            Weapon()?.Save(doc, saveType);
+            Armour()?.Save(doc, saveType);
+            Accessory()?.Save(doc, saveType);
             return doc;
         }
     }

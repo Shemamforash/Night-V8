@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using Facilitating.Persistence;
 using SamsHelper.Persistence;
 
 namespace SamsHelper.BaseGameFunctionality.Basic
@@ -20,7 +21,12 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
-            throw new System.NotImplementedException();
+            XmlNode attributeNode = SaveController.CreateNodeAndAppend("Attributes", doc);
+            foreach (AttributeType t in _attributes.Keys)
+            {
+                _attributes[t].Save(doc, saveType);
+            }
+            return attributeNode;
         }
 
         public CharacterAttribute Get(AttributeType type)

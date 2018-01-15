@@ -39,7 +39,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             OnContentChange += a;
         }
 
-        private void Clear()
+        public void Clear()
         {
             Items.ForEach(item => item.Destroy());
             Items.Clear();

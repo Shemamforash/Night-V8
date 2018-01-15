@@ -3,6 +3,7 @@ using System.Xml;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.EnemyTypes;
+using Game.Combat.Enemies.EnemyTypes.Humans;
 using SamsHelper.Persistence;
 using UnityEngine;
 
@@ -13,12 +14,7 @@ namespace Game.Combat
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private bool _finished = false;
 
-        public void Remove(Enemy enemy)
-        {
-            _enemies.Remove(enemy);
-        }
-
-        private void AddEnemy(Enemy enemy)
+        public void AddEnemy(Enemy enemy)
         {
             _enemies.Add(enemy);
         }
@@ -28,10 +24,11 @@ namespace Game.Combat
             CombatScenario scenario = new CombatScenario();
             if (size == 0)
             {
-                scenario.AddEnemy(new Sniper(false));
-                scenario.AddEnemy(new Martyr());
-                scenario.AddEnemy(new Medic());
+//                scenario.AddEnemy(new Sniper());
+//                scenario.AddEnemy(new Martyr());
+//                scenario.AddEnemy(new Medic());
                 scenario.AddEnemy(new Fighter());
+                scenario.AddEnemy(new Warlord());
             }
             for (int i = 0; i < size; ++i)
             {

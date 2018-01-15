@@ -117,17 +117,20 @@
                     <e p="Grazer.cs" t="Include" />
                     <e p="Watcher.cs" t="Include" />
                   </e>
-                  <e p="BaseEnemy.cs" t="Include" />
                   <e p="Humans" t="Include">
                     <e p="Fighter.cs" t="Include" />
                     <e p="Martyr.cs" t="Include" />
                     <e p="Medic.cs" t="Include" />
+                    <e p="Mountain.cs" t="Include" />
+                    <e p="Sentinel.cs" t="Include" />
                     <e p="Sniper.cs" t="Include" />
+                    <e p="Warlord.cs" t="Include" />
+                    <e p="Witch.cs" t="Include" />
                   </e>
+                  <e p="Misc" t="Include" />
                 </e>
                 <e p="EnemyView.cs" t="Include" />
               </e>
-              <e p="EnemyPlayerRelation.cs" t="Include" />
               <e p="Shot.cs" t="Include" />
               <e p="SkillBar.cs" t="Include" />
               <e p="Skills" t="Include">

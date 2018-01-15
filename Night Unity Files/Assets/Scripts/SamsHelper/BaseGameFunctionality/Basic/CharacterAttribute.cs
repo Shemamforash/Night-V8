@@ -1,4 +1,7 @@
-﻿using SamsHelper.ReactiveUI;
+﻿using System.Xml;
+using Facilitating.Persistence;
+using SamsHelper.Persistence;
+using SamsHelper.ReactiveUI;
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public class CharacterAttribute : Number
@@ -11,6 +14,13 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         {
             AttributeType = attributeType;
             AddOnValueChange(a => Recalculate());
+        }
+        
+        public void Save(XmlNode doc, PersistenceType saveType)
+        {
+            SaveController.CreateNodeAndAppend("AttributeType", doc, AttributeType);
+            SaveController.CreateNodeAndAppend("SummativeModifier", doc, _summativeModifier);
+            SaveController.CreateNodeAndAppend("MultiplicativeModifier", doc, _multiplicativeModifier);
         }
 
         public override float CurrentValue()

@@ -5,12 +5,11 @@ namespace Game.Combat.Enemies.EnemyTypes
 {
     public class Sniper : Enemy
     {
-        private readonly bool _mobile;
         private bool _reachedTarget;
 
-        public Sniper(bool mobile) : base("Sniper", 5)
+        //Check you've initialised the speed sam!
+        public Sniper() : base("Sniper", 5)
         {
-            _mobile = mobile;
             Weapon sniperRifle = WeaponGenerator.GenerateWeapon(WeaponType.Rifle);
             Equip(sniperRifle);
             Speed = 7;
@@ -22,12 +21,12 @@ namespace Game.Combat.Enemies.EnemyTypes
         protected override void Alert()
         {
             base.Alert();
-            CurrentAction = FindCover;
+            CurrentAction = FindBetterRange;
         }
 
         protected override void ReachTarget()
         {
-            if (_mobile || !_reachedTarget)
+            if (!_reachedTarget)
             {
                 base.ReachTarget();
             }

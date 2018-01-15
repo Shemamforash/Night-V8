@@ -138,13 +138,13 @@ namespace Game.Characters
 
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
-            XmlNode characterManagerNode = SaveController.CreateNodeAndAppend("CharacterManager", doc);
+            doc = base.Save(doc, saveType);
             foreach (Player.Player c in _characters)
             {
-                XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", characterManagerNode);
-                c.Save(characterNode, saveType);
+//                XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", doc);
+//                c.Save(characterNode, saveType);
             }
-            return characterManagerNode;
+            return doc;
         }
 
         public static Player.Player PreviousCharacter(Player.Player character)

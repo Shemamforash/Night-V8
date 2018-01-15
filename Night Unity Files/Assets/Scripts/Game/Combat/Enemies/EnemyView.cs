@@ -1,43 +1,44 @@
-﻿using SamsHelper;
+﻿using Game.Characters.Player;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Assertions.Comparers;
-using UnityEngine.UI;
 
 namespace Game.Combat.Enemies
 {
     public class EnemyView : ViewParent
     {
-        public TextMeshProUGUI CoverText, DistanceText, VisionText, ActionText;//StrengthText, ArmourText, 
+        public TextMeshProUGUI CoverText, DistanceText, RangeText, ActionText, HealthText, ArmourText; 
         private TextMeshProUGUI _nameText, _typeText;
         private UIArmourController _uiArmourController;
         private UIHealthBarController _lowerUiHealthBarController;
         private GameObject _alertedObject, _detectedObject;
         public UIAimController UiAimController;
+        private float _fadingIn = 2f;
+        private float _fadeInTime = 2f;
         
         public EnemyView(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/EnemyItem") : base(linkedObject, parent, prefabLocation)
         {
             GameObject.SetActive(true);
+            SetAlpha(0f);
         }
 
         protected override void CacheUiElements()
         {
             base.CacheUiElements();
             CoverText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Cover");
-            CoverText.text = "";
+            CoverText.text = "No Cover";
             DistanceText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Distance");
-            VisionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Vision");
-            VisionText.text = "No Cover";
-//            StrengthText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Strength Remaining");
-//            ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour");
+            RangeText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Range Category");
+            HealthText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Health Text");
+            ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour Text");
             UiAimController = Helper.FindChildWithName<UIAimController>(GameObject, "Aim Timer");
             _nameText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Name");
             _typeText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Type");
             _uiArmourController = Helper.FindChildWithName<UIArmourController>(GameObject, "Armour Bar");
-            _lowerUiHealthBarController = Helper.FindChildWithName<UIHealthBarController>(GameObject, "Health Bar Bottom");
+            _lowerUiHealthBarController = Helper.FindChildWithName<UIHealthBarController>(GameObject, "Health Bar");
             _alertedObject = GameObject.Find("Alert");
             _detectedObject = GameObject.Find("Detected");
             _alertedObject.SetActive(false);
@@ -45,14 +46,24 @@ namespace Game.Combat.Enemies
             ActionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Action");
         }
 
-        public void SetHealth(float normalisedHealth)
+        public void SetHealth(HealthController healthController)
         {
-            _lowerUiHealthBarController.SetValue(normalisedHealth);
+            _lowerUiHealthBarController.SetValue(healthController.GetNormalisedHealthValue());
+            HealthText.text = (int)healthController.GetCurrentHealth() + "/" + (int)healthController.GetMaxHealth();
         }
 
-        public void SetArmour(int armourLevel)
+        public void SetArmour(int armourLevel, bool inCover)
         {
             _uiArmourController.SetArmourValue(armourLevel);
+            float armourProtection = 1 - armourLevel / 10f;
+            string coverString = "No Cover";
+            if (inCover)
+            {
+                armourProtection /= 2f;
+                coverString = "In Cover";
+            }
+            CoverText.text = coverString;
+            ArmourText.text = armourProtection + "x damage";
         }
         
         public override void Update()
@@ -64,6 +75,12 @@ namespace Game.Combat.Enemies
 
         public void SetAlpha(float alpha)
         {
+            if (_fadingIn > 0)
+            {
+                float fadeInAmount = 1f - _fadingIn / _fadeInTime;
+                alpha *= fadeInAmount;
+                _fadingIn -= Time.deltaTime;
+            }
             GetGameObject().GetComponent<CanvasGroup>().alpha = alpha;
         }
 
@@ -76,7 +93,7 @@ namespace Game.Combat.Enemies
         {
 //            CoverText.text = "";
             DistanceText.text = "";
-            VisionText.text = "";
+            RangeText.text = "";
 //            StrengthText.text = "";
 //            ArmourText.text = "";
             _nameText.text = _nameText.text + " DEAD";

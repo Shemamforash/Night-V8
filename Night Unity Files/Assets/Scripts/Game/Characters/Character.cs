@@ -8,6 +8,7 @@ using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.Characters.Player;
 using Game.Combat;
+using Game.Combat.Enemies.EnemyTypes;
 using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper;
@@ -33,25 +34,25 @@ namespace Game.Characters
         protected Cooldown KnockdownCooldown;
 //        protected Cooldown CoverCooldown;
 
-        private bool _sprinting;
         private const float KnockdownDuration = 3f;
-        protected const float DashDuration = 2f;
+        private const float DashDuration = 2f;
         private long _timeAtLastFire;
-        protected Number ArmourLevel = new Number(0, 0, 10);
+        protected readonly Number ArmourLevel = new Number(0, 0, 10);
 
         public Action<Shot> OnFireAction;
         public bool Retaliate;
 
-        public RageController RageController;
-        public HealthController HealthController;
-        public EquipmentController EquipmentController;
-        protected AttributeModifier _sprintModifier = new AttributeModifier();
-        private bool _inCover;
+        public readonly HealthController HealthController;
+        public readonly EquipmentController EquipmentController;
+        
+        protected bool InCover;
+        protected Action TakeCoverAction, LeaveCoverAction;
 
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             SaveController.CreateNodeAndAppend("Name", doc, Name);
             EquipmentController.Save(doc, saveType);
+            Inventory().Save(doc, saveType);
             return doc;
         }
 
@@ -62,9 +63,7 @@ namespace Game.Characters
 
         protected Character(string name) : base(name, GameObjectType.Character)
         {
-            _sprintModifier.SetMultiplicative(2);
             CharacterInventory = new DesolationInventory(name);
-            RageController = new RageController(this);
             HealthController = new HealthController(this);
             EquipmentController = new EquipmentController(this);
             SetReloadCooldown();
@@ -91,7 +90,7 @@ namespace Game.Characters
 
         private int GetCoverProtection(int damage)
         {
-            if (_inCover) return (int) (damage * 0.5f);
+            if (InCover) return (int) (damage * 0.5f);
             return damage;
         }
 
@@ -156,14 +155,14 @@ namespace Game.Characters
 
         protected abstract float GetSpeedModifier();
 
-        public void MoveForward()
+        protected void MoveForward()
         {
             if (Immobilised()) return;
             LeaveCover();
             CombatManager.ReduceDistance(this, GetSpeedModifier());
         }
 
-        public void MoveBackward()
+        protected void MoveBackward()
         {
             if (Immobilised()) return;
             LeaveCover();
@@ -182,22 +181,6 @@ namespace Game.Characters
             }
         }
 
-        //SPRINTING
-
-        public void StartSprinting()
-        {
-            if (_sprinting) return;
-            _sprintModifier.Apply();
-            _sprinting = true;
-        }
-
-        public void StopSprinting()
-        {
-            if (!_sprinting) return;
-            _sprintModifier.Remove();
-            _sprinting = false;
-        }
-
 //        public void SetFlanked()
 //        {
 //            _coverLevel = CoverLevel.Partial;
@@ -206,16 +189,16 @@ namespace Game.Characters
         //COVER
         public void TakeCover()
         {
-            if (Immobilised() || _inCover) return;
-            _inCover = true;
-            CombatManager.TakeCover(this);
+            if (Immobilised() || InCover) return;
+            InCover = true;
+            TakeCoverAction?.Invoke();
         }
 
         public void LeaveCover()
         {
-            if (Immobilised() || !_inCover) return;
-            _inCover = false;
-            CombatManager.LeaveCover(this);
+            if (Immobilised() || !InCover) return;
+            InCover = false;
+            LeaveCoverAction?.Invoke();
         }
 
         //COCKING
@@ -265,7 +248,7 @@ namespace Game.Characters
             OnFireAction = null;
             Retaliate = false;
             float reloadSpeed = EquipmentController.Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
-            CombatManager.CombatUi.EmptyMagazine();
+            CombatManager.EmptyMagazine();
             ReloadingCooldown.Duration = reloadSpeed;
             ReloadingCooldown.Start();
         }
@@ -280,7 +263,7 @@ namespace Game.Characters
         public bool CanFire()
         {
             Weapon weapon = EquipmentController.Weapon();
-            return !Immobilised() && weapon.Cocked && !weapon.Empty() && FireRateElapsedTimeMet() && !_inCover;
+            return !Immobilised() && weapon.Cocked && !weapon.Empty() && FireRateElapsedTimeMet() && !InCover;
         }
 
         private bool FireRateElapsedTimeMet()
@@ -347,17 +330,10 @@ namespace Game.Characters
 
         //MISC
 
-        public virtual void Interrupt()
+        protected virtual void Interrupt()
         {
             StopCocking();
             StopReloading();
-            StopSprinting();
-        }
-
-        protected void Flank()
-        {
-            if (Immobilised()) return;
-            CombatManager.Flank(this);
         }
 
         protected bool Immobilised()

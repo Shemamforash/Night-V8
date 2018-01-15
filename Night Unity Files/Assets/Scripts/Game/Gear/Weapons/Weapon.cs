@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
+using System.Xml;
 using Facilitating.Audio;
+using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat;
@@ -12,8 +14,10 @@ using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -23,11 +27,17 @@ namespace Game.Gear.Weapons
     {
         public bool Cocked = true;
         private int _ammoInMagazine;
-        private bool _canEquip;
         public readonly WeaponAttributes WeaponAttributes;
         public Action OnFireAction;
         public Action OnReceiveDamageAction;
 
+        public override XmlNode Save(XmlNode root, PersistenceType saveType)
+        {
+            root = base.Save(root, saveType);
+            WeaponAttributes.Save(root, saveType);
+            return root;
+        }
+        
         public Weapon(string name, float weight) : base(name, weight, GearSubtype.Weapon)
         {
             WeaponAttributes = new WeaponAttributes();
@@ -65,8 +75,7 @@ namespace Game.Gear.Weapons
 
         public void IncreaseDurability()
         {
-            _canEquip = true;
-            WeaponAttributes.Durability.Increment(1);
+            WeaponAttributes.Durability.Increment();
             WeaponAttributes.RecalculateAttributeValues();
             WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Decrement(GetUpgradeCost());
             SetName();

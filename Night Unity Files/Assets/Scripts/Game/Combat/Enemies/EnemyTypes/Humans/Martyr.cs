@@ -14,7 +14,6 @@ namespace Game.Combat.Enemies.EnemyTypes
             _detonateCooldown.SetStartAction(() => SetActionText("Detonating"));
             _detonateCooldown.SetEndAction(Detonate);
             Speed = 3;
-            AcceptsHealing = false;
             HealthController.AddOnTakeDamage(damage =>
             {
                 if (_detonated) return;
@@ -32,7 +31,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         
         protected override void ReachTarget()
         {
-            if (!IsAlerted()) return;
+            if (Alerted) return;
             _detonateCooldown.Start();
             CurrentAction = null;
         }

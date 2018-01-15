@@ -89,7 +89,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         //Returns true if new instance of item was added
         //Returns false if existing instance was incremented
-        public virtual void AddItem(MyGameObject item)
+        public void AddItem(MyGameObject item)
         {
             Weight += item.Weight;
             item.ParentInventory = this;
@@ -223,9 +223,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public virtual XmlNode Save(XmlNode root, PersistenceType saveType)
         {
             if (saveType != PersistenceType.Game) return null;
-            XmlNode inventoryNode = SaveController.CreateNodeAndAppend(GetType().ToString(), root);
+            XmlNode inventoryNode = SaveController.CreateNodeAndAppend("Inventory", root);
             SaveController.CreateNodeAndAppend("Name", inventoryNode, Name);
             Resources().ForEach(r => SaveResource(r.GetResourceType(), inventoryNode));
+            Debug.Log(Items().Count);
+            Items().ForEach(i => i.Save(root, saveType));
             return inventoryNode;
         }
 

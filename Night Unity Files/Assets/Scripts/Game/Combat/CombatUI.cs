@@ -13,39 +13,44 @@ using Character = Game.Characters.Character;
 
 namespace Game.Combat
 {
-    public class CombatUi
+    public partial class CombatManager
     {
-        private readonly GameObject _ammoPrefab, _magazineContent;
-        private readonly MenuList _enemyList;
+        private static GameObject _ammoPrefab;
+        private static GameObject _magazineContent;
+        private static MenuList _enemyList;
         private float _hitInfoTimerCurrent;
         private const float HitInfoTimerMax = 1f;
 
-        private readonly TextMeshProUGUI _characterName,
-            _characterHealthText,
-            _ammoText,
-            _weaponNameText,
-            _reloadTimeRemaining,
-            _statusText;
+        private static TextMeshProUGUI _playerName;
+
+        private static TextMeshProUGUI _playerHealthText;
+
+        private static TextMeshProUGUI _ammoText;
+
+        private static TextMeshProUGUI _weaponNameText;
+
+        private static TextMeshProUGUI _reloadTimeRemaining;
+
+        private static TextMeshProUGUI _statusText;
 //            _hitInfo;
 
-        public readonly TextMeshProUGUI ConditionsText;
+        public static TextMeshProUGUI ConditionsText;
 
-        private readonly UIHealthBarController _characterUiHealthController;
-        private readonly List<GameObject> _magazineAmmo = new List<GameObject>();
-        private Character _character;
+        private static UIHealthBarController _playerUiHealthController;
+        private static List<GameObject> _magazineAmmo = new List<GameObject>();
         private float _criticalTarget;
-        public readonly CooldownController DashCooldownController;
-        public readonly SkillBar SkillBar;
+        public static CooldownController DashCooldownController;
+        public static SkillBar SkillBar;
 
-        public CombatUi(GameObject combatMenu)
+        public void Awake()
         {
-            GameObject playerContainer = combatMenu.transform.Find("Player").gameObject;
-            _enemyList = Helper.FindChildWithName<MenuList>(combatMenu, "Enemies");
+            GameObject playerContainer = gameObject.transform.Find("Player").gameObject;
+            _enemyList = Helper.FindChildWithName<MenuList>(gameObject, "Enemies");
             _magazineContent = Helper.FindChildWithName<Transform>(playerContainer, "Magazine").gameObject;
             _ammoPrefab = Resources.Load("Prefabs/Combat/Ammo Prefab") as GameObject;
 
-            _characterName = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Name");
-            _characterHealthText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Strength Remaining");
+            _playerName = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Name");
+            _playerHealthText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Strength Remaining");
             _ammoText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Ammo Stock");
             _weaponNameText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Weapon");
             _reloadTimeRemaining = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Time Remaining");
@@ -56,32 +61,33 @@ namespace Game.Combat
 //            _hitInfo.color = new Color(1, 1, 1, 0);
 
             DashCooldownController = Helper.FindChildWithName<CooldownController>(playerContainer, "Dash");
-            
+
             SkillBar = Helper.FindChildWithName<SkillBar>(playerContainer, "Skill Bar");
 
-            _characterUiHealthController = Helper.FindChildWithName<UIHealthBarController>(playerContainer, "Health Bar");
+            _playerUiHealthController = Helper.FindChildWithName<UIHealthBarController>(playerContainer, "Health Bar");
         }
 
-        public void SetCoverText(string coverText)
+        public static void SetCoverText(string coverText)
         {
             _statusText.text = coverText;
         }
 
-        public void UpdatePlayerHealth()
+        public static void UpdatePlayerHealth()
         {
-            int currentHealth = (int) _character.HealthController.GetCurrentHealth();
-            int maxHealth = (int) _character.HealthController.GetMaxHealth();
-            _characterUiHealthController.SetValue(_character.HealthController.GetNormalisedHealthValue());
-            _characterHealthText.text = currentHealth + "/" + maxHealth;
+            int currentHealth = (int) _player.HealthController.GetCurrentHealth();
+            int maxHealth = (int) _player.HealthController.GetMaxHealth();
+            _playerUiHealthController.SetValue(_player.HealthController.GetNormalisedHealthValue());
+            _playerHealthText.text = currentHealth + "/" + maxHealth;
         }
 
-        private void ResetMagazine(int capacity)
+        private static void ResetMagazine(int capacity)
         {
             EnableReloadTime(false);
             foreach (GameObject round in _magazineAmmo)
             {
                 GameObject.Destroy(round);
             }
+
             _magazineAmmo.Clear();
             for (int i = 0; i < capacity; ++i)
             {
@@ -90,24 +96,24 @@ namespace Game.Combat
             }
         }
 
-        public void EmptyMagazine()
+        public static void EmptyMagazine()
         {
             EnableReloadTime(true);
         }
 
-        public void UpdateReloadTime(float time)
+        public static void UpdateReloadTime(float time)
         {
             string reloadTimeString = (Mathf.Round(time * 10f) / 10f).ToString("0.0") + "secs remaining";
             _reloadTimeRemaining.text = reloadTimeString;
         }
 
-        private void EnableReloadTime(bool enable)
+        private static void EnableReloadTime(bool enable)
         {
             _reloadTimeRemaining.gameObject.SetActive(enable);
             _magazineContent.SetActive(!enable);
         }
 
-        public void UpdateMagazine(int remaining)
+        public static void UpdateMagazine(int remaining)
         {
             EnableReloadTime(false);
             for (int i = 0; i < _magazineAmmo.Count; ++i)
@@ -115,40 +121,28 @@ namespace Game.Combat
                 GameObject round = _magazineAmmo[i].transform.Find("Round").gameObject;
                 round.SetActive(i < remaining);
             }
-            _ammoText.text = CombatManager.Player().Weapon().GetRemainingMagazines() + " mags";
+
+            _ammoText.text = _player.Weapon().GetRemainingMagazines() + " mags";
         }
 
-        public void UpdateReloadTimeText(string text)
+        public static void UpdateReloadTimeText(string text)
         {
             _reloadTimeRemaining.text = text;
         }
 
-        public void Start(CombatScenario scenario)
+        private static void SetTarget(Enemy e)
         {
-            _character = CombatManager.Player();
-            ResetMagazine((int) _character.Weapon().WeaponAttributes.Capacity.CurrentValue());
-            UpdateMagazine(_character.Weapon().GetRemainingAmmo());
-            _characterName.text = _character.Name;
-            _weaponNameText.text = _character.Weapon().Name + " (" + _character.Weapon().GetSummary() + ")";
-            _enemyList.SetItems(new List<MyGameObject>(scenario.Enemies()));
-            _enemyList.Items.ForEach(e => e.PrimaryButton.AddOnSelectEvent(() => SetTarget((Enemy) e.GetLinkedObject()))); //CombatManager.SetCurrentTarget(e.GetLinkedObject())));
-            SetTarget((Enemy) _enemyList.Items[0].GetLinkedObject());
-            UpdatePlayerHealth();
-        }
-
-        private void SetTarget(Enemy e)
-        {
-            CombatManager.SetCurrentTarget(e);
+            SetCurrentTarget(e);
             e?.EnemyView().PrimaryButton.GetComponent<Button>().Select();
         }
 
-        public void Remove(Enemy enemy)
+        public static void Remove(Enemy enemy)
         {
             Enemy nearestEnemy = null;
             int distanceToEnemy = 100;
             int enemyPosition = _enemyList.Items.IndexOf(enemy.EnemyView());
             for (int i = 0; i < _enemyList.Items.Count; ++i)
-            {    
+            {
                 Enemy e = _enemyList.Items[i].GetLinkedObject() as Enemy;
                 if (e == null || !_enemyList.Items[i].Navigatable()) continue;
                 int distance = Math.Abs(enemyPosition - i);
@@ -156,6 +150,7 @@ namespace Game.Combat
                 nearestEnemy = e;
                 distanceToEnemy = distance;
             }
+
             SetTarget(nearestEnemy);
         }
     }

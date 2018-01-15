@@ -7,19 +7,21 @@ using Game.World;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
 namespace Game.Combat
 {
-    public class CombatManager : Menu
+    public partial class CombatManager : Menu
     {
-        public static CombatUi CombatUi;
         private static Number _strengthText;
         public static readonly CooldownManager CombatCooldowns = new CooldownManager();
         private static readonly List<Enemy> Enemies = new List<Enemy>();
         private static Enemy _currentTarget;
         private static Player _player;
+        private static CombatScenario _currentScenario;
+        public static List<Enemy> _enemiesToAdd = new List<Enemy>();
 
         public static List<Enemy> GetEnemies()
         {
@@ -32,20 +34,25 @@ namespace Game.Combat
 //            return Enemies.FirstOrDefault(e => e == _currentTarget);
 //        }
 
-        protected void Awake()
-        {
-            CombatUi = new CombatUi(gameObject);
-        }
-
         public void Update()
         {
             CombatCooldowns.UpdateCooldowns();
             Enemies.ForEach(r =>
             {
-                if (r.IsDead()) return;
+                if (r.IsDead) return;
                 r.UpdateBehaviour();
             });
-            Player().RageController.Decrease();
+            _enemiesToAdd.ForEach(AddEnemy);
+            _enemiesToAdd.Clear();
+            _player.RageController.Decrease();
+        }
+
+        public static void QueueEnemyToAdd(Enemy e)
+        {
+            _enemiesToAdd.Add(e);
+            e.Distance.SetCurrentValue(e.Distance.Max);
+            e.TryAlert();
+            _currentScenario.AddEnemy(e);
         }
 
         public static void ResetCombat()
@@ -58,22 +65,19 @@ namespace Game.Combat
         public static void EnterCombat(Player player, CombatScenario scenario)
         {
             WorldState.Pause();
+            _currentScenario = scenario;
             _player = player;
             _player.HealthController.EnterCombat();
             ResetCombat();
+            ResetMagazine((int) _player.Weapon().WeaponAttributes.Capacity.CurrentValue());
+            UpdateMagazine(_player.Weapon().GetRemainingAmmo());
+            _playerName.text = _player.Name;
+            _enemyList.Clear();
+            _weaponNameText.text = _player.Weapon().Name + " (" + _player.Weapon().GetSummary() + ")";
+            UpdatePlayerHealth();
             InputHandler.RegisterInputListener(_player);
-            Enemies.AddRange(scenario.Enemies());
-            Enemies.ForEach(e => e.HealthController.EnterCombat());
+            scenario.Enemies().ForEach(AddEnemy);
             MenuStateMachine.ShowMenu("Combat Menu");
-            CombatUi.Start(scenario);
-        }
-
-        private static void ExitCombat()
-        {
-            WorldState.UnPause();
-            MenuStateMachine.ShowMenu("Game Menu");
-            InputHandler.UnregisterInputListener(_player);
-            _player.HealthController.ExitCombat();
         }
 
         public static Player Player()
@@ -81,62 +85,44 @@ namespace Game.Combat
             return _player;
         }
 
+        private static void AddEnemy(Enemy e)
+        {
+            Enemies.Add(e);
+            e.HealthController.EnterCombat();
+            ViewParent enemyUi = _enemyList.AddItem(e);
+            enemyUi.PrimaryButton.AddOnSelectEvent(() => SetTarget((Enemy) enemyUi.GetLinkedObject()));
+            if (_enemyList.Items.Count == 1) SetTarget((Enemy) _enemyList.Items[0].GetLinkedObject());
+        }
+
+        private static void ExitCombat()
+        {
+            WorldState.UnPause();
+            MenuStateMachine.ShowMenu("Game Menu");
+            InputHandler.UnregisterInputListener(_player);
+            if (Enemies.All(e => e.IsDead))
+            {
+                _currentScenario.FinishCombat();
+            }
+
+            _player.HealthController.ExitCombat();
+        }
+
         public static void SetPlayerHealthText(float f)
         {
             _strengthText.SetCurrentValue(_strengthText.CurrentValue() - f);
-        }
-
-        public static void Flank(Character c)
-        {
-            //TODO Flank
-//            Enemy enemy = c as Enemy;
-//            if (enemy != null)
-//            {
-//                Findenemy(enemy).PlayerCover.Increment(-1f);
-//            }
-//            else
-//            {
-//                _currentTarget.EnemyCover.Increment(-1f);
-//            }
-        }
-
-        public static void LeaveCover(Character character)
-        {
-            Enemy enemy = character as Enemy;
-            if (enemy != null)
-            {
-                enemy.EnemyView().VisionText.text = "No Cover";
-            }
-            else
-            {
-                CombatUi.SetCoverText("No Cover");
-            }
-        }
-
-        public static void TakeCover(Character c)
-        {
-            Enemy enemy = c as Enemy;
-            if (enemy != null)
-            {
-                enemy.EnemyView().VisionText.text = "In Cover";
-            }
-            else
-            {
-                CombatUi.SetCoverText("In Cover");
-            }
         }
 
         public static float DistanceBetweenCharacter(Character origin, Character target)
         {
             if (origin is Player) return ((Enemy) target).Distance.CurrentValue();
             if (target is Player) return ((Enemy) origin).Distance.CurrentValue();
-            return Mathf.Abs(((Enemy)target).Distance.CurrentValue() - ((Enemy)origin).Distance.CurrentValue());
+            return Mathf.Abs(((Enemy) target).Distance.CurrentValue() - ((Enemy) origin).Distance.CurrentValue());
         }
 
         public static void IncreaseDistance(Character c, float distance)
         {
-            if(c is Player) Enemies.ForEach(e => e.Distance.Increment(distance));
-            else ((Enemy)c).Distance.Increment(distance);
+            if (c is Player) Enemies.ForEach(e => e.Distance.Increment(distance));
+            else ((Enemy) c).Distance.Increment(distance);
         }
 
         public static void ReduceDistance(Character c, float distance)
@@ -150,17 +136,18 @@ namespace Game.Combat
                 });
             else
             {
-                ((Enemy)c).Distance.Increment(-distance);
+                ((Enemy) c).Distance.Increment(-distance);
 //                if (((Enemy) c).Distance.ReachedMin()) EnterMelee(c);
             }
         }
-        
+
         public static Character GetTarget(Character c)
         {
             if (c is Player)
             {
                 return _currentTarget;
             }
+
             return _player;
         }
 
@@ -173,13 +160,16 @@ namespace Game.Combat
 
         public static void Flee(Enemy enemy)
         {
-            enemy.MarkFled();
-            CombatUi.Remove(enemy);
-            if (Enemies.Any(e => e.InCombat()))
+            enemy.HasFled = true;
+            CheckCombatEnd();
+        }
+
+        public static void CheckCombatEnd()
+        {
+            if (Enemies.All(e => !e.InCombat()))
             {
-                return;
+                ExitCombat();
             }
-            ExitCombat();
         }
 
         public static Enemy GetCurrentTarget()
@@ -194,11 +184,12 @@ namespace Game.Combat
             foreach (Enemy enemy in Enemies)
             {
                 if (enemy == target) continue;
-                if (enemy.Distance > ((Enemy)target).Distance)
+                if (enemy.Distance > ((Enemy) target).Distance)
                 {
                     enemiesBehindTarget.Add(enemy);
                 }
             }
+
             return enemiesBehindTarget;
         }
 
@@ -209,6 +200,7 @@ namespace Game.Combat
             {
                 charactersInRange.Add(_player);
             }
+
             foreach (Enemy enemy in Enemies)
             {
                 if (enemy == target) continue;
@@ -218,6 +210,7 @@ namespace Game.Combat
                     charactersInRange.Add(enemy);
                 }
             }
+
             return charactersInRange;
         }
     }

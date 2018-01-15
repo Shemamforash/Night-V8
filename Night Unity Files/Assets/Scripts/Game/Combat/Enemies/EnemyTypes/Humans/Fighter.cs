@@ -1,28 +1,29 @@
 ﻿using System.Collections.Generic;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
+using UnityEngine;
 
 namespace Game.Combat.Enemies.EnemyTypes
 {
     public class Fighter : Enemy
     {
-        private readonly int _damageToFindCover;
         private int _damageTaken;
 
-        public Fighter() : base("Fighter", 20)
+        public Fighter(int distance = 0) : base("Fighter", 20, distance)
         {
-            _damageToFindCover = 1000;
+            int damageToFindCover = 1000;
             Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType>{WeaponType.Shotgun, WeaponType.SMG});
             Equip(weapon);
 //            Attributes.Endurance.SetCurrentValue(4);
             PreferredCoverDistance = EquipmentController.Weapon().GetAttributeValue(AttributeType.Accuracy) * 0.9f;
             ArmourLevel.SetCurrentValue(6);
             MinimumFindCoverDistance = 5f;
+            Speed = 5;
             HealthController.AddOnTakeDamage(damage =>
             {
                 _damageTaken += damage;
-                if (_damageTaken < _damageToFindCover) return;
-                CurrentAction = FindCover;
+                if (_damageTaken < damageToFindCover) return;
+                CurrentAction = FindBetterRange;
                 _damageTaken = 0;
             });
         }
@@ -32,6 +33,11 @@ namespace Game.Combat.Enemies.EnemyTypes
             base.Alert();
             TargetDistance = PreferredCoverDistance;
             CurrentAction = MoveToTargetDistance;
+        }
+
+        protected override void PrintUpdate()
+        {
+            Debug.Log(TargetDistance);
         }
     }
 }

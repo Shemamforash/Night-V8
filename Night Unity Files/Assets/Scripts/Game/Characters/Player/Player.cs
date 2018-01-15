@@ -39,6 +39,10 @@ namespace Game.Characters.Player
         public CraftAmmo CraftAmmoAction;
         public CharacterActions.Combat CombatAction;
         public LightFire LightFireAction;
+        public RageController RageController;
+        
+        protected readonly AttributeModifier SprintModifier = new AttributeModifier();
+        private bool _sprinting;
 
         private int _storyProgress;
 
@@ -54,15 +58,19 @@ namespace Game.Characters.Player
         public Player(string name, TraitLoader.CharacterClass characterClass, TraitLoader.Trait characterTrait) : base(name)
         {
             Attributes = new DesolationAttributes(this);
-            _sprintModifier.AddTargetAttribute(Attributes.Endurance);
+            SprintModifier.AddTargetAttribute(Attributes.Endurance);
+            SprintModifier.SetMultiplicative(2);
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
             CharacterInventory.MaxWeight = 50;
             Attributes.Endurance.AddOnValueChange(a => Energy.Max = a.CurrentValue());
+            RageController = new RageController(this);
             HealthController.AddOnHeal(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
             HealthController.AddOnTakeDamage(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
             Energy.OnMin(Sleep);
             LinkCooldownsToUi();
+            TakeCoverAction = () => CombatManager.SetCoverText("In Cover");
+            LeaveCoverAction = () => CombatManager.SetCoverText("No Cover");
         }
 
         private void LinkCooldownsToUi()
@@ -76,7 +84,7 @@ namespace Game.Characters.Player
         private void UpdateHealthUi(float normalisedHealth)
         {
             HeartBeatController.SetHealth(normalisedHealth);
-            CombatManager.CombatUi.UpdatePlayerHealth();
+            CombatManager.UpdatePlayerHealth();
         }
 
         public override XmlNode Save(XmlNode doc, PersistenceType saveType)
@@ -210,24 +218,24 @@ namespace Game.Characters.Player
             switch (weapon.WeaponType())
             {
                 case WeaponType.Pistol:
-                    CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.Retribution(this));
-                    CombatManager.CombatUi.SkillBar.BindSkill(4, new Skill.Revenge(this));
+                    CombatManager.SkillBar.BindSkill(3, new Skill.Retribution(this));
+                    CombatManager.SkillBar.BindSkill(4, new Skill.Revenge(this));
                     break;
                 case WeaponType.Rifle:
-                    CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.PiercingShot(this));
-                    CombatManager.CombatUi.SkillBar.BindSkill(4, new Skill.FullBlast(this));
+                    CombatManager.SkillBar.BindSkill(3, new Skill.PiercingShot(this));
+                    CombatManager.SkillBar.BindSkill(4, new Skill.FullBlast(this));
                     break;
                 case WeaponType.Shotgun:
-                    CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.LegSweep(this));
-                    CombatManager.CombatUi.SkillBar.BindSkill(4, new Skill.BulletCloud(this));
+                    CombatManager.SkillBar.BindSkill(3, new Skill.LegSweep(this));
+                    CombatManager.SkillBar.BindSkill(4, new Skill.BulletCloud(this));
                     break;
                 case WeaponType.SMG:
-                    CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.DoubleUp(this));
-                    CombatManager.CombatUi.SkillBar.BindSkill(4, new Skill.Splinter(this));
+                    CombatManager.SkillBar.BindSkill(3, new Skill.DoubleUp(this));
+                    CombatManager.SkillBar.BindSkill(4, new Skill.Splinter(this));
                     break;
                 case WeaponType.LMG:
-                    CombatManager.CombatUi.SkillBar.BindSkill(3, new Skill.TopUp(this));
-                    CombatManager.CombatUi.SkillBar.BindSkill(4, new Skill.HeavyLead(this));
+                    CombatManager.SkillBar.BindSkill(3, new Skill.TopUp(this));
+                    CombatManager.SkillBar.BindSkill(4, new Skill.HeavyLead(this));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -238,7 +246,7 @@ namespace Game.Characters.Player
 
         protected void LinkDashCooldownToUi()
         {
-            DashCooldown.SetController(CombatManager.CombatUi.DashCooldownController);
+            DashCooldown.SetController(CombatManager.DashCooldownController);
         }
 
         protected void LinkCockCooldownToUi()
@@ -248,14 +256,13 @@ namespace Game.Characters.Player
                 EquipmentController.Weapon().Cocked = true;
                 UpdateMagazineUi();
             });
-            CockingCooldown.SetDuringAction(f => CombatManager.CombatUi.UpdateReloadTime(f));
+            CockingCooldown.SetDuringAction(CombatManager.UpdateReloadTime);
         }
 
         protected void LinkKnockdownCooldownToUi()
         {
-            KnockdownCooldown.SetStartAction(() => Debug.Log("hi"));
-            KnockdownCooldown.SetEndAction(() => CombatManager.CombatUi.ConditionsText.text = "");
-            KnockdownCooldown.SetDuringAction(f => CombatManager.CombatUi.ConditionsText.text = "Knocked down! " + Helper.Round(f, 1) + "s");
+            KnockdownCooldown.SetEndAction(() => CombatManager.ConditionsText.text = "");
+            KnockdownCooldown.SetDuringAction(f => CombatManager.ConditionsText.text = "Knocked down! " + Helper.Round(f, 1) + "s");
         }
 
         protected void LinkReloadCooldownToUi()
@@ -266,22 +273,24 @@ namespace Game.Characters.Player
                 EquipmentController.Weapon().Reload(Inventory());
                 UpdateMagazineUi();
             });
-            ReloadingCooldown.SetDuringAction(f => CombatManager.CombatUi.UpdateReloadTime(f));
+            ReloadingCooldown.SetDuringAction(CombatManager.UpdateReloadTime);
         }
 
         //FIRING
         protected override Shot FireWeapon(Character target)
         {
             Shot shot = base.FireWeapon(target);
+            if(RageController.Active()) shot.GuaranteeCritical();
             UpdateMagazineUi();
             return shot;
         }
 
         //MISC
 
-        public override void Interrupt()
+        protected override void Interrupt()
         {
             base.Interrupt();
+            StopSprinting();
             UpdateMagazineUi();
         }
 
@@ -295,15 +304,31 @@ namespace Game.Characters.Player
                 magazineMessage = "RELOAD";
             if (magazineMessage == "")
             {
-                CombatManager.CombatUi.UpdateMagazine(EquipmentController.Weapon().GetRemainingAmmo());
+                CombatManager.UpdateMagazine(EquipmentController.Weapon().GetRemainingAmmo());
             }
             else
             {
-                CombatManager.CombatUi.EmptyMagazine();
-                CombatManager.CombatUi.UpdateReloadTimeText(magazineMessage);
+                CombatManager.EmptyMagazine();
+                CombatManager.UpdateReloadTimeText(magazineMessage);
             }
         }
 
+        //SPRINTING
+
+        public void StartSprinting()
+        {
+            if (_sprinting) return;
+            SprintModifier.Apply();
+            _sprinting = true;
+        }
+
+        public void StopSprinting()
+        {
+            if (!_sprinting) return;
+            SprintModifier.Remove();
+            _sprinting = false;
+        }
+        
         //INPUT
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -320,13 +345,8 @@ namespace Game.Characters.Player
                 case InputAxis.Fire:
                     FireWeapon(null);
                     break;
-                case InputAxis.Flank:
-                    Flank();
-                    break;
                 case InputAxis.Reload:
                     TryReload();
-                    break;
-                case InputAxis.Vertical:
                     break;
                 case InputAxis.Horizontal:
                     Move(direction);

@@ -40,17 +40,17 @@ namespace Facilitating.Persistence
         {
             return Save(SettingsSaveLocation, PersistenceType.Settings);
         }
-        
+
         public static bool LoadGame()
         {
             return Load(GameSaveLocation, PersistenceType.Game);
         }
-        
+
         public static bool LoadSettings()
         {
             return Load(SettingsSaveLocation, PersistenceType.Settings);
         }
-        
+
         public static bool SaveExists()
         {
             return File.Exists(GameSaveLocation);
@@ -63,11 +63,11 @@ namespace Facilitating.Persistence
             parent.AppendChild(newNode);
             return newNode;
         }
-        
+
         public static XmlNode CreateNodeAndAppend<T>(string tagName, XmlNode parent, T value)
         {
             XmlNode newNode = CreateNodeAndAppend(tagName, parent);
-            newNode.InnerText = value.ToString();
+            newNode.InnerText = value == null ? "" : value.ToString();
             return newNode;
         }
 
@@ -77,26 +77,26 @@ namespace Facilitating.Persistence
             XmlNode node = root.SelectSingleNode(str);
             return ParseFloatFromNode(node);
         }
-        
+
         public static float ParseFloatFromNode(XmlNode node)
         {
             if (node != null) return float.Parse(node.InnerText);
             throw new Exception("Could not parse float from node");
         }
-        
+
         //Int Parsing
         public static int ParseIntFromNodeAndString(XmlNode root, string str)
         {
             XmlNode node = root.SelectSingleNode(str);
             return ParseIntFromSubNode(node);
         }
-        
+
         public static int ParseIntFromSubNode(XmlNode node)
         {
             if (node != null) return int.Parse(node.InnerText);
             throw new Exception("Could not parse int from node");
         }
-        
+
         //Bool parsing
         public static bool ParseBoolFromSubNode(XmlNode n, string boolName)
         {
@@ -104,7 +104,7 @@ namespace Facilitating.Persistence
             if (selectSingleNode != null) return selectSingleNode.InnerText == "True";
             throw new Exception("Could not parse float from node");
         }
-        
+
         //Basic Load/Save Functions
         private static bool Load(string fileLocation, PersistenceType saveType)
         {
@@ -118,6 +118,7 @@ namespace Facilitating.Persistence
                     BroadcastLoad(root, saveType);
                     return true;
                 }
+
                 return false;
             }
             catch (IOException e)
@@ -125,7 +126,7 @@ namespace Facilitating.Persistence
                 return false;
             }
         }
-        
+
         private static bool Save(string fileLocation, PersistenceType saveType)
         {
             try

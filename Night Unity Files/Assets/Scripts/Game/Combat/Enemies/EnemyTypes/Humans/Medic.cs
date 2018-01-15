@@ -31,34 +31,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         protected override void Alert()
         {
             base.Alert();
-            FindCover();
-        }
-
-        public override void UpdateBehaviour()
-        {
-            base.UpdateBehaviour();
-            if (!IsAlerted()) return;
-        }
-
-        private void CheckForDamagedEnemies()
-        {
-            Enemy weakestEnemy = null;
-            float weakestEnemyHealth = 100000;
-            foreach(Enemy enemy in CombatManager.GetEnemies())
-            {
-                if (enemy == this) continue;
-                if (!enemy.AcceptsHealing) continue;
-                float enemyHealth = enemy.HealthController.GetCurrentHealth();
-                Debug.Log(enemyHealth + " " + enemy.HealthController.GetMaxHealth() + " " + _healAmount);
-                if (enemyHealth > enemy.HealthController.GetMaxHealth() - _healAmount) continue;
-                if (enemyHealth > weakestEnemyHealth) continue;
-                weakestEnemyHealth = enemyHealth;
-                weakestEnemy = enemy;
-            }
-            _healTarget = weakestEnemy;
-            if (weakestEnemy == null) return;
-            CurrentAction = TryHeal;
-            ShowMovementText = false;
+            FindBetterRange();
         }
 
         public void RequestHeal(Enemy healTarget)
@@ -72,16 +45,16 @@ namespace Game.Combat.Enemies.EnemyTypes
         {
             _healTarget.ReceiveHealing(_healAmount);
             _healTarget = null;
-            FindCover();
+            FindBetterRange();
             ShowMovementText = true;
             _recoverHealCooldown.Start();
         }
         
         private void TryHeal()
         {
-            if (_healTarget == null || _healTarget.IsDead())
+            if (_healTarget == null || _healTarget.IsDead)
             {
-                FindCover();
+                FindBetterRange();
                 ShowMovementText = true;
                 return;
             }

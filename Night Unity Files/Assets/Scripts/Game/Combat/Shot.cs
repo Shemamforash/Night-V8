@@ -37,6 +37,8 @@ namespace Game.Combat
 
         private Action _onHitAction;
         private bool _didHit;
+        
+        private int _bleedDamage, _burnDamage
 
         public Shot(Character target, Character origin)
         {
@@ -46,7 +48,6 @@ namespace Game.Combat
             if (_origin != null)
             {
                 _distanceToTarget = CombatManager.DistanceBetweenCharacter(_origin, _target);
-                if (_origin.RageController.Active()) _guaranteeCritical = true;
                 CacheWeaponAttributes();
                 CalculateHitProbability();
                 CalculateCriticalProbability();
@@ -116,7 +117,7 @@ namespace Game.Combat
             ApplyPierce(pelletDamage);
             ApplySplinter(pelletDamage);
             _onHitAction?.Invoke();
-            _origin?.RageController.Increase(pelletDamage);
+            (_origin as Player)?.RageController.Increase(pelletDamage);
             _target.OnHit(this, pelletDamage, isCritical);
         }
 

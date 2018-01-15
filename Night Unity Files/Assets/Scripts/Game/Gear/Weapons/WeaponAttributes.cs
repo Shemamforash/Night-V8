@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security;
+using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -26,6 +29,28 @@ namespace Game.Gear.Weapons
         public WeaponType WeaponType;
         public InventoryResourceType AmmoType;
 
+        public override XmlNode Save(XmlNode root, PersistenceType saveType)
+        {
+            root = base.Save(root, saveType);
+            SaveController.CreateNodeAndAppend("FireRate", root, FireRate);
+            SaveController.CreateNodeAndAppend("ReloadSpeed", root, ReloadSpeed);
+            SaveController.CreateNodeAndAppend("Damage", root, Damage);
+            SaveController.CreateNodeAndAppend("Accuracy", root, Accuracy);
+            SaveController.CreateNodeAndAppend("CriticalChance", root, CriticalChance);
+            SaveController.CreateNodeAndAppend("Handling", root, Handling);
+            SaveController.CreateNodeAndAppend("Capacity", root, Capacity);
+            SaveController.CreateNodeAndAppend("Pellets", root, Pellets);
+            SaveController.CreateNodeAndAppend("Durability", root, Durability.CurrentValue());
+            SaveController.CreateNodeAndAppend("Automatic", root, Automatic);
+            SaveController.CreateNodeAndAppend("WeaponClassDescription", root, WeaponClassDescription);
+            SaveController.CreateNodeAndAppend("WeaponSubClass", root, SubClassName);
+            SaveController.CreateNodeAndAppend("WeaponSubClassDescription", root, SubClassDescription);
+            SaveController.CreateNodeAndAppend("ModifierName", root, ModifierName);
+            SaveController.CreateNodeAndAppend("ModifierDescription", root, ModifierDescription);
+            SaveController.CreateNodeAndAppend("WeaponType", root, WeaponType);
+            return root;
+        }
+        
         public WeaponAttributes()
         {
             Durability = new Number(Random.Range(0, MaxDurability), 0, MaxDurability);
