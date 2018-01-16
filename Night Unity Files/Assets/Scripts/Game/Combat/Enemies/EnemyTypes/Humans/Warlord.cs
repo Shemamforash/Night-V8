@@ -10,14 +10,13 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private float _reinforceCallTime;
         private float _reinforceDuration = 5f;
 
-        public Warlord() : base("Warlord", 40)
+        public Warlord() : base("Warlord", 3, 40)
         {
             Weapon weapon = WeaponGenerator.GenerateWeapon(WeaponType.LMG);
             Equip(weapon);
             ArmourLevel.SetCurrentValue(8);
             PreferredCoverDistance = 25;
             MinimumFindCoverDistance = 10;
-            Speed = 3;
             HealthController.AddOnTakeDamage(a =>
             {
                 if (CombatManager.GetEnemies().Count >= 7) return;
@@ -45,7 +44,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             _reinforceCallTime -= Time.deltaTime;
             if (!(_reinforceCallTime <= 0)) return;
             CurrentAction = AnticipatePlayer;
-            CombatManager.QueueEnemyToAdd(new Fighter());
+            CombatManager.QueueEnemyToAdd(new Fighter(MaxDistance));
             return;
             switch (Random.Range(0, 4))
             {

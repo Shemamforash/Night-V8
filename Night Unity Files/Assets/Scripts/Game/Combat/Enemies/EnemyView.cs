@@ -1,25 +1,27 @@
 ﻿using Game.Characters.Player;
+using Game.Combat.Enemies.EnemyTypes.Misc;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.ReactiveUI.Elements;
-using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Combat.Enemies
 {
-    public class EnemyView : ViewParent
+    public class EnemyView : BasicEnemyView
     {
-        public TextMeshProUGUI CoverText, DistanceText, RangeText, ActionText, HealthText, ArmourText; 
-        private TextMeshProUGUI _nameText, _typeText;
+        public TextMeshProUGUI CoverText, RangeText, ActionText, HealthText, ArmourText;
+        private TextMeshProUGUI  _typeText;
         private UIArmourController _uiArmourController;
         private UIHealthBarController _lowerUiHealthBarController;
         private GameObject _alertedObject, _detectedObject;
+        private Image _sicknessLevel;
+        private ParticleSystem _bleedEffect, _burnEffect;
         public UIAimController UiAimController;
         private float _fadingIn = 2f;
         private float _fadeInTime = 2f;
-        
-        public EnemyView(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/EnemyItem") : base(linkedObject, parent, prefabLocation)
+
+        public EnemyView(MyGameObject linkedObject, Transform parent) : base(linkedObject, parent, "Prefabs/Inventory/EnemyItem")
         {
             GameObject.SetActive(true);
             SetAlpha(0f);
@@ -30,12 +32,13 @@ namespace Game.Combat.Enemies
             base.CacheUiElements();
             CoverText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Cover");
             CoverText.text = "No Cover";
-            DistanceText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Distance");
             RangeText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Range Category");
             HealthText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Health Text");
             ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour Text");
+            _sicknessLevel = Helper.FindChildWithName<Image>(GameObject, "Sickness");
+            _burnEffect = Helper.FindChildWithName<ParticleSystem>(GameObject, "Burning");
+            _bleedEffect = Helper.FindChildWithName<ParticleSystem>(GameObject, "Bleeding");
             UiAimController = Helper.FindChildWithName<UIAimController>(GameObject, "Aim Timer");
-            _nameText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Name");
             _typeText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Type");
             _uiArmourController = Helper.FindChildWithName<UIArmourController>(GameObject, "Armour Bar");
             _lowerUiHealthBarController = Helper.FindChildWithName<UIHealthBarController>(GameObject, "Health Bar");
@@ -49,7 +52,27 @@ namespace Game.Combat.Enemies
         public void SetHealth(HealthController healthController)
         {
             _lowerUiHealthBarController.SetValue(healthController.GetNormalisedHealthValue());
-            HealthText.text = (int)healthController.GetCurrentHealth() + "/" + (int)healthController.GetMaxHealth();
+            HealthText.text = (int) healthController.GetCurrentHealth() + "/" + (int) healthController.GetMaxHealth();
+        }
+
+        public void StartBleeding()
+        {
+            _bleedEffect.Play();
+        }
+
+        public void StopBleeding()
+        {
+            _bleedEffect.Stop();
+        }
+
+        public void StartBurning()
+        {
+            _burnEffect.Play();
+        }
+
+        public void StopBurning()
+        {
+            _burnEffect.Stop();
         }
 
         public void SetArmour(int armourLevel, bool inCover)
@@ -62,14 +85,14 @@ namespace Game.Combat.Enemies
                 armourProtection /= 2f;
                 coverString = "In Cover";
             }
+
             CoverText.text = coverString;
             ArmourText.text = armourProtection + "x damage";
         }
-        
+
         public override void Update()
         {
             base.Update();
-            _nameText.text = LinkedObject.Name;
             _typeText.text = ((Enemy) LinkedObject).EnemyType();
         }
 
@@ -81,6 +104,7 @@ namespace Game.Combat.Enemies
                 alpha *= fadeInAmount;
                 _fadingIn -= Time.deltaTime;
             }
+
             GetGameObject().GetComponent<CanvasGroup>().alpha = alpha;
         }
 
@@ -118,6 +142,11 @@ namespace Game.Combat.Enemies
         {
             _alertedObject.SetActive(false);
             _detectedObject.SetActive(true);
+        }
+
+        public void UpdateSickness(float value)
+        {
+            _sicknessLevel.fillAmount = value;
         }
     }
 }

@@ -8,6 +8,7 @@ using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat
@@ -33,13 +34,11 @@ namespace Game.Combat
 
         private int _knockbackDistance, _knockDownRadius;
 
-        private float _pierceChance, _burnChance, _bleedChance, _decayChance, _knockDownChance;
+        private float _pierceChance, _burnChance, _bleedChance, _sicknessChance, _knockDownChance;
 
         private Action _onHitAction;
         private bool _didHit;
         
-        private int _bleedDamage, _burnDamage
-
         public Shot(Character target, Character origin)
         {
             _origin = origin;
@@ -60,7 +59,7 @@ namespace Game.Combat
                 _hitChance = 1;
             }
         }
-
+        
         private void CacheWeaponAttributes()
         {
             WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
@@ -103,7 +102,6 @@ namespace Game.Combat
                         continue;
                     }
                     ApplyDamage();
-                    ApplyConditions();
                 }
                 _origin?.Weapon().ConsumeAmmo(1);
             }
@@ -116,6 +114,7 @@ namespace Game.Combat
             _damageDealt += pelletDamage;
             ApplyPierce(pelletDamage);
             ApplySplinter(pelletDamage);
+            ApplyConditions();
             _onHitAction?.Invoke();
             (_origin as Player)?.RageController.Increase(pelletDamage);
             _target.OnHit(this, pelletDamage, isCritical);
@@ -175,6 +174,9 @@ namespace Game.Combat
             {
                 _target.Knockback(_knockbackDistance);
             }
+            if(Random.Range(0f, 1f) < _bleedChance) _target.AddBleedStack();
+            if(Random.Range(0f, 1f) < _burnChance) _target.AddBleedStack();
+            if(Random.Range(0f, 1f) < _sicknessChance) _target.AddSicknessStack();
         }
 
         private void CalculateHitProbability()
@@ -270,6 +272,24 @@ namespace Game.Combat
         public Character Origin()
         {
             return _origin;
+        }
+
+        public void SetBurnChance(float chance)
+        {
+            Assert.IsTrue(chance >= 0 && chance <= 1);
+            _burnChance = chance;
+        }
+        
+        public void SetBleedChance(float chance)
+        {
+            Assert.IsTrue(chance >= 0 && chance <= 1);
+            _bleedChance = chance;
+        }
+        
+        public void SetSicknessChance(float chance)
+        {
+            Assert.IsTrue(chance >= 0 && chance <= 1);
+            _sicknessChance = chance;
         }
     }
 }

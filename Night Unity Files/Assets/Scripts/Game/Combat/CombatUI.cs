@@ -17,7 +17,7 @@ namespace Game.Combat
     {
         private static GameObject _ammoPrefab;
         private static GameObject _magazineContent;
-        private static MenuList _enemyList;
+        public static MenuList _enemyList;
         private float _hitInfoTimerCurrent;
         private const float HitInfoTimerMax = 1f;
 
@@ -130,7 +130,7 @@ namespace Game.Combat
             _reloadTimeRemaining.text = text;
         }
 
-        private static void SetTarget(Enemy e)
+        public static void SetTarget(Enemy e)
         {
             SetCurrentTarget(e);
             e?.EnemyView().PrimaryButton.GetComponent<Button>().Select();

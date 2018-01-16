@@ -113,7 +113,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         public void RefreshNavigation()
         {
             List<ViewParent> navigatableItems = Items.Where(item => item.Navigatable()).ToList();
-            Items.ForEach(i => i.PrimaryButton.ClearNavigation());
+            Items.ForEach(i => i.PrimaryButton?.ClearNavigation());
             for (int i = 1; i < navigatableItems.Count; ++i)
             {
                 EnhancedButton from = navigatableItems[i - 1].PrimaryButton;

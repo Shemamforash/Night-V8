@@ -9,6 +9,7 @@ using Game.Characters.CharacterActions;
 using Game.Characters.Player;
 using Game.Combat;
 using Game.Combat.Enemies.EnemyTypes;
+using Game.Combat.Skills;
 using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper;
@@ -29,13 +30,11 @@ namespace Game.Characters
         protected readonly DesolationInventory CharacterInventory;
         protected Cooldown CockingCooldown;
         protected Cooldown ReloadingCooldown;
-        protected Cooldown DashCooldown;
 
         protected Cooldown KnockdownCooldown;
 //        protected Cooldown CoverCooldown;
 
         private const float KnockdownDuration = 3f;
-        private const float DashDuration = 2f;
         private long _timeAtLastFire;
         protected readonly Number ArmourLevel = new Number(0, 0, 10);
 
@@ -44,9 +43,12 @@ namespace Game.Characters
 
         public readonly HealthController HealthController;
         public readonly EquipmentController EquipmentController;
-        
+        public MovementController MovementController;
+
         protected bool InCover;
         protected Action TakeCoverAction, LeaveCoverAction;
+        
+        protected Condition Bleeding, Burning, Sickening;
 
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
@@ -70,7 +72,6 @@ namespace Game.Characters
             SetKnockdownCooldown();
 //            SetCoverCooldown();
             SetCockCooldown();
-            SetDashCooldown();
         }
 
         public virtual void Equip(GearItem gearItem)
@@ -115,11 +116,6 @@ namespace Game.Characters
 
         //Cooldowns
 
-        private void SetDashCooldown()
-        {
-            DashCooldown = CombatManager.CombatCooldowns.CreateCooldown(DashDuration);
-        }
-
         private void SetCockCooldown()
         {
             CockingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
@@ -149,36 +145,6 @@ namespace Game.Characters
                 EquipmentController.Weapon().Cocked = true;
                 EquipmentController.Weapon().Reload(Inventory());
             });
-        }
-
-        //MOVEMENT
-
-        protected abstract float GetSpeedModifier();
-
-        protected void MoveForward()
-        {
-            if (Immobilised()) return;
-            LeaveCover();
-            CombatManager.ReduceDistance(this, GetSpeedModifier());
-        }
-
-        protected void MoveBackward()
-        {
-            if (Immobilised()) return;
-            LeaveCover();
-            CombatManager.IncreaseDistance(this, GetSpeedModifier());
-        }
-
-        protected void Move(float direction)
-        {
-            if (direction > 0)
-            {
-                MoveForward();
-            }
-            else
-            {
-                MoveBackward();
-            }
         }
 
 //        public void SetFlanked()
@@ -292,40 +258,12 @@ namespace Game.Characters
             return normalShot;
         }
 
-        //DASHING
-
-        protected void Dash(float direction)
+        //Only call from combatmanager
+        public virtual void Update()
         {
-            if (direction < 0)
-            {
-                DashBackward();
-                return;
-            }
-
-            DashForward();
-        }
-
-        private bool CanDash()
-        {
-            return DashCooldown.Finished();
-        }
-
-        private float _dashDistance = 5f;
-
-        private void DashForward()
-        {
-            if (Immobilised()) return;
-            if (!CanDash()) return;
-            CombatManager.ReduceDistance(this, _dashDistance);
-            DashCooldown.Start();
-        }
-
-        private void DashBackward()
-        {
-            if (Immobilised()) return;
-            if (!CanDash()) return;
-            CombatManager.IncreaseDistance(this, _dashDistance);
-            DashCooldown.Start();
+            Burning.Update();
+            Sickening.Update();
+            Bleeding.Update();
         }
 
         //MISC
@@ -336,9 +274,9 @@ namespace Game.Characters
             StopReloading();
         }
 
-        protected bool Immobilised()
+        public bool Immobilised()
         {
-            return ReloadingCooldown.Running() || CockingCooldown.Running(); // || KnockdownCooldown.Running(); // || CoverCooldown.Running();
+            return ReloadingCooldown.Running() || CockingCooldown.Running() || KnockdownCooldown.Running();
         }
 
         public void KnockDown()
@@ -351,7 +289,32 @@ namespace Game.Characters
         public void Knockback(float knockbackDistance)
         {
             Interrupt();
-            CombatManager.IncreaseDistance(this, knockbackDistance);
+            MovementController.KnockBack(knockbackDistance);
+        }
+
+        //CONDITIONS
+        
+        protected virtual void SetConditions()
+        {
+            Bleeding = new Bleed(this);
+            Burning = new Burn(this);
+            Sickening = new Sickness(this);
+        }
+
+        public void AddBleedStack()
+        {
+            Bleeding.AddStack();
+        }
+
+        public void AddSicknessStack()
+        {
+            Sickening.AddStack();
+        }
+
+        public void AddBurnStack()
+        {
+            Burning.AddStack();
         }
     }
+
 }

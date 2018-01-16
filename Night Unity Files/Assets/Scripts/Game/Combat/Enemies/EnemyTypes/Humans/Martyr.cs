@@ -8,12 +8,11 @@ namespace Game.Combat.Enemies.EnemyTypes
         private readonly Cooldown _detonateCooldown;
         private bool _detonated;
 
-        public Martyr() : base(nameof(Martyr), 1)
+        public Martyr() : base(nameof(Martyr), 3, 1)
         {
             _detonateCooldown = CombatManager.CombatCooldowns.CreateCooldown(1f);
             _detonateCooldown.SetStartAction(() => SetActionText("Detonating"));
             _detonateCooldown.SetEndAction(Detonate);
-            Speed = 3;
             HealthController.AddOnTakeDamage(damage =>
             {
                 if (_detonated) return;

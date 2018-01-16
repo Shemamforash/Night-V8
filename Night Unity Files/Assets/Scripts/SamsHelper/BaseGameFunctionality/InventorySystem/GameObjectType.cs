@@ -8,6 +8,7 @@
         Enemy,
         Resource,
         Inventory,
-        State
+        State,
+        MiscCombat
     }
 }

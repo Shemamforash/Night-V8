@@ -41,9 +41,6 @@ namespace Game.Characters.Player
         public LightFire LightFireAction;
         public RageController RageController;
         
-        protected readonly AttributeModifier SprintModifier = new AttributeModifier();
-        private bool _sprinting;
-
         private int _storyProgress;
 
         public string GetCurrentStoryProgress()
@@ -58,8 +55,7 @@ namespace Game.Characters.Player
         public Player(string name, TraitLoader.CharacterClass characterClass, TraitLoader.Trait characterTrait) : base(name)
         {
             Attributes = new DesolationAttributes(this);
-            SprintModifier.AddTargetAttribute(Attributes.Endurance);
-            SprintModifier.SetMultiplicative(2);
+            MovementController = new MovementController(this, (int) Attributes.Endurance.CurrentValue());
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
             CharacterInventory.MaxWeight = 50;
@@ -71,12 +67,12 @@ namespace Game.Characters.Player
             LinkCooldownsToUi();
             TakeCoverAction = () => CombatManager.SetCoverText("In Cover");
             LeaveCoverAction = () => CombatManager.SetCoverText("No Cover");
+            SetConditions();
         }
 
         private void LinkCooldownsToUi()
         {
             LinkCockCooldownToUi();
-            LinkDashCooldownToUi();
             LinkKnockdownCooldownToUi();
             LinkReloadCooldownToUi();
         }
@@ -96,12 +92,6 @@ namespace Game.Characters.Player
             SaveController.CreateNodeAndAppend("Energy", doc, Energy.CurrentValue());
             Attributes.Save(doc, saveType);
             return doc;
-        }
-
-        protected override float GetSpeedModifier()
-        {
-            float walkSpeed = 1f + Attributes.Endurance.CurrentValue() / 20f;
-            return walkSpeed * Time.deltaTime;
         }
 
         public override ViewParent CreateUi(Transform parent)
@@ -244,11 +234,6 @@ namespace Game.Characters.Player
 
         //COOLDOWNS
 
-        protected void LinkDashCooldownToUi()
-        {
-            DashCooldown.SetController(CombatManager.DashCooldownController);
-        }
-
         protected void LinkCockCooldownToUi()
         {
             CockingCooldown.SetEndAction(() =>
@@ -290,7 +275,7 @@ namespace Game.Characters.Player
         protected override void Interrupt()
         {
             base.Interrupt();
-            StopSprinting();
+            MovementController.StopSprinting();
             UpdateMagazineUi();
         }
 
@@ -313,22 +298,6 @@ namespace Game.Characters.Player
             }
         }
 
-        //SPRINTING
-
-        public void StartSprinting()
-        {
-            if (_sprinting) return;
-            SprintModifier.Apply();
-            _sprinting = true;
-        }
-
-        public void StopSprinting()
-        {
-            if (!_sprinting) return;
-            SprintModifier.Remove();
-            _sprinting = false;
-        }
-        
         //INPUT
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -349,10 +318,10 @@ namespace Game.Characters.Player
                     TryReload();
                     break;
                 case InputAxis.Horizontal:
-                    Move(direction);
+                    MovementController.Move(direction);
                     break;
                 case InputAxis.Sprint:
-                    StartSprinting();
+                    MovementController.StartSprinting();
                     break;
             }
         }
@@ -376,7 +345,7 @@ namespace Game.Characters.Player
                 case InputAxis.Horizontal:
                     break;
                 case InputAxis.Sprint:
-                    StopSprinting();
+                    MovementController.StopSprinting();
                     break;
             }
         }
@@ -385,7 +354,7 @@ namespace Game.Characters.Player
         {
             if (axis == InputAxis.Horizontal)
             {
-                Dash(direction);
+                MovementController.Dash(direction);
             }
         }
 

@@ -18,6 +18,7 @@ namespace Game.Combat
         private static Number _strengthText;
         public static readonly CooldownManager CombatCooldowns = new CooldownManager();
         private static readonly List<Enemy> Enemies = new List<Enemy>();
+        private static readonly List<Grenade> Grenades = new List<Grenade>();
         private static Enemy _currentTarget;
         private static Player _player;
         private static CombatScenario _currentScenario;
@@ -40,21 +41,37 @@ namespace Game.Combat
             Enemies.ForEach(r =>
             {
                 if (r.IsDead) return;
-                r.UpdateBehaviour();
+                r.Update();
             });
+            Grenades.ForEach(g =>
+            {
+                g.Update();
+            });
+            _player.Update();
             _enemiesToAdd.ForEach(AddEnemy);
             _enemiesToAdd.Clear();
             _player.RageController.Decrease();
         }
 
+        public static void RemoveGrenade(Grenade g)
+        {
+            Grenades.Remove(g);
+            _enemyList.Remove(g.EnemyUi);
+        }
+        
         public static void QueueEnemyToAdd(Enemy e)
         {
             _enemiesToAdd.Add(e);
-            e.Distance.SetCurrentValue(e.Distance.Max);
             e.TryAlert();
             _currentScenario.AddEnemy(e);
         }
 
+        public static void AddGrenade(Grenade g)
+        {
+            Grenades.Add(g);
+            _enemyList.AddItem(g);
+        }
+        
         public static void ResetCombat()
         {
             Enemies.Clear();
@@ -89,8 +106,7 @@ namespace Game.Combat
         {
             Enemies.Add(e);
             e.HealthController.EnterCombat();
-            ViewParent enemyUi = _enemyList.AddItem(e);
-            enemyUi.PrimaryButton.AddOnSelectEvent(() => SetTarget((Enemy) enemyUi.GetLinkedObject()));
+            _enemyList.AddItem(e);
             if (_enemyList.Items.Count == 1) SetTarget((Enemy) _enemyList.Items[0].GetLinkedObject());
         }
 
@@ -117,28 +133,6 @@ namespace Game.Combat
             if (origin is Player) return ((Enemy) target).Distance.CurrentValue();
             if (target is Player) return ((Enemy) origin).Distance.CurrentValue();
             return Mathf.Abs(((Enemy) target).Distance.CurrentValue() - ((Enemy) origin).Distance.CurrentValue());
-        }
-
-        public static void IncreaseDistance(Character c, float distance)
-        {
-            if (c is Player) Enemies.ForEach(e => e.Distance.Increment(distance));
-            else ((Enemy) c).Distance.Increment(distance);
-        }
-
-        public static void ReduceDistance(Character c, float distance)
-        {
-            if (c is Player)
-                Enemies.ForEach(e =>
-                {
-                    e.Distance.Increment(-distance);
-                    //TODO melee
-                    //if(e.Distance.ReachedMin()) EnterMelee(e);
-                });
-            else
-            {
-                ((Enemy) c).Distance.Increment(-distance);
-//                if (((Enemy) c).Distance.ReachedMin()) EnterMelee(c);
-            }
         }
 
         public static Character GetTarget(Character c)

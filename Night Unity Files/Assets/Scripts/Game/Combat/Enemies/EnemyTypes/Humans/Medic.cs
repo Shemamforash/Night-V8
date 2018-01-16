@@ -13,11 +13,10 @@ namespace Game.Combat.Enemies.EnemyTypes
         private Cooldown _applyHealCooldown;
         private Cooldown _recoverHealCooldown;
 
-        public Medic() : base(nameof(Medic), 4)
+        public Medic() : base(nameof(Medic), 7, 4)
         {
             Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType>{WeaponType.Pistol, WeaponType.SMG});
             Equip(weapon);
-            Speed = 7;
             PreferredCoverDistance = 40f;
             MinimumFindCoverDistance = 20f;
             AlertOthers = true;

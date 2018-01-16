@@ -4,7 +4,7 @@ namespace Game.Combat.Enemies.EnemyTypes
 {
     public class Grazer : Enemy
     {
-        public Grazer() : base(nameof(Grazer), Random.Range(10, 25))
+        public Grazer() : base(nameof(Grazer), 2, Random.Range(10, 25))
         {
         }
 

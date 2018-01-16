@@ -100,6 +100,7 @@
               <e p="Player" t="Include">
                 <e p="EquipmentController.cs" t="Include" />
                 <e p="HealthController.cs" t="Include" />
+                <e p="MovementController.cs" t="Include" />
                 <e p="Player.cs" t="Include" />
                 <e p="RageController.cs" t="Include" />
               </e>
@@ -110,7 +111,14 @@
               <e p="CombatScenario.cs" t="Include" />
               <e p="CombatTester.cs" t="Include" />
               <e p="CombatUI.cs" t="Include" />
+              <e p="Conditions" t="Include">
+                <e p="Bleed.cs" t="Include" />
+                <e p="Burn.cs" t="Include" />
+                <e p="Condition.cs" t="Include" />
+                <e p="Sickness.cs" t="Include" />
+              </e>
               <e p="Enemies" t="Include">
+                <e p="CombatItem.cs" t="Include" />
                 <e p="Enemy.cs" t="Include" />
                 <e p="EnemyTypes" t="Include">
                   <e p="Animals" t="Include">
@@ -127,7 +135,12 @@
                     <e p="Warlord.cs" t="Include" />
                     <e p="Witch.cs" t="Include" />
                   </e>
-                  <e p="Misc" t="Include" />
+                  <e p="Misc" t="Include">
+                    <e p="BasicEnemyView.cs" t="Include" />
+                    <e p="Grenade.cs" t="Include" />
+                    <e p="IncendiaryGrenade.cs" t="Include" />
+                    <e p="SplinterGrenade.cs" t="Include" />
+                  </e>
                 </e>
                 <e p="EnemyView.cs" t="Include" />
               </e>
