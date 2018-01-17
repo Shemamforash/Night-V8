@@ -25,28 +25,26 @@ namespace Game.Combat
         private int _pierceDepth;
         private float _pierceFalloff = 1;
 
-        private int _splinterRange;
-        private float _splinterFalloff = 1;
-
         private bool _guaranteeHit, _guaranteeCritical;
 
         private float _criticalChance, _hitChance;
 
-        private int _knockbackDistance, _knockDownRadius;
+        private int _knockbackDistance;
 
         private float _pierceChance, _burnChance, _bleedChance, _sicknessChance, _knockDownChance;
 
-        private Action _onHitAction;
+        private event Action OnHitAction;
         private bool _didHit;
-        
+
         public Shot(Character target, Character origin)
         {
+            Assert.IsNotNull(target);
             _origin = origin;
             _target = target;
 
             if (_origin != null)
             {
-                _distanceToTarget = CombatManager.DistanceBetweenCharacter(_origin, _target);
+                _distanceToTarget = CombatManager.DistanceBetween(_origin, _target);
                 CacheWeaponAttributes();
                 CalculateHitProbability();
                 CalculateCriticalProbability();
@@ -59,7 +57,7 @@ namespace Game.Combat
                 _hitChance = 1;
             }
         }
-        
+
         private void CacheWeaponAttributes()
         {
             WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
@@ -71,11 +69,6 @@ namespace Game.Combat
         public void SetDamage(int damage)
         {
             _damage = damage;
-        }
-
-        public void SetKnockDownRadius(int knockDownRadius)
-        {
-            _knockDownRadius = knockDownRadius;
         }
 
         private bool WillHitTarget()
@@ -101,8 +94,10 @@ namespace Game.Combat
                         _target.OnMiss();
                         continue;
                     }
+
                     ApplyDamage();
                 }
+
                 _origin?.Weapon().ConsumeAmmo(1);
             }
         }
@@ -113,9 +108,8 @@ namespace Game.Combat
             int pelletDamage = isCritical ? _damage * 2 : _damage;
             _damageDealt += pelletDamage;
             ApplyPierce(pelletDamage);
-            ApplySplinter(pelletDamage);
             ApplyConditions();
-            _onHitAction?.Invoke();
+            OnHitAction?.Invoke();
             (_origin as Player)?.RageController.Increase(pelletDamage);
             _target.OnHit(this, pelletDamage, isCritical);
         }
@@ -124,13 +118,15 @@ namespace Game.Combat
         {
             if (_pierceDepth == 0) return;
             if (Random.Range(0f, 1f) > _pierceChance) return;
-            List<Enemy> enemiesBehindTarget = CombatManager.GetEnemiesBehindTarget(_target);
+            if (_target is Player) return;
+            List<Enemy> enemiesBehindTarget = CombatManager.GetEnemiesBehindTarget((Enemy) _target);
             for (int i = 0; i < enemiesBehindTarget.Count; ++i)
             {
                 if (i == _pierceDepth)
                 {
                     break;
                 }
+
                 int pierceDamage = (int) (pelletDamage * Math.Pow(_pierceFalloff, i + 1));
                 Shot s = new Shot(enemiesBehindTarget[i], null);
                 s.SetDamage(pierceDamage);
@@ -139,44 +135,18 @@ namespace Game.Combat
             }
         }
 
-        private void ApplySplinter(int pelletDamage)
-        {
-            if (_splinterRange <= 0) return;
-            List<Character> enemiesInRange = CombatManager.GetCharactersInRange(_target, _splinterRange);
-            foreach (Character character in enemiesInRange)
-            {
-                float distance = CombatManager.DistanceBetweenCharacter(character, _target);
-                float damageModifier = 1 - Helper.Normalise(distance, _splinterRange);
-                damageModifier = damageModifier * (1 - _splinterFalloff);
-                damageModifier += _splinterFalloff;
-                int splinterDamage = (int) (damageModifier * pelletDamage);
-                Shot s = new Shot(character, null);
-                s.SetDamage(splinterDamage);
-                s.SetKnockbackDistance((int) (_knockbackDistance * _splinterFalloff));
-                s.Fire();
-            }
-        }
-
         private void ApplyConditions()
         {
-            if (Random.Range(0f, 1f) < _knockDownChance && _knockDownChance > 0)
-            {
-                if (_knockDownRadius != 0)
-                {
-                    CombatManager.GetCharactersInRange(_target, _knockbackDistance).ForEach(c => c.KnockDown());
-                }
-                else
-                {
-                    _target.KnockDown();
-                }
-            }
             if (_knockbackDistance != 0)
             {
-                _target.Knockback(_knockbackDistance);
+                if (Random.Range(0, 1f) < _knockDownChance)
+                {
+                    _target.Knockback(_knockbackDistance);
+                }
             }
-            if(Random.Range(0f, 1f) < _bleedChance) _target.AddBleedStack();
-            if(Random.Range(0f, 1f) < _burnChance) _target.AddBleedStack();
-            if(Random.Range(0f, 1f) < _sicknessChance) _target.AddSicknessStack();
+            if (Random.Range(0f, 1f) < _bleedChance) _target.AddBleedStack();
+            if (Random.Range(0f, 1f) < _burnChance) _target.AddBleedStack();
+            if (Random.Range(0f, 1f) < _sicknessChance) _target.AddSicknessStack();
         }
 
         private void CalculateHitProbability()
@@ -232,17 +202,6 @@ namespace Game.Combat
             _pierceFalloff = Mathf.Clamp(falloff, 0f, 1f);
         }
 
-        public void SetSplinterRange(int range)
-        {
-            if (range < 0) range = 0;
-            _splinterRange = range;
-        }
-
-        public void SetSplinterFalloff(float falloff)
-        {
-            _splinterFalloff = Mathf.Clamp(falloff, 0f, 1f);
-        }
-
         public void SetNumberOfShots(int noShots)
         {
             _noShots = noShots;
@@ -257,21 +216,23 @@ namespace Game.Combat
 
         public void GuaranteeCritical() => _guaranteeCritical = true;
 
-        public void SetOnHit(Action a) => _onHitAction = a;
+        public void AddOnHit(Action a) => OnHitAction += a;
 
-        public void SetKnockdownChance(float chance)
+        public void SetKnockdownChance(float chance, int distance)
         {
+            Assert.IsTrue(distance >= 0);
             _knockDownChance = Mathf.Clamp(chance, 0f, 1f);
-        }
-
-        public void SetKnockbackDistance(int distance)
-        {
-            _knockbackDistance = distance < 0 ? 0 : distance;
+            _knockbackDistance = distance;
         }
 
         public Character Origin()
         {
             return _origin;
+        }
+        
+        public Character Target()
+        {
+            return _target;
         }
 
         public void SetBurnChance(float chance)
@@ -279,17 +240,22 @@ namespace Game.Combat
             Assert.IsTrue(chance >= 0 && chance <= 1);
             _burnChance = chance;
         }
-        
+
         public void SetBleedChance(float chance)
         {
             Assert.IsTrue(chance >= 0 && chance <= 1);
             _bleedChance = chance;
         }
-        
+
         public void SetSicknessChance(float chance)
         {
             Assert.IsTrue(chance >= 0 && chance <= 1);
             _sicknessChance = chance;
+        }
+
+        public int DamageDealt()
+        {
+            return _damageDealt;
         }
     }
 }

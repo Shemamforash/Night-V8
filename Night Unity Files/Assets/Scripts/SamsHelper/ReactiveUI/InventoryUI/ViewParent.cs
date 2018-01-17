@@ -32,7 +32,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _menuList = menuList;
         }
 
-        protected void SetNavigatable(bool navigatable)
+        public void SetNavigatable(bool navigatable)
         {
             _navigatable = navigatable;
             _menuList?.RefreshNavigation();

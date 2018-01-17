@@ -121,17 +121,15 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 Helper.SetReciprocalNavigation(from, to);
             }
             OnContentChange?.Invoke();
-            if (CloseButton != null)
+            if (CloseButton == null) return;
+            ViewParent lastItem = navigatableItems.Count > 0 ? navigatableItems.Last() : null;
+            if (lastItem != null)
             {
-                ViewParent lastItem = navigatableItems.Count > 0 ? navigatableItems.Last() : null;
-                if (lastItem != null)
-                {
-                    Helper.SetReciprocalNavigation(lastItem.PrimaryButton, CloseButton);
-                }
-                else
-                {
-                    CloseButton.Button().Select();
-                }
+                Helper.SetReciprocalNavigation(lastItem.PrimaryButton, CloseButton);
+            }
+            else
+            {
+                CloseButton.Button().Select();
             }
         }
 

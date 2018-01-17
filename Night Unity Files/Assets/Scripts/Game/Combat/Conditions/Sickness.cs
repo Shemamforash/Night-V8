@@ -13,7 +13,7 @@ namespace Game.Combat.Skills
         {
         }
 
-        public override void Update()
+        protected override void Tick()
         {
             if (StackList.Count != 0)
             {
@@ -23,7 +23,6 @@ namespace Game.Combat.Skills
                     StackList.RemoveAt(0);
                 }
             }
-            base.Update();
         }
 
         public override void AddStack()

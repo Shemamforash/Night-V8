@@ -50,15 +50,18 @@ namespace Game.Gear.Weapons
             SaveController.CreateNodeAndAppend("WeaponType", root, WeaponType);
             return root;
         }
-        
+
+        public string DurabilityToQuality()
+        {
+            if (Durability.CurrentValue() <= 4) return "Flawed";
+            if (Durability.CurrentValue() <= 8) return "Worn";
+            if (Durability.CurrentValue() <= 12) return "Fresh";
+            return Durability.CurrentValue() <= 16 ? "Faultless" : "Perfected";
+        }
+
         public WeaponAttributes()
         {
             Durability = new Number(Random.Range(0, MaxDurability), 0, MaxDurability);
-            Durability.AddThreshold(4, "Flawed");
-            Durability.AddThreshold(8, "Worn");
-            Durability.AddThreshold(12, "Fresh");
-            Durability.AddThreshold(16, "Faultless");
-            Durability.AddThreshold(20, "Perfected");
         }
 
         public void SetClass(WeaponClass weaponClass)
@@ -87,6 +90,7 @@ namespace Game.Gear.Weapons
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
 //            Print();
         }
 
@@ -107,7 +111,7 @@ namespace Game.Gear.Weapons
             RecalculateAttributeValues();
 //            Print();
         }
-        
+
         public void AddManualModifier()
         {
             Capacity.ApplyMultiplicativeModifier(1);

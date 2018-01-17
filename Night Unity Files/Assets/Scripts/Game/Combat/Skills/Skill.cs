@@ -88,7 +88,7 @@ namespace Game.Combat.Skills
             {
                 base.OnFire();
                 shot.GuaranteeHit();
-                shot.SetKnockdownChance(1);
+                shot.SetKnockdownChance(1, 10);
                 shot.Fire();
             }
         }
@@ -102,8 +102,10 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                shot.SetSplinterRange(25);
-                shot.SetSplinterFalloff(1f);
+                shot.AddOnHit(() =>
+                {
+                    Explosion.CreateAndDetonate(shot.Target().Position.CurrentValue(), 25, shot.DamageDealt());
+                });
                 shot.Fire();
             }
         }
@@ -132,7 +134,7 @@ namespace Game.Combat.Skills
                 base.OnFire();
                 Player.OnFireAction = s =>
                 {
-                    s.SetKnockbackDistance(1);
+                    s.SetKnockdownChance(0.25f, 2);
                 };
             }
         }
@@ -164,8 +166,10 @@ namespace Game.Combat.Skills
                 base.OnFire();
                 Player.OnFireAction = s =>
                 {
-                    s.SetSplinterRange(5);
-                    s.SetSplinterFalloff(0.5f);
+                    s.AddOnHit(() =>
+                    {
+                        Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt());
+                    });
                 };
             }
         }

@@ -47,8 +47,10 @@ namespace Game.Characters
 
         protected bool InCover;
         protected Action TakeCoverAction, LeaveCoverAction;
-        
+
         protected Condition Bleeding, Burning, Sickening;
+
+        public readonly Number Position = new Number();
 
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
@@ -79,13 +81,18 @@ namespace Game.Characters
             EquipmentController.Equip(gearItem);
         }
 
-        public void OnHit(Shot shot, int damage, bool isCritical)
+        public void OnHit(int damage, bool isCritical)
         {
             float armourModifier = 1 - 0.8f / ArmourLevel.Max * ArmourLevel.CurrentValue();
             damage = (int) (armourModifier * damage);
             damage = GetCoverProtection(damage);
             if (isCritical) HealthController.TakeCriticalDamage(damage);
             else HealthController.TakeDamage(damage);
+        }
+        
+        public void OnHit(Shot shot, int damage, bool isCritical)
+        {
+           OnHit(damage, isCritical);
             if (Retaliate) FireWeapon(shot?.Origin());
         }
 
@@ -290,10 +297,11 @@ namespace Game.Characters
         {
             Interrupt();
             MovementController.KnockBack(knockbackDistance);
+            KnockDown();
         }
 
         //CONDITIONS
-        
+
         protected virtual void SetConditions()
         {
             Bleeding = new Bleed(this);
@@ -316,5 +324,4 @@ namespace Game.Characters
             Burning.AddStack();
         }
     }
-
 }

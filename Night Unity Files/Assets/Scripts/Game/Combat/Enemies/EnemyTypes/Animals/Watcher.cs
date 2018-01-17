@@ -4,7 +4,7 @@ namespace Game.Combat.Enemies.EnemyTypes
 {
     public class Watcher : Enemy
     {
-        public Watcher() : base(nameof(Watcher), 4, Random.Range(5, 10))
+        public Watcher(float position) : base(nameof(Watcher), 4, 4, position)
         {
         }
 

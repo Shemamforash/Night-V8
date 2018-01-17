@@ -13,7 +13,6 @@ namespace SamsHelper.ReactiveUI
         private float _max;
         private Action _onMax;
         private Action _onMin;
-        private readonly LinkedList<Tuple<float, string>> _thresholdList = new LinkedList<Tuple<float, string>>();
 
         public Number(float initialValue = 0, float min = 0, float max = float.MaxValue)
         {
@@ -23,42 +22,15 @@ namespace SamsHelper.ReactiveUI
             BroadcastChange();
         }
 
-        public void AddThreshold(float thresholdValue, string thresholdName)
-        {
-            if (thresholdValue < _min || thresholdValue > _max)
-            {
-                throw new Exceptions.ThresholdValueNotReachableException(thresholdName, thresholdValue, _min, _max);
-            }
-            Tuple<float, string> newThreshold = Tuple.Create(thresholdValue, thresholdName);
-            LinkedListNode<Tuple<float, string>> current = _thresholdList.First;
-            if (current == null)
-            {
-                _thresholdList.AddFirst(newThreshold);
-            }
-            else
-            {
-                while (current != null)
-                {
-                    if (thresholdValue < current.Value.Item1)
-                    {
-                        _thresholdList.AddAfter(current, newThreshold);
-                        break;
-                    }
-                    current = current.Next;
-                }
-                _thresholdList.AddAfter(_thresholdList.Last, newThreshold);
-            }
-        }
-
-        public string GetThresholdName()
-        {
-            return (from threshold in _thresholdList where _currentValue <= threshold.Item1 select threshold.Item2).FirstOrDefault();
-        }
-
         public void AddOnValueChange(Action<Number> a)
         {
             a(this);
             OnValueChange += a;
+        }
+
+        public void UpdateValueChange()
+        {
+            OnValueChange?.Invoke(this);
         }
         
         public void ClearOnValueChange()

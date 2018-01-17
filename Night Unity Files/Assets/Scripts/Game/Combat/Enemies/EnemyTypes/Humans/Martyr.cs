@@ -8,7 +8,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         private readonly Cooldown _detonateCooldown;
         private bool _detonated;
 
-        public Martyr() : base(nameof(Martyr), 3, 1)
+        public Martyr(float position) : base(nameof(Martyr), 3, 1, position)
         {
             _detonateCooldown = CombatManager.CombatCooldowns.CreateCooldown(1f);
             _detonateCooldown.SetStartAction(() => SetActionText("Detonating"));
@@ -38,14 +38,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         private void Detonate()
         {
             _detonated = true;
-            Shot s = new Shot(this, null);
-            s.SetSplinterRange(10);
-            s.SetSplinterFalloff(0.5f);
-            s.SetKnockbackDistance(10);
-            s.SetKnockdownChance(1);
-            s.SetKnockDownRadius(10);
-            s.SetDamage(40);
-            s.Fire();
+            Explosion.CreateAndDetonate(Position.CurrentValue(), 10, 40);
         }
     }    
 }

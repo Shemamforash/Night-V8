@@ -144,6 +144,7 @@
                 </e>
                 <e p="EnemyView.cs" t="Include" />
               </e>
+              <e p="Explosion.cs" t="Include" />
               <e p="Shot.cs" t="Include" />
               <e p="SkillBar.cs" t="Include" />
               <e p="Skills" t="Include">

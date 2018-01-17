@@ -13,13 +13,12 @@ namespace Game.Combat.Enemies.EnemyTypes
         private Cooldown _applyHealCooldown;
         private Cooldown _recoverHealCooldown;
 
-        public Medic() : base(nameof(Medic), 7, 4)
+        public Medic(float position) : base(nameof(Medic), 7, 4, position)
         {
             Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType>{WeaponType.Pistol, WeaponType.SMG});
             Equip(weapon);
             PreferredCoverDistance = 40f;
             MinimumFindCoverDistance = 20f;
-            AlertOthers = true;
             _recoverHealCooldown = CombatManager.CombatCooldowns.CreateCooldown(5f);
             _applyHealCooldown = CombatManager.CombatCooldowns.CreateCooldown(2f);
             _applyHealCooldown.SetStartAction(() => SetActionText("Healing " + _healTarget.Name));
@@ -58,7 +57,7 @@ namespace Game.Combat.Enemies.EnemyTypes
                 return;
             }
             if (_applyHealCooldown.Running()) return;
-            TargetDistance = _healTarget.Distance.CurrentValue();
+            TargetDistance = CombatManager.DistanceBetween(this, _healTarget);
             SetActionText("Running to " + _healTarget.Name);
             MoveToTargetDistance();
             if (!Moving()) _applyHealCooldown.Start();

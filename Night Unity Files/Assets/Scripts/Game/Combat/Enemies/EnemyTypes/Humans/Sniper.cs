@@ -8,12 +8,11 @@ namespace Game.Combat.Enemies.EnemyTypes
         private bool _reachedTarget;
 
         //Check you've initialised the speed sam!
-        public Sniper() : base("Sniper", 7, 5)
+        public Sniper(float position) : base("Sniper", 7, 5, position)
         {
             Weapon sniperRifle = WeaponGenerator.GenerateWeapon(WeaponType.Rifle);
             Equip(sniperRifle);
             PreferredCoverDistance = Weapon().GetAttributeValue(AttributeType.Accuracy) * 0.9f;
-            AlertOthers = true;
             ArmourLevel.SetCurrentValue(4);
         }
 

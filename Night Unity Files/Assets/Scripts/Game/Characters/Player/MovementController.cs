@@ -8,43 +8,47 @@ namespace Game.Characters.Player
 {
     public class MovementController
     {
-        private Character _character;
-        protected Cooldown DashCooldown;
+        private readonly Character _character;
+        private Cooldown _dashCooldown;
         private const float DashDuration = 2f;
-        private int baseSpeed;
-        protected readonly int SprintModifier = 2;
+        private int _baseSpeed;
+        private const int SprintModifier = 2;
         private bool _sprinting;
-        private Action<float> _moveForwardAction, _moveBackwardAction;
+        private readonly Action<float> _moveForwardAction, _moveBackwardAction;
 
         public MovementController(Character character, int speed)
         {
             _character = character;
             SetDashCooldown();
-            baseSpeed = speed;
+            _baseSpeed = speed;
             Player p = _character as Player;
             if (p != null)
             {
-                _moveForwardAction = f => CombatManager.GetEnemies().ForEach(e => e.Distance.Decrement(f));
-                _moveBackwardAction = f => CombatManager.GetEnemies().ForEach(e => e.Distance.Increment(f));
-                DashCooldown.SetController(CombatManager.DashCooldownController);
+                _moveForwardAction = f => _character.Position.Increment(f);
+                _moveBackwardAction = f => _character.Position.Decrement(f);
             }
             else
             {
-                _moveForwardAction = f => ((Enemy)_character).Distance.Decrement(f);
-                _moveBackwardAction = f => ((Enemy)_character).Distance.Increment(f);
+                _moveForwardAction = f => _character.Position.Decrement(f);
+                _moveBackwardAction = f => _character.Position.Increment(f);
             }
+        }
+
+        public void SetBaseSpeed(int baseSpeed)
+        {
+            _baseSpeed = baseSpeed;
         }
         
         private void SetDashCooldown()
         {
-            DashCooldown = CombatManager.CombatCooldowns.CreateCooldown(DashDuration);
+            _dashCooldown = CombatManager.CombatCooldowns.CreateCooldown(DashDuration);
         }
         
         //MOVEMENT
 
         private float CurrentSpeed()
         {
-            float currentSpeed = baseSpeed;
+            float currentSpeed = _baseSpeed;
             if (_sprinting) currentSpeed *= SprintModifier;
             return currentSpeed * Time.deltaTime;
         }
@@ -103,12 +107,12 @@ namespace Game.Characters.Player
             {
                 _moveBackwardAction?.Invoke(_dashDistance);
             }
-            DashCooldown.Start();
+            _dashCooldown.Start();
         }
         
         private bool CanDash()
         {
-            return DashCooldown.Finished();
+            return _dashCooldown.Finished();
         }
 
         private float _dashDistance = 5f;

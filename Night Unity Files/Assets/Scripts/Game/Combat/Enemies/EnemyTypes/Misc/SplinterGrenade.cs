@@ -2,18 +2,15 @@
 {
     public class SplinterGrenade : Grenade
     {
-        public SplinterGrenade(int distance, int targetDistance) : base(distance, targetDistance, "Splinter Bomb")
+        public SplinterGrenade(float distance, float targetPosition) : base(distance, targetPosition, "Splinter Bomb")
         {
         }
         
-        protected override void ReachTarget()
+        protected override void CreateExplosion()
         {
-            Shot s = new Shot(null, null);
-            s.SetDamage(10);
-            s.SetBleedChance(1);
-            s.SetSplinterRange(10);
-            s.SetSplinterFalloff(0.5f);
-            s.Fire();
+            Explosion explosion = new Explosion(Position.CurrentValue(), 10, 10);
+            explosion.SetBleeding();
+            explosion.Fire();
         }
     }
 }

@@ -12,13 +12,13 @@ namespace Game.Combat
     public class CombatScenario : IPersistenceTemplate
     {
         private readonly List<Enemy> _enemies = new List<Enemy>();
-        private bool _finished = false;
+        private bool _finished;
 
         public void AddEnemy(Enemy enemy)
         {
             _enemies.Add(enemy);
         }
-
+        
         public static CombatScenario Generate(int size = 0)
         {
             CombatScenario scenario = new CombatScenario();
@@ -27,9 +27,9 @@ namespace Game.Combat
 //                scenario.AddEnemy(new Sniper());
 //                scenario.AddEnemy(new Martyr());
 //                scenario.AddEnemy(new Medic());
-                scenario.AddEnemy(new Fighter());
-                scenario.AddEnemy(new Warlord());
-                scenario.AddEnemy(new Witch());
+//                scenario.AddEnemy(new Fighter(Random.Range(20f, 40f)));
+                scenario.AddEnemy(new Warlord(Random.Range(20f, 40f)));
+                scenario.AddEnemy(new Witch(Random.Range(20f, 40f)));
             }
             for (int i = 0; i < size; ++i)
             {
@@ -37,19 +37,19 @@ namespace Game.Combat
                 switch (rand)
                 {
                     case 0:
-                        scenario.AddEnemy(new Watcher());
+                        scenario.AddEnemy(new Watcher(Random.Range(20f, 40f)));
                         break;
                     case 1:
-                        scenario.AddEnemy(new Grazer());
+                        scenario.AddEnemy(new Grazer(Random.Range(20f, 40f)));
                         break;
                     case 2:
-                        scenario.AddEnemy(new Fighter());
+                        scenario.AddEnemy(new Fighter(Random.Range(20f, 40f)));
                         break;
                     case 3:
-                        scenario.AddEnemy(new Martyr());
+                        scenario.AddEnemy(new Martyr(Random.Range(20f, 40f)));
                         break;
                     case 4:
-                        scenario.AddEnemy(new Medic());
+                        scenario.AddEnemy(new Medic(Random.Range(20f, 40f)));
                         break;
                 }
             }

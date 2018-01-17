@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game.Characters;
 using Game.Characters.Player;
@@ -23,6 +24,7 @@ namespace Game.Combat
         private static Player _player;
         private static CombatScenario _currentScenario;
         public static List<Enemy> _enemiesToAdd = new List<Enemy>();
+        private static List<Grenade> _grenadesToRemove = new List<Grenade>();
 
         public static List<Enemy> GetEnemies()
         {
@@ -47,6 +49,8 @@ namespace Game.Combat
             {
                 g.Update();
             });
+            _grenadesToRemove.ForEach(g => Grenades.Remove(g));
+            _grenadesToRemove.Clear();
             _player.Update();
             _enemiesToAdd.ForEach(AddEnemy);
             _enemiesToAdd.Clear();
@@ -55,8 +59,8 @@ namespace Game.Combat
 
         public static void RemoveGrenade(Grenade g)
         {
-            Grenades.Remove(g);
-            _enemyList.Remove(g.EnemyUi);
+            _grenadesToRemove.Add(g);
+            _enemyList.Remove(g.GrenadeView);
         }
         
         public static void QueueEnemyToAdd(Enemy e)
@@ -128,28 +132,13 @@ namespace Game.Combat
             _strengthText.SetCurrentValue(_strengthText.CurrentValue() - f);
         }
 
-        public static float DistanceBetweenCharacter(Character origin, Character target)
-        {
-            if (origin is Player) return ((Enemy) target).Distance.CurrentValue();
-            if (target is Player) return ((Enemy) origin).Distance.CurrentValue();
-            return Mathf.Abs(((Enemy) target).Distance.CurrentValue() - ((Enemy) origin).Distance.CurrentValue());
-        }
-
         public static Character GetTarget(Character c)
         {
             if (c is Player)
             {
                 return _currentTarget;
             }
-
             return _player;
-        }
-
-        public static void SetCurrentTarget(Enemy enemy)
-        {
-            _currentTarget?.EnemyView().MarkUnselected();
-            if (enemy == null) return;
-            _currentTarget = enemy;
         }
 
         public static void Flee(Enemy enemy)
@@ -166,19 +155,33 @@ namespace Game.Combat
             }
         }
 
+        public static float DistanceToPlayer(Character origin)
+        {
+            return Math.Abs(origin.Position.CurrentValue() - _player.Position.CurrentValue());
+        }
+        
+        public static float DistanceBetween(Character origin, Character target)
+        {
+            return DistanceBetween(origin.Position.CurrentValue(), target);
+        }
+        
+        public static float DistanceBetween(float originPosition, Character target)
+        {
+            return Math.Abs(originPosition - target.Position.CurrentValue());
+        }
+
         public static Enemy GetCurrentTarget()
         {
             return _currentTarget;
         }
 
-        public static List<Enemy> GetEnemiesBehindTarget(Character target)
+        public static List<Enemy> GetEnemiesBehindTarget(Enemy target)
         {
             List<Enemy> enemiesBehindTarget = new List<Enemy>();
-            if (target is Player) return enemiesBehindTarget;
             foreach (Enemy enemy in Enemies)
             {
                 if (enemy == target) continue;
-                if (enemy.Distance > ((Enemy) target).Distance)
+                if (enemy.Position > target.Position)
                 {
                     enemiesBehindTarget.Add(enemy);
                 }
@@ -187,19 +190,24 @@ namespace Game.Combat
             return enemiesBehindTarget;
         }
 
-        public static List<Character> GetCharactersInRange(Character target, int range)
+        public static List<Character> GetCharactersInRange(Character target, float range)
+        {
+            List<Character> charactersInRange = GetCharactersInRange(target.Position.CurrentValue(), range);
+            charactersInRange.Remove(target);
+            return charactersInRange;
+        }
+        
+        public static List<Character> GetCharactersInRange(float position, float range)
         {
             List<Character> charactersInRange = new List<Character>();
-            if ((target as Enemy)?.Distance.CurrentValue() <= range)
+            if (Mathf.Abs(_player.Position.CurrentValue() - position) <= range)
             {
                 charactersInRange.Add(_player);
             }
 
             foreach (Enemy enemy in Enemies)
             {
-                if (enemy == target) continue;
-                float distanceFromEnemy = DistanceBetweenCharacter(target, enemy);
-                if (distanceFromEnemy <= range)
+                if (DistanceBetween(position, enemy) <= range)
                 {
                     charactersInRange.Add(enemy);
                 }

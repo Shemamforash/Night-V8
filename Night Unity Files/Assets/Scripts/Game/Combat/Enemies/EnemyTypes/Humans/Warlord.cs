@@ -10,7 +10,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private float _reinforceCallTime;
         private float _reinforceDuration = 5f;
 
-        public Warlord() : base("Warlord", 3, 40)
+        public Warlord(float position) : base("Warlord", 10,3, position)
         {
             Weapon weapon = WeaponGenerator.GenerateWeapon(WeaponType.LMG);
             Equip(weapon);
@@ -46,21 +46,21 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             CurrentAction = AnticipatePlayer;
             CombatManager.QueueEnemyToAdd(new Fighter(MaxDistance));
             return;
-            switch (Random.Range(0, 4))
-            {
-                case 0:
-                    CombatManager.QueueEnemyToAdd(new Fighter());
-                    break;
-                case 1:
-                    CombatManager.QueueEnemyToAdd(new Sniper());
-                    break;
-                case 2:
-                    CombatManager.QueueEnemyToAdd(new Martyr());
-                    break;
-                case 3:
-                    CombatManager.QueueEnemyToAdd(new Medic());
-                    break;
-            }
+//            switch (Random.Range(0, 4))
+//            {
+//                case 0:
+//                    CombatManager.QueueEnemyToAdd(new Fighter());
+//                    break;
+//                case 1:
+//                    CombatManager.QueueEnemyToAdd(new Sniper());
+//                    break;
+//                case 2:
+//                    CombatManager.QueueEnemyToAdd(new Martyr());
+//                    break;
+//                case 3:
+//                    CombatManager.QueueEnemyToAdd(new Medic());
+//                    break;
+//            }
         }
     }
 }

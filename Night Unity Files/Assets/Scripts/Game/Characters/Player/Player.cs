@@ -55,11 +55,15 @@ namespace Game.Characters.Player
         public Player(string name, TraitLoader.CharacterClass characterClass, TraitLoader.Trait characterTrait) : base(name)
         {
             Attributes = new DesolationAttributes(this);
-            MovementController = new MovementController(this, (int) Attributes.Endurance.CurrentValue());
+            MovementController = new MovementController(this, 0);
             CharacterClass = characterClass;
             CharacterTrait = characterTrait;
             CharacterInventory.MaxWeight = 50;
-            Attributes.Endurance.AddOnValueChange(a => Energy.Max = a.CurrentValue());
+            Attributes.Endurance.AddOnValueChange(a =>
+            {
+                Energy.Max = a.CurrentValue();
+                MovementController.SetBaseSpeed((int) a.CurrentValue());
+            });
             RageController = new RageController(this);
             HealthController.AddOnHeal(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
             HealthController.AddOnTakeDamage(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
@@ -68,6 +72,7 @@ namespace Game.Characters.Player
             TakeCoverAction = () => CombatManager.SetCoverText("In Cover");
             LeaveCoverAction = () => CombatManager.SetCoverText("No Cover");
             SetConditions();
+            Position.AddOnValueChange(a => CombatManager.GetEnemies().ForEach(e => e.Position.UpdateValueChange()));
         }
 
         private void LinkCooldownsToUi()

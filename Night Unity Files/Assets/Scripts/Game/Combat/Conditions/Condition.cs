@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Game.Characters;
 using Game.Characters.Player;
+using UnityEngine;
 
 namespace Game.Combat
 {
@@ -11,6 +12,7 @@ namespace Game.Combat
         protected readonly List<float> StackList = new List<float>();
         protected readonly HealthController CharacterHealth;
         public Action OnConditionEmpty, OnConditionNonEmpty;
+        private float _timeToNextTick;
 
         protected Condition(Character character, int duration, int damage)
         {
@@ -19,7 +21,7 @@ namespace Game.Combat
             Damage = damage;
         }
 
-        public virtual void Update()
+        public void Update()
         {
             if (StackList.Count == 0)
             {
@@ -28,12 +30,22 @@ namespace Game.Combat
             else
             {
                 OnConditionNonEmpty?.Invoke();
+                _timeToNextTick -= Time.deltaTime;
+                if (_timeToNextTick > 0) return;
+                _timeToNextTick = 1 + _timeToNextTick;
+                Tick();
             }
         }
+
+        protected abstract void Tick();
 
         public virtual void AddStack()
         {
             StackList.Add(Duration);
+            if (StackList.Count == 1)
+            {
+                _timeToNextTick = 1f;
+            }
             OnConditionNonEmpty?.Invoke();
         }
 

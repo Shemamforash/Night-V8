@@ -83,7 +83,7 @@ namespace Game.Gear.Weapons
 
         public void SetName()
         {
-            string quality = WeaponAttributes.Durability.GetThresholdName();
+            string quality = WeaponAttributes.DurabilityToQuality();
             Name = WeaponAttributes.GetName() + " -- (" + quality + ")";
         }
 

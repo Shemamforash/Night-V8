@@ -2,16 +2,15 @@
 {
     public class IncendiaryGrenade : Grenade
     {
-        public IncendiaryGrenade(int distance, int targetDistance) : base(distance, targetDistance, "Fire Bomb")
+        public IncendiaryGrenade(float distance, float targetPosition) : base(distance, targetPosition, "Fire Bomb")
         {
         }
         
-        protected override void ReachTarget()
+        protected override void CreateExplosion()
         {
-            Shot s = new Shot(null, null);
-            s.SetDamage(10);
-            s.SetBurnChance(1);
-            s.Fire();
+            Explosion explosion = new Explosion(Position.CurrentValue(), 5, 20);
+            explosion.SetBurning();
+            explosion.Fire();
         }
     }
 }

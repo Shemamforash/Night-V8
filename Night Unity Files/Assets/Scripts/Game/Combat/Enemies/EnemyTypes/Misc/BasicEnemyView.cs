@@ -1,5 +1,4 @@
-﻿using Game.Characters.Player;
-using SamsHelper;
+﻿using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
@@ -15,7 +14,6 @@ namespace Game.Combat.Enemies.EnemyTypes.Misc
         {
             GameObject.SetActive(true);
             SetAlpha(0f);
-            SetNavigatable(false);
         }
         
         protected override void CacheUiElements()

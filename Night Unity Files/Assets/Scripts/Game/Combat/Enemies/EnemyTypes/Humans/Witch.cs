@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Characters.Player;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -11,7 +12,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private int _damageTaken;
         private readonly Cooldown _throwGrenadeCooldown;
 
-        public Witch() : base("Witch", 5, 15)
+        public Witch(float position) : base("Witch", 5, 5, position)
         {
             int damageToReposition = 30;
             Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType> {WeaponType.Pistol, WeaponType.SMG});
@@ -38,17 +39,18 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
 
         private void ThrowGrenade()
         {
-            int currentPosition = (int) Distance.CurrentValue();
+            float currentPosition = Position.CurrentValue();
+            float targetPosition = CombatManager.Player().Position.CurrentValue();
             switch (Random.Range(0, 3))
             {
                 case 0:
-                    CombatManager.AddGrenade(new Grenade(currentPosition, 0));
+                    CombatManager.AddGrenade(new Grenade(currentPosition, targetPosition));
                     break;
                 case 1:
-                    CombatManager.AddGrenade(new SplinterGrenade(currentPosition, 0));
+                    CombatManager.AddGrenade(new SplinterGrenade(currentPosition, targetPosition));
                     break;
                 case 2:
-                    CombatManager.AddGrenade(new IncendiaryGrenade(currentPosition, 0));
+                    CombatManager.AddGrenade(new IncendiaryGrenade(currentPosition, targetPosition));
                     break;
             }
             StartGrenadeCooldown();

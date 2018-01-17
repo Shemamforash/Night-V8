@@ -9,7 +9,7 @@ namespace Game.Combat.Enemies.EnemyTypes
     {
         private int _damageTaken;
 
-        public Fighter(int distance = 0) : base("Fighter", 20, distance)
+        public Fighter(float position) : base("Fighter", 20, 4, position)
         {
             int damageToFindCover = 1000;
             Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType>{WeaponType.Shotgun, WeaponType.SMG});
@@ -37,7 +37,7 @@ namespace Game.Combat.Enemies.EnemyTypes
 
         protected override void PrintUpdate()
         {
-            Debug.Log(TargetDistance);
+//            Debug.Log(TargetDistance);
         }
     }
 }

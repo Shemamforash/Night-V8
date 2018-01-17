@@ -9,7 +9,7 @@ namespace Game.Combat
         {
         }
 
-        public override void Update()
+        protected override void Tick()
         {
             if (StackList.Count != 0)
             {
@@ -25,7 +25,6 @@ namespace Game.Combat
                     StackList.RemoveAt(i);
                 }
             }
-            base.Update();
         }
     }
 }

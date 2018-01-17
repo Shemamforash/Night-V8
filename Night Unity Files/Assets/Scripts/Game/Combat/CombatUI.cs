@@ -132,15 +132,17 @@ namespace Game.Combat
 
         public static void SetTarget(Enemy e)
         {
-            SetCurrentTarget(e);
-            e?.EnemyView().PrimaryButton.GetComponent<Button>().Select();
+            _currentTarget?.EnemyView.MarkUnselected();
+            if (e == null) return;
+            _currentTarget = e;
+            e.EnemyView.PrimaryButton.GetComponent<Button>().Select();
         }
 
         public static void Remove(Enemy enemy)
         {
             Enemy nearestEnemy = null;
             int distanceToEnemy = 100;
-            int enemyPosition = _enemyList.Items.IndexOf(enemy.EnemyView());
+            int enemyPosition = _enemyList.Items.IndexOf(enemy.EnemyView);
             for (int i = 0; i < _enemyList.Items.Count; ++i)
             {
                 Enemy e = _enemyList.Items[i].GetLinkedObject() as Enemy;
@@ -150,7 +152,6 @@ namespace Game.Combat
                 nearestEnemy = e;
                 distanceToEnemy = distance;
             }
-
             SetTarget(nearestEnemy);
         }
     }
