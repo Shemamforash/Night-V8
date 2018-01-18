@@ -18,6 +18,7 @@ namespace Game.Combat
         private static GameObject _ammoPrefab;
         private static GameObject _magazineContent;
         public static MenuList _enemyList;
+        public static MenuList _grenadeList;
         private float _hitInfoTimerCurrent;
         private const float HitInfoTimerMax = 1f;
 
@@ -27,14 +28,10 @@ namespace Game.Combat
 
         private static TextMeshProUGUI _ammoText;
 
-        private static TextMeshProUGUI _weaponNameText;
-
         private static TextMeshProUGUI _reloadTimeRemaining;
 
         private static TextMeshProUGUI _statusText;
 //            _hitInfo;
-
-        public static TextMeshProUGUI ConditionsText;
 
         private static UIHealthBarController _playerUiHealthController;
         private static List<GameObject> _magazineAmmo = new List<GameObject>();
@@ -46,18 +43,17 @@ namespace Game.Combat
         {
             GameObject playerContainer = gameObject.transform.Find("Player").gameObject;
             _enemyList = Helper.FindChildWithName<MenuList>(gameObject, "Enemies");
+            _grenadeList = Helper.FindChildWithName<MenuList>(gameObject, "Grenades");
             _magazineContent = Helper.FindChildWithName<Transform>(playerContainer, "Magazine").gameObject;
             _ammoPrefab = Resources.Load("Prefabs/Combat/Ammo Prefab") as GameObject;
 
             _playerName = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Name");
             _playerHealthText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Strength Remaining");
             _ammoText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Ammo Stock");
-            _weaponNameText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Weapon");
             _reloadTimeRemaining = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Time Remaining");
             _statusText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Status");
             _statusText.text = "";
 //            _hitInfo = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Hit Info");
-            ConditionsText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Conditions");
 //            _hitInfo.color = new Color(1, 1, 1, 0);
 
             DashCooldownController = Helper.FindChildWithName<CooldownController>(playerContainer, "Dash");

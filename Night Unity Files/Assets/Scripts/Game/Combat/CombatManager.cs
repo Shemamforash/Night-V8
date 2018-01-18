@@ -60,7 +60,7 @@ namespace Game.Combat
         public static void RemoveGrenade(Grenade g)
         {
             _grenadesToRemove.Add(g);
-            _enemyList.Remove(g.GrenadeView);
+            _grenadeList.Remove(g.GrenadeView);
         }
         
         public static void QueueEnemyToAdd(Enemy e)
@@ -73,7 +73,7 @@ namespace Game.Combat
         public static void AddGrenade(Grenade g)
         {
             Grenades.Add(g);
-            _enemyList.AddItem(g);
+            _grenadeList.AddItem(g);
         }
         
         public static void ResetCombat()
@@ -94,7 +94,6 @@ namespace Game.Combat
             UpdateMagazine(_player.Weapon().GetRemainingAmmo());
             _playerName.text = _player.Name;
             _enemyList.Clear();
-            _weaponNameText.text = _player.Weapon().Name + " (" + _player.Weapon().GetSummary() + ")";
             UpdatePlayerHealth();
             InputHandler.RegisterInputListener(_player);
             scenario.Enemies().ForEach(AddEnemy);

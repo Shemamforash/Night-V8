@@ -168,6 +168,7 @@
                 <e p="Weapon.cs" t="Include" />
                 <e p="WeaponAttributes.cs" t="Include" />
                 <e p="WeaponClass.cs" t="Include" />
+                <e p="WeaponGenerationTester.cs" t="Include" />
                 <e p="WeaponGenerator.cs" t="Include" />
                 <e p="WeaponType.cs" t="Include" />
               </e>

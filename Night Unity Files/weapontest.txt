@@ -1,0 +1,205 @@
+Type: Pistol  ---  Durability: 20
+        DPS: 33.9 (min: 28.1 /max: 44.6 )
+        Damage: 20.8 (min: 1.3 /max: 66.3)
+        Accuracy: 76.7 (min: 24 /max: 100)
+        CriticalChance: 25.7 (min: 2.5 /max: 37.5)
+        FireRate: 2.4 (min: 0.8 /max: 5.6)
+
+Pistol Slinger Oppressive
+Durability: 20 (1)
+DPS: 44.55
+Automatic: True
+Capacity:   8
+Pellets:    1
+Damage:     19.5
+Accuracy:   90
+Fire Rate:  2.4
+Reload:     1
+CritChance: 37.5
+Pistol: +13 Damage +60 Accuracy +3 FireRate +0.5 ReloadSpeed +25 CriticalChance
+Slinger: +50% Accuracy +100% ReloadSpeed +10 Capacity +1 Pellets
+Oppressive: +50% Damage -20% FireRate +50% CriticalChance -20% Capacity
+
+
+Pistol Deathgrip Light
+Durability: 20 (1)
+DPS: 28.08
+Automatic: True
+Capacity:   6
+Pellets:    1
+Damage:     16.38
+Accuracy:   60
+Fire Rate:  3
+Reload:     0.625
+CritChance: 25
+Pistol: +13 Damage +60 Accuracy +3 FireRate +0.5 ReloadSpeed +25 CriticalChance
+Deathgrip: +40% Damage +25% ReloadSpeed +6 Capacity +1 Pellets
+Light: -10% Damage
+
+
+
+
+Type: Rifle  ---  Durability: 20
+        DPS: 31.3 (min: 21.1 /max: 47.8 )
+        Damage: 51.3 (min: 2.1 /max: 220.5)
+        Accuracy: 90.1 (min: 32 /max: 100)
+        CriticalChance: 47.8 (min: 0 /max: 100)
+        FireRate: 0.9 (min: 0.2 /max: 3)
+
+Rifle Shoulderbreaker Absolute
+Durability: 20 (1)
+DPS: 47.79871
+Automatic: True
+Capacity:   2
+Pellets:    1
+Damage:     73.5
+Accuracy:   96
+Fire Rate:  0.75
+Reload:     2.5
+CritChance: 75
+Rifle: +35 Damage +80 Accuracy +1 FireRate +2.5 ReloadSpeed +50 CriticalChance
+Shoulderbreaker: +110% Damage -20% Accuracy +2 Capacity +1 Pellets
+Absolute: +50% Accuracy -25% FireRate +50% CriticalChance
+
+
+Rifle Deepdriver Unrelenting
+Durability: 20 (1)
+DPS: 21.12
+Automatic: False
+Capacity:   3
+Pellets:    1
+Damage:     52.5
+Accuracy:   100
+Fire Rate:  0.6
+Reload:     3.75
+CritChance: 10
+Rifle: +35 Damage +80 Accuracy +1 FireRate +2.5 ReloadSpeed +50 CriticalChance
+Deepdriver: -20% FireRate +100% CriticalChance +4 Capacity +1 Pellets
+Unrelenting: +50% FireRate +50% ReloadSpeed -90% CriticalChance +50% Capacity
+
+
+
+
+Type: Shotgun  ---  Durability: 20
+        DPS: 32.8 (min: 27 /max: 43.6 )
+        Damage: 12.4 (min: 0.6 /max: 40)
+        Accuracy: 25.4 (min: 12.5 /max: 37.5)
+        CriticalChance: 9.1 (min: 0.5 /max: 30)
+        FireRate: 1.7 (min: 0.4 /max: 4.5)
+
+Shotgun Hellsmasher Unrelenting
+Durability: 20 (1)
+DPS: 43.61425
+Automatic: True
+Capacity:   15
+Pellets:    10
+Damage:     8.8
+Accuracy:   25
+Fire Rate:  2.25
+Reload:     0.9375
+CritChance: 0.5
+Shotgun: +8 Damage +25 Accuracy +1.5 FireRate +2.5 ReloadSpeed +5 CriticalChance
+Hellsmasher: +10% Damage -75% ReloadSpeed +10 Capacity +10 Pellets
+Unrelenting: +50% FireRate +50% ReloadSpeed -90% CriticalChance +50% Capacity
+
+
+Shotgun Bonebreaker Light
+Durability: 20 (1)
+DPS: 27
+Automatic: True
+Capacity:   10
+Pellets:    5
+Damage:     18
+Accuracy:   25
+Fire Rate:  1.5
+Reload:     2.5
+CritChance: 10
+Shotgun: +8 Damage +25 Accuracy +1.5 FireRate +2.5 ReloadSpeed +5 CriticalChance
+Bonebreaker: +150% Damage +100% CriticalChance +10 Capacity +5 Pellets
+Light: -10% Damage
+
+
+
+
+Type: SMG  ---  Durability: 20
+        DPS: 32.5 (min: 24.7 /max: 43.6 )
+        Damage: 5.2 (min: 0.5 /max: 10)
+        Accuracy: 64.2 (min: 21 /max: 100)
+        CriticalChance: 15.1 (min: 0.5 /max: 75)
+        FireRate: 10.1 (min: 3 /max: 22.5)
+
+SMG Beastbreaker Oppressive
+Durability: 20 (1)
+DPS: 43.61539
+Automatic: True
+Capacity:   16
+Pellets:    1
+Damage:     7.5
+Accuracy:   90
+Fire Rate:  4.8
+Reload:     1
+CritChance: 75
+SMG: +5 Damage +60 Accuracy +10 FireRate +1 ReloadSpeed +5 CriticalChance
+Beastbreaker: +50% Accuracy -40% FireRate +900% CriticalChance +20 Capacity +1 Pellets
+Oppressive: +50% Damage -20% FireRate +50% CriticalChance -20% Capacity
+
+
+SMG Gripshaker Light
+Durability: 20 (1)
+DPS: 24.74182
+Automatic: True
+Capacity:   40
+Pellets:    1
+Damage:     4.5
+Accuracy:   48
+Fire Rate:  15
+Reload:     1
+CritChance: 5
+SMG: +5 Damage +60 Accuracy +10 FireRate +1 ReloadSpeed +5 CriticalChance
+Gripshaker: -20% Accuracy +50% FireRate +40 Capacity +1 Pellets
+Light: -10% Damage
+
+
+
+
+Type: LMG  ---  Durability: 20
+        DPS: 34.4 (min: 27.1 /max: 48.8 )
+        Damage: 12.4 (min: 0.9 /max: 35.2)
+        Accuracy: 53.1 (min: 17.5 /max: 100)
+        CriticalChance: 16.8 (min: 0.2 /max: 75)
+        FireRate: 6.9 (min: 2 /max: 22.5)
+
+LMG Spewer Absolute
+Durability: 20 (1)
+DPS: 48.79286
+Automatic: True
+Capacity:   60
+Pellets:    1
+Damage:     8.8
+Accuracy:   75
+Fire Rate:  11.25
+Reload:     4
+CritChance: 15
+LMG: +11 Damage +50 Accuracy +5 FireRate +4 ReloadSpeed +10 CriticalChance
+Spewer: -20% Damage +200% FireRate +60 Capacity +1 Pellets
+Absolute: +50% Accuracy -25% FireRate +50% CriticalChance
+
+
+LMG Breacher Light
+Durability: 20 (1)
+DPS: 27.07031
+Automatic: True
+Capacity:   70
+Pellets:    1
+Damage:     9.9
+Accuracy:   50
+Fire Rate:  5
+Reload:     5.2
+CritChance: 50
+LMG: +11 Damage +50 Accuracy +5 FireRate +4 ReloadSpeed +10 CriticalChance
+Breacher: +30% ReloadSpeed +400% CriticalChance +70 Capacity +1 Pellets
+Light: -10% Damage
+
+
+
+

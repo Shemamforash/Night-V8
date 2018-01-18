@@ -38,9 +38,9 @@ namespace Game.Gear.Weapons
             return root;
         }
         
-        public Weapon(string name, float weight) : base(name, weight, GearSubtype.Weapon)
+        public Weapon(string name, float weight, int durability) : base(name, weight, GearSubtype.Weapon)
         {
-            WeaponAttributes = new WeaponAttributes();
+            WeaponAttributes = new WeaponAttributes(durability);
 //            Durability.OnMin(() => { _canEquip = false; });
         }
         

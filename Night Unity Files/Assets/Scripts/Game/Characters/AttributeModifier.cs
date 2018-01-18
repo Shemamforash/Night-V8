@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using UnityEngine;
 
 namespace Game.Characters
 {
     public class AttributeModifier
     {
-        private float _summativeModifier;
-        private float _multiplicativeModifier;
+        private float _sumMod;
+        private float _multMod = 1;
         private readonly List<CharacterAttribute> _targetAttributes= new List<CharacterAttribute>();
         public AttributeType AttributeType;
         private bool _applied;
@@ -15,13 +16,13 @@ namespace Game.Characters
         public void SetSummative(float summativeModifer)
         {
             Remove();
-            _summativeModifier = summativeModifer;
+            _sumMod = summativeModifer;
         }
         
         public void SetMultiplicative(float multiplicativeModifier)
         {
             Remove();
-            _multiplicativeModifier = multiplicativeModifier;
+            _multMod = multiplicativeModifier;
         }
 
         public void AddTargetAttributes(List<CharacterAttribute> targetAttributes)
@@ -43,16 +44,16 @@ namespace Game.Characters
         public void Apply()
         {
             if (_targetAttributes == null || _applied) return;
-            _targetAttributes.ForEach(a => a.ApplySummativeModifier(_summativeModifier));
-            _targetAttributes.ForEach(a => a.ApplyMultiplicativeModifier(_multiplicativeModifier));
+            _targetAttributes.ForEach(a => a.ApplyAddMod(_sumMod));
+            _targetAttributes.ForEach(a => a.ApplyMultMod(_multMod));
             _applied = true;
         }
 
         public void Remove()
         {
             if (_targetAttributes == null || !_applied) return;
-            _targetAttributes.ForEach(a => a.RemoveSummativeModifier(_summativeModifier));
-            _targetAttributes.ForEach(a => a.RemoveMultiplicativeModifier(_multiplicativeModifier));
+            _targetAttributes.ForEach(a => a.RemoveAddMod(_sumMod));
+            _targetAttributes.ForEach(a => a.RemoveMultMod(_multMod));
             _applied = false;
         }
 
@@ -66,18 +67,19 @@ namespace Game.Characters
             return modifierString;
         }
         
-        public string SummativeModifierString()
+        public string AddModString()
         {
-            string summativeModifierString = ModifierToString(_summativeModifier);
-            if (summativeModifierString == "") return summativeModifierString;
-            return summativeModifierString +  " " +  AttributeType;
+            string addModString = ModifierToString(_sumMod);
+            if (addModString == "") return addModString;
+            return addModString +  " " +  AttributeType;
         }
 
-        public string MultiplicativeModifierString()
+        public string MultModString()
         {
-            string multiplicativeModifierString = ModifierToString(_multiplicativeModifier * 100);
-            if (multiplicativeModifierString == "") return multiplicativeModifierString;
-            return multiplicativeModifierString +  "% " + AttributeType;
+            if (_multMod == 1) return "";
+            string multModString = ModifierToString((_multMod - 1) * 100);
+            if (multModString == "") return multModString;
+            return multModString +  "% " + AttributeType;
         }
     }
 }

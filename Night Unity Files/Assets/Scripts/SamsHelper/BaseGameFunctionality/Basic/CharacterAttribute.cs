@@ -1,13 +1,17 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
+using NUnit.Framework;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
+using UnityEngine;
+
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public class CharacterAttribute : Number
     {
         public readonly AttributeType AttributeType;
-        private float _summativeModifier, _multiplicativeModifier = 1;
+        private float _addMod;
+        public float _multMod = 1;
         private float _calculatedValue;
 
         public CharacterAttribute(AttributeType attributeType, float value, float min = 0, float max = float.MaxValue) : base(value, min, max)
@@ -19,8 +23,8 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public void Save(XmlNode doc, PersistenceType saveType)
         {
             SaveController.CreateNodeAndAppend("AttributeType", doc, AttributeType);
-            SaveController.CreateNodeAndAppend("SummativeModifier", doc, _summativeModifier);
-            SaveController.CreateNodeAndAppend("MultiplicativeModifier", doc, _multiplicativeModifier);
+            SaveController.CreateNodeAndAppend("SummativeModifier", doc, _addMod);
+            SaveController.CreateNodeAndAppend("MultiplicativeModifier", doc, _multMod);
         }
 
         public override float CurrentValue()
@@ -28,37 +32,43 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             return _calculatedValue;
         }
 
-        public float OriginalValue()
+        private float OriginalValue()
         {
             return base.CurrentValue();
         }
 
         private void Recalculate()
         {
-            _calculatedValue = (OriginalValue() + _summativeModifier) * _multiplicativeModifier;
+            _calculatedValue = (OriginalValue() + _addMod) * _multMod;
+            Assert.IsTrue(_multMod >= 0);
+            Assert.IsTrue(_addMod + OriginalValue() >= 0);
+            if (_calculatedValue > Max) _calculatedValue = Max;
+            if (_calculatedValue < Min) _calculatedValue = Min;
         }
 
-        public void ApplySummativeModifier(float summativeModifier)
+        public void ApplyAddMod(float addMod)
         {
-            _summativeModifier += summativeModifier;
+            _addMod += addMod;
             Recalculate();
         }
 
-        public void ApplyMultiplicativeModifier(float multiplicativeModifier)
+        public void ApplyMultMod(float multMod)
         {
-            _multiplicativeModifier += multiplicativeModifier;
+            _multMod *= multMod;
+            Assert.IsTrue(_multMod >= 0);
+            Recalculate();
+        }
+        
+        public void RemoveAddMod(float addMod)
+        {
+            _addMod -= addMod;
             Recalculate();
         }
 
-        public void RemoveSummativeModifier(float summativeModifier)
+        public void RemoveMultMod(float multMod)
         {
-            _summativeModifier -= summativeModifier;
-            Recalculate();
-        }
-
-        public void RemoveMultiplicativeModifier(float multiplicativeModifier)
-        {
-            _multiplicativeModifier -= multiplicativeModifier;
+            _multMod /= multMod;
+            Assert.IsTrue(_multMod >= 0);
             Recalculate();
         }
 

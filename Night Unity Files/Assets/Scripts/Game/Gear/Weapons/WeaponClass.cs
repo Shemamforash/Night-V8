@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using Game.Characters;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Gear.Weapons
@@ -29,9 +27,9 @@ namespace Game.Gear.Weapons
             return _subtypes[Random.Range(0, _subtypes.Count)];
         }
 
-        public Weapon CreateWeapon(GearModifier modifier, bool manualOnly)
+        public Weapon CreateWeapon(GearModifier modifier, bool manualOnly, int durability)
         {
-            Weapon w = new Weapon(Type.ToString(), 10);
+            Weapon w = new Weapon(Type.ToString(), 10, durability);
             WeaponAttributes weaponAttributes = w.WeaponAttributes;
             weaponAttributes.SetClass(this);
             weaponAttributes.SetSubClass(GetSubtype());

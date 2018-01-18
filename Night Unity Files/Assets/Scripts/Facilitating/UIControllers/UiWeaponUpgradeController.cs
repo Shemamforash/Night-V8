@@ -78,9 +78,8 @@ namespace Facilitating.UIControllers
 			_topLeftAttributeText.text = _weapon.GetAttributeValue(AttributeType.Damage) + "DMG";
 			_topRightAttributeText.text = _weapon.GetAttributeValue(AttributeType.Accuracy) + "ACC";
 			_centreLeftAttributeText.text = Helper.Round(_weapon.GetAttributeValue(AttributeType.FireRate), 1) + "ROF";
-			_centreRightAttributeText.text = _weapon.GetAttributeValue(AttributeType.Handling) + "CRIT";
+			_centreRightAttributeText.text = _weapon.GetAttributeValue(AttributeType.CriticalChance) + "CRIT";
 			_bottomLeftAttributeText.text = Helper.Round(_weapon.GetAttributeValue(AttributeType.ReloadSpeed), 1) + "RLD";
-			_bottomRightAttributeText.text = _weapon.GetAttributeValue(AttributeType.CriticalChance) + "HDL";
 			int upgradeCost = _weapon.GetUpgradeCost();
 			if (upgradeCost <= WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Quantity())
 			{

@@ -19,7 +19,7 @@ namespace Game.Gear.Weapons
 
         public string ModifierString()
         {
-            return _modifiers.Aggregate("", (current, modifier) => current + (modifier.SummativeModifierString() == "" ? modifier.MultiplicativeModifierString() : modifier.SummativeModifierString()));
+            return _modifiers.Aggregate("", (current, modifier) => current + (modifier.AddModString() == "" ? modifier.MultModString() : modifier.AddModString()));
         }
         
         public virtual string GetDescription()
@@ -27,10 +27,10 @@ namespace Game.Gear.Weapons
             string description = Name + ":";
             foreach (AttributeModifier modifier in _modifiers)
             {
-                string summativeString = modifier.SummativeModifierString();
+                string summativeString = modifier.AddModString();
                 if (summativeString != "") description += "\n" + summativeString;
 
-                string multiplicativeString = modifier.MultiplicativeModifierString();
+                string multiplicativeString = modifier.MultModString();
                 if (multiplicativeString != "") description += "\n" + multiplicativeString;
             }
             return description;

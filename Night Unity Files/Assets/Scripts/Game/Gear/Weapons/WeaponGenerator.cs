@@ -20,6 +20,7 @@ namespace Game.Gear.Weapons
         {
             LoadBaseWeapons();
             GearReader.LoadGear();
+            WeaponGenerationTester.Test();
         }
 
         public static WeaponClass GetWeaponClassWithType(WeaponType type)
@@ -27,12 +28,12 @@ namespace Game.Gear.Weapons
             return WeaponDictionary[type];
         }
 
-        public static Weapon GenerateWeapon(WeaponType type, bool manualOnly = false)
+        public static Weapon GenerateWeapon(WeaponType type, bool manualOnly = false, int durability = -1)
         {
-            return GenerateWeapon(new List<WeaponType> {type}, manualOnly);
+            return GenerateWeapon(new List<WeaponType> {type}, manualOnly, durability);
         }
 
-        public static Weapon GenerateWeapon(List<WeaponType> weaponsWanted = null, bool manualOnly = false)
+        public static Weapon GenerateWeapon(List<WeaponType> weaponsWanted = null, bool manualOnly = false, int durability = -1)
         {
             bool automatic = true;
             WeaponType weaponType;
@@ -49,12 +50,11 @@ namespace Game.Gear.Weapons
             if (manualOnly)
             {
                 weaponType = WeaponType.Rifle;
-                automatic = false;
             }
 #endif
             WeaponClass weaponClass = WeaponDictionary[weaponType];
             GearModifier modifier = GeneralModifiers[UnityEngine.Random.Range(0, GeneralModifiers.Count)];
-            Weapon weapon = weaponClass.CreateWeapon(modifier, manualOnly);
+            Weapon weapon = weaponClass.CreateWeapon(modifier, manualOnly, durability);
             WorldEventManager.GenerateEvent(new WeaponFindEvent(weapon.Name));
             weapon.SetName();
             return weapon;
@@ -112,7 +112,7 @@ namespace Game.Gear.Weapons
                 }
                 else
                 {
-                    attributeModifier.SetMultiplicative(value - 1);
+                    attributeModifier.SetMultiplicative(value);
                 }
                 gearModifier.AddAttributeModifier(attributeModifier);
             }

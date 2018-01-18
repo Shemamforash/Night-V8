@@ -125,12 +125,6 @@
         <Weight>0</Weight>
     </Trait>
     <Trait>
-        <Name>1</Name>
-        <Endurance>1</Endurance>
-        <Willpower>1</Willpower>
-        <Weight>1</Weight>
-    </Trait>
-    <Trait>
         <Name>Feeble</Name>
         <Endurance>-2</Endurance>
         <Willpower>1</Willpower>
@@ -155,12 +149,6 @@
         <Weight>1</Weight>
     </Trait>
     <Trait>
-        <Name>1</Name>
-        <Endurance>1</Endurance>
-        <Willpower>1</Willpower>
-        <Weight>1</Weight>
-    </Trait>
-    <Trait>
         <Name>Nomadic</Name>
         <Endurance>1</Endurance>
         <Willpower>1</Willpower>
@@ -169,6 +157,78 @@
     <Trait>
         <Name>Reluctant</Name>
         <Endurance>1</Endurance>
+        <Willpower>1</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Daunting</Name>
+        <Endurance>2</Endurance>
+        <Willpower>1</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Pathetic</Name>
+        <Endurance>-2</Endurance>
+        <Willpower>1</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Resolute</Name>
+        <Endurance>1</Endurance>
+        <Willpower>2</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Anxious</Name>
+        <Endurance>1</Endurance>
+        <Willpower>-2</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Keen</Name>
+        <Endurance>1</Endurance>
+        <Willpower>1</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Oblivious</Name>
+        <Endurance>1</Endurance>
+        <Willpower>1</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Nimble</Name>
+        <Endurance>-1</Endurance>
+        <Willpower>1</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Inept</Name>
+        <Endurance>1</Endurance>
+        <Willpower>1</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Enduring</Name>
+        <Endurance>1</Endurance>
+        <Willpower>1</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Evasive</Name>
+        <Endurance>1</Endurance>
+        <Willpower>-1</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Deranged</Name>
+        <Endurance>1</Endurance>
+        <Willpower>-1</Willpower>
+        <Weight>1</Weight>
+    </Trait>
+    <Trait>
+        <Name>Resilient</Name>
+        <Endurance>-1</Endurance>
         <Willpower>1</Willpower>
         <Weight>1</Weight>
     </Trait>

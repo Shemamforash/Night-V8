@@ -16,10 +16,13 @@
         FireRate,
         ReloadSpeed,
         CriticalChance,
-        Handling,
         Detection,
         Vision,
         Pellets,
-        Capacity
+        Capacity,
+        SicknessChance,
+        PierceChance,
+        BleedChance,
+        BurnChance
     }
 }

@@ -251,8 +251,7 @@ namespace Game.Characters.Player
 
         protected void LinkKnockdownCooldownToUi()
         {
-            KnockdownCooldown.SetEndAction(() => CombatManager.ConditionsText.text = "");
-            KnockdownCooldown.SetDuringAction(f => CombatManager.ConditionsText.text = "Knocked down! " + Helper.Round(f, 1) + "s");
+            //todo
         }
 
         protected void LinkReloadCooldownToUi()

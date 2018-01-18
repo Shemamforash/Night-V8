@@ -10,11 +10,9 @@ namespace Game.Combat.Enemies
 {
     public class EnemyView : BasicEnemyView
     {
-        public TextMeshProUGUI CoverText, RangeText, ActionText, HealthText, ArmourText;
-        private TextMeshProUGUI  _typeText;
+        public TextMeshProUGUI CoverText, ActionText, HealthText, ArmourText;
         private UIArmourController _uiArmourController;
         private UIHealthBarController _lowerUiHealthBarController;
-        private GameObject _alertedObject, _detectedObject;
         private Image _sicknessLevel;
         private ParticleSystem _bleedEffect, _burnEffect;
         public UIAimController UiAimController;
@@ -32,20 +30,14 @@ namespace Game.Combat.Enemies
             base.CacheUiElements();
             CoverText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Cover");
             CoverText.text = "No Cover";
-            RangeText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Range Category");
             HealthText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Health Text");
             ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour Text");
             _sicknessLevel = Helper.FindChildWithName<Image>(GameObject, "Sickness");
             _burnEffect = Helper.FindChildWithName<ParticleSystem>(GameObject, "Burning");
             _bleedEffect = Helper.FindChildWithName<ParticleSystem>(GameObject, "Bleeding");
             UiAimController = Helper.FindChildWithName<UIAimController>(GameObject, "Aim Timer");
-            _typeText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Type");
             _uiArmourController = Helper.FindChildWithName<UIArmourController>(GameObject, "Armour Bar");
             _lowerUiHealthBarController = Helper.FindChildWithName<UIHealthBarController>(GameObject, "Health Bar");
-            _alertedObject = GameObject.Find("Alert");
-            _detectedObject = GameObject.Find("Detected");
-            _alertedObject.SetActive(false);
-            _detectedObject.SetActive(false);
             ActionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Action");
         }
 
@@ -90,12 +82,6 @@ namespace Game.Combat.Enemies
             ArmourText.text = armourProtection + "x damage";
         }
 
-        public override void Update()
-        {
-            base.Update();
-            _typeText.text = ((Enemy) LinkedObject).EnemyType();
-        }
-
         public void SetAlpha(float alpha)
         {
             if (_fadingIn > 0)
@@ -117,31 +103,11 @@ namespace Game.Combat.Enemies
         {
 //            CoverText.text = "";
             DistanceText.text = "";
-            RangeText.text = "";
 //            StrengthText.text = "";
 //            ArmourText.text = "";
-            _nameText.text = _nameText.text + " DEAD";
-            _typeText.text = "Corpse";
+            _nameText.text = "Dead " + _nameText.text;
             ActionText.text = "";
             SetNavigatable(false);
-        }
-
-        public void SetUnaware()
-        {
-            _alertedObject.SetActive(false);
-            _detectedObject.SetActive(false);
-        }
-
-        public void SetAlert()
-        {
-            _alertedObject.SetActive(true);
-            _detectedObject.SetActive(false);
-        }
-
-        public void SetDetected()
-        {
-            _alertedObject.SetActive(false);
-            _detectedObject.SetActive(true);
         }
 
         public void UpdateSickness(float value)

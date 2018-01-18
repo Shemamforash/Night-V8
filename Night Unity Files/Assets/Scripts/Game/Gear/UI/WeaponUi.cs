@@ -25,9 +25,8 @@ namespace Game.Gear.UI
             TopLeftAttributeText.text = weapon.GetAttributeValue(AttributeType.Damage) + "DMG";
             TopRightAttributeText.text = weapon.GetAttributeValue(AttributeType.Accuracy) + "ACC";
             CentreLeftAttributeText.text = Helper.Round(weapon.GetAttributeValue(AttributeType.FireRate), 1) + "ROF";
-            CentreRightAttributeText.text = weapon.GetAttributeValue(AttributeType.Handling) + "CRIT";
+            CentreRightAttributeText.text = weapon.GetAttributeValue(AttributeType.CriticalChance) + "CRIT";
             BottomLeftAttributeText.text = Helper.Round(weapon.GetAttributeValue(AttributeType.ReloadSpeed), 1) + "RLD";
-            BottomRightAttributeText.text = weapon.GetAttributeValue(AttributeType.CriticalChance) + "HDL";
         }
     }
 }

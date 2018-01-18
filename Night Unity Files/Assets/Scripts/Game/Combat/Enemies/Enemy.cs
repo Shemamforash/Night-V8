@@ -119,7 +119,6 @@ namespace Game.Combat.Enemies
             {
                 if (EnemyView == null) return;
                 if (HasFled || IsDead) return;
-                EnemyView.RangeText.text = DistanceToRange();
                 if (a.CurrentValue() <= MaxDistance) return;
                 HasFled = true;
             });
@@ -173,18 +172,13 @@ namespace Game.Combat.Enemies
             float distance = CombatManager.DistanceToPlayer(this);
             if (distance < DetectionRange && !Alerted)
             {
-                EnemyView.SetDetected();
                 TryAlert();
                 return;
             }
-
             if (distance < VisionRange)
             {
-                EnemyView.SetAlert();
-                return;
+                SetActionText("Alerted");
             }
-
-            EnemyView.SetUnaware();
         }
 
         public override void OnMiss()

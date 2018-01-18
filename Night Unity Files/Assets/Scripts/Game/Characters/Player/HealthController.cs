@@ -10,7 +10,7 @@ namespace Game.Characters.Player
         private event Action<int> OnTakeDamage;
         private event Action<int> OnHeal;
         private readonly Character _character;
-        private const int HealthChunkSize = 10;
+        private const int PlayerHealthChunkSize = 100;
 
         public HealthController(Character character)
         {
@@ -19,18 +19,16 @@ namespace Game.Characters.Player
 
         public void EnterCombat()
         {
-            int strengthRating;
+            int maxHealth;
             Player player = _character as Player;
             if (player != null)
             {
-                strengthRating = (int) player.Attributes.Strength.CurrentValue();
+                maxHealth = (int) player.Attributes.Strength.CurrentValue() * PlayerHealthChunkSize;
             }
             else
             {
-                strengthRating = ((Enemy) _character).MaxHealth;
+                maxHealth = ((Enemy) _character).MaxHealth * 10;
             }
-
-            int maxHealth = strengthRating * HealthChunkSize;
             _healthRemaining = new Number(maxHealth, 0, maxHealth);
             _healthRemaining.OnMin(_character.Kill);
             HeartBeatController.Enable();
@@ -46,7 +44,7 @@ namespace Game.Characters.Player
 
         public void ExitCombat()
         {
-            (_character as Player)?.Attributes.Strength.SetCurrentValue(_healthRemaining / HealthChunkSize);
+            (_character as Player)?.Attributes.Strength.SetCurrentValue(_healthRemaining / PlayerHealthChunkSize);
             HeartBeatController.Disable();
         }
 
