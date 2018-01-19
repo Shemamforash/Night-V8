@@ -25,6 +25,7 @@ namespace Game.Combat
         private static CombatScenario _currentScenario;
         public static List<Enemy> _enemiesToAdd = new List<Enemy>();
         private static List<Grenade> _grenadesToRemove = new List<Grenade>();
+        private static bool _inMelee;
 
         public static List<Enemy> GetEnemies()
         {
@@ -39,6 +40,7 @@ namespace Game.Combat
 
         public void Update()
         {
+            if (_inMelee) return;
             CombatCooldowns.UpdateCooldowns();
             Enemies.ForEach(r =>
             {
@@ -55,6 +57,33 @@ namespace Game.Combat
             _enemiesToAdd.ForEach(AddEnemy);
             _enemiesToAdd.Clear();
             _player.RageController.Decrease();
+        }
+
+        public static void EngageMelee(Enemy e)
+        {
+            _inMelee = true;
+            MeleeController.StartMelee(e);
+            InputHandler.UnregisterInputListener(_player);
+            _combatCanvas.alpha = 0.4f;
+        }
+
+        public static void LeaveMelee()
+        {
+            _inMelee = false;
+            InputHandler.RegisterInputListener(_player);
+            _combatCanvas.alpha = 1f;
+        }
+
+        public static void CheckForOverlappingEnemies()
+        {
+            float playerPosition = _player.Position.CurrentValue();
+            Enemies.ForEach(e =>
+            {
+                if (e.IsDead) return;
+                if (!(e.Position.CurrentValue() <= playerPosition)) return;
+                EngageMelee(e);
+                e.Position.SetCurrentValue(playerPosition + 0.01f);
+            });
         }
 
         public static void RemoveGrenade(Grenade g)

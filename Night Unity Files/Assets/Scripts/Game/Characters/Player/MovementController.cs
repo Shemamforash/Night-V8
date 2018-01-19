@@ -24,12 +24,20 @@ namespace Game.Characters.Player
             Player p = _character as Player;
             if (p != null)
             {
-                _moveForwardAction = f => _character.Position.Increment(f);
+                _moveForwardAction = f =>
+                {
+                    _character.Position.Increment(f);
+                    CombatManager.CheckForOverlappingEnemies();
+                };
                 _moveBackwardAction = f => _character.Position.Decrement(f);
             }
             else
             {
-                _moveForwardAction = f => _character.Position.Decrement(f);
+                _moveForwardAction = f =>
+                {
+                    _character.Position.Decrement(f);
+                    CombatManager.CheckForOverlappingEnemies();
+                };
                 _moveBackwardAction = f => _character.Position.Increment(f);
             }
         }

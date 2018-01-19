@@ -1,6 +1,8 @@
 ﻿using System;
 using Game.Combat.Enemies;
+using NUnit.Framework;
 using SamsHelper.ReactiveUI;
+using UnityEngine;
 
 namespace Game.Characters.Player
 {
@@ -37,6 +39,7 @@ namespace Game.Characters.Player
 
         public void TakeDamage(int amount)
         {
+            Assert.IsTrue(amount >= 0);
             if (_healthRemaining.ReachedMin()) return;
             _healthRemaining.Decrement(amount);
             OnTakeDamage?.Invoke(amount);
@@ -56,6 +59,7 @@ namespace Game.Characters.Player
 
         public void Heal(int amount)
         {
+            Assert.IsTrue(amount >= 0);
             _healthRemaining.Increment(amount);
             OnHeal?.Invoke(amount);
         }

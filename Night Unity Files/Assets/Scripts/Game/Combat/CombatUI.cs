@@ -20,6 +20,7 @@ namespace Game.Combat
         public static MenuList _enemyList;
         public static MenuList _grenadeList;
         private float _hitInfoTimerCurrent;
+        private static CanvasGroup _combatCanvas;
         private const float HitInfoTimerMax = 1f;
 
         private static TextMeshProUGUI _playerName;
@@ -41,11 +42,12 @@ namespace Game.Combat
 
         public void Awake()
         {
-            GameObject playerContainer = gameObject.transform.Find("Player").gameObject;
+            GameObject playerContainer = Helper.FindChildWithName(gameObject, "Player");
             _enemyList = Helper.FindChildWithName<MenuList>(gameObject, "Enemies");
             _grenadeList = Helper.FindChildWithName<MenuList>(gameObject, "Grenades");
             _magazineContent = Helper.FindChildWithName<Transform>(playerContainer, "Magazine").gameObject;
             _ammoPrefab = Resources.Load("Prefabs/Combat/Ammo Prefab") as GameObject;
+            _combatCanvas = Helper.FindChildWithName<CanvasGroup>(gameObject, "Combat Canvas");
 
             _playerName = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Name");
             _playerHealthText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Strength Remaining");
