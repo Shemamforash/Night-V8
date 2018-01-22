@@ -293,6 +293,8 @@
             </e>
           </e>
         </e>
+        <e p="UIKnockdownController.cs" t="Include" />
+        <e p="UIMagazineController.cs" t="Include" />
         <e p="UIMeleeController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />

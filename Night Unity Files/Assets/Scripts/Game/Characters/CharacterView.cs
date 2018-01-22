@@ -202,7 +202,7 @@ namespace Game.Characters
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _character.States.GetCurrentState();
             if (currentState == null) return;
-            string currentActionString = currentState.Name + " " + currentState.GetCostAsString();
+            string currentActionString = currentState.GetActionText();
             _currentActionText.text = currentActionString;
             if (currentState.Name == "Idle")
             {

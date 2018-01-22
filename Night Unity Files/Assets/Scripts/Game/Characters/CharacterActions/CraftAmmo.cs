@@ -1,4 +1,5 @@
-﻿using Game.World;
+﻿using Facilitating.UIControllers;
+using Game.World;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.MenuSystem;
 
@@ -15,7 +16,7 @@ namespace Game.Characters.CharacterActions
         public override void Enter()
         {
             base.Enter();
-            UICreateAmmoController.Instance().ShowMenu(GetCharacter());
+            UiCreateAmmoController.Instance().ShowMenu(GetCharacter());
         }
         
         public void SetAmmoType(InventoryResourceType magType)
@@ -26,9 +27,9 @@ namespace Game.Characters.CharacterActions
             MenuStateMachine.GoToInitialMenu();
         }
 
-        public override string GetCostAsString()
+        public override string GetActionText()
         {
-            return "Crafting " + _magType + " magazine";
+            return "Crafting...";
         }
         
         public override void Exit()

@@ -48,8 +48,8 @@ namespace Game.World
             _weather.Start();
             _homeInventory.Start();
 
-            SaveController.LoadSettings();
-            SaveController.LoadGame();
+//            SaveController.LoadSettings();
+//todo            SaveController.LoadGame();
 
             DayEvent += IncrementDaysSpentHere;
             StormDistance = new Number(15);

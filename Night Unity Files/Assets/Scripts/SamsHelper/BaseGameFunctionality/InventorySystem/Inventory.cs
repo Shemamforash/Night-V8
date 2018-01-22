@@ -226,7 +226,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             XmlNode inventoryNode = SaveController.CreateNodeAndAppend("Inventory", root);
             SaveController.CreateNodeAndAppend("Name", inventoryNode, Name);
             Resources().ForEach(r => SaveResource(r.GetResourceType(), inventoryNode));
-            Debug.Log(Items().Count);
             Items().ForEach(i => i.Save(root, saveType));
             return inventoryNode;
         }

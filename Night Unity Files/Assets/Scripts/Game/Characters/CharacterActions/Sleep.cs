@@ -17,7 +17,7 @@ namespace Game.Characters.CharacterActions
             };
         }
 
-        public override string GetCostAsString()
+        public override string GetActionText()
         {
             return "Resting";
         }

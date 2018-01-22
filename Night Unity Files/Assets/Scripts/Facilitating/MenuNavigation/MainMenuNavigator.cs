@@ -39,6 +39,11 @@ namespace Facilitating.MenuNavigation
             SceneManager.LoadScene("Game");
         }
 
+        public void GoToNewGameMenu()
+        {
+            MenuStateMachine.ShowMenu("Difficulty Menu");
+        }
+
         public void ContinueGame()
         {
             if (SaveController.SaveExists())

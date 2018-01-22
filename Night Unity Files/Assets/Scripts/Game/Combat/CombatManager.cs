@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets;
 using Game.Characters;
 using Game.Characters.Player;
 using Game.Combat.Enemies;
@@ -40,7 +41,7 @@ namespace Game.Combat
 
         public void Update()
         {
-            if (_inMelee) return;
+            if (MeleeController.InMelee) return;
             CombatCooldowns.UpdateCooldowns();
             Enemies.ForEach(r =>
             {
@@ -61,17 +62,17 @@ namespace Game.Combat
 
         public static void EngageMelee(Enemy e)
         {
-            _inMelee = true;
             MeleeController.StartMelee(e);
-            InputHandler.UnregisterInputListener(_player);
-            _combatCanvas.alpha = 0.4f;
         }
 
-        public static void LeaveMelee()
+        public static void DisengagePlayerInput()
         {
-            _inMelee = false;
+            InputHandler.UnregisterInputListener(_player);
+        }
+        
+        public static void EngagePlayerInput()
+        {
             InputHandler.RegisterInputListener(_player);
-            _combatCanvas.alpha = 1f;
         }
 
         public static void CheckForOverlappingEnemies()
@@ -89,7 +90,7 @@ namespace Game.Combat
         public static void RemoveGrenade(Grenade g)
         {
             _grenadesToRemove.Add(g);
-            _grenadeList.Remove(g.GrenadeView);
+            GrenadeList.Remove(g.GrenadeView);
         }
         
         public static void QueueEnemyToAdd(Enemy e)
@@ -102,7 +103,7 @@ namespace Game.Combat
         public static void AddGrenade(Grenade g)
         {
             Grenades.Add(g);
-            _grenadeList.AddItem(g);
+            GrenadeList.AddItem(g);
         }
         
         public static void ResetCombat()
@@ -119,10 +120,9 @@ namespace Game.Combat
             _player = player;
             _player.HealthController.EnterCombat();
             ResetCombat();
-            ResetMagazine((int) _player.Weapon().WeaponAttributes.Capacity.CurrentValue());
-            UpdateMagazine(_player.Weapon().GetRemainingAmmo());
+            UIMagazineController.SetWeapon(_player.Weapon());
             _playerName.text = _player.Name;
-            _enemyList.Clear();
+            EnemyList.Clear();
             UpdatePlayerHealth();
             InputHandler.RegisterInputListener(_player);
             scenario.Enemies().ForEach(AddEnemy);
@@ -138,8 +138,8 @@ namespace Game.Combat
         {
             Enemies.Add(e);
             e.HealthController.EnterCombat();
-            _enemyList.AddItem(e);
-            if (_enemyList.Items.Count == 1) SetTarget((Enemy) _enemyList.Items[0].GetLinkedObject());
+            EnemyList.AddItem(e);
+            if (EnemyList.Items.Count == 1) SetTarget((Enemy) EnemyList.Items[0].GetLinkedObject());
         }
 
         private static void ExitCombat()

@@ -30,6 +30,12 @@ namespace Game.Characters.Player
                     CombatManager.CheckForOverlappingEnemies();
                 };
                 _moveBackwardAction = f => _character.Position.Decrement(f);
+                _dashCooldown.SetDuringAction(a =>
+                {
+                    float normalisedTime = a / _dashCooldown.Duration;
+                    CombatManager.UpdateDashTimer(1 - normalisedTime);
+                });
+                _dashCooldown.SetEndAction(() => CombatManager.UpdateDashTimer(1));
             }
             else
             {

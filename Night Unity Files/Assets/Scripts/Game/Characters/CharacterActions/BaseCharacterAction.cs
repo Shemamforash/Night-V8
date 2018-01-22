@@ -101,7 +101,7 @@ namespace Game.Characters.CharacterActions
             return (int) Math.Ceiling((float) _timeRemaining / WorldState.MinutesPerHour);
         }
 
-        public virtual string GetCostAsString()
+        public virtual string GetActionText()
         {
             return TimeRemainingAsHours() + " hrs";
         }

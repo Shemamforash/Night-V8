@@ -30,22 +30,27 @@ namespace UI.Highlight
 
         public virtual void OnSelect(BaseEventData eventData)
         {
-            ChangeTextColour(Color.black);
+            ChangeTextColour(Color.white);
         }
 
         public virtual void OnDeselect(BaseEventData eventData)
         {
-            ChangeTextColour(Color.white);
+            Fade();
         }
 
+        private void Fade()
+        {
+            ChangeTextColour(new Color(1,1,1, 0.4f));
+        }
+        
         public void OnPointerEnter(PointerEventData p)
         {
-            ChangeTextColour(Color.black);
+            ChangeTextColour(Color.white);
         }
 
         public void OnPointerExit(PointerEventData p)
         {
-            ChangeTextColour(Color.white);
+            Fade();
         }
 
         private void ChangeTextColour(Color c)
@@ -56,7 +61,7 @@ namespace UI.Highlight
             }
         }
 
-        public virtual void OnDisable()
+        public void OnDisable()
         {
             ChangeTextColour(Color.white);
         }

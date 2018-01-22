@@ -7,7 +7,7 @@
             IsVisible = false;
         }
 
-        public override string GetCostAsString()
+        public override string GetActionText()
         {
             return "";
         }

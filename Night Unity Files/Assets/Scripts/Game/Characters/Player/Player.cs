@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Assets;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.Combat;
@@ -40,7 +41,7 @@ namespace Game.Characters.Player
         public CharacterActions.Combat CombatAction;
         public LightFire LightFireAction;
         public RageController RageController;
-        
+
         private int _storyProgress;
 
         public string GetCurrentStoryProgress()
@@ -70,7 +71,7 @@ namespace Game.Characters.Player
             Energy.OnMin(Sleep);
             LinkCooldownsToUi();
             TakeCoverAction = () => CombatManager.SetCoverText("In Cover");
-            LeaveCoverAction = () => CombatManager.SetCoverText("No Cover");
+            LeaveCoverAction = () => CombatManager.SetCoverText("Exposed");
             SetConditions();
             Position.AddOnValueChange(a => CombatManager.GetEnemies().ForEach(e => e.Position.UpdateValueChange()));
         }
@@ -80,6 +81,13 @@ namespace Game.Characters.Player
             LinkCockCooldownToUi();
             LinkKnockdownCooldownToUi();
             LinkReloadCooldownToUi();
+        }
+
+        public override void KnockDown()
+        {
+            if (!KnockedDown)
+                base.KnockDown();
+            UIKnockdownController.StartKnockdown(10);
         }
 
         private void UpdateHealthUi(float normalisedHealth)
@@ -246,7 +254,7 @@ namespace Game.Characters.Player
                 EquipmentController.Weapon().Cocked = true;
                 UpdateMagazineUi();
             });
-            CockingCooldown.SetDuringAction(CombatManager.UpdateReloadTime);
+            CockingCooldown.SetStartAction(() => UIMagazineController.SetMessage("Cocking"));
         }
 
         protected void LinkKnockdownCooldownToUi()
@@ -262,14 +270,14 @@ namespace Game.Characters.Player
                 EquipmentController.Weapon().Reload(Inventory());
                 UpdateMagazineUi();
             });
-            ReloadingCooldown.SetDuringAction(CombatManager.UpdateReloadTime);
+            ReloadingCooldown.SetDuringAction(UIMagazineController.UpdateReloadTime);
         }
 
         //FIRING
         protected override Shot FireWeapon(Character target)
         {
             Shot shot = base.FireWeapon(target);
-            if(RageController.Active()) shot.GuaranteeCritical();
+            if (RageController.Active()) shot.GuaranteeCritical();
             UpdateMagazineUi();
             return shot;
         }
@@ -293,12 +301,12 @@ namespace Game.Characters.Player
                 magazineMessage = "RELOAD";
             if (magazineMessage == "")
             {
-                CombatManager.UpdateMagazine(EquipmentController.Weapon().GetRemainingAmmo());
+                UIMagazineController.UpdateMagazine();
             }
             else
             {
-                CombatManager.EmptyMagazine();
-                CombatManager.UpdateReloadTimeText(magazineMessage);
+                UIMagazineController.EmptyMagazine();
+                UIMagazineController.SetMessage(magazineMessage);
             }
         }
 
@@ -326,6 +334,18 @@ namespace Game.Characters.Player
                     break;
                 case InputAxis.Sprint:
                     MovementController.StartSprinting();
+                    break;
+                case InputAxis.SkillOne:
+                    CombatManager.SkillBar.ActivateSkill(0);
+                    break;
+                case InputAxis.SkillTwo:
+                    CombatManager.SkillBar.ActivateSkill(1);
+                    break;
+                case InputAxis.SkillThree:
+                    CombatManager.SkillBar.ActivateSkill(2);
+                    break;
+                case InputAxis.SkillFour:
+                    CombatManager.SkillBar.ActivateSkill(3);
                     break;
             }
         }

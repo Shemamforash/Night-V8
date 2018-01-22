@@ -39,6 +39,9 @@ namespace Game.Combat.Enemies
         public bool WaitingForHeal;
 
         public EnemyView EnemyView;
+        
+        protected Cooldown KnockdownCooldown;
+        private const float KnockdownDuration = 3f;
 
         private void SetHealBehaviour()
         {
@@ -56,6 +59,12 @@ namespace Game.Combat.Enemies
             });
         }
 
+        private void SetKnockdownCooldown()
+        {
+            KnockdownCooldown = CombatManager.CombatCooldowns.CreateCooldown(KnockdownDuration);
+            KnockdownCooldown.SetEndAction(() => KnockedDown = false);
+        }
+        
         private void SetFireCooldown()
         {
             _fireCooldown = CombatManager.CombatCooldowns.CreateCooldown();
@@ -86,6 +95,13 @@ namespace Game.Combat.Enemies
             WaitingForHeal = false;
         }
 
+        public override void KnockDown()
+        {
+            if (!KnockedDown) return;
+            KnockdownCooldown.Start();
+            base.KnockDown();
+        }
+        
         protected Enemy(string name, int enemyHp, int speed, float position) : base(name, speed, position)
         {
             MaxHealth = enemyHp;
@@ -94,6 +110,7 @@ namespace Game.Combat.Enemies
 
             SetFireCooldown();
             SetAimCooldown();
+            SetKnockdownCooldown();
 
             ReloadingCooldown.SetStartAction(() => SetActionText("Reloading"));
 //            CoverCooldown.SetStartAction(() => SetActionText("Taking Cover"));

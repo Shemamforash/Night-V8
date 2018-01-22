@@ -5,16 +5,16 @@ using UnityEngine.UI;
 
 public class CooldownController : MonoBehaviour
 {
-	private Slider _cooldownSlider;
+	private Image _cooldownFill;
 	private EnhancedText _cooldownText;
 	private readonly Color _cooldownNotReadyColor = new Color(1, 1, 1, 0.4f);
 	
 	// Use this for initialization
 	private void Awake()
 	{
-		_cooldownSlider = Helper.FindChildWithName<Slider>(gameObject, "Cooldown Bar");
-		_cooldownText = Helper.FindChildWithName<EnhancedText>(gameObject, "Cooldown Text");
-		_cooldownSlider.value = 0;
+		_cooldownFill = Helper.FindChildWithName<Image>(gameObject, "Fill");
+		_cooldownText = Helper.FindChildWithName<EnhancedText>(gameObject, "Text");
+		_cooldownFill.fillAmount = 1;
 		UpdateCooldownFill(1);
 	}
 
@@ -31,7 +31,7 @@ public class CooldownController : MonoBehaviour
 			targetColor = Color.white;
 		}
 		_cooldownText.SetColor(targetColor);
-		_cooldownSlider.value = normalisedValue;
+		_cooldownFill.fillAmount = normalisedValue;
 	}
 
 	public void Reset()

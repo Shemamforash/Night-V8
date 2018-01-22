@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Xml;
+using Assets;
 using Facilitating.Audio;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
@@ -31,10 +32,8 @@ namespace Game.Characters
         protected Cooldown CockingCooldown;
         protected Cooldown ReloadingCooldown;
 
-        protected Cooldown KnockdownCooldown;
 //        protected Cooldown CoverCooldown;
 
-        private const float KnockdownDuration = 3f;
         private long _timeAtLastFire;
         protected readonly Number ArmourLevel = new Number(0, 0, 10);
 
@@ -46,6 +45,7 @@ namespace Game.Characters
         public MovementController MovementController;
 
         protected bool InCover;
+        public bool KnockedDown;
         protected Action TakeCoverAction, LeaveCoverAction;
 
         protected Condition Bleeding, Burning, Sickening;
@@ -71,7 +71,6 @@ namespace Game.Characters
             HealthController = new HealthController(this);
             EquipmentController = new EquipmentController(this);
             SetReloadCooldown();
-            SetKnockdownCooldown();
 //            SetCoverCooldown();
             SetCockCooldown();
         }
@@ -127,11 +126,6 @@ namespace Game.Characters
         {
             CockingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
             CockingCooldown.SetEndAction(() => { EquipmentController.Weapon().Cocked = true; });
-        }
-
-        private void SetKnockdownCooldown()
-        {
-            KnockdownCooldown = CombatManager.CombatCooldowns.CreateCooldown(KnockdownDuration);
         }
 
         private void SetCoverCooldown()
@@ -221,7 +215,7 @@ namespace Game.Characters
             OnFireAction = null;
             Retaliate = false;
             float reloadSpeed = EquipmentController.Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
-            CombatManager.EmptyMagazine();
+            UIMagazineController.EmptyMagazine();
             ReloadingCooldown.Duration = reloadSpeed;
             ReloadingCooldown.Start();
         }
@@ -283,14 +277,13 @@ namespace Game.Characters
 
         public bool Immobilised()
         {
-            return ReloadingCooldown.Running() || CockingCooldown.Running() || KnockdownCooldown.Running();
+            return ReloadingCooldown.Running() || CockingCooldown.Running() || KnockedDown;
         }
 
-        public void KnockDown()
+        public virtual void KnockDown()
         {
-            if (KnockdownCooldown.Running()) return;
-            KnockdownCooldown.Start();
             Interrupt();
+            KnockedDown = true;
         }
 
         public void Knockback(float knockbackDistance)

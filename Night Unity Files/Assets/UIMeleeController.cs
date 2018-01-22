@@ -90,7 +90,7 @@ public class UIMeleeController : MonoBehaviour
         }
         else
         {
-            MeleeController.FailRound();
+            MeleeController.ExitMelee();
         }
     }
 }
