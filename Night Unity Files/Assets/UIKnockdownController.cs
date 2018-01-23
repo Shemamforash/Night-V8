@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Game.Combat;
 using SamsHelper;
 using SamsHelper.Input;
@@ -35,6 +33,7 @@ public class UIKnockdownController : MonoBehaviour
         _startingPresses = noPresses;
         _pressesRemaining = _startingPresses;
         _instance.StartCoroutine(_instance.CheckForInput());
+        SetProgressBarFill(0);
     }
 
     private static void SetLastPressDirection(int lastDirection)
@@ -52,12 +51,18 @@ public class UIKnockdownController : MonoBehaviour
         }
     }
 
+    private static void SetProgressBarFill(float fill)
+    {
+        _leftProgressBar.fillAmount = fill;
+        _rightProgressBar.fillAmount = fill;
+    }
+    
+    
     private static void DecreasePresses()
     {
         _pressesRemaining -= 1;
-        float fill = 1 - _pressesRemaining / _startingPresses;
-        _leftProgressBar.fillAmount = fill;
-        _rightProgressBar.fillAmount = fill;
+        float fill = 1 - _pressesRemaining / (float)_startingPresses;
+        SetProgressBarFill(fill);
     }
 
     private IEnumerator CheckForInput()

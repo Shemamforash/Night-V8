@@ -16,7 +16,6 @@ namespace Assets
         private static int _capacity;
         private static Weapon _weapon;
         private static bool _empty;
-        private const float EmptyMagazinePause = 0.2f;
 
         public void Awake()
         {
@@ -74,12 +73,7 @@ namespace Assets
 
         public static void UpdateReloadTime(float time)
         {
-            if (time < EmptyMagazinePause)
-            {
-                EmptyMagazine();
-                return;
-            }
-            int newCapacity = (int) (_capacity * (1- time / (1 - EmptyMagazinePause)));
+            int newCapacity = (int) (_capacity * time);
             UpdateMagazine(newCapacity);
         }
 

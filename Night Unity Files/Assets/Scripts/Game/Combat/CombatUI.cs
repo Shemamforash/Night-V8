@@ -25,17 +25,9 @@ namespace Game.Combat
 
         private static TextMeshProUGUI _coverText;
 
-        private static Image _dashRing;
-//            _hitInfo;
-
         private static UIHealthBarController _playerUiHealthController;
         private float _criticalTarget;
         public static SkillBar SkillBar;
-
-        public static void UpdateDashTimer(float amount)
-        {
-            _dashRing.fillAmount = amount;
-        }
 
         public void Awake()
         {
@@ -48,7 +40,6 @@ namespace Game.Combat
 
             _playerName = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Name");
             _playerHealthText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Health");
-            _dashRing = Helper.FindChildWithName<Image>(playerContainer, "Ring");
 
             _coverText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Cover");
             _coverText.text = "";

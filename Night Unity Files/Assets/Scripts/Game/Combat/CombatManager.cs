@@ -6,6 +6,7 @@ using Game.Characters;
 using Game.Characters.Player;
 using Game.Combat.Enemies;
 using Game.World;
+using Game.World.Environment_and_Weather;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
@@ -27,6 +28,7 @@ namespace Game.Combat
         public static List<Enemy> _enemiesToAdd = new List<Enemy>();
         private static List<Grenade> _grenadesToRemove = new List<Grenade>();
         private static bool _inMelee;
+        public static int VisibilityRange;
 
         public static List<Enemy> GetEnemies()
         {
@@ -82,8 +84,8 @@ namespace Game.Combat
             {
                 if (e.IsDead) return;
                 if (!(e.Position.CurrentValue() <= playerPosition)) return;
-                EngageMelee(e);
                 e.Position.SetCurrentValue(playerPosition + 0.01f);
+                EngageMelee(e);
             });
         }
 
@@ -116,6 +118,8 @@ namespace Game.Combat
         public static void EnterCombat(Player player, CombatScenario scenario)
         {
             WorldState.Pause();
+//            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
+            VisibilityRange = 30;
             _currentScenario = scenario;
             _player = player;
             _player.HealthController.EnterCombat();

@@ -1,5 +1,6 @@
 ﻿using SamsHelper;
 using SamsHelper.Input;
+using TMPro;
 using UnityEngine;
 
 public class UIMeleeController : MonoBehaviour
@@ -13,31 +14,43 @@ public class UIMeleeController : MonoBehaviour
     private float _currentRadius;
     public InputAxis Axis;
     public bool NegativeDirection;
-    private RingDrawer _outerRing, _innerRing;
+    private RingDrawer _outerRing;
+    private GameObject _innerRing;
+    private TextMeshProUGUI _keyText;
     private bool _running;
 
     public void Awake()
     {
         _outerRing = Helper.FindChildWithName<RingDrawer>(gameObject, "Outer Ring");
-        _innerRing = Helper.FindChildWithName<RingDrawer>(gameObject, "Inner Ring");
+        _innerRing = Helper.FindChildWithName(gameObject, "Inner Ring");
+        _keyText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Key");
     }
 
     public void Start()
     {
         _outerRing.SetLineWidth(OuterRingWidth);
-        _innerRing.SetLineWidth(InnerRingWidth);
+//        _innerRing.SetLineWidth(InnerRingWidth);
         _outerRing.Hide();
-        _innerRing.Hide();
+//        _innerRing.Hide();
+        SetEnabled(false);
     }
 
+    private void SetEnabled(bool enabled)
+    {
+        _outerRing.gameObject.SetActive(enabled);
+        _innerRing.gameObject.SetActive(enabled);
+        _keyText.gameObject.SetActive(enabled);
+    }
+    
     public void StartRunning()
     {
+        SetEnabled(true);
         _running = true;
         _currentRingTime = MeleeController.InitialRingTime();
         _currentPressTime = MeleeController.InitialPressTime();
         _currentRadius = OuterRadius;
-        _innerRing.DrawCircle(TargetRadius);
-        _innerRing.SetFaded();
+//        _innerRing.DrawCircle(TargetRadius);
+//        _innerRing.SetFaded();
     }
     
     public void Update()
@@ -70,7 +83,7 @@ public class UIMeleeController : MonoBehaviour
 
     private void CheckForInput()
     {
-        _innerRing.SetHighlighted();
+//        _innerRing.SetHighlighted();
         _outerRing.Hide();
         float axis = Input.GetAxis(Axis.ToString());
         if (NegativeDirection && axis < 0 ||
@@ -84,13 +97,15 @@ public class UIMeleeController : MonoBehaviour
     private void EndMelee(bool success)
     {
         _running = false;
+        SetEnabled(false);
         if (success)
         {
+            transform.Find("Particle Spray").GetComponent<ParticleSystem>().Emit(100);
             MeleeController.SucceedRound();
         }
         else
         {
-            MeleeController.ExitMelee();
+            MeleeController.FailRound();
         }
     }
 }

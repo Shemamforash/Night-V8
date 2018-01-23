@@ -7,12 +7,13 @@ using UnityEngine;
 public class MeleeController : MonoBehaviour
 {
     private static UIMeleeController _up, _left, _down, _right;
-    private static List<UIMeleeController> _meleeControllers = new List<UIMeleeController>();
-    private const float FalloffRatio = 0.9f;
-    private const float MaxRingTime = 2f, MaxPressTime = 0.5f;
+    private static readonly List<UIMeleeController> MeleeControllers = new List<UIMeleeController>();
+    private const float FalloffRatio = 0.95f;
+    private const float MaxRingTime = 1.5f, MaxPressTime = 0.5f;
     private static float _initialRingTime, _initialPressTime;
     private static Enemy _targetEnemy;
     public static bool InMelee;
+    private static int _remainingHits, _hitsWon, _hitsLost;
 
     public void Awake()
     {
@@ -20,26 +21,17 @@ public class MeleeController : MonoBehaviour
         _left = Helper.FindChildWithName<UIMeleeController>(gameObject, "Left");
         _down = Helper.FindChildWithName<UIMeleeController>(gameObject, "Down");
         _right = Helper.FindChildWithName<UIMeleeController>(gameObject, "Right");
-        _meleeControllers.Add(_up);
-        _meleeControllers.Add(_left);
-        _meleeControllers.Add(_down);
-        _meleeControllers.Add(_right);
-        Enable(null);
+        MeleeControllers.Add(_up);
+        MeleeControllers.Add(_left);
+        MeleeControllers.Add(_down);
+        MeleeControllers.Add(_right);
     }
-
-//	public void Start()
-//	{
-//		StartMelee();
-//	}
-
-    private static void Enable(UIMeleeController controller)
-    {
-        _meleeControllers.ForEach(m => m.gameObject.SetActive(m == controller));
-    }
-
 
     public static void StartMelee(Enemy enemy)
     {
+        _remainingHits = 10;
+        _hitsWon = 0;
+        _hitsLost = 0;
         _targetEnemy = enemy;
         _initialRingTime = MaxRingTime;
         _initialPressTime = MaxPressTime;
@@ -51,27 +43,47 @@ public class MeleeController : MonoBehaviour
 
     private static void StartRandomController()
     {
-        UIMeleeController randomController = _meleeControllers[Random.Range(0, _meleeControllers.Count)];
-        Enable(randomController);
+        UIMeleeController randomController = MeleeControllers[Random.Range(0, MeleeControllers.Count)];
         randomController.StartRunning();
     }
 
     public static void SucceedRound()
     {
+        _targetEnemy.OnHit(10, false);
+        ++_hitsWon;
+        GoToNextRound();
+    }
+
+    private static void GoToNextRound()
+    {
         _initialPressTime *= FalloffRatio;
         _initialRingTime *= FalloffRatio;
-        _targetEnemy.OnHit(10, false);
-        if (_targetEnemy.IsDead) ExitMelee();
+        --_remainingHits;
+        if (_remainingHits == 0 || _targetEnemy.IsDead) ExitMelee();
         else StartRandomController();
     }
 
-    public static void ExitMelee()
+    public static void FailRound()
     {
-        Enable(null);
-        _targetEnemy.Knockback(10);
+        CombatManager.Player().OnHit(10, false);
+        ++_hitsLost;
+        GoToNextRound();
+    }
+
+    private static void ExitMelee()
+    {
         CombatManager.CombatCanvas.alpha = 1f;
         CombatManager.EngagePlayerInput();
         InMelee = false;
+        if (_targetEnemy.IsDead) return;
+        if (_hitsWon >= _hitsLost)
+        {
+            _targetEnemy.Knockback(10);
+        }
+        else
+        {
+            CombatManager.Player().Knockback(10);
+        }
     }
 
     public static float InitialRingTime()

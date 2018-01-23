@@ -36,6 +36,12 @@ namespace Game.World.Environment_and_Weather
         public void GoToWeather()
         {
             GetState(CalculateNextState()).Enter();
+            _weatherText.text = CurrentWeather().Name;
+        }
+
+        public Weather CurrentWeather()
+        {
+            return (Weather) GetCurrentState();
         }
 
         private void LoadWeather()

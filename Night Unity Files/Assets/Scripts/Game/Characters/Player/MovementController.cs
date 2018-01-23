@@ -33,9 +33,13 @@ namespace Game.Characters.Player
                 _dashCooldown.SetDuringAction(a =>
                 {
                     float normalisedTime = a / _dashCooldown.Duration;
-                    CombatManager.UpdateDashTimer(1 - normalisedTime);
+                    RageBarController.UpdateDashTimer(1 - normalisedTime);
                 });
-                _dashCooldown.SetEndAction(() => CombatManager.UpdateDashTimer(1));
+                _dashCooldown.SetEndAction(() =>
+                {
+                    RageBarController.UpdateDashTimer(1);
+                    RageBarController.PlayFlash();
+                });
             }
             else
             {

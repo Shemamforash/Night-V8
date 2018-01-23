@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using Game.Combat;
 using SamsHelper;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,40 +9,79 @@ public class RageBarController : MonoBehaviour
 {
     private static float _barFillAmount;
     private static ParticleSystem _rageFire;
+    private static readonly List<Image> RoseProngs = new List<Image>();
+    private static Image _dashFlash;
+    private static RageBarController _instance;
+    private static float _currentTime, _dashFlashTime = 1f;
+    private static Image _dashRing;
 
-    // Use this for initialization
+    public void Awake()
+    {
+        _instance = this;
+        _dashFlash = Helper.FindChildWithName<Image>(gameObject, "Ready");
+        _rageFire = Helper.FindChildWithName<ParticleSystem>(gameObject, "Rage Fire");
+        _dashRing = Helper.FindChildWithName<Image>(gameObject, "Ring");
+    }
+
     public void Start()
     {
-        _rageFire = GameObject.Find("Rage Fire").GetComponent<ParticleSystem>();
+        for (int i = 1; i < 17; ++i)
+        {
+            RoseProngs.Add(Helper.FindChildWithName<Image>(gameObject, i.ToString()));
+        }
         SetRageBarFill(0f, false);
     }
 
     public static void SetRageBarFill(float value, bool rageActive)
     {
-        Color targetColor = new Color(1, 1, 1, 1);
         if (rageActive && !_rageFire.isPlaying)
         {
             _rageFire.Play();
         }
-        else if(_rageFire.isPlaying && !rageActive)
+        else if (_rageFire.isPlaying && !rageActive)
         {
             _rageFire.Stop();
         }
-        int barsFilled = (int) Math.Floor(value / _barFillAmount);
-//        for (int i = 0; i < _bars.Count; ++i)
-//        {
-//            float alpha = 0f;
-//            if (i < barsFilled)
-//            {
-//                alpha = 1;
-//            }
-//            else if (i == barsFilled)
-//            {
-//                float remainder = value - barsFilled * _barFillAmount;
-//                alpha = remainder / _barFillAmount;
-//            }
-//            targetColor.a = alpha;
-//            _bars[i].color = targetColor;
-//        }
+
+        int completeProngs = (int) Math.Floor(value / 0.0625f);
+        float remainder = value - completeProngs * 0.0625f;
+        float normalisedRemainder = remainder / 0.0625f;
+        for (int i = 0; i < RoseProngs.Count; ++i)
+        {
+            float alpha = 0f;
+            if (i < completeProngs)
+            {
+                alpha = 1f;
+            }
+            else if (i == completeProngs)
+            {
+                alpha = normalisedRemainder;
+            }
+
+            RoseProngs[i].color = new Color(1, 1, 1, alpha);
+        }
+    }
+
+    public static void UpdateDashTimer(float amount)
+    {
+        _dashRing.fillAmount = amount;
+    }
+
+    public static void PlayFlash()
+    {
+        _currentTime = _dashFlashTime;
+        _instance.StartCoroutine(_instance.Flash());
+    }
+
+    private IEnumerator Flash()
+    {
+        while (_currentTime > 0)
+        {
+            float normalisedTime = _currentTime / _dashFlashTime;
+            normalisedTime *= 0.8f;
+            _dashFlash.color = new Color(1, 1, 1, normalisedTime);
+            _currentTime -= Time.deltaTime;
+            yield return null;
+        }
     }
 }

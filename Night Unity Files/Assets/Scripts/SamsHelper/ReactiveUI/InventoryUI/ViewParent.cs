@@ -34,6 +34,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         public void SetNavigatable(bool navigatable)
         {
+            if (_navigatable == navigatable) return;
             _navigatable = navigatable;
             _menuList?.RefreshNavigation();
         }

@@ -31,19 +31,6 @@ public class UIAimController : MonoBehaviour
 		_rightTransform.anchoredPosition = new Vector2(-position, 0);
 	}
 
-	public void Update()
-	{
-		if (_currentAlpha == 0) return;
-		_currentAlpha -= Time.deltaTime;
-		if (_currentAlpha < 0)
-		{
-			_currentAlpha = 0;
-			SetValue(0);
-		}
-		_leftImage.color = new Color(1,1,1,_currentAlpha);
-		_rightImage.color = new Color(1,1,1,_currentAlpha);
-	}
-
 	public void Fire()
 	{
 		SetValue(1);

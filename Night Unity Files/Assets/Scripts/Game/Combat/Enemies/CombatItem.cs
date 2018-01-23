@@ -19,16 +19,6 @@ namespace Game.Combat.Enemies
             MovementController = new MovementController(this, Speed);
         }
 
-        public string DistanceToRange()
-        {
-            float distance = CombatManager.DistanceToPlayer(this);
-            if (distance <= ImmediateDistance) return "Immediate";
-            if (distance <= CloseDistance) return "Close";
-            if (distance <= MidDistance) return "Medium";
-            if (distance <= FarDistance) return "Far";
-            return distance <= MaxDistance ? "Out of Range" : "Too far!";
-        }
-        
         protected virtual void SetDistanceData(BasicEnemyView enemyView)
         {
             Position.AddOnValueChange(a =>
@@ -37,14 +27,24 @@ namespace Game.Combat.Enemies
                 if (CombatManager.Player().Position.CurrentValue() > Position.CurrentValue()) distance = -distance;
                 string distanceText = distance.ToString() + "m";
                 enemyView.DistanceText.text = distanceText;
-                float normalisedDistance = Helper.Normalise(distance, MaxDistance);
-                float alpha = 1f - normalisedDistance;
-                alpha *= alpha;
-                alpha = Mathf.Clamp(alpha, 0.2f, 1f);
+
+                float alpha = 0;
+//                if (a.CurrentValue() > CombatManager.VisibilityRange)
+//                {
+//                    enemyView.SetNavigatable(false);
+//                }
+//                else
+//                {
+//                    enemyView.SetNavigatable(true);
+                    float normalisedDistance = Helper.Normalise(distance, MaxDistance);
+                    alpha = 1f - normalisedDistance;
+                    alpha = Mathf.Clamp(alpha, 0.2f, 1f);
+//                    Debug.Log(distance + " " + MaxDistance + " " + alpha);
+//                }
                 enemyView.SetAlpha(alpha);
             });
         }
-        
+
         protected bool Moving()
         {
             return TargetDistance >= 0;

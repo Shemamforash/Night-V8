@@ -82,7 +82,7 @@ namespace Game.Combat.Enemies
             ArmourText.text = armourProtection + "x damage";
         }
 
-        public void SetAlpha(float alpha)
+        public override void SetAlpha(float alpha)
         {
             if (_fadingIn > 0)
             {
@@ -90,8 +90,7 @@ namespace Game.Combat.Enemies
                 alpha *= fadeInAmount;
                 _fadingIn -= Time.deltaTime;
             }
-
-            GetGameObject().GetComponent<CanvasGroup>().alpha = alpha;
+            base.SetAlpha(alpha);
         }
 
         public void MarkUnselected()

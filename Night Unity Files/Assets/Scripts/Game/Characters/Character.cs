@@ -9,6 +9,7 @@ using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.Characters.Player;
 using Game.Combat;
+using Game.Combat.Enemies;
 using Game.Combat.Enemies.EnemyTypes;
 using Game.Combat.Skills;
 using Game.Gear.Weapons;

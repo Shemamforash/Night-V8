@@ -8,7 +8,8 @@ namespace Game.World.Environment_and_Weather
 {
     public class Weather : ProbabalisticState
     {
-        private int _temperature, _visibility, _water, _food, _duration;
+        private readonly int _temperature, _water, _food, _duration;
+        private readonly float _visibility;
         private List<Danger> _dangers = new List<Danger>();
         private int _timeRemaining;
         public WeatherAttributes Attributes;
@@ -20,6 +21,11 @@ namespace Game.World.Environment_and_Weather
             _water = water;
             _food = food;
             _duration = duration;
+        }
+
+        public float GetVisibility()
+        {
+            return _visibility;
         }
 
         public void AddDanger(string dangerType, float severity)

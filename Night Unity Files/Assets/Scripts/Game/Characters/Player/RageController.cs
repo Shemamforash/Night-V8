@@ -15,7 +15,7 @@ namespace Game.Characters
         public RageController(Character character)
         {
             _reloadModifier.SetMultiplicative(0.5f);
-            _fireRateModifier.SetMultiplicative(0.5f);
+            _fireRateModifier.SetMultiplicative(2f);
             _character = character;
             _rageLevel.OnMin(End);
             if (_character is Player.Player)

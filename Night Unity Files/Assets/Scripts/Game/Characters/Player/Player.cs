@@ -40,7 +40,7 @@ namespace Game.Characters.Player
         public CraftAmmo CraftAmmoAction;
         public CharacterActions.Combat CombatAction;
         public LightFire LightFireAction;
-        public RageController RageController;
+        public readonly RageController RageController;
 
         private int _storyProgress;
 
@@ -270,14 +270,26 @@ namespace Game.Characters.Player
                 EquipmentController.Weapon().Reload(Inventory());
                 UpdateMagazineUi();
             });
-            ReloadingCooldown.SetDuringAction(UIMagazineController.UpdateReloadTime);
+            ReloadingCooldown.SetDuringAction(t =>
+            {
+                if (t > ReloadingCooldown.Duration * 0.8f)
+                {
+                    UIMagazineController.EmptyMagazine();
+                }
+                else
+                {
+                    t = (t - ReloadingCooldown.Duration * 0.2f) / (ReloadingCooldown.Duration * 0.8f);
+                    t = 1 - t;
+                    UIMagazineController.UpdateReloadTime(t);
+                }
+            });
         }
 
         //FIRING
         protected override Shot FireWeapon(Character target)
         {
             Shot shot = base.FireWeapon(target);
-            if (RageController.Active()) shot.GuaranteeCritical();
+            if (RageController.Active()) shot?.GuaranteeCritical();
             UpdateMagazineUi();
             return shot;
         }
