@@ -43,8 +43,6 @@ namespace Game.Combat
 
             _coverText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Cover");
             _coverText.text = "";
-//            _hitInfo = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Hit Info");
-//            _hitInfo.color = new Color(1, 1, 1, 0);
 
             SkillBar = Helper.FindChildWithName<SkillBar>(playerContainer, "Skill Bar");
 
@@ -60,7 +58,7 @@ namespace Game.Combat
         {
             int currentHealth = (int) _player.HealthController.GetCurrentHealth();
             int maxHealth = (int) _player.HealthController.GetMaxHealth();
-            _playerUiHealthController.SetValue(_player.HealthController.GetNormalisedHealthValue());
+            _playerUiHealthController.SetValue(_player.HealthController.GetNormalisedHealthValue(), PlayerCanvasGroup.alpha);
             _playerHealthText.text = currentHealth + "/" + maxHealth;
         }
 

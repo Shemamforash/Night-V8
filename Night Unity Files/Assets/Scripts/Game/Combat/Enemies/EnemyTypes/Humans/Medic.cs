@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -10,57 +11,59 @@ namespace Game.Combat.Enemies.EnemyTypes
     {
         private int _healAmount = 50;
         private Enemy _healTarget;
-        private Cooldown _applyHealCooldown;
-        private Cooldown _recoverHealCooldown;
 
         public Medic(float position) : base(nameof(Medic), 7, 4, position)
         {
             Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType>{WeaponType.Pistol, WeaponType.SMG});
             Equip(weapon);
-            PreferredCoverDistance = 40f;
+            DefaultDistance = 30f;
             MinimumFindCoverDistance = 20f;
-            _recoverHealCooldown = CombatManager.CombatCooldowns.CreateCooldown(5f);
-            _applyHealCooldown = CombatManager.CombatCooldowns.CreateCooldown(2f);
-            _applyHealCooldown.SetStartAction(() => SetActionText("Healing " + _healTarget.Name));
-            _applyHealCooldown.SetEndAction(Heal);
             ArmourLevel.SetCurrentValue(2);
         }
 
-        protected override void Alert()
+        public override void Kill()
         {
-            base.Alert();
-            FindBetterRange();
-        }
-
-        public void RequestHeal(Enemy healTarget)
-        {
-            if (_healTarget != null && _recoverHealCooldown.Finished()) return;
-            _healTarget = healTarget;
-            CurrentAction = TryHeal;
+            base.Kill();
+            _healTarget?.ClearHealWait();
         }
         
-        private void Heal()
+        public void RequestHeal(Enemy healTarget)
         {
-            _healTarget.ReceiveHealing(_healAmount);
-            _healTarget = null;
-            FindBetterRange();
-            ShowMovementText = true;
-            _recoverHealCooldown.Start();
+            if (_healTarget != null) return;
+            _healTarget = healTarget;
+            if (_healTarget == null || _healTarget.IsDead)
+            {
+                TryHeal();
+            }
+        }
+        
+        private Action Heal()
+        {
+            float healTime = 2f;
+            SetActionText("Healing " + _healTarget.Name);
+            return () =>
+            {
+                healTime -= Time.deltaTime;
+                if (healTime > 0) return;
+                _healTarget.ReceiveHealing(_healAmount);
+                _healTarget = null;
+                CurrentAction = Aim();
+            };
+        }
+
+        protected override void ReachTarget()
+        {
+            base.ReachTarget();
+            if (_healTarget != null)
+            {
+                CurrentAction = Heal();
+            }
         }
         
         private void TryHeal()
         {
-            if (_healTarget == null || _healTarget.IsDead)
-            {
-                FindBetterRange();
-                ShowMovementText = true;
-                return;
-            }
-            if (_applyHealCooldown.Running()) return;
-            TargetDistance = CombatManager.DistanceBetween(this, _healTarget);
+            CurrentAction = MoveToTargetPosition(_healTarget.Position.CurrentValue());
             SetActionText("Running to " + _healTarget.Name);
-            MoveToTargetDistance();
-            if (!Moving()) _applyHealCooldown.Start();
         }
     }
 }

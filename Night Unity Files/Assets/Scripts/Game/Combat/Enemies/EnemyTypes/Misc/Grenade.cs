@@ -1,4 +1,5 @@
-﻿using Game.Combat;
+﻿using System;
+using Game.Combat;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using SamsHelper.ReactiveUI.InventoryUI;
@@ -8,10 +9,11 @@ public class Grenade : CombatItem
 {
 	private int _damage = 20;
 	public BasicEnemyView GrenadeView;
+	private Action _moveAction;
 	
-	public Grenade(float distance, float targetPosition, string name = "Grenade") : base(name, 15, targetPosition)
+	public Grenade(float position, float targetPosition, string name = "Grenade") : base(name, 15, position)
 	{
-		Position.SetCurrentValue(distance);
+		_moveAction = MoveToTargetPosition(targetPosition);
 	}
 
 	protected override void ReachTarget()
@@ -36,8 +38,8 @@ public class Grenade : CombatItem
 		return GrenadeView;
 	}
 
-	public void Update()
+	public override void Update()
 	{
-		MoveToTargetDistance();
+		_moveAction();
 	}
 }

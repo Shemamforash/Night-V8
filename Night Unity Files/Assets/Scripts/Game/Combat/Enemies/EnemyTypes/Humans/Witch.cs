@@ -17,14 +17,12 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             int damageToReposition = 30;
             Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType> {WeaponType.Pistol, WeaponType.SMG});
             Equip(weapon);
-            PreferredCoverDistance = Random.RandomRange(30, 40);
             ArmourLevel.SetCurrentValue(4);
             MinimumFindCoverDistance = 5f;
             HealthController.AddOnTakeDamage(damage =>
             {
                 _damageTaken += damage;
                 if (_damageTaken < damageToReposition) return;
-                CurrentAction = FindBetterRange;
                 _damageTaken = 0;
             });
             _throwGrenadeCooldown = CombatManager.CombatCooldowns.CreateCooldown();
@@ -54,7 +52,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
                     break;
             }
             StartGrenadeCooldown();
-            CurrentAction = FindBetterRange;
+            CurrentAction = Aim();
         }
 
         private void StartGrenadeCooldown()
@@ -63,11 +61,9 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             _throwGrenadeCooldown.Start();
         }
 
-        protected override void Alert()
+        public override void Alert()
         {
             base.Alert();
-            TargetDistance = PreferredCoverDistance;
-            CurrentAction = MoveToTargetDistance;
             StartGrenadeCooldown();
         }
     }

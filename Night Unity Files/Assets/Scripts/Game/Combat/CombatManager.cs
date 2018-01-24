@@ -29,6 +29,7 @@ namespace Game.Combat
         private static List<Grenade> _grenadesToRemove = new List<Grenade>();
         private static bool _inMelee;
         public static int VisibilityRange;
+        private const int MaxEncounterSize = 6;
 
         public static List<Enemy> GetEnemies()
         {
@@ -50,10 +51,7 @@ namespace Game.Combat
                 if (r.IsDead) return;
                 r.Update();
             });
-            Grenades.ForEach(g =>
-            {
-                g.Update();
-            });
+            Grenades.ForEach(g => { g.Update(); });
             _grenadesToRemove.ForEach(g => Grenades.Remove(g));
             _grenadesToRemove.Clear();
             _player.Update();
@@ -71,22 +69,41 @@ namespace Game.Combat
         {
             InputHandler.UnregisterInputListener(_player);
         }
-        
+
         public static void EngagePlayerInput()
         {
             InputHandler.RegisterInputListener(_player);
         }
 
-        public static void CheckForOverlappingEnemies()
+        public static void CheckPlayerOverlappingEnemy()
         {
-            float playerPosition = _player.Position.CurrentValue();
+            Enemy nearestEnemy = null;
             Enemies.ForEach(e =>
             {
-                if (e.IsDead) return;
-                if (!(e.Position.CurrentValue() <= playerPosition)) return;
-                e.Position.SetCurrentValue(playerPosition + 0.01f);
-                EngageMelee(e);
+                if (!e.InCombat()) return;
+                if (nearestEnemy == null)
+                {
+                    nearestEnemy = e;
+                    return;
+                }
+
+                if (e.Position < nearestEnemy.Position)
+                {
+                    nearestEnemy = e;
+                }
             });
+            if (nearestEnemy.Position.CurrentValue() > _player.Position.CurrentValue()) return;
+            _player.Position.SetCurrentValue(nearestEnemy.Position.CurrentValue());
+            EngageMelee(nearestEnemy);
+        }
+
+        public static void CheckEnemyOverlappingPlayer(Enemy e)
+        {
+            float playerPosition = _player.Position.CurrentValue();
+            if (!e.InCombat()) return;
+            if (e.Position.CurrentValue() > playerPosition) return;
+            e.Position.SetCurrentValue(playerPosition);
+            EngageMelee(e);
         }
 
         public static void RemoveGrenade(Grenade g)
@@ -94,11 +111,11 @@ namespace Game.Combat
             _grenadesToRemove.Add(g);
             GrenadeList.Remove(g.GrenadeView);
         }
-        
+
         public static void QueueEnemyToAdd(Enemy e)
         {
             _enemiesToAdd.Add(e);
-            e.TryAlert();
+            e.Alert();
             _currentScenario.AddEnemy(e);
         }
 
@@ -107,7 +124,7 @@ namespace Game.Combat
             Grenades.Add(g);
             GrenadeList.AddItem(g);
         }
-        
+
         public static void ResetCombat()
         {
             Enemies.Clear();
@@ -170,6 +187,7 @@ namespace Game.Combat
             {
                 return _currentTarget;
             }
+
             return _player;
         }
 
@@ -187,16 +205,11 @@ namespace Game.Combat
             }
         }
 
-        public static float DistanceToPlayer(Character origin)
-        {
-            return Math.Abs(origin.Position.CurrentValue() - _player.Position.CurrentValue());
-        }
-        
         public static float DistanceBetween(Character origin, Character target)
         {
             return DistanceBetween(origin.Position.CurrentValue(), target);
         }
-        
+
         public static float DistanceBetween(float originPosition, Character target)
         {
             return Math.Abs(originPosition - target.Position.CurrentValue());
@@ -228,7 +241,7 @@ namespace Game.Combat
             charactersInRange.Remove(target);
             return charactersInRange;
         }
-        
+
         public static List<Character> GetCharactersInRange(float position, float range)
         {
             List<Character> charactersInRange = new List<Character>();
@@ -246,6 +259,11 @@ namespace Game.Combat
             }
 
             return charactersInRange;
+        }
+
+        public static bool ReachedMaxEncounterSize()
+        {
+            return Enemies.Count == MaxEncounterSize;
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class IncendiaryGrenade : Grenade
     {
-        public IncendiaryGrenade(float distance, float targetPosition) : base(distance, targetPosition, "Fire Bomb")
+        public IncendiaryGrenade(float position, float targetPosition) : base(position, targetPosition, "Fire Bomb")
         {
         }
         

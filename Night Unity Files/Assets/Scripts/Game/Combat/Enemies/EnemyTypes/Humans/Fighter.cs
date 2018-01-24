@@ -15,7 +15,6 @@ namespace Game.Combat.Enemies.EnemyTypes
             Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType>{WeaponType.Shotgun, WeaponType.SMG});
             Equip(weapon);
 //            Attributes.Endurance.SetCurrentValue(4);
-            PreferredCoverDistance = EquipmentController.Weapon().GetAttributeValue(AttributeType.Accuracy) * 0.9f;
             ArmourLevel.SetCurrentValue(6);
             MinimumFindCoverDistance = 5f;
             Speed = 5;
@@ -23,16 +22,8 @@ namespace Game.Combat.Enemies.EnemyTypes
             {
                 _damageTaken += damage;
                 if (_damageTaken < damageToFindCover) return;
-                CurrentAction = FindBetterRange;
                 _damageTaken = 0;
             });
-        }
-
-        protected override void Alert()
-        {
-            base.Alert();
-            TargetDistance = PreferredCoverDistance;
-            CurrentAction = MoveToTargetDistance;
         }
 
         protected override void PrintUpdate()

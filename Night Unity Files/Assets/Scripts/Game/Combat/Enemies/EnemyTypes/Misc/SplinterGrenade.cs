@@ -2,7 +2,7 @@
 {
     public class SplinterGrenade : Grenade
     {
-        public SplinterGrenade(float distance, float targetPosition) : base(distance, targetPosition, "Splinter Bomb")
+        public SplinterGrenade(float position, float targetPosition) : base(position, targetPosition, "Splinter Bomb")
         {
         }
         

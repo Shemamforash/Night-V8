@@ -10,6 +10,7 @@ namespace Game.Combat.Enemies.EnemyTypes
 
         public Martyr(float position) : base(nameof(Martyr), 3, 1, position)
         {
+            MinimumFindCoverDistance = -1f;
             _detonateCooldown = CombatManager.CombatCooldowns.CreateCooldown(1f);
             _detonateCooldown.SetStartAction(() => SetActionText("Detonating"));
             _detonateCooldown.SetEndAction(Detonate);
@@ -20,11 +21,10 @@ namespace Game.Combat.Enemies.EnemyTypes
             });
         }
 
-        protected override void Alert()
+        public override void Alert()
         {
             base.Alert();
-            TargetDistance = 0f;
-            CurrentAction = MoveToTargetDistance;
+            CurrentAction = MoveToTargetDistance(0);
             Speed = 10;
         }
         

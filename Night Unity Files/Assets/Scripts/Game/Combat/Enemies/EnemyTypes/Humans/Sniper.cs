@@ -12,14 +12,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         {
             Weapon sniperRifle = WeaponGenerator.GenerateWeapon(WeaponType.Rifle);
             Equip(sniperRifle);
-            PreferredCoverDistance = Weapon().GetAttributeValue(AttributeType.Accuracy) * 0.9f;
             ArmourLevel.SetCurrentValue(4);
-        }
-
-        protected override void Alert()
-        {
-            base.Alert();
-            CurrentAction = FindBetterRange;
         }
 
         protected override void ReachTarget()

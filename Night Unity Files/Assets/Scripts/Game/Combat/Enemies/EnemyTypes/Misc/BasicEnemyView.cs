@@ -9,6 +9,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Misc
     public class BasicEnemyView : ViewParent
     {
         public TextMeshProUGUI DistanceText, _nameText;
+        protected float CurrentAlpha;
         
         public BasicEnemyView(MyGameObject linkedObject, Transform parent, string prefabLocation = "Prefabs/Inventory/OtherCombatItem") : base(linkedObject, parent, prefabLocation)
         {
@@ -32,6 +33,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Misc
         public virtual void SetAlpha(float alpha)
         {
             GetGameObject().GetComponent<CanvasGroup>().alpha = alpha;
+            CurrentAlpha = alpha;
         }
     }
 }

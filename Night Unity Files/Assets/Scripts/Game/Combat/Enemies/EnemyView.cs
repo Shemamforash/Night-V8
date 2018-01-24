@@ -16,8 +16,8 @@ namespace Game.Combat.Enemies
         private Image _sicknessLevel;
         private ParticleSystem _bleedEffect, _burnEffect;
         public UIAimController UiAimController;
-        private float _fadingIn = 2f;
-        private float _fadeInTime = 2f;
+        private float _currentFadeInTime = 2f;
+        private const float MaxFadeInTime = 2f;
 
         public EnemyView(MyGameObject linkedObject, Transform parent) : base(linkedObject, parent, "Prefabs/Inventory/EnemyItem")
         {
@@ -43,7 +43,7 @@ namespace Game.Combat.Enemies
 
         public void SetHealth(HealthController healthController)
         {
-            _lowerUiHealthBarController.SetValue(healthController.GetNormalisedHealthValue());
+            _lowerUiHealthBarController.SetValue(healthController.GetNormalisedHealthValue(), CurrentAlpha);
             HealthText.text = (int) healthController.GetCurrentHealth() + "/" + (int) healthController.GetMaxHealth();
         }
 
@@ -84,18 +84,18 @@ namespace Game.Combat.Enemies
 
         public override void SetAlpha(float alpha)
         {
-            if (_fadingIn > 0)
+            if (_currentFadeInTime > 0)
             {
-                float fadeInAmount = 1f - _fadingIn / _fadeInTime;
+                float fadeInAmount = 1f - _currentFadeInTime / MaxFadeInTime;
                 alpha *= fadeInAmount;
-                _fadingIn -= Time.deltaTime;
+                _currentFadeInTime -= Time.deltaTime;
             }
             base.SetAlpha(alpha);
         }
 
         public void MarkUnselected()
         {
-            _lowerUiHealthBarController.SetParticleEmissionOverDistance();
+            _lowerUiHealthBarController.SetValue(-1, 0f);
         }
 
         public void MarkDead()

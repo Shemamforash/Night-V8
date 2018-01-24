@@ -15,41 +15,26 @@ public class UIHealthBarController : MonoBehaviour
         _healthParticles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Health Effect");
         _healthParticleTransform = _healthParticles.transform;
         _sliderRect = _slider.GetComponent<RectTransform>();
-        SetValue(1);
-        SetColor(Color.white);
+        SetValue(1, 1);
         if (_slider.direction != Slider.Direction.LeftToRight) return;
         ParticleSystem.ShapeModule shapeModule = _healthParticles.shape;
         shapeModule.rotation = new Vector3(0, 0, 270);
     }
 
-    // write better comments
-    public void SetValue(float value)
+    public void SetValue(float normalisedHealth, float alpha)
     {
-        if (value != 1)
+        int amount = 50;
+        if (alpha == 0 || normalisedHealth < 0)
         {
-            SetParticleEmissionOverDistance(50);
+            amount = 0;
         }
-        _slider.value = value;
-        float width = _sliderRect.rect.width / 2;
-        value -= 0.5f;
-        value *= 2;
-        if (_slider.direction == Slider.Direction.RightToLeft)
+        else
         {
-            value = -value;
+            _slider.value = normalisedHealth;
         }
-        float position = value * width + 20f;
-        _healthParticleTransform.localPosition = new Vector3(position, 0, 0);
-    }
-
-    private void SetColor(Color color)
-    {
         ParticleSystem.MainModule main = _healthParticles.main;
-        main.startColor = color;
-    }
-
-    public void SetParticleEmissionOverDistance(float amount = 0)
-    {
-        ParticleSystem.EmissionModule main = _healthParticles.emission;
-        main.rateOverDistance = amount;
+        main.startColor = new Color(1,1,1,alpha);
+        ParticleSystem.EmissionModule emission = _healthParticles.emission;
+        emission.rateOverDistance = amount;
     }
 }

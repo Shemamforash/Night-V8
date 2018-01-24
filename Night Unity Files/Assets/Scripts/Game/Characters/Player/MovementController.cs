@@ -27,9 +27,14 @@ namespace Game.Characters.Player
                 _moveForwardAction = f =>
                 {
                     _character.Position.Increment(f);
-                    CombatManager.CheckForOverlappingEnemies();
+                    CombatManager.CheckPlayerOverlappingEnemy();
+                    CombatManager.GetEnemies().ForEach(e => e.CheckForRepositioning());
                 };
-                _moveBackwardAction = f => _character.Position.Decrement(f);
+                _moveBackwardAction = f =>
+                {
+                    _character.Position.Decrement(f);
+                    CombatManager.GetEnemies().ForEach(e => e.CheckForRepositioning());
+                };
                 _dashCooldown.SetDuringAction(a =>
                 {
                     float normalisedTime = a / _dashCooldown.Duration;
@@ -46,7 +51,7 @@ namespace Game.Characters.Player
                 _moveForwardAction = f =>
                 {
                     _character.Position.Decrement(f);
-                    CombatManager.CheckForOverlappingEnemies();
+                    CombatManager.CheckEnemyOverlappingPlayer((Enemy) character);
                 };
                 _moveBackwardAction = f => _character.Position.Increment(f);
             }

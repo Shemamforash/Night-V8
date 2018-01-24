@@ -129,15 +129,6 @@ namespace Game.Characters
             CockingCooldown.SetEndAction(() => { EquipmentController.Weapon().Cocked = true; });
         }
 
-        private void SetCoverCooldown()
-        {
-//            CoverCooldown = CombatManager.CombatCooldowns.CreateCooldown(2f);
-//            CoverCooldown.SetEndAction(() =>
-//            {
-//                _inCover = true;
-//                CombatManager.TakeCover(this);
-//            });
-        }
 
         private void SetReloadCooldown()
         {
@@ -148,11 +139,6 @@ namespace Game.Characters
                 EquipmentController.Weapon().Reload(Inventory());
             });
         }
-
-//        public void SetFlanked()
-//        {
-//            _coverLevel = CoverLevel.Partial;
-//        }
 
         //COVER
         public void TakeCover()
@@ -203,7 +189,6 @@ namespace Game.Characters
                 CockWeapon();
                 return;
             }
-
             ReloadWeapon();
         }
 
