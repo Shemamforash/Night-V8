@@ -8,6 +8,7 @@ public class UIAimController : MonoBehaviour
 	private Image _rightImage, _leftImage;
 	private float _currentTime;
 	private float _currentAlpha;
+	private ParticleSystem _firingParticles;
 	
 	// Use this for initialization
 	public void Awake ()
@@ -16,6 +17,7 @@ public class UIAimController : MonoBehaviour
 		_leftTransform = Helper.FindChildWithName<RectTransform>(gameObject, "Left");
 		_rightImage = Helper.FindChildWithName<Image>(gameObject, "Right");
 		_leftImage = Helper.FindChildWithName<Image>(gameObject, "Left");
+		_firingParticles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Gun Fire");
 		SetValue(0);
 	}
 	
@@ -35,5 +37,6 @@ public class UIAimController : MonoBehaviour
 	{
 		SetValue(1);
 		_currentAlpha = 1f;
+		_firingParticles.Emit(2);
 	}
 }

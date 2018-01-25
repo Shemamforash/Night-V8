@@ -12,9 +12,7 @@ namespace Game.Combat.Enemies
     {
         public TextMeshProUGUI CoverText, ActionText, HealthText, ArmourText;
         private UIArmourController _uiArmourController;
-        private UIHealthBarController _lowerUiHealthBarController;
-        private Image _sicknessLevel;
-        private ParticleSystem _bleedEffect, _burnEffect;
+        public UIHealthBarController HealthBar;
         public UIAimController UiAimController;
         private float _currentFadeInTime = 2f;
         private const float MaxFadeInTime = 2f;
@@ -32,39 +30,16 @@ namespace Game.Combat.Enemies
             CoverText.text = "No Cover";
             HealthText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Health Text");
             ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour Text");
-            _sicknessLevel = Helper.FindChildWithName<Image>(GameObject, "Sickness");
-            _burnEffect = Helper.FindChildWithName<ParticleSystem>(GameObject, "Burning");
-            _bleedEffect = Helper.FindChildWithName<ParticleSystem>(GameObject, "Bleeding");
             UiAimController = Helper.FindChildWithName<UIAimController>(GameObject, "Aim Timer");
             _uiArmourController = Helper.FindChildWithName<UIArmourController>(GameObject, "Armour Bar");
-            _lowerUiHealthBarController = Helper.FindChildWithName<UIHealthBarController>(GameObject, "Health Bar");
+            HealthBar = Helper.FindChildWithName<UIHealthBarController>(GameObject, "Health Bar");
             ActionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Action");
         }
 
         public void SetHealth(HealthController healthController)
         {
-            _lowerUiHealthBarController.SetValue(healthController.GetNormalisedHealthValue(), CurrentAlpha);
+            HealthBar.SetValue(healthController.GetNormalisedHealthValue(), CurrentAlpha);
             HealthText.text = (int) healthController.GetCurrentHealth() + "/" + (int) healthController.GetMaxHealth();
-        }
-
-        public void StartBleeding()
-        {
-            _bleedEffect.Play();
-        }
-
-        public void StopBleeding()
-        {
-            _bleedEffect.Stop();
-        }
-
-        public void StartBurning()
-        {
-            _burnEffect.Play();
-        }
-
-        public void StopBurning()
-        {
-            _burnEffect.Stop();
         }
 
         public void SetArmour(int armourLevel, bool inCover)
@@ -95,7 +70,7 @@ namespace Game.Combat.Enemies
 
         public void MarkUnselected()
         {
-            _lowerUiHealthBarController.SetValue(-1, 0f);
+            HealthBar.SetValue(-1, 0f);
         }
 
         public void MarkDead()
@@ -107,11 +82,6 @@ namespace Game.Combat.Enemies
             _nameText.text = "Dead " + _nameText.text;
             ActionText.text = "";
             SetNavigatable(false);
-        }
-
-        public void UpdateSickness(float value)
-        {
-            _sicknessLevel.fillAmount = value;
         }
     }
 }

@@ -49,6 +49,11 @@ namespace Game.Gear.Weapons
             return false;
         }
 
+        public bool NeedsCocking()
+        {
+            return !Cocked && !WeaponAttributes.Automatic && !Empty();
+        }
+
         public WeaponType WeaponType()
         {
             return WeaponAttributes.WeaponType;

@@ -27,8 +27,8 @@ namespace Game.Combat
 //                scenario.AddEnemy(new Sniper());
 //                scenario.AddEnemy(new Martyr());
 //                scenario.AddEnemy(new Medic());
-                scenario.AddEnemy(new Fighter(Random.Range(20f, 40f)));
-                scenario.AddEnemy(new Warlord(Random.Range(20f, 40f)));
+//                scenario.AddEnemy(new Fighter(Random.Range(20f, 40f)));
+//                scenario.AddEnemy(new Warlord(Random.Range(20f, 40f)));
                 scenario.AddEnemy(new Witch(Random.Range(20f, 40f)));
             }
             for (int i = 0; i < size; ++i)

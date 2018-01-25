@@ -85,7 +85,7 @@ public class UIKnockdownController : MonoBehaviour
 
     private void Finish()
     {
-        CombatManager.Player().KnockedDown = false;
+        CombatManager.Player().IsKnockedDown = false;
         _instance.gameObject.SetActive(false);
         CombatManager.EngagePlayerInput();
         CombatManager.PlayerCanvasGroup.alpha = 1f;

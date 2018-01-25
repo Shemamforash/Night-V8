@@ -77,6 +77,14 @@ namespace Game.Combat
 
         public static void CheckPlayerOverlappingEnemy()
         {
+            Enemy nearestEnemy = NearestEnemy();
+            if (nearestEnemy.Position.CurrentValue() > _player.Position.CurrentValue()) return;
+            _player.Position.SetCurrentValue(nearestEnemy.Position.CurrentValue());
+            EngageMelee(nearestEnemy);
+        }
+
+        public static Enemy NearestEnemy()
+        {
             Enemy nearestEnemy = null;
             Enemies.ForEach(e =>
             {
@@ -92,9 +100,16 @@ namespace Game.Combat
                     nearestEnemy = e;
                 }
             });
-            if (nearestEnemy.Position.CurrentValue() > _player.Position.CurrentValue()) return;
-            _player.Position.SetCurrentValue(nearestEnemy.Position.CurrentValue());
-            EngageMelee(nearestEnemy);
+            return nearestEnemy;
+        }
+
+        public static void CheckToEndCombatByFleeing()
+        {
+            Enemy nearestEnemy = NearestEnemy();
+            if (nearestEnemy?.DistanceToPlayer >= VisibilityRange + 10)
+            {
+                ExitCombat();
+            }
         }
 
         public static void CheckEnemyOverlappingPlayer(Enemy e)
@@ -136,7 +151,7 @@ namespace Game.Combat
         {
             WorldState.Pause();
 //            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
-            VisibilityRange = 30;
+            VisibilityRange = 50;
             _currentScenario = scenario;
             _player = player;
             _player.HealthController.EnterCombat();

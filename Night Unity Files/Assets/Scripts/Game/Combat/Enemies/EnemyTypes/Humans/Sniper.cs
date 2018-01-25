@@ -1,5 +1,5 @@
-﻿using Game.Gear.Weapons;
-using SamsHelper.BaseGameFunctionality.Basic;
+﻿using System;
+using Game.Gear.Weapons;
 
 namespace Game.Combat.Enemies.EnemyTypes
 {
@@ -7,7 +7,6 @@ namespace Game.Combat.Enemies.EnemyTypes
     {
         private bool _reachedTarget;
 
-        //Check you've initialised the speed sam!
         public Sniper(float position) : base("Sniper", 7, 5, position)
         {
             Weapon sniperRifle = WeaponGenerator.GenerateWeapon(WeaponType.Rifle);
@@ -15,13 +14,11 @@ namespace Game.Combat.Enemies.EnemyTypes
             ArmourLevel.SetCurrentValue(4);
         }
 
-        protected override void ReachTarget()
+        protected override Action Aim()
         {
-            if (!_reachedTarget)
-            {
-                base.ReachTarget();
-            }
-            _reachedTarget = true;
+            Action aimAction = base.Aim();
+            TakeCover();
+            return aimAction;
         }
     }
 }

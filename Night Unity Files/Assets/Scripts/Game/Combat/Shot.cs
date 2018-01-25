@@ -111,7 +111,14 @@ namespace Game.Combat
             ApplyConditions();
             OnHitAction?.Invoke();
             (_origin as Player)?.RageController.Increase(pelletDamage);
-            _target.OnHit(this, pelletDamage, isCritical);
+            if (_target is Player)
+            {
+                ((Player)_target).OnHit(this, pelletDamage, isCritical);
+            }
+            else
+            {
+                _target.OnHit(pelletDamage, isCritical);
+            }
         }
 
         private void ApplyPierce(int pelletDamage)

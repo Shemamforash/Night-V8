@@ -65,5 +65,10 @@ namespace Game.Combat.Enemies.EnemyTypes
             CurrentAction = MoveToTargetPosition(_healTarget.Position.CurrentValue());
             SetActionText("Running to " + _healTarget.Name);
         }
+
+        public bool HasTarget()
+        {
+            return _healTarget != null;
+        }
     }
 }

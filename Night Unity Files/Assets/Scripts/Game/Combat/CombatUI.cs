@@ -25,7 +25,7 @@ namespace Game.Combat
 
         private static TextMeshProUGUI _coverText;
 
-        private static UIHealthBarController _playerUiHealthController;
+        public static UIHealthBarController PlayerHealthBar;
         private float _criticalTarget;
         public static SkillBar SkillBar;
 
@@ -46,7 +46,8 @@ namespace Game.Combat
 
             SkillBar = Helper.FindChildWithName<SkillBar>(playerContainer, "Skill Bar");
 
-            _playerUiHealthController = Helper.FindChildWithName<UIHealthBarController>(playerContainer, "Health Bar");
+            PlayerHealthBar = Helper.FindChildWithName<UIHealthBarController>(playerContainer, "Health Bar");
+            PlayerHealthBar.SetIsPlayerBar();
         }
 
         public static void SetCoverText(string coverText)
@@ -58,7 +59,7 @@ namespace Game.Combat
         {
             int currentHealth = (int) _player.HealthController.GetCurrentHealth();
             int maxHealth = (int) _player.HealthController.GetMaxHealth();
-            _playerUiHealthController.SetValue(_player.HealthController.GetNormalisedHealthValue(), PlayerCanvasGroup.alpha);
+            PlayerHealthBar.SetValue(_player.HealthController.GetNormalisedHealthValue(), PlayerCanvasGroup.alpha);
             _playerHealthText.text = currentHealth + "/" + maxHealth;
         }
 

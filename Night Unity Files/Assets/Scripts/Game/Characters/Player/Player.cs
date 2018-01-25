@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Assets;
+using Facilitating.Audio;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.Combat;
@@ -12,6 +13,7 @@ using Game.World.Region;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
+using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Input;
@@ -31,6 +33,8 @@ namespace Game.Characters.Player
         public CharacterView CharacterView;
         public readonly DesolationAttributes Attributes;
         public readonly Number Energy = new Number();
+        public Action<Shot> OnFireAction;
+        public bool Retaliate;
 
         public CollectResources CollectResourcesAction;
         public Sleep SleepAction;
@@ -41,6 +45,9 @@ namespace Game.Characters.Player
         public CharacterActions.Combat CombatAction;
         public LightFire LightFireAction;
         public readonly RageController RageController;
+
+        protected Cooldown CockingCooldown;
+        protected Cooldown ReloadingCooldown;
 
         private int _storyProgress;
 
@@ -69,23 +76,33 @@ namespace Game.Characters.Player
             HealthController.AddOnHeal(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
             HealthController.AddOnTakeDamage(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
             Energy.OnMin(Sleep);
-            LinkCooldownsToUi();
-            TakeCoverAction = () => CombatManager.SetCoverText("In Cover");
-            LeaveCoverAction = () => CombatManager.SetCoverText("Exposed");
             SetConditions();
             Position.AddOnValueChange(a => CombatManager.GetEnemies().ForEach(e => e.Position.UpdateValueChange()));
+            SetReloadCooldown();
+            SetCockCooldown();
         }
 
-        private void LinkCooldownsToUi()
+        public void OnHit(Shot shot, int damage, bool isCritical)
         {
-            LinkCockCooldownToUi();
-            LinkKnockdownCooldownToUi();
-            LinkReloadCooldownToUi();
+            OnHit(damage, isCritical);
+            if (Retaliate) FireWeapon(shot?.Origin());
+        }
+
+        public override void TakeCover()
+        {
+            base.TakeCover();
+            CombatManager.SetCoverText("In Cover");
+        }
+
+        public override void LeaveCover()
+        {
+            base.LeaveCover();
+            CombatManager.SetCoverText("Exposed");
         }
 
         public override void KnockDown()
         {
-            if (!KnockedDown)
+            if (!IsKnockedDown)
                 base.KnockDown();
             UIKnockdownController.StartKnockdown(10);
         }
@@ -110,6 +127,17 @@ namespace Game.Characters.Player
         public override ViewParent CreateUi(Transform parent)
         {
             return new InventoryUi(this, parent);
+        }
+
+        protected override void SetConditions()
+        {
+            base.SetConditions();
+            Burning.OnConditionNonEmpty = CombatManager.PlayerHealthBar.StartBurning;
+            Burning.OnConditionEmpty = CombatManager.PlayerHealthBar.StopBurning;
+            Bleeding.OnConditionNonEmpty = CombatManager.PlayerHealthBar.StartBleeding;
+            Bleeding.OnConditionEmpty = CombatManager.PlayerHealthBar.StopBleeding;
+            Sickening.OnConditionNonEmpty = () => CombatManager.PlayerHealthBar.UpdateSickness(((Sickness) Sickening).GetNormalisedValue());
+            Sickening.OnConditionEmpty = () => CombatManager.PlayerHealthBar.UpdateSickness(0);
         }
 
         //Links character to object in scene
@@ -245,10 +273,68 @@ namespace Game.Characters.Player
             }
         }
 
+        //COCKING
+        public void CockWeapon()
+        {
+            if (Immobilised()) return;
+            if (!CockingCooldown.Finished()) return;
+            float cockTime = EquipmentController.Weapon().WeaponAttributes.GetCalculatedValue(AttributeType.FireRate);
+            GunFire.Cock(cockTime);
+            CockingCooldown.Duration = cockTime;
+            CockingCooldown.Start();
+        }
+
+        private void StopCocking()
+        {
+            if (CockingCooldown == null || CockingCooldown.Finished()) return;
+            Debug.Log("stopped cocking");
+            CockingCooldown.Cancel();
+        }
+
+        public override bool Immobilised()
+        {
+            return ReloadingCooldown.Running() || CockingCooldown.Running() || IsKnockedDown;
+        }
+
+        //MISC
+
+        //RELOADING
+        protected void TryReload()
+        {
+            if (Immobilised()) return;
+            if (Weapon().NeedsCocking())
+            {
+                CockWeapon();
+                return;
+            }
+
+            ReloadWeapon();
+        }
+
+        private void ReloadWeapon()
+        {
+            if (ReloadingCooldown.Running()) return;
+            if (EquipmentController.Weapon().FullyLoaded()) return;
+            if (Weapon().GetRemainingMagazines() == 0) return;
+            OnFireAction = null;
+            Retaliate = false;
+            float reloadSpeed = EquipmentController.Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
+            UIMagazineController.EmptyMagazine();
+            ReloadingCooldown.Duration = reloadSpeed;
+            ReloadingCooldown.Start();
+        }
+
+        private void StopReloading()
+        {
+            if (ReloadingCooldown == null || ReloadingCooldown.Finished()) return;
+            ReloadingCooldown.Cancel();
+        }
+
         //COOLDOWNS
 
-        protected void LinkCockCooldownToUi()
+        private void SetCockCooldown()
         {
+            CockingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
             CockingCooldown.SetEndAction(() =>
             {
                 EquipmentController.Weapon().Cocked = true;
@@ -257,13 +343,10 @@ namespace Game.Characters.Player
             CockingCooldown.SetStartAction(() => UIMagazineController.SetMessage("Cocking"));
         }
 
-        protected void LinkKnockdownCooldownToUi()
-        {
-            //todo
-        }
 
-        protected void LinkReloadCooldownToUi()
+        private void SetReloadCooldown()
         {
+            ReloadingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
             ReloadingCooldown.SetEndAction(() =>
             {
                 EquipmentController.Weapon().Cocked = true;
@@ -289,6 +372,7 @@ namespace Game.Characters.Player
         protected override Shot FireWeapon(Character target)
         {
             Shot shot = base.FireWeapon(target);
+            if (shot != null) OnFireAction?.Invoke(shot);
             if (RageController.Active()) shot?.GuaranteeCritical();
             UpdateMagazineUi();
             return shot;
@@ -298,7 +382,8 @@ namespace Game.Characters.Player
 
         protected override void Interrupt()
         {
-            base.Interrupt();
+            StopCocking();
+            StopReloading();
             MovementController.StopSprinting();
             UpdateMagazineUi();
         }

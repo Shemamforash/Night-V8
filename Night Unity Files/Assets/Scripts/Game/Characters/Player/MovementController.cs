@@ -21,8 +21,7 @@ namespace Game.Characters.Player
             _character = character;
             SetDashCooldown();
             _baseSpeed = speed;
-            Player p = _character as Player;
-            if (p != null)
+            if (character is Player)
             {
                 _moveForwardAction = f =>
                 {
@@ -46,13 +45,18 @@ namespace Game.Characters.Player
                     RageBarController.PlayFlash();
                 });
             }
-            else
+            else if(_character is Enemy)
             {
                 _moveForwardAction = f =>
                 {
                     _character.Position.Decrement(f);
                     CombatManager.CheckEnemyOverlappingPlayer((Enemy) character);
                 };
+                _moveBackwardAction = f => _character.Position.Increment(f);
+            }
+            else
+            {
+                _moveForwardAction = f => _character.Position.Decrement(f);
                 _moveBackwardAction = f => _character.Position.Increment(f);
             }
         }
@@ -107,16 +111,6 @@ namespace Game.Characters.Player
         }
         
         //DASHING
-        
-        public void DashForward()
-        {
-            Dash(1);
-        }
-
-        public void DashBackward()
-        {
-            Dash(-1);
-        }
         
         public void Dash(float direction)
         {

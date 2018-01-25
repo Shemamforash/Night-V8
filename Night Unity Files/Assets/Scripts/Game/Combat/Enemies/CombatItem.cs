@@ -13,7 +13,7 @@ namespace Game.Combat.Enemies
         protected int Speed;
         private const float AlphaCutoff = 0.2f;
         private const float FadeVisibilityDistance = 2f;
-        protected float DistanceToPlayer;
+        public float DistanceToPlayer;
 
         protected CombatItem(string name, int speed, float position) : base(name)
         {

@@ -14,7 +14,6 @@ namespace Game.Combat.Enemies.EnemyTypes
             int damageToFindCover = 1000;
             Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType>{WeaponType.Shotgun, WeaponType.SMG});
             Equip(weapon);
-//            Attributes.Endurance.SetCurrentValue(4);
             ArmourLevel.SetCurrentValue(6);
             MinimumFindCoverDistance = 5f;
             Speed = 5;
@@ -22,13 +21,9 @@ namespace Game.Combat.Enemies.EnemyTypes
             {
                 _damageTaken += damage;
                 if (_damageTaken < damageToFindCover) return;
+                CheckForRepositioning(true);
                 _damageTaken = 0;
             });
-        }
-
-        protected override void PrintUpdate()
-        {
-//            Debug.Log(TargetDistance);
         }
     }
 }
