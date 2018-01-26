@@ -22,10 +22,9 @@ namespace Game.Combat.Enemies
         private readonly Cooldown _firingCooldown;
         private const float MaxAimTime = 2f;
         protected float MinimumFindCoverDistance;
-        protected float DefaultDistance = 20f;
         private int _wanderDirection = -1;
 
-        public bool HasFled, IsDead;
+        public bool HasFled;
         protected bool Alerted;
 
         public EnemyView EnemyView;
@@ -37,7 +36,7 @@ namespace Game.Combat.Enemies
         {
             HealthController.AddOnTakeDamage(a =>
             {
-                if (!(HealthController.GetNormalisedHealthValue() <= 0.5f) || _waitingForHeal) return;
+                if (HealthController.GetNormalisedHealthValue() > 0.25f || _waitingForHeal) return;
                 foreach (Enemy enemy in CombatManager.GetEnemies())
                 {
                     Medic medic = enemy as Medic;
@@ -87,9 +86,14 @@ namespace Game.Combat.Enemies
             {
                 duration -= Time.deltaTime;
                 if (duration > 0) return;
-                CurrentAction = Aim();
+                CurrentAction = ChooseNextAction();
                 IsKnockedDown = false;
             };
+        }
+
+        protected virtual Action ChooseNextAction()
+        {
+            return Aim();
         }
 
         protected Enemy(string name, int enemyHp, int speed, float position) : base(name, speed, position)
@@ -124,10 +128,7 @@ namespace Game.Combat.Enemies
                 if (DistanceToPlayer <= MaxDistance)
                 {
                     CheckForRepositioning();
-                    return;
                 }
-
-                HasFled = true;
             });
         }
 
@@ -169,9 +170,22 @@ namespace Game.Combat.Enemies
             if (!Alerted || !InCombat()) return;
             if (DistanceToPlayer < MinimumFindCoverDistance || DistanceToPlayer > CombatManager.VisibilityRange || moveAnyway)
             {
-                float targetDistance = Random.Range(DefaultDistance * 0.9f, DefaultDistance * 1.1f);
+                float targetDistance = CalculateIdealRange();
                 CurrentAction = MoveToTargetDistance(targetDistance);
             }
+        }
+
+        private float CalculateIdealRange()
+        {
+            if (Weapon() == null) return 0;
+            float idealRange = Weapon().GetAttributeValue(AttributeType.Accuracy);
+            idealRange = Random.Range(0.8f * idealRange, idealRange);
+            if (idealRange >= CombatManager.VisibilityRange)
+            {
+                idealRange = Random.Range(0.8f * CombatManager.VisibilityRange, CombatManager.VisibilityRange);
+            }
+
+            return idealRange;
         }
 
         private void CheckForPlayer()
@@ -214,6 +228,7 @@ namespace Game.Combat.Enemies
         public override void Kill()
         {
             IsDead = true;
+            CombatManager.EnemyList.Remove(EnemyView);
             EnemyView?.MarkDead();
             CombatManager.CheckCombatEnd();
             CombatManager.Remove(this);
@@ -246,7 +261,7 @@ namespace Game.Combat.Enemies
         {
             if (Alerted)
             {
-                CurrentAction = Aim();
+                CurrentAction = ChooseNextAction();
             }
             else
             {
@@ -289,7 +304,11 @@ namespace Game.Combat.Enemies
         private Action Flee()
         {
             SetActionText("Fleeing");
-            return MovementController.MoveBackward;
+            return () =>
+            {
+                MovementController.MoveBackward();
+                CombatManager.CheckEnemyFled(this);
+            };
         }
 
         private Action Fire()
@@ -306,6 +325,7 @@ namespace Game.Combat.Enemies
             {
                 Shot s = FireWeapon(CombatManager.Player());
                 if (s == null) return;
+                s.Fire();
                 EnemyView.UiAimController.Fire();
                 --noShots;
                 int remainingAmmo = Weapon().GetRemainingAmmo();

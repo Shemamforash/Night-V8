@@ -33,6 +33,7 @@ public class Grenade : CombatItem
 	public override ViewParent CreateUi(Transform parent)
 	{
 		GrenadeView = new BasicEnemyView(this, parent);
+		GrenadeView.SetNavigatable(false);
 		SetDistanceData(GrenadeView);
 		GrenadeView.SetNavigatable(false);
 		return GrenadeView;

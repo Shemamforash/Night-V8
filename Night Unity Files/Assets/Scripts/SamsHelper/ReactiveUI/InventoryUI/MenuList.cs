@@ -21,7 +21,6 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         [Range(0, 1f)] public float UnselectedItemScale = 1f;
         public bool CentreOnSelectedItem;
         public EnhancedButton CloseButton;
-
         private event Action OnContentChange;
 
         public virtual void Awake()

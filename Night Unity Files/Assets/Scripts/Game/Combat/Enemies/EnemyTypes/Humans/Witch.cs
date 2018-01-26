@@ -1,70 +1,63 @@
-﻿using System.Collections.Generic;
-using Game.Characters.Player;
+﻿using System;
+using System.Collections.Generic;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using Game.Gear.Weapons;
-using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
     public class Witch : Enemy
     {
         private int _damageTaken;
-        private readonly Cooldown _throwGrenadeCooldown;
+        private float _timeSinceThrown, _targetTime;
+        private bool _throwing;
 
-        public Witch(float position) : base("Witch", 5, 5, position)
+        public Witch(float position) : base(nameof(Witch), 5, 5, position)
         {
-            int damageToReposition = 30;
             Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType> {WeaponType.Pistol, WeaponType.SMG});
             Equip(weapon);
             ArmourLevel.SetCurrentValue(4);
             MinimumFindCoverDistance = 5f;
-            HealthController.AddOnTakeDamage(damage =>
-            {
-                _damageTaken += damage;
-                if (_damageTaken < damageToReposition) return;
-                _damageTaken = 0;
-            });
-            _throwGrenadeCooldown = CombatManager.CombatCooldowns.CreateCooldown();
-            _throwGrenadeCooldown.SetEndAction(ThrowGrenade);
-            _throwGrenadeCooldown.SetDuringAction(t =>
-            {
-                if (!(t <= 2)) return;
-                SetActionText("Throwing Grenade");
-                CurrentAction = null;
-            });
         }
 
-        private void ThrowGrenade()
+        private Action ThrowGrenade()
         {
-            float currentPosition = Position.CurrentValue();
-            float targetPosition = CombatManager.Player().Position.CurrentValue();
-            switch (Random.Range(0, 3))
+            float throwDuration = 2f;
+            SetActionText("Throwing Grenade");
+            return () =>
             {
-                case 0:
-                    CombatManager.AddGrenade(new Grenade(currentPosition, targetPosition));
-                    break;
-                case 1:
-                    CombatManager.AddGrenade(new SplinterGrenade(currentPosition, targetPosition));
-                    break;
-                case 2:
-                    CombatManager.AddGrenade(new IncendiaryGrenade(currentPosition, targetPosition));
-                    break;
-            }
-            StartGrenadeCooldown();
-            CurrentAction = Aim();
+                throwDuration -= Time.deltaTime;
+                if (throwDuration > 0) return;
+                float currentPosition = Position.CurrentValue();
+                float targetPosition = CombatManager.Player().Position.CurrentValue();
+                switch (Random.Range(0, 3))
+                {
+                    case 0:
+                        CombatManager.AddGrenade(new Grenade(currentPosition, targetPosition));
+                        break;
+                    case 1:
+                        CombatManager.AddGrenade(new SplinterGrenade(currentPosition, targetPosition));
+                        break;
+                    case 2:
+                        CombatManager.AddGrenade(new IncendiaryGrenade(currentPosition, targetPosition));
+                        break;
+                }
+
+                _targetTime = Random.Range(10, 15);
+                CurrentAction = Aim();
+                _throwing = false;
+            };
         }
 
-        private void StartGrenadeCooldown()
+        public override void Update()
         {
-            _throwGrenadeCooldown.Duration = Random.Range(5f, 10f);
-            _throwGrenadeCooldown.Start();
-        }
-
-        public override void Alert()
-        {
-            base.Alert();
-            StartGrenadeCooldown();
+            base.Update();
+            if (!InCombat() || _throwing) return;
+            _timeSinceThrown += Time.deltaTime;
+            if (!(_timeSinceThrown >= _targetTime)) return;
+            CurrentAction = ThrowGrenade();
+            _throwing = true;
         }
     }
 }

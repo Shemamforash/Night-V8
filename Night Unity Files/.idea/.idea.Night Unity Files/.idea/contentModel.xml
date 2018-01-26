@@ -127,7 +127,7 @@
                     <e p="Watcher.cs" t="Include" />
                   </e>
                   <e p="Humans" t="Include">
-                    <e p="Fighter.cs" t="Include" />
+                    <e p="Brawler.cs" t="Include" />
                     <e p="Martyr.cs" t="Include" />
                     <e p="Medic.cs" t="Include" />
                     <e p="Mountain.cs" t="Include" />

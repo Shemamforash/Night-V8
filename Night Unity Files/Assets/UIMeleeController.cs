@@ -29,9 +29,7 @@ public class UIMeleeController : MonoBehaviour
     public void Start()
     {
         _outerRing.SetLineWidth(OuterRingWidth);
-//        _innerRing.SetLineWidth(InnerRingWidth);
         _outerRing.Hide();
-//        _innerRing.Hide();
         SetEnabled(false);
     }
 

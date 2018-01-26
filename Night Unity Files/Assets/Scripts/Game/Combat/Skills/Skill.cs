@@ -61,6 +61,7 @@ namespace Game.Combat.Skills
             {
                 base.OnFire();
                 shot.SetPierceDepth(100);
+                shot.SetPierceChance(1);
                 shot.Fire();
             }
         }
@@ -89,7 +90,7 @@ namespace Game.Combat.Skills
             {
                 base.OnFire();
                 shot.GuaranteeHit();
-                shot.SetKnockdownChance(1, 10);
+                shot.SetKnockdownChance(1, 0);
                 shot.Fire();
             }
         }
@@ -103,10 +104,7 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                shot.AddOnHit(() =>
-                {
-                    Explosion.CreateAndDetonate(shot.Target().Position.CurrentValue(), 25, shot.DamageDealt());
-                });
+                shot.AddOnHit(() => { Explosion.CreateAndDetonate(shot.Target().Position.CurrentValue(), 25, shot.DamageDealt()); });
                 shot.Fire();
             }
         }
@@ -123,7 +121,7 @@ namespace Game.Combat.Skills
                 Player.Weapon().Reload(Player.Inventory());
             }
         }
-        
+
         public class HeavyLead : Skill
         {
             public HeavyLead(Player player) : base(player, true, nameof(HeavyLead))
@@ -133,13 +131,10 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                Player.OnFireAction = s =>
-                {
-                    s.SetKnockdownChance(0.25f, 2);
-                };
+                Player.OnFireAction = s => { s.SetKnockdownChance(0.25f, 2); };
             }
         }
-        
+
         public class DoubleUp : Skill
         {
             public DoubleUp(Player player) : base(player, true, nameof(DoubleUp))
@@ -149,13 +144,10 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                Player.OnFireAction = s =>
-                {
-                    s.SetNumberOfShots(2);
-                };
+                Player.OnFireAction = s => { s.SetNumberOfShots(2); };
             }
         }
-        
+
         public class Splinter : Skill
         {
             public Splinter(Player player) : base(player, true, nameof(Splinter))
@@ -165,16 +157,10 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                Player.OnFireAction = s =>
-                {
-                    s.AddOnHit(() =>
-                    {
-                        Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt());
-                    });
-                };
+                Player.OnFireAction = s => { s.AddOnHit(() => { Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt()); }); };
             }
         }
-        
+
         public class Retribution : Skill
         {
             public Retribution(Player player) : base(player, true, nameof(Retribution))
@@ -201,10 +187,7 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                Player.OnFireAction = s =>
-                {
-                    Player.Retaliate = true;
-                };
+                Player.Retaliate = true;
             }
         }
     }

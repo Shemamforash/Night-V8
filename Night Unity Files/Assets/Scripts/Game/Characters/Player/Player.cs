@@ -85,7 +85,8 @@ namespace Game.Characters.Player
         public void OnHit(Shot shot, int damage, bool isCritical)
         {
             OnHit(damage, isCritical);
-            if (Retaliate) FireWeapon(shot?.Origin());
+            if (shot?.Origin() == null) return;
+            if (Retaliate) FireWeapon(shot.Origin());
         }
 
         public override void TakeCover()
@@ -372,7 +373,11 @@ namespace Game.Characters.Player
         protected override Shot FireWeapon(Character target)
         {
             Shot shot = base.FireWeapon(target);
-            if (shot != null) OnFireAction?.Invoke(shot);
+            if (shot != null)
+            {
+                OnFireAction?.Invoke(shot);
+                shot.Fire();
+            }
             if (RageController.Active()) shot?.GuaranteeCritical();
             UpdateMagazineUi();
             return shot;

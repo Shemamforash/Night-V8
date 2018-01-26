@@ -26,6 +26,7 @@ namespace Game.Combat.Enemies
         {
             Position.AddOnValueChange(a =>
             {
+                if (IsDead) return;
                 SetDistanceText(enemyView);
                 CalculateAlphaFromDistance(enemyView);
                 DistanceToPlayer = Math.Abs(Position.CurrentValue() - CombatManager.Player().Position.CurrentValue());

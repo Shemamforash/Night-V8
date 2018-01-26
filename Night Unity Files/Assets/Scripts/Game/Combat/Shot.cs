@@ -21,7 +21,7 @@ namespace Game.Combat
         private Weapon _weapon;
 
         private int _noPellets = 1, _noShots = 1;
-        private int _maxRange;
+        private int _range;
         private int _pierceDepth;
         private float _pierceFalloff = 1;
 
@@ -62,13 +62,33 @@ namespace Game.Combat
         {
             WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
-            _maxRange = (int) attributes.GetCalculatedValue(AttributeType.Accuracy);
+            _range = (int) attributes.GetCalculatedValue(AttributeType.Accuracy);
             _noPellets = (int) attributes.GetCalculatedValue(AttributeType.Pellets);
+            _bleedChance = attributes.GetCalculatedValue(AttributeType.BleedChance);
+            _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
+            _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
         }
 
-        public void SetDamage(int damage)
+        private void SetDamage(int damage)
         {
             _damage = damage;
+        }
+        
+        private void CalculateHitProbability()
+        {
+            if (_guaranteeHit || _origin == null || _range > _distanceToTarget)
+            {
+                _hitChance = 1;
+            }
+            else
+            {
+                _hitChance = _range / _distanceToTarget;
+            }
+        }
+
+        private void CalculateCriticalProbability()
+        {
+            _criticalChance = _guaranteeCritical ? 1 : _origin.Weapon().WeaponAttributes.CriticalChance.CurrentValue();
         }
 
         private bool WillHitTarget()
@@ -154,43 +174,6 @@ namespace Game.Combat
             if (Random.Range(0f, 1f) < _bleedChance) _target.AddBleedStack();
             if (Random.Range(0f, 1f) < _burnChance) _target.AddBleedStack();
             if (Random.Range(0f, 1f) < _sicknessChance) _target.AddSicknessStack();
-        }
-
-        private void CalculateHitProbability()
-        {
-            if (_guaranteeHit || _origin == null)
-            {
-                _hitChance = 1;
-            }
-            else
-            {
-                _hitChance = _maxRange / _distanceToTarget;
-                if (_hitChance > 1)
-                {
-                    _hitChance = 1;
-                }
-            }
-        }
-
-        private void CalculateCriticalProbability()
-        {
-            if (_guaranteeCritical)
-            {
-                _criticalChance = 1;
-            }
-            else
-            {
-                float normalisedRange = Helper.Normalise(_distanceToTarget, _maxRange);
-                _criticalChance = LogAndClamp(normalisedRange, _origin.Weapon().WeaponAttributes.CriticalChance.CurrentValue() / 100);
-            }
-        }
-
-        private float LogAndClamp(float normalisedRange, float extra = 0)
-        {
-            float probability = (float) (-0.35f * Math.Log(normalisedRange));
-            probability += extra;
-            probability = Mathf.Clamp(probability, 0, 1);
-            return probability;
         }
 
         public void SetPierceDepth(int depth)

@@ -103,18 +103,37 @@ namespace Game.Combat
             return nearestEnemy;
         }
 
-        public static void CheckToEndCombatByFleeing()
+        public static void CheckPlayerFled()
         {
             Enemy nearestEnemy = NearestEnemy();
-            if (nearestEnemy?.DistanceToPlayer >= VisibilityRange + 10)
+            if (nearestEnemy?.DistanceToPlayer >= VisibilityRange + 20)
             {
+                //failcombat
                 ExitCombat();
+            }
+        }
+        
+        public static void CheckToEndCombatByFleeing()
+        {
+            if (Enemies.All(e => e.HasFled) && Enemies.Count != 0)
+            {
+                //succed combat
+                ExitCombat();
+            }
+        }
+
+        public static void CheckEnemyFled(Enemy enemy)
+        {
+            if (enemy.DistanceToPlayer >= VisibilityRange + 20)
+            {
+                EnemyList.Remove(enemy.EnemyView);
             }
         }
 
         public static void CheckEnemyOverlappingPlayer(Enemy e)
         {
             float playerPosition = _player.Position.CurrentValue();
+            Debug.Log(e.IsDead);
             if (!e.InCombat()) return;
             if (e.Position.CurrentValue() > playerPosition) return;
             e.Position.SetCurrentValue(playerPosition);
@@ -151,7 +170,7 @@ namespace Game.Combat
         {
             WorldState.Pause();
 //            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
-            VisibilityRange = 50;
+            VisibilityRange = 75;
             _currentScenario = scenario;
             _player = player;
             _player.HealthController.EnterCombat();

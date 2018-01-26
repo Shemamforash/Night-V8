@@ -9,7 +9,7 @@ public class MeleeController : MonoBehaviour
     private static UIMeleeController _up, _left, _down, _right;
     private static readonly List<UIMeleeController> MeleeControllers = new List<UIMeleeController>();
     private const float FalloffRatio = 0.95f;
-    private const float MaxRingTime = 1f, MaxPressTime = 0.5f;
+    private const float MaxRingTime = 0.6f, MaxPressTime = 0.3f;
     private static float _initialRingTime, _initialPressTime;
     private static Enemy _targetEnemy;
     public static bool InMelee;

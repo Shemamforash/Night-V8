@@ -16,7 +16,6 @@ namespace Game.Combat.Enemies.EnemyTypes
         {
             Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType>{WeaponType.Pistol, WeaponType.SMG});
             Equip(weapon);
-            DefaultDistance = 30f;
             MinimumFindCoverDistance = 20f;
             ArmourLevel.SetCurrentValue(2);
         }

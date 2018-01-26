@@ -18,18 +18,25 @@ namespace Game.Combat
         {
             _enemies.Add(enemy);
         }
+
+        private static float RandomPosition()
+        {
+            return Random.Range(30f, 60f);
+        }
         
         public static CombatScenario Generate(int size = 0)
         {
             CombatScenario scenario = new CombatScenario();
             if (size == 0)
             {
-//                scenario.AddEnemy(new Sniper());
-//                scenario.AddEnemy(new Martyr());
-//                scenario.AddEnemy(new Medic());
-//                scenario.AddEnemy(new Fighter(Random.Range(20f, 40f)));
-//                scenario.AddEnemy(new Warlord(Random.Range(20f, 40f)));
-                scenario.AddEnemy(new Witch(Random.Range(20f, 40f)));
+//                scenario.AddEnemy(new Sniper(RandomPosition()));
+//                scenario.AddEnemy(new Martyr(RandomPosition()));
+//                scenario.AddEnemy(new Medic(RandomPosition()));
+//                scenario.AddEnemy(new Mountain(RandomPosition()));
+                scenario.AddEnemy(new Sentinel(RandomPosition()));
+                scenario.AddEnemy(new Warlord(RandomPosition()));
+//                scenario.AddEnemy(new Witch(RandomPosition()));
+//                scenario.AddEnemy(new Brawler(RandomPosition()));
             }
             for (int i = 0; i < size; ++i)
             {
@@ -43,7 +50,7 @@ namespace Game.Combat
                         scenario.AddEnemy(new Grazer(Random.Range(20f, 40f)));
                         break;
                     case 2:
-                        scenario.AddEnemy(new Fighter(Random.Range(20f, 40f)));
+                        scenario.AddEnemy(new Sentinel(Random.Range(20f, 40f)));
                         break;
                     case 3:
                         scenario.AddEnemy(new Martyr(Random.Range(20f, 40f)));

@@ -29,6 +29,7 @@ namespace Game.Characters
 
         protected bool InCover;
         public bool IsKnockedDown;
+        public bool IsDead;
 
         protected Condition Bleeding, Burning, Sickening;
 
@@ -134,7 +135,6 @@ namespace Game.Characters
             if (!CanFire()) return null;
             if (target == null) target = CombatManager.GetTarget(this);
             Shot shot = new Shot(target, this);
-            shot.Fire();
             if (EquipmentController.Weapon().WeaponAttributes.Automatic)
             {
                 _timeAtLastFire = Helper.TimeInMillis();

@@ -10,7 +10,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private float _reinforceCallTime;
         private float _reinforceDuration = 5f;
 
-        public Warlord(float position) : base("Warlord", 10,3, position)
+        public Warlord(float position) : base("Warlord", 10, 3, position)
         {
             Weapon weapon = WeaponGenerator.GenerateWeapon(WeaponType.LMG);
             Equip(weapon);
@@ -36,7 +36,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             SetActionText("Reinforcing");
             _reinforceCallTime -= Time.deltaTime;
             if (!(_reinforceCallTime <= 0)) return;
-            CombatManager.QueueEnemyToAdd(new Fighter(MaxDistance));
+            CombatManager.QueueEnemyToAdd(new Sentinel(MaxDistance));
             CurrentAction = Aim();
             return;
 //            switch (Random.Range(0, 4))

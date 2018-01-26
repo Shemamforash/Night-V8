@@ -1,10 +1,10 @@
-﻿using Game.Characters.Player;
+﻿using System.Collections;
+using Game.Characters.Player;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Combat.Enemies
 {
@@ -57,15 +57,17 @@ namespace Game.Combat.Enemies
             ArmourText.text = armourProtection + "x damage";
         }
 
-        public override void SetAlpha(float alpha)
+        private IEnumerator FadeIn()
         {
-            if (_currentFadeInTime > 0)
+            while (_currentFadeInTime > 0)
             {
-                float fadeInAmount = 1f - _currentFadeInTime / MaxFadeInTime;
-                alpha *= fadeInAmount;
                 _currentFadeInTime -= Time.deltaTime;
+                SetAlpha(CurrentAlpha);
+                float fadeInAmount = 1f - _currentFadeInTime / MaxFadeInTime;
+                float newAlpha = CurrentAlpha * fadeInAmount;
+                GetGameObject().GetComponent<CanvasGroup>().alpha = newAlpha;
+                yield return null;
             }
-            base.SetAlpha(alpha);
         }
 
         public void MarkUnselected()
