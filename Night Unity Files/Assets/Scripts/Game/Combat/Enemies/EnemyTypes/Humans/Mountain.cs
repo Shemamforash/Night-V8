@@ -14,11 +14,15 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             ArmourLevel.SetCurrentValue(4);
         }
 
-        protected override Action ChooseNextAction()
+        public override void ChooseNextAction()
         {
-            if (!_firedVolley) return Aim();
+            if (!_firedVolley)
+            {
+                base.ChooseNextAction();
+                return;
+            }
             _firedVolley = false;
-            return MoveToTargetDistance(DistanceToPlayer - 5);
+            CurrentAction = MoveToTargetDistance(DistanceToPlayer - 5);
         }
     }
 }

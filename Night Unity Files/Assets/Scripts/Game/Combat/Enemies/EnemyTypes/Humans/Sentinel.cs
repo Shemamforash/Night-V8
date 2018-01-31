@@ -28,17 +28,21 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
                 if (_damageTaken < HealthController.GetMaxHealth() * 0.25f) return;
                 _healingInCover = true;
                 _targetHealAmount = (int) Random.Range(0, HealthController.GetMaxHealth() * 0.1f);
-                CheckForRepositioning(true);
+                CurrentAction = CheckForRepositioning(true);
                 _damageTaken = 0;
             });
         }
-        
-        protected override Action ChooseNextAction()
+
+        public override void ChooseNextAction()
         {
-            if (!_healingInCover) return Aim();
+            if (!_healingInCover)
+            {
+                base.ChooseNextAction();
+                return;
+            } 
             _healingInCover = false;
-            SetActionText("Bandaging Wounds");
-            return CoverAndHeal;
+            EnemyView.SetActionText("Bandaging Wounds");
+            CurrentAction = CoverAndHeal;
         }
 
         private void CoverAndHeal()
@@ -50,7 +54,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             _targetHealAmount -= 1;
             if (_targetHealAmount == 0)
             {
-                CurrentAction = ChooseNextAction();
+                ChooseNextAction();
             }
             _timeSinceLastHeal = 0;
         }

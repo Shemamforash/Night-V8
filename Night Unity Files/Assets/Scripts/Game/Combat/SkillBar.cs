@@ -11,9 +11,11 @@ namespace Game.Combat
         private int _noSlots = 4;
         private Skill[] _skills;
         private readonly List<CooldownController> _skillView = new List<CooldownController>();
+        public static SkillBar Instance;
 
         public void Awake()
         {
+            Instance = this;
             for (int i = 0; i < _noSlots; ++i)
             {
                 _skillView.Add(Helper.FindChildWithName<CooldownController>(gameObject, "Skill " + (i + 1)));

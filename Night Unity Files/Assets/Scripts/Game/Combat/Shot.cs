@@ -68,7 +68,7 @@ namespace Game.Combat
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
             _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
         }
-
+        
         private void SetDamage(int damage)
         {
             _damage = damage;

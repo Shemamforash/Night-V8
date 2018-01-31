@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using Game.Gear.Weapons;
 using UnityEngine;
+using static Game.Combat.CombatManager;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
@@ -24,29 +25,29 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private Action ThrowGrenade()
         {
             float throwDuration = 2f;
-            SetActionText("Throwing Grenade");
+            EnemyView.SetActionText("Throwing Grenade");
             return () =>
             {
                 throwDuration -= Time.deltaTime;
                 if (throwDuration > 0) return;
                 float currentPosition = Position.CurrentValue();
-                float targetPosition = CombatManager.Player().Position.CurrentValue();
+                float targetPosition = Player.Position.CurrentValue();
                 switch (Random.Range(0, 3))
                 {
                     case 0:
-                        CombatManager.AddGrenade(new Grenade(currentPosition, targetPosition));
+                        UIGrenadeController.AddGrenade(new Grenade(currentPosition, targetPosition));
                         break;
                     case 1:
-                        CombatManager.AddGrenade(new SplinterGrenade(currentPosition, targetPosition));
+                        UIGrenadeController.AddGrenade(new SplinterGrenade(currentPosition, targetPosition));
                         break;
                     case 2:
-                        CombatManager.AddGrenade(new IncendiaryGrenade(currentPosition, targetPosition));
+                        UIGrenadeController.AddGrenade(new IncendiaryGrenade(currentPosition, targetPosition));
                         break;
                 }
 
                 _targetTime = Random.Range(10, 15);
-                CurrentAction = Aim();
                 _throwing = false;
+                ChooseNextAction();
             };
         }
 

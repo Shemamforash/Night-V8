@@ -1,6 +1,7 @@
 using System;
 using Game.Combat;
 using Game.Combat.Enemies;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEngine;
 
@@ -26,13 +27,12 @@ namespace Game.Characters.Player
                 _moveForwardAction = f =>
                 {
                     _character.Position.Increment(f);
-                    CombatManager.CheckPlayerOverlappingEnemy();
-                    CombatManager.GetEnemies().ForEach(e => e.CheckForRepositioning());
+//                    UIEnemyController.Enemies.ForEach(e => e.CheckForRepositioning());
                 };
                 _moveBackwardAction = f =>
                 {
                     _character.Position.Decrement(f);
-                    CombatManager.GetEnemies().ForEach(e => e.CheckForRepositioning());
+//                    UIEnemyController.Enemies.ForEach(e => e.CheckForRepositioning());
                 };
                 _dashCooldown.SetDuringAction(a =>
                 {
@@ -45,14 +45,18 @@ namespace Game.Characters.Player
                     RageBarController.PlayFlash();
                 });
             }
-            else if(_character is Enemy)
+            else if (_character is Enemy)
             {
                 _moveForwardAction = f =>
                 {
                     _character.Position.Decrement(f);
-                    CombatManager.CheckEnemyOverlappingPlayer((Enemy) character);
+                    _character.FacingDirection = Direction.Left;
                 };
-                _moveBackwardAction = f => _character.Position.Increment(f);
+                _moveBackwardAction = f =>
+                {
+                    _character.Position.Increment(f);
+                    _character.FacingDirection = Direction.Right;
+                };
             }
             else
             {
@@ -65,12 +69,12 @@ namespace Game.Characters.Player
         {
             _baseSpeed = baseSpeed;
         }
-        
+
         private void SetDashCooldown()
         {
             _dashCooldown = CombatManager.CombatCooldowns.CreateCooldown(DashDuration);
         }
-        
+
         //MOVEMENT
 
         private float CurrentSpeed()
@@ -89,7 +93,7 @@ namespace Game.Characters.Player
         {
             Move(-1);
         }
-        
+
         public void Move(float direction)
         {
             if (_character.Immobilised()) return;
@@ -109,9 +113,9 @@ namespace Game.Characters.Player
         {
             _moveBackwardAction?.Invoke(distance);
         }
-        
+
         //DASHING
-        
+
         public void Dash(float direction)
         {
             if (_character.Immobilised() || !CanDash()) return;
@@ -124,9 +128,10 @@ namespace Game.Characters.Player
             {
                 _moveBackwardAction?.Invoke(_dashDistance);
             }
+
             _dashCooldown.Start();
         }
-        
+
         private bool CanDash()
         {
             return _dashCooldown.Finished();

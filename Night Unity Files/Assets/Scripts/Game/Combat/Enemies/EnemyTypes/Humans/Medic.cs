@@ -39,14 +39,14 @@ namespace Game.Combat.Enemies.EnemyTypes
         private Action Heal()
         {
             float healTime = 2f;
-            SetActionText("Healing " + _healTarget.Name);
+            EnemyView.SetActionText("Healing " + _healTarget.Name);
             return () =>
             {
                 healTime -= Time.deltaTime;
                 if (healTime > 0) return;
                 _healTarget.ReceiveHealing(_healAmount);
                 _healTarget = null;
-                CurrentAction = Aim();
+                ChooseNextAction();
             };
         }
 
@@ -62,7 +62,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         private void TryHeal()
         {
             CurrentAction = MoveToTargetPosition(_healTarget.Position.CurrentValue());
-            SetActionText("Running to " + _healTarget.Name);
+            EnemyView.SetActionText("Running to " + _healTarget.Name);
         }
 
         public bool HasTarget()

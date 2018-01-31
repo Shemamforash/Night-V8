@@ -7,14 +7,16 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
     public class Enemy : CombatItem
     {
-        protected readonly CharacterAttribute VisionRange = new CharacterAttribute(AttributeType.Vision, 30f);
-        protected readonly CharacterAttribute DetectionRange = new CharacterAttribute(AttributeType.Detection, 15f);
+        private readonly CharacterAttribute _visionRange = new CharacterAttribute(AttributeType.Vision, 30f);
+        private readonly CharacterAttribute _detectionRange = new CharacterAttribute(AttributeType.Detection, 15f);
+        private const int EnemyReloadMultiplier = 4;
 
         public readonly int MaxHealth;
 
@@ -29,7 +31,7 @@ namespace Game.Combat.Enemies
 
         public EnemyView EnemyView;
 
-        private const float KnockdownDuration = 3f;
+        private const float KnockdownDuration = 5f;
         private bool _waitingForHeal;
 
         private void SetHealBehaviour()
@@ -37,7 +39,7 @@ namespace Game.Combat.Enemies
             HealthController.AddOnTakeDamage(a =>
             {
                 if (HealthController.GetNormalisedHealthValue() > 0.25f || _waitingForHeal) return;
-                foreach (Enemy enemy in CombatManager.GetEnemies())
+                foreach (Enemy enemy in UIEnemyController.Enemies)
                 {
                     Medic medic = enemy as Medic;
                     if (medic == null || medic.HasTarget()) continue;
@@ -49,7 +51,7 @@ namespace Game.Combat.Enemies
 
         private Action WaitForHeal(Medic medic)
         {
-            SetActionText("Waiting for Medic");
+            EnemyView.SetActionText("Waiting for Medic");
             TakeCover();
             medic.RequestHeal(this);
             _waitingForHeal = true;
@@ -57,43 +59,45 @@ namespace Game.Combat.Enemies
             {
                 if (!medic.IsDead) return;
                 _waitingForHeal = false;
-                CurrentAction = Aim();
+                ChooseNextAction();
             };
         }
 
         public void ClearHealWait()
         {
-            CurrentAction = Aim();
+            ChooseNextAction();
         }
 
         public void ReceiveHealing(int amount)
         {
             HealthController.Heal(amount);
-            CurrentAction = Aim();
+            ChooseNextAction();
         }
 
-        public override void KnockDown()
+        protected override void KnockDown()
         {
-            if (!IsKnockedDown) return;
             base.KnockDown();
             CurrentAction = KnockedDown();
         }
-        
+
         private Action KnockedDown()
         {
             float duration = KnockdownDuration;
+            EnemyView.SetActionText("Knocked Down");
             return () =>
             {
                 duration -= Time.deltaTime;
                 if (duration > 0) return;
-                CurrentAction = ChooseNextAction();
+                ChooseNextAction();
                 IsKnockedDown = false;
             };
         }
 
-        protected virtual Action ChooseNextAction()
+        public virtual void ChooseNextAction()
         {
-            return Aim();
+            CurrentAction = CheckForRepositioning();
+            if (CurrentAction != null) return;
+            CurrentAction = Aim();
         }
 
         protected Enemy(string name, int enemyHp, int speed, float position) : base(name, speed, position)
@@ -104,6 +108,7 @@ namespace Game.Combat.Enemies
 
             CurrentAction = Wander;
             HealthController.AddOnTakeDamage(f => { Alert(); });
+            FacingDirection = Direction.Left;
         }
 
         public override void TakeCover()
@@ -111,13 +116,13 @@ namespace Game.Combat.Enemies
             base.TakeCover();
             EnemyView.SetArmour((int) ArmourLevel.CurrentValue(), true);
         }
-        
+
         public override void LeaveCover()
         {
             base.LeaveCover();
             EnemyView.SetArmour((int) ArmourLevel.CurrentValue(), true);
         }
-        
+
         protected override void SetDistanceData(BasicEnemyView enemyView)
         {
             base.SetDistanceData(enemyView);
@@ -125,33 +130,93 @@ namespace Game.Combat.Enemies
             {
                 if (EnemyView == null) return;
                 if (HasFled || IsDead) return;
-                if (DistanceToPlayer <= MaxDistance)
-                {
-                    CheckForRepositioning();
-                }
+                _aheadOfPlayer = DistanceToPlayer > 0;
             });
         }
 
-        protected Action MoveToTargetDistance(float distance)
-        {
-            SetActionText(DistanceToPlayer > distance ? "Approaching" : "Retreating");
+        private const float MeleeWarningTime = 2f;
+        private const float StaggerTime = 2f;
+        private const int MeleeDistance = 5;
 
-            if (DistanceToPlayer > distance)
+        protected Action CheckForRepositioning(bool moveAnyway = false)
+        {
+            if (!Alerted || !InCombat()) return null;
+            float absoluteDistance = Math.Abs(DistanceToPlayer);
+            if (absoluteDistance <= MeleeDistance)
             {
-                return () =>
+                if (DistanceToPlayer < 0 && FacingDirection == Direction.Right
+                    || DistanceToPlayer > 0 && FacingDirection == Direction.Left)
                 {
-                    MovementController.MoveForward();
-                    if (DistanceToPlayer > distance) return;
-                    ReachTarget();
-                };
+                    return Melee();
+                }
             }
 
+            if (absoluteDistance < MinimumFindCoverDistance || absoluteDistance > CombatManager.VisibilityRange || moveAnyway)
+            {
+                float targetDistance = CalculateIdealRange();
+                return MoveToTargetDistance(targetDistance);
+            }
+
+            return null;
+        }
+
+
+        private Action Melee()
+        {
+            float currentTime = MeleeWarningTime;
+            EnemyView.SetActionText("Meleeing");
             return () =>
+            {
+                currentTime -= Time.deltaTime;
+                if (currentTime > 0) return;
+                if (Math.Abs(DistanceToPlayer) > MeleeDistance)
+                {
+                    CurrentAction = Stagger();
+                    return;
+                }
+
+                MeleeController.StartMelee(this);
+            };
+        }
+
+        private Action Stagger()
+        {
+            float currentTime = StaggerTime;
+            EnemyView.SetActionText("Staggered");
+            return () =>
+            {
+                currentTime -= Time.deltaTime;
+                if (currentTime > 0) return;
+                ChooseNextAction();
+            };
+        }
+
+        private bool _aheadOfPlayer;
+
+        protected Action MoveToTargetDistance(float distance)
+        {
+            Assert.IsTrue(distance >= 0);
+            Action moveForwardAction = () =>
+            {
+                MovementController.MoveForward();
+                if (DistanceToPlayer > distance) return;
+                ReachTarget();
+            };
+            Action moveBackwardAction = () =>
             {
                 MovementController.MoveBackward();
                 if (DistanceToPlayer < distance) return;
                 ReachTarget();
             };
+
+            if (_aheadOfPlayer)
+            {
+                EnemyView.SetActionText(DistanceToPlayer > distance ? "Approaching" : "Retreating");
+                return DistanceToPlayer > distance ? moveForwardAction : moveBackwardAction;
+            }
+
+            EnemyView.SetActionText(DistanceToPlayer > distance ? "Retreating" : "Approaching");
+            return DistanceToPlayer > distance ? moveBackwardAction : moveForwardAction;
         }
 
         private void Wander()
@@ -161,18 +226,8 @@ namespace Game.Combat.Enemies
             _wanderDirection = -_wanderDirection;
             float targetPosition = Position.CurrentValue() + distanceToTravel;
             CurrentAction = MoveToTargetPosition(targetPosition);
-            SetActionText("Wandering");
+            EnemyView.SetActionText("Wandering");
             CheckForPlayer();
-        }
-
-        public void CheckForRepositioning(bool moveAnyway = false)
-        {
-            if (!Alerted || !InCombat()) return;
-            if (DistanceToPlayer < MinimumFindCoverDistance || DistanceToPlayer > CombatManager.VisibilityRange || moveAnyway)
-            {
-                float targetDistance = CalculateIdealRange();
-                CurrentAction = MoveToTargetDistance(targetDistance);
-            }
         }
 
         private float CalculateIdealRange()
@@ -190,7 +245,7 @@ namespace Game.Combat.Enemies
 
         private void CheckForPlayer()
         {
-            if (DistanceToPlayer < VisionRange)
+            if (DistanceToPlayer < _visionRange)
             {
                 CurrentAction = Suspicious;
             }
@@ -198,8 +253,8 @@ namespace Game.Combat.Enemies
 
         private void Suspicious()
         {
-            SetActionText("Suspicious");
-            if (DistanceToPlayer >= DetectionRange.CurrentValue()) return;
+            EnemyView.SetActionText("Suspicious");
+            if (DistanceToPlayer >= _detectionRange.CurrentValue()) return;
             Alert();
         }
 
@@ -208,39 +263,32 @@ namespace Game.Combat.Enemies
             return !HasFled && !IsDead;
         }
 
-        protected void SetActionText(string action)
-        {
-            if (EnemyView == null) return;
-            EnemyView.ActionText.text = action;
-        }
-
         public override void OnHit(int damage, bool isCritical)
         {
             base.OnHit(damage, isCritical);
-            if(!Alerted) Alert();
+            if (!Alerted) Alert();
         }
-        
+
         public override void OnMiss()
         {
-            if(!Alerted) Alert();
+            if (!Alerted) Alert();
         }
 
         public override void Kill()
         {
             IsDead = true;
-            CombatManager.EnemyList.Remove(EnemyView);
+            UIEnemyController.Remove(this);
             EnemyView?.MarkDead();
             CombatManager.CheckCombatEnd();
-            CombatManager.Remove(this);
             CurrentAction = null;
         }
 
         public override ViewParent CreateUi(Transform parent)
         {
             EnemyView = new EnemyView(this, parent);
-            HealthController.AddOnTakeDamage(f => EnemyView.SetHealth(HealthController));
-            HealthController.AddOnHeal(f => EnemyView.SetHealth(HealthController));
-            EnemyView.SetHealth(HealthController);
+            HealthController.AddOnTakeDamage(f => EnemyView.UpdateHealth());
+            HealthController.AddOnHeal(f => EnemyView.UpdateHealth());
+            EnemyView.UpdateHealth();
             ArmourLevel.AddOnValueChange(a => EnemyView.SetArmour((int) ArmourLevel.CurrentValue(), InCover));
             EnemyView.PrimaryButton.AddOnSelectEvent(() => CombatManager.SetTarget(this));
             SetDistanceData(EnemyView);
@@ -253,15 +301,16 @@ namespace Game.Combat.Enemies
         {
             if (Alerted || !InCombat()) return;
             Alerted = true;
-            CombatManager.GetEnemies().ForEach(e => { e.Alert(); });
-            CheckForRepositioning(true);
+            UIEnemyController.AlertAll();
+            ChooseNextAction();
         }
 
         protected override void ReachTarget()
         {
             if (Alerted)
             {
-                CurrentAction = ChooseNextAction();
+                FacingDirection = Position.CurrentValue() > CombatManager.Player.Position.CurrentValue() ? Direction.Left : Direction.Right;
+                ChooseNextAction();
             }
             else
             {
@@ -269,41 +318,28 @@ namespace Game.Combat.Enemies
             }
         }
 
-        private Action Cock()
-        {
-            SetActionText("Cocking");
-            float duration = EquipmentController.Weapon().GetAttributeValue(AttributeType.FireRate);
-            return () =>
-            {
-                duration -= Time.deltaTime;
-                if (duration > 0) return;
-                EquipmentController.Weapon().Cocked = true;
-                CurrentAction = Aim();
-            };
-        }
-        
         private Action Reload()
         {
             if (Weapon().GetRemainingMagazines() == 0)
             {
                 return Flee();
             }
+
             TakeCover();
-            SetActionText("Reloading");
-            float duration = EquipmentController.Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
+            EnemyView.SetActionText("Reloading");
+            float duration = EquipmentController.Weapon().GetAttributeValue(AttributeType.ReloadSpeed) * EnemyReloadMultiplier;
             return () =>
             {
                 duration -= Time.deltaTime;
                 if (duration > 0) return;
-                EquipmentController.Weapon().Cocked = true;
                 EquipmentController.Weapon().Reload(Inventory());
-                CurrentAction = Aim();
+                ChooseNextAction();
             };
         }
 
         private Action Flee()
         {
-            SetActionText("Fleeing");
+            EnemyView.SetActionText("Fleeing");
             return () =>
             {
                 MovementController.MoveBackward();
@@ -314,16 +350,17 @@ namespace Game.Combat.Enemies
         private Action Fire()
         {
             int divider = Random.Range(3, 6);
-            int noShots = (int)(Weapon().GetAttributeValue(AttributeType.Capacity) / divider);
+            int noShots = (int) (Weapon().GetAttributeValue(AttributeType.Capacity) / divider);
             bool automatic = Weapon().WeaponAttributes.Automatic;
-            SetActionText("Firing");
+            EnemyView.SetActionText("Firing");
             if (!automatic)
             {
                 noShots = 1;
             }
+
             return () =>
             {
-                Shot s = FireWeapon(CombatManager.Player());
+                Shot s = FireWeapon(CombatManager.Player);
                 if (s == null) return;
                 s.Fire();
                 EnemyView.UiAimController.Fire();
@@ -333,33 +370,24 @@ namespace Game.Combat.Enemies
                 {
                     EnemyView.UiAimController.SetValue(0);
                 }
+
                 if (remainingAmmo == 0 || !automatic)
                 {
-                    CurrentAction = CheckForReload();
+                    CurrentAction = Reload();
                 }
-                else if(noShots == 0)
+                else if (noShots == 0)
                 {
-                    CurrentAction = Aim();
+                    ChooseNextAction();
                 }
             };
         }
-        
-        private Action CheckForReload()
-        {
-            if (Weapon().Empty())
-            {
-                return Reload();
-            }
-            return Weapon().Cocked ? null : Cock();
-        }
-        
+
         protected virtual Action Aim()
         {
             LeaveCover();
-            Action reloadAction = CheckForReload();
-            if (reloadAction != null) return reloadAction;
+            Assert.IsFalse(Weapon().Empty());
             float aimTime = MaxAimTime;
-            SetActionText("Aiming");
+            EnemyView.SetActionText("Aiming");
             return () =>
             {
                 if (Immobilised()) return;

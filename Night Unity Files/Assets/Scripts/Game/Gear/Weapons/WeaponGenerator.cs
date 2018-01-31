@@ -46,12 +46,6 @@ namespace Game.Gear.Weapons
                 Array types = Enum.GetValues(typeof(WeaponType));
                 weaponType = (WeaponType) types.GetValue(UnityEngine.Random.Range(0, types.Length));
             }
-#if UNITY_EDITOR
-            if (manualOnly)
-            {
-                weaponType = WeaponType.Rifle;
-            }
-#endif
             WeaponClass weaponClass = WeaponDictionary[weaponType];
             GearModifier modifier = GeneralModifiers[UnityEngine.Random.Range(0, GeneralModifiers.Count)];
             Weapon weapon = weaponClass.CreateWeapon(modifier, manualOnly, durability);

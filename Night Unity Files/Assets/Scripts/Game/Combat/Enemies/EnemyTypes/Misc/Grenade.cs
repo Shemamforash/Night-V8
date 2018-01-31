@@ -20,7 +20,7 @@ public class Grenade : CombatItem
 	{
 		CreateExplosion();
 		Kill();
-		CombatManager.RemoveGrenade(this);
+		UIGrenadeController.RemoveGrenade(this);
 	}
 
 	protected virtual void CreateExplosion()

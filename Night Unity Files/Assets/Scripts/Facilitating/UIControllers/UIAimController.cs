@@ -9,6 +9,7 @@ public class UIAimController : MonoBehaviour
 	private float _currentTime;
 	private float _currentAlpha;
 	private ParticleSystem _firingParticles;
+	private CanvasGroup _aimCanvas;
 	
 	// Use this for initialization
 	public void Awake ()
@@ -18,7 +19,18 @@ public class UIAimController : MonoBehaviour
 		_rightImage = Helper.FindChildWithName<Image>(gameObject, "Right");
 		_leftImage = Helper.FindChildWithName<Image>(gameObject, "Left");
 		_firingParticles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Gun Fire");
+		_aimCanvas = GetComponent<CanvasGroup>();
 		SetValue(0);
+	}
+
+	public void Hide()
+	{
+		_aimCanvas.alpha = 0;
+	}
+
+	public void Show()
+	{
+		_aimCanvas.alpha = 1;
 	}
 	
 	public void SetValue (float value)

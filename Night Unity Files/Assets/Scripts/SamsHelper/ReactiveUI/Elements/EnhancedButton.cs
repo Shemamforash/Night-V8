@@ -26,6 +26,7 @@ namespace SamsHelper.ReactiveUI.Elements
         private Action _onDownAction, _onUpAction;
         private Coroutine _fadeCoroutine;
         private readonly List<Image> _borderImages = new List<Image>();
+        private bool _needsFadeIn;
 
         private class HoldAction
         {
@@ -67,6 +68,11 @@ namespace SamsHelper.ReactiveUI.Elements
             _borderImages.AddRange(Helper.FindAllComponentsInChildren<Image>(Border.transform));
         }
 
+        public void Start()
+        {
+            if(_needsFadeIn) TryStartFade(1);
+        }
+
         private void Enter()
         {
             UseSelectedColours();
@@ -106,8 +112,9 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
             if (gameObject.activeInHierarchy) _fadeCoroutine = StartCoroutine(Fade(target));
+            else _needsFadeIn = true;
         }
-
+        
         private void SetBorderColor(Color c)
         {
             _borderImages.ForEach(b => b.color = c);

@@ -12,7 +12,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         {
             MinimumFindCoverDistance = -1f;
             _detonateCooldown = CombatManager.CombatCooldowns.CreateCooldown(1f);
-            _detonateCooldown.SetStartAction(() => SetActionText("Detonating"));
+            _detonateCooldown.SetStartAction(() => EnemyView.SetActionText("Detonating"));
             _detonateCooldown.SetEndAction(Detonate);
             HealthController.AddOnTakeDamage(damage =>
             {

@@ -10,6 +10,8 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
+using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
 namespace Game.Characters
@@ -17,8 +19,6 @@ namespace Game.Characters
     public abstract class Character : MyGameObject, IPersistenceTemplate
     {
         protected readonly DesolationInventory CharacterInventory;
-
-//        protected Cooldown CoverCooldown;
 
         private long _timeAtLastFire;
         protected readonly Number ArmourLevel = new Number(0, 0, 10);
@@ -34,6 +34,8 @@ namespace Game.Characters
         protected Condition Bleeding, Burning, Sickening;
 
         public readonly Number Position = new Number();
+
+        public Direction FacingDirection;
 
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
@@ -54,28 +56,22 @@ namespace Game.Characters
             CharacterInventory = new DesolationInventory(name);
             HealthController = new HealthController(this);
             EquipmentController = new EquipmentController(this);
-            Position.AddOnValueChange(a => CombatManager.CheckToEndCombatByFleeing());
-//            SetCoverCooldown();
         }
 
         public virtual void Equip(GearItem gearItem)
         {
+            ((Weapon) gearItem)?.Reload(Inventory());
             EquipmentController.Equip(gearItem);
         }
 
         public virtual void OnHit(int damage, bool isCritical)
         {
+            if (InCover) return;
+            //todo pierce through cover?
             float armourModifier = 1 - 0.8f / ArmourLevel.Max * ArmourLevel.CurrentValue();
             damage = (int) (armourModifier * damage);
-            damage = GetCoverProtection(damage);
             if (isCritical) HealthController.TakeCriticalDamage(damage);
             else HealthController.TakeDamage(damage);
-        }
-
-        private int GetCoverProtection(int damage)
-        {
-            if (InCover) return (int) (damage * 0.5f);
-            return damage;
         }
 
         public virtual void OnMiss()
@@ -120,7 +116,7 @@ namespace Game.Characters
         private bool CanFire()
         {
             Weapon weapon = EquipmentController.Weapon();
-            return !Immobilised() && weapon.Cocked && !weapon.Empty() && FireRateElapsedTimeMet() && !InCover;
+            return !Immobilised() && !weapon.Empty() && FireRateElapsedTimeMet() && !InCover;
         }
 
         private bool FireRateElapsedTimeMet()
@@ -133,17 +129,10 @@ namespace Game.Characters
         protected virtual Shot FireWeapon(Character target)
         {
             if (!CanFire()) return null;
-            if (target == null) target = CombatManager.GetTarget(this);
+            Assert.IsNotNull(target);
             Shot shot = new Shot(target, this);
-            if (EquipmentController.Weapon().WeaponAttributes.Automatic)
-            {
-                _timeAtLastFire = Helper.TimeInMillis();
-            }
-            else
-            {
-                EquipmentController.Weapon().Cocked = false;
-            }
-
+            if(FacingDirection == target.FacingDirection) shot.GuaranteeCritical();
+            _timeAtLastFire = Helper.TimeInMillis();
             return shot;
         }
 
@@ -159,7 +148,7 @@ namespace Game.Characters
             Bleeding.Update();
         }
 
-        public virtual void KnockDown()
+        protected virtual void KnockDown()
         {
             Interrupt();
             IsKnockedDown = true;

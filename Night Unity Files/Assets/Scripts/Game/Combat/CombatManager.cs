@@ -1,123 +1,109 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Assets;
 using Game.Characters;
 using Game.Characters.Player;
 using Game.Combat.Enemies;
 using Game.World;
-using Game.World.Environment_and_Weather;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
-using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Combat
 {
-    public partial class CombatManager : Menu
+    public class CombatManager : Menu
     {
+        public static CanvasGroup CombatCanvas, PlayerCanvasGroup;
+
+        private static TextMeshProUGUI _playerName;
+        private static TextMeshProUGUI _playerHealthText;
+        private static TextMeshProUGUI _coverText;
+
+        public static UIHealthBarController PlayerHealthBar;
+        public static SkillBar SkillBar;
+
+        private float _criticalTarget;
+
         private static Number _strengthText;
         public static readonly CooldownManager CombatCooldowns = new CooldownManager();
-        private static readonly List<Enemy> Enemies = new List<Enemy>();
-        private static readonly List<Grenade> Grenades = new List<Grenade>();
-        private static Enemy _currentTarget;
-        private static Player _player;
-        private static CombatScenario _currentScenario;
-        public static List<Enemy> _enemiesToAdd = new List<Enemy>();
-        private static List<Grenade> _grenadesToRemove = new List<Grenade>();
+
+        public static Enemy CurrentTarget;
+        public static Player Player;
+        public static CombatScenario CurrentScenario;
+
         private static bool _inMelee;
         public static int VisibilityRange;
-        private const int MaxEncounterSize = 6;
 
-        public static List<Enemy> GetEnemies()
+
+        public void Awake()
         {
-            return Enemies;
+            GameObject playerContainer = Helper.FindChildWithName(gameObject, "Player");
+            PlayerCanvasGroup = playerContainer.GetComponent<CanvasGroup>();
+
+            CombatCanvas = Helper.FindChildWithName<CanvasGroup>(gameObject, "Combat Canvas");
+
+            _playerName = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Name");
+            _playerHealthText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Health");
+
+            _coverText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Cover");
+            _coverText.text = "";
+
+            SkillBar = Helper.FindChildWithName<SkillBar>(playerContainer, "Skill Bar");
+
+            PlayerHealthBar = Helper.FindChildWithName<UIHealthBarController>(playerContainer, "Health Bar");
+            PlayerHealthBar.SetIsPlayerBar();
         }
 
-//        public static EnemyPlayerenemy Findenemy(Character character)
-//        {
-//            if(character is Enemy) return Enemies.FirstOrDefault(e => e == character);
-//            return Enemies.FirstOrDefault(e => e == _currentTarget);
-//        }
+        public static void SetCoverText(string coverText)
+        {
+            _coverText.text = coverText;
+        }
+
+        public static void UpdatePlayerHealth()
+        {
+            int currentHealth = (int) Player.HealthController.GetCurrentHealth();
+            int maxHealth = (int) Player.HealthController.GetMaxHealth();
+            PlayerHealthBar.SetValue(Player.HealthController.GetNormalisedHealthValue(), PlayerCanvasGroup.alpha);
+            _playerHealthText.text = currentHealth + "/" + maxHealth;
+        }
+
+        public static void SetTarget(Enemy e)
+        {
+            CurrentTarget?.EnemyView.MarkUnselected();
+            if (e == null) return;
+            CurrentTarget = e;
+            CurrentTarget.EnemyView.MarkSelected();
+        }
 
         public void Update()
         {
             if (MeleeController.InMelee) return;
             CombatCooldowns.UpdateCooldowns();
-            Enemies.ForEach(r =>
-            {
-                if (r.IsDead) return;
-                r.Update();
-            });
-            Grenades.ForEach(g => { g.Update(); });
-            _grenadesToRemove.ForEach(g => Grenades.Remove(g));
-            _grenadesToRemove.Clear();
-            _player.Update();
-            _enemiesToAdd.ForEach(AddEnemy);
-            _enemiesToAdd.Clear();
-            _player.RageController.Decrease();
-        }
-
-        public static void EngageMelee(Enemy e)
-        {
-            MeleeController.StartMelee(e);
+            Player.Update();
+            Player.RageController.Decrease();
         }
 
         public static void DisengagePlayerInput()
         {
-            InputHandler.UnregisterInputListener(_player);
+            InputHandler.UnregisterInputListener(Player);
         }
 
         public static void EngagePlayerInput()
         {
-            InputHandler.RegisterInputListener(_player);
-        }
-
-        public static void CheckPlayerOverlappingEnemy()
-        {
-            Enemy nearestEnemy = NearestEnemy();
-            if (nearestEnemy.Position.CurrentValue() > _player.Position.CurrentValue()) return;
-            _player.Position.SetCurrentValue(nearestEnemy.Position.CurrentValue());
-            EngageMelee(nearestEnemy);
-        }
-
-        public static Enemy NearestEnemy()
-        {
-            Enemy nearestEnemy = null;
-            Enemies.ForEach(e =>
-            {
-                if (!e.InCombat()) return;
-                if (nearestEnemy == null)
-                {
-                    nearestEnemy = e;
-                    return;
-                }
-
-                if (e.Position < nearestEnemy.Position)
-                {
-                    nearestEnemy = e;
-                }
-            });
-            return nearestEnemy;
+            InputHandler.RegisterInputListener(Player);
         }
 
         public static void CheckPlayerFled()
         {
-            Enemy nearestEnemy = NearestEnemy();
+            Enemy nearestEnemy = UIEnemyController.NearestEnemy();
             if (nearestEnemy?.DistanceToPlayer >= VisibilityRange + 20)
             {
                 //failcombat
-                ExitCombat();
-            }
-        }
-        
-        public static void CheckToEndCombatByFleeing()
-        {
-            if (Enemies.All(e => e.HasFled) && Enemies.Count != 0)
-            {
-                //succed combat
                 ExitCombat();
             }
         }
@@ -126,43 +112,13 @@ namespace Game.Combat
         {
             if (enemy.DistanceToPlayer >= VisibilityRange + 20)
             {
-                EnemyList.Remove(enemy.EnemyView);
+                UIEnemyController.Remove(enemy);
             }
-        }
-
-        public static void CheckEnemyOverlappingPlayer(Enemy e)
-        {
-            float playerPosition = _player.Position.CurrentValue();
-            Debug.Log(e.IsDead);
-            if (!e.InCombat()) return;
-            if (e.Position.CurrentValue() > playerPosition) return;
-            e.Position.SetCurrentValue(playerPosition);
-            EngageMelee(e);
-        }
-
-        public static void RemoveGrenade(Grenade g)
-        {
-            _grenadesToRemove.Add(g);
-            GrenadeList.Remove(g.GrenadeView);
-        }
-
-        public static void QueueEnemyToAdd(Enemy e)
-        {
-            _enemiesToAdd.Add(e);
-            e.Alert();
-            _currentScenario.AddEnemy(e);
-        }
-
-        public static void AddGrenade(Grenade g)
-        {
-            Grenades.Add(g);
-            GrenadeList.AddItem(g);
         }
 
         public static void ResetCombat()
         {
-            Enemies.Clear();
-            _currentTarget = null;
+            CurrentTarget = null;
             CombatCooldowns.Clear();
         }
 
@@ -171,58 +127,29 @@ namespace Game.Combat
             WorldState.Pause();
 //            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
             VisibilityRange = 75;
-            _currentScenario = scenario;
-            _player = player;
-            _player.HealthController.EnterCombat();
+            CurrentScenario = scenario;
+            Player = player;
+            Player.HealthController.EnterCombat();
             ResetCombat();
-            UIMagazineController.SetWeapon(_player.Weapon());
-            _playerName.text = _player.Name;
-            EnemyList.Clear();
+            UIMagazineController.SetWeapon(Player.Weapon());
+            _playerName.text = Player.Name;
+            UIEnemyController.EnterCombat(scenario);
             UpdatePlayerHealth();
-            InputHandler.RegisterInputListener(_player);
-            scenario.Enemies().ForEach(AddEnemy);
+            InputHandler.RegisterInputListener(Player);
             MenuStateMachine.ShowMenu("Combat Menu");
-        }
-
-        public static Player Player()
-        {
-            return _player;
-        }
-
-        private static void AddEnemy(Enemy e)
-        {
-            Enemies.Add(e);
-            e.HealthController.EnterCombat();
-            EnemyList.AddItem(e);
-            if (EnemyList.Items.Count == 1) SetTarget((Enemy) EnemyList.Items[0].GetLinkedObject());
         }
 
         private static void ExitCombat()
         {
             WorldState.UnPause();
             MenuStateMachine.ShowMenu("Game Menu");
-            InputHandler.UnregisterInputListener(_player);
-            if (Enemies.All(e => e.IsDead))
+            InputHandler.UnregisterInputListener(Player);
+            if (UIEnemyController.AllEnemiesDead())
             {
-                _currentScenario.FinishCombat();
+                CurrentScenario.FinishCombat();
             }
 
-            _player.HealthController.ExitCombat();
-        }
-
-        public static void SetPlayerHealthText(float f)
-        {
-            _strengthText.SetCurrentValue(_strengthText.CurrentValue() - f);
-        }
-
-        public static Character GetTarget(Character c)
-        {
-            if (c is Player)
-            {
-                return _currentTarget;
-            }
-
-            return _player;
+            Player.HealthController.ExitCombat();
         }
 
         public static void Flee(Enemy enemy)
@@ -233,7 +160,7 @@ namespace Game.Combat
 
         public static void CheckCombatEnd()
         {
-            if (Enemies.All(e => !e.InCombat()))
+            if (UIEnemyController.AllEnemiesGone())
             {
                 ExitCombat();
             }
@@ -251,13 +178,13 @@ namespace Game.Combat
 
         public static Enemy GetCurrentTarget()
         {
-            return _currentTarget;
+            return CurrentTarget;
         }
 
         public static List<Enemy> GetEnemiesBehindTarget(Enemy target)
         {
             List<Enemy> enemiesBehindTarget = new List<Enemy>();
-            foreach (Enemy enemy in Enemies)
+            foreach (Enemy enemy in UIEnemyController.Enemies)
             {
                 if (enemy == target) continue;
                 if (enemy.Position > target.Position)
@@ -269,22 +196,15 @@ namespace Game.Combat
             return enemiesBehindTarget;
         }
 
-        public static List<Character> GetCharactersInRange(Character target, float range)
-        {
-            List<Character> charactersInRange = GetCharactersInRange(target.Position.CurrentValue(), range);
-            charactersInRange.Remove(target);
-            return charactersInRange;
-        }
-
         public static List<Character> GetCharactersInRange(float position, float range)
         {
             List<Character> charactersInRange = new List<Character>();
-            if (Mathf.Abs(_player.Position.CurrentValue() - position) <= range)
+            if (Mathf.Abs(Player.Position.CurrentValue() - position) <= range)
             {
-                charactersInRange.Add(_player);
+                charactersInRange.Add(Player);
             }
 
-            foreach (Enemy enemy in Enemies)
+            foreach (Enemy enemy in UIEnemyController.Enemies)
             {
                 if (DistanceBetween(position, enemy) <= range)
                 {
@@ -293,11 +213,6 @@ namespace Game.Combat
             }
 
             return charactersInRange;
-        }
-
-        public static bool ReachedMaxEncounterSize()
-        {
-            return Enemies.Count == MaxEncounterSize;
         }
     }
 }

@@ -8,9 +8,9 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         {
         }
 
-        protected override Action ChooseNextAction()
+        public override void ChooseNextAction()
         {
-            return MoveToTargetDistance(0);
+            CurrentAction = MoveToTargetDistance(0);
         }
 
         protected override void ReachTarget()

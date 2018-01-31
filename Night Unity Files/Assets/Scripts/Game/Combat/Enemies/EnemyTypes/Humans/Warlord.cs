@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Game.Combat.Enemies.EnemyTypes.Misc;
 using Game.Gear.Weapons;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using static UIEnemyController;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
@@ -18,7 +18,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             MinimumFindCoverDistance = 10;
             HealthController.AddOnTakeDamage(a =>
             {
-                if (CombatManager.ReachedMaxEncounterSize()) return;
+                if (ReachedMaxEncounterSize()) return;
                 float normalHealthBefore = (HealthController.GetCurrentHealth() + a) / HealthController.GetMaxHealth();
                 float currentNormalHealth = HealthController.GetNormalisedHealthValue();
                 if (normalHealthBefore > 0.25f && currentNormalHealth <= 0.25f
@@ -33,11 +33,11 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
 
         private void SummonEnemies()
         {
-            SetActionText("Reinforcing");
+            EnemyView.SetActionText("Reinforcing");
             _reinforceCallTime -= Time.deltaTime;
             if (!(_reinforceCallTime <= 0)) return;
-            CombatManager.QueueEnemyToAdd(new Sentinel(MaxDistance));
-            CurrentAction = Aim();
+            QueueEnemyToAdd(new Sentinel(CombatManager.VisibilityRange + BasicEnemyView.FadeVisibilityDistance));
+            ChooseNextAction();
             return;
 //            switch (Random.Range(0, 4))
 //            {

@@ -7,6 +7,7 @@ using Facilitating.Audio;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.Combat;
+using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.Gear.Weapons;
 using Game.World.Region;
@@ -21,6 +22,7 @@ using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Game.Characters.Player
 {
@@ -46,8 +48,9 @@ namespace Game.Characters.Player
         public LightFire LightFireAction;
         public readonly RageController RageController;
 
-        protected Cooldown CockingCooldown;
         protected Cooldown ReloadingCooldown;
+        
+        private bool _fired;
 
         private int _storyProgress;
 
@@ -77,9 +80,13 @@ namespace Game.Characters.Player
             HealthController.AddOnTakeDamage(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
             Energy.OnMin(Sleep);
             SetConditions();
-            Position.AddOnValueChange(a => CombatManager.GetEnemies().ForEach(e => e.Position.UpdateValueChange()));
+            Position.AddOnValueChange(a =>
+            {
+                UIEnemyController.Enemies.ForEach(e => e.Position.UpdateValueChange());
+                CharacterPositionManager.UpdatePlayerDirection();
+            });
             SetReloadCooldown();
-            SetCockCooldown();
+            FacingDirection = Direction.Right;
         }
 
         public void OnHit(Shot shot, int damage, bool isCritical)
@@ -101,10 +108,10 @@ namespace Game.Characters.Player
             CombatManager.SetCoverText("Exposed");
         }
 
-        public override void KnockDown()
+        protected override void KnockDown()
         {
-            if (!IsKnockedDown)
-                base.KnockDown();
+            if (IsKnockedDown) return;
+            base.KnockDown();
             UIKnockdownController.StartKnockdown(10);
         }
 
@@ -231,7 +238,6 @@ namespace Game.Characters.Player
             {
                 case GearSubtype.Weapon:
                     SwapWeaponSkills((Weapon) gearItem);
-                    ((Weapon) gearItem).Reload(Inventory());
                     CharacterView?.WeaponGearUi.SetGearItem(gearItem);
                     break;
                 case GearSubtype.Armour:
@@ -274,46 +280,16 @@ namespace Game.Characters.Player
             }
         }
 
-        //COCKING
-        public void CockWeapon()
-        {
-            if (Immobilised()) return;
-            if (!CockingCooldown.Finished()) return;
-            float cockTime = EquipmentController.Weapon().WeaponAttributes.GetCalculatedValue(AttributeType.FireRate);
-            GunFire.Cock(cockTime);
-            CockingCooldown.Duration = cockTime;
-            CockingCooldown.Start();
-        }
-
-        private void StopCocking()
-        {
-            if (CockingCooldown == null || CockingCooldown.Finished()) return;
-            Debug.Log("stopped cocking");
-            CockingCooldown.Cancel();
-        }
-
+        //MISC
         public override bool Immobilised()
         {
-            return ReloadingCooldown.Running() || CockingCooldown.Running() || IsKnockedDown;
+            return ReloadingCooldown.Running() || IsKnockedDown;
         }
-
-        //MISC
 
         //RELOADING
-        protected void TryReload()
+        private void Reload()
         {
             if (Immobilised()) return;
-            if (Weapon().NeedsCocking())
-            {
-                CockWeapon();
-                return;
-            }
-
-            ReloadWeapon();
-        }
-
-        private void ReloadWeapon()
-        {
             if (ReloadingCooldown.Running()) return;
             if (EquipmentController.Weapon().FullyLoaded()) return;
             if (Weapon().GetRemainingMagazines() == 0) return;
@@ -333,24 +309,11 @@ namespace Game.Characters.Player
 
         //COOLDOWNS
 
-        private void SetCockCooldown()
-        {
-            CockingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
-            CockingCooldown.SetEndAction(() =>
-            {
-                EquipmentController.Weapon().Cocked = true;
-                UpdateMagazineUi();
-            });
-            CockingCooldown.SetStartAction(() => UIMagazineController.SetMessage("Cocking"));
-        }
-
-
         private void SetReloadCooldown()
         {
             ReloadingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
-            ReloadingCooldown.SetEndAction(() =>
+            ReloadingCooldown.SetStartAction(() =>
             {
-                EquipmentController.Weapon().Cocked = true;
                 EquipmentController.Weapon().Reload(Inventory());
                 UpdateMagazineUi();
             });
@@ -378,8 +341,10 @@ namespace Game.Characters.Player
                 OnFireAction?.Invoke(shot);
                 shot.Fire();
             }
+
             if (RageController.Active()) shot?.GuaranteeCritical();
             UpdateMagazineUi();
+            _fired = true;
             return shot;
         }
 
@@ -387,7 +352,6 @@ namespace Game.Characters.Player
 
         protected override void Interrupt()
         {
-            StopCocking();
             StopReloading();
             MovementController.StopSprinting();
             UpdateMagazineUi();
@@ -397,8 +361,6 @@ namespace Game.Characters.Player
         {
             string magazineMessage = "";
             if (Weapon().GetRemainingMagazines() == 0) magazineMessage = "NO AMMO";
-            else if (!EquipmentController.Weapon().Cocked)
-                magazineMessage = "EJECT CARTRIDGE";
             else if (EquipmentController.Weapon().Empty())
                 magazineMessage = "RELOAD";
             if (magazineMessage == "")
@@ -426,10 +388,10 @@ namespace Game.Characters.Player
                     RageController.TryStart();
                     break;
                 case InputAxis.Fire:
-                    FireWeapon(null);
+                    if (!_fired || Weapon().WeaponAttributes.Automatic) FireWeapon(CombatManager.CurrentTarget);
                     break;
                 case InputAxis.Reload:
-                    TryReload();
+                    Reload();
                     break;
                 case InputAxis.Horizontal:
                     MovementController.Move(direction);
@@ -451,7 +413,7 @@ namespace Game.Characters.Player
                     break;
             }
         }
-
+        
         public void OnInputUp(InputAxis axis)
         {
             switch (axis)
@@ -461,6 +423,7 @@ namespace Game.Characters.Player
                 case InputAxis.Submit:
                     break;
                 case InputAxis.Fire:
+                    _fired = false;
                     break;
                 case InputAxis.Flank:
                     break;

@@ -1,10 +1,13 @@
 ﻿using System.Collections;
+using System.Runtime.Remoting.Messaging;
+using Game.Characters;
 using Game.Characters.Player;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Combat.Enemies
 {
@@ -16,11 +19,15 @@ namespace Game.Combat.Enemies
         public UIAimController UiAimController;
         private float _currentFadeInTime = 2f;
         private const float MaxFadeInTime = 2f;
+        private bool _inSight;
+        private string _actionString;
+        private Enemy _enemy;
 
         public EnemyView(MyGameObject linkedObject, Transform parent) : base(linkedObject, parent, "Prefabs/Inventory/EnemyItem")
         {
             GameObject.SetActive(true);
             SetAlpha(0f);
+            _enemy = (Enemy) linkedObject;
         }
 
         protected override void CacheUiElements()
@@ -36,14 +43,53 @@ namespace Game.Combat.Enemies
             ActionText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Action");
         }
 
-        public void SetHealth(HealthController healthController)
+        public void UpdateHealth()
         {
-            HealthBar.SetValue(healthController.GetNormalisedHealthValue(), CurrentAlpha);
-            HealthText.text = (int) healthController.GetCurrentHealth() + "/" + (int) healthController.GetMaxHealth();
+            if (!_inSight) return;
+            HealthController health = _enemy.HealthController;
+            HealthBar.SetValue(health.GetNormalisedHealthValue(), CurrentAlpha);
+            HealthText.text = (int) health.GetCurrentHealth() + "/" + (int) health.GetMaxHealth();
+        }
+
+        public void SetActionText(string action)
+        {
+            _actionString = action;
+            if (!_inSight) action = "??";
+            ActionText.text = action;
+        }
+        
+        protected override void UpdateDistanceText()
+        {
+            if (_inSight)
+            {
+                base.UpdateDistanceText();
+                return;
+            }
+
+            DistanceText.text = "??";
+        }
+
+        public void Hide()
+        {
+            _inSight = false;
+            UiAimController.Hide();
+            UpdateHealth();
+            UpdateDistanceText();
+            SetActionText(_actionString);
+        }
+
+        public void Show()
+        {
+            _inSight = true;
+            UiAimController.Show();
+            SetActionText(_actionString);
+            UpdateDistanceText();
+            UpdateHealth();
         }
 
         public void SetArmour(int armourLevel, bool inCover)
         {
+            if (!_inSight) return;
             _uiArmourController.SetArmourValue(armourLevel);
             float armourProtection = 1 - armourLevel / 10f;
             string coverString = "No Cover";
@@ -57,19 +103,12 @@ namespace Game.Combat.Enemies
             ArmourText.text = armourProtection + "x damage";
         }
 
-        private IEnumerator FadeIn()
+        public void MarkSelected()
         {
-            while (_currentFadeInTime > 0)
-            {
-                _currentFadeInTime -= Time.deltaTime;
-                SetAlpha(CurrentAlpha);
-                float fadeInAmount = 1f - _currentFadeInTime / MaxFadeInTime;
-                float newAlpha = CurrentAlpha * fadeInAmount;
-                GetGameObject().GetComponent<CanvasGroup>().alpha = newAlpha;
-                yield return null;
-            }
+            PrimaryButton.GetComponent<Button>().Select();
+            CharacterPositionManager.UpdatePlayerDirection();
         }
-
+        
         public void MarkUnselected()
         {
             HealthBar.SetValue(-1, 0f);

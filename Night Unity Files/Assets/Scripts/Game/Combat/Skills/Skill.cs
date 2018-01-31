@@ -90,8 +90,10 @@ namespace Game.Combat.Skills
             {
                 base.OnFire();
                 shot.GuaranteeHit();
-                shot.SetKnockdownChance(1, 0);
                 shot.Fire();
+                Shot knockdownShot = new Shot(shot.Target(), shot.Origin());
+                knockdownShot.SetKnockdownChance(1, 5);
+                knockdownShot.Fire();
             }
         }
 
@@ -104,8 +106,11 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                shot.AddOnHit(() => { Explosion.CreateAndDetonate(shot.Target().Position.CurrentValue(), 25, shot.DamageDealt()); });
-                shot.Fire();
+                foreach (Enemy e in UIEnemyController.Enemies)
+                {
+                    Shot s = new Shot(e, shot.Origin());
+                    s.Fire();
+                }
             }
         }
 

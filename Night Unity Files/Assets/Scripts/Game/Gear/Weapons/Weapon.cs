@@ -25,7 +25,6 @@ namespace Game.Gear.Weapons
 {
     public class Weapon : GearItem
     {
-        public bool Cocked = true;
         private int _ammoInMagazine;
         public readonly WeaponAttributes WeaponAttributes;
         public Action OnFireAction;
@@ -47,11 +46,6 @@ namespace Game.Gear.Weapons
         public override bool IsStackable()
         {
             return false;
-        }
-
-        public bool NeedsCocking()
-        {
-            return !Cocked && !WeaponAttributes.Automatic && !Empty();
         }
 
         public WeaponType WeaponType()
