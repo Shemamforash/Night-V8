@@ -49,7 +49,7 @@ namespace Game.Combat
             OnConditionNonEmpty?.Invoke();
         }
 
-        protected void Clear()
+        public void Clear()
         {
             StackList.Clear();
             OnConditionEmpty?.Invoke();

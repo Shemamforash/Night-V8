@@ -39,7 +39,7 @@ public class Grenade : CombatItem
 		return GrenadeView;
 	}
 
-	public override void Update()
+	public override void UpdateCombat()
 	{
 		_moveAction();
 	}

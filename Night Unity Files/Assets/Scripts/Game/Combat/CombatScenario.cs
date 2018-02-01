@@ -34,8 +34,8 @@ namespace Game.Combat
 //                scenario.AddEnemy(new Medic(RandomPosition()));
 //                scenario.AddEnemy(new Mountain(RandomPosition()));
                 scenario.AddEnemy(new Sentinel(RandomPosition()));
-                scenario.AddEnemy(new Warlord(RandomPosition()));
-//                scenario.AddEnemy(new Witch(RandomPosition()));
+//                scenario.AddEnemy(new Warlord(RandomPosition()));
+                scenario.AddEnemy(new Witch(RandomPosition()));
 //                scenario.AddEnemy(new Brawler(RandomPosition()));
             }
             for (int i = 0; i < size; ++i)

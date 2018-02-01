@@ -87,14 +87,14 @@ namespace SamsHelper.ReactiveUI
             SetCurrentValue(_currentValue - amount);
         }
 
-        public virtual void SetCurrentValue(float value)
+        public void SetCurrentValue(float value)
         {
-            if (value > _max)
+            if (value >= _max)
             {
                 _currentValue = _max;
                 _onMax?.Invoke();
             }
-            else if (value < _min)
+            else if (value <= _min)
             {
                 _currentValue = _min;
                 _onMin?.Invoke();

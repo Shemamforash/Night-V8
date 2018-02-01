@@ -22,7 +22,9 @@ namespace Facilitating.Audio
         public static void Fire(WeaponType type, float normalisedDistance)
         {
             _instance.GunSource.pitch = Random.Range(0.9f, 1.1f);
-            _instance.GunSource.volume = Random.Range(0.9f, 1f) * (1 - normalisedDistance);
+            float volume = (float) Math.Pow(1 - normalisedDistance, 2);
+             volume = Random.Range(0.9f, 1f) * volume;
+            _instance.GunSource.volume = volume;
             switch (type)
             {
                 case WeaponType.Pistol:

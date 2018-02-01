@@ -5,7 +5,7 @@ using Game.Combat.Enemies;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
-public class UIEnemyController : MonoBehaviour
+public class UIEnemyController : MonoBehaviour, ICombatListener
 {
     private static MenuList _enemyList;
     private static readonly List<Enemy> EnemiesToAdd = new List<Enemy>();
@@ -15,25 +15,39 @@ public class UIEnemyController : MonoBehaviour
     private void Awake()
     {
         _enemyList = GetComponent<MenuList>();
+        CombatManager.RegisterCombatListener(this);
     }
 
-    public void Update()
+    public void EnterCombat()
+    {
+        CombatManager.CurrentScenario.Enemies().ForEach(e =>
+        {
+            AddEnemy(e);
+            e.EnterCombat();
+        });
+    }
+
+    public void UpdateCombat()
     {
         if (MeleeController.InMelee) return;
-        Enemies.ForEach(e =>
+        foreach (Enemy e in Enemies)
         {
             if (e.IsDead) return;
-            e.Update();
-        });
+            e.UpdateCombat();
+            if (Enemies.Count == 0) break;
+        }
         EnemiesToAdd.ForEach(AddEnemy);
         EnemiesToAdd.Clear();
     }
 
-    public static void EnterCombat(CombatScenario scenario)
+    public void ExitCombat()
     {
+        Enemies.ForEach(e =>
+        {
+            e.ExitCombat();
+        });
         Enemies.Clear();
         _enemyList.Clear();
-        scenario.Enemies().ForEach(AddEnemy);
     }
 
     public static void QueueEnemyToAdd(Enemy e)

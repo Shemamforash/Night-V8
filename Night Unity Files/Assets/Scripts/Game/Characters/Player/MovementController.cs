@@ -12,7 +12,7 @@ namespace Game.Characters.Player
         private readonly Character _character;
         private Cooldown _dashCooldown;
         private const float DashDuration = 2f;
-        private int _baseSpeed;
+        private float _baseSpeed;
         private const int SprintModifier = 2;
         private bool _sprinting;
         private readonly Action<float> _moveForwardAction, _moveBackwardAction;
@@ -22,18 +22,16 @@ namespace Game.Characters.Player
             _character = character;
             SetDashCooldown();
             _baseSpeed = speed;
-            if (character is Player)
+            Player player = character as Player;
+            if (player != null)
             {
-                _moveForwardAction = f =>
+                player.Attributes.Endurance.AddOnValueChange(a =>
                 {
-                    _character.Position.Increment(f);
-//                    UIEnemyController.Enemies.ForEach(e => e.CheckForRepositioning());
-                };
-                _moveBackwardAction = f =>
-                {
-                    _character.Position.Decrement(f);
-//                    UIEnemyController.Enemies.ForEach(e => e.CheckForRepositioning());
-                };
+                    _dashCooldown.Duration = 2f - 0.1f * a.CurrentValue();
+                    _baseSpeed = 1 + a.CurrentValue() * 0.4f;
+                });
+                _moveForwardAction = f => _character.Position.Increment(f);
+                _moveBackwardAction = f => _character.Position.Decrement(f);
                 _dashCooldown.SetDuringAction(a =>
                 {
                     float normalisedTime = a / _dashCooldown.Duration;
@@ -63,11 +61,6 @@ namespace Game.Characters.Player
                 _moveForwardAction = f => _character.Position.Decrement(f);
                 _moveBackwardAction = f => _character.Position.Increment(f);
             }
-        }
-
-        public void SetBaseSpeed(int baseSpeed)
-        {
-            _baseSpeed = baseSpeed;
         }
 
         private void SetDashCooldown()

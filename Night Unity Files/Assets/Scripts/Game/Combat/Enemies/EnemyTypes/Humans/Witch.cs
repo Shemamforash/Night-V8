@@ -51,9 +51,9 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             };
         }
 
-        public override void Update()
+        public override void UpdateCombat()
         {
-            base.Update();
+            base.UpdateCombat();
             if (!InCombat() || _throwing) return;
             _timeSinceThrown += Time.deltaTime;
             if (!(_timeSinceThrown >= _targetTime)) return;

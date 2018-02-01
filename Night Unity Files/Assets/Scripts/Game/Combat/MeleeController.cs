@@ -2,6 +2,7 @@
 using Game.Combat;
 using Game.Combat.Enemies;
 using SamsHelper;
+using SamsHelper.Input;
 using UnityEngine;
 
 public class MeleeController : MonoBehaviour
@@ -42,7 +43,7 @@ public class MeleeController : MonoBehaviour
         _initialRingTime = MaxRingTime;
         _initialPressTime = MaxPressTime;
         CombatManager.CombatCanvas.alpha = 0.4f;
-        CombatManager.DisengagePlayerInput();
+        InputHandler.UnregisterInputListener(CombatManager.Player);
         InMelee = true;
         StartRandomController();
     }
@@ -79,7 +80,7 @@ public class MeleeController : MonoBehaviour
     private static void ExitMelee()
     {
         CombatManager.CombatCanvas.alpha = 1f;
-        CombatManager.EngagePlayerInput();
+        InputHandler.RegisterInputListener(CombatManager.Player);
         InMelee = false;
         if (!_targetEnemy.IsDead)
         {

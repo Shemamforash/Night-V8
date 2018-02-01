@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Assets;
-using Facilitating.Audio;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.Combat;
-using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.Gear.Weapons;
+using Game.World;
 using Game.World.Region;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -22,11 +21,11 @@ using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
-using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 namespace Game.Characters.Player
 {
-    public class Player : Character, IInputListener
+    public class Player : Character, IInputListener, ICombatListener
     {
         public readonly StateMachine States = new StateMachine();
         public readonly TraitLoader.Trait CharacterTrait;
@@ -62,6 +61,12 @@ namespace Game.Characters.Player
             return currentLine;
         }
 
+        public override void Kill()
+        {
+            if (SceneManager.GetActiveScene().name == "Game") WorldState.HomeInventory().RemoveItem(this);
+            if(CombatManager.Player == this) CombatManager.ExitCombat();
+        }
+
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(string name, TraitLoader.CharacterClass characterClass, TraitLoader.Trait characterTrait) : base(name)
         {
@@ -73,7 +78,6 @@ namespace Game.Characters.Player
             Attributes.Endurance.AddOnValueChange(a =>
             {
                 Energy.Max = a.CurrentValue();
-                MovementController.SetBaseSpeed((int) a.CurrentValue());
             });
             RageController = new RageController(this);
             HealthController.AddOnHeal(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
@@ -86,7 +90,6 @@ namespace Game.Characters.Player
                 CharacterPositionManager.UpdatePlayerDirection();
             });
             SetReloadCooldown();
-            FacingDirection = Direction.Right;
         }
 
         public void OnHit(Shot shot, int damage, bool isCritical)
@@ -338,6 +341,7 @@ namespace Game.Characters.Player
             Shot shot = base.FireWeapon(target);
             if (shot != null)
             {
+                shot.SetDamageModifier((float) Math.Pow(1.05f, Attributes.Perception.CurrentValue()));
                 OnFireAction?.Invoke(shot);
                 shot.Fire();
             }
@@ -450,6 +454,20 @@ namespace Game.Characters.Player
         public void CollectResourcesInRegion(Region region)
         {
             CollectResourcesAction.SetTargetRegion(region);
+        }
+
+        public override void EnterCombat()
+        {
+            CombatManager.UpdatePlayerHealth();
+            FacingDirection = Direction.Right;
+            InputHandler.RegisterInputListener(this);
+            UIMagazineController.SetWeapon(Weapon());
+        }
+
+        public override void ExitCombat()
+        {
+            InputHandler.UnregisterInputListener(this);
+            StopReloading();
         }
     }
 }

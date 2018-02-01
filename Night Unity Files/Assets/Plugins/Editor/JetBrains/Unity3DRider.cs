@@ -475,19 +475,19 @@ namespace Plugins.Editor.JetBrains
 
     public static void Log(LoggingLevel level, string initialText)
     {
-      if (level < SelectedLoggingLevel) return;
-
-      var text = "[Rider] "+DateTime.Now.ToString("HH:mm:ss:ff")+" [" + level + "] " + initialText;
-
-      switch (level)
-      {
-        case LoggingLevel.Warning:
-          Debug.LogWarning(text);
-          break;
-        default:
-          Debug.Log(text);
-          break;
-      }
+//      if (level < SelectedLoggingLevel) return;
+//
+//      var text = "[Rider] "+DateTime.Now.ToString("HH:mm:ss:ff")+" [" + level + "] " + initialText;
+//
+//      switch (level)
+//      {
+//        case LoggingLevel.Warning:
+//          Debug.LogWarning(text);
+//          break;
+//        default:
+//          Debug.Log(text);
+//          break;
+//      }
     }
 
     private static string GetDefaultApp()

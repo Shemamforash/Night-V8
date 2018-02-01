@@ -16,11 +16,12 @@ using UnityEngine.SceneManagement;
 
 namespace Game.Characters
 {
-    public abstract class Character : MyGameObject, IPersistenceTemplate
+    public abstract class Character : MyGameObject, IPersistenceTemplate, ICombatListener
     {
         protected readonly DesolationInventory CharacterInventory;
 
         private long _timeAtLastFire;
+        //todo implement armour
         protected readonly Number ArmourLevel = new Number(0, 0, 10);
 
         public readonly HealthController HealthController;
@@ -78,10 +79,7 @@ namespace Game.Characters
         {
         }
 
-        public virtual void Kill()
-        {
-            if (SceneManager.GetActiveScene().name == "Game") WorldState.HomeInventory().RemoveItem(this);
-        }
+        public abstract void Kill();
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
@@ -141,7 +139,7 @@ namespace Game.Characters
         }
 
         //Only call from combatmanager
-        public virtual void Update()
+        public virtual void UpdateCombat()
         {
             Burning.Update();
             Sickening.Update();
@@ -182,6 +180,19 @@ namespace Game.Characters
         public void AddBurnStack()
         {
             Burning.AddStack();
+        }
+
+        public virtual void EnterCombat()
+        {
+            HealthController.EnterCombat();
+        }
+
+        public virtual void ExitCombat()
+        {
+            HealthController.ExitCombat();
+            Burning.Clear();
+            Bleeding.Clear();
+            Sickening.Clear();
         }
     }
 }

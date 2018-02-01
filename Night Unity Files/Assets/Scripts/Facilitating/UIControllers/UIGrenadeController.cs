@@ -15,7 +15,7 @@ public class UIGrenadeController : MonoBehaviour {
 	public void Update()
 	{
 		if (MeleeController.InMelee) return;
-		Grenades.ForEach(g => { g.Update(); });
+		Grenades.ForEach(g => { g.UpdateCombat(); });
 		GrenadesToRemove.ForEach(g => Grenades.Remove(g));
 		GrenadesToRemove.Clear();
 	}

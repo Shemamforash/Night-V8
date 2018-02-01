@@ -35,9 +35,9 @@ namespace Game.Combat.Enemies.EnemyTypes.Misc
             _nameText.text = LinkedObject.Name;
         }
 
-        public void SetAlpha(float alpha)
+        protected void SetAlpha(float alpha)
         {
-            GetGameObject().GetComponent<CanvasGroup>().alpha = alpha;
+            if(GameObject != null) GameObject.GetComponent<CanvasGroup>().alpha = alpha;
             CurrentAlpha = alpha;
         }
 

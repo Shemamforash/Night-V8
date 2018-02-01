@@ -12,6 +12,7 @@ using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game.Combat
@@ -38,6 +39,7 @@ namespace Game.Combat
 
         private static bool _inMelee;
         public static int VisibilityRange;
+        private static readonly List<ICombatListener> _combatListeners = new List<ICombatListener>();
 
 
         public void Awake()
@@ -57,6 +59,11 @@ namespace Game.Combat
 
             PlayerHealthBar = Helper.FindChildWithName<UIHealthBarController>(playerContainer, "Health Bar");
             PlayerHealthBar.SetIsPlayerBar();
+        }
+
+        public static void RegisterCombatListener(ICombatListener listener)
+        {
+            _combatListeners.Add(listener);
         }
 
         public static void SetCoverText(string coverText)
@@ -83,19 +90,9 @@ namespace Game.Combat
         public void Update()
         {
             if (MeleeController.InMelee) return;
+            _combatListeners.ForEach(l => l.UpdateCombat());
             CombatCooldowns.UpdateCooldowns();
-            Player.Update();
             Player.RageController.Decrease();
-        }
-
-        public static void DisengagePlayerInput()
-        {
-            InputHandler.UnregisterInputListener(Player);
-        }
-
-        public static void EngagePlayerInput()
-        {
-            InputHandler.RegisterInputListener(Player);
         }
 
         public static void CheckPlayerFled()
@@ -116,12 +113,6 @@ namespace Game.Combat
             }
         }
 
-        public static void ResetCombat()
-        {
-            CurrentTarget = null;
-            CombatCooldowns.Clear();
-        }
-
         public static void EnterCombat(Player player, CombatScenario scenario)
         {
             WorldState.Pause();
@@ -129,27 +120,31 @@ namespace Game.Combat
             VisibilityRange = 75;
             CurrentScenario = scenario;
             Player = player;
-            Player.HealthController.EnterCombat();
-            ResetCombat();
-            UIMagazineController.SetWeapon(Player.Weapon());
+            player.EnterCombat();
+            CurrentTarget = null;
+            CombatCooldowns.Clear();
             _playerName.text = Player.Name;
-            UIEnemyController.EnterCombat(scenario);
-            UpdatePlayerHealth();
-            InputHandler.RegisterInputListener(Player);
             MenuStateMachine.ShowMenu("Combat Menu");
+            _combatListeners.ForEach(l => l.EnterCombat());
         }
 
-        private static void ExitCombat()
+        public static void ExitCombat()
         {
             WorldState.UnPause();
-            MenuStateMachine.ShowMenu("Game Menu");
-            InputHandler.UnregisterInputListener(Player);
-            if (UIEnemyController.AllEnemiesDead())
+            _combatListeners.ForEach(l => l.ExitCombat());
+            Player.ExitCombat();
+            if (SceneManager.GetActiveScene().name == "Combat Tester")
             {
-                CurrentScenario.FinishCombat();
+                MenuStateMachine.ShowMenu("Retry");
+            }    
+            else
+            {
+                MenuStateMachine.ShowMenu("Game Menu");
+                if (UIEnemyController.AllEnemiesDead())
+                {
+                    CurrentScenario.FinishCombat();
+                }
             }
-
-            Player.HealthController.ExitCombat();
         }
 
         public static void Flee(Enemy enemy)

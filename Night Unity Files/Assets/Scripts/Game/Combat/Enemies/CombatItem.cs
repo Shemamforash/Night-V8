@@ -26,7 +26,7 @@ namespace Game.Combat.Enemies
             {
                 if (IsDead) return;
                 DistanceToPlayer = Position.CurrentValue() - CombatManager.Player.Position.CurrentValue();
-                enemyView.UpdateDistance();
+                enemyView?.UpdateDistance();
             });
         }
 
@@ -52,5 +52,10 @@ namespace Game.Combat.Enemies
         }
 
         protected abstract void ReachTarget();
+
+        public override void Kill()
+        {
+            
+        }
     }
 }

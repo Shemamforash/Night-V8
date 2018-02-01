@@ -10,23 +10,24 @@ namespace Game.Combat.Skills
     public abstract class Skill : Cooldown
     {
         public int RageCostInitial, RageCostOverTime;
-        public readonly string Name;
+        private readonly string _name;
         private readonly bool _instant;
-        protected readonly Player Player;
-        protected Shot shot;
+        private readonly Player _player;
+        private Shot Shot;
+        protected float RechargeTime;
 
         private Skill(Player player, bool instant, string name) : base(CombatManager.CombatCooldowns)
         {
-            Name = name;
+            _name = name;
             _instant = instant;
-            Player = player;
+            _player = player;
             Duration = 2;
         }
 
         public void Activate()
         {
-            if (Running() || Player.Weapon().Empty()) return;
-            if (!Player.RageController.Spend(RageCostInitial)) return;
+            if (Running() || _player.Weapon().Empty()) return;
+            if (!_player.RageController.Spend(RageCostInitial)) return;
             if (!_instant) return;
             OnFire();
             Deactivate();
@@ -34,20 +35,20 @@ namespace Game.Combat.Skills
 
         private void Deactivate()
         {
-            Player.UpdateMagazineUi();
+            _player.UpdateMagazineUi();
             Start();
         }
 
         protected virtual void OnFire()
         {
             Deactivate();
-            shot = new Shot(CombatManager.GetCurrentTarget(), Player);
+            Shot = new Shot(CombatManager.GetCurrentTarget(), _player);
         }
 
         public override void SetController(CooldownController controller)
         {
             base.SetController(controller);
-            controller.Text(Name);
+            controller.Text(_name);
         }
 
         public class PiercingShot : Skill
@@ -60,9 +61,9 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                shot.SetPierceDepth(100);
-                shot.SetPierceChance(1);
-                shot.Fire();
+                Shot.SetPierceDepth(100);
+                Shot.SetPierceChance(1);
+                Shot.Fire();
             }
         }
 
@@ -75,8 +76,8 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                shot.UseRemainingShots();
-                shot.Fire();
+                Shot.UseRemainingShots();
+                Shot.Fire();
             }
         }
 
@@ -89,9 +90,9 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                shot.GuaranteeHit();
-                shot.Fire();
-                Shot knockdownShot = new Shot(shot.Target(), shot.Origin());
+                Shot.GuaranteeHit();
+                Shot.Fire();
+                Shot knockdownShot = new Shot(Shot.Target(), Shot.Origin());
                 knockdownShot.SetKnockdownChance(1, 5);
                 knockdownShot.Fire();
             }
@@ -108,7 +109,7 @@ namespace Game.Combat.Skills
                 base.OnFire();
                 foreach (Enemy e in UIEnemyController.Enemies)
                 {
-                    Shot s = new Shot(e, shot.Origin());
+                    Shot s = new Shot(e, Shot.Origin());
                     s.Fire();
                 }
             }
@@ -123,7 +124,7 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                Player.Weapon().Reload(Player.Inventory());
+                _player.Weapon().Reload(_player.Inventory());
             }
         }
 
@@ -136,7 +137,7 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                Player.OnFireAction = s => { s.SetKnockdownChance(0.25f, 2); };
+                _player.OnFireAction = s => { s.SetKnockdownChance(0.25f, 2); };
             }
         }
 
@@ -149,7 +150,7 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                Player.OnFireAction = s => { s.SetNumberOfShots(2); };
+                _player.OnFireAction = s => { s.SetNumberOfShots(2); };
             }
         }
 
@@ -162,7 +163,7 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                Player.OnFireAction = s => { s.AddOnHit(() => { Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt()); }); };
+                _player.OnFireAction = s => { s.AddOnHit(() => { Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt()); }); };
             }
         }
 
@@ -175,10 +176,10 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                Player.OnFireAction = s =>
+                _player.OnFireAction = s =>
                 {
-                    Player.RageController.Increase(100);
-                    Player.RageController.TryStart();
+                    _player.RageController.Increase(100);
+                    _player.RageController.TryStart();
                 };
             }
         }
@@ -192,7 +193,7 @@ namespace Game.Combat.Skills
             protected override void OnFire()
             {
                 base.OnFire();
-                Player.Retaliate = true;
+                _player.Retaliate = true;
             }
         }
     }

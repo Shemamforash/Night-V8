@@ -32,6 +32,7 @@ namespace Game.Combat
         private int _knockbackDistance;
 
         private float _pierceChance, _burnChance, _bleedChance, _sicknessChance, _knockDownChance;
+        private float _finalDamageModifier = 1f;
 
         private event Action OnHitAction;
         private bool _didHit;
@@ -72,6 +73,11 @@ namespace Game.Combat
         private void SetDamage(int damage)
         {
             _damage = damage;
+        }
+
+        public void SetDamageModifier(float modifier)
+        {
+            _finalDamageModifier = modifier;
         }
         
         private void CalculateHitProbability()
@@ -126,14 +132,16 @@ namespace Game.Combat
         {
             bool isCritical = WillCrit();
             int pelletDamage = isCritical ? _damage * 2 : _damage;
+            pelletDamage = (int) (pelletDamage * _finalDamageModifier);
             _damageDealt += pelletDamage;
             ApplyPierce(pelletDamage);
             ApplyConditions();
             OnHitAction?.Invoke();
             (_origin as Player)?.RageController.Increase(pelletDamage);
-            if (_target is Player)
+            Player player = _target as Player;
+            if (player != null)
             {
-                ((Player)_target).OnHit(this, pelletDamage, isCritical);
+                player.OnHit(this, pelletDamage, isCritical);
             }
             else
             {

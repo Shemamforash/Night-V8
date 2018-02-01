@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Characters;
 using Game.Combat.Enemies.EnemyTypes;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using Game.Combat.Skills;
@@ -20,7 +21,7 @@ namespace Game.Combat.Enemies
 
         public readonly int MaxHealth;
 
-        protected Action CurrentAction;
+        public Action CurrentAction;
         private readonly Cooldown _firingCooldown;
         private const float MaxAimTime = 2f;
         protected float MinimumFindCoverDistance;
@@ -51,7 +52,7 @@ namespace Game.Combat.Enemies
 
         private Action WaitForHeal(Medic medic)
         {
-            EnemyView.SetActionText("Waiting for Medic");
+            SetActionText("Waiting for Medic");
             TakeCover();
             medic.RequestHeal(this);
             _waitingForHeal = true;
@@ -83,7 +84,7 @@ namespace Game.Combat.Enemies
         private Action KnockedDown()
         {
             float duration = KnockdownDuration;
-            EnemyView.SetActionText("Knocked Down");
+            SetActionText("Knocked Down");
             return () =>
             {
                 duration -= Time.deltaTime;
@@ -104,23 +105,34 @@ namespace Game.Combat.Enemies
         {
             MaxHealth = enemyHp;
             if (!(this is Medic || this is Martyr)) SetHealBehaviour();
-            CharacterInventory.SetEnemyResources();
-
-            CurrentAction = Wander;
             HealthController.AddOnTakeDamage(f => { Alert(); });
+            Reset();
+        }
+
+        public void Reset()
+        {
+            CharacterInventory.SetEnemyResources();
+            CurrentAction = Wander;
             FacingDirection = Direction.Left;
+            Alerted = false;
+            Weapon()?.Reload(Inventory());
         }
 
         public override void TakeCover()
         {
             base.TakeCover();
-            EnemyView.SetArmour((int) ArmourLevel.CurrentValue(), true);
+            SetArmour();
         }
 
         public override void LeaveCover()
         {
             base.LeaveCover();
-            EnemyView.SetArmour((int) ArmourLevel.CurrentValue(), true);
+            SetArmour();
+        }
+
+        private void SetArmour()
+        {
+            EnemyView?.SetArmour((int)ArmourLevel.CurrentValue(), true);
         }
 
         protected override void SetDistanceData(BasicEnemyView enemyView)
@@ -164,7 +176,7 @@ namespace Game.Combat.Enemies
         private Action Melee()
         {
             float currentTime = MeleeWarningTime;
-            EnemyView.SetActionText("Meleeing");
+            SetActionText("Meleeing");
             return () =>
             {
                 currentTime -= Time.deltaTime;
@@ -182,7 +194,7 @@ namespace Game.Combat.Enemies
         private Action Stagger()
         {
             float currentTime = StaggerTime;
-            EnemyView.SetActionText("Staggered");
+            SetActionText("Staggered");
             return () =>
             {
                 currentTime -= Time.deltaTime;
@@ -211,11 +223,11 @@ namespace Game.Combat.Enemies
 
             if (_aheadOfPlayer)
             {
-                EnemyView.SetActionText(DistanceToPlayer > distance ? "Approaching" : "Retreating");
+                SetActionText(DistanceToPlayer > distance ? "Approaching" : "Retreating");
                 return DistanceToPlayer > distance ? moveForwardAction : moveBackwardAction;
             }
 
-            EnemyView.SetActionText(DistanceToPlayer > distance ? "Retreating" : "Approaching");
+            SetActionText(DistanceToPlayer > distance ? "Retreating" : "Approaching");
             return DistanceToPlayer > distance ? moveBackwardAction : moveForwardAction;
         }
 
@@ -226,7 +238,7 @@ namespace Game.Combat.Enemies
             _wanderDirection = -_wanderDirection;
             float targetPosition = Position.CurrentValue() + distanceToTravel;
             CurrentAction = MoveToTargetPosition(targetPosition);
-            EnemyView.SetActionText("Wandering");
+            SetActionText("Wandering");
             CheckForPlayer();
         }
 
@@ -253,7 +265,7 @@ namespace Game.Combat.Enemies
 
         private void Suspicious()
         {
-            EnemyView.SetActionText("Suspicious");
+            SetActionText("Suspicious");
             if (DistanceToPlayer >= _detectionRange.CurrentValue()) return;
             Alert();
         }
@@ -263,6 +275,11 @@ namespace Game.Combat.Enemies
             return !HasFled && !IsDead;
         }
 
+        protected void SetActionText(string text)
+        {
+            EnemyView?.SetActionText(text);
+        }
+        
         public override void OnHit(int damage, bool isCritical)
         {
             base.OnHit(damage, isCritical);
@@ -326,7 +343,7 @@ namespace Game.Combat.Enemies
             }
 
             TakeCover();
-            EnemyView.SetActionText("Reloading");
+            SetActionText("Reloading");
             float duration = EquipmentController.Weapon().GetAttributeValue(AttributeType.ReloadSpeed) * EnemyReloadMultiplier;
             return () =>
             {
@@ -339,7 +356,7 @@ namespace Game.Combat.Enemies
 
         private Action Flee()
         {
-            EnemyView.SetActionText("Fleeing");
+            SetActionText("Fleeing");
             return () =>
             {
                 MovementController.MoveBackward();
@@ -352,7 +369,7 @@ namespace Game.Combat.Enemies
             int divider = Random.Range(3, 6);
             int noShots = (int) (Weapon().GetAttributeValue(AttributeType.Capacity) / divider);
             bool automatic = Weapon().WeaponAttributes.Automatic;
-            EnemyView.SetActionText("Firing");
+            SetActionText("Firing");
             if (!automatic)
             {
                 noShots = 1;
@@ -363,14 +380,13 @@ namespace Game.Combat.Enemies
                 Shot s = FireWeapon(CombatManager.Player);
                 if (s == null) return;
                 s.Fire();
-                EnemyView.UiAimController.Fire();
+                EnemyView?.UiAimController.Fire();
                 --noShots;
                 int remainingAmmo = Weapon().GetRemainingAmmo();
                 if (noShots == 0 || remainingAmmo == 0)
                 {
-                    EnemyView.UiAimController.SetValue(0);
+                    UpdateAim(0);
                 }
-
                 if (remainingAmmo == 0 || !automatic)
                 {
                     CurrentAction = Reload();
@@ -382,17 +398,22 @@ namespace Game.Combat.Enemies
             };
         }
 
+        private void UpdateAim(float value)
+        {
+            EnemyView?.UiAimController.SetValue(value);
+        }
+
         protected virtual Action Aim()
         {
             LeaveCover();
             Assert.IsFalse(Weapon().Empty());
             float aimTime = MaxAimTime;
-            EnemyView.SetActionText("Aiming");
+            SetActionText("Aiming");
             return () =>
             {
                 if (Immobilised()) return;
                 float normalisedTime = Helper.Normalise(aimTime, MaxAimTime);
-                EnemyView.UiAimController.SetValue(1 - normalisedTime);
+                UpdateAim(1 - normalisedTime);
                 aimTime -= Time.deltaTime;
                 if (aimTime < 0)
                 {
@@ -401,10 +422,23 @@ namespace Game.Combat.Enemies
             };
         }
 
-        public override void Update()
+        public override void EnterCombat()
+        {
+            base.EnterCombat();
+            Reset();
+        }
+
+        public override void ExitCombat()
+        {
+            base.ExitCombat();
+            EnemyView = null;
+            CurrentAction = null;
+        }
+        
+        public override void UpdateCombat()
         {
             if (!InCombat()) return;
-            base.Update();
+            base.UpdateCombat();
             CurrentAction?.Invoke();
         }
 

@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Runtime.Remoting.Messaging;
-using Game.Characters;
-using Game.Characters.Player;
+﻿using Game.Characters.Player;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -66,7 +63,7 @@ namespace Game.Combat.Enemies
                 return;
             }
 
-            DistanceText.text = "??";
+            DistanceText.text = "behind";
         }
 
         public void Hide()
