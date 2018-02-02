@@ -39,6 +39,11 @@ public class Grenade : CombatItem
 		return GrenadeView;
 	}
 
+	public void SetTargetPosition(float targetPosition)
+	{
+		_moveAction = MoveToTargetPosition(targetPosition);
+	}
+	
 	public override void UpdateCombat()
 	{
 		_moveAction();

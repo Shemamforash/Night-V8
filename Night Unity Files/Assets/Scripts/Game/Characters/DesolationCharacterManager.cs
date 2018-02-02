@@ -29,7 +29,7 @@ namespace Game.Characters
 
         public void Start()
         {
-            TraitLoader.LoadTraits();
+            CharacterTemplateLoader.LoadTemplates();
             SaveController.AddPersistenceListener(this);
             if (_characters.Count == 0)
             {

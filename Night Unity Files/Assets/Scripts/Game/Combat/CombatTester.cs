@@ -19,7 +19,7 @@ namespace Game.Combat
         public void Start()
         {
             new CharacterManager();
-            TraitLoader.LoadTraits();
+            CharacterTemplateLoader.LoadTemplates();
             _instance = this;
             RestartCombat();
         }

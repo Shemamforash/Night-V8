@@ -3,7 +3,7 @@ using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
 public class UIGrenadeController : MonoBehaviour {
-	private static readonly List<Grenade> Grenades = new List<Grenade>();
+	public static readonly List<Grenade> Grenades = new List<Grenade>();
 	private static readonly List<Grenade> GrenadesToRemove = new List<Grenade>();
 	private static MenuList _grenadeList;
 

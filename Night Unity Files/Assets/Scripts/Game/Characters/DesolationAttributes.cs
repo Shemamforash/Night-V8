@@ -26,7 +26,6 @@ namespace Game.Characters
         */
         public readonly CharacterAttribute Hunger = new CharacterAttribute(AttributeType.Hunger, 0, 0, 12);
         public readonly CharacterAttribute Thirst = new CharacterAttribute(AttributeType.Thirst, 0, 0, 12);
-        public int Weight;
         
         private bool _starving, _dehydrated;
         private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
@@ -159,9 +158,6 @@ namespace Game.Characters
             LoadAttribute(doc, nameof(Dehydration), Dehydration);
             LoadAttribute(doc, nameof(Hunger), Hunger);
             LoadAttribute(doc, nameof(Thirst), Thirst);
-
-            XmlNode weightNode = doc.SelectSingleNode("Weight");
-            Weight = SaveController.ParseIntFromSubNode(weightNode);
         }
 
         public override XmlNode Save(XmlNode doc, PersistenceType saveType)
@@ -175,7 +171,6 @@ namespace Game.Characters
             SaveAttribute(doc, nameof(Dehydration), Dehydration);
             SaveAttribute(doc, nameof(Hunger), Hunger);
             SaveAttribute(doc, nameof(Thirst), Thirst);
-            SaveController.CreateNodeAndAppend("Weight", doc, Weight);
             return doc;
         }
 

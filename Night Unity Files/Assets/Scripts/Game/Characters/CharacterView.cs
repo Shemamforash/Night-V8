@@ -32,10 +32,7 @@ namespace Game.Characters
             FindInSimpleView<UIAttributeController>("Attributes").HookValues(_character.Attributes);
             FindInDetailedView<UIAttributeController>("Attributes").HookValues(_character.Attributes);
             UIEnergyController energyController = FindInDetailedView<UIEnergyController>("Energy");
-            _character.Energy.AddOnValueChange(a =>
-            {
-                energyController.SetValue((int) a.CurrentValue(), (int) a.Max);
-            });
+            _character.Energy.AddOnValueChange(a => { energyController.SetValue((int) a.CurrentValue(), (int) a.Max); });
 
             FindInDetailedView<UIConditionController>("Thirst").HookDehydration(_character.Attributes);
             FindInDetailedView<UIConditionController>("Hunger").HookStarvation(_character.Attributes);
@@ -49,7 +46,7 @@ namespace Game.Characters
             SimpleView.SetActive(true);
 
             FindInSimpleView<TextMeshProUGUI>("Simple Name").text = _character.Name;
-            FindInSimpleView<TextMeshProUGUI>("ClassTrait").text = _character.CharacterTrait.Name + " " + _character.CharacterClass.Name;
+            FindInSimpleView<TextMeshProUGUI>("ClassTrait").text = "fill me in";
 
             _currentActionText = FindInSimpleView<TextMeshProUGUI>("Current Action");
         }
@@ -65,9 +62,9 @@ namespace Game.Characters
             _detailedCurrentActionText = FindInDetailedView<TextMeshProUGUI>("CurrentAction");
 
             FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _character.Name;
-            FindInDetailedView<TextMeshProUGUI>("Class").text = _character.CharacterClass.GetTraitDetails();
-            FindInDetailedView<TextMeshProUGUI>("Trait").text = _character.CharacterTrait.GetTraitDetails();
-            FindInDetailedView<TextMeshProUGUI>("Weight").text = "Weight: " + _character.Attributes.Weight + " (requires " + ((int) _character.Attributes.Weight + 5) + "fuel)";
+            FindInDetailedView<TextMeshProUGUI>("Class").text = "fill me in";
+            FindInDetailedView<TextMeshProUGUI>("Trait").text = "fill me in";
+            FindInDetailedView<TextMeshProUGUI>("Weight").text = "fill me in";
 
             WeaponGearUi = FindInDetailedView<UIGearController>("Weapon");
             ArmourGearUi = FindInDetailedView<UIGearController>("Armour");
@@ -168,7 +165,7 @@ namespace Game.Characters
         {
             return _actionMenuList.Items[0].PrimaryButton;
         }
-        
+
         private void NavigateToButtonInOtherCharacterView(CharacterView other, EnhancedButton b)
         {
             SwitchToSimpleView();
@@ -197,7 +194,7 @@ namespace Game.Characters
             WorldState.RegisterMinuteEvent(UpdateCurrentActionText);
             SwitchToSimpleView();
         }
-        
+
         private void UpdateCurrentActionText()
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _character.States.GetCurrentState();
@@ -214,7 +211,7 @@ namespace Game.Characters
                 _detailedCurrentActionText.text = currentActionString;
             }
         }
-        
+
         private void SetActionListActive(bool active)
         {
             _actionMenuList.InventoryContent.gameObject.SetActive(active);

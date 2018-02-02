@@ -180,30 +180,20 @@ class RegionImporter(XMLWriter):
 
 class CharacterImporter(XMLWriter):
     def __init__(self):
-        super(CharacterImporter, self).__init__("Traits", "Traits")
-        write_tag(self, "Traits", self.read_classes_and_traits)
+        super(CharacterImporter, self).__init__("Classes", "Classes")
+        write_tag(self, "Classes", self.read_classes)
 
-    def read_classes_and_traits(self):
+    def read_classes(self):
         for row in range(3, 13):
             write_tag(self, "Class", self.read_class, [row])
-        for row in range(14, 33):
-            write_tag(self, "Trait", self.read_trait, [row])
 
     def read_class(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
-        # write_single_value(self, "HealthRatio", get_value(self, "D", row))
         write_single_value(self, "Endurance", get_value(self, "D", row))
         write_single_value(self, "Strength", get_value(self, "E", row))
         write_single_value(self, "Willpower", get_value(self, "F", row))
         write_single_value(self, "Perception", get_value(self, "G", row))
-        write_single_value(self, "Weight", get_value(self, "I", row))
-        write_single_value(self, "Story", get_value(self, "O", row))
-
-    def read_trait(self, row):
-        write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "Endurance", get_value(self, "E", row))
-        write_single_value(self, "Willpower", get_value(self, "F", row))
-        write_single_value(self, "Weight", get_value(self, "H", row))
+        write_single_value(self, "Story", get_value(self, "N", row))
 
 
 def write_tag(xml_writer, tag_name, nested_method=None, args=None, parameters=[], values=[]):

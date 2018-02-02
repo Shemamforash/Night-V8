@@ -46,7 +46,7 @@ namespace Game.Characters
             }
             foreach (Player.Player playerCharacter in fails.Keys)
             {
-                Debug.Log(playerCharacter.Name + " class: " + playerCharacter.CharacterClass.Name + " trait: " + playerCharacter.CharacterTrait.Name + " failed following tests:");
+                Debug.Log(playerCharacter.Name + " class: " + playerCharacter.Name + " failed following tests:");
                 foreach (string s in fails[playerCharacter])
                 {
                     Debug.Log(s);
@@ -61,8 +61,6 @@ namespace Game.Characters
             _characterNames = new List<string>(Helper.ReadLinesFromFile("names"));
         }
 
-        private static string GenerateName() => _characterNames[Random.Range(0, _characterNames.Count)];
-        
         public static List<Player.Player> LoadInitialParty()
         {
 #if UNITY_EDITOR
@@ -72,53 +70,42 @@ namespace Game.Characters
             return initialParty;
         }
 
-        private static Player.Player GenerateCharacterObject(string name, TraitLoader.CharacterClass characterClass, TraitLoader.Trait characterTrait)
+        private static Player.Player GenerateCharacterObject(CharacterTemplate characterTemplate)
         {
-            Player.Player playerCharacter = new Player.Player(name, characterClass, characterTrait);
+            Player.Player playerCharacter = new Player.Player(characterTemplate);
             CalculateAttributes(playerCharacter);
             return playerCharacter;
         }
 
         public static Player.Player GenerateCharacter()
         {
-            TraitLoader.CharacterClass newClass = TraitLoader.GenerateClass();
-            TraitLoader.Trait secondaryTrait = TraitLoader.GenerateTrait();
-            string name = GenerateName();
-            Player.Player playerCharacter = GenerateCharacterObject(name, newClass, secondaryTrait);
+            CharacterTemplate newTemplate = CharacterTemplateLoader.GenerateClass();
+            Player.Player playerCharacter = GenerateCharacterObject(newTemplate);
             return playerCharacter;
         }
 
         private static Player.Player GenerateDriver()
         {
-            return GenerateCharacterObject("Driver", TraitLoader.FindClass("Crusader"), TraitLoader.FindTrait("Faithless"));
-        }
-
-        private static void CalculateWeight(Player.Player playerCharacter)
-        {
-            int weight = 5;
-            weight += playerCharacter.CharacterClass.Weight + playerCharacter.CharacterTrait.Weight;
-            playerCharacter.Attributes.Weight = weight;
+            return GenerateCharacterObject(CharacterTemplateLoader.FindClass("The Driver"));
         }
 
         private static void CalculateAttributes(Player.Player playerCharacter)
         {
             DesolationAttributes attributes = playerCharacter.Attributes;
             
-            attributes.Endurance.Max = playerCharacter.CharacterClass.Endurance + playerCharacter.CharacterTrait.Endurance;
+            attributes.Endurance.Max = playerCharacter.CharacterTemplate.Endurance;
             playerCharacter.Energy.Max = attributes.Endurance.Max;
             playerCharacter.Energy.SetCurrentValue(attributes.Endurance.Max);
             attributes.Endurance.SetToMax();
 
-            attributes.Strength.Max = playerCharacter.CharacterClass.Strength + playerCharacter.CharacterTrait.Strength;
+            attributes.Strength.Max = playerCharacter.CharacterTemplate.Strength;
             attributes.Strength.SetToMax();
             
-            attributes.Perception.Max = playerCharacter.CharacterClass.Perception + playerCharacter.CharacterTrait.Perception;
+            attributes.Perception.Max = playerCharacter.CharacterTemplate.Perception;
             attributes.Perception.SetToMax();
             
-            attributes.Willpower.Max = playerCharacter.CharacterClass.Willpower + playerCharacter.CharacterTrait.Willpower;
+            attributes.Willpower.Max = playerCharacter.CharacterTemplate.Willpower;
             attributes.Willpower.SetToMax();
-            
-            CalculateWeight(playerCharacter);
         }
     }
 }

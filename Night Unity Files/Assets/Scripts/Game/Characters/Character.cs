@@ -22,7 +22,7 @@ namespace Game.Characters
 
         private long _timeAtLastFire;
         //todo implement armour
-        protected readonly Number ArmourLevel = new Number(0, 0, 10);
+        public readonly Number ArmourLevel = new Number(0, 0, 10);
 
         public readonly HealthController HealthController;
         public readonly EquipmentController EquipmentController;

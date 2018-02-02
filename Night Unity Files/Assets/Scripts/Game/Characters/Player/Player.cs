@@ -28,8 +28,7 @@ namespace Game.Characters.Player
     public class Player : Character, IInputListener, ICombatListener
     {
         public readonly StateMachine States = new StateMachine();
-        public readonly TraitLoader.Trait CharacterTrait;
-        public readonly TraitLoader.CharacterClass CharacterClass;
+        public readonly CharacterTemplate CharacterTemplate;
         public int DistanceFromHome;
         public CharacterView CharacterView;
         public readonly DesolationAttributes Attributes;
@@ -53,10 +52,12 @@ namespace Game.Characters.Player
 
         private int _storyProgress;
 
+        public Skill CharacterSkillOne, CharacterSkillTwo;
+
         public string GetCurrentStoryProgress()
         {
-            if (_storyProgress == CharacterClass.StoryLines.Count) return null;
-            string currentLine = CharacterClass.StoryLines[_storyProgress];
+            if (_storyProgress == CharacterTemplate.StoryLines.Count) return null;
+            string currentLine = CharacterTemplate.StoryLines[_storyProgress];
             ++_storyProgress;
             return currentLine;
         }
@@ -68,12 +69,12 @@ namespace Game.Characters.Player
         }
 
         //Create Character in code only- no view section, no references to objects in the scene
-        public Player(string name, TraitLoader.CharacterClass characterClass, TraitLoader.Trait characterTrait) : base(name)
+        public Player(CharacterTemplate characterTemplate) : base(characterTemplate.CharacterClass.ToString())
         {
             Attributes = new DesolationAttributes(this);
             MovementController = new MovementController(this, 0);
-            CharacterClass = characterClass;
-            CharacterTrait = characterTrait;
+            CharacterTemplate = characterTemplate;
+            CharacterSkills.GetCharacterSkills(this);
             CharacterInventory.MaxWeight = 50;
             Attributes.Endurance.AddOnValueChange(a =>
             {
@@ -127,8 +128,7 @@ namespace Game.Characters.Player
         public override XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             base.Save(doc, saveType);
-            SaveController.CreateNodeAndAppend("Class", doc, CharacterClass.Name);
-            SaveController.CreateNodeAndAppend("Trait", doc, CharacterTrait.Name);
+            SaveController.CreateNodeAndAppend("Class", doc, Name);
             SaveController.CreateNodeAndAppend("Distance", doc, DistanceFromHome);
             SaveController.CreateNodeAndAppend("Energy", doc, Energy.CurrentValue());
             Attributes.Save(doc, saveType);
@@ -227,20 +227,13 @@ namespace Game.Characters.Player
             Tire();
         }
 
-        public int CalculateTotalWeight()
-        {
-            int characterWeight = 5 + Attributes.Weight;
-            int inventoryWeight = (int) (CharacterInventory.Weight / 10);
-            return characterWeight + inventoryWeight;
-        }
-
         public override void Equip(GearItem gearItem)
         {
             base.Equip(gearItem);
             switch (gearItem.GetGearType())
             {
                 case GearSubtype.Weapon:
-                    SwapWeaponSkills((Weapon) gearItem);
+                    WeaponSkills.GetWeaponSkills(Weapon());
                     CharacterView?.WeaponGearUi.SetGearItem(gearItem);
                     break;
                 case GearSubtype.Armour:
@@ -248,35 +241,6 @@ namespace Game.Characters.Player
                     break;
                 case GearSubtype.Accessory:
                     CharacterView?.AccessoryGearUi.SetGearItem(gearItem);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void SwapWeaponSkills(Weapon weapon)
-        {
-            switch (weapon.WeaponType())
-            {
-                case WeaponType.Pistol:
-                    CombatManager.SkillBar.BindSkill(3, new Skill.Retribution(this));
-                    CombatManager.SkillBar.BindSkill(4, new Skill.Revenge(this));
-                    break;
-                case WeaponType.Rifle:
-                    CombatManager.SkillBar.BindSkill(3, new Skill.PiercingShot(this));
-                    CombatManager.SkillBar.BindSkill(4, new Skill.FullBlast(this));
-                    break;
-                case WeaponType.Shotgun:
-                    CombatManager.SkillBar.BindSkill(3, new Skill.LegSweep(this));
-                    CombatManager.SkillBar.BindSkill(4, new Skill.BulletCloud(this));
-                    break;
-                case WeaponType.SMG:
-                    CombatManager.SkillBar.BindSkill(3, new Skill.DoubleUp(this));
-                    CombatManager.SkillBar.BindSkill(4, new Skill.Splinter(this));
-                    break;
-                case WeaponType.LMG:
-                    CombatManager.SkillBar.BindSkill(3, new Skill.TopUp(this));
-                    CombatManager.SkillBar.BindSkill(4, new Skill.HeavyLead(this));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -458,6 +422,8 @@ namespace Game.Characters.Player
 
         public override void EnterCombat()
         {
+            base.EnterCombat();
+            CombatManager.SkillBar.BindSkills(this);
             CombatManager.UpdatePlayerHealth();
             FacingDirection = Direction.Right;
             InputHandler.RegisterInputListener(this);

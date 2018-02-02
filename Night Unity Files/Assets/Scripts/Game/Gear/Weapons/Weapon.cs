@@ -7,6 +7,7 @@ using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat;
 using Game.Combat.Enemies;
+using Game.Combat.Skills;
 using Game.Gear.UI;
 using Game.World;
 using Game.World.WorldEvents;
@@ -29,6 +30,7 @@ namespace Game.Gear.Weapons
         public readonly WeaponAttributes WeaponAttributes;
         public Action OnFireAction;
         public Action OnReceiveDamageAction;
+        public Skill WeaponSkillOne, WeaponSkillTwo;
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
         {
@@ -40,6 +42,7 @@ namespace Game.Gear.Weapons
         public Weapon(string name, float weight, int durability) : base(name, weight, GearSubtype.Weapon)
         {
             WeaponAttributes = new WeaponAttributes(durability);
+            WeaponSkills.GetWeaponSkills(this);
 //            Durability.OnMin(() => { _canEquip = false; });
         }
         

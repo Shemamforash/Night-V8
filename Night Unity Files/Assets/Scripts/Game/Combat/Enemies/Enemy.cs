@@ -132,7 +132,7 @@ namespace Game.Combat.Enemies
 
         private void SetArmour()
         {
-            EnemyView?.SetArmour((int)ArmourLevel.CurrentValue(), true);
+            EnemyView?.SetArmour((int) ArmourLevel.CurrentValue(), true);
         }
 
         protected override void SetDistanceData(BasicEnemyView enemyView)
@@ -205,7 +205,7 @@ namespace Game.Combat.Enemies
 
         private bool _aheadOfPlayer;
 
-        protected Action MoveToTargetDistance(float distance)
+        public Action MoveToTargetDistance(float distance)
         {
             Assert.IsTrue(distance >= 0);
             Action moveForwardAction = () =>
@@ -257,10 +257,10 @@ namespace Game.Combat.Enemies
 
         private void CheckForPlayer()
         {
-            if (DistanceToPlayer < _visionRange)
-            {
-                CurrentAction = Suspicious;
-            }
+            if (DistanceToPlayer > _visionRange) return;
+            if (FacingDirection == Direction.Right && DistanceToPlayer > 0) return;
+            if (FacingDirection == Direction.Left && DistanceToPlayer < 0) return;
+            CurrentAction = Suspicious;
         }
 
         private void Suspicious()
@@ -279,7 +279,7 @@ namespace Game.Combat.Enemies
         {
             EnemyView?.SetActionText(text);
         }
-        
+
         public override void OnHit(int damage, bool isCritical)
         {
             base.OnHit(damage, isCritical);
@@ -387,6 +387,7 @@ namespace Game.Combat.Enemies
                 {
                     UpdateAim(0);
                 }
+
                 if (remainingAmmo == 0 || !automatic)
                 {
                     CurrentAction = Reload();
@@ -434,7 +435,7 @@ namespace Game.Combat.Enemies
             EnemyView = null;
             CurrentAction = null;
         }
-        
+
         public override void UpdateCombat()
         {
             if (!InCombat()) return;

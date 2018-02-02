@@ -16,11 +16,10 @@
           </e>
         </e>
         <e p="Resources" t="Include">
-          <e p="classes.txt" t="Include" />
+          <e p="Classes.xml" t="Include" />
           <e p="Gear.xml" t="Include" />
           <e p="names.txt" t="Include" />
           <e p="Regions.xml" t="Include" />
-          <e p="Traits.xml" t="Include" />
           <e p="WeaponClasses.xml" t="Include" />
           <e p="Weather.xml" t="Include" />
         </e>
@@ -96,7 +95,10 @@
                 <e p="Sleep.cs" t="Include" />
                 <e p="Travel.cs" t="Include" />
               </e>
+              <e p="CharacterClass.cs" t="Include" />
               <e p="CharacterGearComparison.cs" t="Include" />
+              <e p="CharacterTemplate.cs" t="Include" />
+              <e p="CharacterTemplateLoader.cs" t="Include" />
               <e p="CharacterView.cs" t="Include" />
               <e p="ConditionType.cs" t="Include" />
               <e p="DesolationAttributes.cs" t="Include" />
@@ -110,7 +112,6 @@
                 <e p="Player.cs" t="Include" />
                 <e p="RageController.cs" t="Include" />
               </e>
-              <e p="TraitLoader.cs" t="Include" />
             </e>
             <e p="Combat" t="Include">
               <e p="CharacterPositionManager.cs" t="Include" />
@@ -156,7 +157,9 @@
               <e p="Shot.cs" t="Include" />
               <e p="SkillBar.cs" t="Include" />
               <e p="Skills" t="Include">
+                <e p="CharacterSkills.cs" t="Include" />
                 <e p="Skill.cs" t="Include" />
+                <e p="WeaponSkills.cs" t="Include" />
               </e>
             </e>
             <e p="Gear" t="Include">
