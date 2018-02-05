@@ -33,11 +33,11 @@ namespace Game.Combat
                 float distance = CombatManager.DistanceBetween(_position, c);
                 float normalisedDistance = distance / _radius;
                 int damage = (int) (_damage * normalisedDistance);
-                c.OnHit(damage, false);
+                c.OnHit(damage);
                 c.Knockback(_knockbackDistance * (1 - normalisedDistance));
-                if (_bleed) c.AddBleedStack();
-                if (_burn) c.AddBurnStack();
-                if (_sick) c.AddSicknessStack();
+                if (_bleed) c.Bleeding.AddStack();
+                if (_burn) c.Burn.AddStack();
+                if (_sick) c.Sick.AddStack();
             }
         }
 

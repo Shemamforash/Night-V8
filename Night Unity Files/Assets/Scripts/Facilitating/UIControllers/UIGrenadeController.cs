@@ -5,13 +5,13 @@ using UnityEngine;
 public class UIGrenadeController : MonoBehaviour {
 	public static readonly List<Grenade> Grenades = new List<Grenade>();
 	private static readonly List<Grenade> GrenadesToRemove = new List<Grenade>();
-	private static MenuList _grenadeList;
+	private static UIGrenadeController _instance;
 
-	public void Awake()
+	private void Awake()
 	{
-		_grenadeList = GetComponent<MenuList>();
+		_instance = this;
 	}
-	
+
 	public void Update()
 	{
 		if (MeleeController.InMelee) return;
@@ -23,12 +23,12 @@ public class UIGrenadeController : MonoBehaviour {
 	public static void RemoveGrenade(Grenade g)
 	{
 		GrenadesToRemove.Add(g);
-		_grenadeList.Remove(g.GrenadeView);
+		Destroy(g.GrenadeView.GetGameObject());
 	}
 	
 	public static void AddGrenade(Grenade g)
 	{
 		Grenades.Add(g);
-		_grenadeList.AddItem(g);
+		g.CreateUi(_instance.transform);
 	}
 }

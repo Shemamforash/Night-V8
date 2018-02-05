@@ -16,6 +16,7 @@ public class MeleeController : MonoBehaviour
     public static bool InMelee;
     private static int _remainingHits, _hitsWon, _hitsLost;
     private static readonly List<Enemy> _meleeQueue = new List<Enemy>();
+    private const int NumberOfRounds = 5;
 
     public void Awake()
     {
@@ -36,7 +37,7 @@ public class MeleeController : MonoBehaviour
             _meleeQueue.Add(enemy);
             return;
         }
-        _remainingHits = 10;
+        _remainingHits = NumberOfRounds;
         _hitsWon = 0;
         _hitsLost = 0;
         _targetEnemy = enemy;
@@ -56,7 +57,7 @@ public class MeleeController : MonoBehaviour
 
     public static void SucceedRound()
     {
-        _targetEnemy.OnHit(10, false);
+        _targetEnemy.OnHit(10);
         ++_hitsWon;
         GoToNextRound();
     }
@@ -72,7 +73,7 @@ public class MeleeController : MonoBehaviour
 
     public static void FailRound()
     {
-        CombatManager.Player.OnHit(10, false);
+        CombatManager.Player.OnHit(10);
         ++_hitsLost;
         GoToNextRound();
     }

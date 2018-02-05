@@ -31,20 +31,17 @@ namespace Game.Characters.Player
             {
                 maxHealth = ((Enemy) _character).MaxHealth * 10;
             }
+
             _healthRemaining = new Number(maxHealth, 0, maxHealth);
-            _healthRemaining.OnMin(() =>
-            {
-                Debug.Log(_character.Name + " killed");
-                _character.Kill();
-            });
+            _healthRemaining.OnMin(() => _character.Kill());
             HeartBeatController.Enable();
             HeartBeatController.SetHealth(_healthRemaining.Normalised());
         }
 
         public void TakeDamage(int amount)
         {
-            if(_character is Player) Debug.Log(amount);
             Assert.IsTrue(amount >= 0);
+            if (amount == 0) return;
             if (_healthRemaining.ReachedMin()) return;
             _healthRemaining.Decrement(amount);
             OnTakeDamage?.Invoke(amount);
@@ -54,12 +51,6 @@ namespace Game.Characters.Player
         {
             (_character as Player)?.Attributes.Strength.SetCurrentValue(_healthRemaining / PlayerHealthChunkSize);
             HeartBeatController.Disable();
-        }
-
-        public void TakeCriticalDamage(int amount)
-        {
-            TakeDamage(amount);
-            OnTakeDamage?.Invoke(amount);
         }
 
         public void Heal(int amount)

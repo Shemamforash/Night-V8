@@ -7,6 +7,7 @@ using Game.Combat.Enemies;
 using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
@@ -23,7 +24,6 @@ namespace Game.Combat
         private int _noPellets = 1, _noShots = 1;
         private int _range;
         private int _pierceDepth;
-        private float _pierceFalloff = 1;
 
         private bool _guaranteeHit, _guaranteeCritical;
 
@@ -69,7 +69,7 @@ namespace Game.Combat
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
             _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
         }
-        
+
         private void SetDamage(int damage)
         {
             _damage = damage;
@@ -79,7 +79,7 @@ namespace Game.Combat
         {
             _finalDamageModifier = modifier;
         }
-        
+
         private void CalculateHitProbability()
         {
             if (_guaranteeHit || _origin == null || _range > _distanceToTarget)
@@ -109,9 +109,26 @@ namespace Game.Combat
             return Random.Range(0f, 1f) <= _criticalChance;
         }
 
+        private const float BulletSpeed = 500;
+
         public void Fire()
         {
             for (int j = 0; j < _noShots; ++j)
+            {
+                if (_origin != null)
+                {
+                    if (_origin.Weapon().Empty()) break;
+                    _origin.Weapon().ConsumeAmmo(1);
+                }
+                CreateShotCooldown();
+            }
+        }
+
+        private void CreateShotCooldown()
+        {
+            Cooldown shotCooldown = new Cooldown(CombatManager.CombatCooldowns);
+            shotCooldown.Duration = _distanceToTarget / BulletSpeed;
+            shotCooldown.SetEndAction(() =>
             {
                 for (int i = 0; i < _noPellets; ++i)
                 {
@@ -123,9 +140,8 @@ namespace Game.Combat
 
                     ApplyDamage();
                 }
-
-                _origin?.Weapon().ConsumeAmmo(1);
-            }
+            });
+            shotCooldown.Start();
         }
 
         private void ApplyDamage()
@@ -141,11 +157,11 @@ namespace Game.Combat
             Player player = _target as Player;
             if (player != null)
             {
-                player.OnHit(this, pelletDamage, isCritical);
+                player.OnHit(this, pelletDamage);
             }
             else
             {
-                _target.OnHit(pelletDamage, isCritical);
+                _target.OnHit(pelletDamage);
             }
         }
 
@@ -162,7 +178,7 @@ namespace Game.Combat
                     break;
                 }
 
-                int pierceDamage = (int) (pelletDamage * Math.Pow(_pierceFalloff, i + 1));
+                int pierceDamage = (int) (pelletDamage * Math.Pow(1, i + 1));
                 Shot s = new Shot(enemiesBehindTarget[i], null);
                 s.SetDamage(pierceDamage);
                 s.GuaranteeHit();
@@ -179,9 +195,10 @@ namespace Game.Combat
                     _target.Knockback(_knockbackDistance);
                 }
             }
-            if (Random.Range(0f, 1f) < _bleedChance) _target.AddBleedStack();
-            if (Random.Range(0f, 1f) < _burnChance) _target.AddBleedStack();
-            if (Random.Range(0f, 1f) < _sicknessChance) _target.AddSicknessStack();
+
+            if (Random.Range(0f, 1f) < _bleedChance) _target.Bleeding.AddStack();
+            if (Random.Range(0f, 1f) < _burnChance) _target.Burn.AddStack();
+            if (Random.Range(0f, 1f) < _sicknessChance) _target.Sick.AddStack();
         }
 
         public void SetPierceDepth(int depth)
@@ -193,11 +210,6 @@ namespace Game.Combat
         public void SetPierceChance(float chance)
         {
             _pierceChance = Mathf.Clamp(chance, 0f, 1f);
-        }
-
-        public void SetPierceFalloff(float falloff)
-        {
-            _pierceFalloff = Mathf.Clamp(falloff, 0f, 1f);
         }
 
         public void SetNumberOfShots(int noShots)
@@ -227,7 +239,7 @@ namespace Game.Combat
         {
             return _origin;
         }
-        
+
         public Character Target()
         {
             return _target;

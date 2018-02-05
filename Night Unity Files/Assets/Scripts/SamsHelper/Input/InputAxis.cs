@@ -2,18 +2,19 @@
 {
     public enum InputAxis
     {
-        CancelCover,
-        Submit,
-        Fire,
-        Flank,
-        Reload,
-        Vertical,
         Horizontal,
+        Vertical,
+        Menu,
+        SwitchTab,
+        Cover,
+        Fire,
+        Reload,
+        Melee,
         Sprint,
         SkillOne,
         SkillTwo,
         SkillThree,
         SkillFour,
-        SwitchTab
+        Enrage
     }
 }

@@ -11,7 +11,7 @@ namespace Game.Combat.Skills
     {
         public static void GetCharacterSkills(Player player)
         {
-            Skill skillOne = null, skillTwo = null;
+            Skill skillOne, skillTwo;
             switch (player.CharacterTemplate.CharacterClass)
             {
                 case CharacterClass.Villain:
@@ -23,7 +23,7 @@ namespace Game.Combat.Skills
                     skillTwo = new Endure();
                     break;
                 case CharacterClass.Deserter:
-                    skillOne = new Inferno();
+                    skillOne = new Immolate();
                     skillTwo = new Lacerate();
                     break;
                 case CharacterClass.Beast:
@@ -32,6 +32,7 @@ namespace Game.Combat.Skills
                     break;
                 case CharacterClass.Watcher:
                     skillOne = new Terrify();
+                    skillTwo = new Bellow();
                     break;
                 case CharacterClass.Wanderer:
                     skillOne = new Lob();
@@ -50,6 +51,8 @@ namespace Game.Combat.Skills
                     skillTwo = new Fade();
                     break;
                 case CharacterClass.Driver:
+                    skillOne = new Defile();
+                    skillTwo = new Absolve();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -80,14 +83,14 @@ namespace Game.Combat.Skills
         public Rejuvinate() : base(true, nameof(Rejuvinate))
         {
             Player().HealthController.Heal(50);
-            CombatManager.SkillBar.ResetSkillTimers();
+            SkillBar.ResetSkillTimers();
         }
 
         protected override void OnFire()
         {
             base.OnFire();
             Player().HealthController.Heal(50);
-            CombatManager.SkillBar.ResetSkillTimers();
+            SkillBar.ResetSkillTimers();
         }
     }
 
@@ -116,9 +119,9 @@ namespace Game.Combat.Skills
 
     //Deserter
 
-    public class Inferno : Skill
+    public class Immolate : Skill
     {
-        public Inferno() : base(true, nameof(Inferno))
+        public Immolate() : base(true, nameof(Immolate))
         {
         }
 
@@ -169,7 +172,7 @@ namespace Game.Combat.Skills
         {
             base.OnFire();
             Enemy nearestEnemy = UIEnemyController.NearestEnemy();
-            if (nearestEnemy.DistanceToPlayer <= 5)
+            if (nearestEnemy?.DistanceToPlayer <= 5)
             {
                 nearestEnemy.Knockback(5);
             }
@@ -187,20 +190,26 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            foreach (Enemy e in UIEnemyController.Enemies)
-            {
-                float distance = Random.Range(CombatManager.VisibilityRange / 2, CombatManager.VisibilityRange);
-                e.CurrentAction = e.MoveToTargetDistance(distance);
-            }
+            float distance = Random.Range(CombatManager.VisibilityRange / 2, CombatManager.VisibilityRange);
+            CombatManager.CurrentTarget.CurrentAction = CombatManager.CurrentTarget.MoveToTargetDistance(distance);
         }
     }
 
-//    public class Staunch : Skill
-//    {
-//        public Staunch() : base(true, nameof(Staunch))
-//        {
-//        }
-//    }
+    public class Bellow : Skill
+    {
+        public Bellow() : base(true, nameof(Bellow))
+        {
+        }
+        
+        protected override void OnFire()
+        {
+            base.OnFire();
+            foreach (Enemy e in UIEnemyController.Enemies)
+            {
+                e.Knockback(0);
+            }
+        }
+    }
 
     //Wanderer
 
@@ -238,6 +247,14 @@ namespace Game.Combat.Skills
     {
         public Sacrifice() : base(true, nameof(Sacrifice))
         {
+        }
+        
+        protected override void OnFire()
+        {
+            base.OnFire();
+            
+            Player().RageController.Increase(Player().RageController.CurrentValue());
+            Player().HealthController.TakeDamage((int) (Player().HealthController.GetCurrentHealth() / 2f));
         }
     }
 
@@ -321,25 +338,50 @@ namespace Game.Combat.Skills
 
     //Driver
 
-//    public class Staunch : Skill
-//    {
-//        public Staunch() : base(true, nameof(Staunch))
-//        {
-//        }
-//    protected override void OnFire()
-//    {
-//    base.OnFire();
-//}
-//    }
+    public class Defile : Skill
+    {
+        public Defile() : base(true, nameof(Defile))
+        {
+        }
 
-//    public class Staunch : Skill
-//    {
-//        public Staunch() : base(true, nameof(Staunch))
-//        {
-//        }
-//protected override void OnFire()
-//{
-//base.OnFire();
-//}
-//    }
+        protected override void OnFire()
+        {
+            base.OnFire();
+            if (CombatManager.CurrentTarget.DistanceToPlayer > Enemy.MeleeDistance) return;
+            CombatManager.CurrentTarget.OnHit(25);
+            for(int i = 0; i < 5; ++i) CombatManager.CurrentTarget.Bleeding.AddStack();
+        }
+    }
+
+    public class Absolve : Skill
+    {
+        public Absolve() : base(true, nameof(Absolve))
+        {
+        }
+
+        protected override void OnFire()
+        {
+            base.OnFire();
+            Enemy target = CombatManager.CurrentTarget;
+            int healAmount = 0;
+            if (target.Bleeding.Active())
+            {
+                target.Bleeding.Clear();
+                healAmount += 10;
+            }
+
+            if (target.Burn.Active())
+            {
+                target.Burn.Clear();
+                healAmount += 10;
+            }
+
+            if (target.Sick.Active())
+            {
+                target.Sick.Clear();
+                healAmount += 10;
+            }
+            Player().HealthController.Heal(healAmount);
+        }
+    }
 }

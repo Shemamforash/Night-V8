@@ -15,6 +15,7 @@ namespace Game.Combat
         public bool ManualOnly;
         public bool Smg = true, Lmg = true, Rifle = true, Pistol = true, Shotgun = true;
         private static CombatTester _instance;
+        private int currentDanger = 0;
         
         public void Start()
         {

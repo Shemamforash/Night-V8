@@ -6,16 +6,6 @@ namespace Game.Combat
 {
     public static class CharacterPositionManager
     {
-        public static void MovePlayer()
-        {
-            UpdatePlayerDirection();
-        }
-
-        public static void MoveEnemy()
-        {
-            UpdatePlayerDirection();
-        }
-
         public static void UpdatePlayerDirection()
         {
             Player player = CombatManager.Player;

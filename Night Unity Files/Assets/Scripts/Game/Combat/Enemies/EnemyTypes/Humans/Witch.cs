@@ -11,7 +11,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
     public class Witch : Enemy
     {
         private int _damageTaken;
-        private float _timeSinceThrown, _targetTime;
+        private float _targetTime;
         private bool _throwing;
 
         public Witch(float position) : base(nameof(Witch), 5, 5, position)
@@ -24,6 +24,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
 
         private Action ThrowGrenade()
         {
+            _throwing = true;
             float throwDuration = 2f;
             EnemyView.SetActionText("Throwing Grenade");
             return () =>
@@ -51,14 +52,19 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             };
         }
 
+        public override void Alert()
+        {
+            base.Alert();
+            if(!Alerted) _targetTime = Random.Range(10, 15);
+        }
+
         public override void UpdateCombat()
         {
             base.UpdateCombat();
             if (!InCombat() || _throwing) return;
-            _timeSinceThrown += Time.deltaTime;
-            if (!(_timeSinceThrown >= _targetTime)) return;
+            _targetTime -= Time.deltaTime;
+            if (_targetTime > 0) return;
             CurrentAction = ThrowGrenade();
-            _throwing = true;
         }
     }
 }

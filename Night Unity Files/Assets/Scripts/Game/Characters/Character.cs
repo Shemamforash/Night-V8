@@ -32,7 +32,9 @@ namespace Game.Characters
         public bool IsKnockedDown;
         public bool IsDead;
 
-        protected Condition Bleeding, Burning, Sickening;
+        public Bleed Bleeding;
+        public Burn Burn;
+        public Sickness Sick;
 
         public readonly Number Position = new Number();
 
@@ -54,6 +56,7 @@ namespace Game.Characters
         protected Character(string name) : base(name, GameObjectType.Character)
         {
             Position.Min = float.MinValue;
+            Position.AddOnValueChange(a => CharacterPositionManager.UpdatePlayerDirection());
             CharacterInventory = new DesolationInventory(name);
             HealthController = new HealthController(this);
             EquipmentController = new EquipmentController(this);
@@ -65,14 +68,13 @@ namespace Game.Characters
             EquipmentController.Equip(gearItem);
         }
 
-        public virtual void OnHit(int damage, bool isCritical)
+        public virtual void OnHit(int damage)
         {
             if (InCover) return;
             //todo pierce through cover?
             float armourModifier = 1 - 0.8f / ArmourLevel.Max * ArmourLevel.CurrentValue();
             damage = (int) (armourModifier * damage);
-            if (isCritical) HealthController.TakeCriticalDamage(damage);
-            else HealthController.TakeDamage(damage);
+            HealthController.TakeDamage(damage);
         }
 
         public virtual void OnMiss()
@@ -141,8 +143,8 @@ namespace Game.Characters
         //Only call from combatmanager
         public virtual void UpdateCombat()
         {
-            Burning.Update();
-            Sickening.Update();
+            Burn.Update();
+            Sick.Update();
             Bleeding.Update();
         }
 
@@ -163,23 +165,8 @@ namespace Game.Characters
         protected virtual void SetConditions()
         {
             Bleeding = new Bleed(this);
-            Burning = new Burn(this);
-            Sickening = new Sickness(this);
-        }
-
-        public void AddBleedStack()
-        {
-            Bleeding.AddStack();
-        }
-
-        public void AddSicknessStack()
-        {
-            Sickening.AddStack();
-        }
-
-        public void AddBurnStack()
-        {
-            Burning.AddStack();
+            Burn = new Burn(this);
+            Sick = new Sickness(this);
         }
 
         public virtual void EnterCombat()
@@ -190,9 +177,9 @@ namespace Game.Characters
         public virtual void ExitCombat()
         {
             HealthController.ExitCombat();
-            Burning.Clear();
+            Burn.Clear();
             Bleeding.Clear();
-            Sickening.Clear();
+            Sick.Clear();
         }
     }
 }

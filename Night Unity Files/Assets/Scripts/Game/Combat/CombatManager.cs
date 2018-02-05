@@ -26,7 +26,6 @@ namespace Game.Combat
         private static TextMeshProUGUI _coverText;
 
         public static UIHealthBarController PlayerHealthBar;
-        public static SkillBar SkillBar;
 
         private float _criticalTarget;
 
@@ -54,8 +53,6 @@ namespace Game.Combat
 
             _coverText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Cover");
             _coverText.text = "";
-
-            SkillBar = Helper.FindChildWithName<SkillBar>(playerContainer, "Skill Bar");
 
             PlayerHealthBar = Helper.FindChildWithName<UIHealthBarController>(playerContainer, "Health Bar");
             PlayerHealthBar.SetIsPlayerBar();
@@ -140,7 +137,7 @@ namespace Game.Combat
             else
             {
                 MenuStateMachine.ShowMenu("Game Menu");
-                if (UIEnemyController.AllEnemiesDead())
+                if (UIEnemyController.AllEnemiesGone())
                 {
                     CurrentScenario.FinishCombat();
                 }

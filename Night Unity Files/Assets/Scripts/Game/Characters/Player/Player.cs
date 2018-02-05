@@ -6,6 +6,7 @@ using Assets;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.Combat;
+using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.Gear.Weapons;
 using Game.World;
@@ -25,7 +26,7 @@ using UnityEngine.SceneManagement;
 
 namespace Game.Characters.Player
 {
-    public class Player : Character, IInputListener, ICombatListener
+    public class Player : Character, IInputListener
     {
         public readonly StateMachine States = new StateMachine();
         public readonly CharacterTemplate CharacterTemplate;
@@ -47,7 +48,7 @@ namespace Game.Characters.Player
         public readonly RageController RageController;
 
         protected Cooldown ReloadingCooldown;
-        
+
         private bool _fired;
 
         private int _storyProgress;
@@ -65,7 +66,7 @@ namespace Game.Characters.Player
         public override void Kill()
         {
             if (SceneManager.GetActiveScene().name == "Game") WorldState.HomeInventory().RemoveItem(this);
-            if(CombatManager.Player == this) CombatManager.ExitCombat();
+            if (CombatManager.Player == this) CombatManager.ExitCombat();
         }
 
         //Create Character in code only- no view section, no references to objects in the scene
@@ -76,28 +77,27 @@ namespace Game.Characters.Player
             CharacterTemplate = characterTemplate;
             CharacterSkills.GetCharacterSkills(this);
             CharacterInventory.MaxWeight = 50;
-            Attributes.Endurance.AddOnValueChange(a =>
-            {
-                Energy.Max = a.CurrentValue();
-            });
+            Attributes.Endurance.AddOnValueChange(a => { Energy.Max = a.CurrentValue(); });
             RageController = new RageController(this);
             HealthController.AddOnHeal(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
             HealthController.AddOnTakeDamage(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
             Energy.OnMin(Sleep);
             SetConditions();
-            Position.AddOnValueChange(a =>
-            {
-                UIEnemyController.Enemies.ForEach(e => e.Position.UpdateValueChange());
-                CharacterPositionManager.UpdatePlayerDirection();
-            });
+            Position.AddOnValueChange(a => { UIEnemyController.Enemies.ForEach(e => e.Position.UpdateValueChange()); });
             SetReloadCooldown();
         }
 
-        public void OnHit(Shot shot, int damage, bool isCritical)
+        public void OnHit(Shot shot, int damage)
         {
-            OnHit(damage, isCritical);
+            OnHit(damage);
             if (shot?.Origin() == null) return;
             if (Retaliate) FireWeapon(shot.Origin());
+        }
+
+        private void ChangeCover()
+        {
+            if (InCover) LeaveCover();
+            else TakeCover();
         }
 
         public override void TakeCover()
@@ -143,12 +143,12 @@ namespace Game.Characters.Player
         protected override void SetConditions()
         {
             base.SetConditions();
-            Burning.OnConditionNonEmpty = CombatManager.PlayerHealthBar.StartBurning;
-            Burning.OnConditionEmpty = CombatManager.PlayerHealthBar.StopBurning;
+            Burn.OnConditionNonEmpty = CombatManager.PlayerHealthBar.StartBurning;
+            Burn.OnConditionEmpty = CombatManager.PlayerHealthBar.StopBurning;
             Bleeding.OnConditionNonEmpty = CombatManager.PlayerHealthBar.StartBleeding;
             Bleeding.OnConditionEmpty = CombatManager.PlayerHealthBar.StopBleeding;
-            Sickening.OnConditionNonEmpty = () => CombatManager.PlayerHealthBar.UpdateSickness(((Sickness) Sickening).GetNormalisedValue());
-            Sickening.OnConditionEmpty = () => CombatManager.PlayerHealthBar.UpdateSickness(0);
+            Sick.OnConditionNonEmpty = () => CombatManager.PlayerHealthBar.UpdateSickness(((Sickness) Sick).GetNormalisedValue());
+            Sick.OnConditionEmpty = () => CombatManager.PlayerHealthBar.UpdateSickness(0);
         }
 
         //Links character to object in scene
@@ -342,6 +342,14 @@ namespace Game.Characters.Player
             }
         }
 
+        private void TryMelee()
+        {
+            if (CombatManager.CurrentTarget.DistanceToPlayer <= Enemy.MeleeDistance)
+            {
+                MeleeController.StartMelee(CombatManager.CurrentTarget);
+            }
+        }
+        
         //INPUT
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -349,10 +357,10 @@ namespace Game.Characters.Player
             if (Immobilised()) return;
             switch (axis)
             {
-                case InputAxis.CancelCover:
-                    TakeCover();
+                case InputAxis.Cover:
+                    if (!isHeld) ChangeCover();
                     break;
-                case InputAxis.Submit:
+                case InputAxis.Enrage:
                     RageController.TryStart();
                     break;
                 case InputAxis.Fire:
@@ -367,39 +375,30 @@ namespace Game.Characters.Player
                 case InputAxis.Sprint:
                     MovementController.StartSprinting();
                     break;
+                case InputAxis.Melee:
+                    TryMelee();
+                    break;
                 case InputAxis.SkillOne:
-                    CombatManager.SkillBar.ActivateSkill(0);
+                    SkillBar.ActivateSkill(0);
                     break;
                 case InputAxis.SkillTwo:
-                    CombatManager.SkillBar.ActivateSkill(1);
+                    SkillBar.ActivateSkill(1);
                     break;
                 case InputAxis.SkillThree:
-                    CombatManager.SkillBar.ActivateSkill(2);
+                    SkillBar.ActivateSkill(2);
                     break;
                 case InputAxis.SkillFour:
-                    CombatManager.SkillBar.ActivateSkill(3);
+                    SkillBar.ActivateSkill(3);
                     break;
             }
         }
-        
+
         public void OnInputUp(InputAxis axis)
         {
             switch (axis)
             {
-                case InputAxis.CancelCover:
-                    break;
-                case InputAxis.Submit:
-                    break;
                 case InputAxis.Fire:
                     _fired = false;
-                    break;
-                case InputAxis.Flank:
-                    break;
-                case InputAxis.Reload:
-                    break;
-                case InputAxis.Vertical:
-                    break;
-                case InputAxis.Horizontal:
                     break;
                 case InputAxis.Sprint:
                     MovementController.StopSprinting();
@@ -423,7 +422,7 @@ namespace Game.Characters.Player
         public override void EnterCombat()
         {
             base.EnterCombat();
-            CombatManager.SkillBar.BindSkills(this);
+            SkillBar.BindSkills(this);
             CombatManager.UpdatePlayerHealth();
             FacingDirection = Direction.Right;
             InputHandler.RegisterInputListener(this);

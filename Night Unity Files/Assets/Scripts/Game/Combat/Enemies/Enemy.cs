@@ -148,11 +148,11 @@ namespace Game.Combat.Enemies
 
         private const float MeleeWarningTime = 2f;
         private const float StaggerTime = 2f;
-        private const int MeleeDistance = 5;
+        public const int MeleeDistance = 5;
 
         protected Action CheckForRepositioning(bool moveAnyway = false)
         {
-            if (!Alerted || !InCombat()) return null;
+            if (!InCombat()) return null;
             float absoluteDistance = Math.Abs(DistanceToPlayer);
             if (absoluteDistance <= MeleeDistance)
             {
@@ -263,16 +263,20 @@ namespace Game.Combat.Enemies
             CurrentAction = Suspicious;
         }
 
+        private float _timeSinceSawPlayer = 0f;
+        private const float _timeToForgetPlayer = 2f;
+        
         private void Suspicious()
         {
             SetActionText("Suspicious");
             if (DistanceToPlayer >= _detectionRange.CurrentValue()) return;
+            if (DistanceToPlayer >= _visionRange.CurrentValue()) CurrentAction = Wander;
             Alert();
         }
 
         public bool InCombat()
         {
-            return !HasFled && !IsDead;
+            return !HasFled && !IsDead && Alerted;
         }
 
         protected void SetActionText(string text)
@@ -280,9 +284,9 @@ namespace Game.Combat.Enemies
             EnemyView?.SetActionText(text);
         }
 
-        public override void OnHit(int damage, bool isCritical)
+        public override void OnHit(int damage)
         {
-            base.OnHit(damage, isCritical);
+            base.OnHit(damage);
             if (!Alerted) Alert();
         }
 
@@ -303,10 +307,10 @@ namespace Game.Combat.Enemies
         public override ViewParent CreateUi(Transform parent)
         {
             EnemyView = new EnemyView(this, parent);
-            HealthController.AddOnTakeDamage(f => EnemyView.UpdateHealth());
-            HealthController.AddOnHeal(f => EnemyView.UpdateHealth());
+            HealthController.AddOnTakeDamage(f => EnemyView?.UpdateHealth());
+            HealthController.AddOnHeal(f => EnemyView?.UpdateHealth());
             EnemyView.UpdateHealth();
-            ArmourLevel.AddOnValueChange(a => EnemyView.SetArmour((int) ArmourLevel.CurrentValue(), InCover));
+            ArmourLevel.AddOnValueChange(a => EnemyView?.SetArmour((int) ArmourLevel.CurrentValue(), InCover));
             EnemyView.PrimaryButton.AddOnSelectEvent(() => CombatManager.SetTarget(this));
             SetDistanceData(EnemyView);
             SetConditions();
@@ -316,7 +320,7 @@ namespace Game.Combat.Enemies
 
         public virtual void Alert()
         {
-            if (Alerted || !InCombat()) return;
+            if (Alerted) return;
             Alerted = true;
             UIEnemyController.AlertAll();
             ChooseNextAction();
@@ -406,6 +410,10 @@ namespace Game.Combat.Enemies
 
         protected virtual Action Aim()
         {
+            if (Weapon().Empty())
+            {
+                return Reload();
+            }
             LeaveCover();
             Assert.IsFalse(Weapon().Empty());
             float aimTime = MaxAimTime;
@@ -438,7 +446,6 @@ namespace Game.Combat.Enemies
 
         public override void UpdateCombat()
         {
-            if (!InCombat()) return;
             base.UpdateCombat();
             CurrentAction?.Invoke();
         }
@@ -446,12 +453,12 @@ namespace Game.Combat.Enemies
         protected override void SetConditions()
         {
             base.SetConditions();
-            Burning.OnConditionNonEmpty = EnemyView.HealthBar.StartBurning;
-            Burning.OnConditionEmpty = EnemyView.HealthBar.StopBurning;
-            Bleeding.OnConditionNonEmpty = EnemyView.HealthBar.StartBleeding;
-            Bleeding.OnConditionEmpty = EnemyView.HealthBar.StopBleeding;
-            Sickening.OnConditionNonEmpty = () => EnemyView.HealthBar.UpdateSickness(((Sickness) Sickening).GetNormalisedValue());
-            Sickening.OnConditionEmpty = () => EnemyView.HealthBar.UpdateSickness(0);
+            Burn.OnConditionNonEmpty = () => EnemyView?.HealthBar.StartBurning();
+            Burn.OnConditionEmpty = () => EnemyView?.HealthBar.StopBurning();
+            Bleeding.OnConditionNonEmpty = () => EnemyView?.HealthBar.StartBleeding();
+            Bleeding.OnConditionEmpty = () => EnemyView?.HealthBar.StopBleeding();
+            Sick.OnConditionNonEmpty = () => EnemyView?.HealthBar.UpdateSickness(((Sickness) Sick).GetNormalisedValue());
+            Sick.OnConditionEmpty = () => EnemyView?.HealthBar.UpdateSickness(0);
         }
     }
 }

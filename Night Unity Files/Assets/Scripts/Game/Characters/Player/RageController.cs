@@ -1,16 +1,16 @@
-﻿using SamsHelper.ReactiveUI;
+﻿using Game.Combat;
+using SamsHelper.ReactiveUI;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Characters
 {
-    public class RageController
+    public class RageController : ICombatListener
     {
-        private readonly Number _rageLevel = new Number(1, 0, 1);
+        private readonly Number _rageLevel = new Number(0, 0, 1);
         private bool _activated;
         private readonly Character _character;
-        private AttributeModifier _reloadModifier = new AttributeModifier();
-        private AttributeModifier _fireRateModifier = new AttributeModifier();
+        private readonly AttributeModifier _reloadModifier = new AttributeModifier();
+        private readonly AttributeModifier _fireRateModifier = new AttributeModifier();
             
         public RageController(Character character)
         {
@@ -22,6 +22,12 @@ namespace Game.Characters
             {
                 _rageLevel.AddOnValueChange(a => RageBarController.SetRageBarFill(a.CurrentValue(), _activated));
             }
+            CombatManager.RegisterCombatListener(this);
+        }
+
+        public float CurrentValue()
+        {
+            return _rageLevel.CurrentValue();
         }
         
         public void Increase(float damage)
@@ -72,6 +78,21 @@ namespace Game.Characters
             _fireRateModifier.AddTargetAttribute(_character.Weapon().WeaponAttributes.FireRate);
             _reloadModifier.Apply();
             _fireRateModifier.Apply();
+        }
+
+        public void EnterCombat()
+        {
+            _rageLevel.SetCurrentValue(0f);
+        }
+
+        public void ExitCombat()
+        {
+        }
+
+        public void UpdateCombat()
+        {
+            if (_rageLevel.ReachedMax()) return;
+            _rageLevel.Decrement(Time.deltaTime * 0.05f);
         }
     }
 }

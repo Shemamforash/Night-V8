@@ -10,21 +10,21 @@ namespace Game.Combat
     public class SkillBar : MonoBehaviour
     {
         private const int NoSlots = 4;
-        private Skill[] _skills;
-        private readonly List<CooldownController> _skillView = new List<CooldownController>();
-        public static SkillBar Instance;
+        private static Skill[] _skills;
+        private static readonly List<CooldownController> SkillView = new List<CooldownController>();
+        private static CanvasGroup _canvas;
 
         public void Awake()
         {
-            Instance = this;
             for (int i = 0; i < NoSlots; ++i)
             {
-                _skillView.Add(Helper.FindChildWithName<CooldownController>(gameObject, "Skill " + (i + 1)));
+                SkillView.Add(Helper.FindChildWithName<CooldownController>(gameObject, "Skill " + (i + 1)));
             }
             _skills = new Skill[NoSlots];
+            _canvas = GetComponent<CanvasGroup>();
         }
 
-        public void BindSkills(Player player)
+        public static void BindSkills(Player player)
         {
             BindSkill(0, player.CharacterSkillOne);
             BindSkill(1, player.CharacterSkillTwo);
@@ -32,19 +32,24 @@ namespace Game.Combat
             BindSkill(3, player.Weapon().WeaponSkillTwo);
         }
 
-        private void BindSkill(int slot, Skill skill)
+        public static void SetVisible(bool visible)
+        {
+            _canvas.alpha = visible ? 1 : 0;
+        }
+        
+        private static void BindSkill(int slot, Skill skill)
         {
             _skills[slot]?.Cancel();
             _skills[slot] = skill;
-            skill.SetController(_skillView[slot]);
+            skill.SetController(SkillView[slot]);
         }
 
-        public void ActivateSkill(int skillNo)
+        public static void ActivateSkill(int skillNo)
         {
             _skills[skillNo]?.Activate();
         }
 
-        public void ResetSkillTimers()
+        public static void ResetSkillTimers()
         {
             for (int i = 0; i < NoSlots; ++i)
             {

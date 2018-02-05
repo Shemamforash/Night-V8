@@ -21,6 +21,11 @@ namespace Game.Combat
             Damage = damage;
         }
 
+        public bool Active()
+        {
+            return StackList.Count != 0;
+        }
+
         public void Update()
         {
             if (StackList.Count == 0)

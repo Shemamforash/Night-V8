@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game.Combat;
 using Game.Combat.Enemies;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class UIEnemyController : MonoBehaviour, ICombatListener
 {
@@ -30,11 +32,23 @@ public class UIEnemyController : MonoBehaviour, ICombatListener
     public void UpdateCombat()
     {
         if (MeleeController.InMelee) return;
-        foreach (Enemy e in Enemies)
+        List<Enemy> updatedEnemies = new List<Enemy>();
+        int totalEnemies = Enemies.Count;
+        for (int i = 0; i < totalEnemies; ++i)
         {
-            if (e.IsDead) return;
-            e.UpdateCombat();
-            if (Enemies.Count == 0) break;
+            Enemy e = Enemies[i];
+            if (updatedEnemies.Contains(e)) continue;
+            updatedEnemies.Add(e);
+            if(e.IsDead) Debug.Log(e.Name);
+            try
+            {
+                e.UpdateCombat();
+            }
+            catch (InvalidOperationException)
+            {
+                i = 0;
+                --totalEnemies;
+            }
         }
         EnemiesToAdd.ForEach(AddEnemy);
         EnemiesToAdd.Clear();
@@ -62,40 +76,41 @@ public class UIEnemyController : MonoBehaviour, ICombatListener
         return Enemies.Count == MaxEncounterSize;
     }
 
-    public static bool AllEnemiesDead()
-    {
-        return Enemies.All(e => e.IsDead);
-    }
-
     public static bool AllEnemiesGone()
     {
-        return Enemies.All(e => !e.InCombat());
-    }
-
-    private static bool TrySelectAtDistance(int index, int distance)
-    {
-        if (index + distance >= _enemyList.Items.Count || index - distance < 0) return false;
-        Enemy enemy = (Enemy) _enemyList.Items[index + distance].GetLinkedObject();
-        if (enemy == null) return false;
-        CombatManager.SetTarget(enemy);
-        return true;
+        return Enemies.Count == 0;
     }
 
     public static void AlertAll()
     {
         Enemies.ForEach(e => e.Alert());
     }
+    
+    private static bool TrySelectAtDistance(int index, int distance)
+    {
+        if (index + distance >= _enemyList.Items.Count || index + distance < 0) return false;
+        Enemy enemy = (Enemy) _enemyList.Items[index + distance].GetLinkedObject();
+        if (enemy == null) return false;
+        enemy.EnemyView.Select();
+        return true;
+    }
 
     public static void Remove(Enemy enemy)
     {
         int enemyPosition = _enemyList.Items.IndexOf(enemy.EnemyView);
-        for (int distance = 1; distance + enemyPosition < _enemyList.Items.Count; ++distance)
+        int distance = 1;
+        while (distance < _enemyList.Items.Count)
         {
             if (TrySelectAtDistance(enemyPosition, distance) || TrySelectAtDistance(enemyPosition, -distance))
             {
                 break;
             }
+
+            ++distance;
         }
+        _enemyList.Remove(enemy.EnemyView);
+        enemy.ExitCombat();
+        Enemies.Remove(enemy);
     }
 
     private static void AddEnemy(Enemy e)
@@ -118,7 +133,7 @@ public class UIEnemyController : MonoBehaviour, ICombatListener
                 return;
             }
 
-            if (e.Position < nearestEnemy.Position)
+            if (e.Position.CurrentValue() < nearestEnemy.Position.CurrentValue())
             {
                 nearestEnemy = e;
             }
