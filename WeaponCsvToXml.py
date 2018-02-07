@@ -8,7 +8,7 @@ num2alpha = dict(zip(range(1, 27), string.ascii_lowercase))
 class XMLWriter:
     def __init__(self, sheet_name, output_filename):
         self.sheet = workbook[sheet_name]
-        self.output_file = open('Night Unity Files/Assets/Resources/' + output_filename + ".xml", 'w')
+        self.output_file = open('Night Unity Files/Assets/Resources/XML/' + output_filename + ".xml", 'w')
 
     def __del__(self):
         self.output_file.close()
@@ -196,6 +196,54 @@ class CharacterImporter(XMLWriter):
         write_single_value(self, "Story", get_value(self, "N", row))
 
 
+class EnemyImporter(XMLWriter):
+    def __init__(self):
+        super(EnemyImporter, self).__init__("Enemy Types", "Enemies")
+        write_tag(self, "Enemies", self.read_enemies)
+
+    def read_enemies(self):
+        for row in range(2, 10):
+            write_tag(self, "Enemy", self.read_enemy, [row])
+
+    def read_enemy(self, row):
+        write_single_value(self, "Name", get_value(self, "A", row))
+        write_single_value(self, "Health", get_value(self, "B", row))
+        write_single_value(self, "Speed", get_value(self, "C", row))
+        write_single_value(self, "Value", get_value(self, "D", row))
+
+
+class SkillImporter(XMLWriter):
+    def __init__(self):
+        super(SkillImporter, self).__init__("Skills", "Skills")
+        write_tag(self, "Skills", self.read_skills)
+
+    def read_skills(self):
+        for row in range(2, 46):
+            if (row - 1 % 3) == 0:
+                continue
+            write_tag(self, "Skill", self.read_skill, [row])
+
+    def read_skill(self, row):
+        write_single_value(self, "Name", get_value(self, "A", row))
+        write_single_value(self, "Cost", get_value(self, "C", row))
+        write_single_value(self, "Cooldown", get_value(self, "D", row))
+        write_single_value(self, "Description", get_value(self, "E", row))
+
+
+class TraitImporter(XMLWriter):
+    def __init__(self):
+        super(TraitImporter, self).__init__("Traits", "Traits")
+        write_tag(self, "Traits", self.read_traits)
+
+    def read_traits(self):
+        for row in range(2, 47):
+            write_tag(self, "Skill", self.read_trait, [row])
+
+    def read_trait(self, row):
+        write_single_value(self, "Name", get_value(self, "A", row))
+        write_single_value(self, "Requirement", get_value(self, "C", row))
+
+
 def write_tag(xml_writer, tag_name, nested_method=None, args=None, parameters=[], values=[]):
     tag = "<" + tag_name
     for parameter_value in zip(parameters, values):
@@ -228,3 +276,6 @@ GearImporter()
 WeatherImporter()
 RegionImporter()
 CharacterImporter()
+EnemyImporter()
+SkillImporter()
+TraitImporter()

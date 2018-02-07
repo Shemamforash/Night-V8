@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace Game.Combat.Enemies.EnemyTypes.Humans
+﻿namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
     public class Brawler : Enemy
     {
-        public Brawler(float position) : base(nameof(Brawler), 10, 7, position)
+        public Brawler(float position) : base(nameof(Brawler), position)
         {
         }
 

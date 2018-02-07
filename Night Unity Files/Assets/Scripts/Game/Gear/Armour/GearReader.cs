@@ -11,7 +11,7 @@ namespace Game.Gear.Armour
         
         public static void LoadGear()
         {
-            TextAsset gearFile = Resources.Load<TextAsset>("Gear");
+            TextAsset gearFile = Resources.Load<TextAsset>("XML/Gear");
             XmlDocument gearXml = new XmlDocument();
             gearXml.LoadXml(gearFile.text);
             XmlNode root = gearXml.SelectSingleNode("GearList");

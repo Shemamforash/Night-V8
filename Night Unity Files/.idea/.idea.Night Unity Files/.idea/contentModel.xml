@@ -16,12 +16,17 @@
           </e>
         </e>
         <e p="Resources" t="Include">
-          <e p="Classes.xml" t="Include" />
-          <e p="Gear.xml" t="Include" />
           <e p="names.txt" t="Include" />
-          <e p="Regions.xml" t="Include" />
-          <e p="WeaponClasses.xml" t="Include" />
-          <e p="Weather.xml" t="Include" />
+          <e p="XML" t="Include">
+            <e p="Classes.xml" t="Include" />
+            <e p="Enemies.xml" t="Include" />
+            <e p="Gear.xml" t="Include" />
+            <e p="Regions.xml" t="Include" />
+            <e p="Skills.xml" t="Include" />
+            <e p="Traits.xml" t="Include" />
+            <e p="WeaponClasses.xml" t="Include" />
+            <e p="Weather.xml" t="Include" />
+          </e>
         </e>
         <e p="RetryMenu.cs" t="Include" />
         <e p="Scripts" t="Include">
@@ -132,6 +137,7 @@
                     <e p="Grazer.cs" t="Include" />
                     <e p="Watcher.cs" t="Include" />
                   </e>
+                  <e p="EnemyTemplate.cs" t="Include" />
                   <e p="Humans" t="Include">
                     <e p="Brawler.cs" t="Include" />
                     <e p="Martyr.cs" t="Include" />
@@ -303,6 +309,8 @@
             </e>
           </e>
         </e>
+        <e p="UIMinigameController.cs" t="Include" />
+        <e p="UISkillCostController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

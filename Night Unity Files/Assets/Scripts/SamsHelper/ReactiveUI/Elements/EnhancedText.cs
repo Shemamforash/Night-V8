@@ -32,7 +32,7 @@ namespace Facilitating.UI.Elements
             _text.richText = true;
             UpdateFontSize();
             _text.extraPadding = true;
-            _text.font = UiAppearanceController.Instance.UniversalFont;
+            _text.font = UiAppearanceController.Instance().UniversalFont;
             _text = GetComponent<TextMeshProUGUI>();
         }
 
@@ -79,7 +79,7 @@ namespace Facilitating.UI.Elements
             TryReplaceText();
             if (FontSize != FontSizes.Custom)
             {
-                _text.fontSize = UiAppearanceController.Instance.GetFontSize(FontSize);
+                _text.fontSize = UiAppearanceController.Instance().GetFontSize(FontSize);
             }
             else
             {

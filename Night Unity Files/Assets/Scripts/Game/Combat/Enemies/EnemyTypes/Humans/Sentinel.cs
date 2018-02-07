@@ -14,10 +14,10 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private bool _healingInCover;
         private int _targetHealAmount;
 
-        public Sentinel(float position) : base("Sentinel", 20, 4, position)
+        public Sentinel(float position) : base(nameof(Sentinel), position)
         {
-            Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType>{WeaponType.Shotgun, WeaponType.SMG});
-            Equip(weapon);
+            GenerateWeapon(new List<WeaponType>{WeaponType.Shotgun, WeaponType.SMG});
+            //todo remove me
             ArmourLevel.SetCurrentValue(6);
             MinimumFindCoverDistance = 5f;
             Speed = 5;

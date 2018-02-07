@@ -29,7 +29,7 @@ namespace Game.Characters
 
         public void Start()
         {
-            CharacterTemplateLoader.LoadTemplates();
+            PlayerGenerator.LoadTemplates();
             SaveController.AddPersistenceListener(this);
             if (_characters.Count == 0)
             {

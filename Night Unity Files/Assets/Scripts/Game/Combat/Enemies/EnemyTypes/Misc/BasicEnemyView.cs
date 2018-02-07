@@ -38,6 +38,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Misc
         protected void SetAlpha(float alpha)
         {
             if(GameObject != null) GameObject.GetComponent<CanvasGroup>().alpha = alpha;
+            SetNavigatable(alpha != 0);
             CurrentAlpha = alpha;
         }
 

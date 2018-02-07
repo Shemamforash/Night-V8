@@ -2,7 +2,6 @@
 using Game.Combat.Enemies;
 using NUnit.Framework;
 using SamsHelper.ReactiveUI;
-using UnityEngine;
 
 namespace Game.Characters.Player
 {
@@ -29,7 +28,7 @@ namespace Game.Characters.Player
             }
             else
             {
-                maxHealth = ((Enemy) _character).MaxHealth * 10;
+                maxHealth = ((Enemy) _character).MaxHealth;
             }
 
             _healthRemaining = new Number(maxHealth, 0, maxHealth);

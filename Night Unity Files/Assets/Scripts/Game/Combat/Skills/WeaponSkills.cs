@@ -43,7 +43,7 @@ namespace Game.Combat.Skills
     
     public class Gouge : Skill
     {
-        public Gouge() : base(true, nameof(Gouge))
+        public Gouge() : base(nameof(Gouge))
         {
             Duration = 2f;
         }
@@ -51,23 +51,25 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Shot.SetPierceDepth(100);
-            Shot.SetPierceChance(1);
-            Shot.Fire();
+            Shot shot = CreateShot();
+            shot.SetPierceDepth(100);
+            shot.SetPierceChance(1);
+            shot.Fire();
         }
     }
 
     public class Blast : Skill
     {
-        public Blast() : base(true, nameof(Blast))
+        public Blast() : base(nameof(Blast))
         {
         }
 
         protected override void OnFire()
         {
             base.OnFire();
-            Shot.UseRemainingShots();
-            Shot.Fire();
+            Shot shot = CreateShot();
+            shot.UseRemainingShots();
+            shot.Fire();
         }
     }
 
@@ -75,24 +77,23 @@ namespace Game.Combat.Skills
     
     public class Sweep : Skill
     {
-        public Sweep() : base(true, nameof(Sweep))
+        public Sweep() : base(nameof(Sweep))
         {
         }
 
         protected override void OnFire()
         {
             base.OnFire();
-            Shot.GuaranteeHit();
-            Shot.Fire();
-            Shot knockdownShot = new Shot(Shot.Target(), Shot.Origin());
-            knockdownShot.SetKnockdownChance(1, 5);
-            knockdownShot.Fire();
+            Shot shot = CreateShot();
+            shot.GuaranteeHit();
+            shot.SetKnockdownChance(1, 5);
+            shot.Fire();
         }
     }
 
     public class Swarm : Skill
     {
-        public Swarm() : base(true, nameof(Swarm))
+        public Swarm() : base(nameof(Swarm))
         {
         }
 
@@ -101,7 +102,7 @@ namespace Game.Combat.Skills
             base.OnFire();
             foreach (Enemy e in UIEnemyController.Enemies)
             {
-                Shot s = new Shot(e, Shot.Origin());
+                Shot s = new Shot(e, Player());
                 s.Fire();
             }
         }
@@ -111,7 +112,7 @@ namespace Game.Combat.Skills
     
     public class Refill : Skill
     {
-        public Refill() : base(true, nameof(Refill))
+        public Refill() : base(nameof(Refill))
         {
         }
 
@@ -124,14 +125,14 @@ namespace Game.Combat.Skills
 
     public class Compel : Skill
     {
-        public Compel() : base(true, nameof(Compel))
+        public Compel() : base(nameof(Compel), true)
         {
         }
 
         protected override void OnFire()
         {
             base.OnFire();
-            Player().OnFireAction = s => { s.SetKnockdownChance(0.25f, 2); };
+            Player().OnFireAction += s => { s.SetKnockdownChance(0.25f, 2); };
         }
     }
     
@@ -139,27 +140,27 @@ namespace Game.Combat.Skills
 
     public class Hairpin : Skill
     {
-        public Hairpin() : base(true, nameof(Hairpin))
+        public Hairpin() : base(nameof(Hairpin), true)
         {
         }
 
         protected override void OnFire()
         {
             base.OnFire();
-            Player().OnFireAction = s => { s.SetNumberOfShots(2); };
+            Player().OnFireAction += s => { s.SetNumberOfShots(2); };
         }
     }
 
     public class Splinter : Skill
     {
-        public Splinter() : base(true, nameof(Splinter))
+        public Splinter() : base(nameof(Splinter), true)
         {
         }
 
         protected override void OnFire()
         {
             base.OnFire();
-            Player().OnFireAction = s => { s.AddOnHit(() => { Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt()); }); };
+            Player().OnFireAction += s => { s.AddOnHit(() => { Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt()); }); };
         }
     }
 
@@ -167,16 +168,16 @@ namespace Game.Combat.Skills
     
     public class Retribution : Skill
     {
-        public Retribution() : base(true, nameof(Retribution))
+        public Retribution() : base(nameof(Retribution), true)
         {
         }
 
         protected override void OnFire()
         {
             base.OnFire();
-            Player().OnFireAction = s =>
+            Player().OnFireAction += s =>
             {
-                Player().RageController.Increase(100);
+                Player().RageController.Increase(1);
                 Player().RageController.TryStart();
             };
         }
@@ -184,7 +185,7 @@ namespace Game.Combat.Skills
 
     public class Revenge : Skill
     {
-        public Revenge() : base(true, nameof(Revenge))
+        public Revenge() : base(nameof(Revenge), true)
         {
         }
 

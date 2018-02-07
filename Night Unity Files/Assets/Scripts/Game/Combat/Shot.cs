@@ -45,12 +45,12 @@ namespace Game.Combat
 
             if (_origin != null)
             {
-                _distanceToTarget = CombatManager.DistanceBetween(_origin, _target);
+                Enemy enemy = origin as Enemy;
+                _distanceToTarget = enemy?.DistanceToPlayer ?? ((Enemy) target).DistanceToPlayer;
                 CacheWeaponAttributes();
                 CalculateHitProbability();
                 CalculateCriticalProbability();
                 float distance = origin is Player ? 0 : _distanceToTarget;
-                distance = distance / 150f;
                 GunFire.Fire(origin.Weapon().WeaponType(), distance);
             }
             else
@@ -63,6 +63,7 @@ namespace Game.Combat
         {
             WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
+//            if (_origin is Enemy) _damage = (int)Mathf.Ceil(_damage / 2f);
             _range = (int) attributes.GetCalculatedValue(AttributeType.Accuracy);
             _noPellets = (int) attributes.GetCalculatedValue(AttributeType.Pellets);
             _bleedChance = attributes.GetCalculatedValue(AttributeType.BleedChance);
@@ -99,7 +100,12 @@ namespace Game.Combat
 
         private bool WillHitTarget()
         {
-            if (_hitChance <= 0f) return false;
+
+            if (_hitChance <= 0f)
+            {
+                Debug.Log("shot from " + _origin.Name + " has 0% chance to hit");
+                return false;
+            }
             return Random.Range(0f, 1f) <= _hitChance;
         }
 
@@ -137,7 +143,6 @@ namespace Game.Combat
                         _target.OnMiss();
                         continue;
                     }
-
                     ApplyDamage();
                 }
             });

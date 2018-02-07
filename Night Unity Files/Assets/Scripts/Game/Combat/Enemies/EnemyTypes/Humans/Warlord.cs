@@ -10,15 +10,14 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private float _reinforceCallTime;
         private float _reinforceDuration = 5f;
 
-        public Warlord(float position) : base("Warlord", 10, 3, position)
+        public Warlord(float position) : base(nameof(Warlord), position)
         {
-            Weapon weapon = WeaponGenerator.GenerateWeapon(WeaponType.LMG);
-            Equip(weapon);
+            GenerateWeapon(WeaponType.LMG);
             ArmourLevel.SetCurrentValue(8);
             MinimumFindCoverDistance = 10;
             HealthController.AddOnTakeDamage(a =>
             {
-                if (ReachedMaxEncounterSize()) return;
+                if (CombatManager.CurrentScenario.ReachedMaxEncounterSize()) return;
                 float normalHealthBefore = (HealthController.GetCurrentHealth() + a) / HealthController.GetMaxHealth();
                 float currentNormalHealth = HealthController.GetNormalisedHealthValue();
                 if (normalHealthBefore > 0.25f && currentNormalHealth <= 0.25f

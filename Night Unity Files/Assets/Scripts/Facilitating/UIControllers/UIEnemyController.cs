@@ -12,7 +12,6 @@ public class UIEnemyController : MonoBehaviour, ICombatListener
     private static MenuList _enemyList;
     private static readonly List<Enemy> EnemiesToAdd = new List<Enemy>();
     public static readonly List<Enemy> Enemies = new List<Enemy>();
-    private const int MaxEncounterSize = 6;
 
     private void Awake()
     {
@@ -34,8 +33,8 @@ public class UIEnemyController : MonoBehaviour, ICombatListener
         if (MeleeController.InMelee) return;
         List<Enemy> updatedEnemies = new List<Enemy>();
         int totalEnemies = Enemies.Count;
-        for (int i = 0; i < totalEnemies; ++i)
-        {
+        int i = totalEnemies - 1;
+        while(totalEnemies > 0 && i >= 0){
             Enemy e = Enemies[i];
             if (updatedEnemies.Contains(e)) continue;
             updatedEnemies.Add(e);
@@ -49,6 +48,7 @@ public class UIEnemyController : MonoBehaviour, ICombatListener
                 i = 0;
                 --totalEnemies;
             }
+            --i;
         }
         EnemiesToAdd.ForEach(AddEnemy);
         EnemiesToAdd.Clear();
@@ -69,11 +69,6 @@ public class UIEnemyController : MonoBehaviour, ICombatListener
         EnemiesToAdd.Add(e);
         e.Alert();
         CombatManager.CurrentScenario.AddEnemy(e);
-    }
-
-    public static bool ReachedMaxEncounterSize()
-    {
-        return Enemies.Count == MaxEncounterSize;
     }
 
     public static bool AllEnemiesGone()

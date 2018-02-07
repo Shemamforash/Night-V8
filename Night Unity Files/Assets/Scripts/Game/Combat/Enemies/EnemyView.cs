@@ -1,4 +1,5 @@
-﻿using Game.Characters.Player;
+﻿using System.Runtime.InteropServices;
+using Game.Characters.Player;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -59,7 +60,9 @@ namespace Game.Combat.Enemies
         {
             if (_inSight)
             {
-                base.UpdateDistanceText();
+                float distance = Helper.Round(_enemy.DistanceToPlayer);
+                string distanceText = Mathf.Abs(distance) + "m";
+                DistanceText.text = distanceText;
                 return;
             }
 
@@ -109,17 +112,6 @@ namespace Game.Combat.Enemies
         public void MarkUnselected()
         {
             HealthBar.SetValue(-1, 0f);
-        }
-
-        public void MarkDead()
-        {
-//            CoverText.text = "";
-            DistanceText.text = "";
-//            StrengthText.text = "";
-//            ArmourText.text = "";
-            _nameText.text = "Dead " + _nameText.text;
-            ActionText.text = "";
-            SetNavigatable(false);
         }
     }
 }

@@ -70,7 +70,7 @@ namespace SamsHelper.Input
             public void CheckPress()
             {
                 _lastInputValue = UnityEngine.Input.GetAxisRaw(_axis.ToString());
-                if (Math.Abs(_lastInputValue) > 0.0001f)
+                if (Math.Abs(_lastInputValue) > 0f)
                 {
                     if (!_pressed)
                     {

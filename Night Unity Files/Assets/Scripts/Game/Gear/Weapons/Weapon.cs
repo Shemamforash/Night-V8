@@ -1,26 +1,15 @@
 ﻿using System;
-using System.Threading;
 using System.Xml;
-using Facilitating.Audio;
-using Facilitating.Persistence;
 using Facilitating.UIControllers;
-using Game.Characters;
-using Game.Combat;
-using Game.Combat.Enemies;
 using Game.Combat.Skills;
-using Game.Gear.UI;
 using Game.World;
-using Game.World.WorldEvents;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
-using UnityEditor;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Gear.Weapons
 {
@@ -78,7 +67,6 @@ namespace Game.Gear.Weapons
         public void IncreaseDurability()
         {
             WeaponAttributes.Durability.Increment();
-            WeaponAttributes.RecalculateAttributeValues();
             WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Decrement(GetUpgradeCost());
             SetName();
         }
@@ -91,8 +79,7 @@ namespace Game.Gear.Weapons
 
         public void DecreaseDurability()
         {
-            WeaponAttributes.Durability.Decrement(1);
-            WeaponAttributes.RecalculateAttributeValues();
+            WeaponAttributes.Durability.Decrement();
             SetName();
         }
 

@@ -13,10 +13,9 @@ namespace Game.Combat.Enemies
         protected int Speed;
         public float DistanceToPlayer;
 
-        protected CombatItem(string name, int speed, float position) : base(name)
+        protected CombatItem(string name, float position) : base(name)
         {
             Position.SetCurrentValue(position);
-            Speed = speed;
             MovementController = new MovementController(this, Speed);
         }
 

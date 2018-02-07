@@ -18,6 +18,7 @@ namespace Game.Combat
                 if (StackList[i] > 0)
                 {
                     CharacterHealth.TakeDamage(Damage);
+                    if (StackList.Count == 0) break;
                     continue;
                 }
 

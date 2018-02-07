@@ -8,7 +8,6 @@ using Game.Characters.CharacterActions;
 using Game.Combat;
 using Game.Combat.Enemies;
 using Game.Combat.Skills;
-using Game.Gear.Weapons;
 using Game.World;
 using Game.World.Region;
 using SamsHelper;
@@ -34,20 +33,21 @@ namespace Game.Characters.Player
         public CharacterView CharacterView;
         public readonly DesolationAttributes Attributes;
         public readonly Number Energy = new Number();
-        public Action<Shot> OnFireAction;
+        public event Action<Shot> OnFireAction;
+        public event Action OnReloadAction;
         public bool Retaliate;
 
-        public CollectResources CollectResourcesAction;
-        public Sleep SleepAction;
+        private CollectResources _collectResourcesAction;
+        private Sleep _sleepAction;
         public Idle IdleAction;
         public Travel TravelAction;
         public Return ReturnAction;
-        public CraftAmmo CraftAmmoAction;
-        public CharacterActions.Combat CombatAction;
-        public LightFire LightFireAction;
+        private CraftAmmo _craftAmmoAction;
+        private CharacterActions.Combat _combatAction;
+        private LightFire _lightFireAction;
         public readonly RageController RageController;
 
-        protected Cooldown ReloadingCooldown;
+        private Cooldown _reloadingCooldown;
 
         private bool _fired;
 
@@ -70,7 +70,7 @@ namespace Game.Characters.Player
         }
 
         //Create Character in code only- no view section, no references to objects in the scene
-        public Player(CharacterTemplate characterTemplate) : base(characterTemplate.CharacterClass.ToString())
+        public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
         {
             Attributes = new DesolationAttributes(this);
             MovementController = new MovementController(this, 0);
@@ -87,10 +87,15 @@ namespace Game.Characters.Player
             SetReloadCooldown();
         }
 
+        ~Player()
+        {
+            Debug.Log("Destroyed " + Name);
+        }
+
         public void OnHit(Shot shot, int damage)
         {
             OnHit(damage);
-            if (shot?.Origin() == null) return;
+            if (shot.Origin() == null) return;
             if (Retaliate) FireWeapon(shot.Origin());
         }
 
@@ -147,7 +152,7 @@ namespace Game.Characters.Player
             Burn.OnConditionEmpty = CombatManager.PlayerHealthBar.StopBurning;
             Bleeding.OnConditionNonEmpty = CombatManager.PlayerHealthBar.StartBleeding;
             Bleeding.OnConditionEmpty = CombatManager.PlayerHealthBar.StopBleeding;
-            Sick.OnConditionNonEmpty = () => CombatManager.PlayerHealthBar.UpdateSickness(((Sickness) Sick).GetNormalisedValue());
+            Sick.OnConditionNonEmpty = () => CombatManager.PlayerHealthBar.UpdateSickness(Sick.GetNormalisedValue());
             Sick.OnConditionEmpty = () => CombatManager.PlayerHealthBar.UpdateSickness(0);
         }
 
@@ -171,14 +176,14 @@ namespace Game.Characters.Player
 
         private void AddStates()
         {
-            CollectResourcesAction = new CollectResources(this);
-            CombatAction = new CharacterActions.Combat(this);
-            SleepAction = new Sleep(this);
+            _collectResourcesAction = new CollectResources(this);
+            _combatAction = new CharacterActions.Combat(this);
+            _sleepAction = new Sleep(this);
             IdleAction = new Idle(this);
             TravelAction = new Travel(this);
             ReturnAction = new Return(this);
-            LightFireAction = new LightFire(this);
-            CraftAmmoAction = new CraftAmmo(this);
+            _lightFireAction = new LightFire(this);
+            _craftAmmoAction = new CraftAmmo(this);
             States.SetDefaultState(IdleAction);
             CharacterView.FillActionList();
         }
@@ -200,9 +205,13 @@ namespace Game.Characters.Player
             BaseCharacterAction action = (BaseCharacterAction) States.GetCurrentState();
             action.Interrupt();
             Sleep sleepAction = States.GetState("Sleep") as Sleep;
-            sleepAction.SetStateTransitionTarget(action);
-            sleepAction.AddOnExit(() => { action.Resume(); });
-            SleepAction.Enter();
+            if (sleepAction != null)
+            {
+                sleepAction.SetStateTransitionTarget(action);
+                sleepAction.AddOnExit(() => { action.Resume(); });
+            }
+
+            _sleepAction.Enter();
         }
 
         public void Rest(int amount)
@@ -250,53 +259,54 @@ namespace Game.Characters.Player
         //MISC
         public override bool Immobilised()
         {
-            return ReloadingCooldown.Running() || IsKnockedDown;
+            return _reloadingCooldown.Running() || IsKnockedDown;
         }
 
         //RELOADING
         private void Reload()
         {
             if (Immobilised()) return;
-            if (ReloadingCooldown.Running()) return;
+            if (_reloadingCooldown.Running()) return;
             if (EquipmentController.Weapon().FullyLoaded()) return;
             if (Weapon().GetRemainingMagazines() == 0) return;
             OnFireAction = null;
             Retaliate = false;
             float reloadSpeed = EquipmentController.Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
             UIMagazineController.EmptyMagazine();
-            ReloadingCooldown.Duration = reloadSpeed;
-            ReloadingCooldown.Start();
+            _reloadingCooldown.Duration = reloadSpeed;
+            _reloadingCooldown.Start();
         }
 
         private void StopReloading()
         {
-            if (ReloadingCooldown == null || ReloadingCooldown.Finished()) return;
-            ReloadingCooldown.Cancel();
+            if (_reloadingCooldown == null || _reloadingCooldown.Finished()) return;
+            _reloadingCooldown.Cancel();
         }
 
         //COOLDOWNS
 
         private void SetReloadCooldown()
         {
-            ReloadingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
-            ReloadingCooldown.SetStartAction(() =>
+            _reloadingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
+            _reloadingCooldown.SetStartAction(() =>
             {
                 EquipmentController.Weapon().Reload(Inventory());
                 UpdateMagazineUi();
             });
-            ReloadingCooldown.SetDuringAction(t =>
+            _reloadingCooldown.SetDuringAction(t =>
             {
-                if (t > ReloadingCooldown.Duration * 0.8f)
+                if (t > _reloadingCooldown.Duration * 0.8f)
                 {
                     UIMagazineController.EmptyMagazine();
                 }
                 else
                 {
-                    t = (t - ReloadingCooldown.Duration * 0.2f) / (ReloadingCooldown.Duration * 0.8f);
+                    t = (t - _reloadingCooldown.Duration * 0.2f) / (_reloadingCooldown.Duration * 0.8f);
                     t = 1 - t;
                     UIMagazineController.UpdateReloadTime(t);
                 }
             });
+            _reloadingCooldown.SetEndAction(() => OnReloadAction?.Invoke());
         }
 
         //FIRING
@@ -305,7 +315,7 @@ namespace Game.Characters.Player
             Shot shot = base.FireWeapon(target);
             if (shot != null)
             {
-                shot.SetDamageModifier((float) Math.Pow(1.05f, Attributes.Perception.CurrentValue()));
+                shot.SetDamageModifier(Attributes.GetGunDamageModifier());
                 OnFireAction?.Invoke(shot);
                 shot.Fire();
             }
@@ -416,7 +426,7 @@ namespace Game.Characters.Player
 
         public void CollectResourcesInRegion(Region region)
         {
-            CollectResourcesAction.SetTargetRegion(region);
+            _collectResourcesAction.SetTargetRegion(region);
         }
 
         public override void EnterCombat()

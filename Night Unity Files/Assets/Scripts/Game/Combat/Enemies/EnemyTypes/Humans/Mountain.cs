@@ -7,10 +7,9 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
     {
         private bool _firedVolley;
 
-        public Mountain(float position) : base(nameof(Mountain), 50, 2, position)
+        public Mountain(float position) : base(nameof(Mountain), position)
         {
-            Weapon weapon = WeaponGenerator.GenerateWeapon(WeaponType.LMG);
-            Equip(weapon);
+            GenerateWeapon(WeaponType.LMG);
             ArmourLevel.SetCurrentValue(4);
         }
 

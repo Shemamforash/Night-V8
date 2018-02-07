@@ -2,10 +2,12 @@
 using System.Xml;
 using Facilitating.Persistence;
 using Game.World;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
+using UnityEngine;
 
 namespace Game.Characters
 {
@@ -31,6 +33,16 @@ namespace Game.Characters
         private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
         private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
+
+        public float GetSkillRechargeModifier()
+        {
+            return Mathf.Pow(0.95f, Willpower.CurrentValue());
+        }
+
+        public float GetGunDamageModifier()
+        {
+            return Mathf.Pow(1.05f, Perception.CurrentValue());
+        }
         
         public DesolationAttributes(Character character)
         {

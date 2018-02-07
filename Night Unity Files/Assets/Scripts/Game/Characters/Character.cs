@@ -47,7 +47,7 @@ namespace Game.Characters
             Inventory().Save(doc, saveType);
             return doc;
         }
-
+        
         public Weapon Weapon()
         {
             return EquipmentController.Weapon();
@@ -151,6 +151,7 @@ namespace Game.Characters
         protected virtual void KnockDown()
         {
             Interrupt();
+            LeaveCover();
             IsKnockedDown = true;
         }
 

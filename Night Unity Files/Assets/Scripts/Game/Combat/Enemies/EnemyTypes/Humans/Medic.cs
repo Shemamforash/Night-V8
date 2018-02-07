@@ -12,10 +12,9 @@ namespace Game.Combat.Enemies.EnemyTypes
         private int _healAmount = 50;
         private Enemy _healTarget;
 
-        public Medic(float position) : base(nameof(Medic), 7, 4, position)
+        public Medic(float position) : base(nameof(Medic), position)
         {
-            Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType>{WeaponType.Pistol, WeaponType.SMG});
-            Equip(weapon);
+            GenerateWeapon(new List<WeaponType>{WeaponType.Pistol, WeaponType.SMG});
             MinimumFindCoverDistance = 20f;
             ArmourLevel.SetCurrentValue(2);
         }

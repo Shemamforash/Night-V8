@@ -17,6 +17,21 @@ namespace Game.Characters.Player
         private bool _sprinting;
         private readonly Action<float> _moveForwardAction, _moveBackwardAction;
 
+        public void SetSpeed(int speed)
+        {
+            _baseSpeed = speed;
+        }
+
+        public float GetDashCooldown()
+        {
+            return Helper.Round(_dashCooldown.Duration, 1);
+        }
+
+        public float GetSpeed()
+        {
+            return _baseSpeed;
+        }
+        
         public MovementController(Character character, int speed)
         {
             _character = character;

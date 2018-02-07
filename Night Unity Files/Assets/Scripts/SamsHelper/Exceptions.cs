@@ -332,13 +332,37 @@ namespace SamsHelper
         public class UnknownRegionTypeException : Exception
         {
             private readonly string _type;
-            
+
             public UnknownRegionTypeException(string type)
             {
                 _type = type;
             }
 
             public override string Message => "Unknown region type '" + _type + "'";
+        }
+
+        public class EnemyTypeDoesNotExistException : Exception
+        {
+            private readonly string _type;
+
+            public EnemyTypeDoesNotExistException(string type)
+            {
+                _type = type;
+            }
+
+            public override string Message => "Enemy type does not exist '" + _type + "'";
+        }
+
+        public class SkillDoesNotExistException : Exception
+        {
+            private readonly string _type;
+
+            public SkillDoesNotExistException(string type)
+            {
+                _type = type;
+            }
+
+            public override string Message => "Skill does not exist '" + _type + "'";
         }
     }
 }

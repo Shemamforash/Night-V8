@@ -6,12 +6,12 @@ namespace Game.Characters
 {
     public class RageController : ICombatListener
     {
-        private readonly Number _rageLevel = new Number(0, 0, 1);
+        private readonly Number _rageLevel = new Number(0, 0, 8);
         private bool _activated;
         private readonly Character _character;
         private readonly AttributeModifier _reloadModifier = new AttributeModifier();
         private readonly AttributeModifier _fireRateModifier = new AttributeModifier();
-            
+
         public RageController(Character character)
         {
             _reloadModifier.SetMultiplicative(0.5f);
@@ -20,8 +20,9 @@ namespace Game.Characters
             _rageLevel.OnMin(End);
             if (_character is Player.Player)
             {
-                _rageLevel.AddOnValueChange(a => RageBarController.SetRageBarFill(a.CurrentValue(), _activated));
+                _rageLevel.AddOnValueChange(a => RageBarController.SetRageBarFill(a.Normalised(), _activated));
             }
+
             CombatManager.RegisterCombatListener(this);
         }
 
@@ -29,7 +30,7 @@ namespace Game.Characters
         {
             return _rageLevel.CurrentValue();
         }
-        
+
         public void Increase(float damage)
         {
             if (!_activated)
@@ -46,23 +47,8 @@ namespace Game.Characters
             _rageLevel.Decrement(amount);
             return true;
         }
-        
-        public bool Decrease()
-        {
-            float decreaseAmount = 0f;
-            if (_rageLevel.CurrentValue() < 1 && !_activated)
-            {
-                decreaseAmount = -0.04f;
-            }
-            else if (_activated)
-            {
-                decreaseAmount = -0.1f;
-            }
-            _rageLevel.Increment(decreaseAmount * Time.deltaTime);
-            return !_rageLevel.ReachedMin();
-        }
 
-        public void End()
+        private void End()
         {
             if (!_activated) return;
             _activated = false;
@@ -72,10 +58,8 @@ namespace Game.Characters
 
         public void TryStart()
         {
-            if (_rageLevel.CurrentValue() != 1) return;
+            if (!_rageLevel.ReachedMax() && !_activated) return;
             _activated = true;
-            _reloadModifier.AddTargetAttribute(_character.Weapon().WeaponAttributes.ReloadSpeed);
-            _fireRateModifier.AddTargetAttribute(_character.Weapon().WeaponAttributes.FireRate);
             _reloadModifier.Apply();
             _fireRateModifier.Apply();
         }
@@ -83,16 +67,26 @@ namespace Game.Characters
         public void EnterCombat()
         {
             _rageLevel.SetCurrentValue(0f);
+            _reloadModifier.AddTargetAttribute(_character.Weapon().WeaponAttributes.ReloadSpeed);
+            _fireRateModifier.AddTargetAttribute(_character.Weapon().WeaponAttributes.FireRate);
         }
 
         public void ExitCombat()
         {
+            _reloadModifier.RemoveTargetAttribute(_character.Weapon().WeaponAttributes.ReloadSpeed);
+            _fireRateModifier.RemoveTargetAttribute(_character.Weapon().WeaponAttributes.FireRate);
         }
 
         public void UpdateCombat()
         {
             if (_rageLevel.ReachedMax()) return;
-            _rageLevel.Decrement(Time.deltaTime * 0.05f);
+            float decreaseAmount = 0.04f;
+            if (_activated)
+            {
+                decreaseAmount = 0.1f;
+            }
+
+            _rageLevel.Decrement(decreaseAmount * Time.deltaTime);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         private readonly Cooldown _detonateCooldown;
         private bool _detonated;
 
-        public Martyr(float position) : base(nameof(Martyr), 3, 1, position)
+        public Martyr(float position) : base(nameof(Martyr), position)
         {
             MinimumFindCoverDistance = -1f;
             _detonateCooldown = CombatManager.CombatCooldowns.CreateCooldown(1f);
@@ -24,13 +24,17 @@ namespace Game.Combat.Enemies.EnemyTypes
         public override void Alert()
         {
             base.Alert();
-            CurrentAction = MoveToTargetDistance(0);
             Speed = 10;
+        }
+
+        public override void ChooseNextAction()
+        {
+            CurrentAction = MoveToTargetDistance(0);
         }
         
         protected override void ReachTarget()
         {
-            if (Alerted) return;
+            if (!Alerted) return;
             _detonateCooldown.Start();
             CurrentAction = null;
         }
@@ -38,7 +42,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         private void Detonate()
         {
             _detonated = true;
-            Explosion.CreateAndDetonate(Position.CurrentValue(), 10, 40);
+            Explosion.CreateAndDetonate(Position.CurrentValue(), 10, 50);
         }
     }    
 }

@@ -129,7 +129,7 @@ namespace Game.World.Region
 
         private void LoadRegionTemplates()
         {
-            string regionText = Resources.Load<TextAsset>("Regions").text;
+            string regionText = Resources.Load<TextAsset>("XML/Regions").text;
             XmlDocument regionXml = new XmlDocument();
             regionXml.LoadXml(regionText);
             XmlNode root = regionXml.SelectSingleNode("RegionType");

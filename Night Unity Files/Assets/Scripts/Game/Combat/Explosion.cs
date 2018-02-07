@@ -6,9 +6,9 @@ namespace Game.Combat
 {
     public class Explosion
     {
-        private int _damage;
-        private float _radius;
-        private float _position;
+        private readonly int _damage;
+        private readonly float _radius;
+        private readonly float _position;
 
         private float _knockbackDistance;
         private bool _bleed, _burn, _sick;
@@ -27,14 +27,11 @@ namespace Game.Combat
 
         public void Fire()
         {
-            List<Character> _charactersInRange = CombatManager.GetCharactersInRange(_position, _radius);
-            foreach (Character c in _charactersInRange)
+            List<Character> charactersInRange = CombatManager.GetCharactersInRange(_position, _radius);
+            foreach (Character c in charactersInRange)
             {
-                float distance = CombatManager.DistanceBetween(_position, c);
-                float normalisedDistance = distance / _radius;
-                int damage = (int) (_damage * normalisedDistance);
-                c.OnHit(damage);
-                c.Knockback(_knockbackDistance * (1 - normalisedDistance));
+                c.OnHit(_damage);
+                c.Knockback(_knockbackDistance);
                 if (_bleed) c.Bleeding.AddStack();
                 if (_burn) c.Burn.AddStack();
                 if (_sick) c.Sick.AddStack();

@@ -7,10 +7,9 @@ namespace Game.Combat.Enemies.EnemyTypes
     {
         private bool _reachedTarget;
 
-        public Sniper(float position) : base("Sniper", 7, 5, position)
+        public Sniper(float position) : base(nameof(Sniper), position)
         {
-            Weapon sniperRifle = WeaponGenerator.GenerateWeapon(WeaponType.Rifle);
-            Equip(sniperRifle);
+            GenerateWeapon(WeaponType.Rifle);
             ArmourLevel.SetCurrentValue(4);
         }
 

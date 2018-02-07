@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Facilitating.UI.Elements;
 using SamsHelper.Input;
-using UnityEditor;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -64,7 +61,14 @@ namespace SamsHelper.ReactiveUI.Elements
             InputHandler.RegisterInputListener(this);
             _button = GetComponent<Button>();
             _buttonClickSource = Camera.main.GetComponent<AudioSource>();
-            Border.SetActive(false);
+            try
+            {
+                Border.SetActive(false);
+            }
+            catch (UnassignedReferenceException e)
+            {
+                Debug.Log(e.Message + " " + gameObject.name);
+            }
             _borderImages.AddRange(Helper.FindAllComponentsInChildren<Image>(Border.transform));
         }
 
@@ -245,12 +249,12 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private Navigation GetNavigation()
         {
-            return _button.navigation;
+            return Button().navigation;
         }
 
         private void SetNavigation(Navigation navigation)
         {
-            _button.navigation = navigation;
+            Button().navigation = navigation;
         }
 
         public void ClearNavigation()

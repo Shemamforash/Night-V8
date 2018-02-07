@@ -12,6 +12,7 @@ namespace Game.Combat
         private const int NoSlots = 4;
         private static Skill[] _skills;
         private static readonly List<CooldownController> SkillView = new List<CooldownController>();
+        private static readonly List<UISkillCostController> CostControllers = new List<UISkillCostController>();
         private static CanvasGroup _canvas;
 
         public void Awake()
@@ -19,6 +20,7 @@ namespace Game.Combat
             for (int i = 0; i < NoSlots; ++i)
             {
                 SkillView.Add(Helper.FindChildWithName<CooldownController>(gameObject, "Skill " + (i + 1)));
+                CostControllers.Add(Helper.FindChildWithName<UISkillCostController>(SkillView[i].gameObject, "Cost"));
             }
             _skills = new Skill[NoSlots];
             _canvas = GetComponent<CanvasGroup>();
@@ -42,6 +44,7 @@ namespace Game.Combat
             _skills[slot]?.Cancel();
             _skills[slot] = skill;
             skill.SetController(SkillView[slot]);
+            CostControllers[slot].SetCost(skill.Cost);
         }
 
         public static void ActivateSkill(int skillNo)
@@ -53,7 +56,7 @@ namespace Game.Combat
         {
             for (int i = 0; i < NoSlots; ++i)
             {
-                _skills[i].ResetTimer();
+                _skills[i].Start();
             }
         }
     }

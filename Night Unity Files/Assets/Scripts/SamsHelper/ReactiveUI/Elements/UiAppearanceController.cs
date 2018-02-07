@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using Facilitating.UI.Elements;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace SamsHelper.ReactiveUI.Elements
 {
-    [ExecuteInEditMode]
+//    [ExecuteInEditMode]
     public class UiAppearanceController : MonoBehaviour
     {
         public TMP_FontAsset UniversalFont;
@@ -19,16 +17,13 @@ namespace SamsHelper.ReactiveUI.Elements
             _instance = this;
         }
 
-        public static UiAppearanceController Instance
+        public static UiAppearanceController Instance()
         {
-            get
+            if (_instance == null)
             {
-                if (_instance == null)
-                {
-                    _instance = FindObjectOfType<UiAppearanceController>();
-                }
-                return _instance;
+                _instance = FindObjectOfType<UiAppearanceController>();
             }
+            return _instance;
         }
 
         public void UpdateTextFont()
@@ -37,12 +32,12 @@ namespace SamsHelper.ReactiveUI.Elements
             _texts.ForEach(t => t.SetFont(UniversalFont));
         }
 
-#if UNITY_EDITOR
-        public void Update()
-        {
-            UpdateTextFont();
-        }
-#endif
+//#if UNITY_EDITOR
+//        public void Update()
+//        {
+//            UpdateTextFont();
+//        }
+//#endif
 
 //        public void SetFontSize(EnhancedText.FontSizes fontSize, int newSize)
 //        {
@@ -78,6 +73,7 @@ namespace SamsHelper.ReactiveUI.Elements
                 case EnhancedText.FontSizes.Title:
                     return TitleFontSize;
             }
+
             return 0;
         }
     }

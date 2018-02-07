@@ -89,7 +89,6 @@ namespace Game.Combat
             if (MeleeController.InMelee) return;
             _combatListeners.ForEach(l => l.UpdateCombat());
             CombatCooldowns.UpdateCooldowns();
-            Player.RageController.Decrease();
         }
 
         public static void CheckPlayerFled()
@@ -156,11 +155,6 @@ namespace Game.Combat
             {
                 ExitCombat();
             }
-        }
-
-        public static float DistanceBetween(Character origin, Character target)
-        {
-            return DistanceBetween(origin.Position.CurrentValue(), target);
         }
 
         public static float DistanceBetween(float originPosition, Character target)

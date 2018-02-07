@@ -14,15 +14,11 @@ namespace Game.Combat
     {
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private bool _finished;
+        private const int MaxEncounterSize = 6;
 
         public void AddEnemy(Enemy enemy)
         {
             _enemies.Add(enemy);
-        }
-
-        private static float RandomPosition()
-        {
-            return Random.Range(30f, 60f);
         }
 
         public static CombatScenario GenerateSimple()
@@ -40,68 +36,61 @@ namespace Game.Combat
             return scenario;
         }
 
+        private static float RandomPosition()
+        {
+            return Random.Range(40f, 60f);
+        }
+        
+        private static void AddEnemy(string enemyName, CombatScenario scenario)
+        {
+            switch (enemyName)
+            {
+                case nameof(Sentinel):
+                    scenario.AddEnemy(new Sentinel(RandomPosition()));
+                    break;
+                case nameof(Martyr):
+                    scenario.AddEnemy(new Martyr(RandomPosition()));
+                    break;
+                case nameof(Brawler):
+                    scenario.AddEnemy(new Brawler(RandomPosition()));
+                    break;
+                case nameof(Sniper):
+                    scenario.AddEnemy(new Sniper(RandomPosition()));
+                    break;
+                case nameof(Mountain):
+                    scenario.AddEnemy(new Mountain(RandomPosition()));
+                    break;
+                case nameof(Witch):
+                    scenario.AddEnemy(new Witch(RandomPosition()));
+                    break;
+                case nameof(Medic):
+                    scenario.AddEnemy(new Medic(RandomPosition()));
+                    break;
+                case nameof(Warlord):
+                    scenario.AddEnemy(new Warlord(RandomPosition()));
+                    break;
+            }
+        }
+        
+        public bool ReachedMaxEncounterSize()
+        {
+            return _enemies.Count == MaxEncounterSize;
+        }
+
+        private static List<EnemyTemplate> _enemyTypes = EnemyTemplate.GetEnemyTypes();
+        
         public static CombatScenario Generate(int difficulty)
         {
             CombatScenario scenario = new CombatScenario();
-            List<int> enemyNos = new List<int> {0, 1, 2, 3, 4, 5, 6, 7};
-            while (difficulty > 0)
+            while (difficulty > 0 && !scenario.ReachedMaxEncounterSize())
             {
-                Helper.Shuffle(ref enemyNos);
-                foreach (int i in enemyNos)
+                Helper.Shuffle(ref _enemyTypes);
+                foreach(EnemyTemplate t in _enemyTypes)
                 {
-                    if (difficulty == 0) break;
-                    switch (i)
-                    {
-                        case 0:
-                            if (difficulty >= 1)
-                            {
-                                scenario.AddEnemy(new Sentinel(Random.Range(20f, 40f)));
-                                difficulty -= 1;
-                            }
-                            break;
-                        case 1:
-                            if (difficulty >= 1)
-                            {
-                                scenario.AddEnemy(new Martyr(Random.Range(20f, 40f)));
-                                difficulty -= 1;
-                            }                            break;
-                        case 2:
-                            if (difficulty >= 2)
-                            {
-                                scenario.AddEnemy(new Brawler(Random.Range(20f, 40f)));
-                                difficulty -= 2;
-                            }                            break;
-                        case 3:
-                            if (difficulty >= 2)
-                            {
-                                scenario.AddEnemy(new Sniper(Random.Range(20f, 40f)));
-                                difficulty -= 2;
-                            }                            break;
-                        case 4:
-                            if (difficulty >= 3)
-                            {
-                                scenario.AddEnemy(new Medic(Random.Range(20f, 40f)));
-                                difficulty -= 3;
-                            }                            break;
-                        case 5:
-                            if (difficulty >= 3)
-                            {
-                                scenario.AddEnemy(new Mountain(Random.Range(20f, 40f)));
-                                difficulty -= 3;
-                            }                            break;
-                        case 6:
-                            if (difficulty >= 3)
-                            {
-                                scenario.AddEnemy(new Witch(Random.Range(20f, 40f)));
-                                difficulty -= 3;
-                            }                            break;
-                        case 7:
-                            if (difficulty >= 4)
-                            {
-                                scenario.AddEnemy(new Warlord(Random.Range(20f, 40f)));
-                                difficulty -= 4;
-                            }                            break;
-                    }
+                    if (difficulty < t.Value) continue;
+                    AddEnemy(t.Name, scenario);
+                    if (scenario.ReachedMaxEncounterSize()) break;
+                    difficulty -= t.Value;
                 }
             }
             return scenario;

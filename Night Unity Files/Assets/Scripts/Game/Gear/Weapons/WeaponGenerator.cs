@@ -37,9 +37,9 @@ namespace Game.Gear.Weapons
         {
             bool automatic = true;
             WeaponType weaponType;
-            if (weaponsWanted != null && weaponsWanted.Count != 0)
+            if (weaponsWanted != null )
             {
-                weaponType = weaponsWanted[UnityEngine.Random.Range(0, weaponsWanted.Count)];
+                weaponType = weaponsWanted.Count != 0 ? weaponsWanted[UnityEngine.Random.Range(0, weaponsWanted.Count)] : weaponsWanted[0];
             }
             else
             {
@@ -47,6 +47,7 @@ namespace Game.Gear.Weapons
                 weaponType = (WeaponType) types.GetValue(UnityEngine.Random.Range(0, types.Length));
             }
             WeaponClass weaponClass = WeaponDictionary[weaponType];
+            Debug.Log(weaponsWanted[0] + " " +weaponClass.Type);
             GearModifier modifier = GeneralModifiers[UnityEngine.Random.Range(0, GeneralModifiers.Count)];
             Weapon weapon = weaponClass.CreateWeapon(modifier, manualOnly, durability);
             WorldEventManager.GenerateEvent(new WeaponFindEvent(weapon.Name));
@@ -56,7 +57,7 @@ namespace Game.Gear.Weapons
 
         private static void LoadBaseWeapons()
         {
-            TextAsset weaponFile = Resources.Load<TextAsset>("WeaponClasses");
+            TextAsset weaponFile = Resources.Load<TextAsset>("XML/WeaponClasses");
             XmlDocument weaponXml = new XmlDocument();
             weaponXml.LoadXml(weaponFile.text);
             XmlNode classesNode = weaponXml.SelectSingleNode("//Classes");

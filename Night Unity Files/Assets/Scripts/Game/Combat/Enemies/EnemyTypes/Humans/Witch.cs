@@ -14,10 +14,10 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private float _targetTime;
         private bool _throwing;
 
-        public Witch(float position) : base(nameof(Witch), 5, 5, position)
+        public Witch(float position) : base(nameof(Witch), position)
         {
-            Weapon weapon = WeaponGenerator.GenerateWeapon(new List<WeaponType> {WeaponType.Pistol, WeaponType.SMG});
-            Equip(weapon);
+            GenerateWeapon(new List<WeaponType> {WeaponType.Pistol, WeaponType.SMG});
+            //todo remove me
             ArmourLevel.SetCurrentValue(4);
             MinimumFindCoverDistance = 5f;
         }

@@ -63,6 +63,12 @@ namespace Game.Gear.Weapons
         {
             if (durability == -1) durability = Random.Range(0, MaxDurability);
             Durability = new Number(durability, 0, MaxDurability);
+            Durability.AddOnValueChange(a => RecalculateAttributeValues());
+        }
+
+        public void SetDurability(int value)
+        {
+            Durability.SetCurrentValue(value);
         }
 
         public void SetClass(WeaponClass weaponClass)
@@ -126,7 +132,7 @@ namespace Game.Gear.Weapons
             return ModifierName + " " + SubClassName;
         }
 
-        public void RecalculateAttributeValues()
+        private void RecalculateAttributeValues()
         {
             DurabilityModifier = 1f / (MaxDurability * 2) * (Durability.CurrentValue() + MaxDurability);
             _durabilityModifier.SetMultiplicative(DurabilityModifier);

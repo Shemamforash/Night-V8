@@ -11,9 +11,10 @@ public class Grenade : CombatItem
 	public BasicEnemyView GrenadeView;
 	private Action _moveAction;
 	
-	public Grenade(float position, float targetPosition, string name = "Grenade") : base(name, 15, position)
+	public Grenade(float position, float targetPosition, string name = "Grenade") : base(name, position)
 	{
 		_moveAction = MoveToTargetPosition(targetPosition);
+		MovementController.SetSpeed(15);
 	}
 
 	protected override void ReachTarget()

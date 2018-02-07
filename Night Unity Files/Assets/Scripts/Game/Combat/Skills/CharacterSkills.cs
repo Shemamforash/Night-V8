@@ -67,7 +67,7 @@ namespace Game.Combat.Skills
 
     public class Staunch : Skill
     {
-        public Staunch() : base(true, nameof(Staunch))
+        public Staunch() : base(nameof(Staunch))
         {
         }
 
@@ -80,10 +80,8 @@ namespace Game.Combat.Skills
 
     public class Rejuvinate : Skill
     {
-        public Rejuvinate() : base(true, nameof(Rejuvinate))
+        public Rejuvinate() : base(nameof(Rejuvinate))
         {
-            Player().HealthController.Heal(50);
-            SkillBar.ResetSkillTimers();
         }
 
         protected override void OnFire()
@@ -98,7 +96,7 @@ namespace Game.Combat.Skills
 
     public class Fortify : Skill
     {
-        public Fortify() : base(true, nameof(Fortify))
+        public Fortify() : base(nameof(Fortify))
         {
         }
 
@@ -111,7 +109,7 @@ namespace Game.Combat.Skills
 
     public class Endure : Skill
     {
-        public Endure() : base(true, nameof(Endure))
+        public Endure() : base(nameof(Endure))
         {
             //todo
         }
@@ -121,7 +119,7 @@ namespace Game.Combat.Skills
 
     public class Immolate : Skill
     {
-        public Immolate() : base(true, nameof(Immolate))
+        public Immolate() : base(nameof(Immolate))
         {
         }
 
@@ -135,7 +133,7 @@ namespace Game.Combat.Skills
 
     public class Lacerate : Skill
     {
-        public Lacerate() : base(true, nameof(Lacerate))
+        public Lacerate() : base(nameof(Lacerate))
         {
         }
 
@@ -151,7 +149,7 @@ namespace Game.Combat.Skills
 
     public class Taunt : Skill
     {
-        public Taunt() : base(true, nameof(Taunt))
+        public Taunt() : base(nameof(Taunt))
         {
         }
 
@@ -164,7 +162,7 @@ namespace Game.Combat.Skills
 
     public class Headbutt : Skill
     {
-        public Headbutt() : base(true, nameof(Headbutt))
+        public Headbutt() : base(nameof(Headbutt))
         {
         }
 
@@ -183,7 +181,7 @@ namespace Game.Combat.Skills
 
     public class Terrify : Skill
     {
-        public Terrify() : base(true, nameof(Terrify))
+        public Terrify() : base(nameof(Terrify))
         {
         }
 
@@ -197,7 +195,7 @@ namespace Game.Combat.Skills
 
     public class Bellow : Skill
     {
-        public Bellow() : base(true, nameof(Bellow))
+        public Bellow() : base(nameof(Bellow))
         {
         }
         
@@ -215,7 +213,7 @@ namespace Game.Combat.Skills
 
     public class Lob : Skill
     {
-        public Lob() : base(true, nameof(Lob))
+        public Lob() : base(nameof(Lob))
         {
         }
 
@@ -235,7 +233,7 @@ namespace Game.Combat.Skills
 
     public class Unearth : Skill
     {
-        public Unearth() : base(true, nameof(Unearth))
+        public Unearth() : base(nameof(Unearth))
         {
             //todo
         }
@@ -245,7 +243,7 @@ namespace Game.Combat.Skills
 
     public class Sacrifice : Skill
     {
-        public Sacrifice() : base(true, nameof(Sacrifice))
+        public Sacrifice() : base(nameof(Sacrifice))
         {
         }
         
@@ -260,7 +258,7 @@ namespace Game.Combat.Skills
 
     public class Execute : Skill
     {
-        public Execute() : base(true, nameof(Execute))
+        public Execute() : base(nameof(Execute))
         {
         }
 
@@ -280,7 +278,7 @@ namespace Game.Combat.Skills
 
     public class Restock : Skill
     {
-        public Restock() : base(true, nameof(Restock))
+        public Restock() : base(nameof(Restock))
         {
         }
 
@@ -293,7 +291,7 @@ namespace Game.Combat.Skills
 
     public class Curse : Skill
     {
-        public Curse() : base(true, nameof(Curse))
+        public Curse() : base(nameof(Curse))
         {
         }
 
@@ -308,7 +306,7 @@ namespace Game.Combat.Skills
 
     public class Blink : Skill
     {
-        public Blink() : base(true, nameof(Blink))
+        public Blink() : base(nameof(Blink))
         {
         }
 
@@ -321,7 +319,7 @@ namespace Game.Combat.Skills
 
     public class Fade : Skill
     {
-        public Fade() : base(true, nameof(Fade))
+        public Fade() : base(nameof(Fade))
         {
         }
 
@@ -340,7 +338,7 @@ namespace Game.Combat.Skills
 
     public class Defile : Skill
     {
-        public Defile() : base(true, nameof(Defile))
+        public Defile() : base(nameof(Defile))
         {
         }
 
@@ -355,7 +353,7 @@ namespace Game.Combat.Skills
 
     public class Absolve : Skill
     {
-        public Absolve() : base(true, nameof(Absolve))
+        public Absolve() : base(nameof(Absolve))
         {
         }
 

@@ -1,0 +1,266 @@
+<Skills>
+    <Skill>
+        <Name>Gouge</Name>
+        <Cost>3</Cost>
+        <Cooldown>5</Cooldown>
+        <Description>Hit all enemies behind target.</Description>
+    </Skill>
+    <Skill>
+        <Name>Blast</Name>
+        <Cost>6</Cost>
+        <Cooldown>10</Cooldown>
+        <Description>Empty entire magazine in single shot. Each shot deals critical damage.</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Sweep</Name>
+        <Cost>2</Cost>
+        <Cooldown>5</Cooldown>
+        <Description>Hit enemy and cause knockdown</Description>
+    </Skill>
+    <Skill>
+        <Name>Swarm</Name>
+        <Cost>4</Cost>
+        <Cooldown>5</Cooldown>
+        <Description>Hit all enemies. Fire 10* as many pellets.</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Refill</Name>
+        <Cost>5</Cost>
+        <Cooldown>10</Cooldown>
+        <Description>Refill magazine without reloading.</Description>
+    </Skill>
+    <Skill>
+        <Name>Compel</Name>
+        <Cost>6</Cost>
+        <Cooldown>10</Cooldown>
+        <Description>Every successful hit pushes the enemy back by 1 metre.</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Hairpin</Name>
+        <Cost>3</Cost>
+        <Cooldown>5</Cooldown>
+        <Description>Fire 2 rounds every time you fire for the rest of the magazine.</Description>
+    </Skill>
+    <Skill>
+        <Name>Splinter</Name>
+        <Cost>5</Cost>
+        <Cooldown>10</Cooldown>
+        <Description>Remaining shots in magazine explode and deal damage to enemies near target.</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Retribution</Name>
+        <Cost>4</Cost>
+        <Cooldown>10</Cooldown>
+        <Description>Gain twice as much rage per hit for the rest of the clip. Automatically trigger rage mode when full. Rage mode lasts twice as long.</Description>
+    </Skill>
+    <Skill>
+        <Name>Revenge</Name>
+        <Cost>3</Cost>
+        <Cooldown>3</Cooldown>
+        <Description>Automatically return fire on enemies who attack you for the rest of the clip.</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Staunch</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Recover 10 health</Description>
+    </Skill>
+    <Skill>
+        <Name>Rejuvinate</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Restore health, reset skill timers</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Fortify</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Recover 2 armour</Description>
+    </Skill>
+    <Skill>
+        <Name>Endure</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Take no damage for 2s</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Immolate</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Fire grenade</Description>
+    </Skill>
+    <Skill>
+        <Name>Lacerate</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Bleed Grenade</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Taunt</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Taunt enemy</Description>
+    </Skill>
+    <Skill>
+        <Name>Headbutt</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Headbutt</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Terrify</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Fear enemy, forcing them to retreat</Description>
+    </Skill>
+    <Skill>
+        <Name>Bellow</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Knock all enemies down</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Lob</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Return thrown grenade</Description>
+    </Skill>
+    <Skill>
+        <Name>Unearth</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Uncover a mine</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Sacrifice</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Lose 10 health, double blood rage</Description>
+    </Skill>
+    <Skill>
+        <Name>Execute</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Execute enemy lower than 100hp</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Restock</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Recover additional magazine</Description>
+    </Skill>
+    <Skill>
+        <Name>Curse</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Mark target for bonus damage</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Blink</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Dash to target</Description>
+    </Skill>
+    <Skill>
+        <Name>Fade</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Smokescreen- reset alert level</Description>
+    </Skill>
+    <Skill>
+        <Name>1</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>1</Description>
+    </Skill>
+    <Skill>
+        <Name>Defile</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Deal damage and apply maximum bleed stacks</Description>
+    </Skill>
+    <Skill>
+        <Name>Absolve</Name>
+        <Cost>1</Cost>
+        <Cooldown>1</Cooldown>
+        <Description>Remove enemy conditions, heal self</Description>
+    </Skill>
+</Skills>

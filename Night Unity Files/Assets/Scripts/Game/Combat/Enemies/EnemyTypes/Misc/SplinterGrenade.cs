@@ -8,7 +8,7 @@
         
         protected override void CreateExplosion()
         {
-            Explosion explosion = new Explosion(Position.CurrentValue(), 10, 10);
+            Explosion explosion = new Explosion(Position.CurrentValue(), 5, 10);
             explosion.SetBleeding();
             explosion.Fire();
         }

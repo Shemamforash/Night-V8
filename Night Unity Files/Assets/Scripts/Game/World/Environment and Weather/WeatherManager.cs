@@ -46,7 +46,7 @@ namespace Game.World.Environment_and_Weather
 
         private void LoadWeather()
         {
-            TextAsset weatherFile = Resources.Load<TextAsset>("Weather");
+            TextAsset weatherFile = Resources.Load<TextAsset>("XML/Weather");
             XmlDocument weatherXml = new XmlDocument();
             weatherXml.LoadXml(weatherFile.text);
             XmlNode root = weatherXml.SelectSingleNode("WeatherTypes");

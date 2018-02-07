@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies.EnemyTypes;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using Game.Combat.Skills;
+using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Playables;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
@@ -19,7 +22,7 @@ namespace Game.Combat.Enemies
         private readonly CharacterAttribute _detectionRange = new CharacterAttribute(AttributeType.Detection, 15f);
         private const int EnemyReloadMultiplier = 4;
 
-        public readonly int MaxHealth;
+        public int MaxHealth;
 
         public Action CurrentAction;
         private readonly Cooldown _firingCooldown;
@@ -34,7 +37,7 @@ namespace Game.Combat.Enemies
 
         private const float KnockdownDuration = 5f;
         private bool _waitingForHeal;
-
+        
         private void SetHealBehaviour()
         {
             HealthController.AddOnTakeDamage(a =>
@@ -101,12 +104,29 @@ namespace Game.Combat.Enemies
             CurrentAction = Aim();
         }
 
-        protected Enemy(string name, int enemyHp, int speed, float position) : base(name, speed, position)
+        protected Enemy(string name, float position) : base(name, position)
         {
-            MaxHealth = enemyHp;
+            EnemyTemplate.CreateEnemyFromTemplate(this);
             if (!(this is Medic || this is Martyr)) SetHealBehaviour();
             HealthController.AddOnTakeDamage(f => { Alert(); });
             Reset();
+        }
+
+        protected void GenerateWeapon(WeaponType type)
+        {
+            GenerateWeapon(new List<WeaponType>{type});
+        }
+        
+        protected void GenerateWeapon(List<WeaponType> types)
+        {
+            Weapon weapon = WeaponGenerator.GenerateWeapon(types, false, 1);
+            Equip(weapon);
+        }
+        
+        public void SetTemplate(EnemyTemplate enemyTemplate)
+        {
+            MovementController.SetSpeed(enemyTemplate.Speed);
+            MaxHealth = enemyTemplate.Health;
         }
 
         public void Reset()
@@ -121,18 +141,18 @@ namespace Game.Combat.Enemies
         public override void TakeCover()
         {
             base.TakeCover();
-            SetArmour();
+            SetArmour(true);
         }
 
         public override void LeaveCover()
         {
             base.LeaveCover();
-            SetArmour();
+            SetArmour(false);
         }
 
-        private void SetArmour()
+        private void SetArmour(bool inCover)
         {
-            EnemyView?.SetArmour((int) ArmourLevel.CurrentValue(), true);
+            EnemyView?.SetArmour((int) ArmourLevel.CurrentValue(), inCover);
         }
 
         protected override void SetDistanceData(BasicEnemyView enemyView)
@@ -166,6 +186,7 @@ namespace Game.Combat.Enemies
             if (absoluteDistance < MinimumFindCoverDistance || absoluteDistance > CombatManager.VisibilityRange || moveAnyway)
             {
                 float targetDistance = CalculateIdealRange();
+                Debug.Log(targetDistance);
                 return MoveToTargetDistance(targetDistance);
             }
 
@@ -297,11 +318,9 @@ namespace Game.Combat.Enemies
 
         public override void Kill()
         {
-            IsDead = true;
             UIEnemyController.Remove(this);
-            EnemyView?.MarkDead();
             CombatManager.CheckCombatEnd();
-            CurrentAction = null;
+            ExitCombat();
         }
 
         public override ViewParent CreateUi(Transform parent)
@@ -434,6 +453,9 @@ namespace Game.Combat.Enemies
         public override void EnterCombat()
         {
             base.EnterCombat();
+            Alerted = false;
+            IsDead = false;
+            HasFled = false;    
             Reset();
         }
 
@@ -457,7 +479,7 @@ namespace Game.Combat.Enemies
             Burn.OnConditionEmpty = () => EnemyView?.HealthBar.StopBurning();
             Bleeding.OnConditionNonEmpty = () => EnemyView?.HealthBar.StartBleeding();
             Bleeding.OnConditionEmpty = () => EnemyView?.HealthBar.StopBleeding();
-            Sick.OnConditionNonEmpty = () => EnemyView?.HealthBar.UpdateSickness(((Sickness) Sick).GetNormalisedValue());
+            Sick.OnConditionNonEmpty = () => EnemyView?.HealthBar.UpdateSickness(Sick.GetNormalisedValue());
             Sick.OnConditionEmpty = () => EnemyView?.HealthBar.UpdateSickness(0);
         }
     }

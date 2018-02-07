@@ -59,19 +59,19 @@ namespace Game.Gear.Weapons
         
         public static void Test()
         {
-            foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
-            {
+//            foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
+//            {
 //                for (int durability = 0; durability <= 20; durability += 4)
 //                {
-                    ResetAttributeStats();
-//                    TestWeapon(type, durability);
+//                    ResetAttributeStats();
+//                    TestWeapon(type, 0);
 //                    TestWeapon(type, 20);
 //                }
 
-                _testResultString += "\n\n";
-            }
+//                _testResultString += "\n\n";
+//            }
 //            Debug.Log(_testResultString);
-            //File.WriteAllText(Directory.GetCurrentDirectory() + "/weapontest.txt", _testResultString.Replace("\n", Environment.NewLine));
+//            File.WriteAllText(Directory.GetCurrentDirectory() + "/weapontest.txt", _testResultString.Replace("\n", Environment.NewLine));
         }
 
         private static void TestWeapon(WeaponType type, int durability)

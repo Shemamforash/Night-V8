@@ -12,36 +12,46 @@ namespace Facilitating.Audio
         public AudioClip[] SMGFire;
         public AudioClip BoltPull;
         private static GunFire _instance;
+        public GameObject AudioSourcePrefab;
 
         public void Awake()
         {
             _instance = this;
             GunSource = GetComponent<AudioSource>();
         }
+
+        private static void CreateAudioSource(float position, AudioClip sound)
+        {
+            //todo audiosource pool
+            GameObject g = Instantiate(_instance.AudioSourcePrefab, new Vector3(0, 0, -position), Quaternion.identity);
+            g.GetComponent<AudioSource>().PlayOneShot(sound);
+            Destroy(g, sound.length);
+        }
         
-        public static void Fire(WeaponType type, float normalisedDistance)
+        public static void Fire(WeaponType type, float distance)
         {
             _instance.GunSource.pitch = Random.Range(0.9f, 1.1f);
-            float volume = (float) Math.Pow(1 - normalisedDistance, 2);
-             volume = Random.Range(0.9f, 1f) * volume;
+            float volume = Random.Range(0.9f, 1f);
             _instance.GunSource.volume = volume;
-            switch (type)
-            {
-                case WeaponType.Pistol:
-                    break;
-                case WeaponType.Rifle:
-                    _instance.GunSource.PlayOneShot(_instance.RifleFire[Random.Range(0, _instance.RifleFire.Length)]);
-                    break;
-                case WeaponType.Shotgun:
-                    break;
-                case WeaponType.SMG:
-                    _instance.GunSource.PlayOneShot(_instance.SMGFire[Random.Range(0, _instance.SMGFire.Length)]);
-                    break;
-                case WeaponType.LMG:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
+            CreateAudioSource(distance, _instance.RifleFire[Random.Range(0, _instance.RifleFire.Length)]);
+//
+//            switch (type)
+//            {
+//                case WeaponType.Pistol:
+//                    break;
+//                case WeaponType.Rifle:
+//                    CreateAudioSource(distance, _instance.RifleFire[Random.Range(0, _instance.RifleFire.Length)]);
+//                    break;
+//                case WeaponType.Shotgun:
+//                    break;
+//                case WeaponType.SMG:
+//                    CreateAudioSource(distance, _instance.SMGFire[Random.Range(0, _instance.SMGFire.Length)]);
+//                    break;
+//                case WeaponType.LMG:
+//                    break;
+//                default:
+//                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+//            }
         }
 
         public static void Cock(float duration)
