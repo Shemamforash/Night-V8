@@ -135,7 +135,7 @@ namespace Game.Combat.Enemies
             CurrentAction = Wander;
             FacingDirection = Direction.Left;
             Alerted = false;
-            Weapon()?.Reload(Inventory());
+            EquipmentController.Weapon()?.Reload(Inventory());
         }
 
         public override void TakeCover()
@@ -186,7 +186,6 @@ namespace Game.Combat.Enemies
             if (absoluteDistance < MinimumFindCoverDistance || absoluteDistance > CombatManager.VisibilityRange || moveAnyway)
             {
                 float targetDistance = CalculateIdealRange();
-                Debug.Log(targetDistance);
                 return MoveToTargetDistance(targetDistance);
             }
 
@@ -265,8 +264,8 @@ namespace Game.Combat.Enemies
 
         private float CalculateIdealRange()
         {
-            if (Weapon() == null) return 0;
-            float idealRange = Weapon().GetAttributeValue(AttributeType.Accuracy);
+            if (EquipmentController.Weapon() == null) return 0;
+            float idealRange = EquipmentController.Weapon().GetAttributeValue(AttributeType.Accuracy);
             idealRange = Random.Range(0.8f * idealRange, idealRange);
             if (idealRange >= CombatManager.VisibilityRange)
             {
@@ -360,7 +359,7 @@ namespace Game.Combat.Enemies
 
         private Action Reload()
         {
-            if (Weapon().GetRemainingMagazines() == 0)
+            if (EquipmentController.Weapon().GetRemainingMagazines() == 0)
             {
                 return Flee();
             }
@@ -390,8 +389,8 @@ namespace Game.Combat.Enemies
         private Action Fire()
         {
             int divider = Random.Range(3, 6);
-            int noShots = (int) (Weapon().GetAttributeValue(AttributeType.Capacity) / divider);
-            bool automatic = Weapon().WeaponAttributes.Automatic;
+            int noShots = (int) (EquipmentController.Weapon().GetAttributeValue(AttributeType.Capacity) / divider);
+            bool automatic = EquipmentController.Weapon().WeaponAttributes.Automatic;
             SetActionText("Firing");
             if (!automatic)
             {
@@ -405,7 +404,7 @@ namespace Game.Combat.Enemies
                 s.Fire();
                 EnemyView?.UiAimController.Fire();
                 --noShots;
-                int remainingAmmo = Weapon().GetRemainingAmmo();
+                int remainingAmmo = EquipmentController.Weapon().GetRemainingAmmo();
                 if (noShots == 0 || remainingAmmo == 0)
                 {
                     UpdateAim(0);
@@ -429,12 +428,12 @@ namespace Game.Combat.Enemies
 
         protected virtual Action Aim()
         {
-            if (Weapon().Empty())
+            if (EquipmentController.Weapon().Empty())
             {
                 return Reload();
             }
             LeaveCover();
-            Assert.IsFalse(Weapon().Empty());
+            Assert.IsFalse(EquipmentController.Weapon().Empty());
             float aimTime = MaxAimTime;
             SetActionText("Aiming");
             return () =>

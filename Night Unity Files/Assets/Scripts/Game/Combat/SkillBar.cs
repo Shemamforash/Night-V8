@@ -30,8 +30,8 @@ namespace Game.Combat
         {
             BindSkill(0, player.CharacterSkillOne);
             BindSkill(1, player.CharacterSkillTwo);
-            BindSkill(2, player.Weapon().WeaponSkillOne);
-            BindSkill(3, player.Weapon().WeaponSkillTwo);
+            BindSkill(2, player.EquipmentController.Weapon().WeaponSkillOne);
+            BindSkill(3, player.EquipmentController.Weapon().WeaponSkillTwo);
         }
 
         public static void SetVisible(bool visible)

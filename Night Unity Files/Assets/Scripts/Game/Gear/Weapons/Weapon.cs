@@ -17,8 +17,6 @@ namespace Game.Gear.Weapons
     {
         private int _ammoInMagazine;
         public readonly WeaponAttributes WeaponAttributes;
-        public Action OnFireAction;
-        public Action OnReceiveDamageAction;
         public Skill WeaponSkillOne, WeaponSkillTwo;
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
@@ -31,7 +29,6 @@ namespace Game.Gear.Weapons
         public Weapon(string name, float weight, int durability) : base(name, weight, GearSubtype.Weapon)
         {
             WeaponAttributes = new WeaponAttributes(durability);
-            WeaponSkills.GetWeaponSkills(this);
 //            Durability.OnMin(() => { _canEquip = false; });
         }
         

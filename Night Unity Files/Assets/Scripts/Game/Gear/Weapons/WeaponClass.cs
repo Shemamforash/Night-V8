@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Combat.Skills;
 using Random = UnityEngine.Random;
 
 namespace Game.Gear.Weapons
@@ -34,6 +35,7 @@ namespace Game.Gear.Weapons
             weaponAttributes.SetClass(this);
             weaponAttributes.SetSubClass(GetSubtype());
             weaponAttributes.SetModifier(modifier);
+            WeaponSkills.GetWeaponSkills(w);
             if (_canBeManual && (Random.Range(0, 2) == 0 || manualOnly))
             {
                 weaponAttributes.AddManualModifier();

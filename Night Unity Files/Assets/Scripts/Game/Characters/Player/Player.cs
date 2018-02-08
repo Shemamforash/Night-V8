@@ -66,12 +66,13 @@ namespace Game.Characters.Player
         public override void Kill()
         {
             if (SceneManager.GetActiveScene().name == "Game") WorldState.HomeInventory().RemoveItem(this);
-            if (CombatManager.Player == this) CombatManager.ExitCombat();
+            if (CombatManager.Player == this) CombatManager.FailCombat();
         }
 
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
         {
+            Debug.Log("Created");
             Attributes = new DesolationAttributes(this);
             MovementController = new MovementController(this, 0);
             CharacterTemplate = characterTemplate;
@@ -82,7 +83,6 @@ namespace Game.Characters.Player
             HealthController.AddOnHeal(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
             HealthController.AddOnTakeDamage(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
             Energy.OnMin(Sleep);
-            SetConditions();
             Position.AddOnValueChange(a => { UIEnemyController.Enemies.ForEach(e => e.Position.UpdateValueChange()); });
             SetReloadCooldown();
         }
@@ -108,12 +108,14 @@ namespace Game.Characters.Player
         public override void TakeCover()
         {
             base.TakeCover();
+            CombatManager.SetCentralViewAlpha(0.4f);
             CombatManager.SetCoverText("In Cover");
         }
 
         public override void LeaveCover()
         {
             base.LeaveCover();
+            CombatManager.SetCentralViewAlpha(1f);
             CombatManager.SetCoverText("Exposed");
         }
 
@@ -242,7 +244,6 @@ namespace Game.Characters.Player
             switch (gearItem.GetGearType())
             {
                 case GearSubtype.Weapon:
-                    WeaponSkills.GetWeaponSkills(Weapon());
                     CharacterView?.WeaponGearUi.SetGearItem(gearItem);
                     break;
                 case GearSubtype.Armour:
@@ -268,7 +269,7 @@ namespace Game.Characters.Player
             if (Immobilised()) return;
             if (_reloadingCooldown.Running()) return;
             if (EquipmentController.Weapon().FullyLoaded()) return;
-            if (Weapon().GetRemainingMagazines() == 0) return;
+            if (EquipmentController.Weapon().GetRemainingMagazines() == 0) return;
             OnFireAction = null;
             Retaliate = false;
             float reloadSpeed = EquipmentController.Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
@@ -338,7 +339,7 @@ namespace Game.Characters.Player
         public void UpdateMagazineUi()
         {
             string magazineMessage = "";
-            if (Weapon().GetRemainingMagazines() == 0) magazineMessage = "NO AMMO";
+            if (EquipmentController.Weapon().GetRemainingMagazines() == 0) magazineMessage = "NO AMMO";
             else if (EquipmentController.Weapon().Empty())
                 magazineMessage = "RELOAD";
             if (magazineMessage == "")
@@ -374,7 +375,7 @@ namespace Game.Characters.Player
                     RageController.TryStart();
                     break;
                 case InputAxis.Fire:
-                    if (!_fired || Weapon().WeaponAttributes.Automatic) FireWeapon(CombatManager.CurrentTarget);
+                    if (!_fired || EquipmentController.Weapon().WeaponAttributes.Automatic) FireWeapon(CombatManager.CurrentTarget);
                     break;
                 case InputAxis.Reload:
                     Reload();
@@ -432,17 +433,24 @@ namespace Game.Characters.Player
         public override void EnterCombat()
         {
             base.EnterCombat();
+            RageController.EnterCombat();
+            SetConditions();
             SkillBar.BindSkills(this);
             CombatManager.UpdatePlayerHealth();
             FacingDirection = Direction.Right;
             InputHandler.RegisterInputListener(this);
-            UIMagazineController.SetWeapon(Weapon());
+            UIMagazineController.SetWeapon(EquipmentController.Weapon());
         }
 
         public override void ExitCombat()
         {
-            InputHandler.UnregisterInputListener(this);
+            UIKnockdownController.Exit();
+            MeleeController.Exit();
+            IsKnockedDown = false;
             StopReloading();
+            InputHandler.UnregisterInputListener(this);
+            Position.SetCurrentValue(0);
+            _fired = false;
         }
     }
 }

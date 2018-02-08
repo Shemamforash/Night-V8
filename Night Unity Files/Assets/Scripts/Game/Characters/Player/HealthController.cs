@@ -11,7 +11,7 @@ namespace Game.Characters.Player
         private event Action<int> OnTakeDamage;
         private event Action<int> OnHeal;
         private readonly Character _character;
-        private const int PlayerHealthChunkSize = 100;
+        private const int PlayerHealthChunkSize = 50;
 
         public HealthController(Character character)
         {

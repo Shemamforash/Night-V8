@@ -51,7 +51,7 @@ namespace Game.Combat
                 CalculateHitProbability();
                 CalculateCriticalProbability();
                 float distance = origin is Player ? 0 : _distanceToTarget;
-                GunFire.Fire(origin.Weapon().WeaponType(), distance);
+                GunFire.Fire(origin.EquipmentController.Weapon().WeaponType(), distance);
             }
             else
             {
@@ -61,7 +61,7 @@ namespace Game.Combat
 
         private void CacheWeaponAttributes()
         {
-            WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
+            WeaponAttributes attributes = _origin.EquipmentController.Weapon().WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
 //            if (_origin is Enemy) _damage = (int)Mathf.Ceil(_damage / 2f);
             _range = (int) attributes.GetCalculatedValue(AttributeType.Accuracy);
@@ -95,7 +95,7 @@ namespace Game.Combat
 
         private void CalculateCriticalProbability()
         {
-            _criticalChance = _guaranteeCritical ? 1 : _origin.Weapon().WeaponAttributes.CriticalChance.CurrentValue();
+            _criticalChance = _guaranteeCritical ? 1 : _origin.EquipmentController.Weapon().WeaponAttributes.CriticalChance.CurrentValue();
         }
 
         private bool WillHitTarget()
@@ -123,8 +123,8 @@ namespace Game.Combat
             {
                 if (_origin != null)
                 {
-                    if (_origin.Weapon().Empty()) break;
-                    _origin.Weapon().ConsumeAmmo(1);
+                    if (_origin.EquipmentController.Weapon().Empty()) break;
+                    _origin.EquipmentController.Weapon().ConsumeAmmo(1);
                 }
                 CreateShotCooldown();
             }
@@ -224,7 +224,7 @@ namespace Game.Combat
 
         public void UseRemainingShots()
         {
-            _noShots = _origin.Weapon().GetRemainingAmmo();
+            _noShots = _origin.EquipmentController.Weapon().GetRemainingAmmo();
         }
 
         public void GuaranteeHit() => _guaranteeHit = true;

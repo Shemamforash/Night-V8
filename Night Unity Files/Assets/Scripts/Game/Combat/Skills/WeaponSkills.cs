@@ -119,7 +119,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().Weapon().Reload(Player().Inventory());
+            Player().EquipmentController.Weapon().Reload(Player().Inventory());
         }
     }
 

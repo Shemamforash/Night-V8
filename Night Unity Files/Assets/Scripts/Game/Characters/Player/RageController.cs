@@ -22,8 +22,6 @@ namespace Game.Characters
             {
                 _rageLevel.AddOnValueChange(a => RageBarController.SetRageBarFill(a.Normalised(), _activated));
             }
-
-            CombatManager.RegisterCombatListener(this);
         }
 
         public float CurrentValue()
@@ -35,7 +33,7 @@ namespace Game.Characters
         {
             if (!_activated)
             {
-                _rageLevel.Increment(0.01f * damage);
+                _rageLevel.Increment(0.02f * damage);
             }
         }
 
@@ -67,26 +65,22 @@ namespace Game.Characters
         public void EnterCombat()
         {
             _rageLevel.SetCurrentValue(0f);
-            _reloadModifier.AddTargetAttribute(_character.Weapon().WeaponAttributes.ReloadSpeed);
-            _fireRateModifier.AddTargetAttribute(_character.Weapon().WeaponAttributes.FireRate);
+            _reloadModifier.AddTargetAttribute(_character.EquipmentController.Weapon().WeaponAttributes.ReloadSpeed);
+            _fireRateModifier.AddTargetAttribute(_character.EquipmentController.Weapon().WeaponAttributes.FireRate);
         }
 
         public void ExitCombat()
         {
-            _reloadModifier.RemoveTargetAttribute(_character.Weapon().WeaponAttributes.ReloadSpeed);
-            _fireRateModifier.RemoveTargetAttribute(_character.Weapon().WeaponAttributes.FireRate);
+            _reloadModifier.RemoveTargetAttribute(_character.EquipmentController.Weapon().WeaponAttributes.ReloadSpeed);
+            _fireRateModifier.RemoveTargetAttribute(_character.EquipmentController.Weapon().WeaponAttributes.FireRate);
         }
 
         public void UpdateCombat()
         {
-            if (_rageLevel.ReachedMax()) return;
-            float decreaseAmount = 0.04f;
             if (_activated)
             {
-                decreaseAmount = 0.1f;
+                _rageLevel.Decrement(0.1f * Time.deltaTime);
             }
-
-            _rageLevel.Decrement(decreaseAmount * Time.deltaTime);
         }
     }
 }

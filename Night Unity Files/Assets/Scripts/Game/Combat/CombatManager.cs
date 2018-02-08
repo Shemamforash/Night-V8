@@ -19,7 +19,7 @@ namespace Game.Combat
 {
     public class CombatManager : Menu
     {
-        public static CanvasGroup CombatCanvas, PlayerCanvasGroup;
+        public static CanvasGroup CombatCanvas, PlayerCanvasGroup, CentralView;
 
         private static TextMeshProUGUI _playerName;
         private static TextMeshProUGUI _playerHealthText;
@@ -40,7 +40,11 @@ namespace Game.Combat
         public static int VisibilityRange;
         private static readonly List<ICombatListener> _combatListeners = new List<ICombatListener>();
 
-
+        public static void SetCentralViewAlpha(float f)
+        {
+            PlayerCanvasGroup.alpha = f;
+        }
+        
         public void Awake()
         {
             GameObject playerContainer = Helper.FindChildWithName(gameObject, "Player");
@@ -96,8 +100,7 @@ namespace Game.Combat
             Enemy nearestEnemy = UIEnemyController.NearestEnemy();
             if (nearestEnemy?.DistanceToPlayer >= VisibilityRange + 20)
             {
-                //failcombat
-                ExitCombat();
+                FailCombat();
             }
         }
 
@@ -124,15 +127,12 @@ namespace Game.Combat
             _combatListeners.ForEach(l => l.EnterCombat());
         }
 
-        public static void ExitCombat()
+        public static void SucceedCombat()
         {
-            WorldState.UnPause();
-            _combatListeners.ForEach(l => l.ExitCombat());
-            Player.ExitCombat();
             if (SceneManager.GetActiveScene().name == "Combat Tester")
             {
-                MenuStateMachine.ShowMenu("Retry");
-            }    
+                MenuStateMachine.ShowMenu("Next Level");
+            }
             else
             {
                 MenuStateMachine.ShowMenu("Game Menu");
@@ -141,6 +141,27 @@ namespace Game.Combat
                     CurrentScenario.FinishCombat();
                 }
             }
+            ExitCombat();
+        }
+
+        public static void FailCombat()
+        {
+            if (SceneManager.GetActiveScene().name == "Combat Tester")
+            {
+                MenuStateMachine.ShowMenu("Minigame Menu");
+            }    
+            else
+            {
+                MenuStateMachine.ShowMenu("Game Menu");
+            }
+            ExitCombat();
+        }
+        
+        private static void ExitCombat()
+        {
+            WorldState.UnPause();
+            _combatListeners.ForEach(l => l.ExitCombat());
+            Player.ExitCombat();
         }
 
         public static void Flee(Enemy enemy)
@@ -153,7 +174,7 @@ namespace Game.Combat
         {
             if (UIEnemyController.AllEnemiesGone())
             {
-                ExitCombat();
+                SucceedCombat();
             }
         }
 

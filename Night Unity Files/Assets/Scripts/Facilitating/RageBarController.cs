@@ -34,6 +34,7 @@ public class RageBarController : MonoBehaviour
 
     public static void SetRageBarFill(float value, bool rageActive)
     {
+        if (_instance == null) return;
         if (rageActive && !_rageFire.isPlaying)
         {
             _rageFire.Play();

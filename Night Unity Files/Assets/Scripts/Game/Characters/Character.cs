@@ -1,7 +1,9 @@
 ﻿using System.Xml;
+using Facilitating.Audio;
 using Facilitating.Persistence;
 using Game.Characters.Player;
 using Game.Combat;
+using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.Gear.Weapons;
 using Game.World;
@@ -39,6 +41,7 @@ namespace Game.Characters
         public readonly Number Position = new Number();
 
         public Direction FacingDirection;
+        public readonly FootstepCounter FootStepCounter;
 
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
@@ -47,16 +50,37 @@ namespace Game.Characters
             Inventory().Save(doc, saveType);
             return doc;
         }
-        
-        public Weapon Weapon()
-        {
-            return EquipmentController.Weapon();
-        }
 
+        public class FootstepCounter
+        {
+            private float distanceTravelled;
+            private const float DistanceToPlay = 2f;
+            private Character _character;
+
+            public FootstepCounter(Character character)
+            {
+                _character = character;
+            }
+
+            public void IncreaseDistance(float distance)
+            {
+                distanceTravelled += distance;
+                if (distanceTravelled < DistanceToPlay) return;
+                Enemy enemyChar = _character as Enemy;
+                float position = enemyChar?.DistanceToPlayer ?? 0;
+                GunFire.Step(position);
+                distanceTravelled = 0;
+            }
+        }
+        
         protected Character(string name) : base(name, GameObjectType.Character)
         {
+            FootStepCounter = new FootstepCounter(this);
             Position.Min = float.MinValue;
-            Position.AddOnValueChange(a => CharacterPositionManager.UpdatePlayerDirection());
+            Position.AddOnValueChange(a =>
+            {
+                CharacterPositionManager.UpdatePlayerDirection();
+            });
             CharacterInventory = new DesolationInventory(name);
             HealthController = new HealthController(this);
             EquipmentController = new EquipmentController(this);

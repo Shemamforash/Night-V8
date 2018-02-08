@@ -23,9 +23,9 @@ public class UIGearEquipController : Menu
             Character c = (Character) viewParent.GetLinkedObject();
             InventoryUi inventoryUi = (InventoryUi) viewParent;
             inventoryUi.SetLeftTextCallback(() => c.Name);
-            string gearName = c.Weapon() == null ? "Nothing Equipped" : c.Weapon().Name;
+            string gearName = c.EquipmentController.Weapon() == null ? "Nothing Equipped" : c.EquipmentController.Weapon().Name;
             inventoryUi.SetCentralTextCallback(() => gearName);
-            string gearInfo = c.Weapon() == null ? "--" : c.Weapon().GetSummary();
+            string gearInfo = c.EquipmentController.Weapon() == null ? "--" : c.EquipmentController.Weapon().GetSummary();
             inventoryUi.SetRightTextCallback(() => gearInfo);
             inventoryUi.PrimaryButton.AddOnClick(() =>
             {

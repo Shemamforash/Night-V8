@@ -13,6 +13,7 @@ namespace Facilitating.Audio
         public AudioClip BoltPull;
         private static GunFire _instance;
         public GameObject AudioSourcePrefab;
+        public AudioClip[] Steps;
 
         public void Awake()
         {
@@ -58,6 +59,11 @@ namespace Facilitating.Audio
         {
             _instance.GunSource.volume = 1;
             _instance.GunSource.PlayOneShot(_instance.BoltPull, duration);
+        }
+
+        public static void Step(float distance)
+        {
+            CreateAudioSource(distance, _instance.Steps[Random.Range(0, _instance.Steps.Length)]);
         }
     }
 }

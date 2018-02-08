@@ -107,6 +107,7 @@ namespace Game.Characters.Player
             if (_character.Immobilised()) return;
             _character.LeaveCover();
             float distanceToMove = CurrentSpeed();
+            _character.FootStepCounter.IncreaseDistance(distanceToMove);
             if (direction > 0)
             {
                 _moveForwardAction?.Invoke(distanceToMove);

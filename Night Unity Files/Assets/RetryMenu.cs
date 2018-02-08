@@ -1,21 +1,34 @@
 ﻿using Game.Characters.Player;
 using Game.Combat;
-using UnityEngine;
+using Game.Gear.Weapons;
+using SamsHelper.ReactiveUI.MenuSystem;
 
-public class RetryMenu : MonoBehaviour
+public class RetryMenu : Menu
 {
-	private Player player;
-	private int currentDanger = 1;
-	
-	public void RestartScenario()
-	{
-		CombatManager.EnterCombat(CombatManager.Player, CombatManager.CurrentScenario);
-	}
+	private static Player _player;
+	private static int _currentDanger = 1;
+	private static RetryMenu _instance;
 
+	public void Awake()
+	{
+		_instance = this;
+	}
+	
 	public void NextScenario()
 	{
-		++currentDanger;
-		CombatScenario scenario = CombatScenario.Generate(currentDanger);
-		CombatManager.EnterCombat(player, scenario);
+		++_currentDanger;
+		CombatScenario scenario = CombatScenario.Generate(_currentDanger);
+		CombatManager.EnterCombat(_player, scenario);
+		_player.EquipmentController.Weapon().IncreaseDurability();
+	}
+
+	public static void StartCombat(Player p, Weapon w)
+	{
+		_currentDanger = 0;
+		p.Equip(w);
+		_player = p;
+		_player.Inventory().IncrementResource(w.WeaponAttributes.AmmoType, 21);
+		w.Reload(_player.Inventory());
+		_instance.NextScenario();
 	}
 }

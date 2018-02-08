@@ -81,10 +81,10 @@ public class UIKnockdownController : MonoBehaviour
             yield return null;
         }
 
-        Finish();
+        Exit();
     }
 
-    private static void Finish()
+    public static void Exit()
     {
         SkillBar.SetVisible(true);
         CombatManager.Player.IsKnockedDown = false;

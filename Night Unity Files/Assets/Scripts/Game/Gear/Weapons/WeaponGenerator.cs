@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
+using Game.Combat.Skills;
 using Game.Gear.Armour;
 using Game.World.WorldEvents;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -47,7 +48,6 @@ namespace Game.Gear.Weapons
                 weaponType = (WeaponType) types.GetValue(UnityEngine.Random.Range(0, types.Length));
             }
             WeaponClass weaponClass = WeaponDictionary[weaponType];
-            Debug.Log(weaponsWanted[0] + " " +weaponClass.Type);
             GearModifier modifier = GeneralModifiers[UnityEngine.Random.Range(0, GeneralModifiers.Count)];
             Weapon weapon = weaponClass.CreateWeapon(modifier, manualOnly, durability);
             WorldEventManager.GenerateEvent(new WeaponFindEvent(weapon.Name));

@@ -67,7 +67,7 @@ public class MeleeController : MonoBehaviour
         _initialPressTime *= FalloffRatio;
         _initialRingTime *= FalloffRatio;
         --_remainingHits;
-        if (_remainingHits == 0 || _targetEnemy.IsDead) ExitMelee();
+        if (_remainingHits == 0 || _targetEnemy.IsDead) EndMelee();
         else StartRandomController();
     }
 
@@ -78,11 +78,16 @@ public class MeleeController : MonoBehaviour
         GoToNextRound();
     }
 
-    private static void ExitMelee()
+    public static void Exit()
     {
         CombatManager.CombatCanvas.alpha = 1f;
         InputHandler.RegisterInputListener(CombatManager.Player);
         InMelee = false;
+    }
+    
+    private static void EndMelee()
+    {
+        Exit();
         if (!_targetEnemy.IsDead)
         {
             if (_hitsWon >= _hitsLost)
