@@ -8,6 +8,7 @@ using Game.Characters.CharacterActions;
 using Game.Combat;
 using Game.Combat.Enemies;
 using Game.Combat.Skills;
+using Game.Gear.Weapons;
 using Game.World;
 using Game.World.Region;
 using SamsHelper;
@@ -49,11 +50,11 @@ namespace Game.Characters.Player
 
         private Cooldown _reloadingCooldown;
 
-        private bool _fired;
-
         private int _storyProgress;
 
         public Skill CharacterSkillOne, CharacterSkillTwo;
+        
+        private bool _fired;
 
         public string GetCurrentStoryProgress()
         {
@@ -85,6 +86,10 @@ namespace Game.Characters.Player
             Energy.OnMin(Sleep);
             Position.AddOnValueChange(a => { UIEnemyController.Enemies.ForEach(e => e.Position.UpdateValueChange()); });
             SetReloadCooldown();
+            RecoilManager.Recoil.AddOnValueChange(a =>
+            {
+                CombatManager.RecoilManager?.SetValue(a.Normalised());
+            });
         }
 
         ~Player()
@@ -244,6 +249,7 @@ namespace Game.Characters.Player
             switch (gearItem.GetGearType())
             {
                 case GearSubtype.Weapon:
+                    Debug.Log(((Weapon) gearItem).WeaponAttributes.Print());
                     CharacterView?.WeaponGearUi.SetGearItem(gearItem);
                     break;
                 case GearSubtype.Armour:
@@ -316,14 +322,13 @@ namespace Game.Characters.Player
             Shot shot = base.FireWeapon(target);
             if (shot != null)
             {
+                if (RageController.Active()) shot.GuaranteeCritical();
                 shot.SetDamageModifier(Attributes.GetGunDamageModifier());
                 OnFireAction?.Invoke(shot);
+                UpdateMagazineUi();
                 shot.Fire();
+                _fired = true;
             }
-
-            if (RageController.Active()) shot?.GuaranteeCritical();
-            UpdateMagazineUi();
-            _fired = true;
             return shot;
         }
 
@@ -375,6 +380,7 @@ namespace Game.Characters.Player
                     RageController.TryStart();
                     break;
                 case InputAxis.Fire:
+                    if (!_fired && isHeld) break;
                     if (!_fired || EquipmentController.Weapon().WeaponAttributes.Automatic) FireWeapon(CombatManager.CurrentTarget);
                     break;
                 case InputAxis.Reload:

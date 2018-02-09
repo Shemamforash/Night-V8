@@ -22,7 +22,6 @@ namespace Game.Characters
     {
         protected readonly DesolationInventory CharacterInventory;
 
-        private long _timeAtLastFire;
         //todo implement armour
         public readonly Number ArmourLevel = new Number(0, 0, 10);
 
@@ -42,6 +41,8 @@ namespace Game.Characters
 
         public Direction FacingDirection;
         public readonly FootstepCounter FootStepCounter;
+
+        public readonly RecoilManager RecoilManager = new RecoilManager();
 
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
@@ -72,15 +73,12 @@ namespace Game.Characters
                 distanceTravelled = 0;
             }
         }
-        
+
         protected Character(string name) : base(name, GameObjectType.Character)
         {
             FootStepCounter = new FootstepCounter(this);
             Position.Min = float.MinValue;
-            Position.AddOnValueChange(a =>
-            {
-                CharacterPositionManager.UpdatePlayerDirection();
-            });
+            Position.AddOnValueChange(a => { CharacterPositionManager.UpdatePlayerDirection(); });
             CharacterInventory = new DesolationInventory(name);
             HealthController = new HealthController(this);
             EquipmentController = new EquipmentController(this);
@@ -137,26 +135,14 @@ namespace Game.Characters
         }
 
         //FIRING
-        private bool CanFire()
-        {
-            Weapon weapon = EquipmentController.Weapon();
-            return !Immobilised() && !weapon.Empty() && FireRateElapsedTimeMet() && !InCover;
-        }
-
-        private bool FireRateElapsedTimeMet()
-        {
-            long timeElapsed = Helper.TimeInMillis() - _timeAtLastFire;
-            long targetTime = (long) (1f / EquipmentController.Weapon().GetAttributeValue(AttributeType.FireRate) * 1000);
-            return !(timeElapsed < targetTime);
-        }
 
         protected virtual Shot FireWeapon(Character target)
         {
-            if (!CanFire()) return null;
+            if (Immobilised() || InCover || !EquipmentController.Weapon().CanFire()) return null;
             Assert.IsNotNull(target);
-            Shot shot = new Shot(target, this);
-            if(FacingDirection == target.FacingDirection) shot.GuaranteeCritical();
-            _timeAtLastFire = Helper.TimeInMillis();
+            Shot shot = EquipmentController.Weapon().Fire(target, this);
+            if (FacingDirection == target.FacingDirection) shot.GuaranteeCritical();
+            RecoilManager.Increment(EquipmentController.Weapon());
             return shot;
         }
 
@@ -170,6 +156,7 @@ namespace Game.Characters
             Burn.Update();
             Sick.Update();
             Bleeding.Update();
+            RecoilManager.UpdateCombat();
         }
 
         protected virtual void KnockDown()
@@ -196,11 +183,14 @@ namespace Game.Characters
 
         public virtual void EnterCombat()
         {
+            RecoilManager.EnterCombat();
             HealthController.EnterCombat();
+            RecoilManager.EnterCombat();
         }
 
         public virtual void ExitCombat()
         {
+            CombatManager.RegisterCombatListener(RecoilManager);
             HealthController.ExitCombat();
             Burn.Clear();
             Bleeding.Clear();

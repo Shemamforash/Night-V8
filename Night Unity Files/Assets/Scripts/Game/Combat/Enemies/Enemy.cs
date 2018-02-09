@@ -119,7 +119,7 @@ namespace Game.Combat.Enemies
         
         protected void GenerateWeapon(List<WeaponType> types)
         {
-            Weapon weapon = WeaponGenerator.GenerateWeapon(types, false, 1);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(types, 1);
             Equip(weapon);
         }
         
@@ -265,7 +265,7 @@ namespace Game.Combat.Enemies
         private float CalculateIdealRange()
         {
             if (EquipmentController.Weapon() == null) return 0;
-            float idealRange = EquipmentController.Weapon().GetAttributeValue(AttributeType.Accuracy);
+            float idealRange = EquipmentController.Weapon().GetAttributeValue(AttributeType.Range);
             idealRange = Random.Range(0.8f * idealRange, idealRange);
             if (idealRange >= CombatManager.VisibilityRange)
             {

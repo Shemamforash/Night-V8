@@ -12,10 +12,11 @@
         Dehydration,
         
         Damage,
-        Accuracy,
+        Range,
         FireRate,
         ReloadSpeed,
         CriticalChance,
+        Handling,
         Detection,
         Vision,
         Pellets,

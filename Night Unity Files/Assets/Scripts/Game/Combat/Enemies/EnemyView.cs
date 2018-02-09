@@ -52,7 +52,7 @@ namespace Game.Combat.Enemies
         public void SetActionText(string action)
         {
             _actionString = action;
-            if (!_inSight) action = "??";
+            if (!_inSight) action = "";
             ActionText.text = action;
         }
         
@@ -60,9 +60,7 @@ namespace Game.Combat.Enemies
         {
             if (_inSight)
             {
-                float distance = Helper.Round(_enemy.DistanceToPlayer);
-                string distanceText = Mathf.Abs(distance) + "m";
-                DistanceText.text = distanceText;
+                base.UpdateDistanceText();
                 return;
             }
 

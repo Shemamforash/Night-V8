@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 import string
 
-workbook = load_workbook('Desolation Balance Files.xlsx')
+workbook = load_workbook('Desolation Balance Files.xlsx', data_only=True)
 num2alpha = dict(zip(range(1, 27), string.ascii_lowercase))
 
 
@@ -16,50 +16,49 @@ class XMLWriter:
 
 class WeaponImporter(XMLWriter):
     def __init__(self):
-        super(WeaponImporter, self).__init__("Weapon Data V3", "WeaponClasses")
+        super(WeaponImporter, self).__init__("Weapon Data V4", "WeaponClasses")
         write_tag(self, "Weapons", self.read)
 
-    def write_weapon_stats(self, row, modprefix):
+    def write_weapon_stats(self, row):
+        write_single_value(self, "Damage", "+" + get_value(self, "L", row))
+        write_single_value(self, "Range", "+" + get_value(self, "M", row))
+        write_single_value(self, "FireRate", "+" + get_value(self, "N", row))
+        write_single_value(self, "ReloadSpeed", "+" + get_value(self, "O", row))
+        write_single_value(self, "CriticalChance", "+" + get_value(self, "P", row))
+        write_single_value(self, "Handling", "+" + get_value(self, "Q", row))
+        write_single_value(self, "Capacity", "+" + get_value(self, "R", row))
+        write_single_value(self, "Pellets", "+" + get_value(self, "S", row))
+
+    def write_weapon_mod_stats(self, row):
         write_single_value(self, "Damage", "x" + get_value(self, "D", row))
-        write_single_value(self, "Accuracy", "x" + get_value(self, "E", row))
+        write_single_value(self, "Range", "x" + get_value(self, "E", row))
         write_single_value(self, "FireRate", "x" + get_value(self, "F", row))
         write_single_value(self, "ReloadSpeed", "x" + get_value(self, "G", row))
         write_single_value(self, "CriticalChance", "x" + get_value(self, "H", row))
-        write_single_value(self, "PierceChance", "+" + get_value(self, "I", row, 0))
-        write_single_value(self, "BleedChance", "+" + get_value(self, "J", row, 0))
-        write_single_value(self, "BurnChance", "+" + get_value(self, "K", row, 0))
-        write_single_value(self, "SicknessChance", "+" + get_value(self, "L", row, 0))
-        write_single_value(self, "Capacity", modprefix + get_value(self, "M", row))
-        write_single_value(self, "Pellets", modprefix + get_value(self, "N", row))
+        write_single_value(self, "Handling", "x" + get_value(self, "I", row))
+        write_single_value(self, "Capacity", "x" + get_value(self, "J", row))
+        write_single_value(self, "Pellets", "x" + get_value(self, "K", row))
+        write_single_value(self, "PierceChance", "+" + get_value(self, "L", row, 0))
+        write_single_value(self, "BleedChance", "+" + get_value(self, "M", row, 0))
+        write_single_value(self, "BurnChance", "+" + get_value(self, "N", row, 0))
+        write_single_value(self, "SicknessChance", "+" + get_value(self, "O", row, 0))
 
     def read_weapon_subtypes(self, subtype_row):
-        for i in range(0, 5):
-            subtype_name = get_value(self, "B", subtype_row)
-            write_tag(self, "Subtype", self.write_weapon_stats, [subtype_row, "+"], ["name"], [subtype_name])
-            subtype_row += 1
+        for i in range(0, 3):
+            subtype_name = get_value(self, "C", subtype_row + i)
+            manual = get_value(self, "B", subtype_row + i)
+            write_tag(self, "Subtype", self.write_weapon_stats, [subtype_row + i], ["name", "manual"], [subtype_name, manual])
 
     def read_weapon_modifiers(self):
-        for i in range(36, 57):
+        for i in range(27, 48):
             modifier_name = get_value(self, "B", i)
-            write_tag(self, "Modifier", self.write_weapon_stats, [i, "x"], ["name"], [modifier_name])
+            write_tag(self, "Modifier", self.write_weapon_mod_stats, [i], ["name"], [modifier_name])
 
     def read_weapon_classes(self):
         for row_no in range(3, 8):
             weapon_class = get_value(self, "A", row_no)
-            manual_allowed = str(get_value(self, "B", row_no))
             magazine_cost = get_value(self, "N", row_no)
-            write_tag(self, "Class", self.read_single_class, [row_no], ["name", "manualAllowed", "ammoCost"], [weapon_class, manual_allowed, magazine_cost])
-
-    def read_single_class(self, row_no):
-        write_tag(self, "BaseStats", self.write_base_stats, [row_no])
-        self.read_weapon_subtypes(row_no * 5 - 4)
-
-    def write_base_stats(self, row_no):
-        write_single_value(self, "Damage", "+" + get_value(self, "D", row_no))
-        write_single_value(self, "Accuracy", "+" + get_value(self, "E", row_no))
-        write_single_value(self, "FireRate", "+" + get_value(self, "F", row_no))
-        write_single_value(self, "ReloadSpeed", "+" + get_value(self, "G", row_no))
-        write_single_value(self, "CriticalChance", "+" + get_value(self, "H", row_no))
+            write_tag(self, "Class", self.read_weapon_subtypes, [row_no * 3 + 2], ["name", "ammoCost"], [weapon_class, magazine_cost])
 
     def read(self):
         write_tag(self, "Classes", self.read_weapon_classes)
@@ -272,10 +271,10 @@ def write_single_value(xml_writer, stat_name, value):
 
 
 WeaponImporter()
-GearImporter()
-WeatherImporter()
-RegionImporter()
-CharacterImporter()
-EnemyImporter()
-SkillImporter()
-TraitImporter()
+# GearImporter()
+# WeatherImporter()
+# RegionImporter()
+# CharacterImporter()
+# EnemyImporter()
+# SkillImporter()
+# TraitImporter()

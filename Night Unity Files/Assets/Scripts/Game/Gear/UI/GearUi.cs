@@ -45,7 +45,7 @@ namespace Game.Gear.UI
             ModifierColumn2Text = Helper.FindChildWithName<TextMeshProUGUI>(DetailedSection, "Modifier 1");
             ModifierColumnOneText = Helper.FindChildWithName<TextMeshProUGUI>(DetailedSection, "Modifier 2");
             TopLeftAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(DetailedSection, "Damage");
-            TopRightAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(DetailedSection, "Accuracy");
+            TopRightAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(DetailedSection, "Range");
             CentreLeftAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(DetailedSection, "Fire Rate");
             CentreRightAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(DetailedSection, "Critical Chance");
             BottomLeftAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(DetailedSection, "Reload Speed");

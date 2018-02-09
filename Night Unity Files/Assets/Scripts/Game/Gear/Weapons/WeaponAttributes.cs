@@ -15,7 +15,7 @@ namespace Game.Gear.Weapons
 {
     public class WeaponAttributes : AttributeContainer
     {
-        public CharacterAttribute FireRate, ReloadSpeed, Damage, Accuracy, CriticalChance, Capacity, Pellets;
+        public CharacterAttribute FireRate, ReloadSpeed, Damage, Range, CriticalChance, Handling, Capacity, Pellets;
         public CharacterAttribute PierceChance, BurnChance, BleedChance, SicknessChance;
         private float _dps;
         private AttributeModifier _durabilityModifier = new AttributeModifier();
@@ -24,8 +24,7 @@ namespace Game.Gear.Weapons
         public float DurabilityModifier;
         public bool Automatic = true;
 
-        public string WeaponClassDescription;
-        public string SubClassName, SubClassDescription;
+        public string WeaponClassName, WeaponClassDescription;
         public string ModifierName, ModifierDescription;
         public WeaponType WeaponType;
         public InventoryResourceType AmmoType;
@@ -36,15 +35,14 @@ namespace Game.Gear.Weapons
             SaveController.CreateNodeAndAppend("FireRate", root, FireRate);
             SaveController.CreateNodeAndAppend("ReloadSpeed", root, ReloadSpeed);
             SaveController.CreateNodeAndAppend("Damage", root, Damage);
-            SaveController.CreateNodeAndAppend("Accuracy", root, Accuracy);
+            SaveController.CreateNodeAndAppend("Range", root, Range);
             SaveController.CreateNodeAndAppend("CriticalChance", root, CriticalChance);
+            SaveController.CreateNodeAndAppend("Handling", root, Capacity);
             SaveController.CreateNodeAndAppend("Capacity", root, Capacity);
             SaveController.CreateNodeAndAppend("Pellets", root, Pellets);
             SaveController.CreateNodeAndAppend("Durability", root, Durability.CurrentValue());
             SaveController.CreateNodeAndAppend("Automatic", root, Automatic);
             SaveController.CreateNodeAndAppend("WeaponClassDescription", root, WeaponClassDescription);
-            SaveController.CreateNodeAndAppend("WeaponSubClass", root, SubClassName);
-            SaveController.CreateNodeAndAppend("WeaponSubClassDescription", root, SubClassDescription);
             SaveController.CreateNodeAndAppend("ModifierName", root, ModifierName);
             SaveController.CreateNodeAndAppend("ModifierDescription", root, ModifierDescription);
             SaveController.CreateNodeAndAppend("WeaponType", root, WeaponType);
@@ -75,6 +73,8 @@ namespace Game.Gear.Weapons
         {
             weaponClass.ApplyToGear(this);
             WeaponType = weaponClass.Type;
+            Automatic = weaponClass.Automatic;
+            WeaponClassName = weaponClass.Name;
             WeaponClassDescription = weaponClass.GetDescription();
             switch (WeaponType)
             {
@@ -96,17 +96,7 @@ namespace Game.Gear.Weapons
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-//            Debug.Log(Print());
-        }
-
-        public void SetSubClass(GearModifier subClass)
-        {
-            subClass.ApplyToGear(this);
-            SubClassName = subClass.Name;
-            SubClassDescription = subClass.GetDescription();
             RecalculateAttributeValues();
-//            Debug.Log(Print());
         }
 
         public void SetModifier(GearModifier secondaryModifier)
@@ -115,21 +105,11 @@ namespace Game.Gear.Weapons
             ModifierName = secondaryModifier.Name;
             ModifierDescription = secondaryModifier.GetDescription();
             RecalculateAttributeValues();
-//            Debug.Log(Print());
-        }
-
-        public void AddManualModifier()
-        {
-            Capacity.ApplyMultMod(0.5f);
-            Damage.ApplyMultMod(1.5f);
-            Accuracy.ApplyMultMod(1.5f);
-            FireRate.ApplyMultMod(0.5f);
-            Automatic = false;
         }
 
         public string GetName()
         {
-            return ModifierName + " " + SubClassName;
+            return WeaponClassName;
         }
 
         private void RecalculateAttributeValues()
@@ -143,7 +123,7 @@ namespace Game.Gear.Weapons
         private void CalculateDPS()
         {
             float averageShotDamage = CriticalChance.CurrentValue() / 100 * Damage.CurrentValue() * 2 + (1 - CriticalChance.CurrentValue() / 100) * Damage.CurrentValue();
-            float magazineDamage = (int) Capacity.CurrentValue() * averageShotDamage * (int) Pellets.CurrentValue() * Accuracy.CurrentValue() / 100;
+            float magazineDamage = (int) Capacity.CurrentValue() * averageShotDamage * (int) Pellets.CurrentValue();
             float magazineDuration = (int) Capacity.CurrentValue() / FireRate.CurrentValue() + ReloadSpeed.CurrentValue();
             _dps = magazineDamage / magazineDuration;
         }
@@ -156,10 +136,11 @@ namespace Game.Gear.Weapons
         protected override void CacheAttributes()
         {
             Damage = new CharacterAttribute(AttributeType.Damage, 0);
-            Accuracy = new CharacterAttribute(AttributeType.Accuracy, 0, 0, 100);
+            Range = new CharacterAttribute(AttributeType.Range, 0, 0, 100);
             CriticalChance = new CharacterAttribute(AttributeType.CriticalChance, 0, 0, 100);
             FireRate = new CharacterAttribute(AttributeType.FireRate, 0);
             ReloadSpeed = new CharacterAttribute(AttributeType.ReloadSpeed, 0);
+            Handling = new CharacterAttribute(AttributeType.Handling, 0);
 
             Capacity = new CharacterAttribute(AttributeType.Capacity, 0);
             Pellets = new CharacterAttribute(AttributeType.Pellets, 0);
@@ -170,10 +151,11 @@ namespace Game.Gear.Weapons
             SicknessChance = new CharacterAttribute(AttributeType.SicknessChance, 0);
 
             AddAttribute(Damage);
-            AddAttribute(Accuracy);
+            AddAttribute(Range);
             AddAttribute(ReloadSpeed);
             AddAttribute(CriticalChance);
             AddAttribute(FireRate);
+            AddAttribute(Handling);
 
             AddAttribute(Capacity);
             AddAttribute(Pellets);
@@ -183,24 +165,23 @@ namespace Game.Gear.Weapons
             AddAttribute(PierceChance);
             AddAttribute(SicknessChance);
 
-            _durabilityModifier.AddTargetAttributes(new List<CharacterAttribute> {Damage, Accuracy, CriticalChance, FireRate, ReloadSpeed});
+            _durabilityModifier.AddTargetAttributes(new List<CharacterAttribute> {Damage, Range, CriticalChance, FireRate, ReloadSpeed});
         }
 
         public string Print()
         {
-            return WeaponType + " " + SubClassName + " " + ModifierName
+            return WeaponType + " " + WeaponClassName + " " + ModifierName
                    + "\nDurability: " + Durability.CurrentValue() + " (" + DurabilityModifier + ")"
                    + "\nDPS: " + DPS()
                    + "\nAutomatic: " + Automatic
                    + "\nCapacity:   " + Capacity.CurrentValue()
                    + "\nPellets:    " + Pellets.CurrentValue()
                    + "\nDamage:     " + Damage.CurrentValue()
-                   + "\nAccuracy:   " + Accuracy.CurrentValue()
+                   + "\nRange:   " + Range.CurrentValue()
                    + "\nFire Rate:  " + FireRate.CurrentValue()
                    + "\nReload:     " + ReloadSpeed.CurrentValue()
                    + "\nCritChance: " + CriticalChance.CurrentValue()
                    + "\n" + WeaponClassDescription?.Replace("\n", " ")
-                   + "\n" + SubClassDescription?.Replace("\n", " ")
                    + "\n" + ModifierDescription?.Replace("\n", " ") + "\n\n";
         }
     }

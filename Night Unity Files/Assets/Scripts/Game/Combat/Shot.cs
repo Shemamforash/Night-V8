@@ -33,6 +33,7 @@ namespace Game.Combat
 
         private float _pierceChance, _burnChance, _bleedChance, _sicknessChance, _knockDownChance;
         private float _finalDamageModifier = 1f;
+        private readonly float _recoilModifier = 1f;
 
         private event Action OnHitAction;
         private bool _didHit;
@@ -46,6 +47,7 @@ namespace Game.Combat
             if (_origin != null)
             {
                 Enemy enemy = origin as Enemy;
+                _recoilModifier = origin.RecoilManager.GetAccuracyModifier();
                 _distanceToTarget = enemy?.DistanceToPlayer ?? ((Enemy) target).DistanceToPlayer;
                 CacheWeaponAttributes();
                 CalculateHitProbability();
@@ -64,7 +66,7 @@ namespace Game.Combat
             WeaponAttributes attributes = _origin.EquipmentController.Weapon().WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
 //            if (_origin is Enemy) _damage = (int)Mathf.Ceil(_damage / 2f);
-            _range = (int) attributes.GetCalculatedValue(AttributeType.Accuracy);
+            _range = (int) attributes.GetCalculatedValue(AttributeType.Range);
             _noPellets = (int) attributes.GetCalculatedValue(AttributeType.Pellets);
             _bleedChance = attributes.GetCalculatedValue(AttributeType.BleedChance);
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
@@ -83,13 +85,13 @@ namespace Game.Combat
 
         private void CalculateHitProbability()
         {
-            if (_guaranteeHit || _origin == null || _range > _distanceToTarget)
+            if (_origin == null || _range > _distanceToTarget)
             {
                 _hitChance = 1;
             }
             else
             {
-                _hitChance = _range / _distanceToTarget;
+                _hitChance = (float) Math.Pow(_range / _distanceToTarget, 2);
             }
         }
 
@@ -100,13 +102,10 @@ namespace Game.Combat
 
         private bool WillHitTarget()
         {
-
-            if (_hitChance <= 0f)
-            {
-                Debug.Log("shot from " + _origin.Name + " has 0% chance to hit");
-                return false;
-            }
-            return Random.Range(0f, 1f) <= _hitChance;
+            if (_guaranteeHit) return true;
+            if (_hitChance > 0f) return Random.Range(0f, 1f) <= _hitChance * _recoilModifier;
+            Debug.Log("shot from " + _origin.Name + " has 0% chance to hit " + _range + " " +_distanceToTarget);
+            return false;
         }
 
         private bool WillCrit()

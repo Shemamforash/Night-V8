@@ -1,45 +1,28 @@
-﻿using System.Collections.Generic;
-using Game.Combat.Skills;
-using Random = UnityEngine.Random;
+﻿using Game.Combat.Skills;
 
 namespace Game.Gear.Weapons
 {
     public class WeaponClass : GearModifier
     {
-        private readonly bool _canBeManual;
+        public readonly bool Automatic;
         public readonly WeaponType Type;
-        private readonly List<GearModifier> _subtypes = new List<GearModifier>();
         public readonly int AmmoCost;
+        public readonly string Name;
         
-        public WeaponClass(WeaponType type, bool canBeManual, int ammoCost) : base(type.ToString())
+        public WeaponClass(WeaponType type,string name, bool automatic, int ammoCost) : base(type.ToString())
         {
             Type = type;
-            _canBeManual = canBeManual;
+            Automatic = automatic;
             AmmoCost = ammoCost;
+            Name = name;
         }
 
-        public void AddSubtype(GearModifier subtype)
-        {
-            _subtypes.Add(subtype);
-        }
-
-        private GearModifier GetSubtype()
-        {
-            return _subtypes[Random.Range(0, _subtypes.Count)];
-        }
-
-        public Weapon CreateWeapon(GearModifier modifier, bool manualOnly, int durability)
+        public Weapon CreateWeapon(int durability)
         {
             Weapon w = new Weapon(Type.ToString(), 10, durability);
             WeaponAttributes weaponAttributes = w.WeaponAttributes;
             weaponAttributes.SetClass(this);
-            weaponAttributes.SetSubClass(GetSubtype());
-            weaponAttributes.SetModifier(modifier);
             WeaponSkills.GetWeaponSkills(w);
-            if (_canBeManual && (Random.Range(0, 2) == 0 || manualOnly))
-            {
-                weaponAttributes.AddManualModifier();
-            }
             return w;
         }
     }

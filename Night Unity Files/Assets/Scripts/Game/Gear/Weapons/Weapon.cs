@@ -1,6 +1,7 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 using Facilitating.UIControllers;
+using Game.Characters;
+using Game.Combat;
 using Game.Combat.Skills;
 using Game.World;
 using SamsHelper;
@@ -18,6 +19,7 @@ namespace Game.Gear.Weapons
         private int _ammoInMagazine;
         public readonly WeaponAttributes WeaponAttributes;
         public Skill WeaponSkillOne, WeaponSkillTwo;
+        private long _timeAtLastFire;
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
         {
@@ -30,6 +32,24 @@ namespace Game.Gear.Weapons
         {
             WeaponAttributes = new WeaponAttributes(durability);
 //            Durability.OnMin(() => { _canEquip = false; });
+        }
+        
+        private bool FireRateElapsedTimeMet()
+        {
+            long timeElapsed = Helper.TimeInMillis() - _timeAtLastFire;
+            long targetTime = (long) (1f / GetAttributeValue(AttributeType.FireRate) * 1000);
+            return !(timeElapsed < targetTime);
+        }
+
+        public bool CanFire()
+        {
+            return !Empty() && FireRateElapsedTimeMet();
+        }
+        
+        public Shot Fire(Character target, Character origin)
+        {
+            _timeAtLastFire = Helper.TimeInMillis();
+            return new Shot(target, origin);
         }
         
         public override bool IsStackable()

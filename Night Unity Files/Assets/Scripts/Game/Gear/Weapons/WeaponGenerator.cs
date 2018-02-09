@@ -2,20 +2,18 @@
 using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
-using Game.Combat.Skills;
 using Game.Gear.Armour;
 using Game.World.WorldEvents;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Gear.Weapons
 {
     public static class WeaponGenerator
     {
-        private static readonly Dictionary<WeaponType, WeaponClass> WeaponDictionary =
-            new Dictionary<WeaponType, WeaponClass>();
-
         private static readonly List<GearModifier> GeneralModifiers = new List<GearModifier>();
+        private static readonly Dictionary<WeaponType, List<WeaponClass>> WeaponClasses = new Dictionary<WeaponType, List<WeaponClass>>();
 
         static WeaponGenerator()
         {
@@ -26,30 +24,30 @@ namespace Game.Gear.Weapons
 
         public static WeaponClass GetWeaponClassWithType(WeaponType type)
         {
-            return WeaponDictionary[type];
+            List<WeaponClass> validTypes = WeaponClasses[type];
+            return validTypes[Random.Range(0, validTypes.Count)];
         }
 
-        public static Weapon GenerateWeapon(WeaponType type, bool manualOnly = false, int durability = -1)
+        public static Weapon GenerateWeapon(WeaponType type, int durability = -1)
         {
-            return GenerateWeapon(new List<WeaponType> {type}, manualOnly, durability);
+            return GenerateWeapon(new List<WeaponType> {type}, durability);
         }
 
-        public static Weapon GenerateWeapon(List<WeaponType> weaponsWanted = null, bool manualOnly = false, int durability = -1)
+        public static Weapon GenerateWeapon(List<WeaponType> weaponsWanted = null, int durability = -1)
         {
-            bool automatic = true;
             WeaponType weaponType;
-            if (weaponsWanted != null )
+            if (weaponsWanted != null)
             {
-                weaponType = weaponsWanted.Count != 0 ? weaponsWanted[UnityEngine.Random.Range(0, weaponsWanted.Count)] : weaponsWanted[0];
+                weaponType = weaponsWanted.Count != 0 ? weaponsWanted[Random.Range(0, weaponsWanted.Count)] : weaponsWanted[0];
             }
             else
             {
                 Array types = Enum.GetValues(typeof(WeaponType));
-                weaponType = (WeaponType) types.GetValue(UnityEngine.Random.Range(0, types.Length));
+                weaponType = (WeaponType) types.GetValue(Random.Range(0, types.Length));
             }
-            WeaponClass weaponClass = WeaponDictionary[weaponType];
-            GearModifier modifier = GeneralModifiers[UnityEngine.Random.Range(0, GeneralModifiers.Count)];
-            Weapon weapon = weaponClass.CreateWeapon(modifier, manualOnly, durability);
+
+            WeaponClass weaponClass = GetWeaponClassWithType(weaponType);
+            Weapon weapon = weaponClass.CreateWeapon(durability);
             WorldEventManager.GenerateEvent(new WeaponFindEvent(weapon.Name));
             weapon.SetName();
             return weapon;
@@ -63,19 +61,20 @@ namespace Game.Gear.Weapons
             XmlNode classesNode = weaponXml.SelectSingleNode("//Classes");
             foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
             {
+                WeaponClasses[type] = new List<WeaponClass>();
                 XmlNode classNode = classesNode.SelectSingleNode("Class[@name='" + type + "']");
-                bool canBeManual = classNode.Attributes["manualAllowed"].Value == "True";
                 int ammoCost = int.Parse(classNode.Attributes["ammoCost"].Value);
-                WeaponClass baseWeapon = new WeaponClass(type, canBeManual, ammoCost);
-                WeaponDictionary[type] = baseWeapon;
-
-                LoadModifierValues(classNode.SelectSingleNode("BaseStats"), baseWeapon);
 
                 foreach (XmlNode subtypeNode in classNode.SelectNodes("Subtype"))
                 {
-                    baseWeapon.AddSubtype(CreateModifier(subtypeNode));
+                    bool automatic = subtypeNode.Attributes["automatic"].Value == "True";
+                    string name = subtypeNode.Attributes["name"].Value;
+                    WeaponClass weapon = new WeaponClass(type, name, automatic, ammoCost);
+                    LoadModifierValues(subtypeNode, weapon);
+                    WeaponClasses[type].Add(weapon);
                 }
             }
+
             XmlNode modifiersNode = weaponXml.SelectSingleNode("//Modifiers");
             foreach (XmlNode modifierNode in modifiersNode.SelectNodes("Modifier"))
             {
@@ -109,6 +108,7 @@ namespace Game.Gear.Weapons
                 {
                     attributeModifier.SetMultiplicative(value);
                 }
+
                 gearModifier.AddAttributeModifier(attributeModifier);
             }
         }
@@ -122,6 +122,7 @@ namespace Game.Gear.Weapons
                     return type;
                 }
             }
+
             throw new Exception("Attribute string '" + attributeString + "' is not recognised.");
         }
     }

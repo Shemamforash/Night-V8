@@ -39,6 +39,7 @@ namespace Game.Combat
         private static bool _inMelee;
         public static int VisibilityRange;
         private static readonly List<ICombatListener> _combatListeners = new List<ICombatListener>();
+        public static UIRecoilManager RecoilManager;
 
         public static void SetCentralViewAlpha(float f)
         {
@@ -58,6 +59,8 @@ namespace Game.Combat
             _coverText = Helper.FindChildWithName<TextMeshProUGUI>(playerContainer, "Cover");
             _coverText.text = "";
 
+            RecoilManager = Helper.FindChildWithName<UIRecoilManager>(gameObject, "Skill Bar");
+
             PlayerHealthBar = Helper.FindChildWithName<UIHealthBarController>(playerContainer, "Health Bar");
             PlayerHealthBar.SetIsPlayerBar();
         }
@@ -65,6 +68,11 @@ namespace Game.Combat
         public static void RegisterCombatListener(ICombatListener listener)
         {
             _combatListeners.Add(listener);
+        }
+
+        public static void UnregisterCombatListener(ICombatListener listener)
+        {
+            _combatListeners.Remove(listener);
         }
 
         public static void SetCoverText(string coverText)
@@ -92,6 +100,7 @@ namespace Game.Combat
         {
             if (MeleeController.InMelee) return;
             _combatListeners.ForEach(l => l.UpdateCombat());
+            Player.UpdateCombat();
             CombatCooldowns.UpdateCooldowns();
         }
 

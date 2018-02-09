@@ -160,6 +160,7 @@
               <e p="Explosion.cs" t="Include" />
               <e p="ICombatListener.cs" t="Include" />
               <e p="MeleeController.cs" t="Include" />
+              <e p="RecoilManager.cs" t="Include" />
               <e p="Shot.cs" t="Include" />
               <e p="SkillBar.cs" t="Include" />
               <e p="Skills" t="Include">
@@ -310,6 +311,7 @@
           </e>
         </e>
         <e p="UIMinigameController.cs" t="Include" />
+        <e p="UIRecoilManager.cs" t="Include" />
         <e p="UISkillCostController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />

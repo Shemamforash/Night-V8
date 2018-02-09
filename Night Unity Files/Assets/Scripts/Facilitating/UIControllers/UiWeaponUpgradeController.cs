@@ -46,7 +46,7 @@ namespace Facilitating.UIControllers
 			_modifierColumn2Text = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Modifier 1");
 			_modifierColumnOneText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Modifier 2");
 			_topLeftAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Damage");
-			_topRightAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Accuracy");
+			_topRightAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Range");
 			_centreLeftAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Fire Rate");
 			_centreRightAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Critical Chance");
 			_bottomLeftAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Reload Speed");
@@ -73,10 +73,10 @@ namespace Facilitating.UIControllers
 			_rightText.text = _weapon.Weight + "kg";
 			_dpsText.text = Helper.Round(_weapon.WeaponAttributes.DPS(), 1) + "DPS";
 			_subTitleText.text = "Magazine " + _weapon.GetRemainingAmmo() + "/" + (int)_weapon.WeaponAttributes.Capacity.CurrentValue();
-			_modifierColumnOneText.text = _weapon.WeaponAttributes.SubClassDescription;
+			_modifierColumnOneText.text = _weapon.WeaponAttributes.WeaponClassDescription;
 			_modifierColumn2Text.text = _weapon.WeaponAttributes.ModifierDescription;
 			_topLeftAttributeText.text = _weapon.GetAttributeValue(AttributeType.Damage) + "DMG";
-			_topRightAttributeText.text = _weapon.GetAttributeValue(AttributeType.Accuracy) + "ACC";
+			_topRightAttributeText.text = _weapon.GetAttributeValue(AttributeType.Range) + "ACC";
 			_centreLeftAttributeText.text = Helper.Round(_weapon.GetAttributeValue(AttributeType.FireRate), 1) + "ROF";
 			_centreRightAttributeText.text = _weapon.GetAttributeValue(AttributeType.CriticalChance) + "CRIT";
 			_bottomLeftAttributeText.text = Helper.Round(_weapon.GetAttributeValue(AttributeType.ReloadSpeed), 1) + "RLD";
