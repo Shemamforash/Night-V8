@@ -22,7 +22,8 @@ namespace Game.Gear.Weapons
             Weapon w = new Weapon(Type.ToString(), 10, durability);
             WeaponAttributes weaponAttributes = w.WeaponAttributes;
             weaponAttributes.SetClass(this);
-            WeaponSkills.GetWeaponSkills(w);
+            w.WeaponSkillOne = WeaponSkills.GetWeaponSkillOne(w);
+            w.WeaponSkillTwo = WeaponSkills.GetWeaponSkillTwo(w);
             return w;
         }
     }

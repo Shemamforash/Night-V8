@@ -93,9 +93,9 @@ public class UIMinigameController : Menu
                 _classButtons.ForEach(b => b.SetDownNavigation(button));
             }
 
+            Navigation navigation;
             button.AddOnSelectEvent(() =>
             {
-                Navigation navigation;
                 _classButtons.ForEach(b =>
                 {
                     navigation = b.Button().navigation;

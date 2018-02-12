@@ -27,13 +27,12 @@ namespace Game.Combat
 
         private bool _guaranteeHit, _guaranteeCritical;
 
-        private float _criticalChance, _hitChance;
+        private float _criticalChance;
 
         private int _knockbackDistance;
 
         private float _pierceChance, _burnChance, _bleedChance, _sicknessChance, _knockDownChance;
         private float _finalDamageModifier = 1f;
-        private readonly float _recoilModifier = 1f;
 
         private event Action OnHitAction;
         private bool _didHit;
@@ -47,23 +46,18 @@ namespace Game.Combat
             if (_origin != null)
             {
                 Enemy enemy = origin as Enemy;
-                _recoilModifier = origin.RecoilManager.GetAccuracyModifier();
                 _distanceToTarget = enemy?.DistanceToPlayer ?? ((Enemy) target).DistanceToPlayer;
                 CacheWeaponAttributes();
-                CalculateHitProbability();
-                CalculateCriticalProbability();
                 float distance = origin is Player ? 0 : _distanceToTarget;
-                GunFire.Fire(origin.EquipmentController.Weapon().WeaponType(), distance);
-            }
-            else
-            {
-                _hitChance = 1;
+                GunFire.Fire(origin.Weapon.WeaponType(), distance);
             }
         }
 
+        public bool IsCritical { get; set; }
+
         private void CacheWeaponAttributes()
         {
-            WeaponAttributes attributes = _origin.EquipmentController.Weapon().WeaponAttributes;
+            WeaponAttributes attributes = _origin.Weapon.WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
 //            if (_origin is Enemy) _damage = (int)Mathf.Ceil(_damage / 2f);
             _range = (int) attributes.GetCalculatedValue(AttributeType.Range);
@@ -71,6 +65,7 @@ namespace Game.Combat
             _bleedChance = attributes.GetCalculatedValue(AttributeType.BleedChance);
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
             _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
+            _criticalChance = _origin.Weapon.WeaponAttributes.CriticalChance.CurrentValue();
         }
 
         private void SetDamage(int damage)
@@ -83,35 +78,25 @@ namespace Game.Combat
             _finalDamageModifier = modifier;
         }
 
-        private void CalculateHitProbability()
-        {
-            if (_origin == null || _range > _distanceToTarget)
-            {
-                _hitChance = 1;
-            }
-            else
-            {
-                _hitChance = (float) Math.Pow(_range / _distanceToTarget, 2);
-            }
-        }
-
-        private void CalculateCriticalProbability()
-        {
-            _criticalChance = _guaranteeCritical ? 1 : _origin.EquipmentController.Weapon().WeaponAttributes.CriticalChance.CurrentValue();
-        }
-
         private bool WillHitTarget()
         {
-            if (_guaranteeHit) return true;
-            if (_hitChance > 0f) return Random.Range(0f, 1f) <= _hitChance * _recoilModifier;
-            Debug.Log("shot from " + _origin.Name + " has 0% chance to hit " + _range + " " +_distanceToTarget);
-            return false;
+            float hitChance = _origin?.GetHitChance(_target) ?? 1;
+            if (_guaranteeHit && hitChance != 0) return true;
+            return Random.Range(0f, 1f) < hitChance;
         }
 
         private bool WillCrit()
         {
-            if (_criticalChance <= 0f) return false;
-            return Random.Range(0f, 1f) <= _criticalChance;
+            if (_guaranteeCritical)
+            {
+                IsCritical = true;
+            }
+            else
+            {
+                IsCritical = Random.Range(0f, 1f) < _criticalChance;
+            }
+
+            return IsCritical;
         }
 
         private const float BulletSpeed = 500;
@@ -122,9 +107,10 @@ namespace Game.Combat
             {
                 if (_origin != null)
                 {
-                    if (_origin.EquipmentController.Weapon().Empty()) break;
-                    _origin.EquipmentController.Weapon().ConsumeAmmo(1);
+                    if (_origin.Weapon.Empty()) break;
+                    _origin.Weapon.ConsumeAmmo(1);
                 }
+
                 CreateShotCooldown();
             }
         }
@@ -142,6 +128,7 @@ namespace Game.Combat
                         _target.OnMiss();
                         continue;
                     }
+
                     ApplyDamage();
                 }
             });
@@ -165,7 +152,7 @@ namespace Game.Combat
             }
             else
             {
-                _target.OnHit(pelletDamage);
+                _target.OnHit(pelletDamage, IsCritical);
             }
         }
 
@@ -223,7 +210,7 @@ namespace Game.Combat
 
         public void UseRemainingShots()
         {
-            _noShots = _origin.EquipmentController.Weapon().GetRemainingAmmo();
+            _noShots = _origin.Weapon.GetRemainingAmmo();
         }
 
         public void GuaranteeHit() => _guaranteeHit = true;

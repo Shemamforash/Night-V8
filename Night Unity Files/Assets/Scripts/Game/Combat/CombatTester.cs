@@ -38,7 +38,7 @@ namespace Game.Combat
             if(_instance.Shotgun) weaponsWanted.Add(WeaponType.Shotgun);
             Weapon weapon = WeaponGenerator.GenerateWeapon(weaponsWanted);
             weapon.WeaponAttributes.SetDurability(_instance.Durability);
-            _playerCharacter.Equip(weapon);
+            _playerCharacter.EquipWeapon(weapon);
             weapon.Reload(_playerCharacter.Inventory());
             
             _encounter = CombatScenario.Generate(_instance.Difficulty);

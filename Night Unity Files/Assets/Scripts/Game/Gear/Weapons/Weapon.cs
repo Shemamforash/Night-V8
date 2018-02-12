@@ -1,7 +1,9 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat;
+using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.World;
 using SamsHelper;
@@ -27,7 +29,7 @@ namespace Game.Gear.Weapons
             WeaponAttributes.Save(root, saveType);
             return root;
         }
-        
+
         public Weapon(string name, float weight, int durability) : base(name, weight, GearSubtype.Weapon)
         {
             WeaponAttributes = new WeaponAttributes(durability);

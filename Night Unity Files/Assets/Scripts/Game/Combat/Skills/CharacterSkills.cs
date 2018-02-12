@@ -9,60 +9,64 @@ namespace Game.Combat.Skills
 {
     public static class CharacterSkills
     {
-        public static void GetCharacterSkills(Player player)
+        public static Skill GetCharacterSkillOne(Player player)
         {
-            Skill skillOne, skillTwo;
             switch (player.CharacterTemplate.CharacterClass)
             {
                 case CharacterClass.Villain:
-                    skillOne = new Staunch();
-                    skillTwo = new Rejuvinate();
-                    break;
+                    return new Staunch();
                 case CharacterClass.Father:
-                    skillOne = new Fortify();
-                    skillTwo = new Endure();
-                    break;
+                    return new Fortify();
                 case CharacterClass.Deserter:
-                    skillOne = new Immolate();
-                    skillTwo = new Lacerate();
-                    break;
+                    return new Immolate();
                 case CharacterClass.Beast:
-                    skillOne = new Taunt();
-                    skillTwo = new Headbutt();
-                    break;
+                    return new Taunt();
                 case CharacterClass.Watcher:
-                    skillOne = new Terrify();
-                    skillTwo = new Bellow();
-                    break;
+                    return new Terrify();
                 case CharacterClass.Wanderer:
-                    skillOne = new Lob();
-                    skillTwo = new Unearth();
-                    break;
+                    return new Lob();
                 case CharacterClass.Protector:
-                    skillOne = new Sacrifice();
-                    skillTwo = new Execute();
-                    break;
+                    return new Sacrifice();
                 case CharacterClass.Hunter:
-                    skillOne = new Restock();
-                    skillTwo = new Curse();
-                    break;
+                    return new Restock();
                 case CharacterClass.Ghost:
-                    skillOne = new Blink();
-                    skillTwo = new Fade();
-                    break;
+                    return new Blink();
                 case CharacterClass.Driver:
-                    skillOne = new Defile();
-                    skillTwo = new Absolve();
-                    break;
+                    return new Defile();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
 
-            player.CharacterSkillOne = skillOne;
-            player.CharacterSkillTwo = skillTwo;
+        public static Skill GetCharacterSkillTwo(Player player)
+        {
+            switch (player.CharacterTemplate.CharacterClass)
+            {
+                case CharacterClass.Villain:
+                    return new Rejuvinate();
+                case CharacterClass.Father:
+                    return new Endure();
+                case CharacterClass.Deserter:
+                    return new Lacerate();
+                case CharacterClass.Beast:
+                    return new Headbutt();
+                case CharacterClass.Watcher:
+                    return new Bellow();
+                case CharacterClass.Wanderer:
+                    return new Unearth();
+                case CharacterClass.Protector:
+                    return new Execute();
+                case CharacterClass.Hunter:
+                    return new Curse();
+                case CharacterClass.Ghost:
+                    return new Fade();
+                case CharacterClass.Driver:
+                    return new Absolve();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
-
     //Villain
 
     public class Staunch : Skill
@@ -198,7 +202,7 @@ namespace Game.Combat.Skills
         public Bellow() : base(nameof(Bellow))
         {
         }
-        
+
         protected override void OnFire()
         {
             base.OnFire();
@@ -246,11 +250,11 @@ namespace Game.Combat.Skills
         public Sacrifice() : base(nameof(Sacrifice))
         {
         }
-        
+
         protected override void OnFire()
         {
             base.OnFire();
-            
+
             Player().RageController.Increase(Player().RageController.CurrentValue());
             Player().HealthController.TakeDamage((int) (Player().HealthController.GetCurrentHealth() / 2f));
         }
@@ -285,7 +289,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().Inventory().IncrementResource(Player().EquipmentController.Weapon().WeaponAttributes.AmmoType, 1);
+            Player().Inventory().IncrementResource(Player().Weapon.WeaponAttributes.AmmoType, 1);
         }
     }
 
@@ -346,8 +350,8 @@ namespace Game.Combat.Skills
         {
             base.OnFire();
             if (CombatManager.CurrentTarget.DistanceToPlayer > Enemy.MeleeDistance) return;
-            CombatManager.CurrentTarget.OnHit(25);
-            for(int i = 0; i < 5; ++i) CombatManager.CurrentTarget.Bleeding.AddStack();
+            CombatManager.CurrentTarget.OnHit(25, false);
+            for (int i = 0; i < 5; ++i) CombatManager.CurrentTarget.Bleeding.AddStack();
         }
     }
 
@@ -379,6 +383,7 @@ namespace Game.Combat.Skills
                 target.Sick.Clear();
                 healAmount += 10;
             }
+
             Player().HealthController.Heal(healAmount);
         }
     }

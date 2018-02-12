@@ -57,7 +57,7 @@ public class MeleeController : MonoBehaviour
 
     public static void SucceedRound()
     {
-        _targetEnemy.OnHit(10);
+        _targetEnemy.OnHit(10, false);
         ++_hitsWon;
         GoToNextRound();
     }
@@ -73,7 +73,7 @@ public class MeleeController : MonoBehaviour
 
     public static void FailRound()
     {
-        CombatManager.Player.OnHit(10);
+        CombatManager.Player.OnHit(10, false);
         ++_hitsLost;
         GoToNextRound();
     }

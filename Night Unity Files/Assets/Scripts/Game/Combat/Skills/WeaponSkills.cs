@@ -6,36 +6,42 @@ namespace Game.Combat.Skills
 {
     public static class WeaponSkills
     {
-        public static void GetWeaponSkills(Weapon weapon)
+        public static Skill GetWeaponSkillOne(Weapon weapon)
         {
-            Skill skillOne, skillTwo;
             switch (weapon.WeaponType())
             {
                 case WeaponType.Rifle:
-                    skillOne = new Gouge();
-                    skillTwo = new Blast();
-                    break;
+                    return new Gouge();
                 case WeaponType.Shotgun:
-                    skillOne = new Sweep();
-                    skillTwo = new Swarm();
-                    break;
+                    return new Sweep();
                 case WeaponType.LMG:
-                    skillOne = new Refill();
-                    skillTwo = new Compel();
-                    break;
+                    return new Refill();
                 case WeaponType.SMG:
-                    skillOne = new Hairpin();
-                    skillTwo = new Splinter();
-                    break;
+                    return new Hairpin();
                 case WeaponType.Pistol:
-                    skillOne = new Retribution();
-                    skillTwo = new Revenge();
-                    break;
+                    return new Retribution();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            weapon.WeaponSkillOne= skillOne;
-            weapon.WeaponSkillTwo = skillTwo;
+        }
+        
+        public static Skill GetWeaponSkillTwo(Weapon weapon)
+        {
+            switch (weapon.WeaponType())
+            {
+                case WeaponType.Rifle:
+                    return  new Blast();
+                case WeaponType.Shotgun:
+                    return  new Swarm();
+                case WeaponType.LMG:
+                    return  new Compel();
+                case WeaponType.SMG:
+                    return  new Splinter();
+                case WeaponType.Pistol:
+                    return  new Revenge();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
     
@@ -119,7 +125,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().EquipmentController.Weapon().Reload(Player().Inventory());
+            Player().Weapon.Reload(Player().Inventory());
         }
     }
 

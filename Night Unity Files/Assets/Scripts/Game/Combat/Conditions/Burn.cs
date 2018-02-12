@@ -16,7 +16,7 @@ namespace Game.Combat
             int stackMaxDamage = Damage;
             for (int i = StackList.Count - 1; i >= 0; --i)
             {
-                StackList[i] -= Time.deltaTime;
+                StackList[i] -= 1;
                 if (StackList[i] > 0)
                 {
                     totalBurnDamage += stackMaxDamage;
@@ -24,7 +24,7 @@ namespace Game.Combat
                     continue;
                 }
 
-                StackList.RemoveAt(i);
+                RemoveStack(i);
             }
             CharacterHealth.TakeDamage(totalBurnDamage);
         }

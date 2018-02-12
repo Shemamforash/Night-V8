@@ -120,7 +120,7 @@ namespace Game.Combat.Enemies
         protected void GenerateWeapon(List<WeaponType> types)
         {
             Weapon weapon = WeaponGenerator.GenerateWeapon(types, 1);
-            Equip(weapon);
+            EquipWeapon(weapon);
         }
         
         public void SetTemplate(EnemyTemplate enemyTemplate)
@@ -135,7 +135,7 @@ namespace Game.Combat.Enemies
             CurrentAction = Wander;
             FacingDirection = Direction.Left;
             Alerted = false;
-            EquipmentController.Weapon()?.Reload(Inventory());
+            Weapon?.Reload(Inventory());
         }
 
         public override void TakeCover()
@@ -264,8 +264,8 @@ namespace Game.Combat.Enemies
 
         private float CalculateIdealRange()
         {
-            if (EquipmentController.Weapon() == null) return 0;
-            float idealRange = EquipmentController.Weapon().GetAttributeValue(AttributeType.Range);
+            if (Weapon == null) return 0;
+            float idealRange = Weapon.GetAttributeValue(AttributeType.Range);
             idealRange = Random.Range(0.8f * idealRange, idealRange);
             if (idealRange >= CombatManager.VisibilityRange)
             {
@@ -304,9 +304,17 @@ namespace Game.Combat.Enemies
             EnemyView?.SetActionText(text);
         }
 
-        public override void OnHit(int damage)
+        public override void OnHit(int damage, bool critical)
         {
-            base.OnHit(damage);
+            base.OnHit(damage, critical);
+            if (critical)
+            {
+                EnemyView?.UiHitController.RegisterCritical();
+            }
+            else
+            {
+                EnemyView?.UiHitController.RegisterShot();
+            }
             if (!Alerted) Alert();
         }
 
@@ -359,19 +367,19 @@ namespace Game.Combat.Enemies
 
         private Action Reload()
         {
-            if (EquipmentController.Weapon().GetRemainingMagazines() == 0)
+            if (Weapon.GetRemainingMagazines() == 0)
             {
                 return Flee();
             }
 
             TakeCover();
             SetActionText("Reloading");
-            float duration = EquipmentController.Weapon().GetAttributeValue(AttributeType.ReloadSpeed) * EnemyReloadMultiplier;
+            float duration = Weapon.GetAttributeValue(AttributeType.ReloadSpeed) * EnemyReloadMultiplier;
             return () =>
             {
                 duration -= Time.deltaTime;
                 if (duration > 0) return;
-                EquipmentController.Weapon().Reload(Inventory());
+                Weapon.Reload(Inventory());
                 ChooseNextAction();
             };
         }
@@ -389,8 +397,8 @@ namespace Game.Combat.Enemies
         private Action Fire()
         {
             int divider = Random.Range(3, 6);
-            int noShots = (int) (EquipmentController.Weapon().GetAttributeValue(AttributeType.Capacity) / divider);
-            bool automatic = EquipmentController.Weapon().WeaponAttributes.Automatic;
+            int noShots = (int) (Weapon.GetAttributeValue(AttributeType.Capacity) / divider);
+            bool automatic = Weapon.WeaponAttributes.Automatic;
             SetActionText("Firing");
             if (!automatic)
             {
@@ -404,7 +412,7 @@ namespace Game.Combat.Enemies
                 s.Fire();
                 EnemyView?.UiAimController.Fire();
                 --noShots;
-                int remainingAmmo = EquipmentController.Weapon().GetRemainingAmmo();
+                int remainingAmmo = Weapon.GetRemainingAmmo();
                 if (noShots == 0 || remainingAmmo == 0)
                 {
                     UpdateAim(0);
@@ -428,12 +436,12 @@ namespace Game.Combat.Enemies
 
         protected virtual Action Aim()
         {
-            if (EquipmentController.Weapon().Empty())
+            if (Weapon.Empty())
             {
                 return Reload();
             }
             LeaveCover();
-            Assert.IsFalse(EquipmentController.Weapon().Empty());
+            Assert.IsFalse(Weapon.Empty());
             float aimTime = MaxAimTime;
             SetActionText("Aiming");
             return () =>
@@ -478,8 +486,6 @@ namespace Game.Combat.Enemies
             Burn.OnConditionEmpty = () => EnemyView?.HealthBar.StopBurning();
             Bleeding.OnConditionNonEmpty = () => EnemyView?.HealthBar.StartBleeding();
             Bleeding.OnConditionEmpty = () => EnemyView?.HealthBar.StopBleeding();
-            Sick.OnConditionNonEmpty = () => EnemyView?.HealthBar.UpdateSickness(Sick.GetNormalisedValue());
-            Sick.OnConditionEmpty = () => EnemyView?.HealthBar.UpdateSickness(0);
         }
     }
 }

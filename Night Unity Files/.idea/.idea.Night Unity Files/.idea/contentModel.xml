@@ -310,8 +310,8 @@
             </e>
           </e>
         </e>
+        <e p="UIHitController.cs" t="Include" />
         <e p="UIMinigameController.cs" t="Include" />
-        <e p="UIRecoilManager.cs" t="Include" />
         <e p="UISkillCostController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />

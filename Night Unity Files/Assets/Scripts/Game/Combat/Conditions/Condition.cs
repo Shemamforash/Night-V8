@@ -28,17 +28,18 @@ namespace Game.Combat
 
         public void Update()
         {
+            _timeToNextTick -= Time.deltaTime;
+            if (_timeToNextTick > 0) return;
+            _timeToNextTick = 1 + _timeToNextTick;
+            Tick();
+        }
+
+        public void RemoveStack(int index)
+        {
+            StackList.RemoveAt(index);
             if (StackList.Count == 0)
             {
                 OnConditionEmpty?.Invoke();
-            }
-            else
-            {
-                OnConditionNonEmpty?.Invoke();
-                _timeToNextTick -= Time.deltaTime;
-                if (_timeToNextTick > 0) return;
-                _timeToNextTick = 1 + _timeToNextTick;
-                Tick();
             }
         }
 

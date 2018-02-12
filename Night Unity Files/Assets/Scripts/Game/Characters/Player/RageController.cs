@@ -65,14 +65,14 @@ namespace Game.Characters
         public void EnterCombat()
         {
             _rageLevel.SetCurrentValue(0f);
-            _reloadModifier.AddTargetAttribute(_character.EquipmentController.Weapon().WeaponAttributes.ReloadSpeed);
-            _fireRateModifier.AddTargetAttribute(_character.EquipmentController.Weapon().WeaponAttributes.FireRate);
+            _reloadModifier.AddTargetAttribute(_character.Weapon.WeaponAttributes.ReloadSpeed);
+            _fireRateModifier.AddTargetAttribute(_character.Weapon.WeaponAttributes.FireRate);
         }
 
         public void ExitCombat()
         {
-            _reloadModifier.RemoveTargetAttribute(_character.EquipmentController.Weapon().WeaponAttributes.ReloadSpeed);
-            _fireRateModifier.RemoveTargetAttribute(_character.EquipmentController.Weapon().WeaponAttributes.FireRate);
+            _reloadModifier.RemoveTargetAttribute(_character.Weapon.WeaponAttributes.ReloadSpeed);
+            _fireRateModifier.RemoveTargetAttribute(_character.Weapon.WeaponAttributes.FireRate);
         }
 
         public void UpdateCombat()

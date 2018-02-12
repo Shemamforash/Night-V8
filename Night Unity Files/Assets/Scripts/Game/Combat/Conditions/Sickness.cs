@@ -15,13 +15,11 @@ namespace Game.Combat.Skills
 
         protected override void Tick()
         {
-            if (StackList.Count != 0)
+            if (StackList.Count == 0) return;
+            StackList[0] -= 1;
+            if (StackList[0] <= 0)
             {
-                StackList[0] -= Time.deltaTime;
-                if (StackList[0] <= 0)
-                {
-                    StackList.RemoveAt(0);
-                }
+                RemoveStack(0);
             }
         }
 

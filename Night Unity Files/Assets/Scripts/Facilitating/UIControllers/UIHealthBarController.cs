@@ -6,7 +6,6 @@ public class UIHealthBarController : MonoBehaviour
 {
     private Slider _slider;
     private ParticleSystem _healthParticles;
-    private Image _sicknessLevel;
     private ParticleSystem _bleedEffect, _burnEffect;
     private RectTransform _sliderRect;
     private float _edgeWidthRatio = 3f;
@@ -15,7 +14,6 @@ public class UIHealthBarController : MonoBehaviour
     {
         _slider = GetComponent<Slider>();
         _healthParticles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Health Effect");
-        _sicknessLevel = Helper.FindChildWithName<Image>(gameObject, "Sickness");
         _burnEffect = Helper.FindChildWithName<ParticleSystem>(gameObject, "Burning");
         _bleedEffect = Helper.FindChildWithName<ParticleSystem>(gameObject, "Bleeding");
         SetValue(1, 1);
@@ -62,6 +60,7 @@ public class UIHealthBarController : MonoBehaviour
     
     public void StartBleeding()
     {
+        if (_bleedEffect.isPlaying) return;
         _bleedEffect.Play();
     }
 
@@ -72,16 +71,12 @@ public class UIHealthBarController : MonoBehaviour
 
     public void StartBurning()
     {
+        if (_burnEffect.isPlaying) return; 
         _burnEffect.Play();
     }
 
     public void StopBurning()
     {
         _burnEffect.Stop();
-    }
-    
-    public void UpdateSickness(float value)
-    {
-        _sicknessLevel.fillAmount = value;
     }
 }

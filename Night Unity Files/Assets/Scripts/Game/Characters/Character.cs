@@ -1,10 +1,12 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using Facilitating.Audio;
 using Facilitating.Persistence;
 using Game.Characters.Player;
 using Game.Combat;
 using Game.Combat.Enemies;
 using Game.Combat.Skills;
+using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper;
@@ -12,24 +14,24 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
-using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.SceneManagement;
 
 namespace Game.Characters
 {
     public abstract class Character : MyGameObject, IPersistenceTemplate, ICombatListener
     {
         protected readonly DesolationInventory CharacterInventory;
+        public Weapon Weapon;
+        public Accessory Accessory;
+        public Armour Armour;
 
         //todo implement armour
         public readonly Number ArmourLevel = new Number(0, 0, 10);
 
         public readonly HealthController HealthController;
-        public readonly EquipmentController EquipmentController;
         public MovementController MovementController;
 
-        protected bool InCover;
+        public bool InCover;
         public bool IsKnockedDown;
         public bool IsDead;
 
@@ -47,7 +49,9 @@ namespace Game.Characters
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             SaveController.CreateNodeAndAppend("Name", doc, Name);
-            EquipmentController.Save(doc, saveType);
+            Weapon?.Save(doc, saveType);
+            Armour?.Save(doc, saveType);
+            Accessory?.Save(doc, saveType);
             Inventory().Save(doc, saveType);
             return doc;
         }
@@ -74,6 +78,29 @@ namespace Game.Characters
             }
         }
 
+        public float GetHitChance(Character target)
+        {
+            float hitChance = 0f;
+            if (target.InCover)
+            {
+                return hitChance;
+            }
+
+            float distanceToTarget = target is Enemy ? ((Enemy) target).DistanceToPlayer : ((Enemy) this).DistanceToPlayer;
+            float range = Weapon.WeaponAttributes.Range.CurrentValue();
+            if (distanceToTarget <= range)
+            {
+                hitChance = 1;
+            }
+            else
+            {
+                hitChance = (float) Math.Pow(range / distanceToTarget, 2);
+            }
+
+            hitChance *= RecoilManager.GetAccuracyModifier();
+            return hitChance;
+        }
+
         protected Character(string name) : base(name, GameObjectType.Character)
         {
             FootStepCounter = new FootstepCounter(this);
@@ -81,16 +108,33 @@ namespace Game.Characters
             Position.AddOnValueChange(a => { CharacterPositionManager.UpdatePlayerDirection(); });
             CharacterInventory = new DesolationInventory(name);
             HealthController = new HealthController(this);
-            EquipmentController = new EquipmentController(this);
         }
 
-        public virtual void Equip(GearItem gearItem)
+
+        public virtual void EquipWeapon(Weapon weapon)
         {
-            ((Weapon) gearItem)?.Reload(Inventory());
-            EquipmentController.Equip(gearItem);
+            Weapon?.Unequip();
+            weapon.Equip(CharacterInventory);
+            Weapon = weapon;
+            Weapon.Reload(Inventory());
         }
 
-        public virtual void OnHit(int damage)
+        public virtual void EquipArmour(Armour armour)
+        {
+            Armour?.Unequip();
+            armour.Equip(CharacterInventory);
+            Armour = armour;
+        }
+        
+        public virtual void EquipAccessory(Accessory accessory)
+        {
+            Accessory?.Unequip();
+            accessory.Equip(CharacterInventory);
+            Accessory = accessory;
+        }
+        
+
+        public virtual void OnHit(int damage, bool critical)
         {
             if (InCover) return;
             //todo pierce through cover?
@@ -138,11 +182,11 @@ namespace Game.Characters
 
         protected virtual Shot FireWeapon(Character target)
         {
-            if (Immobilised() || InCover || !EquipmentController.Weapon().CanFire()) return null;
+            if (Immobilised() || InCover || !Weapon.CanFire()) return null;
             Assert.IsNotNull(target);
-            Shot shot = EquipmentController.Weapon().Fire(target, this);
+            Shot shot = Weapon.Fire(target, this);
             if (FacingDirection == target.FacingDirection) shot.GuaranteeCritical();
-            RecoilManager.Increment(EquipmentController.Weapon());
+            RecoilManager.Increment(Weapon);
             return shot;
         }
 

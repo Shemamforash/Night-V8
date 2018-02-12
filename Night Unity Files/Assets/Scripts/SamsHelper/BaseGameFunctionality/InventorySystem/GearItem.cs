@@ -30,13 +30,14 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 //            c.AddItemToInventory(this);
 //            _equipped = true;
 //            c.ReplaceGearInSlot(_gearslot, this);
-            ParentInventory = p;
+            MoveTo(p);
             _modifiers.ForEach(a => a.Apply());
             Equipped = true;
         }
         
         public void Unequip()
         {
+            MoveTo(WorldState.HomeInventory());
             _modifiers.ForEach(a => a.Remove());
             Equipped = false;
         }
@@ -57,10 +58,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             ui.SetCentralTextCallback(() => Name);
             return ui;
         }
-        
-        public void MoveTo(Inventory targetInventory)
+
+        private void MoveTo(Inventory targetInventory)
         {
             ParentInventory?.Move(this, targetInventory, 1);
+            ParentInventory = targetInventory;
         }
 
         public virtual void Load(XmlNode doc, PersistenceType saveType)

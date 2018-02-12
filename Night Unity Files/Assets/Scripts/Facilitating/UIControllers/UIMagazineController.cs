@@ -52,7 +52,7 @@ namespace Assets
             {
                 MagazineAmmo[i].SetUnspent(i < remaining);
             }
-            SetMessage(CombatManager.Player.EquipmentController.Weapon().GetRemainingMagazines() + " mags");
+            SetMessage(CombatManager.Player.Weapon.GetRemainingMagazines() + " mags");
             _empty = false;
         }
 

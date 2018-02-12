@@ -8,6 +8,7 @@ using Game.Characters.CharacterActions;
 using Game.Combat;
 using Game.Combat.Enemies;
 using Game.Combat.Skills;
+using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.World;
 using Game.World.Region;
@@ -53,7 +54,7 @@ namespace Game.Characters.Player
         private int _storyProgress;
 
         public Skill CharacterSkillOne, CharacterSkillTwo;
-        
+
         private bool _fired;
 
         public string GetCurrentStoryProgress()
@@ -77,7 +78,8 @@ namespace Game.Characters.Player
             Attributes = new DesolationAttributes(this);
             MovementController = new MovementController(this, 0);
             CharacterTemplate = characterTemplate;
-            CharacterSkills.GetCharacterSkills(this);
+            CharacterSkillOne = CharacterSkills.GetCharacterSkillOne(this);
+            CharacterSkillTwo = CharacterSkills.GetCharacterSkillTwo(this);
             CharacterInventory.MaxWeight = 50;
             Attributes.Endurance.AddOnValueChange(a => { Energy.Max = a.CurrentValue(); });
             RageController = new RageController(this);
@@ -86,10 +88,6 @@ namespace Game.Characters.Player
             Energy.OnMin(Sleep);
             Position.AddOnValueChange(a => { UIEnemyController.Enemies.ForEach(e => e.Position.UpdateValueChange()); });
             SetReloadCooldown();
-            RecoilManager.Recoil.AddOnValueChange(a =>
-            {
-                CombatManager.RecoilManager?.SetValue(a.Normalised());
-            });
         }
 
         ~Player()
@@ -99,7 +97,7 @@ namespace Game.Characters.Player
 
         public void OnHit(Shot shot, int damage)
         {
-            OnHit(damage);
+            OnHit(damage, shot.IsCritical);
             if (shot.Origin() == null) return;
             if (Retaliate) FireWeapon(shot.Origin());
         }
@@ -159,8 +157,6 @@ namespace Game.Characters.Player
             Burn.OnConditionEmpty = CombatManager.PlayerHealthBar.StopBurning;
             Bleeding.OnConditionNonEmpty = CombatManager.PlayerHealthBar.StartBleeding;
             Bleeding.OnConditionEmpty = CombatManager.PlayerHealthBar.StopBleeding;
-            Sick.OnConditionNonEmpty = () => CombatManager.PlayerHealthBar.UpdateSickness(Sick.GetNormalisedValue());
-            Sick.OnConditionEmpty = () => CombatManager.PlayerHealthBar.UpdateSickness(0);
         }
 
         //Links character to object in scene
@@ -243,24 +239,22 @@ namespace Game.Characters.Player
             Tire();
         }
 
-        public override void Equip(GearItem gearItem)
+        public override void EquipWeapon(Weapon weapon)
         {
-            base.Equip(gearItem);
-            switch (gearItem.GetGearType())
-            {
-                case GearSubtype.Weapon:
-                    Debug.Log(((Weapon) gearItem).WeaponAttributes.Print());
-                    CharacterView?.WeaponGearUi.SetGearItem(gearItem);
-                    break;
-                case GearSubtype.Armour:
-                    CharacterView?.ArmourGearUi.SetGearItem(gearItem);
-                    break;
-                case GearSubtype.Accessory:
-                    CharacterView?.AccessoryGearUi.SetGearItem(gearItem);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            base.EquipWeapon(weapon);
+            CharacterView?.WeaponGearUi.SetGearItem(weapon);
+        }
+
+        public override void EquipArmour(Armour armour)
+        {
+            base.EquipArmour(armour);
+            CharacterView?.ArmourGearUi.SetGearItem(armour);
+        }
+
+        public override void EquipAccessory(Accessory accessory)
+        {
+            base.EquipAccessory(accessory);
+            CharacterView?.AccessoryGearUi.SetGearItem(accessory);
         }
 
         //MISC
@@ -274,14 +268,15 @@ namespace Game.Characters.Player
         {
             if (Immobilised()) return;
             if (_reloadingCooldown.Running()) return;
-            if (EquipmentController.Weapon().FullyLoaded()) return;
-            if (EquipmentController.Weapon().GetRemainingMagazines() == 0) return;
+            if (Weapon.FullyLoaded()) return;
+            if (Weapon.GetRemainingMagazines() == 0) return;
             OnFireAction = null;
             Retaliate = false;
-            float reloadSpeed = EquipmentController.Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
+            float reloadSpeed = Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
             UIMagazineController.EmptyMagazine();
             _reloadingCooldown.Duration = reloadSpeed;
             _reloadingCooldown.Start();
+            _fired = false;
         }
 
         private void StopReloading()
@@ -297,7 +292,7 @@ namespace Game.Characters.Player
             _reloadingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
             _reloadingCooldown.SetStartAction(() =>
             {
-                EquipmentController.Weapon().Reload(Inventory());
+                Weapon.Reload(Inventory());
                 UpdateMagazineUi();
             });
             _reloadingCooldown.SetDuringAction(t =>
@@ -329,6 +324,7 @@ namespace Game.Characters.Player
                 shot.Fire();
                 _fired = true;
             }
+
             return shot;
         }
 
@@ -344,8 +340,8 @@ namespace Game.Characters.Player
         public void UpdateMagazineUi()
         {
             string magazineMessage = "";
-            if (EquipmentController.Weapon().GetRemainingMagazines() == 0) magazineMessage = "NO AMMO";
-            else if (EquipmentController.Weapon().Empty())
+            if (Weapon.GetRemainingMagazines() == 0) magazineMessage = "NO AMMO";
+            else if (Weapon.Empty())
                 magazineMessage = "RELOAD";
             if (magazineMessage == "")
             {
@@ -365,7 +361,7 @@ namespace Game.Characters.Player
                 MeleeController.StartMelee(CombatManager.CurrentTarget);
             }
         }
-        
+
         //INPUT
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -381,7 +377,7 @@ namespace Game.Characters.Player
                     break;
                 case InputAxis.Fire:
                     if (!_fired && isHeld) break;
-                    if (!_fired || EquipmentController.Weapon().WeaponAttributes.Automatic) FireWeapon(CombatManager.CurrentTarget);
+                    if (!_fired || Weapon.WeaponAttributes.Automatic) FireWeapon(CombatManager.CurrentTarget);
                     break;
                 case InputAxis.Reload:
                     Reload();
@@ -445,7 +441,7 @@ namespace Game.Characters.Player
             CombatManager.UpdatePlayerHealth();
             FacingDirection = Direction.Right;
             InputHandler.RegisterInputListener(this);
-            UIMagazineController.SetWeapon(EquipmentController.Weapon());
+            UIMagazineController.SetWeapon(Weapon);
         }
 
         public override void ExitCombat()

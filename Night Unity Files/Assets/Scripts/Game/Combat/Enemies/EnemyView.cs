@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+﻿using Game.Characters;
 using Game.Characters.Player;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using SamsHelper;
@@ -11,15 +11,16 @@ namespace Game.Combat.Enemies
 {
     public class EnemyView : BasicEnemyView
     {
-        public TextMeshProUGUI CoverText, ActionText, HealthText, ArmourText;
+        public TextMeshProUGUI ActionText, HealthText, ArmourText;
         private UIArmourController _uiArmourController;
         public UIHealthBarController HealthBar;
         public UIAimController UiAimController;
+        public UIHitController UiHitController;
         private float _currentFadeInTime = 2f;
         private const float MaxFadeInTime = 2f;
         private bool _inSight;
         private string _actionString;
-        private Enemy _enemy;
+        private readonly Enemy _enemy;
 
         public EnemyView(MyGameObject linkedObject, Transform parent) : base(linkedObject, parent, "Prefabs/Inventory/EnemyItem")
         {
@@ -31,8 +32,8 @@ namespace Game.Combat.Enemies
         protected override void CacheUiElements()
         {
             base.CacheUiElements();
-            CoverText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Cover");
-            CoverText.text = "No Cover";
+            UiHitController = Helper.FindChildWithName<UIHitController>(GameObject, "Cover");
+            UiHitController.SetCharacter((Character) LinkedObject);
             HealthText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Health Text");
             ArmourText = Helper.FindChildWithName<TextMeshProUGUI>(GameObject, "Armour Text");
             UiAimController = Helper.FindChildWithName<UIAimController>(GameObject, "Aim Timer");
@@ -87,17 +88,14 @@ namespace Game.Combat.Enemies
 
         public void SetArmour(int armourLevel, bool inCover)
         {
+            //todo get armour
             if (!_inSight) return;
             _uiArmourController.SetArmourValue(armourLevel);
-            float armourProtection = 1 - armourLevel / 10f;
-            string coverString = "No Cover";
+            float armourProtection = armourLevel / 10f;
             if (inCover)
             {
-                armourProtection /= 2f;
-                coverString = "In Cover";
+                armourProtection = 0;
             }
-
-            CoverText.text = coverString;
             ArmourText.text = armourProtection + "x damage";
         }
 

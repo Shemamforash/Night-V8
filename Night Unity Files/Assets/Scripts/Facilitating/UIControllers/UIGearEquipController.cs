@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Characters;
+using Game.Gear.Armour;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -23,13 +27,26 @@ public class UIGearEquipController : Menu
             Character c = (Character) viewParent.GetLinkedObject();
             InventoryUi inventoryUi = (InventoryUi) viewParent;
             inventoryUi.SetLeftTextCallback(() => c.Name);
-            string gearName = c.EquipmentController.Weapon() == null ? "Nothing Equipped" : c.EquipmentController.Weapon().Name;
+            string gearName = c.Weapon == null ? "Nothing Equipped" : c.Weapon.Name;
             inventoryUi.SetCentralTextCallback(() => gearName);
-            string gearInfo = c.EquipmentController.Weapon() == null ? "--" : c.EquipmentController.Weapon().GetSummary();
+            string gearInfo = c.Weapon == null ? "--" : c.Weapon.GetSummary();
             inventoryUi.SetRightTextCallback(() => gearInfo);
             inventoryUi.PrimaryButton.AddOnClick(() =>
             {
-                c.Equip(gear);
+                switch (gear.GetGearType())
+                {
+                    case GearSubtype.Weapon:
+                        c.EquipWeapon((Weapon) gear);
+                        break;
+                    case GearSubtype.Armour:
+                        c.EquipArmour((Armour) gear);
+                        break;
+                    case GearSubtype.Accessory:
+                        c.EquipAccessory((Accessory) gear);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
                 MenuStateMachine.GoToInitialMenu();
             });
         }
@@ -46,7 +63,20 @@ public class UIGearEquipController : Menu
             GearItem gearItem = (GearItem) inventoryUi.GetLinkedObject();
             inventoryUi.PrimaryButton.AddOnClick(() =>
             {
-                character.Equip(gearItem);
+                switch (gearItem.GetGearType())
+                {
+                    case GearSubtype.Weapon:
+                        character.EquipWeapon((Weapon) gearItem);
+                        break;
+                    case GearSubtype.Armour:
+                        character.EquipArmour((Armour) gearItem);
+                        break;
+                    case GearSubtype.Accessory:
+                        character.EquipAccessory((Accessory) gearItem);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
                 MenuStateMachine.GoToInitialMenu();
             });
         }

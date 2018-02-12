@@ -19,13 +19,13 @@ public class RetryMenu : Menu
 		++_currentDanger;
 		CombatScenario scenario = CombatScenario.Generate(_currentDanger);
 		CombatManager.EnterCombat(_player, scenario);
-		_player.EquipmentController.Weapon().IncreaseDurability();
+		_player.Weapon.IncreaseDurability();
 	}
 
 	public static void StartCombat(Player p, Weapon w)
 	{
 		_currentDanger = 0;
-		p.Equip(w);
+		p.EquipWeapon(w);
 		_player = p;
 		_player.Inventory().IncrementResource(w.WeaponAttributes.AmmoType, 21);
 		w.Reload(_player.Inventory());

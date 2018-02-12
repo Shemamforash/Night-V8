@@ -24,22 +24,21 @@ public class UIArmourController : MonoBehaviour
             LayoutElement layout = newSegment.AddComponent<LayoutElement>();
             layout.preferredHeight = GetComponent<RectTransform>().rect.height;
             newSegment.name = "Armour Piece " + (i + 1);
-            newSegment.SetActive(false);
             _armourSegments.Add(newSegment);
         }
     }
 
     public void SetArmourValue(int armourLevel)
     {
-        GetComponent<RectTransform>().anchorMin = new Vector2(1 - armourLevel / 10f, 0.5f);
-        for (int i = 0; i < _armourSegments.Count; ++i)
+        for (int i = _armourSegments.Count - 1; i >= 0; --i)
         {
-            _armourSegments[i].SetActive(i < armourLevel);
-        }
-    }
+            Color c = new Color(1, 1, 1, 0.4f);
+            if (i >= armourLevel)
+            {
+                c = Color.white;
+            }
 
-    public void SetColor(Color c)
-    {
-        _armourSegments.ForEach(a => a.GetComponent<Image>().color = c);
+            _armourSegments[i].GetComponent<Image>().color = c;
+        }
     }
 }
