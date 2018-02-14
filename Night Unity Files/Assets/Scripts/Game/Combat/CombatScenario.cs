@@ -24,15 +24,8 @@ namespace Game.Combat
         public static CombatScenario GenerateSimple()
         {
             CombatScenario scenario = new CombatScenario();
-
-            //                scenario.AddEnemy(new Sniper(RandomPosition()));
-//                scenario.AddEnemy(new Martyr(RandomPosition()));
-//                scenario.AddEnemy(new Medic(RandomPosition()));
-//                scenario.AddEnemy(new Mountain(RandomPosition()));
-            scenario.AddEnemy(new Sentinel(RandomPosition()));
-//                scenario.AddEnemy(new Warlord(RandomPosition()));
-            scenario.AddEnemy(new Witch(RandomPosition()));
-//                scenario.AddEnemy(new Brawler(RandomPosition()));
+            scenario.AddEnemy(new Enemy(EnemyType.Sentinel));
+            scenario.AddEnemy(new Enemy(EnemyType.Witch));
             return scenario;
         }
 
@@ -41,33 +34,33 @@ namespace Game.Combat
             return Random.Range(40f, 60f);
         }
         
-        private static void AddEnemy(string enemyName, CombatScenario scenario)
+        private static void AddEnemy(EnemyType enemyType, CombatScenario scenario)
         {
-            switch (enemyName)
+            switch (enemyType)
             {
-                case nameof(Sentinel):
-                    scenario.AddEnemy(new Sentinel(RandomPosition()));
+                case EnemyType.Sentinel:
+                    scenario.AddEnemy(new Enemy(EnemyType.Sentinel));
                     break;
-                case nameof(Martyr):
-                    scenario.AddEnemy(new Martyr(RandomPosition()));
+                case EnemyType.Martyr:
+                    scenario.AddEnemy(new Enemy(EnemyType.Martyr));
                     break;
-                case nameof(Brawler):
-                    scenario.AddEnemy(new Brawler(RandomPosition()));
+                case EnemyType.Brawler:
+                    scenario.AddEnemy(new Enemy(EnemyType.Brawler));
                     break;
-                case nameof(Sniper):
-                    scenario.AddEnemy(new Sniper(RandomPosition()));
+                case EnemyType.Sniper:
+                    scenario.AddEnemy(new Enemy(EnemyType.Sniper));
                     break;
-                case nameof(Mountain):
-                    scenario.AddEnemy(new Mountain(RandomPosition()));
+                case EnemyType.Mountain:
+                    scenario.AddEnemy(new Enemy(EnemyType.Mountain));
                     break;
-                case nameof(Witch):
-                    scenario.AddEnemy(new Witch(RandomPosition()));
+                case EnemyType.Witch:
+                    scenario.AddEnemy(new Enemy(EnemyType.Witch));
                     break;
-                case nameof(Medic):
-                    scenario.AddEnemy(new Medic(RandomPosition()));
+                case EnemyType.Medic:
+                    scenario.AddEnemy(new Enemy(EnemyType.Medic));
                     break;
-                case nameof(Warlord):
-                    scenario.AddEnemy(new Warlord(RandomPosition()));
+                case EnemyType.Warlord:
+                    scenario.AddEnemy(new Enemy(EnemyType.Warlord));
                     break;
             }
         }
@@ -88,7 +81,7 @@ namespace Game.Combat
                 foreach(EnemyTemplate t in _enemyTypes)
                 {
                     if (difficulty < t.Value) continue;
-                    AddEnemy(t.Name, scenario);
+                    AddEnemy(t.EnemyType, scenario);
                     if (scenario.ReachedMaxEncounterSize()) break;
                     difficulty -= t.Value;
                 }

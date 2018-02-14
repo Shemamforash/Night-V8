@@ -1,4 +1,5 @@
 ﻿using System;
+using Facilitating.UIControllers;
 using Game.Combat.Enemies;
 using Game.Gear.Weapons;
 
@@ -106,9 +107,9 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            foreach (Enemy e in UIEnemyController.Enemies)
+            foreach (DetailedEnemyCombat e in UIEnemyController.Enemies)
             {
-                Shot s = new Shot(e, Player());
+                Shot s = new Shot(e, CombatManager.Player);
                 s.Fire();
             }
         }
@@ -125,7 +126,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().Weapon.Reload(Player().Inventory());
+            CombatManager.Player.Weapon().Reload(CombatManager.Player.Player.Inventory());
         }
     }
 
@@ -138,7 +139,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().OnFireAction += s => { s.SetKnockdownChance(0.25f, 2); };
+            CombatManager.Player.OnFireAction += s => { s.SetKnockdownChance(0.25f, 2); };
         }
     }
     
@@ -153,7 +154,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().OnFireAction += s => { s.SetNumberOfShots(2); };
+            CombatManager.Player.OnFireAction += s => { s.SetNumberOfShots(2); };
         }
     }
 
@@ -166,7 +167,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().OnFireAction += s => { s.AddOnHit(() => { Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt()); }); };
+            CombatManager.Player.OnFireAction += s => { s.AddOnHit(() => { Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt()); }); };
         }
     }
 
@@ -181,10 +182,10 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().OnFireAction += s =>
+            CombatManager.Player.OnFireAction += s =>
             {
-                Player().RageController.Increase(1);
-                Player().RageController.TryStart();
+                CombatManager.Player.RageController.Increase(1);
+                CombatManager.Player.RageController.TryStart();
             };
         }
     }
@@ -198,7 +199,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().Retaliate = true;
+            CombatManager.Player.Retaliate = true;
         }
     }
 }

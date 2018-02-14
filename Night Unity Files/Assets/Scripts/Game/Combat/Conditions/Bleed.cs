@@ -5,7 +5,7 @@ namespace Game.Combat
 {
     public class Bleed : Condition
     {
-        public Bleed(Character character) : base(character, 2, 1)
+        public Bleed(CharacterCombat character) : base(character, 2, 1)
         {
         }
 

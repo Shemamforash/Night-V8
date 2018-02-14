@@ -5,7 +5,7 @@ namespace Game.Combat
 {
     public class Burn : Condition
     {
-        public Burn(Character character) : base(character, 5, 4)
+        public Burn(CharacterCombat character) : base(character, 5, 4)
         {
         }
 

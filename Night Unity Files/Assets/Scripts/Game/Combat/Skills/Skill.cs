@@ -73,7 +73,7 @@ namespace Game.Combat.Skills
 
         protected static Player Player()
         {
-            return CombatManager.Player;
+            return CombatManager.Player.Player;
         }
 
         protected Skill(string name, bool waitForReload = false) : base(CombatManager.CombatCooldowns)
@@ -89,11 +89,11 @@ namespace Game.Combat.Skills
             if (Running()) return;
             if (!CombatManager.Player.RageController.Spend(Cost)) return;
             OnFire();
-            Player().UpdateMagazineUi();
+            CombatManager.Player.UpdateMagazineUi();
             if (!_waitForReload) Start();
             else
             {
-                Player().OnReloadAction += StartOnReload;
+                CombatManager.Player.OnReloadAction += StartOnReload;
             }
         }
 
@@ -101,7 +101,7 @@ namespace Game.Combat.Skills
         {
             if (Running() || !_fired) return;
             Start();
-            Player().OnReloadAction -= StartOnReload;
+            CombatManager.Player.OnReloadAction -= StartOnReload;
         }
 
         protected virtual void OnFire()
@@ -112,7 +112,7 @@ namespace Game.Combat.Skills
 
         protected static Shot CreateShot()
         {
-            return new Shot(CombatManager.GetCurrentTarget(), Player());
+            return new Shot(CombatManager.Player.CurrentTarget, CombatManager.Player);
         }
 
         public override void SetController(CooldownController controller)

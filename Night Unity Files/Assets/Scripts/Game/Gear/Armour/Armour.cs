@@ -10,7 +10,8 @@ namespace Game.Gear.Armour
 {
     public class Armour : GearItem
     {
-        public readonly AttributeModifier ArmourRating, PerceptionModifier, WillpowerModifier, StrengthModifier, EnduranceModifier;
+        public readonly AttributeModifier PerceptionModifier, WillpowerModifier, StrengthModifier, EnduranceModifier;
+        public readonly int ArmourRating;
         public readonly string Description;
         
         public Armour(string name, int weight, string description, int armourRating, int perceptionModifier, int willpowerModifier, int strengthModifier, int enduranceModifier) : base(name, weight, GearSubtype.Armour)

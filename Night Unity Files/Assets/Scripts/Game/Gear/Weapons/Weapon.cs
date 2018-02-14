@@ -48,7 +48,7 @@ namespace Game.Gear.Weapons
             return !Empty() && FireRateElapsedTimeMet();
         }
         
-        public Shot Fire(Character target, Character origin)
+        public Shot Fire(CharacterCombat target, CharacterCombat origin)
         {
             _timeAtLastFire = Helper.TimeInMillis();
             return new Shot(target, origin);

@@ -209,6 +209,7 @@ class EnemyImporter(XMLWriter):
         write_single_value(self, "Health", get_value(self, "B", row))
         write_single_value(self, "Speed", get_value(self, "C", row))
         write_single_value(self, "Value", get_value(self, "D", row))
+        write_single_value(self, "WeaponTypes", get_value(self, "E", row))
 
 
 class SkillImporter(XMLWriter):
@@ -270,11 +271,11 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-WeaponImporter()
+# WeaponImporter()
 # GearImporter()
 # WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
-# EnemyImporter()
+EnemyImporter()
 # SkillImporter()
 # TraitImporter()

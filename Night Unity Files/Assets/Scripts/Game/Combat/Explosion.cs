@@ -27,8 +27,8 @@ namespace Game.Combat
 
         public void Fire()
         {
-            List<Character> charactersInRange = CombatManager.GetCharactersInRange(_position, _radius);
-            foreach (Character c in charactersInRange)
+            List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(_position, _radius);
+            foreach (CharacterCombat c in charactersInRange)
             {
                 c.OnHit(_damage, false);
                 c.Knockback(_knockbackDistance);

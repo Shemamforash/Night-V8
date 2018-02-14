@@ -27,7 +27,7 @@ using UnityEngine.SceneManagement;
 
 namespace Game.Characters.Player
 {
-    public class Player : Character, IInputListener
+    public class Player : Character
     {
         public readonly StateMachine States = new StateMachine();
         public readonly CharacterTemplate CharacterTemplate;
@@ -35,9 +35,7 @@ namespace Game.Characters.Player
         public CharacterView CharacterView;
         public readonly DesolationAttributes Attributes;
         public readonly Number Energy = new Number();
-        public event Action<Shot> OnFireAction;
-        public event Action OnReloadAction;
-        public bool Retaliate;
+       
 
         private CollectResources _collectResourcesAction;
         private Sleep _sleepAction;
@@ -47,15 +45,10 @@ namespace Game.Characters.Player
         private CraftAmmo _craftAmmoAction;
         private CharacterActions.Combat _combatAction;
         private LightFire _lightFireAction;
-        public readonly RageController RageController;
-
-        private Cooldown _reloadingCooldown;
 
         private int _storyProgress;
-
         public Skill CharacterSkillOne, CharacterSkillTwo;
-
-        private bool _fired;
+      
 
         public string GetCurrentStoryProgress()
         {
@@ -68,7 +61,7 @@ namespace Game.Characters.Player
         public override void Kill()
         {
             if (SceneManager.GetActiveScene().name == "Game") WorldState.HomeInventory().RemoveItem(this);
-            if (CombatManager.Player == this) CombatManager.FailCombat();
+            if (CombatManager.Player.Player == this) CombatManager.FailCombat();
         }
 
         //Create Character in code only- no view section, no references to objects in the scene
@@ -76,63 +69,18 @@ namespace Game.Characters.Player
         {
             Debug.Log("Created");
             Attributes = new DesolationAttributes(this);
-            MovementController = new MovementController(this, 0);
             CharacterTemplate = characterTemplate;
             CharacterSkillOne = CharacterSkills.GetCharacterSkillOne(this);
             CharacterSkillTwo = CharacterSkills.GetCharacterSkillTwo(this);
             CharacterInventory.MaxWeight = 50;
             Attributes.Endurance.AddOnValueChange(a => { Energy.Max = a.CurrentValue(); });
-            RageController = new RageController(this);
-            HealthController.AddOnHeal(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
-            HealthController.AddOnTakeDamage(a => UpdateHealthUi(HealthController.GetNormalisedHealthValue()));
+            
             Energy.OnMin(Sleep);
-            Position.AddOnValueChange(a => { UIEnemyController.Enemies.ForEach(e => e.Position.UpdateValueChange()); });
-            SetReloadCooldown();
         }
 
         ~Player()
         {
             Debug.Log("Destroyed " + Name);
-        }
-
-        public void OnHit(Shot shot, int damage)
-        {
-            OnHit(damage, shot.IsCritical);
-            if (shot.Origin() == null) return;
-            if (Retaliate) FireWeapon(shot.Origin());
-        }
-
-        private void ChangeCover()
-        {
-            if (InCover) LeaveCover();
-            else TakeCover();
-        }
-
-        public override void TakeCover()
-        {
-            base.TakeCover();
-            CombatManager.SetCentralViewAlpha(0.4f);
-            CombatManager.SetCoverText("In Cover");
-        }
-
-        public override void LeaveCover()
-        {
-            base.LeaveCover();
-            CombatManager.SetCentralViewAlpha(1f);
-            CombatManager.SetCoverText("Exposed");
-        }
-
-        protected override void KnockDown()
-        {
-            if (IsKnockedDown) return;
-            base.KnockDown();
-            UIKnockdownController.StartKnockdown(10);
-        }
-
-        private void UpdateHealthUi(float normalisedHealth)
-        {
-            HeartBeatController.SetHealth(normalisedHealth);
-            CombatManager.UpdatePlayerHealth();
         }
 
         public override XmlNode Save(XmlNode doc, PersistenceType saveType)
@@ -148,15 +96,6 @@ namespace Game.Characters.Player
         public override ViewParent CreateUi(Transform parent)
         {
             return new InventoryUi(this, parent);
-        }
-
-        protected override void SetConditions()
-        {
-            base.SetConditions();
-            Burn.OnConditionNonEmpty = CombatManager.PlayerHealthBar.StartBurning;
-            Burn.OnConditionEmpty = CombatManager.PlayerHealthBar.StopBurning;
-            Bleeding.OnConditionNonEmpty = CombatManager.PlayerHealthBar.StartBleeding;
-            Bleeding.OnConditionEmpty = CombatManager.PlayerHealthBar.StopBleeding;
         }
 
         //Links character to object in scene
@@ -257,202 +196,10 @@ namespace Game.Characters.Player
             CharacterView?.AccessoryGearUi.SetGearItem(accessory);
         }
 
-        //MISC
-        public override bool Immobilised()
-        {
-            return _reloadingCooldown.Running() || IsKnockedDown;
-        }
-
-        //RELOADING
-        private void Reload()
-        {
-            if (Immobilised()) return;
-            if (_reloadingCooldown.Running()) return;
-            if (Weapon.FullyLoaded()) return;
-            if (Weapon.GetRemainingMagazines() == 0) return;
-            OnFireAction = null;
-            Retaliate = false;
-            float reloadSpeed = Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
-            UIMagazineController.EmptyMagazine();
-            _reloadingCooldown.Duration = reloadSpeed;
-            _reloadingCooldown.Start();
-            _fired = false;
-        }
-
-        private void StopReloading()
-        {
-            if (_reloadingCooldown == null || _reloadingCooldown.Finished()) return;
-            _reloadingCooldown.Cancel();
-        }
-
-        //COOLDOWNS
-
-        private void SetReloadCooldown()
-        {
-            _reloadingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
-            _reloadingCooldown.SetStartAction(() =>
-            {
-                Weapon.Reload(Inventory());
-                UpdateMagazineUi();
-            });
-            _reloadingCooldown.SetDuringAction(t =>
-            {
-                if (t > _reloadingCooldown.Duration * 0.8f)
-                {
-                    UIMagazineController.EmptyMagazine();
-                }
-                else
-                {
-                    t = (t - _reloadingCooldown.Duration * 0.2f) / (_reloadingCooldown.Duration * 0.8f);
-                    t = 1 - t;
-                    UIMagazineController.UpdateReloadTime(t);
-                }
-            });
-            _reloadingCooldown.SetEndAction(() => OnReloadAction?.Invoke());
-        }
-
-        //FIRING
-        protected override Shot FireWeapon(Character target)
-        {
-            Shot shot = base.FireWeapon(target);
-            if (shot != null)
-            {
-                if (RageController.Active()) shot.GuaranteeCritical();
-                shot.SetDamageModifier(Attributes.GetGunDamageModifier());
-                OnFireAction?.Invoke(shot);
-                UpdateMagazineUi();
-                shot.Fire();
-                _fired = true;
-            }
-
-            return shot;
-        }
-
-        //MISC
-
-        protected override void Interrupt()
-        {
-            StopReloading();
-            MovementController.StopSprinting();
-            UpdateMagazineUi();
-        }
-
-        public void UpdateMagazineUi()
-        {
-            string magazineMessage = "";
-            if (Weapon.GetRemainingMagazines() == 0) magazineMessage = "NO AMMO";
-            else if (Weapon.Empty())
-                magazineMessage = "RELOAD";
-            if (magazineMessage == "")
-            {
-                UIMagazineController.UpdateMagazine();
-            }
-            else
-            {
-                UIMagazineController.EmptyMagazine();
-                UIMagazineController.SetMessage(magazineMessage);
-            }
-        }
-
-        private void TryMelee()
-        {
-            if (CombatManager.CurrentTarget.DistanceToPlayer <= Enemy.MeleeDistance)
-            {
-                MeleeController.StartMelee(CombatManager.CurrentTarget);
-            }
-        }
-
-        //INPUT
-
-        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-            if (Immobilised()) return;
-            switch (axis)
-            {
-                case InputAxis.Cover:
-                    if (!isHeld) ChangeCover();
-                    break;
-                case InputAxis.Enrage:
-                    RageController.TryStart();
-                    break;
-                case InputAxis.Fire:
-                    if (!_fired && isHeld) break;
-                    if (!_fired || Weapon.WeaponAttributes.Automatic) FireWeapon(CombatManager.CurrentTarget);
-                    break;
-                case InputAxis.Reload:
-                    Reload();
-                    break;
-                case InputAxis.Horizontal:
-                    MovementController.Move(direction);
-                    break;
-                case InputAxis.Sprint:
-                    MovementController.StartSprinting();
-                    break;
-                case InputAxis.Melee:
-                    TryMelee();
-                    break;
-                case InputAxis.SkillOne:
-                    SkillBar.ActivateSkill(0);
-                    break;
-                case InputAxis.SkillTwo:
-                    SkillBar.ActivateSkill(1);
-                    break;
-                case InputAxis.SkillThree:
-                    SkillBar.ActivateSkill(2);
-                    break;
-                case InputAxis.SkillFour:
-                    SkillBar.ActivateSkill(3);
-                    break;
-            }
-        }
-
-        public void OnInputUp(InputAxis axis)
-        {
-            switch (axis)
-            {
-                case InputAxis.Fire:
-                    _fired = false;
-                    break;
-                case InputAxis.Sprint:
-                    MovementController.StopSprinting();
-                    break;
-            }
-        }
-
-        public void OnDoubleTap(InputAxis axis, float direction)
-        {
-            if (axis == InputAxis.Horizontal)
-            {
-                MovementController.Dash(direction);
-            }
-        }
-
+        
         public void CollectResourcesInRegion(Region region)
         {
             _collectResourcesAction.SetTargetRegion(region);
-        }
-
-        public override void EnterCombat()
-        {
-            base.EnterCombat();
-            RageController.EnterCombat();
-            SetConditions();
-            SkillBar.BindSkills(this);
-            CombatManager.UpdatePlayerHealth();
-            FacingDirection = Direction.Right;
-            InputHandler.RegisterInputListener(this);
-            UIMagazineController.SetWeapon(Weapon);
-        }
-
-        public override void ExitCombat()
-        {
-            UIKnockdownController.Exit();
-            MeleeController.Exit();
-            IsKnockedDown = false;
-            StopReloading();
-            InputHandler.UnregisterInputListener(this);
-            Position.SetCurrentValue(0);
-            _fired = false;
         }
     }
 }

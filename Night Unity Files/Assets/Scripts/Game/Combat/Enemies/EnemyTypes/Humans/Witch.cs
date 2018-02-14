@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Facilitating.UIControllers;
+using Game.Characters;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using Game.Gear.Weapons;
 using UnityEngine;
@@ -8,41 +10,41 @@ using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
-    public class Witch : Enemy
+    public class Witch : DetailedEnemyCombat
     {
         private int _damageTaken;
         private float _targetTime;
         private bool _throwing;
 
-        public Witch(float position) : base(nameof(Witch), position)
+        public override void SetPlayer(Character enemy)
         {
-            GenerateWeapon(new List<WeaponType> {WeaponType.Pistol, WeaponType.SMG});
-            //todo remove me
-            ArmourLevel.SetCurrentValue(4);
+            base.SetPlayer(enemy);
             MinimumFindCoverDistance = 5f;
+            ArmourController.SetArmourValue(5);
         }
 
         private Action ThrowGrenade()
         {
             _throwing = true;
             float throwDuration = 2f;
-            EnemyView.SetActionText("Throwing Grenade");
+            SetActionText("Throwing Grenade");
             return () =>
             {
                 throwDuration -= Time.deltaTime;
                 if (throwDuration > 0) return;
                 float currentPosition = Position.CurrentValue();
-                float targetPosition = Player.Position.CurrentValue();
+                //todo get player
+                float targetPosition = CombatManager.Player.Position.CurrentValue();
                 switch (Random.Range(0, 3))
                 {
                     case 0:
-                        UIGrenadeController.AddGrenade(new Grenade(currentPosition, targetPosition));
+                        UIGrenadeController.AddGrenade(MiscEnemyType.Grenade, currentPosition, targetPosition);
                         break;
                     case 1:
-                        UIGrenadeController.AddGrenade(new SplinterGrenade(currentPosition, targetPosition));
+                        UIGrenadeController.AddGrenade(MiscEnemyType.Incendiary, currentPosition, targetPosition);
                         break;
                     case 2:
-                        UIGrenadeController.AddGrenade(new IncendiaryGrenade(currentPosition, targetPosition));
+                        UIGrenadeController.AddGrenade(MiscEnemyType.Splinter, currentPosition, targetPosition);
                         break;
                 }
 

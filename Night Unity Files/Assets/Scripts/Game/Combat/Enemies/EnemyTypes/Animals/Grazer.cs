@@ -4,13 +4,13 @@ namespace Game.Combat.Enemies.EnemyTypes
 {
     public class Grazer : Enemy
     {
-        public Grazer(float position) : base(nameof(Grazer), position)
-        {
-        }
-
-        public void InitialiseBehaviour(Enemy enemy)
-        {
-        }
+//        public Grazer(float position) : base(nameof(Grazer), position)
+//        {
+//        }
+//
+//        public void InitialiseBehaviour(Enemy enemy)
+//        {
+//        }
 
 //        public override void InitialiseBehaviour(EnemyPlayerRelation relation)
 //        {
@@ -23,5 +23,8 @@ namespace Game.Combat.Enemies.EnemyTypes
 //            SetReciprocralBehaviour(wander, graze);
 //            EnemyBehaviour.NavigateToState(wander.Name);
 //        }
+        protected Grazer(EnemyType type) : base(type)
+        {
+        }
     }
 }

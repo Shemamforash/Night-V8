@@ -1,52 +1,75 @@
 ﻿using System;
-using Game.Combat;
-using Game.Combat.Enemies;
-using Game.Combat.Enemies.EnemyTypes.Misc;
-using SamsHelper.ReactiveUI.InventoryUI;
+using System.Collections;
+using Facilitating.UIControllers;
+using SamsHelper;
+using TMPro;
 using UnityEngine;
 
-public class Grenade : CombatItem
+namespace Game.Combat.Enemies.EnemyTypes.Misc
 {
-	private int _damage = 20;
-	public BasicEnemyView GrenadeView;
-	private Action _moveAction;
+	public class Grenade : MonoBehaviour
+	{
+		private int _damage = 20;
+		private Action _moveAction;
+		private float _speed = 15;
+		private TextMeshProUGUI _distanceText;
+		public float CurrentPosition;
+		private float _targetPosition;
+
+		public virtual void Awake()
+		{
+			_distanceText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Distance");
+			SetName("Grenade");
+			StartCoroutine(MoveToPosition());
+		}
+
+		protected void SetName(string grenadeName)
+		{
+			Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name").text = grenadeName;
+		}
+
+		private IEnumerator MoveToPosition()
+		{
+			bool reachedTarget = false;
+			while (!reachedTarget)
+			{
+				if (_targetPosition < CurrentPosition) _speed = -_speed;
+				float lastPosition = CurrentPosition;
+				CurrentPosition += _speed * Time.deltaTime;
+				if (lastPosition > _targetPosition && CurrentPosition <= _targetPosition)
+				{
+					CurrentPosition = _targetPosition;
+					reachedTarget = true;
+				}
+				else if(lastPosition < _targetPosition && CurrentPosition >= _targetPosition)
+				{
+					CurrentPosition = _targetPosition;
+					reachedTarget = true;
+				}
+
+				_distanceText.text = CombatManager.DistanceBetween(CurrentPosition, CombatManager.Player) + "m";
+				yield return null;
+			}
+			CreateExplosion();
+			UIGrenadeController.RemoveGrenade(this);
+		}
 	
-	public Grenade(float position, float targetPosition, string name = "Grenade") : base(name, position)
-	{
-		_moveAction = MoveToTargetPosition(targetPosition);
-		MovementController.SetSpeed(15);
-	}
+		public void SetTargetPosition(float currentPosition, float targetPosition)
+		{
+			CurrentPosition = currentPosition;
+			SetTargetPosition(targetPosition);
+		}
 
-	protected override void ReachTarget()
-	{
-		CreateExplosion();
-		Kill();
-		UIGrenadeController.RemoveGrenade(this);
-	}
+		public void SetTargetPosition(float targetPosition)
+		{
+			_targetPosition = targetPosition;
+		}
 
-	protected virtual void CreateExplosion()
-	{
-		Explosion explosion = new Explosion(Position.CurrentValue(), 5, 20);
-		explosion.SetKnockbackDistance(5);
-		explosion.Fire();
-	}
-
-	public override ViewParent CreateUi(Transform parent)
-	{
-		GrenadeView = new BasicEnemyView(this, parent);
-		GrenadeView.SetNavigatable(false);
-		SetDistanceData(GrenadeView);
-		GrenadeView.SetNavigatable(false);
-		return GrenadeView;
-	}
-
-	public void SetTargetPosition(float targetPosition)
-	{
-		_moveAction = MoveToTargetPosition(targetPosition);
-	}
-	
-	public override void UpdateCombat()
-	{
-		_moveAction();
+		protected virtual void CreateExplosion()
+		{
+			Explosion explosion = new Explosion(CurrentPosition, 5, 20);
+			explosion.SetKnockbackDistance(5);
+			explosion.Fire();
+		}
 	}
 }

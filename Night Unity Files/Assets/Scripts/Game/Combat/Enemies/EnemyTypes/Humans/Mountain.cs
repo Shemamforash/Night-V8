@@ -1,16 +1,18 @@
 ﻿using System;
+using Game.Characters;
 using Game.Gear.Weapons;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
-    public class Mountain : Enemy
+    public class Mountain : DetailedEnemyCombat
     {
         private bool _firedVolley;
 
-        public Mountain(float position) : base(nameof(Mountain), position)
+        public override void SetPlayer(Character enemy)
         {
-            GenerateWeapon(WeaponType.LMG);
-            ArmourLevel.SetCurrentValue(4);
+            base.SetPlayer(enemy);
+            MinimumFindCoverDistance = 20f;
+            ArmourController.SetArmourValue(4);
         }
 
         public override void ChooseNextAction()

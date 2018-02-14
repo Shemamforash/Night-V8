@@ -4,9 +4,9 @@ namespace Game.Combat.Enemies.EnemyTypes
 {
     public class Watcher : Enemy
     {
-        public Watcher(float position) : base(nameof(Watcher), position)
-        {
-        }
+//        public Watcher(float position) : base(nameof(Watcher), position)
+//        {
+//        }
 
 //        public override void InitialiseBehaviour(EnemyPlayerRelation relation)
 //        {
@@ -34,5 +34,8 @@ namespace Game.Combat.Enemies.EnemyTypes
 //            SetReciprocralBehaviour(watch, wander);
 //            EnemyBehaviour.NavigateToState(wander.Name);
 //        }
+        protected Watcher(EnemyType type) : base(type)
+        {
+        }
     }
 }

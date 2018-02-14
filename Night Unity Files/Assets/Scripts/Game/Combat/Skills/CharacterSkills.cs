@@ -1,4 +1,5 @@
 ﻿using System;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.Player;
 using Game.Combat.Enemies;
@@ -78,7 +79,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().HealthController.Heal(10);
+            CombatManager.Player.HealthController.Heal(10);
         }
     }
 
@@ -91,7 +92,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().HealthController.Heal(50);
+            CombatManager.Player.HealthController.Heal(50);
             SkillBar.ResetSkillTimers();
         }
     }
@@ -107,7 +108,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().ArmourLevel.Increment(2);
+            CombatManager.Player.ArmourController.IncrementArmour(2);
         }
     }
 
@@ -130,8 +131,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            IncendiaryGrenade g = new IncendiaryGrenade(Player().Position.CurrentValue(), CombatManager.CurrentTarget.Position.CurrentValue());
-            UIGrenadeController.AddGrenade(g);
+            UIGrenadeController.AddGrenade(MiscEnemyType.Incendiary, CombatManager.Player.Position.CurrentValue(), CombatManager.Player.CurrentTarget.Position.CurrentValue());
         }
     }
 
@@ -144,8 +144,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            SplinterGrenade g = new SplinterGrenade(Player().Position.CurrentValue(), CombatManager.CurrentTarget.Position.CurrentValue());
-            UIGrenadeController.AddGrenade(g);
+            UIGrenadeController.AddGrenade(MiscEnemyType.Splinter, CombatManager.Player.Position.CurrentValue(), CombatManager.Player.CurrentTarget.Position.CurrentValue());
         }
     }
 
@@ -160,7 +159,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            CombatManager.CurrentTarget.CurrentAction = CombatManager.CurrentTarget.MoveToTargetDistance(0);
+            CombatManager.Player.CurrentTarget.CurrentAction = CombatManager.Player.CurrentTarget.MoveToTargetDistance(0);
         }
     }
 
@@ -173,7 +172,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Enemy nearestEnemy = UIEnemyController.NearestEnemy();
+            DetailedEnemyCombat nearestEnemy = UIEnemyController.NearestEnemy();
             if (nearestEnemy?.DistanceToPlayer <= 5)
             {
                 nearestEnemy.Knockback(5);
@@ -193,7 +192,7 @@ namespace Game.Combat.Skills
         {
             base.OnFire();
             float distance = Random.Range(CombatManager.VisibilityRange / 2, CombatManager.VisibilityRange);
-            CombatManager.CurrentTarget.CurrentAction = CombatManager.CurrentTarget.MoveToTargetDistance(distance);
+            CombatManager.Player.CurrentTarget.CurrentAction = CombatManager.Player.CurrentTarget.MoveToTargetDistance(distance);
         }
     }
 
@@ -206,7 +205,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            foreach (Enemy e in UIEnemyController.Enemies)
+            foreach (DetailedEnemyCombat e in UIEnemyController.Enemies)
             {
                 e.Knockback(0);
             }
@@ -226,11 +225,9 @@ namespace Game.Combat.Skills
             base.OnFire();
             foreach (Grenade g in UIGrenadeController.Grenades)
             {
-                if (g.DistanceToPlayer < 5)
-                {
-                    g.SetTargetPosition(CombatManager.CurrentTarget.Position.CurrentValue());
-                    break;
-                }
+                if (CombatManager.DistanceBetween(g.CurrentPosition, CombatManager.Player) > 5) continue;
+                g.SetTargetPosition(CombatManager.Player.CurrentTarget.Position.CurrentValue());
+                break;
             }
         }
     }
@@ -255,8 +252,8 @@ namespace Game.Combat.Skills
         {
             base.OnFire();
 
-            Player().RageController.Increase(Player().RageController.CurrentValue());
-            Player().HealthController.TakeDamage((int) (Player().HealthController.GetCurrentHealth() / 2f));
+            CombatManager.Player.RageController.Increase(CombatManager.Player.RageController.CurrentValue());
+            CombatManager.Player.HealthController.TakeDamage((int) (CombatManager.Player.HealthController.GetCurrentHealth() / 2f));
         }
     }
 
@@ -269,7 +266,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            foreach (Enemy e in UIEnemyController.Enemies)
+            foreach (DetailedEnemyCombat e in UIEnemyController.Enemies)
             {
                 if (e.DistanceToPlayer > 5 || !e.IsKnockedDown || e.HealthController.GetCurrentHealth() > 100) continue;
                 e.HealthController.TakeDamage(101);
@@ -317,7 +314,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().Position.SetCurrentValue(CombatManager.CurrentTarget.Position.CurrentValue() - 5);
+            CombatManager.Player.Position.SetCurrentValue(CombatManager.Player.CurrentTarget.Position.CurrentValue() - 5);
         }
     }
 
@@ -330,8 +327,8 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Player().Position.SetCurrentValue(UIEnemyController.NearestEnemy().Position.CurrentValue() - 10);
-            foreach (Enemy e in UIEnemyController.Enemies)
+            CombatManager.Player.Position.SetCurrentValue(UIEnemyController.NearestEnemy().Position.CurrentValue() - 10);
+            foreach (DetailedEnemyCombat e in UIEnemyController.Enemies)
             {
                 e.Reset();
             }
@@ -349,9 +346,9 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            if (CombatManager.CurrentTarget.DistanceToPlayer > Enemy.MeleeDistance) return;
-            CombatManager.CurrentTarget.OnHit(25, false);
-            for (int i = 0; i < 5; ++i) CombatManager.CurrentTarget.Bleeding.AddStack();
+            if (CombatManager.Player.CurrentTarget.DistanceToPlayer > CharacterCombat.MeleeDistance) return;
+            CombatManager.Player.CurrentTarget.OnHit(25, false);
+            for (int i = 0; i < 5; ++i) CombatManager.Player.CurrentTarget.Bleeding.AddStack();
         }
     }
 
@@ -364,7 +361,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Enemy target = CombatManager.CurrentTarget;
+            DetailedEnemyCombat target = CombatManager.Player.CurrentTarget;
             int healAmount = 0;
             if (target.Bleeding.Active())
             {
@@ -384,7 +381,7 @@ namespace Game.Combat.Skills
                 healAmount += 10;
             }
 
-            Player().HealthController.Heal(healAmount);
+            CombatManager.Player.HealthController.Heal(healAmount);
         }
     }
 }

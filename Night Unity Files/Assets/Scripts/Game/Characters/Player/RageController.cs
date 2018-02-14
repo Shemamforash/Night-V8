@@ -8,20 +8,15 @@ namespace Game.Characters
     {
         private readonly Number _rageLevel = new Number(0, 0, 8);
         private bool _activated;
-        private readonly Character _character;
         private readonly AttributeModifier _reloadModifier = new AttributeModifier();
         private readonly AttributeModifier _fireRateModifier = new AttributeModifier();
 
-        public RageController(Character character)
+        public RageController()
         {
             _reloadModifier.SetMultiplicative(0.5f);
             _fireRateModifier.SetMultiplicative(2f);
-            _character = character;
             _rageLevel.OnMin(End);
-            if (_character is Player.Player)
-            {
-                _rageLevel.AddOnValueChange(a => RageBarController.SetRageBarFill(a.Normalised(), _activated));
-            }
+            _rageLevel.AddOnValueChange(a => RageBarController.SetRageBarFill(a.Normalised(), _activated));
         }
 
         public float CurrentValue()
@@ -65,14 +60,14 @@ namespace Game.Characters
         public void EnterCombat()
         {
             _rageLevel.SetCurrentValue(0f);
-            _reloadModifier.AddTargetAttribute(_character.Weapon.WeaponAttributes.ReloadSpeed);
-            _fireRateModifier.AddTargetAttribute(_character.Weapon.WeaponAttributes.FireRate);
+            _reloadModifier.AddTargetAttribute(CombatManager.Player.Weapon().WeaponAttributes.ReloadSpeed);
+            _fireRateModifier.AddTargetAttribute(CombatManager.Player.Weapon().WeaponAttributes.FireRate);
         }
 
         public void ExitCombat()
         {
-            _reloadModifier.RemoveTargetAttribute(_character.Weapon.WeaponAttributes.ReloadSpeed);
-            _fireRateModifier.RemoveTargetAttribute(_character.Weapon.WeaponAttributes.FireRate);
+            _reloadModifier.RemoveTargetAttribute(CombatManager.Player.Weapon().WeaponAttributes.ReloadSpeed);
+            _fireRateModifier.RemoveTargetAttribute(CombatManager.Player.Weapon().WeaponAttributes.FireRate);
         }
 
         public void UpdateCombat()

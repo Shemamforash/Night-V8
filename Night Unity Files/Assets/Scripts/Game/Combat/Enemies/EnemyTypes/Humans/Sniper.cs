@@ -1,16 +1,17 @@
 ﻿using System;
+using Game.Characters;
 using Game.Gear.Weapons;
 
 namespace Game.Combat.Enemies.EnemyTypes
 {
-    public class Sniper : Enemy
+    public class Sniper : DetailedEnemyCombat
     {
         private bool _reachedTarget;
 
-        public Sniper(float position) : base(nameof(Sniper), position)
+        public override void SetPlayer(Character enemy)
         {
-            GenerateWeapon(WeaponType.Rifle);
-            ArmourLevel.SetCurrentValue(4);
+            base.SetPlayer(enemy);
+            ArmourController.SetArmourValue(4);
         }
 
         protected override Action Aim()

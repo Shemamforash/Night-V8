@@ -76,12 +76,14 @@
               <e p="UIGearEquipController.cs" t="Include" />
               <e p="UIGrenadeController.cs" t="Include" />
               <e p="UIHealthBarController.cs" t="Include" />
+              <e p="UIHitController.cs" t="Include" />
               <e p="UIInventoryController.cs" t="Include" />
               <e p="UIKnockdownController.cs" t="Include" />
               <e p="UIMagazineController.cs" t="Include" />
               <e p="UIMeleeController.cs" t="Include" />
-              <e p="UINumberPopupController.cs" t="Include" />
+              <e p="UIMinigameController.cs" t="Include" />
               <e p="UIRegionItem.cs" t="Include" />
+              <e p="UISkillCostController.cs" t="Include" />
               <e p="UIWeaponUpgradeController.cs" t="Include" />
             </e>
           </e>
@@ -103,23 +105,19 @@
               <e p="CharacterClass.cs" t="Include" />
               <e p="CharacterGearComparison.cs" t="Include" />
               <e p="CharacterTemplate.cs" t="Include" />
-              <e p="CharacterTemplateLoader.cs" t="Include" />
               <e p="CharacterView.cs" t="Include" />
               <e p="ConditionType.cs" t="Include" />
               <e p="DesolationAttributes.cs" t="Include" />
               <e p="DesolationCharacterGenerator.cs" t="Include" />
               <e p="DesolationCharacterManager.cs" t="Include" />
-              <e p="Intensity.cs" t="Include" />
               <e p="Player" t="Include">
                 <e p="EquipmentController.cs" t="Include" />
-                <e p="HealthController.cs" t="Include" />
-                <e p="MovementController.cs" t="Include" />
                 <e p="Player.cs" t="Include" />
                 <e p="RageController.cs" t="Include" />
               </e>
             </e>
             <e p="Combat" t="Include">
-              <e p="CharacterPositionManager.cs" t="Include" />
+              <e p="CharacterCombat.cs" t="Include" />
               <e p="CombatManager.cs" t="Include" />
               <e p="CombatScenario.cs" t="Include" />
               <e p="CombatTester.cs" t="Include" />
@@ -129,8 +127,8 @@
                 <e p="Condition.cs" t="Include" />
                 <e p="Sickness.cs" t="Include" />
               </e>
+              <e p="DetailedEnemyCombat.cs" t="Include" />
               <e p="Enemies" t="Include">
-                <e p="CombatItem.cs" t="Include" />
                 <e p="Enemy.cs" t="Include" />
                 <e p="EnemyTypes" t="Include">
                   <e p="Animals" t="Include">
@@ -138,6 +136,7 @@
                     <e p="Watcher.cs" t="Include" />
                   </e>
                   <e p="EnemyTemplate.cs" t="Include" />
+                  <e p="EnemyType.cs" t="Include" />
                   <e p="Humans" t="Include">
                     <e p="Brawler.cs" t="Include" />
                     <e p="Martyr.cs" t="Include" />
@@ -149,17 +148,17 @@
                     <e p="Witch.cs" t="Include" />
                   </e>
                   <e p="Misc" t="Include">
-                    <e p="BasicEnemyView.cs" t="Include" />
                     <e p="Grenade.cs" t="Include" />
                     <e p="IncendiaryGrenade.cs" t="Include" />
+                    <e p="MiscEnemyType.cs" t="Include" />
                     <e p="SplinterGrenade.cs" t="Include" />
                   </e>
                 </e>
-                <e p="EnemyView.cs" t="Include" />
               </e>
               <e p="Explosion.cs" t="Include" />
               <e p="ICombatListener.cs" t="Include" />
               <e p="MeleeController.cs" t="Include" />
+              <e p="PlayerCombat.cs" t="Include" />
               <e p="RecoilManager.cs" t="Include" />
               <e p="Shot.cs" t="Include" />
               <e p="SkillBar.cs" t="Include" />
@@ -310,9 +309,6 @@
             </e>
           </e>
         </e>
-        <e p="UIHitController.cs" t="Include" />
-        <e p="UIMinigameController.cs" t="Include" />
-        <e p="UISkillCostController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

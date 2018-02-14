@@ -24,7 +24,7 @@ public class RetryMenu : Menu
 
 	public static void StartCombat(Player p, Weapon w)
 	{
-		_currentDanger = 0;
+		_currentDanger = 5;
 		p.EquipWeapon(w);
 		_player = p;
 		_player.Inventory().IncrementResource(w.WeaponAttributes.AmmoType, 21);

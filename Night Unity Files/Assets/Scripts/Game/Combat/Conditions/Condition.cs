@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.Player;
 using UnityEngine;
@@ -10,11 +11,11 @@ namespace Game.Combat
     {
         protected readonly int Duration, Damage;
         protected readonly List<float> StackList = new List<float>();
-        protected readonly HealthController CharacterHealth;
+        protected readonly UIHealthBarController CharacterHealth;
         public Action OnConditionEmpty, OnConditionNonEmpty;
         private float _timeToNextTick;
 
-        protected Condition(Character character, int duration, int damage)
+        protected Condition(CharacterCombat character, int duration, int damage)
         {
             CharacterHealth = character.HealthController;
             Duration = duration;

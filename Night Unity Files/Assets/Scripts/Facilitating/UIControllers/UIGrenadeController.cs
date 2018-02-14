@@ -1,34 +1,47 @@
-﻿using System.Collections.Generic;
-using SamsHelper.ReactiveUI.InventoryUI;
+﻿using System;
+using System.Collections.Generic;
+using Game.Combat.Enemies.EnemyTypes.Misc;
+using SamsHelper;
 using UnityEngine;
 
-public class UIGrenadeController : MonoBehaviour {
-	public static readonly List<Grenade> Grenades = new List<Grenade>();
-	private static readonly List<Grenade> GrenadesToRemove = new List<Grenade>();
-	private static UIGrenadeController _instance;
+namespace Facilitating.UIControllers
+{
+	public class UIGrenadeController : MonoBehaviour {
+		public static readonly List<Grenade> Grenades = new List<Grenade>();
+		private static UIGrenadeController _instance;
 
-	private void Awake()
-	{
-		_instance = this;
-	}
+		private void Awake()
+		{
+			_instance = this;
+		}
 
-	public void Update()
-	{
-		if (MeleeController.InMelee) return;
-		Grenades.ForEach(g => { g.UpdateCombat(); });
-		GrenadesToRemove.ForEach(g => Grenades.Remove(g));
-		GrenadesToRemove.Clear();
-	}
+		public static void RemoveGrenade(Grenade g)
+		{
+			Grenades.Remove(g);
+			Destroy(g);
+		}
 	
-	public static void RemoveGrenade(Grenade g)
-	{
-		GrenadesToRemove.Add(g);
-		Destroy(g.GrenadeView.GetGameObject());
-	}
-	
-	public static void AddGrenade(Grenade g)
-	{
-		Grenades.Add(g);
-		g.CreateUi(_instance.transform);
+		public static void AddGrenade(MiscEnemyType type, float position, float targetPosition)
+		{
+			GameObject grenadeGameObject = Helper.InstantiateUiObject("Prefabs/Inventory/OtherCombatItem", _instance.transform);
+			Grenade combatGrenade;
+			switch (type)
+			{
+				case MiscEnemyType.Grenade:
+					combatGrenade = grenadeGameObject.AddComponent<Grenade>();
+					break;
+				case MiscEnemyType.Incendiary:
+					combatGrenade = grenadeGameObject.AddComponent<IncendiaryGrenade>();
+					break;
+				case MiscEnemyType.Splinter:
+					combatGrenade = grenadeGameObject.AddComponent<SplinterGrenade>();
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(type), type, null);
+			}
+
+			combatGrenade.SetTargetPosition(position, targetPosition);
+			Grenades.Add(combatGrenade);
+		}
 	}
 }

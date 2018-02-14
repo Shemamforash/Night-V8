@@ -17,7 +17,7 @@ namespace Game.Combat
     public class Shot
     {
         private int _damage, _damageDealt;
-        private readonly Character _target, _origin;
+        private readonly CharacterCombat _target, _origin;
         private readonly float _distanceToTarget;
         private Weapon _weapon;
 
@@ -37,7 +37,7 @@ namespace Game.Combat
         private event Action OnHitAction;
         private bool _didHit;
 
-        public Shot(Character target, Character origin)
+        public Shot(CharacterCombat target, CharacterCombat origin)
         {
             Assert.IsNotNull(target);
             _origin = origin;
@@ -45,11 +45,11 @@ namespace Game.Combat
 
             if (_origin != null)
             {
-                Enemy enemy = origin as Enemy;
-                _distanceToTarget = enemy?.DistanceToPlayer ?? ((Enemy) target).DistanceToPlayer;
+                DetailedEnemyCombat enemy = origin as DetailedEnemyCombat;
+                _distanceToTarget = enemy?.DistanceToPlayer ?? ((DetailedEnemyCombat) target).DistanceToPlayer;
                 CacheWeaponAttributes();
                 float distance = origin is Player ? 0 : _distanceToTarget;
-                GunFire.Fire(origin.Weapon.WeaponType(), distance);
+                GunFire.Fire(origin.Weapon().WeaponType(), distance);
             }
         }
 
@@ -57,7 +57,7 @@ namespace Game.Combat
 
         private void CacheWeaponAttributes()
         {
-            WeaponAttributes attributes = _origin.Weapon.WeaponAttributes;
+            WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
 //            if (_origin is Enemy) _damage = (int)Mathf.Ceil(_damage / 2f);
             _range = (int) attributes.GetCalculatedValue(AttributeType.Range);
@@ -65,7 +65,7 @@ namespace Game.Combat
             _bleedChance = attributes.GetCalculatedValue(AttributeType.BleedChance);
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
             _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
-            _criticalChance = _origin.Weapon.WeaponAttributes.CriticalChance.CurrentValue();
+            _criticalChance = _origin.Weapon().WeaponAttributes.CriticalChance.CurrentValue();
         }
 
         private void SetDamage(int damage)
@@ -107,8 +107,8 @@ namespace Game.Combat
             {
                 if (_origin != null)
                 {
-                    if (_origin.Weapon.Empty()) break;
-                    _origin.Weapon.ConsumeAmmo(1);
+                    if (_origin.Weapon().Empty()) break;
+                    _origin.Weapon().ConsumeAmmo(1);
                 }
 
                 CreateShotCooldown();
@@ -144,8 +144,8 @@ namespace Game.Combat
             ApplyPierce(pelletDamage);
             ApplyConditions();
             OnHitAction?.Invoke();
-            (_origin as Player)?.RageController.Increase(pelletDamage);
-            Player player = _target as Player;
+            (_origin as PlayerCombat)?.RageController.Increase(pelletDamage);
+            PlayerCombat player = _target as PlayerCombat;
             if (player != null)
             {
                 player.OnHit(this, pelletDamage);
@@ -160,8 +160,8 @@ namespace Game.Combat
         {
             if (_pierceDepth == 0) return;
             if (Random.Range(0f, 1f) > _pierceChance) return;
-            if (_target is Player) return;
-            List<Enemy> enemiesBehindTarget = CombatManager.GetEnemiesBehindTarget((Enemy) _target);
+            if (_target is PlayerCombat) return;
+            List<DetailedEnemyCombat> enemiesBehindTarget = CombatManager.GetEnemiesBehindTarget((DetailedEnemyCombat) _target);
             for (int i = 0; i < enemiesBehindTarget.Count; ++i)
             {
                 if (i == _pierceDepth)
@@ -210,7 +210,7 @@ namespace Game.Combat
 
         public void UseRemainingShots()
         {
-            _noShots = _origin.Weapon.GetRemainingAmmo();
+            _noShots = _origin.Weapon().GetRemainingAmmo();
         }
 
         public void GuaranteeHit() => _guaranteeHit = true;
@@ -226,12 +226,12 @@ namespace Game.Combat
             _knockbackDistance = distance;
         }
 
-        public Character Origin()
+        public CharacterCombat Origin()
         {
             return _origin;
         }
 
-        public Character Target()
+        public CharacterCombat Target()
         {
             return _target;
         }

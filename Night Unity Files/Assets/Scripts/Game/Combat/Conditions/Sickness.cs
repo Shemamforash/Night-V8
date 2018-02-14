@@ -9,7 +9,7 @@ namespace Game.Combat.Skills
         private int _criticalStackCount = 10;
         private float _timeSinceLastHit = 0;
 
-        public Sickness(Character character) : base(character, 1, 0)
+        public Sickness(CharacterCombat character) : base(character, 1, 0)
         {
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Characters;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -7,25 +8,24 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.EnemyTypes
 {
-    public class Medic : Enemy
+    public class Medic : DetailedEnemyCombat
     {
-        private int _healAmount = 50;
-        private Enemy _healTarget;
+        private const int HealAmount = 50;
+        private DetailedEnemyCombat _healTarget;
 
-        public Medic(float position) : base(nameof(Medic), position)
+        public override void SetPlayer(Character enemy)
         {
-            GenerateWeapon(new List<WeaponType>{WeaponType.Pistol, WeaponType.SMG});
+            base.SetPlayer(enemy);
             MinimumFindCoverDistance = 20f;
-            ArmourLevel.SetCurrentValue(2);
+            ArmourController.SetArmourValue(2);
         }
-
-        public override void Kill()
+        
+        private void OnDestroy()
         {
-            base.Kill();
             _healTarget?.ClearHealWait();
         }
         
-        public void RequestHeal(Enemy healTarget)
+        public void RequestHeal(DetailedEnemyCombat healTarget)
         {
             if (_healTarget != null) return;
             _healTarget = healTarget;
@@ -38,12 +38,12 @@ namespace Game.Combat.Enemies.EnemyTypes
         private Action Heal()
         {
             float healTime = 2f;
-            EnemyView.SetActionText("Healing " + _healTarget.Name);
+            SetActionText("Healing " + _healTarget.Enemy.Name);
             return () =>
             {
                 healTime -= Time.deltaTime;
                 if (healTime > 0) return;
-                _healTarget.ReceiveHealing(_healAmount);
+                _healTarget.ReceiveHealing(HealAmount);
                 _healTarget = null;
                 ChooseNextAction();
             };
@@ -61,7 +61,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         private void TryHeal()
         {
             CurrentAction = MoveToTargetPosition(_healTarget.Position.CurrentValue());
-            EnemyView.SetActionText("Running to " + _healTarget.Name);
+            SetActionText("Running to " + _healTarget.Enemy.Name);
         }
 
         public bool HasTarget()

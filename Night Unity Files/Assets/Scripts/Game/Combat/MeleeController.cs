@@ -12,10 +12,10 @@ public class MeleeController : MonoBehaviour
     private const float FalloffRatio = 0.95f;
     private const float MaxRingTime = 0.6f, MaxPressTime = 0.3f;
     private static float _initialRingTime, _initialPressTime;
-    private static Enemy _targetEnemy;
+    private static DetailedEnemyCombat _targetEnemy;
     public static bool InMelee;
     private static int _remainingHits, _hitsWon, _hitsLost;
-    private static readonly List<Enemy> _meleeQueue = new List<Enemy>();
+    private static readonly List<DetailedEnemyCombat> _meleeQueue = new List<DetailedEnemyCombat>();
     private const int NumberOfRounds = 5;
 
     public void Awake()
@@ -30,8 +30,9 @@ public class MeleeController : MonoBehaviour
         MeleeControllers.Add(_right);
     }
 
-    public static void StartMelee(Enemy enemy)
+    public static void StartMelee(DetailedEnemyCombat enemy)
     {
+        Debug.Log("starting melee");
         if (_targetEnemy != null)
         {
             _meleeQueue.Add(enemy);

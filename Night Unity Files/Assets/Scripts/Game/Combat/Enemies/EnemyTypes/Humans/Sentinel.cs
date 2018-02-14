@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Game.Characters;
 using Game.Gear.Weapons;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
-    public class Sentinel : Enemy
+    public class Sentinel : DetailedEnemyCombat
     {
         private float _timeSinceLastHeal;
         private const float DefaultHealTime = 0.5f;
@@ -11,25 +12,13 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private bool _healingInCover;
         private int _targetHealAmount;
 
-        public Sentinel(float position) : base(nameof(Sentinel), position)
+        public override void SetPlayer(Character enemy)
         {
-            GenerateWeapon(new List<WeaponType>{WeaponType.Shotgun, WeaponType.SMG});
-            //todo remove me
-            ArmourLevel.SetCurrentValue(6);
+            base.SetPlayer(enemy);
             MinimumFindCoverDistance = 5f;
-            Speed = 5;
-//            HealthController.AddOnTakeDamage(damage =>
-//            {
-//                if (_healingInCover) return;
-//                _damageTaken += damage;
-//                if (_damageTaken < HealthController.GetMaxHealth() * 0.25f) return;
-//                _healingInCover = true;
-//                _targetHealAmount = (int) Random.Range(0, HealthController.GetMaxHealth() * 0.1f);
-//                CurrentAction = CheckForRepositioning(true);
-//                _damageTaken = 0;
-//            });
+            ArmourController.SetArmourValue(6);
         }
-
+        
 //        public override void ChooseNextAction()
 //        {
 //            if (!_healingInCover)

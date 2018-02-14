@@ -1,19 +1,20 @@
-﻿using Game.Combat.Enemies.EnemyTypes.Misc;
+﻿using Game.Characters;
+using Game.Combat.Enemies.EnemyTypes.Misc;
 using Game.Gear.Weapons;
 using UnityEngine;
-using static UIEnemyController;
+using static Facilitating.UIControllers.UIEnemyController;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
-    public class Warlord : Enemy
+    public class Warlord : DetailedEnemyCombat
     {
         private float _reinforceCallTime;
         private float _reinforceDuration = 5f;
 
-        public Warlord(float position) : base(nameof(Warlord), position)
+        public override void SetPlayer(Character enemy)
         {
-            GenerateWeapon(WeaponType.LMG);
-            ArmourLevel.SetCurrentValue(8);
+            base.SetPlayer(enemy);
+            ArmourController.SetArmourValue(8);
             MinimumFindCoverDistance = 10;
             HealthController.AddOnTakeDamage(a =>
             {
@@ -29,13 +30,15 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
                 }
             });
         }
-
+        
         private void SummonEnemies()
         {
-            EnemyView.SetActionText("Reinforcing");
+            SetActionText("Reinforcing");
             _reinforceCallTime -= Time.deltaTime;
             if (!(_reinforceCallTime <= 0)) return;
-            QueueEnemyToAdd(new Sentinel(CombatManager.VisibilityRange + BasicEnemyView.FadeVisibilityDistance));
+            
+            //todo add enemy
+//            QueueEnemyToAdd(new Sentinel(CombatManager.VisibilityRange + 5f));
             ChooseNextAction();
             return;
 //            switch (Random.Range(0, 4))

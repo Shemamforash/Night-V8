@@ -1,18 +1,20 @@
-﻿using SamsHelper.BaseGameFunctionality.CooldownSystem;
+﻿using Game.Characters;
+using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.EnemyTypes
 {
-    public class Martyr : Enemy
+    public class Martyr : DetailedEnemyCombat
     {
-        private readonly Cooldown _detonateCooldown;
+        private Cooldown _detonateCooldown;
         private bool _detonated;
 
-        public Martyr(float position) : base(nameof(Martyr), position)
+        public override void SetPlayer(Character enemy)
         {
+            base.SetPlayer(enemy);
             MinimumFindCoverDistance = -1f;
             _detonateCooldown = CombatManager.CombatCooldowns.CreateCooldown(1f);
-            _detonateCooldown.SetStartAction(() => EnemyView.SetActionText("Detonating"));
+            _detonateCooldown.SetStartAction(() => SetActionText("Detonating"));
             _detonateCooldown.SetEndAction(Detonate);
             HealthController.AddOnTakeDamage(damage =>
             {
@@ -20,7 +22,7 @@ namespace Game.Combat.Enemies.EnemyTypes
                 Detonate();
             });
         }
-
+        
         public override void Alert()
         {
             base.Alert();
