@@ -1,378 +1,378 @@
 Type: Pistol  ---  Durability: 0
-        DPS: 12 (min: 9.8 /max: 14.6 )
-        Damage: 6.4 (min: 3.5 /max: 9)
-        Range: 14.3 (min: 7.5 /max: 22.5)
-        CriticalChance: 15 (min: 15 /max: 15)
-        FireRate: 2 (min: 1.5 /max: 3)
+        DPS: 26.4 (min: 20.1 /max: 32.6 )
+        Damage: 9.4 (min: 5.2 /max: 13.5)
+        Range: 28.4 (min: 15 /max: 45)
+        CriticalChance: 0.2 (min: 0.2 /max: 0.2)
+        FireRate: 3 (min: 2.2 /max: 4.5)
 
 Pistol Shortshooter 
-Durability: 0 (0.5)
-DPS: 14.61176
-Automatic: True
+Durability: 0 (0.75)
+DPS: 32.62192
+Automatic: False
 Capacity:   6
 Pellets:    1
-Damage:     9
-Range:   7.5
-Fire Rate:  1.5
-Reload:     0.25
-CritChance: 15
-Pistol: +18 Damage +15 Range +3 FireRate +0.5 ReloadSpeed +30 CriticalChance +80 Handling +6 Capacity +1 Pellets
+Damage:     13.5
+Range:   15
+Fire Rate:  2.25
+Reload:     0.375
+CritChance: 0.225
+Pistol: +18 Damage +15 Range +3 FireRate +0.5 ReloadSpeed +0.3 CriticalChance +80 Handling +6 Capacity +1 Pellets
 
 
 
 Pistol Deepdriver 
-Durability: 0 (0.5)
-DPS: 9.75
-Automatic: True
+Durability: 0 (0.75)
+DPS: 20.09229
+Automatic: False
 Capacity:   10
 Pellets:    1
-Damage:     6.5
-Range:   22.5
-Fire Rate:  1.5
-Reload:     1
-CritChance: 15
-Pistol: +13 Damage +45 Range +3 FireRate +2 ReloadSpeed +30 CriticalChance +90 Handling +10 Capacity +1 Pellets
+Damage:     9.75
+Range:   45
+Fire Rate:  2.25
+Reload:     1.5
+CritChance: 0.225
+Pistol: +13 Damage +45 Range +3 FireRate +2 ReloadSpeed +0.3 CriticalChance +90 Handling +10 Capacity +1 Pellets
 
 
 
 Type: Pistol  ---  Durability: 20
-        DPS: 45.7 (min: 31.7 /max: 56.2 )
-        Damage: 9.7 (min: 3.5 /max: 18)
-        Range: 20.9 (min: 7.5 /max: 45)
-        CriticalChance: 22.5 (min: 15 /max: 30)
-        FireRate: 3 (min: 1.5 /max: 6)
+        DPS: 45 (min: 31.7 /max: 56.2 )
+        Damage: 11 (min: 5.2 /max: 18)
+        Range: 28.5 (min: 15 /max: 45)
+        CriticalChance: 0.3 (min: 0.2 /max: 0.3)
+        FireRate: 3.5 (min: 2.2 /max: 6)
 
 Pistol Shortshooter 
 Durability: 20 (1)
 DPS: 56.16
-Automatic: True
+Automatic: False
 Capacity:   6
 Pellets:    1
 Damage:     18
 Range:   15
 Fire Rate:  3
 Reload:     0.5
-CritChance: 30
-Pistol: +18 Damage +15 Range +3 FireRate +0.5 ReloadSpeed +30 CriticalChance +80 Handling +6 Capacity +1 Pellets
+CritChance: 0.3
+Pistol: +18 Damage +15 Range +3 FireRate +0.5 ReloadSpeed +0.3 CriticalChance +80 Handling +6 Capacity +1 Pellets
 
 
 
 Pistol Deepdriver 
 Durability: 20 (1)
 DPS: 31.6875
-Automatic: True
+Automatic: False
 Capacity:   10
 Pellets:    1
 Damage:     13
 Range:   45
 Fire Rate:  3
 Reload:     2
-CritChance: 30
-Pistol: +13 Damage +45 Range +3 FireRate +2 ReloadSpeed +30 CriticalChance +90 Handling +10 Capacity +1 Pellets
+CritChance: 0.3
+Pistol: +13 Damage +45 Range +3 FireRate +2 ReloadSpeed +0.3 CriticalChance +90 Handling +10 Capacity +1 Pellets
 
 
 
 
 
 Type: Rifle  ---  Durability: 0
-        DPS: 14 (min: 11.4 /max: 18.2 )
-        Damage: 26.6 (min: 20 /max: 40)
-        Range: 58.7 (min: 50 /max: 75)
-        CriticalChance: 29 (min: 25 /max: 37.5)
-        FireRate: 0.5 (min: 0.5 /max: 0.5)
+        DPS: 29.2 (min: 25.5 /max: 33.6 )
+        Damage: 38.8 (min: 30 /max: 60)
+        Range: 100 (min: 100 /max: 100)
+        CriticalChance: 0.4 (min: 0.4 /max: 0.6)
+        FireRate: 0.8 (min: 0.8 /max: 0.8)
 
 Rifle Shoulderbreaker 
-Durability: 0 (0.5)
-DPS: 18.18182
-Automatic: True
+Durability: 0 (0.75)
+DPS: 33.55932
+Automatic: False
 Capacity:   2
 Pellets:    1
-Damage:     40
-Range:   50
-Fire Rate:  0.5
-Reload:     1.5
-CritChance: 25
-Rifle: +80 Damage +100 Range +1 FireRate +3 ReloadSpeed +50 CriticalChance +2 Capacity +1 Pellets
+Damage:     60
+Range:   100
+Fire Rate:  0.75
+Reload:     2.25
+CritChance: 0.375
+Rifle: +80 Damage +100 Range +1 FireRate +3 ReloadSpeed +0.5 CriticalChance +2 Capacity +1 Pellets
 
 
 
 Rifle Groundrider 
-Durability: 0 (0.5)
-DPS: 11.42857
-Automatic: True
+Durability: 0 (0.75)
+DPS: 25.54839
+Automatic: False
 Capacity:   8
 Pellets:    1
-Damage:     20
-Range:   75
-Fire Rate:  0.5
-Reload:     1.5
-CritChance: 25
-Rifle: +40 Damage +150 Range +1 FireRate +3 ReloadSpeed +50 CriticalChance +20 Handling +8 Capacity +1 Pellets
+Damage:     30
+Range:   100
+Fire Rate:  0.75
+Reload:     2.25
+CritChance: 0.375
+Rifle: +40 Damage +150 Range +1 FireRate +3 ReloadSpeed +0.5 CriticalChance +20 Handling +8 Capacity +1 Pellets
 
 
 
 Type: Rifle  ---  Durability: 20
-        DPS: 47.7 (min: 43.6 /max: 50.9 )
-        Damage: 39.7 (min: 20 /max: 80)
-        Range: 79.3 (min: 50 /max: 100)
-        CriticalChance: 44 (min: 25 /max: 75)
-        FireRate: 0.8 (min: 0.5 /max: 1)
+        DPS: 47.3 (min: 43.6 /max: 50.9 )
+        Damage: 45.8 (min: 30 /max: 80)
+        Range: 100 (min: 100 /max: 100)
+        CriticalChance: 0.5 (min: 0.4 /max: 0.8)
+        FireRate: 0.9 (min: 0.8 /max: 1)
 
 Rifle Voidwalker 
 Durability: 20 (1)
 DPS: 50.90909
-Automatic: False
+Automatic: True
 Capacity:   8
 Pellets:    1
 Damage:     40
 Range:   100
 Fire Rate:  1
 Reload:     3
-CritChance: 75
-Rifle: +40 Damage +100 Range +1 FireRate +3 ReloadSpeed +75 CriticalChance +20 Handling +8 Capacity +1 Pellets
+CritChance: 0.75
+Rifle: +40 Damage +100 Range +1 FireRate +3 ReloadSpeed +0.75 CriticalChance +20 Handling +8 Capacity +1 Pellets
 
 
 
 Rifle Groundrider 
 Durability: 20 (1)
 DPS: 43.63636
-Automatic: True
+Automatic: False
 Capacity:   8
 Pellets:    1
 Damage:     40
 Range:   100
 Fire Rate:  1
 Reload:     3
-CritChance: 50
-Rifle: +40 Damage +150 Range +1 FireRate +3 ReloadSpeed +50 CriticalChance +20 Handling +8 Capacity +1 Pellets
+CritChance: 0.5
+Rifle: +40 Damage +150 Range +1 FireRate +3 ReloadSpeed +0.5 CriticalChance +20 Handling +8 Capacity +1 Pellets
 
 
 
 
 
 Type: Shotgun  ---  Durability: 0
-        DPS: 28.4 (min: 22.8 /max: 35.8 )
-        Damage: 4.2 (min: 2 /max: 6.5)
-        Range: 6.9 (min: 0 /max: 15)
-        CriticalChance: 2.5 (min: 2.5 /max: 2.5)
-        FireRate: 1 (min: 0.8 /max: 1.5)
+        DPS: 52.1 (min: 47 /max: 60.8 )
+        Damage: 6.2 (min: 3 /max: 9.8)
+        Range: 12.8 (min: 0 /max: 30)
+        CriticalChance: 0 (min: 0 /max: 0)
+        FireRate: 1.5 (min: 1.1 /max: 2.2)
 
 Shotgun Skullcrusher 
-Durability: 0 (0.5)
-DPS: 35.78182
-Automatic: False
+Durability: 0 (0.75)
+DPS: 60.77288
+Automatic: True
 Capacity:   5
 Pellets:    8
-Damage:     4
-Range:   15
-Fire Rate:  1.5
-Reload:     1.25
-CritChance: 2.5
-Shotgun: +8 Damage +30 Range +3 FireRate +2.5 ReloadSpeed +5 CriticalChance +50 Handling +5 Capacity +8 Pellets
+Damage:     6
+Range:   30
+Fire Rate:  2.25
+Reload:     1.875
+CritChance: 0.0375
+Shotgun: +8 Damage +30 Range +3 FireRate +2.5 ReloadSpeed +0.05 CriticalChance +50 Handling +5 Capacity +8 Pellets
 
 
 
 Shotgun Bonebreaker 
-Durability: 0 (0.5)
-DPS: 22.84286
-Automatic: False
+Durability: 0 (0.75)
+DPS: 46.98871
+Automatic: True
 Capacity:   10
 Pellets:    5
-Damage:     6.5
-Range:   5
-Fire Rate:  0.75
-Reload:     1.25
-CritChance: 2.5
-Shotgun: +13 Damage +10 Range +1.5 FireRate +2.5 ReloadSpeed +5 CriticalChance +25 Handling +10 Capacity +5 Pellets
+Damage:     9.75
+Range:   10
+Fire Rate:  1.125
+Reload:     1.875
+CritChance: 0.0375
+Shotgun: +13 Damage +10 Range +1.5 FireRate +2.5 ReloadSpeed +0.05 CriticalChance +25 Handling +10 Capacity +5 Pellets
 
 
 
 Type: Shotgun  ---  Durability: 20
         DPS: 75.8 (min: 72 /max: 80.6 )
-        Damage: 6.2 (min: 2 /max: 13)
-        Range: 10.2 (min: 0 /max: 30)
-        CriticalChance: 3.8 (min: 2.5 /max: 5)
-        FireRate: 1.5 (min: 0.8 /max: 3)
+        Damage: 7.2 (min: 3 /max: 13)
+        Range: 13.2 (min: 0 /max: 30)
+        CriticalChance: 0 (min: 0 /max: 0.1)
+        FireRate: 1.8 (min: 1.1 /max: 3)
 
 Shotgun Skullcrusher 
 Durability: 20 (1)
 DPS: 80.64
-Automatic: False
+Automatic: True
 Capacity:   5
 Pellets:    8
 Damage:     8
 Range:   30
 Fire Rate:  3
 Reload:     2.5
-CritChance: 5
-Shotgun: +8 Damage +30 Range +3 FireRate +2.5 ReloadSpeed +5 CriticalChance +50 Handling +5 Capacity +8 Pellets
+CritChance: 0.05
+Shotgun: +8 Damage +30 Range +3 FireRate +2.5 ReloadSpeed +0.05 CriticalChance +50 Handling +5 Capacity +8 Pellets
 
 
 
 Shotgun Leadspreader 
 Durability: 20 (1)
 DPS: 71.99999
-Automatic: True
+Automatic: False
 Capacity:   5
 Pellets:    20
 Damage:     4
 Range:   0
 Fire Rate:  1.5
 Reload:     2.5
-CritChance: 5
-Shotgun: +4 Damage +1.5 FireRate +2.5 ReloadSpeed +5 CriticalChance +50 Handling +5 Capacity +20 Pellets
+CritChance: 0.05
+Shotgun: +4 Damage +1.5 FireRate +2.5 ReloadSpeed +0.05 CriticalChance +50 Handling +5 Capacity +20 Pellets
 
 
 
 
 
 Type: SMG  ---  Durability: 0
-        DPS: 16.2 (min: 14.5 /max: 18.2 )
-        Damage: 2.3 (min: 2 /max: 3)
-        Range: 21.6 (min: 15 /max: 25)
-        CriticalChance: 3.3 (min: 2.5 /max: 5)
-        FireRate: 6.1 (min: 5 /max: 8.5)
+        DPS: 32.9 (min: 30.6 /max: 36.4 )
+        Damage: 3.5 (min: 3 /max: 4.5)
+        Range: 43.6 (min: 30 /max: 50)
+        CriticalChance: 0 (min: 0 /max: 0.1)
+        FireRate: 9.3 (min: 7.5 /max: 12.8)
 
 SMG Spewer 
-Durability: 0 (0.5)
-DPS: 18.22222
-Automatic: False
+Durability: 0 (0.75)
+DPS: 36.43902
+Automatic: True
 Capacity:   20
 Pellets:    2
-Damage:     2
-Range:   15
-Fire Rate:  5
-Reload:     0.5
-CritChance: 2.5
-SMG: +4 Damage +30 Range +10 FireRate +1 ReloadSpeed +5 CriticalChance +98 Handling +20 Capacity +2 Pellets
+Damage:     3
+Range:   30
+Fire Rate:  7.5
+Reload:     0.75
+CritChance: 0.0375
+SMG: +4 Damage +30 Range +10 FireRate +1 ReloadSpeed +0.05 CriticalChance +98 Handling +20 Capacity +2 Pellets
 
 
 
 SMG Spitter 
-Durability: 0 (0.5)
-DPS: 14.53846
-Automatic: False
+Durability: 0 (0.75)
+DPS: 30.55263
+Automatic: True
 Capacity:   30
 Pellets:    1
-Damage:     3
-Range:   25
-Fire Rate:  5
-Reload:     0.5
-CritChance: 5
-SMG: +6 Damage +50 Range +10 FireRate +1 ReloadSpeed +10 CriticalChance +98 Handling +30 Capacity +1 Pellets
+Damage:     4.5
+Range:   50
+Fire Rate:  7.5
+Reload:     0.75
+CritChance: 0.075
+SMG: +6 Damage +50 Range +10 FireRate +1 ReloadSpeed +0.1 CriticalChance +98 Handling +30 Capacity +1 Pellets
 
 
 
 Type: SMG  ---  Durability: 20
         DPS: 51.9 (min: 49.5 /max: 56 )
-        Damage: 3.5 (min: 2 /max: 6)
-        Range: 32.4 (min: 15 /max: 50)
-        CriticalChance: 5 (min: 2.5 /max: 10)
-        FireRate: 9.2 (min: 5 /max: 17)
+        Damage: 4.1 (min: 3 /max: 6)
+        Range: 43.4 (min: 30 /max: 50)
+        CriticalChance: 0.1 (min: 0 /max: 0.1)
+        FireRate: 10.9 (min: 7.5 /max: 17)
 
 SMG Spewer 
 Durability: 20 (1)
 DPS: 56
-Automatic: False
+Automatic: True
 Capacity:   20
 Pellets:    2
 Damage:     4
 Range:   30
 Fire Rate:  10
 Reload:     1
-CritChance: 5
-SMG: +4 Damage +30 Range +10 FireRate +1 ReloadSpeed +5 CriticalChance +98 Handling +20 Capacity +2 Pellets
+CritChance: 0.05
+SMG: +4 Damage +30 Range +10 FireRate +1 ReloadSpeed +0.05 CriticalChance +98 Handling +20 Capacity +2 Pellets
 
 
 
 SMG Spitter 
 Durability: 20 (1)
 DPS: 49.5
-Automatic: False
+Automatic: True
 Capacity:   30
 Pellets:    1
 Damage:     6
 Range:   50
 Fire Rate:  10
 Reload:     1
-CritChance: 10
-SMG: +6 Damage +50 Range +10 FireRate +1 ReloadSpeed +10 CriticalChance +98 Handling +30 Capacity +1 Pellets
+CritChance: 0.1
+SMG: +6 Damage +50 Range +10 FireRate +1 ReloadSpeed +0.1 CriticalChance +98 Handling +30 Capacity +1 Pellets
 
 
 
 
 
 Type: LMG  ---  Durability: 0
-        DPS: 20.6 (min: 14.5 /max: 26.4 )
-        Damage: 7 (min: 6 /max: 9)
-        Range: 28.2 (min: 25 /max: 35)
-        CriticalChance: 6.7 (min: 5 /max: 10)
-        FireRate: 3.4 (min: 2.5 /max: 5)
+        DPS: 40 (min: 30.2 /max: 49.7 )
+        Damage: 10.5 (min: 9 /max: 13.5)
+        Range: 57 (min: 50 /max: 70)
+        CriticalChance: 0.1 (min: 0.1 /max: 0.2)
+        FireRate: 4.9 (min: 3.8 /max: 7.5)
 
 LMG Annihilator 
-Durability: 0 (0.5)
-DPS: 26.4
-Automatic: False
+Durability: 0 (0.75)
+DPS: 49.68
+Automatic: True
 Capacity:   50
 Pellets:    1
-Damage:     6
-Range:   25
-Fire Rate:  5
-Reload:     2.5
-CritChance: 10
-LMG: +12 Damage +50 Range +10 FireRate +5 ReloadSpeed +20 CriticalChance +90 Handling +50 Capacity +1 Pellets
+Damage:     9
+Range:   50
+Fire Rate:  7.5
+Reload:     3.75
+CritChance: 0.15
+LMG: +12 Damage +50 Range +10 FireRate +5 ReloadSpeed +0.2 CriticalChance +90 Handling +50 Capacity +1 Pellets
 
 
 
 LMG Breacher 
-Durability: 0 (0.5)
-DPS: 14.45902
-Automatic: False
+Durability: 0 (0.75)
+DPS: 30.2119
+Automatic: True
 Capacity:   70
 Pellets:    1
-Damage:     6
-Range:   35
-Fire Rate:  2.5
-Reload:     2.5
-CritChance: 5
-LMG: +12 Damage +70 Range +5 FireRate +5 ReloadSpeed +10 CriticalChance +95 Handling +70 Capacity +1 Pellets
+Damage:     9
+Range:   70
+Fire Rate:  3.75
+Reload:     3.75
+CritChance: 0.075
+LMG: +12 Damage +70 Range +5 FireRate +5 ReloadSpeed +0.1 CriticalChance +95 Handling +70 Capacity +1 Pellets
 
 
 
 Type: LMG  ---  Durability: 20
-        DPS: 60.7 (min: 48.6 /max: 72 )
-        Damage: 10.5 (min: 6 /max: 18)
-        Range: 42.6 (min: 25 /max: 70)
-        CriticalChance: 10 (min: 5 /max: 20)
-        FireRate: 5 (min: 2.5 /max: 10)
+        DPS: 61.2 (min: 48.6 /max: 72 )
+        Damage: 12.2 (min: 9 /max: 18)
+        Range: 56.8 (min: 50 /max: 70)
+        CriticalChance: 0.1 (min: 0.1 /max: 0.2)
+        FireRate: 5.8 (min: 3.8 /max: 10)
 
 LMG Annihilator 
 Durability: 20 (1)
 DPS: 72
-Automatic: False
+Automatic: True
 Capacity:   50
 Pellets:    1
 Damage:     12
 Range:   50
 Fire Rate:  10
 Reload:     5
-CritChance: 20
-LMG: +12 Damage +50 Range +10 FireRate +5 ReloadSpeed +20 CriticalChance +90 Handling +50 Capacity +1 Pellets
+CritChance: 0.2
+LMG: +12 Damage +50 Range +10 FireRate +5 ReloadSpeed +0.2 CriticalChance +90 Handling +50 Capacity +1 Pellets
 
 
 
 LMG Breacher 
 Durability: 20 (1)
 DPS: 48.63158
-Automatic: False
+Automatic: True
 Capacity:   70
 Pellets:    1
 Damage:     12
 Range:   70
 Fire Rate:  5
 Reload:     5
-CritChance: 10
-LMG: +12 Damage +70 Range +5 FireRate +5 ReloadSpeed +10 CriticalChance +95 Handling +70 Capacity +1 Pellets
+CritChance: 0.1
+LMG: +12 Damage +70 Range +5 FireRate +5 ReloadSpeed +0.1 CriticalChance +95 Handling +70 Capacity +1 Pellets
 
 
 

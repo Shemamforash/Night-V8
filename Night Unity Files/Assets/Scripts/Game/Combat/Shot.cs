@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using Facilitating.Audio;
-using Game.Characters;
-using Game.Characters.Player;
-using Game.Combat.Enemies;
 using Game.Gear.Weapons;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEngine;
@@ -19,10 +13,7 @@ namespace Game.Combat
         private int _damage, _damageDealt;
         private readonly CharacterCombat _target, _origin;
         private readonly float _distanceToTarget;
-        private Weapon _weapon;
 
-        private int _noPellets = 1, _noShots = 1;
-        private int _range;
         private int _pierceDepth;
 
         private bool _guaranteeHit, _guaranteeCritical;
@@ -36,41 +27,35 @@ namespace Game.Combat
 
         private event Action OnHitAction;
         private bool _didHit;
-
+        private bool _isCritical;
+        public bool DidHit;
+        
         public Shot(CharacterCombat target, CharacterCombat origin)
         {
             Assert.IsNotNull(target);
+            Assert.IsNotNull(origin);
             _origin = origin;
             _target = target;
-
-            if (_origin != null)
-            {
-                DetailedEnemyCombat enemy = origin as DetailedEnemyCombat;
-                _distanceToTarget = enemy?.DistanceToPlayer ?? ((DetailedEnemyCombat) target).DistanceToPlayer;
-                CacheWeaponAttributes();
-                float distance = origin is Player ? 0 : _distanceToTarget;
-                GunFire.Fire(origin.Weapon().WeaponType(), distance);
-            }
+            DetailedEnemyCombat enemy = origin as DetailedEnemyCombat;
+            _distanceToTarget = enemy?.DistanceToPlayer ?? ((DetailedEnemyCombat) target).DistanceToPlayer;
+            CacheWeaponAttributes();
         }
 
-        public bool IsCritical { get; set; }
+        private bool DidPierce()
+        {
+            return Random.Range(0f, 1f) < _pierceChance;
+        }
 
         private void CacheWeaponAttributes()
         {
             WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
 //            if (_origin is Enemy) _damage = (int)Mathf.Ceil(_damage / 2f);
-            _range = (int) attributes.GetCalculatedValue(AttributeType.Range);
-            _noPellets = (int) attributes.GetCalculatedValue(AttributeType.Pellets);
             _bleedChance = attributes.GetCalculatedValue(AttributeType.BleedChance);
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
             _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
-            _criticalChance = _origin.Weapon().WeaponAttributes.CriticalChance.CurrentValue();
-        }
-
-        private void SetDamage(int damage)
-        {
-            _damage = damage;
+            _pierceChance = attributes.GetCalculatedValue(AttributeType.PierceChance);
+            _criticalChance = attributes.GetCalculatedValue(AttributeType.CriticalChance);
         }
 
         public void SetDamageModifier(float modifier)
@@ -78,41 +63,37 @@ namespace Game.Combat
             _finalDamageModifier = modifier;
         }
 
-        private bool WillHitTarget()
+        private void CalculateIfWillHit()
         {
+            if (_target.InCover) return;
             float hitChance = _origin?.GetHitChance(_target) ?? 1;
-            if (_guaranteeHit && hitChance != 0) return true;
-            return Random.Range(0f, 1f) < hitChance;
+            if (_guaranteeHit && hitChance > 0) DidHit = true;
+            DidHit = Random.Range(0f, 1f) < hitChance;
         }
 
         private bool WillCrit()
         {
             if (_guaranteeCritical)
             {
-                IsCritical = true;
+                _isCritical = true;
             }
             else
             {
-                IsCritical = Random.Range(0f, 1f) < _criticalChance;
+                _isCritical = Random.Range(0f, 1f) < _criticalChance;
             }
 
-            return IsCritical;
+            return _isCritical;
         }
 
         private const float BulletSpeed = 500;
 
         public void Fire()
         {
-            for (int j = 0; j < _noShots; ++j)
-            {
-                if (_origin != null)
-                {
-                    if (_origin.Weapon().Empty()) break;
-                    _origin.Weapon().ConsumeAmmo(1);
-                }
-
-                CreateShotCooldown();
-            }
+            if (_origin.Weapon().Empty()) return;
+            _origin.Weapon().ConsumeAmmo(1);
+            CreateShotCooldown();
+            CalculateIfWillHit();
+            _origin?.RecoilManager.Increment(_origin.Weapon());
         }
 
         private void CreateShotCooldown()
@@ -121,16 +102,13 @@ namespace Game.Combat
             shotCooldown.Duration = _distanceToTarget / BulletSpeed;
             shotCooldown.SetEndAction(() =>
             {
-                for (int i = 0; i < _noPellets; ++i)
+                if (!DidHit)
                 {
-                    if (!WillHitTarget())
-                    {
-                        _target.OnMiss();
-                        continue;
-                    }
-
-                    ApplyDamage();
+                    _target.OnMiss();
+                    return;
                 }
+
+                ApplyDamage();
             });
             shotCooldown.Start();
         }
@@ -138,43 +116,18 @@ namespace Game.Combat
         private void ApplyDamage()
         {
             bool isCritical = WillCrit();
-            int pelletDamage = isCritical ? _damage * 2 : _damage;
-            pelletDamage = (int) (pelletDamage * _finalDamageModifier);
-            _damageDealt += pelletDamage;
-            ApplyPierce(pelletDamage);
+            int totalDamage = isCritical ? _damage * 2 : _damage;
+            totalDamage = (int) (totalDamage * _finalDamageModifier);
+            _damageDealt = totalDamage;
             ApplyConditions();
             OnHitAction?.Invoke();
-            (_origin as PlayerCombat)?.RageController.Increase(pelletDamage);
-            PlayerCombat player = _target as PlayerCombat;
-            if (player != null)
-            {
-                player.OnHit(this, pelletDamage);
-            }
-            else
-            {
-                _target.OnHit(pelletDamage, IsCritical);
-            }
-        }
-
-        private void ApplyPierce(int pelletDamage)
-        {
-            if (_pierceDepth == 0) return;
-            if (Random.Range(0f, 1f) > _pierceChance) return;
-            if (_target is PlayerCombat) return;
-            List<DetailedEnemyCombat> enemiesBehindTarget = CombatManager.GetEnemiesBehindTarget((DetailedEnemyCombat) _target);
-            for (int i = 0; i < enemiesBehindTarget.Count; ++i)
-            {
-                if (i == _pierceDepth)
-                {
-                    break;
-                }
-
-                int pierceDamage = (int) (pelletDamage * Math.Pow(1, i + 1));
-                Shot s = new Shot(enemiesBehindTarget[i], null);
-                s.SetDamage(pierceDamage);
-                s.GuaranteeHit();
-                s.Fire();
-            }
+            (_origin as PlayerCombat)?.RageController.Increase(totalDamage);
+            float armourModifier = DidPierce() ? 1 : 1 - _target.ArmourController.CurrentArmour() / 10f;
+            float healthDamage = (int) (armourModifier * DamageDealt());
+            float armourDamage = (int) ((1 - armourModifier) * DamageDealt());
+            if (healthDamage != 0) _target.HealthController.TakeDamage(healthDamage);
+            if (armourDamage != 0) _target.ArmourController.TakeDamage(armourDamage);
+            if (_isCritical) (_target as DetailedEnemyCombat)?.UiHitController.RegisterCritical();
         }
 
         private void ApplyConditions()
@@ -192,27 +145,6 @@ namespace Game.Combat
             if (Random.Range(0f, 1f) < _sicknessChance) _target.Sick.AddStack();
         }
 
-        public void SetPierceDepth(int depth)
-        {
-            if (depth < 0) depth = 0;
-            _pierceDepth = depth;
-        }
-
-        public void SetPierceChance(float chance)
-        {
-            _pierceChance = Mathf.Clamp(chance, 0f, 1f);
-        }
-
-        public void SetNumberOfShots(int noShots)
-        {
-            _noShots = noShots;
-        }
-
-        public void UseRemainingShots()
-        {
-            _noShots = _origin.Weapon().GetRemainingAmmo();
-        }
-
         public void GuaranteeHit() => _guaranteeHit = true;
 
         public void GuaranteeCritical() => _guaranteeCritical = true;
@@ -224,11 +156,6 @@ namespace Game.Combat
             Assert.IsTrue(distance >= 0);
             _knockDownChance = Mathf.Clamp(chance, 0f, 1f);
             _knockbackDistance = distance;
-        }
-
-        public CharacterCombat Origin()
-        {
-            return _origin;
         }
 
         public CharacterCombat Target()

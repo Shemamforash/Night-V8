@@ -16,7 +16,6 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         {
             base.SetPlayer(enemy);
             MinimumFindCoverDistance = 5f;
-            ArmourController.SetArmourValue(6);
         }
         
 //        public override void ChooseNextAction()

@@ -22,8 +22,8 @@ namespace Game.Combat.Enemies
     public class Enemy : Character
     {
         public readonly EnemyTemplate Template;
+        public bool IsDead;
         
-
         public Enemy(EnemyType type) : base(type.ToString())
         {
             Template = EnemyTemplate.GetEnemyTemplate(type);
@@ -33,8 +33,6 @@ namespace Game.Combat.Enemies
                 EquipWeapon(weapon);
             }
             Reset();
-            Armour a = new Armour("armour", 1, "", Random.Range(0, 10), 0,0,0,0);
-            EquipArmour(a);
         }
 
         private void Reset()
@@ -83,7 +81,8 @@ namespace Game.Combat.Enemies
 
         public override void Kill()
         {
-            throw new NotImplementedException();
+            IsDead = true;
+            //todo register kill
         }
     }
 }

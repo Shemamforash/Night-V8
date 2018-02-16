@@ -18,7 +18,6 @@ namespace Facilitating.UIControllers
 		public static void RemoveGrenade(Grenade g)
 		{
 			Grenades.Remove(g);
-			Destroy(g);
 		}
 	
 		public static void AddGrenade(MiscEnemyType type, float position, float targetPosition)

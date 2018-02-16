@@ -20,7 +20,6 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         {
             base.SetPlayer(enemy);
             MinimumFindCoverDistance = 5f;
-            ArmourController.SetArmourValue(5);
         }
 
         private Action ThrowGrenade()
@@ -34,7 +33,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
                 if (throwDuration > 0) return;
                 float currentPosition = Position.CurrentValue();
                 //todo get player
-                float targetPosition = CombatManager.Player.Position.CurrentValue();
+                float targetPosition = Player.Position.CurrentValue();
                 switch (Random.Range(0, 3))
                 {
                     case 0:
@@ -60,9 +59,10 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             if(!Alerted) _targetTime = Random.Range(10, 15);
         }
 
-        public override void UpdateCombat()
+        public override void Update()
         {
-            base.UpdateCombat();
+            if(MeleeController.InMelee) return;
+            base.Update();
             if (!InCombat() || _throwing) return;
             _targetTime -= Time.deltaTime;
             if (_targetTime > 0) return;

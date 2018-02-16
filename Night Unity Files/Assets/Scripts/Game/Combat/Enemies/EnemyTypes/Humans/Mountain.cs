@@ -12,7 +12,6 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         {
             base.SetPlayer(enemy);
             MinimumFindCoverDistance = 20f;
-            ArmourController.SetArmourValue(4);
         }
 
         public override void ChooseNextAction()
@@ -23,7 +22,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
                 return;
             }
             _firedVolley = false;
-            CurrentAction = MoveToTargetDistance(DistanceToPlayer - 5);
+            CurrentAction = MoveToTargetPosition(CombatManager.Player.Position.CurrentValue() + 5);
         }
     }
 }

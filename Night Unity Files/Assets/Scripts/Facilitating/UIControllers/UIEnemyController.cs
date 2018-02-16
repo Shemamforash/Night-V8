@@ -1,69 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Combat;
+using Game.Combat.Enemies;
+using Game.Combat.Enemies.EnemyTypes;
 using UnityEngine;
 
 namespace Facilitating.UIControllers
 {
     public class UIEnemyController : MonoBehaviour, ICombatListener
     {
-        private static readonly List<DetailedEnemyCombat> EnemiesToAdd = new List<DetailedEnemyCombat>();
         public static readonly List<DetailedEnemyCombat> Enemies = new List<DetailedEnemyCombat>();
-
-        private void Awake()
-        {
-            CombatManager.RegisterCombatListener(this);
-        }
 
         public void EnterCombat()
         {
             CombatManager.CurrentScenario.Enemies().ForEach(e =>
             {
-                AddEnemy(e.CreateUi(transform));
+                if(!e.IsDead) AddEnemy(e.CreateUi(transform));
             });
         }
 
         public void UpdateCombat()
         {
-            if (MeleeController.InMelee) return;
-            List<DetailedEnemyCombat> updatedEnemies = new List<DetailedEnemyCombat>();
-            int totalEnemies = Enemies.Count;
-            int i = totalEnemies - 1;
-            while(totalEnemies > 0 && i >= 0){
-                DetailedEnemyCombat e = Enemies[i];
-                if (updatedEnemies.Contains(e)) continue;
-                updatedEnemies.Add(e);
-                if(e.IsDead) Debug.Log(e.Enemy.Name);
-                try
-                {
-                    e.UpdateCombat();
-                }
-                catch (InvalidOperationException)
-                {
-                    i = 0;
-                    --totalEnemies;
-                }
-                --i;
-            }
-            EnemiesToAdd.ForEach(AddEnemy);
-            EnemiesToAdd.Clear();
         }
 
+        public static void Select(float direction)
+        {
+            if (direction > 0)
+            {
+                TrySelectAtDistance(Enemies.IndexOf(CombatManager.Player.CurrentTarget), -1);
+            }
+            else
+            {
+                TrySelectAtDistance(Enemies.IndexOf(CombatManager.Player.CurrentTarget), 1);
+            }
+        }
+        
         public void ExitCombat()
         {
             Enemies.ForEach(e =>
             {
                 e.ExitCombat();
-                Destroy(e);
+                Destroy(e.gameObject);
             });
             Enemies.Clear();
         }
 
-        public static void QueueEnemyToAdd(DetailedEnemyCombat e)
+        public void QueueEnemyToAdd(EnemyType type)
         {
-            EnemiesToAdd.Add(e);
-            e.Alert();
-            CombatManager.CurrentScenario.AddEnemy(e.Enemy);
+            Enemy e = new Enemy(type);
+            DetailedEnemyCombat enemyUi = e.CreateUi(transform);
+            enemyUi.Alert();
+            enemyUi.Position.SetCurrentValue(CombatManager.VisibilityRange + 5f);
+            AddEnemy(enemyUi);
+            CombatManager.CurrentScenario.AddEnemy(e);
         }
 
         public static bool AllEnemiesGone()

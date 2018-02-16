@@ -47,8 +47,8 @@ namespace Game.Characters.Player
         private LightFire _lightFireAction;
 
         private int _storyProgress;
-        public Skill CharacterSkillOne, CharacterSkillTwo;
-      
+        public readonly Skill CharacterSkillOne, CharacterSkillTwo;
+        private const int PlayerHealthChunkSize = 50;
 
         public string GetCurrentStoryProgress()
         {
@@ -61,7 +61,6 @@ namespace Game.Characters.Player
         public override void Kill()
         {
             if (SceneManager.GetActiveScene().name == "Game") WorldState.HomeInventory().RemoveItem(this);
-            if (CombatManager.Player.Player == this) CombatManager.FailCombat();
         }
 
         //Create Character in code only- no view section, no references to objects in the scene
@@ -83,6 +82,34 @@ namespace Game.Characters.Player
             Debug.Log("Destroyed " + Name);
         }
 
+        public float CalculateDashCooldown()
+        {
+            return 2f - 0.1f * Attributes.Endurance.CurrentValue();
+        }
+
+        private const float MinSpeed = 3, MaxSpeed = 6;
+        
+        public float CalculateSpeed()
+        {
+            float normalisedSpeed = Attributes.Endurance.Normalised();
+            return normalisedSpeed * (MaxSpeed - MinSpeed) + MinSpeed;
+        }
+
+        public float CalculateDamageModifier()
+        {
+            return (float) Math.Pow(1.05f, Attributes.Perception.CurrentValue());
+        }
+
+        public float CalculateSkillCooldownModifier()
+        {
+            return (float) Math.Pow(0.95f, Attributes.Willpower.CurrentValue());
+        }
+
+        public int CalculateCombatHealth()
+        {
+            return (int) (Attributes.Strength.CurrentValue() * PlayerHealthChunkSize);
+        }
+        
         public override XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             base.Save(doc, saveType);

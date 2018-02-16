@@ -47,7 +47,7 @@ public class UIAimController : MonoBehaviour
 
 	public void Fire()
 	{
-		SetValue(1);
+		SetValue(0);
 		_currentAlpha = 1f;
 		_firingParticles.Emit(2);
 	}

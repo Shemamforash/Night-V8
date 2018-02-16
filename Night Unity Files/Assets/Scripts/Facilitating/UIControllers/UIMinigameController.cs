@@ -39,8 +39,7 @@ public class UIMinigameController : Menu
         _strength.Set(strength, strength * 50 + " health (+50 per strength)");
 
         int endurance = (int) _chosenCharacter.Attributes.Endurance.CurrentValue();
-        //todo sort me out
-//        _endurance.Set(endurance, _chosenCharacter.MovementController.GetDashCooldown() + " second dash cooldown, " + _chosenCharacter.MovementController.GetSpeed() + "m/s speed");
+        _endurance.Set(endurance, _chosenCharacter.CalculateDashCooldown() + " second dash cooldown, " + _chosenCharacter.CalculateSpeed() + "m/s speed");
 
         int willpower = (int) _chosenCharacter.Attributes.Willpower.CurrentValue();
         float skillRechargeModifier = _chosenCharacter.Attributes.GetSkillRechargeModifier();

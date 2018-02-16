@@ -46,8 +46,8 @@ class WeaponImporter(XMLWriter):
     def read_weapon_subtypes(self, subtype_row):
         for i in range(0, 3):
             subtype_name = get_value(self, "C", subtype_row + i)
-            manual = get_value(self, "B", subtype_row + i)
-            write_tag(self, "Subtype", self.write_weapon_stats, [subtype_row + i], ["name", "manual"], [subtype_name, manual])
+            automatic = get_value(self, "B", subtype_row + i)
+            write_tag(self, "Subtype", self.write_weapon_stats, [subtype_row + i], ["name", "automatic"], [subtype_name, automatic])
 
     def read_weapon_modifiers(self):
         for i in range(27, 48):
@@ -271,11 +271,11 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-# WeaponImporter()
+WeaponImporter()
 # GearImporter()
 # WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
-EnemyImporter()
+# EnemyImporter()
 # SkillImporter()
 # TraitImporter()

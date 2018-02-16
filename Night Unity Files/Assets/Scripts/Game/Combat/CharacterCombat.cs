@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Facilitating.Audio;
 using Facilitating.UIControllers;
 using Game.Characters;
@@ -20,21 +21,21 @@ namespace Game.Combat
         public Bleed Bleeding;
         public Burn Burn;
         public Sickness Sick;
-        
+
         public bool InCover;
         public bool IsKnockedDown;
         public bool IsDead;
 
-        protected readonly RecoilManager RecoilManager = new RecoilManager();
+        public readonly RecoilManager RecoilManager = new RecoilManager();
 
         public UIHealthBarController HealthController;
         public UIArmourController ArmourController;
-        
+
         public readonly Number Position = new Number(0f, float.MinValue);
         private float _distanceTravelled;
         protected Action<float> MoveForwardAction;
         protected Action<float> MoveBackwardAction;
-    
+
         public float Speed;
         private const int SprintModifier = 2;
         protected bool Sprinting;
@@ -42,26 +43,19 @@ namespace Game.Combat
         public const int MeleeDistance = 5;
 
         private Character _character;
-        
+
         public virtual void Awake()
         {
             ArmourController = Helper.FindChildWithName<UIArmourController>(gameObject, "Armour");
             HealthController = Helper.FindChildWithName<UIHealthBarController>(gameObject, "Health");
-            Position.AddOnValueChange(a => { CombatManager.Player?.UpdatePlayerDirection(); });
             SetConditions();
         }
 
         protected void SetOwnedByEnemy(float speed)
         {
             Speed = speed;
-            MoveForwardAction = f =>
-            {
-                Position.Decrement(f);
-            };
-            MoveBackwardAction = f =>
-            {
-                Position.Increment(f);
-            };
+            MoveForwardAction = f => { Position.Decrement(f); };
+            MoveBackwardAction = f => { Position.Increment(f); };
         }
 
         private void IncreaseDistance(float distance)
@@ -103,9 +97,10 @@ namespace Game.Combat
         {
             MoveBackwardAction?.Invoke(distance);
         }
-        
-        public virtual void UpdateCombat()
+
+        public virtual void Update()
         {
+            if (MeleeController.InMelee) return;
             Burn.Update();
             Sick.Update();
             Bleeding.Update();
@@ -113,7 +108,7 @@ namespace Game.Combat
         }
 
         public abstract void Kill();
-        
+
         protected virtual void Interrupt()
         {
         }
@@ -130,7 +125,7 @@ namespace Game.Combat
             KnockBack(knockbackDistance);
             KnockDown();
         }
-        
+
         //COVER
         protected virtual void TakeCover()
         {
@@ -144,21 +139,9 @@ namespace Game.Combat
             InCover = false;
         }
 
-        protected virtual bool Immobilised()
+        public virtual bool Immobilised()
         {
             return IsKnockedDown;
-        }
-
-        
-        public virtual void OnHit(int damage, bool critical)
-        {
-            if (InCover) return;
-            //todo pierce through cover?
-            float armourModifier = 1 - ArmourController.CurrentArmour() / 10;
-            int healthDamage = (int) (armourModifier * damage);
-            int armourDamage = (int) ((1 - armourModifier) * damage);
-            if(healthDamage != 0) HealthController.TakeDamage(healthDamage);
-            if(armourDamage != 0) ArmourController.TakeDamage(armourDamage);
         }
 
         public float GetHitChance(CharacterCombat target)
@@ -184,10 +167,6 @@ namespace Game.Combat
             return hitChance;
         }
 
-        protected virtual void TakeArmourDamage(int damage)
-        {
-        }
-
         public virtual void OnMiss()
         {
         }
@@ -196,17 +175,12 @@ namespace Game.Combat
         {
             return _character.Weapon;
         }
-        
+
         //FIRING
 
-        protected virtual Shot FireWeapon(CharacterCombat target)
-        {
-            if (Immobilised() || InCover || !Weapon().CanFire()) return null;
-            Assert.IsNotNull(target);
-            Shot shot = Weapon().Fire(target, this);
-            RecoilManager.Increment(Weapon());
-            return shot;
-        }
+//        public virtual List<Shot> FireWeapon(CharacterCombat target)
+//        {
+//        }
 
         //CONDITIONS
 

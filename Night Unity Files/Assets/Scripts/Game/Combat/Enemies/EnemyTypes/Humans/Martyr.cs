@@ -19,8 +19,10 @@ namespace Game.Combat.Enemies.EnemyTypes
             HealthController.AddOnTakeDamage(damage =>
             {
                 if (_detonated) return;
+                if (HealthController.GetCurrentHealth() != 0) return;
                 Detonate();
             });
+            ArmourController.SetArmourValue(0);
         }
         
         public override void Alert()
@@ -31,7 +33,7 @@ namespace Game.Combat.Enemies.EnemyTypes
 
         public override void ChooseNextAction()
         {
-            CurrentAction = MoveToTargetDistance(0);
+            CurrentAction = MoveToPlayer;
         }
         
         protected override void ReachTarget()

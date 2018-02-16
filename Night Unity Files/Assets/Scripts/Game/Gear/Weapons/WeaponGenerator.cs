@@ -19,7 +19,7 @@ namespace Game.Gear.Weapons
         {
             LoadBaseWeapons();
             GearReader.LoadGear();
-            WeaponGenerationTester.Test();
+//            WeaponGenerationTester.Test();
         }
 
         public static WeaponClass GetWeaponClassWithType(WeaponType type)

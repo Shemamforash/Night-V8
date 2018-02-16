@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
+using Facilitating.Audio;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat;
 using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.World;
+using NUnit.Framework;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
@@ -48,10 +51,18 @@ namespace Game.Gear.Weapons
             return !Empty() && FireRateElapsedTimeMet();
         }
         
-        public Shot Fire(CharacterCombat target, CharacterCombat origin)
+        public List<Shot> Fire(CharacterCombat target, CharacterCombat origin)
         {
+            if (origin.InCover || !CanFire() || origin.Immobilised()) return null;
             _timeAtLastFire = Helper.TimeInMillis();
-            return new Shot(target, origin);
+            float distance = origin is PlayerCombat ? 0 : ((DetailedEnemyCombat)origin).DistanceToPlayer;
+            GunFire.Fire(WeaponAttributes.WeaponType, distance);
+            List<Shot> shots = new List<Shot>();
+            for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
+            {
+                shots.Add(new Shot(target, origin));
+            }
+            return shots;
         }
         
         public override bool IsStackable()
@@ -116,7 +127,6 @@ namespace Game.Gear.Weapons
 
         public bool FullyLoaded()
         {
-            //TODO check if character has any ammo left
             return GetRemainingAmmo() == (int)WeaponAttributes.Capacity.CurrentValue();
         }
 

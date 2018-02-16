@@ -7,7 +7,7 @@ namespace Game.Combat
 {
     public class RecoilManager : ICombatListener 
     {
-        public readonly Number Recoil = new Number(0, 0, 1f);
+        private readonly Number Recoil = new Number(0, 0, 1f);
         private const float RecoilRecoveryRate = 0.02f;
         private const float TimeToStartRecovery = 0.5f;
         private float _recoveryTimer;

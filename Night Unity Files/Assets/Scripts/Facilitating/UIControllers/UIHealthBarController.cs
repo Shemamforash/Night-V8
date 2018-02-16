@@ -1,5 +1,4 @@
 ﻿using System;
-using Game.Characters;
 using Game.Combat;
 using NUnit.Framework;
 using SamsHelper;
@@ -13,30 +12,27 @@ namespace Facilitating.UIControllers
     public class UIHealthBarController : MonoBehaviour
     {
         private Slider _slider;
-        private ParticleSystem _healthParticles;
+        private RectTransform _fill;
         private ParticleSystem _bleedEffect, _burnEffect;
         private RectTransform _sliderRect;
         private float _edgeWidthRatio = 3f;
         private readonly Number _healthRemaining = new Number();
-        private event Action<int> OnTakeDamage;
-        private event Action<int> OnHeal;
+        private event Action<float> OnTakeDamage;
+        private event Action<float> OnHeal;
         private TextMeshProUGUI _healthText;
         private CharacterCombat _character;
 
         public void Awake()
         {
             GameObject healthBar = Helper.FindChildWithName(gameObject, "Health Bar");
+            _fill = Helper.FindChildWithName<RectTransform>(healthBar, "Fill");
             _slider = healthBar.GetComponent<Slider>();
-            _healthParticles = Helper.FindChildWithName<ParticleSystem>(healthBar, "Health Effect");
             _burnEffect = Helper.FindChildWithName<ParticleSystem>(healthBar, "Burning");
             _bleedEffect = Helper.FindChildWithName<ParticleSystem>(healthBar, "Bleeding");
             _healthText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Health Text");
-            SetValue(1);
             if (_slider.direction != Slider.Direction.LeftToRight) return;
-            ParticleSystem.ShapeModule shapeModule = _healthParticles.shape;
-            shapeModule.rotation = new Vector3(0, 0, 270);
             _healthRemaining.OnMin(() => GetCharacter()?.Kill());
-            _healthRemaining.AddOnValueChange(a => SetValue(GetNormalisedHealthValue()));
+            _healthRemaining.AddOnValueChange(a => SetValue());
         }
 
         private CharacterCombat GetCharacter()
@@ -51,13 +47,15 @@ namespace Facilitating.UIControllers
             _healthRemaining.SetCurrentValue(initialHealth);
         }
 
-        public void TakeDamage(int amount)
+        public void TakeDamage(float amount)
         {
             Assert.IsTrue(amount >= 0);
             if (amount == 0) return;
             if (_healthRemaining.ReachedMin()) return;
             _healthRemaining.Decrement(amount);
+            FadeNewHealth();
             OnTakeDamage?.Invoke(amount);
+            (_character as DetailedEnemyCombat)?.UiHitController.RegisterShot();
         }
 
         public void Heal(int amount)
@@ -67,8 +65,8 @@ namespace Facilitating.UIControllers
             OnHeal?.Invoke(amount);
         }
 
-        public void AddOnTakeDamage(Action<int> a) => OnTakeDamage += a;
-        public void AddOnHeal(Action<int> a) => OnHeal += a;
+        public void AddOnTakeDamage(Action<float> a) => OnTakeDamage += a;
+        public void AddOnHeal(Action<float> a) => OnHeal += a;
 
         public float GetNormalisedHealthValue()
         {
@@ -90,25 +88,47 @@ namespace Facilitating.UIControllers
             _edgeWidthRatio = 7.2f;
         }
 
-        public void SetValue(float alpha)
+        private void FadeNewHealth()
+        {
+            GameObject fader = new GameObject();
+            fader.transform.SetParent(_fill.parent, false);
+            fader.transform.SetSiblingIndex(1);
+            fader.AddComponent<Image>();
+            RectTransform faderTransform = fader.GetComponent<RectTransform>();
+            faderTransform.anchorMin = Vector2.zero;
+            faderTransform.anchorMax = new Vector2(_fill.anchorMax.x, 1);
+            faderTransform.offsetMin = Vector2.zero;
+            faderTransform.offsetMax = Vector2.zero;
+            fader.AddComponent<Fader>();
+        }
+
+        private class Fader : MonoBehaviour
+        {
+            private float _alpha = 1;
+            private Image _faderImage;
+            private const float Duration = 0.5f;
+
+            public void Awake()
+            {
+                _faderImage = GetComponent<Image>();
+            }
+
+            public void Update()
+            {
+                _faderImage.color = new Color(1, 0, 0, _alpha);
+                _alpha -= Time.deltaTime * Duration;
+                if (_alpha < 0)
+                {
+                    Destroy(gameObject);
+                }
+            }
+        }
+
+        private void SetValue()
         {
             float normalisedHealth = GetNormalisedHealthValue();
             _healthText.text = (int) GetCurrentHealth() + "/" + (int) GetMaxHealth();
-
-            int amount = 50;
-            if (alpha == 0 || normalisedHealth < 0)
-            {
-                amount = 0;
-            }
-            else
-            {
-                _slider.value = normalisedHealth;
-            }
-
-            ParticleSystem.MainModule main = _healthParticles.main;
-            main.startColor = new Color(1, 1, 1, alpha);
-            _healthParticles.Emit(amount);
-
+            _slider.value = normalisedHealth;
             float edgeWidth = _edgeWidthRatio * normalisedHealth;
 
             ParticleSystem.ShapeModule burnShape = _burnEffect.shape;

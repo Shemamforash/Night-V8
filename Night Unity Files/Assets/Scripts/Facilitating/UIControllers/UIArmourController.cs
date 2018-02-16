@@ -33,13 +33,8 @@ namespace Facilitating.UIControllers
             for (int i = 0; i < ArmourDivisions; ++i)
             {
                 GameObject newSegment = new GameObject();
-                RectTransform rectTransform = newSegment.AddComponent<RectTransform>();
-                rectTransform.SetParent(_armourBar);
-                rectTransform.localScale = new Vector3(1, 1, 1);
+                newSegment.transform.SetParent(_armourBar, false);
                 newSegment.AddComponent<Image>();
-                LayoutElement layout = newSegment.AddComponent<LayoutElement>();
-                layout.preferredHeight = GetComponent<RectTransform>().rect.height;
-                rectTransform.position = new Vector3(rectTransform.position.x, rectTransform.position.y, 0);
                 newSegment.name = "Armour Piece " + (i + 1);
                 segments.Add(newSegment);
             }
@@ -85,10 +80,10 @@ namespace Facilitating.UIControllers
             OnArmourChange?.Invoke();
         }
 
-        public void TakeDamage(int amount)
+        public void TakeDamage(float amount)
         {
             Assert.IsFalse(amount == 0);
-            for (int i = _armourChunks.Count; i >= 0; --i)
+            for (int i = _armourChunks.Count - 1; i >= 0; --i)
             {
                 if (!_armourChunks[i].Active()) continue;
                 amount = _armourChunks[i].TakeDamage(amount);
@@ -146,7 +141,7 @@ namespace Facilitating.UIControllers
                 _armourObject.GetComponent<Image>().color = new Color(1, rValue, rValue, 1);
             }
 
-            public int TakeDamage(int damage)
+            public int TakeDamage(float damage)
             {
                 int remainder = (int) (damage - Remaining.CurrentValue());
                 Remaining.Decrement(damage);
@@ -154,7 +149,6 @@ namespace Facilitating.UIControllers
                 {
                     remainder = 0;
                 }
-
                 _currentFadeTime = MaxFadeTime;
                 return remainder;
             }

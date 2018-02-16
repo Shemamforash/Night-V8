@@ -27,6 +27,11 @@ namespace Game.Combat
             return StackList.Count != 0;
         }
 
+        protected void ApplyDamage()
+        {
+            
+        }
+        
         public void Update()
         {
             _timeToNextTick -= Time.deltaTime;

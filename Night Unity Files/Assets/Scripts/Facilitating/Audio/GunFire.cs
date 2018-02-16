@@ -1,13 +1,13 @@
-﻿using System;
+﻿
+using System.Collections;
+using System.Collections.Generic;
 using Game.Gear.Weapons;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Facilitating.Audio
 {
     public class GunFire : MonoBehaviour
     {
-        private AudioSource GunSource;
         public AudioClip[] RifleFire;
         public AudioClip[] SMGFire;
         public AudioClip BoltPull;
@@ -15,26 +15,60 @@ namespace Facilitating.Audio
         public GameObject AudioSourcePrefab;
         public AudioClip[] Steps;
 
+        private static readonly List<PoolingAudioSource> _inactiveAudioSources = new List<PoolingAudioSource>();
+        private static List<PoolingAudioSource> _activeSources = new List<PoolingAudioSource>();
+
         public void Awake()
         {
             _instance = this;
-            GunSource = GetComponent<AudioSource>();
         }
 
-        private static void CreateAudioSource(float position, AudioClip sound)
+        private class PoolingAudioSource
         {
-            //todo audiosource pool
-            GameObject g = Instantiate(_instance.AudioSourcePrefab, new Vector3(0, 0, -position), Quaternion.identity);
-            g.GetComponent<AudioSource>().PlayOneShot(sound);
-            Destroy(g, sound.length);
+            private readonly AudioSource _audioSource;
+            private readonly GameObject _gameObject;
+
+            public PoolingAudioSource()
+            {
+                _gameObject = Instantiate(_instance.AudioSourcePrefab, Vector3.zero, Quaternion.identity);
+                _audioSource = _gameObject.GetComponent<AudioSource>();
+                _inactiveAudioSources.Add(this);
+            }
+
+            public float PlayClip(float position, AudioClip sound)
+            {
+                _gameObject.transform.position = new Vector3(0, 0, position);
+                _audioSource.pitch = Random.Range(0.9f, 1.1f);
+                _audioSource.volume = Random.Range(0.9f, 1.0f);
+                _audioSource.PlayOneShot(sound);
+                _inactiveAudioSources.Remove(this);
+                _activeSources.Add(this);
+                return sound.length;
+            }
         }
-        
+
+        private static PoolingAudioSource GetAvailableAudioSource()
+        {
+            return _inactiveAudioSources.Count == 0 ? new PoolingAudioSource() : _inactiveAudioSources[Random.Range(0, _inactiveAudioSources.Count)];
+        }
+
+        private IEnumerator ReuseAudioSource(float time, PoolingAudioSource audioSource)
+        {
+            yield return new WaitForSeconds(time);
+            _activeSources.Remove(audioSource);
+            _inactiveAudioSources.Add(audioSource);
+        }
+
+        private void PlaySound(float position, AudioClip sound)
+        {
+            PoolingAudioSource audioSource = GetAvailableAudioSource();
+            float duration = audioSource.PlayClip(position, sound);
+            StartCoroutine(ReuseAudioSource(duration, audioSource));
+        }
+
         public static void Fire(WeaponType type, float distance)
         {
-            _instance.GunSource.pitch = Random.Range(0.9f, 1.1f);
-            float volume = Random.Range(0.9f, 1f);
-            _instance.GunSource.volume = volume;
-            CreateAudioSource(distance, _instance.RifleFire[Random.Range(0, _instance.RifleFire.Length)]);
+            _instance.PlaySound(distance, _instance.RifleFire[Random.Range(0, _instance.RifleFire.Length)]);
 //
 //            switch (type)
 //            {
@@ -57,13 +91,13 @@ namespace Facilitating.Audio
 
         public static void Cock(float duration)
         {
-            _instance.GunSource.volume = 1;
-            _instance.GunSource.PlayOneShot(_instance.BoltPull, duration);
+//            _instance.GunSource.volume = 1;
+//            _instance.GunSource.PlayOneShot(_instance.BoltPull, duration);
         }
 
         public static void Step(float distance)
         {
-            CreateAudioSource(distance, _instance.Steps[Random.Range(0, _instance.Steps.Length)]);
+            _instance.PlaySound(distance, _instance.Steps[Random.Range(0, _instance.Steps.Length)]);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Facilitating.UIControllers;
 using Game.Combat.Enemies;
 using Game.Gear.Weapons;
@@ -25,29 +26,29 @@ namespace Game.Combat.Skills
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         public static Skill GetWeaponSkillTwo(Weapon weapon)
         {
             switch (weapon.WeaponType())
             {
                 case WeaponType.Rifle:
-                    return  new Blast();
+                    return new Blast();
                 case WeaponType.Shotgun:
-                    return  new Swarm();
+                    return new Swarm();
                 case WeaponType.LMG:
-                    return  new Compel();
+                    return new Compel();
                 case WeaponType.SMG:
-                    return  new Splinter();
+                    return new Splinter();
                 case WeaponType.Pistol:
-                    return  new Revenge();
+                    return new Revenge();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
     }
-    
+
     //Rifle
-    
+
     public class Gouge : Skill
     {
         public Gouge() : base(nameof(Gouge))
@@ -58,10 +59,14 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Shot shot = CreateShot();
-            shot.SetPierceDepth(100);
-            shot.SetPierceChance(1);
-            shot.Fire();
+            List<DetailedEnemyCombat> enemiesBehindTarget = CombatManager.GetEnemiesBehindTarget(CombatManager.Player.CurrentTarget);
+            enemiesBehindTarget.Add(CombatManager.Player.CurrentTarget);
+            foreach (DetailedEnemyCombat enemyCombat in enemiesBehindTarget)
+            {
+                Shot s = new Shot(enemyCombat, CombatManager.Player);
+                s.GuaranteeHit();
+                s.Fire();
+            }
         }
     }
 
@@ -74,14 +79,15 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            Shot shot = CreateShot();
-            shot.UseRemainingShots();
-            shot.Fire();
+            for (int i = 0; i < CombatManager.Player.Weapon().GetRemainingAmmo(); ++i)
+            {
+                CreateShot().Fire();
+            }
         }
     }
 
     //Shotgun
-    
+
     public class Sweep : Skill
     {
         public Sweep() : base(nameof(Sweep))
@@ -116,7 +122,7 @@ namespace Game.Combat.Skills
     }
 
     //LMG
-    
+
     public class Refill : Skill
     {
         public Refill() : base(nameof(Refill))
@@ -142,7 +148,7 @@ namespace Game.Combat.Skills
             CombatManager.Player.OnFireAction += s => { s.SetKnockdownChance(0.25f, 2); };
         }
     }
-    
+
     //SMG
 
     public class Hairpin : Skill
@@ -154,7 +160,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            CombatManager.Player.OnFireAction += s => { s.SetNumberOfShots(2); };
+            CombatManager.Player.OnFireAction += s => { CombatManager.Player.FireWeapon(s.Target()); };
         }
     }
 
@@ -172,7 +178,7 @@ namespace Game.Combat.Skills
     }
 
     //Pistol
-    
+
     public class Retribution : Skill
     {
         public Retribution() : base(nameof(Retribution), true)

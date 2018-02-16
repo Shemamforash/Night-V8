@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Assets;
 using Facilitating.UIControllers;
 using Game.Characters;
@@ -15,10 +16,8 @@ namespace Game.Combat
 {
     public class PlayerCombat : CharacterCombat, IInputListener
     {
-        private float _damageModifier, _skillCooldownModifier, _initialHealth;
+        private float _damageModifier, _skillCooldownModifier;
         private int _initialArmour;
-
-        private const int PlayerHealthChunkSize = 50;
 
         public Player Player;
 
@@ -33,7 +32,6 @@ namespace Game.Combat
         public DetailedEnemyCombat CurrentTarget;
 
         private TextMeshProUGUI _playerName;
-        private TextMeshProUGUI _coverText;
 
         public CanvasGroup PlayerCanvasGroup;
         private Number _strengthText;
@@ -42,6 +40,14 @@ namespace Game.Combat
         public override void Kill()
         {
             Player.Kill();
+            CombatManager.FailCombat();
+        }
+
+        public override void Update()
+        {
+            if (MeleeController.InMelee) return;
+            base.Update();
+            UpdatePlayerDirection();
         }
         
         public override void Awake()
@@ -49,46 +55,11 @@ namespace Game.Combat
             base.Awake();
             PlayerCanvasGroup = gameObject.GetComponent<CanvasGroup>();
             _playerName = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
-            _coverText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Cover");
-            _coverText.text = "";
             HealthController.AddOnHeal(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
             HealthController.AddOnTakeDamage(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
-        }
-
-        public void UpdatePlayerDirection()
-        {
-            if (CurrentTarget == null) return;
-            FacingDirection = CurrentTarget.DistanceToPlayer > 0 ? Direction.Right : Direction.Left;
-            UIEnemyController.Enemies.ForEach(e =>
-            {
-                if (FacingDirection == Direction.Left && e.DistanceToPlayer > 0)
-                {
-                    e.Hide();
-                    return;
-                }
-
-                if (FacingDirection == Direction.Right && e.DistanceToPlayer < 0)
-                {
-                    e.Hide();
-                    return;
-                }
-
-                e.Show();
-            });
-        }
-
-        public override void SetPlayer(Character player)
-        {
-            base.SetPlayer(player);
-            Player = (Player)player;
-            _playerName.text = player.Name;
-            Speed = Player.Attributes.Endurance.CurrentValue() * 0.4f + 1;
             MoveForwardAction = f => Position.Increment(f);
             MoveBackwardAction = f => Position.Decrement(f);
-            Position.SetCurrentValue(0);
             _dashCooldown = CombatManager.CombatCooldowns.CreateCooldown();
-            float dashDuration = 2f - 0.1f * Player.Attributes.Endurance.CurrentValue();
-            _dashCooldown.Duration = dashDuration;
             _dashCooldown.SetDuringAction(a =>
             {
                 float normalisedTime = a / _dashCooldown.Duration;
@@ -99,27 +70,43 @@ namespace Game.Combat
                 RageBarController.UpdateDashTimer(1);
                 RageBarController.PlayFlash();
             });
+            HealthController.SetIsPlayerBar();
+            RageController = new RageController();
+            SetReloadCooldown();
+        }
 
-            _damageModifier = (float) Math.Pow(1.05f, Player.Attributes.Perception.CurrentValue());
-            _skillCooldownModifier = (float) Math.Pow(0.95f, Player.Attributes.Willpower.CurrentValue());
-            int initialHealth = (int) (Player.Attributes.Strength.CurrentValue() * PlayerHealthChunkSize);
-            HealthController.SetInitialHealth(initialHealth, this);
+        public override void SetPlayer(Character player)
+        {
+            base.SetPlayer(player);
+            Player = (Player) player;
+            _playerName.text = player.Name;
+            Speed = Player.CalculateSpeed();
+            Position.SetCurrentValue(0);
+            
+            _dashCooldown.Duration = Player.CalculateDashCooldown();
+            _damageModifier = Player.CalculateDamageModifier();
+            _skillCooldownModifier = Player.CalculateSkillCooldownModifier();
+            
+            HealthController.SetInitialHealth(Player.CalculateCombatHealth(), this);
             _initialArmour = player.Armour?.ArmourRating ?? 0;
 
             HeartBeatController.Enable();
             HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue());
             RecoilManager.EnterCombat();
-            HealthController.SetIsPlayerBar();
-
-            RageController = new RageController();
-            Position.AddOnValueChange(a => { UIEnemyController.Enemies.ForEach(e => e.Position.UpdateValueChange()); });
-            SetReloadCooldown();
+            
             ArmourController.SetArmourValue(_initialArmour);
             RageController.EnterCombat();
             SkillBar.BindSkills(Player);
             FacingDirection = Direction.Right;
             InputHandler.RegisterInputListener(this);
             UIMagazineController.SetWeapon(Weapon());
+        }
+        
+        public void UpdatePlayerDirection()
+        {
+            if (CurrentTarget == null) return;
+            bool behind = CurrentTarget.Position.CurrentValue() < Position.CurrentValue();
+            FacingDirection = behind ? Direction.Left : Direction.Right;
         }
 
         private void Dash(float direction)
@@ -165,11 +152,9 @@ namespace Game.Combat
             else TakeCover();
         }
 
-        public void OnHit(Shot shot, int damage)
+        public void TryRetaliate(DetailedEnemyCombat origin)
         {
-            OnHit(damage, shot.IsCritical);
-            if (shot.Origin() == null) return;
-            if (Retaliate) FireWeapon(shot.Origin());
+            if (Retaliate) FireWeapon(origin);
         }
 
         protected override void KnockDown()
@@ -183,14 +168,12 @@ namespace Game.Combat
         {
             base.TakeCover();
             PlayerCanvasGroup.alpha = 0.4f;
-            _coverText.text = "In Cover";
         }
 
         protected override void LeaveCover()
         {
             base.LeaveCover();
             PlayerCanvasGroup.alpha = 1f;
-            _coverText.text = "Exposed";
         }
 
         public void SetTarget(DetailedEnemyCombat e)
@@ -201,7 +184,7 @@ namespace Game.Combat
         }
 
         //MISC
-        protected override bool Immobilised()
+        public override bool Immobilised()
         {
             return _reloadingCooldown.Running() || IsKnockedDown;
         }
@@ -268,20 +251,19 @@ namespace Game.Combat
         }
 
         //FIRING
-        protected override Shot FireWeapon(CharacterCombat target)
+        public void FireWeapon(CharacterCombat target)
         {
-            Shot shot = base.FireWeapon(target);
-            if (shot != null)
+            List<Shot> shots = Weapon().Fire(target, this);
+            if (shots == null) return;
+            shots.ForEach(shot =>
             {
                 if (RageController.Active()) shot.GuaranteeCritical();
                 shot.SetDamageModifier(_damageModifier);
                 OnFireAction?.Invoke(shot);
-                UpdateMagazineUi();
                 shot.Fire();
                 _fired = true;
-            }
-
-            return shot;
+            });
+            UpdateMagazineUi();
         }
 
         //MISC
@@ -320,42 +302,53 @@ namespace Game.Combat
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
             if (Immobilised()) return;
-            switch (axis)
+            if (isHeld)
             {
-                case InputAxis.Cover:
-                    if (!isHeld) ChangeCover();
-                    break;
-                case InputAxis.Enrage:
-                    RageController.TryStart();
-                    break;
-                case InputAxis.Fire:
-                    if (!_fired && isHeld) break;
-                    if (!_fired || Player.Weapon.WeaponAttributes.Automatic) FireWeapon(CurrentTarget);
-                    break;
-                case InputAxis.Reload:
-                    Reload();
-                    break;
-                case InputAxis.Horizontal:
-                    Move(direction);
-                    break;
-                case InputAxis.Sprint:
-                    StartSprinting();
-                    break;
-                case InputAxis.Melee:
-                    TryMelee();
-                    break;
-                case InputAxis.SkillOne:
-                    SkillBar.ActivateSkill(0);
-                    break;
-                case InputAxis.SkillTwo:
-                    SkillBar.ActivateSkill(1);
-                    break;
-                case InputAxis.SkillThree:
-                    SkillBar.ActivateSkill(2);
-                    break;
-                case InputAxis.SkillFour:
-                    SkillBar.ActivateSkill(3);
-                    break;
+                switch (axis)
+                {
+                    case InputAxis.Fire:
+                        if (!_fired || Player.Weapon.WeaponAttributes.Automatic) FireWeapon(CurrentTarget);
+                        break;
+                    case InputAxis.Horizontal:
+                        Move(direction);
+                        break;
+                }
+            }
+            else
+            {
+                switch (axis)
+                {
+                    case InputAxis.Cover:
+                        ChangeCover();
+                        break;
+                    case InputAxis.Enrage:
+                        RageController.TryStart();
+                        break;
+                    case InputAxis.Reload:
+                        Reload();
+                        break;
+                    case InputAxis.Vertical:
+                        UIEnemyController.Select(direction);
+                        break;
+                    case InputAxis.Sprint:
+                        StartSprinting();
+                        break;
+                    case InputAxis.Melee:
+                        TryMelee();
+                        break;
+                    case InputAxis.SkillOne:
+                        SkillBar.ActivateSkill(0);
+                        break;
+                    case InputAxis.SkillTwo:
+                        SkillBar.ActivateSkill(1);
+                        break;
+                    case InputAxis.SkillThree:
+                        SkillBar.ActivateSkill(2);
+                        break;
+                    case InputAxis.SkillFour:
+                        SkillBar.ActivateSkill(3);
+                        break;
+                }
             }
         }
 

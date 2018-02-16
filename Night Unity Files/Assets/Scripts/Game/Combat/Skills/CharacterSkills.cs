@@ -159,7 +159,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             base.OnFire();
-            CombatManager.Player.CurrentTarget.CurrentAction = CombatManager.Player.CurrentTarget.MoveToTargetDistance(0);
+            CombatManager.Player.CurrentTarget.CurrentAction = CombatManager.Player.CurrentTarget.MoveToPlayer;
         }
     }
 
@@ -192,7 +192,8 @@ namespace Game.Combat.Skills
         {
             base.OnFire();
             float distance = Random.Range(CombatManager.VisibilityRange / 2, CombatManager.VisibilityRange);
-            CombatManager.Player.CurrentTarget.CurrentAction = CombatManager.Player.CurrentTarget.MoveToTargetDistance(distance);
+            //todo
+//            CombatManager.Player.CurrentTarget.CurrentAction = CombatManager.Player.CurrentTarget.MoveToTargetDistance(distance);
         }
     }
 
@@ -347,7 +348,7 @@ namespace Game.Combat.Skills
         {
             base.OnFire();
             if (CombatManager.Player.CurrentTarget.DistanceToPlayer > CharacterCombat.MeleeDistance) return;
-            CombatManager.Player.CurrentTarget.OnHit(25, false);
+            CombatManager.Player.CurrentTarget.HealthController.TakeDamage(25);
             for (int i = 0; i < 5; ++i) CombatManager.Player.CurrentTarget.Bleeding.AddStack();
         }
     }

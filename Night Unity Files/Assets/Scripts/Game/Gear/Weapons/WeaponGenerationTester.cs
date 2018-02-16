@@ -59,16 +59,16 @@ namespace Game.Gear.Weapons
 
         public static void Test()
         {
-//            foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
-//            {
-//                ResetAttributeStats();
-//                TestWeapon(type, 0);
-//                TestWeapon(type, 20);
-//                _testResultString += "\n\n";
-//            }
-//
-//            Debug.Log(_testResultString);
-//            File.WriteAllText(Directory.GetCurrentDirectory() + "/weapontest.txt", _testResultString.Replace("\n", Environment.NewLine));
+            foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
+            {
+                ResetAttributeStats();
+                TestWeapon(type, 0);
+                TestWeapon(type, 20);
+                _testResultString += "\n\n";
+            }
+
+            Debug.Log(_testResultString);
+            File.WriteAllText(Directory.GetCurrentDirectory() + "/weapontest.txt", _testResultString.Replace("\n", Environment.NewLine));
         }
 
         private static void TestWeapon(WeaponType type, int durability)

@@ -30,7 +30,7 @@ namespace Game.Combat
             List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(_position, _radius);
             foreach (CharacterCombat c in charactersInRange)
             {
-                c.OnHit(_damage, false);
+                c.HealthController.TakeDamage(_damage);
                 c.Knockback(_knockbackDistance);
                 if (_bleed) c.Bleeding.AddStack();
                 if (_burn) c.Burn.AddStack();

@@ -4,7 +4,7 @@
     {
         public override void ChooseNextAction()
         {
-            CurrentAction = MoveToTargetDistance(0);
+            CurrentAction = MoveToPlayer;
         }
 
         protected override void ReachTarget()
@@ -12,7 +12,7 @@
             base.ReachTarget();
             if (Alerted)
             {
-                CurrentAction = MoveToTargetDistance(0);
+                CurrentAction = MoveToPlayer;
             }
         }
     }

@@ -18,7 +18,6 @@ namespace SamsHelper.ReactiveUI.Elements
         private Button _button;
         public GameObject Border;
         [Range(0f, 5f)] public float FadeDuration = 0.5f;
-        private AudioSource _buttonClickSource;
         private bool _justEntered;
         private Action _onDownAction, _onUpAction;
         private Coroutine _fadeCoroutine;
@@ -60,7 +59,6 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             InputHandler.RegisterInputListener(this);
             _button = GetComponent<Button>();
-            _buttonClickSource = Camera.main.GetComponent<AudioSource>();
             try
             {
                 Border.SetActive(false);
@@ -81,7 +79,6 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             UseSelectedColours();
             OnSelectActions?.Invoke();
-            _buttonClickSource.Play();
             _justEntered = true;
         }
 

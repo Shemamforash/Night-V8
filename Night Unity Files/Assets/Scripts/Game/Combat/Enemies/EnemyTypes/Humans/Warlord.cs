@@ -14,7 +14,6 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         public override void SetPlayer(Character enemy)
         {
             base.SetPlayer(enemy);
-            ArmourController.SetArmourValue(8);
             MinimumFindCoverDistance = 10;
             HealthController.AddOnTakeDamage(a =>
             {
@@ -37,8 +36,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             _reinforceCallTime -= Time.deltaTime;
             if (!(_reinforceCallTime <= 0)) return;
             
-            //todo add enemy
-//            QueueEnemyToAdd(new Sentinel(CombatManager.VisibilityRange + 5f));
+            CombatManager.EnemyController.QueueEnemyToAdd(EnemyType.Sentinel);
             ChooseNextAction();
             return;
 //            switch (Random.Range(0, 4))
