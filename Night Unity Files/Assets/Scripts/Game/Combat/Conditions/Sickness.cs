@@ -6,7 +6,7 @@ namespace Game.Combat.Skills
 {
     public class Sickness : Condition
     {
-        private int _criticalStackCount = 10;
+        public static int MaxStacks = 10;
         private float _timeSinceLastHit = 0;
 
         public Sickness(CharacterCombat character) : base(character, 1, 0)
@@ -26,7 +26,7 @@ namespace Game.Combat.Skills
         public override void AddStack()
         {
             base.AddStack();
-            if (StackList.Count == _criticalStackCount)
+            if (StackList.Count == MaxStacks)
             {
                 CharacterHealth.TakeDamage((int) (CharacterHealth.GetMaxHealth() * 0.25f));
                 Clear();
@@ -41,7 +41,7 @@ namespace Game.Combat.Skills
         public float GetNormalisedValue()
         {
             float currentValue = StackList.Sum();
-            return currentValue / _criticalStackCount;
+            return currentValue / MaxStacks;
         }
     }
 }

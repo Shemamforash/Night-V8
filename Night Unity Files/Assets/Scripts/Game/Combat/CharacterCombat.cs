@@ -144,7 +144,7 @@ namespace Game.Combat
             return IsKnockedDown;
         }
 
-        public float GetHitChance(CharacterCombat target)
+        public float GetHitChance(CharacterCombat target, bool printChance = false)
         {
             float hitChance = 0f;
             if (target.InCover)
@@ -164,6 +164,7 @@ namespace Game.Combat
             }
 
             hitChance *= RecoilManager.GetAccuracyModifier();
+            if (printChance) Debug.Log(hitChance + " " + RecoilManager.GetAccuracyModifier());
             return hitChance;
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Facilitating.Audio;
 using Game.Characters;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Game.Combat
         private readonly float _position;
 
         private float _knockbackDistance;
-        private bool _bleed, _burn, _sick;
+        private bool _bleed, _burn, _sick, _pierce;
 
         public Explosion(float position, float radius, int damage)
         {
@@ -30,12 +31,14 @@ namespace Game.Combat
             List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(_position, _radius);
             foreach (CharacterCombat c in charactersInRange)
             {
-                c.HealthController.TakeDamage(_damage);
+                if(_pierce) c.ArmourController.TakeDamage(_damage);
+                else c.HealthController.TakeDamage(_damage);
                 c.Knockback(_knockbackDistance);
                 if (_bleed) c.Bleeding.AddStack();
                 if (_burn) c.Burn.AddStack();
                 if (_sick) c.Sick.AddStack();
             }
+            GunFire.Explode(_position);
         }
 
         public void SetKnockbackDistance(float distance)
@@ -56,6 +59,11 @@ namespace Game.Combat
         public void SetSickness()
         {
             _sick = true;
+        }
+
+        public void SetPiercing()
+        {
+            _pierce = true;
         }
     }
 }

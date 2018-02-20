@@ -7,8 +7,8 @@ namespace Game.Characters
     public class CharacterTemplate
     {
         public readonly List<string> StoryLines;
-        public CharacterClass CharacterClass;
-        public int Strength, Endurance, Willpower, Perception;
+        public readonly CharacterClass CharacterClass;
+        public readonly int Strength, Endurance, Willpower, Perception;
 
         public CharacterTemplate(List<string> storyLines, string name, int strength, int endurance, int willpower, int perception)
         {

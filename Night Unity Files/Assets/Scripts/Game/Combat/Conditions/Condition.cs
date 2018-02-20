@@ -27,9 +27,9 @@ namespace Game.Combat
             return StackList.Count != 0;
         }
 
-        protected void ApplyDamage()
+        public int Size()
         {
-            
+            return StackList.Count;
         }
         
         public void Update()
@@ -50,6 +50,14 @@ namespace Game.Combat
         }
 
         protected abstract void Tick();
+
+        public void AddStacks(int stacks)
+        {
+            for (int i = 0; i < stacks; ++i)
+            {
+                AddStack();
+            }
+        }
 
         public virtual void AddStack()
         {

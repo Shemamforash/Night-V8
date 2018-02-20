@@ -66,7 +66,7 @@ namespace Game.Combat
             PrimaryButton = gameObject.GetComponent<EnhancedButton>();
             PrimaryButton.AddOnSelectEvent(() => CombatManager.Player.SetTarget(this));
             HealthController.AddOnTakeDamage(f => { Alert(); });
-            Position.SetCurrentValue(Random.Range(70, 130));
+            Position.SetCurrentValue(Random.Range(30, 70));
             UpdateDistance();
         }
 
@@ -134,7 +134,7 @@ namespace Game.Combat
             Enemy = (Enemy)enemy;
             SetOwnedByEnemy(Enemy.Template.Speed);
             HealthController.SetInitialHealth(Enemy.Template.Health, this);
-            ArmourController.SetArmourValue(Enemy.Armour.ArmourRating);
+            ArmourController.SetArmourValue(Enemy.ArmourController.GetProtectionLevel());
             RecoilManager.EnterCombat();
             if (!(this is Medic || this is Martyr)) SetHealBehaviour();
             CurrentAction = Wander;

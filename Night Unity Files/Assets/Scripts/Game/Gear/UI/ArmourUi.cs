@@ -16,16 +16,16 @@ namespace Game.Gear.UI
         public override void Update()
         {
             base.Update();
-            Armour armour = (Armour) LinkedObject;
-            TitleText.text = armour.ArmourRating + " Armour";
+            ArmourPlate armour = (ArmourPlate) LinkedObject;
+            TitleText.text = armour.Weight + " Armour";
            //TODO SubTitleText.text = "-" + armour.ArmourRating / 100 + "% damage";
-            ModifierColumnOneText.text = armour.Description;
+            ModifierColumnOneText.text = armour.GetSummary();
             ModifierColumn2Text.gameObject.SetActive(false);
 
-            TopLeftAttributeText.text = "+" + armour.PerceptionModifier + "INT";
-            TopRightAttributeText.text = "+" + armour.WillpowerModifier + "STAB";
-            CentreLeftAttributeText.text = "+" + armour.StrengthModifier + "STR";
-            CentreRightAttributeText.text = "+" + armour.EnduranceModifier + "END";
+//            TopLeftAttributeText.text = "+" + armour.PerceptionModifier + "INT";
+//            TopRightAttributeText.text = "+" + armour.WillpowerModifier + "STAB";
+//            CentreLeftAttributeText.text = "+" + armour.StrengthModifier + "STR";
+//            CentreRightAttributeText.text = "+" + armour.EnduranceModifier + "END";
             BottomLeftAttributeText.gameObject.SetActive(false);
             BottomRightAttributeText.gameObject.SetActive(false);
         }

@@ -48,7 +48,7 @@ namespace Game.Characters.Player
 
         private int _storyProgress;
         public readonly Skill CharacterSkillOne, CharacterSkillTwo;
-        private const int PlayerHealthChunkSize = 50;
+        public const int PlayerHealthChunkSize = 50;
 
         public string GetCurrentStoryProgress()
         {
@@ -211,11 +211,10 @@ namespace Game.Characters.Player
             CharacterView?.WeaponGearUi.SetGearItem(weapon);
         }
 
-        public override void EquipArmour(Armour armour)
-        {
-            base.EquipArmour(armour);
-            CharacterView?.ArmourGearUi.SetGearItem(armour);
-        }
+//        public void EquipArmour(Armour armour)
+//        {
+//            CharacterView?.ArmourGearUi.SetGearItem(armour);
+//        }
 
         public override void EquipAccessory(Accessory accessory)
         {

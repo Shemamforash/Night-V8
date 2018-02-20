@@ -12,9 +12,13 @@ namespace Game.Gear.Weapons
         private static string _testResultString = "";
         private const int TestRuns = 1000;
         private static Dictionary<AttributeType, MinMaxAverage> _attributeStats;
+
         private static readonly List<AttributeType> DesiredStats = new List<AttributeType>
         {
-            AttributeType.Damage, AttributeType.Range, AttributeType.CriticalChance, AttributeType.FireRate,
+            AttributeType.Damage,
+            AttributeType.Range,
+            AttributeType.CriticalChance,
+            AttributeType.FireRate,
         };
 
         private class MinMaxAverage
@@ -61,24 +65,27 @@ namespace Game.Gear.Weapons
         {
             foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
             {
-                ResetAttributeStats();
-                TestWeapon(type, 0);
-                TestWeapon(type, 20);
-                _testResultString += "\n\n";
+                foreach (WeaponQuality quality in Enum.GetValues(typeof(WeaponQuality)))
+                {
+                    ResetAttributeStats();
+                    TestWeapon(type, 0, quality);
+                    TestWeapon(type, 10, quality);
+                    _testResultString += "\n\n";
+                }
             }
 
-            Debug.Log(_testResultString);
+//            Debug.Log(_testResultString);
             File.WriteAllText(Directory.GetCurrentDirectory() + "/weapontest.txt", _testResultString.Replace("\n", Environment.NewLine));
         }
 
-        private static void TestWeapon(WeaponType type, int durability)
+        private static void TestWeapon(WeaponType type, int durability, WeaponQuality quality)
         {
             float averageDps = 0, minDps = 10000, maxDps = 0;
             Weapon maxWeapon = null;
             Weapon minWeapon = null;
             for (int i = 0; i < TestRuns; ++i)
             {
-                Weapon w = WeaponGenerator.GenerateWeapon(type, durability);
+                Weapon w = WeaponGenerator.GenerateWeapon(quality, type, durability);
                 DesiredStats.ForEach(stat => _attributeStats[stat].AddValue(w));
                 float dps = w.WeaponAttributes.DPS();
                 averageDps += dps;
@@ -97,12 +104,12 @@ namespace Game.Gear.Weapons
 
             averageDps /= TestRuns;
             string indent = "        ";
-            _testResultString += "Type: " + type + "  ---  Durability: " + durability + "\n";
+            _testResultString += "Type: " + type + "  ---  Durability: " + durability + "  ---  Quality: " + quality.ToString() + "\n";
             _testResultString += indent + "DPS: " + Helper.Round(averageDps, 1) + " (min: " + Helper.Round(minDps, 1) + " /max: " + Helper.Round(maxDps, 1) + " )\n";
             DesiredStats.ForEach(stat => _testResultString += indent + _attributeStats[stat].GetString() + "\n");
             _testResultString += "\n";
-            _testResultString += maxWeapon.WeaponAttributes.Print() + "\n";
-            _testResultString += minWeapon.WeaponAttributes.Print() + "\n";
+//            _testResultString += maxWeapon.WeaponAttributes.Print() + "\n";
+//            _testResultString += minWeapon.WeaponAttributes.Print() + "\n";
         }
     }
 }

@@ -92,6 +92,17 @@ namespace Facilitating.UIControllers
         
             OnArmourChange?.Invoke();
         }
+        
+        public void RemovePiece()
+        {
+            for (int i = _armourChunks.Count - 1; i >= 0; --i)
+            {
+                if (!_armourChunks[i].Active()) continue;
+                _armourChunks[i].TakeDamage(_armourChunks[i].Remaining.CurrentValue());
+            }
+        
+            OnArmourChange?.Invoke();
+        }
 
         public void Update()
         {

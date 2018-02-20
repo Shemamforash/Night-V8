@@ -37,13 +37,13 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
                 switch (Random.Range(0, 3))
                 {
                     case 0:
-                        UIGrenadeController.AddGrenade(MiscEnemyType.Grenade, currentPosition, targetPosition);
+                        UIGrenadeController.AddGrenade(GrenadeType.Grenade, currentPosition, targetPosition);
                         break;
                     case 1:
-                        UIGrenadeController.AddGrenade(MiscEnemyType.Incendiary, currentPosition, targetPosition);
+                        UIGrenadeController.AddGrenade(GrenadeType.Incendiary, currentPosition, targetPosition);
                         break;
                     case 2:
-                        UIGrenadeController.AddGrenade(MiscEnemyType.Splinter, currentPosition, targetPosition);
+                        UIGrenadeController.AddGrenade(GrenadeType.Splinter, currentPosition, targetPosition);
                         break;
                 }
 

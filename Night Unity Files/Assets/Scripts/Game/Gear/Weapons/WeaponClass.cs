@@ -17,9 +17,9 @@ namespace Game.Gear.Weapons
             Name = name;
         }
 
-        public Weapon CreateWeapon(int durability)
+        public Weapon CreateWeapon(WeaponQuality quality, int durability = -1)
         {
-            Weapon w = new Weapon(Type.ToString(), 10, durability);
+            Weapon w = new Weapon(Type.ToString(), 10, quality, durability);
             WeaponAttributes weaponAttributes = w.WeaponAttributes;
             weaponAttributes.SetClass(this);
             w.WeaponSkillOne = WeaponSkills.GetWeaponSkillOne(w);

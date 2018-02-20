@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets;
+using Facilitating.Audio;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.Player;
@@ -88,7 +89,7 @@ namespace Game.Combat
             _skillCooldownModifier = Player.CalculateSkillCooldownModifier();
             
             HealthController.SetInitialHealth(Player.CalculateCombatHealth(), this);
-            _initialArmour = player.Armour?.ArmourRating ?? 0;
+            _initialArmour = player.ArmourController.GetProtectionLevel();
 
             HeartBeatController.Enable();
             HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue());
@@ -167,12 +168,14 @@ namespace Game.Combat
         protected override void TakeCover()
         {
             base.TakeCover();
+            GunFire.EnterCover();
             PlayerCanvasGroup.alpha = 0.4f;
         }
 
         protected override void LeaveCover()
         {
             base.LeaveCover();
+            GunFire.ExitCover();
             PlayerCanvasGroup.alpha = 1f;
         }
 

@@ -29,7 +29,7 @@ namespace Game.Combat
         private bool _didHit;
         private bool _isCritical;
         public bool DidHit;
-        
+
         public Shot(CharacterCombat target, CharacterCombat origin)
         {
             Assert.IsNotNull(target);
@@ -43,7 +43,7 @@ namespace Game.Combat
 
         private bool DidPierce()
         {
-            return Random.Range(0f, 1f) < _pierceChance;
+            return Random.Range(0f, 1f) <= _pierceChance;
         }
 
         private void CacheWeaponAttributes()
@@ -66,7 +66,7 @@ namespace Game.Combat
         private void CalculateIfWillHit()
         {
             if (_target.InCover) return;
-            float hitChance = _origin?.GetHitChance(_target) ?? 1;
+            float hitChance = _origin?.GetHitChance(_target, _origin is PlayerCombat) ?? 1;
             if (_guaranteeHit && hitChance > 0) DidHit = true;
             DidHit = Random.Range(0f, 1f) < hitChance;
         }
@@ -90,7 +90,6 @@ namespace Game.Combat
         public void Fire()
         {
             if (_origin.Weapon().Empty()) return;
-            _origin.Weapon().ConsumeAmmo(1);
             CreateShotCooldown();
             CalculateIfWillHit();
             _origin?.RecoilManager.Increment(_origin.Weapon());
@@ -184,6 +183,12 @@ namespace Game.Combat
         public int DamageDealt()
         {
             return _damageDealt;
+        }
+
+        public void SetPierceChance(float chance)
+        {
+            Assert.IsTrue(chance >= 0 && chance <= 1);
+            _pierceChance = chance;
         }
     }
 }

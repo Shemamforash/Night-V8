@@ -2,9 +2,7 @@
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.Player;
-using Game.Combat.Enemies;
 using Game.Combat.Enemies.EnemyTypes.Misc;
-using Random = UnityEngine.Random;
 
 namespace Game.Combat.Skills
 {
@@ -16,8 +14,6 @@ namespace Game.Combat.Skills
             {
                 case CharacterClass.Villain:
                     return new Staunch();
-                case CharacterClass.Father:
-                    return new Fortify();
                 case CharacterClass.Deserter:
                     return new Immolate();
                 case CharacterClass.Beast:
@@ -25,7 +21,7 @@ namespace Game.Combat.Skills
                 case CharacterClass.Watcher:
                     return new Terrify();
                 case CharacterClass.Wanderer:
-                    return new Lob();
+                    return new Shatter();
                 case CharacterClass.Protector:
                     return new Sacrifice();
                 case CharacterClass.Hunter:
@@ -45,22 +41,20 @@ namespace Game.Combat.Skills
             {
                 case CharacterClass.Villain:
                     return new Rejuvinate();
-                case CharacterClass.Father:
-                    return new Endure();
                 case CharacterClass.Deserter:
                     return new Lacerate();
                 case CharacterClass.Beast:
-                    return new Headbutt();
+                    return new Crush();
                 case CharacterClass.Watcher:
-                    return new Bellow();
+                    return new Afflict();
                 case CharacterClass.Wanderer:
-                    return new Unearth();
+                    return new Brace();
                 case CharacterClass.Protector:
                     return new Execute();
                 case CharacterClass.Hunter:
-                    return new Curse();
+                    return new Fortify();
                 case CharacterClass.Ghost:
-                    return new Fade();
+                    return new Unearth();
                 case CharacterClass.Driver:
                     return new Absolve();
                 default:
@@ -78,8 +72,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
-            CombatManager.Player.HealthController.Heal(10);
+            CombatManager.Player.HealthController.Heal(Characters.Player.Player.PlayerHealthChunkSize);
         }
     }
 
@@ -91,32 +84,15 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
-            CombatManager.Player.HealthController.Heal(50);
-            SkillBar.ResetSkillTimers();
-        }
-    }
+            PlayerCombat pCombat = CombatManager.Player;
+            pCombat.CurrentTarget.Bleeding.AddStacks(pCombat.Bleeding.Size());
+            pCombat.Bleeding.Clear();
 
-    //Father
+            pCombat.CurrentTarget.Burn.AddStacks(pCombat.Burn.Size());
+            pCombat.Burn.Clear();
 
-    public class Fortify : Skill
-    {
-        public Fortify() : base(nameof(Fortify))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            base.OnFire();
-            CombatManager.Player.ArmourController.IncrementArmour(2);
-        }
-    }
-
-    public class Endure : Skill
-    {
-        public Endure() : base(nameof(Endure))
-        {
-            //todo
+            pCombat.CurrentTarget.Sick.AddStacks(pCombat.Sick.Size());
+            pCombat.Sick.Clear();
         }
     }
 
@@ -130,8 +106,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
-            UIGrenadeController.AddGrenade(MiscEnemyType.Incendiary, CombatManager.Player.Position.CurrentValue(), CombatManager.Player.CurrentTarget.Position.CurrentValue());
+            UIGrenadeController.AddGrenade(GrenadeType.Incendiary, CombatManager.Player.Position.CurrentValue(), CombatManager.Player.CurrentTarget.Position.CurrentValue());
         }
     }
 
@@ -143,8 +118,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
-            UIGrenadeController.AddGrenade(MiscEnemyType.Splinter, CombatManager.Player.Position.CurrentValue(), CombatManager.Player.CurrentTarget.Position.CurrentValue());
+            UIGrenadeController.AddGrenade(GrenadeType.Splinter, CombatManager.Player.Position.CurrentValue(), CombatManager.Player.CurrentTarget.Position.CurrentValue());
         }
     }
 
@@ -158,25 +132,22 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
             CombatManager.Player.CurrentTarget.CurrentAction = CombatManager.Player.CurrentTarget.MoveToPlayer;
         }
     }
 
-    public class Headbutt : Skill
+    public class Crush : Skill
     {
-        public Headbutt() : base(nameof(Headbutt))
+        public Crush() : base(nameof(Crush))
         {
         }
 
         protected override void OnFire()
         {
-            base.OnFire();
             DetailedEnemyCombat nearestEnemy = UIEnemyController.NearestEnemy();
-            if (nearestEnemy?.DistanceToPlayer <= 5)
-            {
-                nearestEnemy.Knockback(5);
-            }
+            if (nearestEnemy == null || nearestEnemy.DistanceToPlayer > 5) return;
+            nearestEnemy.Knockback(5);
+            nearestEnemy.ArmourController.RemovePiece();
         }
     }
 
@@ -190,54 +161,51 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
-            float distance = Random.Range(CombatManager.VisibilityRange / 2, CombatManager.VisibilityRange);
-            //todo
-//            CombatManager.Player.CurrentTarget.CurrentAction = CombatManager.Player.CurrentTarget.MoveToTargetDistance(distance);
+            UIEnemyController.Enemies.ForEach(e => e.Knockback(0));
         }
     }
 
-    public class Bellow : Skill
+    public class Afflict : Skill
     {
-        public Bellow() : base(nameof(Bellow))
+        public Afflict() : base(nameof(Afflict))
         {
         }
 
         protected override void OnFire()
         {
-            base.OnFire();
-            foreach (DetailedEnemyCombat e in UIEnemyController.Enemies)
+            DetailedEnemyCombat target = CombatManager.Player.CurrentTarget;
+            if (target.Sick.Size() != 0)
             {
-                e.Knockback(0);
+                target.Sick.AddStacks(Sickness.MaxStacks - target.Sick.Size());
             }
         }
     }
 
     //Wanderer
 
-    public class Lob : Skill
+    public class Shatter : Skill
     {
-        public Lob() : base(nameof(Lob))
+        public Shatter() : base(nameof(Shatter))
         {
         }
 
         protected override void OnFire()
         {
-            base.OnFire();
-            foreach (Grenade g in UIGrenadeController.Grenades)
-            {
-                if (CombatManager.DistanceBetween(g.CurrentPosition, CombatManager.Player) > 5) continue;
-                g.SetTargetPosition(CombatManager.Player.CurrentTarget.Position.CurrentValue());
-                break;
-            }
+            UIGrenadeController.AddGrenade(GrenadeType.Pierce, CombatManager.Player.Position.CurrentValue(), CombatManager.Player.CurrentTarget.Position.CurrentValue());
         }
     }
 
-    public class Unearth : Skill
+    public class Brace : Skill
     {
-        public Unearth() : base(nameof(Unearth))
+        public Brace() : base(nameof(Brace))
         {
-            //todo
+        }
+
+        protected override void OnFire()
+        {
+            if (CombatManager.Player.ArmourController.CurrentArmour() == 0) return;
+            CombatManager.Player.ArmourController.RemovePiece();
+            CombatManager.Player.HealthController.Heal(Characters.Player.Player.PlayerHealthChunkSize);
         }
     }
 
@@ -251,10 +219,11 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
-
-            CombatManager.Player.RageController.Increase(CombatManager.Player.RageController.CurrentValue());
-            CombatManager.Player.HealthController.TakeDamage((int) (CombatManager.Player.HealthController.GetCurrentHealth() / 2f));
+            CombatManager.Player.HealthController.TakeDamage(Characters.Player.Player.PlayerHealthChunkSize);
+            DetailedEnemyCombat target = CombatManager.Player.CurrentTarget;
+            target.Burn.AddStacks(3);
+            target.Bleeding.AddStacks(3);
+            target.Sick.AddStacks(3);
         }
     }
 
@@ -266,10 +235,9 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
             foreach (DetailedEnemyCombat e in UIEnemyController.Enemies)
             {
-                if (e.DistanceToPlayer > 5 || !e.IsKnockedDown || e.HealthController.GetCurrentHealth() > 100) continue;
+                if (e.DistanceToPlayer > 5 || e.HealthController.GetCurrentHealth() > 100) continue;
                 e.HealthController.TakeDamage(101);
                 break;
             }
@@ -277,6 +245,18 @@ namespace Game.Combat.Skills
     }
 
     //Hunter
+
+    public class Fortify : Skill
+    {
+        public Fortify() : base(nameof(Fortify))
+        {
+        }
+
+        protected override void OnFire()
+        {
+            CombatManager.Player.ArmourController.IncrementArmour(2);
+        }
+    }
 
     public class Restock : Skill
     {
@@ -286,21 +266,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
             Player().Inventory().IncrementResource(Player().Weapon.WeaponAttributes.AmmoType, 1);
-        }
-    }
-
-    public class Curse : Skill
-    {
-        public Curse() : base(nameof(Curse))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            base.OnFire();
-            //todo
         }
     }
 
@@ -314,25 +280,18 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
-            CombatManager.Player.Position.SetCurrentValue(CombatManager.Player.CurrentTarget.Position.CurrentValue() - 5);
+            CombatManager.Player.Position.SetCurrentValue(CombatManager.Player.CurrentTarget.Position.CurrentValue());
         }
     }
 
-    public class Fade : Skill
+    public class Unearth : Skill
     {
-        public Fade() : base(nameof(Fade))
+        public Unearth() : base(nameof(Unearth))
         {
         }
 
         protected override void OnFire()
         {
-            base.OnFire();
-            CombatManager.Player.Position.SetCurrentValue(UIEnemyController.NearestEnemy().Position.CurrentValue() - 10);
-            foreach (DetailedEnemyCombat e in UIEnemyController.Enemies)
-            {
-                e.Reset();
-            }
         }
     }
 
@@ -346,10 +305,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
-            if (CombatManager.Player.CurrentTarget.DistanceToPlayer > CharacterCombat.MeleeDistance) return;
-            CombatManager.Player.CurrentTarget.HealthController.TakeDamage(25);
-            for (int i = 0; i < 5; ++i) CombatManager.Player.CurrentTarget.Bleeding.AddStack();
+            CombatManager.Player.CurrentTarget.Bleeding.AddStacks(5);
         }
     }
 
@@ -361,25 +317,24 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
             DetailedEnemyCombat target = CombatManager.Player.CurrentTarget;
             int healAmount = 0;
             if (target.Bleeding.Active())
             {
                 target.Bleeding.Clear();
-                healAmount += 10;
+                healAmount += Characters.Player.Player.PlayerHealthChunkSize;
             }
 
             if (target.Burn.Active())
             {
                 target.Burn.Clear();
-                healAmount += 10;
+                healAmount += Characters.Player.Player.PlayerHealthChunkSize;
             }
 
             if (target.Sick.Active())
             {
                 target.Sick.Clear();
-                healAmount += 10;
+                healAmount += Characters.Player.Player.PlayerHealthChunkSize;
             }
 
             CombatManager.Player.HealthController.Heal(healAmount);

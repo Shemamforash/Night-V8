@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Facilitating.UIControllers;
-using Game.Combat.Enemies;
 using Game.Gear.Weapons;
 
 namespace Game.Combat.Skills
@@ -21,7 +20,7 @@ namespace Game.Combat.Skills
                 case WeaponType.SMG:
                     return new Hairpin();
                 case WeaponType.Pistol:
-                    return new Retribution();
+                    return new Passion();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -32,7 +31,7 @@ namespace Game.Combat.Skills
             switch (weapon.WeaponType())
             {
                 case WeaponType.Rifle:
-                    return new Blast();
+                    return new Impact();
                 case WeaponType.Shotgun:
                     return new Swarm();
                 case WeaponType.LMG:
@@ -53,12 +52,10 @@ namespace Game.Combat.Skills
     {
         public Gouge() : base(nameof(Gouge))
         {
-            Duration = 2f;
         }
 
         protected override void OnFire()
         {
-            base.OnFire();
             List<DetailedEnemyCombat> enemiesBehindTarget = CombatManager.GetEnemiesBehindTarget(CombatManager.Player.CurrentTarget);
             enemiesBehindTarget.Add(CombatManager.Player.CurrentTarget);
             foreach (DetailedEnemyCombat enemyCombat in enemiesBehindTarget)
@@ -70,19 +67,15 @@ namespace Game.Combat.Skills
         }
     }
 
-    public class Blast : Skill
+    public class Impact : Skill
     {
-        public Blast() : base(nameof(Blast))
+        public Impact() : base(nameof(Impact))
         {
         }
 
         protected override void OnFire()
         {
-            base.OnFire();
-            for (int i = 0; i < CombatManager.Player.Weapon().GetRemainingAmmo(); ++i)
-            {
-                CreateShot().Fire();
-            }
+            CombatManager.Player.OnFireAction += s => s.SetPierceChance(1);
         }
     }
 
@@ -96,7 +89,6 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
             Shot shot = CreateShot();
             shot.GuaranteeHit();
             shot.SetKnockdownChance(1, 5);
@@ -112,7 +104,6 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
             foreach (DetailedEnemyCombat e in UIEnemyController.Enemies)
             {
                 Shot s = new Shot(e, CombatManager.Player);
@@ -131,7 +122,6 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
             CombatManager.Player.Weapon().Reload(CombatManager.Player.Player.Inventory());
         }
     }
@@ -144,7 +134,6 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
             CombatManager.Player.OnFireAction += s => { s.SetKnockdownChance(0.25f, 2); };
         }
     }
@@ -159,7 +148,6 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
             CombatManager.Player.OnFireAction += s => { CombatManager.Player.FireWeapon(s.Target()); };
         }
     }
@@ -172,27 +160,21 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
             CombatManager.Player.OnFireAction += s => { s.AddOnHit(() => { Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt()); }); };
         }
     }
 
     //Pistol
 
-    public class Retribution : Skill
+    public class Passion : Skill
     {
-        public Retribution() : base(nameof(Retribution), true)
+        public Passion() : base(nameof(Passion), true)
         {
         }
 
         protected override void OnFire()
         {
-            base.OnFire();
-            CombatManager.Player.OnFireAction += s =>
-            {
-                CombatManager.Player.RageController.Increase(1);
-                CombatManager.Player.RageController.TryStart();
-            };
+            CombatManager.Player.OnFireAction += s => { s.SetBurnChance(1); };
         }
     }
 
@@ -204,7 +186,6 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            base.OnFire();
             CombatManager.Player.Retaliate = true;
         }
     }

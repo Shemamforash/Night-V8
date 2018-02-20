@@ -31,6 +31,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Misc
         private IEnumerator MoveToPosition()
         {
             bool reachedTarget = false;
+            Debug.Log(_targetPosition + " " + CurrentPosition + " " + _speed);
             while (!reachedTarget)
             {
                 if (_targetPosition < CurrentPosition) _speed = -_speed;

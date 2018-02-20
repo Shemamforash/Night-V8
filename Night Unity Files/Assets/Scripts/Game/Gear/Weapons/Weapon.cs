@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Audio;
 using Facilitating.UIControllers;
-using Game.Characters;
 using Game.Combat;
-using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.World;
-using NUnit.Framework;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
@@ -33,9 +29,9 @@ namespace Game.Gear.Weapons
             return root;
         }
 
-        public Weapon(string name, float weight, int durability) : base(name, weight, GearSubtype.Weapon)
+        public Weapon(string name, float weight, WeaponQuality quality, int durability = -1) : base(name, weight, GearSubtype.Weapon)
         {
-            WeaponAttributes = new WeaponAttributes(durability);
+            WeaponAttributes = new WeaponAttributes(quality, durability);
 //            Durability.OnMin(() => { _canEquip = false; });
         }
         
@@ -46,7 +42,7 @@ namespace Game.Gear.Weapons
             return !(timeElapsed < targetTime);
         }
 
-        public bool CanFire()
+        private bool CanFire()
         {
             return !Empty() && FireRateElapsedTimeMet();
         }
@@ -57,6 +53,7 @@ namespace Game.Gear.Weapons
             _timeAtLastFire = Helper.TimeInMillis();
             float distance = origin is PlayerCombat ? 0 : ((DetailedEnemyCombat)origin).DistanceToPlayer;
             GunFire.Fire(WeaponAttributes.WeaponType, distance);
+            ConsumeAmmo(1);
             List<Shot> shots = new List<Shot>();
             for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
             {
@@ -80,7 +77,7 @@ namespace Game.Gear.Weapons
             return (int)ParentInventory.GetResourceQuantity(WeaponAttributes.AmmoType);
         }
 
-        public void ConsumeAmmo(int amount = 0)
+        private void ConsumeAmmo(int amount = 0)
         {
             _ammoInMagazine -= amount;
             if (_ammoInMagazine < 0)
@@ -103,14 +100,13 @@ namespace Game.Gear.Weapons
 
         public void SetName()
         {
-            string quality = WeaponAttributes.DurabilityToQuality();
+            string quality = WeaponAttributes.Quality.ToString();
             Name = WeaponAttributes.GetName() + " -- (" + quality + ")";
         }
 
         public void DecreaseDurability()
         {
             WeaponAttributes.Durability.Decrement();
-            SetName();
         }
 
         public string GetWeaponType()

@@ -2,7 +2,7 @@
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
-namespace Game.Characters
+namespace Game.Characters.Player
 {
     public class RageController : ICombatListener
     {
@@ -33,13 +33,6 @@ namespace Game.Characters
         }
 
         public bool Active() => _activated;
-
-        public bool Spend(float amount)
-        {
-            if (!(_rageLevel.CurrentValue() >= amount)) return false;
-            _rageLevel.Decrement(amount);
-            return true;
-        }
 
         private void End()
         {

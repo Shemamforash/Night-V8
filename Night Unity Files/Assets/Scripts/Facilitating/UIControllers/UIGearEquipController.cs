@@ -39,7 +39,7 @@ public class UIGearEquipController : Menu
                         c.EquipWeapon((Weapon) gear);
                         break;
                     case GearSubtype.Armour:
-                        c.EquipArmour((Armour) gear);
+                        c.ArmourController.AddPlate((ArmourPlate) gear);
                         break;
                     case GearSubtype.Accessory:
                         c.EquipAccessory((Accessory) gear);
@@ -69,7 +69,7 @@ public class UIGearEquipController : Menu
                         character.EquipWeapon((Weapon) gearItem);
                         break;
                     case GearSubtype.Armour:
-                        character.EquipArmour((Armour) gearItem);
+                        character.ArmourController.AddPlate((ArmourPlate) gearItem);
                         break;
                     case GearSubtype.Accessory:
                         character.EquipAccessory((Accessory) gearItem);

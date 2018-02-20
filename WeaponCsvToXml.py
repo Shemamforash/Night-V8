@@ -183,7 +183,7 @@ class CharacterImporter(XMLWriter):
         write_tag(self, "Classes", self.read_classes)
 
     def read_classes(self):
-        for row in range(3, 13):
+        for row in range(3, 12):
             write_tag(self, "Class", self.read_class, [row])
 
     def read_class(self, row):
@@ -201,15 +201,15 @@ class EnemyImporter(XMLWriter):
         write_tag(self, "Enemies", self.read_enemies)
 
     def read_enemies(self):
-        for row in range(2, 10):
+        for row in range(3, 11):
             write_tag(self, "Enemy", self.read_enemy, [row])
 
     def read_enemy(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
         write_single_value(self, "Health", get_value(self, "B", row))
-        write_single_value(self, "Speed", get_value(self, "C", row))
-        write_single_value(self, "Value", get_value(self, "D", row))
-        write_single_value(self, "WeaponTypes", get_value(self, "E", row))
+        write_single_value(self, "Speed", get_value(self, "D", row))
+        write_single_value(self, "Value", get_value(self, "E", row))
+        write_single_value(self, "WeaponTypes", get_value(self, "F", row))
 
 
 class SkillImporter(XMLWriter):
@@ -225,9 +225,8 @@ class SkillImporter(XMLWriter):
 
     def read_skill(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "Cost", get_value(self, "C", row))
-        write_single_value(self, "Cooldown", get_value(self, "D", row))
-        write_single_value(self, "Description", get_value(self, "E", row))
+        write_single_value(self, "Cooldown", get_value(self, "C", row))
+        write_single_value(self, "Description", get_value(self, "D", row))
 
 
 class TraitImporter(XMLWriter):
@@ -271,11 +270,11 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-WeaponImporter()
+# WeaponImporter()
 # GearImporter()
 # WeatherImporter()
 # RegionImporter()
-# CharacterImporter()
-# EnemyImporter()
+CharacterImporter()
+EnemyImporter()
 # SkillImporter()
 # TraitImporter()

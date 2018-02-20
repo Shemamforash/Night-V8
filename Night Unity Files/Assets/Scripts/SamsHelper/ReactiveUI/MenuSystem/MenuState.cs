@@ -40,7 +40,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public override void Exit()
         {
-//            _lastSelectedItem = EventSystem.current.currentSelectedGameObject?.GetComponent<Selectable>();
+            _lastSelectedItem = EventSystem.current?.currentSelectedGameObject?.GetComponent<Selectable>();
             if (_menu.PauseOnOpen)
             {
                 WorldState.UnPause();

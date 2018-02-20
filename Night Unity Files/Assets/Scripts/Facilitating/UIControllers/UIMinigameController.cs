@@ -106,7 +106,7 @@ public class UIMinigameController : Menu
                 navigation.selectOnUp = button.Button();
                 StartButton.navigation = navigation;
                 
-                _chosenWeapon = WeaponGenerator.GenerateWeapon(t, 1);
+                _chosenWeapon = WeaponGenerator.GenerateWeapon(WeaponQuality.Radiant, t, 0);
                 _skillThree.SetSkill(_chosenWeapon.WeaponSkillOne);
                 _skillFour.SetSkill(_chosenWeapon.WeaponSkillTwo);
                 SetWeaponButton(button);
@@ -176,7 +176,7 @@ public class UIMinigameController : Menu
         public void SetSkill(Skill skill)
         {
             _name.text = skill.Name;
-            _description.text = skill.Description;
+            _description.text = skill.Description();
         }
     }
 

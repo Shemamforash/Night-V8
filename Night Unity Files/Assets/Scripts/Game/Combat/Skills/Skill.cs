@@ -7,28 +7,24 @@ using UnityEngine;
 
 namespace Game.Combat.Skills
 {
-    public abstract class Skill : Cooldown
+    public abstract class Skill
     {
-        public int Cost;
-
         public readonly string Name;
-        public string Description;
+        private SkillValue _skillValue;
 
 //        protected Shot Shot;
         private static readonly Dictionary<string, SkillValue> _skillValues = new Dictionary<string, SkillValue>();
         private static bool _loaded;
-        private bool _waitForReload;
-        private bool _fired;
+        private readonly bool _waitForReload;
 
         private class SkillValue
         {
-            public readonly int Cooldown, Cost;
+            public readonly int Cooldown;
             public readonly string Description;
 
-            public SkillValue(int cooldown, int cost, string description)
+            public SkillValue(int cooldown, string description)
             {
                 Cooldown = cooldown;
-                Cost = cost;
                 Description = description;
             }
         }
@@ -45,9 +41,17 @@ namespace Game.Combat.Skills
             }
 
             SkillValue value = _skillValues[skillName];
-            s.Duration = value.Cooldown;
-            s.Cost = value.Cost;
-            s.Description = value.Description;
+            s._skillValue = value;
+        }
+
+        public float Cooldown()
+        {
+            return _skillValue.Cooldown;
+        }
+
+        public string Description()
+        {
+            return _skillValue.Description;
         }
 
         private static void LoadTemplates()
@@ -61,9 +65,8 @@ namespace Game.Combat.Skills
             {
                 string name = skillNode.SelectSingleNode("Name").InnerText;
                 int cooldown = int.Parse(skillNode.SelectSingleNode("Cooldown").InnerText);
-                int cost = int.Parse(skillNode.SelectSingleNode("Cost").InnerText);
                 string description = skillNode.SelectSingleNode("Description").InnerText;
-                SkillValue t = new SkillValue(cooldown, cost, description);
+                SkillValue t = new SkillValue(cooldown, description);
                 _skillValues[name] = t;
             }
 
@@ -76,22 +79,18 @@ namespace Game.Combat.Skills
             return CombatManager.Player.Player;
         }
 
-        protected Skill(string name, bool waitForReload = false) : base(CombatManager.CombatCooldowns)
+        protected Skill(string name, bool waitForReload = false)
         {
             Name = name;
             _waitForReload = waitForReload;
             ReadSkillValue(this);
-            SetEndAction(() => _fired = false);
         }
 
         public void Activate()
         {
-            if (Running()) return;
-            if (!CombatManager.Player.RageController.Spend(Cost)) return;
             OnFire();
             CombatManager.Player.UpdateMagazineUi();
-            if (!_waitForReload) Start();
-            else
+            if (_waitForReload)
             {
                 CombatManager.Player.OnReloadAction += StartOnReload;
             }
@@ -99,26 +98,14 @@ namespace Game.Combat.Skills
 
         private void StartOnReload()
         {
-            if (Running() || !_fired) return;
-            Start();
             CombatManager.Player.OnReloadAction -= StartOnReload;
         }
 
-        protected virtual void OnFire()
-        {
-            _fired = true;
-            Controller.UpdateCooldownFill(0);
-        }
+        protected abstract void OnFire();
 
         protected static Shot CreateShot()
         {
             return new Shot(CombatManager.Player.CurrentTarget, CombatManager.Player);
-        }
-
-        public override void SetController(CooldownController controller)
-        {
-            base.SetController(controller);
-            controller.Text(Name);
         }
     }
 }

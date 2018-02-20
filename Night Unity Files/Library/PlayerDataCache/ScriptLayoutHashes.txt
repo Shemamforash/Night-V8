@@ -193,7 +193,7 @@ e3ce71b3af2bfc0f9c13cfcfedb68bca Assembly-CSharp.dll:.FireBurst
 535099216052ad02b7649b5dbf77b88f Assembly-CSharp.dll:SamsHelper.ReactiveUI.MenuSystem.Menu
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
-fd5d365d80c188bbb979e2dcbe994a03 Assembly-CSharp.dll:Facilitating.Audio.GunFire
+54477c8e448481ab88e4cefdf94737b2 Assembly-CSharp.dll:Facilitating.Audio.GunFire
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:UI.Highlight.Toggler
 d1bf8a6689077035e5803d325473aa2c Assembly-CSharp.dll:Game.Combat.Enemies.EnemyTypes.Humans.Brawler
 d1bf8a6689077035e5803d325473aa2c Assembly-CSharp.dll:Game.Combat.Enemies.EnemyTypes.Medic

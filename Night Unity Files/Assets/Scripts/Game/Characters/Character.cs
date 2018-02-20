@@ -1,35 +1,27 @@
-﻿using System;
-using System.Xml;
-using Facilitating.Audio;
+﻿using System.Xml;
 using Facilitating.Persistence;
-using Game.Characters.Player;
-using Game.Combat;
-using Game.Combat.Enemies;
-using Game.Combat.Skills;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.World;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI;
-using UnityEngine.Assertions;
 
 namespace Game.Characters
 {
     public abstract class Character : MyGameObject, IPersistenceTemplate
     {
         protected readonly DesolationInventory CharacterInventory;
+        public readonly ArmourController ArmourController;
         public Weapon Weapon;
         public Accessory Accessory;
-        public Armour Armour;
+
 
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             SaveController.CreateNodeAndAppend("Name", doc, Name);
             Weapon?.Save(doc, saveType);
-            Armour?.Save(doc, saveType);
+            ArmourController?.Save(doc, saveType);
             Accessory?.Save(doc, saveType);
             Inventory().Save(doc, saveType);
             return doc;
@@ -38,6 +30,7 @@ namespace Game.Characters
         protected Character(string name) : base(name, GameObjectType.Character)
         {
             CharacterInventory = new DesolationInventory(name);
+            ArmourController = new ArmourController(this);
         }
 
         public virtual void EquipWeapon(Weapon weapon)
@@ -48,13 +41,6 @@ namespace Game.Characters
             Weapon.Reload(Inventory());
         }
 
-        public virtual void EquipArmour(Armour armour)
-        {
-            Armour?.Unequip();
-            armour.Equip(CharacterInventory);
-            Armour = armour;
-        }
-        
         public virtual void EquipAccessory(Accessory accessory)
         {
             Accessory?.Unequip();
@@ -64,8 +50,9 @@ namespace Game.Characters
 
         public abstract void Kill();
 
-        public void Load(XmlNode doc, PersistenceType saveType)
+        public override void Load(XmlNode doc, PersistenceType saveType)
         {
+            base.Load(doc, saveType);
             Name = doc.SelectSingleNode("Name").InnerText;
         }
 

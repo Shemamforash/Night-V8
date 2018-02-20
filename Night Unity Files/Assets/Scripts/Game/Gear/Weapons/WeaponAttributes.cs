@@ -20,7 +20,7 @@ namespace Game.Gear.Weapons
         private float _dps;
         private AttributeModifier _durabilityModifier = new AttributeModifier();
         public readonly Number Durability;
-        private const int MaxDurability = 20;
+        private const int MaxDurability = 10;
         private const float MinDurabilityMod = 0.75f;
         public float DurabilityModifier;
         public bool Automatic = true;
@@ -29,6 +29,8 @@ namespace Game.Gear.Weapons
         public string ModifierName, ModifierDescription;
         public WeaponType WeaponType;
         public InventoryResourceType AmmoType;
+
+        public WeaponQuality Quality;
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
         {
@@ -50,17 +52,10 @@ namespace Game.Gear.Weapons
             return root;
         }
 
-        public string DurabilityToQuality()
+        public WeaponAttributes(WeaponQuality quality, int durability = -1)
         {
-            if (Durability.CurrentValue() <= 4) return "Flawed";
-            if (Durability.CurrentValue() <= 8) return "Worn";
-            if (Durability.CurrentValue() <= 12) return "Fresh";
-            return Durability.CurrentValue() <= 16 ? "Faultless" : "Perfected";
-        }
-
-        public WeaponAttributes(int durability)
-        {
-            if (durability == -1) durability = Random.Range(0, MaxDurability);
+            Quality = quality;
+            if (durability == -1) durability = Random.Range(0, MaxDurability / 4);
             Durability = new Number(durability, 0, MaxDurability);
             Durability.AddOnValueChange(a => RecalculateAttributeValues());
         }
@@ -97,6 +92,7 @@ namespace Game.Gear.Weapons
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             RecalculateAttributeValues();
         }
 
@@ -115,8 +111,9 @@ namespace Game.Gear.Weapons
 
         private void RecalculateAttributeValues()
         {
-            DurabilityModifier = Durability.CurrentValue() / MaxDurability;
-            DurabilityModifier = DurabilityModifier * (1 - MinDurabilityMod) + MinDurabilityMod;
+            float normalisedDurability = Durability.CurrentValue() / MaxDurability;
+            float qualityModifier = (float) (Quality + 1) / 2f;
+            DurabilityModifier = MinDurabilityMod + (1 - MinDurabilityMod) * normalisedDurability * qualityModifier;
             _durabilityModifier.SetMultiplicative(DurabilityModifier);
             _durabilityModifier.Apply();
             CalculateDPS();
@@ -167,7 +164,7 @@ namespace Game.Gear.Weapons
             AddAttribute(PierceChance);
             AddAttribute(SicknessChance);
 
-            _durabilityModifier.AddTargetAttributes(new List<CharacterAttribute> {Damage, CriticalChance, FireRate, ReloadSpeed});
+            _durabilityModifier.AddTargetAttributes(new List<CharacterAttribute> {Damage, CriticalChance, FireRate});
         }
 
         public string Print()

@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.EnemyTypes;
 using Game.Combat.Enemies.EnemyTypes.Humans;
 using Game.Gear.Armour;
+using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.Persistence;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat
 {
@@ -75,6 +78,7 @@ namespace Game.Combat
         public static CombatScenario Generate(int difficulty, int size)
         {
             CombatScenario scenario = new CombatScenario();
+            if (size > MaxEncounterSize) size = MaxEncounterSize;
             for (int i = 0; i < size; ++i)
             {
                 Helper.Shuffle(ref _enemyTypes);
@@ -82,15 +86,10 @@ namespace Game.Combat
                 {
                     if (size < t.Value) continue;
                     Enemy e = AddEnemy(t.EnemyType, scenario);
-                    int armourPivot = difficulty / 2;
-                    int minArmour = armourPivot - 1;
-                    if (minArmour < 0) minArmour = 0;
-                    int maxArmour = armourPivot + 1;
-                    if (maxArmour > 10) maxArmour = 10;
-                    Armour a = new Armour("armour", 1, "", Random.Range(minArmour, maxArmour), 0, 0, 0, 0);
-                    e.EquipArmour(a);
-                    if (scenario.ReachedMaxEncounterSize()) break;
-                    difficulty -= t.Value;
+
+                    e.GenerateArmour(difficulty);
+                    e.GenerateWeapon(difficulty);
+                    break;
                 }
             }
 

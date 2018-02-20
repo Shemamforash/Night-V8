@@ -42,7 +42,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _tabActions.Add(() => SelectTab(CharacterButton, typeof(Character).ToString()));
             _tabActions.Add(() => SelectTab(ResourceButton, typeof(InventoryResource).ToString()));
             _tabActions.Add(() => SelectTab(WeaponButton, typeof(Weapon).ToString()));
-            _tabActions.Add(() => SelectTab(ArmourButton, typeof(Armour).ToString()));
+            _tabActions.Add(() => SelectTab(ArmourButton, typeof(ArmourPlate).ToString()));
             _tabActions.Add(() => SelectTab(AccesoryButton, typeof(Accessory).ToString()));
             _tabActions[_currentTab]();
         }

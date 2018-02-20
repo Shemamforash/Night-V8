@@ -36,7 +36,7 @@ namespace Game.Characters
                         equippedGear = _character.Weapon;
                         break;
                     case GearSubtype.Armour:
-                        equippedGear = _character.Armour;
+                        equippedGear = null;
                         break;
                     case GearSubtype.Accessory:
                         equippedGear = _character.Accessory;
@@ -53,7 +53,7 @@ namespace Game.Characters
                     ui.PrimaryButton.AddOnClick(() => _character.EquipWeapon((Weapon) _gearItem));
                     break;
                 case GearSubtype.Armour:
-                    ui.PrimaryButton.AddOnClick(() => _character.EquipArmour((Armour) _gearItem));
+                    ui.PrimaryButton.AddOnClick(() => _character.ArmourController.AddPlate((ArmourPlate) _gearItem));
                     break;
                 case GearSubtype.Accessory:
                     ui.PrimaryButton.AddOnClick(() => _character.EquipAccessory((Accessory) _gearItem));

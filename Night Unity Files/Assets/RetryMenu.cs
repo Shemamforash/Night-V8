@@ -21,7 +21,11 @@ public class RetryMenu : Menu
 	{
 		++_currentDanger;
 		if(_currentDanger == 20) CombatManager.FailCombat();
-		if (_currentDanger % 4 == 0) ++_currentSize;
+		if (_currentDanger % 4 == 0)
+		{
+			++_currentSize;
+			_player.Attributes.Strength.Increment();
+		}
 		CombatScenario scenario = CombatScenario.Generate(_currentDanger, _currentSize);
 		CombatManager.EnterCombat(_player, scenario);
 		_player.Weapon.IncreaseDurability();

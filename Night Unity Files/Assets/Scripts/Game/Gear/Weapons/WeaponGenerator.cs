@@ -28,12 +28,12 @@ namespace Game.Gear.Weapons
             return validTypes[Random.Range(0, validTypes.Count)];
         }
 
-        public static Weapon GenerateWeapon(WeaponType type, int durability = -1)
+        public static Weapon GenerateWeapon(WeaponQuality quality, WeaponType type, int durability = -1)
         {
-            return GenerateWeapon(new List<WeaponType> {type}, durability);
+            return GenerateWeapon(quality, new List<WeaponType> {type}, durability);
         }
 
-        public static Weapon GenerateWeapon(List<WeaponType> weaponsWanted = null, int durability = -1)
+        public static Weapon GenerateWeapon(WeaponQuality quality, List<WeaponType> weaponsWanted = null, int durability = -1)
         {
             WeaponType weaponType;
             if (weaponsWanted != null)
@@ -47,7 +47,7 @@ namespace Game.Gear.Weapons
             }
 
             WeaponClass weaponClass = GetWeaponClassWithType(weaponType);
-            Weapon weapon = weaponClass.CreateWeapon(durability);
+            Weapon weapon = weaponClass.CreateWeapon(quality, durability);
             WorldEventManager.GenerateEvent(new WeaponFindEvent(weapon.Name));
             weapon.SetName();
             return weapon;

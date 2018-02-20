@@ -149,8 +149,9 @@
                   </e>
                   <e p="Misc" t="Include">
                     <e p="Grenade.cs" t="Include" />
+                    <e p="GrenadeType.cs" t="Include" />
                     <e p="IncendiaryGrenade.cs" t="Include" />
-                    <e p="MiscEnemyType.cs" t="Include" />
+                    <e p="PierceGrenade.cs" t="Include" />
                     <e p="SplinterGrenade.cs" t="Include" />
                   </e>
                 </e>
@@ -171,7 +172,9 @@
             <e p="Gear" t="Include">
               <e p="Armour" t="Include">
                 <e p="Accessory.cs" t="Include" />
-                <e p="Armour.cs" t="Include" />
+                <e p="ArmourController.cs" t="Include" />
+                <e p="ArmourPlate.cs" t="Include" />
+                <e p="ArmourPlateType.cs" t="Include" />
                 <e p="GearReader.cs" t="Include" />
               </e>
               <e p="GearModifier.cs" t="Include" />
@@ -187,6 +190,7 @@
                 <e p="WeaponClass.cs" t="Include" />
                 <e p="WeaponGenerationTester.cs" t="Include" />
                 <e p="WeaponGenerator.cs" t="Include" />
+                <e p="WeaponQuality.cs" t="Include" />
                 <e p="WeaponType.cs" t="Include" />
               </e>
             </e>

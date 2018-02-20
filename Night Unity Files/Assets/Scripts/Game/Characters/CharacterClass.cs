@@ -3,7 +3,6 @@
     public enum CharacterClass
     {
         Villain,
-        Father,
         Deserter,
         Beast,
         Watcher,

@@ -9,6 +9,8 @@ namespace Facilitating.Audio
     public class GunFire : MonoBehaviour
     {
         public AudioClip[] RifleFire;
+        public AudioClip[] ShotgunFire;
+        public AudioClip Explosion, Tinnitus;
         public AudioClip[] SMGFire;
         public AudioClip BoltPull;
         private static GunFire _instance;
@@ -35,11 +37,12 @@ namespace Facilitating.Audio
                 _inactiveAudioSources.Add(this);
             }
 
-            public float PlayClip(float position, AudioClip sound)
+            public float PlayClip(float position, AudioClip sound, float maxDistance = 200)
             {
                 _gameObject.transform.position = new Vector3(0, 0, position);
                 _audioSource.pitch = Random.Range(0.9f, 1.1f);
                 _audioSource.volume = Random.Range(0.9f, 1.0f);
+                _audioSource.maxDistance = maxDistance;
                 _audioSource.PlayOneShot(sound);
                 _inactiveAudioSources.Remove(this);
                 _activeSources.Add(this);
@@ -59,6 +62,16 @@ namespace Facilitating.Audio
             _inactiveAudioSources.Add(audioSource);
         }
 
+        public static void EnterCover()
+        {
+//            _instance.gameObject.GetComponent<AudioLowPassFilter>().enabled = true;
+        }
+        
+        public static void ExitCover()
+        {
+//            _instance.gameObject.GetComponent<AudioLowPassFilter>().enabled = false;
+        }
+        
         private void PlaySound(float position, AudioClip sound)
         {
             PoolingAudioSource audioSource = GetAvailableAudioSource();
@@ -66,27 +79,37 @@ namespace Facilitating.Audio
             StartCoroutine(ReuseAudioSource(duration, audioSource));
         }
 
+        public static void Explode(float distance)
+        {
+            PoolingAudioSource source = GetAvailableAudioSource();
+            float duration =  source.PlayClip(distance, _instance.Explosion, 500);
+            _instance.StartCoroutine(_instance.ReuseAudioSource(duration, source));
+
+            source = GetAvailableAudioSource();
+            duration =  source.PlayClip(distance, _instance.Tinnitus, 10);
+            _instance.StartCoroutine(_instance.ReuseAudioSource(duration, source));
+        }
+        
         public static void Fire(WeaponType type, float distance)
         {
-            _instance.PlaySound(distance, _instance.RifleFire[Random.Range(0, _instance.RifleFire.Length)]);
-//
-//            switch (type)
-//            {
-//                case WeaponType.Pistol:
-//                    break;
-//                case WeaponType.Rifle:
-//                    CreateAudioSource(distance, _instance.RifleFire[Random.Range(0, _instance.RifleFire.Length)]);
-//                    break;
-//                case WeaponType.Shotgun:
-//                    break;
-//                case WeaponType.SMG:
-//                    CreateAudioSource(distance, _instance.SMGFire[Random.Range(0, _instance.SMGFire.Length)]);
-//                    break;
-//                case WeaponType.LMG:
-//                    break;
-//                default:
-//                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-//            }
+
+            switch (type)
+            {
+                case WeaponType.Pistol:
+                    break;
+                case WeaponType.Rifle:
+                    _instance.PlaySound(distance, _instance.RifleFire[Random.Range(0, _instance.RifleFire.Length)]);
+
+                    break;
+                case WeaponType.Shotgun:
+                    _instance.PlaySound(distance, _instance.ShotgunFire[Random.Range(0, _instance.ShotgunFire.Length)]);
+                    break;
+                case WeaponType.SMG:
+                    _instance.PlaySound(distance, _instance.SMGFire[Random.Range(0, _instance.SMGFire.Length)]);
+                    break;
+                case WeaponType.LMG:
+                    break;
+            }
         }
 
         public static void Cock(float duration)

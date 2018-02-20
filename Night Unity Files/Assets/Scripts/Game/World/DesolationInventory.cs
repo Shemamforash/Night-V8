@@ -26,7 +26,7 @@ namespace Game.World
             List<MyGameObject> sortedItems = new List<MyGameObject>();
             sortedItems.AddRange(Resources());
             sortedItems.AddRange(GetItemsOfType(item => item is Weapon));
-            sortedItems.AddRange(GetItemsOfType(item => item is Armour));
+            sortedItems.AddRange(GetItemsOfType(item => item is ArmourPlate));
             sortedItems.AddRange(GetItemsOfType(item => item is Accessory));
             return sortedItems;
         }
@@ -44,8 +44,7 @@ namespace Game.World
             IncrementResource(InventoryResourceType.Water, 1000);
             for (int i = 0; i < noItems; ++i)
             {
-                AddItem(WeaponGenerator.GenerateWeapon());
-                AddItem(GearReader.GenerateArmour());
+                AddItem(WeaponGenerator.GenerateWeapon(WeaponQuality.Shining));
                 AddItem(GearReader.GenerateAccessory());
             }
         }

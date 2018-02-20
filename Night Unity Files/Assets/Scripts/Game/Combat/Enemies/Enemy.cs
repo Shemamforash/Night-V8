@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Enemies.EnemyTypes;
 using Game.Combat.Enemies.EnemyTypes.Humans;
-using Game.Combat.Enemies.EnemyTypes.Misc;
-using Game.Combat.Skills;
-using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper;
-using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.CooldownSystem;
-using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
-using UnityEngine.Assertions;
-using UnityEngine.Playables;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
@@ -27,12 +17,26 @@ namespace Game.Combat.Enemies
         public Enemy(EnemyType type) : base(type.ToString())
         {
             Template = EnemyTemplate.GetEnemyTemplate(type);
-            if (Template.AllowedWeaponTypes.Count != 0)
-            {
-                Weapon weapon = WeaponGenerator.GenerateWeapon(Template.AllowedWeaponTypes, 1);
-                EquipWeapon(weapon);
-            }
             Reset();
+        }
+
+        public void GenerateWeapon(float difficulty)
+        {
+            if (Template.AllowedWeaponTypes.Count == 0) return;
+            WeaponQuality targetQuality = (WeaponQuality) Enum.Parse(typeof(WeaponQuality), Mathf.FloorToInt(difficulty * 5).ToString());
+            int durability = Random.Range(0, 10);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality, Template.AllowedWeaponTypes, durability);
+            EquipWeapon(weapon);
+        }
+
+        public void GenerateArmour(float difficulty)
+        {
+            int armourPivot = (int) (difficulty / 2);
+            int minArmour = armourPivot - 1;
+            if (minArmour < 0) minArmour = 0;
+            int maxArmour = armourPivot + 1;
+            if (maxArmour > 10) maxArmour = 10;
+            ArmourController.AutoFillSlots(Random.Range(minArmour, maxArmour));
         }
 
         private void Reset()

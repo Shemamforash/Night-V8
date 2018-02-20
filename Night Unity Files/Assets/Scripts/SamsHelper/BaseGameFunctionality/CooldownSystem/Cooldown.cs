@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.CooldownSystem
@@ -11,7 +12,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         private Action<float> _duringCooldown;
         private CooldownManager _manager;
         private bool _finished, _started;
-        protected CooldownController Controller;
+        private List<CooldownController> Controllers = new List<CooldownController>();
         
         public Cooldown(CooldownManager manager, float duration = 0)
         {
@@ -35,7 +36,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 
         public virtual void SetController(CooldownController controller)
         {
-            Controller = controller;
+            Controllers.Add(controller);
         }
 
         public void SetStartAction(Action a)
@@ -75,12 +76,13 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             {
                 _finished = true;
                 _started = false;
-                Controller?.Reset();
+                Controllers.ForEach(c => c.Reset());
                 _endOfCooldown?.Invoke();
                 return;
             }
             _duringCooldown?.Invoke(Duration - elapsed);
-            Controller?.UpdateCooldownFill(1 - (Duration - elapsed) / Duration);
+            float normalisedDuration = 1 - (Duration - elapsed) / Duration;
+            Controllers.ForEach(c => c.UpdateCooldownFill(normalisedDuration));
         }
     }
 }
