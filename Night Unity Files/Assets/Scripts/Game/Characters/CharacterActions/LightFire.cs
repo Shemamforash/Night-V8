@@ -7,7 +7,14 @@ namespace Game.Characters.CharacterActions
     {
         public LightFire(Player.Player playerCharacter) : base("Tend Fire", playerCharacter)
         {
-            
+            HourCallback = () =>
+            {
+                --Duration;
+                if (Duration != 0) return;
+                Campfire.Tend();
+                WorldState.HomeInventory().DecrementResource(InventoryResourceType.Fuel, 1);
+                Exit();
+            };
         }
 
         public override void Enter()
@@ -15,14 +22,11 @@ namespace Game.Characters.CharacterActions
             base.Enter();
             if (WorldState.HomeInventory().GetResource(InventoryResourceType.Fuel).Quantity() > 0)
             {
-                SetDuration(1);
-                MinuteCallback = Campfire.Tend;
-                WorldState.HomeInventory().DecrementResource(InventoryResourceType.Fuel, 1);
-                Start();
+                Duration = 1;
             }
             else
             {
-                PlayerCharacter.IdleAction.Enter();
+                PlayerCharacter.RestAction.Enter();
             }
         }
     }

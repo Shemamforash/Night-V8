@@ -1,19 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
-using Facilitating.MenuNavigation;
 using Facilitating.Persistence;
 using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI.Elements;
-using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Characters
 {

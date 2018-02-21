@@ -2,23 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Assets;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
-using Game.Combat;
-using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.World;
 using Game.World.Region;
-using SamsHelper;
-using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.Characters;
-using SamsHelper.BaseGameFunctionality.CooldownSystem;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
-using SamsHelper.Input;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
@@ -35,16 +26,15 @@ namespace Game.Characters.Player
         public CharacterView CharacterView;
         public readonly DesolationAttributes Attributes;
         public readonly Number Energy = new Number();
-       
 
         private CollectResources _collectResourcesAction;
-        private Sleep _sleepAction;
-        public Idle IdleAction;
+        public Rest RestAction;
         public Travel TravelAction;
         public Return ReturnAction;
         private CraftAmmo _craftAmmoAction;
         private CharacterActions.Combat _combatAction;
         private LightFire _lightFireAction;
+        private BrandManager _brandManager;
 
         private int _storyProgress;
         public readonly Skill CharacterSkillOne, CharacterSkillTwo;
@@ -60,7 +50,9 @@ namespace Game.Characters.Player
 
         public override void Kill()
         {
-            if (SceneManager.GetActiveScene().name == "Game") WorldState.HomeInventory().RemoveItem(this);
+            if (SceneManager.GetActiveScene().name != "Game") return;
+            WorldState.HomeInventory().RemoveItem(this);
+            WorldState.UnregisterMinuteEvent(UpdateCurrentState);
         }
 
         //Create Character in code only- no view section, no references to objects in the scene
@@ -73,8 +65,9 @@ namespace Game.Characters.Player
             CharacterSkillTwo = CharacterSkills.GetCharacterSkillTwo(this);
             CharacterInventory.MaxWeight = 50;
             Attributes.Endurance.AddOnValueChange(a => { Energy.Max = a.CurrentValue(); });
-            
-            Energy.OnMin(Sleep);
+
+            _brandManager = new BrandManager(this);
+            Energy.OnMin(() => RestAction.Enter());
         }
 
         ~Player()
@@ -88,7 +81,7 @@ namespace Game.Characters.Player
         }
 
         private const float MinSpeed = 3, MaxSpeed = 6;
-        
+
         public float CalculateSpeed()
         {
             float normalisedSpeed = Attributes.Endurance.Normalised();
@@ -109,7 +102,7 @@ namespace Game.Characters.Player
         {
             return (int) (Attributes.Strength.CurrentValue() * PlayerHealthChunkSize);
         }
-        
+
         public override XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             base.Save(doc, saveType);
@@ -140,21 +133,26 @@ namespace Game.Characters.Player
 
         public List<BaseCharacterAction> StatesAsList(bool includeInactiveStates)
         {
-            return (from BaseCharacterAction s in States.StatesAsList() where s.IsStateVisible() || includeInactiveStates select s).ToList();
+            return (from BaseCharacterAction s in States.StatesAsList() where s.IsVisible || includeInactiveStates select s).ToList();
         }
 
         private void AddStates()
         {
             _collectResourcesAction = new CollectResources(this);
             _combatAction = new CharacterActions.Combat(this);
-            _sleepAction = new Sleep(this);
-            IdleAction = new Idle(this);
+            RestAction = new Rest(this);
             TravelAction = new Travel(this);
             ReturnAction = new Return(this);
             _lightFireAction = new LightFire(this);
             _craftAmmoAction = new CraftAmmo(this);
-            States.SetDefaultState(IdleAction);
+            States.SetDefaultState(RestAction);
             CharacterView.FillActionList();
+            WorldState.RegisterMinuteEvent(UpdateCurrentState);
+        }
+
+        private void UpdateCurrentState()
+        {
+            ((BaseCharacterAction) States.GetCurrentState()).UpdateAction();
         }
 
         private bool IsOverburdened()
@@ -169,32 +167,30 @@ namespace Game.Characters.Player
             Energy.Decrement(amount);
         }
 
-        private void Sleep()
-        {
-            BaseCharacterAction action = (BaseCharacterAction) States.GetCurrentState();
-            action.Interrupt();
-            Sleep sleepAction = States.GetState("Sleep") as Sleep;
-            if (sleepAction != null)
-            {
-                sleepAction.SetStateTransitionTarget(action);
-                sleepAction.AddOnExit(() => { action.Resume(); });
-            }
-
-            _sleepAction.Enter();
-        }
-
         public void Rest(int amount)
         {
-            Energy.Increment(amount);
-            if (!Energy.ReachedMax()) return;
-            if (DistanceFromHome == 0)
+            if (Energy.ReachedMax())
             {
-                IdleAction.Enter();
+                _brandManager.IncreaseIdleTime();
             }
+
+            Energy.Increment(amount);
         }
+
+        private const int HighWeightThreshold = 15, LowWeightThreshold = 5;
 
         public void Travel()
         {
+            if (Inventory().Weight >= HighWeightThreshold)
+            {
+                _brandManager.IncreaseTimeSpentHighCapacity();
+            }
+            else if (Inventory().Weight < LowWeightThreshold)
+            {
+                _brandManager.IncreaseTimeSpentLowCapacity();
+            }
+
+            _brandManager.IncreaseTravelTime();
             DistanceFromHome++;
             Tire();
         }
@@ -222,7 +218,7 @@ namespace Game.Characters.Player
             CharacterView?.AccessoryGearUi.SetGearItem(accessory);
         }
 
-        
+
         public void CollectResourcesInRegion(Region region)
         {
             _collectResourcesAction.SetTargetRegion(region);

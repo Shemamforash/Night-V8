@@ -10,7 +10,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         private readonly Menu _menu;
         private Selectable _lastSelectedItem;
 
-        public MenuState(StateMachine stateMachine, string name, Menu menu) : base(stateMachine, name, StateSubtype.Menu)
+        public MenuState(StateMachine stateMachine, string name, Menu menu) : base(stateMachine, name)
         {
             _menu = menu;
             SetGameObject(menu.gameObject);

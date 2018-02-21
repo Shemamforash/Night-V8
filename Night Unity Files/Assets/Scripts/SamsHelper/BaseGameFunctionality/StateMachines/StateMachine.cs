@@ -1,20 +1,13 @@
 using System.Collections.Generic;
-using SamsHelper.Input;
-using UnityEngine;
+using Game.Characters.CharacterActions;
 
 namespace SamsHelper.BaseGameFunctionality.StateMachines
 {
-    public class StateMachine: IInputListener
+    public class StateMachine
     {
         protected readonly Dictionary<string, State> States = new Dictionary<string, State>();
         private State _currentState;
         private State _defaultState;
-        private bool _acceptInput = true;
-
-        public void EnableInput()
-        {
-            InputHandler.RegisterInputListener(this);
-        }
 
         public List<State> StatesAsList()
         {
@@ -29,6 +22,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         public void SetDefaultState(State defaultState)
         {
             _defaultState = defaultState;
+            _defaultState.Enter();
         }
 
         public State GetState(string stateName)
@@ -58,22 +52,9 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             }
         }
 
-        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        public bool IsDefaultState(BaseCharacterAction currentState)
         {
-            if (!_acceptInput) return;
-            _currentState?.OnInputDown(axis, isHeld, direction);
-        }
-
-        public void OnInputUp(InputAxis axis)
-        {
-            if (!_acceptInput) return;
-            _currentState?.OnInputUp(axis);
-        }
-
-        public void OnDoubleTap(InputAxis axis, float direction)
-        {
-            if (!_acceptInput) return;
-            _currentState?.OnDoubleTap(axis, direction);
+            return currentState == _defaultState;
         }
     }
 }

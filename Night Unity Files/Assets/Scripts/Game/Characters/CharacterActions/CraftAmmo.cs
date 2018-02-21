@@ -11,30 +11,29 @@ namespace Game.Characters.CharacterActions
 
         public CraftAmmo(Player.Player playerCharacter) : base("Craft Ammo", playerCharacter)
         {
+            HourCallback = () =>
+            {
+                WorldState.HomeInventory().IncrementResource(_magType, 1);
+                Exit();
+            };
+
         }
 
-        public override void Enter()
+        protected override void OnClick()
         {
-            base.Enter();
-            UiCreateAmmoController.Instance().ShowMenu(GetCharacter());
+            UiCreateAmmoController.Instance().ShowMenu(PlayerCharacter);
         }
-        
+
         public void SetAmmoType(InventoryResourceType magType)
         {
             _magType = magType;
-            SetDuration(1);
-            Start();
             MenuStateMachine.GoToInitialMenu();
+            Enter();
         }
 
         public override string GetActionText()
         {
             return "Crafting...";
-        }
-        
-        public override void Exit()
-        {
-            WorldState.HomeInventory().IncrementResource(_magType, 1);
         }
     }
 }

@@ -90,16 +90,16 @@
           <e p="Game" t="Include">
             <e p="Characters" t="Include">
               <e p="AttributeModifier.cs" t="Include" />
+              <e p="BrandManager.cs" t="Include" />
               <e p="Character.cs" t="Include" />
               <e p="CharacterActions" t="Include">
                 <e p="BaseCharacterAction.cs" t="Include" />
                 <e p="CollectResources.cs" t="Include" />
                 <e p="Combat.cs" t="Include" />
                 <e p="CraftAmmo.cs" t="Include" />
-                <e p="Idle.cs" t="Include" />
                 <e p="LightFire.cs" t="Include" />
+                <e p="Rest.cs" t="Include" />
                 <e p="Return.cs" t="Include" />
-                <e p="Sleep.cs" t="Include" />
                 <e p="Travel.cs" t="Include" />
               </e>
               <e p="CharacterClass.cs" t="Include" />

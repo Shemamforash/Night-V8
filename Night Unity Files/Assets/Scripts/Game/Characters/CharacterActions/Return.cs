@@ -1,4 +1,5 @@
 ﻿using Game.World;
+using UnityEngine.Assertions;
 
 namespace Game.Characters.CharacterActions
 {
@@ -7,24 +8,30 @@ namespace Game.Characters.CharacterActions
         public Return(Player.Player playerCharacter) : base("Return", playerCharacter)
         {
             IsVisible = false;
-            HourCallback = GetCharacter().Return;
-            AddOnExit(ReturnToVehicle);
+            HourCallback = () =>
+            {
+                --Duration;
+                PlayerCharacter.Return();
+                if (Duration != 0) return;
+                ReturnToVehicle();
+                Exit();
+            };
         }
 
         public override void Enter()
         {
             base.Enter();
-            SetDuration(GetCharacter().DistanceFromHome);
-            Start();
+            Duration = PlayerCharacter.DistanceFromHome;
         }
 
         private void ReturnToVehicle()
         {
+            Assert.IsTrue(PlayerCharacter.DistanceFromHome == 0);
             if (PlayerCharacter.DistanceFromHome == 1)
             {
-                GetCharacter().Return();
+                PlayerCharacter.Return();
             }
-            GetCharacter().Inventory().MoveAllResources(WorldState.HomeInventory());
+            PlayerCharacter.Inventory().MoveAllResources(WorldState.HomeInventory());
         }
     }
 }

@@ -201,7 +201,7 @@ namespace Game.Characters
             if (currentState == null) return;
             string currentActionString = currentState.GetActionText();
             _currentActionText.text = currentActionString;
-            if (currentState.Name == "Idle")
+            if (_character.States.IsDefaultState(currentState))
             {
                 SetActionListActive(true);
             }

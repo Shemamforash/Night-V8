@@ -11,7 +11,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
     {
         public readonly AttributeType AttributeType;
         private float _addMod;
-        public float _multMod = 1;
+        private float _multMod = 1;
         private float _calculatedValue;
 
         public CharacterAttribute(AttributeType attributeType, float value, float min = 0, float max = float.MaxValue) : base(value, min, max)
@@ -27,6 +27,21 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             SaveController.CreateNodeAndAppend("MultiplicativeModifier", doc, _multMod);
         }
 
+        public void DecrementMax()
+        {
+            --Max;
+            if (CurrentValue() > Max)
+            {
+                SetCurrentValue(Max);
+            }
+        }
+
+        public void IncrementMax()
+        {
+            ++Max;
+            SetCurrentValue(CurrentValue());
+        }
+        
         public override float CurrentValue()
         {
             return _calculatedValue;

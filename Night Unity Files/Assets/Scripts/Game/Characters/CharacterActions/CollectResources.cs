@@ -4,6 +4,7 @@ using SamsHelper.ReactiveUI.MenuSystem;
 
 namespace Game.Characters.CharacterActions
 {
+    //todo move me somewhere better
     public class CollectResources : BaseCharacterAction
     {
         private Player.Player _previousCharacter;
@@ -12,35 +13,27 @@ namespace Game.Characters.CharacterActions
         public CollectResources(Player.Player playerCharacter) : base("Collect Resources", playerCharacter)
         {
             IsVisible = false;
-            SetStateTransitionTarget(playerCharacter.ReturnAction);
+//            SetStateTransitionTarget(playerCharacter.ReturnAction);
             AddOnExit(ReturnToGameScreen);
         }
 
         public void SetTargetRegion(Region targetRegion)
         {
             _targetRegion = targetRegion;
-            Enter();
-        }
-
-        public override void Enter()
-        {
-            base.Enter();
             _previousCharacter = CharacterManager.SelectedCharacter;
-            CharacterManager.SelectedCharacter = GetCharacter();
-            InventoryTransferManager.Instance().ShowInventories(GetCharacter().Inventory(), _targetRegion, () => GetCharacter().ReturnAction.Enter());
+            CharacterManager.SelectedCharacter = PlayerCharacter;
+            InventoryTransferManager.Instance().ShowInventories(PlayerCharacter.Inventory(), _targetRegion, () => PlayerCharacter.ReturnAction.Enter());
         }
 
-        public override void Interrupt()
-        {
-            base.Interrupt();
-            ReturnToGameScreen();
-        }
+//        public override void Interrupt()
+//        {
+//            ReturnToGameScreen();
+//        }
 
-        public override void Resume()
-        {
-            base.Resume();
-            Enter();
-        }
+//        public override void Resume()
+//        {
+//            Enter();
+//        }
 
         private void ReturnToGameScreen()
         {

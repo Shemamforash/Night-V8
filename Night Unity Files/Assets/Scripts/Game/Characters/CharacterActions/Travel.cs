@@ -1,26 +1,35 @@
 ﻿using Game.World.Region;
+using NUnit.Framework;
 
 namespace Game.Characters.CharacterActions
 {
     public class Travel : BaseCharacterAction
     {
+        private Region _targetRegion;
+
         public Travel(Player.Player playerCharacter) : base("Travel", playerCharacter)
         {
-            HourCallback = GetCharacter().Travel;
+            HourCallback = () =>
+            {
+                --Duration;
+                PlayerCharacter.Travel();
+                if (Duration != 0) return;
+                _targetRegion.Discover(playerCharacter);
+                Exit();
+            };
         }
-        
-        public override void Enter()
+
+        protected override void OnClick()
         {
-            base.Enter();
-            if(PlayerCharacter.DistanceFromHome == 0) RegionManager.EnterManager(GetCharacter());
+            Assert.IsTrue(PlayerCharacter.DistanceFromHome == 0);
+            RegionManager.EnterManager(PlayerCharacter);
         }
 
         public void TravelTo(Region region)
         {
+            Duration = region.Distance - PlayerCharacter.DistanceFromHome;
+            _targetRegion = region;
             Enter();
-            SetDuration(region.Distance - PlayerCharacter.DistanceFromHome);
-            AddOnExit(() => region.Discover(PlayerCharacter));
-            Start();
         }
     }
 }
