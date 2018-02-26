@@ -28,4 +28,13 @@ namespace Game.Gear.Armour
             return new ArmourPlate(plateType, weight);
         }
     }
+    
+    public enum ArmourPlateType
+    {
+        Leather,
+        Sheet,
+        Metal,
+        Steel,
+        Ceramic
+    }
 }

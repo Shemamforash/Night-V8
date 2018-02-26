@@ -28,16 +28,17 @@ namespace Facilitating.UI.Elements
 
         public void Awake()
         {
-            TryReplaceText();
+            _text = GetComponent<TextMeshProUGUI>();
             _text.richText = true;
-            UpdateFontSize();
             _text.extraPadding = true;
             _text.font = UiAppearanceController.Instance().UniversalFont;
-            _text = GetComponent<TextMeshProUGUI>();
+            TryReplaceText();
+            UpdateFontSize();
         }
 
         public void Text(string text)
         {
+            if (_text == null) _text = GetComponent<TextMeshProUGUI>();
             _text.text = text;
         }
 

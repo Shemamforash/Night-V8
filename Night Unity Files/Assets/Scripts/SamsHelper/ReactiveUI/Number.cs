@@ -57,10 +57,7 @@ namespace SamsHelper.ReactiveUI
             set
             {
                 _max = value;
-                if (_currentValue > _max)
-                {
-                    SetCurrentValue(_max);
-                }
+                SetCurrentValue(_currentValue > _max ? _max : _currentValue);
             }
         }
 
@@ -70,10 +67,7 @@ namespace SamsHelper.ReactiveUI
             set
             {
                 _min = value;
-                if (_currentValue < _min)
-                {
-                    SetCurrentValue(_min);
-                }
+                SetCurrentValue(_currentValue < _min ? _min : _currentValue);
             }
         }
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
 using Game.World;
 using SamsHelper;
@@ -15,29 +16,30 @@ namespace Game.Characters
 {
     public class CharacterView
     {
-        private readonly Player.Player _character;
+        private readonly Player.Player _player;
         public readonly GameObject GameObject;
         private GameObject SimpleView;
         private GameObject _detailedView;
 
         private TextMeshProUGUI _currentActionText;
         private TextMeshProUGUI _detailedCurrentActionText;
-
-        public UIGearController WeaponGearUi, ArmourGearUi, AccessoryGearUi;
+        public UIPlayerAccessoryController AccessoryController;
+        public UIPlayerWeaponController WeaponController;
+        public UIPlayerArmourController ArmourController;
 
         private MenuList _actionMenuList;
 
         private void BindUi()
         {
-            FindInSimpleView<UIAttributeController>("Attributes").HookValues(_character.Attributes);
-            FindInDetailedView<UIAttributeController>("Attributes").HookValues(_character.Attributes);
+            FindInSimpleView<UIAttributeController>("Attributes").HookValues(_player.Attributes);
+            FindInDetailedView<UIAttributeController>("Attributes").HookValues(_player.Attributes);
             UIEnergyController energyController = FindInDetailedView<UIEnergyController>("Energy");
-            _character.Energy.AddOnValueChange(a => { energyController.SetValue((int) a.CurrentValue(), (int) a.Max); });
+            _player.Energy.AddOnValueChange(a => { energyController.SetValue((int) a.CurrentValue(), (int) a.Max); });
 
-            FindInDetailedView<UIConditionController>("Thirst").HookDehydration(_character.Attributes);
-            FindInDetailedView<UIConditionController>("Hunger").HookStarvation(_character.Attributes);
-            FindInSimpleView<UIConditionController>("Thirst").HookDehydration(_character.Attributes);
-            FindInSimpleView<UIConditionController>("Hunger").HookStarvation(_character.Attributes);
+            FindInDetailedView<UIConditionController>("Thirst").HookDehydration(_player.Attributes);
+            FindInDetailedView<UIConditionController>("Hunger").HookStarvation(_player.Attributes);
+            FindInSimpleView<UIConditionController>("Thirst").HookDehydration(_player.Attributes);
+            FindInSimpleView<UIConditionController>("Hunger").HookStarvation(_player.Attributes);
         }
 
         private void CacheSimpleViewElements()
@@ -45,8 +47,7 @@ namespace Game.Characters
             SimpleView = GameObject.transform.Find("Simple").gameObject;
             SimpleView.SetActive(true);
 
-            FindInSimpleView<TextMeshProUGUI>("Simple Name").text = _character.Name;
-            FindInSimpleView<TextMeshProUGUI>("ClassTrait").text = "fill me in";
+            FindInSimpleView<TextMeshProUGUI>("Name").text = _player.Name;
 
             _currentActionText = FindInSimpleView<TextMeshProUGUI>("Current Action");
         }
@@ -61,19 +62,18 @@ namespace Game.Characters
 
             _detailedCurrentActionText = FindInDetailedView<TextMeshProUGUI>("CurrentAction");
 
-            FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _character.Name;
-            FindInDetailedView<TextMeshProUGUI>("Class").text = "fill me in";
-            FindInDetailedView<TextMeshProUGUI>("Trait").text = "fill me in";
-            FindInDetailedView<TextMeshProUGUI>("Weight").text = "fill me in";
+            FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _player.Name;
 
-            WeaponGearUi = FindInDetailedView<UIGearController>("Weapon");
-            ArmourGearUi = FindInDetailedView<UIGearController>("Armour");
-            AccessoryGearUi = FindInDetailedView<UIGearController>("Accessory");
+            WeaponController = FindInDetailedView<UIPlayerWeaponController>("Weapon");
+            WeaponController.GetComponent<EnhancedButton>().AddOnClick(() => UiWeaponUpgradeController.Show(_player));
+            ArmourController = FindInDetailedView<UIPlayerArmourController>("Armour");
+            _player.ArmourController.AddOnArmourChange(a => ArmourController.SetArmour(_player.ArmourController));
+            AccessoryController = FindInDetailedView<UIPlayerAccessoryController>("Accessory");
         }
 
         public void FillActionList()
         {
-            List<BaseCharacterAction> availableActions = _character.StatesAsList(false).ToList();
+            List<BaseCharacterAction> availableActions = _player.StatesAsList(false).ToList();
             _actionMenuList.SetItems(new List<MyGameObject>(availableActions), false);
 //            foreach (ViewParent action in _actionMenuList.Items)
 //            {
@@ -85,9 +85,9 @@ namespace Game.Characters
 //            }
 
             List<ViewParent> actionUiList = _actionMenuList.Items;
-            EnhancedButton weaponGearUiButton = WeaponGearUi.GetComponent<EnhancedButton>();
-            EnhancedButton armourGearUiButton = ArmourGearUi.GetComponent<EnhancedButton>();
-            EnhancedButton accessoryGearuiButton = AccessoryGearUi.GetComponent<EnhancedButton>();
+            EnhancedButton weaponGearUiButton = WeaponController.GetComponent<EnhancedButton>();
+            EnhancedButton armourGearUiButton = ArmourController.GetComponent<EnhancedButton>();
+            EnhancedButton accessoryGearuiButton = AccessoryController.GetComponent<EnhancedButton>();
 
             for (int i = 0; i < actionUiList.Count; ++i)
             {
@@ -107,23 +107,23 @@ namespace Game.Characters
         //if no character below do nothing
         public void RefreshNavigation()
         {
-            CharacterView _previousCharacterView = CharacterManager.PreviousCharacter(_character)?.CharacterView;
+            CharacterView _previousCharacterView = CharacterManager.PreviousCharacter(_player)?.CharacterView;
 
             if (_previousCharacterView == null)
             {
                 WorldView.GetInventoryButton().SetOnDownAction(() =>
                 {
-                    CharacterManager.SelectCharacter(_character);
+                    CharacterManager.SelectCharacter(_player);
                     _actionMenuList.Items[0].PrimaryButton.Button().Select();
                 });
                 _actionMenuList.Items[0].PrimaryButton.SetOnUpAction(() =>
                 {
-                    CharacterManager.ExitCharacter(_character);
+                    CharacterManager.ExitCharacter(_player);
                     WorldView.GetInventoryButton().Button().Select();
                 });
-                WeaponGearUi.GetComponent<EnhancedButton>().SetOnUpAction(() =>
+                WeaponController.GetComponent<EnhancedButton>().SetOnUpAction(() =>
                 {
-                    CharacterManager.ExitCharacter(_character);
+                    CharacterManager.ExitCharacter(_player);
                     WorldView.GetInventoryButton().Button().Select();
                 });
             }
@@ -131,27 +131,27 @@ namespace Game.Characters
             {
                 _previousCharacterView.GetLastActionButton().SetOnDownAction(() =>
                 {
-                    CharacterManager.ExitCharacter(_previousCharacterView._character);
-                    CharacterManager.SelectCharacter(_character);
+                    CharacterManager.ExitCharacter(_previousCharacterView._player);
+                    CharacterManager.SelectCharacter(_player);
                     _actionMenuList.Items[0].PrimaryButton.Button().Select();
                 });
                 GetFirstActionButton().SetOnUpAction(() =>
                 {
-                    CharacterManager.ExitCharacter(_character);
-                    CharacterManager.SelectCharacter(_previousCharacterView._character);
+                    CharacterManager.ExitCharacter(_player);
+                    CharacterManager.SelectCharacter(_previousCharacterView._player);
                     _previousCharacterView.GetLastActionButton().Button().Select();
                 });
-                WeaponGearUi.GetComponent<EnhancedButton>().SetOnUpAction(() =>
+                WeaponController.GetComponent<EnhancedButton>().SetOnUpAction(() =>
                 {
-                    CharacterManager.ExitCharacter(_character);
-                    CharacterManager.SelectCharacter(_previousCharacterView._character);
-                    _previousCharacterView.AccessoryGearUi.GetComponent<EnhancedButton>().Button().Select();
+                    CharacterManager.ExitCharacter(_player);
+                    CharacterManager.SelectCharacter(_previousCharacterView._player);
+                    _previousCharacterView.ArmourController.GetComponent<EnhancedButton>().Button().Select();
                 });
-                _previousCharacterView.AccessoryGearUi.GetComponent<EnhancedButton>().SetOnDownAction(() =>
+                _previousCharacterView.ArmourController.GetComponent<EnhancedButton>().SetOnDownAction(() =>
                 {
-                    CharacterManager.ExitCharacter(_previousCharacterView._character);
-                    CharacterManager.SelectCharacter(_character);
-                    WeaponGearUi.GetComponent<EnhancedButton>().Button().Select();
+                    CharacterManager.ExitCharacter(_previousCharacterView._player);
+                    CharacterManager.SelectCharacter(_player);
+                    ArmourController.GetComponent<EnhancedButton>().Button().Select();
                 });
             }
         }
@@ -175,18 +175,18 @@ namespace Game.Characters
 
         private EnhancedButton GetCharacterButtonAbove()
         {
-            return CharacterManager.PreviousCharacter(_character)?.CharacterView.SimpleView.GetComponent<EnhancedButton>();
+            return CharacterManager.PreviousCharacter(_player)?.CharacterView.SimpleView.GetComponent<EnhancedButton>();
         }
 
         private EnhancedButton GetCharacterButtonBelow()
         {
-            return CharacterManager.NextCharacter(_character)?.CharacterView.SimpleView.GetComponent<EnhancedButton>();
+            return CharacterManager.NextCharacter(_player)?.CharacterView.SimpleView.GetComponent<EnhancedButton>();
         }
 
-        public CharacterView(Player.Player character)
+        public CharacterView(Player.Player player)
         {
-            _character = character;
-            GameObject = _character.GetGameObject();
+            _player = player;
+            GameObject = _player.GetGameObject();
             GameObject.SetActive(true);
             CacheSimpleViewElements();
             CacheDetailedViewElements();
@@ -197,11 +197,11 @@ namespace Game.Characters
 
         private void UpdateCurrentActionText()
         {
-            BaseCharacterAction currentState = (BaseCharacterAction) _character.States.GetCurrentState();
+            BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
             if (currentState == null) return;
             string currentActionString = currentState.GetActionText();
             _currentActionText.text = currentActionString;
-            if (_character.States.IsDefaultState(currentState))
+            if (_player.States.IsDefaultState(currentState))
             {
                 SetActionListActive(true);
             }

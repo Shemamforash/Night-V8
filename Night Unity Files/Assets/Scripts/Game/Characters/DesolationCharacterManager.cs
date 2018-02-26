@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
+using Game.Gear.Armour;
+using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -11,53 +14,34 @@ using UnityEngine;
 
 namespace Game.Characters
 {
-    public class CharacterManager : DesolationInventory, IPersistenceTemplate, IInputListener
+    public class CharacterManager : DesolationInventory, IPersistenceTemplate
     {
         private static readonly List<Player.Player> _characters = new List<Player.Player>();
         public static Player.Player SelectedCharacter;
 
         public CharacterManager() : base("Vehicle")
         {
-            InputHandler.RegisterInputListener(this);
         }
 
         public void Start()
         {
             PlayerGenerator.LoadTemplates();
             SaveController.AddPersistenceListener(this);
-            if (_characters.Count == 0)
+            if (_characters.Count != 0) return;
+            foreach (Player.Player playerCharacter in PlayerGenerator.LoadInitialParty())
             {
-                foreach (Player.Player playerCharacter in PlayerGenerator.LoadInitialParty())
-                {
-                    AddCharacter(playerCharacter);
-                }
-            }
-            PopulateCharacterUi();
-        }
-
-        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-            if (axis == InputAxis.Reload && !isHeld)
-            {
-//                ExitCharacter();
+                AddCharacter(playerCharacter);
             }
         }
 
-        public void OnInputUp(InputAxis axis)
-        {
-        }
-
-        public void OnDoubleTap(InputAxis axis, float direction)
-        {
-        }
-
-        public void AddCharacter(Player.Player playerCharacter)
+        private void AddCharacter(Player.Player playerCharacter)
         {
             Transform characterAreaTransform = GameObject.Find("Character Section").transform.Find("Content").transform;
             if (Items().Count > 0)
             {
                 Helper.AddDelineator(characterAreaTransform);
             }
+
             GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", characterAreaTransform);
             characterObject.name = playerCharacter.Name;
             playerCharacter.SetGameObject(characterObject);
@@ -71,39 +55,48 @@ namespace Game.Characters
             return _characters;
         }
 
-        private static void PopulateCharacterUi()
+        public List<Weapon> Weapons()
         {
-//            Button inventoryButton = WorldView.GetInventoryButton();
-
-//            foreach (Player playerCharacter in _characters)
-//            {
-//                EnhancedButton b = playerCharacter.CharacterView.SimpleView.GetComponent<EnhancedButton>();
-//                b.AddOnSelectEvent(delegate
-//                {
-//                    ExitCharacter();
-//                    SelectCharacter(b.Button());
-//                });
-//            }
-//            for (int i = 1; i < _characters.Count; ++i)
-//            {
-//                Button previousButton = _characters[i - 1].CharacterView.SimpleView.GetComponent<Button>();
-//                Helper.SetReciprocalNavigation(previousButton, _characters[i].CharacterView.SimpleView.GetComponent<Button>());
-//            }
-//            Helper.SetReciprocalNavigation(inventoryButton, _characters[0].CharacterView.SimpleView.GetComponent<Button>());
+            return weapons;
         }
 
+        public List<ArmourPlate> Armour()
+        {
+            return armour;
+        }
+
+        public List<Accessory> Accessories()
+        {
+            return accessories;
+        }
+
+        private readonly List<Weapon> weapons = new List<Weapon>();
+        private readonly List<ArmourPlate> armour = new List<ArmourPlate>();
+        private readonly List<Accessory> accessories = new List<Accessory>();
+
+        protected override void AddItem(MyGameObject item)
+        {
+            base.AddItem(item);
+            if(item is Weapon) weapons.Add((Weapon)item);
+            if(item is ArmourPlate) armour.Add((ArmourPlate)item);
+            if(item is Accessory) accessories.Add((Accessory)item);
+        }
+        
         public override MyGameObject RemoveItem(MyGameObject item)
         {
             base.RemoveItem(item);
             Player.Player playerCharacter = item as Player.Player;
+            weapons.Remove(item as Weapon);
+            armour.Remove(item as ArmourPlate);
+            accessories.Remove(item as Accessory);
             if (playerCharacter == null) return item;
             _characters.Remove(playerCharacter);
-            PopulateCharacterUi();
             _characters.ForEach(c => c.CharacterView.RefreshNavigation());
             if (playerCharacter.Name == "Driver")
             {
                 MenuStateMachine.ShowMenu("Game Over Menu");
             }
+
             return item;
         }
 
@@ -138,6 +131,7 @@ namespace Game.Characters
 //                XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", doc);
 //                c.Save(characterNode, saveType);
             }
+
             return doc;
         }
 
@@ -150,8 +144,10 @@ namespace Game.Characters
                 {
                     return _characters[i - 1];
                 }
+
                 break;
             }
+
             return null;
         }
 
@@ -164,8 +160,10 @@ namespace Game.Characters
                 {
                     return _characters[i + 1];
                 }
+
                 break;
             }
+
             return null;
         }
     }

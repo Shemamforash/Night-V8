@@ -27,21 +27,6 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             SaveController.CreateNodeAndAppend("MultiplicativeModifier", doc, _multMod);
         }
 
-        public void DecrementMax()
-        {
-            --Max;
-            if (CurrentValue() > Max)
-            {
-                SetCurrentValue(Max);
-            }
-        }
-
-        public void IncrementMax()
-        {
-            ++Max;
-            SetCurrentValue(CurrentValue());
-        }
-        
         public override float CurrentValue()
         {
             return _calculatedValue;

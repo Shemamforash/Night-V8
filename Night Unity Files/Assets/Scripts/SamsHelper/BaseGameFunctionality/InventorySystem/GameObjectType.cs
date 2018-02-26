@@ -9,6 +9,7 @@
         Resource,
         Inventory,
         State,
-        MiscCombat
+        MiscCombat,
+        Inscription
     }
 }

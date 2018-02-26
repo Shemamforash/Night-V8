@@ -87,9 +87,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return _resources.Contains(resource) && resource.Quantity() != 0;
         }
 
-        //Returns true if new instance of item was added
-        //Returns false if existing instance was incremented
-        public void AddItem(MyGameObject item)
+        protected virtual void AddItem(MyGameObject item)
         {
             Weight += item.Weight;
             item.ParentInventory = this;

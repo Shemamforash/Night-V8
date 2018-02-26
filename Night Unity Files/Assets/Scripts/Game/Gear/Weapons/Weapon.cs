@@ -149,7 +149,6 @@ namespace Game.Gear.Weapons
         public override ViewParent CreateUi(Transform parent)
         {
             ViewParent weaponUi = base.CreateUi(parent);
-            weaponUi.PrimaryButton.AddOnClick(() => UiWeaponUpgradeController.Show(this));
             return weaponUi;
         }
     }

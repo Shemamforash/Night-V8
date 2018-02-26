@@ -72,7 +72,6 @@
               <e p="UIEnemyShieldController.cs" t="Include" />
               <e p="UIEnergyController.cs" t="Include" />
               <e p="UIExploreMenuController.cs" t="Include" />
-              <e p="UIGearController.cs" t="Include" />
               <e p="UIGearEquipController.cs" t="Include" />
               <e p="UIGrenadeController.cs" t="Include" />
               <e p="UIHealthBarController.cs" t="Include" />
@@ -174,10 +173,10 @@
                 <e p="Accessory.cs" t="Include" />
                 <e p="ArmourController.cs" t="Include" />
                 <e p="ArmourPlate.cs" t="Include" />
-                <e p="ArmourPlateType.cs" t="Include" />
                 <e p="GearReader.cs" t="Include" />
               </e>
               <e p="GearModifier.cs" t="Include" />
+              <e p="Inscription.cs" t="Include" />
               <e p="UI" t="Include">
                 <e p="AccessoryUi.cs" t="Include" />
                 <e p="ArmourUi.cs" t="Include" />
@@ -314,6 +313,9 @@
           </e>
         </e>
         <e p="UIDistanceController.cs" t="Include" />
+        <e p="UIPlayerAccessoryController.cs" t="Include" />
+        <e p="UIPlayerArmourController.cs" t="Include" />
+        <e p="UIPlayerWeaponController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

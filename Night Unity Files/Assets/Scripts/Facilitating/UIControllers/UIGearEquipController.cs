@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Characters;
+using Game.Characters.Player;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -24,25 +25,25 @@ public class UIGearEquipController : Menu
         _menuList.SetItems(CharacterManager.Characters());
         foreach (ViewParent viewParent in _menuList.Items)
         {
-            Character c = (Character) viewParent.GetLinkedObject();
+            Player player = (Player) viewParent.GetLinkedObject();
             InventoryUi inventoryUi = (InventoryUi) viewParent;
-            inventoryUi.SetLeftTextCallback(() => c.Name);
-            string gearName = c.Weapon == null ? "Nothing Equipped" : c.Weapon.Name;
+            inventoryUi.SetLeftTextCallback(() => player.Name);
+            string gearName = player.Weapon == null ? "Nothing Equipped" : player.Weapon.Name;
             inventoryUi.SetCentralTextCallback(() => gearName);
-            string gearInfo = c.Weapon == null ? "--" : c.Weapon.GetSummary();
+            string gearInfo = player.Weapon == null ? "--" : player.Weapon.GetSummary();
             inventoryUi.SetRightTextCallback(() => gearInfo);
             inventoryUi.PrimaryButton.AddOnClick(() =>
             {
                 switch (gear.GetGearType())
                 {
                     case GearSubtype.Weapon:
-                        c.EquipWeapon((Weapon) gear);
+                        player.EquipWeapon((Weapon) gear);
                         break;
                     case GearSubtype.Armour:
-                        c.ArmourController.AddPlate((ArmourPlate) gear);
+                        player.EquipArmour((ArmourPlate) gear);
                         break;
                     case GearSubtype.Accessory:
-                        c.EquipAccessory((Accessory) gear);
+                        player.EquipAccessory((Accessory) gear);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -52,7 +53,7 @@ public class UIGearEquipController : Menu
         }
     }
 
-    public static void DisplayGear(Character character, List<MyGameObject> availableGear)
+    public static void DisplayGear(Player player, List<MyGameObject> availableGear)
     {
         MenuStateMachine.ShowMenu("Equip Menu");
         _menuList.SetItems(availableGear);
@@ -66,13 +67,13 @@ public class UIGearEquipController : Menu
                 switch (gearItem.GetGearType())
                 {
                     case GearSubtype.Weapon:
-                        character.EquipWeapon((Weapon) gearItem);
+                        player.EquipWeapon((Weapon) gearItem);
                         break;
                     case GearSubtype.Armour:
-                        character.ArmourController.AddPlate((ArmourPlate) gearItem);
+                        player.EquipArmour((ArmourPlate) gearItem);
                         break;
                     case GearSubtype.Accessory:
-                        character.EquipAccessory((Accessory) gearItem);
+                        player.EquipAccessory((Accessory) gearItem);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

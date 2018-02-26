@@ -11,7 +11,6 @@ namespace Game.Gear.UI
         public WeaponUi(Weapon linkedObject, Transform parent) : base(linkedObject, parent)
         {
             SetLeftTextCallback(linkedObject.GetWeaponType);
-            PrimaryButton.AddOnClick(() => UiWeaponUpgradeController.Show(linkedObject));
         }
 
         public override void Update()

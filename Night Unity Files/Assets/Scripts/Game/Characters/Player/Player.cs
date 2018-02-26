@@ -67,7 +67,7 @@ namespace Game.Characters.Player
             Attributes.Endurance.AddOnValueChange(a => { Energy.Max = a.CurrentValue(); });
 
             _brandManager = new BrandManager(this);
-            Energy.OnMin(() => RestAction.Enter());
+            Energy.OnMin(() => RestAction?.Enter());
         }
 
         ~Player()
@@ -204,18 +204,19 @@ namespace Game.Characters.Player
         public override void EquipWeapon(Weapon weapon)
         {
             base.EquipWeapon(weapon);
-            CharacterView?.WeaponGearUi.SetGearItem(weapon);
+            CharacterView?.WeaponController.SetWeapon(weapon);
         }
 
-//        public void EquipArmour(Armour armour)
-//        {
-//            CharacterView?.ArmourGearUi.SetGearItem(armour);
-//        }
-
+        public void EquipArmour(ArmourPlate plate)
+        {
+            ArmourController.AddPlate(plate);
+            CharacterView.ArmourController.SetArmour(ArmourController);
+        }
+        
         public override void EquipAccessory(Accessory accessory)
         {
             base.EquipAccessory(accessory);
-            CharacterView?.AccessoryGearUi.SetGearItem(accessory);
+            CharacterView?.AccessoryController.SetAccessory(accessory);
         }
 
 

@@ -1,108 +1,378 @@
-﻿using Facilitating.UI.Elements;
+﻿using System;
+using System.Collections.Generic;
+using Facilitating.UI.Elements;
+using Game.Characters.Player;
 using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Input;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Facilitating.UIControllers
 {
-	public class UiWeaponUpgradeController : Menu
-	{
-		private EnhancedText _titleText;
-		private static EnhancedText _upgradeText;
-		private static Weapon _weapon;
-		private static string _previousMenu;
-	
-		private static TextMeshProUGUI _leftText,
-			_rightText,
-			_centralText,
-			_dpsText,
-			_subTitleText,
-			_modifierColumnOneText,
-			_modifierColumn2Text,
-			_topLeftAttributeText,
-			_topRightAttributeText,
-			_centreLeftAttributeText,
-			_centreRightAttributeText,
-			_bottomLeftAttributeText,
-			_bottomRightAttributeText;
+    public class UiWeaponUpgradeController : Menu, IInputListener
+    {
+        private static string _previousMenu;
+        private static bool _upgradingAllowed;
 
-		private static bool _upgradingAllowed;
+        private static GameObject _weaponInfoObject;
+        private static GameObject _weaponCompareObject;
 
-		public void Awake () {
-			Helper.FindChildWithName<EnhancedButton>(gameObject, "Cancel")?.AddOnClick(ReturnToPreviousMenu);
-			_upgradeText = Helper.FindChildWithName<Button>(gameObject, "Upgrade").transform.Find("Text").GetComponent<EnhancedText>();
-			_rightText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Right Text");
-			_leftText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Left Text");
-			_centralText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Centre Text");
-			_dpsText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "DPS");
-			_subTitleText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Capacity");
-			_modifierColumn2Text = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Modifier 1");
-			_modifierColumnOneText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Modifier 2");
-			_topLeftAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Damage");
-			_topRightAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Range");
-			_centreLeftAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Fire Rate");
-			_centreRightAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Critical Chance");
-			_bottomLeftAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Reload Speed");
-			_bottomRightAttributeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Handling");
-		}
-	
-		private void ReturnToPreviousMenu()
-		{
-			MenuStateMachine.ShowMenu(_previousMenu);
-		}
+        private static EnhancedText _typeText, _nameText, _durabilityText;
+        private static EnhancedText _damageText, _fireRateText, _rangeText;
+        private static EnhancedText _dpsText, _capacityText;
+        private static EnhancedText _reloadSpeedText, _criticalText, _handlingText;
+        private static EnhancedText _inscriptionText;
 
-		public static void Show(Weapon weapon)
-		{
-			_weapon = weapon;
-			_previousMenu = MenuStateMachine.States.GetCurrentState().Name;
-			MenuStateMachine.ShowMenu("Weapon Upgrade Menu");
-			SetWeaponText();
-		}
-	
-		private static void SetWeaponText()
-		{
-			_centralText.text = _weapon.ExtendedName();
-			_leftText.text = _weapon.GetWeaponType();
-			_rightText.text = _weapon.Weight + "kg";
-			_dpsText.text = Helper.Round(_weapon.WeaponAttributes.DPS(), 1) + "DPS";
-			_subTitleText.text = "Magazine " + _weapon.GetRemainingAmmo() + "/" + (int)_weapon.WeaponAttributes.Capacity.CurrentValue();
-			_modifierColumnOneText.text = _weapon.WeaponAttributes.WeaponClassDescription;
-			_modifierColumn2Text.text = _weapon.WeaponAttributes.ModifierDescription;
-			_topLeftAttributeText.text = _weapon.GetAttributeValue(AttributeType.Damage) + "DMG";
-			_topRightAttributeText.text = _weapon.GetAttributeValue(AttributeType.Range) + "ACC";
-			_centreLeftAttributeText.text = Helper.Round(_weapon.GetAttributeValue(AttributeType.FireRate), 1) + "ROF";
-			_centreRightAttributeText.text = _weapon.GetAttributeValue(AttributeType.CriticalChance) + "CRIT";
-			_bottomLeftAttributeText.text = Helper.Round(_weapon.GetAttributeValue(AttributeType.ReloadSpeed), 1) + "RLD";
-			int upgradeCost = _weapon.GetUpgradeCost();
-			if (upgradeCost <= WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Quantity())
-			{
-				_upgradeText.Text("Upgrade (" + _weapon.GetUpgradeCost() + ")");
-				_upgradingAllowed = true;
-			}
-			else
-			{
-				_upgradeText.Text("Need " + upgradeCost + " to upgrade.");
-				_upgradingAllowed = false;
-			}
-		}
+        private static EnhancedButton _inscribeButton, _repairButton, _compareButton, _equipButton;
+        private static EnhancedButton _centreButton;
 
-		public void UpgradeWeapon()
-		{
-			if (!_upgradingAllowed) return;
-			_weapon.IncreaseDurability();
-			SetWeaponText();
-		}
+        private static Player _currentPlayer;
 
-		public void EquipWeapon()
-		{
-			UIGearEquipController.DisplayCharacters(_weapon);
-		}
-	}
+        private static readonly List<WeaponUI> _weaponUis = new List<WeaponUI>();
+        private static int _selectedWeapon;
+
+        public void Awake()
+        {
+            _weaponInfoObject = Helper.FindChildWithName(gameObject, "Weapon Info");
+            _weaponCompareObject = Helper.FindChildWithName(gameObject, "Weapon List");
+
+            _typeText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "Type");
+            _nameText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "Name");
+            _durabilityText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "Durability");
+            _damageText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "Damage");
+            _fireRateText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "Fire Rate");
+            _rangeText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "Range");
+            _dpsText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "DPS");
+            _capacityText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "Capacity");
+            _reloadSpeedText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "Reload Speed");
+            _criticalText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "Critical Chance");
+            _handlingText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "Handling");
+            _inscriptionText = Helper.FindChildWithName<EnhancedText>(_weaponInfoObject, "Inscription");
+
+            _inscribeButton = Helper.FindChildWithName<EnhancedButton>(_weaponInfoObject, "Inscribe");
+            _repairButton = Helper.FindChildWithName<EnhancedButton>(_weaponInfoObject, "Repair");
+            _compareButton = Helper.FindChildWithName<EnhancedButton>(_weaponInfoObject, "Compare");
+            _equipButton = Helper.FindChildWithName<EnhancedButton>(_weaponInfoObject, "Equip");
+
+            for (int i = 0; i < 7; ++i)
+            {
+                GameObject uiObject = Helper.FindChildWithName(_weaponCompareObject, "Item " + i);
+                WeaponUI weaponUi = new WeaponUI(uiObject, Math.Abs(i - 3));
+                if (i == 3)
+                {
+                    _centreButton = uiObject.GetComponent<EnhancedButton>();
+                }
+
+                _weaponUis.Add(weaponUi);
+                weaponUi.SetWeapon(null);
+            }
+
+            _centreButton.AddOnClick(() =>
+            {
+                Equip(WorldState.HomeInventory().Weapons()[_selectedWeapon]);
+                DisableInput();
+            });
+
+            _equipButton.AddOnClick(EnableInput);
+            _compareButton.AddOnClick(EnableInput);
+        }
+
+        private void ReturnToPreviousMenu()
+        {
+            MenuStateMachine.ShowMenu(_previousMenu);
+        }
+
+        public static void Show(Player player)
+        {
+            _previousMenu = MenuStateMachine.States.GetCurrentState().Name;
+            MenuStateMachine.ShowMenu("Weapon Upgrade Menu");
+            _currentPlayer = player;
+            if (player.Weapon != null)
+            {
+                SetWeapon();
+            }
+            else
+            {
+                SetNoWeapon();
+            }
+        }
+
+        public void Equip(Weapon weapon)
+        {
+            if (weapon != null)
+            {
+                _currentPlayer.EquipWeapon(weapon);
+                Show(_currentPlayer);
+                return;
+            }
+
+            SetNoWeaponInfo();
+        }
+
+        public void CompareTo(Weapon weapon)
+        {
+            if (_currentPlayer.Weapon == null)
+            {
+                SetWeaponInfo(weapon);
+            }
+            else
+            {
+                WeaponAttributes attr = _currentPlayer.Weapon.WeaponAttributes;
+                _damageText.Text(GetAttributePrefix(weapon, AttributeType.Damage) + " " + Helper.Round(attr.Damage.CurrentValue(), 1) + " Dam");
+                _fireRateText.Text(GetAttributePrefix(weapon, AttributeType.FireRate) + " " + Helper.Round(attr.FireRate.CurrentValue(), 1) + " RoF");
+                _rangeText.Text(GetAttributePrefix(weapon, AttributeType.Range) + " " + Helper.Round(attr.Range.CurrentValue(), 1) + "M");
+                _reloadSpeedText.Text(Helper.Round(attr.ReloadSpeed.CurrentValue(), 1) + "s Reload " + GetAttributePrefix(weapon, AttributeType.ReloadSpeed));
+                _criticalText.Text(Helper.Round(attr.CriticalChance.CurrentValue(), 1) + "% Critical " + GetAttributePrefix(weapon, AttributeType.CriticalChance));
+                _handlingText.Text(Helper.Round(attr.Handling.CurrentValue(), 1) + "% Handling " + GetAttributePrefix(weapon, AttributeType.Handling));
+                _dpsText.Text(GetPrefix(attr.DPS(), weapon.WeaponAttributes.DPS()) + " " + Helper.Round(attr.DPS(), 1) + " DPS");
+                _capacityText.Text(GetAttributePrefix(weapon, AttributeType.Capacity) + " " + Helper.Round(attr.Capacity.CurrentValue(), 1) + " Capacity");
+            }
+        }
+
+        public void StopComparing()
+        {
+            if (_currentPlayer.Weapon == null)
+            {
+                SetNoWeaponInfo();
+            }
+            else
+            {
+                SetWeaponInfo(_currentPlayer.Weapon);
+            }
+        }
+
+        private static string GetPrefix(float original, float other)
+        {
+            string prefix = "";
+
+            if (other > original)
+            {
+                prefix += "-";
+                if (other > original * 1.2f)
+                {
+                    prefix += " -";
+                }
+            }
+            else
+            {
+                prefix += "+";
+                if (other < original * 0.8f)
+                {
+                    prefix += " +";
+                }
+            }
+
+            return prefix;
+        }
+
+        private string GetAttributePrefix(Weapon compare, AttributeType attribute)
+        {
+            Weapon equipped = _currentPlayer.Weapon;
+            float equippedValue = equipped.GetAttributeValue(attribute);
+            float compareValue = compare.GetAttributeValue(attribute);
+            return GetPrefix(equippedValue, compareValue);
+        }
+
+        private static void SetWeaponInfo(Weapon weapon)
+        {
+            WeaponAttributes attr = weapon.WeaponAttributes;
+            _typeText.Text(weapon.GetWeaponType());
+            _nameText.Text(weapon.ExtendedName());
+            _durabilityText.Text(attr.Durability.CurrentValue() + " Durability");
+            _damageText.Text(Helper.Round(attr.Damage.CurrentValue(), 1) + " Dam");
+            _fireRateText.Text(Helper.Round(attr.FireRate.CurrentValue(), 1) + " RoF");
+            _rangeText.Text(Helper.Round(attr.Range.CurrentValue(), 1) + "M");
+            _reloadSpeedText.Text(Helper.Round(attr.ReloadSpeed.CurrentValue(), 1) + "s Reload");
+            _criticalText.Text(Helper.Round(attr.CriticalChance.CurrentValue(), 1) + "% Critical");
+            _handlingText.Text(Helper.Round(attr.Handling.CurrentValue(), 1) + "% Handling");
+            _dpsText.Text(Helper.Round(attr.DPS(), 1) + " DPS");
+            _capacityText.Text(Helper.Round(attr.Capacity.CurrentValue(), 1) + " Capacity");
+        }
+
+        private static void SetWeapon()
+        {
+            Weapon weapon = _currentPlayer.Weapon;
+            WeaponAttributes attr = weapon.WeaponAttributes;
+            SetWeaponInfo(weapon);
+            _compareButton.gameObject.SetActive(true);
+            _equipButton.gameObject.SetActive(false);
+            _compareButton.Button().Select();
+//        if (weapon.Inscribable())
+//        {
+//            _inscribeButton.gameObject.SetActive(true);
+//            _inscriptionText.Text("-- Not Inscribable --");
+//        }
+//        else
+//        {
+            //todo show inscription
+//            weapon.Inscription.Name
+//            _inscriptionText.Text("-- Not Inscribable --");
+//        }
+
+            if (attr.Durability.ReachedMax())
+            {
+                _repairButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                _repairButton.gameObject.SetActive(true);
+            }
+
+            if (!WeaponsAreAvailable())
+            {
+                _compareButton.gameObject.SetActive(false);
+            }
+        }
+
+        private static void SetNoWeaponInfo()
+        {
+            _typeText.Text("");
+            _nameText.Text("");
+            _durabilityText.Text("");
+            _damageText.Text("");
+            _fireRateText.Text("");
+            _rangeText.Text("");
+            _dpsText.Text("Nothing Equipped");
+            _capacityText.Text("");
+            _reloadSpeedText.Text("");
+            _criticalText.Text("");
+            _handlingText.Text("");
+            _inscriptionText.Text("");
+        }
+
+        private static void SetNoWeapon()
+        {
+            SetNoWeaponInfo();
+            _inscribeButton.gameObject.SetActive(false);
+            _repairButton.gameObject.SetActive(false);
+            _compareButton.gameObject.SetActive(false);
+            _equipButton.gameObject.SetActive(true);
+            _equipButton.Button().Select();
+            if (!WeaponsAreAvailable())
+            {
+                _equipButton.gameObject.SetActive(false);
+            }
+        }
+
+        public static bool WeaponsAreAvailable()
+        {
+            return WorldState.HomeInventory().Weapons().Count != 0;
+        }
+
+        public void EnableInput()
+        {
+            InputHandler.RegisterInputListener(this);
+            _centreButton.Button().Select();
+        }
+
+        private void DisableInput()
+        {
+            InputHandler.UnregisterInputListener(this);
+            StopComparing();
+        }
+
+        private void SelectWeapon()
+        {
+            int centre = 3;
+            for (int i = 0; i < _weaponUis.Count; ++i)
+            {
+                int offset = i - centre;
+                int targetWeapon = _selectedWeapon + offset;
+                Weapon weapon = null;
+                if (targetWeapon >= 0 && targetWeapon < WorldState.HomeInventory().Weapons().Count)
+                {
+                    weapon = WorldState.HomeInventory().Weapons()[targetWeapon];
+                }
+
+                if (i == centre)
+                {
+                    CompareTo(weapon);
+                }
+
+                _weaponUis[i].SetWeapon(weapon);
+            }
+        }
+
+        private void TrySelectWeaponBelow()
+        {
+            if (_selectedWeapon == WorldState.HomeInventory().Weapons().Count - 1) return;
+            ++_selectedWeapon;
+            SelectWeapon();
+        }
+
+        private void TrySelectWeaponAbove()
+        {
+            if (_selectedWeapon == 0) return;
+            --_selectedWeapon;
+            SelectWeapon();
+        }
+
+        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+            if (isHeld) return;
+            if (axis == InputAxis.Cover)
+            {
+                DisableInput();
+                Equip(null);
+            }
+            else if (axis != InputAxis.Vertical)
+                return;
+
+            if (direction < 0)
+            {
+                TrySelectWeaponBelow();
+            }
+            else
+            {
+                TrySelectWeaponAbove();
+            }
+        }
+
+        public void OnInputUp(InputAxis axis)
+        {
+        }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
+        }
+
+        private class WeaponUI
+        {
+            private readonly EnhancedText _typeText, _nameText, _dpsText;
+            private readonly Color _activeColour;
+
+            public WeaponUI(GameObject uiObject, int offset)
+            {
+                _typeText = Helper.FindChildWithName<EnhancedText>(uiObject, "Type");
+                _nameText = Helper.FindChildWithName<EnhancedText>(uiObject, "Name");
+                _dpsText = Helper.FindChildWithName<EnhancedText>(uiObject, "Dps");
+                _activeColour = new Color(1f, 1f, 1f, 1f / (offset + 1));
+            }
+
+            private void SetColour(Color c)
+            {
+                _typeText.SetColor(c);
+                _nameText.SetColor(c);
+                _dpsText.SetColor(c);
+            }
+
+            public void SetWeapon(Weapon weapon)
+            {
+                if (weapon == null)
+                {
+                    SetColour(new Color(1, 1, 1, 0f));
+                    return;
+                }
+
+                SetColour(_activeColour);
+                _typeText.Text(weapon.GetWeaponType());
+                _nameText.Text(weapon.ExtendedName());
+                _dpsText.Text(Helper.Round(weapon.WeaponAttributes.DPS(), 1) + " DPS");
+            }
+        }
+    }
 }

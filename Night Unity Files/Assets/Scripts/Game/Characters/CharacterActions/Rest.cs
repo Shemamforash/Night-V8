@@ -17,7 +17,7 @@ namespace Game.Characters.CharacterActions
                 }
 
                 PlayerCharacter.Rest(1);
-                if (PlayerCharacter.Energy.ReachedMax())
+                if (PlayerCharacter.Energy.ReachedMax() && PlayerCharacter.DistanceFromHome > 0)
                 {
                     PlayerCharacter.ReturnAction.Enter();
                 }

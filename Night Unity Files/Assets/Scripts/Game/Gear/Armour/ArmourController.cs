@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
-using UnityEngine;
-
 namespace Game.Gear.Armour
 {
     public class ArmourController : IPersistenceTemplate
@@ -16,6 +15,16 @@ namespace Game.Gear.Armour
         public ArmourController(Character character)
         {
             _character = character;
+        }
+
+        public void AddOnArmourChange(Action<Number> a)
+        {
+            ArmourSlots.AddOnValueChange(a);
+        }
+
+        public List<ArmourPlate> GetPlates()
+        {
+            return _plates;
         }
 
         public void RemovePlate(ArmourPlate plate)
@@ -64,6 +73,11 @@ namespace Game.Gear.Armour
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             return doc;
+        }
+
+        public int GetMaxProtectionLevel()
+        {
+            return (int) ArmourSlots.Max;
         }
     }
 }
