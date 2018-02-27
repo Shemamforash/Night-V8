@@ -44,8 +44,10 @@ namespace Game.World
             IncrementResource(InventoryResourceType.Water, 1000);
             for (int i = 0; i < noItems; ++i)
             {
-                AddItem(WeaponGenerator.GenerateWeapon(WeaponQuality.Shining));
-                AddItem(GearReader.GenerateAccessory());
+                AddItem(WeaponGenerator.GenerateWeapon(ItemQuality.Shining));
+                AddItem(Accessory.GenerateAccessory(ItemQuality.Shining));
+                AddItem(Inscription.GenerateInscription(ItemQuality.Shining));
+                AddItem(ArmourPlate.GeneratePlate(ItemQuality.Shining));
             }
         }
 

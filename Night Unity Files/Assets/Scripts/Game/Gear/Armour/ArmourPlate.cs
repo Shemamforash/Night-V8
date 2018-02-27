@@ -1,40 +1,32 @@
-﻿using SamsHelper.BaseGameFunctionality.Characters;
+﻿using Game.Gear.Weapons;
+using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 
 namespace Game.Gear.Armour
 {
     public class ArmourPlate : GearItem
     {
-        private readonly bool _inscribable;
-        public readonly ArmourPlateType PlateType;
+        public readonly bool _inscribable;
 
-        public ArmourPlate(ArmourPlateType plateType, float weight) : base(plateType.ToString(), weight, GearSubtype.Armour)
+        private ArmourPlate(string name, float weight, ItemQuality itemQuality) : base(name, weight, GearSubtype.Armour, itemQuality)
         {
-            PlateType = plateType;
             if (weight == 5)
             {
                 _inscribable = true;
             }
         }
 
-        public override string GetSummary()
+        public static ArmourPlate GeneratePlate(ItemQuality plateQuality)
         {
-            return PlateType + " Armour Plate";
+            int weight = (int)plateQuality + 1;
+            string name = plateQuality + " Plate";
+            return new ArmourPlate(name, weight, plateQuality);
         }
 
-        public static ArmourPlate CreatePlate(ArmourPlateType plateType)
+        public override string GetSummary()
         {
-            int weight = (int)plateType + 1;
-            return new ArmourPlate(plateType, weight);
+            return "+" + Weight + " Armour";
         }
     }
     
-    public enum ArmourPlateType
-    {
-        Leather,
-        Sheet,
-        Metal,
-        Steel,
-        Ceramic
-    }
 }

@@ -1,26 +1,70 @@
-﻿using Game.Gear.UI;
+﻿using System.Collections.Generic;
+using System.Xml;
+using Game.Gear.UI;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
 namespace Game.Gear.Armour
 {
     public class Accessory : GearItem
     {
-        public readonly string Effect, Description;
-        
-        public Accessory(string name, float weight, string description, string effect) : base(name, weight, GearSubtype.Accessory)
+        private static List<AccessoryTemplate> _accessoryTemplates = new List<AccessoryTemplate>();
+
+        private static bool _readTemplates;
+        private AccessoryTemplate _template;
+
+        public Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, template.Weight, GearSubtype.Accessory, itemQuality)
         {
-            Description = description;
-            Effect = effect;
+            _template = template;
         }
 
         public override string GetSummary()
         {
-            return Effect;
+            return _template.Description;
         }
 
+        public class AccessoryTemplate
+        {
+            public readonly string Name, Description;
+            public readonly float Weight;
+
+            public AccessoryTemplate(string name, int weight, string description, string effect)
+            {
+                _accessoryTemplates.Add(this);
+                Name = name;
+                Weight = weight;
+                Description = description;
+            }
+        }
+
+        private static void ReadTemplates()
+        {
+            if (_readTemplates) return;
+            TextAsset accessoryFile = Resources.Load<TextAsset>("XML/Gear");
+            XmlDocument accessoryXml = new XmlDocument();
+            accessoryXml.LoadXml(accessoryFile.text);
+            XmlNode root = accessoryXml.SelectSingleNode("GearList");
+            foreach (XmlNode accessoryNode in root.SelectNodes("Accessory"))
+            {
+                string name = accessoryNode.SelectSingleNode("Name").InnerText;
+                int weight = int.Parse(accessoryNode.SelectSingleNode("Weight").InnerText);
+                string description = accessoryNode.SelectSingleNode("Description").InnerText;
+                string effect = accessoryNode.SelectSingleNode("Effect").InnerText;
+                new AccessoryTemplate(name, weight, description, effect);
+            }
+
+            _readTemplates = true;
+        }
+
+        public static Accessory GenerateAccessory(ItemQuality quality)
+        {
+            ReadTemplates();
+            AccessoryTemplate randomTemplate = _accessoryTemplates[Random.Range(0, _accessoryTemplates.Count)];
+            return new Accessory(randomTemplate, quality);
+        }
+        
 //        public override ViewParent CreateUi(Transform parent)
 //        {
 //            return new AccessoryUi(this, parent);

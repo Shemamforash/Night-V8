@@ -2,6 +2,7 @@
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
@@ -14,14 +15,25 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public abstract class GearItem : InventoryItem, IPersistenceTemplate
     {
         private readonly GearSubtype _gearType;
-        private readonly List<AttributeModifier> _modifiers = new List<AttributeModifier>();
         public bool Equipped;
+        private ItemQuality _itemItemQuality;
 
-        protected GearItem(string name, float weight, GearSubtype gearSubtype) : base(name, GameObjectType.Gear, weight)
+        protected GearItem(string name, float weight, GearSubtype gearSubtype, ItemQuality itemQuality) : base(name, GameObjectType.Gear, weight)
         {
+            SetQuality(itemQuality);
             _gearType = gearSubtype;
         }
-        
+
+        public ItemQuality Quality()
+        {
+            return _itemItemQuality;
+        }
+
+        public void SetQuality(ItemQuality quality)
+        {
+            _itemItemQuality = quality;
+        }
+
         public void Equip(DesolationInventory p)
         {
             //if in inventory, auto equip and replace
@@ -31,14 +43,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 //            _equipped = true;
 //            c.ReplaceGearInSlot(_gearslot, this);
             MoveTo(p);
-            _modifiers.ForEach(a => a.Apply());
             Equipped = true;
         }
-        
+
         public void Unequip()
         {
             MoveTo(WorldState.HomeInventory());
-            _modifiers.ForEach(a => a.Remove());
             Equipped = false;
         }
 

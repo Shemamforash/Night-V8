@@ -4,6 +4,7 @@
     {
         Weapon,
         Armour,
-        Accessory
+        Accessory,
+        Inscription
     }
 }

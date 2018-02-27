@@ -2,68 +2,54 @@
 using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
+using Game.Gear.Weapons;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
+
 namespace Game.Gear.Armour
 {
     public class ArmourController : IPersistenceTemplate
     {
-        private readonly List<ArmourPlate> _plates = new List<ArmourPlate>();
-        private Number ArmourSlots = new Number(0, 0, 0);
-        private Character _character;
+        private ArmourPlate _plateOne, _plateTwo;
+        private readonly Character _character;
+        private event Action _onArmourChange;
 
         public ArmourController(Character character)
         {
             _character = character;
         }
 
-        public void AddOnArmourChange(Action<Number> a)
+        public void SetPlateOne(ArmourPlate plate)
         {
-            ArmourSlots.AddOnValueChange(a);
-        }
-
-        public List<ArmourPlate> GetPlates()
-        {
-            return _plates;
-        }
-
-        public void RemovePlate(ArmourPlate plate)
-        {
-            _plates.Remove(plate);
-            plate.Unequip();
-            ArmourSlots.Decrement(plate.Weight);
-        }
-
-        public bool DoesPlateFit(ArmourPlate plate)
-        {
-            return ArmourSlots.CurrentValue() + plate.Weight <= ArmourSlots.Max;
-        }
-
-        public void AddPlate(ArmourPlate plate)
-        {
+            _plateOne?.Unequip();
             plate.Equip(_character.Inventory());
-            _plates.Add(plate);
-            ArmourSlots.Increment(plate.Weight);
+            _plateOne = plate;
+            _onArmourChange?.Invoke();
         }
 
-        public void UpgradeSlots()
+        public void AddOnArmourChange(Action a)
         {
-            ArmourSlots.Max = ArmourSlots.Max + 1;
+            _onArmourChange += a;
         }
 
-        public void AutoFillSlots(int slots)
+        public void SetPlateTwo(ArmourPlate plate)
         {
-            ArmourSlots.Max = slots;
-            while (GetProtectionLevel() != slots)
-            {
-                ArmourPlate plate = ArmourPlate.CreatePlate(ArmourPlateType.Leather);
-                AddPlate(plate);
-            }
+            _plateTwo.Unequip();
+            plate.Equip(_character.Inventory());
+            _plateTwo = plate;
+            _onArmourChange?.Invoke();
+        }
+
+        public void AutoFillSlots()
+        {
+            SetPlateOne(ArmourPlate.GeneratePlate(ItemQuality.Radiant));
+            SetPlateTwo(ArmourPlate.GeneratePlate(ItemQuality.Radiant));
         }
 
         public int GetProtectionLevel()
         {
-            return (int) ArmourSlots.CurrentValue();
+            //todo plate damage
+            return (int) (_plateOne.Weight + _plateTwo.Weight);
         }
 
         public void Load(XmlNode doc, PersistenceType saveType)
@@ -77,7 +63,17 @@ namespace Game.Gear.Armour
 
         public int GetMaxProtectionLevel()
         {
-            return (int) ArmourSlots.Max;
+            return (int) (_plateOne.Weight + _plateTwo.Weight);
+        }
+
+        public ArmourPlate GetPlateOne()
+        {
+            return _plateOne;
+        }
+        
+        public ArmourPlate GetPlateTwo()
+        {
+            return _plateTwo;
         }
     }
 }

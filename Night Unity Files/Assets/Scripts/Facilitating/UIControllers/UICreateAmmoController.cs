@@ -31,7 +31,6 @@ namespace Facilitating.UIControllers
             _lmgButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "LMG Ammo");
             _closeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Close Menu");
             _scrapLeft = Helper.FindChildWithName<EnhancedText>(gameObject, "Scrap Left");
-            Debug.Log(_instance);
         }
     
         public void Start()

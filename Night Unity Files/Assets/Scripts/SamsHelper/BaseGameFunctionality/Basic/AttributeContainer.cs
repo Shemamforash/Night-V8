@@ -7,7 +7,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public abstract class AttributeContainer : IPersistenceTemplate
     {
-        private readonly Dictionary<AttributeType, CharacterAttribute> _attributes = new Dictionary<AttributeType, CharacterAttribute>();
+        public readonly Dictionary<AttributeType, CharacterAttribute> Attributes = new Dictionary<AttributeType, CharacterAttribute>();
 
         protected AttributeContainer()
         {
@@ -22,16 +22,16 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             XmlNode attributeNode = SaveController.CreateNodeAndAppend("Attributes", doc);
-            foreach (AttributeType t in _attributes.Keys)
+            foreach (AttributeType t in Attributes.Keys)
             {
-                _attributes[t].Save(doc, saveType);
+                Attributes[t].Save(doc, saveType);
             }
             return attributeNode;
         }
 
         public CharacterAttribute Get(AttributeType type)
         {
-            return _attributes.ContainsKey(type) ? _attributes[type] : null;
+            return Attributes.ContainsKey(type) ? Attributes[type] : null;
         }
 
         public float GetCalculatedValue(AttributeType type) => Get(type).CurrentValue();
@@ -40,11 +40,11 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         
         protected void AddAttribute(CharacterAttribute a)
         {
-            if (_attributes.ContainsKey(a.AttributeType))
+            if (Attributes.ContainsKey(a.AttributeType))
             {
                 throw new Exceptions.AttributeContainerAlreadyContainsAttributeException(a.AttributeType);
             }
-            _attributes[a.AttributeType] = a;
+            Attributes[a.AttributeType] = a;
         }
     }
 }

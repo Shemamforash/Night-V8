@@ -207,12 +207,18 @@ namespace Game.Characters.Player
             CharacterView?.WeaponController.SetWeapon(weapon);
         }
 
-        public void EquipArmour(ArmourPlate plate)
+        public void EquipArmourSlotOne(ArmourPlate plate)
         {
-            ArmourController.AddPlate(plate);
+            ArmourController.SetPlateOne(plate);
             CharacterView.ArmourController.SetArmour(ArmourController);
         }
-        
+
+        public void EquipArmourSlotTwo(ArmourPlate plate)
+        {
+            ArmourController.SetPlateTwo(plate);
+            CharacterView.ArmourController.SetArmour(ArmourController);
+        }
+
         public override void EquipAccessory(Accessory accessory)
         {
             base.EquipAccessory(accessory);

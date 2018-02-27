@@ -59,20 +59,14 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             InputHandler.RegisterInputListener(this);
             _button = GetComponent<Button>();
-            try
-            {
-                Border.SetActive(false);
-            }
-            catch (UnassignedReferenceException e)
-            {
-                Debug.Log(e.Message + " " + gameObject.name);
-            }
-            _borderImages.AddRange(Helper.FindAllComponentsInChildren<Image>(Border.transform));
+            if (Border == null) return;
+            Border.SetActive(false);
+            _borderImages.AddRange(Helper.FindAllComponentsInChildren<Image>(Border?.transform));
         }
 
         public void Start()
         {
-            if(_needsFadeIn) TryStartFade(1);
+            if (_needsFadeIn) TryStartFade(1);
         }
 
         private void Enter()
@@ -115,7 +109,7 @@ namespace SamsHelper.ReactiveUI.Elements
             if (gameObject.activeInHierarchy) _fadeCoroutine = StartCoroutine(Fade(target));
             else _needsFadeIn = true;
         }
-        
+
         private void SetBorderColor(Color c)
         {
             _borderImages.ForEach(b => b.color = c);
@@ -160,6 +154,7 @@ namespace SamsHelper.ReactiveUI.Elements
                     _onHoldActions.ForEach(a => a.Reset());
                 }
             }
+
             if (isHeld || _justEntered || axis != InputAxis.Vertical) return;
             if (direction > 0)
             {

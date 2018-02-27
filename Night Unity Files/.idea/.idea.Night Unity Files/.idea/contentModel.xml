@@ -21,6 +21,7 @@
             <e p="Classes.xml" t="Include" />
             <e p="Enemies.xml" t="Include" />
             <e p="Gear.xml" t="Include" />
+            <e p="Inscriptions.xml" t="Include" />
             <e p="Regions.xml" t="Include" />
             <e p="Skills.xml" t="Include" />
             <e p="Traits.xml" t="Include" />
@@ -173,13 +174,11 @@
                 <e p="Accessory.cs" t="Include" />
                 <e p="ArmourController.cs" t="Include" />
                 <e p="ArmourPlate.cs" t="Include" />
-                <e p="GearReader.cs" t="Include" />
               </e>
-              <e p="GearModifier.cs" t="Include" />
               <e p="Inscription.cs" t="Include" />
+              <e p="ItemQuality.cs" t="Include" />
               <e p="UI" t="Include">
                 <e p="AccessoryUi.cs" t="Include" />
-                <e p="ArmourUi.cs" t="Include" />
                 <e p="GearUi.cs" t="Include" />
                 <e p="WeaponUi.cs" t="Include" />
               </e>
@@ -189,7 +188,6 @@
                 <e p="WeaponClass.cs" t="Include" />
                 <e p="WeaponGenerationTester.cs" t="Include" />
                 <e p="WeaponGenerator.cs" t="Include" />
-                <e p="WeaponQuality.cs" t="Include" />
                 <e p="WeaponType.cs" t="Include" />
               </e>
             </e>
@@ -288,9 +286,6 @@
             <e p="RingDrawer.cs" t="Include" />
           </e>
         </e>
-        <e p="Shaders" t="Include">
-          <e p="DissolveShader.shader" t="Include" />
-        </e>
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />
@@ -312,6 +307,7 @@
             </e>
           </e>
         </e>
+        <e p="UiArmourUpgradeController.cs" t="Include" />
         <e p="UIDistanceController.cs" t="Include" />
         <e p="UIPlayerAccessoryController.cs" t="Include" />
         <e p="UIPlayerArmourController.cs" t="Include" />

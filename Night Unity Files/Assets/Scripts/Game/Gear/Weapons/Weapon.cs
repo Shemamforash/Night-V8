@@ -29,9 +29,9 @@ namespace Game.Gear.Weapons
             return root;
         }
 
-        public Weapon(string name, float weight, WeaponQuality quality, int durability = -1) : base(name, weight, GearSubtype.Weapon)
+        public Weapon(string name, float weight, ItemQuality _itemQuality, int durability = -1) : base(name, weight, GearSubtype.Weapon, _itemQuality)
         {
-            WeaponAttributes = new WeaponAttributes(quality, durability);
+            WeaponAttributes = new WeaponAttributes(this, durability);
 //            Durability.OnMin(() => { _canEquip = false; });
         }
         
@@ -100,8 +100,8 @@ namespace Game.Gear.Weapons
 
         public void SetName()
         {
-            string quality = WeaponAttributes.Quality.ToString();
-            Name = WeaponAttributes.GetName() + " -- (" + quality + ")";
+            string quality = Quality().ToString();
+            Name = quality + " " + WeaponAttributes.GetName();
         }
 
         public void DecreaseDurability()

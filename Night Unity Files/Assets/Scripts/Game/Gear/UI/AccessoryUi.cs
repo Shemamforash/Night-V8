@@ -16,8 +16,8 @@ namespace Game.Gear.UI
         {
             base.Update();
             Accessory accessory = (Accessory)LinkedObject;
-            TitleText.text = accessory.Description;
-            SubTitleText.text = accessory.Effect;
+            TitleText.text = accessory.GetSummary();
+            SubTitleText.text = "effect";
             ModifierSection.SetActive(false);
             StatsSection.SetActive(false);
         }

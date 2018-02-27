@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;

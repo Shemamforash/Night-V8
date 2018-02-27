@@ -364,5 +364,17 @@ namespace SamsHelper
 
             public override string Message => "Skill does not exist '" + _type + "'";
         }
+
+        public class InscriptionModificationException : Exception
+        {
+            private readonly string _name;
+
+            public InscriptionModificationException(string name)
+            {
+                _name = name;
+            }
+
+            public override string Message => "Inscription had too many modification values, should have at most two '" + _name + "'";
+        }
     }
 }

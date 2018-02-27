@@ -9,52 +9,62 @@ namespace Game.Characters
     {
         private float _sumMod;
         private float _multMod = 1;
-        private readonly List<CharacterAttribute> _targetAttributes= new List<CharacterAttribute>();
-        public AttributeType AttributeType;
-        private bool _applied;
+        private readonly List<AttributeType> _targetAttributes = new List<AttributeType>();
+        private AttributeContainer _lastAppliedContainer;
+
+        public AttributeModifier(AttributeType attributeType)
+        {
+            _targetAttributes.Add(attributeType);
+        }
+
+        public AttributeModifier(List<AttributeType> attributeTypes)
+        {
+            _targetAttributes = attributeTypes;
+        }
 
         public void SetSummative(float summativeModifer)
         {
-            Remove();
             _sumMod = summativeModifer;
         }
-        
+
         public void SetMultiplicative(float multiplicativeModifier)
         {
-            Remove();
             _multMod = multiplicativeModifier;
         }
 
-        public void AddTargetAttributes(List<CharacterAttribute> targetAttributes)
+        public void ApplyOnce(AttributeContainer attributeContainer)
         {
-             _targetAttributes.AddRange(targetAttributes);   
-        }
-        
-        public void AddTargetAttribute(CharacterAttribute targetAttribute)
-        {
-            _targetAttributes.Add(targetAttribute);
+            ApplyModifiers(attributeContainer);
         }
 
-        public void RemoveTargetAttribute(CharacterAttribute targetAttribute)
+        private void ApplyModifiers(AttributeContainer attributeContainer)
         {
-            _targetAttributes.Remove(targetAttribute);
-            _applied = false;
+            foreach (AttributeType attribute in attributeContainer.Attributes.Keys)
+            {
+                if (!_targetAttributes.Contains(attribute)) continue;
+                attributeContainer.Attributes[attribute].ApplyAddMod(_sumMod);
+                attributeContainer.Attributes[attribute].ApplyMultMod(_multMod);
+            }
         }
 
-        public void Apply()
+        public void Apply(AttributeContainer attributeContainer)
         {
-            if (_targetAttributes == null || _applied) return;
-            _targetAttributes.ForEach(a => a.ApplyAddMod(_sumMod));
-            _targetAttributes.ForEach(a => a.ApplyMultMod(_multMod));
-            _applied = true;
+            if (_lastAppliedContainer != null) Debug.Log("Did you mean to remove the modifiers from the last container?");
+            ApplyModifiers(attributeContainer);
+            _lastAppliedContainer = attributeContainer;
         }
 
         public void Remove()
         {
-            if (_targetAttributes == null || !_applied) return;
-            _targetAttributes.ForEach(a => a.RemoveAddMod(_sumMod));
-            _targetAttributes.ForEach(a => a.RemoveMultMod(_multMod));
-            _applied = false;
+            if (_lastAppliedContainer == null) return;
+            foreach (AttributeType attribute in _lastAppliedContainer.Attributes.Keys)
+            {
+                if (!_targetAttributes.Contains(attribute)) continue;
+                _lastAppliedContainer.Attributes[attribute].RemoveAddMod(_sumMod);
+                _lastAppliedContainer.Attributes[attribute].RemoveMultMod(_multMod);
+            }
+
+            _lastAppliedContainer = null;
         }
 
         private string ModifierToString(float modifier)
@@ -64,14 +74,15 @@ namespace Game.Characters
             {
                 modifierString = Helper.AddSignPrefix(modifier);
             }
+
             return modifierString;
         }
-        
+
         public string AddModString()
         {
             string addModString = ModifierToString(_sumMod);
             if (addModString == "") return addModString;
-            return addModString +  " " +  AttributeType;
+            return addModString;
         }
 
         public string MultModString()
@@ -79,7 +90,7 @@ namespace Game.Characters
             if (_multMod == 1) return "";
             string multModString = ModifierToString((_multMod - 1) * 100);
             if (multModString == "") return multModString;
-            return multModString +  "% " + AttributeType;
+            return multModString;
         }
     }
 }

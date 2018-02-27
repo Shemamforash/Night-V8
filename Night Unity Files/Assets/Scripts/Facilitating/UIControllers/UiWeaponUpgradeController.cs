@@ -99,9 +99,11 @@ namespace Facilitating.UIControllers
             {
                 SetNoWeapon();
             }
+
+            SelectWeapon();
         }
 
-        public void Equip(Weapon weapon)
+        private void Equip(Weapon weapon)
         {
             if (weapon != null)
             {
@@ -113,27 +115,25 @@ namespace Facilitating.UIControllers
             SetNoWeaponInfo();
         }
 
-        public void CompareTo(Weapon weapon)
+        private static void CompareTo(Weapon compare)
         {
             if (_currentPlayer.Weapon == null)
             {
-                SetWeaponInfo(weapon);
+                SetWeaponInfo(compare);
             }
             else
             {
-                WeaponAttributes attr = _currentPlayer.Weapon.WeaponAttributes;
-                _damageText.Text(GetAttributePrefix(weapon, AttributeType.Damage) + " " + Helper.Round(attr.Damage.CurrentValue(), 1) + " Dam");
-                _fireRateText.Text(GetAttributePrefix(weapon, AttributeType.FireRate) + " " + Helper.Round(attr.FireRate.CurrentValue(), 1) + " RoF");
-                _rangeText.Text(GetAttributePrefix(weapon, AttributeType.Range) + " " + Helper.Round(attr.Range.CurrentValue(), 1) + "M");
-                _reloadSpeedText.Text(Helper.Round(attr.ReloadSpeed.CurrentValue(), 1) + "s Reload " + GetAttributePrefix(weapon, AttributeType.ReloadSpeed));
-                _criticalText.Text(Helper.Round(attr.CriticalChance.CurrentValue(), 1) + "% Critical " + GetAttributePrefix(weapon, AttributeType.CriticalChance));
-                _handlingText.Text(Helper.Round(attr.Handling.CurrentValue(), 1) + "% Handling " + GetAttributePrefix(weapon, AttributeType.Handling));
-                _dpsText.Text(GetPrefix(attr.DPS(), weapon.WeaponAttributes.DPS()) + " " + Helper.Round(attr.DPS(), 1) + " DPS");
-                _capacityText.Text(GetAttributePrefix(weapon, AttributeType.Capacity) + " " + Helper.Round(attr.Capacity.CurrentValue(), 1) + " Capacity");
+                _damageText.Text(GetAttributePrefix(compare, AttributeType.Damage) + " Dam");
+                _fireRateText.Text(GetAttributePrefix(compare, AttributeType.FireRate) + " RoF");
+                _rangeText.Text(GetAttributePrefix(compare, AttributeType.Range) + "M");
+                _reloadSpeedText.Text(GetAttributePrefix(compare, AttributeType.ReloadSpeed) + "s Reload ");
+                _criticalText.Text(GetAttributePrefix(compare, AttributeType.CriticalChance) + "% Critical ");
+                _handlingText.Text(GetAttributePrefix(compare, AttributeType.Handling) + "% Handling ");
+                _capacityText.Text(GetAttributePrefix(compare, AttributeType.Capacity) + " Capacity");
             }
         }
 
-        public void StopComparing()
+        private void StopComparing()
         {
             if (_currentPlayer.Weapon == null)
             {
@@ -145,36 +145,13 @@ namespace Facilitating.UIControllers
             }
         }
 
-        private static string GetPrefix(float original, float other)
-        {
-            string prefix = "";
 
-            if (other > original)
-            {
-                prefix += "-";
-                if (other > original * 1.2f)
-                {
-                    prefix += " -";
-                }
-            }
-            else
-            {
-                prefix += "+";
-                if (other < original * 0.8f)
-                {
-                    prefix += " +";
-                }
-            }
-
-            return prefix;
-        }
-
-        private string GetAttributePrefix(Weapon compare, AttributeType attribute)
+        private static string GetAttributePrefix(Weapon compare, AttributeType attribute)
         {
             Weapon equipped = _currentPlayer.Weapon;
             float equippedValue = equipped.GetAttributeValue(attribute);
             float compareValue = compare.GetAttributeValue(attribute);
-            return GetPrefix(equippedValue, compareValue);
+            return "<color=#505050>" + Helper.Round(compareValue, 1) + "</color>" + " vs " + Helper.Round(equippedValue, 1);
         }
 
         private static void SetWeaponInfo(Weapon weapon)
@@ -275,7 +252,7 @@ namespace Facilitating.UIControllers
             StopComparing();
         }
 
-        private void SelectWeapon()
+        private static void SelectWeapon()
         {
             int centre = 3;
             for (int i = 0; i < _weaponUis.Count; ++i)

@@ -4,13 +4,10 @@ using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.Elements;
-using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
-using UnityEngine.UI;
 using TMPro;
 using UIControllers;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Game.World
 {
@@ -22,6 +19,7 @@ namespace Game.World
         
         public void Awake()
         {
+            PauseOnOpen = false;
             _timeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Time");
             _stormDistanceText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Storm Distance");
             _inventoryButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inventory");

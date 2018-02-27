@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
@@ -18,7 +17,7 @@ namespace Game.Gear.Weapons
         public CharacterAttribute FireRate, ReloadSpeed, Damage, Range, CriticalChance, Handling, Capacity, Pellets;
         public CharacterAttribute PierceChance, BurnChance, BleedChance, SicknessChance;
         private float _dps;
-        private AttributeModifier _durabilityModifier = new AttributeModifier();
+        private AttributeModifier _durabilityModifier;
         public readonly Number Durability;
         private const int MaxDurability = 10;
         private const float MinDurabilityMod = 0.75f;
@@ -29,8 +28,7 @@ namespace Game.Gear.Weapons
         public string ModifierName, ModifierDescription;
         public WeaponType WeaponType;
         public InventoryResourceType AmmoType;
-
-        public WeaponQuality Quality;
+        private Weapon _weapon;
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
         {
@@ -52,9 +50,10 @@ namespace Game.Gear.Weapons
             return root;
         }
 
-        public WeaponAttributes(WeaponQuality quality, int durability = -1)
+        public WeaponAttributes(Weapon weapon, int durability = -1)
         {
-            Quality = quality;
+            _weapon = weapon;
+            _durabilityModifier = new AttributeModifier(new List<AttributeType> {AttributeType.Damage, AttributeType.CriticalChance, AttributeType.FireRate});
             if (durability == -1) durability = Random.Range(0, MaxDurability / 4);
             Durability = new Number(durability, 0, MaxDurability);
             Durability.AddOnValueChange(a => RecalculateAttributeValues());
@@ -67,11 +66,10 @@ namespace Game.Gear.Weapons
 
         public void SetClass(WeaponClass weaponClass)
         {
-            weaponClass.ApplyToGear(this);
+            weaponClass.Modifiers.ForEach(m => m.ApplyOnce(this));
             WeaponType = weaponClass.Type;
             Automatic = weaponClass.Automatic;
             WeaponClassName = weaponClass.Name;
-            WeaponClassDescription = weaponClass.GetDescription();
             switch (WeaponType)
             {
                 case WeaponType.Pistol:
@@ -96,12 +94,12 @@ namespace Game.Gear.Weapons
             RecalculateAttributeValues();
         }
 
-        public void SetModifier(GearModifier secondaryModifier)
+        public void SetInscription(Inscription inscription)
         {
-            secondaryModifier.ApplyToGear(this);
-            ModifierName = secondaryModifier.Name;
-            ModifierDescription = secondaryModifier.GetDescription();
-            RecalculateAttributeValues();
+//            inscription.ApplyToGear(this);
+//            ModifierName = inscription.Name;
+//            ModifierDescription = inscription.GetDescription();
+//            RecalculateAttributeValues();
         }
 
         public string GetName()
@@ -111,11 +109,12 @@ namespace Game.Gear.Weapons
 
         private void RecalculateAttributeValues()
         {
+            _durabilityModifier.Remove();
             float normalisedDurability = Durability.CurrentValue() / MaxDurability;
-            float qualityModifier = (float) (Quality + 1) / 2f;
+            float qualityModifier = (int) _weapon.Quality() + 1 / 2f;
             DurabilityModifier = MinDurabilityMod + (1 - MinDurabilityMod) * normalisedDurability * qualityModifier;
             _durabilityModifier.SetMultiplicative(DurabilityModifier);
-            _durabilityModifier.Apply();
+            _durabilityModifier.Apply(this);
             CalculateDPS();
         }
 
@@ -163,8 +162,6 @@ namespace Game.Gear.Weapons
             AddAttribute(BleedChance);
             AddAttribute(PierceChance);
             AddAttribute(SicknessChance);
-
-            _durabilityModifier.AddTargetAttributes(new List<CharacterAttribute> {Damage, CriticalChance, FireRate});
         }
 
         public string Print()

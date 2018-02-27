@@ -106,7 +106,7 @@ public class UIMinigameController : Menu
                 navigation.selectOnUp = button.Button();
                 StartButton.navigation = navigation;
                 
-                _chosenWeapon = WeaponGenerator.GenerateWeapon(WeaponQuality.Radiant, t, 0);
+                _chosenWeapon = WeaponGenerator.GenerateWeapon(ItemQuality.Radiant, t, 0);
                 _skillThree.SetSkill(_chosenWeapon.WeaponSkillOne);
                 _skillFour.SetSkill(_chosenWeapon.WeaponSkillTwo);
                 SetWeaponButton(button);

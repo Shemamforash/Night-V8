@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Gear.Armour;
@@ -7,7 +6,6 @@ using Game.Gear.Weapons;
 using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.Input;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;

@@ -65,7 +65,7 @@ namespace Game.Gear.Weapons
         {
             foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
             {
-                foreach (WeaponQuality quality in Enum.GetValues(typeof(WeaponQuality)))
+                foreach (ItemQuality quality in Enum.GetValues(typeof(ItemQuality)))
                 {
                     ResetAttributeStats();
                     TestWeapon(type, 0, quality);
@@ -78,7 +78,7 @@ namespace Game.Gear.Weapons
             File.WriteAllText(Directory.GetCurrentDirectory() + "/weapontest.txt", _testResultString.Replace("\n", Environment.NewLine));
         }
 
-        private static void TestWeapon(WeaponType type, int durability, WeaponQuality quality)
+        private static void TestWeapon(WeaponType type, int durability, ItemQuality quality)
         {
             float averageDps = 0, minDps = 10000, maxDps = 0;
             Weapon maxWeapon = null;

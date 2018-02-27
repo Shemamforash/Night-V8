@@ -23,7 +23,7 @@ namespace Game.Combat.Enemies
         public void GenerateWeapon(float difficulty)
         {
             if (Template.AllowedWeaponTypes.Count == 0) return;
-            WeaponQuality targetQuality = (WeaponQuality) Enum.Parse(typeof(WeaponQuality), Mathf.FloorToInt(difficulty * 5).ToString());
+            ItemQuality targetQuality = (ItemQuality) Enum.Parse(typeof(ItemQuality), Mathf.FloorToInt(difficulty * 5).ToString());
             int durability = Random.Range(0, 10);
             Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality, Template.AllowedWeaponTypes, durability);
             EquipWeapon(weapon);
@@ -36,7 +36,7 @@ namespace Game.Combat.Enemies
             if (minArmour < 0) minArmour = 0;
             int maxArmour = armourPivot + 1;
             if (maxArmour > 10) maxArmour = 10;
-            ArmourController.AutoFillSlots(Random.Range(minArmour, maxArmour));
+            ArmourController.AutoFillSlots();
         }
 
         private void Reset()

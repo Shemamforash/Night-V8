@@ -53,7 +53,7 @@ namespace Game.Characters
                     ui.PrimaryButton.AddOnClick(() => _character.EquipWeapon((Weapon) _gearItem));
                     break;
                 case GearSubtype.Armour:
-                    ui.PrimaryButton.AddOnClick(() => _character.ArmourController.AddPlate((ArmourPlate) _gearItem));
+                    ui.PrimaryButton.AddOnClick(() => _character.ArmourController.SetPlateOne((ArmourPlate) _gearItem));
                     break;
                 case GearSubtype.Accessory:
                     ui.PrimaryButton.AddOnClick(() => _character.EquipAccessory((Accessory) _gearItem));

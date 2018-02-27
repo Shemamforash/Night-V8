@@ -40,7 +40,7 @@ public class UIGearEquipController : Menu
                         player.EquipWeapon((Weapon) gear);
                         break;
                     case GearSubtype.Armour:
-                        player.EquipArmour((ArmourPlate) gear);
+                        player.EquipArmourSlotOne((ArmourPlate) gear);
                         break;
                     case GearSubtype.Accessory:
                         player.EquipAccessory((Accessory) gear);
@@ -70,7 +70,7 @@ public class UIGearEquipController : Menu
                         player.EquipWeapon((Weapon) gearItem);
                         break;
                     case GearSubtype.Armour:
-                        player.EquipArmour((ArmourPlate) gearItem);
+                        player.EquipArmourSlotOne((ArmourPlate) gearItem);
                         break;
                     case GearSubtype.Accessory:
                         player.EquipAccessory((Accessory) gearItem);
