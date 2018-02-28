@@ -70,6 +70,7 @@ namespace Game.Characters
             ArmourController.GetComponent<EnhancedButton>().AddOnClick(() => UiArmourUpgradeController.Show(_player));
             _player.ArmourController.AddOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));
             AccessoryController = FindInDetailedView<UIPlayerAccessoryController>("Accessory");
+            AccessoryController.GetComponent<EnhancedButton>().AddOnClick(() => UiAccessoryController.Show(_player));
         }
 
         public void FillActionList()

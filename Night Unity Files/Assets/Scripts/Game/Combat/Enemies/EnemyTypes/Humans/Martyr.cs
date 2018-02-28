@@ -22,7 +22,6 @@ namespace Game.Combat.Enemies.EnemyTypes
                 if (HealthController.GetCurrentHealth() != 0) return;
                 Detonate();
             });
-            ArmourController.SetArmourValue(0);
         }
         
         public override void Alert()

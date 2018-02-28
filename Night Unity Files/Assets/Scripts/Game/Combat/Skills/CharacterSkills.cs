@@ -3,6 +3,7 @@ using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.Player;
 using Game.Combat.Enemies.EnemyTypes.Misc;
+using Game.Gear.Armour;
 
 namespace Game.Combat.Skills
 {
@@ -147,7 +148,7 @@ namespace Game.Combat.Skills
             DetailedEnemyCombat nearestEnemy = UIEnemyController.NearestEnemy();
             if (nearestEnemy == null || nearestEnemy.DistanceToPlayer > 5) return;
             nearestEnemy.Knockback(5);
-            nearestEnemy.ArmourController.RemovePiece();
+            nearestEnemy.ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit);
         }
     }
 
@@ -204,7 +205,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             if (CombatManager.Player.ArmourController.CurrentArmour() == 0) return;
-            CombatManager.Player.ArmourController.RemovePiece();
+            CombatManager.Player.ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit);
             CombatManager.Player.HealthController.Heal(Characters.Player.Player.PlayerHealthChunkSize);
         }
     }
@@ -254,7 +255,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            CombatManager.Player.ArmourController.IncrementArmour(2);
+            CombatManager.Player.ArmourController.RepairArmour(2 * ArmourPlate.PlateHealthUnit);
         }
     }
 

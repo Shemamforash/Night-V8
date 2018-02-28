@@ -1,11 +1,11 @@
 <Game>
   <Regions>
     <Inventory>
-      <Name>Pursuer's Promise</Name>
-      <Water>10</Water>
-      <Food>40</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
+      <Name>Victory's Boon</Name>
+      <Water>0</Water>
+      <Food>0</Food>
+      <Fuel>50</Fuel>
+      <Scrap>50</Scrap>
       <PistolMag>0</PistolMag>
       <RifleMag>0</RifleMag>
       <ShotgunMag>0</ShotgunMag>
@@ -16,12 +16,654 @@
       <PerceptionReq>0</PerceptionReq>
       <Origin>None</Origin>
       <ID>0</ID>
-      <Type>Food</Type>
+      <Type>Cache</Type>
       <Connections>
         <RegionID>1</RegionID>
+        <RegionID>6</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Adherant's Promise</Name>
+      <Water>50</Water>
+      <Food>0</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>2</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>2</PerceptionReq>
+      <Origin>0</Origin>
+      <ID>1</ID>
+      <Type>Water</Type>
+      <Connections>
         <RegionID>2</RegionID>
+        <RegionID>3</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Saviour's Balm</Name>
+      <Water>40</Water>
+      <Food>10</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>3</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>4</PerceptionReq>
+      <Origin>1</Origin>
+      <ID>2</ID>
+      <Type>Water</Type>
+      <Connections>
+        <RegionID>7</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Hunter's Prosperity</Name>
+      <Water>20</Water>
+      <Food>30</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>3</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>3</PerceptionReq>
+      <Origin>1</Origin>
+      <ID>3</ID>
+      <Type>Food</Type>
+      <Connections>
+        <RegionID>4</RegionID>
+        <RegionID>5</RegionID>
+        <RegionID>10</RegionID>
+        <RegionID>50</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Pursuer's Dell</Name>
+      <Water>10</Water>
+      <Food>40</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>4</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>3</PerceptionReq>
+      <Origin>3</Origin>
+      <ID>4</ID>
+      <Type>Food</Type>
+      <Connections>
+        <RegionID>22</RegionID>
+        <RegionID>25</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Devotion's Jewel</Name>
+      <Water>0</Water>
+      <Food>0</Food>
+      <Fuel>50</Fuel>
+      <Scrap>50</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>4</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>4</PerceptionReq>
+      <Origin>3</Origin>
+      <ID>5</ID>
+      <Type>Cache</Type>
+      <Connections>
+        <RegionID>16</RegionID>
+        <RegionID>20</RegionID>
+        <RegionID>26</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Prowler's Bounty</Name>
+      <Water>10</Water>
+      <Food>40</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>2</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>2</PerceptionReq>
+      <Origin>0</Origin>
+      <ID>6</ID>
+      <Type>Food</Type>
+      <Connections>
+        <RegionID>8</RegionID>
+        <RegionID>14</RegionID>
+        <RegionID>19</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Trapper's Dale</Name>
+      <Water>20</Water>
+      <Food>30</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>4</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>4</PerceptionReq>
+      <Origin>2</Origin>
+      <ID>7</ID>
+      <Type>Food</Type>
+      <Connections>
+        <RegionID>9</RegionID>
+        <RegionID>27</RegionID>
+        <RegionID>34</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Devil's Decay</Name>
+      <Water>0</Water>
+      <Food>10</Food>
+      <Fuel>30</Fuel>
+      <Scrap>40</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>3</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>6</PerceptionReq>
+      <Origin>6</Origin>
+      <ID>8</ID>
+      <Type>Scrap</Type>
+      <Connections>
+        <RegionID>12</RegionID>
+        <RegionID>31</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Guardian's Sleep</Name>
+      <Water>0</Water>
+      <Food>10</Food>
+      <Fuel>30</Fuel>
+      <Scrap>40</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>5</PerceptionReq>
+      <Origin>7</Origin>
+      <ID>9</ID>
+      <Type>Scrap</Type>
+      <Connections>
+        <RegionID>18</RegionID>
+        <RegionID>35</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Titan's Decay</Name>
+      <Water>0</Water>
+      <Food>10</Food>
+      <Fuel>30</Fuel>
+      <Scrap>40</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>4</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>3</PerceptionReq>
+      <Origin>3</Origin>
+      <ID>10</ID>
+      <Type>Scrap</Type>
+      <Connections>
+        <RegionID>11</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Love's Waste</Name>
+      <Water>0</Water>
+      <Food>0</Food>
+      <Fuel>50</Fuel>
+      <Scrap>50</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>5</PerceptionReq>
+      <Origin>10</Origin>
+      <ID>11</ID>
+      <Type>Cache</Type>
+      <Connections>
+        <RegionID>13</RegionID>
+        <RegionID>15</RegionID>
+        <RegionID>36</RegionID>
+        <RegionID>44</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Beauty's Boon</Name>
+      <Water>0</Water>
+      <Food>0</Food>
+      <Fuel>50</Fuel>
+      <Scrap>50</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>4</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>7</PerceptionReq>
+      <Origin>8</Origin>
+      <ID>12</ID>
+      <Type>Cache</Type>
+      <Connections>
+        <RegionID>17</RegionID>
+        <RegionID>23</RegionID>
+        <RegionID>46</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Stalker's Wild</Name>
+      <Water>10</Water>
+      <Food>40</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>6</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>5</PerceptionReq>
+      <Origin>11</Origin>
+      <ID>13</ID>
+      <Type>Food</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Savage's Relief</Name>
+      <Water>10</Water>
+      <Food>10</Food>
+      <Fuel>30</Fuel>
+      <Scrap>30</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>3</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>2</PerceptionReq>
+      <Origin>6</Origin>
+      <ID>14</ID>
+      <Type>Human</Type>
+      <Connections>
+        <RegionID>24</RegionID>
+        <RegionID>43</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Titan's Sunset</Name>
+      <Water>0</Water>
+      <Food>10</Food>
+      <Fuel>20</Fuel>
+      <Scrap>30</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>6</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>5</PerceptionReq>
+      <Origin>11</Origin>
+      <ID>15</ID>
+      <Type>Scrap</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Stalker's Prosperity</Name>
+      <Water>20</Water>
+      <Food>30</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>8</PerceptionReq>
+      <Origin>5</Origin>
+      <ID>16</ID>
+      <Type>Food</Type>
+      <Connections>
+        <RegionID>21</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Prowler's Promise</Name>
+      <Water>10</Water>
+      <Food>40</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>9</PerceptionReq>
+      <Origin>12</Origin>
+      <ID>17</ID>
+      <Type>Food</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Hunter's Prosperity</Name>
+      <Water>0</Water>
+      <Food>50</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>6</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>5</PerceptionReq>
+      <Origin>9</Origin>
+      <ID>18</ID>
+      <Type>Food</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Gargantua's Slumber</Name>
+      <Water>0</Water>
+      <Food>10</Food>
+      <Fuel>30</Fuel>
+      <Scrap>40</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>3</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>6</PerceptionReq>
+      <Origin>6</Origin>
+      <ID>19</ID>
+      <Type>Scrap</Type>
+      <Connections>
+        <RegionID>38</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Cripple's Gate</Name>
+      <Water>10</Water>
+      <Food>10</Food>
+      <Fuel>30</Fuel>
+      <Scrap>30</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>6</PerceptionReq>
+      <Origin>5</Origin>
+      <ID>20</ID>
+      <Type>Human</Type>
+      <Connections>
+        <RegionID>33</RegionID>
+        <RegionID>39</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Heaven's Drink</Name>
+      <Water>50</Water>
+      <Food>0</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>6</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>13</PerceptionReq>
+      <Origin>16</Origin>
+      <ID>21</ID>
+      <Type>Water</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Victory's Jewel</Name>
+      <Water>0</Water>
+      <Food>0</Food>
+      <Fuel>50</Fuel>
+      <Scrap>50</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>3</PerceptionReq>
+      <Origin>4</Origin>
+      <ID>22</ID>
+      <Type>Cache</Type>
+      <Connections>
+        <RegionID>41</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Torment's Anguish</Name>
+      <Water>10</Water>
+      <Food>10</Food>
+      <Fuel>20</Fuel>
+      <Scrap>20</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>9</PerceptionReq>
+      <Origin>12</Origin>
+      <ID>23</ID>
+      <Type>Human</Type>
+      <Connections>
+        <RegionID>29</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Vandal's Damnation</Name>
+      <Water>20</Water>
+      <Food>20</Food>
+      <Fuel>40</Fuel>
+      <Scrap>40</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>4</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>4</PerceptionReq>
+      <Origin>14</Origin>
+      <ID>24</ID>
+      <Type>Human</Type>
+      <Connections>
+        <RegionID>28</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Stalker's Prosperity</Name>
+      <Water>0</Water>
+      <Food>50</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>6</PerceptionReq>
+      <Origin>4</Origin>
+      <ID>25</ID>
+      <Type>Food</Type>
+      <Connections>
+        <RegionID>30</RegionID>
         <RegionID>37</RegionID>
       </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Execrator's Anguish</Name>
+      <Water>10</Water>
+      <Food>10</Food>
+      <Fuel>30</Fuel>
+      <Scrap>30</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>5</PerceptionReq>
+      <Origin>5</Origin>
+      <ID>26</ID>
+      <Type>Human</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Hope's Reward</Name>
+      <Water>0</Water>
+      <Food>0</Food>
+      <Fuel>50</Fuel>
+      <Scrap>50</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>7</PerceptionReq>
+      <Origin>7</Origin>
+      <ID>27</ID>
+      <Type>Cache</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Endurance's Temptation</Name>
+      <Water>0</Water>
+      <Food>0</Food>
+      <Fuel>50</Fuel>
+      <Scrap>50</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>4</PerceptionReq>
+      <Origin>24</Origin>
+      <ID>28</ID>
+      <Type>Cache</Type>
+      <Connections>
+        <RegionID>32</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Pursuit's Dale</Name>
+      <Water>20</Water>
+      <Food>30</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>6</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>10</PerceptionReq>
+      <Origin>23</Origin>
+      <ID>29</ID>
+      <Type>Food</Type>
+      <Connections />
       <Scenario />
     </Inventory>
     <Inventory>
@@ -35,142 +677,21 @@
       <ShotgunMag>0</ShotgunMag>
       <SmgMag>0</SmgMag>
       <LmgMag>0</LmgMag>
-      <Distance>2</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>3</PerceptionReq>
-      <Origin>0</Origin>
-      <ID>1</ID>
-      <Type>Food</Type>
-      <Connections>
-        <RegionID>3</RegionID>
-        <RegionID>5</RegionID>
-        <RegionID>39</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Hell's Abode</Name>
-      <Water>10</Water>
-      <Food>10</Food>
-      <Fuel>20</Fuel>
-      <Scrap>20</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>2</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>5</PerceptionReq>
-      <Origin>0</Origin>
-      <ID>2</ID>
-      <Type>Human</Type>
-      <Connections>
-        <RegionID>4</RegionID>
-        <RegionID>6</RegionID>
-        <RegionID>9</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Demon's Torpor</Name>
-      <Water>0</Water>
-      <Food>10</Food>
-      <Fuel>30</Fuel>
-      <Scrap>40</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>3</Distance>
+      <Distance>6</Distance>
       <Discovered>False</Discovered>
       <PerceptionReq>7</PerceptionReq>
-      <Origin>1</Origin>
-      <ID>3</ID>
-      <Type>Scrap</Type>
-      <Connections>
-        <RegionID>19</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Pursuit's Bounty</Name>
-      <Water>10</Water>
-      <Food>40</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>3</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>5</PerceptionReq>
-      <Origin>2</Origin>
-      <ID>4</ID>
+      <Origin>25</Origin>
+      <ID>30</ID>
       <Type>Food</Type>
-      <Connections>
-        <RegionID>8</RegionID>
-        <RegionID>11</RegionID>
-        <RegionID>12</RegionID>
-        <RegionID>47</RegionID>
-      </Connections>
+      <Connections />
       <Scenario />
     </Inventory>
     <Inventory>
-      <Name>Mortal's Remission</Name>
-      <Water>20</Water>
-      <Food>20</Food>
-      <Fuel>40</Fuel>
-      <Scrap>40</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>3</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>4</PerceptionReq>
-      <Origin>1</Origin>
-      <ID>5</ID>
-      <Type>Human</Type>
-      <Connections>
-        <RegionID>7</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Satan's Remains</Name>
-      <Water>0</Water>
+      <Name>Mortal's Burden</Name>
+      <Water>10</Water>
       <Food>10</Food>
       <Fuel>30</Fuel>
-      <Scrap>40</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>3</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>7</PerceptionReq>
-      <Origin>2</Origin>
-      <ID>6</ID>
-      <Type>Scrap</Type>
-      <Connections>
-        <RegionID>16</RegionID>
-        <RegionID>21</RegionID>
-        <RegionID>30</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Betrayer's Gate</Name>
-      <Water>20</Water>
-      <Food>20</Food>
-      <Fuel>40</Fuel>
-      <Scrap>40</Scrap>
+      <Scrap>30</Scrap>
       <PistolMag>0</PistolMag>
       <RifleMag>0</RifleMag>
       <ShotgunMag>0</ShotgunMag>
@@ -178,18 +699,180 @@
       <LmgMag>0</LmgMag>
       <Distance>4</Distance>
       <Discovered>False</Discovered>
-      <PerceptionReq>4</PerceptionReq>
-      <Origin>5</Origin>
-      <ID>7</ID>
+      <PerceptionReq>7</PerceptionReq>
+      <Origin>8</Origin>
+      <ID>31</ID>
       <Type>Human</Type>
       <Connections>
-        <RegionID>13</RegionID>
-        <RegionID>36</RegionID>
+        <RegionID>47</RegionID>
       </Connections>
       <Scenario />
     </Inventory>
     <Inventory>
-      <Name>Faith's Fountain</Name>
+      <Name>Titan's End</Name>
+      <Water>0</Water>
+      <Food>10</Food>
+      <Fuel>20</Fuel>
+      <Scrap>30</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>6</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>5</PerceptionReq>
+      <Origin>28</Origin>
+      <ID>32</ID>
+      <Type>Scrap</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Devil's Carcass</Name>
+      <Water>0</Water>
+      <Food>10</Food>
+      <Fuel>20</Fuel>
+      <Scrap>30</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>6</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>6</PerceptionReq>
+      <Origin>20</Origin>
+      <ID>33</ID>
+      <Type>Scrap</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Huntress's Bloom</Name>
+      <Water>0</Water>
+      <Food>50</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>9</PerceptionReq>
+      <Origin>7</Origin>
+      <ID>34</ID>
+      <Type>Food</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Demon's Torpor</Name>
+      <Water>0</Water>
+      <Food>0</Food>
+      <Fuel>30</Fuel>
+      <Scrap>50</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>6</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>9</PerceptionReq>
+      <Origin>9</Origin>
+      <ID>35</ID>
+      <Type>Scrap</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Abhorrent's Terminus</Name>
+      <Water>10</Water>
+      <Food>10</Food>
+      <Fuel>30</Fuel>
+      <Scrap>30</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>6</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>6</PerceptionReq>
+      <Origin>11</Origin>
+      <ID>36</ID>
+      <Type>Human</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Endurance's Heartache</Name>
+      <Water>0</Water>
+      <Food>0</Food>
+      <Fuel>50</Fuel>
+      <Scrap>50</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>6</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>11</PerceptionReq>
+      <Origin>25</Origin>
+      <ID>37</ID>
+      <Type>Cache</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Trapper's Promise</Name>
+      <Water>0</Water>
+      <Food>50</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>4</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>7</PerceptionReq>
+      <Origin>19</Origin>
+      <ID>38</ID>
+      <Type>Food</Type>
+      <Connections>
+        <RegionID>40</RegionID>
+        <RegionID>42</RegionID>
+      </Connections>
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Hunter's Sustenance</Name>
+      <Water>0</Water>
+      <Food>50</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>6</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>6</PerceptionReq>
+      <Origin>20</Origin>
+      <ID>39</ID>
+      <Type>Food</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Paragon's Rapture</Name>
       <Water>40</Water>
       <Food>10</Food>
       <Fuel>0</Fuel>
@@ -199,24 +882,21 @@
       <ShotgunMag>0</ShotgunMag>
       <SmgMag>0</SmgMag>
       <LmgMag>0</LmgMag>
-      <Distance>4</Distance>
+      <Distance>5</Distance>
       <Discovered>False</Discovered>
-      <PerceptionReq>5</PerceptionReq>
-      <Origin>4</Origin>
-      <ID>8</ID>
+      <PerceptionReq>10</PerceptionReq>
+      <Origin>38</Origin>
+      <ID>40</ID>
       <Type>Water</Type>
       <Connections>
-        <RegionID>18</RegionID>
-        <RegionID>23</RegionID>
-        <RegionID>28</RegionID>
-        <RegionID>49</RegionID>
+        <RegionID>45</RegionID>
       </Connections>
       <Scenario />
     </Inventory>
     <Inventory>
-      <Name>Betrayer's Woe</Name>
-      <Water>20</Water>
-      <Food>20</Food>
+      <Name>Devotion's Temptation</Name>
+      <Water>40</Water>
+      <Food>40</Food>
       <Fuel>40</Fuel>
       <Scrap>40</Scrap>
       <PistolMag>0</PistolMag>
@@ -224,15 +904,34 @@
       <ShotgunMag>0</ShotgunMag>
       <SmgMag>0</SmgMag>
       <LmgMag>0</LmgMag>
-      <Distance>3</Distance>
+      <Distance>6</Distance>
       <Discovered>False</Discovered>
-      <PerceptionReq>6</PerceptionReq>
-      <Origin>2</Origin>
-      <ID>9</ID>
-      <Type>Human</Type>
+      <PerceptionReq>3</PerceptionReq>
+      <Origin>22</Origin>
+      <ID>41</ID>
+      <Type>Cache</Type>
+      <Connections />
+      <Scenario />
+    </Inventory>
+    <Inventory>
+      <Name>Heaven's Elation</Name>
+      <Water>30</Water>
+      <Food>20</Food>
+      <Fuel>0</Fuel>
+      <Scrap>0</Scrap>
+      <PistolMag>0</PistolMag>
+      <RifleMag>0</RifleMag>
+      <ShotgunMag>0</ShotgunMag>
+      <SmgMag>0</SmgMag>
+      <LmgMag>0</LmgMag>
+      <Distance>5</Distance>
+      <Discovered>False</Discovered>
+      <PerceptionReq>7</PerceptionReq>
+      <Origin>38</Origin>
+      <ID>42</ID>
+      <Type>Water</Type>
       <Connections>
-        <RegionID>10</RegionID>
-        <RegionID>15</RegionID>
+        <RegionID>48</RegionID>
       </Connections>
       <Scenario />
     </Inventory>
@@ -249,155 +948,39 @@
       <LmgMag>0</LmgMag>
       <Distance>4</Distance>
       <Discovered>False</Discovered>
-      <PerceptionReq>7</PerceptionReq>
-      <Origin>9</Origin>
-      <ID>10</ID>
+      <PerceptionReq>4</PerceptionReq>
+      <Origin>14</Origin>
+      <ID>43</ID>
       <Type>Food</Type>
-      <Connections>
-        <RegionID>26</RegionID>
-      </Connections>
+      <Connections />
       <Scenario />
     </Inventory>
     <Inventory>
-      <Name>Hell's Triumph</Name>
-      <Water>20</Water>
-      <Food>20</Food>
-      <Fuel>40</Fuel>
-      <Scrap>40</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>4</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>6</PerceptionReq>
-      <Origin>4</Origin>
-      <ID>11</ID>
-      <Type>Human</Type>
-      <Connections>
-        <RegionID>14</RegionID>
-        <RegionID>45</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Endurance's Boon</Name>
+      <Name>Carrion's Collapse</Name>
       <Water>0</Water>
       <Food>0</Food>
-      <Fuel>50</Fuel>
+      <Fuel>30</Fuel>
       <Scrap>50</Scrap>
       <PistolMag>0</PistolMag>
       <RifleMag>0</RifleMag>
       <ShotgunMag>0</ShotgunMag>
       <SmgMag>0</SmgMag>
       <LmgMag>0</LmgMag>
-      <Distance>4</Distance>
+      <Distance>6</Distance>
       <Discovered>False</Discovered>
-      <PerceptionReq>6</PerceptionReq>
-      <Origin>4</Origin>
-      <ID>12</ID>
-      <Type>Cache</Type>
-      <Connections>
-        <RegionID>41</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Drifter's Agony</Name>
-      <Water>10</Water>
-      <Food>10</Food>
-      <Fuel>20</Fuel>
-      <Scrap>20</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>9</PerceptionReq>
-      <Origin>7</Origin>
-      <ID>13</ID>
-      <Type>Human</Type>
-      <Connections>
-        <RegionID>17</RegionID>
-        <RegionID>24</RegionID>
-        <RegionID>27</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Vandal's Anguish</Name>
-      <Water>10</Water>
-      <Food>10</Food>
-      <Fuel>20</Fuel>
-      <Scrap>20</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>9</PerceptionReq>
+      <PerceptionReq>5</PerceptionReq>
       <Origin>11</Origin>
-      <ID>14</ID>
-      <Type>Human</Type>
-      <Connections>
-        <RegionID>31</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Faith's Promise</Name>
-      <Water>40</Water>
-      <Food>10</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>4</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>8</PerceptionReq>
-      <Origin>9</Origin>
-      <ID>15</ID>
-      <Type>Water</Type>
-      <Connections>
-        <RegionID>20</RegionID>
-        <RegionID>29</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Zealot's Elation</Name>
-      <Water>30</Water>
-      <Food>20</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>4</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>7</PerceptionReq>
-      <Origin>6</Origin>
-      <ID>16</ID>
-      <Type>Water</Type>
+      <ID>44</ID>
+      <Type>Scrap</Type>
       <Connections />
       <Scenario />
     </Inventory>
     <Inventory>
-      <Name>Tracker's Dale</Name>
-      <Water>20</Water>
-      <Food>30</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
+      <Name>Guardian's Solace</Name>
+      <Water>0</Water>
+      <Food>10</Food>
+      <Fuel>20</Fuel>
+      <Scrap>30</Scrap>
       <PistolMag>0</PistolMag>
       <RifleMag>0</RifleMag>
       <ShotgunMag>0</ShotgunMag>
@@ -405,57 +988,15 @@
       <LmgMag>0</LmgMag>
       <Distance>6</Distance>
       <Discovered>False</Discovered>
-      <PerceptionReq>10</PerceptionReq>
-      <Origin>13</Origin>
-      <ID>17</ID>
-      <Type>Food</Type>
+      <PerceptionReq>15</PerceptionReq>
+      <Origin>40</Origin>
+      <ID>45</ID>
+      <Type>Scrap</Type>
       <Connections />
       <Scenario />
     </Inventory>
     <Inventory>
-      <Name>Adherant's Fountain</Name>
-      <Water>40</Water>
-      <Food>10</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>6</PerceptionReq>
-      <Origin>8</Origin>
-      <ID>18</ID>
-      <Type>Water</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Zealot's Ache</Name>
-      <Water>30</Water>
-      <Food>20</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>4</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>9</PerceptionReq>
-      <Origin>3</Origin>
-      <ID>19</ID>
-      <Type>Water</Type>
-      <Connections>
-        <RegionID>22</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Angel's Ache</Name>
+      <Name>God's Ache</Name>
       <Water>50</Water>
       <Food>0</Food>
       <Fuel>0</Fuel>
@@ -467,39 +1008,15 @@
       <LmgMag>0</LmgMag>
       <Distance>5</Distance>
       <Discovered>False</Discovered>
-      <PerceptionReq>11</PerceptionReq>
-      <Origin>15</Origin>
-      <ID>20</ID>
+      <PerceptionReq>9</PerceptionReq>
+      <Origin>12</Origin>
+      <ID>46</ID>
       <Type>Water</Type>
-      <Connections>
-        <RegionID>25</RegionID>
-      </Connections>
+      <Connections />
       <Scenario />
     </Inventory>
     <Inventory>
-      <Name>Leviathan's Waste</Name>
-      <Water>0</Water>
-      <Food>10</Food>
-      <Fuel>30</Fuel>
-      <Scrap>40</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>4</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>7</PerceptionReq>
-      <Origin>6</Origin>
-      <ID>21</ID>
-      <Type>Scrap</Type>
-      <Connections>
-        <RegionID>33</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Drifter's Abode</Name>
+      <Name>Maverick's Comfort</Name>
       <Water>20</Water>
       <Food>20</Food>
       <Fuel>40</Fuel>
@@ -511,60 +1028,17 @@
       <LmgMag>0</LmgMag>
       <Distance>5</Distance>
       <Discovered>False</Discovered>
-      <PerceptionReq>11</PerceptionReq>
-      <Origin>19</Origin>
-      <ID>22</ID>
+      <PerceptionReq>10</PerceptionReq>
+      <Origin>31</Origin>
+      <ID>47</ID>
       <Type>Human</Type>
       <Connections>
-        <RegionID>34</RegionID>
+        <RegionID>49</RegionID>
       </Connections>
       <Scenario />
     </Inventory>
     <Inventory>
-      <Name>Behemoth's Failure</Name>
-      <Water>0</Water>
-      <Food>10</Food>
-      <Fuel>20</Fuel>
-      <Scrap>30</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>6</PerceptionReq>
-      <Origin>8</Origin>
-      <ID>23</ID>
-      <Type>Scrap</Type>
-      <Connections>
-        <RegionID>32</RegionID>
-        <RegionID>35</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Cripple's Success</Name>
-      <Water>10</Water>
-      <Food>10</Food>
-      <Fuel>20</Fuel>
-      <Scrap>20</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>6</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>14</PerceptionReq>
-      <Origin>13</Origin>
-      <ID>24</ID>
-      <Type>Human</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Heaven's Elation</Name>
+      <Name>Saviour's Rapture</Name>
       <Water>50</Water>
       <Food>0</Food>
       <Fuel>0</Fuel>
@@ -576,126 +1050,19 @@
       <LmgMag>0</LmgMag>
       <Distance>6</Distance>
       <Discovered>False</Discovered>
-      <PerceptionReq>14</PerceptionReq>
-      <Origin>20</Origin>
-      <ID>25</ID>
+      <PerceptionReq>8</PerceptionReq>
+      <Origin>42</Origin>
+      <ID>48</ID>
       <Type>Water</Type>
       <Connections />
       <Scenario />
     </Inventory>
     <Inventory>
-      <Name>Satan's Sunset</Name>
+      <Name>Hellion's Resolution</Name>
       <Water>0</Water>
       <Food>0</Food>
       <Fuel>30</Fuel>
       <Scrap>50</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>11</PerceptionReq>
-      <Origin>10</Origin>
-      <ID>26</ID>
-      <Type>Scrap</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Failure's Triumph</Name>
-      <Water>10</Water>
-      <Food>10</Food>
-      <Fuel>30</Fuel>
-      <Scrap>30</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>6</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>10</PerceptionReq>
-      <Origin>13</Origin>
-      <ID>27</ID>
-      <Type>Human</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Paragon's Drink</Name>
-      <Water>30</Water>
-      <Food>20</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>7</PerceptionReq>
-      <Origin>8</Origin>
-      <ID>28</ID>
-      <Type>Water</Type>
-      <Connections>
-        <RegionID>48</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Seraph's Fountain</Name>
-      <Water>50</Water>
-      <Food>0</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>8</PerceptionReq>
-      <Origin>15</Origin>
-      <ID>29</ID>
-      <Type>Water</Type>
-      <Connections>
-        <RegionID>38</RegionID>
-        <RegionID>43</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Bounty's Waste</Name>
-      <Water>40</Water>
-      <Food>40</Food>
-      <Fuel>40</Fuel>
-      <Scrap>40</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>4</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>9</PerceptionReq>
-      <Origin>6</Origin>
-      <ID>30</ID>
-      <Type>Cache</Type>
-      <Connections>
-        <RegionID>40</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Pursuer's Fruit</Name>
-      <Water>10</Water>
-      <Food>40</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
       <PistolMag>0</PistolMag>
       <RifleMag>0</RifleMag>
       <ShotgunMag>0</ShotgunMag>
@@ -704,156 +1071,14 @@
       <Distance>6</Distance>
       <Discovered>False</Discovered>
       <PerceptionReq>12</PerceptionReq>
-      <Origin>14</Origin>
-      <ID>31</ID>
-      <Type>Food</Type>
+      <Origin>47</Origin>
+      <ID>49</ID>
+      <Type>Scrap</Type>
       <Connections />
       <Scenario />
     </Inventory>
     <Inventory>
-      <Name>Prowler's Dell</Name>
-      <Water>20</Water>
-      <Food>30</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>6</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>6</PerceptionReq>
-      <Origin>23</Origin>
-      <ID>32</ID>
-      <Type>Food</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Deliverer's Fountain</Name>
-      <Water>30</Water>
-      <Food>20</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>7</PerceptionReq>
-      <Origin>21</Origin>
-      <ID>33</ID>
-      <Type>Water</Type>
-      <Connections>
-        <RegionID>44</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Beauty's Waste</Name>
-      <Water>0</Water>
-      <Food>0</Food>
-      <Fuel>0</Fuel>
-      <Scrap>20</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>6</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>13</PerceptionReq>
-      <Origin>22</Origin>
-      <ID>34</ID>
-      <Type>Cache</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Vandal's Dusk</Name>
-      <Water>20</Water>
-      <Food>20</Food>
-      <Fuel>40</Fuel>
-      <Scrap>40</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>6</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>6</PerceptionReq>
-      <Origin>23</Origin>
-      <ID>35</ID>
-      <Type>Human</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Heaven's Rapture</Name>
-      <Water>30</Water>
-      <Food>20</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>7</PerceptionReq>
-      <Origin>7</Origin>
-      <ID>36</ID>
-      <Type>Water</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Bounty's Exaltation</Name>
-      <Water>0</Water>
-      <Food>0</Food>
-      <Fuel>0</Fuel>
-      <Scrap>20</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>2</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>2</PerceptionReq>
-      <Origin>0</Origin>
-      <ID>37</ID>
-      <Type>Cache</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Prosperity's Waste</Name>
-      <Water>0</Water>
-      <Food>0</Food>
-      <Fuel>50</Fuel>
-      <Scrap>50</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>6</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>11</PerceptionReq>
-      <Origin>29</Origin>
-      <ID>38</ID>
-      <Type>Cache</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Maverick's Abode</Name>
+      <Name>Downfall's Woe</Name>
       <Water>10</Water>
       <Food>10</Food>
       <Fuel>20</Fuel>
@@ -863,238 +1088,12 @@
       <ShotgunMag>0</ShotgunMag>
       <SmgMag>0</SmgMag>
       <LmgMag>0</LmgMag>
-      <Distance>3</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>3</PerceptionReq>
-      <Origin>1</Origin>
-      <ID>39</ID>
-      <Type>Human</Type>
-      <Connections>
-        <RegionID>42</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Guardian's Hulk</Name>
-      <Water>0</Water>
-      <Food>10</Food>
-      <Fuel>30</Fuel>
-      <Scrap>40</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>9</PerceptionReq>
-      <Origin>30</Origin>
-      <ID>40</ID>
-      <Type>Scrap</Type>
-      <Connections>
-        <RegionID>50</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Faith's Beck</Name>
-      <Water>40</Water>
-      <Food>10</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>6</PerceptionReq>
-      <Origin>12</Origin>
-      <ID>41</ID>
-      <Type>Water</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Prowler's Bloom</Name>
-      <Water>0</Water>
-      <Food>50</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>4</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>3</PerceptionReq>
-      <Origin>39</Origin>
-      <ID>42</ID>
-      <Type>Food</Type>
-      <Connections>
-        <RegionID>46</RegionID>
-      </Connections>
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Devotion's Jewel</Name>
-      <Water>0</Water>
-      <Food>0</Food>
-      <Fuel>50</Fuel>
-      <Scrap>50</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>6</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>8</PerceptionReq>
-      <Origin>29</Origin>
-      <ID>43</ID>
-      <Type>Cache</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Huntress's Wild</Name>
-      <Water>10</Water>
-      <Food>40</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>6</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>9</PerceptionReq>
-      <Origin>33</Origin>
-      <ID>44</ID>
-      <Type>Food</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Victory's Boon</Name>
-      <Water>0</Water>
-      <Food>0</Food>
-      <Fuel>50</Fuel>
-      <Scrap>50</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>6</PerceptionReq>
-      <Origin>11</Origin>
-      <ID>45</ID>
-      <Type>Cache</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Devotion's Advantage</Name>
-      <Water>0</Water>
-      <Food>0</Food>
-      <Fuel>50</Fuel>
-      <Scrap>50</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>5</PerceptionReq>
-      <Origin>42</Origin>
-      <ID>46</ID>
-      <Type>Cache</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Angel's Rapture</Name>
-      <Water>50</Water>
-      <Food>0</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
       <Distance>4</Distance>
       <Discovered>False</Discovered>
       <PerceptionReq>5</PerceptionReq>
-      <Origin>4</Origin>
-      <ID>47</ID>
-      <Type>Water</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Faith's Beck</Name>
-      <Water>50</Water>
-      <Food>0</Food>
-      <Fuel>0</Fuel>
-      <Scrap>0</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>6</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>9</PerceptionReq>
-      <Origin>28</Origin>
-      <ID>48</ID>
-      <Type>Water</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Love's Heartache</Name>
-      <Water>0</Water>
-      <Food>0</Food>
-      <Fuel>50</Fuel>
-      <Scrap>50</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>5</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>5</PerceptionReq>
-      <Origin>8</Origin>
-      <ID>49</ID>
-      <Type>Cache</Type>
-      <Connections />
-      <Scenario />
-    </Inventory>
-    <Inventory>
-      <Name>Beast's Hulk</Name>
-      <Water>0</Water>
-      <Food>10</Food>
-      <Fuel>30</Fuel>
-      <Scrap>40</Scrap>
-      <PistolMag>0</PistolMag>
-      <RifleMag>0</RifleMag>
-      <ShotgunMag>0</ShotgunMag>
-      <SmgMag>0</SmgMag>
-      <LmgMag>0</LmgMag>
-      <Distance>6</Distance>
-      <Discovered>False</Discovered>
-      <PerceptionReq>10</PerceptionReq>
-      <Origin>40</Origin>
+      <Origin>3</Origin>
       <ID>50</ID>
-      <Type>Scrap</Type>
+      <Type>Human</Type>
       <Connections />
       <Scenario />
     </Inventory>
@@ -1112,7 +1111,7 @@
     <LmgMag>10</LmgMag>
   </Inventory>
   <Character>
-    <Id>748</Id>
+    <Id>682</Id>
     <Name>The Driver</Name>
     <ExtendedName>
     </ExtendedName>
@@ -1121,8 +1120,8 @@
     <Type>Character</Type>
   </Character>
   <Character>
-    <Id>759</Id>
-    <Name>The Driver</Name>
+    <Id>693</Id>
+    <Name>The Wanderer</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>0</Weight>
@@ -1130,8 +1129,8 @@
     <Type>Character</Type>
   </Character>
   <Gear>
-    <Id>784</Id>
-    <Name>Shining Bonebreaker</Name>
+    <Id>718</Id>
+    <Name>Shining Breacher</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>10</Weight>
@@ -1139,8 +1138,8 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>785</Id>
-    <Name>Staggering Barb</Name>
+    <Id>719</Id>
+    <Name>Empty Flask</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>2</Weight>
@@ -1148,8 +1147,8 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>786</Id>
-    <Name>Perforation</Name>
+    <Id>720</Id>
+    <Name>Fervour</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>0.25</Weight>
@@ -1157,7 +1156,7 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>787</Id>
+    <Id>721</Id>
     <Name>Shining Plate</Name>
     <ExtendedName>
     </ExtendedName>
@@ -1166,8 +1165,8 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>788</Id>
-    <Name>Shining Skullcrusher</Name>
+    <Id>722</Id>
+    <Name>Shining Annihilator</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>10</Weight>
@@ -1175,43 +1174,7 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>789</Id>
-    <Name>Blighted Marrow</Name>
-    <ExtendedName>
-    </ExtendedName>
-    <Weight>2</Weight>
-    <ParentInventory>0</ParentInventory>
-    <Type>Gear</Type>
-  </Gear>
-  <Gear>
-    <Id>790</Id>
-    <Name>Lacerations</Name>
-    <ExtendedName>
-    </ExtendedName>
-    <Weight>0.25</Weight>
-    <ParentInventory>0</ParentInventory>
-    <Type>Gear</Type>
-  </Gear>
-  <Gear>
-    <Id>791</Id>
-    <Name>Shining Plate</Name>
-    <ExtendedName>
-    </ExtendedName>
-    <Weight>3</Weight>
-    <ParentInventory>0</ParentInventory>
-    <Type>Gear</Type>
-  </Gear>
-  <Gear>
-    <Id>792</Id>
-    <Name>Shining Gripshaker</Name>
-    <ExtendedName>
-    </ExtendedName>
-    <Weight>10</Weight>
-    <ParentInventory>0</ParentInventory>
-    <Type>Gear</Type>
-  </Gear>
-  <Gear>
-    <Id>793</Id>
+    <Id>723</Id>
     <Name>Stinging Edges</Name>
     <ExtendedName>
     </ExtendedName>
@@ -1220,8 +1183,8 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>794</Id>
-    <Name>Swiftness</Name>
+    <Id>724</Id>
+    <Name>Multiplicity</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>0.25</Weight>
@@ -1229,7 +1192,43 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>795</Id>
+    <Id>725</Id>
+    <Name>Shining Plate</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>3</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>726</Id>
+    <Name>Shining Deepdriver</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>10</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>727</Id>
+    <Name>Obscuring Aura</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>2</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>728</Id>
+    <Name>Might</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>0.25</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>729</Id>
     <Name>Shining Plate</Name>
     <ExtendedName>
     </ExtendedName>

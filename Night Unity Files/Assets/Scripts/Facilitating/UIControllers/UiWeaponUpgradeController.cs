@@ -27,7 +27,7 @@ namespace Facilitating.UIControllers
         private static EnhancedText _reloadSpeedText, _criticalText, _handlingText;
         private static EnhancedText _inscriptionText;
 
-        private static EnhancedButton _inscribeButton, _repairButton, _compareButton, _equipButton;
+        private static EnhancedButton _inscribeButton, _repairButton, _compareButton;
         private static EnhancedButton _centreButton;
 
         private static Player _currentPlayer;
@@ -56,7 +56,6 @@ namespace Facilitating.UIControllers
             _inscribeButton = Helper.FindChildWithName<EnhancedButton>(_weaponInfoObject, "Inscribe");
             _repairButton = Helper.FindChildWithName<EnhancedButton>(_weaponInfoObject, "Repair");
             _compareButton = Helper.FindChildWithName<EnhancedButton>(_weaponInfoObject, "Compare");
-            _equipButton = Helper.FindChildWithName<EnhancedButton>(_weaponInfoObject, "Equip");
 
             for (int i = 0; i < 7; ++i)
             {
@@ -77,7 +76,10 @@ namespace Facilitating.UIControllers
                 DisableInput();
             });
 
-            _equipButton.AddOnClick(EnableInput);
+            Helper.FindChildWithName<EnhancedButton>(_weaponInfoObject, "Info").AddOnClick(() =>
+            {
+                if (WeaponsAreAvailable()) EnableInput();
+            });
             _compareButton.AddOnClick(EnableInput);
         }
 
@@ -150,6 +152,7 @@ namespace Facilitating.UIControllers
         {
             Weapon equipped = _currentPlayer.Weapon;
             float equippedValue = equipped.GetAttributeValue(attribute);
+            Debug.Log(compare);
             float compareValue = compare.GetAttributeValue(attribute);
             return "<color=#505050>" + Helper.Round(compareValue, 1) + "</color>" + " vs " + Helper.Round(equippedValue, 1);
         }
@@ -176,7 +179,6 @@ namespace Facilitating.UIControllers
             WeaponAttributes attr = weapon.WeaponAttributes;
             SetWeaponInfo(weapon);
             _compareButton.gameObject.SetActive(true);
-            _equipButton.gameObject.SetActive(false);
             _compareButton.Button().Select();
 //        if (weapon.Inscribable())
 //        {
@@ -227,12 +229,6 @@ namespace Facilitating.UIControllers
             _inscribeButton.gameObject.SetActive(false);
             _repairButton.gameObject.SetActive(false);
             _compareButton.gameObject.SetActive(false);
-            _equipButton.gameObject.SetActive(true);
-            _equipButton.Button().Select();
-            if (!WeaponsAreAvailable())
-            {
-                _equipButton.gameObject.SetActive(false);
-            }
         }
 
         public static bool WeaponsAreAvailable()

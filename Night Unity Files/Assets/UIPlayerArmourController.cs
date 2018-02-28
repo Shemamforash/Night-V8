@@ -49,7 +49,7 @@ public class UIPlayerArmourController : MonoBehaviour
             }
         }
 
-        _ratingText.Text("Max Armour: " + armour.GetMaxProtectionLevel());
+        _ratingText.Text("Max Armour: " + armour.GetMaxArmour());
         _platesText.Text(armour.GetProtectionLevel() + " Armour");
 
 

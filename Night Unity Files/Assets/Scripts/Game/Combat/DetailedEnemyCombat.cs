@@ -134,7 +134,7 @@ namespace Game.Combat
             Enemy = (Enemy)enemy;
             SetOwnedByEnemy(Enemy.Template.Speed);
             HealthController.SetInitialHealth(Enemy.Template.Health, this);
-            ArmourController.SetArmourValue(Enemy.ArmourController.GetProtectionLevel());
+            ArmourController.SetCharacter(Enemy);
             RecoilManager.EnterCombat();
             if (!(this is Medic || this is Martyr)) SetHealBehaviour();
             CurrentAction = Wander;

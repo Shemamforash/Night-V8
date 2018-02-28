@@ -95,7 +95,7 @@ namespace Game.Combat
             HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue());
             RecoilManager.EnterCombat();
             
-            ArmourController.SetArmourValue(_initialArmour);
+            ArmourController.SetCharacter(Player);
             RageController.EnterCombat();
             SkillBar.BindSkills(Player);
             FacingDirection = Direction.Right;

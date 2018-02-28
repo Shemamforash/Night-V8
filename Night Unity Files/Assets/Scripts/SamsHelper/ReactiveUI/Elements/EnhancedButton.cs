@@ -60,7 +60,7 @@ namespace SamsHelper.ReactiveUI.Elements
             InputHandler.RegisterInputListener(this);
             _button = GetComponent<Button>();
             if (Border == null) return;
-            Border.SetActive(false);
+            Border?.SetActive(false);
             _borderImages.AddRange(Helper.FindAllComponentsInChildren<Image>(Border?.transform));
         }
 
@@ -99,7 +99,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private void UseSelectedColours()
         {
-            Border.SetActive(true);
+            Border?.SetActive(true);
             TryStartFade(1);
         }
 
@@ -128,7 +128,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private void UseDeselectedColours()
         {
-            Border.SetActive(false);
+            Border?.SetActive(false);
             TryStartFade(0);
         }
 

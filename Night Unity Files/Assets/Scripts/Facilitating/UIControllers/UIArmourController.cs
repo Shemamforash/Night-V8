@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Game.Characters;
+using Game.Gear.Armour;
 using SamsHelper;
-using SamsHelper.ReactiveUI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,14 +18,14 @@ namespace Facilitating.UIControllers
         private const int SegmentSpacing = 5;
         private HorizontalLayoutGroup _layoutGroup;
         private TextMeshProUGUI _armourText;
-        private event Action OnArmourChange;
+        private ArmourController _armourController;
 
         // Use this for initialization
         public void Awake()
         {
             _armourBar = Helper.FindChildWithName<Transform>(gameObject, "Armour Bar");
             _armourText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Armour Text");
-            
+
             _layoutGroup = _armourBar.GetComponent<HorizontalLayoutGroup>();
             _layoutGroup.spacing = SegmentSpacing;
 
@@ -43,65 +43,55 @@ namespace Facilitating.UIControllers
             {
                 _armourChunks.Add(new ArmourChunk(segments[i]));
             }
-            OnArmourChange += UpdateArmourText;
         }
 
-        private void UpdateArmourText()
+        public void SetCharacter(Character character)
         {
-            _armourText.text = CurrentArmour() / 10f + "x damage";
+            _armourController = character.ArmourController;
         }
 
-        public void SetArmourValue(int armourLevel)
+        private void SetSlotsFilled(bool damageWasTaken = false)
         {
-            for (int i = 0; i < _armourChunks.Count; ++i)
+            int slotsAvailable = _armourController.GetMaxArmour();
+            int slotsUsed = _armourController.GetCurrentArmour();
+
+            for (int i = 0; i < _armourChunks.Count; i++)
             {
-                if (i < armourLevel)
+                ArmourChunk chunk = _armourChunks[i];
+                if (i < slotsAvailable)
                 {
-                    _armourChunks[i].Reset();
+                    if (i < slotsUsed)
+                    {
+                        chunk.Activate(i == slotsUsed - 1 && damageWasTaken);
+                    }
+                    else
+                    {
+                        chunk.Deactivate();
+                    }
                 }
                 else
                 {
-                    _armourChunks[i].Deactivate();
+                    chunk.SetInvisible();
                 }
             }
-            OnArmourChange?.Invoke();
+            _armourText.text = _armourController.GetCurrentArmour() / 10f + "x damage";
         }
 
-        public void IncrementArmour(int amount)
+        public int CurrentArmour()
         {
-            Assert.IsFalse(amount == 0);
-            foreach (ArmourChunk armourPiece in _armourChunks)
-            {
-                if (armourPiece.Remaining.ReachedMax()) continue;
-                amount = armourPiece.RestoreArmour(amount);
-                if (amount == 0) return;
-            }
-
-            OnArmourChange?.Invoke();
+            return _armourController.GetCurrentArmour();
         }
 
-        public void TakeDamage(float amount)
+        public void RepairArmour(float amount)
         {
-            Assert.IsFalse(amount == 0);
-            for (int i = _armourChunks.Count - 1; i >= 0; --i)
-            {
-                if (!_armourChunks[i].Active()) continue;
-                amount = _armourChunks[i].TakeDamage(amount);
-                if (amount == 0) break;
-            }
-        
-            OnArmourChange?.Invoke();
+            _armourController.Repair(amount);
+            SetSlotsFilled();
         }
-        
-        public void RemovePiece()
+
+        public void TakeDamage(float damage)
         {
-            for (int i = _armourChunks.Count - 1; i >= 0; --i)
-            {
-                if (!_armourChunks[i].Active()) continue;
-                _armourChunks[i].TakeDamage(_armourChunks[i].Remaining.CurrentValue());
-            }
-        
-            OnArmourChange?.Invoke();
+            _armourController.TakeDamage(damage);
+            SetSlotsFilled(true);
         }
 
         public void Update()
@@ -111,37 +101,18 @@ namespace Facilitating.UIControllers
 
         private class ArmourChunk
         {
-            public readonly Number Remaining;
-            private bool _active;
-            private const int ArmourHealth = 100;
             private readonly GameObject _armourObject;
             private const float MaxFadeTime = 1f;
             private float _currentFadeTime;
 
             public ArmourChunk(GameObject armourObject)
             {
-                Remaining = new Number(ArmourHealth, 0, ArmourHealth);
-                Remaining.OnMin(Deactivate);
                 _armourObject = armourObject;
-            }
-
-            public int RestoreArmour(int amount)
-            {
-                int lost = (int) (ArmourHealth - Remaining.CurrentValue());
-                Remaining.Increment(amount);
-                _active = true;
-                _armourObject.GetComponent<Image>().color = Color.white;
-                if (amount > lost)
-                {
-                    return amount - lost;
-                }
-
-                return 0;
             }
 
             public void Update()
             {
-                if (!_active || _currentFadeTime <= 0) return;
+                if (_currentFadeTime <= 0) return;
                 float rValue = 1 - _currentFadeTime / MaxFadeTime;
                 _currentFadeTime -= Time.deltaTime;
                 if (_currentFadeTime < 0)
@@ -149,41 +120,25 @@ namespace Facilitating.UIControllers
                     _currentFadeTime = 0;
                     rValue = 1;
                 }
+
                 _armourObject.GetComponent<Image>().color = new Color(1, rValue, rValue, 1);
             }
 
-            public int TakeDamage(float damage)
+            public void Activate(bool damageWasTaken)
             {
-                int remainder = (int) (damage - Remaining.CurrentValue());
-                Remaining.Decrement(damage);
-                if (remainder < 0)
-                {
-                    remainder = 0;
-                }
-                _currentFadeTime = MaxFadeTime;
-                return remainder;
-            }
-
-            public bool Active()
-            {
-                return _active;
-            }
-
-            public void Reset()
-            {
-                RestoreArmour(ArmourHealth);
+                if (damageWasTaken) _currentFadeTime = MaxFadeTime;
+                else _armourObject.GetComponent<Image>().color = Color.white;
             }
 
             public void Deactivate()
             {
-                _active = false;
                 _armourObject.GetComponent<Image>().color = new Color(1, 1, 1, 0.4f);
             }
-        }
 
-        public int CurrentArmour()
-        {
-            return _armourChunks.Count(chunk => chunk.Active());
+            public void SetInvisible()
+            {
+                _armourObject.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+            }
         }
     }
 }

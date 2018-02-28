@@ -17,7 +17,6 @@ namespace Game.Combat.Enemies.EnemyTypes
         {
             base.SetPlayer(enemy);
             MinimumFindCoverDistance = 20f;
-            ArmourController.SetArmourValue(2);
         }
         
         private void OnDestroy()

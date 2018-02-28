@@ -19,12 +19,51 @@ namespace Game.Gear.Armour
             _character = character;
         }
 
+        public void TakeDamage(float amount)
+        {
+            Action<float> takeDamage = null;
+            if(_plateOne != null) takeDamage = _plateOne.TakeDamage;
+            DivideDamageOrHeal(amount, takeDamage);
+        }
+
+        private void DivideDamageOrHeal(float amount, Action<float> armourAction)
+        {
+            float plateOneHealth = _plateOne?.GetRemainingHealth() ?? 0;
+            float plateTwoHealth = _plateTwo?.GetRemainingHealth() ?? 0;
+            float totalHealth = GetCurrentArmour();
+            float plateOneProportion = plateOneHealth / totalHealth;
+            float plateTwoPropotion = plateTwoHealth / totalHealth;
+            armourAction?.Invoke(amount * plateOneProportion);
+            armourAction?.Invoke(amount * plateTwoPropotion);
+        }
+        
+        public void Repair(float amount)
+        {
+            Action<float> repair = null;
+            if(_plateOne != null) repair = _plateOne.Repair;
+            DivideDamageOrHeal(amount, repair);
+        }
+        
         public void SetPlateOne(ArmourPlate plate)
         {
             _plateOne?.Unequip();
-            plate.Equip(_character.Inventory());
+            plate?.Equip(_character.Inventory());
             _plateOne = plate;
             _onArmourChange?.Invoke();
+        }
+
+        public int GetCurrentArmour()
+        {
+            int plateOneCurrent = _plateOne?.GetCurrentProtection() ?? 0;
+            int plateTwoCurrent = _plateTwo?.GetCurrentProtection() ?? 0;
+            return plateOneCurrent + plateTwoCurrent;
+        }
+
+        public int GetMaxArmour()
+        {
+            int plateOneMax = _plateOne?.GetMaxProtection() ?? 0;
+            int plateTwoMax = _plateTwo?.GetMaxProtection() ?? 0;
+            return plateOneMax + plateTwoMax;
         }
 
         public void AddOnArmourChange(Action a)
@@ -34,8 +73,8 @@ namespace Game.Gear.Armour
 
         public void SetPlateTwo(ArmourPlate plate)
         {
-            _plateTwo.Unequip();
-            plate.Equip(_character.Inventory());
+            _plateTwo?.Unequip();
+            plate?.Equip(_character.Inventory());
             _plateTwo = plate;
             _onArmourChange?.Invoke();
         }
@@ -49,7 +88,9 @@ namespace Game.Gear.Armour
         public int GetProtectionLevel()
         {
             //todo plate damage
-            return (int) (_plateOne.Weight + _plateTwo.Weight);
+            int plateOneWeight = (int) (_plateOne?.Weight ?? 0);
+            int plateTwoWeight = (int) (_plateTwo?.Weight ?? 0);
+            return plateOneWeight + plateTwoWeight;
         }
 
         public void Load(XmlNode doc, PersistenceType saveType)
@@ -61,16 +102,11 @@ namespace Game.Gear.Armour
             return doc;
         }
 
-        public int GetMaxProtectionLevel()
-        {
-            return (int) (_plateOne.Weight + _plateTwo.Weight);
-        }
-
         public ArmourPlate GetPlateOne()
         {
             return _plateOne;
         }
-        
+
         public ArmourPlate GetPlateTwo()
         {
             return _plateTwo;
