@@ -376,5 +376,17 @@ namespace SamsHelper
 
             public override string Message => "Inscription had too many modification values, should have at most two '" + _name + "'";
         }
+
+        public class StateDoesNotExistException : Exception
+        {
+            private readonly string _stateName;
+
+            public StateDoesNotExistException(string stateName)
+            {
+                _stateName = stateName;
+            }
+
+            public override string Message => "State '" + _stateName + "' does not exist.";
+        }
     }
 }

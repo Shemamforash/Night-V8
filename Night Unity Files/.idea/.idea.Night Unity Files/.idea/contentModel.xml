@@ -73,6 +73,7 @@
               <e p="UIEnemyShieldController.cs" t="Include" />
               <e p="UIEnergyController.cs" t="Include" />
               <e p="UIExploreMenuController.cs" t="Include" />
+              <e p="UiGearMenuTemplate.cs" t="Include" />
               <e p="UIGrenadeController.cs" t="Include" />
               <e p="UIHealthBarController.cs" t="Include" />
               <e p="UIHitController.cs" t="Include" />
@@ -307,9 +308,9 @@
           </e>
         </e>
         <e p="UiAccessoryController.cs" t="Include" />
-        <e p="UiAccessoryMenu.cs" t="Include" />
         <e p="UiArmourUpgradeController.cs" t="Include" />
         <e p="UIDistanceController.cs" t="Include" />
+        <e p="UiGearMenuController.cs" t="Include" />
         <e p="UIPlayerAccessoryController.cs" t="Include" />
         <e p="UIPlayerArmourController.cs" t="Include" />
         <e p="UIPlayerWeaponController.cs" t="Include" />

@@ -1,205 +1,109 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Facilitating.UI.Elements;
+using Facilitating.UIControllers;
 using Game.Characters.Player;
 using Game.Gear.Armour;
 using Game.World;
 using SamsHelper;
-using SamsHelper.Input;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.Elements;
-using SamsHelper.ReactiveUI.MenuSystem;
-using UnityEngine;
+using UnityEngine.UI;
 
-public class UiAccessoryController : Menu, IInputListener
+public class UiAccessoryController : UiGearMenuTemplate
 {
-    private static bool _upgradingAllowed;
+    private bool _upgradingAllowed;
+    private EnhancedText _nameText, _descriptionText, _compareText, _inscriptionText;
+    private EnhancedButton _inscribeButton, _accessoryButton;
 
-    private static GameObject _accessoryList;
-
-    private static RectTransform _selectorTransform;
-
-    private static Player _currentPlayer;
-
-    private static readonly List<AccessoryUi> _accessoryUis = new List<AccessoryUi>();
-    private static int _selectedAccessory;
-
-
-    private static UiAccessoryController _instance;
-    private const int centre = 3;
-    private static EnhancedText _nameText, _descriptionText, _compareText, _inscriptionText;
-    private static EnhancedButton _inscribeButton, _closeButton;
-    private static EnhancedButton _centreButton;
-
-    private static void ShowAccessoryInfo()
+    public void Awake()
     {
-        if (_currentPlayer.Accessory != null)
+        _nameText = Helper.FindChildWithName<EnhancedText>(gameObject, "Name");
+        _inscriptionText = Helper.FindChildWithName<EnhancedText>(gameObject, "Inscription");
+        _descriptionText = Helper.FindChildWithName<EnhancedText>(gameObject, "Description");
+        _compareText = Helper.FindChildWithName<EnhancedText>(gameObject, "Compare");
+
+        _inscribeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inscribe");
+
+        _accessoryButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Info");
+        _accessoryButton.AddOnClick(() =>
         {
-            _nameText.Text(_currentPlayer.Accessory.Name);
-            _descriptionText.Text(_currentPlayer.Accessory.GetSummary());
+            if (GearIsAvailable()) UiGearMenuController.EnableInput();
+        });
+    }
+    
+    public override Button GetGearButton()
+    {
+        return _accessoryButton.Button();
+    }
+    
+    private void ShowAccessoryInfo()
+    {
+        if (CurrentPlayer.Accessory != null)
+        {
+            _nameText.Text(CurrentPlayer.Accessory.Name);
+            _descriptionText.Text(CurrentPlayer.Accessory.GetSummary());
+            
+            if (CurrentPlayer.Accessory.Inscribable())
+            {
+                _accessoryButton.SetDownNavigation(_inscribeButton);
+                _inscribeButton.SetDownNavigation(UiGearMenuController._closeButton);
+            }
+            else
+            {
+                _inscribeButton.Button().interactable = false;
+                _accessoryButton.SetDownNavigation(UiGearMenuController._closeButton);
+            }
         }
         else
         {
             _nameText.Text("");
             _descriptionText.Text("No Accessory Equipped");
             _inscriptionText.Text("");
+            _inscribeButton.Button().interactable = false;
+            _accessoryButton.SetDownNavigation(UiGearMenuController._closeButton);
         }
+
         _compareText.Text("");
     }
-    
-    public void Awake()
-    {
-        _instance = this;
-        _accessoryList = Helper.FindChildWithName(gameObject, "Accessory List");
-        _closeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Close");
-        _closeButton.AddOnClick(MenuStateMachine.GoToInitialMenu);
-        _nameText = Helper.FindChildWithName<EnhancedText>(gameObject, "Name");
-        _inscriptionText = Helper.FindChildWithName<EnhancedText>(gameObject, "Inscription");
-        _descriptionText = Helper.FindChildWithName<EnhancedText>(gameObject, "Description");
-        _compareText = Helper.FindChildWithName<EnhancedText>(gameObject, "Compare");
-        
-        _inscribeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inscribe");
-        
-        Helper.FindChildWithName(gameObject, "Info").GetComponent<EnhancedButton>().AddOnClick(() =>
-        {
-            if (AccessoriesAreAvailable()) EnableInput();
-        });
 
-        for (int i = 0; i < 7; ++i)
-        {
-            GameObject uiObject = Helper.FindChildWithName(_accessoryList, "Item " + i);
-            AccessoryUi accessoryUi = new AccessoryUi(uiObject, Math.Abs(i - centre));
-            if (i == centre)
-            {
-                _centreButton = uiObject.GetComponent<EnhancedButton>();
-            }
-
-            _accessoryUis.Add(accessoryUi);
-            accessoryUi.SetAccessory(null);
-        }
-
-        _centreButton.AddOnClick(() =>
-        {
-            Equip(WorldState.HomeInventory().Accessories()[_selectedAccessory]);
-            DisableInput();
-        });
-    }
-
-    public static void Show(Player player)
-    {
-        MenuStateMachine.ShowMenu("Accessory Menu");
-        _currentPlayer = player;
-        ShowAccessoryInfo();
-        SelectAccessory();
-    }
-
-    private void Equip(Accessory accessory)
-    {
-        _currentPlayer.EquipAccessory(accessory);
-        Show(_currentPlayer);
-    }
-
-    private static bool AccessoriesAreAvailable()
+    public override bool GearIsAvailable()
     {
         return WorldState.HomeInventory().Accessories().Count != 0;
     }
 
-    private static void EnableInput()
+    public override void SelectGearItem(GearItem item, UiGearMenuController.GearUi gearUi)
     {
-        InputHandler.RegisterInputListener(_instance);
-        _centreButton.Button().Select();
+        Accessory accessory = item as Accessory;
+        gearUi.SetTypeText("");
+        gearUi.SetNameText(accessory.Name);
+        gearUi.SetDpsText("");
     }
 
-    private void DisableInput()
+    public override void Show(Player player)
     {
-        InputHandler.UnregisterInputListener(this);
-    }
-    
-
-    private static void SelectAccessory()
-    {
-        for (int i = 0; i < _accessoryUis.Count; ++i)
-        {
-            int offset = i - centre;
-            int targetPlate = _selectedAccessory + offset;
-            Accessory accessory = null;
-            if (targetPlate >= 0 && targetPlate < WorldState.HomeInventory().Accessories().Count)
-            {
-                accessory = WorldState.HomeInventory().Accessories()[targetPlate];
-            }
-
-            if (i == centre && accessory != null)
-            {
-                _compareText.Text(_currentPlayer.Accessory != null ? accessory.GetSummary() : "");
-            }
-
-            _accessoryUis[i].SetAccessory(accessory);
-        }
+        base.Show(player);
+        ShowAccessoryInfo();
     }
 
-    private static void TrySelectAccessoryBelow()
+    public override void CompareTo(GearItem comparisonItem)
     {
-        if (_selectedAccessory == WorldState.HomeInventory().Accessories().Count - 1) return;
-        ++_selectedAccessory;
-        SelectAccessory();
+        _compareText.Text(CurrentPlayer.Accessory != null ? comparisonItem.GetSummary() : "");
     }
 
-    private static void TrySelectAccessoryAbove()
+    public override void StopComparing()
     {
-        if (_selectedAccessory == 0) return;
-        --_selectedAccessory;
-        SelectAccessory();
+        _compareText.Text("");
     }
 
-    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+    public override List<GearItem> GetAvailableGear()
     {
-        if (isHeld) return;
-        if (axis == InputAxis.Cover)
-        {
-            DisableInput();
-            Equip(null);
-        }
-        else if (axis != InputAxis.Vertical)
-            return;
-
-        if (direction < 0)
-        {
-            TrySelectAccessoryBelow();
-        }
-        else
-        {
-            TrySelectAccessoryAbove();
-        }
+        return new List<GearItem>(WorldState.HomeInventory().Accessories());
     }
 
-    public void OnInputUp(InputAxis axis)
+    public override void Equip(int selectedGear)
     {
-    }
-
-    public void OnDoubleTap(InputAxis axis, float direction)
-    {
-    }
-
-    private class AccessoryUi
-    {
-        private readonly EnhancedText _accessoryNameText;
-        private readonly Color _activeColour;
-
-        public AccessoryUi(GameObject uiObject, int offset)
-        {
-            _accessoryNameText = uiObject.GetComponent<EnhancedText>();
-            _activeColour = new Color(1f, 1f, 1f, 1f / (offset + 1));
-        }
-
-        public void SetAccessory(Accessory accessory)
-        {
-            if (accessory == null)
-            {
-                _accessoryNameText.SetColor(new Color(1, 1, 1, 0f));
-                return;
-            }
-
-            _accessoryNameText.SetColor(_activeColour);
-            _accessoryNameText.Text("");
-        }
+        if (selectedGear == -1) return; 
+        CurrentPlayer.EquipAccessory(WorldState.HomeInventory().Accessories()[selectedGear]);
+        Show(CurrentPlayer);
     }
 }

@@ -151,5 +151,10 @@ namespace Game.Gear.Weapons
             ViewParent weaponUi = base.CreateUi(parent);
             return weaponUi;
         }
+
+        public bool Inscribable()
+        {
+            return Quality() == ItemQuality.Shining;
+        }
     }
 }

@@ -65,12 +65,12 @@ namespace Game.Characters
             FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _player.Name;
 
             WeaponController = FindInDetailedView<UIPlayerWeaponController>("Weapon");
-            WeaponController.GetComponent<EnhancedButton>().AddOnClick(() => UiWeaponUpgradeController.Show(_player));
+            WeaponController.GetComponent<EnhancedButton>().AddOnClick(() => UiGearMenuController.ShowWeaponMenu(_player));
             ArmourController = FindInDetailedView<UIPlayerArmourController>("Armour");
-            ArmourController.GetComponent<EnhancedButton>().AddOnClick(() => UiArmourUpgradeController.Show(_player));
+            ArmourController.GetComponent<EnhancedButton>().AddOnClick(() => UiGearMenuController.ShowArmourMenu(_player));
             _player.ArmourController.AddOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));
             AccessoryController = FindInDetailedView<UIPlayerAccessoryController>("Accessory");
-            AccessoryController.GetComponent<EnhancedButton>().AddOnClick(() => UiAccessoryController.Show(_player));
+            AccessoryController.GetComponent<EnhancedButton>().AddOnClick(() => UiGearMenuController.ShowAccessoryMenu(_player));
         }
 
         public void FillActionList()

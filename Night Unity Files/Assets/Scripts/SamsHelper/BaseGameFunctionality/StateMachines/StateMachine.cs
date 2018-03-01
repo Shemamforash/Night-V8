@@ -27,6 +27,11 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public State GetState(string stateName)
         {
+            State state = States[stateName];
+            if (state == null)
+            {
+                throw new Exceptions.StateDoesNotExistException(stateName);
+            }
             return States[stateName];
         }
 

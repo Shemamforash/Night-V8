@@ -187,7 +187,7 @@ namespace SamsHelper.ReactiveUI.Elements
         {
         }
 
-        public void SetRightNavigation(EnhancedButton target)
+        public void SetRightNavigation(EnhancedButton target, bool reciprocate = true)
         {
             if (target == null) return;
 
@@ -195,12 +195,13 @@ namespace SamsHelper.ReactiveUI.Elements
             navigation.selectOnRight = target.Button();
             SetNavigation(navigation);
 
+            if (!reciprocate) return;
             navigation = target.GetNavigation();
             navigation.selectOnLeft = _button;
             target.SetNavigation(navigation);
         }
 
-        public void SetLeftNavigation(EnhancedButton target)
+        public void SetLeftNavigation(EnhancedButton target, bool reciprocate = true)
         {
             if (target == null) return;
 
@@ -208,12 +209,13 @@ namespace SamsHelper.ReactiveUI.Elements
             navigation.selectOnLeft = target.Button();
             SetNavigation(navigation);
 
+            if (!reciprocate) return;
             navigation = target.GetNavigation();
             navigation.selectOnRight = _button;
             target.SetNavigation(navigation);
         }
 
-        public void SetUpNavigation(EnhancedButton target)
+        public void SetUpNavigation(EnhancedButton target, bool reciprocate = true)
         {
             if (target == null) return;
 
@@ -221,12 +223,13 @@ namespace SamsHelper.ReactiveUI.Elements
             navigation.selectOnUp = target.Button();
             SetNavigation(navigation);
 
+            if (!reciprocate) return;
             navigation = target.GetNavigation();
             navigation.selectOnDown = _button;
             target.SetNavigation(navigation);
         }
 
-        public void SetDownNavigation(EnhancedButton target)
+        public void SetDownNavigation(EnhancedButton target, bool reciprocate = true)
         {
             if (target == null) return;
 
@@ -234,6 +237,7 @@ namespace SamsHelper.ReactiveUI.Elements
             navigation.selectOnDown = target.Button();
             SetNavigation(navigation);
 
+            if (!reciprocate) return;
             navigation = target.GetNavigation();
             navigation.selectOnUp = _button;
             target.SetNavigation(navigation);

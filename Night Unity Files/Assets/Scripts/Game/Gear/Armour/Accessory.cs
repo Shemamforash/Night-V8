@@ -69,5 +69,9 @@ namespace Game.Gear.Armour
 //        {
 //            return new AccessoryUi(this, parent);
 //        }
+        public bool Inscribable()
+        {
+            return Quality() == ItemQuality.Radiant;
+        }
     }
 }
