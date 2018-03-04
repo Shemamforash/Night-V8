@@ -8,7 +8,7 @@ namespace SamsHelper.Input
     {
         private readonly Dictionary<InputAxis, InputPress> _inputPressList = new Dictionary<InputAxis, InputPress>();
         private static InputHandler _instance;
-        private static List<InputPress> _pressedKeys = new List<InputPress>();
+        private static readonly List<InputPress> _pressedKeys = new List<InputPress>();
         private event Action OnNoPress;
         private static readonly List<IInputListener> InputListeners = new List<IInputListener>();
         private const float _doubleTapDuration = 300;
@@ -28,7 +28,7 @@ namespace SamsHelper.Input
             _inputPressList[axis] = new InputPress(axis);
         }
 
-        public static InputHandler Instance()
+        private static InputHandler Instance()
         {
             return _instance ?? FindObjectOfType<InputHandler>();
         }

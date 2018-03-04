@@ -6,6 +6,7 @@
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="CharacterVisionController.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Plugins" t="Include">
@@ -203,6 +204,8 @@
                 <e p="WeatherSystemController.cs" t="Include" />
               </e>
               <e p="Region" t="Include">
+                <e p="MapGenerator.cs" t="Include" />
+                <e p="MapNode.cs" t="Include" />
                 <e p="Region.cs" t="Include" />
                 <e p="RegionManager.cs" t="Include" />
                 <e p="RegionTemplate.cs" t="Include" />
@@ -311,6 +314,7 @@
         <e p="UiArmourUpgradeController.cs" t="Include" />
         <e p="UIDistanceController.cs" t="Include" />
         <e p="UiGearMenuController.cs" t="Include" />
+        <e p="UiNodeFocusScript.cs" t="Include" />
         <e p="UIPlayerAccessoryController.cs" t="Include" />
         <e p="UIPlayerArmourController.cs" t="Include" />
         <e p="UIPlayerWeaponController.cs" t="Include" />

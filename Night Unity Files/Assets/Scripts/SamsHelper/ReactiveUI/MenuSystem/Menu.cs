@@ -6,6 +6,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
     public class Menu : MonoBehaviour
     {
         public Selectable DefaultSelectable;
+        [HideInInspector]
         public bool PauseOnOpen = true;
         public bool PreserveLastSelected = true;
     }
