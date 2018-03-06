@@ -30,7 +30,7 @@ namespace Facilitating.UI.GameOnly
             _thisCanvasGroup.interactable = true;
             _thisCanvasGroup.alpha = 1;
             _thunderClick.InitiateThunder();
-            StartCoroutine(nameof(ShowLines));
+            StartCoroutine(ShowLines());
         }
 
         private IEnumerator WaitToReadText()

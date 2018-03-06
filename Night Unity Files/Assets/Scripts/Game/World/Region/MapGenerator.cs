@@ -6,45 +6,37 @@ namespace Game.World.Region
 {
     public class MapGenerator : MonoBehaviour
     {
-        //10 radius unit = 0.5 hours
-        public const int MapWidth = 100;
-        private const int MinRadius = 10, MaxRadius = 40;
+        public const int MapWidth = 30;
+        public const int MinRadius = 6, MaxRadius = 9;
+        public const int VisionRadius = 1;
         private const int DesiredSamples = 50;
         private int _currentSamples;
         private readonly List<MapNode> activeNodes = new List<MapNode>();
         private static readonly List<MapNode> storedNodes = new List<MapNode>();
+        private MapNode initialNode;
 
         public void Start()
         {
             GenerateNodes();
             UpdateNodeColor();
+            CharacterVisionController.Instance().SetNode(initialNode);
+//            storedNodes.ForEach(n => UiPathDrawController.CreatePathBetweenNodes(initialNode, n));
         }
 
-        private float _currentTime;
-        
-        public void PlerpUpdate()
+        public static List<MapNode> GetVisibleNodes(MapNode origin)
         {
-            if (_currentTime > 0f)
+            return storedNodes.FindAll(n =>
             {
-                _currentTime -= Time.deltaTime;
-            }
-            else
-            {
-                Camera.main.GetComponent<UiNodeFocusScript>().FocusOnNode(storedNodes[Random.Range(0, storedNodes.Count)].NodeObject);
-                _currentTime = 2f;
-            }
+                if (n.Discovered) return false;
+                return Vector2.Distance(n.transform.position, origin.transform.position) <= MaxRadius;
+            });
         }
 
-        public static List<MapNode> GetVisibleNodes()
-        {
-            return storedNodes;
-            return storedNodes.FindAll(n => n.Visible);
-        }
-        
         private void GenerateNodes()
         {
             activeNodes.Clear();
             CreateNewNode(new Vector2Int(MapWidth / 2, MapWidth / 2));
+            initialNode = storedNodes[0];
             _currentSamples = DesiredSamples - 1;
 
             while (activeNodes.Count != 0)
@@ -74,8 +66,8 @@ namespace Game.World.Region
 
         private List<Vector2Int> GetCandidatePositions(MapNode origin)
         {
-            Vector2 minCorner = GetMinCorner(origin.Position);
-            Vector2 maxCorner = GetMaxCorner(origin.Position);
+            Vector2Int minCorner = GetMinCorner(origin.GetMapPosition());
+            Vector2Int maxCorner = GetMaxCorner(origin.GetMapPosition());
 
             List<Vector2Int> validPositions = new List<Vector2Int>();
 
@@ -84,7 +76,7 @@ namespace Game.World.Region
                 for (int y = (int) minCorner.y; y <= maxCorner.y; ++y)
                 {
                     Vector2Int candidatePosition = new Vector2Int(x, y);
-                    float distance = Vector2Int.Distance(origin.Position, candidatePosition);
+                    float distance = Vector2Int.Distance(origin.GetMapPosition(), candidatePosition);
                     if (distance >= MinRadius && distance <= MaxRadius)
                     {
                         validPositions.Add(candidatePosition);
@@ -107,7 +99,7 @@ namespace Game.World.Region
                 bool tooClose = false;
                 foreach (MapNode node in storedNodes)
                 {
-                    if (Vector2Int.Distance(node.Position, randomPoint) < MinRadius) tooClose = true;
+                    if (Vector2Int.Distance(node.GetMapPosition(), randomPoint) < MinRadius) tooClose = true;
                 }
 
                 if (!tooClose) return randomPoint;
@@ -116,16 +108,16 @@ namespace Game.World.Region
             return new Vector2Int(-1, -1);
         }
 
-        private Vector2 GetMinCorner(Vector2Int origin)
+        private Vector2Int GetMinCorner(Vector2Int origin)
         {
             int minX = origin.x - MaxRadius;
             int minY = origin.y - MaxRadius;
             if (minX < 0) minX = 0;
             if (minY < 0) minY = 0;
-            return new Vector2(minX, minY);
+            return new Vector2Int(minX, minY);
         }
 
-        private Vector2 GetMaxCorner(Vector2Int origin)
+        private Vector2Int GetMaxCorner(Vector2Int origin)
         {
             int maxX = origin.x + MaxRadius;
             int maxY = origin.y + MaxRadius;
@@ -139,7 +131,7 @@ namespace Game.World.Region
                 maxY = MapWidth - 1;
             }
 
-            return new Vector2(maxX, maxY);
+            return new Vector2Int(maxX, maxY);
         }
 
         public static void UpdateNodeColor()
@@ -148,6 +140,21 @@ namespace Game.World.Region
             {
                 n.UpdateColor();
             }
+        }
+
+        public static MapNode GetNearestNode(Vector3 position, MapNode excludedNode)
+        {
+            float nearestDistance = 100;
+            MapNode nearestNode = null;
+            storedNodes.ForEach(n =>
+            {
+                if (n == excludedNode) return;
+                float distance = n.DistanceToPoint(position);
+                if (distance >= nearestDistance) return;
+                nearestDistance = distance;
+                nearestNode = n;
+            });
+            return nearestNode;
         }
     }
 }

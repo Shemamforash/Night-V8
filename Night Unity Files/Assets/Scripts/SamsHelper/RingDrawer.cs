@@ -9,6 +9,8 @@
         private const int Segments = 128;
         private const int Overlap = 1;
         private float _angleDelta;
+        [Range(0, 15)] public float radius;
+        private float _lastRadius = -1;
 
         public void Awake()
         {
@@ -37,18 +39,15 @@
             _lineRenderer.endColor = invisible;
         }
 
-        public void SetFaded()
-        {
-            Color invisible = new Color(1f, 1f, 1f, 0.4f);
-            _lineRenderer.startColor = invisible;
-            _lineRenderer.endColor = invisible;
-        }
-
-        public void SetHighlighted()
-        {
-            _lineRenderer.startColor = Color.white;
-            _lineRenderer.endColor = Color.white;
-        }
+//        public void Update()
+//        {
+//            if (_lastRadius != -1 && _lastRadius != radius)
+//            {
+//                DrawCircle(radius);
+//            }
+//
+//            _lastRadius = radius;
+//        }
 
         public void DrawCircle(float radius)
         {

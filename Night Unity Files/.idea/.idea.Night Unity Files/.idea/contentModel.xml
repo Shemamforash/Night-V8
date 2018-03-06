@@ -8,6 +8,7 @@
       <e p="Assets" t="Include">
         <e p="CharacterVisionController.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
+        <e p="MapRingCreator.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Plugins" t="Include">
           <e p="Editor" t="Include">
@@ -254,6 +255,7 @@
             </e>
             <e p="Direction.cs" t="Include" />
             <e p="Exceptions.cs" t="Include" />
+            <e p="FadeAndDie.cs" t="Include" />
             <e p="Helper.cs" t="Include" />
             <e p="Input" t="Include">
               <e p="IInputListener.cs" t="Include" />
@@ -313,8 +315,10 @@
         <e p="UiAccessoryController.cs" t="Include" />
         <e p="UiArmourUpgradeController.cs" t="Include" />
         <e p="UIDistanceController.cs" t="Include" />
+        <e p="UiFootprintController.cs" t="Include" />
         <e p="UiGearMenuController.cs" t="Include" />
         <e p="UiNodeFocusScript.cs" t="Include" />
+        <e p="UiPathDrawController.cs" t="Include" />
         <e p="UIPlayerAccessoryController.cs" t="Include" />
         <e p="UIPlayerArmourController.cs" t="Include" />
         <e p="UIPlayerWeaponController.cs" t="Include" />

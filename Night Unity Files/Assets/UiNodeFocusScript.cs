@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using Game.World.Region;
 using UnityEngine;
 
@@ -14,6 +13,13 @@ public class UiNodeFocusScript : MonoBehaviour
 		Vector3 nodePosition = node.transform.position;
 		_targetPosition = new Vector3(nodePosition.x, nodePosition.y, _startPosition.z);
 		StartCoroutine(LerpToPosition());
+	}
+
+	public void Update()
+	{
+		Vector3 charPos = CharacterVisionController.Instance().transform.position;
+		charPos.z = transform.position.z;
+		transform.position = charPos;
 	}
 
 	private IEnumerator LerpToPosition()
