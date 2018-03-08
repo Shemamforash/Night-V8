@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Facilitating.UI.Elements;
 using SamsHelper.Input;
 using UnityEngine;
 using UnityEngine.Events;
@@ -81,7 +82,7 @@ namespace SamsHelper.ReactiveUI.Elements
             UseDeselectedColours();
             OnDeselectActions?.Invoke();
             if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
-            SetBorderColor(new Color(1, 1, 1, 0f));
+            SetBorderColor(UiAppearanceController.InvisibleColour);
         }
 
         public void AddOnClick(UnityAction a)
@@ -272,5 +273,6 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             _onUpAction = a;
         }
+
     }
 }

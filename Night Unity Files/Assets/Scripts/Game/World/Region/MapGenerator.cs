@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SamsHelper;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,7 +14,9 @@ namespace Game.World.Region
         private int _currentSamples;
         private readonly List<MapNode> activeNodes = new List<MapNode>();
         private static readonly List<MapNode> storedNodes = new List<MapNode>();
-        private MapNode initialNode;
+        private static MapNode initialNode;
+        private static float _currentAlpha;
+        private static float _flashSpeed = 1;
 
         public void Start()
         {
@@ -23,13 +26,59 @@ namespace Game.World.Region
 //            storedNodes.ForEach(n => UiPathDrawController.CreatePathBetweenNodes(initialNode, n));
         }
 
+        public static void SetRoute(MapNode from, MapNode to)
+        {
+            if (route != null)
+            {
+                for (int i = 0; i < route.Count; ++i)
+                {
+                    if (i < route.Count - 1)
+                    {
+                        route[i].GetPathTo(route[i + 1]).StopGlowing();
+                    }
+                }
+            }
+
+//            _currentAlpha = 0;
+            route = RoutePlotter.RouteBetween(from, to);
+        }
+
+        private static List<MapNode> route;
+
+        public void Update()
+        {
+            if (route == null || route.Count == 1) return;
+            for (int i = 1; i < route.Count; ++i)
+            {
+                float scaledAlpha = _currentAlpha / 2f + 0.25f;
+                route[i - 1].GetPathTo(route[i]).GlowSegments(scaledAlpha);
+            }
+
+            _currentAlpha += Time.deltaTime * _flashSpeed;
+            if (_currentAlpha > 1)
+            {
+                _currentAlpha = 1;
+                _flashSpeed = -_flashSpeed;
+            }
+            else if (_currentAlpha < 0)
+            {
+                _currentAlpha = 0;
+                _flashSpeed = -_flashSpeed;
+            }
+        }
+
         public static List<MapNode> GetVisibleNodes(MapNode origin)
         {
             return storedNodes.FindAll(n =>
             {
-                if (n.Discovered) return false;
+                if (n.Discovered()) return false;
                 return Vector2.Distance(n.transform.position, origin.transform.position) <= MaxRadius;
             });
+        }
+
+        public static List<MapNode> DiscoveredNodes()
+        {
+            return storedNodes.FindAll(n => n.Discovered());
         }
 
         private void GenerateNodes()

@@ -4,6 +4,7 @@ using System.Linq;
 using Game.Characters;
 using Game.Gear.Armour;
 using SamsHelper;
+using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -132,12 +133,12 @@ namespace Facilitating.UIControllers
 
             public void Deactivate()
             {
-                _armourObject.GetComponent<Image>().color = new Color(1, 1, 1, 0.4f);
+                _armourObject.GetComponent<Image>().color = UiAppearanceController.FadedColour;
             }
 
             public void SetInvisible()
             {
-                _armourObject.GetComponent<Image>().color = new Color(1, 1, 1, 0);
+                _armourObject.GetComponent<Image>().color = UiAppearanceController.InvisibleColour;
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Facilitating.UI.Elements;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 	{
 		private Image _cooldownFill;
 		private EnhancedText _cooldownText;
-		private readonly Color _cooldownNotReadyColor = new Color(1, 1, 1, 0.4f);
+		private readonly Color _cooldownNotReadyColor = UiAppearanceController.FadedColour;
 	
 		// Use this for initialization
 		private void Awake()

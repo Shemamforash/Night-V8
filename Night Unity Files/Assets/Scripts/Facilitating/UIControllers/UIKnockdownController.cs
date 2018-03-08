@@ -2,6 +2,7 @@
 using Game.Combat;
 using SamsHelper;
 using SamsHelper.Input;
+using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,12 +43,12 @@ public class UIKnockdownController : MonoBehaviour
         _lastPressDirection = lastDirection;
         if (_lastPressDirection == 1)
         {
-            _rightText.color = new Color(1, 1, 1, 0.4f);
+            _rightText.color = UiAppearanceController.FadedColour;
             _leftText.color = Color.white;
         }
         else
         {
-            _leftText.color = new Color(1, 1, 1, 0.4f);
+            _leftText.color = UiAppearanceController.FadedColour;
             _rightText.color = Color.white;
         }
     }

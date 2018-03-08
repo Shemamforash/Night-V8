@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SamsHelper.ReactiveUI.Elements;
+using UnityEngine;
 
 public class HeartBeatController : MonoBehaviour
 {
@@ -86,6 +87,6 @@ public class HeartBeatController : MonoBehaviour
     private void SetTrailAlpha(float alpha)
     {
         ParticleSystem.TrailModule trails = _heartBeatParticles.trails;
-        trails.colorOverTrail = new ParticleSystem.MinMaxGradient(new Color(1, 1, 1, alpha), new Color(1, 1, 1, 0f));
+        trails.colorOverTrail = new ParticleSystem.MinMaxGradient(new Color(1, 1, 1, alpha), UiAppearanceController.InvisibleColour);
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using SamsHelper;
+using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 
 namespace UI.Highlight
@@ -40,7 +41,7 @@ namespace UI.Highlight
 
         private void Fade()
         {
-            ChangeTextColour(new Color(1,1,1, 0.4f));
+            ChangeTextColour(UiAppearanceController.FadedColour);
         }
         
         public void OnPointerEnter(PointerEventData p)

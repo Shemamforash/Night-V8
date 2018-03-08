@@ -291,7 +291,7 @@ namespace SamsHelper
             GameObject delineator = new GameObject();
             delineator.AddComponent<RectTransform>();
             Image i = delineator.AddComponent<Image>();
-            i.color = new Color(1, 1, 1, 0.2f);
+            i.color = UiAppearanceController.FadedColour;
             LayoutElement layout = delineator.AddComponent<LayoutElement>();
             layout.minHeight = 2;
             layout.preferredWidth = 2000;

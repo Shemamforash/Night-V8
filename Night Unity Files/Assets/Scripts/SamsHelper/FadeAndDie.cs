@@ -36,8 +36,8 @@ namespace SamsHelper
             while (_age > 0)
             {
                 float normalisedLifeTime = _age / LifeTime;
-                _spriteRenderer.color = new Color(1, 1, 1, normalisedLifeTime * _fullOpacity);
-                LifeTime -= Time.deltaTime;
+                _spriteRenderer.color = new Color(1f, 1f, 1f, normalisedLifeTime * _fullOpacity);
+                _age -= Time.deltaTime;
                 yield return null;
             }
 

@@ -11,6 +11,9 @@ namespace SamsHelper.ReactiveUI.Elements
         public TMP_FontAsset UniversalFont;
         public int SmallFontSize = 10, MediumFontSize = 15, LargeFontSize = 30, TitleFontSize = 45;
         private static UiAppearanceController _instance;
+        public static readonly Color FadedColour = new Color(1f, 1f, 1f, 0.4f);
+        public static readonly Color InvisibleColour = new Color(1f, 1f, 1f, 0f);
+
 
         public void Awake()
         {

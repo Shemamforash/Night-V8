@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SamsHelper;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
@@ -29,7 +30,7 @@ public class UIEnergyController : MonoBehaviour
         GameObject energyTick = Helper.InstantiateUiObject("Prefabs/AttributeMarkerPrefab", _energyContainer);
         if (!energyAvailable)
         {
-            energyTick.GetComponent<Image>().color = new Color(1, 1, 1, 0.4f);
+            energyTick.GetComponent<Image>().color = UiAppearanceController.FadedColour;
         }
         _energyTicks.Add(energyTick);
     }

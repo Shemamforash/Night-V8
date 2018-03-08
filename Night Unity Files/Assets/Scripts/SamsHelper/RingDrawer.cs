@@ -1,4 +1,6 @@
-﻿namespace SamsHelper
+﻿using SamsHelper.ReactiveUI.Elements;
+
+namespace SamsHelper
 {
     using UnityEngine;
 
@@ -34,7 +36,7 @@
 
         public void Hide()
         {
-            Color invisible = new Color(1f, 1f, 1f, 0f);
+            Color invisible = UiAppearanceController.InvisibleColour;
             _lineRenderer.startColor = invisible;
             _lineRenderer.endColor = invisible;
         }

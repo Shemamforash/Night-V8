@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SamsHelper;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,7 +32,7 @@ public class UIAttributeMarkerController : MonoBehaviour
     {
         GameObject newMarker = Helper.InstantiateUiObject("Prefabs/AttributeMarkerPrefab", transform);
         Image markerImage = newMarker.GetComponent<Image>();
-        markerImage.color = i < currentValue ? Color.white : new Color(1, 1, 1, 0.4f);
+        markerImage.color = i < currentValue ? Color.white : UiAppearanceController.FadedColour;
         _attributeMarkers.Add(newMarker);
     }
 }

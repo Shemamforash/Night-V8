@@ -74,12 +74,12 @@ public class UIMinigameController : Menu
     {
         if (_lastWeaponButton != null)
         {
-            _lastWeaponButton.GetComponent<Image>().color = new Color(1, 1, 1, 0f);
+            _lastWeaponButton.GetComponent<Image>().color = UiAppearanceController.InvisibleColour;
             Helper.FindAllComponentsInChildren<EnhancedText>(_lastWeaponButton.transform).ForEach(text => text.SetColor(Color.white));
         }
 
         _lastWeaponButton = button;
-        _lastWeaponButton.GetComponent<Image>().color = new Color(1, 1, 1, 0.4f);
+        _lastWeaponButton.GetComponent<Image>().color = UiAppearanceController.FadedColour;
         Helper.FindAllComponentsInChildren<EnhancedText>(_lastWeaponButton.transform).ForEach(text => text.SetColor(Color.black));
     }
 
@@ -120,12 +120,12 @@ public class UIMinigameController : Menu
     {
         if (_lastClassButton != null)
         {
-            _lastClassButton.GetComponent<Image>().color = new Color(1, 1, 1, 0f);
+            _lastClassButton.GetComponent<Image>().color = UiAppearanceController.InvisibleColour;
             Helper.FindAllComponentsInChildren<EnhancedText>(_lastClassButton.transform).ForEach(text => text.SetColor(Color.white));
         }
 
         _lastClassButton = button;
-        _lastClassButton.GetComponent<Image>().color = new Color(1, 1, 1, 0.4f);
+        _lastClassButton.GetComponent<Image>().color = UiAppearanceController.FadedColour;
         Helper.FindAllComponentsInChildren<EnhancedText>(_lastClassButton.transform).ForEach(text => text.SetColor(Color.black));
     }
     
@@ -134,7 +134,7 @@ public class UIMinigameController : Menu
         foreach (CharacterClass c in Enum.GetValues(typeof(CharacterClass)))
         {
             GameObject buttonObject = Helper.InstantiateUiObject("Prefabs/Button Small Border", _classList.transform);
-            buttonObject.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0f);
+            buttonObject.AddComponent<Image>().color = UiAppearanceController.InvisibleColour;
             Helper.FindChildWithName<TextMeshProUGUI>(buttonObject, "Text").text = "The " + c;
             EnhancedButton button = buttonObject.GetComponent<EnhancedButton>();
             _classButtons.Add(button);
