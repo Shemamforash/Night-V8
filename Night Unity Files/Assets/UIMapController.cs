@@ -27,9 +27,11 @@ public class UIMapController : Menu, IInputListener
         _quickTravelObject = Helper.FindChildWithName(gameObject, "Quick Travel");
         _planButton.AddOnSelectEvent(() => _quickTravelObject.SetActive(true));
         _planButton.AddOnDeselectEvent(() => _quickTravelObject.SetActive(false));
+        _quickTravelObject.SetActive(false);
         
         _exploreButton.AddOnSelectEvent(() => CharacterVisionController.Instance().gameObject.SetActive(true));
         _exploreButton.AddOnDeselectEvent(() => CharacterVisionController.Instance().gameObject.SetActive(false));
+        _exploreButton.Button().Select();
         
         SetSelectedButton(0);
         InputHandler.RegisterInputListener(this);

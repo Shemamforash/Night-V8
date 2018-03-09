@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using Facilitating.UI.Elements;
 using Game.World.Region;
 using SamsHelper;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 public class UiQuickTravelController : MonoBehaviour, IInputListener
 {
-    private List<RegionUi> _regionUiList = new List<RegionUi>();
-    private int centre = 7;
+    private readonly List<RegionUi> _regionUiList = new List<RegionUi>();
+    private const int Centre = 7;
     private List<MapNode> _regions;
     private int _selectedRegion;
 
@@ -21,7 +20,7 @@ public class UiQuickTravelController : MonoBehaviour, IInputListener
         List<Transform> regions = Helper.FindAllChildren(listObject).FindAll(r => r.name == "Region");
         for (int i = 0; i < 15; ++i)
         {
-            RegionUi regionUi = new RegionUi(regions[i].gameObject, Math.Abs(i - centre));
+            RegionUi regionUi = new RegionUi(regions[i].gameObject, Math.Abs(i - Centre));
             _regionUiList.Add(regionUi);
             regionUi.SetRegion();
         }
@@ -70,7 +69,7 @@ public class UiQuickTravelController : MonoBehaviour, IInputListener
 
     private void TrySelectRegionBelow()
     {
-        if (_selectedRegion == _regions.Count) return;
+        if (_selectedRegion == _regions.Count - 1) return;
         ++_selectedRegion;
         SelectRegion();
     }
@@ -88,28 +87,28 @@ public class UiQuickTravelController : MonoBehaviour, IInputListener
 
         for (int i = 0; i < _regionUiList.Count; ++i)
         {
-            int offset = i - centre;
+            int offset = i - Centre;
             int targetGear = _selectedRegion + offset;
-            MapNode region = null;
+            MapNode node = null;
             if (targetGear >= 0 && targetGear < _regions.Count)
             {
-                region = _regions[targetGear];
+                node = _regions[targetGear];
             }
 
-            if (i == centre)
+            if (i == Centre)
             {
                 //todo show info
-                MapGenerator.SetRoute(CharacterVisionController.Instance().CurrentNode, region);
+                MapGenerator.SetRoute(CharacterVisionController.Instance().CurrentNode, node);
             }
-            if(region == null) _regionUiList[i].SetRegion();
-            else _regionUiList[i].SetRegion(region.name, "Region", region.DistanceToPoint(CharacterVisionController.Instance().CurrentNode));
+            if(node == null) _regionUiList[i].SetRegion();
+            else _regionUiList[i].SetRegion(node.Region.Name, node.Region.GetRegionType().ToString(), RoutePlotter.DistanceBetween(node, CharacterVisionController.Instance().CurrentNode));
         }
     }
 
     private class RegionUi
     {
-        private EnhancedText _nameText, _typeText, _distanceText;
-        private Color _activeColour;
+        private readonly EnhancedText _nameText, _typeText, _distanceText;
+        private readonly Color _activeColour;
 
         public RegionUi(GameObject gameObject, int offset)
         {
@@ -134,7 +133,7 @@ public class UiQuickTravelController : MonoBehaviour, IInputListener
         public void SetRegion(string name, string type, float distance)
         {
             _nameText.Text(name);
-            _typeText.Text(name);
+            _typeText.Text(type);
             _distanceText.Text(Helper.Round(distance / (MapGenerator.MinRadius * 2f), 1) + "hrs");
             SetColor(_activeColour);
         }

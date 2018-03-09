@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml;
+﻿using System.Xml;
 using Facilitating.Persistence;
-using Facilitating.UIControllers;
-using Game.Characters;
 using Game.Characters.Player;
 using Game.Combat;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -16,48 +12,23 @@ namespace Game.World.Region
 {
     public class Region : DesolationInventory
     {
-        public readonly int Distance;
         private readonly RegionTemplate _template;
         private bool _discovered;
         private readonly CombatScenario _combatScenario;
-        public readonly int PerceptionRequirement;
-        public readonly Region Origin;
-        public readonly List<Region> Connections = new List<Region>();
-        public readonly int RegionNumber;
 
         public override XmlNode Save(XmlNode doc, PersistenceType type)
         {
             XmlNode regionNode = base.Save(doc, type);
-            SaveController.CreateNodeAndAppend("Distance", regionNode, Distance);
             SaveController.CreateNodeAndAppend("Discovered", regionNode, _discovered);
-            SaveController.CreateNodeAndAppend("PerceptionReq", regionNode, PerceptionRequirement);
-            SaveController.CreateNodeAndAppend("Origin", regionNode, Origin?.RegionNumber.ToString() ?? "None");
-            SaveController.CreateNodeAndAppend("ID", regionNode, RegionNumber);
             SaveController.CreateNodeAndAppend("Type", regionNode, _template.Type);
-            XmlNode connectionNode = SaveController.CreateNodeAndAppend("Connections",regionNode);
-            foreach (Region region in Connections)
-            {
-                SaveController.CreateNodeAndAppend("RegionID", connectionNode, region.RegionNumber);
-            }
             XmlNode combatNode = SaveController.CreateNodeAndAppend("Scenario", regionNode);
             _combatScenario?.Save(combatNode, type);
             return regionNode;
         }
         
-        public Region(string name, Region origin, int regionNumber, RegionTemplate template) : base(name)
+        public Region(string name, RegionTemplate template) : base(name)
         {
             _template = template;
-            Distance = Random.Range(1, 2);
-            if (origin != null) Distance += origin.Distance;
-            Origin = origin;
-            RegionNumber = regionNumber;
-            if (origin != null)
-            {
-                int randomVal = (int) (6 - Mathf.Sqrt(Random.Range(0f, 37f)));
-                if (randomVal == 0 && origin.PerceptionRequirement == 0) randomVal = (int) (5 - Mathf.Sqrt(Random.Range(0f, 26f)));
-                PerceptionRequirement = origin.PerceptionRequirement + randomVal;
-            }
-            else PerceptionRequirement = 0;
             SetInitialResourceValues(InventoryResourceType.Water, _template.WaterAvailable);
             SetInitialResourceValues(InventoryResourceType.Food, _template.FoodAvailable);
             SetInitialResourceValues(InventoryResourceType.Fuel, _template.FuelAvailable);
@@ -67,11 +38,6 @@ namespace Game.World.Region
             {
                 _combatScenario = CombatScenario.Generate(Random.Range(1, 3));
             }
-        }
-
-        public void AddConnection(Region region)
-        {
-            Connections.Add(region);
         }
 
         private void SetInitialResourceValues(InventoryResourceType resourceType, float resourceRating)
@@ -94,7 +60,6 @@ namespace Game.World.Region
             ui.SetCentralTextCallback(() => Name);
             ui.SetLeftTextCallback(() => GetRegionType().ToString());
             ui.SetLeftTextWidth(200);
-            ui.SetRightTextCallback(() => Distance + " hrs");
             return ui;
         }
 
@@ -110,16 +75,12 @@ namespace Game.World.Region
             }
         }
 
-        public void Discover(Player player)
+        public void Discover()
         {
             if (!_discovered)
             {
                 _discovered = true;
-                RegionManager.DiscoverRegion(this);
             }
-            UIExploreMenuController.Instance().SetRegion(this, player);
-            if (Connections.Count != 0) return;
-            Origin?.Connections.Remove(this);
         }
 
         public bool Discovered() => _discovered;

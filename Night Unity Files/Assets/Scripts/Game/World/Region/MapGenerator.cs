@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SamsHelper;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,7 +6,7 @@ namespace Game.World.Region
 {
     public class MapGenerator : MonoBehaviour
     {
-        public const int MapWidth = 30;
+        public const int MapWidth = 120;
         public const int MinRadius = 6, MaxRadius = 9;
         public const int VisionRadius = 1;
         private const int DesiredSamples = 50;
@@ -39,8 +38,8 @@ namespace Game.World.Region
                 }
             }
 
-//            _currentAlpha = 0;
             route = RoutePlotter.RouteBetween(from, to);
+            Camera.main.GetComponent<FitScreenToRoute>().FitRoute(route);
         }
 
         private static List<MapNode> route;
@@ -50,7 +49,7 @@ namespace Game.World.Region
             if (route == null || route.Count == 1) return;
             for (int i = 1; i < route.Count; ++i)
             {
-                float scaledAlpha = _currentAlpha / 2f + 0.25f;
+                float scaledAlpha = _currentAlpha / 2f + 0.5f;
                 route[i - 1].GetPathTo(route[i]).GlowSegments(scaledAlpha);
             }
 
@@ -84,7 +83,9 @@ namespace Game.World.Region
         private void GenerateNodes()
         {
             activeNodes.Clear();
-            CreateNewNode(new Vector2Int(MapWidth / 2, MapWidth / 2));
+            int count = 0;
+            List<Region> regions = RegionManager.GenerateRegions(DesiredSamples);
+            CreateNewNode(new Vector2Int(MapWidth / 2, MapWidth / 2), regions[count]);
             initialNode = storedNodes[0];
             _currentSamples = DesiredSamples - 1;
 
@@ -98,14 +99,15 @@ namespace Game.World.Region
                 }
                 else
                 {
-                    CreateNewNode(point);
+                    ++count;
+                    CreateNewNode(point, regions[count]);
                 }
             }
         }
 
-        private void CreateNewNode(Vector2Int point)
+        private void CreateNewNode(Vector2Int point, Region region)
         {
-            MapNode newMapNode = MapNode.CreateNode(point);
+            MapNode newMapNode = MapNode.CreateNode(point, region);
             newMapNode.NodeObject.name = "Node " + _currentSamples;
             newMapNode.NodeObject.transform.SetParent(transform);
             activeNodes.Add(newMapNode);

@@ -21,7 +21,7 @@ namespace Game.World.Region
 
         public void SetColor(float alpha, bool shouldGlow = false)
         {
-            alpha *= FullOpacity;
+            if(!shouldGlow) alpha *= FullOpacity;
             bgComponents = shouldGlow ? 0 : 1;
             Color c = new Color(1, bgComponents, bgComponents, alpha);
             _lineRenderer.startColor = c;

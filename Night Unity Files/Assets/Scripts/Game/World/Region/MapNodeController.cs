@@ -7,7 +7,6 @@ using UnityEngine;
 public class MapNodeController : MonoBehaviour
 {
     private TextMeshProUGUI _fadeText;
-    private string _text = "Vanguard's Prayer";
     private const float LetterFadeInDuration = 0.5f;
     private float _currentTime;
     private int _currentLetter;
@@ -17,12 +16,12 @@ public class MapNodeController : MonoBehaviour
 
     private Transform _ring1, _ring2, _ring3;
 
-    private void Awake()
+    public void SetName(string name)
     {
         _fadeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Fade");
-        for (int i = 0; i < _text.Length; ++i)
+        for (int i = 0; i < name.Length; ++i)
         {
-            _letters.Add(new Letter(_text[i].ToString()));
+            _letters.Add(new Letter(name[i].ToString()));
             if (i > 0)
             {
                 _letters[i - 1].SetNextLetter(_letters[i]);

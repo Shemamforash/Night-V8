@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using SamsHelper;
 using UnityEngine;
 
 namespace Game.World.Region
@@ -59,26 +60,17 @@ namespace Game.World.Region
 
                     Vector2 from = _currentPosition;
                     Vector2 to = _currentPosition + _direction * MaxPathLength;
-                    bool passesTarget = CheckPassesThroughTarget(from, to);
+                    bool passesTarget = AdvancedMaths.DoesLinePassThroughPoint(from, to, _targetPosition);
                     if (passesTarget) to = _targetPosition;
                         segment.SetEnds(from, to);
                     if (passesTarget) break;
                     _currentPosition = to + _direction * MaxPathLength / 2f;
-                    if (CheckPassesThroughTarget(to, _currentPosition)) break;
+                    if (AdvancedMaths.DoesLinePassThroughPoint(to, _currentPosition, _targetPosition)) break;
                     _currentTime = PathDrawTime;
                 }
 
                 yield return null;
             }
-        }
-        
-        private bool CheckPassesThroughTarget(Vector2 from, Vector2 to)
-        {
-            float distanceAC = Vector2.Distance(from, _targetPosition);
-            float distanceAB = Vector2.Distance(from, to);
-            float distanceBC = Vector2.Distance(to, _targetPosition);
-            float distanceDifference = distanceAC + distanceBC - distanceAB;
-            return distanceDifference < 0.01f && distanceDifference > -0.01f;
         }
     }
 }

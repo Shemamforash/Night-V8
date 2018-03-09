@@ -17,9 +17,7 @@ public class UiNodeFocusScript : MonoBehaviour
 
 	public void Update()
 	{
-		Vector3 charPos = CharacterVisionController.Instance().transform.position;
-		charPos.z = transform.position.z;
-		transform.position = charPos;
+		
 	}
 
 	private IEnumerator LerpToPosition()

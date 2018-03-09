@@ -55,12 +55,13 @@ namespace Game.World.Environment_and_Weather
 
         private void UpdateEnvironmentResources()
         {
-            List<Region.Region> discoveredRegions = RegionManager.GetDiscoveredRegions();
-            discoveredRegions.ForEach(r =>
-            {
-                r.AddWater(_water);
-                r.AddFood(_food);
-            });
+            //todo me
+//            List<Region.Region> discoveredRegions = RegionManager.GetDiscoveredRegions();
+//            discoveredRegions.ForEach(r =>
+//            {
+//                r.AddWater(_water);
+//                r.AddFood(_food);
+//            });
         }
 
         private class Danger

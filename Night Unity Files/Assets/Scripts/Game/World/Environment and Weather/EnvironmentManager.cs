@@ -38,7 +38,7 @@ namespace Game.World.Environment_and_Weather
         private void NavigateToState(string stateName)
         {
             GetState(stateName).Enter();
-            RegionManager.GenerateNewRegions();
+            RegionManager.GenerateRegions(2);
             _environmentText.text = GetCurrentState().Name;
         }
 

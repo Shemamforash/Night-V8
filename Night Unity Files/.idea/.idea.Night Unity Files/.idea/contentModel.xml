@@ -6,6 +6,7 @@
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="FitScreenToRoute.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Plugins" t="Include">
@@ -236,6 +237,7 @@
             </e>
           </e>
           <e p="SamsHelper" t="Include">
+            <e p="AdvancedMaths.cs" t="Include" />
             <e p="BaseGameFunctionality" t="Include">
               <e p="Basic" t="Include">
                 <e p="AttributeContainer.cs" t="Include" />

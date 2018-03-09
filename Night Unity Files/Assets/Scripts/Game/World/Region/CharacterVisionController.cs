@@ -1,6 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using Game.World.Region;
+using SamsHelper;
 using SamsHelper.Input;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ public class CharacterVisionController : MonoBehaviour, IInputListener
     public MapNode CurrentNode;
     private float _distanceTravelled;
     private const float DistanceToFootPrint = 0.25f;
+    private float _moveSpeed = 3f;
     private bool _leftLast;
 
     public void Awake()
@@ -38,6 +40,25 @@ public class CharacterVisionController : MonoBehaviour, IInputListener
         _visionTransform.gameObject.SetActive(false);
     }
 
+    public void Update()
+    {
+        UpdateSize();
+        if (!_moving) return;
+        Vector3 charPos = Instance().transform.position;
+        charPos.z = -10f;
+        Camera.main.transform.position = charPos;
+    }
+    
+    private void UpdateSize()
+    {
+        float nearestNode = GetNearestNodeWeight();
+        float xScale = nearestNode;
+        float randomOffset = Mathf.PerlinNoise(Time.time, 0);
+        xScale += randomOffset / 5f;
+        xScale = Mathf.Clamp(xScale, 0.05f, 1);
+        _visionTransform.localScale = new Vector3(xScale, 1, 1);
+    }
+    
     public void SetNode(MapNode node)
     {
         if (CurrentNode != null)
@@ -49,7 +70,6 @@ public class CharacterVisionController : MonoBehaviour, IInputListener
         transform.position = node.transform.position;
         CurrentNode = node;
         CurrentNode.Discover();
-        UpdateSize();
     }
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -102,33 +122,41 @@ public class CharacterVisionController : MonoBehaviour, IInputListener
         _distanceTravelled = 0;
     }
 
+    private MapNode nearestNode;
+    
     private IEnumerator MoveForward()
     {
         _moving = true;
         _visionTransform.gameObject.SetActive(false);
+        nearestNode = null;
         while (true)
         {
             Vector3 lastPosition = transform.position;
-            transform.Translate(Vector3.up * Time.deltaTime * 2);
-            UpdateFootprintMaker(lastPosition);
-
-            MapGenerator.UpdateNodeColor();
-            MapNode nearestNode = MapGenerator.GetNearestNode(transform.position, CurrentNode);
-            float distance = nearestNode.DistanceToPoint(transform.position);
-            if (distance < 0.02f)
+            transform.Translate(Vector3.up * Time.deltaTime *_moveSpeed);
+            if (nearestNode == null)
             {
-                ReachNode(nearestNode);
-                break;
+                MapGenerator.UpdateNodeColor();
+                MapNode nearestNodeCanditate = MapGenerator.GetNearestNode(transform.position, CurrentNode);
+                float distance = nearestNodeCanditate.DistanceToPoint(transform.position);
+                if (distance < MapGenerator.VisionRadius)
+                {
+                    nearestNode = nearestNodeCanditate;
+                }
             }
-
-            if (distance < MapGenerator.VisionRadius)
+            else
             {
+                float distance = nearestNode.DistanceToPoint(transform.position);
                 float timeToTarget = distance / 4;
                 float angle = AngleBetweenMapNode(nearestNode, false);
                 float angleDelta = angle / timeToTarget * Time.deltaTime;
                 transform.Rotate(new Vector3(0, 0, angleDelta));
+                if (AdvancedMaths.DoesLinePassThroughPoint(lastPosition, transform.position, nearestNode.transform.position))
+                {
+                    ReachNode(nearestNode);
+                    break;
+                }
             }
-
+            UpdateFootprintMaker(lastPosition);
             yield return null;
         }
     }
@@ -149,15 +177,7 @@ public class CharacterVisionController : MonoBehaviour, IInputListener
 
         return angle;
     }
-
-    private void UpdateSize()
-    {
-        float nearestNode = GetNearestNodeWeight();
-        float xScale = nearestNode;
-        xScale = Mathf.Clamp(xScale, 0.05f, 1);
-        _visionTransform.localScale = new Vector3(xScale, 1, 1);
-    }
-
+    
     private float GetNearestNodeWeight()
     {
         float highestWeight = 0f;

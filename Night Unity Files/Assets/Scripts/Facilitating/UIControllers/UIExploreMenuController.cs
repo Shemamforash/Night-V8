@@ -38,9 +38,9 @@ namespace Facilitating.UIControllers
             _player = player;
             _currentRegion = region;
             
-            bool isInitialRegion = _currentRegion.Origin == null;
-            _lookAroundButton.gameObject.SetActive(!isInitialRegion);
-            _titleText.text = isInitialRegion ? "Setting Out" : _currentRegion.Name;
+//            bool isInitialRegion = _currentRegion.Origin == null;
+//            _lookAroundButton.gameObject.SetActive(!isInitialRegion);
+//            _titleText.text = isInitialRegion ? "Setting Out" : _currentRegion.Name;
             
             CreateRegionUi();
             SetNavigation();
@@ -52,14 +52,14 @@ namespace Facilitating.UIControllers
 
         private void CreateRegionUi()
         {
-            foreach (Region connection in _currentRegion.Connections)
-            {
-                GameObject regionUi = Helper.InstantiateUiObject("Prefabs/Region Explore UI", _regionContainer.transform);
-                UIRegionItem regionUiController = regionUi.GetComponent<UIRegionItem>();
-                regionUiController.SetText("left text", connection.Name, "right text");
-                regionUiController.SetRegion(connection, _player);
-                _regionUiList.Add(regionUi);
-            }
+//            foreach (Region connection in _currentRegion.Connections)
+//            {
+//                GameObject regionUi = Helper.InstantiateUiObject("Prefabs/Region Explore UI", _regionContainer.transform);
+//                UIRegionItem regionUiController = regionUi.GetComponent<UIRegionItem>();
+//                regionUiController.SetText("left text", connection.Name, "right text");
+//                regionUiController.SetRegion(connection, _player);
+//                _regionUiList.Add(regionUi);
+//            }
         }
         
         private void SetNavigation()

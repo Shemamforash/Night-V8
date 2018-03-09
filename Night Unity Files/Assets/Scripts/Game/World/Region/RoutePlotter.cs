@@ -71,11 +71,23 @@ public class RoutePlotter : MonoBehaviour
         return null;
     }
 
-    public static List<MapNode> RouteBetween(MapNode origin, MapNode target)
+    private static Vertex GetEndVertex(MapNode origin, MapNode target)
     {
         Dictionary<MapNode, Vertex> vertices = GenerateVertices();
         vertices[origin].distance = 0;
         Vertex targetVertex = Dijkstra(target, vertices);
+        return targetVertex;
+    }
+
+    public static float DistanceBetween(MapNode origin, MapNode target)
+    {
+        Vertex targetVertex = GetEndVertex(origin, target);
+        return targetVertex.distance;
+    }
+    
+    public static List<MapNode> RouteBetween(MapNode origin, MapNode target)
+    {
+        Vertex targetVertex = GetEndVertex(origin, target);
         return FindPath(targetVertex);
     }
 }

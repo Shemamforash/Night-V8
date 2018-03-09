@@ -5,6 +5,8 @@ namespace Game.Characters.CharacterActions
 {
     public class Travel : BaseCharacterAction
     {
+        //todo fix me
+        
         private Region _targetRegion;
 
         public Travel(Player.Player playerCharacter) : base("Travel", playerCharacter)
@@ -14,7 +16,7 @@ namespace Game.Characters.CharacterActions
                 --Duration;
                 PlayerCharacter.Travel();
                 if (Duration != 0) return;
-                _targetRegion.Discover(playerCharacter);
+//                _targetRegion.Discover(playerCharacter);
                 Exit();
             };
         }
@@ -22,12 +24,12 @@ namespace Game.Characters.CharacterActions
         protected override void OnClick()
         {
             Assert.IsTrue(PlayerCharacter.DistanceFromHome == 0);
-            RegionManager.EnterManager(PlayerCharacter);
+//            RegionManager.EnterManager(PlayerCharacter);
         }
 
         public void TravelTo(Region region)
         {
-            Duration = region.Distance - PlayerCharacter.DistanceFromHome;
+//            Duration = region.Distance - PlayerCharacter.DistanceFromHome;
             _targetRegion = region;
             Enter();
         }
