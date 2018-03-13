@@ -60,7 +60,7 @@ namespace Game.Combat.Skills
             enemiesBehindTarget.Add(CombatManager.Player.CurrentTarget);
             foreach (DetailedEnemyCombat enemyCombat in enemiesBehindTarget)
             {
-                Shot s = new Shot(enemyCombat, CombatManager.Player);
+                Shot s = Shot.CreateShot(CombatManager.Player);
                 s.GuaranteeHit();
                 s.Fire();
             }
@@ -106,7 +106,7 @@ namespace Game.Combat.Skills
         {
             foreach (DetailedEnemyCombat e in UIEnemyController.Enemies)
             {
-                Shot s = new Shot(e, CombatManager.Player);
+                Shot s = Shot.CreateShot(CombatManager.Player);
                 s.Fire();
             }
         }
@@ -148,7 +148,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            CombatManager.Player.OnFireAction += s => { CombatManager.Player.FireWeapon(s.Target()); };
+            CombatManager.Player.OnFireAction += s => { CombatManager.Player.FireWeapon(); };
         }
     }
 
@@ -160,7 +160,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            CombatManager.Player.OnFireAction += s => { s.AddOnHit(() => { Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt()); }); };
+//            CombatManager.Player.OnFireAction += s => { s.AddOnHit(() => { Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt()); }); };
         }
     }
 

@@ -28,7 +28,7 @@ public class UIHitController : MonoBehaviour
     
     public void Update()
     {
-        float newHeight = MaxHeight * CombatManager.Player.GetHitChance(_character);
+        float newHeight = MaxHeight * CombatManager.Player.RecoilManager.GetAccuracyModifier();
         if (_currentShotTime > 0)
         {
             float rValue = 1 - _currentShotTime / FadeTime;

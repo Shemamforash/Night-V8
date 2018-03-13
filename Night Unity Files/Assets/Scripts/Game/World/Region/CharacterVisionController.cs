@@ -147,7 +147,7 @@ public class CharacterVisionController : MonoBehaviour, IInputListener
             {
                 float distance = nearestNode.DistanceToPoint(transform.position);
                 float timeToTarget = distance / 4;
-                float angle = AngleBetweenMapNode(nearestNode, false);
+                float angle = AdvancedMaths.AngleBetween(transform, nearestNode.transform, false);
                 float angleDelta = angle / timeToTarget * Time.deltaTime;
                 transform.Rotate(new Vector3(0, 0, angleDelta));
                 if (AdvancedMaths.DoesLinePassThroughPoint(lastPosition, transform.position, nearestNode.transform.position))
@@ -161,29 +161,12 @@ public class CharacterVisionController : MonoBehaviour, IInputListener
         }
     }
 
-    private float AngleBetweenMapNode(MapNode node, bool absolute = true)
-    {
-        Vector3 targetDirection = node.transform.position - transform.position;
-        float xDir = -Mathf.Sin(transform.rotation.eulerAngles.z * Mathf.Deg2Rad);
-        float yDir = Mathf.Cos(transform.rotation.eulerAngles.z * Mathf.Deg2Rad);
-        Vector3 characterDirection = new Vector2(xDir, yDir);
-        float angle = Vector2.Angle(characterDirection, targetDirection);
-        if (absolute) return angle;
-        Vector3 cross = Vector3.Cross(characterDirection, targetDirection);
-        if (cross.z < 0)
-        {
-            angle = -angle;
-        }
-
-        return angle;
-    }
-    
     private float GetNearestNodeWeight()
     {
         float highestWeight = 0f;
         MapGenerator.GetVisibleNodes(CurrentNode).ForEach(n =>
         {
-            float angle = AngleBetweenMapNode(n);
+            float angle = AdvancedMaths.AngleBetween(transform, n.transform);
             if (angle > 90) return;
             float distance = Vector2.Distance(transform.position, n.transform.position);
             if (distance < 0.1f || distance > MapGenerator.MaxRadius) return;

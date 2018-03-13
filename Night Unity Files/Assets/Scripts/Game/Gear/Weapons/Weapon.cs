@@ -47,21 +47,21 @@ namespace Game.Gear.Weapons
             return !Empty() && FireRateElapsedTimeMet();
         }
         
-        public List<Shot> Fire(CharacterCombat target, CharacterCombat origin)
+        public List<Shot> Fire(CharacterCombat origin)
         {
-            if (origin.InCover || !CanFire() || origin.Immobilised()) return null;
+            if (!CanFire() || origin.Immobilised()) return null;
             _timeAtLastFire = Helper.TimeInMillis();
             float distance = origin is PlayerCombat ? 0 : ((DetailedEnemyCombat)origin).DistanceToPlayer;
             GunFire.Fire(WeaponAttributes.WeaponType, distance);
-            ConsumeAmmo(1);
             List<Shot> shots = new List<Shot>();
             for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
             {
-                shots.Add(new Shot(target, origin));
+                shots.Add(Shot.CreateShot(origin));
             }
+            ConsumeAmmo(1);
             return shots;
         }
-        
+
         public override bool IsStackable()
         {
             return false;
@@ -77,7 +77,7 @@ namespace Game.Gear.Weapons
             return (int)ParentInventory.GetResourceQuantity(WeaponAttributes.AmmoType);
         }
 
-        private void ConsumeAmmo(int amount = 0)
+        public void ConsumeAmmo(int amount = 0)
         {
             _ammoInMagazine -= amount;
             if (_ammoInMagazine < 0)

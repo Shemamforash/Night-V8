@@ -48,7 +48,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Misc
                     reachedTarget = true;
                 }
 
-                _distanceText.text = Helper.Round(CombatManager.DistanceBetween(CurrentPosition, CombatManager.Player)) + "m";
+//                _distanceText.text = Helper.Round(CombatManager.DistanceBetween(CurrentPosition, CombatManager.Player)) + "m";
                 yield return null;
             }
 

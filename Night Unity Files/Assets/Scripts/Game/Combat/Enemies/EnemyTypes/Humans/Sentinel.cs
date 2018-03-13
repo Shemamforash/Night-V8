@@ -15,7 +15,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         public override void SetPlayer(Character enemy)
         {
             base.SetPlayer(enemy);
-            MinimumFindCoverDistance = 5f;
+//            MinimumFindCoverDistance = 5f;
         }
         
 //        public override void ChooseNextAction()

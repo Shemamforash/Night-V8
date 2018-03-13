@@ -6,6 +6,7 @@
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="CombatCharacterController.cs" t="Include" />
         <e p="FitScreenToRoute.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="NightSave.xml" t="Include" />
@@ -72,7 +73,6 @@
               <e p="UIAttributeMarkerController.cs" t="Include" />
               <e p="UIConditionController.cs" t="Include" />
               <e p="UICreateAmmoController.cs" t="Include" />
-              <e p="UIDistanceController.cs" t="Include" />
               <e p="UIEnemyController.cs" t="Include" />
               <e p="UIEnemyShieldController.cs" t="Include" />
               <e p="UIEnergyController.cs" t="Include" />

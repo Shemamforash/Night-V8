@@ -29,7 +29,7 @@ public class UIKnockdownController : MonoBehaviour
     {
         _instance.gameObject.SetActive(true);
         SkillBar.SetVisible(false);
-        CombatManager.Player.PlayerCanvasGroup.alpha = 0.4f;
+//        CombatManager.Player.PlayerCanvasGroup.alpha = 0.4f;
         InputHandler.UnregisterInputListener(CombatManager.Player);
         SetLastPressDirection(Random.Range(0, 2) == 0 ? -1 : 1);
         _startingPresses = noPresses;
@@ -88,9 +88,9 @@ public class UIKnockdownController : MonoBehaviour
     public static void Exit()
     {
         SkillBar.SetVisible(true);
-        CombatManager.Player.IsKnockedDown = false;
+//        CombatManager.Player.IsKnockedDown = false;
         _instance.gameObject.SetActive(false);
         InputHandler.RegisterInputListener(CombatManager.Player);
-        CombatManager.Player.PlayerCanvasGroup.alpha = 1f;
+//        CombatManager.Player.PlayerCanvasGroup.alpha = 1f;
     }
 }

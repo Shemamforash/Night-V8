@@ -12,6 +12,7 @@ using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Combat
 {
@@ -28,7 +29,6 @@ namespace Game.Combat
         public event Action OnReloadAction;
         public bool Retaliate;
         private bool _fired;
-        public Direction FacingDirection;
         private Cooldown _dashCooldown;
         public DetailedEnemyCombat CurrentTarget;
 
@@ -48,7 +48,6 @@ namespace Game.Combat
         {
             if (MeleeController.InMelee) return;
             base.Update();
-            UpdatePlayerDirection();
         }
         
         public override void Awake()
@@ -58,8 +57,6 @@ namespace Game.Combat
             _playerName = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
             HealthController.AddOnHeal(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
             HealthController.AddOnTakeDamage(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
-            MoveForwardAction = f => Position.Increment(f);
-            MoveBackwardAction = f => Position.Decrement(f);
             _dashCooldown = CombatManager.CombatCooldowns.CreateCooldown();
             _dashCooldown.SetDuringAction(a =>
             {
@@ -74,6 +71,7 @@ namespace Game.Combat
             HealthController.SetIsPlayerBar();
             RageController = new RageController();
             SetReloadCooldown();
+            CharacterController.SetDistance(0, 0);
         }
 
         public override void SetPlayer(Character player)
@@ -82,7 +80,6 @@ namespace Game.Combat
             Player = (Player) player;
             _playerName.text = player.Name;
             Speed = Player.CalculateSpeed();
-            Position.SetCurrentValue(0);
             
             _dashCooldown.Duration = Player.CalculateDashCooldown();
             _damageModifier = Player.CalculateDamageModifier();
@@ -98,29 +95,20 @@ namespace Game.Combat
             ArmourController.SetCharacter(Player);
             RageController.EnterCombat();
             SkillBar.BindSkills(Player);
-            FacingDirection = Direction.Right;
             InputHandler.RegisterInputListener(this);
             UIMagazineController.SetWeapon(Weapon());
         }
         
-        public void UpdatePlayerDirection()
-        {
-            if (CurrentTarget == null) return;
-            bool behind = CurrentTarget.Position.CurrentValue() < Position.CurrentValue();
-            FacingDirection = behind ? Direction.Left : Direction.Right;
-        }
-
         private void Dash(float direction)
         {
             if (Immobilised() || !CanDash()) return;
-            LeaveCover();
             if (direction > 0)
             {
-                MoveForwardAction?.Invoke(_dashDistance);
+//                MoveForwardAction?.Invoke(_dashDistance);
             }
             else
             {
-                MoveBackwardAction?.Invoke(_dashDistance);
+//                MoveBackwardAction?.Invoke(_dashDistance);
             }
 
             _dashCooldown.Start();
@@ -147,60 +135,40 @@ namespace Game.Combat
             Sprinting = false;
         }
 
-        private void ChangeCover()
-        {
-            if (InCover) LeaveCover();
-            else TakeCover();
-        }
 
         public void TryRetaliate(DetailedEnemyCombat origin)
         {
-            if (Retaliate) FireWeapon(origin);
+            if (Retaliate) FireWeapon();
         }
 
         protected override void KnockDown()
         {
-            if (IsKnockedDown) return;
+//            if (IsKnockedDown) return;
             base.KnockDown();
-            UIKnockdownController.StartKnockdown(10);
-        }
-
-        protected override void TakeCover()
-        {
-            base.TakeCover();
-            GunFire.EnterCover();
-            PlayerCanvasGroup.alpha = 0.4f;
-        }
-
-        protected override void LeaveCover()
-        {
-            base.LeaveCover();
-            GunFire.ExitCover();
-            PlayerCanvasGroup.alpha = 1f;
+//            UIKnockdownController.StartKnockdown(10);
         }
 
         public void SetTarget(DetailedEnemyCombat e)
         {
             if (e == null) return;
             CurrentTarget = e;
-            CurrentTarget.MarkSelected();
+            e.PrimaryButton.GetComponent<Button>().Select();
         }
 
         //MISC
-        public override bool Immobilised()
-        {
-            return _reloadingCooldown.Running() || IsKnockedDown;
-        }
+//        public override bool Immobilised()
+//        {
+//            return _reloadingCooldown.Running() || IsKnockedDown;
+//        }
 
 
         public override void ExitCombat()
         {
             UIKnockdownController.Exit();
             MeleeController.Exit();
-            IsKnockedDown = false;
+//            IsKnockedDown = false;
             StopReloading();
             InputHandler.UnregisterInputListener(this);
-            Position.SetCurrentValue(0);
             _fired = false;
             HeartBeatController.Disable();
         }
@@ -223,8 +191,8 @@ namespace Game.Combat
 
         private void StopReloading()
         {
-            if (_reloadingCooldown == null || _reloadingCooldown.Finished()) return;
-            _reloadingCooldown.Cancel();
+//            if (_reloadingCooldown == null || _reloadingCooldown.Finished()) return;
+//            _reloadingCooldown.Cancel();
         }
 
         //COOLDOWNS
@@ -254,9 +222,10 @@ namespace Game.Combat
         }
 
         //FIRING
-        public void FireWeapon(CharacterCombat target)
+        public void FireWeapon()
         {
-            List<Shot> shots = Weapon().Fire(target, this);
+            if (Weapon().Empty()) return;
+            List<Shot> shots = Weapon().Fire(this);
             if (shots == null) return;
             shots.ForEach(shot =>
             {
@@ -295,10 +264,15 @@ namespace Game.Combat
             }
         }
 
+        public override CharacterCombat GetTarget()
+        {
+            return CurrentTarget;
+        }
+        
         private void TryMelee()
         {
-            if (CurrentTarget.DistanceToPlayer > MeleeDistance) return;
-            MeleeController.StartMelee(CurrentTarget);
+//            if (CurrentTarget.DistanceToPlayer > MeleeDistance) return;
+//            MeleeController.StartMelee(CurrentTarget);
         }
 
         //input
@@ -310,10 +284,13 @@ namespace Game.Combat
                 switch (axis)
                 {
                     case InputAxis.Fire:
-                        if (!_fired || Player.Weapon.WeaponAttributes.Automatic) FireWeapon(CurrentTarget);
+                        if (!_fired || Player.Weapon.WeaponAttributes.Automatic) FireWeapon();
                         break;
                     case InputAxis.Horizontal:
-                        Move(direction);
+                        Move(axis, direction);
+                        break;
+                    case InputAxis.Vertical:
+                        Move(axis, direction);
                         break;
                 }
             }
@@ -321,9 +298,6 @@ namespace Game.Combat
             {
                 switch (axis)
                 {
-                    case InputAxis.Cover:
-                        ChangeCover();
-                        break;
                     case InputAxis.Enrage:
                         RageController.TryStart();
                         break;

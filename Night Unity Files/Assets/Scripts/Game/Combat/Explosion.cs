@@ -28,16 +28,16 @@ namespace Game.Combat
 
         public void Fire()
         {
-            List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(_position, _radius);
-            foreach (CharacterCombat c in charactersInRange)
-            {
-                if(_pierce) c.ArmourController.TakeDamage(_damage);
-                else c.HealthController.TakeDamage(_damage);
-                c.Knockback(_knockbackDistance);
-                if (_bleed) c.Bleeding.AddStack();
-                if (_burn) c.Burn.AddStack();
-                if (_sick) c.Sick.AddStack();
-            }
+//            List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(_position, _radius);
+//            foreach (CharacterCombat c in charactersInRange)
+//            {
+//                if(_pierce) c.ArmourController.TakeDamage(_damage);
+//                else c.HealthController.TakeDamage(_damage);
+//                c.Knockback(_knockbackDistance);
+//                if (_bleed) c.Bleeding.AddStack();
+//                if (_burn) c.Burn.AddStack();
+//                if (_sick) c.Sick.AddStack();
+//            }
             GunFire.Explode(_position);
         }
 

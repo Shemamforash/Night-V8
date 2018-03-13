@@ -22,89 +22,90 @@ namespace Game.Combat
         public Burn Burn;
         public Sickness Sick;
 
-        public bool InCover;
-        public bool IsKnockedDown;
-        public bool IsDead;
+//        public bool IsKnockedDown;
+//        public bool IsDead;
 
         public readonly RecoilManager RecoilManager = new RecoilManager();
 
         public UIHealthBarController HealthController;
         public UIArmourController ArmourController;
 
-        public readonly Number Position = new Number(0f, float.MinValue);
-        private float _distanceTravelled;
-        protected Action<float> MoveForwardAction;
-        protected Action<float> MoveBackwardAction;
+//        private float _distanceTravelled;
 
         public float Speed;
         private const int SprintModifier = 2;
+
         protected bool Sprinting;
-        private const float DistanceToPlay = 2f;
-        public const int MeleeDistance = 5;
+//        private const float DistanceToPlay = 2f;
+//        public const int MeleeDistance = 5;
 
         private Character _character;
+
+        public CombatCharacterController CharacterController;
 
         public virtual void Awake()
         {
             ArmourController = Helper.FindChildWithName<UIArmourController>(gameObject, "Armour");
             HealthController = Helper.FindChildWithName<UIHealthBarController>(gameObject, "Health");
+            CharacterController = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Combat Character")).GetComponent<CombatCharacterController>();
+            CharacterController.transform.SetParent(GameObject.Find("World").transform);
             SetConditions();
+            CharacterController.SetOwner(this);
         }
 
         protected void SetOwnedByEnemy(float speed)
         {
             Speed = speed;
-            MoveForwardAction = f => { Position.Decrement(f); };
-            MoveBackwardAction = f => { Position.Increment(f); };
         }
 
-        private void IncreaseDistance(float distance)
-        {
-            _distanceTravelled += distance;
-            if (_distanceTravelled < DistanceToPlay) return;
-            GunFire.Step(Position.CurrentValue());
-            _distanceTravelled = 0;
-        }
+//        private void IncreaseDistance(float distance)
+//        {
+//            _distanceTravelled += distance;
+//            if (_distanceTravelled < DistanceToPlay) return;
+//            GunFire.Step(Position.CurrentValue());
+//            _distanceTravelled = 0;
+//        }
 
-        protected void MoveForward()
-        {
-            Move(1);
-        }
+//        protected void MoveForward()
+//        {
+//            Move(1);
+//        }
 
-        protected void MoveBackward()
-        {
-            Move(-1);
-        }
+//        protected void MoveBackward()
+//        {
+//            Move(-1);
+//        }
 
-        protected void Move(float direction)
+        protected void Move(InputAxis axis, float direction)
         {
             if (Immobilised()) return;
-            LeaveCover();
-            float distanceToMove = Speed * Time.deltaTime;
-            if (Sprinting) distanceToMove *= SprintModifier;
-            IncreaseDistance(distanceToMove);
-            if (direction > 0)
+            float speed = Speed;
+            if (Sprinting) speed *= SprintModifier;
+
+            if (axis == InputAxis.Horizontal)
             {
-                MoveForwardAction?.Invoke(distanceToMove);
+                if (direction > 0) CharacterController.MoveRight(speed);
+                else CharacterController.MoveLeft(speed);
             }
             else
             {
-                MoveBackwardAction?.Invoke(distanceToMove);
+                if (direction > 0) CharacterController.MoveUp(speed);
+                else CharacterController.MoveDown(speed);
             }
         }
 
-        private void KnockBack(float distance)
-        {
-            MoveBackwardAction?.Invoke(distance);
-        }
+//        private void KnockBack(float distance)
+//        {
+//            MoveBackwardAction?.Invoke(distance);
+//        }
 
         public virtual void Update()
         {
             if (MeleeController.InMelee) return;
-            Burn.Update();
-            Sick.Update();
-            Bleeding.Update();
-            RecoilManager.UpdateCombat();
+//            Burn.Update();
+//            Sick.Update();
+//            Bleeding.Update();
+//            RecoilManager.UpdateCombat();
         }
 
         public abstract void Kill();
@@ -115,57 +116,20 @@ namespace Game.Combat
 
         protected virtual void KnockDown()
         {
-            Interrupt();
-            LeaveCover();
-            IsKnockedDown = true;
+//            Interrupt();
+//            IsKnockedDown = true;
         }
 
         public void Knockback(float knockbackDistance)
         {
-            KnockBack(knockbackDistance);
-            KnockDown();
-        }
-
-        //COVER
-        protected virtual void TakeCover()
-        {
-            if (Immobilised() || InCover) return;
-            InCover = true;
-        }
-
-        protected virtual void LeaveCover()
-        {
-            if (Immobilised() || !InCover) return;
-            InCover = false;
+//            KnockBack(knockbackDistance);
+//            KnockDown();
         }
 
         public virtual bool Immobilised()
         {
-            return IsKnockedDown;
-        }
-
-        public float GetHitChance(CharacterCombat target, bool printChance = false)
-        {
-            float hitChance = 0f;
-            if (target.InCover)
-            {
-                return hitChance;
-            }
-
-            float distanceToTarget = (target as DetailedEnemyCombat)?.DistanceToPlayer ?? ((DetailedEnemyCombat) this).DistanceToPlayer;
-            float range = Weapon().WeaponAttributes.Range.CurrentValue();
-            if (distanceToTarget <= range)
-            {
-                hitChance = 1;
-            }
-            else
-            {
-                hitChance = (float) Math.Pow(range / distanceToTarget, 2);
-            }
-
-            hitChance *= RecoilManager.GetAccuracyModifier();
-            if (printChance) Debug.Log(hitChance + " " + RecoilManager.GetAccuracyModifier());
-            return hitChance;
+//            return IsKnockedDown;
+            return false;
         }
 
         public virtual void OnMiss()
@@ -179,11 +143,12 @@ namespace Game.Combat
 
         //FIRING
 
-//        public virtual List<Shot> FireWeapon(CharacterCombat target)
-//        {
-//        }
-
         //CONDITIONS
+
+        public float DistanceToTarget()
+        {
+            return Vector2.Distance(CharacterController.Position(), GetTarget().CharacterController.Position());
+        }
 
         private void SetConditions()
         {
@@ -208,5 +173,7 @@ namespace Game.Combat
         {
             _character = character;
         }
+
+        public abstract CharacterCombat GetTarget();
     }
 }

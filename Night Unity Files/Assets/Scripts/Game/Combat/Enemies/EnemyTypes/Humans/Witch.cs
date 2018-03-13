@@ -19,7 +19,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         public override void SetPlayer(Character enemy)
         {
             base.SetPlayer(enemy);
-            MinimumFindCoverDistance = 5f;
+//            MinimumFindCoverDistance = 5f;
         }
 
         private Action ThrowGrenade()
@@ -31,21 +31,21 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             {
                 throwDuration -= Time.deltaTime;
                 if (throwDuration > 0) return;
-                float currentPosition = Position.CurrentValue();
+//                float currentPosition = Position.CurrentValue();
                 //todo get player
-                float targetPosition = Player.Position.CurrentValue();
-                switch (Random.Range(0, 3))
-                {
-                    case 0:
-                        UIGrenadeController.AddGrenade(GrenadeType.Grenade, currentPosition, targetPosition);
-                        break;
-                    case 1:
-                        UIGrenadeController.AddGrenade(GrenadeType.Incendiary, currentPosition, targetPosition);
-                        break;
-                    case 2:
-                        UIGrenadeController.AddGrenade(GrenadeType.Splinter, currentPosition, targetPosition);
-                        break;
-                }
+//                float targetPosition = Player.Position.CurrentValue();
+//                switch (Random.Range(0, 3))
+//                {
+//                    case 0:
+//                        UIGrenadeController.AddGrenade(GrenadeType.Grenade, currentPosition, targetPosition);
+//                        break;
+//                    case 1:
+//                        UIGrenadeController.AddGrenade(GrenadeType.Incendiary, currentPosition, targetPosition);
+//                        break;
+//                    case 2:
+//                        UIGrenadeController.AddGrenade(GrenadeType.Splinter, currentPosition, targetPosition);
+//                        break;
+//                }
 
                 _targetTime = Random.Range(10, 15);
                 _throwing = false;
@@ -56,7 +56,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         public override void Alert()
         {
             base.Alert();
-            if(!Alerted) _targetTime = Random.Range(10, 15);
+//            if(!Alerted) _targetTime = Random.Range(10, 15);
         }
 
         public override void Update()
@@ -66,7 +66,7 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             if (!InCombat() || _throwing) return;
             _targetTime -= Time.deltaTime;
             if (_targetTime > 0) return;
-            CurrentAction = ThrowGrenade();
+//            CurrentAction = ThrowGrenade();
         }
     }
 }

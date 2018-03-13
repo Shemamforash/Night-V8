@@ -4,16 +4,16 @@
     {
         public override void ChooseNextAction()
         {
-            CurrentAction = MoveToPlayer;
+//            CurrentAction = MoveToPlayer;
         }
 
         protected override void ReachTarget()
         {
             base.ReachTarget();
-            if (Alerted)
-            {
-                CurrentAction = MoveToPlayer;
-            }
+//            if (Alerted)
+//            {
+//                CurrentAction = MoveToPlayer;
+//            }
         }
     }
 }

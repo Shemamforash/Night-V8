@@ -45,10 +45,9 @@ namespace Game.Combat.Enemies
             Weapon?.Reload(Inventory());
         }
 
-        public DetailedEnemyCombat CreateUi(Transform parent)
+        public DetailedEnemyCombat LinkUi(GameObject enemyUiPrefab)
         {
             Reset();
-            GameObject enemyUiPrefab = Helper.InstantiateUiObject("Prefabs/Inventory/EnemyItem", parent);
             DetailedEnemyCombat enemyCombat;
             switch (Template.EnemyType)
             {

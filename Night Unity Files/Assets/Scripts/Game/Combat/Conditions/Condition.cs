@@ -17,7 +17,7 @@ namespace Game.Combat
 
         protected Condition(CharacterCombat character, int duration, int damage)
         {
-            CharacterHealth = character.HealthController;
+//            CharacterHealth = character.HealthController;
             Duration = duration;
             Damage = damage;
         }

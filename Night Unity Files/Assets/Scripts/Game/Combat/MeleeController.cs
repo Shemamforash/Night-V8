@@ -57,7 +57,7 @@ namespace Game.Combat
 
         public static void SucceedRound()
         {
-            _targetEnemy.HealthController.TakeDamage(10);
+//            _targetEnemy.HealthController.TakeDamage(10);
             ++_hitsWon;
             GoToNextRound();
         }
@@ -67,13 +67,13 @@ namespace Game.Combat
             _initialPressTime *= FalloffRatio;
             _initialRingTime *= FalloffRatio;
             --_remainingHits;
-            if (_remainingHits == 0 || _targetEnemy.IsDead) EndMelee();
-            else StartRandomController();
+//            if (_remainingHits == 0 || _targetEnemy.IsDead) EndMelee();
+//            else StartRandomController();
         }
 
         public static void FailRound()
         {
-            CombatManager.Player.HealthController.TakeDamage(10);
+//            CombatManager.Player.HealthController.TakeDamage(10);
             ++_hitsLost;
             GoToNextRound();
         }
@@ -88,18 +88,18 @@ namespace Game.Combat
         private static void EndMelee()
         {
             Exit();
-            if (!_targetEnemy.IsDead)
-            {
-                if (_hitsWon >= _hitsLost)
-                {
-                    _targetEnemy.Knockback(10);
-                }
-                else
-                {
-                    CombatManager.Player.Knockback(10);
-                    _targetEnemy.ChooseNextAction();
-                }
-            }
+//            if (!_targetEnemy.IsDead)
+//            {
+//                if (_hitsWon >= _hitsLost)
+//                {
+//                    _targetEnemy.Knockback(10);
+//                }
+//                else
+//                {
+//                    CombatManager.Player.Knockback(10);
+//                    _targetEnemy.ChooseNextAction();
+//                }
+//            }
             _targetEnemy = null;
             if (MeleeQueue.Count == 0) return;
             StartMelee(MeleeQueue[0]);

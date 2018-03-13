@@ -16,7 +16,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         public override void SetPlayer(Character enemy)
         {
             base.SetPlayer(enemy);
-            MinimumFindCoverDistance = 20f;
+//            MinimumFindCoverDistance = 20f;
         }
         
         private void OnDestroy()
@@ -28,10 +28,10 @@ namespace Game.Combat.Enemies.EnemyTypes
         {
             if (_healTarget != null) return;
             _healTarget = healTarget;
-            if (_healTarget == null || _healTarget.IsDead)
-            {
-                TryHeal();
-            }
+//            if (_healTarget == null || _healTarget.IsDead)
+//            {
+//                TryHeal();
+//            }
         }
         
         private Action Heal()
@@ -53,13 +53,13 @@ namespace Game.Combat.Enemies.EnemyTypes
             base.ReachTarget();
             if (_healTarget != null)
             {
-                CurrentAction = Heal();
+//                CurrentAction = Heal();
             }
         }
         
         private void TryHeal()
         {
-            CurrentAction = MoveToTargetPosition(_healTarget.Position.CurrentValue());
+//            CurrentAction = MoveToTargetPosition(_healTarget.Position.CurrentValue());
             SetActionText("Running to " + _healTarget.Enemy.Name);
         }
 

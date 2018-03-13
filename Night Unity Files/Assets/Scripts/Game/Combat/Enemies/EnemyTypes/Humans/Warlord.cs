@@ -14,20 +14,20 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         public override void SetPlayer(Character enemy)
         {
             base.SetPlayer(enemy);
-            MinimumFindCoverDistance = 10;
-            HealthController.AddOnTakeDamage(a =>
-            {
-                if (CombatManager.CurrentScenario.ReachedMaxEncounterSize()) return;
-                float normalHealthBefore = (HealthController.GetCurrentHealth() + a) / HealthController.GetMaxHealth();
-                float currentNormalHealth = HealthController.GetNormalisedHealthValue();
-                if (normalHealthBefore > 0.25f && currentNormalHealth <= 0.25f
-                    || normalHealthBefore > 0.5f && currentNormalHealth <= 0.5f
-                    || normalHealthBefore > 0.75f && currentNormalHealth <= 0.75f)
-                {
-                    CurrentAction = SummonEnemies;
-                    _reinforceCallTime = _reinforceDuration;
-                }
-            });
+//            MinimumFindCoverDistance = 10;
+//            HealthController.AddOnTakeDamage(a =>
+//            {
+//                if (CombatManager.CurrentScenario.ReachedMaxEncounterSize()) return;
+//                float normalHealthBefore = (HealthController.GetCurrentHealth() + a) / HealthController.GetMaxHealth();
+//                float currentNormalHealth = HealthController.GetNormalisedHealthValue();
+//                if (normalHealthBefore > 0.25f && currentNormalHealth <= 0.25f
+//                    || normalHealthBefore > 0.5f && currentNormalHealth <= 0.5f
+//                    || normalHealthBefore > 0.75f && currentNormalHealth <= 0.75f)
+//                {
+//                    CurrentAction = SummonEnemies;
+//                    _reinforceCallTime = _reinforceDuration;
+//                }
+//            });
         }
         
         private void SummonEnemies()

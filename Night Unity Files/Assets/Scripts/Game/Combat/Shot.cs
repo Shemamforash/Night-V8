@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using Game.Gear.Weapons;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEngine;
@@ -8,17 +10,17 @@ using Random = UnityEngine.Random;
 
 namespace Game.Combat
 {
-    public class Shot
+    public class Shot : MonoBehaviour
     {
         private int _damage, _damageDealt;
-        private readonly CharacterCombat _target, _origin;
-        private readonly float _distanceToTarget;
+        private CharacterCombat _target, _origin;
 
         private int _pierceDepth;
 
         private bool _guaranteeHit, _guaranteeCritical;
 
         private float _criticalChance;
+        private float _accuracy;
 
         private int _knockbackDistance;
 
@@ -30,14 +32,24 @@ namespace Game.Combat
         private bool _isCritical;
         public bool DidHit;
 
-        public Shot(CharacterCombat target, CharacterCombat origin)
+        private float _speed = 5;
+        private float _age;
+        private const float MaxAge = 5f;
+
+        public static Shot CreateShot(CharacterCombat origin)
         {
-            Assert.IsNotNull(target);
+            Assert.IsNotNull(origin.GetTarget());
             Assert.IsNotNull(origin);
+            GameObject bullet = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Bullet"));
+            Shot shot = bullet.AddComponent<Shot>();
+            shot.Initialise(origin, origin.GetTarget());
+            return shot;
+        }
+
+        private void Initialise(CharacterCombat origin, CharacterCombat target)
+        {
             _origin = origin;
             _target = target;
-            DetailedEnemyCombat enemy = origin as DetailedEnemyCombat;
-            _distanceToTarget = enemy?.DistanceToPlayer ?? ((DetailedEnemyCombat) target).DistanceToPlayer;
             CacheWeaponAttributes();
         }
 
@@ -50,7 +62,7 @@ namespace Game.Combat
         {
             WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
-//            if (_origin is Enemy) _damage = (int)Mathf.Ceil(_damage / 2f);
+            _accuracy = 1f - attributes.GetCalculatedValue(AttributeType.Range) / 100f;
             _bleedChance = attributes.GetCalculatedValue(AttributeType.BleedChance);
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
             _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
@@ -63,12 +75,14 @@ namespace Game.Combat
             _finalDamageModifier = modifier;
         }
 
-        private void CalculateIfWillHit()
+        private void CalculateAccuracy()
         {
-            if (_target.InCover) return;
-            float hitChance = _origin?.GetHitChance(_target, _origin is PlayerCombat) ?? 1;
-            if (_guaranteeHit && hitChance > 0) DidHit = true;
-            DidHit = Random.Range(0f, 1f) < hitChance;
+            _accuracy *= 45f;
+            if (_guaranteeHit) _accuracy = 0;
+            else
+            {
+                _accuracy *= _origin.RecoilManager.GetAccuracyModifier();
+            }
         }
 
         private bool WillCrit()
@@ -85,34 +99,41 @@ namespace Game.Combat
             return _isCritical;
         }
 
-        private const float BulletSpeed = 500;
-
         public void Fire()
         {
-            if (_origin.Weapon().Empty()) return;
-            CreateShotCooldown();
-            CalculateIfWillHit();
+            transform.position = _origin.CharacterController.Position();
+            CalculateAccuracy();
+            float angleOffset = Random.Range(-_accuracy, _accuracy);
+            float angleToTarget = -AdvancedMaths.AngleFromUp(transform, _target.CharacterController.transform);
+            angleToTarget += angleOffset;
+            Vector3 bulletRot = new Vector3(0, 0, angleToTarget);
+            _speed = Random.Range(4.8f, 5.2f);
+            transform.rotation = Quaternion.Euler(bulletRot);
+            StartCoroutine(Move());
             _origin?.RecoilManager.Increment(_origin.Weapon());
         }
 
-        private void CreateShotCooldown()
-        {
-            Cooldown shotCooldown = new Cooldown(CombatManager.CombatCooldowns);
-            shotCooldown.Duration = _distanceToTarget / BulletSpeed;
-            shotCooldown.SetEndAction(() =>
-            {
-                if (!DidHit)
-                {
-                    _target.OnMiss();
-                    return;
-                }
 
-                ApplyDamage();
-            });
-            shotCooldown.Start();
+        private IEnumerator Move()
+        {
+            while (_age < MaxAge)
+            {
+                transform.Translate(Vector3.up * Time.deltaTime * _speed);
+                _age += Time.deltaTime;
+                yield return null;
+            }
+
+            Destroy(gameObject);
         }
 
-        private void ApplyDamage()
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.GetComponent<CombatCharacterController> ()== _origin.CharacterController) return;
+            ApplyDamage(other.GetComponent<CombatCharacterController>().Owner());
+            Destroy(gameObject);
+        }
+
+        private void ApplyDamage(CharacterCombat hit)
         {
             bool isCritical = WillCrit();
             int totalDamage = isCritical ? _damage * 2 : _damage;
@@ -121,12 +142,12 @@ namespace Game.Combat
             ApplyConditions();
             OnHitAction?.Invoke();
             (_origin as PlayerCombat)?.RageController.Increase(totalDamage);
-            float armourModifier = DidPierce() ? 1 : 1 - _target.ArmourController.CurrentArmour() / 10f;
+            float armourModifier = DidPierce() ? 1 : 1 - hit.ArmourController.CurrentArmour() / 10f;
             float healthDamage = (int) (armourModifier * DamageDealt());
             float armourDamage = (int) ((1 - armourModifier) * DamageDealt());
-            if (healthDamage != 0) _target.HealthController.TakeDamage(healthDamage);
-            if (armourDamage != 0) _target.ArmourController.TakeDamage(armourDamage);
-            if (_isCritical) (_target as DetailedEnemyCombat)?.UiHitController.RegisterCritical();
+            if (healthDamage != 0) hit.HealthController.TakeDamage(healthDamage);
+            if (armourDamage != 0) hit.ArmourController.TakeDamage(armourDamage);
+            if (_isCritical) (hit as DetailedEnemyCombat)?.UiHitController.RegisterCritical();
         }
 
         private void ApplyConditions()

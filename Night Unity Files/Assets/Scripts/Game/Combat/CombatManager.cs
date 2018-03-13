@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Facilitating.UIControllers;
 using Game.Characters.Player;
@@ -70,7 +69,7 @@ namespace Game.Combat
 
         public static void FailCombat()
         {
-            MenuStateMachine.ShowMenu(SceneManager.GetActiveScene().name == "Combat Tester" ? "Minigame Menu" : "Game Menu");
+//            MenuStateMachine.ShowMenu(SceneManager.GetActiveScene().name == "Combat Tester" ? "Minigame Menu" : "Game Menu");
             ExitCombat();
         }
 
@@ -81,37 +80,28 @@ namespace Game.Combat
             EnemyController.ExitCombat();
         }
 
-        public static float DistanceBetween(float originPosition, CharacterCombat target)
-        {
-            return Math.Abs(originPosition - target.Position.CurrentValue());
-        }
+//        public static float DistanceBetween(float originPosition, CharacterCombat target)
+//        {
+//            return Math.Abs(originPosition - target.Position.CurrentValue());
+//        }
 
         public static List<DetailedEnemyCombat> GetEnemiesBehindTarget(DetailedEnemyCombat target)
         {
             List<DetailedEnemyCombat> enemiesBehindTarget = new List<DetailedEnemyCombat>();
-            foreach (DetailedEnemyCombat enemy in UIEnemyController.Enemies)
-            {
-                if (enemy == target) continue;
-                if (enemy.Position > target.Position)
-                {
-                    enemiesBehindTarget.Add(enemy);
-                }
-            }
-
             return enemiesBehindTarget;
         }
 
-        public static List<CharacterCombat> GetCharactersInRange(float position, float range)
+        public static List<CharacterCombat> GetCharactersInRange(Vector2 position, float range)
         {
             List<CharacterCombat> charactersInRange = new List<CharacterCombat>();
-            if (Mathf.Abs(Player.Position.CurrentValue() - position) <= range)
+            if (Vector2.Distance(Player.CharacterController.Position(), position) <= range)
             {
                 charactersInRange.Add(Player);
             }
 
             foreach (DetailedEnemyCombat enemy in UIEnemyController.Enemies)
             {
-                if (DistanceBetween(position, enemy) <= range)
+                if (Vector2.Distance(enemy.CharacterController.Position(), position) <= range)
                 {
                     charactersInRange.Add(enemy);
                 }

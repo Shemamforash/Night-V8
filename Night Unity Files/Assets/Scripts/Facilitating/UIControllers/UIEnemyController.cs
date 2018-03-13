@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Combat;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.EnemyTypes;
+using SamsHelper;
 using UnityEngine;
 
 namespace Facilitating.UIControllers
@@ -10,12 +10,41 @@ namespace Facilitating.UIControllers
     public class UIEnemyController : MonoBehaviour, ICombatListener
     {
         public static readonly List<DetailedEnemyCombat> Enemies = new List<DetailedEnemyCombat>();
+        private static Transform _enemyListLeft, _enemyListRight;
+        private static readonly List<GameObject> _leftList = new List<GameObject>();
+        private static readonly List<GameObject> _rightList = new List<GameObject>();
+
+        public void Awake()
+        {
+            _enemyListLeft = Helper.FindChildWithName(gameObject, "Left").transform;
+            _enemyListRight = Helper.FindChildWithName(gameObject, "Right").transform;
+        }
+
+        private GameObject CreateNewEnemyUi()
+        {
+            GameObject enemyUi;
+            if (_leftList.Count <= _rightList.Count)
+            {
+                enemyUi = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Enemy UI Left"));
+                enemyUi.transform.SetParent(_enemyListLeft);
+                _leftList.Add(enemyUi);
+            }
+            else
+            {
+                enemyUi = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Enemy UI Right"));
+                enemyUi.transform.SetParent(_enemyListRight);
+                _rightList.Add(enemyUi);
+            }
+
+            enemyUi.transform.localScale = Vector3.one;
+            return enemyUi;
+        }
 
         public void EnterCombat()
         {
             CombatManager.CurrentScenario.Enemies().ForEach(e =>
             {
-                if(!e.IsDead) AddEnemy(e.CreateUi(transform));
+                if (!e.IsDead) AddEnemy(e.LinkUi(CreateNewEnemyUi()));
             });
         }
 
@@ -34,7 +63,7 @@ namespace Facilitating.UIControllers
                 TrySelectAtDistance(Enemies.IndexOf(CombatManager.Player.CurrentTarget), 1);
             }
         }
-        
+
         public void ExitCombat()
         {
             Enemies.ForEach(e =>
@@ -48,9 +77,8 @@ namespace Facilitating.UIControllers
         public void QueueEnemyToAdd(EnemyType type)
         {
             Enemy e = new Enemy(type);
-            DetailedEnemyCombat enemyUi = e.CreateUi(transform);
+            DetailedEnemyCombat enemyUi = e.LinkUi(CreateNewEnemyUi());
             enemyUi.Alert();
-            enemyUi.Position.SetCurrentValue(CombatManager.VisibilityRange + 5f);
             AddEnemy(enemyUi);
             CombatManager.CurrentScenario.AddEnemy(e);
         }
@@ -64,13 +92,13 @@ namespace Facilitating.UIControllers
         {
             Enemies.ForEach(e => e.Alert());
         }
-    
+
         private static bool TrySelectAtDistance(int index, int distance)
         {
             if (index + distance >= Enemies.Count || index + distance < 0) return false;
             DetailedEnemyCombat enemy = Enemies[index + distance];
             if (enemy == null) return false;
-            enemy.PrimaryButton.Button().Select();
+//            enemy.PrimaryButton.Button().Select();
             return true;
         }
 
@@ -87,6 +115,7 @@ namespace Facilitating.UIControllers
 
                 ++distance;
             }
+
             Enemies.Remove(enemy);
         }
 
@@ -99,6 +128,7 @@ namespace Facilitating.UIControllers
         public static DetailedEnemyCombat NearestEnemy()
         {
             DetailedEnemyCombat nearestEnemy = null;
+            float nearestDistance = 10000;
             Enemies.ForEach(e =>
             {
                 if (!e.InCombat()) return;
@@ -108,10 +138,10 @@ namespace Facilitating.UIControllers
                     return;
                 }
 
-                if (e.Position.CurrentValue() < nearestEnemy.Position.CurrentValue())
-                {
-                    nearestEnemy = e;
-                }
+                float distance = Vector2.Distance(e.CharacterController.Position(), CombatManager.Player.CharacterController.Position());
+                if (distance >= nearestDistance) return;
+                nearestDistance = distance;
+                nearestEnemy = e;
             });
             return nearestEnemy;
         }

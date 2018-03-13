@@ -31,7 +31,6 @@ namespace Facilitating.UIControllers
             _bleedEffect = Helper.FindChildWithName<ParticleSystem>(healthBar, "Bleeding");
             _healthText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Health Text");
             if (_slider.direction != Slider.Direction.LeftToRight) return;
-            _healthRemaining.OnMin(() => GetCharacter()?.Kill());
             _healthRemaining.AddOnValueChange(a => SetValue());
         }
 
@@ -45,6 +44,7 @@ namespace Facilitating.UIControllers
             _character = character;
             _healthRemaining.Max = initialHealth;
             _healthRemaining.SetCurrentValue(initialHealth);
+            _healthRemaining.OnMin(() => GetCharacter()?.Kill());
         }
 
         public void TakeDamage(float amount)
@@ -55,7 +55,7 @@ namespace Facilitating.UIControllers
             _healthRemaining.Decrement(amount);
             FadeNewHealth();
             OnTakeDamage?.Invoke(amount);
-            (_character as DetailedEnemyCombat)?.UiHitController.RegisterShot();
+//            (_character as DetailedEnemyCombat)?.UiHitController.RegisterShot();
         }
 
         public void Heal(int amount)
