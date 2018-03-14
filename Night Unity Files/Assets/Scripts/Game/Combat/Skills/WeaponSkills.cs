@@ -56,14 +56,14 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            List<DetailedEnemyCombat> enemiesBehindTarget = CombatManager.GetEnemiesBehindTarget(CombatManager.Player.CurrentTarget);
-            enemiesBehindTarget.Add(CombatManager.Player.CurrentTarget);
-            foreach (DetailedEnemyCombat enemyCombat in enemiesBehindTarget)
-            {
-                Shot s = Shot.CreateShot(CombatManager.Player);
-                s.GuaranteeHit();
-                s.Fire();
-            }
+//            List<DetailedEnemyCombat> enemiesBehindTarget = CombatManager.GetEnemiesBehindTarget(CombatManager.Player.GetTarget());
+//            enemiesBehindTarget.Add(CombatManager.Player.GetTarget());
+//            foreach (DetailedEnemyCombat enemyCombat in enemiesBehindTarget)
+//            {
+//                Shot s = Shot.CreateShot(CombatManager.Player);
+//                s.GuaranteeHit();
+//                s.Fire();
+//            }
         }
     }
 

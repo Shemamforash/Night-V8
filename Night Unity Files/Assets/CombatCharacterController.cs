@@ -5,10 +5,12 @@ using UnityEngine;
 public class CombatCharacterController : MonoBehaviour
 {
     private CharacterCombat _owner;
+    private bool _followOwner;
 
     public void SetOwner(CharacterCombat owner)
     {
         _owner = owner;
+        if (_owner is PlayerCombat) _followOwner = true;
     }
 
     public CharacterCombat Owner()
@@ -18,6 +20,12 @@ public class CombatCharacterController : MonoBehaviour
     
     public void Update()
     {
+        if (_followOwner)
+        {
+            Vector3 cameraPos = transform.position;
+            cameraPos.z = -10;
+            Camera.main.transform.position = cameraPos;
+        }
         if (_owner.GetTarget() == null) return;
         float angle = -AdvancedMaths.AngleFromUp(transform, _owner.GetTarget().CharacterController.transform);
         Vector3 currentRotation = transform.rotation.eulerAngles;

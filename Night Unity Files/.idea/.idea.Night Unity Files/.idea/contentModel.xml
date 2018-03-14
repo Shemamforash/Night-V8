@@ -125,6 +125,7 @@
               </e>
             </e>
             <e p="Combat" t="Include">
+              <e p="AreaGenerator.cs" t="Include" />
               <e p="CharacterCombat.cs" t="Include" />
               <e p="CombatManager.cs" t="Include" />
               <e p="CombatScenario.cs" t="Include" />
@@ -167,6 +168,7 @@
               <e p="Explosion.cs" t="Include" />
               <e p="ICombatListener.cs" t="Include" />
               <e p="MeleeController.cs" t="Include" />
+              <e p="PerlinNoise.cs" t="Include" />
               <e p="PlayerCombat.cs" t="Include" />
               <e p="RecoilManager.cs" t="Include" />
               <e p="Shot.cs" t="Include" />

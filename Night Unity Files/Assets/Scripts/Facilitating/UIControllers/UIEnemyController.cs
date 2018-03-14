@@ -56,12 +56,55 @@ namespace Facilitating.UIControllers
         {
             if (direction > 0)
             {
-                TrySelectAtDistance(Enemies.IndexOf(CombatManager.Player.CurrentTarget), -1);
+                SelectNextFurthest();
             }
             else
             {
-                TrySelectAtDistance(Enemies.IndexOf(CombatManager.Player.CurrentTarget), 1);
+                SelectNextNearest();
             }
+        }
+
+        private static void SelectNextFurthest()
+        {
+            CharacterCombat currentTarget = CombatManager.Player.GetTarget();
+            float distance = currentTarget.DistanceToTarget();
+            float nearestDistance = 10000;
+            DetailedEnemyCombat nearestEnemy = null;
+            Enemies.ForEach(e =>
+            {
+                if (e == currentTarget) return;
+                float candidateDistance = e.DistanceToTarget();
+                if (candidateDistance <= distance) return;
+                if (candidateDistance >= nearestDistance) return;
+                nearestDistance = candidateDistance;
+                nearestEnemy = e;
+            });
+            if (nearestEnemy == null) SelectNearestEnemy();
+            else nearestEnemy.PrimaryButton.Button().Select();
+        }
+
+        private static void SelectNearestEnemy()
+        {
+            NearestEnemy()?.PrimaryButton.Button().Select();
+        }
+
+        private static void SelectNextNearest()
+        {
+            CharacterCombat currentTarget = CombatManager.Player.GetTarget();
+            float distance = currentTarget.DistanceToTarget();
+            float nearestDistance = 0;
+            DetailedEnemyCombat nearestEnemy = null;
+            Enemies.ForEach(e =>
+            {
+                if (e == currentTarget) return;
+                float candidateDistance = e.DistanceToTarget();
+                if (candidateDistance >= distance) return;
+                if (candidateDistance <= nearestDistance) return;
+                nearestDistance = candidateDistance;
+                nearestEnemy = e;
+            });
+            if (nearestEnemy == null) SelectNearestEnemy();
+            else nearestEnemy.PrimaryButton.Button().Select();
         }
 
         public void ExitCombat()
@@ -93,29 +136,9 @@ namespace Facilitating.UIControllers
             Enemies.ForEach(e => e.Alert());
         }
 
-        private static bool TrySelectAtDistance(int index, int distance)
-        {
-            if (index + distance >= Enemies.Count || index + distance < 0) return false;
-            DetailedEnemyCombat enemy = Enemies[index + distance];
-            if (enemy == null) return false;
-//            enemy.PrimaryButton.Button().Select();
-            return true;
-        }
-
         public static void Remove(DetailedEnemyCombat enemy)
         {
-            int enemyPosition = Enemies.IndexOf(enemy);
-            int distance = 1;
-            while (distance < Enemies.Count)
-            {
-                if (TrySelectAtDistance(enemyPosition, distance) || TrySelectAtDistance(enemyPosition, -distance))
-                {
-                    break;
-                }
-
-                ++distance;
-            }
-
+            SelectNextNearest();
             Enemies.Remove(enemy);
         }
 

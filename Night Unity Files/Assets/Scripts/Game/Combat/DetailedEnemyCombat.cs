@@ -27,14 +27,18 @@ namespace Game.Combat
 
         private const int EnemyReloadMultiplier = 4;
 
-//        public Action CurrentAction;
+        public Action CurrentAction;
+
+        private Vector2 _originPosition;
 //        private readonly Cooldown _firingCooldown;
-//        private const float MaxAimTime = 2f;
+        private const float MaxAimTime = 2f;
 //        protected float MinimumFindCoverDistance;
 //        private int _wanderDirection = -1;
 
         public TextMeshProUGUI ActionText;
+
         public UIHitController UiHitController;
+
 //        private float _currentFadeInTime = 2f;
 //        private const float MaxFadeInTime = 2f;
 //        private string _actionString;
@@ -42,7 +46,7 @@ namespace Game.Combat
 
 //        private const float KnockdownDuration = 5f;
 //        private bool _waitingForHeal;
-        
+
         public float DistanceToPlayer;
 //        private const float AlphaCutoff = 0.2f;
 
@@ -50,7 +54,7 @@ namespace Game.Combat
         public TextMeshProUGUI NameText;
 //        private float _currentAlpha;
 
-        
+
         public override void Awake()
         {
             base.Awake();
@@ -64,13 +68,10 @@ namespace Game.Combat
                 CombatManager.Player.SetTarget(this);
                 gameObject.GetComponent<CanvasGroup>().alpha = 1;
             });
-            PrimaryButton.AddOnDeselectEvent(() =>
-            {
-                CombatManager.Player.SetTarget(this);
-                gameObject.GetComponent<CanvasGroup>().alpha = UiAppearanceController.FadedColour.a;
-            });
-//            HealthController.AddOnTakeDamage(f => { Alert(); });
-            CharacterController.SetDistance(3, 7);
+            PrimaryButton.AddOnDeselectEvent(() => { gameObject.GetComponent<CanvasGroup>().alpha = UiAppearanceController.FadedColour.a; });
+            HealthController.AddOnTakeDamage(f => { Alert(); });
+            CharacterController.SetDistance(2, 4);
+            _originPosition = CharacterController.Position();
             UpdateDistance();
         }
 
@@ -101,43 +102,30 @@ namespace Game.Combat
 //                alpha = Helper.Normalise(distanceToMaxVisibility, FadeVisibilityDistance);
 //                alpha = Mathf.Clamp(alpha, 0, AlphaCutoff);
 //            }
-            
+
 //            SetAlpha(alpha);
         }
-        
-        protected Action MoveToTargetPosition(float position)
+
+        protected Action MoveToTargetPosition(Vector3 position)
         {
-//            if (Position.CurrentValue() > position)
-//            {
-//                return () =>
-//                {
-//                    MoveForward();
-//                    if (Position.CurrentValue() > position) return;
-//                    Position.SetCurrentValue(position);
-//                    ReachTarget();
-//                };
-//            }
-//            return () =>
-//            {
-//                MoveBackward();
-//                if (Position.CurrentValue() < position) return;
-//                Position.SetCurrentValue(position);
-//                ReachTarget();
-//            };
-            return null;
+            return () =>
+            {
+                CharacterController.transform.position = Vector3.MoveTowards(CharacterController.transform.position, position, Time.deltaTime * 0.2f);
+                if(Vector3.Distance(CharacterController.transform.position, position) < 0.1f) ReachTarget();
+            };
         }
 
         public override void SetPlayer(Character enemy)
         {
             base.SetPlayer(enemy);
             NameText.text = enemy.Name;
-            Enemy = (Enemy)enemy;
+            Enemy = (Enemy) enemy;
             SetOwnedByEnemy(Enemy.Template.Speed);
             HealthController.SetInitialHealth(Enemy.Template.Health, this);
             ArmourController.SetCharacter(Enemy);
             RecoilManager.EnterCombat();
 //            if (!(this is Medic || this is Martyr)) SetHealBehaviour();
-//            CurrentAction = Wander;
+            CurrentAction = Wander;
             UiHitController.SetCharacter(this);
         }
 
@@ -209,7 +197,7 @@ namespace Game.Combat
         {
 //            CurrentAction = CheckForRepositioning();
 //            if (CurrentAction != null) return;
-//            CurrentAction = Aim();
+            CurrentAction = Aim();
         }
 
         private const float MeleeWarningTime = 2f;
@@ -317,13 +305,25 @@ namespace Game.Combat
 
         private void Wander()
         {
-//            float distanceToTravel = Random.Range(0f, 5f);
-//            distanceToTravel *= _wanderDirection;
-//            _wanderDirection = -_wanderDirection;
-//            float targetPosition = Position.CurrentValue() + distanceToTravel;
-//            CurrentAction = MoveToTargetPosition(targetPosition);
-//            SetActionText("Wandering");
-//            CheckForPlayer();
+            float randomRadius = Random.Range(0f, 5f);
+            float randomAngle = Random.Range(0f, 2f * Mathf.PI);
+            float targetX = Mathf.Sqrt(randomRadius) * Mathf.Cos(randomAngle);
+            float targetY = Mathf.Sqrt(randomRadius) * Mathf.Sin(randomAngle);
+            Vector2 targetPosition = new Vector2(targetX + _originPosition.x, targetY + _originPosition.y);
+            CurrentAction = MoveToTargetPosition(targetPosition);
+            SetActionText("Wandering");
+            CheckForPlayer();
+        }
+
+        private void WaitThenWander()
+        {
+            float waitDuration = Random.Range(1f, 3f);
+            CurrentAction = () =>
+            {
+                waitDuration -= Time.deltaTime;
+                if (waitDuration > 0) return;
+                Wander();
+            };
         }
 
         private float CalculateIdealRange()
@@ -373,22 +373,22 @@ namespace Game.Combat
 
         public virtual void Alert()
         {
-//            if (Alerted) return;
-//            Alerted = true;
+            if (Alerted) return;
+            Alerted = true;
             UIEnemyController.AlertAll();
             ChooseNextAction();
         }
 
         protected virtual void ReachTarget()
         {
-//            if (Alerted)
+            if (Alerted)
             {
                 ChooseNextAction();
             }
-//            else
-//            {
-//                Wander();
-//            }
+            else
+            {
+                WaitThenWander();
+            }
         }
 
         private Action Reload()
@@ -415,7 +415,7 @@ namespace Game.Combat
             return () =>
             {
 //                MoveBackward();
-                if(DistanceToPlayer > CombatManager.VisibilityRange) Kill();
+                if (DistanceToPlayer > CombatManager.VisibilityRange) Kill();
             };
         }
 
@@ -436,17 +436,17 @@ namespace Game.Combat
                 List<Shot> shots = Weapon().Fire(this);
                 if (shots == null || shots.Count == 0) return;
                 shots.ForEach(s => s.Fire());
-                if(shots.Any(s => s.DidHit)) CombatManager.Player.TryRetaliate(this);
-//                UiAimController.Fire();
+                if (shots.Any(s => s.DidHit)) CombatManager.Player.TryRetaliate(this);
                 --noShots;
                 int remainingAmmo = Weapon().GetRemainingAmmo();
                 if (noShots == 0 || remainingAmmo == 0)
                 {
                     UpdateAim(0);
                 }
+
                 if (remainingAmmo == 0)
                 {
-//                    CurrentAction = Reload();
+                    CurrentAction = Reload();
                 }
                 else if (noShots == 0)
                 {
@@ -457,20 +457,20 @@ namespace Game.Combat
 
         public override void Kill()
         {
-            Debug.Log("banana");
             UIEnemyController.Remove(this);
+            Destroy(CharacterController.gameObject);
             Enemy.Kill();
             Destroy(gameObject);
         }
-        
+
         public override void Update()
         {
             if (MeleeController.InMelee) return;
             base.Update();
-//            CurrentAction?.Invoke();
+            CurrentAction?.Invoke();
             UpdateDistance();
         }
-        
+
         private void UpdateAim(float value)
         {
 //            UiAimController.SetValue(value);
@@ -484,19 +484,19 @@ namespace Game.Combat
             }
 
             Assert.IsFalse(Weapon().Empty());
-//            float aimTime = MaxAimTime;
+            float aimTime = Random.Range(MaxAimTime / 2f , MaxAimTime);
             SetActionText("Aiming");
             return () =>
             {
                 if (Immobilised()) return;
-//                float normalisedTime = Helper.Normalise(aimTime, MaxAimTime);
-//                aimTime -= Time.deltaTime;
-//                if (aimTime < 0)
-//                {
-//                    CurrentAction = Fire();
-//                    aimTime = 0;
-//                }
-//                UpdateAim(1 - normalisedTime);
+                float normalisedTime = Helper.Normalise(aimTime, MaxAimTime);
+                aimTime -= Time.deltaTime;
+                if (aimTime < 0)
+                {
+                    CurrentAction = Fire();
+                    aimTime = 0;
+                }
+                UpdateAim(1 - normalisedTime);
             };
         }
     }

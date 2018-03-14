@@ -30,7 +30,7 @@ namespace Game.Combat
         public bool Retaliate;
         private bool _fired;
         private Cooldown _dashCooldown;
-        public DetailedEnemyCombat CurrentTarget;
+        private DetailedEnemyCombat _currentTarget;
 
         private TextMeshProUGUI _playerName;
 
@@ -151,7 +151,7 @@ namespace Game.Combat
         public void SetTarget(DetailedEnemyCombat e)
         {
             if (e == null) return;
-            CurrentTarget = e;
+            _currentTarget = e;
             e.PrimaryButton.GetComponent<Button>().Select();
         }
 
@@ -266,7 +266,7 @@ namespace Game.Combat
 
         public override CharacterCombat GetTarget()
         {
-            return CurrentTarget;
+            return _currentTarget;
         }
         
         private void TryMelee()
@@ -304,9 +304,6 @@ namespace Game.Combat
                     case InputAxis.Reload:
                         Reload();
                         break;
-                    case InputAxis.Vertical:
-                        UIEnemyController.Select(direction);
-                        break;
                     case InputAxis.Sprint:
                         StartSprinting();
                         break;
@@ -324,6 +321,9 @@ namespace Game.Combat
                         break;
                     case InputAxis.SkillFour:
                         SkillBar.ActivateSkill(3);
+                        break;
+                    case InputAxis.SwitchTab:
+                        UIEnemyController.Select(direction);
                         break;
                 }
             }

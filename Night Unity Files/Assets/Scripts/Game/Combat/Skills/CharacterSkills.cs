@@ -174,7 +174,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            DetailedEnemyCombat target = CombatManager.Player.CurrentTarget;
+//            DetailedEnemyCombat target = CombatManager.Player.CurrentTarget;
 //            if (target.Sick.Size() != 0)
 //            {
 //                target.Sick.AddStacks(Sickness.MaxStacks - target.Sick.Size());

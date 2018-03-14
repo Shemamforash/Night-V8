@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Game.Characters;
 using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -13,7 +14,8 @@ namespace Game.Combat
     public class Shot : MonoBehaviour
     {
         private int _damage, _damageDealt;
-        private CharacterCombat _target, _origin;
+        private CharacterCombat _origin;
+        private Transform _target;
 
         private int _pierceDepth;
 
@@ -32,7 +34,7 @@ namespace Game.Combat
         private bool _isCritical;
         public bool DidHit;
 
-        private float _speed = 5;
+        private float _speed;
         private float _age;
         private const float MaxAge = 5f;
 
@@ -49,7 +51,7 @@ namespace Game.Combat
         private void Initialise(CharacterCombat origin, CharacterCombat target)
         {
             _origin = origin;
-            _target = target;
+            _target = target.CharacterController.transform;
             CacheWeaponAttributes();
         }
 
@@ -77,7 +79,7 @@ namespace Game.Combat
 
         private void CalculateAccuracy()
         {
-            _accuracy *= 45f;
+            _accuracy *= 20f;
             if (_guaranteeHit) _accuracy = 0;
             else
             {
@@ -104,10 +106,10 @@ namespace Game.Combat
             transform.position = _origin.CharacterController.Position();
             CalculateAccuracy();
             float angleOffset = Random.Range(-_accuracy, _accuracy);
-            float angleToTarget = -AdvancedMaths.AngleFromUp(transform, _target.CharacterController.transform);
+            float angleToTarget = -AdvancedMaths.AngleFromUp(transform, _target);
             angleToTarget += angleOffset;
             Vector3 bulletRot = new Vector3(0, 0, angleToTarget);
-            _speed = Random.Range(4.8f, 5.2f);
+            _speed = Random.Range(9f, 11f);
             transform.rotation = Quaternion.Euler(bulletRot);
             StartCoroutine(Move());
             _origin?.RecoilManager.Increment(_origin.Weapon());
@@ -139,7 +141,7 @@ namespace Game.Combat
             int totalDamage = isCritical ? _damage * 2 : _damage;
             totalDamage = (int) (totalDamage * _finalDamageModifier);
             _damageDealt = totalDamage;
-            ApplyConditions();
+            ApplyConditions(hit);
             OnHitAction?.Invoke();
             (_origin as PlayerCombat)?.RageController.Increase(totalDamage);
             float armourModifier = DidPierce() ? 1 : 1 - hit.ArmourController.CurrentArmour() / 10f;
@@ -150,19 +152,19 @@ namespace Game.Combat
             if (_isCritical) (hit as DetailedEnemyCombat)?.UiHitController.RegisterCritical();
         }
 
-        private void ApplyConditions()
+        private void ApplyConditions(CharacterCombat hit)
         {
             if (_knockbackDistance != 0)
             {
                 if (Random.Range(0, 1f) < _knockDownChance)
                 {
-                    _target.Knockback(_knockbackDistance);
+                    hit.Knockback(_knockbackDistance);
                 }
             }
 
-            if (Random.Range(0f, 1f) < _bleedChance) _target.Bleeding.AddStack();
-            if (Random.Range(0f, 1f) < _burnChance) _target.Burn.AddStack();
-            if (Random.Range(0f, 1f) < _sicknessChance) _target.Sick.AddStack();
+            if (Random.Range(0f, 1f) < _bleedChance) hit.Bleeding.AddStack();
+            if (Random.Range(0f, 1f) < _burnChance) hit.Burn.AddStack();
+            if (Random.Range(0f, 1f) < _sicknessChance) hit.Sick.AddStack();
         }
 
         public void GuaranteeHit() => _guaranteeHit = true;
@@ -176,11 +178,6 @@ namespace Game.Combat
             Assert.IsTrue(distance >= 0);
             _knockDownChance = Mathf.Clamp(chance, 0f, 1f);
             _knockbackDistance = distance;
-        }
-
-        public CharacterCombat Target()
-        {
-            return _target;
         }
 
         public void SetBurnChance(float chance)
