@@ -104,6 +104,7 @@ namespace Game.Combat
         public void Fire()
         {
             transform.position = _origin.CharacterController.Position();
+//            transform.position += _origin.CharacterController.transform.up;
             CalculateAccuracy();
             float angleOffset = Random.Range(-_accuracy, _accuracy);
             float angleToTarget = -AdvancedMaths.AngleFromUp(transform, _target);
@@ -111,26 +112,36 @@ namespace Game.Combat
             Vector3 bulletRot = new Vector3(0, 0, angleToTarget);
             _speed = Random.Range(9f, 11f);
             transform.rotation = Quaternion.Euler(bulletRot);
-            StartCoroutine(Move());
+            _allowedToMove = true;
             _origin?.RecoilManager.Increment(_origin.Weapon());
         }
 
+        private bool _allowedToMove;
 
-        private IEnumerator Move()
+        private void FixedUpdate()
         {
-            while (_age < MaxAge)
+            if (!_allowedToMove) return;
+            if (_age < MaxAge)
             {
                 transform.Translate(Vector3.up * Time.deltaTime * _speed);
                 _age += Time.deltaTime;
-                yield return null;
+                return;
             }
 
             Destroy(gameObject);
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private void OnCollisionEnter2D(Collision2D collision)
         {
+            GameObject other = collision.gameObject;
             if (other.GetComponent<CombatCharacterController> ()== _origin.CharacterController) return;
+            if (other.CompareTag("Barrier"))
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            if (other.name.Contains("Bullet")) return;
             ApplyDamage(other.GetComponent<CombatCharacterController>().Owner());
             Destroy(gameObject);
         }

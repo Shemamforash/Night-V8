@@ -49,7 +49,7 @@ namespace Game.Combat
             if (MeleeController.InMelee) return;
             base.Update();
         }
-        
+
         public override void Awake()
         {
             base.Awake();
@@ -71,6 +71,8 @@ namespace Game.Combat
             HealthController.SetIsPlayerBar();
             RageController = new RageController();
             SetReloadCooldown();
+            CharacterController = GameObject.Find("Player").GetComponent<CombatCharacterController>();
+            CharacterController.SetOwner(this);
             CharacterController.SetDistance(0, 0);
         }
 
@@ -80,25 +82,25 @@ namespace Game.Combat
             Player = (Player) player;
             _playerName.text = player.Name;
             Speed = Player.CalculateSpeed();
-            
+
             _dashCooldown.Duration = Player.CalculateDashCooldown();
             _damageModifier = Player.CalculateDamageModifier();
             _skillCooldownModifier = Player.CalculateSkillCooldownModifier();
-            
+
             HealthController.SetInitialHealth(Player.CalculateCombatHealth(), this);
             _initialArmour = player.ArmourController.GetProtectionLevel();
 
             HeartBeatController.Enable();
             HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue());
             RecoilManager.EnterCombat();
-            
+
             ArmourController.SetCharacter(Player);
             RageController.EnterCombat();
             SkillBar.BindSkills(Player);
             InputHandler.RegisterInputListener(this);
             UIMagazineController.SetWeapon(Weapon());
         }
-        
+
         private void Dash(float direction)
         {
             if (Immobilised() || !CanDash()) return;
@@ -268,12 +270,13 @@ namespace Game.Combat
         {
             return _currentTarget;
         }
-        
+
         private void TryMelee()
         {
 //            if (CurrentTarget.DistanceToPlayer > MeleeDistance) return;
 //            MeleeController.StartMelee(CurrentTarget);
         }
+
 
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -329,6 +332,20 @@ namespace Game.Combat
             }
         }
 
+        private void StopMove(InputAxis axis)
+        {
+            if (axis == InputAxis.Horizontal)
+            {
+                CharacterController.MoveRight(0);
+                CharacterController.MoveLeft(0);
+            }
+            else
+            {
+                CharacterController.MoveUp(0);
+                CharacterController.MoveDown(0);
+            }
+        }
+
         public void OnInputUp(InputAxis axis)
         {
             switch (axis)
@@ -338,6 +355,12 @@ namespace Game.Combat
                     break;
                 case InputAxis.Sprint:
                     StopSprinting();
+                    break;
+                case InputAxis.Horizontal:
+                    StopMove(axis);
+                    break;
+                case InputAxis.Vertical:
+                    StopMove(axis);
                     break;
             }
         }

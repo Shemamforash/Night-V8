@@ -6,7 +6,13 @@ public class CombatCharacterController : MonoBehaviour
 {
     private CharacterCombat _owner;
     private bool _followOwner;
+    private Rigidbody2D _rigidbody;
 
+    public void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+    }
+    
     public void SetOwner(CharacterCombat owner)
     {
         _owner = owner;
@@ -18,19 +24,19 @@ public class CombatCharacterController : MonoBehaviour
         return _owner;
     }
     
-    public void Update()
+    public void FixedUpdate()
     {
         if (_followOwner)
         {
             Vector3 cameraPos = transform.position;
             cameraPos.z = -10;
-            Camera.main.transform.position = cameraPos;
+//            Camera.main.transform.position = cameraPos;
         }
         if (_owner.GetTarget() == null) return;
         float angle = -AdvancedMaths.AngleFromUp(transform, _owner.GetTarget().CharacterController.transform);
         Vector3 currentRotation = transform.rotation.eulerAngles;
         currentRotation.z = angle;
-        transform.rotation = Quaternion.Euler(currentRotation);
+//        transform.rotation = Quaternion.Euler(currentRotation);
     }
 
     public Vector3 Position()
@@ -40,30 +46,44 @@ public class CombatCharacterController : MonoBehaviour
 
     public void MoveLeft(float speed)
     {
-        Vector3 newPosition = transform.position;
-        newPosition.x -= speed * Time.deltaTime;
-        transform.position = newPosition;
+        Vector2 currentVelocity = _rigidbody.velocity;
+        currentVelocity.x = -1 * speed;
+        _rigidbody.velocity = currentVelocity;
+
+//        Vector3 newPosition = transform.position;
+//        newPosition.x -= speed * Time.deltaTime;
+//        _rigidbody.MovePosition(newPosition);
     }
 
     public void MoveRight(float speed)
     {
-        Vector3 newPosition = transform.position;
-        newPosition.x += speed * Time.deltaTime;
-        transform.position = newPosition;
+        Vector2 currentVelocity = _rigidbody.velocity;
+        currentVelocity.x = 1 * speed;
+        _rigidbody.velocity = currentVelocity;
+
+//        Vector3 newPosition = transform.position;
+//        newPosition.x += speed * Time.deltaTime;
+//        _rigidbody.MovePosition(newPosition);
     }
 
     public void MoveUp(float speed)
     {
-        Vector3 newPosition = transform.position;
-        newPosition.y += speed * Time.deltaTime;
-        transform.position = newPosition;
+        Vector2 currentVelocity = _rigidbody.velocity;
+        currentVelocity.y = 1 * speed;
+        _rigidbody.velocity = currentVelocity;
+//        Vector3 newPosition = transform.position;
+//        newPosition.y += speed * Time.deltaTime;
+//        _rigidbody.MovePosition(newPosition);
     }
 
     public void MoveDown(float speed)
     {
-        Vector3 newPosition = transform.position;
-        newPosition.y -= speed * Time.deltaTime;
-        transform.position = newPosition;
+        Vector2 currentVelocity = _rigidbody.velocity;
+        currentVelocity.y = -1 * speed;
+        _rigidbody.velocity = currentVelocity;
+//        Vector3 newPosition = transform.position;
+//        newPosition.y -= speed * Time.deltaTime;
+//        _rigidbody.MovePosition(newPosition);
     }
 
     public void SetDistance(int rangeMin, int rangeMax)

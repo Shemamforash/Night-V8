@@ -70,6 +70,9 @@ namespace Game.Combat
             });
             PrimaryButton.AddOnDeselectEvent(() => { gameObject.GetComponent<CanvasGroup>().alpha = UiAppearanceController.FadedColour.a; });
             HealthController.AddOnTakeDamage(f => { Alert(); });
+            CharacterController = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Combat Character")).GetComponent<CombatCharacterController>();
+            CharacterController.transform.SetParent(GameObject.Find("World").transform);
+            CharacterController.SetOwner(this);
             CharacterController.SetDistance(2, 4);
             _originPosition = CharacterController.Position();
             UpdateDistance();

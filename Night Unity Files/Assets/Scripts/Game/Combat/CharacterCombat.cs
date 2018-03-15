@@ -47,10 +47,7 @@ namespace Game.Combat
         {
             ArmourController = Helper.FindChildWithName<UIArmourController>(gameObject, "Armour");
             HealthController = Helper.FindChildWithName<UIHealthBarController>(gameObject, "Health");
-            CharacterController = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Combat Character")).GetComponent<CombatCharacterController>();
-            CharacterController.transform.SetParent(GameObject.Find("World").transform);
             SetConditions();
-            CharacterController.SetOwner(this);
         }
 
         protected void SetOwnedByEnemy(float speed)
@@ -93,7 +90,7 @@ namespace Game.Combat
                 else CharacterController.MoveDown(speed);
             }
         }
-
+        
 //        private void KnockBack(float distance)
 //        {
 //            MoveBackwardAction?.Invoke(distance);
