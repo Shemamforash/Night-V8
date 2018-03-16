@@ -1,4 +1,5 @@
-﻿using Game.Characters;
+﻿using Facilitating.UIControllers;
+using Game.Characters;
 using Game.Combat;
 using SamsHelper;
 using UnityEngine;
@@ -28,7 +29,10 @@ public class UIHitController : MonoBehaviour
     
     public void Update()
     {
-        float newHeight = MaxHeight * CombatManager.Player.RecoilManager.GetAccuracyModifier();
+        float distance = _character.DistanceToTarget();
+        distance = 1f / distance;
+        if (distance > 1) distance = 1;
+        float newHeight = MaxHeight * (CombatManager.Player.RecoilManager.GetAccuracyModifier() * 2f - 1f) * distance;
         if (_currentShotTime > 0)
         {
             float rValue = 1 - _currentShotTime / FadeTime;

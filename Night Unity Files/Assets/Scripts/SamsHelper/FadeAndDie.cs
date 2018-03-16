@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace SamsHelper
@@ -9,24 +10,26 @@ namespace SamsHelper
         private float _age;
         public float LifeTime;
         private SpriteRenderer _spriteRenderer;
-        public bool FadeOnAwake;
         private bool Fading;
+        public Action _callback;
 
         public void Awake()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _fullOpacity = _spriteRenderer.color.a;
-            if (FadeOnAwake)
-            {
-                StartFade(LifeTime);
-            }
         }
 
-        public void StartFade(float lifeTime)
+        public void SetLifeTime(float lifeTime, Action callback = null)
+        {
+            _callback = callback;
+            LifeTime = lifeTime;
+        }
+
+        public void StartFade()
         {
             if (Fading) return;
+            _spriteRenderer.color = new Color(1f, 1f, 1f, _fullOpacity);
             Fading = true;
-            LifeTime = lifeTime;
             _age = LifeTime;
             StartCoroutine(Fade());
         }
@@ -41,7 +44,15 @@ namespace SamsHelper
                 yield return null;
             }
 
-            Destroy(gameObject);
+            if (_callback == null)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                _callback();
+                Fading = false;
+            }
         }
     }
 }

@@ -49,6 +49,7 @@ namespace Game.Gear.Weapons
         
         public List<Shot> Fire(CharacterCombat origin)
         {
+            if (origin.GetTarget() == null) return null;
             if (!CanFire() || origin.Immobilised()) return null;
             _timeAtLastFire = Helper.TimeInMillis();
             float distance = origin is PlayerCombat ? 0 : ((DetailedEnemyCombat)origin).DistanceToPlayer;

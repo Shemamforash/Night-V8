@@ -37,9 +37,9 @@ namespace Game.Combat
         public CanvasGroup PlayerCanvasGroup;
         private Number _strengthText;
 
-
         public override void Kill()
         {
+            base.Kill();
             Player.Kill();
             CombatManager.FailCombat();
         }
@@ -289,12 +289,6 @@ namespace Game.Combat
                     case InputAxis.Fire:
                         if (!_fired || Player.Weapon.WeaponAttributes.Automatic) FireWeapon();
                         break;
-                    case InputAxis.Horizontal:
-                        Move(axis, direction);
-                        break;
-                    case InputAxis.Vertical:
-                        Move(axis, direction);
-                        break;
                 }
             }
             else
@@ -332,20 +326,6 @@ namespace Game.Combat
             }
         }
 
-        private void StopMove(InputAxis axis)
-        {
-            if (axis == InputAxis.Horizontal)
-            {
-                CharacterController.MoveRight(0);
-                CharacterController.MoveLeft(0);
-            }
-            else
-            {
-                CharacterController.MoveUp(0);
-                CharacterController.MoveDown(0);
-            }
-        }
-
         public void OnInputUp(InputAxis axis)
         {
             switch (axis)
@@ -357,10 +337,10 @@ namespace Game.Combat
                     StopSprinting();
                     break;
                 case InputAxis.Horizontal:
-                    StopMove(axis);
+//                    StopMove(axis);
                     break;
                 case InputAxis.Vertical:
-                    StopMove(axis);
+//                    StopMove(axis);
                     break;
             }
         }

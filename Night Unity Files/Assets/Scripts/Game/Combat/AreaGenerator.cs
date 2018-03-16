@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SamsHelper;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,37 +8,72 @@ namespace Game.Combat
 {
     public class AreaGenerator : MonoBehaviour
     {
-        private List<Vector2> polyVertices = new List<Vector2>();
+        private const int SmallPolyWidth = 1;
+        private const int Resolution = 400;
 
-        private Texture2D GenerateDistortedPoly(int definition)
+        private class Ellipse
         {
-            int innerCircleRadius = Random.Range(100, 200);
-            int outerCircleRadius = Random.Range(300, 500);
+            public readonly float InnerRingWidth, InnerRingHeight, OuterRingWidth, OuterRingHeight;
+            public bool IsCircle;
+
+            public Ellipse(float innerRingWidth, float innerRingHeight, float outerRingWidth, float outerRingHeight)
+            {
+                InnerRingWidth = innerRingWidth;
+                InnerRingHeight = innerRingHeight;
+                OuterRingWidth = outerRingWidth;
+                OuterRingHeight = outerRingHeight;
+            }
+
+            public Ellipse(float innerRadius, float outerRadius) : this(innerRadius, innerRadius, outerRadius, outerRadius)
+            {
+                IsCircle = true;
+            }
+        }
+        
+        private static Shape GenerateDistortedPoly(int definition, int size, Ellipse ellipse)
+        {
+            int halfSize = size / 2;
             int angleIncrement;
+            List<Vector2> polyVertices = new List<Vector2>();
             for (int i = 0; i < 360; i += angleIncrement)
             {
-                float pointRadius = Random.Range(innerCircleRadius, outerCircleRadius);
-                int xPos = (int) (pointRadius * Mathf.Cos(i * Mathf.Deg2Rad)) + 500;
-                int yPos = (int) (pointRadius * Mathf.Sin(i * Mathf.Deg2Rad)) + 500;
-                polyVertices.Add(new Vector2(xPos, yPos));
+                Vector2 vertex = RandomPointBetweenRadii(i, ellipse, size);
+                vertex.x = (int) vertex.x + halfSize;
+                vertex.y = (int) vertex.y + halfSize;
+                polyVertices.Add(vertex);
                 angleIncrement = Random.Range(definition / 2, definition);
             }
 
-            return CreateTextureFromPoly(polyVertices);
+            Shape newPoly = new Shape(CreateTextureFromPoly(polyVertices, size), polyVertices);
+            return newPoly;
         }
 
-        private void OnDrawGizmos()
+        private static Vector2 RandomPointBetweenRadii(float angle, Ellipse e, int size)
         {
-            Gizmos.color = Color.red;
-            for (int i = 1; i < polyVertices.Count; ++i)
+            Vector2 randomPoint;
+            angle *= Mathf.Deg2Rad;
+            if (e.IsCircle)
             {
-                Gizmos.DrawLine(polyVertices[i - 1] / 100f, polyVertices[i] / 100f);
+                randomPoint = new Vector2();
+                float pointRadius = Random.Range(e.InnerRingWidth, e.OuterRingWidth);
+                randomPoint.x = pointRadius * Mathf.Cos(angle);
+                randomPoint.y = pointRadius * Mathf.Sin(angle);
+                return randomPoint;
             }
+            Vector2 innerRadiusPoint = new Vector2();
+            innerRadiusPoint.x = e.InnerRingWidth * Mathf.Cos(angle);
+            innerRadiusPoint.y = e.InnerRingHeight * Mathf.Sin(angle);
+            Vector2 outerRadiusPoint = new Vector2();
+            outerRadiusPoint.x = e.OuterRingWidth * Mathf.Cos(angle);
+            outerRadiusPoint.y = e.OuterRingHeight * Mathf.Sin(angle);
 
-            Gizmos.DrawLine(polyVertices[polyVertices.Count - 1] / 100f, polyVertices[0] / 100f);
+            randomPoint = outerRadiusPoint - innerRadiusPoint;
+            randomPoint *= Random.Range(0f, 1f);
+            randomPoint += innerRadiusPoint;
+            return randomPoint;
         }
 
-        public static bool IsPointInPolygon(Vector2 point, List<Vector2> polygon)
+        private static bool IsPointInPolygon(Vector2 point, List<Vector2> polygon)
         {
             int polygonLength = polygon.Count, i = 0;
             bool inside = false;
@@ -63,44 +99,82 @@ namespace Game.Combat
             return inside;
         }
 
-        public void Start()
+        private class Shape
+        {
+            public readonly Texture2D Tex;
+            public readonly List<Vector2> Vertices;
+
+            public Shape(Texture2D tex, List<Vector2> vertices)
+            {
+                Tex = tex;
+                Vertices = vertices;
+            }
+        }
+
+        private int _barrierNumber;
+
+        private GameObject GenerateBasicBarrier()
         {
             GameObject g = new GameObject();
-//            Rigidbody2D rb = g.AddComponent<Rigidbody2D>();
-//            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            g.layer = 8;
+            g.name = "Barrier " + _barrierNumber;
+            ++_barrierNumber;
             g.tag = "Barrier";
-            g.transform.position = new Vector2(2,2);
+            g.AddComponent<PolygonCollider2D>();
             SpriteRenderer sr = g.AddComponent<SpriteRenderer>();
-            sr.color = new Color(0.9f, 0.9f, 0.9f, 1.0f);
+//            sr.color = new Color(0.9f, 0.9f, 0.9f, 1.0f);
+            return g;
+        }
 
-            transform.position = new Vector3(1.5f, 1.5f, 0.0f);
-            Texture2D tex = GenerateDistortedPoly(50);
-            Sprite mySprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
-            sr.sprite = mySprite;
-
-            PolygonCollider2D polyCol = g.AddComponent<PolygonCollider2D>();
-            Vector2[] colliderPath = polyVertices.ToArray();
+        private GameObject GenerateSmallPoly()
+        {
+            GameObject g = GenerateBasicBarrier();
+            int width = (int) ((float)Resolution / SmallPolyWidth * Random.Range(0.6f, 1f));
+            if (width % 2 != 0) ++width;
+            int radius = width / 2;
+            int minX, minY, maxX, maxY;
+            minX = (int) Random.Range(0, radius * 0.9f);
+            minY = (int) Random.Range(0, radius * 0.9f);
+            maxX = Random.Range(minX, radius);
+            maxY = Random.Range(minY, radius);
+            Ellipse e = new Ellipse(minX, minY, maxX, maxY);
+//            Ellipse e = new Ellipse(radius / 2f, radius);
+            Shape shape = GenerateDistortedPoly(50, width, e);
+            Vector2[] colliderPath = shape.Vertices.ToArray();
             for (int i = 0; i < colliderPath.Length; i++)
             {
                 Vector2 point = colliderPath[i];
-                point.x -= 500;
-                point.y -= 500;
-                point /= 100f;
+                point.x -= width / 2f;
+                point.y -= width / 2f;
+                point /= (float)Resolution;
                 colliderPath[i] = point;
             }
-
-            polyCol.SetPath(0, colliderPath);
-            g.transform.localScale = new Vector2(0.4f, 0.4f);
+            g.GetComponent<PolygonCollider2D>().SetPath(0, colliderPath);
+            Sprite sprite = Sprite.Create(shape.Tex, new Rect(0.0f, 0.0f, width, width), new Vector2(0.5f, 0.5f), Resolution);
+            g.GetComponent<SpriteRenderer>().sprite = sprite;
+            g.transform.localScale = Vector2.one;
+            g.transform.rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
+            return g;
+        }
+        
+        public void Start()
+        {
+            for (int i = 0; i < 20; ++i)
+            {
+                float rx = Random.Range(-4f, 4f);
+                float ry = Random.Range(-4f, 4f);
+                GenerateSmallPoly().transform.position = new Vector2(rx, ry);
+            }
         }
 
-        private static Texture2D CreateTextureFromPoly(List<Vector2> vertices)
+        private static Texture2D CreateTextureFromPoly(List<Vector2> vertices, int size)
         {
-            Texture2D texture = new Texture2D(1000, 1000);
+            Texture2D texture = new Texture2D(size, size);
             for (int x = 0; x < texture.width; ++x)
             {
                 for (int y = 0; y < texture.height; ++y)
                 {
-                    texture.SetPixel(x, y, IsPointInPolygon(new Vector2(x, y), vertices) ? Color.white : new Color(1f, 1f, 1f, 0f));
+                    texture.SetPixel(x, y, IsPointInPolygon(new Vector2(x, y), vertices) ? Color.black : new Color(0f, 0f, 0f, 0f));
                 }
             }
 
@@ -120,7 +194,7 @@ namespace Game.Combat
             private static void Plot(Texture2D bitmap, float x, float y, float alpha)
             {
                 alpha = Mathf.Clamp(alpha, 0f, 1f);
-                Color color = new Color(1f, 1f, 1f, alpha);
+                Color color = new Color(0f, 0f, 0f, alpha);
                 if ((int) x < 0 || (int) x >= bitmap.width) return;
                 if ((int) y < 0 || (int) y >= bitmap.height) return;
                 if (bitmap.GetPixel((int) x, (int) y).a == 1) return;
@@ -140,8 +214,6 @@ namespace Game.Combat
             private static float FPart(float x)
             {
                 return x - Mathf.Floor(x);
-//                if (x < 0) return (float) (1f - (x - Math.Floor(x)));
-//                return (float) (x - Math.Floor(x));
             }
 
             private static float RfPart(float x)

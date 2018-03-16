@@ -36,7 +36,7 @@ namespace Game.Combat
             if(_instance.Rifle) weaponsWanted.Add(WeaponType.Rifle);
             if(_instance.Pistol) weaponsWanted.Add(WeaponType.Pistol);
             if(_instance.Shotgun) weaponsWanted.Add(WeaponType.Shotgun);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Flawed, weaponsWanted);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Shining, weaponsWanted);
             weapon.WeaponAttributes.SetDurability(_instance.Durability);
             _playerCharacter.EquipWeapon(weapon);
             weapon.Reload(_playerCharacter.Inventory());

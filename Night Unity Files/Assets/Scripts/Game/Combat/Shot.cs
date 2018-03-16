@@ -7,6 +7,7 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Experimental.U2D;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat
@@ -40,8 +41,6 @@ namespace Game.Combat
 
         public static Shot CreateShot(CharacterCombat origin)
         {
-            Assert.IsNotNull(origin.GetTarget());
-            Assert.IsNotNull(origin);
             GameObject bullet = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Bullet"));
             Shot shot = bullet.AddComponent<Shot>();
             shot.Initialise(origin, origin.GetTarget());
@@ -103,38 +102,35 @@ namespace Game.Combat
 
         public void Fire()
         {
-            transform.position = _origin.CharacterController.Position();
-//            transform.position += _origin.CharacterController.transform.up;
             CalculateAccuracy();
             float angleOffset = Random.Range(-_accuracy, _accuracy);
-            float angleToTarget = -AdvancedMaths.AngleFromUp(transform, _target);
-            angleToTarget += angleOffset;
-            Vector3 bulletRot = new Vector3(0, 0, angleToTarget);
             _speed = Random.Range(9f, 11f);
-            transform.rotation = Quaternion.Euler(bulletRot);
-            _allowedToMove = true;
+
+            Vector3 direction = (_target.transform.position - _origin.CharacterController.Position()).normalized;
+            transform.position = _origin.CharacterController.Position() + direction * 0.2f;
+            direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * direction;
+
+            GetComponent<Rigidbody2D>().velocity = direction * _speed;
             _origin?.RecoilManager.Increment(_origin.Weapon());
+            StartCoroutine(WaitToDie());
         }
 
-        private bool _allowedToMove;
 
-        private void FixedUpdate()
+        private IEnumerator WaitToDie()
         {
-            if (!_allowedToMove) return;
-            if (_age < MaxAge)
+            while (_age < MaxAge)
             {
-                transform.Translate(Vector3.up * Time.deltaTime * _speed);
                 _age += Time.deltaTime;
-                return;
+                yield return null;
             }
-
+            
             Destroy(gameObject);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
             GameObject other = collision.gameObject;
-            if (other.GetComponent<CombatCharacterController> ()== _origin.CharacterController) return;
+            if (other.GetComponent<CombatCharacterController>() == _origin.CharacterController) return;
             if (other.CompareTag("Barrier"))
             {
                 Destroy(gameObject);
@@ -142,6 +138,7 @@ namespace Game.Combat
             }
 
             if (other.name.Contains("Bullet")) return;
+            if (other.CompareTag("Player")) return;
             ApplyDamage(other.GetComponent<CombatCharacterController>().Owner());
             Destroy(gameObject);
         }

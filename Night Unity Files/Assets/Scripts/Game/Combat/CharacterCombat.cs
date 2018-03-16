@@ -33,10 +33,9 @@ namespace Game.Combat
 //        private float _distanceTravelled;
 
         public float Speed;
-        private const int SprintModifier = 2;
+        public const int SprintModifier = 2;
 
-        protected bool Sprinting;
-//        private const float DistanceToPlay = 2f;
+        public bool Sprinting;
 //        public const int MeleeDistance = 5;
 
         private Character _character;
@@ -55,42 +54,6 @@ namespace Game.Combat
             Speed = speed;
         }
 
-//        private void IncreaseDistance(float distance)
-//        {
-//            _distanceTravelled += distance;
-//            if (_distanceTravelled < DistanceToPlay) return;
-//            GunFire.Step(Position.CurrentValue());
-//            _distanceTravelled = 0;
-//        }
-
-//        protected void MoveForward()
-//        {
-//            Move(1);
-//        }
-
-//        protected void MoveBackward()
-//        {
-//            Move(-1);
-//        }
-
-        protected void Move(InputAxis axis, float direction)
-        {
-            if (Immobilised()) return;
-            float speed = Speed;
-            if (Sprinting) speed *= SprintModifier;
-
-            if (axis == InputAxis.Horizontal)
-            {
-                if (direction > 0) CharacterController.MoveRight(speed);
-                else CharacterController.MoveLeft(speed);
-            }
-            else
-            {
-                if (direction > 0) CharacterController.MoveUp(speed);
-                else CharacterController.MoveDown(speed);
-            }
-        }
-        
 //        private void KnockBack(float distance)
 //        {
 //            MoveBackwardAction?.Invoke(distance);
@@ -99,13 +62,16 @@ namespace Game.Combat
         public virtual void Update()
         {
             if (MeleeController.InMelee) return;
-//            Burn.Update();
-//            Sick.Update();
-//            Bleeding.Update();
-//            RecoilManager.UpdateCombat();
+            Burn.Update();
+            Sick.Update();
+            Bleeding.Update();
+            RecoilManager.UpdateCombat();
         }
 
-        public abstract void Kill();
+        public virtual void Kill()
+        {
+            Destroy(CharacterController.gameObject);
+        }
 
         protected virtual void Interrupt()
         {

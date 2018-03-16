@@ -8,6 +8,7 @@
       <e p="Assets" t="Include">
         <e p="CombatCharacterController.cs" t="Include" />
         <e p="FitScreenToRoute.cs" t="Include" />
+        <e p="FootstepMaker.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Plugins" t="Include">
@@ -40,26 +41,6 @@
               <e p="ThunderClick.cs" t="Include" />
             </e>
             <e p="Campfire.cs" t="Include" />
-            <e p="Delaunay" t="Include">
-              <e p="Circle.cs" t="Include" />
-              <e p="Edge.cs" t="Include" />
-              <e p="EdgeList.cs" t="Include" />
-              <e p="EdgeReorderer.cs" t="Include" />
-              <e p="Halfedge.cs" t="Include" />
-              <e p="HalfedgePriorityQueue.cs" t="Include" />
-              <e p="ICoord.cs" t="Include" />
-              <e p="LineSegment.cs" t="Include" />
-              <e p="LR.cs" t="Include" />
-              <e p="Polygon.cs" t="Include" />
-              <e p="Rectf.cs" t="Include" />
-              <e p="Site.cs" t="Include" />
-              <e p="SiteList.cs" t="Include" />
-              <e p="Triangle.cs" t="Include" />
-              <e p="Vector2f.cs" t="Include" />
-              <e p="Vertex.cs" t="Include" />
-              <e p="Voronoi.cs" t="Include" />
-              <e p="Winding.cs" t="Include" />
-            </e>
             <e p="FireBurst.cs" t="Include" />
             <e p="MenuNavigation" t="Include">
               <e p="MainMenuNavigator.cs" t="Include" />

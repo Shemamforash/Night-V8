@@ -460,6 +460,7 @@ namespace Game.Combat
 
         public override void Kill()
         {
+            base.Kill();
             UIEnemyController.Remove(this);
             Destroy(CharacterController.gameObject);
             Enemy.Kill();

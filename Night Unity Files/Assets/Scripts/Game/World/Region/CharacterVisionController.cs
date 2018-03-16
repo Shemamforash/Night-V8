@@ -12,10 +12,7 @@ public class CharacterVisionController : MonoBehaviour, IInputListener
     private static CharacterVisionController _instance;
     private bool _moving;
     public MapNode CurrentNode;
-    private float _distanceTravelled;
-    private const float DistanceToFootPrint = 0.25f;
     private float _moveSpeed = 3f;
-    private bool _leftLast;
 
     public void Awake()
     {
@@ -103,25 +100,6 @@ public class CharacterVisionController : MonoBehaviour, IInputListener
         SetNode(newNode);
     }
 
-    private void UpdateFootprintMaker(Vector3 lastPosition)
-    {
-        _distanceTravelled += Vector3.Distance(lastPosition, transform.position);
-        if (_distanceTravelled < DistanceToFootPrint) return;
-        GameObject newFootPrint = Instantiate(Resources.Load("Prefabs/Map/Footprint") as GameObject, transform.position, transform.rotation);
-        if (_leftLast)
-        {
-            newFootPrint.transform.Translate(Vector3.left * 0.03f);
-            _leftLast = false;
-        }
-        else
-        {
-            newFootPrint.transform.Translate(Vector3.right * 0.03f);
-            _leftLast = true;
-        }
-
-        _distanceTravelled = 0;
-    }
-
     private MapNode nearestNode;
     
     private IEnumerator MoveForward()
@@ -156,7 +134,6 @@ public class CharacterVisionController : MonoBehaviour, IInputListener
                     break;
                 }
             }
-            UpdateFootprintMaker(lastPosition);
             yield return null;
         }
     }
