@@ -8,7 +8,7 @@ namespace Game.Combat
 {
     public class AreaGenerator : MonoBehaviour
     {
-        private const int SmallPolyWidth = 1;
+        private const int SmallPolyWidth = 2;
         private const int Resolution = 400;
 
         private class Ellipse
@@ -29,7 +29,7 @@ namespace Game.Combat
                 IsCircle = true;
             }
         }
-        
+
         private static Shape GenerateDistortedPoly(int definition, int size, Ellipse ellipse)
         {
             int halfSize = size / 2;
@@ -60,6 +60,7 @@ namespace Game.Combat
                 randomPoint.y = pointRadius * Mathf.Sin(angle);
                 return randomPoint;
             }
+
             Vector2 innerRadiusPoint = new Vector2();
             innerRadiusPoint.x = e.InnerRingWidth * Mathf.Cos(angle);
             innerRadiusPoint.y = e.InnerRingHeight * Mathf.Sin(angle);
@@ -73,43 +74,6 @@ namespace Game.Combat
             return randomPoint;
         }
 
-        private static bool IsPointInPolygon(Vector2 point, List<Vector2> polygon)
-        {
-            int polygonLength = polygon.Count, i = 0;
-            bool inside = false;
-            // x, y for tested point.
-            float pointX = point.x, pointY = point.y;
-            // start / end point for the current polygon segment.
-            Vector2 endPoint = polygon[polygonLength - 1];
-            float endX = endPoint.x;
-            float endY = endPoint.y;
-            while (i < polygonLength)
-            {
-                float startX = endX;
-                float startY = endY;
-                endPoint = polygon[i++];
-                endX = endPoint.x;
-                endY = endPoint.y;
-                //
-                inside ^= endY > pointY ^ startY > pointY /* ? pointY inside [startY;endY] segment ? */
-                          && /* if so, test if it is under the segment */
-                          pointX - endX < (pointY - endY) * (startX - endX) / (startY - endY);
-            }
-
-            return inside;
-        }
-
-        private class Shape
-        {
-            public readonly Texture2D Tex;
-            public readonly List<Vector2> Vertices;
-
-            public Shape(Texture2D tex, List<Vector2> vertices)
-            {
-                Tex = tex;
-                Vertices = vertices;
-            }
-        }
 
         private int _barrierNumber;
 
@@ -121,24 +85,22 @@ namespace Game.Combat
             ++_barrierNumber;
             g.tag = "Barrier";
             g.AddComponent<PolygonCollider2D>();
-            SpriteRenderer sr = g.AddComponent<SpriteRenderer>();
-//            sr.color = new Color(0.9f, 0.9f, 0.9f, 1.0f);
+            g.AddComponent<SpriteRenderer>();
             return g;
         }
 
-        private GameObject GenerateSmallPoly()
+        private Shape GenerateSmallPoly()
         {
             GameObject g = GenerateBasicBarrier();
-            int width = (int) ((float)Resolution / SmallPolyWidth * Random.Range(0.6f, 1f));
+            int width = (int) ((float) Resolution / SmallPolyWidth * Random.Range(0.6f, 1f));
             if (width % 2 != 0) ++width;
             int radius = width / 2;
-            int minX, minY, maxX, maxY;
-            minX = (int) Random.Range(0, radius * 0.9f);
-            minY = (int) Random.Range(0, radius * 0.9f);
-            maxX = Random.Range(minX, radius);
-            maxY = Random.Range(minY, radius);
-            Ellipse e = new Ellipse(minX, minY, maxX, maxY);
-//            Ellipse e = new Ellipse(radius / 2f, radius);
+            int minX = (int) Random.Range(0, radius * 0.9f);
+            int minY = (int) Random.Range(0, radius * 0.9f);
+            int maxX = Random.Range(minX, radius);
+            int maxY = Random.Range(minY, radius);
+//            Ellipse e = new Ellipse(minX, minY, maxX, maxY);
+            Ellipse e = new Ellipse(radius * 0.8f, radius);
             Shape shape = GenerateDistortedPoly(50, width, e);
             Vector2[] colliderPath = shape.Vertices.ToArray();
             for (int i = 0; i < colliderPath.Length; i++)
@@ -146,25 +108,34 @@ namespace Game.Combat
                 Vector2 point = colliderPath[i];
                 point.x -= width / 2f;
                 point.y -= width / 2f;
-                point /= (float)Resolution;
+                point /= (float) Resolution;
                 colliderPath[i] = point;
             }
+
             g.GetComponent<PolygonCollider2D>().SetPath(0, colliderPath);
             Sprite sprite = Sprite.Create(shape.Tex, new Rect(0.0f, 0.0f, width, width), new Vector2(0.5f, 0.5f), Resolution);
             g.GetComponent<SpriteRenderer>().sprite = sprite;
             g.transform.localScale = Vector2.one;
             g.transform.rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
-            return g;
+            shape.SetObject(g);
+            return shape;
         }
-        
+
+        private List<Shape> _barriers = new List<Shape>();
+
         public void Start()
         {
             for (int i = 0; i < 20; ++i)
             {
-                float rx = Random.Range(-4f, 4f);
-                float ry = Random.Range(-4f, 4f);
-                GenerateSmallPoly().transform.position = new Vector2(rx, ry);
+                float rx = Random.Range(-8f, 8f);
+                float ry = Random.Range(-8f, 8f);
+
+                Shape shape = GenerateSmallPoly();
+                _barriers.Add(shape);
+                shape.SetPosition(rx, ry);
             }
+
+            PathingGrid.Instance().SetShapes(_barriers);
         }
 
         private static Texture2D CreateTextureFromPoly(List<Vector2> vertices, int size)
@@ -174,7 +145,7 @@ namespace Game.Combat
             {
                 for (int y = 0; y < texture.height; ++y)
                 {
-                    texture.SetPixel(x, y, IsPointInPolygon(new Vector2(x, y), vertices) ? Color.black : new Color(0f, 0f, 0f, 0f));
+                    texture.SetPixel(x, y, AdvancedMaths.IsPointInPolygon(new Vector2(x, y), vertices) ? Color.black : new Color(0f, 0f, 0f, 0f));
                 }
             }
 
@@ -187,6 +158,37 @@ namespace Game.Combat
             texture.alphaIsTransparency = true;
             texture.Apply();
             return texture;
+        }
+
+        public class Shape
+        {
+            public readonly Texture2D Tex;
+            public readonly List<Vector2> Vertices;
+            public GameObject ShapeObject;
+            public PolygonCollider2D Collider;
+            public List<Vector2> WorldVerts = new List<Vector2>();
+            public List<PathingGrid.Cell> OccupiedCells = new List<PathingGrid.Cell>();
+
+            public Shape(Texture2D tex, List<Vector2> vertices)
+            {
+                Tex = tex;
+                Vertices = vertices;
+            }
+
+            public void SetObject(GameObject shapeObject)
+            {
+                ShapeObject = shapeObject;
+                Collider = shapeObject.GetComponent<PolygonCollider2D>();
+            }
+
+            public void SetPosition(float rx, float ry)
+            {
+                ShapeObject.transform.position = new Vector2(rx, ry);
+                foreach (Vector2 colliderPoint in Collider.points)
+                {
+                    WorldVerts.Add(ShapeObject.transform.TransformPoint(colliderPoint));
+                }
+            }
         }
 
         private static class Line

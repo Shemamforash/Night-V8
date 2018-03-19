@@ -169,6 +169,7 @@
               <e p="Explosion.cs" t="Include" />
               <e p="ICombatListener.cs" t="Include" />
               <e p="MeleeController.cs" t="Include" />
+              <e p="PathingGrid.cs" t="Include" />
               <e p="PerlinNoise.cs" t="Include" />
               <e p="PlayerCombat.cs" t="Include" />
               <e p="RecoilManager.cs" t="Include" />
@@ -240,7 +241,6 @@
             </e>
           </e>
           <e p="SamsHelper" t="Include">
-            <e p="AdvancedMaths.cs" t="Include" />
             <e p="BaseGameFunctionality" t="Include">
               <e p="Basic" t="Include">
                 <e p="AttributeContainer.cs" t="Include" />
@@ -275,11 +275,16 @@
             <e p="Direction.cs" t="Include" />
             <e p="Exceptions.cs" t="Include" />
             <e p="FadeAndDie.cs" t="Include" />
-            <e p="Helper.cs" t="Include" />
             <e p="Input" t="Include">
               <e p="IInputListener.cs" t="Include" />
               <e p="InputAxis.cs" t="Include" />
               <e p="InputHandler.cs" t="Include" />
+            </e>
+            <e p="Libraries" t="Include">
+              <e p="AdvancedMaths.cs" t="Include" />
+              <e p="Helper.cs" t="Include" />
+              <e p="Node.cs" t="Include" />
+              <e p="Pathfinding.cs" t="Include" />
             </e>
             <e p="Persistence" t="Include">
               <e p="IPersistenceTemplate.cs" t="Include" />

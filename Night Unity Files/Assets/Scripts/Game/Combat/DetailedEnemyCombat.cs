@@ -30,6 +30,7 @@ namespace Game.Combat
         public Action CurrentAction;
 
         private Vector2 _originPosition;
+
 //        private readonly Cooldown _firingCooldown;
         private const float MaxAimTime = 2f;
 //        protected float MinimumFindCoverDistance;
@@ -109,12 +110,43 @@ namespace Game.Combat
 //            SetAlpha(alpha);
         }
 
-        protected Action MoveToTargetPosition(Vector3 position)
+        private void OnDrawGizmos()
         {
+            Gizmos.color = Color.red;
+            if (route.Count == 0) return;
+            for (int i = 1; i < route.Count; ++i)
+            {
+                Gizmos.DrawLine(route[i - 1].Position, route[i].Position);
+            }
+        }
+
+        private List<PathingGrid.Cell> route = new List<PathingGrid.Cell>();
+
+        private Action MoveToTargetPosition(PathingGrid.Cell current, List<PathingGrid.Cell> newRoute)
+        {
+            route = newRoute;
+            newRoute.Remove(current);
+            PathingGrid.Cell target = newRoute[0];
+            newRoute.RemoveAt(0);
+            Vector3 direction = (target.Position - current.Position).normalized;
+
             return () =>
             {
-                CharacterController.transform.position = Vector3.MoveTowards(CharacterController.transform.position, position, Time.deltaTime * 0.2f);
-                if(Vector3.Distance(CharacterController.transform.position, position) < 0.1f) ReachTarget();
+                if (PathingGrid.PositionToCell(transform.position) == target)
+                {
+                    if (newRoute.Count == 0)
+                    {
+                        ReachTarget();
+                        return;
+                    }
+
+                    current = target;
+                    target = newRoute[0];
+                    newRoute.RemoveAt(0);
+                    direction = (target.Position - current.Position).normalized;
+                }
+
+                CharacterController.GetComponent<Rigidbody2D>().AddForce(direction * 2);
             };
         }
 
@@ -308,12 +340,12 @@ namespace Game.Combat
 
         private void Wander()
         {
-            float randomRadius = Random.Range(0f, 5f);
-            float randomAngle = Random.Range(0f, 2f * Mathf.PI);
-            float targetX = Mathf.Sqrt(randomRadius) * Mathf.Cos(randomAngle);
-            float targetY = Mathf.Sqrt(randomRadius) * Mathf.Sin(randomAngle);
-            Vector2 targetPosition = new Vector2(targetX + _originPosition.x, targetY + _originPosition.y);
-            CurrentAction = MoveToTargetPosition(targetPosition);
+            if (transform.position == Vector3.zero) return;
+            PathingGrid.Cell currentCell = PathingGrid.PositionToCell(transform.position);
+            int randomDistance = Random.Range(2, 10);
+            PathingGrid.Cell targetCell = PathingGrid.GetCellNearMe(currentCell, randomDistance);
+            List<PathingGrid.Cell> route = PathingGrid.RouteToCell(currentCell, targetCell);
+            CurrentAction = MoveToTargetPosition(currentCell, route);
             SetActionText("Wandering");
             CheckForPlayer();
         }
@@ -488,7 +520,7 @@ namespace Game.Combat
             }
 
             Assert.IsFalse(Weapon().Empty());
-            float aimTime = Random.Range(MaxAimTime / 2f , MaxAimTime);
+            float aimTime = Random.Range(MaxAimTime / 2f, MaxAimTime);
             SetActionText("Aiming");
             return () =>
             {
@@ -500,6 +532,7 @@ namespace Game.Combat
                     CurrentAction = Fire();
                     aimTime = 0;
                 }
+
                 UpdateAim(1 - normalisedTime);
             };
         }

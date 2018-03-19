@@ -7,11 +7,7 @@ public class CombatCharacterController : MonoBehaviour, IInputListener
 {
     private CharacterCombat _owner;
     private Rigidbody2D _rigidbody;
-    private Vector2 _velocity = new Vector2(0, 0);
-    private const float Acceleration = 10f;
-    private const float Deceleration = 0.9f;
     private Transform _pivot;
-    private bool _movingHorizontally, _movingVertically;
 
     public void Awake()
     {
@@ -31,35 +27,6 @@ public class CombatCharacterController : MonoBehaviour, IInputListener
         return _owner;
     }
 
-    private void UpdateHorizontalVelocity()
-    {
-        _velocity.x *= Deceleration;
-        if (Mathf.Abs(_velocity.x) < 0.01f)
-        {
-            _velocity.x = 0;
-        }
-
-        _rigidbody.velocity = _velocity;
-    }
-
-    private void UpdateVerticalVelocity()
-    {
-        _velocity.y *= Deceleration;
-        if (Mathf.Abs(_velocity.y) < 0.01f)
-        {
-            _velocity.y = 0;
-        }
-
-        _rigidbody.velocity = _velocity;
-    }
-
-    private void FixedUpdate()
-    {
-        if (!_movingHorizontally || _dashing) UpdateHorizontalVelocity();
-        if (!_movingVertically || _dashing) UpdateVerticalVelocity();
-        if (_velocity.magnitude < _owner.Speed) _dashing = false;
-    }
-
     public void Update()
     {
         GetComponent<FootstepMaker>().UpdateRotation(AdvancedMaths.AngleFromUp(Vector3.zero, _rigidbody.velocity.normalized));
@@ -73,34 +40,24 @@ public class CombatCharacterController : MonoBehaviour, IInputListener
         return transform.position;
     }
 
-    private bool _dashing;
-
     private void DashHorizontal(float direction)
     {
-        _dashing = true;
-        _velocity.x += direction * 5;
-        _rigidbody.velocity = _velocity;
+        _rigidbody.AddForce(new Vector2(direction * 300f, 0f));
     }
 
     private void DashVertical(float direction)
     {
-        _dashing = true;
-        _velocity.y += direction * 5;
-        _rigidbody.velocity = _velocity;
+        _rigidbody.AddForce(new Vector2(0f, direction * 300f));
     }
 
     private void MoveHorizontal(float speed, float direction)
     {
-        _velocity.x += Time.deltaTime * Acceleration * direction;
-        if (Mathf.Abs(_velocity.x) > speed) _velocity.x = speed * direction;
-        _rigidbody.velocity = _velocity;
+        _rigidbody.AddForce(new Vector2(direction * speed * 2, 0f));
     }
 
     private void MoveVertical(float speed, float direction)
     {
-        _velocity.y += Time.deltaTime * Acceleration * direction;
-        if (Mathf.Abs(_velocity.y) > speed) _velocity.y = speed * direction;
-        _rigidbody.velocity = _velocity;
+        _rigidbody.AddForce(new Vector2(0f, direction * speed * 2));
     }
 
     public void SetDistance(int rangeMin, int rangeMax)
@@ -115,7 +72,6 @@ public class CombatCharacterController : MonoBehaviour, IInputListener
 
     private void Move(InputAxis axis, float direction)
     {
-        if (_dashing) return;
         float speed = _owner.Speed;
         if (_owner.Sprinting) speed *= CharacterCombat.SprintModifier;
 
@@ -136,11 +92,9 @@ public class CombatCharacterController : MonoBehaviour, IInputListener
         switch (axis)
         {
             case InputAxis.Horizontal:
-                _movingHorizontally = true;
                 Move(axis, direction);
                 break;
             case InputAxis.Vertical:
-                _movingVertically = true;
                 Move(axis, direction);
                 break;
         }
@@ -148,15 +102,6 @@ public class CombatCharacterController : MonoBehaviour, IInputListener
 
     public void OnInputUp(InputAxis axis)
     {
-        switch (axis)
-        {
-            case InputAxis.Horizontal:
-                _movingHorizontally = false;
-                break;
-            case InputAxis.Vertical:
-                _movingVertically = false;
-                break;
-        }
     }
 
     public void OnDoubleTap(InputAxis axis, float direction)
