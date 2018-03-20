@@ -4,8 +4,52 @@
     <e p="C:\Users\Sam\.Rider2017.3\system\resharper-host\Local\Transient\ReSharperHost\v11\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
     <e p="C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="2D-Light-of-Sight-Unity-master" t="Include">
+          <e p="Core" t="Include">
+            <e p="Event" t="Include">
+              <e p="LOSEventManager.cs" t="Include" />
+              <e p="LOSEventSource.cs" t="Include" />
+              <e p="LOSEventTrigger.cs" t="Include" />
+            </e>
+            <e p="LOSCamera.cs" t="Include" />
+            <e p="LOSFullScreenLight.cs" t="Include" />
+            <e p="LOSLightBase.cs" t="Include" />
+            <e p="LOSManager.cs" t="Include" />
+            <e p="LOSObjectBase.cs" t="Include" />
+            <e p="LOSObstacle.cs" t="Include" />
+            <e p="LOSRadialLight.cs" t="Include" />
+          </e>
+          <e p="Examples" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="ChangeColorOnLOSEvent.cs" t="Include" />
+              <e p="ChangeTextColorOnLOSEvent.cs" t="Include" />
+              <e p="FlipX.cs" t="Include" />
+              <e p="Flowing.cs" t="Include" />
+              <e p="Follow.cs" t="Include" />
+              <e p="Move.cs" t="Include" />
+              <e p="MoveAccordingToDirection.cs" t="Include" />
+              <e p="MovePhysics.cs" t="Include" />
+              <e p="Rotate.cs" t="Include" />
+              <e p="RotateLight.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Resources" t="Include">
+            <e p="Shaders" t="Include">
+              <e p="Basic.shader" t="Include" />
+              <e p="GreyscaleBackground.shader" t="Include" />
+              <e p="GreyscaleForeground.shader" t="Include" />
+              <e p="RadialLight.shader" t="Include" />
+              <e p="RadialLightPlus.shader" t="Include" />
+            </e>
+          </e>
+          <e p="Utilities" t="Include">
+            <e p="SHelper.cs" t="Include" />
+            <e p="SMath.cs" t="Include" />
+          </e>
+        </e>
         <e p="CombatCharacterController.cs" t="Include" />
         <e p="FitScreenToRoute.cs" t="Include" />
         <e p="FootstepMaker.cs" t="Include" />
@@ -126,8 +170,16 @@
               </e>
             </e>
             <e p="Combat" t="Include">
-              <e p="AreaGenerator.cs" t="Include" />
               <e p="CharacterCombat.cs" t="Include" />
+              <e p="CharacterUi" t="Include">
+                <e p="CharacterUi.cs" t="Include" />
+                <e p="EnemyUi.cs" t="Include" />
+                <e p="PlayerUi.cs" t="Include" />
+              </e>
+              <e p="CombatArea" t="Include">
+                <e p="AreaGenerator.cs" t="Include" />
+                <e p="PathingGrid.cs" t="Include" />
+              </e>
               <e p="CombatManager.cs" t="Include" />
               <e p="CombatScenario.cs" t="Include" />
               <e p="CombatTester.cs" t="Include" />
@@ -169,8 +221,6 @@
               <e p="Explosion.cs" t="Include" />
               <e p="ICombatListener.cs" t="Include" />
               <e p="MeleeController.cs" t="Include" />
-              <e p="PathingGrid.cs" t="Include" />
-              <e p="PerlinNoise.cs" t="Include" />
               <e p="PlayerCombat.cs" t="Include" />
               <e p="RecoilManager.cs" t="Include" />
               <e p="Shot.cs" t="Include" />

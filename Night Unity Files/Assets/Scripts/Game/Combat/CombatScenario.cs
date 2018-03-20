@@ -18,7 +18,7 @@ namespace Game.Combat
     {
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private bool _finished;
-        private const int MaxEncounterSize = 6;
+        private const int MaxEncounterSize = 10;
 
         public void AddEnemy(Enemy enemy)
         {

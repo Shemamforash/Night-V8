@@ -5,6 +5,8 @@ using Facilitating.Audio;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.Player;
+using Game.Combat.CharacterUi;
+using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -32,10 +34,8 @@ namespace Game.Combat
         private Cooldown _dashCooldown;
         private DetailedEnemyCombat _currentTarget;
 
-        private TextMeshProUGUI _playerName;
-
-        public CanvasGroup PlayerCanvasGroup;
         private Number _strengthText;
+        private PlayerUi _playerUi;
 
         public override void Kill()
         {
@@ -50,14 +50,20 @@ namespace Game.Combat
             base.Update();
         }
 
-        public override void Awake()
+        public void Initialise(Player player)
         {
-            base.Awake();
-            PlayerCanvasGroup = gameObject.GetComponent<CanvasGroup>();
-            _playerName = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
-            HealthController.AddOnHeal(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
-            HealthController.AddOnTakeDamage(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
+            _playerUi = GameObject.Find("Player Ui").GetComponent<PlayerUi>();
+            
+            Player = player;
+            _damageModifier = Player.CalculateDamageModifier();
+            _skillCooldownModifier = Player.CalculateSkillCooldownModifier();
+            _initialArmour = player.ArmourController.GetProtectionLevel();
+            
+            _playerUi._playerName.text = player.Name;
+            Speed = Player.CalculateSpeed();
+
             _dashCooldown = CombatManager.CombatCooldowns.CreateCooldown();
+            _dashCooldown.Duration = Player.CalculateDashCooldown();
             _dashCooldown.SetDuringAction(a =>
             {
                 float normalisedTime = a / _dashCooldown.Duration;
@@ -68,37 +74,30 @@ namespace Game.Combat
                 RageBarController.UpdateDashTimer(1);
                 RageBarController.PlayFlash();
             });
-            HealthController.SetIsPlayerBar();
+            
             RageController = new RageController();
+            RageController.EnterCombat();
+
+            HealthController().SetInitialHealth(Player.CalculateCombatHealth(), this);
+            HealthController().AddOnHeal(a => HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue()));
+            HealthController().AddOnTakeDamage(a => HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue()));
+            
+            HeartBeatController.Enable();
+            HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue());
+            RecoilManager.EnterCombat();
+
+            _playerUi.ArmourController.SetCharacter(Player);
+            
+            SkillBar.BindSkills(Player);
+            InputHandler.RegisterInputListener(this);
+            UIMagazineController.SetWeapon(Weapon());
+            
             SetReloadCooldown();
             CharacterController = GameObject.Find("Player").GetComponent<CombatCharacterController>();
             CharacterController.SetOwner(this);
             CharacterController.SetDistance(0, 0);
-        }
-
-        public override void SetPlayer(Character player)
-        {
-            base.SetPlayer(player);
-            Player = (Player) player;
-            _playerName.text = player.Name;
-            Speed = Player.CalculateSpeed();
-
-            _dashCooldown.Duration = Player.CalculateDashCooldown();
-            _damageModifier = Player.CalculateDamageModifier();
-            _skillCooldownModifier = Player.CalculateSkillCooldownModifier();
-
-            HealthController.SetInitialHealth(Player.CalculateCombatHealth(), this);
-            _initialArmour = player.ArmourController.GetProtectionLevel();
-
-            HeartBeatController.Enable();
-            HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue());
-            RecoilManager.EnterCombat();
-
-            ArmourController.SetCharacter(Player);
-            RageController.EnterCombat();
-            SkillBar.BindSkills(Player);
-            InputHandler.RegisterInputListener(this);
-            UIMagazineController.SetWeapon(Weapon());
+            
+            SetConditions();
         }
 
         private void Dash(float direction)
@@ -154,7 +153,7 @@ namespace Game.Combat
         {
             if (e == null) return;
             _currentTarget = e;
-            e.PrimaryButton.GetComponent<Button>().Select();
+            e.SetSelected();
         }
 
         //MISC
@@ -163,6 +162,21 @@ namespace Game.Combat
 //            return _reloadingCooldown.Running() || IsKnockedDown;
 //        }
 
+
+        public override Weapon Weapon()
+        {
+            return Player.Weapon;
+        }
+
+        public override UIHealthBarController HealthController()
+        {
+            return _playerUi.HealthController;
+        }
+        
+        public override UIArmourController ArmourController()
+        {
+            return _playerUi.ArmourController;
+        }
 
         public override void ExitCombat()
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Game.Combat;
 using NUnit.Framework;
 using SamsHelper;
@@ -21,6 +22,7 @@ namespace Facilitating.UIControllers
         private event Action<float> OnHeal;
         private TextMeshProUGUI _healthText;
         private CharacterCombat _character;
+        private static readonly List<Fader> _faderPool = new List<Fader>();
 
         public void Awake()
         {
@@ -90,16 +92,28 @@ namespace Facilitating.UIControllers
 
         private void FadeNewHealth()
         {
-            GameObject fader = new GameObject();
-            fader.transform.SetParent(_fill.parent, false);
-            fader.transform.SetSiblingIndex(1);
-            fader.AddComponent<Image>();
+            Fader fader;
+            if (_faderPool.Count == 0)
+            {
+                GameObject newFader = new GameObject();
+                newFader.transform.SetParent(_fill.parent, false);
+                newFader.AddComponent<Image>();
+                fader = newFader.AddComponent<Fader>();
+            }
+            else
+            {
+                fader = _faderPool[0];
+                _faderPool.RemoveAt(0);
+            }
+            
+            GameObject faderObject = fader.gameObject;
+            faderObject.transform.SetSiblingIndex(1);
             RectTransform faderTransform = fader.GetComponent<RectTransform>();
             faderTransform.anchorMin = Vector2.zero;
             faderTransform.anchorMax = new Vector2(_fill.anchorMax.x, 1);
             faderTransform.offsetMin = Vector2.zero;
             faderTransform.offsetMax = Vector2.zero;
-            fader.AddComponent<Fader>();
+            fader.Restart();
         }
 
         private class Fader : MonoBehaviour
@@ -107,20 +121,27 @@ namespace Facilitating.UIControllers
             private float _alpha = 1;
             private Image _faderImage;
             private const float Duration = 0.5f;
+            private float _age = 0;
 
             public void Awake()
             {
                 _faderImage = GetComponent<Image>();
             }
 
+            public void Restart()
+            {
+                _age = 0;
+                _alpha = 1;
+            }
+
             public void Update()
             {
+                _alpha = 1 - Duration / _age;
                 _faderImage.color = new Color(1, 0, 0, _alpha);
-                _alpha -= Time.deltaTime * Duration;
-                if (_alpha < 0)
-                {
-                    Destroy(gameObject);
-                }
+                _age += Time.deltaTime;
+                if (_alpha > 0) return;
+                gameObject.SetActive(false);
+                _faderPool.Add(this);
             }
         }
 

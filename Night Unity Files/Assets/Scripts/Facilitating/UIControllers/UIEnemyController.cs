@@ -80,12 +80,12 @@ namespace Facilitating.UIControllers
                 nearestEnemy = e;
             });
             if (nearestEnemy == null) SelectNearestEnemy();
-            else nearestEnemy.PrimaryButton.Button().Select();
+            else nearestEnemy.SetSelected();
         }
 
         private static void SelectNearestEnemy()
         {
-            NearestEnemy()?.PrimaryButton.Button().Select();
+            NearestEnemy()?.SetSelected();
         }
 
         private static void SelectNextNearest()
@@ -104,7 +104,7 @@ namespace Facilitating.UIControllers
                 nearestEnemy = e;
             });
             if (nearestEnemy == null) SelectNearestEnemy();
-            else nearestEnemy.PrimaryButton.Button().Select();
+            else nearestEnemy.SetSelected();
         }
 
         public void ExitCombat()
@@ -145,7 +145,7 @@ namespace Facilitating.UIControllers
         private static void AddEnemy(DetailedEnemyCombat e)
         {
             Enemies.Add(e);
-            if (Enemies.Count == 1) e.PrimaryButton.Button().Select();
+            if (Enemies.Count == 1) e.SetSelected();
         }
 
         public static DetailedEnemyCombat NearestEnemy()

@@ -1,4 +1,5 @@
 ﻿using Game.Characters;
+using Game.Combat.CharacterUi;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using Game.Gear.Weapons;
 using UnityEngine;
@@ -11,9 +12,9 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private float _reinforceCallTime;
         private float _reinforceDuration = 5f;
 
-        public override void SetPlayer(Character enemy)
+        public override void Initialise(Enemy enemy, EnemyUi characterUi)
         {
-            base.SetPlayer(enemy);
+            base.Initialise(enemy, characterUi);
 //            MinimumFindCoverDistance = 10;
 //            HealthController.AddOnTakeDamage(a =>
 //            {

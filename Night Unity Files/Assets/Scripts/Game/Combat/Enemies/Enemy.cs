@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Characters;
+using Game.Combat.CharacterUi;
 using Game.Combat.Enemies.EnemyTypes;
 using Game.Combat.Enemies.EnemyTypes.Humans;
 using Game.Gear.Weapons;
@@ -49,36 +50,37 @@ namespace Game.Combat.Enemies
         {
             Reset();
             DetailedEnemyCombat enemyCombat;
+            GameObject enemyObject = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Combat Character"));
             switch (Template.EnemyType)
             {
                 case EnemyType.Brawler:
-                    enemyCombat = enemyUiPrefab.AddComponent<Brawler>();
+                    enemyCombat = enemyObject.AddComponent<Brawler>();
                     break;
                 case EnemyType.Martyr:
-                    enemyCombat = enemyUiPrefab.AddComponent<Martyr>();
+                    enemyCombat = enemyObject.AddComponent<Martyr>();
                     break;
                 case EnemyType.Medic:
-                    enemyCombat = enemyUiPrefab.AddComponent<Medic>();
+                    enemyCombat = enemyObject.AddComponent<Medic>();
                     break;
                 case EnemyType.Mountain:
-                    enemyCombat = enemyUiPrefab.AddComponent<Mountain>();
+                    enemyCombat = enemyObject.AddComponent<Mountain>();
                     break;
                 case EnemyType.Sentinel:
-                    enemyCombat = enemyUiPrefab.AddComponent<Sentinel>();
+                    enemyCombat = enemyObject.AddComponent<Sentinel>();
                     break;
                 case EnemyType.Sniper:
-                    enemyCombat = enemyUiPrefab.AddComponent<Sniper>();
+                    enemyCombat = enemyObject.AddComponent<Sniper>();
                     break;
                 case EnemyType.Warlord:
-                    enemyCombat = enemyUiPrefab.AddComponent<Warlord>();
+                    enemyCombat = enemyObject.AddComponent<Warlord>();
                     break;
                 case EnemyType.Witch:
-                    enemyCombat = enemyUiPrefab.AddComponent<Witch>();
+                    enemyCombat = enemyObject.AddComponent<Witch>();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            enemyCombat.SetPlayer(this);
+            enemyCombat.Initialise(this, enemyUiPrefab.GetComponent<EnemyUi>());
             return enemyCombat;
         }
 

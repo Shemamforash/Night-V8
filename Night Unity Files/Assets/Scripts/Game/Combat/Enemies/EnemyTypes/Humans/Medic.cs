@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Characters;
+using Game.Combat.CharacterUi;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -13,9 +14,9 @@ namespace Game.Combat.Enemies.EnemyTypes
         private const int HealAmount = 50;
         private DetailedEnemyCombat _healTarget;
 
-        public override void SetPlayer(Character enemy)
+        public override void Initialise(Enemy enemy, EnemyUi characterUi)
         {
-            base.SetPlayer(enemy);
+            base.Initialise(enemy, characterUi);
 //            MinimumFindCoverDistance = 20f;
         }
         

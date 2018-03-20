@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using SamsHelper;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,6 +11,12 @@ namespace Game.Combat
     {
         private const int SmallPolyWidth = 2;
         private const int Resolution = 400;
+        private static AreaGenerator _instance;
+
+        public void Awake()
+        {
+            _instance = this;
+        }
 
         private class Ellipse
         {
@@ -74,12 +81,12 @@ namespace Game.Combat
             return randomPoint;
         }
 
+        private static int _barrierNumber;
 
-        private int _barrierNumber;
-
-        private GameObject GenerateBasicBarrier()
+        private static GameObject GenerateBasicBarrier()
         {
             GameObject g = new GameObject();
+            g.transform.SetParent(_instance.transform);
             g.layer = 8;
             g.name = "Barrier " + _barrierNumber;
             ++_barrierNumber;
@@ -89,7 +96,7 @@ namespace Game.Combat
             return g;
         }
 
-        private Shape GenerateSmallPoly()
+        private static Shape GenerateSmallPoly()
         {
             GameObject g = GenerateBasicBarrier();
             int width = (int) ((float) Resolution / SmallPolyWidth * Random.Range(0.6f, 1f));
@@ -121,11 +128,12 @@ namespace Game.Combat
             return shape;
         }
 
-        private List<Shape> _barriers = new List<Shape>();
+        private static readonly List<Shape> _barriers = new List<Shape>();
 
-        public void Start()
+        public static List<Shape> GenerateArea()
         {
-            for (int i = 0; i < 20; ++i)
+            //todo thread me
+            for (int i = 0; i < 100; ++i)
             {
                 float rx = Random.Range(-8f, 8f);
                 float ry = Random.Range(-8f, 8f);
@@ -135,7 +143,7 @@ namespace Game.Combat
                 shape.SetPosition(rx, ry);
             }
 
-            PathingGrid.Instance().SetShapes(_barriers);
+            return _barriers;
         }
 
         private static Texture2D CreateTextureFromPoly(List<Vector2> vertices, int size)
@@ -155,7 +163,6 @@ namespace Game.Combat
             }
 
             Line.Draw(texture, vertices[vertices.Count - 1], vertices[0]);
-            texture.alphaIsTransparency = true;
             texture.Apply();
             return texture;
         }

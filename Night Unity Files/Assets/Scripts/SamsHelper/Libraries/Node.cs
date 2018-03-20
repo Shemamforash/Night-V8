@@ -5,7 +5,6 @@ namespace SamsHelper
 {
     public class Node<T>
     {
-        public Node<T> From;
         public readonly T Content;
         public readonly Vector3 Position;
         public float Length;

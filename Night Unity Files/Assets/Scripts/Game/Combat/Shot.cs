@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Game.Characters;
 using Game.Gear.Weapons;
 using SamsHelper;
@@ -14,35 +15,56 @@ namespace Game.Combat
 {
     public class Shot : MonoBehaviour
     {
-        private int _damage, _damageDealt;
+        private int _damage;
+        private float _accuracy;
+        private float _pierceChance, _burnChance, _bleedChance, _sicknessChance;
+        private float _criticalChance;
         private CharacterCombat _origin;
         private Transform _target;
-
-        private int _pierceDepth;
-
-        private bool _guaranteeHit, _guaranteeCritical;
-
-        private float _criticalChance;
-        private float _accuracy;
-
-        private int _knockbackDistance;
-
-        private float _pierceChance, _burnChance, _bleedChance, _sicknessChance, _knockDownChance;
-        private float _finalDamageModifier = 1f;
-
-        private event Action OnHitAction;
-        private bool _didHit;
         private bool _isCritical;
-        public bool DidHit;
-
         private float _speed;
         private float _age;
-        private const float MaxAge = 5f;
+        private const float MaxAge = 3f;
+        
+        private float _knockDownChance;
+        private float _finalDamageModifier = 1f;
+        private bool _guaranteeHit, _guaranteeCritical;
+        private int _knockbackDistance;
+        private int _damageDealt;
+        private int _pierceDepth;
+        public bool DidHit;
+        private event Action OnHitAction;
+        
+        private static List<Shot> _shotPool = new List<Shot>();
+
+        private void ResetValues()
+        {
+            _knockDownChance = 0;
+            _finalDamageModifier = 1f;
+            _guaranteeHit = false;
+            _guaranteeCritical = false;
+            _knockbackDistance = 0;
+            _damageDealt = 0;
+            _pierceDepth = 0;
+            DidHit = false;
+            OnHitAction = null;
+        }
 
         public static Shot CreateShot(CharacterCombat origin)
         {
-            GameObject bullet = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Bullet"));
-            Shot shot = bullet.AddComponent<Shot>();
+            Shot shot;
+            if (_shotPool.Count == 0)
+            {
+                GameObject bullet = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Bullet"));
+                shot = bullet.AddComponent<Shot>();
+            }
+            else
+            {
+                shot = _shotPool[0];
+                shot.gameObject.SetActive(true);
+                _shotPool.RemoveAt(0);
+            }
+
             shot.Initialise(origin, origin.GetTarget());
             return shot;
         }
@@ -51,6 +73,7 @@ namespace Game.Combat
         {
             _origin = origin;
             _target = target.CharacterController.transform;
+            ResetValues();
             CacheWeaponAttributes();
         }
 
@@ -102,6 +125,7 @@ namespace Game.Combat
 
         public void Fire()
         {
+            _age = 0;
             CalculateAccuracy();
             float angleOffset = Random.Range(-_accuracy, _accuracy);
             _speed = Random.Range(9f, 11f);
@@ -124,23 +148,29 @@ namespace Game.Combat
                 yield return null;
             }
             
-            Destroy(gameObject);
+            DeactivateShot();
         }
 
+        private void DeactivateShot()
+        {
+            gameObject.SetActive(false);
+            _shotPool.Add(this);
+        }
+        
         private void OnCollisionEnter2D(Collision2D collision)
         {
             GameObject other = collision.gameObject;
             if (other.GetComponent<CombatCharacterController>() == _origin.CharacterController) return;
             if (other.CompareTag("Barrier"))
             {
-                Destroy(gameObject);
+                DeactivateShot();
                 return;
             }
 
             if (other.name.Contains("Bullet")) return;
             if (other.CompareTag("Player")) return;
             ApplyDamage(other.GetComponent<CombatCharacterController>().Owner());
-            Destroy(gameObject);
+            DeactivateShot();
         }
 
         private void ApplyDamage(CharacterCombat hit)
@@ -152,12 +182,12 @@ namespace Game.Combat
             ApplyConditions(hit);
             OnHitAction?.Invoke();
             (_origin as PlayerCombat)?.RageController.Increase(totalDamage);
-            float armourModifier = DidPierce() ? 1 : 1 - hit.ArmourController.CurrentArmour() / 10f;
+            float armourModifier = DidPierce() ? 1 : 1 - hit.ArmourController().CurrentArmour() / 10f;
             float healthDamage = (int) (armourModifier * DamageDealt());
             float armourDamage = (int) ((1 - armourModifier) * DamageDealt());
-            if (healthDamage != 0) hit.HealthController.TakeDamage(healthDamage);
-            if (armourDamage != 0) hit.ArmourController.TakeDamage(armourDamage);
-            if (_isCritical) (hit as DetailedEnemyCombat)?.UiHitController.RegisterCritical();
+            if (healthDamage != 0) hit.HealthController().TakeDamage(healthDamage);
+            if (armourDamage != 0) hit.ArmourController().TakeDamage(armourDamage);
+            if (_isCritical) (hit as DetailedEnemyCombat)?.HitController().RegisterCritical();
         }
 
         private void ApplyConditions(CharacterCombat hit)

@@ -1,4 +1,5 @@
 ﻿using Game.Characters;
+using Game.Combat.CharacterUi;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEngine;
 
@@ -9,9 +10,9 @@ namespace Game.Combat.Enemies.EnemyTypes
         private Cooldown _detonateCooldown;
         private bool _detonated;
 
-        public override void SetPlayer(Character enemy)
+        public override void Initialise(Enemy enemy, EnemyUi characterUi)
         {
-            base.SetPlayer(enemy);
+            base.Initialise(enemy, characterUi);
 //            MinimumFindCoverDistance = -1f;
             _detonateCooldown = CombatManager.CombatCooldowns.CreateCooldown(1f);
             _detonateCooldown.SetStartAction(() => SetActionText("Detonating"));
@@ -32,11 +33,13 @@ namespace Game.Combat.Enemies.EnemyTypes
 
         public override void ChooseNextAction()
         {
+            base.ChooseNextAction();
 //            CurrentAction = MoveToPlayer;
         }
         
         protected override void ReachTarget()
         {
+            base.ReachTarget();
 //            if (!Alerted) return;
 //            _detonateCooldown.Start();
 //            CurrentAction = null;

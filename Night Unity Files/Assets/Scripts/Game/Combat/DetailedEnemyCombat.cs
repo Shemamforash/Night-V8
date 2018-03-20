@@ -4,8 +4,10 @@ using System.Linq;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.Player;
+using Game.Combat.CharacterUi;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.EnemyTypes;
+using Game.Gear.Weapons;
 using NUnit.Framework;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -23,7 +25,6 @@ namespace Game.Combat
         protected bool Alerted;
         private readonly CharacterAttribute _visionRange = new CharacterAttribute(AttributeType.Vision, 30f);
         private readonly CharacterAttribute _detectionRange = new CharacterAttribute(AttributeType.Detection, 15f);
-        public EnhancedButton PrimaryButton;
 
         private const int EnemyReloadMultiplier = 4;
 
@@ -33,12 +34,9 @@ namespace Game.Combat
 
 //        private readonly Cooldown _firingCooldown;
         private const float MaxAimTime = 2f;
-//        protected float MinimumFindCoverDistance;
+        protected int MinRepositionDistance = 4;
 //        private int _wanderDirection = -1;
 
-        public TextMeshProUGUI ActionText;
-
-        public UIHitController UiHitController;
 
 //        private float _currentFadeInTime = 2f;
 //        private const float MaxFadeInTime = 2f;
@@ -52,38 +50,18 @@ namespace Game.Combat
 //        private const float AlphaCutoff = 0.2f;
 
 //        private const float FadeVisibilityDistance = 5f;
-        public TextMeshProUGUI NameText;
 //        private float _currentAlpha;
-
-
-        public override void Awake()
-        {
-            base.Awake();
-            NameText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
-            UiHitController = Helper.FindChildWithName<UIHitController>(gameObject, "Cover");
-            ActionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Action");
-            PrimaryButton = gameObject.GetComponent<EnhancedButton>();
-            gameObject.GetComponent<CanvasGroup>().alpha = UiAppearanceController.FadedColour.a;
-            PrimaryButton.AddOnSelectEvent(() =>
-            {
-                CombatManager.Player.SetTarget(this);
-                gameObject.GetComponent<CanvasGroup>().alpha = 1;
-            });
-            PrimaryButton.AddOnDeselectEvent(() => { gameObject.GetComponent<CanvasGroup>().alpha = UiAppearanceController.FadedColour.a; });
-            HealthController.AddOnTakeDamage(f => { Alert(); });
-            CharacterController = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Combat Character")).GetComponent<CombatCharacterController>();
-            CharacterController.transform.SetParent(GameObject.Find("World").transform);
-            CharacterController.SetOwner(this);
-            CharacterController.SetDistance(2, 4);
-            _originPosition = CharacterController.Position();
-            UpdateDistance();
-        }
+        private EnemyUi _enemyUi;
 
         public override CharacterCombat GetTarget()
         {
             return CombatManager.Player;
         }
 
+        public override UIArmourController ArmourController()
+        {
+            return _enemyUi.ArmourController;
+        }
 
         private void UpdateDistance()
         {
@@ -112,7 +90,10 @@ namespace Game.Combat
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.red;
+//            Gizmos.color = Color.red;
+//            Gizmos.DrawCube(PathingGrid.PositionToCell(transform.position).Position, new Vector3(0.5f, 0.5f, 0.5f));
+//            Gizmos.color = Color.green;
+//            Gizmos.DrawCube(transform.position, new Vector3(0.5f, 0.5f, 0.5f));
             if (route.Count == 0) return;
             for (int i = 1; i < route.Count; ++i)
             {
@@ -122,14 +103,11 @@ namespace Game.Combat
 
         private List<PathingGrid.Cell> route = new List<PathingGrid.Cell>();
 
-        private Action MoveToTargetPosition(PathingGrid.Cell current, List<PathingGrid.Cell> newRoute)
+        private Action MoveToTargetPosition(List<PathingGrid.Cell> newRoute)
         {
             route = newRoute;
-            newRoute.Remove(current);
             PathingGrid.Cell target = newRoute[0];
             newRoute.RemoveAt(0);
-            Vector3 direction = (target.Position - current.Position).normalized;
-
             return () =>
             {
                 if (PathingGrid.PositionToCell(transform.position) == target)
@@ -140,28 +118,58 @@ namespace Game.Combat
                         return;
                     }
 
-                    current = target;
                     target = newRoute[0];
                     newRoute.RemoveAt(0);
-                    direction = (target.Position - current.Position).normalized;
                 }
 
+                Vector3 direction = target.Position;
+                direction = direction - transform.position;
+                direction.Normalize();
                 CharacterController.GetComponent<Rigidbody2D>().AddForce(direction * 2);
             };
         }
 
-        public override void SetPlayer(Character enemy)
+        public override UIHealthBarController HealthController()
         {
-            base.SetPlayer(enemy);
-            NameText.text = enemy.Name;
-            Enemy = (Enemy) enemy;
+            return _enemyUi.HealthController;
+        }
+
+        public UIHitController HitController()
+        {
+            return _enemyUi.UiHitController;
+        }
+
+        public void SetSelected()
+        {
+            _enemyUi.PrimaryButton.Button().Select();
+        }
+
+        public virtual void Initialise(Enemy enemy, EnemyUi enemyUi)
+        {
+            _enemyUi = enemyUi;
+            _enemyUi.NameText.text = enemy.Name;
+            Enemy = enemy;
             SetOwnedByEnemy(Enemy.Template.Speed);
-            HealthController.SetInitialHealth(Enemy.Template.Health, this);
-            ArmourController.SetCharacter(Enemy);
+            HealthController().SetInitialHealth(Enemy.Template.Health, this);
+            _enemyUi.ArmourController.SetCharacter(Enemy);
             RecoilManager.EnterCombat();
 //            if (!(this is Medic || this is Martyr)) SetHealBehaviour();
             CurrentAction = Wander;
-            UiHitController.SetCharacter(this);
+            _enemyUi.UiHitController.SetCharacter(this);
+            _enemyUi.PrimaryButton.AddOnSelectEvent(() =>
+            {
+                CombatManager.Player.SetTarget(this);
+                _enemyUi.CanvasGroup.alpha = 1;
+            });
+            _enemyUi.PrimaryButton.AddOnDeselectEvent(() => { _enemyUi.CanvasGroup.alpha = UiAppearanceController.FadedColour.a; });
+            _enemyUi.HealthController.AddOnTakeDamage(f => { Alert(); });
+            CharacterController = GetComponent<CombatCharacterController>();
+            CharacterController.transform.SetParent(GameObject.Find("World").transform);
+            CharacterController.SetOwner(this);
+            CharacterController.SetDistance(2, 4);
+            _originPosition = CharacterController.Position();
+            UpdateDistance();
+            SetConditions();
         }
 
         public void Reset()
@@ -230,8 +238,8 @@ namespace Game.Combat
 
         public virtual void ChooseNextAction()
         {
-//            CurrentAction = CheckForRepositioning();
-//            if (CurrentAction != null) return;
+            CurrentAction = CheckForRepositioning();
+            if (CurrentAction != null) return;
             CurrentAction = Aim();
         }
 
@@ -246,12 +254,13 @@ namespace Game.Combat
 //                return Melee();
 //            }
 
-//            if (DistanceToPlayer < MinimumFindCoverDistance || DistanceToPlayer > CombatManager.VisibilityRange || moveAnyway)
-//            {
-//                float targetDistance = CalculateIdealRange();
-//                float targetPosition = _aheadOfPlayer ? CombatManager.Player.Position.CurrentValue() + targetDistance : CombatManager.Player.Position.CurrentValue() - targetDistance;
-//                return MoveToTargetPosition(targetPosition);
-//            }
+            
+            if (DistanceToPlayer < MinRepositionDistance || DistanceToPlayer > 3 || moveAnyway)
+            {
+                PathingGrid.Cell currentCell = PathingGrid.PositionToCell(transform.position);
+                List<PathingGrid.Cell> path = PathingGrid.RouteToCell(currentCell, PathingGrid.GetCellInRange(currentCell, 10, MinRepositionDistance));
+                return MoveToTargetPosition(path);
+            }
 
             return null;
         }
@@ -342,10 +351,10 @@ namespace Game.Combat
         {
             if (transform.position == Vector3.zero) return;
             PathingGrid.Cell currentCell = PathingGrid.PositionToCell(transform.position);
-            int randomDistance = Random.Range(2, 10);
+            int randomDistance = Random.Range(20, 30);
             PathingGrid.Cell targetCell = PathingGrid.GetCellNearMe(currentCell, randomDistance);
             List<PathingGrid.Cell> route = PathingGrid.RouteToCell(currentCell, targetCell);
-            CurrentAction = MoveToTargetPosition(currentCell, route);
+            CurrentAction = MoveToTargetPosition(route);
             SetActionText("Wandering");
             CheckForPlayer();
         }
@@ -406,10 +415,16 @@ namespace Game.Combat
 //            if (!Alerted) Alert();
         }
 
+        public override Weapon Weapon()
+        {
+            return Enemy.Weapon;
+        }
+
         public virtual void Alert()
         {
             if (Alerted) return;
             Alerted = true;
+            Debug.Log("alerted");
             UIEnemyController.AlertAll();
             ChooseNextAction();
         }
@@ -494,7 +509,7 @@ namespace Game.Combat
         {
             base.Kill();
             UIEnemyController.Remove(this);
-            Destroy(CharacterController.gameObject);
+            Destroy(_enemyUi.gameObject);
             Enemy.Kill();
             Destroy(gameObject);
         }
@@ -503,8 +518,8 @@ namespace Game.Combat
         {
             if (MeleeController.InMelee) return;
             base.Update();
-            CurrentAction?.Invoke();
             UpdateDistance();
+            CurrentAction?.Invoke();
         }
 
         private void UpdateAim(float value)
@@ -514,6 +529,7 @@ namespace Game.Combat
 
         protected virtual Action Aim()
         {
+            if(Weapon() == null) return CheckForRepositioning();
             if (Weapon().Empty())
             {
                 return Reload();

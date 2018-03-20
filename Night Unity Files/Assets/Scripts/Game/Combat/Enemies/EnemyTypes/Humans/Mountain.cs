@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Characters;
+using Game.Combat.CharacterUi;
 using Game.Gear.Weapons;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
@@ -8,9 +9,9 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
     {
         private bool _firedVolley;
 
-        public override void SetPlayer(Character enemy)
+        public override void Initialise(Enemy enemy, EnemyUi characterUi)
         {
-            base.SetPlayer(enemy);
+            base.Initialise(enemy, characterUi);
 //            MinimumFindCoverDistance = 20f;
         }
 

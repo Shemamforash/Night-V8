@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Facilitating.UIControllers;
 using Game.Characters;
+using Game.Combat.CharacterUi;
 using Game.Combat.Enemies.EnemyTypes.Misc;
 using Game.Gear.Weapons;
 using UnityEngine;
@@ -16,9 +17,9 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private float _targetTime;
         private bool _throwing;
 
-        public override void SetPlayer(Character enemy)
+        public override void Initialise(Enemy enemy, EnemyUi characterUi)
         {
-            base.SetPlayer(enemy);
+            base.Initialise(enemy, characterUi);
 //            MinimumFindCoverDistance = 5f;
         }
 

@@ -4,6 +4,7 @@ using Facilitating.Audio;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.Player;
+using Game.Combat.CharacterUi;
 using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.Gear.Weapons;
@@ -27,9 +28,6 @@ namespace Game.Combat
 
         public readonly RecoilManager RecoilManager = new RecoilManager();
 
-        public UIHealthBarController HealthController;
-        public UIArmourController ArmourController;
-
 //        private float _distanceTravelled;
 
         public float Speed;
@@ -41,13 +39,6 @@ namespace Game.Combat
         private Character _character;
 
         public CombatCharacterController CharacterController;
-
-        public virtual void Awake()
-        {
-            ArmourController = Helper.FindChildWithName<UIArmourController>(gameObject, "Armour");
-            HealthController = Helper.FindChildWithName<UIHealthBarController>(gameObject, "Health");
-            SetConditions();
-        }
 
         protected void SetOwnedByEnemy(float speed)
         {
@@ -99,10 +90,7 @@ namespace Game.Combat
         {
         }
 
-        public Weapon Weapon()
-        {
-            return _character.Weapon;
-        }
+        public abstract Weapon Weapon();
 
         //FIRING
 
@@ -113,15 +101,17 @@ namespace Game.Combat
             return Vector2.Distance(CharacterController.Position(), GetTarget().CharacterController.Position());
         }
 
-        private void SetConditions()
+        public abstract UIHealthBarController HealthController();
+
+        protected void SetConditions()
         {
             Bleeding = new Bleed(this);
             Burn = new Burn(this);
             Sick = new Sickness(this);
-            Burn.OnConditionNonEmpty = HealthController.StartBurning;
-            Burn.OnConditionEmpty = HealthController.StopBurning;
-            Bleeding.OnConditionNonEmpty = HealthController.StartBleeding;
-            Bleeding.OnConditionEmpty = HealthController.StopBleeding;
+            Burn.OnConditionNonEmpty = HealthController().StartBurning;
+            Burn.OnConditionEmpty = HealthController().StopBurning;
+            Bleeding.OnConditionNonEmpty = HealthController().StartBleeding;
+            Bleeding.OnConditionEmpty = HealthController().StopBleeding;
         }
 
         public virtual void ExitCombat()
@@ -131,12 +121,7 @@ namespace Game.Combat
             Sick.Clear();
         }
 
-
-        public virtual void SetPlayer(Character character)
-        {
-            _character = character;
-        }
-
         public abstract CharacterCombat GetTarget();
+        public abstract UIArmourController ArmourController();
     }
 }

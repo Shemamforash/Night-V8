@@ -2,6 +2,7 @@
 using System.Linq;
 using Facilitating.UIControllers;
 using Game.Characters.Player;
+using Game.Combat.CharacterUi;
 using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -23,7 +24,7 @@ namespace Game.Combat
 
         public void Awake()
         {
-            Player = Helper.FindChildWithName<PlayerCombat>(gameObject, "Player");
+            Player = GameObject.Find("Player").GetComponent<PlayerCombat>();
             CombatCanvas = Helper.FindChildWithName<CanvasGroup>(gameObject, "Combat Canvas");
             EnemyController = Helper.FindChildWithName<UIEnemyController>(gameObject, "Enemies");
         }
@@ -42,9 +43,11 @@ namespace Game.Combat
             VisibilityRange = 200;
             CurrentScenario = scenario;
             MenuStateMachine.ShowMenu("Combat Menu");
+            List<AreaGenerator.Shape> barriers = AreaGenerator.GenerateArea();
+            PathingGrid.Instance().SetShapes(barriers);
 //            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
             
-            Player.SetPlayer(player);
+            Player.Initialise(player);
             CombatCooldowns.Clear();
             EnemyController.EnterCombat();
         }
