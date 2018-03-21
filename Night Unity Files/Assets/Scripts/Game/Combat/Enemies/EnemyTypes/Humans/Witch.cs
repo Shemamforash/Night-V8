@@ -54,17 +54,17 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             };
         }
 
-        public override void Alert()
-        {
-            base.Alert();
+//        public override void Alert()
+//        {
+//            base.Alert();
 //            if(!Alerted) _targetTime = Random.Range(10, 15);
-        }
+//        }
 
         public override void Update()
         {
             if(MeleeController.InMelee) return;
             base.Update();
-            if (!InCombat() || _throwing) return;
+            if (_throwing) return;
             _targetTime -= Time.deltaTime;
             if (_targetTime > 0) return;
 //            CurrentAction = ThrowGrenade();

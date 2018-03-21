@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Facilitating.UIControllers;
 using Game.Characters.Player;
@@ -9,6 +10,7 @@ using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 
 namespace Game.Combat
 {
@@ -43,8 +45,17 @@ namespace Game.Combat
             VisibilityRange = 200;
             CurrentScenario = scenario;
             MenuStateMachine.ShowMenu("Combat Menu");
+            
+            Stopwatch watch = Stopwatch.StartNew();
             List<AreaGenerator.Shape> barriers = AreaGenerator.GenerateArea();
+            watch.Stop();
+            Debug.Log("barriers: " + watch.Elapsed.ToString("mm\\:ss\\.ff"));
+            
+            watch = Stopwatch.StartNew();
             PathingGrid.Instance().SetShapes(barriers);
+            watch.Stop();
+            Debug.Log("all grid: " + watch.Elapsed.ToString("mm\\:ss\\.ff"));
+            
 //            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
             
             Player.Initialise(player);
@@ -56,7 +67,7 @@ namespace Game.Combat
         {
             if (SceneManager.GetActiveScene().name == "Combat Tester")
             {
-                MenuStateMachine.ShowMenu("Next Level");
+//                MenuStateMachine.ShowMenu("Next Level");
             }
             else
             {

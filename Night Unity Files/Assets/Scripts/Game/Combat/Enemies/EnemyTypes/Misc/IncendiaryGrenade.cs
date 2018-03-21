@@ -10,9 +10,9 @@
         
         protected override void CreateExplosion()
         {
-            Explosion explosion = new Explosion(CurrentPosition, 5, 20);
+            Explosion explosion = Explosion.CreateExplosion(transform.position, 5, 20);
             explosion.SetBurning();
-            explosion.Fire();
+            explosion.Detonate();
         }
     }
 }

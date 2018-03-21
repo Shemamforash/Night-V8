@@ -1,54 +1,39 @@
-﻿using Game.Characters;
-using Game.Combat.CharacterUi;
-using SamsHelper.BaseGameFunctionality.CooldownSystem;
-using UnityEngine;
+﻿using Game.Combat.CharacterUi;
 
 namespace Game.Combat.Enemies.EnemyTypes
 {
     public class Martyr : DetailedEnemyCombat
     {
-        private Cooldown _detonateCooldown;
         private bool _detonated;
 
         public override void Initialise(Enemy enemy, EnemyUi characterUi)
         {
             base.Initialise(enemy, characterUi);
-//            MinimumFindCoverDistance = -1f;
-            _detonateCooldown = CombatManager.CombatCooldowns.CreateCooldown(1f);
-            _detonateCooldown.SetStartAction(() => SetActionText("Detonating"));
-            _detonateCooldown.SetEndAction(Detonate);
-//            HealthController.AddOnTakeDamage(damage =>
-//            {
-//                if (_detonated) return;
-//                if (HealthController.GetCurrentHealth() != 0) return;
-//                Detonate();
-//            });
+            EnemyUi.HealthController.AddOnTakeDamage(damage =>
+            {
+                if (_detonated) return;
+                if (EnemyUi.HealthController.GetCurrentHealth() != 0) return;
+                Detonate();
+            });
         }
         
-        public override void Alert()
-        {
-            base.Alert();
-            Speed = 10;
-        }
-
         public override void ChooseNextAction()
         {
-            base.ChooseNextAction();
-//            CurrentAction = MoveToPlayer;
+            Speed = 10;
+            CurrentAction = MoveToPlayer;
         }
-        
-        protected override void ReachTarget()
+
+        protected override void ReachPlayer()
         {
-            base.ReachTarget();
-//            if (!Alerted) return;
-//            _detonateCooldown.Start();
-//            CurrentAction = null;
+            CurrentAction = null;
+            if(!_detonated) Detonate();
         }
         
         private void Detonate()
         {
             _detonated = true;
-//            Explosion.CreateAndDetonate(Position.CurrentValue(), 10, 50);
+            SetActionText("Detonating");
+            Explosion.CreateExplosion(transform.position, 2, 50).Detonate();
         }
     }    
 }

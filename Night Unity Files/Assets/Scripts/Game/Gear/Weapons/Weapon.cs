@@ -21,6 +21,8 @@ namespace Game.Gear.Weapons
         public readonly WeaponAttributes WeaponAttributes;
         public Skill WeaponSkillOne, WeaponSkillTwo;
         private long _timeAtLastFire;
+        private const float MaxAccuracyOffsetInDegrees = 45f;
+        private const float IdealDistanceProbabilityTarget = 0.1f;
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
         {
@@ -34,7 +36,7 @@ namespace Game.Gear.Weapons
             WeaponAttributes = new WeaponAttributes(this, durability);
 //            Durability.OnMin(() => { _canEquip = false; });
         }
-        
+
         private bool FireRateElapsedTimeMet()
         {
             long timeElapsed = Helper.TimeInMillis() - _timeAtLastFire;
@@ -42,23 +44,54 @@ namespace Game.Gear.Weapons
             return !(timeElapsed < targetTime);
         }
 
+        public float CalculateHitProbability(float distance)
+        {
+            float accuracy = CalculateBaseAccuracy();
+            float targetWidth = 0.1f;
+            float oppositeLength = distance * Mathf.Tan(accuracy * Mathf.Deg2Rad);
+            float probability = targetWidth / 2f / oppositeLength;
+            probability = Mathf.Clamp(probability, 0f, 1f);
+            return probability;
+        }
+
+        public float CalculateIdealDistance()
+        {
+            float accuracy = CalculateBaseAccuracy();
+            Debug.Log(accuracy);
+            float targetWidth = 0.1f;
+            float oppositeLength = targetWidth / 2f / IdealDistanceProbabilityTarget;
+            Debug.Log(oppositeLength);
+            float distance = oppositeLength / Mathf.Tan(accuracy * Mathf.Deg2Rad);
+            Debug.Log(distance);
+            Debug.Log(PathingGrid.WorldToGridDistance(distance));
+            return distance;
+        }
+
+        public float CalculateBaseAccuracy()
+        {
+            float accuracy = 1 - WeaponAttributes.GetCalculatedValue(AttributeType.Range) / 100f;
+            accuracy *= MaxAccuracyOffsetInDegrees;
+            return accuracy;
+        }
+
         private bool CanFire()
         {
             return !Empty() && FireRateElapsedTimeMet();
         }
-        
+
         public List<Shot> Fire(CharacterCombat origin)
         {
             if (origin.GetTarget() == null) return null;
             if (!CanFire() || origin.Immobilised()) return null;
             _timeAtLastFire = Helper.TimeInMillis();
-            float distance = origin is PlayerCombat ? 0 : ((DetailedEnemyCombat)origin).DistanceToPlayer;
+            float distance = origin is PlayerCombat ? 0 : ((DetailedEnemyCombat) origin).DistanceToPlayer;
             GunFire.Fire(WeaponAttributes.WeaponType, distance);
             List<Shot> shots = new List<Shot>();
             for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
             {
                 shots.Add(Shot.CreateShot(origin));
             }
+
             ConsumeAmmo(1);
             return shots;
         }
@@ -75,7 +108,7 @@ namespace Game.Gear.Weapons
 
         public int GetRemainingMagazines()
         {
-            return (int)ParentInventory.GetResourceQuantity(WeaponAttributes.AmmoType);
+            return (int) ParentInventory.GetResourceQuantity(WeaponAttributes.AmmoType);
         }
 
         public void ConsumeAmmo(int amount = 0)
@@ -124,7 +157,7 @@ namespace Game.Gear.Weapons
 
         public bool FullyLoaded()
         {
-            return GetRemainingAmmo() == (int)WeaponAttributes.Capacity.CurrentValue();
+            return GetRemainingAmmo() == (int) WeaponAttributes.Capacity.CurrentValue();
         }
 
         public bool Empty()

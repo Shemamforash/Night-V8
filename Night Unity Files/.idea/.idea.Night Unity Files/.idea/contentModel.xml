@@ -50,9 +50,7 @@
             <e p="SMath.cs" t="Include" />
           </e>
         </e>
-        <e p="CombatCharacterController.cs" t="Include" />
-        <e p="FitScreenToRoute.cs" t="Include" />
-        <e p="FootstepMaker.cs" t="Include" />
+        <e p="FireBehaviour.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Plugins" t="Include">
@@ -76,7 +74,6 @@
             <e p="Weather.xml" t="Include" />
           </e>
         </e>
-        <e p="RetryMenu.cs" t="Include" />
         <e p="Scripts" t="Include">
           <e p="Facilitating" t="Include">
             <e p="Audio" t="Include">
@@ -178,8 +175,10 @@
               </e>
               <e p="CombatArea" t="Include">
                 <e p="AreaGenerator.cs" t="Include" />
+                <e p="Cell.cs" t="Include" />
                 <e p="PathingGrid.cs" t="Include" />
               </e>
+              <e p="CombatCharacterController.cs" t="Include" />
               <e p="CombatManager.cs" t="Include" />
               <e p="CombatScenario.cs" t="Include" />
               <e p="CombatTester.cs" t="Include" />
@@ -219,10 +218,13 @@
                 </e>
               </e>
               <e p="Explosion.cs" t="Include" />
+              <e p="FitScreenToRoute.cs" t="Include" />
+              <e p="FootstepMaker.cs" t="Include" />
               <e p="ICombatListener.cs" t="Include" />
               <e p="MeleeController.cs" t="Include" />
               <e p="PlayerCombat.cs" t="Include" />
               <e p="RecoilManager.cs" t="Include" />
+              <e p="RetryMenu.cs" t="Include" />
               <e p="Shot.cs" t="Include" />
               <e p="SkillBar.cs" t="Include" />
               <e p="Skills" t="Include">
@@ -281,6 +283,8 @@
                 <e p="UiNodeFocusScript.cs" t="Include" />
                 <e p="UiPathDrawController.cs" t="Include" />
               </e>
+              <e p="UIMapController.cs" t="Include" />
+              <e p="UiQuickTravelController.cs" t="Include" />
               <e p="WorldEvents" t="Include">
                 <e p="WeaponFindEvent.cs" t="Include" />
                 <e p="WorldEvent.cs" t="Include" />
@@ -386,8 +390,6 @@
             </e>
           </e>
         </e>
-        <e p="UIMapController.cs" t="Include" />
-        <e p="UiQuickTravelController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

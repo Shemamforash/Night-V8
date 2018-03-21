@@ -1,27 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using NUnit.Framework;
+using System.Threading;
 using SamsHelper;
 using UnityEngine;
+using UnityEngine.Assertions.Comparers;
 using Debug = UnityEngine.Debug;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat
 {
     public class PathingGrid : MonoBehaviour
     {
-        private const int GameWorldWidth = 20;
-        private const int CellResolution = 5;
-        private const float CellWidth = 1f / CellResolution;
-        private const int GridWidth = GameWorldWidth * CellResolution;
+        public const int GameWorldWidth = 20;
+        public const int CellResolution = 5;
+        public const float CellWidth = 1f / CellResolution;
+        public const int GridWidth = GameWorldWidth * CellResolution;
 
 
-        private static Cell[,] _grid;
+        public static Cell[,] Grid;
         private static readonly List<Node<Cell>> _gridNodes = new List<Node<Cell>>();
         private static PathingGrid _instance;
 
-        private HashSet<Cell> _reachableCells = new HashSet<Cell>();
-        private static HashSet<Cell> _unreachableCells = new HashSet<Cell>();
+        private HashSet<Cell> _reachableCells = new HashSet<Cell>(new CellComparer());
+        public static HashSet<Cell> UnreachableCells = new HashSet<Cell>(new CellComparer());
 
         private static List<AreaGenerator.Shape> _shapes;
         private static ContactFilter2D cf;
@@ -45,7 +48,10 @@ namespace Game.Combat
             _shapeColliders.Clear();
             cf.useTriggers = true;
             cf.SetLayerMask(1 << 9);
+            Stopwatch watch = Stopwatch.StartNew();
             GenerateBaseGrid();
+            watch.Stop();
+            Debug.Log("base grid: " + watch.Elapsed.ToString("mm\\:ss\\.ff"));
             foreach (AreaGenerator.Shape shape in _shapes)
             {
                 GameObject tempCOl = new GameObject();
@@ -60,7 +66,7 @@ namespace Game.Combat
                     Cell c = colliders[i].GetComponent<Cell>();
                     shape.OccupiedCells.Add(c);
                     _reachableCells.Remove(c);
-                    _unreachableCells.Add(c);
+                    UnreachableCells.Add(c);
                     c.Barrier = shape;
                 }
             }
@@ -70,80 +76,118 @@ namespace Game.Combat
 
         public static Cell PositionToCell(Vector2 position)
         {
-            Collider2D point = Physics2D.OverlapPoint(position, 1 << 9);
-            return point != null ? point.GetComponent<Cell>() : null;
+            position.x += CellWidth / 2f;
+            position.y += CellWidth / 2f;
+            int x = Mathf.FloorToInt(position.x * CellResolution);
+            int y = Mathf.FloorToInt(position.y * CellResolution);
+            x += GridWidth / 2;
+            y += GridWidth / 2;
+            return Grid[x, y];
+        }
+        
+        public static Thread RouteToCell(Cell from, Cell to, List<Cell> path)
+        {
+            Thread thread = new Thread(() =>
+            {
+                Stopwatch watch = Stopwatch.StartNew();
+                List<Cell> newPath = Pathfinding.AStar(from.Node, to.Node, _gridNodes);
+
+                int currentIndex = 0;
+                while (currentIndex < newPath.Count)
+                {
+                    Cell current = newPath[currentIndex];
+                    List<Cell> cellsToRemove = new List<Cell>();
+                    bool noneHit = false;
+                    for (int i = newPath.Count - 1; i > currentIndex; --i)
+                    {
+                        Cell next = newPath[i];
+                        if (noneHit)
+                        {
+                            cellsToRemove.Add(next);
+                        }
+                        else
+                        {
+                            Vector3 lineStart = current.Position;
+                            Vector3 lineDirection = (next.Position - current.Position).normalized;
+                            float distance = Vector2.Distance(current.Position, next.Position);
+                            bool unreachableCellFound = false;
+                            for (float j = 0; j < distance; j += 0.1f)
+                            {
+                                Vector3 currentPosition = lineStart + lineDirection * j;
+//                                Debug.DrawRay(lineStart, currentPosition, Color.cyan, 10f);
+                                Cell cellHere = PositionToCell(currentPosition);
+                                if (!UnreachableCells.Contains(cellHere)) continue;
+                                unreachableCellFound = true;
+                                break;
+                            }
+
+                            if (unreachableCellFound) continue;
+                            noneHit = true;
+                        }
+                    }
+
+                    cellsToRemove.ForEach(cell => newPath.Remove(cell));
+                    ++currentIndex;
+                }
+                
+                path.Clear();
+                newPath.ForEach(path.Add);
+                watch.Stop();
+//            Debug.Log(watch.Elapsed.ToString("mm\\:ss\\.ff"));
+            });
+            thread.Start();
+            return thread;
         }
 
-        public static List<Cell> RouteToCell(Cell from, Cell to)
+        private class CellComparer : IEqualityComparer<Cell>
         {
-            Stopwatch watch = Stopwatch.StartNew();
-            List<Cell> path = Pathfinding.AStar(from.Node, to.Node, _gridNodes);
-
-            int currentIndex = 0;
-            while (currentIndex < path.Count)
+            public bool Equals(Cell x, Cell y)
             {
-                Cell current = path[currentIndex];
-                List<Cell> cellsToRemove = new List<Cell>();
-                bool noneHit = false;
-                for (int i = path.Count - 1; i > currentIndex; --i)
-                {
-                    Cell next = path[i];
-                    if (noneHit)
-                    {
-                        cellsToRemove.Add(next);
-                    }
-                    else
-                    {
-                        RaycastHit2D[] hits = Physics2D.RaycastAll(current.Position, next.Position - current.Position, Vector2.Distance(current.Position, next.Position), 1 << 9);
-                        Debug.DrawRay(current.Position, next.Position - current.Position, Color.cyan, 10f);
-                        if (hits.Any(hit => _unreachableCells.Contains(hit.collider.GetComponent<Cell>())))
-                        {
-                            continue;
-                        }
-
-                        noneHit = true;
-                    }
-                }
-
-                cellsToRemove.ForEach(cell => path.Remove(cell));
-                ++currentIndex;
+                return x.id == y.id;
             }
 
-            watch.Stop();
-//            Debug.Log(watch.Elapsed.ToString("mm\\:ss\\.ff"));
-            return path;
+            public int GetHashCode(Cell cell)
+            {
+                return cell.id;
+            }
         }
 
         private static List<Cell> CellsInRange(Cell current, int distance, bool includeUnreachable = false)
         {
-            HashSet<Cell> visited = new HashSet<Cell>();
-            HashSet<Cell> currentLayer = new HashSet<Cell>();
-            HashSet<Cell> nextLayer = new HashSet<Cell>();
+            HashSet<Cell> visited = new HashSet<Cell>(new CellComparer());
+            HashSet<Cell> nextLayer = new HashSet<Cell>(new CellComparer());
             if (current == null) Debug.Log("initial node was null");
-            currentLayer.Add(current);
-            while (distance >= 0)
+            nextLayer.Add(current);
+
+            while (nextLayer.Count != 0)
             {
+                List<Cell> prevLayer = nextLayer.ToList();
                 nextLayer.Clear();
-                foreach (Cell c in currentLayer)
+                foreach (Cell c in prevLayer)
                 {
                     List<Cell> neighbors = includeUnreachable ? c.AllNeighbors : c.ReachableNeighbors;
                     foreach (Cell neighbor in neighbors)
                     {
-                        if (visited.Contains(neighbor) || currentLayer.Contains(neighbor) || neighbor == null) continue;
+                        int xDiff = Math.Abs(neighbor.XIndex - current.XIndex);
+                        int yDiff = Math.Abs(neighbor.YIndex - current.YIndex);
+                        if (xDiff + yDiff > distance) continue;
+                        if (visited.Contains(neighbor)) continue;
                         nextLayer.Add(neighbor);
+                        visited.Add(neighbor);
                     }
-
-                    visited.Add(c);
                 }
-
-                currentLayer.Clear();
-                foreach (Cell cell in nextLayer)
-                {
-                    currentLayer.Add(cell);
-                }
-
-                --distance;
             }
+
+//            while (distance >= 0)
+//            {
+//                foreach (Cell cell in nextLayer)
+//                {
+//                    visited.Add(cell);
+//                }
+
+
+//                --distance;
+//            }
 
             return visited.ToList();
         }
@@ -156,7 +200,7 @@ namespace Game.Combat
         private void OnDrawGizmos()
         {
             Gizmos.color = new Color(1, 0, 0, 0.4f);
-            foreach (Cell cell in _unreachableCells)
+            foreach (Cell cell in UnreachableCells)
             {
                 Gizmos.DrawCube(new Vector3(cell.XPos, cell.YPos), new Vector3(CellWidth, CellWidth, 1));
             }
@@ -188,10 +232,15 @@ namespace Game.Combat
             return nearestValidCell;
         }
 
+        public static int WorldToGridDistance(float distance)
+        {
+            return Mathf.FloorToInt(distance * CellResolution);
+        }
+
         private static List<Cell> RemoveHiddenCells(List<Cell> cells, int range)
         {
             Vector2 playerPosition = CombatManager.Player.CharacterController.transform.position;
-            HashSet<Cell> hiddenCells = new HashSet<Cell>();
+            HashSet<Cell> hiddenCells = new HashSet<Cell>(new CellComparer());
 
             List<AreaGenerator.Shape> shapes = new List<AreaGenerator.Shape>();
             cells.ForEach(c =>
@@ -234,88 +283,34 @@ namespace Game.Combat
                 collider2d.enabled = true;
                 collider2d.points = new[] {leftPoint, rightPoint, rightPointDistant, leftPointDistant};
                 int collisions = collider2d.OverlapCollider(cf, colliders);
+
                 for (int j = 0; j < collisions; ++j)
                 {
                     Collider2D d = colliders[j];
                     if (d == null) break;
-                    Cell c = d.GetComponent<Cell>();
-                    if (c == null) continue;
-                    if (hiddenCells.Contains(c)) continue;
+                    Cell c = PositionToCell(d.transform.position);
                     hiddenCells.Add(c);
                 }
 
                 collider2d.enabled = false;
             }
 
-            cells.RemoveAll(c => _unreachableCells.Contains(c) || hiddenCells.Contains(c));
-
+            cells.RemoveAll(c => UnreachableCells.Contains(c) || hiddenCells.Contains(c));
             return cells;
         }
 
         private void GenerateBaseGrid()
         {
             _gridNodes.Clear();
-            _grid = new Cell[GridWidth, GridWidth];
+            Grid = new Cell[GridWidth, GridWidth];
             for (int x = 0; x < GridWidth; ++x)
             {
                 for (int y = 0; y < GridWidth; ++y)
                 {
-                    _grid[x, y] = Cell.Generate(x, y);
-                    _grid[x, y].transform.SetParent(transform);
-                    _reachableCells.Add(_grid[x, y]);
-                    _gridNodes.Add(_grid[x, y].Node);
+                    Grid[x, y] = Cell.Generate(x, y);
+                    _reachableCells.Add(Grid[x, y]);
+                    _gridNodes.Add(Grid[x, y].Node);
                 }
-            }
-        }
-
-        public class Cell : MonoBehaviour
-        {
-            public float XPos, YPos;
-            public int XIndex, YIndex;
-            public Node<Cell> Node;
-            public List<Cell> AllNeighbors = new List<Cell>();
-            public List<Cell> ReachableNeighbors = new List<Cell>();
-            public Vector2 Position;
-            public AreaGenerator.Shape Barrier;
-
-            public static Cell Generate(int xIndex, int yIndex)
-            {
-                GameObject sprite = new GameObject();
-                sprite.AddComponent<Cell>().SetXY(xIndex, yIndex);
-                return sprite.GetComponent<Cell>();
-            }
-
-            private void AddNeighbor(Cell c)
-            {
-                AllNeighbors.Add(c);
-                if (_unreachableCells.Contains(c)) return;
-                ReachableNeighbors.Add(c);
-                Node.AddNeighbor(c.Node);
-            }
-
-            public void SetNeighbors()
-            {
-                if (XIndex - 1 >= 0) AddNeighbor(_grid[XIndex - 1, YIndex]);
-                if (YIndex - 1 >= 0) AddNeighbor(_grid[XIndex, YIndex - 1]);
-                if (XIndex + 1 < GridWidth) AddNeighbor(_grid[XIndex + 1, YIndex]);
-                if (YIndex + 1 < GridWidth) AddNeighbor(_grid[XIndex, YIndex + 1]);
-            }
-
-            private void SetXY(int xIndex, int yIndex)
-            {
-                gameObject.layer = 9;
-                gameObject.name = "Cell " + xIndex + " " + yIndex;
-                XIndex = xIndex;
-                YIndex = yIndex;
-                XPos = (float) xIndex / CellResolution - GameWorldWidth / 2f;
-                YPos = (float) yIndex / CellResolution - GameWorldWidth / 2f;
-                Position = new Vector2(XPos, YPos);
-                Node = new Node<Cell>(this, Position);
-                BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
-                transform.position = new Vector3(XPos, YPos, 0);
-                transform.localScale = new Vector3(CellWidth, CellWidth, 1);
-                col.size = new Vector2(1, 1);
-                col.isTrigger = true;
             }
         }
     }

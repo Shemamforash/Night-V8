@@ -33,39 +33,12 @@ namespace Game.Combat
             return scenario;
         }
 
-        private static Enemy AddEnemy(EnemyType enemyType, CombatScenario scenario)
+        private static void AddEnemy(EnemyType enemyType, CombatScenario scenario, int difficulty)
         {
-            Enemy newEnemy = null;
-            switch (enemyType)
-            {
-                case EnemyType.Sentinel:
-                    newEnemy = new Enemy(EnemyType.Sentinel);
-                    break;
-                case EnemyType.Martyr:
-                    newEnemy = new Enemy(EnemyType.Martyr);
-                    break;
-                case EnemyType.Brawler:
-                    newEnemy = new Enemy(EnemyType.Brawler);
-                    break;
-                case EnemyType.Sniper:
-                    newEnemy = new Enemy(EnemyType.Sniper);
-                    break;
-                case EnemyType.Mountain:
-                    newEnemy = new Enemy(EnemyType.Mountain);
-                    break;
-                case EnemyType.Witch:
-                    newEnemy = new Enemy(EnemyType.Witch);
-                    break;
-                case EnemyType.Medic:
-                    newEnemy = new Enemy(EnemyType.Medic);
-                    break;
-                case EnemyType.Warlord:
-                    newEnemy = new Enemy(EnemyType.Warlord);
-                    break;
-            }
-
+            Enemy newEnemy = new Enemy(enemyType);
             scenario.AddEnemy(newEnemy);
-            return newEnemy;
+            newEnemy.GenerateArmour(difficulty);
+            newEnemy.GenerateWeapon(difficulty);
         }
 
         public bool ReachedMaxEncounterSize()
@@ -85,10 +58,7 @@ namespace Game.Combat
                 foreach (EnemyTemplate t in _enemyTypes)
                 {
                     if (size < t.Value) continue;
-                    Enemy e = AddEnemy(t.EnemyType, scenario);
-
-                    e.GenerateArmour(difficulty);
-                    e.GenerateWeapon(difficulty);
+                    AddEnemy(t.EnemyType, scenario, difficulty);
                     break;
                 }
             }
@@ -105,7 +75,7 @@ namespace Game.Combat
                 foreach (EnemyTemplate t in _enemyTypes)
                 {
                     if (difficulty < t.Value) continue;
-                    AddEnemy(t.EnemyType, scenario);
+                    AddEnemy(t.EnemyType, scenario, difficulty);
                     if (scenario.ReachedMaxEncounterSize()) break;
                     difficulty -= t.Value;
                 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.Player;
@@ -34,12 +35,10 @@ namespace Game.Combat
 
 //        private readonly Cooldown _firingCooldown;
         private const float MaxAimTime = 2f;
+
         protected int MinRepositionDistance = 4;
-//        private int _wanderDirection = -1;
+        protected int MaxRepositionDistance;
 
-
-//        private float _currentFadeInTime = 2f;
-//        private const float MaxFadeInTime = 2f;
 //        private string _actionString;
         public Enemy Enemy;
 
@@ -51,7 +50,7 @@ namespace Game.Combat
 
 //        private const float FadeVisibilityDistance = 5f;
 //        private float _currentAlpha;
-        private EnemyUi _enemyUi;
+        protected EnemyUi EnemyUi;
 
         public override CharacterCombat GetTarget()
         {
@@ -60,7 +59,7 @@ namespace Game.Combat
 
         public override UIArmourController ArmourController()
         {
-            return _enemyUi.ArmourController;
+            return EnemyUi.ArmourController;
         }
 
         private void UpdateDistance()
@@ -94,19 +93,23 @@ namespace Game.Combat
 //            Gizmos.DrawCube(PathingGrid.PositionToCell(transform.position).Position, new Vector3(0.5f, 0.5f, 0.5f));
 //            Gizmos.color = Color.green;
 //            Gizmos.DrawCube(transform.position, new Vector3(0.5f, 0.5f, 0.5f));
-            if (route.Count == 0) return;
-            for (int i = 1; i < route.Count; ++i)
-            {
-                Gizmos.DrawLine(route[i - 1].Position, route[i].Position);
-            }
+//            Gizmos.color = Color.red;
+//            Gizmos.DrawCube(transform.position, Vector3.one * 0.5f);
+//            Gizmos.color = Color.green;
+//            Gizmos.DrawCube(PathingGrid.PositionToCell(transform.position).Position, Vector3.one * 0.5f);
+//            if (route.Count == 0) return;
+//            for (int i = 1; i < route.Count; ++i)
+//            {
+//                Gizmos.DrawLine(route[i - 1].Position, route[i].Position);
+//            }
         }
 
-        private List<PathingGrid.Cell> route = new List<PathingGrid.Cell>();
+        private List<Cell> route = new List<Cell>();
 
-        private Action MoveToTargetPosition(List<PathingGrid.Cell> newRoute)
+        private Action MoveToTargetPosition(List<Cell> newRoute)
         {
             route = newRoute;
-            PathingGrid.Cell target = newRoute[0];
+            Cell target = newRoute[0];
             newRoute.RemoveAt(0);
             return () =>
             {
@@ -129,40 +132,60 @@ namespace Game.Combat
             };
         }
 
+        protected void MoveToPlayer()
+        {
+            if (DistanceToPlayer < 0.25f)
+            {
+                ReachPlayer();
+            }
+
+            Vector3 direction = CombatManager.Player.transform.position;
+            direction = direction - transform.position;
+            direction.Normalize();
+            CharacterController.GetComponent<Rigidbody2D>().AddForce(direction * 2);
+        }
+
+        protected virtual void ReachPlayer()
+        {
+        }
+
         public override UIHealthBarController HealthController()
         {
-            return _enemyUi.HealthController;
+            return EnemyUi.HealthController;
         }
 
         public UIHitController HitController()
         {
-            return _enemyUi.UiHitController;
+            return EnemyUi.UiHitController;
         }
 
         public void SetSelected()
         {
-            _enemyUi.PrimaryButton.Button().Select();
+            EnemyUi.PrimaryButton.Button().Select();
         }
 
+        private int IdealWeaponDistance;
+        
         public virtual void Initialise(Enemy enemy, EnemyUi enemyUi)
         {
-            _enemyUi = enemyUi;
-            _enemyUi.NameText.text = enemy.Name;
+            EnemyUi = enemyUi;
+            EnemyUi.NameText.text = enemy.Name;
             Enemy = enemy;
+            if(Weapon() != null) IdealWeaponDistance = PathingGrid.WorldToGridDistance(Weapon().CalculateIdealDistance());
             SetOwnedByEnemy(Enemy.Template.Speed);
             HealthController().SetInitialHealth(Enemy.Template.Health, this);
-            _enemyUi.ArmourController.SetCharacter(Enemy);
+            EnemyUi.ArmourController.SetCharacter(Enemy);
             RecoilManager.EnterCombat();
 //            if (!(this is Medic || this is Martyr)) SetHealBehaviour();
             CurrentAction = Wander;
-            _enemyUi.UiHitController.SetCharacter(this);
-            _enemyUi.PrimaryButton.AddOnSelectEvent(() =>
+            EnemyUi.UiHitController.SetCharacter(this);
+            EnemyUi.PrimaryButton.AddOnSelectEvent(() =>
             {
                 CombatManager.Player.SetTarget(this);
-                _enemyUi.CanvasGroup.alpha = 1;
+                EnemyUi.CanvasGroup.alpha = 1;
             });
-            _enemyUi.PrimaryButton.AddOnDeselectEvent(() => { _enemyUi.CanvasGroup.alpha = UiAppearanceController.FadedColour.a; });
-            _enemyUi.HealthController.AddOnTakeDamage(f => { Alert(); });
+            EnemyUi.PrimaryButton.AddOnDeselectEvent(() => { EnemyUi.CanvasGroup.alpha = UiAppearanceController.FadedColour.a; });
+            EnemyUi.HealthController.AddOnTakeDamage(f => { Alert(); });
             CharacterController = GetComponent<CombatCharacterController>();
             CharacterController.transform.SetParent(GameObject.Find("World").transform);
             CharacterController.SetOwner(this);
@@ -248,18 +271,18 @@ namespace Game.Combat
 
         protected Action CheckForRepositioning(bool moveAnyway = false)
         {
-            if (!InCombat()) return null;
 //            if (DistanceToPlayer <= MeleeDistance)
 //            {
 //                return Melee();
 //            }
 
-            
-            if (DistanceToPlayer < MinRepositionDistance || DistanceToPlayer > 3 || moveAnyway)
+            float cellDistanceToPlayer = PathingGrid.WorldToGridDistance(DistanceToPlayer);
+            Debug.Log(cellDistanceToPlayer + " " +MinRepositionDistance + " " +IdealWeaponDistance);
+            if (cellDistanceToPlayer < MinRepositionDistance || cellDistanceToPlayer > IdealWeaponDistance * 1.5f || moveAnyway)
             {
-                PathingGrid.Cell currentCell = PathingGrid.PositionToCell(transform.position);
-                List<PathingGrid.Cell> path = PathingGrid.RouteToCell(currentCell, PathingGrid.GetCellInRange(currentCell, 10, MinRepositionDistance));
-                return MoveToTargetPosition(path);
+                Cell currentCell = PathingGrid.PositionToCell(transform.position);
+                Thread pathThread = PathingGrid.RouteToCell(currentCell, PathingGrid.GetCellInRange(currentCell, IdealWeaponDistance, MinRepositionDistance), route);
+                return WaitForRoute(pathThread);
             }
 
             return null;
@@ -296,67 +319,25 @@ namespace Game.Combat
             };
         }
 
-        public bool _aheadOfPlayer;
-
-        public void MoveToPlayer()
-        {
-//            float playerPosition = CombatManager.Player.Position.CurrentValue();
-//            if (playerPosition < Position.CurrentValue())
-//            {
-//                MoveForward();
-//                if (playerPosition >= Position.CurrentValue())
-//                {
-//                    Position.SetCurrentValue(playerPosition);
-//                    ReachTarget();
-//                }
-//            }
-//            else
-//            {
-//                MoveBackward();
-//                if (playerPosition <= Position.CurrentValue())
-//                {
-//                    Position.SetCurrentValue(playerPosition);
-//                    ReachTarget();
-//                }
-//            }
-        }
-//
-//        public Action MoveToTargetDistance(float distance)
-//        {
-//            Assert.IsTrue(distance >= 0);
-//            Action moveForwardAction = () =>
-//            {
-//                MoveForward();
-//                if (DistanceToPlayer > distance) return;
-//                ReachTarget();
-//            };
-//            Action moveBackwardAction = () =>
-//            {
-//                MoveBackward();
-//                if (DistanceToPlayer < distance) return;
-//                ReachTarget();
-//            };
-//
-//            if (_aheadOfPlayer)
-//            {
-//                SetActionText(DistanceToPlayer > distance ? "Approaching" : "Retreating");
-//                return DistanceToPlayer > distance ? moveForwardAction : moveBackwardAction;
-//            }
-//
-//            SetActionText(DistanceToPlayer > distance ? "Retreating" : "Approaching");
-//            return DistanceToPlayer > distance ? moveBackwardAction : moveForwardAction;
-//        }
-
         private void Wander()
         {
             if (transform.position == Vector3.zero) return;
-            PathingGrid.Cell currentCell = PathingGrid.PositionToCell(transform.position);
-            int randomDistance = Random.Range(20, 30);
-            PathingGrid.Cell targetCell = PathingGrid.GetCellNearMe(currentCell, randomDistance);
-            List<PathingGrid.Cell> route = PathingGrid.RouteToCell(currentCell, targetCell);
-            CurrentAction = MoveToTargetPosition(route);
+            Cell currentCell = PathingGrid.PositionToCell(transform.position);
+            int randomDistance = Random.Range(10, 20);
+            Cell targetCell = PathingGrid.GetCellNearMe(currentCell, randomDistance);
+            Thread routingThread = PathingGrid.RouteToCell(currentCell, targetCell, route);
+            CurrentAction = WaitForRoute(routingThread);
             SetActionText("Wandering");
             CheckForPlayer();
+        }
+
+        private Action WaitForRoute(Thread routingThread)
+        {
+            return () =>
+            {
+                if (routingThread.IsAlive) return;
+                CurrentAction = MoveToTargetPosition(route);
+            };
         }
 
         private void WaitThenWander()
@@ -385,29 +366,21 @@ namespace Game.Combat
 
         private void CheckForPlayer()
         {
-//            if (DistanceToPlayer > _visionRange) return;
-//            CurrentAction = Suspicious;
+            if (DistanceToPlayer > _visionRange) return;
+            CurrentAction = Suspicious;
         }
 
         private void Suspicious()
         {
             SetActionText("Suspicious");
-//            if (DistanceToPlayer >= _detectionRange.CurrentValue()) return;
-//            if (DistanceToPlayer >= _visionRange.CurrentValue()) CurrentAction = Wander;
+            if (DistanceToPlayer >= _detectionRange.CurrentValue()) return;
+            if (DistanceToPlayer >= _visionRange.CurrentValue()) CurrentAction = Wander;
             Alert();
-        }
-
-        public bool InCombat()
-        {
-//            return !IsDead && Alerted;
-            return true;
         }
 
         protected void SetActionText(string action)
         {
-//            _actionString = action;
-//            if (!DistanceController.InSight) action = "";
-//            ActionText.text = action;
+            EnemyUi.ActionText.text = action;
         }
 
         public override void OnMiss()
@@ -420,11 +393,10 @@ namespace Game.Combat
             return Enemy.Weapon;
         }
 
-        public virtual void Alert()
+        public void Alert()
         {
             if (Alerted) return;
             Alerted = true;
-            Debug.Log("alerted");
             UIEnemyController.AlertAll();
             ChooseNextAction();
         }
@@ -509,7 +481,7 @@ namespace Game.Combat
         {
             base.Kill();
             UIEnemyController.Remove(this);
-            Destroy(_enemyUi.gameObject);
+            Destroy(EnemyUi.gameObject);
             Enemy.Kill();
             Destroy(gameObject);
         }
@@ -529,7 +501,7 @@ namespace Game.Combat
 
         protected virtual Action Aim()
         {
-            if(Weapon() == null) return CheckForRepositioning();
+            if (Weapon() == null) return CheckForRepositioning();
             if (Weapon().Empty())
             {
                 return Reload();

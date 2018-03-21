@@ -154,7 +154,6 @@ namespace Facilitating.UIControllers
             float nearestDistance = 10000;
             Enemies.ForEach(e =>
             {
-                if (!e.InCombat()) return;
                 if (nearestEnemy == null)
                 {
                     nearestEnemy = e;

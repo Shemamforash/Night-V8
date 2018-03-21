@@ -25,7 +25,7 @@ namespace Game.Combat
         private float _speed;
         private float _age;
         private const float MaxAge = 3f;
-        
+
         private float _knockDownChance;
         private float _finalDamageModifier = 1f;
         private bool _guaranteeHit, _guaranteeCritical;
@@ -34,7 +34,7 @@ namespace Game.Combat
         private int _pierceDepth;
         public bool DidHit;
         private event Action OnHitAction;
-        
+
         private static List<Shot> _shotPool = new List<Shot>();
 
         private void ResetValues()
@@ -86,7 +86,7 @@ namespace Game.Combat
         {
             WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
-            _accuracy = 1f - attributes.GetCalculatedValue(AttributeType.Range) / 100f;
+            _accuracy = _origin.Weapon().CalculateBaseAccuracy();
             _bleedChance = attributes.GetCalculatedValue(AttributeType.BleedChance);
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
             _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
@@ -101,12 +101,8 @@ namespace Game.Combat
 
         private void CalculateAccuracy()
         {
-            _accuracy *= 20f;
             if (_guaranteeHit) _accuracy = 0;
-            else
-            {
-                _accuracy *= _origin.RecoilManager.GetAccuracyModifier();
-            }
+            else _accuracy *= _origin.RecoilManager.GetAccuracyModifier();
         }
 
         private bool WillCrit()
@@ -147,7 +143,7 @@ namespace Game.Combat
                 _age += Time.deltaTime;
                 yield return null;
             }
-            
+
             DeactivateShot();
         }
 
@@ -156,7 +152,7 @@ namespace Game.Combat
             gameObject.SetActive(false);
             _shotPool.Add(this);
         }
-        
+
         private void OnCollisionEnter2D(Collision2D collision)
         {
             GameObject other = collision.gameObject;

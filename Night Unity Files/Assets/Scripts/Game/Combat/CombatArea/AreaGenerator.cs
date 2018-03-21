@@ -173,8 +173,8 @@ namespace Game.Combat
             public readonly List<Vector2> Vertices;
             public GameObject ShapeObject;
             public PolygonCollider2D Collider;
-            public List<Vector2> WorldVerts = new List<Vector2>();
-            public List<PathingGrid.Cell> OccupiedCells = new List<PathingGrid.Cell>();
+            public readonly List<Vector2> WorldVerts = new List<Vector2>();
+            public readonly List<Cell> OccupiedCells = new List<Cell>();
 
             public Shape(Texture2D tex, List<Vector2> vertices)
             {
