@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Facilitating.UIControllers;
 using Game.Characters.Player;
-using Game.Combat.CharacterUi;
 using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
+using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 
 namespace Game.Combat
@@ -23,12 +25,30 @@ namespace Game.Combat
         private static bool _inMelee;
         public static int VisibilityRange;
         public static PlayerCombat Player;
+        public Image _screenFade;
+        private const float _fadeTime = 1f;
 
         public void Awake()
         {
             Player = GameObject.Find("Player").GetComponent<PlayerCombat>();
             CombatCanvas = Helper.FindChildWithName<CanvasGroup>(gameObject, "Combat Canvas");
             EnemyController = Helper.FindChildWithName<UIEnemyController>(gameObject, "Enemies");
+            _screenFade = GameObject.Find("Screen Fade").GetComponent<Image>();
+            StartCoroutine(FadeIn());
+        }
+
+        private IEnumerator FadeIn()
+        {
+            float timeElapsed = 0f;
+            while (timeElapsed < _fadeTime)
+            {
+                float alpha = 1 - timeElapsed / _fadeTime;
+                _screenFade.color = new Color(0, 0, 0, alpha);
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            _screenFade.color = UiAppearanceController.InvisibleColour;
         }
 
         public void Update()
@@ -52,7 +72,7 @@ namespace Game.Combat
             Debug.Log("barriers: " + watch.Elapsed.ToString("mm\\:ss\\.ff"));
             
             watch = Stopwatch.StartNew();
-            PathingGrid.Instance().SetShapes(barriers);
+            PathingGrid.Instance().GenerateGrid(barriers);
             watch.Stop();
             Debug.Log("all grid: " + watch.Elapsed.ToString("mm\\:ss\\.ff"));
             
@@ -63,10 +83,33 @@ namespace Game.Combat
             EnemyController.EnterCombat();
         }
 
-        private static void SucceedCombat()
+        private bool _loadingNextSene = false;
+        
+        private IEnumerator FadeOut(AsyncOperation sceneLoaded)
+        {
+            float timeElapsed = 0f;
+            sceneLoaded.allowSceneActivation = false;
+            _loadingNextSene = true;
+            float alpha = 0;
+            while (!sceneLoaded.isDone && alpha != 1)
+            {
+                alpha = timeElapsed / (_fadeTime * 4);
+                if (alpha > 1) alpha = 1;
+                _screenFade.color = new Color(0, 0, 0, alpha);
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            sceneLoaded.allowSceneActivation = true;
+        }
+
+        private void SucceedCombat()
         {
             if (SceneManager.GetActiveScene().name == "Combat Tester")
             {
+                if (_loadingNextSene) return;
+                AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync("Combat Tester");
+                StartCoroutine(FadeOut(sceneLoaded));
 //                MenuStateMachine.ShowMenu("Next Level");
             }
             else
@@ -99,23 +142,23 @@ namespace Game.Combat
 //            return Math.Abs(originPosition - target.Position.CurrentValue());
 //        }
 
-        public static List<DetailedEnemyCombat> GetEnemiesBehindTarget(DetailedEnemyCombat target)
+        public static List<EnemyBehaviour> GetEnemiesBehindTarget(EnemyBehaviour target)
         {
-            List<DetailedEnemyCombat> enemiesBehindTarget = new List<DetailedEnemyCombat>();
+            List<EnemyBehaviour> enemiesBehindTarget = new List<EnemyBehaviour>();
             return enemiesBehindTarget;
         }
 
         public static List<CharacterCombat> GetCharactersInRange(Vector2 position, float range)
         {
             List<CharacterCombat> charactersInRange = new List<CharacterCombat>();
-            if (Vector2.Distance(Player.CharacterController.Position(), position) <= range)
+            if (Vector2.Distance(Player.transform.position, position) <= range)
             {
                 charactersInRange.Add(Player);
             }
 
-            foreach (DetailedEnemyCombat enemy in UIEnemyController.Enemies)
+            foreach (EnemyBehaviour enemy in UIEnemyController.Enemies)
             {
-                if (Vector2.Distance(enemy.CharacterController.Position(), position) <= range)
+                if (Vector2.Distance(enemy.transform.position, position) <= range)
                 {
                     charactersInRange.Add(enemy);
                 }

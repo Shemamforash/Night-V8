@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using SamsHelper;
 using UnityEngine;
-using UnityEngine.Assertions.Comparers;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
@@ -23,17 +22,17 @@ namespace Game.Combat
         private static readonly List<Node<Cell>> _gridNodes = new List<Node<Cell>>();
         private static PathingGrid _instance;
 
-        private HashSet<Cell> _reachableCells = new HashSet<Cell>(new CellComparer());
+        private readonly HashSet<Cell> _reachableCells = new HashSet<Cell>(new CellComparer());
         public static HashSet<Cell> UnreachableCells = new HashSet<Cell>(new CellComparer());
 
         private static List<AreaGenerator.Shape> _shapes;
         private static ContactFilter2D cf;
 
-        private static readonly List<PolygonCollider2D> _shapeColliders = new List<PolygonCollider2D>();
         private static readonly Collider2D[] colliders = new Collider2D[5000];
 
         public void Awake()
         {
+            UnreachableCells = new HashSet<Cell>(new CellComparer());
             _instance = this;
         }
 
@@ -42,10 +41,9 @@ namespace Game.Combat
             return _instance;
         }
 
-        public void SetShapes(List<AreaGenerator.Shape> barriers)
+        public void GenerateGrid(List<AreaGenerator.Shape> barriers)
         {
             _shapes = barriers;
-            _shapeColliders.Clear();
             cf.useTriggers = true;
             cf.SetLayerMask(1 << 9);
             Stopwatch watch = Stopwatch.StartNew();
@@ -54,12 +52,6 @@ namespace Game.Combat
             Debug.Log("base grid: " + watch.Elapsed.ToString("mm\\:ss\\.ff"));
             foreach (AreaGenerator.Shape shape in _shapes)
             {
-                GameObject tempCOl = new GameObject();
-                tempCOl.name = "Collider shape";
-                tempCOl.transform.localScale = Vector3.one;
-                PolygonCollider2D collider2d = tempCOl.AddComponent<PolygonCollider2D>();
-                _shapeColliders.Add(collider2d);
-                collider2d.isTrigger = true;
                 int areas = shape.Collider.OverlapCollider(cf, colliders);
                 for (int i = 0; i < areas; ++i)
                 {
@@ -84,6 +76,19 @@ namespace Game.Combat
             y += GridWidth / 2;
             return Grid[x, y];
         }
+
+        public static bool IsLineObstructed(Vector3 start, Vector3 end)
+        {
+            Vector3 direction = (end - start).normalized;
+            float distance = Vector2.Distance(start, end);
+            for (float j = 0; j <= distance; j += 0.05f)
+            {
+                Vector3 currentPosition = start + direction * j;
+                Cell cellHere = PositionToCell(currentPosition);
+                if (UnreachableCells.Contains(cellHere)) return true;
+            }
+            return false;
+        }
         
         public static Thread RouteToCell(Cell from, Cell to, List<Cell> path)
         {
@@ -92,6 +97,7 @@ namespace Game.Combat
                 Stopwatch watch = Stopwatch.StartNew();
                 List<Cell> newPath = Pathfinding.AStar(from.Node, to.Node, _gridNodes);
 
+                
                 int currentIndex = 0;
                 while (currentIndex < newPath.Count)
                 {
@@ -105,23 +111,8 @@ namespace Game.Combat
                         {
                             cellsToRemove.Add(next);
                         }
-                        else
+                        else if (!IsLineObstructed(current.Position, next.Position))
                         {
-                            Vector3 lineStart = current.Position;
-                            Vector3 lineDirection = (next.Position - current.Position).normalized;
-                            float distance = Vector2.Distance(current.Position, next.Position);
-                            bool unreachableCellFound = false;
-                            for (float j = 0; j < distance; j += 0.1f)
-                            {
-                                Vector3 currentPosition = lineStart + lineDirection * j;
-//                                Debug.DrawRay(lineStart, currentPosition, Color.cyan, 10f);
-                                Cell cellHere = PositionToCell(currentPosition);
-                                if (!UnreachableCells.Contains(cellHere)) continue;
-                                unreachableCellFound = true;
-                                break;
-                            }
-
-                            if (unreachableCellFound) continue;
                             noneHit = true;
                         }
                     }
@@ -177,18 +168,6 @@ namespace Game.Combat
                     }
                 }
             }
-
-//            while (distance >= 0)
-//            {
-//                foreach (Cell cell in nextLayer)
-//                {
-//                    visited.Add(cell);
-//                }
-
-
-//                --distance;
-//            }
-
             return visited.ToList();
         }
 
@@ -217,8 +196,7 @@ namespace Game.Combat
         public static Cell GetCellInRange(Cell currentCell, int maxRange, int minRange = 0)
         {
             Cell playerCell = PositionToCell(CombatManager.Player.transform.position);
-            List<Cell> cellsInRange = CellsInRange(playerCell, Random.Range(minRange, maxRange), true);
-            cellsInRange = RemoveHiddenCells(cellsInRange, maxRange);
+            List<Cell> cellsInRange = CellsInRange(playerCell, Random.Range(minRange, maxRange));
             float minDistance = float.MaxValue;
             Cell nearestValidCell = null;
             _cellsInRange = cellsInRange;
@@ -226,9 +204,11 @@ namespace Game.Combat
             {
                 float distance = Vector2.Distance(currentCell.Position, c.Position);
                 if (distance >= minDistance) return;
+                if (IsCellHidden(c)) return;
                 minDistance = distance;
                 nearestValidCell = c;
             });
+            return Helper.RandomInList(CellsInRange(nearestValidCell, 2));
             return nearestValidCell;
         }
 
@@ -237,66 +217,56 @@ namespace Game.Combat
             return Mathf.FloorToInt(distance * CellResolution);
         }
 
-        private static List<Cell> RemoveHiddenCells(List<Cell> cells, int range)
+        private static Vector2 _lastPlayerPosition;
+
+        private static bool IsCellHidden(Cell c)
         {
-            Vector2 playerPosition = CombatManager.Player.CharacterController.transform.position;
-            HashSet<Cell> hiddenCells = new HashSet<Cell>(new CellComparer());
-
-            List<AreaGenerator.Shape> shapes = new List<AreaGenerator.Shape>();
-            cells.ForEach(c =>
+            Vector2 currentPlayerPosition = CombatManager.Player.transform.position;
+            if (_lastPlayerPosition != currentPlayerPosition)
             {
-                if (c.Barrier != null) shapes.Add(c.Barrier);
-            });
-
-            for (int i = 0; i < shapes.Count; i++)
-            {
-                AreaGenerator.Shape shape = shapes[i];
-                if (shape.OccupiedCells.All(a => hiddenCells.Contains(a))) continue;
-                Vector2 dirToShape = shape.ShapeObject.transform.position;
-                dirToShape -= playerPosition;
-
-                float leftAngleMax = 0;
-                float rightAngleMax = 0;
-                Vector2 leftPoint = Vector2.zero;
-                Vector2 rightPoint = Vector2.zero;
-
-                foreach (Vector2 worldPoint in shape.WorldVerts)
-                {
-                    Vector2 dirToPoint = worldPoint - playerPosition;
-                    float angle = Vector2.SignedAngle(dirToShape, dirToPoint);
-                    if (angle < leftAngleMax)
-                    {
-                        leftAngleMax = angle;
-                        leftPoint = worldPoint;
-                        continue;
-                    }
-
-                    if (angle <= rightAngleMax) continue;
-                    rightAngleMax = angle;
-                    rightPoint = worldPoint;
-                }
-
-                Vector2 leftPointDistant = leftPoint + (leftPoint - playerPosition).normalized * range * 1.5f;
-                Vector2 rightPointDistant = rightPoint + (rightPoint - playerPosition).normalized * range * 1.5f;
-
-                PolygonCollider2D collider2d = _shapeColliders[i];
-                collider2d.enabled = true;
-                collider2d.points = new[] {leftPoint, rightPoint, rightPointDistant, leftPointDistant};
-                int collisions = collider2d.OverlapCollider(cf, colliders);
-
-                for (int j = 0; j < collisions; ++j)
-                {
-                    Collider2D d = colliders[j];
-                    if (d == null) break;
-                    Cell c = PositionToCell(d.transform.position);
-                    hiddenCells.Add(c);
-                }
-
-                collider2d.enabled = false;
+                UpdateHiddenCells(currentPlayerPosition);
             }
+            _lastPlayerPosition = currentPlayerPosition;
+            return _hiddenCellPolys.Any(poly => AdvancedMaths.IsPointInPolygon(c.transform.position, poly));
+        }
 
-            cells.RemoveAll(c => UnreachableCells.Contains(c) || hiddenCells.Contains(c));
-            return cells;
+        private static readonly List<List<Vector2>> _hiddenCellPolys = new List<List<Vector2>>();
+
+        private static void UpdateHiddenCells(Vector2 playerPosition)
+        {
+            _hiddenCellPolys.Clear();
+           _shapes.ForEach(shape =>
+           {
+               Vector2 dirToShape = shape.ShapeObject.transform.position;
+               dirToShape -= playerPosition;
+
+               float leftAngleMax = 0;
+               float rightAngleMax = 0;
+               Vector2 leftPoint = Vector2.zero;
+               Vector2 rightPoint = Vector2.zero;
+
+               foreach (Vector2 worldPoint in shape.WorldVerts)
+               {
+                   Vector2 dirToPoint = worldPoint - playerPosition;
+                   float angle = Vector2.SignedAngle(dirToShape, dirToPoint);
+                   if (angle < leftAngleMax)
+                   {
+                       leftAngleMax = angle;
+                       leftPoint = worldPoint;
+                       continue;
+                   }
+
+                   if (angle <= rightAngleMax) continue;
+                   rightAngleMax = angle;
+                   rightPoint = worldPoint;
+               }
+
+               Vector2 leftPointDistant = leftPoint + (leftPoint - playerPosition).normalized * 20 * 1.5f;
+               Vector2 rightPointDistant = rightPoint + (rightPoint - playerPosition).normalized * 20 * 1.5f;
+
+               List<Vector2> hiddenPoly = new List<Vector2> {leftPoint, rightPoint, rightPointDistant, leftPointDistant};
+               _hiddenCellPolys.Add(hiddenPoly);
+           });
         }
 
         private void GenerateBaseGrid()

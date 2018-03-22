@@ -1,6 +1,6 @@
 ﻿namespace Game.Combat.Enemies.EnemyTypes
 {
-    public class Sniper : DetailedEnemyCombat
+    public class Sniper : EnemyBehaviour
     {
     }
 }

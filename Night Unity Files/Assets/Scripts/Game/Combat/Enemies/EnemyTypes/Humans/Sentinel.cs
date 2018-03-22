@@ -5,7 +5,7 @@ using Game.Gear.Weapons;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
-    public class Sentinel : DetailedEnemyCombat
+    public class Sentinel : EnemyBehaviour
     {
         private float _timeSinceLastHeal;
         private const float DefaultHealTime = 0.5f;

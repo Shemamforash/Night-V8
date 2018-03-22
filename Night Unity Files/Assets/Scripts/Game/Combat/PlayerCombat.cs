@@ -22,6 +22,7 @@ namespace Game.Combat
     {
         private float _damageModifier, _skillCooldownModifier;
         private int _initialArmour;
+        private Cooldown _dashCooldown;
 
         public Player Player;
 
@@ -31,11 +32,11 @@ namespace Game.Combat
         public event Action OnReloadAction;
         public bool Retaliate;
         private bool _fired;
-        private Cooldown _dashCooldown;
-        private DetailedEnemyCombat _currentTarget;
+        private EnemyBehaviour _currentTarget;
 
         private Number _strengthText;
         private PlayerUi _playerUi;
+        private Transform _pivot;
 
         public override void Kill()
         {
@@ -46,12 +47,25 @@ namespace Game.Combat
 
         public override void Update()
         {
+            if (GetTarget() == null)
+            {
+                _pivot.gameObject.SetActive(false);
+            }
+            else
+            {
+                _pivot.gameObject.SetActive(true);
+                _pivot.rotation = AdvancedMaths.RotationToTarget(transform.position, GetTarget().transform.position);
+            }
+
             if (MeleeController.InMelee) return;
             base.Update();
         }
 
         public void Initialise(Player player)
         {
+            _pivot = Helper.FindChildWithName<Transform>(gameObject, "Pivot");
+            InputHandler.RegisterInputListener(this);
+            
             _playerUi = GameObject.Find("Player Ui").GetComponent<PlayerUi>();
             
             Player = player;
@@ -82,7 +96,6 @@ namespace Game.Combat
             HealthController().AddOnHeal(a => HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue()));
             HealthController().AddOnTakeDamage(a => HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue()));
             
-            HeartBeatController.Enable();
             HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue());
             RecoilManager.EnterCombat();
 
@@ -93,25 +106,15 @@ namespace Game.Combat
             UIMagazineController.SetWeapon(Weapon());
             
             SetReloadCooldown();
-            CharacterController = GameObject.Find("Player").GetComponent<CombatCharacterController>();
-            CharacterController.SetOwner(this);
-            CharacterController.SetDistance(0, 0);
+            SetDistance(0, 0);
             
             SetConditions();
         }
 
-        private void Dash(float direction)
+        protected override void Dash(Vector2 direction)
         {
-            if (Immobilised() || !CanDash()) return;
-            if (direction > 0)
-            {
-//                MoveForwardAction?.Invoke(_dashDistance);
-            }
-            else
-            {
-//                MoveBackwardAction?.Invoke(_dashDistance);
-            }
-
+            if (!CanDash()) return;
+            base.Dash(direction);
             _dashCooldown.Start();
         }
 
@@ -119,41 +122,29 @@ namespace Game.Combat
         {
             return _dashCooldown.Finished();
         }
-
-        private float _dashDistance = 5f;
-
-        //SPRINTING
-
-        private void StartSprinting()
-        {
-            if (Sprinting) return;
-            Sprinting = true;
-        }
-
-        private void StopSprinting()
-        {
-            if (!Sprinting) return;
-            Sprinting = false;
-        }
-
-
-        public void TryRetaliate(DetailedEnemyCombat origin)
+        
+        public void TryRetaliate(EnemyBehaviour origin)
         {
             if (Retaliate) FireWeapon();
         }
 
+//        protected override void KnockDown()
+//        {
+//            if (IsKnockedDown) return;
+//            base.KnockDown();
+//            UIKnockdownController.StartKnockdown(10);
+//        }
+        
         protected override void KnockDown()
         {
-//            if (IsKnockedDown) return;
-            base.KnockDown();
-//            UIKnockdownController.StartKnockdown(10);
+            StopReloading();
+//            StopSprinting();
+            UpdateMagazineUi();
         }
 
-        public void SetTarget(DetailedEnemyCombat e)
+        public void SetTarget(EnemyBehaviour e)
         {
-            if (e == null) return;
             _currentTarget = e;
-            e.SetSelected();
         }
 
         //MISC
@@ -186,7 +177,6 @@ namespace Game.Combat
             StopReloading();
             InputHandler.UnregisterInputListener(this);
             _fired = false;
-            HeartBeatController.Disable();
         }
 
         //RELOADING
@@ -256,13 +246,6 @@ namespace Game.Combat
 
         //MISC
 
-        protected override void Interrupt()
-        {
-            StopReloading();
-            StopSprinting();
-            UpdateMagazineUi();
-        }
-
         public void UpdateMagazineUi()
         {
             string magazineMessage = "";
@@ -303,6 +286,12 @@ namespace Game.Combat
                     case InputAxis.Fire:
                         if (!_fired || Player.Weapon.WeaponAttributes.Automatic) FireWeapon();
                         break;
+                    case InputAxis.Horizontal:
+                        Move(direction * Vector2.right);
+                        break;
+                    case InputAxis.Vertical:
+                        Move(direction * Vector2.up);
+                        break;
                 }
             }
             else
@@ -314,9 +303,6 @@ namespace Game.Combat
                         break;
                     case InputAxis.Reload:
                         Reload();
-                        break;
-                    case InputAxis.Sprint:
-                        StartSprinting();
                         break;
                     case InputAxis.Melee:
                         TryMelee();
@@ -336,6 +322,9 @@ namespace Game.Combat
                     case InputAxis.SwitchTab:
                         UIEnemyController.Select(direction);
                         break;
+                    case InputAxis.Sprint:
+                        StartSprinting();
+                        break;
                 }
             }
         }
@@ -350,20 +339,19 @@ namespace Game.Combat
                 case InputAxis.Sprint:
                     StopSprinting();
                     break;
-                case InputAxis.Horizontal:
-//                    StopMove(axis);
-                    break;
-                case InputAxis.Vertical:
-//                    StopMove(axis);
-                    break;
             }
         }
 
         public void OnDoubleTap(InputAxis axis, float direction)
         {
-            if (axis == InputAxis.Horizontal)
+            switch (axis)
             {
-                Dash(direction);
+                case InputAxis.Horizontal:
+                    Dash(direction * Vector2.right);
+                    break;
+                case InputAxis.Vertical:
+                    Dash(direction * Vector2.up);
+                    break;
             }
         }
     }

@@ -1,6 +1,4 @@
-﻿using Facilitating.UIControllers;
-using Game.Characters;
-using Game.Combat;
+﻿using Game.Combat;
 using SamsHelper;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,7 +25,7 @@ public class UIHitController : MonoBehaviour
         _character = character;
     }
     
-    public void Update()
+    public void UpdateValue()
     {
         float distance = _character.DistanceToTarget();
         distance = 1f / distance;

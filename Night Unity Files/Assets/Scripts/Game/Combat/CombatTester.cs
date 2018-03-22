@@ -41,7 +41,7 @@ namespace Game.Combat
             _playerCharacter.EquipWeapon(weapon);
             weapon.Reload(_playerCharacter.Inventory());
             
-            _encounter = CombatScenario.Generate(_instance.Difficulty, 3);
+            _encounter = CombatScenario.Generate(_instance.Difficulty, 1);
             CombatManager.EnterCombat(_playerCharacter, _encounter);
         }
     }

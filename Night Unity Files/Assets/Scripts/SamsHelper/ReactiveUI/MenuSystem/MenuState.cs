@@ -1,5 +1,6 @@
 ﻿using Game.World;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -45,6 +46,8 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             {
                 WorldState.UnPause();
             }
+
+            if (_menu == null) return;
             _menu.gameObject.SetActive(false);
         }
     }

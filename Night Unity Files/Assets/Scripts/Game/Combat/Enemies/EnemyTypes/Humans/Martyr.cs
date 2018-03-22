@@ -2,7 +2,7 @@
 
 namespace Game.Combat.Enemies.EnemyTypes
 {
-    public class Martyr : DetailedEnemyCombat
+    public class Martyr : EnemyBehaviour
     {
         private bool _detonated;
 

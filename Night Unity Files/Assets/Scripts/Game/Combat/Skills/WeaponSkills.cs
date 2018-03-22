@@ -104,7 +104,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            foreach (DetailedEnemyCombat e in UIEnemyController.Enemies)
+            foreach (EnemyBehaviour e in UIEnemyController.Enemies)
             {
                 Shot s = Shot.CreateShot(CombatManager.Player);
                 s.Fire();

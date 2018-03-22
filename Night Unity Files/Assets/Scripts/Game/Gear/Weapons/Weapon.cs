@@ -22,7 +22,8 @@ namespace Game.Gear.Weapons
         public Skill WeaponSkillOne, WeaponSkillTwo;
         private long _timeAtLastFire;
         private const float MaxAccuracyOffsetInDegrees = 45f;
-        private const float IdealDistanceProbabilityTarget = 0.1f;
+        private const float RangeMin = 1f;
+        private const float RangeMax = 4.5f;
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
         {
@@ -56,20 +57,14 @@ namespace Game.Gear.Weapons
 
         public float CalculateIdealDistance()
         {
-            float accuracy = CalculateBaseAccuracy();
-            Debug.Log(accuracy);
-            float targetWidth = 0.1f;
-            float oppositeLength = targetWidth / 2f / IdealDistanceProbabilityTarget;
-            Debug.Log(oppositeLength);
-            float distance = oppositeLength / Mathf.Tan(accuracy * Mathf.Deg2Rad);
-            Debug.Log(distance);
-            Debug.Log(PathingGrid.WorldToGridDistance(distance));
-            return distance;
+            float range = WeaponAttributes.GetCalculatedValue(AttributeType.Range) / 100f;
+            float idealDistance = (RangeMax - RangeMin) * range + RangeMin;
+            return idealDistance;
         }
 
         public float CalculateBaseAccuracy()
         {
-            float accuracy = 1 - WeaponAttributes.GetCalculatedValue(AttributeType.Range) / 100f;
+            float accuracy = 1f - WeaponAttributes.GetCalculatedValue(AttributeType.Range) / 100f;
             accuracy *= MaxAccuracyOffsetInDegrees;
             return accuracy;
         }
@@ -84,7 +79,7 @@ namespace Game.Gear.Weapons
             if (origin.GetTarget() == null) return null;
             if (!CanFire() || origin.Immobilised()) return null;
             _timeAtLastFire = Helper.TimeInMillis();
-            float distance = origin is PlayerCombat ? 0 : ((DetailedEnemyCombat) origin).DistanceToPlayer;
+            float distance = origin is PlayerCombat ? 0 : ((EnemyBehaviour) origin).DistanceToPlayer;
             GunFire.Fire(WeaponAttributes.WeaponType, distance);
             List<Shot> shots = new List<Shot>();
             for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
@@ -123,6 +118,11 @@ namespace Game.Gear.Weapons
         public float GetAttributeValue(AttributeType attributeType)
         {
             return WeaponAttributes.Get(attributeType).CurrentValue();
+        }
+
+        public int Capacity()
+        {
+            return (int)WeaponAttributes.Get(AttributeType.Capacity).CurrentValue();
         }
 
         public void IncreaseDurability()

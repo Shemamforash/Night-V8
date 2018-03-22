@@ -12,10 +12,10 @@ namespace Game.Combat
         private const float FalloffRatio = 0.95f;
         private const float MaxRingTime = 0.6f, MaxPressTime = 0.3f;
         private static float _initialRingTime, _initialPressTime;
-        private static DetailedEnemyCombat _targetEnemy;
+        private static EnemyBehaviour _targetEnemy;
         public static bool InMelee;
         private static int _remainingHits, _hitsWon, _hitsLost;
-        private static readonly List<DetailedEnemyCombat> MeleeQueue = new List<DetailedEnemyCombat>();
+        private static readonly List<EnemyBehaviour> MeleeQueue = new List<EnemyBehaviour>();
         private const int NumberOfRounds = 5;
 
         public void Awake()
@@ -30,7 +30,7 @@ namespace Game.Combat
             MeleeControllers.Add(_right);
         }
 
-        public static void StartMelee(DetailedEnemyCombat enemy)
+        public static void StartMelee(EnemyBehaviour enemy)
         {
             if (_targetEnemy != null)
             {

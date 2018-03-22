@@ -105,7 +105,12 @@ namespace Facilitating.UIControllers
                 fader = _faderPool[0];
                 _faderPool.RemoveAt(0);
             }
-            
+
+            if (fader == null)
+            {
+                FadeNewHealth();
+                return;
+            }
             GameObject faderObject = fader.gameObject;
             faderObject.transform.SetSiblingIndex(1);
             RectTransform faderTransform = fader.GetComponent<RectTransform>();

@@ -26,7 +26,7 @@ namespace Game.Combat
         private bool _bleed, _burn, _sick, _pierce;
 
         private static GameObject _explosionPrefab;
-        private static List<Explosion> _explosionPool = new List<Explosion>();
+        private static readonly List<Explosion> _explosionPool = new List<Explosion>();
 
 
         public void Awake()
@@ -43,6 +43,11 @@ namespace Game.Combat
             _originalWarningWidth = _warningRing.bounds.size.x;
         }
 
+        public void OnDestroy()
+        {
+            _explosionPool.Remove(this);
+        }
+        
         public static Explosion CreateExplosion(Vector2 position, float radius, int damage)
         {
             Explosion explosion = GetNewExplosion();

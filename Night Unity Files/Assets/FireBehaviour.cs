@@ -38,6 +38,7 @@ public class FireBehaviour : MonoBehaviour
 
 		FireBehaviour fire = _firePool[0];
 		_firePool.RemoveAt(0);
+		fire.gameObject.SetActive(true);
 		return fire;
 	}
 

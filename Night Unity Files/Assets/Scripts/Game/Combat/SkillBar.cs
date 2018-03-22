@@ -11,13 +11,16 @@ namespace Game.Combat
     {
         private const int NoSlots = 4;
         private static Skill[] _skills;
-        private static readonly List<CooldownController> CooldownControllers = new List<CooldownController>();
-        private static readonly List<UISkillCostController> CostControllers = new List<UISkillCostController>();
+        private static List<CooldownController> CooldownControllers;
+        private static List<UISkillCostController> CostControllers;
         private static CanvasGroup _canvas;
         private static Cooldown _skillsCooldown;
 
         public void Awake()
         {
+            CooldownControllers = new List<CooldownController>();
+            CostControllers = new List<UISkillCostController>();
+            
             for (int i = 0; i < NoSlots; ++i)
             {
                 CooldownControllers.Add(Helper.FindChildWithName<CooldownController>(gameObject, "Skill " + (i + 1)));

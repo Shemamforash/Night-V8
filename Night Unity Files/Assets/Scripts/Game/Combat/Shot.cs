@@ -20,8 +20,9 @@ namespace Game.Combat
         private float _pierceChance, _burnChance, _bleedChance, _sicknessChance;
         private float _criticalChance;
         private CharacterCombat _origin;
-        private Transform _target;
+        private Vector3 _targetPosition;
         private bool _isCritical;
+        private bool _moving, _fired;
         private float _speed;
         private float _age;
         private const float MaxAge = 3f;
@@ -34,8 +35,21 @@ namespace Game.Combat
         private int _pierceDepth;
         public bool DidHit;
         private event Action OnHitAction;
+        private static GameObject _bulletPrefab;
 
-        private static List<Shot> _shotPool = new List<Shot>();
+        private static readonly List<Shot> _shotPool = new List<Shot>();
+        
+        private Transform _shotParent;
+
+        public void Awake()
+        {
+            if(_shotParent == null) _shotParent = GameObject.Find("World").transform.Find("Footsteps");
+        }
+
+        private void OnDestroy()
+        {
+            _shotPool.Remove(this);
+        }
 
         private void ResetValues()
         {
@@ -46,6 +60,8 @@ namespace Game.Combat
             _knockbackDistance = 0;
             _damageDealt = 0;
             _pierceDepth = 0;
+            _moving = false;
+            _fired = false;
             DidHit = false;
             OnHitAction = null;
         }
@@ -55,8 +71,10 @@ namespace Game.Combat
             Shot shot;
             if (_shotPool.Count == 0)
             {
-                GameObject bullet = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Bullet"));
+                if (_bulletPrefab == null) _bulletPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bullet");
+                GameObject bullet = Instantiate(_bulletPrefab);
                 shot = bullet.AddComponent<Shot>();
+                bullet.layer = 11;
             }
             else
             {
@@ -72,7 +90,7 @@ namespace Game.Combat
         private void Initialise(CharacterCombat origin, CharacterCombat target)
         {
             _origin = origin;
-            _target = target.CharacterController.transform;
+            _targetPosition = target.transform.position;
             ResetValues();
             CacheWeaponAttributes();
         }
@@ -119,6 +137,16 @@ namespace Game.Combat
             return _isCritical;
         }
 
+        private Vector3 direction;
+        
+        private void FixedUpdate()
+        {
+            if (!_fired && !_moving) return;
+            GetComponent<Rigidbody2D>().velocity = direction * _speed;
+            _origin?.RecoilManager.Increment(_origin.Weapon());
+            _moving = true;
+        }
+
         public void Fire()
         {
             _age = 0;
@@ -126,12 +154,10 @@ namespace Game.Combat
             float angleOffset = Random.Range(-_accuracy, _accuracy);
             _speed = Random.Range(9f, 11f);
 
-            Vector3 direction = (_target.transform.position - _origin.CharacterController.Position()).normalized;
-            transform.position = _origin.CharacterController.Position() + direction * 0.2f;
+            direction = (_targetPosition - _origin.transform.position).normalized;
+            transform.position = _origin.transform.position + direction * 0.2f;
             direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * direction;
-
-            GetComponent<Rigidbody2D>().velocity = direction * _speed;
-            _origin?.RecoilManager.Increment(_origin.Weapon());
+            _fired = true;
             StartCoroutine(WaitToDie());
         }
 
@@ -149,6 +175,7 @@ namespace Game.Combat
 
         private void DeactivateShot()
         {
+            Debug.Log("banana");
             gameObject.SetActive(false);
             _shotPool.Add(this);
         }
@@ -156,16 +183,12 @@ namespace Game.Combat
         private void OnCollisionEnter2D(Collision2D collision)
         {
             GameObject other = collision.gameObject;
-            if (other.GetComponent<CombatCharacterController>() == _origin.CharacterController) return;
-            if (other.CompareTag("Barrier"))
+            if (other.CompareTag("Barrier") || other.layer == 11 || other.CompareTag("Player"))
             {
                 DeactivateShot();
                 return;
             }
-
-            if (other.name.Contains("Bullet")) return;
-            if (other.CompareTag("Player")) return;
-            ApplyDamage(other.GetComponent<CombatCharacterController>().Owner());
+            ApplyDamage(other.GetComponent<CharacterCombat>());
             DeactivateShot();
         }
 
@@ -178,12 +201,13 @@ namespace Game.Combat
             ApplyConditions(hit);
             OnHitAction?.Invoke();
             (_origin as PlayerCombat)?.RageController.Increase(totalDamage);
+            if(hit is EnemyBehaviour) ((EnemyBehaviour)hit).Alert();
             float armourModifier = DidPierce() ? 1 : 1 - hit.ArmourController().CurrentArmour() / 10f;
             float healthDamage = (int) (armourModifier * DamageDealt());
             float armourDamage = (int) ((1 - armourModifier) * DamageDealt());
             if (healthDamage != 0) hit.HealthController().TakeDamage(healthDamage);
             if (armourDamage != 0) hit.ArmourController().TakeDamage(armourDamage);
-            if (_isCritical) (hit as DetailedEnemyCombat)?.HitController().RegisterCritical();
+            if (_isCritical) (hit as EnemyBehaviour)?.HitController().RegisterCritical();
         }
 
         private void ApplyConditions(CharacterCombat hit)

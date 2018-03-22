@@ -11,7 +11,7 @@ using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
-    public class Witch : DetailedEnemyCombat
+    public class Witch : EnemyBehaviour
     {
         private int _damageTaken;
         private float _targetTime;

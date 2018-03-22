@@ -9,10 +9,10 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.EnemyTypes
 {
-    public class Medic : DetailedEnemyCombat
+    public class Medic : EnemyBehaviour
     {
         private const int HealAmount = 50;
-        private DetailedEnemyCombat _healTarget;
+        private EnemyBehaviour _healTarget;
 
         public override void Initialise(Enemy enemy, EnemyUi characterUi)
         {
@@ -25,7 +25,7 @@ namespace Game.Combat.Enemies.EnemyTypes
             _healTarget?.ClearHealWait();
         }
         
-        public void RequestHeal(DetailedEnemyCombat healTarget)
+        public void RequestHeal(EnemyBehaviour healTarget)
         {
             if (_healTarget != null) return;
             _healTarget = healTarget;

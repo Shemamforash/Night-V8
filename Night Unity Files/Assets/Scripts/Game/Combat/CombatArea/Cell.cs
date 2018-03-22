@@ -20,8 +20,9 @@ namespace Game.Combat
         {
             if (_cellPrefab == null) _cellPrefab = Resources.Load<GameObject>("Prefabs/Combat/Cell");
             GameObject sprite = Instantiate(_cellPrefab, PathingGrid.Instance().transform);
-            sprite.GetComponent<Cell>().SetXY(xIndex, yIndex);
-            return sprite.GetComponent<Cell>();
+            Cell cell = sprite.GetComponent<Cell>();
+            cell.SetXY(xIndex, yIndex);
+            return cell;
         }
 
         private void AddNeighbor(Cell c)
@@ -51,11 +52,11 @@ namespace Game.Combat
             YPos = (float) yIndex / PathingGrid.CellResolution - PathingGrid.GameWorldWidth / 2f;
             Position = new Vector2(XPos, YPos);
             Node = new Node<Cell>(this, Position);
-            BoxCollider2D col = gameObject.GetComponent<BoxCollider2D>();
+//            BoxCollider2D col = gameObject.GetComponent<BoxCollider2D>();
             transform.position = new Vector3(XPos, YPos, 0);
             transform.localScale = new Vector3(PathingGrid.CellWidth, PathingGrid.CellWidth, 1);
-            col.size = new Vector2(1, 1);
-            col.isTrigger = true;
+//            col.size = new Vector2(1, 1);
+//            col.isTrigger = true;
         }
     }
 }

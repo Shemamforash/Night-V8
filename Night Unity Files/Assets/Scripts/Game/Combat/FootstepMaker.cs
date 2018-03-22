@@ -8,19 +8,21 @@ public class FootstepMaker : MonoBehaviour {
 	private bool _leftLast;
 	private Vector3 _lastPosition;
 	private GameObject _footprintPrefab;
-	private static readonly List<GameObject> _footstepPool = new List<GameObject>();
-	private Quaternion _rotation;
+	private readonly List<GameObject> _footstepPool = new List<GameObject>();
+	private Transform _footstepParent;
+	private Rigidbody2D _rigidBody;
 
 	public void Awake()
 	{
-		_footprintPrefab = Resources.Load<GameObject>("Prefabs/Map/Footprint");
+		if(_footstepParent == null) _footstepParent = GameObject.Find("World").transform.Find("Footsteps");
+		_rigidBody = GetComponent<Rigidbody2D>();
 	}
 
 	private void SetTransformAndRotation(GameObject footprintObject)
 	{
 		footprintObject.SetActive(true);
 		footprintObject.transform.position = transform.position;
-		footprintObject.transform.rotation = _rotation;
+		footprintObject.transform.rotation = GetRotation();
 	}
 	
 	private GameObject GetNewFootprint()
@@ -28,7 +30,9 @@ public class FootstepMaker : MonoBehaviour {
 		GameObject footprintObject;
 		if (_footstepPool.Count == 0)
 		{
-			footprintObject = Instantiate(_footprintPrefab, transform.position, _rotation);
+			if(_footprintPrefab == null) _footprintPrefab = Resources.Load<GameObject>("Prefabs/Map/Footprint");
+			footprintObject = Instantiate(_footprintPrefab, transform.position, GetRotation());
+			footprintObject.transform.SetParent(_footstepParent);
 			FadeAndDie footprint = footprintObject.GetComponent<FadeAndDie>();
 			footprint.SetLifeTime(2f, () =>
 			{
@@ -46,9 +50,10 @@ public class FootstepMaker : MonoBehaviour {
 		return footprintObject;
 	}
 
-	public void UpdateRotation(float rotation)
+	private Quaternion GetRotation()
 	{
-		_rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+		float zRotation = AdvancedMaths.AngleFromUp(Vector3.zero, _rigidBody.velocity.normalized);
+		return Quaternion.Euler(new Vector3(0, 0, zRotation));
 	}
 	
 	private void Update()

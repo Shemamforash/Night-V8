@@ -7,7 +7,7 @@ using static Facilitating.UIControllers.UIEnemyController;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
-    public class Warlord : DetailedEnemyCombat
+    public class Warlord : EnemyBehaviour
     {
         private float _reinforceCallTime;
         private float _reinforceDuration = 5f;

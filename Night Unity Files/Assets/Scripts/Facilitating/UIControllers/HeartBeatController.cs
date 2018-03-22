@@ -15,7 +15,6 @@ public class HeartBeatController : MonoBehaviour
     public void Awake()
     {
         _instance = this;
-        Disable();
         _heartBeatParticles = GetComponent<ParticleSystem>();
     }
 
@@ -35,16 +34,6 @@ public class HeartBeatController : MonoBehaviour
         {
             _instance._heartBeatParticles.Stop();
         }
-    }
-
-    public static void Enable()
-    {
-        _instance.gameObject.SetActive(true);
-    }
-
-    public static void Disable()
-    {
-        _instance.gameObject.SetActive(false);
     }
 
     public void Update()

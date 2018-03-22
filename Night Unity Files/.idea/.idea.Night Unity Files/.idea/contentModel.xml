@@ -177,6 +177,7 @@
                 <e p="AreaGenerator.cs" t="Include" />
                 <e p="Cell.cs" t="Include" />
                 <e p="PathingGrid.cs" t="Include" />
+                <e p="Triangulator.cs" t="Include" />
               </e>
               <e p="CombatCharacterController.cs" t="Include" />
               <e p="CombatManager.cs" t="Include" />
@@ -188,7 +189,6 @@
                 <e p="Condition.cs" t="Include" />
                 <e p="Sickness.cs" t="Include" />
               </e>
-              <e p="DetailedEnemyCombat.cs" t="Include" />
               <e p="Enemies" t="Include">
                 <e p="Enemy.cs" t="Include" />
                 <e p="EnemyTypes" t="Include">
@@ -217,6 +217,7 @@
                   </e>
                 </e>
               </e>
+              <e p="EnemyBehaviour.cs" t="Include" />
               <e p="Explosion.cs" t="Include" />
               <e p="FitScreenToRoute.cs" t="Include" />
               <e p="FootstepMaker.cs" t="Include" />

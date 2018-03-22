@@ -1,6 +1,6 @@
 ﻿namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
-    public class Brawler : DetailedEnemyCombat
+    public class Brawler : EnemyBehaviour
     {
         public override void ChooseNextAction()
         {

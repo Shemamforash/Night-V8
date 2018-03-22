@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Facilitating.Audio;
-using Facilitating.UIControllers;
+﻿using Facilitating.UIControllers;
 using Game.Characters;
-using Game.Characters.Player;
-using Game.Combat.CharacterUi;
-using Game.Combat.Enemies;
 using Game.Combat.Skills;
 using Game.Gear.Weapons;
-using NUnit.Framework;
 using SamsHelper;
-using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
-using SamsHelper.ReactiveUI;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat
 {
@@ -22,51 +14,36 @@ namespace Game.Combat
         public Bleed Bleeding;
         public Burn Burn;
         public Sickness Sick;
+        
+        private Rigidbody2D _rigidbody;
+        private bool Sprinting;
+        private const int SprintModifier = 2;
+        private bool _immobilised = false;
+        private const float DashForce = 300;
 
 //        public bool IsKnockedDown;
 //        public bool IsDead;
 
         public readonly RecoilManager RecoilManager = new RecoilManager();
 
-//        private float _distanceTravelled;
-
         public float Speed;
-        public const int SprintModifier = 2;
-
-        public bool Sprinting;
-//        public const int MeleeDistance = 5;
-
         private Character _character;
-
-        public CombatCharacterController CharacterController;
 
         protected void SetOwnedByEnemy(float speed)
         {
             Speed = speed;
         }
-        
+
 //        private void KnockBack(float distance)
 //        {
 //            MoveBackwardAction?.Invoke(distance);
 //        }
 
-        public virtual void Update()
-        {
-            if (MeleeController.InMelee) return;
-            Burn.Update();
-            Sick.Update();
-            Bleeding.Update();
-            RecoilManager.UpdateCombat();
-        }
-
         public virtual void Kill()
         {
-            Destroy(CharacterController.gameObject);
+//            Destroy(CharacterController.gameObject);
         }
 
-        protected virtual void Interrupt()
-        {
-        }
 
         protected virtual void KnockDown()
         {
@@ -86,10 +63,6 @@ namespace Game.Combat
             return false;
         }
 
-        public virtual void OnMiss()
-        {
-        }
-
         public abstract Weapon Weapon();
 
         //FIRING
@@ -98,10 +71,8 @@ namespace Game.Combat
 
         public float DistanceToTarget()
         {
-            return Vector2.Distance(CharacterController.Position(), GetTarget().CharacterController.Position());
+            return Vector2.Distance(transform.position, GetTarget().transform.position);
         }
-
-        public abstract UIHealthBarController HealthController();
 
         protected void SetConditions()
         {
@@ -121,7 +92,71 @@ namespace Game.Combat
             Sick.Clear();
         }
 
+        public void Immobilised(bool immobilised)
+        {
+            _immobilised = immobilised;
+        }
+
+        public void Awake()
+        {
+            _rigidbody = GetComponent<Rigidbody2D>();
+        }
+
+        public virtual void Update()
+        {
+            if (MeleeController.InMelee) return;
+            Burn.Update();
+            Sick.Update();
+            Bleeding.Update();
+            RecoilManager.UpdateCombat();
+        }
+
+        private Vector2 _forceToadd = Vector2.zero;
+
+        public void FixedUpdate()
+        {
+            _rigidbody.AddForce(_forceToadd);
+            _forceToadd = Vector2.zero;
+        }
+
+        protected virtual void Dash(Vector2 direction)
+        {
+            if (_immobilised) return;
+            _forceToadd += direction * DashForce;
+        }
+
+        public void Move(Vector2 direction)
+        {
+            if (_immobilised) return;
+            float speed = Speed;
+            if (Sprinting) speed *= SprintModifier;
+            _forceToadd += direction * speed;
+        }
+
+        protected void StartSprinting()
+        {
+            if (Sprinting) return;
+            Sprinting = true;
+        }
+
+        protected void StopSprinting()
+        {
+            if (!Sprinting) return;
+            Sprinting = false;
+        }
+
+        public void SetDistance(int rangeMin, int rangeMax)
+        {
+            Vector3 position = new Vector3();
+            position.x = Random.Range(rangeMin, rangeMax);
+            if (Random.Range(0, 2) == 1) position.x = -position.x;
+            position.y = Random.Range(rangeMin, rangeMax);
+            if (Random.Range(0, 2) == 1) position.y = -position.y;
+            transform.position = position;
+        }
+
         public abstract CharacterCombat GetTarget();
         public abstract UIArmourController ArmourController();
+        public abstract UIHealthBarController HealthController();
     }
 }

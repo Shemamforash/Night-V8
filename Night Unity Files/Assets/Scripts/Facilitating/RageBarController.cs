@@ -9,7 +9,7 @@ public class RageBarController : MonoBehaviour
 {
     private static float _barFillAmount;
     private static ParticleSystem _rageFire;
-    private static readonly List<Image> RoseProngs = new List<Image>();
+    private static List<Image> RoseProngs;
     private static Image _dashFlash;
     private static RageBarController _instance;
     private static float _currentTime, _dashFlashTime = 1f;
@@ -17,6 +17,7 @@ public class RageBarController : MonoBehaviour
 
     public void Awake()
     {
+        RoseProngs = new List<Image>();
         _instance = this;
         _dashFlash = Helper.FindChildWithName<Image>(gameObject, "Ready");
         _rageFire = Helper.FindChildWithName<ParticleSystem>(gameObject, "Rage Fire");

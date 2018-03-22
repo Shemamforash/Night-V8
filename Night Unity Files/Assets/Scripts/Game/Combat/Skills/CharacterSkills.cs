@@ -145,7 +145,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            DetailedEnemyCombat nearestEnemy = UIEnemyController.NearestEnemy();
+            EnemyBehaviour nearestEnemy = UIEnemyController.NearestEnemy();
             if (nearestEnemy == null || nearestEnemy.DistanceToPlayer > 5) return;
             nearestEnemy.Knockback(5);
 //            nearestEnemy.ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit);
@@ -236,7 +236,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            foreach (DetailedEnemyCombat e in UIEnemyController.Enemies)
+            foreach (EnemyBehaviour e in UIEnemyController.Enemies)
             {
 //                if (e.DistanceToPlayer > 5 || e.HealthController.GetCurrentHealth() > 100) continue;
 //                e.HealthController.TakeDamage(101);

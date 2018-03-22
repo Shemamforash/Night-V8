@@ -9,7 +9,7 @@ namespace Facilitating.UIControllers
 {
     public class UIEnemyController : MonoBehaviour, ICombatListener
     {
-        public static readonly List<DetailedEnemyCombat> Enemies = new List<DetailedEnemyCombat>();
+        public static readonly List<EnemyBehaviour> Enemies = new List<EnemyBehaviour>();
         private static Transform _enemyListLeft, _enemyListRight;
         private static readonly List<GameObject> _leftList = new List<GameObject>();
         private static readonly List<GameObject> _rightList = new List<GameObject>();
@@ -36,6 +36,9 @@ namespace Facilitating.UIControllers
                 _rightList.Add(enemyUi);
             }
 
+            Vector3 uiPosition = enemyUi.transform.position;
+            uiPosition.z = 0;
+            enemyUi.transform.position = uiPosition;
             enemyUi.transform.localScale = Vector3.one;
             return enemyUi;
         }
@@ -69,13 +72,13 @@ namespace Facilitating.UIControllers
             CharacterCombat currentTarget = CombatManager.Player.GetTarget();
             float distance = currentTarget.DistanceToTarget();
             float nearestDistance = 10000;
-            DetailedEnemyCombat nearestEnemy = null;
+            EnemyBehaviour nearestEnemy = null;
             Enemies.ForEach(e =>
             {
                 if (e == currentTarget) return;
                 float candidateDistance = e.DistanceToTarget();
-                if (candidateDistance <= distance) return;
-                if (candidateDistance >= nearestDistance) return;
+                if (candidateDistance < distance) return;
+                if (nearestEnemy != null && candidateDistance >= nearestDistance) return;
                 nearestDistance = candidateDistance;
                 nearestEnemy = e;
             });
@@ -85,21 +88,22 @@ namespace Facilitating.UIControllers
 
         private static void SelectNearestEnemy()
         {
-            NearestEnemy()?.SetSelected();
+            NearestEnemy(true)?.SetSelected();
         }
 
         private static void SelectNextNearest()
         {
             CharacterCombat currentTarget = CombatManager.Player.GetTarget();
             float distance = currentTarget.DistanceToTarget();
-            float nearestDistance = 0;
-            DetailedEnemyCombat nearestEnemy = null;
+            Debug.Log(distance);
+            float nearestDistance = -1;
+            EnemyBehaviour nearestEnemy = null;
             Enemies.ForEach(e =>
             {
                 if (e == currentTarget) return;
                 float candidateDistance = e.DistanceToTarget();
-                if (candidateDistance >= distance) return;
-                if (candidateDistance <= nearestDistance) return;
+                if (candidateDistance > distance) return;
+                if (nearestEnemy != null && candidateDistance <= nearestDistance) return;
                 nearestDistance = candidateDistance;
                 nearestEnemy = e;
             });
@@ -120,7 +124,7 @@ namespace Facilitating.UIControllers
         public void QueueEnemyToAdd(EnemyType type)
         {
             Enemy e = new Enemy(type);
-            DetailedEnemyCombat enemyUi = e.LinkUi(CreateNewEnemyUi());
+            EnemyBehaviour enemyUi = e.LinkUi(CreateNewEnemyUi());
             enemyUi.Alert();
             AddEnemy(enemyUi);
             CombatManager.CurrentScenario.AddEnemy(e);
@@ -136,31 +140,32 @@ namespace Facilitating.UIControllers
             Enemies.ForEach(e => e.Alert());
         }
 
-        public static void Remove(DetailedEnemyCombat enemy)
+        public static void Remove(EnemyBehaviour enemy)
         {
             SelectNextNearest();
             Enemies.Remove(enemy);
         }
 
-        private static void AddEnemy(DetailedEnemyCombat e)
+        private static void AddEnemy(EnemyBehaviour e)
         {
             Enemies.Add(e);
             if (Enemies.Count == 1) e.SetSelected();
         }
 
-        public static DetailedEnemyCombat NearestEnemy()
+        public static EnemyBehaviour NearestEnemy(bool ignoreTarget = false)
         {
-            DetailedEnemyCombat nearestEnemy = null;
+            EnemyBehaviour nearestEnemy = null;
             float nearestDistance = 10000;
             Enemies.ForEach(e =>
             {
+                if (ignoreTarget && e == CombatManager.Player.GetTarget()) return;
                 if (nearestEnemy == null)
                 {
                     nearestEnemy = e;
                     return;
                 }
 
-                float distance = Vector2.Distance(e.CharacterController.Position(), CombatManager.Player.CharacterController.Position());
+                float distance = e.DistanceToPlayer;
                 if (distance >= nearestDistance) return;
                 nearestDistance = distance;
                 nearestEnemy = e;

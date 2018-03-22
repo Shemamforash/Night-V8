@@ -5,7 +5,7 @@ using Game.Gear.Weapons;
 
 namespace Game.Combat.Enemies.EnemyTypes.Humans
 {
-    public class Mountain : DetailedEnemyCombat
+    public class Mountain : EnemyBehaviour
     {
         private bool _firedVolley;
 

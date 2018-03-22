@@ -46,42 +46,42 @@ namespace Game.Combat.Enemies
             Weapon?.Reload(Inventory());
         }
 
-        public DetailedEnemyCombat LinkUi(GameObject enemyUiPrefab)
+        public EnemyBehaviour LinkUi(GameObject enemyUiPrefab)
         {
             Reset();
-            DetailedEnemyCombat enemyCombat;
+            EnemyBehaviour enemyBehaviour;
             GameObject enemyObject = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Combat Character"));
             switch (Template.EnemyType)
             {
                 case EnemyType.Brawler:
-                    enemyCombat = enemyObject.AddComponent<Brawler>();
+                    enemyBehaviour = enemyObject.AddComponent<Brawler>();
                     break;
                 case EnemyType.Martyr:
-                    enemyCombat = enemyObject.AddComponent<Martyr>();
+                    enemyBehaviour = enemyObject.AddComponent<Martyr>();
                     break;
                 case EnemyType.Medic:
-                    enemyCombat = enemyObject.AddComponent<Medic>();
+                    enemyBehaviour = enemyObject.AddComponent<Medic>();
                     break;
                 case EnemyType.Mountain:
-                    enemyCombat = enemyObject.AddComponent<Mountain>();
+                    enemyBehaviour = enemyObject.AddComponent<Mountain>();
                     break;
                 case EnemyType.Sentinel:
-                    enemyCombat = enemyObject.AddComponent<Sentinel>();
+                    enemyBehaviour = enemyObject.AddComponent<Sentinel>();
                     break;
                 case EnemyType.Sniper:
-                    enemyCombat = enemyObject.AddComponent<Sniper>();
+                    enemyBehaviour = enemyObject.AddComponent<Sniper>();
                     break;
                 case EnemyType.Warlord:
-                    enemyCombat = enemyObject.AddComponent<Warlord>();
+                    enemyBehaviour = enemyObject.AddComponent<Warlord>();
                     break;
                 case EnemyType.Witch:
-                    enemyCombat = enemyObject.AddComponent<Witch>();
+                    enemyBehaviour = enemyObject.AddComponent<Witch>();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            enemyCombat.Initialise(this, enemyUiPrefab.GetComponent<EnemyUi>());
-            return enemyCombat;
+            enemyBehaviour.Initialise(this, enemyUiPrefab.GetComponent<EnemyUi>());
+            return enemyBehaviour;
         }
 
         public override void Kill()

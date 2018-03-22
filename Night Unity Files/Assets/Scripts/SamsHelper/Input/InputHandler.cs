@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Combat;
 using UnityEngine;
 
 namespace SamsHelper.Input
@@ -8,9 +9,7 @@ namespace SamsHelper.Input
     {
         private readonly Dictionary<InputAxis, InputPress> _inputPressList = new Dictionary<InputAxis, InputPress>();
         private static InputHandler _instance;
-        private static readonly List<InputPress> _pressedKeys = new List<InputPress>();
-        private event Action OnNoPress;
-        private static readonly List<IInputListener> InputListeners = new List<IInputListener>();
+        private readonly List<IInputListener> InputListeners = new List<IInputListener>();
         private const float _doubleTapDuration = 300;
 
 
@@ -75,7 +74,6 @@ namespace SamsHelper.Input
                     if (!_pressed)
                     {
                         _pressed = true;
-                        AddPressedKey(this);
                         BroadcastInputDown(_axis, false, _lastInputValue);
                         CheckDoubleTap();
                     }
@@ -87,62 +85,45 @@ namespace SamsHelper.Input
                 else
                 {
                     _pressed = false;
-                    RemovePressedKey(this);
                     BroadcastInputUp(_axis);
                 }
             }
         }
 
-        private static void AddPressedKey(InputPress key)
-        {
-            _pressedKeys.Add(key);
-        }
-
-        private static void RemovePressedKey(InputPress key)
-        {
-            _pressedKeys.Remove(key);
-            if (_pressedKeys.Count == 0)
-            {
-                BroadcastNoPress();
-            }
-        }
-
-        private static void BroadcastNoPress() => Instance().OnNoPress?.Invoke();
-        public void AddOnNoPress(Action a) => Instance().OnNoPress += a;
-
         private static void BroadcastInputDown(InputAxis axis, bool isHeld, float lastInputValue)
         {
-            for (int i = InputListeners.Count - 1; i >= 0; --i)
+            for (int i = Instance().InputListeners.Count - 1; i >= 0; --i)
             {
-                InputListeners[i].OnInputDown(axis, isHeld, lastInputValue);
+                Instance().InputListeners[i].OnInputDown(axis, isHeld, lastInputValue);
             }
         }
 
         private static void BroadcastInputUp(InputAxis axis)
         {
-            for (int i = InputListeners.Count - 1; i >= 0; --i)
+            for (int i = Instance().InputListeners.Count - 1; i >= 0; --i)
             {
-                InputListeners[i].OnInputUp(axis);
+                Instance().InputListeners[i].OnInputUp(axis);
             }
         }
 
         private static void BroadCastDoubleTap(InputAxis axis, float lastInputValue)
         {
-            for (int i = InputListeners.Count - 1; i >= 0; --i)
+            for (int i = Instance().InputListeners.Count - 1; i >= 0; --i)
             {
-                InputListeners[i].OnDoubleTap(axis, lastInputValue);
+                Instance().InputListeners[i].OnDoubleTap(axis, lastInputValue);
             }
         }
 
         public static void RegisterInputListener(IInputListener inputListener)
         {
-            if (InputListeners.Contains(inputListener)) return;
-            InputListeners.Add(inputListener);
+            if (Instance().InputListeners.Contains(inputListener)) return;
+            Instance().InputListeners.Add(inputListener);
         }
 
         public static void UnregisterInputListener(IInputListener inputListener)
         {
-            InputListeners.Remove(inputListener);
+            Instance().InputListeners.Remove(inputListener);
         }
+
     }
 }

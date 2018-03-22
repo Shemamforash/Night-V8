@@ -38,7 +38,14 @@ namespace LOS
         /// Gets the instance of the singleton.
         /// </summary>
         /// <value>The instance.</value>
-        public static LOSManager instance => _instance;
+        public static LOSManager instance
+        {
+            get
+            {
+                if (_instance == null) _instance = FindObjectsOfType<LOSManager>()[0];
+                return _instance;
+            }
+        }
 
         /// <summary>
         /// Tries the get instance.
