@@ -12,6 +12,7 @@ namespace Game.Combat
         private static GameObject _barrierPrefab;
         private static readonly List<Shape> _barriers = new List<Shape>();
 
+
         public void Awake()
         {
             _instance = this;

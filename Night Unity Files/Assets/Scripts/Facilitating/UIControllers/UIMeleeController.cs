@@ -13,21 +13,21 @@ public class UIMeleeController : MonoBehaviour
     private float _currentRingTime, _currentPressTime;
     
     private float _currentRadius;
-    public InputAxis Axis;
+    private InputAxis Axis;
     public bool NegativeDirection;
     private RingDrawer _outerRing;
     private GameObject _innerRing;
     private TextMeshProUGUI _keyText;
     private bool _running;
 
-    public void Awake()
+    private void Awake()
     {
         _outerRing = Helper.FindChildWithName<RingDrawer>(gameObject, "Outer Ring");
         _innerRing = Helper.FindChildWithName(gameObject, "Inner Ring");
         _keyText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Key");
     }
 
-    public void Start()
+    private void Start()
     {
         _outerRing.SetLineWidth(OuterRingWidth);
         _outerRing.Hide();
@@ -41,18 +41,18 @@ public class UIMeleeController : MonoBehaviour
         _keyText.gameObject.SetActive(enabled);
     }
     
-    public void StartRunning()
+    private void StartRunning()
     {
         SetEnabled(true);
         _running = true;
-        _currentRingTime = MeleeController.InitialRingTime();
-        _currentPressTime = MeleeController.InitialPressTime();
+//        _currentRingTime = MeleeController.InitialRingTime();
+//        _currentPressTime = MeleeController.InitialPressTime();
         _currentRadius = OuterRadius;
 //        _innerRing.DrawCircle(TargetRadius);
 //        _innerRing.SetFaded();
     }
     
-    public void Update()
+    private void Update()
     {
         if (!_running) return;
         if (_currentRingTime > 0)
@@ -71,11 +71,11 @@ public class UIMeleeController : MonoBehaviour
 
     private void MoveOuterRing()
     {
-        float outerRingAlpha = _currentRingTime / MeleeController.InitialRingTime();
-        _currentRadius = (OuterRadius - TargetRadius) * outerRingAlpha + TargetRadius;
-        outerRingAlpha = 1 - outerRingAlpha;
-        Color c = new Color(1, 1, 1, outerRingAlpha);
-        _outerRing.SetColor(c);
+//        float outerRingAlpha = _currentRingTime / MeleeController.InitialRingTime();
+//        _currentRadius = (OuterRadius - TargetRadius) * outerRingAlpha + TargetRadius;
+//        outerRingAlpha = 1 - outerRingAlpha;
+//        Color c = new Color(1, 1, 1, outerRingAlpha);
+//        _outerRing.SetColor(c);
         _outerRing.DrawCircle(_currentRadius);
         _currentRingTime -= Time.deltaTime;
     }
@@ -100,11 +100,11 @@ public class UIMeleeController : MonoBehaviour
         if (success)
         {
             transform.Find("Particle Spray").GetComponent<ParticleSystem>().Emit(100);
-            MeleeController.SucceedRound();
+//            MeleeController.SucceedRound();
         }
         else
         {
-            MeleeController.FailRound();
+//            MeleeController.FailRound();
         }
     }
 }

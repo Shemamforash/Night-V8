@@ -12,6 +12,7 @@ using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Game.Gear.Weapons
 {
@@ -21,7 +22,7 @@ namespace Game.Gear.Weapons
         public readonly WeaponAttributes WeaponAttributes;
         public Skill WeaponSkillOne, WeaponSkillTwo;
         private long _timeAtLastFire;
-        private const float MaxAccuracyOffsetInDegrees = 45f;
+        private const float MaxAccuracyOffsetInDegrees = 25f;
         private const float RangeMin = 1f;
         private const float RangeMax = 4.5f;
 
@@ -74,20 +75,24 @@ namespace Game.Gear.Weapons
             return !Empty() && FireRateElapsedTimeMet();
         }
 
-        public List<Shot> Fire(CharacterCombat origin)
+        public List<Shot> Fire(CharacterCombat origin, bool fireShots = false)
         {
-            if (origin.GetTarget() == null) return null;
-            if (!CanFire() || origin.Immobilised()) return null;
-            _timeAtLastFire = Helper.TimeInMillis();
-            float distance = origin is PlayerCombat ? 0 : ((EnemyBehaviour) origin).DistanceToPlayer;
-            GunFire.Fire(WeaponAttributes.WeaponType, distance);
+            Assert.IsNotNull(origin.GetTarget());
             List<Shot> shots = new List<Shot>();
-            for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
+            if (CanFire())
             {
-                shots.Add(Shot.CreateShot(origin));
-            }
+                _timeAtLastFire = Helper.TimeInMillis();
+                //todo play sound GunFire.Fire(WeaponAttributes.WeaponType, distance);
+                for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
+                {
+                    shots.Add(Shot.CreateShot(origin));
+                }
 
-            ConsumeAmmo(1);
+                ConsumeAmmo(1);
+                Assert.IsTrue(shots.Count > 0);
+                Assert.IsNotNull(shots);
+                if (fireShots) shots.ForEach(s => s.Fire());
+            }
             return shots;
         }
 

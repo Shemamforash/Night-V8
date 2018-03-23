@@ -58,5 +58,12 @@ namespace Game.Combat
 //            col.size = new Vector2(1, 1);
 //            col.isTrigger = true;
         }
+
+        public float Distance(Cell other)
+        {
+            int xDiff = other.XIndex - XIndex;
+            int yDiff = other.YIndex - YIndex;
+            return Mathf.Sqrt(xDiff * xDiff + yDiff * yDiff);
+        }
     }
 }

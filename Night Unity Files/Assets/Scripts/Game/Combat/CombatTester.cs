@@ -38,10 +38,11 @@ namespace Game.Combat
             if(_instance.Shotgun) weaponsWanted.Add(WeaponType.Shotgun);
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Shining, weaponsWanted);
             weapon.WeaponAttributes.SetDurability(_instance.Durability);
+            Debug.Log(weapon.WeaponAttributes.Print());
             _playerCharacter.EquipWeapon(weapon);
             weapon.Reload(_playerCharacter.Inventory());
             
-            _encounter = CombatScenario.Generate(_instance.Difficulty, 1);
+            _encounter = CombatScenario.Generate(_instance.Difficulty, 8);
             CombatManager.EnterCombat(_playerCharacter, _encounter);
         }
     }

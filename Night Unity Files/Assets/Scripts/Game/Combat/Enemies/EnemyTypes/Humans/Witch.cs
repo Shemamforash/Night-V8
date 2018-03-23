@@ -62,7 +62,6 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
 
         public override void Update()
         {
-            if(MeleeController.InMelee) return;
             base.Update();
             if (_throwing) return;
             _targetTime -= Time.deltaTime;

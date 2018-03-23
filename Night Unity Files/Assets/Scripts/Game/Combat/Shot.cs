@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Game.Characters;
+using Game.Combat.Enemies;
 using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -21,7 +22,7 @@ namespace Game.Combat
         private float _criticalChance;
         private CharacterCombat _origin;
         private Vector3 _targetPosition;
-        private bool _isCritical;
+        public bool IsCritical;
         private bool _moving, _fired;
         private float _speed;
         private float _age;
@@ -95,7 +96,7 @@ namespace Game.Combat
             CacheWeaponAttributes();
         }
 
-        private bool DidPierce()
+        public bool DidPierce()
         {
             return Random.Range(0f, 1f) <= _pierceChance;
         }
@@ -127,14 +128,14 @@ namespace Game.Combat
         {
             if (_guaranteeCritical)
             {
-                _isCritical = true;
+                IsCritical = true;
             }
             else
             {
-                _isCritical = Random.Range(0f, 1f) < _criticalChance;
+                IsCritical = Random.Range(0f, 1f) < _criticalChance;
             }
 
-            return _isCritical;
+            return IsCritical;
         }
 
         private Vector3 direction;
@@ -175,7 +176,6 @@ namespace Game.Combat
 
         private void DeactivateShot()
         {
-            Debug.Log("banana");
             gameObject.SetActive(false);
             _shotPool.Add(this);
         }
@@ -183,31 +183,19 @@ namespace Game.Combat
         private void OnCollisionEnter2D(Collision2D collision)
         {
             GameObject other = collision.gameObject;
-            if (other.CompareTag("Barrier") || other.layer == 11 || other.CompareTag("Player"))
-            {
-                DeactivateShot();
-                return;
-            }
-            ApplyDamage(other.GetComponent<CharacterCombat>());
+            EnemyBehaviour b = other.GetComponent<EnemyBehaviour>();
+            if(b != null) ApplyDamage(b);
             DeactivateShot();
         }
 
         private void ApplyDamage(CharacterCombat hit)
         {
-            bool isCritical = WillCrit();
-            int totalDamage = isCritical ? _damage * 2 : _damage;
-            totalDamage = (int) (totalDamage * _finalDamageModifier);
-            _damageDealt = totalDamage;
+            WillCrit();
+            _damageDealt = IsCritical ? _damage * 2 : _damage;
+            _damageDealt = (int) (_damageDealt * _finalDamageModifier);
             ApplyConditions(hit);
             OnHitAction?.Invoke();
-            (_origin as PlayerCombat)?.RageController.Increase(totalDamage);
-            if(hit is EnemyBehaviour) ((EnemyBehaviour)hit).Alert();
-            float armourModifier = DidPierce() ? 1 : 1 - hit.ArmourController().CurrentArmour() / 10f;
-            float healthDamage = (int) (armourModifier * DamageDealt());
-            float armourDamage = (int) ((1 - armourModifier) * DamageDealt());
-            if (healthDamage != 0) hit.HealthController().TakeDamage(healthDamage);
-            if (armourDamage != 0) hit.ArmourController().TakeDamage(armourDamage);
-            if (_isCritical) (hit as EnemyBehaviour)?.HitController().RegisterCritical();
+            hit.TakeDamage(this);
         }
 
         private void ApplyConditions(CharacterCombat hit)

@@ -47,6 +47,7 @@ namespace Game.Combat
 
         public override void Update()
         {
+            base.Update();
             if (GetTarget() == null)
             {
                 _pivot.gameObject.SetActive(false);
@@ -56,9 +57,6 @@ namespace Game.Combat
                 _pivot.gameObject.SetActive(true);
                 _pivot.rotation = AdvancedMaths.RotationToTarget(transform.position, GetTarget().transform.position);
             }
-
-            if (MeleeController.InMelee) return;
-            base.Update();
         }
 
         public void Initialise(Player player)
@@ -106,8 +104,6 @@ namespace Game.Combat
             UIMagazineController.SetWeapon(Weapon());
             
             SetReloadCooldown();
-            SetDistance(0, 0);
-            
             SetConditions();
         }
 
@@ -172,7 +168,6 @@ namespace Game.Combat
         public override void ExitCombat()
         {
             UIKnockdownController.Exit();
-            MeleeController.Exit();
 //            IsKnockedDown = false;
             StopReloading();
             InputHandler.UnregisterInputListener(this);
@@ -239,8 +234,9 @@ namespace Game.Combat
                 shot.SetDamageModifier(_damageModifier);
                 OnFireAction?.Invoke(shot);
                 shot.Fire();
-                _fired = true;
             });
+            _fired = true;
+
             UpdateMagazineUi();
         }
 

@@ -2,10 +2,10 @@
 {
     public class Brawler : EnemyBehaviour
     {
-        public override void ChooseNextAction()
-        {
+//        public override void ChooseNextAction()
+//        {
 //            CurrentAction = MoveToPlayer;
-        }
+//        }
 
         protected override void ReachTarget()
         {

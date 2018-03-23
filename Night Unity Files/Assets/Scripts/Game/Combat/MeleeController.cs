@@ -13,12 +13,12 @@ namespace Game.Combat
         private const float MaxRingTime = 0.6f, MaxPressTime = 0.3f;
         private static float _initialRingTime, _initialPressTime;
         private static EnemyBehaviour _targetEnemy;
-        public static bool InMelee;
+        private static bool InMelee;
         private static int _remainingHits, _hitsWon, _hitsLost;
         private static readonly List<EnemyBehaviour> MeleeQueue = new List<EnemyBehaviour>();
         private const int NumberOfRounds = 5;
 
-        public void Awake()
+        private void Awake()
         {
             _up = Helper.FindChildWithName<UIMeleeController>(gameObject, "Up");
             _left = Helper.FindChildWithName<UIMeleeController>(gameObject, "Left");
@@ -30,7 +30,7 @@ namespace Game.Combat
             MeleeControllers.Add(_right);
         }
 
-        public static void StartMelee(EnemyBehaviour enemy)
+        private static void StartMelee(EnemyBehaviour enemy)
         {
             if (_targetEnemy != null)
             {
@@ -52,10 +52,10 @@ namespace Game.Combat
         private static void StartRandomController()
         {
             UIMeleeController randomController = MeleeControllers[Random.Range(0, MeleeControllers.Count)];
-            randomController.StartRunning();
+//            randomController.StartRunning();
         }
 
-        public static void SucceedRound()
+        private static void SucceedRound()
         {
 //            _targetEnemy.HealthController.TakeDamage(10);
             ++_hitsWon;
@@ -71,14 +71,14 @@ namespace Game.Combat
 //            else StartRandomController();
         }
 
-        public static void FailRound()
+        private static void FailRound()
         {
 //            CombatManager.Player.HealthController.TakeDamage(10);
             ++_hitsLost;
             GoToNextRound();
         }
 
-        public static void Exit()
+        private static void Exit()
         {
             CombatManager.CombatCanvas.alpha = 1f;
             InputHandler.RegisterInputListener(CombatManager.Player);
@@ -106,12 +106,12 @@ namespace Game.Combat
             MeleeQueue.RemoveAt(0);
         }
 
-        public static float InitialRingTime()
+        private static float InitialRingTime()
         {
             return _initialRingTime;
         }
 
-        public static float InitialPressTime()
+        private static float InitialPressTime()
         {
             return _initialPressTime;
         }

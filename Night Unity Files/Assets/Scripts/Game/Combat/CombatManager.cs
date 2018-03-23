@@ -53,38 +53,38 @@ namespace Game.Combat
 
         public void Update()
         {
-            if (MeleeController.InMelee) return;
             CombatCooldowns.UpdateCooldowns();
+            if (_failed)
+            {
+                SucceedCombat();
+                return;
+            }
             if (CurrentScenario.Enemies().Any(e => !e.IsDead)) return;
             SucceedCombat();
         }
 
         public static void EnterCombat(Player player, CombatScenario scenario)
         {
+            _failed = false;
             WorldState.Pause();
             VisibilityRange = 200;
             CurrentScenario = scenario;
             MenuStateMachine.ShowMenu("Combat Menu");
-            
-            Stopwatch watch = Stopwatch.StartNew();
+
             List<AreaGenerator.Shape> barriers = AreaGenerator.GenerateArea();
-            watch.Stop();
-            Debug.Log("barriers: " + watch.Elapsed.ToString("mm\\:ss\\.ff"));
-            
-            watch = Stopwatch.StartNew();
+
             PathingGrid.Instance().GenerateGrid(barriers);
-            watch.Stop();
-            Debug.Log("all grid: " + watch.Elapsed.ToString("mm\\:ss\\.ff"));
-            
+
 //            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
-            
+
             Player.Initialise(player);
             CombatCooldowns.Clear();
             EnemyController.EnterCombat();
         }
 
         private bool _loadingNextSene = false;
-        
+        private static bool _failed;
+
         private IEnumerator FadeOut(AsyncOperation sceneLoaded)
         {
             float timeElapsed = 0f;
@@ -126,8 +126,9 @@ namespace Game.Combat
 
         public static void FailCombat()
         {
+            _failed = true;
 //            MenuStateMachine.ShowMenu(SceneManager.GetActiveScene().name == "Combat Tester" ? "Minigame Menu" : "Game Menu");
-            ExitCombat();
+//            ExitCombat();
         }
 
         private static void ExitCombat()

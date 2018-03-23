@@ -26,6 +26,11 @@ public class FireBehaviour : MonoBehaviour
 		fire.StartCoroutine(fire.Burn(position));
 	}
 
+	private void OnDestroy()
+	{
+		_firePool.Remove(this);
+	}
+
 	private static FireBehaviour GetNewFire()
 	{
 		if (_firePool.Count == 0)

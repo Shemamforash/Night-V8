@@ -146,7 +146,7 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             EnemyBehaviour nearestEnemy = UIEnemyController.NearestEnemy();
-            if (nearestEnemy == null || nearestEnemy.DistanceToPlayer > 5) return;
+            if (nearestEnemy == null || nearestEnemy.DistanceToTarget() > 5) return;
             nearestEnemy.Knockback(5);
 //            nearestEnemy.ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit);
         }

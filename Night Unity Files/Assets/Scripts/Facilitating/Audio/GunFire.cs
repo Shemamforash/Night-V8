@@ -17,49 +17,57 @@ namespace Facilitating.Audio
         public GameObject AudioSourcePrefab;
         public AudioClip[] Steps;
 
-        private static readonly List<PoolingAudioSource> _inactiveAudioSources = new List<PoolingAudioSource>();
-        private static List<PoolingAudioSource> _activeSources = new List<PoolingAudioSource>();
+        private static readonly List<PoolingAudioSource> _audioSourcePool = new List<PoolingAudioSource>();
 
         public void Awake()
         {
             _instance = this;
         }
 
-        private class PoolingAudioSource
+        private class PoolingAudioSource : MonoBehaviour
         {
-            private readonly AudioSource _audioSource;
-            private readonly GameObject _gameObject;
+            private AudioSource _audioSource;
 
-            public PoolingAudioSource()
+            public static PoolingAudioSource GetAudioSource()
             {
-                _gameObject = Instantiate(_instance.AudioSourcePrefab, Vector3.zero, Quaternion.identity);
-                _audioSource = _gameObject.GetComponent<AudioSource>();
-                _inactiveAudioSources.Add(this);
+                PoolingAudioSource pooledAudio;
+                if (_audioSourcePool.Count == 0)
+                {
+                    GameObject audioObject = Instantiate(_instance.AudioSourcePrefab, Vector3.zero, Quaternion.identity);
+                    pooledAudio = audioObject.AddComponent<PoolingAudioSource>();
+                    pooledAudio._audioSource = audioObject.GetComponent<AudioSource>();
+                    _audioSourcePool.Add(pooledAudio);
+                }
+                else
+                {
+                    pooledAudio = _audioSourcePool[_audioSourcePool.Count - 1];
+                    _audioSourcePool.RemoveAt(_audioSourcePool.Count - 1);
+                }
+
+                return pooledAudio;
             }
 
             public float PlayClip(float position, AudioClip sound, float maxDistance = 200)
             {
-                _gameObject.transform.position = new Vector3(0, 0, position);
+                transform.position = new Vector3(0, 0, position);
                 _audioSource.pitch = Random.Range(0.9f, 1.1f);
                 _audioSource.volume = Random.Range(0.9f, 1.0f);
                 _audioSource.maxDistance = maxDistance;
                 _audioSource.PlayOneShot(sound);
-                _inactiveAudioSources.Remove(this);
-                _activeSources.Add(this);
+                _audioSourcePool.Remove(this);
                 return sound.length;
             }
-        }
 
-        private static PoolingAudioSource GetAvailableAudioSource()
-        {
-            return _inactiveAudioSources.Count == 0 ? new PoolingAudioSource() : _inactiveAudioSources[Random.Range(0, _inactiveAudioSources.Count)];
+            public void OnDestroy()
+            {
+                _audioSourcePool.Remove(this);
+            }
         }
 
         private IEnumerator ReuseAudioSource(float time, PoolingAudioSource audioSource)
         {
             yield return new WaitForSeconds(time);
-            _activeSources.Remove(audioSource);
-            _inactiveAudioSources.Add(audioSource);
+            _audioSourcePool.Add(audioSource);
         }
 
         public static void EnterCover()
@@ -74,18 +82,18 @@ namespace Facilitating.Audio
         
         private void PlaySound(float position, AudioClip sound)
         {
-            PoolingAudioSource audioSource = GetAvailableAudioSource();
+            PoolingAudioSource audioSource = PoolingAudioSource.GetAudioSource();
             float duration = audioSource.PlayClip(position, sound);
             StartCoroutine(ReuseAudioSource(duration, audioSource));
         }
 
         public static void Explode(float distance)
         {
-            PoolingAudioSource source = GetAvailableAudioSource();
+            PoolingAudioSource source = PoolingAudioSource.GetAudioSource();
             float duration =  source.PlayClip(distance, _instance.Explosion, 500);
             _instance.StartCoroutine(_instance.ReuseAudioSource(duration, source));
 
-            source = GetAvailableAudioSource();
+            source = PoolingAudioSource.GetAudioSource();
             duration =  source.PlayClip(distance, _instance.Tinnitus, 10);
             _instance.StartCoroutine(_instance.ReuseAudioSource(duration, source));
         }
@@ -99,7 +107,6 @@ namespace Facilitating.Audio
                     break;
                 case WeaponType.Rifle:
                     _instance.PlaySound(distance, _instance.RifleFire[Random.Range(0, _instance.RifleFire.Length)]);
-
                     break;
                 case WeaponType.Shotgun:
                     _instance.PlaySound(distance, _instance.ShotgunFire[Random.Range(0, _instance.ShotgunFire.Length)]);

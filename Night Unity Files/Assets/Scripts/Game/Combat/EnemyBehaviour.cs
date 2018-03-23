@@ -35,7 +35,7 @@ namespace Game.Combat
         private Vector2 _originPosition;
         public Enemy Enemy;
         protected EnemyUi EnemyUi;
-        private List<Cell> route = new List<Cell>();
+        private Queue<Cell> route = new Queue<Cell>();
         public Action CurrentAction;
 
 
@@ -46,22 +46,21 @@ namespace Game.Combat
 //        private const float FadeVisibilityDistance = 5f;
 //        private float _currentAlpha;
 
-
-        public float DistanceToPlayer;
-        
-        private void UpdateDistance()
+        public override void Update()
         {
-            DistanceToPlayer = DistanceToTarget();
-            UpdateDistanceAlpha();
+            base.Update();
+            _couldHitTarget = TargetVisible() && !OutOfRange();
+            EnemyUi.UiHitController.UpdateValue();
+            CurrentAction?.Invoke();
         }
 
         private void UpdateDistanceAlpha()
         {
-//            float distanceToMaxVisibility = CombatManager.VisibilityRange + FadeVisibilityDistance - DistanceToPlayer;
+//            float distanceToMaxVisibility = CombatManager.VisibilityRange + FadeVisibilityDistance - DistanceToTarget();
 //            float alpha = 0;
-//            if (DistanceToPlayer < CombatManager.VisibilityRange)
+//            if (DistanceToTarget() < CombatManager.VisibilityRange)
 //            {
-//                float normalisedDistance = Helper.Normalise(DistanceToPlayer, CombatManager.VisibilityRange);
+//                float normalisedDistance = Helper.Normalise(DistanceToTarget(), CombatManager.VisibilityRange);
 //                alpha = 1f - normalisedDistance;
 //                alpha = Mathf.Clamp(alpha, AlphaCutoff, 1f);
 //            }
@@ -74,22 +73,20 @@ namespace Game.Combat
 //            SetAlpha(alpha);
         }
 
-//        private void OnDrawGizmos()
-//        {
-//            Gizmos.color = Color.red;
-//            Gizmos.DrawCube(PathingGrid.PositionToCell(transform.position).Position, new Vector3(0.5f, 0.5f, 0.5f));
-//            Gizmos.color = Color.green;
-//            Gizmos.DrawCube(transform.position, new Vector3(0.5f, 0.5f, 0.5f));
-//            Gizmos.color = Color.red;
-//            Gizmos.DrawCube(transform.position, Vector3.one * 0.5f);
-//            Gizmos.color = Color.green;
-//            Gizmos.DrawCube(PathingGrid.PositionToCell(transform.position).Position, Vector3.one * 0.5f);
-//            if (route.Count == 0) return;
-//            for (int i = 1; i < route.Count; ++i)
-//            {
-//                Gizmos.DrawLine(route[i - 1].Position, route[i].Position);
-//            }
-//        }
+        public void OnDrawGizmos()
+        {
+            if (route.Count == 0) return;
+            Cell[] routeArr = route.ToArray();
+            for (int i = 1; i < routeArr.Length; ++i)
+            {
+                Gizmos.DrawLine(routeArr[i - 1].Position, routeArr[i].Position);
+            }
+
+//            Gizmos.color = new Color(0, 1, 0, 0.2f);
+//            Gizmos.DrawSphere(transform.position, (int)(IdealWeaponDistance * 1.5f / PathingGrid.CellResolution));
+//            Gizmos.color = new Color(0, 1, 0, 0.3f);
+//            Gizmos.DrawSphere(transform.position, (int)(IdealWeaponDistance * 0.5f / PathingGrid.CellResolution));
+        }
 
 
         public override CharacterCombat GetTarget() => CombatManager.Player;
@@ -121,14 +118,17 @@ namespace Game.Combat
             transform.SetParent(GameObject.Find("World").transform);
             SetDistance(2, 4);
             _originPosition = transform.position;
-            UpdateDistance();
             SetConditions();
         }
 
-        public void Reset()
+        public void SetDistance(int rangeMin, int rangeMax)
         {
-//            Alerted = false;
-//            CurrentAction = Wander;
+            Vector3 position = new Vector3();
+            position.x = Random.Range(rangeMin, rangeMax);
+            if (Random.Range(0, 2) == 1) position.x = -position.x;
+            position.y = Random.Range(rangeMin, rangeMax);
+            if (Random.Range(0, 2) == 1) position.y = -position.y;
+            transform.position = position;
         }
 
         protected override void KnockDown()
@@ -152,17 +152,12 @@ namespace Game.Combat
 //            });
         }
 
-        private Action WaitForHeal(Medic medic)
+        private void WaitForHeal(Medic medic)
         {
             SetActionText("Waiting for Medic");
             medic.RequestHeal(this);
 //            _waitingForHeal = true;
-            return () =>
-            {
-//                if (!medic.IsDead) return;
-//                _waitingForHeal = false;
-                ChooseNextAction();
-            };
+            ChooseNextAction();
         }
 
         public void ClearHealWait()
@@ -176,34 +171,14 @@ namespace Game.Combat
             ChooseNextAction();
         }
 
-        private Action KnockedDown()
+        private void KnockedDown()
         {
 //            float duration = KnockdownDuration;
             SetActionText("Knocked Down");
-            return () =>
-            {
-//                duration -= Time.deltaTime;
-//                if (duration > 0) return;
-                ChooseNextAction();
-//                IsKnockedDown = false;
-            };
-        }
-
-        public virtual void ChooseNextAction()
-        {
-            Immobilised(false);
-            CurrentAction = CheckForRepositioning();
-            if (CurrentAction != null) return;
-            CurrentAction = Aim();
+            ChooseNextAction();
         }
 
         private const float MeleeWarningTime = 2f;
-
-        private bool TargetVisible()
-        {
-            _obstructed = PathingGrid.IsLineObstructed(transform.position, GetTarget().transform.position);
-            return _obstructed;
-        }
 
         private Action Melee()
         {
@@ -213,36 +188,25 @@ namespace Game.Combat
             {
                 currentTime -= Time.deltaTime;
                 if (currentTime > 0) return;
-//                if (Math.Abs(DistanceToPlayer) > MeleeDistance)
+//                if (Math.Abs(DistanceToTarget()) > MeleeDistance)
 //                {
 //                    CurrentAction = Stagger();
 //                    return;
 //                }
-
-                MeleeController.StartMelee(this);
-            };
-        }
-
-        private Action WaitForRoute(Thread routingThread)
-        {
-            return () =>
-            {
-                if (routingThread.IsAlive) return;
-                CurrentAction = MoveToTargetPosition(route);
             };
         }
 
         private void CheckForPlayer()
         {
-            if (DistanceToPlayer > _visionRange) return;
+            if (DistanceToTarget() > _visionRange) return;
             CurrentAction = Suspicious;
         }
 
         private void Suspicious()
         {
             SetActionText("Suspicious");
-            if (DistanceToPlayer >= _detectionRange.CurrentValue()) return;
-            if (DistanceToPlayer >= _visionRange.CurrentValue()) CurrentAction = Wander;
+            if (DistanceToTarget() >= _detectionRange.CurrentValue()) return;
+            if (DistanceToTarget() >= _visionRange.CurrentValue()) CurrentAction = Wander;
             Alert();
         }
 
@@ -256,24 +220,24 @@ namespace Game.Combat
             return Enemy.Weapon;
         }
 
-        public void Alert()
-        {
-            if (Alerted) return;
-            Alerted = true;
-            UIEnemyController.AlertAll();
-            ChooseNextAction();
-        }
-
-        private Action Flee()
+        private void Flee()
         {
             SetActionText("Fleeing");
-            return () =>
+            CurrentAction = () =>
             {
 //                MoveBackward();
-                if (DistanceToPlayer > CombatManager.VisibilityRange) Kill();
+                if (DistanceToTarget() > CombatManager.VisibilityRange) Kill();
             };
         }
 
+        public override void TakeDamage(Shot shot)
+        {
+            base.TakeDamage(shot);
+            if (shot.IsCritical) HitController().RegisterCritical();
+            Alert();
+            CombatManager.Player.RageController.Increase(shot.DamageDealt());
+        }
+        
         public override void Kill()
         {
             base.Kill();
@@ -283,28 +247,77 @@ namespace Game.Combat
             Destroy(gameObject);
         }
 
-        public override void Update()
+        private bool TargetVisible()
         {
-            EnemyUi.UiHitController.UpdateValue();
-            if (MeleeController.InMelee) return;
-            _obstructed = false;
-            base.Update();
-            UpdateDistance();
-            CurrentAction?.Invoke();
+            bool _obstructed = PathingGrid.IsLineObstructed(transform.position, GetTarget().transform.position);
+//            if (_obstructed) Debug.DrawLine(transform.position, GetTarget().transform.position, Color.yellow, 2f);
+            return !_obstructed;
+        }
+
+        public virtual void ChooseNextAction()
+        {
+            Immobilised(false);
+            if (NeedsRepositioning()) return;
+            Aim();
+        }
+
+        private void WaitForRoute(Thread routingThread, Action reachTargetAction = null)
+        {
+            CurrentAction = () =>
+            {
+                if (routingThread.IsAlive) return;
+                if (reachTargetAction == null) reachTargetAction = ChooseNextAction;
+                MoveToTargetPosition(reachTargetAction);
+            };
+        }
+
+        protected virtual void OnAlert()
+        {
+            if (NeedsRepositioning()) return;
+            if (Weapon() == null)
+            {
+                MoveToPlayer();
+                return;
+            }
+
+            Aim();
+        }
+
+        public void Alert()
+        {
+            if (Alerted) return;
+            Alerted = true;
+            UIEnemyController.AlertAll();
+            OnAlert();
         }
 
         //Firing
 
-        private Action Reload()
+        private bool NeedToMoveToCover(Action reachCoverAction)
         {
+            if (PathingGrid.IsCellHidden(CurrentCell())) return false;
+            Cell safeCell = PathingGrid.FindCoverNearMe(CurrentCell());
+            if (safeCell == null) return false;
+            Immobilised(false);
+            SetActionText("Seeking Cover");
+            StartSprinting();
+            Thread safeRoute = PathingGrid.RouteToCell(CurrentCell(), safeCell, route);
+            WaitForRoute(safeRoute, reachCoverAction);
+            return true;
+        }
+
+        private void Reload()
+        {
+            if (NeedToMoveToCover(Reload)) return;
             if (Weapon().GetRemainingMagazines() == 0)
             {
-                return Flee();
+                Flee();
+                return;
             }
 
             SetActionText("Reloading");
             float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed) * EnemyReloadMultiplier;
-            return () =>
+            CurrentAction = () =>
             {
                 duration -= Time.deltaTime;
                 if (duration > 0) return;
@@ -313,45 +326,40 @@ namespace Game.Combat
             };
         }
 
-        private Action Aim()
+        private void Aim()
         {
-            if (Weapon() == null) return CheckForRepositioning();
             Immobilised(true);
+            Assert.IsNotNull(Weapon());
             Assert.IsFalse(Weapon().Empty());
-            float aimTime = Random.Range(MaxAimTime / 2f, MaxAimTime);
             SetActionText("Aiming");
-            return () =>
+            CurrentAction = () =>
             {
-                if (Immobilised()) return;
-                if (!TargetVisible() || OutOfRange()) ChooseNextAction();
-                aimTime -= Time.deltaTime;
-                if (aimTime >= 0) return;
-                CurrentAction = Fire();
-                aimTime = 0;
+                if (!_couldHitTarget) ChooseNextAction();
+                if (RecoilManager.GetAccuracyModifier() < 0.75f) return;
+                Fire();
             };
         }
 
-        private Action Fire()
+        private bool _couldHitTarget;
+
+        private void Fire()
         {
             bool automatic = Weapon().WeaponAttributes.Automatic;
             SetActionText("Firing");
             Immobilised(true);
-            return () =>
+            CurrentAction = () =>
             {
-                if (!TargetVisible() || OutOfRange()) ChooseNextAction();
-                List<Shot> shots = Weapon().Fire(this);
-                if (shots == null || shots.Count == 0) return;
-                shots.ForEach(s => s.Fire());
+                if (!_couldHitTarget)
+                {
+                    ChooseNextAction();
+                    return;
+                }
+
+                List<Shot> shots = Weapon().Fire(this, true);
                 if (shots.Any(s => s.DidHit)) CombatManager.Player.TryRetaliate(this);
-                int remainingAmmo = Weapon().GetRemainingAmmo();
-                if (!automatic)
-                {
-                    CurrentAction = Aim();
-                }
-                else if (remainingAmmo == 0)
-                {
-                    CurrentAction = Reload();
-                }
+                if (Weapon().Empty()) Reload();
+                else if (!automatic)
+                    Aim();
             };
         }
 
@@ -370,11 +378,10 @@ namespace Game.Combat
 
         private void Wander()
         {
-            Cell currentCell = PathingGrid.PositionToCell(transform.position);
             int randomDistance = Random.Range(10, 20);
-            Cell targetCell = PathingGrid.GetCellNearMe(currentCell, randomDistance);
-            Thread routingThread = PathingGrid.RouteToCell(currentCell, targetCell, route);
-            CurrentAction = WaitForRoute(routingThread);
+            Cell targetCell = PathingGrid.GetCellNearMe(CurrentCell(), randomDistance);
+            Thread routingThread = PathingGrid.RouteToCell(CurrentCell(), targetCell, route);
+            WaitForRoute(routingThread, WaitThenWander);
             SetActionText("Wandering");
         }
 
@@ -386,76 +393,67 @@ namespace Game.Combat
             {
                 ChooseNextAction();
             }
-            else
-            {
-                WaitThenWander();
-            }
         }
-
-        private bool _obstructed;
 
         private bool OutOfRange()
         {
-            float cellDistanceToPlayer = PathingGrid.WorldToGridDistance(DistanceToPlayer);
-            return cellDistanceToPlayer < IdealWeaponDistance * 0.5f || cellDistanceToPlayer > IdealWeaponDistance * 1.5f || _obstructed;
+            return DistanceToTarget() < IdealWeaponDistance * 0.5f || DistanceToTarget() > IdealWeaponDistance * 1.5f;
         }
 
-        protected Action CheckForRepositioning()
+        private bool NeedsRepositioning()
         {
-//            if (DistanceToPlayer <= MeleeDistance)
+//            if (DistanceToTarget() <= MeleeDistance)
 //            {
 //                return Melee();
 //            }
 
-            if (OutOfRange())
-            {
-                Cell currentCell = PathingGrid.PositionToCell(transform.position);
-                Thread pathThread = PathingGrid.RouteToCell(currentCell, PathingGrid.GetCellInRange(currentCell, (int) (IdealWeaponDistance * 1.25f), (int) (IdealWeaponDistance * 0.75f)), route);
-                return WaitForRoute(pathThread);
-            }
-
-            return null;
+            if (_couldHitTarget || Weapon() == null) return false;
+            SetActionText("Moving");
+            Cell targetCell = PathingGrid.FindCellToAttackPlayer(CurrentCell(), (int) (IdealWeaponDistance * 1.25f), (int) (IdealWeaponDistance * 0.75f));
+            Thread pathThread = PathingGrid.RouteToCell(CurrentCell(), targetCell, route);
+            WaitForRoute(pathThread);
+            return true;
         }
 
-        private Action MoveToTargetPosition(List<Cell> newRoute)
+        private void MoveToTargetPosition(Action ReachTargetAction)
         {
-            route = newRoute;
-            if (newRoute.Count == 0) return ChooseNextAction;
-
-            Cell target = newRoute[0];
-            newRoute.RemoveAt(0);
-            return () =>
+            Queue<Cell> newRoute = new Queue<Cell>(route);
+            Assert.IsTrue(newRoute.Count > 0);
+            Cell target = newRoute.Dequeue();
+            CurrentAction = () =>
             {
-                if (PathingGrid.PositionToCell(transform.position) == target)
+                if (CurrentCell() == target)
                 {
+                    StopSprinting();
                     if (newRoute.Count == 0)
                     {
-                        ReachTarget();
+                        ReachTargetAction();
                         return;
                     }
 
-                    target = newRoute[0];
-                    newRoute.RemoveAt(0);
+                    target = newRoute.Dequeue();
                 }
 
-                Vector3 direction = target.Position;
-                direction = direction - transform.position;
-                direction.Normalize();
+                Vector3 direction = ((Vector3) target.Position - transform.position).normalized;
                 Move(direction);
             };
         }
 
         protected void MoveToPlayer()
         {
-            if (DistanceToPlayer < 0.25f)
+            CurrentAction = () =>
             {
-                ReachPlayer();
-            }
+                if (DistanceToTarget() < 0.25f)
+                {
+                    ReachPlayer();
+                    return;
+                }
 
-            Vector3 direction = CombatManager.Player.transform.position;
-            direction = direction - transform.position;
-            direction.Normalize();
-            Move(direction);
+                Vector3 direction = CombatManager.Player.transform.position;
+                direction = direction - transform.position;
+                direction.Normalize();
+                Move(direction);
+            };
         }
 
         protected virtual void ReachPlayer()

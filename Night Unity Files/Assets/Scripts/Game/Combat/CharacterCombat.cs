@@ -25,13 +25,35 @@ namespace Game.Combat
 //        public bool IsDead;
 
         public readonly RecoilManager RecoilManager = new RecoilManager();
+        private float _distanceToTarget = -1;
+        private Cell _currentCell;
 
         public float Speed;
         private Character _character;
 
+        public float DistanceToTarget()
+        {
+            if (_distanceToTarget == -1) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);
+            return _distanceToTarget;
+        }
+
+        public Cell CurrentCell()
+        {
+            return _currentCell == null ? PathingGrid.PositionToCell(transform.position) : _currentCell;
+        }
+
         protected void SetOwnedByEnemy(float speed)
         {
             Speed = speed;
+        }
+
+        public virtual void TakeDamage(Shot shot)
+        {
+            float armourModifier = shot.DidPierce() ? 1 : 1 - ArmourController().CurrentArmour() / 10f;
+            float healthDamage = (int) (armourModifier * shot.DamageDealt());
+            float armourDamage = (int)((1f - armourModifier) * shot.DamageDealt());
+            if (healthDamage != 0) HealthController().TakeDamage(healthDamage);
+            if (armourDamage != 0) ArmourController().TakeDamage(armourDamage);
         }
 
 //        private void KnockBack(float distance)
@@ -69,11 +91,6 @@ namespace Game.Combat
 
         //CONDITIONS
 
-        public float DistanceToTarget()
-        {
-            return Vector2.Distance(transform.position, GetTarget().transform.position);
-        }
-
         protected void SetConditions()
         {
             Bleeding = new Bleed(this);
@@ -104,7 +121,8 @@ namespace Game.Combat
 
         public virtual void Update()
         {
-            if (MeleeController.InMelee) return;
+            if(GetTarget() != null) _distanceToTarget = CurrentCell().Distance(GetTarget().CurrentCell());
+            _currentCell = PathingGrid.PositionToCell(transform.position);
             Burn.Update();
             Sick.Update();
             Bleeding.Update();
@@ -143,16 +161,6 @@ namespace Game.Combat
         {
             if (!Sprinting) return;
             Sprinting = false;
-        }
-
-        public void SetDistance(int rangeMin, int rangeMax)
-        {
-            Vector3 position = new Vector3();
-            position.x = Random.Range(rangeMin, rangeMax);
-            if (Random.Range(0, 2) == 1) position.x = -position.x;
-            position.y = Random.Range(rangeMin, rangeMax);
-            if (Random.Range(0, 2) == 1) position.y = -position.y;
-            transform.position = position;
         }
 
         public abstract CharacterCombat GetTarget();

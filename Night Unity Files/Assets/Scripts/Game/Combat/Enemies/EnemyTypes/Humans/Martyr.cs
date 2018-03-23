@@ -16,16 +16,19 @@ namespace Game.Combat.Enemies.EnemyTypes
                 Detonate();
             });
         }
+
+        protected override void OnAlert()
+        {
+            MoveToPlayer();
+        }
         
         public override void ChooseNextAction()
         {
-            Speed = 10;
-            CurrentAction = MoveToPlayer;
+            CurrentAction = null;
         }
 
         protected override void ReachPlayer()
         {
-            CurrentAction = null;
             if(!_detonated) Detonate();
         }
         
