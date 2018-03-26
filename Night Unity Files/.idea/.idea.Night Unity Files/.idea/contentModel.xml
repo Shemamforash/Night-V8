@@ -121,7 +121,6 @@
               <e p="UIExploreMenuController.cs" t="Include" />
               <e p="UiGearMenuController.cs" t="Include" />
               <e p="UiGearMenuTemplate.cs" t="Include" />
-              <e p="UIGrenadeController.cs" t="Include" />
               <e p="UIHealthBarController.cs" t="Include" />
               <e p="UIHitController.cs" t="Include" />
               <e p="UIInventoryController.cs" t="Include" />
@@ -303,6 +302,7 @@
                 <e p="AttributeType.cs" t="Include" />
                 <e p="CharacterAttribute.cs" t="Include" />
                 <e p="MyGameObject.cs" t="Include" />
+                <e p="ObjectPool.cs" t="Include" />
                 <e p="ScaleableValue.cs" t="Include" />
               </e>
               <e p="CooldownSystem" t="Include">

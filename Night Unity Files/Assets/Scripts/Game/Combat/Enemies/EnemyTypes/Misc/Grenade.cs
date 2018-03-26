@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Facilitating.UIControllers;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
 using TMPro;
 using UnityEngine;
 
@@ -10,80 +12,50 @@ namespace Game.Combat.Enemies.EnemyTypes.Misc
     public class Grenade : MonoBehaviour
     {
         private int _damage = 20;
-        private Action _moveAction;
-        private float _speed = 25;
-        private TextMeshProUGUI _distanceText;
-        public float CurrentPosition;
-        private float _targetPosition;
+        private static float MaxSpeed = 2f;
+        private static readonly ObjectPool<Grenade> _grenadePool = new ObjectPool<Grenade>("Prefabs/Combat/Grenade");
 
-        public virtual void Awake()
+        public static void Create(Vector2 origin, Vector2 target)
         {
-            _distanceText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Distance");
-            SetName("Grenade");
-            StartCoroutine(MoveToPosition());
+            Grenade grenade = _grenadePool.Create();
+            grenade.StartMoving(origin, target);
         }
 
-        protected void SetName(string grenadeName)
+        private void StartMoving(Vector2 origin, Vector2 target)
         {
-            Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name").text = grenadeName;
+            StartCoroutine(MoveToPosition(origin, target));
         }
 
-        private IEnumerator MoveToPosition()
+        private IEnumerator MoveToPosition(Vector2 origin, Vector2 target)
         {
-            bool reachedTarget = false;
-            Debug.Log(_targetPosition + " " + CurrentPosition + " " + _speed);
-            while (!reachedTarget)
+            float distance = Vector2.Distance(origin, target);
+            float timeToReach = distance / MaxSpeed;
+            float currentTime = 0f;
+            while (currentTime < timeToReach)
             {
-                if (_targetPosition < CurrentPosition) _speed = -_speed;
-                float lastPosition = CurrentPosition;
-                CurrentPosition += _speed * Time.deltaTime;
-                if (lastPosition > _targetPosition && CurrentPosition <= _targetPosition)
-                {
-                    CurrentPosition = _targetPosition;
-                    reachedTarget = true;
-                }
-                else if (lastPosition < _targetPosition && CurrentPosition >= _targetPosition)
-                {
-                    CurrentPosition = _targetPosition;
-                    reachedTarget = true;
-                }
-
-//                _distanceText.text = Helper.Round(CombatManager.DistanceBetween(CurrentPosition, CombatManager.Player)) + "m";
+                float normalisedTime = currentTime / timeToReach;
+                transform.position = Vector2.Lerp(origin, target, normalisedTime);
+                currentTime += Time.deltaTime;
                 yield return null;
             }
 
-            StartCoroutine(Detonate());
+            Detonate();
         }
 
-        public void SetTargetPosition(float currentPosition, float targetPosition)
+        private void OnDestroy()
         {
-            CurrentPosition = currentPosition;
-            SetTargetPosition(targetPosition);
+            _grenadePool.Dispose(this);
         }
 
-        public void SetTargetPosition(float targetPosition)
-        {
-            _targetPosition = targetPosition;
-        }
-
-        private IEnumerator Detonate()
-        {
-            _distanceText.text = "!!!";
-            _distanceText.color = Color.red;
-            yield return new WaitForSeconds(1);
-            DestroyGrenade();
-        }
-
-        private void DestroyGrenade()
+        private void Detonate()
         {
             CreateExplosion();
-            UIGrenadeController.RemoveGrenade(this);
-            Destroy(gameObject);
+            _grenadePool.Return(this);
         }
 
         protected virtual void CreateExplosion()
         {
-            Explosion explosion = Explosion.CreateExplosion(transform.position, 5, 20);
+            Explosion explosion = Explosion.CreateExplosion(transform.position, 5, _damage);
             explosion.SetKnockbackDistance(5);
             explosion.Detonate();
         }

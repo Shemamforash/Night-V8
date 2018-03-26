@@ -29,7 +29,7 @@ namespace Game.Combat
         private const int EnemyReloadMultiplier = 4;
         private const float MaxAimTime = 2f;
 
-        private bool Alerted;
+        protected bool Alerted;
         private int IdealWeaponDistance;
 
         private Vector2 _originPosition;
@@ -41,7 +41,7 @@ namespace Game.Combat
 
         //        private readonly Cooldown _firingCooldown;
         //        private const float KnockdownDuration = 5f;
-//        private bool _waitingForHeal;
+        private bool _waitingForHeal;
         //        private const float AlphaCutoff = 0.2f;
 //        private const float FadeVisibilityDistance = 5f;
 //        private float _currentAlpha;
@@ -49,7 +49,7 @@ namespace Game.Combat
         public override void Update()
         {
             base.Update();
-            _couldHitTarget = TargetVisible() && !OutOfRange();
+            CouldHitTarget = TargetVisible() && !OutOfRange();
             EnemyUi.UiHitController.UpdateValue();
             CurrentAction?.Invoke();
         }
@@ -118,6 +118,7 @@ namespace Game.Combat
             transform.SetParent(GameObject.Find("World").transform);
             SetDistance(2, 4);
             _originPosition = transform.position;
+            SetHealBehaviour();
             SetConditions();
         }
 
@@ -137,27 +138,45 @@ namespace Game.Combat
 //            CurrentAction = KnockedDown();
         }
 
+        private Medic FindMedic()
+        {
+            foreach (EnemyBehaviour enemy in UIEnemyController.Enemies)
+            {
+                Medic medic = enemy as Medic;
+                if (medic == null || medic.HasTarget()) continue;
+                return medic;
+            }
+
+            return null;
+        }
+
         private void SetHealBehaviour()
         {
-//            HealthController.AddOnTakeDamage(a =>
-//            {
-//                if (HealthController.GetNormalisedHealthValue() > 0.25f || _waitingForHeal) return;
-//                foreach (DetailedEnemyCombat enemy in UIEnemyController.Enemies)
-//                {
-//                    Medic medic = enemy as Medic;
-//                    if (medic == null || medic.HasTarget()) continue;
-//                    CurrentAction = WaitForHeal(medic);
-//                    break;
-//                }
-//            });
+            HealthController().AddOnTakeDamage(a =>
+            {
+                if (HealthController().GetNormalisedHealthValue() > 0.25f || _waitingForHeal) return;
+                Medic m = FindMedic();
+                if (m == null) return;
+                MoveToCover(() => WaitForHeal(m));
+            });
         }
 
         private void WaitForHeal(Medic medic)
         {
-            SetActionText("Waiting for Medic");
-            medic.RequestHeal(this);
-//            _waitingForHeal = true;
-            ChooseNextAction();
+            CurrentAction = () =>
+            {
+                if (!_waitingForHeal)
+                {
+                    SetActionText("Waiting for Medic");
+                    medic.RequestHeal(this);
+                    _waitingForHeal = true;
+                }
+
+                if (medic != null) return;
+                medic = FindMedic();
+                if (medic == null) ChooseNextAction();
+                else WaitForHeal(medic);
+            };
         }
 
         public void ClearHealWait()
@@ -225,7 +244,6 @@ namespace Game.Combat
             SetActionText("Fleeing");
             CurrentAction = () =>
             {
-//                MoveBackward();
                 if (DistanceToTarget() > CombatManager.VisibilityRange) Kill();
             };
         }
@@ -237,7 +255,7 @@ namespace Game.Combat
             Alert();
             CombatManager.Player.RageController.Increase(shot.DamageDealt());
         }
-        
+
         public override void Kill()
         {
             base.Kill();
@@ -293,7 +311,7 @@ namespace Game.Combat
 
         //Firing
 
-        private bool NeedToMoveToCover(Action reachCoverAction)
+        private bool MoveToCover(Action reachCoverAction)
         {
             if (PathingGrid.IsCellHidden(CurrentCell())) return false;
             Cell safeCell = PathingGrid.FindCoverNearMe(CurrentCell());
@@ -308,7 +326,7 @@ namespace Game.Combat
 
         private void Reload()
         {
-            if (NeedToMoveToCover(Reload)) return;
+            if (MoveToCover(Reload)) return;
             if (Weapon().GetRemainingMagazines() == 0)
             {
                 Flee();
@@ -334,13 +352,13 @@ namespace Game.Combat
             SetActionText("Aiming");
             CurrentAction = () =>
             {
-                if (!_couldHitTarget) ChooseNextAction();
+                if (!CouldHitTarget) ChooseNextAction();
                 if (RecoilManager.GetAccuracyModifier() < 0.75f) return;
                 Fire();
             };
         }
 
-        private bool _couldHitTarget;
+        protected bool CouldHitTarget;
 
         private void Fire()
         {
@@ -349,7 +367,7 @@ namespace Game.Combat
             Immobilised(true);
             CurrentAction = () =>
             {
-                if (!_couldHitTarget)
+                if (!CouldHitTarget)
                 {
                     ChooseNextAction();
                     return;
@@ -407,12 +425,18 @@ namespace Game.Combat
 //                return Melee();
 //            }
 
-            if (_couldHitTarget || Weapon() == null) return false;
+            if (CouldHitTarget || Weapon() == null) return false;
             SetActionText("Moving");
             Cell targetCell = PathingGrid.FindCellToAttackPlayer(CurrentCell(), (int) (IdealWeaponDistance * 1.25f), (int) (IdealWeaponDistance * 0.75f));
             Thread pathThread = PathingGrid.RouteToCell(CurrentCell(), targetCell, route);
             WaitForRoute(pathThread);
             return true;
+        }
+
+        private void MoveToCell(Cell target)
+        {
+            Vector3 direction = ((Vector3) target.Position - transform.position).normalized;
+            Move(direction);
         }
 
         private void MoveToTargetPosition(Action ReachTargetAction)
@@ -434,25 +458,39 @@ namespace Game.Combat
                     target = newRoute.Dequeue();
                 }
 
-                Vector3 direction = ((Vector3) target.Position - transform.position).normalized;
-                Move(direction);
+                MoveToCell(target);
             };
         }
 
         protected void MoveToPlayer()
         {
+            MoveToCharacter(GetTarget(), ReachPlayer);
+        }
+
+        protected void MoveToCharacter(CharacterCombat character, Action reachCharacterAction)
+        {
+            Thread pathThread = null;
+            Cell targetCell = null;
             CurrentAction = () =>
             {
-                if (DistanceToTarget() < 0.25f)
+                if (pathThread == null || PathingGrid.IsLineObstructed(transform.position, character.transform.position))
                 {
-                    ReachPlayer();
-                    return;
+                    pathThread = PathingGrid.RouteToCell(CurrentCell(), character.CurrentCell(), route);
                 }
 
-                Vector3 direction = CombatManager.Player.transform.position;
-                direction = direction - transform.position;
-                direction.Normalize();
-                Move(direction);
+                if (pathThread.IsAlive) return;
+                if (CurrentCell() == targetCell || targetCell == null)
+                {
+                    targetCell = route.Count == 0 ? null : route.Dequeue();
+                }
+
+                if (targetCell != null)
+                {
+                    MoveToCell(targetCell);
+                }
+
+                if (DistanceToTarget() > 0.25f) return;
+                reachCharacterAction();
             };
         }
 

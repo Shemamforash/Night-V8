@@ -267,6 +267,11 @@ namespace SamsHelper
             return true;
         }
 
+        public static T RandomInList<T>(T[] arr)
+        {
+            return arr[Random.Range(0, arr.Length)];
+        }
+        
         public static T RandomInList<T>(List<T> arr)
         {
             return arr[Random.Range(0, arr.Count)];

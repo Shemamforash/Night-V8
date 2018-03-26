@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using Game.Characters.CharacterActions;
 using Game.Characters.Player;
 using SamsHelper;
 using UnityEngine;
@@ -23,18 +24,15 @@ namespace Game.Combat
         private static readonly List<Node<Cell>> _gridNodes = new List<Node<Cell>>();
         private static PathingGrid _instance;
 
-        private readonly HashSet<Cell> _reachableCells = new HashSet<Cell>(new CellComparer());
-        public static HashSet<Cell> UnreachableCells = new HashSet<Cell>(new CellComparer());
-
         private static List<AreaGenerator.Shape> _shapes;
         private static ContactFilter2D cf;
 
         private static readonly Collider2D[] colliders = new Collider2D[5000];
-        private static List<List<Vector2>> _hiddenCellPolys = new List<List<Vector2>>();
+        private static Vector2 _lastPlayerPosition;
+        private static readonly HashSet<Cell> _hiddenCells = new HashSet<Cell>(new CellComparer());
 
         public void Awake()
         {
-            UnreachableCells = new HashSet<Cell>(new CellComparer());
             _instance = this;
         }
 
@@ -56,9 +54,7 @@ namespace Game.Combat
                 {
                     Cell c = colliders[i].GetComponent<Cell>();
                     shape.OccupiedCells.Add(c);
-                    _reachableCells.Remove(c);
-                    UnreachableCells.Add(c);
-                    c.Barrier = shape;
+                    c.Reachable = false;
                 }
             }
 
@@ -84,7 +80,7 @@ namespace Game.Combat
             {
                 Vector3 currentPosition = start + direction * j;
                 Cell cellHere = PositionToCell(currentPosition);
-                if (UnreachableCells.Contains(cellHere)) return true;
+                if (!cellHere.Reachable) return true;
             }
 
             return false;
@@ -156,12 +152,13 @@ namespace Game.Combat
                 for (int y = startY; y < endY; ++y)
                 {
                     Cell current = Grid[x, y];
-                    if (UnreachableCells.Contains(current)) continue;
+                    if (!current.Reachable) continue;
                     float distance = current.Distance(origin);
                     if (distance < minRange || distance > maxRange) continue;
                     cellsInRange.Add(current);
                 }
             }
+
             return cellsInRange;
         }
 
@@ -172,15 +169,9 @@ namespace Game.Combat
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = new Color(1, 0, 0, 0.4f);
-            foreach (Cell cell in UnreachableCells)
-            {
-                Gizmos.DrawCube(new Vector3(cell.XPos, cell.YPos), new Vector3(CellWidth, CellWidth, 1));
-            }
-
-            Gizmos.color = new Color(0, 1, 1, 0.4f);
             foreach (Cell cell in _cellsInRange)
             {
+                Gizmos.color = IsCellHidden(cell) ? new Color(1, 0, 1, 0.4f) : new Color(0, 1, 1, 0.4f);
                 Gizmos.DrawCube(new Vector3(cell.XPos, cell.YPos), new Vector3(CellWidth, CellWidth, 1));
             }
         }
@@ -190,33 +181,10 @@ namespace Game.Combat
         public static Cell FindCellToAttackPlayer(Cell currentCell, int maxRange, int minRange = 0)
         {
             Cell playerCell = CombatManager.Player.CurrentCell();
-            _cellsInRange = CellsInRange(playerCell, maxRange, minRange);
-            Cell nearestValidCell = null;
-            int iteratorStart = 0;
-            int minIndex = -1;
-            float minDistance = 1000;
-            for (int i = iteratorStart; i < _cellsInRange.Count; ++i)
-            {
-                float distance = currentCell.Distance(_cellsInRange[i]);
-                if (distance < minDistance)
-                {
-                    minIndex = i;
-                    minDistance = distance;
-                }
-
-                if (i != _cellsInRange.Count - 1) continue;
-                Cell temp = _cellsInRange[iteratorStart];
-                _cellsInRange[iteratorStart] = _cellsInRange[minIndex];
-                _cellsInRange[minIndex] = temp;
-                if (!IsCellHidden(_cellsInRange[iteratorStart]))
-                {
-                    nearestValidCell = _cellsInRange[iteratorStart];
-                    break;
-                }
-                ++iteratorStart;
-            }
+            List<Cell> cellsNearPlayer = CellsInRange(playerCell, maxRange, minRange);
+            Cell nearestValidCell = FindNearestCell(cellsNearPlayer, false, currentCell);
             if (nearestValidCell == null) return currentCell;
-            List<Cell> cellsNearTarget = CellsInRange(nearestValidCell, 3, 0).FindAll(c =>
+            List<Cell> cellsNearTarget = CellsInRange(nearestValidCell, 3).FindAll(c =>
             {
                 float distance = c.Distance(playerCell);
                 bool outOfRange = distance < minRange || distance > maxRange;
@@ -226,20 +194,46 @@ namespace Game.Combat
             return Helper.RandomInList(cellsNearTarget);
         }
 
-        public static Cell FindCoverNearMe(Cell currentCell, int maxRange = 10)
+        private static Cell FindNearestCell(List<Cell> cells, bool shouldCellBeHidden, Cell currentCell)
         {
-            List<Cell> cellsInRange = CellsInRange(currentCell, maxRange, 0);
-            List<Cell> hiddenCells = cellsInRange.FindAll(IsCellHidden);
-            Cell nearestHiddenCell = null;
-            float nearestCellDistance = 1000;
-            hiddenCells.ForEach(c =>
+            Cell nearestValidCell = null;
+            int iteratorStart = 0;
+            while (iteratorStart < cells.Count)
             {
-                float distance = currentCell.Distance(c);
-                if (distance >= nearestCellDistance) return;
-                nearestCellDistance = distance;
-                nearestHiddenCell = c;
-            });
-            return nearestHiddenCell;
+                int minIndex = -1;
+                float minDistance = 1000;
+                for (int i = iteratorStart; i < cells.Count; ++i)
+                {
+                    float distance = currentCell.Distance(cells[i]);
+                    if (distance >= minDistance) continue;
+                    minIndex = i;
+                    minDistance = distance;
+                }
+
+                Cell temp = cells[iteratorStart];
+                cells[iteratorStart] = cells[minIndex];
+                cells[minIndex] = temp;
+                if (shouldCellBeHidden && IsCellHidden(cells[iteratorStart]))
+                {
+                    nearestValidCell = cells[iteratorStart];
+                    break;
+                }
+
+                if (!shouldCellBeHidden && !IsCellHidden(cells[iteratorStart]))
+                {
+                    nearestValidCell = cells[iteratorStart];
+                    break;
+                }
+
+                ++iteratorStart;
+            }
+            return nearestValidCell;
+        }
+
+        public static Cell FindCoverNearMe(Cell currentCell)
+        {
+            List<Cell> cellsNearby = CellsInRange(currentCell, 10);
+            return FindNearestCell(cellsNearby, true, currentCell);
         }
 
         public static int WorldToGridDistance(float distance)
@@ -247,60 +241,20 @@ namespace Game.Combat
             return Mathf.FloorToInt(distance * CellResolution);
         }
 
-        private static Vector2 _lastPlayerPosition;
-        private static readonly HashSet<Cell> _hiddenCells = new HashSet<Cell>(new CellComparer());
-
         public static bool IsCellHidden(Cell c)
         {
             Vector2 currentPlayerPosition = CombatManager.Player.transform.position;
             if (_lastPlayerPosition != currentPlayerPosition)
             {
-                UpdateHiddenCellPolys(currentPlayerPosition);
+                _hiddenCells.Clear();
             }
+
             _lastPlayerPosition = currentPlayerPosition;
 
             if (_hiddenCells.Contains(c)) return true;
             bool hidden = IsLineObstructed(c.Position, currentPlayerPosition);
             if (hidden) _hiddenCells.Add(c);
             return hidden;
-        }
-
-        private static void UpdateHiddenCellPolys(Vector2 playerPosition)
-        {
-            _hiddenCells.Clear();
-            _hiddenCellPolys.Clear();
-            _shapes.ForEach(shape =>
-            {
-                Vector2 dirToShape = shape.ShapeObject.transform.position;
-                dirToShape -= playerPosition;
-
-                float leftAngleMax = 0;
-                float rightAngleMax = 0;
-                Vector2 leftPoint = Vector2.zero;
-                Vector2 rightPoint = Vector2.zero;
-
-                foreach (Vector2 worldPoint in shape.WorldVerts)
-                {
-                    Vector2 dirToPoint = worldPoint - playerPosition;
-                    float angle = Vector2.SignedAngle(dirToShape, dirToPoint);
-                    if (angle < leftAngleMax)
-                    {
-                        leftAngleMax = angle;
-                        leftPoint = worldPoint;
-                        continue;
-                    }
-
-                    if (angle <= rightAngleMax) continue;
-                    rightAngleMax = angle;
-                    rightPoint = worldPoint;
-                }
-
-                Vector2 leftPointDistant = leftPoint + (leftPoint - playerPosition).normalized * 20 * 1.5f;
-                Vector2 rightPointDistant = rightPoint + (rightPoint - playerPosition).normalized * 20 * 1.5f;
-
-                List<Vector2> hiddenPoly = new List<Vector2> {leftPoint, rightPoint, rightPointDistant, leftPointDistant};
-                _hiddenCellPolys.Add(hiddenPoly);
-            });
         }
 
         private void GenerateBaseGrid()
@@ -312,7 +266,6 @@ namespace Game.Combat
                 for (int y = 0; y < GridWidth; ++y)
                 {
                     Grid[x, y] = Cell.Generate(x, y);
-                    _reachableCells.Add(Grid[x, y]);
                     _gridNodes.Add(Grid[x, y].Node);
                 }
             }

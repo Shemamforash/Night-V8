@@ -9,6 +9,7 @@ public class FootstepMaker : MonoBehaviour {
 	private Vector3 _lastPosition;
 	private GameObject _footprintPrefab;
 	private readonly List<GameObject> _footstepPool = new List<GameObject>();
+	
 	private Transform _footstepParent;
 	private Rigidbody2D _rigidBody;
 

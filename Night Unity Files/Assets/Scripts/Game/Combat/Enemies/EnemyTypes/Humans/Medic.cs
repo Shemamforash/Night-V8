@@ -27,41 +27,28 @@ namespace Game.Combat.Enemies.EnemyTypes
         
         public void RequestHeal(EnemyBehaviour healTarget)
         {
-            if (_healTarget != null) return;
             _healTarget = healTarget;
-//            if (_healTarget == null || _healTarget.IsDead)
-//            {
-//                TryHeal();
-//            }
+            MoveToCharacter(healTarget, Heal);
         }
-        
-        private Action Heal()
+
+        private void Heal()
         {
             float healTime = 2f;
             SetActionText("Healing " + _healTarget.Enemy.Name);
-            return () =>
+            CurrentAction = () =>
             {
                 healTime -= Time.deltaTime;
-                if (healTime > 0) return;
+                if (_healTarget == null)
+                {
+                    ChooseNextAction();
+                    return;
+                }
+
+                if (healTime < 0) return;
                 _healTarget.ReceiveHealing(HealAmount);
                 _healTarget = null;
                 ChooseNextAction();
             };
-        }
-
-        protected override void ReachTarget()
-        {
-            base.ReachTarget();
-            if (_healTarget != null)
-            {
-//                CurrentAction = Heal();
-            }
-        }
-        
-        private void TryHeal()
-        {
-//            CurrentAction = MoveToTargetPosition(_healTarget.Position.CurrentValue());
-            SetActionText("Running to " + _healTarget.Enemy.Name);
         }
 
         public bool HasTarget()

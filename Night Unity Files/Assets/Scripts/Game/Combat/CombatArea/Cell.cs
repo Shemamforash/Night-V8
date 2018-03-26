@@ -12,9 +12,9 @@ namespace Game.Combat
         public List<Cell> AllNeighbors = new List<Cell>();
         public List<Cell> ReachableNeighbors = new List<Cell>();
         public Vector2 Position;
-        public AreaGenerator.Shape Barrier;
         private static GameObject _cellPrefab;
         public int id;
+        public bool Reachable = true;
 
         public static Cell Generate(int xIndex, int yIndex)
         {
@@ -28,7 +28,7 @@ namespace Game.Combat
         private void AddNeighbor(Cell c)
         {
             AllNeighbors.Add(c);
-            if (PathingGrid.UnreachableCells.Contains(c)) return;
+            if (!c.Reachable) return;
             ReachableNeighbors.Add(c);
             Node.AddNeighbor(c.Node);
         }

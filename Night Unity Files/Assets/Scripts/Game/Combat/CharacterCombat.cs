@@ -49,11 +49,15 @@ namespace Game.Combat
 
         public virtual void TakeDamage(Shot shot)
         {
-            float armourModifier = shot.DidPierce() ? 1 : 1 - ArmourController().CurrentArmour() / 10f;
-            float healthDamage = (int) (armourModifier * shot.DamageDealt());
-            float armourDamage = (int)((1f - armourModifier) * shot.DamageDealt());
-            if (healthDamage != 0) HealthController().TakeDamage(healthDamage);
-            if (armourDamage != 0) ArmourController().TakeDamage(armourDamage);
+            float chanceToAbsorbDamage = shot.DidPierce() ? 0 : ArmourController().CurrentArmour() / 10f;
+            if (chanceToAbsorbDamage >= Random.Range(0f, 1f))
+            {
+                ArmourController().TakeDamage(shot.DamageDealt());
+            }
+            else
+            {
+                HealthController().TakeDamage(shot.DamageDealt());
+            }
         }
 
 //        private void KnockBack(float distance)

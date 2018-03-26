@@ -38,7 +38,7 @@ namespace Game.Combat
         private event Action OnHitAction;
         private static GameObject _bulletPrefab;
 
-        private static readonly List<Shot> _shotPool = new List<Shot>();
+        private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Prefabs/Combat/Bullet");
         
         private Transform _shotParent;
 
@@ -49,7 +49,7 @@ namespace Game.Combat
 
         private void OnDestroy()
         {
-            _shotPool.Remove(this);
+            _shotPool.Dispose(this);
         }
 
         private void ResetValues()
@@ -69,21 +69,8 @@ namespace Game.Combat
 
         public static Shot CreateShot(CharacterCombat origin)
         {
-            Shot shot;
-            if (_shotPool.Count == 0)
-            {
-                if (_bulletPrefab == null) _bulletPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bullet");
-                GameObject bullet = Instantiate(_bulletPrefab);
-                shot = bullet.AddComponent<Shot>();
-                bullet.layer = 11;
-            }
-            else
-            {
-                shot = _shotPool[0];
-                shot.gameObject.SetActive(true);
-                _shotPool.RemoveAt(0);
-            }
-
+            Shot shot = _shotPool.Create();
+            shot.gameObject.layer = 11;
             shot.Initialise(origin, origin.GetTarget());
             return shot;
         }
@@ -176,8 +163,7 @@ namespace Game.Combat
 
         private void DeactivateShot()
         {
-            gameObject.SetActive(false);
-            _shotPool.Add(this);
+            _shotPool.Return(this);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
