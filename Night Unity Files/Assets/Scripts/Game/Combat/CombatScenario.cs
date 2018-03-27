@@ -51,17 +51,21 @@ namespace Game.Combat
         public static CombatScenario Generate(int difficulty, int size)
         {
             CombatScenario scenario = new CombatScenario();
-            if (size > MaxEncounterSize) size = MaxEncounterSize;
-            for (int i = 0; i < size; ++i)
-            {
-                Helper.Shuffle(ref _enemyTypes);
-                foreach (EnemyTemplate t in _enemyTypes)
-                {
-                    if (size < t.Value) continue;
-                    AddEnemy(t.EnemyType, scenario, difficulty);
-                    break;
-                }
-            }
+            AddEnemy(EnemyType.Medic, scenario, difficulty);
+            AddEnemy(EnemyType.Sentinel, scenario, difficulty);
+            AddEnemy(EnemyType.Sniper, scenario, difficulty);
+
+//            if (size > MaxEncounterSize) size = MaxEncounterSize;
+//            for (int i = 0; i < size; ++i)
+//            {
+//                Helper.Shuffle(ref _enemyTypes);
+//                foreach (EnemyTemplate t in _enemyTypes)
+//                {
+//                    if (size < t.Value) continue;
+//                    AddEnemy(t.EnemyType, scenario, difficulty);
+//                    break;
+//                }
+//            }
 
             return scenario;
         }

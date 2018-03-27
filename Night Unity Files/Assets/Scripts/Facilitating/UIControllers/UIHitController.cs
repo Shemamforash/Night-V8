@@ -7,7 +7,7 @@ public class UIHitController : MonoBehaviour
 {
     private RectTransform _innerRect;
     private Image _outerImage, _innerImage;
-    private const float MaxHeight = 70f;
+    private const float MaxHeight = 90f;
     private CharacterCombat _character;
     private const float FadeTime = 0.5f;
     private float _currentShotTime;
@@ -27,10 +27,7 @@ public class UIHitController : MonoBehaviour
     
     public void UpdateValue()
     {
-        float distance = _character.DistanceToTarget();
-        distance = 1f / distance;
-        if (distance > 1) distance = 1;
-        float newHeight = MaxHeight * (CombatManager.Player.RecoilManager.GetAccuracyModifier() * 2f - 1f) * distance;
+        float newHeight = MaxHeight * (CombatManager.Player.GetAccuracyModifier() * 2f - 1f);
         if (_currentShotTime > 0)
         {
             float rValue = 1 - _currentShotTime / FadeTime;

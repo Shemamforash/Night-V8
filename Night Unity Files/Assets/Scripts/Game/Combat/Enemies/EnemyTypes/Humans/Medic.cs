@@ -11,20 +11,20 @@ namespace Game.Combat.Enemies.EnemyTypes
 {
     public class Medic : EnemyBehaviour
     {
-        private const int HealAmount = 50;
+        private const int HealAmount = 10;
+        private const int HealTicks = 5;
+        private const float HealDuration = 2f;
+        private const float HealInterval = HealDuration / HealTicks;
         private EnemyBehaviour _healTarget;
+        private static GameObject _healPrefab;
 
         public override void Initialise(Enemy enemy, EnemyUi characterUi)
         {
             base.Initialise(enemy, characterUi);
+            if (_healPrefab == null) _healPrefab = Resources.Load<GameObject>("Prefabs/Combat/Heal Indicator");
 //            MinimumFindCoverDistance = 20f;
         }
-        
-        private void OnDestroy()
-        {
-            _healTarget?.ClearHealWait();
-        }
-        
+
         public void RequestHeal(EnemyBehaviour healTarget)
         {
             _healTarget = healTarget;
@@ -33,21 +33,24 @@ namespace Game.Combat.Enemies.EnemyTypes
 
         private void Heal()
         {
-            float healTime = 2f;
+            float age = 0f;
+            int currentTick = 1;
             SetActionText("Healing " + _healTarget.Enemy.Name);
             CurrentAction = () =>
             {
-                healTime -= Time.deltaTime;
-                if (_healTarget == null)
+                age += Time.deltaTime;
+                if (_healTarget == null || currentTick == HealTicks)
                 {
+                    _healTarget?.ChooseNextAction();
                     ChooseNextAction();
                     return;
                 }
-
-                if (healTime < 0) return;
-                _healTarget.ReceiveHealing(HealAmount);
-                _healTarget = null;
-                ChooseNextAction();
+                if (age < currentTick * HealInterval) return;
+                ++currentTick;
+                _healTarget.HealthController().Heal(HealAmount);
+                GameObject healObject = Instantiate(_healPrefab);
+                healObject.transform.position = _healTarget.transform.position;
+                healObject.transform.localScale = Vector3.one;
             };
         }
 

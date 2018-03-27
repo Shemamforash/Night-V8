@@ -110,11 +110,10 @@ namespace Game.Combat
             SetOwnedByEnemy(Enemy.Template.Speed);
             HealthController().SetInitialHealth(Enemy.Template.Health, this);
             EnemyUi.ArmourController.SetCharacter(Enemy);
-            RecoilManager.EnterCombat();
 //            if (!(this is Medic || this is Martyr)) SetHealBehaviour();
             CurrentAction = Wander;
             EnemyUi.UiHitController.SetCharacter(this);
-            EnemyUi.PrimaryButton.AddOnDeselectEvent(() => { EnemyUi.CanvasGroup.alpha = UiAppearanceController.FadedColour.a; });
+            EnemyUi.PrimaryButton.AddOnDeselectEvent(() => EnemyUi.CanvasGroup.alpha = 0);
             transform.SetParent(GameObject.Find("World").transform);
             SetDistance(2, 4);
             _originPosition = transform.position;
@@ -122,7 +121,7 @@ namespace Game.Combat
             SetConditions();
         }
 
-        public void SetDistance(int rangeMin, int rangeMax)
+        private void SetDistance(int rangeMin, int rangeMax)
         {
             Vector3 position = new Vector3();
             position.x = Random.Range(rangeMin, rangeMax);
@@ -132,13 +131,7 @@ namespace Game.Combat
             transform.position = position;
         }
 
-        protected override void KnockDown()
-        {
-//            base.KnockDown();
-//            CurrentAction = KnockedDown();
-        }
-
-        private Medic FindMedic()
+        private static Medic FindMedic()
         {
             foreach (EnemyBehaviour enemy in UIEnemyController.Enemies)
             {
@@ -177,17 +170,6 @@ namespace Game.Combat
                 if (medic == null) ChooseNextAction();
                 else WaitForHeal(medic);
             };
-        }
-
-        public void ClearHealWait()
-        {
-            ChooseNextAction();
-        }
-
-        public void ReceiveHealing(int amount)
-        {
-//            HealthController.Heal(amount);
-            ChooseNextAction();
         }
 
         private void KnockedDown()
@@ -252,6 +234,7 @@ namespace Game.Combat
         {
             base.TakeDamage(shot);
             if (shot.IsCritical) HitController().RegisterCritical();
+            else HitController().RegisterShot();
             Alert();
             CombatManager.Player.RageController.Increase(shot.DamageDealt());
         }
@@ -276,7 +259,8 @@ namespace Game.Combat
         {
             Immobilised(false);
             if (NeedsRepositioning()) return;
-            Aim();
+            if (Weapon().Empty()) Reload();
+            else Aim();
         }
 
         private void WaitForRoute(Thread routingThread, Action reachTargetAction = null)
@@ -353,7 +337,7 @@ namespace Game.Combat
             CurrentAction = () =>
             {
                 if (!CouldHitTarget) ChooseNextAction();
-                if (RecoilManager.GetAccuracyModifier() < 0.75f) return;
+                if (GetAccuracyModifier() < 0.75f) return;
                 Fire();
             };
         }
@@ -469,16 +453,18 @@ namespace Game.Combat
 
         protected void MoveToCharacter(CharacterCombat character, Action reachCharacterAction)
         {
-            Thread pathThread = null;
             Cell targetCell = null;
+            SetActionText("Moving to " + character.name);
+            Thread pathThread = PathingGrid.RouteToCell(CurrentCell(), character.CurrentCell(), route);
             CurrentAction = () =>
             {
-                if (pathThread == null || PathingGrid.IsLineObstructed(transform.position, character.transform.position))
+                if (pathThread.IsAlive) return;
+                if (character.IsDead)
                 {
-                    pathThread = PathingGrid.RouteToCell(CurrentCell(), character.CurrentCell(), route);
+                    ChooseNextAction();
+                    return;
                 }
 
-                if (pathThread.IsAlive) return;
                 if (CurrentCell() == targetCell || targetCell == null)
                 {
                     targetCell = route.Count == 0 ? null : route.Dequeue();
@@ -489,7 +475,7 @@ namespace Game.Combat
                     MoveToCell(targetCell);
                 }
 
-                if (DistanceToTarget() > 0.25f) return;
+                if (Vector2.Distance(character.transform.position, transform.position) > 0.25f) return;
                 reachCharacterAction();
             };
         }

@@ -1,9 +1,10 @@
-﻿using Facilitating.UIControllers;
+﻿using System.Collections;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Skills;
 using Game.Gear.Weapons;
-using SamsHelper;
-using SamsHelper.Input;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.ReactiveUI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -18,13 +19,17 @@ namespace Game.Combat
         private Rigidbody2D _rigidbody;
         private bool Sprinting;
         private const int SprintModifier = 2;
-        private bool _immobilised = false;
+        protected bool IsImmobilised;
         private const float DashForce = 300;
 
-//        public bool IsKnockedDown;
+        public bool IsDead;
+
 //        public bool IsDead;
 
-        public readonly RecoilManager RecoilManager = new RecoilManager();
+        private readonly Number Recoil = new Number(0, 0, 1f);
+        private const float RecoilRecoveryRate = 0.02f;
+        private const float TimeToStartRecovery = 0.5f;
+        private float _recoveryTimer;
         private float _distanceToTarget = -1;
         private Cell _currentCell;
 
@@ -60,33 +65,32 @@ namespace Game.Combat
             }
         }
 
-//        private void KnockBack(float distance)
-//        {
-//            MoveBackwardAction?.Invoke(distance);
-//        }
-
         public virtual void Kill()
         {
+            IsDead = true;
 //            Destroy(CharacterController.gameObject);
         }
 
+        private const float KnockbackTime = 2f;
+        protected bool KnockedBack = false;
 
-        protected virtual void KnockDown()
+        public virtual void Knockback(Vector3 source, float force = 10f)
         {
-//            Interrupt();
-//            IsKnockedDown = true;
+            StartCoroutine(RecoverFromKnockback());
+            Vector3 direction = (transform.position - source).normalized;
+            _forceToadd = direction * force;
         }
 
-        public void Knockback(float knockbackDistance)
+        private IEnumerator RecoverFromKnockback()
         {
-//            KnockBack(knockbackDistance);
-//            KnockDown();
-        }
-
-        public virtual bool Immobilised()
-        {
-//            return IsKnockedDown;
-            return false;
+            KnockedBack = true;
+            float age = 0;
+            while (age < KnockbackTime)
+            {
+                age += Time.deltaTime;
+                yield return null;
+            }
+            KnockedBack = false;
         }
 
         public abstract Weapon Weapon();
@@ -115,7 +119,7 @@ namespace Game.Combat
 
         public void Immobilised(bool immobilised)
         {
-            _immobilised = immobilised;
+            IsImmobilised = immobilised;
         }
 
         public void Awake()
@@ -130,7 +134,39 @@ namespace Game.Combat
             Burn.Update();
             Sick.Update();
             Bleeding.Update();
-            RecoilManager.UpdateCombat();
+            UpdateRecoil();
+        }
+
+        public void IncreaseRecoil()
+        {
+            float recoilLoss = Weapon().GetAttributeValue(AttributeType.Handling);
+            recoilLoss = 100 - recoilLoss;
+            recoilLoss /= 100;
+            recoilLoss *= Moving() ? 2 : 1;
+            Recoil.Increment(recoilLoss);
+            _recoveryTimer = TimeToStartRecovery;
+        }
+
+        protected bool Moving()
+        {
+            return _rigidbody.velocity == Vector2.zero;
+        }
+        
+        public float GetAccuracyModifier()
+        {
+            float baseRecoilModifier = -0.5f * Recoil.CurrentValue() + 1;
+//            float movementModifier = Moving() ? 0.5f : 1f;
+            return baseRecoilModifier;
+        }
+        
+        private void UpdateRecoil()
+        {
+            if (_recoveryTimer > 0)
+            {
+                _recoveryTimer -= Time.deltaTime;
+                return;
+            }
+            Recoil.Decrement(RecoilRecoveryRate + Time.deltaTime);
         }
 
         private Vector2 _forceToadd = Vector2.zero;
@@ -143,13 +179,13 @@ namespace Game.Combat
 
         protected virtual void Dash(Vector2 direction)
         {
-            if (_immobilised) return;
+            if (IsImmobilised) return;
             _forceToadd += direction * DashForce;
         }
 
         public void Move(Vector2 direction)
         {
-            if (_immobilised) return;
+            if (IsImmobilised) return;
             float speed = Speed;
             if (Sprinting) speed *= SprintModifier;
             _forceToadd += direction * speed;

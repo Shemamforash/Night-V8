@@ -147,7 +147,7 @@ namespace Game.Combat.Skills
         {
             EnemyBehaviour nearestEnemy = UIEnemyController.NearestEnemy();
             if (nearestEnemy == null || nearestEnemy.DistanceToTarget() > 5) return;
-            nearestEnemy.Knockback(5);
+//            nearestEnemy.Knockback(5);
 //            nearestEnemy.ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit);
         }
     }
@@ -162,7 +162,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            UIEnemyController.Enemies.ForEach(e => e.Knockback(0));
+//            UIEnemyController.Enemies.ForEach(e => e.Knockback(0));
         }
     }
 

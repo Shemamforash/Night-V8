@@ -30,6 +30,9 @@ namespace Assets
 
             public Ammo(GameObject ammoObject)
             {
+                Vector3 position = ammoObject.transform.position;
+                position.z = 0;
+                ammoObject.transform.position = position;
                 _ammoObject = ammoObject;
                 _round = _ammoObject.transform.Find("Round").gameObject;
             }

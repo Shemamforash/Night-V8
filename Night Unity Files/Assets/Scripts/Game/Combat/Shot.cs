@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using Game.Characters;
-using Game.Combat.Enemies;
 using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.Experimental.U2D;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat
@@ -31,20 +26,23 @@ namespace Game.Combat
         private float _knockDownChance;
         private float _finalDamageModifier = 1f;
         private bool _guaranteeHit, _guaranteeCritical;
-        private int _knockbackDistance;
+        private int _knockbackForce;
         private int _damageDealt;
         private int _pierceDepth;
         public bool DidHit;
         private event Action OnHitAction;
         private static GameObject _bulletPrefab;
+        private Rigidbody2D _rigidBody;
+        private TrailRenderer _trailRenderer;
+        private GameObject _fireTrail;
 
         private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Prefabs/Combat/Bullet");
-        
+
         private Transform _shotParent;
 
         public void Awake()
         {
-            if(_shotParent == null) _shotParent = GameObject.Find("World").transform.Find("Footsteps");
+            if (_shotParent == null) _shotParent = GameObject.Find("World").transform.Find("Bullets");
         }
 
         private void OnDestroy()
@@ -58,7 +56,7 @@ namespace Game.Combat
             _finalDamageModifier = 1f;
             _guaranteeHit = false;
             _guaranteeCritical = false;
-            _knockbackDistance = 0;
+            _knockbackForce = 0;
             _damageDealt = 0;
             _pierceDepth = 0;
             _moving = false;
@@ -77,12 +75,22 @@ namespace Game.Combat
 
         private void Initialise(CharacterCombat origin, CharacterCombat target)
         {
+            if (_rigidBody == null) _rigidBody = GetComponent<Rigidbody2D>();
+            if (_trailRenderer == null) _trailRenderer = GetComponent<TrailRenderer>();
+            if (_fireTrail == null) _fireTrail = Helper.FindChildWithName(gameObject, "Fire Trail");
+            _fireTrail.SetActive(false);
+            _trailRenderer.Clear();
             _origin = origin;
             _targetPosition = target.transform.position;
             ResetValues();
             CacheWeaponAttributes();
         }
 
+        public void ActivateFireTrail()
+        {
+            _fireTrail.SetActive(true);
+        }
+        
         public bool DidPierce()
         {
             return Random.Range(0f, 1f) <= _pierceChance;
@@ -108,30 +116,21 @@ namespace Game.Combat
         private void CalculateAccuracy()
         {
             if (_guaranteeHit) _accuracy = 0;
-            else _accuracy *= _origin.RecoilManager.GetAccuracyModifier();
+            else _accuracy *= _origin.GetAccuracyModifier();
         }
 
-        private bool WillCrit()
+        private void CheckWillCrit()
         {
-            if (_guaranteeCritical)
-            {
-                IsCritical = true;
-            }
-            else
-            {
-                IsCritical = Random.Range(0f, 1f) < _criticalChance;
-            }
-
-            return IsCritical;
+            IsCritical = _guaranteeCritical || Random.Range(0f, 1f) < _criticalChance;
         }
 
         private Vector3 direction;
-        
+
         private void FixedUpdate()
         {
-            if (!_fired && !_moving) return;
-            GetComponent<Rigidbody2D>().velocity = direction * _speed;
-            _origin?.RecoilManager.Increment(_origin.Weapon());
+            if (!_fired || _moving) return;
+            _rigidBody.velocity = direction * _speed;
+            _origin?.IncreaseRecoil();
             _moving = true;
         }
 
@@ -141,14 +140,12 @@ namespace Game.Combat
             CalculateAccuracy();
             float angleOffset = Random.Range(-_accuracy, _accuracy);
             _speed = Random.Range(9f, 11f);
-
             direction = (_targetPosition - _origin.transform.position).normalized;
             transform.position = _origin.transform.position + direction * 0.2f;
             direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * direction;
             _fired = true;
             StartCoroutine(WaitToDie());
         }
-
 
         private IEnumerator WaitToDie()
         {
@@ -163,20 +160,25 @@ namespace Game.Combat
 
         private void DeactivateShot()
         {
+            _fireTrail.SetActive(false);
             _shotPool.Return(this);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
             GameObject other = collision.gameObject;
+            if (Random.Range(0f, 1f) < _burnChance)
+            {
+                FireBehaviour.StartBurning(transform.position);  
+            }
             EnemyBehaviour b = other.GetComponent<EnemyBehaviour>();
-            if(b != null) ApplyDamage(b);
+            if (b != null) ApplyDamage(b);
             DeactivateShot();
         }
 
         private void ApplyDamage(CharacterCombat hit)
         {
-            WillCrit();
+            CheckWillCrit();
             _damageDealt = IsCritical ? _damage * 2 : _damage;
             _damageDealt = (int) (_damageDealt * _finalDamageModifier);
             ApplyConditions(hit);
@@ -186,16 +188,15 @@ namespace Game.Combat
 
         private void ApplyConditions(CharacterCombat hit)
         {
-            if (_knockbackDistance != 0)
+            if (_knockbackForce != 0)
             {
                 if (Random.Range(0, 1f) < _knockDownChance)
                 {
-                    hit.Knockback(_knockbackDistance);
+                    hit.Knockback(transform.position, _knockbackForce);
                 }
             }
 
             if (Random.Range(0f, 1f) < _bleedChance) hit.Bleeding.AddStack();
-            if (Random.Range(0f, 1f) < _burnChance) hit.Burn.AddStack();
             if (Random.Range(0f, 1f) < _sicknessChance) hit.Sick.AddStack();
         }
 
@@ -209,7 +210,7 @@ namespace Game.Combat
         {
             Assert.IsTrue(distance >= 0);
             _knockDownChance = Mathf.Clamp(chance, 0f, 1f);
-            _knockbackDistance = distance;
+            _knockbackForce = distance;
         }
 
         public void SetBurnChance(float chance)

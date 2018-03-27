@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Assets;
-using Facilitating.Audio;
 using Facilitating.UIControllers;
-using Game.Characters;
 using Game.Characters.Player;
 using Game.Combat.CharacterUi;
 using Game.Gear.Weapons;
@@ -12,9 +11,7 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Combat
 {
@@ -27,7 +24,6 @@ namespace Game.Combat
         public Player Player;
 
         public RageController RageController;
-        private Cooldown _reloadingCooldown;
         public event Action<Shot> OnFireAction;
         public event Action OnReloadAction;
         public bool Retaliate;
@@ -63,14 +59,14 @@ namespace Game.Combat
         {
             _pivot = Helper.FindChildWithName<Transform>(gameObject, "Pivot");
             InputHandler.RegisterInputListener(this);
-            
+
             _playerUi = GameObject.Find("Player Ui").GetComponent<PlayerUi>();
-            
+
             Player = player;
             _damageModifier = Player.CalculateDamageModifier();
             _skillCooldownModifier = Player.CalculateSkillCooldownModifier();
             _initialArmour = player.ArmourController.GetProtectionLevel();
-            
+
             _playerUi._playerName.text = player.Name;
             Speed = Player.CalculateSpeed();
 
@@ -86,24 +82,21 @@ namespace Game.Combat
                 RageBarController.UpdateDashTimer(1);
                 RageBarController.PlayFlash();
             });
-            
+
             RageController = new RageController();
             RageController.EnterCombat();
 
             HealthController().SetInitialHealth(Player.CalculateCombatHealth(), this);
             HealthController().AddOnHeal(a => HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue()));
             HealthController().AddOnTakeDamage(a => HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue()));
-            
-            HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue());
-            RecoilManager.EnterCombat();
 
+            HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue());
             _playerUi.ArmourController.SetCharacter(Player);
-            
+
             SkillBar.BindSkills(Player);
             InputHandler.RegisterInputListener(this);
             UIMagazineController.SetWeapon(Weapon());
-            
-            SetReloadCooldown();
+
             SetConditions();
         }
 
@@ -118,23 +111,17 @@ namespace Game.Combat
         {
             return _dashCooldown.Finished();
         }
-        
+
         public void TryRetaliate(EnemyBehaviour origin)
         {
             if (Retaliate) FireWeapon();
         }
 
-//        protected override void KnockDown()
-//        {
-//            if (IsKnockedDown) return;
-//            base.KnockDown();
-//            UIKnockdownController.StartKnockdown(10);
-//        }
-        
-        protected override void KnockDown()
+        public override void Knockback(Vector3 source, float force = 10f)
         {
+            base.Knockback(source, force);
             StopReloading();
-//            StopSprinting();
+            StopSprinting();
             UpdateMagazineUi();
         }
 
@@ -142,13 +129,6 @@ namespace Game.Combat
         {
             _currentTarget = e;
         }
-
-        //MISC
-//        public override bool Immobilised()
-//        {
-//            return _reloadingCooldown.Running() || IsKnockedDown;
-//        }
-
 
         public override Weapon Weapon()
         {
@@ -159,7 +139,7 @@ namespace Game.Combat
         {
             return _playerUi.HealthController;
         }
-        
+
         public override UIArmourController ArmourController()
         {
             return _playerUi.ArmourController;
@@ -167,64 +147,67 @@ namespace Game.Combat
 
         public override void ExitCombat()
         {
-            UIKnockdownController.Exit();
-//            IsKnockedDown = false;
             StopReloading();
             InputHandler.UnregisterInputListener(this);
             _fired = false;
         }
 
+        private Coroutine _reloadingCoroutine;
+        
         //RELOADING
         private void Reload()
         {
-            if (Immobilised()) return;
-            if (_reloadingCooldown.Running()) return;
+            if (_reloadingCoroutine != null) return;
             if (Player.Weapon.FullyLoaded()) return;
             if (Player.Weapon.GetRemainingMagazines() == 0) return;
-            OnFireAction = null;
-            Retaliate = false;
-            float reloadSpeed = Player.Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
-            UIMagazineController.EmptyMagazine();
-            _reloadingCooldown.Duration = reloadSpeed;
-            _reloadingCooldown.Start();
-            _fired = false;
+            _reloadingCoroutine = StartCoroutine(StartReloading());
         }
 
         private void StopReloading()
         {
-//            if (_reloadingCooldown == null || _reloadingCooldown.Finished()) return;
-//            _reloadingCooldown.Cancel();
+            if(_reloadingCoroutine != null) StopCoroutine(_reloadingCoroutine);
+            _reloadingCoroutine = null;
+            Immobilised(false);
+            UpdateMagazineUi();
         }
 
         //COOLDOWNS
 
-        private void SetReloadCooldown()
+        private IEnumerator StartReloading()
         {
-            _reloadingCooldown = CombatManager.CombatCooldowns.CreateCooldown();
-            _reloadingCooldown.SetStartAction(() =>
+            Immobilised(true);
+            float duration = Player.Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
+            UIMagazineController.EmptyMagazine();
+            _fired = false;
+            OnFireAction = null;
+            Retaliate = false;
+
+            float age = 0;
+            while (age < duration)
             {
-                Player.Weapon.Reload(Player.Inventory());
-                UpdateMagazineUi();
-            });
-            _reloadingCooldown.SetDuringAction(t =>
-            {
-                if (t > _reloadingCooldown.Duration * 0.8f)
+                age += Time.deltaTime;
+                float t = age / duration;
+                if (t < 0.2f)
                 {
                     UIMagazineController.EmptyMagazine();
                 }
                 else
                 {
-                    t = (t - _reloadingCooldown.Duration * 0.2f) / (_reloadingCooldown.Duration * 0.8f);
+                    t = (t - 0.2f) / 0.8f;
                     t = 1 - t;
                     UIMagazineController.UpdateReloadTime(t);
                 }
-            });
-            _reloadingCooldown.SetEndAction(() => OnReloadAction?.Invoke());
+                yield return null;
+            }
+            Player.Weapon.Reload(Player.Inventory());
+            OnReloadAction?.Invoke();
+            StopReloading();
         }
 
         //FIRING
         public void FireWeapon()
         {
+            if (GetTarget() == null) return;
             if (Weapon().Empty()) return;
             List<Shot> shots = Weapon().Fire(this);
             if (shots == null) return;
@@ -264,17 +247,10 @@ namespace Game.Combat
             return _currentTarget;
         }
 
-        private void TryMelee()
-        {
-//            if (CurrentTarget.DistanceToPlayer > MeleeDistance) return;
-//            MeleeController.StartMelee(CurrentTarget);
-        }
-
-
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
-            if (Immobilised()) return;
+            if (IsImmobilised) return;
             if (isHeld)
             {
                 switch (axis)
@@ -299,9 +275,6 @@ namespace Game.Combat
                         break;
                     case InputAxis.Reload:
                         Reload();
-                        break;
-                    case InputAxis.Melee:
-                        TryMelee();
                         break;
                     case InputAxis.SkillOne:
                         SkillBar.ActivateSkill(0);

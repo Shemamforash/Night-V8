@@ -20,6 +20,7 @@ namespace Game.Combat.CharacterUi
             UiHitController = Helper.FindChildWithName<UIHitController>(gameObject, "Cover");
             ActionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Action");
             PrimaryButton = gameObject.GetComponent<EnhancedButton>();
+            CanvasGroup.alpha = 0f;
         }
     }
 }

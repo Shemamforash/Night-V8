@@ -13,34 +13,40 @@ namespace Facilitating.UIControllers
     {
         public static readonly List<EnemyBehaviour> Enemies = new List<EnemyBehaviour>();
         private static Transform _enemyListLeft, _enemyListRight;
-        private static readonly List<GameObject> _leftList = new List<GameObject>();
-        private static readonly List<GameObject> _rightList = new List<GameObject>();
+//        private static readonly List<GameObject> _leftList = new List<GameObject>();
+//        private static readonly List<GameObject> _rightList = new List<GameObject>();
 
         public void Awake()
         {
-            _enemyListLeft = Helper.FindChildWithName(gameObject, "Left").transform;
-            _enemyListRight = Helper.FindChildWithName(gameObject, "Right").transform;
+//            _enemyListLeft = Helper.FindChildWithName(gameObject, "Left").transform;
+//            _enemyListRight = Helper.FindChildWithName(gameObject, "Right").transform;
         }
 
         private GameObject CreateNewEnemyUi()
         {
-            GameObject enemyUi;
-            if (_leftList.Count <= _rightList.Count)
-            {
-                enemyUi = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Enemy UI Left"));
-                enemyUi.transform.SetParent(_enemyListLeft);
-                _leftList.Add(enemyUi);
-            }
-            else
-            {
-                enemyUi = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Enemy UI Right"));
-                enemyUi.transform.SetParent(_enemyListRight);
-                _rightList.Add(enemyUi);
-            }
+            GameObject enemyUi = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Enemy Item"));
+            enemyUi.transform.SetParent(transform);
+            enemyUi.transform.position = new Vector3(0,0,0);
+            RectTransform rect = enemyUi.GetComponent<RectTransform>();
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            
+//            if (_leftList.Count <= _rightList.Count)
+//            {
+//                enemyUi = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Enemy UI Left"));
+//                enemyUi.transform.SetParent(_enemyListLeft);
+//                _leftList.Add(enemyUi);
+//            }
+//            else
+//            {
+//                enemyUi = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Enemy UI Right"));
+//                enemyUi.transform.SetParent(_enemyListRight);
+//                _rightList.Add(enemyUi);
+//            }
 
-            Vector3 uiPosition = enemyUi.transform.position;
-            uiPosition.z = 0;
-            enemyUi.transform.position = uiPosition;
+//            Vector3 uiPosition = enemyUi.transform.position;
+//            uiPosition.z = 0;
+//            enemyUi.transform.position = uiPosition;
             enemyUi.transform.localScale = Vector3.one;
             return enemyUi;
         }
@@ -66,36 +72,38 @@ namespace Facilitating.UIControllers
         {
             if (direction > 0)
             {
-                SelectNextFurthest();
+                SelectAntiClockwise();
             }
             else
             {
-                SelectNextNearest();
+                SelectClockwise();
             }
         }
 
-        private static void SelectNextFurthest()
+        private static void SelectEnemy(int direction)
         {
-            float distance = CombatManager.Player.DistanceToTarget();
-            Enemies.Sort((a, b) => a.DistanceToTarget().CompareTo(b.DistanceToTarget()));
-            EnemyBehaviour nearestEnemy = Enemies.FirstOrDefault(e => e.DistanceToTarget() > distance);
-            if (nearestEnemy == null) SelectNearestEnemy();
-            else nearestEnemy.SetSelected();
+            Vector2 playerTransform = CombatManager.Player.transform.position;
+            Enemies.Sort((a, b) =>
+            {
+                float aAngle = AdvancedMaths.AngleFromUp(playerTransform, a.transform.position);
+                float bAngle = AdvancedMaths.AngleFromUp(playerTransform, b.transform.position);
+                return aAngle.CompareTo(bAngle);
+            });
+            int currentTargetIndex = Enemies.IndexOf((EnemyBehaviour) CombatManager.Player.GetTarget());
+            currentTargetIndex += direction;
+            if (currentTargetIndex == Enemies.Count) currentTargetIndex = 0;
+            if (currentTargetIndex == -1) currentTargetIndex = Enemies.Count - 1;
+            Enemies[currentTargetIndex].SetSelected();
         }
 
-        private static void SelectNearestEnemy()
+        private static void SelectClockwise()
         {
-            NearestEnemy()?.SetSelected();
+            SelectEnemy(1);
         }
 
-        private static void SelectNextNearest()
+        private static void SelectAntiClockwise()
         {
-            float distance = CombatManager.Player.DistanceToTarget();
-            Enemies.Sort((a, b) => a.DistanceToTarget().CompareTo(b.DistanceToTarget()));
-            Enemies.Reverse();
-            EnemyBehaviour nearestEnemy = Enemies.FirstOrDefault(e => e.DistanceToTarget() < distance);
-            if (nearestEnemy == null) SelectNearestEnemy();
-            else nearestEnemy.SetSelected();
+            SelectEnemy(-1);
         }
 
         public void ExitCombat()
@@ -137,7 +145,7 @@ namespace Facilitating.UIControllers
         public static void Remove(EnemyBehaviour enemy)
         {
             Enemies.Remove(enemy);
-            SelectNextNearest();
+            if(Enemies.Count != 0) SelectClockwise();
         }
 
         private static void AddEnemy(EnemyBehaviour e)

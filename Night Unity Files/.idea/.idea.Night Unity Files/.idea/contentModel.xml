@@ -52,6 +52,7 @@
         </e>
         <e p="FireBehaviour.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
+        <e p="HealthRise.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Plugins" t="Include">
           <e p="Editor" t="Include">
@@ -124,7 +125,6 @@
               <e p="UIHealthBarController.cs" t="Include" />
               <e p="UIHitController.cs" t="Include" />
               <e p="UIInventoryController.cs" t="Include" />
-              <e p="UIKnockdownController.cs" t="Include" />
               <e p="UIMagazineController.cs" t="Include" />
               <e p="UIMeleeController.cs" t="Include" />
               <e p="UIMinigameController.cs" t="Include" />
@@ -223,7 +223,6 @@
               <e p="ICombatListener.cs" t="Include" />
               <e p="MeleeController.cs" t="Include" />
               <e p="PlayerCombat.cs" t="Include" />
-              <e p="RecoilManager.cs" t="Include" />
               <e p="RetryMenu.cs" t="Include" />
               <e p="Shot.cs" t="Include" />
               <e p="SkillBar.cs" t="Include" />

@@ -14,6 +14,7 @@ namespace Game.Combat
         public Vector2 Position;
         private static GameObject _cellPrefab;
         public int id;
+        public bool Blocked = false;
         public bool Reachable = true;
 
         public static Cell Generate(int xIndex, int yIndex)

@@ -100,7 +100,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private void UseSelectedColours()
         {
-            Border?.SetActive(true);
+            if(Border != null) Border?.SetActive(true);
             TryStartFade(1);
         }
 
@@ -129,7 +129,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private void UseDeselectedColours()
         {
-            Border?.SetActive(false);
+            if(Border != null) Border.SetActive(false);
             TryStartFade(0);
         }
 

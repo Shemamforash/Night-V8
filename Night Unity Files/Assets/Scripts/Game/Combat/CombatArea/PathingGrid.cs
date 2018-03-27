@@ -55,6 +55,7 @@ namespace Game.Combat
                     Cell c = colliders[i].GetComponent<Cell>();
                     shape.OccupiedCells.Add(c);
                     c.Reachable = false;
+                    if (AdvancedMaths.IsPointInPolygon(c.Position, shape.WorldVerts)) c.Blocked = true;
                 }
             }
 
@@ -72,7 +73,7 @@ namespace Game.Combat
             return Grid[x, y];
         }
 
-        public static bool IsLineObstructed(Vector3 start, Vector3 end)
+        public static bool IsLineObstructed(Vector3 start, Vector3 end, bool includeReachable = false)
         {
             Vector3 direction = (end - start).normalized;
             float distance = Vector2.Distance(start, end);
@@ -80,7 +81,8 @@ namespace Game.Combat
             {
                 Vector3 currentPosition = start + direction * j;
                 Cell cellHere = PositionToCell(currentPosition);
-                if (!cellHere.Reachable) return true;
+                if (cellHere.Blocked) return true;
+                if (!cellHere.Reachable && includeReachable) return true;
             }
 
             return false;
@@ -104,7 +106,7 @@ namespace Game.Combat
                         {
                             cellsToRemove.Add(next);
                         }
-                        else if (!IsLineObstructed(current.Position, next.Position))
+                        else if (!IsLineObstructed(current.Position, next.Position, true))
                         {
                             noneHit = true;
                         }

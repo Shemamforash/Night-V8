@@ -47,16 +47,21 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
                         break;
                 }
 
-                _cooldownTime = Random.Range(10, 15);
+                ResetCooldown();
                 _throwing = false;
                 ChooseNextAction();
             };
         }
 
+        private void ResetCooldown()
+        {
+            _cooldownTime = Random.Range(5, 10);
+        }
+
         protected override void OnAlert()
         {
             base.OnAlert();
-            _cooldownTime = Random.Range(10, 15);
+            ResetCooldown();
         }
 
         public override void Update()
@@ -65,8 +70,8 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
             if (_throwing || !Alerted) return;
             _cooldownTime -= Time.deltaTime;
             if (_cooldownTime > 0) return;
-            if(CouldHitTarget)
-            CurrentAction = ThrowGrenade();
+            if (CouldHitTarget)
+                CurrentAction = ThrowGrenade();
         }
     }
 }
