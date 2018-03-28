@@ -67,7 +67,7 @@ namespace Game.Combat
             _skillCooldownModifier = Player.CalculateSkillCooldownModifier();
             _initialArmour = player.ArmourController.GetProtectionLevel();
 
-            _playerUi._playerName.text = player.Name;
+//            _playerUi._playerName.text = player.Name;
             Speed = Player.CalculateSpeed();
 
             _dashCooldown = CombatManager.CombatCooldowns.CreateCooldown();
@@ -153,7 +153,7 @@ namespace Game.Combat
         }
 
         private Coroutine _reloadingCoroutine;
-        
+
         //RELOADING
         private void Reload()
         {
@@ -165,7 +165,7 @@ namespace Game.Combat
 
         private void StopReloading()
         {
-            if(_reloadingCoroutine != null) StopCoroutine(_reloadingCoroutine);
+            if (_reloadingCoroutine != null) StopCoroutine(_reloadingCoroutine);
             _reloadingCoroutine = null;
             Immobilised(false);
             UpdateMagazineUi();
@@ -194,11 +194,12 @@ namespace Game.Combat
                 else
                 {
                     t = (t - 0.2f) / 0.8f;
-                    t = 1 - t;
                     UIMagazineController.UpdateReloadTime(t);
                 }
+
                 yield return null;
             }
+
             Player.Weapon.Reload(Player.Inventory());
             OnReloadAction?.Invoke();
             StopReloading();

@@ -380,8 +380,15 @@ namespace Game.Combat
 
         private void Wander()
         {
-            int randomDistance = Random.Range(10, 20);
-            Cell targetCell = PathingGrid.GetCellNearMe(CurrentCell(), randomDistance);
+            int randomDistance = Random.Range(1, 3);
+            float currentAngle = AdvancedMaths.AngleFromUp(_originPosition, transform.position);
+            float randomAngle = currentAngle + Random.Range(20f, 60f);
+            randomAngle *= Mathf.Deg2Rad;
+            Vector2 randomPoint = new Vector2();
+            randomPoint.x = randomDistance * Mathf.Cos(randomAngle) + _originPosition.x;
+            randomPoint.y = randomDistance * Mathf.Sin(randomAngle) + _originPosition.y;
+            Cell targetCell = PathingGrid.PositionToCell(randomPoint);
+//            Cell targetCell = PathingGrid.GetCellNearMe(CurrentCell(), randomDistance);
             Thread routingThread = PathingGrid.RouteToCell(CurrentCell(), targetCell, route);
             WaitForRoute(routingThread, WaitThenWander);
             SetActionText("Wandering");

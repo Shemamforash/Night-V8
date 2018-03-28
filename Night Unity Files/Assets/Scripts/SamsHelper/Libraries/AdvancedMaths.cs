@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SamsHelper
@@ -24,6 +25,60 @@ namespace SamsHelper
                 return angle;
             }
             return 360 - angle;
+        }
+
+        
+        public static List<Vector2> GetPoissonDiscDistribution(int numberOfPoints, float minRadius, float maxRadius, float maxSampleDistance, bool includeInitialSample = false)
+        {
+            List<Vector2> samples = new List<Vector2>();
+            List<Vector2> activeSamples = new List<Vector2>();
+            if (includeInitialSample)
+            {
+                samples.Add(new Vector2(0, 0));
+            }
+            else
+            {
+                Vector2 random = new Vector2(Random.Range(-maxSampleDistance, maxSampleDistance), Random.Range(-maxSampleDistance, maxSampleDistance));
+                samples.Add(random);
+            }
+            activeSamples.Add(samples[0]);
+
+            for(int i = 0; i < numberOfPoints - 1 && activeSamples.Count != 0; ++i)
+            {
+                Vector2 randomSample = activeSamples[Random.Range(0, activeSamples.Count)];
+                int targetSamples = 20;
+                while (targetSamples != 0)
+                {
+                    Vector2 randomPoint = new Vector2();
+                    float leftBound = randomSample.x - maxRadius;
+                    leftBound = Mathf.Clamp(leftBound, -maxSampleDistance, maxSampleDistance);
+                    float rightBound = randomSample.x + maxRadius;
+                    rightBound = Mathf.Clamp(rightBound, -maxSampleDistance, maxSampleDistance);
+                    float lowerBound = randomSample.y - maxRadius;
+                    lowerBound = Mathf.Clamp(lowerBound, -maxSampleDistance, maxSampleDistance);
+                    float upperBound = randomSample.y + maxRadius;
+                    upperBound = Mathf.Clamp(upperBound, -maxSampleDistance, maxSampleDistance);
+                    randomPoint.x = Random.Range(leftBound, rightBound);
+                    randomPoint.y = Random.Range(lowerBound, upperBound);
+                    float distance = Vector2.Distance(randomSample, randomPoint);
+                    if (distance >= minRadius && distance <= maxRadius)
+                    {
+                        if (!samples.Any(s => Vector2.Distance(s, randomPoint) < minRadius))
+                        {
+                            samples.Add(randomPoint);
+                            activeSamples.Add(randomPoint);
+                            break;
+                        }
+                    }
+
+                    --targetSamples;
+                }
+
+                if (targetSamples == 0) activeSamples.Remove(randomSample);
+            }
+
+            if(samples.Count != numberOfPoints) Debug.Log("Found " +samples.Count + " samples out of " + numberOfPoints + " desired samples, consider modifying the parameters to reach desired number of samples");
+            return samples;
         }
 
         public static Quaternion RotationToTarget(Vector3 origin, Vector3 target)

@@ -50,6 +50,7 @@
             <e p="SMath.cs" t="Include" />
           </e>
         </e>
+        <e p="CombatShaderController.cs" t="Include" />
         <e p="FireBehaviour.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="HealthRise.cs" t="Include" />
@@ -368,6 +369,9 @@
             </e>
             <e p="RingDrawer.cs" t="Include" />
           </e>
+        </e>
+        <e p="Shaders" t="Include">
+          <e p="CombatShader.shader" t="Include" />
         </e>
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">

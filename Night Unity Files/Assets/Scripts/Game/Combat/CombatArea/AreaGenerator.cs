@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SamsHelper;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -137,14 +138,15 @@ namespace Game.Combat
         {
             _barrierNumber = 0;
             _barriers.Clear();
-            for (int i = 0; i < 100; ++i)
-            {
-                float rx = Random.Range(-8f, 8f);
-                float ry = Random.Range(-8f, 8f);
 
+            List<Vector2> positions = AdvancedMaths.GetPoissonDiscDistribution(500, 1f, 3f, PathingGrid.GameWorldWidth, true);
+            positions.RemoveAt(0);
+            
+            foreach(Vector2 position in positions)
+            {
                 Shape shape = GenerateSmallPoly();
                 _barriers.Add(shape);
-                shape.SetPosition(rx, ry);
+                shape.SetPosition(position.x, position.y);
             }
             return _barriers;
         }

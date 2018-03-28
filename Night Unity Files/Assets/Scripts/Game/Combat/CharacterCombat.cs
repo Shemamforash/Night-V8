@@ -15,7 +15,7 @@ namespace Game.Combat
         public Bleed Bleeding;
         public Burn Burn;
         public Sickness Sick;
-        
+
         private Rigidbody2D _rigidbody;
         private bool Sprinting;
         private const int SprintModifier = 2;
@@ -90,6 +90,7 @@ namespace Game.Combat
                 age += Time.deltaTime;
                 yield return null;
             }
+
             KnockedBack = false;
         }
 
@@ -129,7 +130,7 @@ namespace Game.Combat
 
         public virtual void Update()
         {
-            if(GetTarget() != null) _distanceToTarget = CurrentCell().Distance(GetTarget().CurrentCell());
+            if (GetTarget() != null) _distanceToTarget = CurrentCell().Distance(GetTarget().CurrentCell());
             _currentCell = PathingGrid.PositionToCell(transform.position);
             Burn.Update();
             Sick.Update();
@@ -151,14 +152,14 @@ namespace Game.Combat
         {
             return _rigidbody.velocity == Vector2.zero;
         }
-        
+
         public float GetAccuracyModifier()
         {
             float baseRecoilModifier = -0.5f * Recoil.CurrentValue() + 1;
 //            float movementModifier = Moving() ? 0.5f : 1f;
             return baseRecoilModifier;
         }
-        
+
         private void UpdateRecoil()
         {
             if (_recoveryTimer > 0)
@@ -166,6 +167,7 @@ namespace Game.Combat
                 _recoveryTimer -= Time.deltaTime;
                 return;
             }
+
             Recoil.Decrement(RecoilRecoveryRate + Time.deltaTime);
         }
 
@@ -173,8 +175,32 @@ namespace Game.Combat
 
         public void FixedUpdate()
         {
+            KeepInBounds();
             _rigidbody.AddForce(_forceToadd);
             _forceToadd = Vector2.zero;
+        }
+
+        private void KeepInBounds()
+        {
+            Cell current = CurrentCell();
+            int x = current.XIndex;
+            int y = current.YIndex;
+            int distanceToTop = y;
+            int distanceToBottom = PathingGrid.GridWidth - 1 - y;
+            int distanceToLeft = x;
+            int distanceToRight = PathingGrid.GridWidth - 1 - x;
+            int threshold = 3;
+            float yForceModifier = 1;
+            float xForceModifier = 1;
+            
+            if (distanceToTop <= threshold && _forceToadd.y < 0) yForceModifier = (float)distanceToTop / threshold - 1;
+            else if (distanceToBottom <= threshold && _forceToadd.y > 0)  yForceModifier = (float)distanceToBottom / threshold - 1;
+
+            if (distanceToLeft <= threshold && _forceToadd.x < 0) xForceModifier = (float)distanceToLeft / threshold - 1;
+            else if (distanceToRight <= threshold && _forceToadd.x > 0) xForceModifier = (float)distanceToRight / threshold - 1;
+
+            _forceToadd.x *= Mathf.Clamp(xForceModifier, 0f, 1f);
+            _forceToadd.y *= Mathf.Clamp(yForceModifier, 0f ,1f);
         }
 
         protected virtual void Dash(Vector2 direction)

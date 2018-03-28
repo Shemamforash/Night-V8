@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SamsHelper;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,7 +12,6 @@ namespace Game.World.Region
         public const int VisionRadius = 1;
         private const int DesiredSamples = 50;
         private int _currentSamples;
-        private readonly List<MapNode> activeNodes = new List<MapNode>();
         private static readonly List<MapNode> storedNodes = new List<MapNode>();
         private static MapNode initialNode;
         private static float _currentAlpha;
@@ -82,81 +82,24 @@ namespace Game.World.Region
 
         private void GenerateNodes()
         {
-            activeNodes.Clear();
-            int count = 0;
             List<Region> regions = RegionManager.GenerateRegions(DesiredSamples);
-            CreateNewNode(new Vector2Int(MapWidth / 2, MapWidth / 2), regions[count]);
-            initialNode = storedNodes[0];
-            _currentSamples = DesiredSamples - 1;
 
-            while (activeNodes.Count != 0)
+            List<Vector2> samples = AdvancedMaths.GetPoissonDiscDistribution(DesiredSamples, MinRadius, MaxRadius, MapWidth / 2f, true);
+            for (int i = 0; i < samples.Count; ++i)
             {
-                MapNode randomMapNode = activeNodes[Random.Range(0, activeNodes.Count)];
-                Vector2Int point = GenerateSamplePoint(randomMapNode);
-                if (point.x == -1)
-                {
-                    activeNodes.Remove(randomMapNode);
-                }
-                else
-                {
-                    ++count;
-                    CreateNewNode(point, regions[count]);
-                }
+                Vector2Int point = new Vector2Int((int)samples[i].x, (int)samples[i].y);
+                CreateNewNode(point, regions[i]);
+                if(i == 0) initialNode = storedNodes[0];
             }
         }
-
+        
         private void CreateNewNode(Vector2Int point, Region region)
         {
             MapNode newMapNode = MapNode.CreateNode(point, region);
             newMapNode.NodeObject.name = "Node " + _currentSamples;
             newMapNode.NodeObject.transform.SetParent(transform);
-            activeNodes.Add(newMapNode);
             storedNodes.Add(newMapNode);
             --_currentSamples;
-        }
-
-        private List<Vector2Int> GetCandidatePositions(MapNode origin)
-        {
-            Vector2Int minCorner = GetMinCorner(origin.GetMapPosition());
-            Vector2Int maxCorner = GetMaxCorner(origin.GetMapPosition());
-
-            List<Vector2Int> validPositions = new List<Vector2Int>();
-
-            for (int x = (int) minCorner.x; x <= maxCorner.x; ++x)
-            {
-                for (int y = (int) minCorner.y; y <= maxCorner.y; ++y)
-                {
-                    Vector2Int candidatePosition = new Vector2Int(x, y);
-                    float distance = Vector2Int.Distance(origin.GetMapPosition(), candidatePosition);
-                    if (distance >= MinRadius && distance <= MaxRadius)
-                    {
-                        validPositions.Add(candidatePosition);
-                    }
-                }
-            }
-
-            return validPositions;
-        }
-
-        private Vector2Int GenerateSamplePoint(MapNode origin)
-        {
-            List<Vector2Int> validPositions = GetCandidatePositions(origin);
-
-            for (int i = 0; i < _currentSamples && validPositions.Count > 0; ++i)
-            {
-                int randomPosition = Random.Range(0, validPositions.Count);
-                Vector2Int randomPoint = validPositions[randomPosition];
-                validPositions.RemoveAt(randomPosition);
-                bool tooClose = false;
-                foreach (MapNode node in storedNodes)
-                {
-                    if (Vector2Int.Distance(node.GetMapPosition(), randomPoint) < MinRadius) tooClose = true;
-                }
-
-                if (!tooClose) return randomPoint;
-            }
-
-            return new Vector2Int(-1, -1);
         }
 
         private Vector2Int GetMinCorner(Vector2Int origin)
