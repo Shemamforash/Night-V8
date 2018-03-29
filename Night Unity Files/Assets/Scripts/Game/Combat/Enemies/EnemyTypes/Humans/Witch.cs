@@ -17,11 +17,6 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
         private bool _throwing;
         private float _cooldownTime;
 
-        public override void Initialise(Enemy enemy, EnemyUi characterUi)
-        {
-            base.Initialise(enemy, characterUi);
-        }
-
         private Action ThrowGrenade()
         {
             _throwing = true;

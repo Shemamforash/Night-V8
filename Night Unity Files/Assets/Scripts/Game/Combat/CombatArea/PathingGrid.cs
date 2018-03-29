@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using SamsHelper;
 using UnityEngine;
@@ -64,7 +65,16 @@ namespace Game.Combat
             int y = Mathf.FloorToInt(position.y * CellResolution);
             x += GridWidth / 2;
             y += GridWidth / 2;
-            return Grid[x, y];
+            try
+            {
+                return Grid[x, y];
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Debug.Log("(" + x + " ," + y + ")");
+                Debug.Log(e.StackTrace);
+                return null;
+            }
         }
 
         public static bool IsLineObstructed(Vector3 start, Vector3 end, bool includeReachable = false)
@@ -223,6 +233,7 @@ namespace Game.Combat
 
                 ++iteratorStart;
             }
+
             return nearestValidCell;
         }
 

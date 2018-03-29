@@ -85,7 +85,7 @@ namespace Game.Gear.Weapons
                 //todo play sound GunFire.Fire(WeaponAttributes.WeaponType, distance);
                 for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
                 {
-                    shots.Add(Shot.CreateShot(origin));
+                    shots.Add(Shot.Create(origin));
                 }
 
                 ConsumeAmmo(1);

@@ -105,7 +105,7 @@ namespace Game.Combat.Skills
 
         protected static Shot CreateShot()
         {
-            return Shot.CreateShot(CombatManager.Player);
+            return Shot.Create(CombatManager.Player);
         }
     }
 }

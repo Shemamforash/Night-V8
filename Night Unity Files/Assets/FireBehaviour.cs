@@ -7,6 +7,8 @@ using UnityEngine;
 public class FireBehaviour : MonoBehaviour
 {
 	private const int MaxEmissionRate = 500;
+	private const float LightMaxRadius = 5f;
+	private int EmissionRate;
 	private const float LifeTime = 4f;
 	private float _age;
 	private ParticleSystem _particles;
@@ -20,17 +22,40 @@ public class FireBehaviour : MonoBehaviour
 		_light = Helper.FindChildWithName<LOSRadialLight>(gameObject, "Light");
 	}
 
-	public static void StartBurning(Vector3 position)
+	public static void Create(Vector3 position, float size, bool lightOn = true)
 	{
 		FireBehaviour fire = GetNewFire();
-		fire.StartCoroutine(fire.Burn(position));
+		fire.StartCoroutine(fire.Burn(position, size, lightOn));
 	}
 
+	private IEnumerator Burn(Vector3 position, float size, bool lightOn)
+	{
+		EmissionRate = (int) (size * size * MaxEmissionRate);
+		ParticleSystem.ShapeModule shape = _particles.shape;
+		shape.radius = size;
+		_light.radius = size * LightMaxRadius;
+		_light.gameObject.SetActive(lightOn);
+		gameObject.SetActive(true);
+		transform.position = position;
+		_age = 0f;
+		while (_age < LifeTime)
+		{
+			float normalisedTime = 1 - _age / LifeTime;
+			ParticleSystem.EmissionModule emission = _particles.emission;
+			emission.rateOverTime = (int)(normalisedTime * EmissionRate);
+			_light.color = new Color(0.6f, 0.1f, 0.1f, 0.6f * normalisedTime * size);
+			_age += Time.deltaTime;
+			yield return null;
+		}
+		gameObject.SetActive(false);
+		_firePool.Add(this);
+	}
+	
 	private void OnDestroy()
 	{
 		_firePool.Remove(this);
 	}
-
+	
 	private static FireBehaviour GetNewFire()
 	{
 		if (_firePool.Count == 0)
@@ -45,23 +70,5 @@ public class FireBehaviour : MonoBehaviour
 		_firePool.RemoveAt(0);
 		fire.gameObject.SetActive(true);
 		return fire;
-	}
-
-	private IEnumerator Burn(Vector3 position)
-	{
-		gameObject.SetActive(true);
-		transform.position = position;
-		_age = 0f;
-		while (_age < LifeTime)
-		{
-			float normalisedTime = 1 - _age / LifeTime;
-			ParticleSystem.EmissionModule emission = _particles.emission;
-			emission.rateOverTime = (int)(normalisedTime * MaxEmissionRate);
-			_light.color = new Color(0.6f, 0.1f, 0.1f, 0.6f * normalisedTime);
-			_age += Time.deltaTime;
-			yield return null;
-		}
-		gameObject.SetActive(false);
-		_firePool.Add(this);
 	}
 }

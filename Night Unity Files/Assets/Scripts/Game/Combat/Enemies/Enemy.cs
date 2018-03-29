@@ -46,7 +46,7 @@ namespace Game.Combat.Enemies
             Weapon?.Reload(Inventory());
         }
 
-        public EnemyBehaviour LinkUi(GameObject enemyUiPrefab)
+        public EnemyBehaviour CreateEnemyObject()
         {
             Reset();
             EnemyBehaviour enemyBehaviour;
@@ -80,7 +80,7 @@ namespace Game.Combat.Enemies
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            enemyBehaviour.Initialise(this, enemyUiPrefab.GetComponent<EnemyUi>());
+            enemyBehaviour.Initialise(this);
             return enemyBehaviour;
         }
 

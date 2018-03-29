@@ -94,7 +94,7 @@ namespace Game.Combat
             {
 //                if(_pierce) c.ArmourController.TakeDamage(_damage);
 //                else
-                c.HealthController().TakeDamage(_damage);
+                c.HealthController.TakeDamage(_damage);
 //                c.Knockback(_knockbackDistance);
 //                if (_bleed) c.Bleeding.AddStack();
 //                if (_burn) c.Burn.AddStack();
@@ -130,7 +130,7 @@ namespace Game.Combat
             bool emitted = false;
             bool shownWarning = false;
             bool shownLight = false;
-            FireBehaviour.StartBurning(transform.position);
+            FireBehaviour.Create(transform.position, _explosionRadius);
             while (_age < _explodeTime + _fadeTime)
             {
                 if (!shownWarning && _age < _explodeTime / 2f)

@@ -9,9 +9,9 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
     {
         private bool _firedVolley;
 
-        public override void Initialise(Enemy enemy, EnemyUi characterUi)
+        public override void Initialise(Enemy enemy)
         {
-            base.Initialise(enemy, characterUi);
+            base.Initialise(enemy);
 //            MinimumFindCoverDistance = 20f;
         }
 

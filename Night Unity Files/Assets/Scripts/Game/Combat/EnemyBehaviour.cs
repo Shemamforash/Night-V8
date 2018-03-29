@@ -34,7 +34,6 @@ namespace Game.Combat
 
         private Vector2 _originPosition;
         public Enemy Enemy;
-        protected EnemyUi EnemyUi;
         private Queue<Cell> route = new Queue<Cell>();
         public Action CurrentAction;
 
@@ -50,7 +49,6 @@ namespace Game.Combat
         {
             base.Update();
             CouldHitTarget = TargetVisible() && !OutOfRange();
-            EnemyUi.UiHitController.UpdateValue();
             CurrentAction?.Invoke();
         }
 
@@ -90,44 +88,39 @@ namespace Game.Combat
 
 
         public override CharacterCombat GetTarget() => CombatManager.Player;
-        public override UIArmourController ArmourController() => EnemyUi.ArmourController;
-        public override UIHealthBarController HealthController() => EnemyUi.HealthController;
-        public UIHitController HitController() => EnemyUi.UiHitController;
 
         public void SetSelected()
         {
             CombatManager.Player.SetTarget(this);
-            EnemyUi.PrimaryButton.Button().Select();
-            EnemyUi.CanvasGroup.alpha = 1;
+            EnemyUi.Instance().SetSelectedEnemy(this);
         }
 
-        public virtual void Initialise(Enemy enemy, EnemyUi enemyUi)
+        public virtual void Initialise(Enemy enemy)
         {
-            EnemyUi = enemyUi;
-            EnemyUi.NameText.text = enemy.Name;
+            ArmourController = enemy.ArmourController;
             Enemy = enemy;
             if (Weapon() != null) IdealWeaponDistance = PathingGrid.WorldToGridDistance(Weapon().CalculateIdealDistance());
             SetOwnedByEnemy(Enemy.Template.Speed);
-            HealthController().SetInitialHealth(Enemy.Template.Health, this);
-            EnemyUi.ArmourController.SetCharacter(Enemy);
+            HealthController.SetInitialHealth(Enemy.Template.Health, this);
 //            if (!(this is Medic || this is Martyr)) SetHealBehaviour();
-            CurrentAction = Wander;
-            EnemyUi.UiHitController.SetCharacter(this);
-            EnemyUi.PrimaryButton.AddOnDeselectEvent(() => EnemyUi.CanvasGroup.alpha = 0);
+            if (Random.Range(0, 3) == 1) SetActionText("Resting");
+            else CurrentAction = Wander;
             transform.SetParent(GameObject.Find("World").transform);
-            SetDistance(2, 4);
+            SetDistance(0.2f, 0.5f);
             _originPosition = transform.position;
             SetHealBehaviour();
             SetConditions();
         }
 
-        private void SetDistance(int rangeMin, int rangeMax)
+        private void SetDistance(float rangeMin, float rangeMax)
         {
-            Vector3 position = new Vector3();
-            position.x = Random.Range(rangeMin, rangeMax);
-            if (Random.Range(0, 2) == 1) position.x = -position.x;
-            position.y = Random.Range(rangeMin, rangeMax);
-            if (Random.Range(0, 2) == 1) position.y = -position.y;
+            Vector3 position = AreaGenerator.CampfirePosition;
+            float xOffset = Random.Range(rangeMin, rangeMax);
+            float yOffset = Random.Range(rangeMin, rangeMax);
+            if (Random.Range(0, 2) == 1) xOffset = -xOffset;
+            if (Random.Range(0, 2) == 1) yOffset = -yOffset;
+            position.x += xOffset;
+            position.y += yOffset;
             transform.position = position;
         }
 
@@ -145,9 +138,9 @@ namespace Game.Combat
 
         private void SetHealBehaviour()
         {
-            HealthController().AddOnTakeDamage(a =>
+            HealthController.AddOnTakeDamage(a =>
             {
-                if (HealthController().GetNormalisedHealthValue() > 0.25f || _waitingForHeal) return;
+                if (HealthController.GetNormalisedHealthValue() > 0.25f || _waitingForHeal) return;
                 Medic m = FindMedic();
                 if (m == null) return;
                 MoveToCover(() => WaitForHeal(m));
@@ -211,9 +204,12 @@ namespace Game.Combat
             Alert();
         }
 
-        protected void SetActionText(string action)
+        public string ActionText;
+        
+        protected void SetActionText(string actionText)
         {
-            EnemyUi.ActionText.text = action;
+            ActionText = actionText;
+            EnemyUi.Instance().UpdateActionText(this, actionText);
         }
 
         public override Weapon Weapon()
@@ -233,8 +229,7 @@ namespace Game.Combat
         public override void TakeDamage(Shot shot)
         {
             base.TakeDamage(shot);
-            if (shot.IsCritical) HitController().RegisterCritical();
-            else HitController().RegisterShot();
+            EnemyUi.Instance().RegisterHit(this, shot.IsCritical);
             Alert();
             CombatManager.Player.RageController.Increase(shot.DamageDealt());
         }
@@ -242,8 +237,11 @@ namespace Game.Combat
         public override void Kill()
         {
             base.Kill();
+            for (int i = 0; i < Random.Range(0, 3); ++i)
+            {
+                PickupController.Create(transform.position, CombatManager.Player.Weapon().WeaponAttributes.AmmoType);
+            }
             UIEnemyController.Remove(this);
-            Destroy(EnemyUi.gameObject);
             Enemy.Kill();
             Destroy(gameObject);
         }
@@ -380,7 +378,7 @@ namespace Game.Combat
 
         private void Wander()
         {
-            int randomDistance = Random.Range(1, 3);
+            float randomDistance = Random.Range(0.5f, 1.5f);
             float currentAngle = AdvancedMaths.AngleFromUp(_originPosition, transform.position);
             float randomAngle = currentAngle + Random.Range(20f, 60f);
             randomAngle *= Mathf.Deg2Rad;

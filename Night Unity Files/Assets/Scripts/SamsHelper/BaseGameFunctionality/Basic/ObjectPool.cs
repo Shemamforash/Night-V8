@@ -24,7 +24,6 @@ namespace SamsHelper.BaseGameFunctionality.Basic
                 newThing = newGameObject.GetComponent<T>();
                 return newThing;
             }
-
             int lastElement = _pool.Count - 1;
             newThing = _pool[lastElement];
             newThing.gameObject.SetActive(true);

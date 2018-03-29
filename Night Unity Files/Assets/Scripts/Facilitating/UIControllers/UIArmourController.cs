@@ -15,11 +15,11 @@ namespace Facilitating.UIControllers
     {
         private const int ArmourDivisions = 10;
         private readonly List<ArmourChunk> _armourChunks = new List<ArmourChunk>();
+        
         private Transform _armourBar;
         private const int SegmentSpacing = 5;
         private HorizontalLayoutGroup _layoutGroup;
         private TextMeshProUGUI _armourText;
-        private ArmourController _armourController;
 
         // Use this for initialization
         public void Awake()
@@ -46,15 +46,10 @@ namespace Facilitating.UIControllers
             }
         }
 
-        public void SetCharacter(Character character)
+        private void SetSlotsFilled(ArmourController armourController, bool damageWasTaken = false)
         {
-            _armourController = character.ArmourController;
-        }
-
-        private void SetSlotsFilled(bool damageWasTaken = false)
-        {
-            int slotsAvailable = _armourController.GetMaxArmour();
-            int slotsUsed = _armourController.GetCurrentArmour();
+            int slotsAvailable = armourController.GetMaxArmour();
+            int slotsUsed = armourController.GetCurrentArmour();
 
             for (int i = 0; i < _armourChunks.Count; i++)
             {
@@ -75,24 +70,17 @@ namespace Facilitating.UIControllers
                     chunk.SetInvisible();
                 }
             }
-            _armourText.text = _armourController.GetCurrentArmour() / 10f + "x damage";
+            _armourText.text = armourController.GetCurrentArmour() / 10f + "x damage";
         }
 
-        public int CurrentArmour()
+        public void RepairArmour(ArmourController controller)
         {
-            return _armourController.GetCurrentArmour();
+            SetSlotsFilled(controller);
         }
 
-        public void RepairArmour(float amount)
+        public void TakeDamage(ArmourController controller)
         {
-            _armourController.Repair(amount);
-            SetSlotsFilled();
-        }
-
-        public void TakeDamage(float damage)
-        {
-            _armourController.TakeDamage(damage);
-            SetSlotsFilled(true);
+            SetSlotsFilled(controller, true);
         }
 
         public void Update()

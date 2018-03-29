@@ -16,7 +16,7 @@ namespace Game.Combat
         private float _pierceChance, _burnChance, _bleedChance, _sicknessChance;
         private float _criticalChance;
         private CharacterCombat _origin;
-        private Vector3 _targetPosition;
+        private Vector3 _direction;
         public bool IsCritical;
         private bool _moving, _fired;
         private float _speed;
@@ -39,6 +39,8 @@ namespace Game.Combat
         private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Prefabs/Combat/Bullet");
 
         private Transform _shotParent;
+        private Weapon _weapon;
+        private Vector3 _originPosition;
 
         public void Awake()
         {
@@ -65,32 +67,63 @@ namespace Game.Combat
             OnHitAction = null;
         }
 
-        public static Shot CreateShot(CharacterCombat origin)
+        public static Shot Create(CharacterCombat origin)
         {
             Shot shot = _shotPool.Create();
             shot.gameObject.layer = 11;
-            shot.Initialise(origin, origin.GetTarget());
+            shot.Initialise(origin, origin.GetTarget().transform.position);
+            return shot;
+        }
+        
+        public static Shot Create(Shot origin)
+        {
+            Shot shot = _shotPool.Create();
+            shot.gameObject.layer = 11;
+            shot.Initialise(origin);
             return shot;
         }
 
-        private void Initialise(CharacterCombat origin, CharacterCombat target)
+        private void Initialise(CharacterCombat origin, Vector3 target)
+        {
+            _origin = origin;
+            _direction = (target - _origin.transform.position).normalized;
+            _weapon = origin.Weapon();
+            _originPosition = origin.transform.position;
+            SetUpComponents();
+        }
+
+        private void SetUpComponents()
         {
             if (_rigidBody == null) _rigidBody = GetComponent<Rigidbody2D>();
             if (_trailRenderer == null) _trailRenderer = GetComponent<TrailRenderer>();
             if (_fireTrail == null) _fireTrail = Helper.FindChildWithName(gameObject, "Fire Trail");
             _fireTrail.SetActive(false);
             _trailRenderer.Clear();
-            _origin = origin;
-            _targetPosition = target.transform.position;
             ResetValues();
             CacheWeaponAttributes();
+            CalculateAccuracy();
+        }
+        
+        private void CalculateAccuracy()
+        {
+            if (_guaranteeHit) _accuracy = 0;
+            else if(_origin != null) _accuracy *= _origin.GetAccuracyModifier();
+        }
+
+        private void Initialise(Shot shot)
+        {
+            _origin = null;
+            _direction = shot._direction;
+            _weapon = shot._weapon;
+            _originPosition = shot.transform.position;
+            SetUpComponents();
         }
 
         public void ActivateFireTrail()
         {
             _fireTrail.SetActive(true);
         }
-        
+
         public bool DidPierce()
         {
             return Random.Range(0f, 1f) <= _pierceChance;
@@ -98,9 +131,9 @@ namespace Game.Combat
 
         private void CacheWeaponAttributes()
         {
-            WeaponAttributes attributes = _origin.Weapon().WeaponAttributes;
+            WeaponAttributes attributes = _weapon.WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
-            _accuracy = _origin.Weapon().CalculateBaseAccuracy();
+            _accuracy = _weapon.CalculateBaseAccuracy();
             _bleedChance = attributes.GetCalculatedValue(AttributeType.BleedChance);
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
             _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
@@ -113,37 +146,27 @@ namespace Game.Combat
             _finalDamageModifier = modifier;
         }
 
-        private void CalculateAccuracy()
-        {
-            if (_guaranteeHit) _accuracy = 0;
-            else _accuracy *= _origin.GetAccuracyModifier();
-        }
-
         private void CheckWillCrit()
         {
             IsCritical = _guaranteeCritical || Random.Range(0f, 1f) < _criticalChance;
         }
 
-        private Vector3 direction;
-
         private void FixedUpdate()
         {
             if (!_fired || _moving) return;
-            _rigidBody.velocity = direction * _speed;
-            _origin?.IncreaseRecoil();
+            _rigidBody.velocity = _direction * _speed;
             _moving = true;
         }
 
-        public void Fire()
+        public void Fire(float distance = 0.2f)
         {
             _age = 0;
-            CalculateAccuracy();
             float angleOffset = Random.Range(-_accuracy, _accuracy);
             _speed = Random.Range(9f, 11f);
-            direction = (_targetPosition - _origin.transform.position).normalized;
-            transform.position = _origin.transform.position + direction * 0.2f;
-            direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * direction;
+            transform.position = _originPosition + _direction * distance;
+            _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
             _fired = true;
+            _origin?.IncreaseRecoil();
             StartCoroutine(WaitToDie());
         }
 
@@ -169,8 +192,9 @@ namespace Game.Combat
             GameObject other = collision.gameObject;
             if (Random.Range(0f, 1f) < _burnChance)
             {
-                FireBehaviour.StartBurning(transform.position);  
+                FireBehaviour.Create(transform.position, 1f);
             }
+            OnHitAction?.Invoke();
             EnemyBehaviour b = other.GetComponent<EnemyBehaviour>();
             if (b != null) ApplyDamage(b);
             DeactivateShot();
@@ -182,7 +206,6 @@ namespace Game.Combat
             _damageDealt = IsCritical ? _damage * 2 : _damage;
             _damageDealt = (int) (_damageDealt * _finalDamageModifier);
             ApplyConditions(hit);
-            OnHitAction?.Invoke();
             hit.TakeDamage(this);
         }
 
@@ -240,6 +263,12 @@ namespace Game.Combat
         {
             Assert.IsTrue(chance >= 0 && chance <= 1);
             _pierceChance = chance;
+        }
+
+        public void SetAccuracy(float accuracy)
+        {
+            Assert.IsTrue(accuracy >= 0 && accuracy <= 1);
+            _accuracy = accuracy;
         }
     }
 }

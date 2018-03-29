@@ -5,6 +5,7 @@ using Assets;
 using Facilitating.UIControllers;
 using Game.Characters.Player;
 using Game.Combat.CharacterUi;
+using Game.Combat.Skills;
 using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -31,7 +32,6 @@ namespace Game.Combat
         private EnemyBehaviour _currentTarget;
 
         private Number _strengthText;
-        private PlayerUi _playerUi;
         private Transform _pivot;
 
         public override void Kill()
@@ -57,10 +57,10 @@ namespace Game.Combat
 
         public void Initialise(Player player)
         {
+            ArmourController = player.ArmourController;
+
             _pivot = Helper.FindChildWithName<Transform>(gameObject, "Pivot");
             InputHandler.RegisterInputListener(this);
-
-            _playerUi = GameObject.Find("Player Ui").GetComponent<PlayerUi>();
 
             Player = player;
             _damageModifier = Player.CalculateDamageModifier();
@@ -86,12 +86,11 @@ namespace Game.Combat
             RageController = new RageController();
             RageController.EnterCombat();
 
-            HealthController().SetInitialHealth(Player.CalculateCombatHealth(), this);
-            HealthController().AddOnHeal(a => HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue()));
-            HealthController().AddOnTakeDamage(a => HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue()));
+            HealthController.SetInitialHealth(Player.CalculateCombatHealth(), this);
+            HealthController.AddOnHeal(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
+            HealthController.AddOnTakeDamage(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
 
-            HeartBeatController.SetHealth(HealthController().GetNormalisedHealthValue());
-            _playerUi.ArmourController.SetCharacter(Player);
+            HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue());
 
             SkillBar.BindSkills(Player);
             InputHandler.RegisterInputListener(this);
@@ -133,16 +132,6 @@ namespace Game.Combat
         public override Weapon Weapon()
         {
             return Player.Weapon;
-        }
-
-        public override UIHealthBarController HealthController()
-        {
-            return _playerUi.HealthController;
-        }
-
-        public override UIArmourController ArmourController()
-        {
-            return _playerUi.ArmourController;
         }
 
         public override void ExitCombat()

@@ -1,17 +1,21 @@
-﻿using SamsHelper;
-using TMPro;
-
-namespace Game.Combat.CharacterUi
+﻿namespace Game.Combat.CharacterUi
 {
     public class PlayerUi : CharacterUi
     {
-//        public TextMeshProUGUI _playerName;
+        private static PlayerUi _instance;
 
         public override void Awake()
         {
             base.Awake();
-//            _playerName = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
-            HealthController.SetIsPlayerBar();
+            _instance = this;
+            _healthBarController.SetIsPlayerBar();
+        }
+
+        public static PlayerUi Instance()
+        {
+            if (_instance != null) return _instance;
+            _instance =  FindObjectOfType<PlayerUi>();
+            return _instance;
         }
     }
 }

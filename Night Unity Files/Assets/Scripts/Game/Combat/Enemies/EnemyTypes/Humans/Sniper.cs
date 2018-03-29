@@ -18,7 +18,7 @@ namespace Game.Combat.Enemies.EnemyTypes
             _firing = true;
             CurrentAction = () =>
             {
-                Shot powerShot = Shot.CreateShot(this);
+                Shot powerShot = Shot.Create(this);
                 powerShot.ActivateFireTrail();
                 powerShot.SetBurnChance(1);
                 powerShot.Fire();

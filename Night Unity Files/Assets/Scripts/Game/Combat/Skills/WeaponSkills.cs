@@ -56,14 +56,17 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-//            List<DetailedEnemyCombat> enemiesBehindTarget = CombatManager.GetEnemiesBehindTarget(CombatManager.Player.GetTarget());
-//            enemiesBehindTarget.Add(CombatManager.Player.GetTarget());
-//            foreach (DetailedEnemyCombat enemyCombat in enemiesBehindTarget)
-//            {
-//                Shot s = Shot.CreateShot(CombatManager.Player);
-//                s.GuaranteeHit();
-//                s.Fire();
-//            }
+            Shot s = Shot.Create(CombatManager.Player);
+            s.AddOnHit(() =>
+            {
+                for (int i = 0; i < 10; ++i)
+                {
+                    Shot fragment = Shot.Create(s);
+                    fragment.SetAccuracy(180f);
+                    fragment.Fire(0.4f);
+                }
+            });
+            s.Fire();
         }
     }
 
@@ -75,7 +78,10 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            CombatManager.Player.OnFireAction += s => s.SetPierceChance(1);
+            Shot s = Shot.Create(CombatManager.Player);
+            s.SetBurnChance(1);
+            s.Fire();
+            CombatManager.Player.Weapon().ConsumeAmmo(CombatManager.Player.Weapon().GetRemainingAmmo());
         }
     }
 
@@ -106,7 +112,7 @@ namespace Game.Combat.Skills
         {
             foreach (EnemyBehaviour e in UIEnemyController.Enemies)
             {
-                Shot s = Shot.CreateShot(CombatManager.Player);
+                Shot s = Shot.Create(CombatManager.Player);
                 s.Fire();
             }
         }

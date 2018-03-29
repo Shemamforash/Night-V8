@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using SamsHelper;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -7,12 +8,11 @@ namespace Game.Combat
 {
     public class AreaGenerator : MonoBehaviour
     {
-        private const float SmallPolyWidth = 0.4f;
+        private const float SmallPolyWidth = 0.4f, MediumPolyWidth = 1f, LargePolyWidth = 2f, HugePolyWidth = 4f;
         private static AreaGenerator _instance;
         private static int _barrierNumber;
         private static GameObject _barrierPrefab;
         private static readonly List<Shape> _barriers = new List<Shape>();
-
 
         public void Awake()
         {
@@ -108,10 +108,10 @@ namespace Game.Combat
             return basicBarrier;
         }
 
-        private static Shape GenerateSmallPoly()
+        public static Shape GeneratePoly(float baseWidth)
         {
             GameObject g = GenerateBasicBarrier();
-            float width = SmallPolyWidth * Random.Range(0.6f, 1f);
+            float width = baseWidth * Random.Range(0.6f, 1f);
             float radius = width / 2f;
             float minX = Random.Range(0, radius * 0.9f);
             float minY = Random.Range(0, radius * 0.9f);
@@ -134,6 +134,28 @@ namespace Game.Combat
             return shape;
         }
 
+        public static Vector2 CampfirePosition = Vector2.zero;
+
+        private static List<Shape> GenerateCamp()
+        {
+            float size = PathingGrid.GameWorldWidth / 2f;
+            CampfirePosition = new Vector2(Random.Range(-size, size), Random.Range(-size, size));
+            List<Shape> stones = EnemyCampfire.Create(CampfirePosition);
+           
+            for (int i = _barriers.Count - 1; i >= 0; --i)
+            {
+                Shape b = _barriers[i];
+                foreach(Vector2 v in b.WorldVerts)
+                {
+                    if (Vector2.Distance(v, CampfirePosition) > 2f) continue;
+                    _barriers.RemoveAt(i);
+                    Destroy(b.ShapeObject);
+                    break;
+                }
+            }
+            return stones;
+        }
+        
         public static List<Shape> GenerateArea()
         {
             _barrierNumber = 0;
@@ -144,10 +166,12 @@ namespace Game.Combat
             
             foreach(Vector2 position in positions)
             {
-                Shape shape = GenerateSmallPoly();
+                Shape shape = GeneratePoly(SmallPolyWidth);
                 _barriers.Add(shape);
                 shape.SetPosition(position.x, position.y);
             }
+
+            _barriers.AddRange(GenerateCamp());
             return _barriers;
         }
 

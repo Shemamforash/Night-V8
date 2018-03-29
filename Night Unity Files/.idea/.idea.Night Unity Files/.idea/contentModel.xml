@@ -51,10 +51,12 @@
           </e>
         </e>
         <e p="CombatShaderController.cs" t="Include" />
+        <e p="EnemyCampfire.cs" t="Include" />
         <e p="FireBehaviour.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="HealthRise.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
+        <e p="PickupController.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="Editor" t="Include">
             <e p="JetBrains" t="Include">
@@ -221,6 +223,7 @@
               <e p="Explosion.cs" t="Include" />
               <e p="FitScreenToRoute.cs" t="Include" />
               <e p="FootstepMaker.cs" t="Include" />
+              <e p="HealthController.cs" t="Include" />
               <e p="ICombatListener.cs" t="Include" />
               <e p="MeleeController.cs" t="Include" />
               <e p="PlayerCombat.cs" t="Include" />
@@ -229,6 +232,7 @@
               <e p="SkillBar.cs" t="Include" />
               <e p="Skills" t="Include">
                 <e p="CharacterSkills.cs" t="Include" />
+                <e p="FirePath.cs" t="Include" />
                 <e p="Skill.cs" t="Include" />
                 <e p="WeaponSkills.cs" t="Include" />
               </e>

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Skills;
+using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI;
@@ -32,9 +32,10 @@ namespace Game.Combat
         private float _recoveryTimer;
         private float _distanceToTarget = -1;
         private Cell _currentCell;
+        public HealthController HealthController = new HealthController();
+        protected ArmourController ArmourController;
 
         public float Speed;
-        private Character _character;
 
         public float DistanceToTarget()
         {
@@ -54,14 +55,14 @@ namespace Game.Combat
 
         public virtual void TakeDamage(Shot shot)
         {
-            float chanceToAbsorbDamage = shot.DidPierce() ? 0 : ArmourController().CurrentArmour() / 10f;
+            float chanceToAbsorbDamage = shot.DidPierce() ? 0 : ArmourController.GetCurrentArmour() / 10f;
             if (chanceToAbsorbDamage >= Random.Range(0f, 1f))
             {
-                ArmourController().TakeDamage(shot.DamageDealt());
+                ArmourController.TakeDamage(shot.DamageDealt());
             }
             else
             {
-                HealthController().TakeDamage(shot.DamageDealt());
+                HealthController.TakeDamage(shot.DamageDealt());
             }
         }
 
@@ -105,10 +106,10 @@ namespace Game.Combat
             Bleeding = new Bleed(this);
             Burn = new Burn(this);
             Sick = new Sickness(this);
-            Burn.OnConditionNonEmpty = HealthController().StartBurning;
-            Burn.OnConditionEmpty = HealthController().StopBurning;
-            Bleeding.OnConditionNonEmpty = HealthController().StartBleeding;
-            Bleeding.OnConditionEmpty = HealthController().StopBleeding;
+//            Burn.OnConditionNonEmpty = HealthController.GetHealthBarController().StartBurning;
+//            Burn.OnConditionEmpty = HealthController.GetHealthBarController().StopBurning;
+//            Bleeding.OnConditionNonEmpty = HealthController.GetHealthBarController().StartBleeding;
+//            Bleeding.OnConditionEmpty = HealthController.GetHealthBarController().StopBleeding;
         }
 
         public virtual void ExitCombat()
@@ -230,7 +231,5 @@ namespace Game.Combat
         }
 
         public abstract CharacterCombat GetTarget();
-        public abstract UIArmourController ArmourController();
-        public abstract UIHealthBarController HealthController();
     }
 }

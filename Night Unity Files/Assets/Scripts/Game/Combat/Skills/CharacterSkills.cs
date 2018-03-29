@@ -73,7 +73,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-//            CombatManager.Player.HealthController.Heal(Characters.Player.Player.PlayerHealthChunkSize);
+            CombatManager.Player.HealthController.Heal(Characters.Player.Player.PlayerHealthChunkSize);
         }
     }
 
@@ -85,15 +85,15 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-//            PlayerCombat pCombat = CombatManager.Player;
-//            pCombat.CurrentTarget.Bleeding.AddStacks(pCombat.Bleeding.Size());
-//            pCombat.Bleeding.Clear();
+            PlayerCombat pCombat = CombatManager.Player;
+            pCombat.GetTarget().Bleeding.AddStacks(pCombat.Bleeding.Size());
+            pCombat.Bleeding.Clear();
 
-//            pCombat.CurrentTarget.Burn.AddStacks(pCombat.Burn.Size());
-//            pCombat.Burn.Clear();
+            pCombat.GetTarget().Burn.AddStacks(pCombat.Burn.Size());
+            pCombat.Burn.Clear();
 
-//            pCombat.CurrentTarget.Sick.AddStacks(pCombat.Sick.Size());
-//            pCombat.Sick.Clear();
+            pCombat.GetTarget().Sick.AddStacks(pCombat.Sick.Size());
+            pCombat.Sick.Clear();
         }
     }
 
@@ -107,7 +107,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-//            UIGrenadeController.AddGrenade(GrenadeType.Incendiary, CombatManager.Player.Position.CurrentValue(), CombatManager.Player.CurrentTarget.Position.CurrentValue());
+            IncendiaryGrenade.Create(CombatManager.Player.transform.position, CombatManager.Player.GetTarget().transform.position);
         }
     }
 
@@ -119,7 +119,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-//            UIGrenadeController.AddGrenade(GrenadeType.Splinter, CombatManager.Player.Position.CurrentValue(), CombatManager.Player.CurrentTarget.Position.CurrentValue());
+            SplinterGrenade.Create(CombatManager.Player.transform.position, CombatManager.Player.GetTarget().transform.position);
         }
     }
 

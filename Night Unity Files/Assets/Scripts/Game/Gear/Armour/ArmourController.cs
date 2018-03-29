@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
+using Facilitating.UIControllers;
 using Game.Characters;
+using Game.Characters.Player;
+using Game.Combat;
+using Game.Combat.CharacterUi;
 using Game.Gear.Weapons;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
@@ -24,6 +28,12 @@ namespace Game.Gear.Armour
             Action<float> takeDamage = null;
             if(_plateOne != null) takeDamage = _plateOne.TakeDamage;
             DivideDamageOrHeal(amount, takeDamage);
+            GetUiArmourController()?.TakeDamage(this);
+        }
+
+        private UIArmourController GetUiArmourController()
+        {
+            return _character is Player ? PlayerUi.Instance().GetArmourController(_character) : EnemyUi.Instance().GetArmourController(_character);
         }
 
         private void DivideDamageOrHeal(float amount, Action<float> armourAction)
@@ -42,6 +52,7 @@ namespace Game.Gear.Armour
             Action<float> repair = null;
             if(_plateOne != null) repair = _plateOne.Repair;
             DivideDamageOrHeal(amount, repair);
+            GetUiArmourController()?.RepairArmour(this);
         }
         
         public void SetPlateOne(ArmourPlate plate)

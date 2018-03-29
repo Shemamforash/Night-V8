@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Game.Combat;
-using NUnit.Framework;
 using SamsHelper;
-using SamsHelper.ReactiveUI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,13 +15,9 @@ namespace Facilitating.UIControllers
         private ParticleSystem _bleedEffect, _burnEffect;
         private RectTransform _sliderRect;
         private float _edgeWidthRatio = 3f;
-        private readonly Number _healthRemaining = new Number();
-        private event Action<float> OnTakeDamage;
-        private event Action<float> OnHeal;
         private TextMeshProUGUI _healthText;
-        private CharacterCombat _character;
         private static readonly List<Fader> _faderPool = new List<Fader>();
-
+        
         public void Awake()
         {
             GameObject healthBar = Helper.FindChildWithName(gameObject, "Health Bar");
@@ -33,57 +26,6 @@ namespace Facilitating.UIControllers
             _burnEffect = Helper.FindChildWithName<ParticleSystem>(healthBar, "Burning");
             _bleedEffect = Helper.FindChildWithName<ParticleSystem>(healthBar, "Bleeding");
             _healthText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Health Text");
-            if (_slider.direction != Slider.Direction.LeftToRight) return;
-            _healthRemaining.AddOnValueChange(a => SetValue());
-        }
-
-        private CharacterCombat GetCharacter()
-        {
-            return _character;
-        }
-
-        public void SetInitialHealth(int initialHealth, CharacterCombat character)
-        {
-            _character = character;
-            _healthRemaining.Max = initialHealth;
-            _healthRemaining.SetCurrentValue(initialHealth);
-            _healthRemaining.OnMin(() => GetCharacter()?.Kill());
-        }
-
-        public void TakeDamage(float amount)
-        {
-            Assert.IsTrue(amount >= 0);
-            if (amount == 0) return;
-            if (_healthRemaining.ReachedMin()) return;
-            _healthRemaining.Decrement(amount);
-            FadeNewHealth();
-            OnTakeDamage?.Invoke(amount);
-//            (_character as DetailedEnemyCombat)?.UiHitController.RegisterShot();
-        }
-
-        public void Heal(int amount)
-        {
-            Assert.IsTrue(amount >= 0);
-            _healthRemaining.Increment(amount);
-            OnHeal?.Invoke(amount);
-        }
-
-        public void AddOnTakeDamage(Action<float> a) => OnTakeDamage += a;
-        public void AddOnHeal(Action<float> a) => OnHeal += a;
-
-        public float GetNormalisedHealthValue()
-        {
-            return _healthRemaining.Normalised();
-        }
-
-        public float GetCurrentHealth()
-        {
-            return _healthRemaining.CurrentValue();
-        }
-
-        public float GetMaxHealth()
-        {
-            return _healthRemaining.Max;
         }
 
         public void SetIsPlayerBar()
@@ -91,7 +33,7 @@ namespace Facilitating.UIControllers
             _edgeWidthRatio = 7.2f;
         }
 
-        private void FadeNewHealth()
+        public void FadeNewHealth()
         {
             Fader fader;
             GameObject faderObject;
@@ -155,10 +97,10 @@ namespace Facilitating.UIControllers
             }
         }
 
-        private void SetValue()
+        public void SetValue(float normalised, float current, float max)
         {
-            float normalisedHealth = GetNormalisedHealthValue();
-            _healthText.text = (int) GetCurrentHealth() + "/" + (int) GetMaxHealth();
+            float normalisedHealth = normalised;
+            _healthText.text = (int) current + "/" + (int) max;
             _slider.value = normalisedHealth;
             float edgeWidth = _edgeWidthRatio * normalisedHealth;
 

@@ -12,44 +12,6 @@ namespace Facilitating.UIControllers
     public class UIEnemyController : MonoBehaviour, ICombatListener
     {
         public static readonly List<EnemyBehaviour> Enemies = new List<EnemyBehaviour>();
-        private static Transform _enemyListLeft, _enemyListRight;
-//        private static readonly List<GameObject> _leftList = new List<GameObject>();
-//        private static readonly List<GameObject> _rightList = new List<GameObject>();
-
-        public void Awake()
-        {
-//            _enemyListLeft = Helper.FindChildWithName(gameObject, "Left").transform;
-//            _enemyListRight = Helper.FindChildWithName(gameObject, "Right").transform;
-        }
-
-        private GameObject CreateNewEnemyUi()
-        {
-            GameObject enemyUi = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Enemy Item"));
-            enemyUi.transform.SetParent(transform);
-            enemyUi.transform.position = new Vector3(0,0,0);
-            RectTransform rect = enemyUi.GetComponent<RectTransform>();
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-            
-//            if (_leftList.Count <= _rightList.Count)
-//            {
-//                enemyUi = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Enemy UI Left"));
-//                enemyUi.transform.SetParent(_enemyListLeft);
-//                _leftList.Add(enemyUi);
-//            }
-//            else
-//            {
-//                enemyUi = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Enemy UI Right"));
-//                enemyUi.transform.SetParent(_enemyListRight);
-//                _rightList.Add(enemyUi);
-//            }
-
-//            Vector3 uiPosition = enemyUi.transform.position;
-//            uiPosition.z = 0;
-//            enemyUi.transform.position = uiPosition;
-            enemyUi.transform.localScale = Vector3.one;
-            return enemyUi;
-        }
 
         public void EnterCombat()
         {
@@ -57,7 +19,7 @@ namespace Facilitating.UIControllers
             _enemiesToAlert.Clear();
             CombatManager.CurrentScenario.Enemies().ForEach(e =>
             {
-                if (!e.IsDead) AddEnemy(e.LinkUi(CreateNewEnemyUi()));
+                if (!e.IsDead) AddEnemy(e.CreateEnemyObject());
             });
         }
 
@@ -123,7 +85,7 @@ namespace Facilitating.UIControllers
         public void QueueEnemyToAdd(EnemyType type)
         {
             Enemy e = new Enemy(type);
-            EnemyBehaviour enemyUi = e.LinkUi(CreateNewEnemyUi());
+            EnemyBehaviour enemyUi = e.CreateEnemyObject();
             enemyUi.Alert();
             AddEnemy(enemyUi);
             CombatManager.CurrentScenario.AddEnemy(e);

@@ -1,18 +1,16 @@
-﻿using Game.Combat.CharacterUi;
-
-namespace Game.Combat.Enemies.EnemyTypes
+﻿namespace Game.Combat.Enemies.EnemyTypes
 {
     public class Martyr : EnemyBehaviour
     {
         private bool _detonated;
 
-        public override void Initialise(Enemy enemy, EnemyUi characterUi)
+        public override void Initialise(Enemy enemy)
         {
-            base.Initialise(enemy, characterUi);
-            EnemyUi.HealthController.AddOnTakeDamage(damage =>
+            base.Initialise(enemy);
+            HealthController.AddOnTakeDamage(damage =>
             {
                 if (_detonated) return;
-                if (EnemyUi.HealthController.GetCurrentHealth() != 0) return;
+                if (HealthController.GetCurrentHealth() != 0) return;
                 Detonate();
             });
         }

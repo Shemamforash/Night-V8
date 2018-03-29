@@ -11,13 +11,13 @@ namespace Game.Combat
     {
         protected readonly int Duration, Damage;
         protected readonly List<float> StackList = new List<float>();
-        protected readonly UIHealthBarController CharacterHealth;
+        protected readonly HealthController CharacterHealth;
         public Action OnConditionEmpty, OnConditionNonEmpty;
         private float _timeToNextTick;
 
         protected Condition(CharacterCombat character, int duration, int damage)
         {
-//            CharacterHealth = character.HealthController;
+            CharacterHealth = character.HealthController;
             Duration = duration;
             Damage = damage;
         }

@@ -18,9 +18,9 @@ namespace Game.Combat.Enemies.EnemyTypes
         private EnemyBehaviour _healTarget;
         private static GameObject _healPrefab;
 
-        public override void Initialise(Enemy enemy, EnemyUi characterUi)
+        public override void Initialise(Enemy enemy)
         {
-            base.Initialise(enemy, characterUi);
+            base.Initialise(enemy);
             if (_healPrefab == null) _healPrefab = Resources.Load<GameObject>("Prefabs/Combat/Heal Indicator");
 //            MinimumFindCoverDistance = 20f;
         }
@@ -47,7 +47,7 @@ namespace Game.Combat.Enemies.EnemyTypes
                 }
                 if (age < currentTick * HealInterval) return;
                 ++currentTick;
-                _healTarget.HealthController().Heal(HealAmount);
+                _healTarget.HealthController.Heal(HealAmount);
                 GameObject healObject = Instantiate(_healPrefab);
                 healObject.transform.position = _healTarget.transform.position;
                 healObject.transform.localScale = Vector3.one;

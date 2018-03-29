@@ -8,7 +8,6 @@ public class UIHitController : MonoBehaviour
     private RectTransform _innerRect;
     private Image _outerImage, _innerImage;
     private const float MaxHeight = 90f;
-    private CharacterCombat _character;
     private const float FadeTime = 0.5f;
     private float _currentShotTime;
     private float _currentCriticalTime;
@@ -20,12 +19,7 @@ public class UIHitController : MonoBehaviour
         _outerImage = Helper.FindChildWithName<Image>(gameObject, "Outer");
     }
 
-    public void SetCharacter(CharacterCombat character)
-    {
-        _character = character;
-    }
-    
-    public void UpdateValue()
+    public void Update()
     {
         float newHeight = MaxHeight * (CombatManager.Player.GetAccuracyModifier() * 2f - 1f);
         if (_currentShotTime > 0)
