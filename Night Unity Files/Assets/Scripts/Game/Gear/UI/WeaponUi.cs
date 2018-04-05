@@ -22,10 +22,10 @@ namespace Game.Gear.UI
             ModifierColumnOneText.text = weapon.WeaponAttributes.WeaponClassDescription;
             ModifierColumn2Text.text = weapon.WeaponAttributes.ModifierDescription;
             TopLeftAttributeText.text = weapon.GetAttributeValue(AttributeType.Damage) + "DMG";
-            TopRightAttributeText.text = weapon.GetAttributeValue(AttributeType.Range) + "ACC";
+            TopRightAttributeText.text = weapon.GetAttributeValue(AttributeType.Range) + "RAN";
             CentreLeftAttributeText.text = Helper.Round(weapon.GetAttributeValue(AttributeType.FireRate), 1) + "ROF";
-            CentreRightAttributeText.text = weapon.GetAttributeValue(AttributeType.CriticalChance) + "CRIT";
             BottomLeftAttributeText.text = Helper.Round(weapon.GetAttributeValue(AttributeType.ReloadSpeed), 1) + "RLD";
+            BottomRightAttributeText.text = Helper.Round(weapon.GetAttributeValue(AttributeType.Accuracy), 1) + "ACC";
         }
     }
 }

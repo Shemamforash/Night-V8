@@ -2,39 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="167d3be1-cdd9-4be3-97f7-467b7a89563b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/GearModifier.cs" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/GearModifier.cs.meta" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponQuality.cs" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponQuality.cs.meta" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Shaders.meta" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Shaders/DissolveMaterial.mat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Shaders/DissolveMaterial.mat.meta" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Shaders/DissolveShader.shader" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Shaders/DissolveShader.shader.meta" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Desolation Balance Files.xlsx" afterPath="$PROJECT_DIR$/Desolation Balance Files.xlsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Combat Tester.unity" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Combat Tester.unity" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/InspectorExpandedItems.asset" afterPath="$PROJECT_DIR$/Night Unity Files/Library/InspectorExpandedItems.asset" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/assetDatabase3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/assetDatabase3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1c/1c0b20b13ede4918b43c745ced6630f6" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1c/1c0b20b13ede4918b43c745ced6630f6" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/51/51593c6711164fa39c7b502ffa53e54e" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/51/51593c6711164fa39c7b502ffa53e54e" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/76/762b650f880c47db82338410cf770fd1" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/76/762b650f880c47db82338410cf770fd1" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/7c/7cd5f20297be4e78a16dda4ac60153d1" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/7c/7cd5f20297be4e78a16dda4ac60153d1" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bc/bcf22d8f0a5f4df5a96a5b55218dc71a" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bc/bcf22d8f0a5f4df5a96a5b55218dc71a" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/27/274e1c874b364cb1a16c7d28c86e13ba" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/27/274e1c874b364cb1a16c7d28c86e13ba" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bc/bc5b6e23f76f4d73a37ecab2dd33d4c3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bc/bc5b6e23f76f4d73a37ecab2dd33d4c3" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/f2/f27addc0f8d44b25806273864c095dd3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/f2/f27addc0f8d44b25806273864c095dd3" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/contentModel.xml" afterPath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/contentModel.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/workspace.xml" afterPath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/NightSave.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/NightSave.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Prefabs/Combat/Bullet.prefab" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Prefabs/Combat/Bullet.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Inscriptions.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Inscriptions.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/WeaponClasses.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/WeaponClasses.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIMinigameController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIMinigameController.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatTester.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatTester.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/Enemy.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/Enemy.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIHitController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIHitController.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UiWeaponUpgradeController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UiWeaponUpgradeController.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterUi/EnemyUi.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterUi/EnemyUi.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/EnemyBehaviour.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/EnemyBehaviour.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/PlayerCombat.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/PlayerCombat.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Shot.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Shot.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/UI/WeaponUi.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/UI/WeaponUi.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/Weapon.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/Weapon.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponAttributes.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponAttributes.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponClass.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponClass.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponGenerationTester.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponGenerationTester.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponGenerator.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponGenerator.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/DesolationInventory.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/DesolationInventory.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/Basic/AttributeType.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/Basic/AttributeType.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/shadercompiler-UnityShaderCompiler.exe0.log" afterPath="$PROJECT_DIR$/Night Unity Files/Library/shadercompiler-UnityShaderCompiler.exe0.log" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WeaponCsvToXml.py" afterPath="$PROJECT_DIR$/WeaponCsvToXml.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,7 +39,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Night-V8$CsvToXml.coverage" NAME="CsvToXml Coverage Results" MODIFIED="1507202347152" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Night-V8$WeaponCsvToXml.coverage" NAME="WeaponCsvToXml Coverage Results" MODIFIED="1519736498733" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Night-V8$WeaponCsvToXml.coverage" NAME="WeaponCsvToXml Coverage Results" MODIFIED="1522915321564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -57,20 +50,30 @@
       <file leaf-file-name="WeaponCsvToXml.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/WeaponCsvToXml.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="51" column="71" lean-forward="false" selection-start-line="51" selection-start-column="71" selection-end-line="51" selection-end-column="71" />
+            <state relative-caret-position="344">
+              <caret line="32" column="29" lean-forward="false" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
               <folding>
                 <element signature="e#0#34#0" expanded="true" />
-                <element signature="e#3775#5053#0" expanded="false" />
-                <element signature="e#5094#6396#0" expanded="false" />
-                <element signature="e#6441#7231#0" expanded="false" />
-                <element signature="e#7271#9057#0" expanded="false" />
-                <element signature="e#9100#9827#0" expanded="false" />
-                <element signature="e#9866#10515#0" expanded="false" />
-                <element signature="e#10554#11118#0" expanded="false" />
-                <element signature="e#11157#11589#0" expanded="false" />
-                <element signature="e#11690#12096#0" expanded="false" />
+                <element signature="e#3763#5041#0" expanded="false" />
+                <element signature="e#5082#6384#0" expanded="false" />
+                <element signature="e#6429#7219#0" expanded="false" />
+                <element signature="e#7259#9045#0" expanded="false" />
+                <element signature="e#9088#9815#0" expanded="false" />
+                <element signature="e#9854#10503#0" expanded="false" />
+                <element signature="e#10542#11106#0" expanded="false" />
+                <element signature="e#11145#11577#0" expanded="false" />
+                <element signature="e#11678#12084#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WeaponClasses.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/WeaponClasses.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="301">
+              <caret line="68" column="20" lean-forward="true" selection-start-line="68" selection-start-column="20" selection-end-line="68" selection-end-column="20" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -125,10 +128,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Traits.xml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Traits.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Traits.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="-51">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -180,6 +183,8 @@
       <find>load_workb</find>
       <find>enemyimpor</find>
       <find>manual</find>
+      <find>critical</find>
+      <find>leadspre</find>
     </findStrings>
     <replaceStrings>
       <replace>get_value(weapon_sheet,</replace>
@@ -214,8 +219,8 @@
         <option value="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Weather.xml" />
         <option value="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Classes.xml" />
         <option value="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Enemies.xml" />
-        <option value="$PROJECT_DIR$/WeaponCsvToXml.py" />
         <option value="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Inscriptions.xml" />
+        <option value="$PROJECT_DIR$/WeaponCsvToXml.py" />
         <option value="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/WeaponClasses.xml" />
       </list>
     </option>
@@ -247,6 +252,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -342,7 +348,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -629,16 +634,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1066" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12708333" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -648,6 +652,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -672,15 +677,15 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#3775#5053#0" expanded="false" />
-            <element signature="e#5094#6396#0" expanded="false" />
-            <element signature="e#6441#7231#0" expanded="false" />
-            <element signature="e#7271#9057#0" expanded="false" />
-            <element signature="e#9100#9827#0" expanded="false" />
-            <element signature="e#9866#10515#0" expanded="false" />
-            <element signature="e#10554#11118#0" expanded="false" />
-            <element signature="e#11157#11589#0" expanded="false" />
-            <element signature="e#11690#12096#0" expanded="false" />
+            <element signature="e#3763#5041#0" expanded="false" />
+            <element signature="e#5082#6384#0" expanded="false" />
+            <element signature="e#6429#7219#0" expanded="false" />
+            <element signature="e#7259#9045#0" expanded="false" />
+            <element signature="e#9088#9815#0" expanded="false" />
+            <element signature="e#9854#10503#0" expanded="false" />
+            <element signature="e#10542#11106#0" expanded="false" />
+            <element signature="e#11145#11577#0" expanded="false" />
+            <element signature="e#11678#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -693,15 +698,15 @@
           <caret line="48" column="38" lean-forward="false" selection-start-line="48" selection-start-column="38" selection-end-line="48" selection-end-column="38" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#3775#5053#0" expanded="false" />
-            <element signature="e#5094#6396#0" expanded="false" />
-            <element signature="e#6441#7231#0" expanded="false" />
-            <element signature="e#7271#9057#0" expanded="false" />
-            <element signature="e#9100#9827#0" expanded="false" />
-            <element signature="e#9866#10515#0" expanded="false" />
-            <element signature="e#10554#11118#0" expanded="false" />
-            <element signature="e#11157#11589#0" expanded="false" />
-            <element signature="e#11690#12096#0" expanded="false" />
+            <element signature="e#3763#5041#0" expanded="false" />
+            <element signature="e#5082#6384#0" expanded="false" />
+            <element signature="e#6429#7219#0" expanded="false" />
+            <element signature="e#7259#9045#0" expanded="false" />
+            <element signature="e#9088#9815#0" expanded="false" />
+            <element signature="e#9854#10503#0" expanded="false" />
+            <element signature="e#10542#11106#0" expanded="false" />
+            <element signature="e#11145#11577#0" expanded="false" />
+            <element signature="e#11678#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -714,15 +719,15 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#3775#5053#0" expanded="false" />
-            <element signature="e#5094#6396#0" expanded="false" />
-            <element signature="e#6441#7231#0" expanded="false" />
-            <element signature="e#7271#9057#0" expanded="false" />
-            <element signature="e#9100#9827#0" expanded="false" />
-            <element signature="e#9866#10515#0" expanded="false" />
-            <element signature="e#10554#11118#0" expanded="false" />
-            <element signature="e#11157#11589#0" expanded="false" />
-            <element signature="e#11690#12096#0" expanded="false" />
+            <element signature="e#3763#5041#0" expanded="false" />
+            <element signature="e#5082#6384#0" expanded="false" />
+            <element signature="e#6429#7219#0" expanded="false" />
+            <element signature="e#7259#9045#0" expanded="false" />
+            <element signature="e#9088#9815#0" expanded="false" />
+            <element signature="e#9854#10503#0" expanded="false" />
+            <element signature="e#10542#11106#0" expanded="false" />
+            <element signature="e#11145#11577#0" expanded="false" />
+            <element signature="e#11678#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -734,15 +739,15 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#3775#5053#0" expanded="false" />
-            <element signature="e#5094#6396#0" expanded="false" />
-            <element signature="e#6441#7231#0" expanded="false" />
-            <element signature="e#7271#9057#0" expanded="false" />
-            <element signature="e#9100#9827#0" expanded="false" />
-            <element signature="e#9866#10515#0" expanded="false" />
-            <element signature="e#10554#11118#0" expanded="false" />
-            <element signature="e#11157#11589#0" expanded="false" />
-            <element signature="e#11690#12096#0" expanded="false" />
+            <element signature="e#3763#5041#0" expanded="false" />
+            <element signature="e#5082#6384#0" expanded="false" />
+            <element signature="e#6429#7219#0" expanded="false" />
+            <element signature="e#7259#9045#0" expanded="false" />
+            <element signature="e#9088#9815#0" expanded="false" />
+            <element signature="e#9854#10503#0" expanded="false" />
+            <element signature="e#10542#11106#0" expanded="false" />
+            <element signature="e#11145#11577#0" expanded="false" />
+            <element signature="e#11678#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -753,15 +758,15 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#3775#5053#0" expanded="false" />
-            <element signature="e#5094#6396#0" expanded="false" />
-            <element signature="e#6441#7231#0" expanded="false" />
-            <element signature="e#7271#9057#0" expanded="false" />
-            <element signature="e#9100#9827#0" expanded="false" />
-            <element signature="e#9866#10515#0" expanded="false" />
-            <element signature="e#10554#11118#0" expanded="false" />
-            <element signature="e#11157#11589#0" expanded="false" />
-            <element signature="e#11690#12096#0" expanded="false" />
+            <element signature="e#3763#5041#0" expanded="false" />
+            <element signature="e#5082#6384#0" expanded="false" />
+            <element signature="e#6429#7219#0" expanded="false" />
+            <element signature="e#7259#9045#0" expanded="false" />
+            <element signature="e#9088#9815#0" expanded="false" />
+            <element signature="e#9854#10503#0" expanded="false" />
+            <element signature="e#10542#11106#0" expanded="false" />
+            <element signature="e#11145#11577#0" expanded="false" />
+            <element signature="e#11678#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -773,15 +778,15 @@
           <caret line="41" column="28" lean-forward="true" selection-start-line="41" selection-start-column="28" selection-end-line="41" selection-end-column="28" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#3775#5053#0" expanded="false" />
-            <element signature="e#5094#6396#0" expanded="false" />
-            <element signature="e#6441#7231#0" expanded="false" />
-            <element signature="e#7271#9057#0" expanded="false" />
-            <element signature="e#9100#9827#0" expanded="false" />
-            <element signature="e#9866#10515#0" expanded="false" />
-            <element signature="e#10554#11118#0" expanded="false" />
-            <element signature="e#11157#11589#0" expanded="false" />
-            <element signature="e#11690#12096#0" expanded="false" />
+            <element signature="e#3763#5041#0" expanded="false" />
+            <element signature="e#5082#6384#0" expanded="false" />
+            <element signature="e#6429#7219#0" expanded="false" />
+            <element signature="e#7259#9045#0" expanded="false" />
+            <element signature="e#9088#9815#0" expanded="false" />
+            <element signature="e#9854#10503#0" expanded="false" />
+            <element signature="e#10542#11106#0" expanded="false" />
+            <element signature="e#11145#11577#0" expanded="false" />
+            <element signature="e#11678#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -793,15 +798,15 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#3775#5053#0" expanded="false" />
-            <element signature="e#5094#6396#0" expanded="false" />
-            <element signature="e#6441#7231#0" expanded="false" />
-            <element signature="e#7271#9057#0" expanded="false" />
-            <element signature="e#9100#9827#0" expanded="false" />
-            <element signature="e#9866#10515#0" expanded="false" />
-            <element signature="e#10554#11118#0" expanded="false" />
-            <element signature="e#11157#11589#0" expanded="false" />
-            <element signature="e#11690#12096#0" expanded="false" />
+            <element signature="e#3763#5041#0" expanded="false" />
+            <element signature="e#5082#6384#0" expanded="false" />
+            <element signature="e#6429#7219#0" expanded="false" />
+            <element signature="e#7259#9045#0" expanded="false" />
+            <element signature="e#9088#9815#0" expanded="false" />
+            <element signature="e#9854#10503#0" expanded="false" />
+            <element signature="e#10542#11106#0" expanded="false" />
+            <element signature="e#11145#11577#0" expanded="false" />
+            <element signature="e#11678#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -813,15 +818,15 @@
           <caret line="37" column="58" lean-forward="false" selection-start-line="37" selection-start-column="58" selection-end-line="37" selection-end-column="58" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#3775#5053#0" expanded="false" />
-            <element signature="e#5094#6396#0" expanded="false" />
-            <element signature="e#6441#7231#0" expanded="false" />
-            <element signature="e#7271#9057#0" expanded="false" />
-            <element signature="e#9100#9827#0" expanded="false" />
-            <element signature="e#9866#10515#0" expanded="false" />
-            <element signature="e#10554#11118#0" expanded="false" />
-            <element signature="e#11157#11589#0" expanded="false" />
-            <element signature="e#11690#12096#0" expanded="false" />
+            <element signature="e#3763#5041#0" expanded="false" />
+            <element signature="e#5082#6384#0" expanded="false" />
+            <element signature="e#6429#7219#0" expanded="false" />
+            <element signature="e#7259#9045#0" expanded="false" />
+            <element signature="e#9088#9815#0" expanded="false" />
+            <element signature="e#9854#10503#0" expanded="false" />
+            <element signature="e#10542#11106#0" expanded="false" />
+            <element signature="e#11145#11577#0" expanded="false" />
+            <element signature="e#11678#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -833,15 +838,15 @@
           <caret line="21" column="67" lean-forward="false" selection-start-line="21" selection-start-column="67" selection-end-line="21" selection-end-column="67" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#3775#5053#0" expanded="false" />
-            <element signature="e#5094#6396#0" expanded="false" />
-            <element signature="e#6441#7231#0" expanded="false" />
-            <element signature="e#7271#9057#0" expanded="false" />
-            <element signature="e#9100#9827#0" expanded="false" />
-            <element signature="e#9866#10515#0" expanded="false" />
-            <element signature="e#10554#11118#0" expanded="false" />
-            <element signature="e#11157#11589#0" expanded="false" />
-            <element signature="e#11690#12096#0" expanded="false" />
+            <element signature="e#3763#5041#0" expanded="false" />
+            <element signature="e#5082#6384#0" expanded="false" />
+            <element signature="e#6429#7219#0" expanded="false" />
+            <element signature="e#7259#9045#0" expanded="false" />
+            <element signature="e#9088#9815#0" expanded="false" />
+            <element signature="e#9854#10503#0" expanded="false" />
+            <element signature="e#10542#11106#0" expanded="false" />
+            <element signature="e#11145#11577#0" expanded="false" />
+            <element signature="e#11678#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -933,25 +938,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WeaponCsvToXml.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="51" column="71" lean-forward="false" selection-start-line="51" selection-start-column="71" selection-end-line="51" selection-end-column="71" />
-          <folding>
-            <element signature="e#0#34#0" expanded="true" />
-            <element signature="e#3775#5053#0" expanded="false" />
-            <element signature="e#5094#6396#0" expanded="false" />
-            <element signature="e#6441#7231#0" expanded="false" />
-            <element signature="e#7271#9057#0" expanded="false" />
-            <element signature="e#9100#9827#0" expanded="false" />
-            <element signature="e#9866#10515#0" expanded="false" />
-            <element signature="e#10554#11118#0" expanded="false" />
-            <element signature="e#11157#11589#0" expanded="false" />
-            <element signature="e#11690#12096#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Classes.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -960,18 +946,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/WeaponClasses.xml">
+    <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Traits.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="43" lean-forward="true" selection-start-line="6" selection-start-column="43" selection-end-line="6" selection-end-column="43" />
+        <state relative-caret-position="-51">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Traits.xml">
+    <entry file="file://$PROJECT_DIR$/WeaponCsvToXml.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="344">
+          <caret line="32" column="29" lean-forward="false" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+            <element signature="e#3763#5041#0" expanded="false" />
+            <element signature="e#5082#6384#0" expanded="false" />
+            <element signature="e#6429#7219#0" expanded="false" />
+            <element signature="e#7259#9045#0" expanded="false" />
+            <element signature="e#9088#9815#0" expanded="false" />
+            <element signature="e#9854#10503#0" expanded="false" />
+            <element signature="e#10542#11106#0" expanded="false" />
+            <element signature="e#11145#11577#0" expanded="false" />
+            <element signature="e#11678#12084#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/WeaponClasses.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="68" column="20" lean-forward="true" selection-start-line="68" selection-start-column="20" selection-end-line="68" selection-end-column="20" />
           <folding />
         </state>
       </provider>

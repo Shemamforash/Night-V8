@@ -9585,7 +9585,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8be6d48062b48108912bf189a28e789, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ArmourController: {fileID: 0}
 --- !u!1 &143820544
 GameObject:
   m_ObjectHideFlags: 0
@@ -40444,11 +40443,11 @@ MonoBehaviour:
   Difficulty: 5
   Durability: 20
   ManualOnly: 0
-  Smg: 1
+  Smg: 0
   Lmg: 0
   Rifle: 0
   Pistol: 0
-  Shotgun: 0
+  Shotgun: 1
 --- !u!114 &1116345288
 MonoBehaviour:
   m_ObjectHideFlags: 0

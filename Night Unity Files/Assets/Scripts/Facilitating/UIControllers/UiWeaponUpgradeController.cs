@@ -18,7 +18,7 @@ namespace Facilitating.UIControllers
         private EnhancedText _typeText, _nameText, _durabilityText;
         private EnhancedText _damageText, _fireRateText, _rangeText;
         private EnhancedText _dpsText, _capacityText;
-        private EnhancedText _reloadSpeedText, _criticalText, _handlingText;
+        private EnhancedText _reloadSpeedText, _accuracyText, _handlingText;
         private EnhancedText _inscriptionText;
 
         private EnhancedButton _inscribeButton, _repairButton;
@@ -35,7 +35,7 @@ namespace Facilitating.UIControllers
             _dpsText = Helper.FindChildWithName<EnhancedText>(gameObject, "DPS");
             _capacityText = Helper.FindChildWithName<EnhancedText>(gameObject, "Capacity");
             _reloadSpeedText = Helper.FindChildWithName<EnhancedText>(gameObject, "Reload Speed");
-            _criticalText = Helper.FindChildWithName<EnhancedText>(gameObject, "Critical Chance");
+            _accuracyText = Helper.FindChildWithName<EnhancedText>(gameObject, "Critical Chance");
             _handlingText = Helper.FindChildWithName<EnhancedText>(gameObject, "Handling");
             _inscriptionText = Helper.FindChildWithName<EnhancedText>(gameObject, "Inscription");
 
@@ -90,8 +90,8 @@ namespace Facilitating.UIControllers
                 _damageText.Text(GetAttributePrefix(compareWeapon, AttributeType.Damage) + " Dam");
                 _fireRateText.Text(GetAttributePrefix(compareWeapon, AttributeType.FireRate) + " RoF");
                 _rangeText.Text(GetAttributePrefix(compareWeapon, AttributeType.Range) + "M");
+                _accuracyText.Text(GetAttributePrefix(compareWeapon, AttributeType.Accuracy) + "%");
                 _reloadSpeedText.Text(GetAttributePrefix(compareWeapon, AttributeType.ReloadSpeed) + "s Reload ");
-                _criticalText.Text(GetAttributePrefix(compareWeapon, AttributeType.CriticalChance) + "% Critical ");
                 _handlingText.Text(GetAttributePrefix(compareWeapon, AttributeType.Handling) + "% Handling ");
                 _capacityText.Text(GetAttributePrefix(compareWeapon, AttributeType.Capacity) + " Capacity");
             }
@@ -115,7 +115,6 @@ namespace Facilitating.UIControllers
             _fireRateText.Text(Helper.Round(attr.FireRate.CurrentValue(), 1) + " RoF");
             _rangeText.Text(Helper.Round(attr.Range.CurrentValue(), 1) + "M");
             _reloadSpeedText.Text(Helper.Round(attr.ReloadSpeed.CurrentValue(), 1) + "s Reload");
-            _criticalText.Text(Helper.Round(attr.CriticalChance.CurrentValue(), 1) + "% Critical");
             _handlingText.Text(Helper.Round(attr.Handling.CurrentValue(), 1) + "% Handling");
             _dpsText.Text(Helper.Round(attr.DPS(), 1) + " DPS");
             _capacityText.Text(Helper.Round(attr.Capacity.CurrentValue(), 1) + " Capacity");
@@ -174,7 +173,7 @@ namespace Facilitating.UIControllers
             _dpsText.Text("Nothing Equipped");
             _capacityText.Text("");
             _reloadSpeedText.Text("");
-            _criticalText.Text("");
+            _accuracyText.Text("");
             _handlingText.Text("");
             _inscriptionText.Text("");
         }

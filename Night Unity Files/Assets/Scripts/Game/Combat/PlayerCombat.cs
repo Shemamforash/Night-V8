@@ -203,7 +203,6 @@ namespace Game.Combat
             if (shots == null) return;
             shots.ForEach(shot =>
             {
-                if (RageController.Active()) shot.GuaranteeCritical();
                 shot.SetDamageModifier(_damageModifier);
                 OnFireAction?.Invoke(shot);
                 shot.Fire();

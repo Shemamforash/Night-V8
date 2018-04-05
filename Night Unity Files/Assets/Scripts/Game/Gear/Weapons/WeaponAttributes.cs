@@ -14,7 +14,7 @@ namespace Game.Gear.Weapons
 {
     public class WeaponAttributes : AttributeContainer
     {
-        public CharacterAttribute FireRate, ReloadSpeed, Damage, Range, CriticalChance, Handling, Capacity, Pellets;
+        public CharacterAttribute FireRate, ReloadSpeed, Damage, Range, Handling, Capacity, Pellets, Accuracy;
         public CharacterAttribute PierceChance, BurnChance, BleedChance, SicknessChance;
         private float _dps;
         private AttributeModifier _durabilityModifier;
@@ -37,7 +37,7 @@ namespace Game.Gear.Weapons
             SaveController.CreateNodeAndAppend("ReloadSpeed", root, ReloadSpeed);
             SaveController.CreateNodeAndAppend("Damage", root, Damage);
             SaveController.CreateNodeAndAppend("Range", root, Range);
-            SaveController.CreateNodeAndAppend("CriticalChance", root, CriticalChance);
+            SaveController.CreateNodeAndAppend("Accuracy", root, Accuracy);
             SaveController.CreateNodeAndAppend("Handling", root, Capacity);
             SaveController.CreateNodeAndAppend("Capacity", root, Capacity);
             SaveController.CreateNodeAndAppend("Pellets", root, Pellets);
@@ -53,7 +53,7 @@ namespace Game.Gear.Weapons
         public WeaponAttributes(Weapon weapon, int durability = -1)
         {
             _weapon = weapon;
-            _durabilityModifier = new AttributeModifier(new List<AttributeType> {AttributeType.Damage, AttributeType.CriticalChance, AttributeType.FireRate});
+            _durabilityModifier = new AttributeModifier(new List<AttributeType> {AttributeType.Damage, AttributeType.FireRate, AttributeType.Accuracy});
             if (durability == -1) durability = Random.Range(0, MaxDurability / 4);
             Durability = new Number(durability, 0, MaxDurability);
             Durability.AddOnValueChange(a => RecalculateAttributeValues());
@@ -120,7 +120,7 @@ namespace Game.Gear.Weapons
 
         private void CalculateDPS()
         {
-            float averageShotDamage = CriticalChance.CurrentValue() * Damage.CurrentValue() * 2 + (1 - CriticalChance.CurrentValue()) * Damage.CurrentValue();
+            float averageShotDamage = Damage.CurrentValue();
             float magazineDamage = (int) Capacity.CurrentValue() * averageShotDamage * (int) Pellets.CurrentValue();
             float magazineDuration = (int) Capacity.CurrentValue() / FireRate.CurrentValue() + ReloadSpeed.CurrentValue();
             _dps = magazineDamage / magazineDuration;
@@ -134,8 +134,8 @@ namespace Game.Gear.Weapons
         protected override void CacheAttributes()
         {
             Damage = new CharacterAttribute(AttributeType.Damage, 0);
-            Range = new CharacterAttribute(AttributeType.Range, 0, 0, 100);
-            CriticalChance = new CharacterAttribute(AttributeType.CriticalChance, 0, 0, 1);
+            Range = new CharacterAttribute(AttributeType.Range, 0);
+            Accuracy = new CharacterAttribute(AttributeType.Accuracy, 0, 0, 100);
             FireRate = new CharacterAttribute(AttributeType.FireRate, 0);
             ReloadSpeed = new CharacterAttribute(AttributeType.ReloadSpeed, 0);
             Handling = new CharacterAttribute(AttributeType.Handling, 0);
@@ -150,8 +150,8 @@ namespace Game.Gear.Weapons
 
             AddAttribute(Damage);
             AddAttribute(Range);
+            AddAttribute(Accuracy);
             AddAttribute(ReloadSpeed);
-            AddAttribute(CriticalChance);
             AddAttribute(FireRate);
             AddAttribute(Handling);
 
@@ -176,7 +176,7 @@ namespace Game.Gear.Weapons
                    + "\nRange:   " + Range.CurrentValue()
                    + "\nFire Rate:  " + FireRate.CurrentValue()
                    + "\nReload:     " + ReloadSpeed.CurrentValue()
-                   + "\nCritChance: " + CriticalChance.CurrentValue()
+                   + "\nAccuracy: " + Accuracy.CurrentValue()
                    + "\n" + WeaponClassDescription?.Replace("\n", " ")
                    + "\n" + ModifierDescription?.Replace("\n", " ") + "\n\n";
         }

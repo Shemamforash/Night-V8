@@ -13,9 +13,9 @@
         
         Damage,
         Range,
+        Accuracy,
         FireRate,
         ReloadSpeed,
-        CriticalChance,
         Handling,
         Detection,
         Vision,

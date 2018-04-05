@@ -16,6 +16,7 @@ namespace Game.World.Region
         private static MapNode initialNode;
         private static float _currentAlpha;
         private static float _flashSpeed = 1;
+        private static List<MapNode> route;
 
         public void Start()
         {
@@ -41,8 +42,6 @@ namespace Game.World.Region
             route = RoutePlotter.RouteBetween(from, to);
             Camera.main.GetComponent<FitScreenToRoute>().FitRoute(route);
         }
-
-        private static List<MapNode> route;
 
         public void Update()
         {
@@ -100,32 +99,6 @@ namespace Game.World.Region
             newMapNode.NodeObject.transform.SetParent(transform);
             storedNodes.Add(newMapNode);
             --_currentSamples;
-        }
-
-        private Vector2Int GetMinCorner(Vector2Int origin)
-        {
-            int minX = origin.x - MaxRadius;
-            int minY = origin.y - MaxRadius;
-            if (minX < 0) minX = 0;
-            if (minY < 0) minY = 0;
-            return new Vector2Int(minX, minY);
-        }
-
-        private Vector2Int GetMaxCorner(Vector2Int origin)
-        {
-            int maxX = origin.x + MaxRadius;
-            int maxY = origin.y + MaxRadius;
-            if (maxX >= MapWidth)
-            {
-                maxX = MapWidth - 1;
-            }
-
-            if (maxY >= MapWidth)
-            {
-                maxY = MapWidth - 1;
-            }
-
-            return new Vector2Int(maxX, maxY);
         }
 
         public static void UpdateNodeColor()

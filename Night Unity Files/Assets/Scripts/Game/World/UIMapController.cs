@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Facilitating.UI.Elements;
 using SamsHelper;
 using SamsHelper.Input;
@@ -37,6 +36,11 @@ public class UIMapController : Menu, IInputListener
         InputHandler.RegisterInputListener(this);
     }
 
+    public static void Open()
+    {
+        MenuStateMachine.ShowMenu("Exploration");
+    }
+    
     private void SetSelectedButton(int offset)
     {
         if (_selectedButtonIndex + offset < 0) return;

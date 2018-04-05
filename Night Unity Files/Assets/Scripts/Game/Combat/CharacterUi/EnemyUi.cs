@@ -38,11 +38,10 @@ namespace Game.Combat.CharacterUi
             enemy.HealthController.UpdateHealth();
         }
 
-        public void RegisterHit(EnemyBehaviour enemy, bool critical)
+        public void RegisterHit(EnemyBehaviour enemy)
         {
             if (enemy != _selectedEnemy) return;
-            if(critical) UiHitController.RegisterCritical();
-            else UiHitController.RegisterShot();
+            UiHitController.RegisterShot();
         }
 
         public void UpdateActionText(EnemyBehaviour enemy, string text)

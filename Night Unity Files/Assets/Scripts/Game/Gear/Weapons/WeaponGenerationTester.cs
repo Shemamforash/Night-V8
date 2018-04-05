@@ -16,8 +16,7 @@ namespace Game.Gear.Weapons
         private static readonly List<AttributeType> DesiredStats = new List<AttributeType>
         {
             AttributeType.Damage,
-            AttributeType.Range,
-            AttributeType.CriticalChance,
+            AttributeType.Accuracy,
             AttributeType.FireRate,
         };
 

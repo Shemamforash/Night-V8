@@ -229,7 +229,7 @@ namespace Game.Combat
         public override void TakeDamage(Shot shot)
         {
             base.TakeDamage(shot);
-            EnemyUi.Instance().RegisterHit(this, shot.IsCritical);
+            EnemyUi.Instance().RegisterHit(this);
             Alert();
             CombatManager.Player.RageController.Increase(shot.DamageDealt());
         }

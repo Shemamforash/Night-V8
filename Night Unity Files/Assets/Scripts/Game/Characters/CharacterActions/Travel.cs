@@ -24,7 +24,7 @@ namespace Game.Characters.CharacterActions
         protected override void OnClick()
         {
             Assert.IsTrue(PlayerCharacter.DistanceFromHome == 0);
-//            RegionManager.EnterManager(PlayerCharacter);
+            UIMapController.Open();
         }
 
         public void TravelTo(Region region)

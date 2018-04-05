@@ -1,159 +1,159 @@
 <Weapons>
-    <Class name="Pistol" ammoCost="10">
+    <Class name="Pistol" ammoCost="1">
         <Subtype name="Slinger" automatic="True">
             <Damage>+7</Damage>
-            <Range>+25</Range>
+            <Range>+3</Range>
             <FireRate>+6</FireRate>
             <ReloadSpeed>+0.5</ReloadSpeed>
-            <CriticalChance>+0.3</CriticalChance>
+            <Accuracy>+50</Accuracy>
             <Handling>+70</Handling>
             <Capacity>+20</Capacity>
             <Pellets>+1</Pellets>
         </Subtype>
         <Subtype name="Shortshooter" automatic="False">
             <Damage>+18</Damage>
-            <Range>+15</Range>
+            <Range>+2</Range>
             <FireRate>+3</FireRate>
             <ReloadSpeed>+0.5</ReloadSpeed>
-            <CriticalChance>+0.3</CriticalChance>
+            <Accuracy>+50</Accuracy>
             <Handling>+80</Handling>
             <Capacity>+6</Capacity>
             <Pellets>+1</Pellets>
         </Subtype>
         <Subtype name="Deepdriver" automatic="False">
             <Damage>+13</Damage>
-            <Range>+45</Range>
+            <Range>+5</Range>
             <FireRate>+3</FireRate>
             <ReloadSpeed>+2</ReloadSpeed>
-            <CriticalChance>+0.3</CriticalChance>
+            <Accuracy>+50</Accuracy>
             <Handling>+90</Handling>
             <Capacity>+10</Capacity>
             <Pellets>+1</Pellets>
         </Subtype>
     </Class>
-    <Class name="Rifle" ammoCost="20">
+    <Class name="Rifle" ammoCost="1">
         <Subtype name="Groundrider" automatic="False">
             <Damage>+40</Damage>
-            <Range>+150</Range>
+            <Range>+10</Range>
             <FireRate>+1</FireRate>
             <ReloadSpeed>+3</ReloadSpeed>
-            <CriticalChance>+0.5</CriticalChance>
+            <Accuracy>+90</Accuracy>
             <Handling>+20</Handling>
             <Capacity>+8</Capacity>
             <Pellets>+1</Pellets>
         </Subtype>
         <Subtype name="Shoulderbreaker" automatic="False">
             <Damage>+80</Damage>
-            <Range>+100</Range>
+            <Range>+8</Range>
             <FireRate>+1</FireRate>
             <ReloadSpeed>+3</ReloadSpeed>
-            <CriticalChance>+0.5</CriticalChance>
+            <Accuracy>+90</Accuracy>
             <Handling>+0</Handling>
             <Capacity>+2</Capacity>
             <Pellets>+1</Pellets>
         </Subtype>
         <Subtype name="Voidwalker" automatic="True">
             <Damage>+40</Damage>
-            <Range>+100</Range>
+            <Range>+8</Range>
             <FireRate>+1</FireRate>
             <ReloadSpeed>+3</ReloadSpeed>
-            <CriticalChance>+0.75</CriticalChance>
+            <Accuracy>+90</Accuracy>
             <Handling>+20</Handling>
             <Capacity>+8</Capacity>
             <Pellets>+1</Pellets>
         </Subtype>
     </Class>
-    <Class name="Shotgun" ammoCost="20">
+    <Class name="Shotgun" ammoCost="1">
         <Subtype name="Leadspreader" automatic="False">
             <Damage>+4</Damage>
             <Range>+0</Range>
             <FireRate>+1.5</FireRate>
             <ReloadSpeed>+2.5</ReloadSpeed>
-            <CriticalChance>+0.05</CriticalChance>
+            <Accuracy>+20</Accuracy>
             <Handling>+50</Handling>
             <Capacity>+5</Capacity>
             <Pellets>+20</Pellets>
         </Subtype>
         <Subtype name="Bonebreaker" automatic="True">
             <Damage>+13</Damage>
-            <Range>+10</Range>
+            <Range>+1</Range>
             <FireRate>+1.5</FireRate>
             <ReloadSpeed>+2.5</ReloadSpeed>
-            <CriticalChance>+0.05</CriticalChance>
+            <Accuracy>+20</Accuracy>
             <Handling>+25</Handling>
             <Capacity>+10</Capacity>
             <Pellets>+5</Pellets>
         </Subtype>
         <Subtype name="Skullcrusher" automatic="True">
             <Damage>+8</Damage>
-            <Range>+30</Range>
+            <Range>+3</Range>
             <FireRate>+3</FireRate>
             <ReloadSpeed>+2.5</ReloadSpeed>
-            <CriticalChance>+0.05</CriticalChance>
+            <Accuracy>+20</Accuracy>
             <Handling>+50</Handling>
             <Capacity>+5</Capacity>
             <Pellets>+8</Pellets>
         </Subtype>
     </Class>
-    <Class name="SMG" ammoCost="30">
+    <Class name="SMG" ammoCost="1">
         <Subtype name="Spitter" automatic="True">
             <Damage>+6</Damage>
-            <Range>+50</Range>
+            <Range>+5</Range>
             <FireRate>+10</FireRate>
             <ReloadSpeed>+1</ReloadSpeed>
-            <CriticalChance>+0.1</CriticalChance>
+            <Accuracy>+30</Accuracy>
             <Handling>+98</Handling>
             <Capacity>+30</Capacity>
             <Pellets>+1</Pellets>
         </Subtype>
         <Subtype name="Gripshaker" automatic="True">
             <Damage>+4</Damage>
-            <Range>+50</Range>
+            <Range>+5</Range>
             <FireRate>+17</FireRate>
             <ReloadSpeed>+1</ReloadSpeed>
-            <CriticalChance>+0.05</CriticalChance>
+            <Accuracy>+30</Accuracy>
             <Handling>+95</Handling>
             <Capacity>+40</Capacity>
             <Pellets>+1</Pellets>
         </Subtype>
         <Subtype name="Spewer" automatic="True">
             <Damage>+4</Damage>
-            <Range>+30</Range>
+            <Range>+3</Range>
             <FireRate>+10</FireRate>
             <ReloadSpeed>+1</ReloadSpeed>
-            <CriticalChance>+0.05</CriticalChance>
+            <Accuracy>+30</Accuracy>
             <Handling>+98</Handling>
             <Capacity>+20</Capacity>
             <Pellets>+2</Pellets>
         </Subtype>
     </Class>
-    <Class name="LMG" ammoCost="15">
+    <Class name="LMG" ammoCost="1">
         <Subtype name="Breacher" automatic="True">
             <Damage>+12</Damage>
-            <Range>+70</Range>
+            <Range>+7</Range>
             <FireRate>+5</FireRate>
             <ReloadSpeed>+5</ReloadSpeed>
-            <CriticalChance>+0.1</CriticalChance>
+            <Accuracy>+40</Accuracy>
             <Handling>+95</Handling>
             <Capacity>+70</Capacity>
             <Pellets>+1</Pellets>
         </Subtype>
         <Subtype name="Gouger" automatic="True">
             <Damage>+18</Damage>
-            <Range>+50</Range>
+            <Range>+5</Range>
             <FireRate>+5</FireRate>
             <ReloadSpeed>+7</ReloadSpeed>
-            <CriticalChance>+0.1</CriticalChance>
+            <Accuracy>+40</Accuracy>
             <Handling>+90</Handling>
             <Capacity>+60</Capacity>
             <Pellets>+1</Pellets>
         </Subtype>
         <Subtype name="Annihilator" automatic="True">
             <Damage>+12</Damage>
-            <Range>+50</Range>
+            <Range>+5</Range>
             <FireRate>+10</FireRate>
             <ReloadSpeed>+5</ReloadSpeed>
-            <CriticalChance>+0.2</CriticalChance>
+            <Accuracy>+40</Accuracy>
             <Handling>+90</Handling>
             <Capacity>+50</Capacity>
             <Pellets>+1</Pellets>

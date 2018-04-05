@@ -24,7 +24,7 @@ class WeaponImporter(XMLWriter):
         write_single_value(self, "Range", "+" + get_value(self, "M", row))
         write_single_value(self, "FireRate", "+" + get_value(self, "N", row))
         write_single_value(self, "ReloadSpeed", "+" + get_value(self, "O", row))
-        write_single_value(self, "CriticalChance", "+" + get_value(self, "P", row))
+        write_single_value(self, "Accuracy", "+" + get_value(self, "P", row))
         write_single_value(self, "Handling", "+" + get_value(self, "Q", row))
         write_single_value(self, "Capacity", "+" + get_value(self, "R", row))
         write_single_value(self, "Pellets", "+" + get_value(self, "S", row))
@@ -57,7 +57,7 @@ class InscriptionImporter(XMLWriter):
         write_single_value(self, "Range", "x" + get_value(self, "C", row))
         write_single_value(self, "FireRate", "x" + get_value(self, "D", row))
         write_single_value(self, "ReloadSpeed", "x" + get_value(self, "E", row))
-        write_single_value(self, "CriticalChance", "x" + get_value(self, "F", row))
+        write_single_value(self, "Accuracy", "x" + get_value(self, "F", row))
         write_single_value(self, "Handling", "x" + get_value(self, "G", row))
         write_single_value(self, "Capacity", "x" + get_value(self, "H", row))
         write_single_value(self, "Pellets", "x" + get_value(self, "I", row))
@@ -276,7 +276,7 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-# WeaponImporter()
+WeaponImporter()
 # GearImporter()
 # WeatherImporter()
 # RegionImporter()

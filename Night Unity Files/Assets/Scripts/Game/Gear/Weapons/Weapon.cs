@@ -58,14 +58,14 @@ namespace Game.Gear.Weapons
 
         public float CalculateIdealDistance()
         {
-            float range = WeaponAttributes.GetCalculatedValue(AttributeType.Range) / 100f;
+            float range = WeaponAttributes.GetCalculatedValue(AttributeType.Accuracy) / 100f;
             float idealDistance = (RangeMax - RangeMin) * range + RangeMin;
             return idealDistance;
         }
 
         public float CalculateBaseAccuracy()
         {
-            float accuracy = 1f - WeaponAttributes.GetCalculatedValue(AttributeType.Range) / 100f;
+            float accuracy = 1f - WeaponAttributes.GetCalculatedValue(AttributeType.Accuracy) / 100f;
             accuracy *= MaxAccuracyOffsetInDegrees;
             return accuracy;
         }

@@ -10,7 +10,6 @@ public class UIHitController : MonoBehaviour
     private const float MaxHeight = 90f;
     private const float FadeTime = 0.5f;
     private float _currentShotTime;
-    private float _currentCriticalTime;
 
     public void Awake()
     {
@@ -26,27 +25,14 @@ public class UIHitController : MonoBehaviour
         {
             float rValue = 1 - _currentShotTime / FadeTime;
             _innerImage.color = new Color(1, rValue, rValue, 1);
+            _outerImage.color = new Color(1, rValue, rValue, 1);
             _currentShotTime -= Time.deltaTime;
         }
-
-        if (_currentCriticalTime > 0)
-        {
-            float rValue = 1 - _currentCriticalTime / FadeTime;
-            _outerImage.color = new Color(1, rValue, rValue, 1);
-            _currentCriticalTime -= Time.deltaTime;
-        }
-
         _innerRect.sizeDelta = new Vector2(newHeight, newHeight);
-    }
-
-    public void RegisterCritical()
-    {
-        _currentCriticalTime = FadeTime;
-        _currentShotTime = FadeTime;
     }
 
     public void RegisterShot()
     {
-        _currentShotTime = FadeTime;
+        _currentShotTime = FadeTime;    
     }
 }

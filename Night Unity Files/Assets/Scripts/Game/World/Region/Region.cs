@@ -53,16 +53,6 @@ namespace Game.World.Region
             return _template.Type;
         }
 
-        public override ViewParent CreateUi(Transform parent)
-        {
-            InventoryUi ui = new InventoryUi(this, parent);
-            ui.PrimaryButton.AddOnSelectEvent(() => RegionManager.UpdateRegionInfo(this));
-            ui.SetCentralTextCallback(() => Name);
-            ui.SetLeftTextCallback(() => GetRegionType().ToString());
-            ui.SetLeftTextWidth(200);
-            return ui;
-        }
-
         public void Enter(Player player)
         {
             if (_combatScenario != null && !_combatScenario.IsFinished())

@@ -21,7 +21,6 @@ namespace Game.World.Region
     {
         private static readonly Dictionary<string, RegionTemplate> Templates = new Dictionary<string, RegionTemplate>();
         private static TextMeshProUGUI _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
-        private static Player _character;
         private static readonly List<Region> _regions = new List<Region>();
         private static bool _loaded;
 
@@ -71,11 +70,6 @@ namespace Game.World.Region
             }
             Helper.Shuffle(ref combinations);
             template.Names = combinations;
-        }
-
-        private static Player Character()
-        {
-            return _character;
         }
 
         protected void Awake()
@@ -144,20 +138,6 @@ namespace Game.World.Region
                 }
             }
             throw new Exceptions.UnknownRegionTypeException(type);
-        }
-
-        public static void UpdateRegionInfo(Region region)
-        {
-            string nameText = "Undiscovered Region", typeText = "", descriptionText = "Explore to discover new regions";
-            if (region != null)
-            {
-                nameText = region.Name;
-                typeText = region.GetRegionType().ToString();
-                descriptionText = region.Description();
-            }
-            _regionInfoNameText.text = nameText;
-            _regionInfoTypeText.text = typeText;
-            _regionInfoDescriptionText.text = descriptionText;
         }
 
         public void Load(XmlNode doc, PersistenceType saveType)

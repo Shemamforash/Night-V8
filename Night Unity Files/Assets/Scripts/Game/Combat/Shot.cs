@@ -14,18 +14,16 @@ namespace Game.Combat
         private int _damage;
         private float _accuracy;
         private float _pierceChance, _burnChance, _bleedChance, _sicknessChance;
-        private float _criticalChance;
         private CharacterCombat _origin;
         private Vector3 _direction;
-        public bool IsCritical;
         private bool _moving, _fired;
-        private float _speed;
+        private const float Speed = 10f;
         private float _age;
-        private const float MaxAge = 3f;
+        private float MaxAge = 3f;
 
         private float _knockDownChance;
         private float _finalDamageModifier = 1f;
-        private bool _guaranteeHit, _guaranteeCritical;
+        private bool _guaranteeHit;
         private int _knockbackForce;
         private int _damageDealt;
         private int _pierceDepth;
@@ -33,7 +31,6 @@ namespace Game.Combat
         private event Action OnHitAction;
         private static GameObject _bulletPrefab;
         private Rigidbody2D _rigidBody;
-        private TrailRenderer _trailRenderer;
         private GameObject _fireTrail;
 
         private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Prefabs/Combat/Bullet");
@@ -57,7 +54,6 @@ namespace Game.Combat
             _knockDownChance = 0;
             _finalDamageModifier = 1f;
             _guaranteeHit = false;
-            _guaranteeCritical = false;
             _knockbackForce = 0;
             _damageDealt = 0;
             _pierceDepth = 0;
@@ -95,10 +91,8 @@ namespace Game.Combat
         private void SetUpComponents()
         {
             if (_rigidBody == null) _rigidBody = GetComponent<Rigidbody2D>();
-            if (_trailRenderer == null) _trailRenderer = GetComponent<TrailRenderer>();
             if (_fireTrail == null) _fireTrail = Helper.FindChildWithName(gameObject, "Fire Trail");
             _fireTrail.SetActive(false);
-            _trailRenderer.Clear();
             ResetValues();
             CacheWeaponAttributes();
             CalculateAccuracy();
@@ -138,7 +132,6 @@ namespace Game.Combat
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
             _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
             _pierceChance = attributes.GetCalculatedValue(AttributeType.PierceChance);
-            _criticalChance = attributes.GetCalculatedValue(AttributeType.CriticalChance);
         }
 
         public void SetDamageModifier(float modifier)
@@ -146,23 +139,23 @@ namespace Game.Combat
             _finalDamageModifier = modifier;
         }
 
-        private void CheckWillCrit()
-        {
-            IsCritical = _guaranteeCritical || Random.Range(0f, 1f) < _criticalChance;
-        }
-
+        
         private void FixedUpdate()
         {
             if (!_fired || _moving) return;
-            _rigidBody.velocity = _direction * _speed;
+            _rigidBody.velocity = _direction * Speed;
             _moving = true;
         }
 
+        private GameObject _bulletTrail;
+        
         public void Fire(float distance = 0.2f)
         {
+            _bulletTrail = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Bullet Trail"));
+            _bulletTrail.transform.SetParent(transform);
+            _bulletTrail.transform.position = transform.position;
             _age = 0;
             float angleOffset = Random.Range(-_accuracy, _accuracy);
-            _speed = Random.Range(9f, 11f);
             transform.position = _originPosition + _direction * distance;
             _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
             _fired = true;
@@ -172,17 +165,21 @@ namespace Game.Combat
 
         private IEnumerator WaitToDie()
         {
+            MaxAge = _weapon.WeaponAttributes.GetCalculatedValue(AttributeType.Range) / Speed;
             while (_age < MaxAge)
             {
+                
                 _age += Time.deltaTime;
                 yield return null;
             }
 
+            _rigidBody.velocity = Vector2.zero;
             DeactivateShot();
         }
 
         private void DeactivateShot()
         {
+            _bulletTrail.transform.SetParent(null);
             _fireTrail.SetActive(false);
             _shotPool.Return(this);
         }
@@ -202,8 +199,7 @@ namespace Game.Combat
 
         private void ApplyDamage(CharacterCombat hit)
         {
-            CheckWillCrit();
-            _damageDealt = IsCritical ? _damage * 2 : _damage;
+            _damageDealt = _damage;
             _damageDealt = (int) (_damageDealt * _finalDamageModifier);
             ApplyConditions(hit);
             hit.TakeDamage(this);
@@ -224,8 +220,6 @@ namespace Game.Combat
         }
 
         public void GuaranteeHit() => _guaranteeHit = true;
-
-        public void GuaranteeCritical() => _guaranteeCritical = true;
 
         public void AddOnHit(Action a) => OnHitAction += a;
 
