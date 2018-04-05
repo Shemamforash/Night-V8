@@ -2,7 +2,6 @@
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
-using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.StateMachines
 {

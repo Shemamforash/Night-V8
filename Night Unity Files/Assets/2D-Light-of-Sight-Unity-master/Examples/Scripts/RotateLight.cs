@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using LOS;
 
 public class RotateLight : MonoBehaviour {

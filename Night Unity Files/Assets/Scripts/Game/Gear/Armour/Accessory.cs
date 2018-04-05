@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
-using Game.Gear.UI;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using LOS.Event;
 
 public class ChangeColorOnLOSEvent : MonoBehaviour {

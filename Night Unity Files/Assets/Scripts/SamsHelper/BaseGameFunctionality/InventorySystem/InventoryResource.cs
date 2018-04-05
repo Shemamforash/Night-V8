@@ -2,7 +2,6 @@
 using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
-using UnityEngine.Assertions.Comparers;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {

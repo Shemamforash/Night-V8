@@ -1,6 +1,5 @@
 ﻿using Game.World;
 using SamsHelper.BaseGameFunctionality.StateMachines;
-using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 

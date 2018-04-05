@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Facilitating.UI.Elements;
+using Game.Characters;
 using Game.Characters.Player;
 using Game.Gear.Weapons;
-using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -62,13 +62,13 @@ namespace Facilitating.UIControllers
 
         public override List<GearItem> GetAvailableGear()
         {
-            return new List<GearItem>(WorldState.HomeInventory().Weapons());
+            return new List<GearItem>(CharacterManager.Weapons);
         }
 
         public override void Equip(int selectedGear)
         {
             if (selectedGear == -1) return;
-            CurrentPlayer.EquipWeapon(WorldState.HomeInventory().Weapons()[selectedGear]);
+            CurrentPlayer.EquipWeapon(CharacterManager.Weapons[selectedGear]);
             Show(CurrentPlayer);
         }
 
@@ -188,7 +188,7 @@ namespace Facilitating.UIControllers
 
         public override bool GearIsAvailable()
         {
-            return WorldState.HomeInventory().Weapons().Count != 0;
+            return CharacterManager.Weapons.Count != 0;
         }
 
         public override void SelectGearItem(GearItem item, UiGearMenuController.GearUi gearUi)

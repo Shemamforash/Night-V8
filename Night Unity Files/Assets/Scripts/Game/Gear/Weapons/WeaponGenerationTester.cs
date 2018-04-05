@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using UnityEngine;
 
 namespace Game.Gear.Weapons
 {

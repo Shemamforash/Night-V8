@@ -2,7 +2,6 @@
 using System.Xml;
 using Facilitating.Persistence;
 using Game.World;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;

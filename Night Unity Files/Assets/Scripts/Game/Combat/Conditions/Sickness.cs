@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using Game.Characters;
-using UnityEngine;
 
 namespace Game.Combat.Skills
 {

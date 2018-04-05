@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
-using Game.Gear.Armour;
 using Game.World.WorldEvents;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;

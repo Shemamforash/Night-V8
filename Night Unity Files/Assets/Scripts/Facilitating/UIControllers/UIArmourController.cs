@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Game.Characters;
+﻿using System.Collections.Generic;
 using Game.Gear.Armour;
 using SamsHelper;
 using SamsHelper.ReactiveUI.Elements;

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using Game.World;
 using SamsHelper;
-using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;

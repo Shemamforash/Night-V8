@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
-using Game.World;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
-using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -17,13 +15,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private bool _isWeightLimited;
         private float _maxWeight;
 
-        public Inventory(string name, float maxWeight = 0) : base(name, GameObjectType.Inventory)
+        protected Inventory(string name, float maxWeight = 0) : base(name, GameObjectType.Inventory)
         {
-            if (maxWeight != 0)
-            {
-                MaxWeight = maxWeight;
-                _isWeightLimited = true;
-            }
+            if (maxWeight == 0) return;
+            MaxWeight = maxWeight;
+            _isWeightLimited = true;
         }
 
         public bool IsBottomless()
@@ -31,22 +27,17 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return !_isWeightLimited;
         }
 
-        public virtual List<MyGameObject> SortByType()
-        {
-            return null;
-        }
-
-        public List<InventoryResource> Resources()
+        protected List<InventoryResource> InventoryResources()
         {
             return _resources;
         }
 
-        public List<MyGameObject> Items()
+        protected List<MyGameObject> Items()
         {
             return _items;
         }
 
-        public List<MyGameObject> GetItemsOfType(Func<MyGameObject, bool> typeCheck)
+        protected List<MyGameObject> GetItemsOfType(Func<MyGameObject, bool> typeCheck)
         {
             return _items.Where(typeCheck).ToList();
         }
@@ -71,13 +62,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return found;
         }
 
-        public bool InventoryHasSpace(float weight)
+        private bool InventoryHasSpace(float weight)
         {
-            if (Weight + weight > MaxWeight + 0.0001f && _isWeightLimited)
-            {
-                return false;
-            }
-            return true;
+            return !(Weight + weight > MaxWeight + 0.0001f) || !_isWeightLimited;
         }
 
         public bool ContainsItem(MyGameObject item)
@@ -108,7 +95,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return item;
         }
 
-        public void AddResource(InventoryResourceType type, float weight)
+        protected void AddResource(InventoryResourceType type, float weight)
         {
             if (_resources.FirstOrDefault(r => r.GetResourceType() == type) != null)
             {
@@ -122,7 +109,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             IncrementResource(GetResource(type), amount);
         }
 
-        public void IncrementResource(InventoryResource resource, float amount)
+        private void IncrementResource(InventoryResource resource, float amount)
         {
             if (amount < 0)
             {
@@ -137,7 +124,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return DecrementResource(GetResource(type), amount);
         }
 
-        public float DecrementResource(InventoryResource resource, float amount)
+        private float DecrementResource(InventoryResource resource, float amount)
         {
             if (amount < 0)
             {
@@ -163,19 +150,17 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         //Returns item in target inventory if the item was successfully moved
         private MyGameObject Move(MyGameObject item, Inventory target)
         {
-            MyGameObject movedItem = null;
-            if (target.InventoryHasSpace(item.Weight))
+            MyGameObject movedItem;
+            if (!target.InventoryHasSpace(item.Weight)) return null;
+            InventoryResource resource = item as InventoryResource;
+            if (resource == null)
             {
-                InventoryResource resource = item as InventoryResource;
-                if (resource == null)
-                {
-                    movedItem = RemoveItem(item);
-                    target.AddItem(movedItem);
-                }
-                else
-                {
-                    movedItem = Move(resource, target, 1);
-                }
+                movedItem = RemoveItem(item);
+                target.AddItem(movedItem);
+            }
+            else
+            {
+                movedItem = Move(resource, target, 1);
             }
             return movedItem;
         }
@@ -215,7 +200,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             if (saveType != PersistenceType.Game) return;
             XmlNode inventoryNode = root.SelectSingleNode(Name);
-            Resources().ForEach(r => LoadResource(r.GetResourceType(), inventoryNode));
+            InventoryResources().ForEach(r => LoadResource(r.GetResourceType(), inventoryNode));
         }
 
         public virtual XmlNode Save(XmlNode root, PersistenceType saveType)
@@ -223,7 +208,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (saveType != PersistenceType.Game) return null;
             XmlNode inventoryNode = SaveController.CreateNodeAndAppend("Inventory", root);
             SaveController.CreateNodeAndAppend("Name", inventoryNode, Name);
-            Resources().ForEach(r => SaveResource(r.GetResourceType(), inventoryNode));
+            InventoryResources().ForEach(r => SaveResource(r.GetResourceType(), inventoryNode));
             Items().ForEach(i => i.Save(root, saveType));
             return inventoryNode;
         }
@@ -236,6 +221,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private void SaveResource(InventoryResourceType type, XmlNode root)
         {
             SaveController.CreateNodeAndAppend(type.ToString(), root, GetResourceQuantity(type));
+        }
+
+        public virtual List<MyGameObject> SortByType()
+        {
+            throw new NotImplementedException();
         }
     }
 }

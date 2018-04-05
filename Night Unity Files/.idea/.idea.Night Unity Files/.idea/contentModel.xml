@@ -51,12 +51,8 @@
           </e>
         </e>
         <e p="CombatShaderController.cs" t="Include" />
-        <e p="EnemyCampfire.cs" t="Include" />
-        <e p="FireBehaviour.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
-        <e p="HealthRise.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
-        <e p="PickupController.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="Editor" t="Include">
             <e p="JetBrains" t="Include">
@@ -111,7 +107,6 @@
             <e p="UIControllers" t="Include">
               <e p="HeartBeatController.cs" t="Include" />
               <e p="UiAccessoryController.cs" t="Include" />
-              <e p="UIAimController.cs" t="Include" />
               <e p="UIAmmoDisplayController.cs" t="Include" />
               <e p="UIArmourController.cs" t="Include" />
               <e p="UiArmourUpgradeController.cs" t="Include" />
@@ -119,22 +114,12 @@
               <e p="UIAttributeMarkerController.cs" t="Include" />
               <e p="UIConditionController.cs" t="Include" />
               <e p="UICreateAmmoController.cs" t="Include" />
-              <e p="UIEnemyController.cs" t="Include" />
-              <e p="UIEnemyShieldController.cs" t="Include" />
-              <e p="UIEnergyController.cs" t="Include" />
-              <e p="UIExploreMenuController.cs" t="Include" />
               <e p="UiGearMenuController.cs" t="Include" />
               <e p="UiGearMenuTemplate.cs" t="Include" />
-              <e p="UIHealthBarController.cs" t="Include" />
-              <e p="UIHitController.cs" t="Include" />
               <e p="UIInventoryController.cs" t="Include" />
-              <e p="UIMagazineController.cs" t="Include" />
-              <e p="UIMeleeController.cs" t="Include" />
-              <e p="UIMinigameController.cs" t="Include" />
               <e p="UIPlayerAccessoryController.cs" t="Include" />
               <e p="UIPlayerArmourController.cs" t="Include" />
               <e p="UIPlayerWeaponController.cs" t="Include" />
-              <e p="UIRegionItem.cs" t="Include" />
               <e p="UISkillCostController.cs" t="Include" />
               <e p="UIWeaponUpgradeController.cs" t="Include" />
             </e>
@@ -156,35 +141,16 @@
               </e>
               <e p="CharacterClass.cs" t="Include" />
               <e p="CharacterGearComparison.cs" t="Include" />
+              <e p="CharacterManager.cs" t="Include" />
               <e p="CharacterTemplate.cs" t="Include" />
               <e p="CharacterView.cs" t="Include" />
               <e p="ConditionType.cs" t="Include" />
               <e p="DesolationAttributes.cs" t="Include" />
-              <e p="DesolationCharacterGenerator.cs" t="Include" />
-              <e p="DesolationCharacterManager.cs" t="Include" />
-              <e p="Player" t="Include">
-                <e p="EquipmentController.cs" t="Include" />
-                <e p="Player.cs" t="Include" />
-                <e p="RageController.cs" t="Include" />
-              </e>
+              <e p="EquipmentController.cs" t="Include" />
+              <e p="Player.cs" t="Include" />
+              <e p="RageController.cs" t="Include" />
             </e>
             <e p="Combat" t="Include">
-              <e p="CharacterCombat.cs" t="Include" />
-              <e p="CharacterUi" t="Include">
-                <e p="CharacterUi.cs" t="Include" />
-                <e p="EnemyUi.cs" t="Include" />
-                <e p="PlayerUi.cs" t="Include" />
-              </e>
-              <e p="CombatArea" t="Include">
-                <e p="AreaGenerator.cs" t="Include" />
-                <e p="Cell.cs" t="Include" />
-                <e p="PathingGrid.cs" t="Include" />
-                <e p="Triangulator.cs" t="Include" />
-              </e>
-              <e p="CombatCharacterController.cs" t="Include" />
-              <e p="CombatManager.cs" t="Include" />
-              <e p="CombatScenario.cs" t="Include" />
-              <e p="CombatTester.cs" t="Include" />
               <e p="Conditions" t="Include">
                 <e p="Bleed.cs" t="Include" />
                 <e p="Burn.cs" t="Include" />
@@ -192,49 +158,110 @@
                 <e p="Sickness.cs" t="Include" />
               </e>
               <e p="Enemies" t="Include">
+                <e p="Animals" t="Include">
+                  <e p="Grazer.cs" t="Include" />
+                  <e p="Watcher.cs" t="Include" />
+                </e>
                 <e p="Enemy.cs" t="Include" />
-                <e p="EnemyTypes" t="Include">
-                  <e p="Animals" t="Include">
-                    <e p="Grazer.cs" t="Include" />
-                    <e p="Watcher.cs" t="Include" />
-                  </e>
-                  <e p="EnemyTemplate.cs" t="Include" />
-                  <e p="EnemyType.cs" t="Include" />
-                  <e p="Humans" t="Include">
-                    <e p="Brawler.cs" t="Include" />
-                    <e p="Martyr.cs" t="Include" />
-                    <e p="Medic.cs" t="Include" />
-                    <e p="Mountain.cs" t="Include" />
-                    <e p="Sentinel.cs" t="Include" />
-                    <e p="Sniper.cs" t="Include" />
-                    <e p="Warlord.cs" t="Include" />
-                    <e p="Witch.cs" t="Include" />
-                  </e>
-                  <e p="Misc" t="Include">
-                    <e p="Grenade.cs" t="Include" />
-                    <e p="GrenadeType.cs" t="Include" />
-                    <e p="IncendiaryGrenade.cs" t="Include" />
-                    <e p="PierceGrenade.cs" t="Include" />
-                    <e p="SplinterGrenade.cs" t="Include" />
-                  </e>
+                <e p="EnemyBehaviour.cs" t="Include" />
+                <e p="EnemyTemplate.cs" t="Include" />
+                <e p="EnemyType.cs" t="Include" />
+                <e p="Humans" t="Include">
+                  <e p="Brawler.cs" t="Include" />
+                  <e p="Martyr.cs" t="Include" />
+                  <e p="Medic.cs" t="Include" />
+                  <e p="Mountain.cs" t="Include" />
+                  <e p="Sentinel.cs" t="Include" />
+                  <e p="Sniper.cs" t="Include" />
+                  <e p="Warlord.cs" t="Include" />
+                  <e p="Witch.cs" t="Include" />
+                </e>
+                <e p="Misc" t="Include">
+                  <e p="Grenade.cs" t="Include" />
+                  <e p="GrenadeType.cs" t="Include" />
+                  <e p="IncendiaryGrenade.cs" t="Include" />
+                  <e p="PierceGrenade.cs" t="Include" />
+                  <e p="SplinterGrenade.cs" t="Include" />
                 </e>
               </e>
-              <e p="EnemyBehaviour.cs" t="Include" />
-              <e p="Explosion.cs" t="Include" />
-              <e p="FitScreenToRoute.cs" t="Include" />
-              <e p="FootstepMaker.cs" t="Include" />
-              <e p="HealthController.cs" t="Include" />
-              <e p="ICombatListener.cs" t="Include" />
-              <e p="MeleeController.cs" t="Include" />
-              <e p="PlayerCombat.cs" t="Include" />
-              <e p="RetryMenu.cs" t="Include" />
-              <e p="Shot.cs" t="Include" />
-              <e p="SkillBar.cs" t="Include" />
-              <e p="Skills" t="Include">
+              <e p="Generation" t="Include">
+                <e p="AreaGenerator.cs" t="Include" />
+                <e p="Cell.cs" t="Include" />
+                <e p="CombatManager.cs" t="Include" />
+                <e p="CombatScenario.cs" t="Include" />
+                <e p="PathingGrid.cs" t="Include" />
+                <e p="Triangulator.cs" t="Include" />
+              </e>
+              <e p="Misc" t="Include">
+                <e p="CharacterCombat.cs" t="Include" />
+                <e p="CombatTester.cs" t="Include" />
+                <e p="EnemyCampfire.cs" t="Include" />
+                <e p="Explosion.cs" t="Include" />
+                <e p="FireBehaviour.cs" t="Include" />
+                <e p="FootstepMaker.cs" t="Include" />
+                <e p="HealthController.cs" t="Include" />
+                <e p="HealthRise.cs" t="Include" />
+                <e p="ICombatListener.cs" t="Include" />
+                <e p="PickupController.cs" t="Include" />
+                <e p="Shot.cs" t="Include" />
+                <e p="SkillBar.cs" t="Include" />
+              </e>
+              <e p="Player" t="Include">
                 <e p="CharacterSkills.cs" t="Include" />
-                <e p="FirePath.cs" t="Include" />
+                <e p="PlayerCombat.cs" t="Include" />
                 <e p="Skill.cs" t="Include" />
                 <e p="WeaponSkills.cs" t="Include" />
+              </e>
+              <e p="UI" t="Include">
+                <e p="CharacterUi.cs" t="Include" />
+                <e p="EnemyUi.cs" t="Include" />
+                <e p="FirePath.cs" t="Include" />
+                <e p="PlayerUi.cs" t="Include" />
+                <e p="UIEnemyController.cs" t="Include" />
+                <e p="UIHealthBarController.cs" t="Include" />
+                <e p="UIHitController.cs" t="Include" />
+                <e p="UIMagazineController.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Exploration" t="Include">
+              <e p="Environment" t="Include">
+                <e p="Environment.cs" t="Include" />
+                <e p="EnvironmentManager.cs" t="Include" />
+                <e p="FitScreenToRoute.cs" t="Include" />
+                <e p="MapGenerator.cs" t="Include" />
+                <e p="MapNode.cs" t="Include" />
+                <e p="MapRingCreator.cs" t="Include" />
+                <e p="Path.cs" t="Include" />
+                <e p="PathSegment.cs" t="Include" />
+                <e p="RoutePlotter.cs" t="Include" />
+              </e>
+              <e p="Region" t="Include">
+                <e p="Region.cs" t="Include" />
+                <e p="RegionManager.cs" t="Include" />
+                <e p="RegionTemplate.cs" t="Include" />
+                <e p="RegionType.cs" t="Include" />
+              </e>
+              <e p="UI" t="Include">
+                <e p="CharacterVisionController.cs" t="Include" />
+                <e p="MapNodeController.cs" t="Include" />
+                <e p="UIExploreMenuController.cs" t="Include" />
+                <e p="UiFootprintController.cs" t="Include" />
+                <e p="UIMapController.cs" t="Include" />
+                <e p="UiNodeFocusScript.cs" t="Include" />
+                <e p="UiPathDrawController.cs" t="Include" />
+                <e p="UiQuickTravelController.cs" t="Include" />
+              </e>
+              <e p="Weather" t="Include">
+                <e p="TemperatureCategory.cs" t="Include" />
+                <e p="Weather.cs" t="Include" />
+                <e p="WeatherAttributes.cs" t="Include" />
+                <e p="WeatherManager.cs" t="Include" />
+                <e p="WeatherSystemController.cs" t="Include" />
+              </e>
+              <e p="WorldEvents" t="Include">
+                <e p="WeaponFindEvent.cs" t="Include" />
+                <e p="WorldEvent.cs" t="Include" />
+                <e p="WorldEventManager.cs" t="Include" />
               </e>
             </e>
             <e p="Gear" t="Include">
@@ -259,41 +286,8 @@
                 <e p="WeaponType.cs" t="Include" />
               </e>
             </e>
-            <e p="World" t="Include">
+            <e p="Global" t="Include">
               <e p="DesolationInventory.cs" t="Include" />
-              <e p="Environment and Weather" t="Include">
-                <e p="Environment.cs" t="Include" />
-                <e p="EnvironmentManager.cs" t="Include" />
-                <e p="TemperatureCategory.cs" t="Include" />
-                <e p="Weather.cs" t="Include" />
-                <e p="WeatherAttributes.cs" t="Include" />
-                <e p="WeatherManager.cs" t="Include" />
-                <e p="WeatherSystemController.cs" t="Include" />
-              </e>
-              <e p="Region" t="Include">
-                <e p="CharacterVisionController.cs" t="Include" />
-                <e p="MapGenerator.cs" t="Include" />
-                <e p="MapNode.cs" t="Include" />
-                <e p="MapNodeController.cs" t="Include" />
-                <e p="MapRingCreator.cs" t="Include" />
-                <e p="Path.cs" t="Include" />
-                <e p="PathSegment.cs" t="Include" />
-                <e p="Region.cs" t="Include" />
-                <e p="RegionManager.cs" t="Include" />
-                <e p="RegionTemplate.cs" t="Include" />
-                <e p="RegionType.cs" t="Include" />
-                <e p="RoutePlotter.cs" t="Include" />
-                <e p="UiFootprintController.cs" t="Include" />
-                <e p="UiNodeFocusScript.cs" t="Include" />
-                <e p="UiPathDrawController.cs" t="Include" />
-              </e>
-              <e p="UIMapController.cs" t="Include" />
-              <e p="UiQuickTravelController.cs" t="Include" />
-              <e p="WorldEvents" t="Include">
-                <e p="WeaponFindEvent.cs" t="Include" />
-                <e p="WorldEvent.cs" t="Include" />
-                <e p="WorldEventManager.cs" t="Include" />
-              </e>
               <e p="WorldState.cs" t="Include" />
               <e p="WorldView.cs" t="Include" />
             </e>

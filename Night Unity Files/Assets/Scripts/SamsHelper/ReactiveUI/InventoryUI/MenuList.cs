@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Game.Gear.UI;
-using Game.World;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace SamsHelper.ReactiveUI.InventoryUI
 {

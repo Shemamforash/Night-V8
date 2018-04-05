@@ -1,5 +1,4 @@
-﻿using Facilitating.UIControllers;
-using Game.Gear.Weapons;
+﻿using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;

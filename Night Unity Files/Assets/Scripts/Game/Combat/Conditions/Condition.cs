@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Facilitating.UIControllers;
-using Game.Characters;
-using Game.Characters.Player;
 using UnityEngine;
 
 namespace Game.Combat

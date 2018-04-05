@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SamsHelper.BaseGameFunctionality.Basic
+﻿namespace SamsHelper.BaseGameFunctionality.Basic
 {
 //    public class AttributesModifier
 //    {

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
 {
-    public class Menu : MonoBehaviour
+    public abstract class Menu : MonoBehaviour
     {
         public Selectable DefaultSelectable;
         [HideInInspector]

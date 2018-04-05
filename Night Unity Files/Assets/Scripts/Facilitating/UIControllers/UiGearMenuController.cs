@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Facilitating.UI.Elements;
 using Facilitating.UIControllers;
 using Game.Characters.Player;
-using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
@@ -62,7 +61,6 @@ public class UiGearMenuController : Menu, IInputListener
         _weaponUpgradeController.Hide();
         _accessoryController.Hide();
         MenuStateMachine.GoToInitialMenu();
-        InputHandler.UnregisterInputListener(this);
         _open = false;
     }
 
@@ -81,7 +79,7 @@ public class UiGearMenuController : Menu, IInputListener
         {
             MenuStateMachine.ShowMenu("Gear Menus");
             _open = true;
-            InputHandler.RegisterInputListener(_instance);
+            InputHandler.SetCurrentListener(_instance);
         }
 
         _currentGearMenu = gearMenu;

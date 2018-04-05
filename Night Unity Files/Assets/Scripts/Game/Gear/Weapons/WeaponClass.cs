@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Skills;
-using UnityEngine;
 
 namespace Game.Gear.Weapons
 {

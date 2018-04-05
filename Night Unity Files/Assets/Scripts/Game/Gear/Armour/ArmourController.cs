@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Xml;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.Player;
-using Game.Combat;
 using Game.Combat.CharacterUi;
 using Game.Gear.Weapons;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI;
 
 namespace Game.Gear.Armour
 {

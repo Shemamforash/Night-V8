@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Xml;
+﻿using System.Xml;
 using Facilitating.Persistence;
-using Game.Characters;
 using Game.Gear.Weapons;
 using Game.World;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.InventoryUI;

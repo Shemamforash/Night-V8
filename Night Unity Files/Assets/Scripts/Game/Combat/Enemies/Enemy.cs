@@ -1,10 +1,8 @@
 ﻿using System;
 using Game.Characters;
-using Game.Combat.CharacterUi;
 using Game.Combat.Enemies.EnemyTypes;
 using Game.Combat.Enemies.EnemyTypes.Humans;
 using Game.Gear.Weapons;
-using SamsHelper;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

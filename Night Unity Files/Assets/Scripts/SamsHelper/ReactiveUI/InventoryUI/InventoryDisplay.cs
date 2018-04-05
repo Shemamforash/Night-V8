@@ -28,7 +28,6 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             base.Awake();
             _titleText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Inventory Title");
             _capacityText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Weight");
-            InputHandler.RegisterInputListener(this);
         }
 
         public void SetTitleText(string titleText)
@@ -66,6 +65,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         public void SetInventory(Inventory inventory, InventoryDisplay moveToInventory, EnhancedButton closeButton = null)
         {
+            InputHandler.SetCurrentListener(this);
             if (closeButton != null) CloseButton = closeButton;
             _moveToInventory = moveToInventory;
             if (moveToInventory == null) _selected = true;

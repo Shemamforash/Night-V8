@@ -6,7 +6,6 @@ using Game.World;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
-using UnityEngine;
 
 namespace Game.Characters
 {

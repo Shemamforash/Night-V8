@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Specialized;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace SamsHelper.ReactiveUI.InventoryUI
 {

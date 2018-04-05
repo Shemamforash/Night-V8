@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
 using Game.World;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
@@ -33,9 +31,6 @@ namespace Game.Characters
         {
             FindInSimpleView<UIAttributeController>("Attributes").HookValues(_player.Attributes);
             FindInDetailedView<UIAttributeController>("Attributes").HookValues(_player.Attributes);
-            UIEnergyController energyController = FindInDetailedView<UIEnergyController>("Energy");
-            _player.Energy.AddOnValueChange(a => { energyController.SetValue((int) a.CurrentValue(), (int) a.Max); });
-
             FindInDetailedView<UIConditionController>("Thirst").HookDehydration(_player.Attributes);
             FindInDetailedView<UIConditionController>("Hunger").HookStarvation(_player.Attributes);
             FindInSimpleView<UIConditionController>("Thirst").HookDehydration(_player.Attributes);

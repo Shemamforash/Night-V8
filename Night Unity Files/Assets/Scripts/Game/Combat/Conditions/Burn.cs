@@ -1,7 +1,4 @@
-﻿using Game.Characters;
-using UnityEngine;
-
-namespace Game.Combat
+﻿namespace Game.Combat
 {
     public class Burn : Condition
     {

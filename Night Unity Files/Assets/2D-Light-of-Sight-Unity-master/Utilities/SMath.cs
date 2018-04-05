@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public static class SMath {
 	public static Vector2 Vec3ToVec2 (Vector3 origin) {

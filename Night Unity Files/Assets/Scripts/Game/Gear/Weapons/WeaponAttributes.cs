@@ -7,7 +7,6 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Gear.Weapons

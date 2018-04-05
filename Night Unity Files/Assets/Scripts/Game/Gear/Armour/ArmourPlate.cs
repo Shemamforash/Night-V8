@@ -1,5 +1,4 @@
-﻿using System;
-using Game.Gear.Weapons;
+﻿using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI;

@@ -2,33 +2,266 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="167d3be1-cdd9-4be3-97f7-467b7a89563b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Desolation Balance Files.xlsx" afterPath="$PROJECT_DIR$/Desolation Balance Files.xlsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Combat Tester.unity" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Combat Tester.unity" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/InspectorExpandedItems.asset" afterPath="$PROJECT_DIR$/Night Unity Files/Library/InspectorExpandedItems.asset" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/EnemyCampfire.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/EnemyCampfire.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/FireBehaviour.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/FireBehaviour.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/HealthRise.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/HealthRise.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/PickupController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/PickupController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIAimController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIAimController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIEnemyController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIEnemyController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIEnemyShieldController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIEnemyShieldController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIEnergyController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIEnergyController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIExploreMenuController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIExploreMenuController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIHealthBarController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIHealthBarController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIHitController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIHitController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIMagazineController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIMagazineController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIMeleeController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIMeleeController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIMinigameController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIMinigameController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIRegionItem.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIRegionItem.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/DesolationCharacterGenerator.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/DesolationCharacterGenerator.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/DesolationCharacterManager.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/DesolationCharacterManager.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/EquipmentController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/EquipmentController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/Player.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/Player.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/RageController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/Player/RageController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterCombat.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterCombat.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterUi.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterUi/CharacterUi.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterUi/CharacterUi.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterUi/EnemyUi.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterUi/EnemyUi.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterUi/PlayerUi.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterUi/PlayerUi.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatArea.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatArea/AreaGenerator.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatArea/AreaGenerator.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatArea/Cell.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatArea/Cell.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatArea/PathingGrid.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatArea/PathingGrid.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatArea/Triangulator.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatArea/Triangulator.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatCharacterController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatCharacterController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatManager.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatManager.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatScenario.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatScenario.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatTester.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CombatTester.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Animals.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Animals/Grazer.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Animals/Grazer.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Animals/Watcher.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Animals/Watcher.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/EnemyTemplate.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/EnemyTemplate.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/EnemyType.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/EnemyType.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Brawler.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Brawler.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Martyr.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Martyr.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Medic.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Medic.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Mountain.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Mountain.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Sentinel.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Sentinel.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Sniper.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Sniper.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Warlord.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Warlord.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Witch.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Humans/Witch.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Misc.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Misc/Grenade.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Misc/Grenade.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Misc/GrenadeType.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Misc/GrenadeType.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Misc/IncendiaryGrenade.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Misc/IncendiaryGrenade.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Misc/PierceGrenade.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Misc/PierceGrenade.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Misc/SplinterGrenade.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Misc/SplinterGrenade.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Enemies/EnemyTypes/Monsters.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/EnemyBehaviour.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/EnemyBehaviour.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Explosion.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Explosion.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/FitScreenToRoute.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/FitScreenToRoute.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/FootstepMaker.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/FootstepMaker.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/HealthController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/HealthController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/ICombatListener.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/ICombatListener.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/MeleeController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/MeleeController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/PlayerCombat.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/PlayerCombat.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/RetryMenu.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/RetryMenu.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Shot.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Shot.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/SkillBar.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/SkillBar.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Skills.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Skills/CharacterSkills.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Skills/CharacterSkills.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Skills/FirePath.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Skills/FirePath.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Skills/Skill.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Skills/Skill.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Skills/WeaponSkills.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Skills/WeaponSkills.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/DesolationInventory.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/DesolationInventory.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/Environment.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/Environment.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/EnvironmentManager.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/EnvironmentManager.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/TemperatureCategory.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/TemperatureCategory.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/Weather.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/Weather.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/WeatherAttributes.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/WeatherAttributes.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/WeatherManager.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/WeatherManager.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/WeatherSystemController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Environment and Weather/WeatherSystemController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/CharacterVisionController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/CharacterVisionController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/MapGenerator.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/MapGenerator.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/MapNode.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/MapNode.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/MapNodeController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/MapNodeController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/MapRingCreator.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/MapRingCreator.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/Path.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/Path.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/PathSegment.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/PathSegment.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/Region.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/Region.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RegionManager.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RegionManager.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RegionTemplate.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RegionTemplate.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RegionType.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RegionType.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RoutePlotter.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/RoutePlotter.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/UiFootprintController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/UiFootprintController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/UiNodeFocusScript.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/UiNodeFocusScript.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/UiPathDrawController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/Region/UiPathDrawController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/UIMapController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/UIMapController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/UiQuickTravelController.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/UiQuickTravelController.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldEvents.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldEvents/WeaponFindEvent.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldEvents/WeaponFindEvent.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldEvents/WorldEvent.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldEvents/WorldEvent.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldEvents/WorldEventManager.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldEvents/WorldEventManager.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldState.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldState.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldView.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/World/WorldView.cs.meta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/8c/8c3099d540e04c6448d2dfcd895f034e" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/8c/8c3099d540e04c6448d2dfcd895f034e.info" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Game.unity" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scenes/Game.unity" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb" afterPath="$PROJECT_DIR$/Night Unity Files/Library/ScriptAssemblies/Assembly-CSharp.dll.mdb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/assetDatabase3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/assetDatabase3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/27/274e1c874b364cb1a16c7d28c86e13ba" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/27/274e1c874b364cb1a16c7d28c86e13ba" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bc/bc5b6e23f76f4d73a37ecab2dd33d4c3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/bc/bc5b6e23f76f4d73a37ecab2dd33d4c3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/f2/f27addc0f8d44b25806273864c095dd3" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/f2/f27addc0f8d44b25806273864c095dd3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/0e/0e2aecbb597f445195e7835d2e530d13" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/0e/0e2aecbb597f445195e7835d2e530d13" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/0e/0e2aecbb597f445195e7835d2e530d13.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/0e/0e2aecbb597f445195e7835d2e530d13.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/12/1283f7514fce9d240bf70d6f252658dc" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/12/1283f7514fce9d240bf70d6f252658dc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1c/1c0b20b13ede4918b43c745ced6630f6" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1c/1c0b20b13ede4918b43c745ced6630f6" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1c/1c0b20b13ede4918b43c745ced6630f6.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/1c/1c0b20b13ede4918b43c745ced6630f6.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/34/343738b59e412db49b4fbcee5be74452" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/34/343738b59e412db49b4fbcee5be74452" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/34/343738b59e412db49b4fbcee5be74452.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/34/343738b59e412db49b4fbcee5be74452.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/38/38caa64cc7eac664f80fc50a042f6865" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/38/38caa64cc7eac664f80fc50a042f6865" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/38/38caa64cc7eac664f80fc50a042f6865.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/38/38caa64cc7eac664f80fc50a042f6865.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3f/3f456d6d212c48edbd84b188d9d289bc" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/3f/3f456d6d212c48edbd84b188d9d289bc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/46/46ee540cd2b345cabc12c019ac058850" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/46/46ee540cd2b345cabc12c019ac058850" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/46/46ee540cd2b345cabc12c019ac058850.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/46/46ee540cd2b345cabc12c019ac058850.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/5f/5f6892e343bb70e448955bb3742e1b2d" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/5f/5f6892e343bb70e448955bb3742e1b2d" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/5f/5f6892e343bb70e448955bb3742e1b2d.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/5f/5f6892e343bb70e448955bb3742e1b2d.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/64/64af00d9dc8545a4a6bd6216a2a37f4a" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/64/64af00d9dc8545a4a6bd6216a2a37f4a" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/64/64af00d9dc8545a4a6bd6216a2a37f4a.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/64/64af00d9dc8545a4a6bd6216a2a37f4a.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/6b/6b8bc62a8b5fbc84d99066b1c8065bdf" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/6b/6b8bc62a8b5fbc84d99066b1c8065bdf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/6b/6b8bc62a8b5fbc84d99066b1c8065bdf.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/6b/6b8bc62a8b5fbc84d99066b1c8065bdf.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/74/7421ff47e6d04c569b3046d4382154b4" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/74/7421ff47e6d04c569b3046d4382154b4" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/74/7421ff47e6d04c569b3046d4382154b4.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/74/7421ff47e6d04c569b3046d4382154b4.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/85/85d325d161304f9c9ea89d1a0fcc460c" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/85/85d325d161304f9c9ea89d1a0fcc460c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/85/85d325d161304f9c9ea89d1a0fcc460c.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/85/85d325d161304f9c9ea89d1a0fcc460c.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/96/96b15e9243f34c7cba4b065e8865d6cf" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/96/96b15e9243f34c7cba4b065e8865d6cf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/96/96b15e9243f34c7cba4b065e8865d6cf.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/96/96b15e9243f34c7cba4b065e8865d6cf.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/a6/a6b62403c3eb4104b4432475f348b6d6" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/a6/a6b62403c3eb4104b4432475f348b6d6" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/a6/a6b62403c3eb4104b4432475f348b6d6.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/a6/a6b62403c3eb4104b4432475f348b6d6.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/a9/a9c0c903183d4908b4673149036794f6" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/a9/a9c0c903183d4908b4673149036794f6" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/a9/a9c0c903183d4908b4673149036794f6.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/a9/a9c0c903183d4908b4673149036794f6.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/af/aff0ae78099b17444a1b7a6fef7df251" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/af/aff0ae78099b17444a1b7a6fef7df251" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/af/aff0ae78099b17444a1b7a6fef7df251.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/af/aff0ae78099b17444a1b7a6fef7df251.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b8/b8f20591281941728e830f250934a690" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b8/b8f20591281941728e830f250934a690" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b8/b8f20591281941728e830f250934a690.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b8/b8f20591281941728e830f250934a690.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b9/b9d4bfb0ef8e439189c45bb6ff310d3c" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b9/b9d4bfb0ef8e439189c45bb6ff310d3c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b9/b9d4bfb0ef8e439189c45bb6ff310d3c.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/b9/b9d4bfb0ef8e439189c45bb6ff310d3c.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c4/c4a52acc913a273478e6f4151fa35653" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c4/c4a52acc913a273478e6f4151fa35653" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c4/c4a52acc913a273478e6f4151fa35653.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c4/c4a52acc913a273478e6f4151fa35653.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c8/c820ea22e1f14f918ebc0ddec4d55986" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c8/c820ea22e1f14f918ebc0ddec4d55986" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c8/c820ea22e1f14f918ebc0ddec4d55986.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/c8/c820ea22e1f14f918ebc0ddec4d55986.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d0/d0816a3de5e1428b80db5eeeed8badc9" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d0/d0816a3de5e1428b80db5eeeed8badc9" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d0/d0816a3de5e1428b80db5eeeed8badc9.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d0/d0816a3de5e1428b80db5eeeed8badc9.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d1/d17a6383cd1d47d19ba2ee0e7244da2a" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d1/d17a6383cd1d47d19ba2ee0e7244da2a" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d1/d17a6383cd1d47d19ba2ee0e7244da2a.info" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/d1/d17a6383cd1d47d19ba2ee0e7244da2a.info" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/metadata/fc/fc56124f30824293aa313d514015a008" afterPath="$PROJECT_DIR$/Night Unity Files/Library/metadata/fc/fc56124f30824293aa313d514015a008" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/contentModel.xml" afterPath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/contentModel.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/workspace.xml" afterPath="$PROJECT_DIR$/Night Unity Files/.idea/.idea.Night Unity Files/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Prefabs/Combat/Bullet.prefab" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/Prefabs/Combat/Bullet.prefab" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Inscriptions.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/Inscriptions.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/NightSave.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/NightSave.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/WeaponClasses.xml" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/WeaponClasses.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIHitController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UIHitController.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UiAccessoryController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UiAccessoryController.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UiArmourUpgradeController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UiArmourUpgradeController.cs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UiWeaponUpgradeController.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Facilitating/UIControllers/UiWeaponUpgradeController.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterUi/EnemyUi.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/CharacterUi/EnemyUi.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/EnemyBehaviour.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/EnemyBehaviour.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/PlayerCombat.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/PlayerCombat.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Shot.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Combat/Shot.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/UI/WeaponUi.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/UI/WeaponUi.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/Weapon.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/Weapon.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponAttributes.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponAttributes.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponGenerationTester.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Gear/Weapons/WeaponGenerationTester.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/Basic/AttributeType.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/Basic/AttributeType.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Library/shadercompiler-UnityShaderCompiler.exe0.log" afterPath="$PROJECT_DIR$/Night Unity Files/Library/shadercompiler-UnityShaderCompiler.exe0.log" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WeaponCsvToXml.py" afterPath="$PROJECT_DIR$/WeaponCsvToXml.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterView.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/Game/Characters/CharacterView.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/Inventory.cs" afterPath="$PROJECT_DIR$/Night Unity Files/Assets/Scripts/SamsHelper/BaseGameFunctionality/InventorySystem/Inventory.cs" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -71,8 +304,8 @@
       <file leaf-file-name="WeaponClasses.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/WeaponClasses.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="301">
-              <caret line="68" column="20" lean-forward="true" selection-start-line="68" selection-start-column="20" selection-end-line="68" selection-end-column="20" />
+            <state relative-caret-position="369">
+              <caret line="72" column="36" lean-forward="true" selection-start-line="72" selection-start-column="36" selection-end-line="72" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -634,7 +867,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1066" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12708333" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -642,7 +875,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -975,8 +1208,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Night Unity Files/Assets/Resources/XML/WeaponClasses.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="68" column="20" lean-forward="true" selection-start-line="68" selection-start-column="20" selection-end-line="68" selection-end-column="20" />
+        <state relative-caret-position="369">
+          <caret line="72" column="36" lean-forward="true" selection-start-line="72" selection-start-column="36" selection-end-line="72" selection-end-column="36" />
           <folding />
         </state>
       </provider>

@@ -66,7 +66,7 @@
     <Class name="Shotgun" ammoCost="1">
         <Subtype name="Leadspreader" automatic="False">
             <Damage>+4</Damage>
-            <Range>+0</Range>
+            <Range>+1</Range>
             <FireRate>+1.5</FireRate>
             <ReloadSpeed>+2.5</ReloadSpeed>
             <Accuracy>+20</Accuracy>
