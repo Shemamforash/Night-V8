@@ -1,29 +1,19 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
-using Game.Characters.Player;
-using Game.Combat;
+using Game.Characters;
+using Game.Combat.Generation;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
-using Random = UnityEngine.Random;
 
-namespace Game.World.Region
+namespace Game.Exploration.Region
 {
     public class Region : DesolationInventory
     {
+        private readonly CombatScenario _combatScenario;
         private readonly RegionTemplate _template;
         private bool _discovered;
-        private readonly CombatScenario _combatScenario;
 
-        public override XmlNode Save(XmlNode doc, PersistenceType type)
-        {
-            XmlNode regionNode = base.Save(doc, type);
-            SaveController.CreateNodeAndAppend("Discovered", regionNode, _discovered);
-            SaveController.CreateNodeAndAppend("Type", regionNode, _template.Type);
-            XmlNode combatNode = SaveController.CreateNodeAndAppend("Scenario", regionNode);
-            _combatScenario?.Save(combatNode, type);
-            return regionNode;
-        }
-        
         public Region(string name, RegionTemplate template) : base(name)
         {
             _template = template;
@@ -32,10 +22,15 @@ namespace Game.World.Region
             SetInitialResourceValues(InventoryResourceType.Fuel, _template.FuelAvailable);
             SetInitialResourceValues(InventoryResourceType.Scrap, _template.ScrapAvailable);
             //TODO different combat scenarios for region tier and animal/human enemies
-            if (template.Type == RegionType.Human)
-            {
-                _combatScenario = CombatScenario.Generate(Random.Range(1, 3));
-            }
+        }
+
+        public override XmlNode Save(XmlNode doc, PersistenceType type)
+        {
+            XmlNode regionNode = base.Save(doc, type);
+            SaveController.CreateNodeAndAppend("Discovered", regionNode, _discovered);
+            XmlNode combatNode = SaveController.CreateNodeAndAppend("Scenario", regionNode);
+            _combatScenario?.Save(combatNode, type);
+            return regionNode;
         }
 
         private void SetInitialResourceValues(InventoryResourceType resourceType, float resourceRating)
@@ -46,32 +41,23 @@ namespace Game.World.Region
             IncrementResource(resourceType, initialQuantity);
         }
 
-        public RegionType GetRegionType()
-        {
-            return _template.Type;
-        }
-
         public void Enter(Player player)
         {
             if (_combatScenario != null && !_combatScenario.IsFinished())
-            {
                 CombatManager.EnterCombat(player, _combatScenario);
-            }
             else
-            {
                 player.CollectResourcesInRegion(this);
-            }
         }
 
         public void Discover()
         {
-            if (!_discovered)
-            {
-                _discovered = true;
-            }
+            if (!_discovered) _discovered = true;
         }
 
-        public bool Discovered() => _discovered;
+        public bool Discovered()
+        {
+            return _discovered;
+        }
 
         public string Description()
         {
@@ -99,10 +85,7 @@ namespace Game.World.Region
         private static string GetAmountRemainingDescripter(float amount)
         {
             string amountRemaining = "";
-            for (int i = 0; i < amount; i += 10)
-            {
-                amountRemaining += "+";
-            }
+            for (int i = 0; i < amount; i += 10) amountRemaining += "+";
             return amountRemaining;
         }
 

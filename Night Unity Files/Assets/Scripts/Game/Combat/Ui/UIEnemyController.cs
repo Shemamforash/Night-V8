@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
-using Game.Combat;
 using Game.Combat.Enemies;
-using Game.Combat.Enemies.EnemyTypes;
-using SamsHelper;
+using Game.Combat.Generation;
+using Game.Combat.Misc;
+using SamsHelper.Libraries;
 using UnityEngine;
 
-namespace Facilitating.UIControllers
+namespace Game.Combat.Ui
 {
     public class UIEnemyController : MonoBehaviour, ICombatListener
     {
         public static readonly List<EnemyBehaviour> Enemies = new List<EnemyBehaviour>();
+
+        private static readonly List<EnemyBehaviour> _enemiesToAlert = new List<EnemyBehaviour>();
+        private static bool _shouldAlertAll;
 
         public void EnterCombat()
         {
@@ -19,6 +22,20 @@ namespace Facilitating.UIControllers
             {
                 if (!e.IsDead) AddEnemy(e.CreateEnemyObject());
             });
+        }
+
+        public void ExitCombat()
+        {
+            Enemies.ForEach(e =>
+            {
+                e.ExitCombat();
+                Destroy(e.gameObject);
+            });
+            Enemies.Clear();
+        }
+
+        public void UpdateCombat()
+        {
         }
 
         public void Update()
@@ -31,13 +48,9 @@ namespace Facilitating.UIControllers
         public static void Select(float direction)
         {
             if (direction > 0)
-            {
                 SelectAntiClockwise();
-            }
             else
-            {
                 SelectClockwise();
-            }
         }
 
         private static void SelectEnemy(int direction)
@@ -66,20 +79,6 @@ namespace Facilitating.UIControllers
             SelectEnemy(-1);
         }
 
-        public void ExitCombat()
-        {
-            Enemies.ForEach(e =>
-            {
-                e.ExitCombat();
-                Destroy(e.gameObject);
-            });
-            Enemies.Clear();
-        }
-
-        public void UpdateCombat()
-        {
-        }
-
         public void QueueEnemyToAdd(EnemyType type)
         {
             Enemy e = new Enemy(type);
@@ -94,9 +93,6 @@ namespace Facilitating.UIControllers
             return Enemies.Count == 0;
         }
 
-        private static List<EnemyBehaviour> _enemiesToAlert = new List<EnemyBehaviour>();
-        private static bool _shouldAlertAll;
-
         public static void AlertAll()
         {
             _shouldAlertAll = true;
@@ -105,7 +101,7 @@ namespace Facilitating.UIControllers
         public static void Remove(EnemyBehaviour enemy)
         {
             Enemies.Remove(enemy);
-            if(Enemies.Count != 0) SelectClockwise();
+            if (Enemies.Count != 0) SelectClockwise();
         }
 
         private static void AddEnemy(EnemyBehaviour e)

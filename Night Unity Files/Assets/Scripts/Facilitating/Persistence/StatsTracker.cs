@@ -1,15 +1,15 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace Persistence
+namespace Facilitating.Persistence
 {
     public class StatsTracker : MonoBehaviour
     {
-        private static float sessionTime = 0;
+        private static float sessionTime;
         public Text statsText;
 
-        void Update()
+        private void Update()
         {
             sessionTime += Time.deltaTime;
             TimeSpan t = TimeSpan.FromSeconds(sessionTime);

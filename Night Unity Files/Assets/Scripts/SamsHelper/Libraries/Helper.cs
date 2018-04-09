@@ -5,12 +5,63 @@ using System.Text.RegularExpressions;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-namespace SamsHelper
+namespace SamsHelper.Libraries
 {
     public static class Helper
     {
+        public static bool IsObjectInCameraView(GameObject gameObject)
+        {
+            Vector3 screenPosition = Camera.main.WorldToViewportPoint(gameObject.transform.position);
+            return screenPosition.z > 0 &&
+                screenPosition.x > 0 &&
+                screenPosition.y > 0 &&
+                screenPosition.x < 1 &&
+                screenPosition.y < 1;
+        }
+        
+        
+        private class MinSearchList<T>
+        {
+            private List<T> _list;
+            private Func<T, float> _compare;
+            private int indexPosition = 0;
+
+            public MinSearchList(List<T> list, Func<T, float> compare)
+            {
+                _list = list;
+                _compare = compare;
+            }
+
+            public bool HasNext()
+            {
+                return indexPosition != _list.Count;
+            }
+            
+            public T Next()
+            {
+                float smallestValue = float.MaxValue;
+                int smallestElementIndex = -1;
+
+                for (int i = indexPosition; i < _list.Count; ++i)
+                {
+                    T element = _list[i];
+                    float candidateValue = _compare(element);
+                    if (candidateValue >= smallestValue) continue;
+                    smallestElementIndex = i;
+                    smallestValue = candidateValue;
+                }
+
+                T smallestElement = _list[smallestElementIndex];
+                _list[smallestElementIndex] = _list[indexPosition];
+                _list[indexPosition] = smallestElement;
+                ++indexPosition;
+                return smallestElement;
+            }
+        }
+        
         public static List<string> ReadLinesFromFile(string fileName)
         {
             TextAsset file = Resources.Load(fileName) as TextAsset;
@@ -18,12 +69,8 @@ namespace SamsHelper
             string[] tempLines = Regex.Split(contents, "\r\n|\r|\n");
             List<string> lines = new List<string>();
             foreach (string line in tempLines)
-            {
                 if (line != "")
-                {
                     lines.Add(line);
-                }
-            }
             return lines;
         }
 
@@ -52,15 +99,13 @@ namespace SamsHelper
                 randomList.Add(element);
                 list.RemoveAt(removePosition);
             }
+
             list = randomList;
         }
 
         public static void Log<T>(List<T> aList)
         {
-            foreach (T t in aList)
-            {
-                Debug.Log(t);
-            }
+            foreach (T t in aList) Debug.Log(t);
         }
 
         public static List<T> FindAllComponentsInChildren<T>(Transform t)
@@ -78,6 +123,7 @@ namespace SamsHelper
                 children.Add(child);
                 children.AddRange(FindAllChildren(child));
             }
+
             return children;
         }
 
@@ -89,21 +135,12 @@ namespace SamsHelper
 
         public static T FindChildWithName<T>(GameObject g, string name) where T : class
         {
-            if (typeof(T) == typeof(GameObject))
-            {
-                throw new Exceptions.CannotGetGameObjectComponent();
-            }
+            if (typeof(T) == typeof(GameObject)) throw new Exceptions.CannotGetGameObjectComponent();
             Transform t = g.transform;
             Transform foundChild = FindChildWithName(t, name);
-            if (foundChild == null)
-            {
-                throw new Exceptions.ChildNotFoundException(g.name, name);
-            }
+            if (foundChild == null) throw new Exceptions.ChildNotFoundException(g.name, name);
             T foundComponent = foundChild.GetComponent<T>();
-            if (foundComponent == null)
-            {
-                throw new Exceptions.ComponentNotFoundException(foundChild.name, foundComponent.GetType());
-            }
+            if (foundComponent == null) throw new Exceptions.ComponentNotFoundException(foundChild.name, foundComponent.GetType());
             return foundComponent;
         }
 
@@ -124,10 +161,8 @@ namespace SamsHelper
                 ++noNameOccurences;
                 foundChild = child;
             }
-            if (noNameOccurences > 1)
-            {
-                throw new Exceptions.UnspecificGameObjectNameException(noNameOccurences, name);
-            }
+
+            if (noNameOccurences > 1) throw new Exceptions.UnspecificGameObjectNameException(noNameOccurences, name);
             return foundChild;
         }
 
@@ -136,10 +171,7 @@ namespace SamsHelper
             string listString = "";
             for (int i = 0; i < list.Count; ++i)
             {
-                if (i != 0)
-                {
-                    listString += ", ";
-                }
+                if (i != 0) listString += ", ";
                 listString += list[i];
             }
         }
@@ -164,7 +196,7 @@ namespace SamsHelper
 
         public static GameObject InstantiateUiObject(GameObject prefab, Transform parent)
         {
-            GameObject newUiObject = GameObject.Instantiate(prefab);
+            GameObject newUiObject = Object.Instantiate(prefab);
             newUiObject.transform.SetParent(parent, false);
             newUiObject.transform.localScale = new Vector3(1, 1, 1);
             return newUiObject;
@@ -174,12 +206,12 @@ namespace SamsHelper
         {
             SetNavigation(origin.Button(), target.Button(), d);
         }
-        
+
         public static void SetNavigation(Button origin, EnhancedButton target, Direction d)
         {
             SetNavigation(origin, target.Button(), d);
         }
-        
+
         public static void SetNavigation(EnhancedButton origin, Button target, Direction d)
         {
             SetNavigation(origin.Button(), target, d);
@@ -204,6 +236,7 @@ namespace SamsHelper
                     originButtonNavigation.selectOnRight = target;
                     break;
             }
+
             origin.navigation = originButtonNavigation;
         }
 
@@ -211,12 +244,12 @@ namespace SamsHelper
         {
             SetReciprocalNavigation(origin.Button(), target.Button(), direction);
         }
-        
+
         public static void SetReciprocalNavigation(EnhancedButton origin, Button target, Direction direction = Direction.Down)
         {
             SetReciprocalNavigation(origin.Button(), target, direction);
         }
-        
+
         public static void SetReciprocalNavigation(Button origin, EnhancedButton target, Direction direction = Direction.Down)
         {
             SetReciprocalNavigation(origin, target.Button(), direction);
@@ -230,6 +263,7 @@ namespace SamsHelper
                 SetNavigation(target, origin, Direction.Up);
                 return;
             }
+
             SetNavigation(origin, target, Direction.Left);
             SetNavigation(target, origin, Direction.Right);
         }
@@ -260,10 +294,7 @@ namespace SamsHelper
 
         public static bool ValuesHaveSameSign(float a, float b)
         {
-            if (a > 0 && b <= 0 || a < 0 && b >= 0)
-            {
-                return false;
-            }
+            if (a > 0 && b <= 0 || a < 0 && b >= 0) return false;
             return true;
         }
 
@@ -271,7 +302,7 @@ namespace SamsHelper
         {
             return arr[Random.Range(0, arr.Length)];
         }
-        
+
         public static T RandomInList<T>(List<T> arr)
         {
             return arr[Random.Range(0, arr.Count)];
@@ -284,10 +315,7 @@ namespace SamsHelper
 
         public static string AddSignPrefix(float value)
         {
-            if (value <= 0)
-            {
-                return value.ToString();
-            }
+            if (value <= 0) return value.ToString();
             return "+" + value;
         }
 

@@ -1,8 +1,7 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
-using Game.Gear.Weapons;
-using Game.World;
-using SamsHelper.BaseGameFunctionality.Characters;
+using Game.Gear;
+using Game.Global;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
@@ -12,13 +11,24 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public abstract class GearItem : InventoryItem, IPersistenceTemplate
     {
         private readonly GearSubtype _gearType;
-        public bool Equipped;
         private ItemQuality _itemItemQuality;
+        public bool Equipped;
 
         protected GearItem(string name, float weight, GearSubtype gearSubtype, ItemQuality itemQuality) : base(name, GameObjectType.Gear, weight)
         {
             SetQuality(itemQuality);
             _gearType = gearSubtype;
+        }
+
+        public virtual void Load(XmlNode doc, PersistenceType saveType)
+        {
+        }
+
+        public virtual XmlNode Save(XmlNode root, PersistenceType saveType)
+        {
+            root = base.Save(root, saveType);
+            SaveController.CreateNodeAndAppend("GearType", root, _gearType);
+            return root;
         }
 
         public ItemQuality Quality()
@@ -70,17 +80,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             ParentInventory?.Move(this, targetInventory, 1);
             ParentInventory = targetInventory;
-        }
-
-        public virtual void Load(XmlNode doc, PersistenceType saveType)
-        {
-        }
-
-        public virtual XmlNode Save(XmlNode root, PersistenceType saveType)
-        {
-            root = base.Save(root, saveType);
-            SaveController.CreateNodeAndAppend("GearType", root, _gearType);
-            return root;
         }
     }
 }

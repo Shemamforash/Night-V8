@@ -16,14 +16,10 @@ namespace SamsHelper.ReactiveUI
             Tuple<TextMeshProUGUI, Func<T, string>> existingTuple = _textAssociations.FirstOrDefault(tup => tup.Item1 == textObject);
             Tuple<TextMeshProUGUI, Func<T, string>> newTuple = Tuple.Create(textObject, formattingFunction);
             if (existingTuple != null)
-            {
                 _textAssociations[_textAssociations.IndexOf(existingTuple)] = newTuple;
-            }
             else
-            {
                 _textAssociations.Add(newTuple);
-            }
-            if(_value != null) UpdateText();
+            if (_value != null) UpdateText();
         }
 
         private void SetTextObjectText(Tuple<TextMeshProUGUI, Func<T, string>> tup, string defaultValue)
@@ -47,13 +43,10 @@ namespace SamsHelper.ReactiveUI
         {
             _textAssociations.ForEach(tup => SetTextObjectText(tup, _value.ToString()));
         }
-        
+
         public void Value(T value)
         {
-            if (_value == null)
-            {
-                SetValue(value);
-            }
+            if (_value == null) SetValue(value);
             _value = value;
             UpdateText();
         }

@@ -1,89 +1,82 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using SamsHelper;
+using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RageBarController : MonoBehaviour
+namespace Facilitating
 {
-    private static float _barFillAmount;
-    private static ParticleSystem _rageFire;
-    private static List<Image> RoseProngs;
-    private static Image _dashFlash;
-    private static RageBarController _instance;
-    private static float _currentTime, _dashFlashTime = 1f;
-    private static Image _dashRing;
-
-    public void Awake()
+    public class RageBarController : MonoBehaviour
     {
-        RoseProngs = new List<Image>();
-        _instance = this;
-        _dashFlash = Helper.FindChildWithName<Image>(gameObject, "Ready");
-        _rageFire = Helper.FindChildWithName<ParticleSystem>(gameObject, "Rage Fire");
-        _dashRing = Helper.FindChildWithName<Image>(gameObject, "Ring");
-    }
+        private static float _barFillAmount;
+        private static ParticleSystem _rageFire;
+        private static List<Image> RoseProngs;
+        private static Image _dashFlash;
+        private static RageBarController _instance;
+        private static float _currentTime;
+        private static readonly float _dashFlashTime = 1f;
+        private static Image _dashRing;
 
-    public void Start()
-    {
-        for (int i = 1; i < 17; ++i)
+        public void Awake()
         {
-            RoseProngs.Add(Helper.FindChildWithName<Image>(gameObject, i.ToString()));
-        }
-        SetRageBarFill(0f, false);
-    }
-
-    public static void SetRageBarFill(float value, bool rageActive)
-    {
-        if (_instance == null) return;
-        if (rageActive && !_rageFire.isPlaying)
-        {
-            _rageFire.Play();
-        }
-        else if (_rageFire.isPlaying && !rageActive)
-        {
-            _rageFire.Stop();
+            RoseProngs = new List<Image>();
+            _instance = this;
+            _dashFlash = Helper.FindChildWithName<Image>(gameObject, "Ready");
+            _rageFire = Helper.FindChildWithName<ParticleSystem>(gameObject, "Rage Fire");
+            _dashRing = Helper.FindChildWithName<Image>(gameObject, "Ring");
         }
 
-        int completeProngs = (int) Math.Floor(value / 0.0625f);
-        float remainder = value - completeProngs * 0.0625f;
-        float normalisedRemainder = remainder / 0.0625f;
-        for (int i = 0; i < RoseProngs.Count; ++i)
+        public void Start()
         {
-            float alpha = 0f;
-            if (i < completeProngs)
+            for (int i = 1; i < 17; ++i) RoseProngs.Add(Helper.FindChildWithName<Image>(gameObject, i.ToString()));
+            SetRageBarFill(0f, false);
+        }
+
+        public static void SetRageBarFill(float value, bool rageActive)
+        {
+            if (_instance == null) return;
+            if (rageActive && !_rageFire.isPlaying)
+                _rageFire.Play();
+            else if (_rageFire.isPlaying && !rageActive)
+                _rageFire.Stop();
+
+            int completeProngs = (int) Math.Floor(value / 0.0625f);
+            float remainder = value - completeProngs * 0.0625f;
+            float normalisedRemainder = remainder / 0.0625f;
+            for (int i = 0; i < RoseProngs.Count; ++i)
             {
-                alpha = 1f;
-            }
-            else if (i == completeProngs)
-            {
-                alpha = normalisedRemainder;
-            }
+                float alpha = 0f;
+                if (i < completeProngs)
+                    alpha = 1f;
+                else if (i == completeProngs)
+                    alpha = normalisedRemainder;
 
-            RoseProngs[i].color = new Color(1, 1, 1, alpha);
+                RoseProngs[i].color = new Color(1, 1, 1, alpha);
+            }
         }
-    }
 
-    public static void UpdateDashTimer(float amount)
-    {
-        _dashRing.fillAmount = amount;
-    }
-
-    public static void PlayFlash()
-    {
-        _currentTime = _dashFlashTime;
-        _instance.StartCoroutine(_instance.Flash());
-    }
-
-    private IEnumerator Flash()
-    {
-        while (_currentTime > 0)
+        public static void UpdateDashTimer(float amount)
         {
-            float normalisedTime = _currentTime / _dashFlashTime;
-            normalisedTime *= 0.8f;
-            _dashFlash.color = new Color(1, 1, 1, normalisedTime);
-            _currentTime -= Time.deltaTime;
-            yield return null;
+            _dashRing.fillAmount = amount;
+        }
+
+        public static void PlayFlash()
+        {
+            _currentTime = _dashFlashTime;
+            _instance.StartCoroutine(_instance.Flash());
+        }
+
+        private IEnumerator Flash()
+        {
+            while (_currentTime > 0)
+            {
+                float normalisedTime = _currentTime / _dashFlashTime;
+                normalisedTime *= 0.8f;
+                _dashFlash.color = new Color(1, 1, 1, normalisedTime);
+                _currentTime -= Time.deltaTime;
+                yield return null;
+            }
         }
     }
 }

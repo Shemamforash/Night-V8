@@ -1,4 +1,4 @@
-﻿using Game.World.Region;
+﻿using Game.Exploration.Region;
 using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 
@@ -7,10 +7,10 @@ namespace Game.Characters.CharacterActions
     //todo move me somewhere better
     public class CollectResources : BaseCharacterAction
     {
-        private Player.Player _previousCharacter;
+        private Player _previousCharacter;
         private Region _targetRegion;
 
-        public CollectResources(Player.Player playerCharacter) : base("Collect Resources", playerCharacter)
+        public CollectResources(Player playerCharacter) : base("Collect Resources", playerCharacter)
         {
             IsVisible = false;
 //            SetStateTransitionTarget(playerCharacter.ReturnAction);
@@ -22,7 +22,7 @@ namespace Game.Characters.CharacterActions
             _targetRegion = targetRegion;
             _previousCharacter = CharacterManager.SelectedCharacter;
             CharacterManager.SelectedCharacter = PlayerCharacter;
-            InventoryTransferManager.Instance().ShowInventories(PlayerCharacter.Inventory(), _targetRegion, () => PlayerCharacter.ReturnAction.Enter());
+//            InventoryTransferManager.Instance().ShowInventories(PlayerCharacter.Inventory(), _targetRegion, () => PlayerCharacter.ReturnAction.Enter());
         }
 
 //        public override void Interrupt()

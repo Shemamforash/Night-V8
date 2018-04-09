@@ -1,5 +1,6 @@
 ﻿using System;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
 
@@ -26,19 +27,15 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             base.Update();
             UpdateText(_centralText, _centralTextCallback);
         }
-        
+
         protected void UpdateText(TextMeshProUGUI textMesh, Func<string> textCallback)
         {
             if (textCallback == null)
-            {
                 textMesh.gameObject.SetActive(false);
-            }
             else
-            {
                 textMesh.text = textCallback();
-            }
         }
-        
+
         public void SetCentralTextCallback(Func<string> a)
         {
             if (a == null) return;

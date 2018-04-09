@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
-using Game.Combat.Skills;
+using Game.Combat.Player;
 
 namespace Game.Gear.Weapons
 {
     public class WeaponClass
     {
-        public readonly bool Automatic;
-        public readonly WeaponType Type;
         public readonly int AmmoCost;
-        public readonly string Name;
+        public readonly bool Automatic;
         public readonly List<AttributeModifier> Modifiers = new List<AttributeModifier>();
+        public readonly string Name;
+        public readonly WeaponType Type;
 
         public WeaponClass(WeaponType type, string name, bool automatic, int ammoCost)
         {

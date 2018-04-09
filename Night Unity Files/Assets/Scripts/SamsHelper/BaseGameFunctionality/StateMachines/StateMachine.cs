@@ -28,10 +28,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         public State GetState(string stateName)
         {
             State state = States[stateName];
-            if (state == null)
-            {
-                throw new Exceptions.StateDoesNotExistException(stateName);
-            }
+            if (state == null) throw new Exceptions.StateDoesNotExistException(stateName);
             return States[stateName];
         }
 
@@ -47,14 +44,8 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public void ReturnToDefault()
         {
-            if (_defaultState == null)
-            {
-                throw new Exceptions.DefaultStateNotSpecifiedException();
-            }
-            if (_currentState == null || !_defaultState.IsCurrentState())
-            {
-                _defaultState.Enter();
-            }
+            if (_defaultState == null) throw new Exceptions.DefaultStateNotSpecifiedException();
+            if (_currentState == null || !_defaultState.IsCurrentState()) _defaultState.Enter();
         }
 
         public bool IsDefaultState(BaseCharacterAction currentState)

@@ -1,57 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 
 namespace Game.Gear.Weapons
 {
     public static class WeaponGenerationTester
     {
-        private static string _testResultString = "";
         private const int TestRuns = 1000;
+        private static string _testResultString = "";
         private static Dictionary<AttributeType, MinMaxAverage> _attributeStats;
 
         private static readonly List<AttributeType> DesiredStats = new List<AttributeType>
         {
             AttributeType.Damage,
             AttributeType.Accuracy,
-            AttributeType.FireRate,
+            AttributeType.FireRate
         };
-
-        private class MinMaxAverage
-        {
-            private float _average, _min = 10000, _max;
-            private int _runs;
-            private readonly AttributeType _type;
-
-            public MinMaxAverage(AttributeType type)
-            {
-                _type = type;
-            }
-
-            public void AddValue(Weapon weapon)
-            {
-                float value = weapon.GetAttributeValue(_type);
-                _average += value;
-                _runs++;
-                if (value < _min)
-                {
-                    _min = value;
-                }
-
-                if (value > _max)
-                {
-                    _max = value;
-                }
-            }
-
-            public string GetString()
-            {
-                float averageString = Helper.Round(_average / _runs, 1);
-                return _type + ": " + averageString + " (min: " + Helper.Round(_min, 1) + " /max: " + Helper.Round(_max, 1) + ")";
-            }
-        }
 
         private static void ResetAttributeStats()
         {
@@ -62,14 +28,12 @@ namespace Game.Gear.Weapons
         public static void Test()
         {
             foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
+            foreach (ItemQuality quality in Enum.GetValues(typeof(ItemQuality)))
             {
-                foreach (ItemQuality quality in Enum.GetValues(typeof(ItemQuality)))
-                {
-                    ResetAttributeStats();
-                    TestWeapon(type, 0, quality);
-                    TestWeapon(type, 10, quality);
-                    _testResultString += "\n\n";
-                }
+                ResetAttributeStats();
+                TestWeapon(type, 0, quality);
+                TestWeapon(type, 10, quality);
+                _testResultString += "\n\n";
             }
 
 //            Debug.Log(_testResultString);
@@ -102,12 +66,40 @@ namespace Game.Gear.Weapons
 
             averageDps /= TestRuns;
             string indent = "        ";
-            _testResultString += "Type: " + type + "  ---  Durability: " + durability + "  ---  Quality: " + quality.ToString() + "\n";
+            _testResultString += "Type: " + type + "  ---  Durability: " + durability + "  ---  Quality: " + quality + "\n";
             _testResultString += indent + "DPS: " + Helper.Round(averageDps, 1) + " (min: " + Helper.Round(minDps, 1) + " /max: " + Helper.Round(maxDps, 1) + " )\n";
             DesiredStats.ForEach(stat => _testResultString += indent + _attributeStats[stat].GetString() + "\n");
             _testResultString += "\n";
 //            _testResultString += maxWeapon.WeaponAttributes.Print() + "\n";
 //            _testResultString += minWeapon.WeaponAttributes.Print() + "\n";
+        }
+
+        private class MinMaxAverage
+        {
+            private readonly AttributeType _type;
+            private float _average, _min = 10000, _max;
+            private int _runs;
+
+            public MinMaxAverage(AttributeType type)
+            {
+                _type = type;
+            }
+
+            public void AddValue(Weapon weapon)
+            {
+                float value = weapon.GetAttributeValue(_type);
+                _average += value;
+                _runs++;
+                if (value < _min) _min = value;
+
+                if (value > _max) _max = value;
+            }
+
+            public string GetString()
+            {
+                float averageString = Helper.Round(_average / _runs, 1);
+                return _type + ": " + averageString + " (min: " + Helper.Round(_min, 1) + " /max: " + Helper.Round(_max, 1) + ")";
+            }
         }
     }
 }

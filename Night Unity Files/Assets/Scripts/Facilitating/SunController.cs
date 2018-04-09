@@ -1,60 +1,67 @@
 ﻿using System;
-using Game.World;
+using Game.Global;
 using UnityEngine;
 
-public class SunController : MonoBehaviour
+namespace Facilitating
 {
-    public GameObject Sun, Stars, Moon;
-    [Range(0, 1)]
-    public float MinBrightness, MaxBrightness;
-    private const float Value = 1f;
-    private static float _weatherModifier = 1f;
-    private float radius = 10;
-    private Vector2 origin;
-
-    public static void SetWeatherModifier(float weatherModifier) => _weatherModifier = weatherModifier;
-
-    public void Awake()
+    public class SunController : MonoBehaviour
     {
-        origin = new Vector2(0, -radius);
-    }
-    
-    public void Update()
-    {
-        ParticleSystem.EmissionModule starEmission = Stars.GetComponent<ParticleSystem>().emission;
-        if (WorldState.Hours >= 6 && WorldState.Hours <= 18)
+        private const float Value = 1f;
+        private static float _weatherModifier = 1f;
+
+        [Range(0, 1)] public float MinBrightness, MaxBrightness;
+
+        private Vector2 origin;
+        private readonly float radius = 10;
+        public GameObject Sun, Stars, Moon;
+
+        public static void SetWeatherModifier(float weatherModifier)
         {
-            starEmission.rateOverTime = 0;
-            UpdateSun();
+            _weatherModifier = weatherModifier;
         }
-        else
+
+        public void Awake()
         {
-            starEmission.rateOverTime = 50;
-            UpdateMoon();
+            origin = new Vector2(0, -radius);
         }
-    }
 
-    private float GetTime()
-    {
-        float time = WorldState.Hours;
-        float minutes = (float) WorldState.Minutes / WorldState.MinutesPerHour;
-        minutes /= 5f;
-        time += minutes;
-        return time;
-    }
+        public void Update()
+        {
+            ParticleSystem.EmissionModule starEmission = Stars.GetComponent<ParticleSystem>().emission;
+            if (WorldState.Hours >= 6 && WorldState.Hours <= 18)
+            {
+                starEmission.rateOverTime = 0;
+                UpdateSun();
+            }
+            else
+            {
+                starEmission.rateOverTime = 50;
+                UpdateMoon();
+            }
+        }
 
-    private void UpdateMoon()
-    {
-    }
+        private float GetTime()
+        {
+            float time = WorldState.Hours;
+            float minutes = (float) WorldState.Minutes / WorldState.MinutesPerHour;
+            minutes /= 5f;
+            time += minutes;
+            return time;
+        }
 
-    private void UpdateSun()
-    {
-        float time = GetTime();
-        float timeOfDayModifier = (float) (-0.028f * Math.Pow(time - 12, 2) + 1f);
-        timeOfDayModifier *= _weatherModifier;
-        float minBrightness = MinBrightness * timeOfDayModifier;
-        float maxBrightness = MaxBrightness * timeOfDayModifier;
-        ParticleSystem.MainModule sunMain = Sun.GetComponent<ParticleSystem>().main;
-        sunMain.startColor = new ParticleSystem.MinMaxGradient(new Color(Value, Value, Value, maxBrightness), new Color(Value, Value, Value, minBrightness));
+        private void UpdateMoon()
+        {
+        }
+
+        private void UpdateSun()
+        {
+            float time = GetTime();
+            float timeOfDayModifier = (float) (-0.028f * Math.Pow(time - 12, 2) + 1f);
+            timeOfDayModifier *= _weatherModifier;
+            float minBrightness = MinBrightness * timeOfDayModifier;
+            float maxBrightness = MaxBrightness * timeOfDayModifier;
+            ParticleSystem.MainModule sunMain = Sun.GetComponent<ParticleSystem>().main;
+            sunMain.startColor = new ParticleSystem.MinMaxGradient(new Color(Value, Value, Value, maxBrightness), new Color(Value, Value, Value, minBrightness));
+        }
     }
 }

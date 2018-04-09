@@ -1,4 +1,4 @@
-﻿namespace Game.Combat.Enemies.EnemyTypes
+﻿namespace Game.Combat.Enemies.Animals
 {
     public class Grazer : Enemy
     {

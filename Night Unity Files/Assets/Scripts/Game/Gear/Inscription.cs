@@ -4,44 +4,23 @@ using System.Xml;
 using Game.Characters;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.Gear.Weapons
+namespace Game.Gear
 {
     public class Inscription : GearItem
     {
-        private AttributeModifier _modifier;
         private static readonly List<InscriptionTemplate> _inscriptionTemplates = new List<InscriptionTemplate>();
         private static bool _readTemplates;
+        private AttributeModifier _modifier;
         private ItemQuality _quality;
         private InscriptionTemplate _template;
 
-        public class InscriptionTemplate
+        private Inscription(InscriptionTemplate template, ItemQuality quality) : base(template.Name, 0.25f, GearSubtype.Inscription, quality)
         {
-            public readonly string Name;
-            private AttributeModifier _modifierOne;
-            private AttributeModifier _modifierTwo;
-
-            public InscriptionTemplate(string name)
-            {
-                Name = name;
-                _inscriptionTemplates.Add(this);
-            }
-
-            public void SetModifier(AttributeModifier modifier)
-            {
-                if (_modifierOne == null)
-                {
-                    _modifierOne = modifier;
-                    return;
-                }
-
-                if (_modifierTwo != null) throw new Exceptions.InscriptionModificationException(Name);
-                _modifierTwo = modifier;
-            }
+            _template = template;
         }
 
         private static void ReadTemplates()
@@ -87,14 +66,34 @@ namespace Game.Gear.Weapons
             return new Inscription(randomTemplate, quality);
         }
 
-        private Inscription(InscriptionTemplate template, ItemQuality quality) : base(template.Name, 0.25f, GearSubtype.Inscription, quality)
-        {
-            _template = template;
-        }
-
         public override string GetSummary()
         {
             return "Inscription summary";
+        }
+
+        public class InscriptionTemplate
+        {
+            public readonly string Name;
+            private AttributeModifier _modifierOne;
+            private AttributeModifier _modifierTwo;
+
+            public InscriptionTemplate(string name)
+            {
+                Name = name;
+                _inscriptionTemplates.Add(this);
+            }
+
+            public void SetModifier(AttributeModifier modifier)
+            {
+                if (_modifierOne == null)
+                {
+                    _modifierOne = modifier;
+                    return;
+                }
+
+                if (_modifierTwo != null) throw new Exceptions.InscriptionModificationException(Name);
+                _modifierTwo = modifier;
+            }
         }
     }
 }

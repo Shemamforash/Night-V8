@@ -1,11 +1,11 @@
-﻿using UnityEngine.EventSystems;
-using UnityEngine;
-using System.Collections.Generic;
-using SamsHelper;
+﻿using System.Collections.Generic;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
-namespace UI.Highlight
+namespace Facilitating.UI
 {
     public class Highlight : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
     {
@@ -15,34 +15,11 @@ namespace UI.Highlight
 
         protected List<TextMeshProUGUI> childTexts = new List<TextMeshProUGUI>();
 
-        public virtual void Awake()
-        {
-            List<Transform> children = Helper.FindAllChildren(transform);
-            foreach (Transform t in children)
-            {
-                TextMeshProUGUI text = t.GetComponent<TextMeshProUGUI>();
-                if (text != null)
-                {
-                    childTexts.Add(text);
-                }
-            }
-        }
-
-        public virtual void OnSelect(BaseEventData eventData)
-        {
-            ChangeTextColour(Color.white);
-        }
-
         public virtual void OnDeselect(BaseEventData eventData)
         {
             Fade();
         }
 
-        private void Fade()
-        {
-            ChangeTextColour(UiAppearanceController.FadedColour);
-        }
-        
         public void OnPointerEnter(PointerEventData p)
         {
             ChangeTextColour(Color.white);
@@ -53,12 +30,29 @@ namespace UI.Highlight
             Fade();
         }
 
+        public virtual void OnSelect(BaseEventData eventData)
+        {
+            ChangeTextColour(Color.white);
+        }
+
+        public virtual void Awake()
+        {
+            List<Transform> children = Helper.FindAllChildren(transform);
+            foreach (Transform t in children)
+            {
+                TextMeshProUGUI text = t.GetComponent<TextMeshProUGUI>();
+                if (text != null) childTexts.Add(text);
+            }
+        }
+
+        private void Fade()
+        {
+            ChangeTextColour(UiAppearanceController.FadedColour);
+        }
+
         private void ChangeTextColour(Color c)
         {
-            foreach (TextMeshProUGUI buttonText in childTexts)
-            {
-                buttonText.color = c;
-            }
+            foreach (TextMeshProUGUI buttonText in childTexts) buttonText.color = c;
         }
 
         public void OnDisable()

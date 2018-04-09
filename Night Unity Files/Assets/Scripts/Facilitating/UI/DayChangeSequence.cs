@@ -1,28 +1,34 @@
 ﻿using System.Collections;
-using Audio;
-using Game.World;
+using Facilitating.Audio;
+using Game.Global;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
-namespace Facilitating.UI.GameOnly
+namespace Facilitating.UI
 {
     public class DayChangeSequence : Menu
     {
-        public float TimeToRead = 3f;
-        public float TimeBetweenLines = 1f;
-        public float FadeTime = 2f;
         private CanvasGroup _menuScreen, _thisCanvasGroup;
         private ThunderClick _thunderClick;
-
+        public float FadeTime = 2f;
+        public float TimeBetweenLines = 1f;
+        public float TimeToRead = 3f;
+        private static DayChangeSequence _instance;
+        
         protected void Awake()
         {
+            _instance = this;
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _menuScreen = GameObject.Find("Game Menu").GetComponent<CanvasGroup>();
             _thunderClick = GetComponent<ThunderClick>();
-            WorldState.RegisterDayEvent(ChangeDay);
         }
 
-        private void ChangeDay()
+        public static DayChangeSequence Instance()
+        {
+            return _instance;
+        }
+        
+        public void ChangeDay()
         {
             WorldState.Pause();
             _menuScreen.interactable = false;
@@ -41,6 +47,7 @@ namespace Facilitating.UI.GameOnly
                 currentTime += Time.deltaTime;
                 yield return null;
             }
+
             TransitionEnd();
         }
 
@@ -58,10 +65,7 @@ namespace Facilitating.UI.GameOnly
         {
             float currentTime = 0f;
             int currentChild = 0;
-            for (int i = 0; i < transform.childCount; ++i)
-            {
-                transform.GetChild(i).gameObject.SetActive(false);
-            }
+            for (int i = 0; i < transform.childCount; ++i) transform.GetChild(i).gameObject.SetActive(false);
             while (currentTime < TimeBetweenLines)
             {
                 currentTime += Time.deltaTime;
@@ -71,8 +75,10 @@ namespace Facilitating.UI.GameOnly
                     ++currentChild;
                     currentTime = 0f;
                 }
+
                 yield return null;
             }
+
             yield return StartCoroutine(nameof(WaitToReadText));
         }
     }

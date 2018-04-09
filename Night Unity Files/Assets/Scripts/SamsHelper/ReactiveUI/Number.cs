@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Random = UnityEngine.Random;
 
 namespace SamsHelper.ReactiveUI
 {
@@ -6,8 +9,8 @@ namespace SamsHelper.ReactiveUI
     {
         protected event Action<Number> OnValueChange;
         private float _currentValue;
-        private float _min;
         private float _max;
+        private float _min;
         private Action _onMax;
         private Action _onMin;
 
@@ -17,6 +20,26 @@ namespace SamsHelper.ReactiveUI
             _min = min;
             _max = max;
             BroadcastChange();
+        }
+
+        public float Max
+        {
+            get { return _max; }
+            set
+            {
+                _max = value;
+                SetCurrentValue(_currentValue > _max ? _max : _currentValue);
+            }
+        }
+
+        public float Min
+        {
+            get { return _min; }
+            set
+            {
+                _min = value;
+                SetCurrentValue(_currentValue < _min ? _min : _currentValue);
+            }
         }
 
         public void AddOnValueChange(Action<Number> a)
@@ -40,32 +63,39 @@ namespace SamsHelper.ReactiveUI
             OnValueChange?.Invoke(this);
         }
 
-        public virtual float CurrentValue() => _currentValue;
-        public float Normalised() => _currentValue / _max;
-        public void OnMax(Action a) => _onMax = a;
-        public void OnMin(Action a) => _onMin = a;
-        public float RandomInRange() => UnityEngine.Random.Range(_min, _max);
-        public bool ReachedMin() => _currentValue <= _min;
-        public bool ReachedMax() => _currentValue >= _max;
-
-        public float Max
+        public virtual float CurrentValue()
         {
-            get { return _max; }
-            set
-            {
-                _max = value;
-                SetCurrentValue(_currentValue > _max ? _max : _currentValue);
-            }
+            return _currentValue;
         }
 
-        public float Min
+        public float Normalised()
         {
-            get { return _min; }
-            set
-            {
-                _min = value;
-                SetCurrentValue(_currentValue < _min ? _min : _currentValue);
-            }
+            return _currentValue / _max;
+        }
+
+        public void OnMax(Action a)
+        {
+            _onMax = a;
+        }
+
+        public void OnMin(Action a)
+        {
+            _onMin = a;
+        }
+
+        public float RandomInRange()
+        {
+            return Random.Range(_min, _max);
+        }
+
+        public bool ReachedMin()
+        {
+            return _currentValue <= _min;
+        }
+
+        public bool ReachedMax()
+        {
+            return _currentValue >= _max;
         }
 
         public void Increment(float amount = 1)
@@ -94,6 +124,7 @@ namespace SamsHelper.ReactiveUI
             {
                 _currentValue = value;
             }
+
             BroadcastChange();
         }
 

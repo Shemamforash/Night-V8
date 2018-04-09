@@ -1,17 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using Game.Combat.Enemies;
-using Game.Combat.Enemies.EnemyTypes;
-using SamsHelper;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 
-namespace Game.Combat
+namespace Game.Combat.Generation
 {
     public class CombatScenario : IPersistenceTemplate
     {
+        private const int MaxEncounterSize = 10;
+
+        private static List<EnemyTemplate> _enemyTypes = EnemyTemplate.GetEnemyTypes();
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private bool _finished;
-        private const int MaxEncounterSize = 10;
+
+        public void Load(XmlNode doc, PersistenceType saveType)
+        {
+//            throw new System.NotImplementedException();
+        }
+
+        public XmlNode Save(XmlNode doc, PersistenceType type)
+        {
+//            throw new System.NotImplementedException();
+            return doc;
+        }
 
         public void AddEnemy(Enemy enemy)
         {
@@ -38,8 +50,6 @@ namespace Game.Combat
         {
             return _enemies.Count == MaxEncounterSize;
         }
-
-        private static List<EnemyTemplate> _enemyTypes = EnemyTemplate.GetEnemyTypes();
 
         public static CombatScenario Generate(int difficulty, int size)
         {
@@ -94,17 +104,6 @@ namespace Game.Combat
         public bool IsFinished()
         {
             return _finished;
-        }
-
-        public void Load(XmlNode doc, PersistenceType saveType)
-        {
-//            throw new System.NotImplementedException();
-        }
-
-        public XmlNode Save(XmlNode doc, PersistenceType type)
-        {
-//            throw new System.NotImplementedException();
-            return doc;
         }
     }
 }

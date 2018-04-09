@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace SamsHelper
+namespace SamsHelper.Libraries
 {
     public static class AdvancedMaths
     {
@@ -20,14 +20,11 @@ namespace SamsHelper
             Vector3 direction = target - origin;
             float angle = Vector2.Angle(Vector3.up, direction);
             Vector3 cross = Vector3.Cross(direction, Vector3.up);
-            if (cross.z < 0)
-            {
-                return angle;
-            }
+            if (cross.z < 0) return angle;
             return 360 - angle;
         }
 
-        
+
         public static List<Vector2> GetPoissonDiscDistribution(int numberOfPoints, float minRadius, float maxRadius, float maxSampleDistance, bool includeInitialSample = false)
         {
             List<Vector2> samples = new List<Vector2>();
@@ -41,9 +38,10 @@ namespace SamsHelper
                 Vector2 random = new Vector2(Random.Range(-maxSampleDistance, maxSampleDistance), Random.Range(-maxSampleDistance, maxSampleDistance));
                 samples.Add(random);
             }
+
             activeSamples.Add(samples[0]);
 
-            for(int i = 0; i < numberOfPoints - 1 && activeSamples.Count != 0; ++i)
+            for (int i = 0; i < numberOfPoints - 1 && activeSamples.Count != 0; ++i)
             {
                 Vector2 randomSample = activeSamples[Random.Range(0, activeSamples.Count)];
                 int targetSamples = 20;
@@ -62,14 +60,12 @@ namespace SamsHelper
                     randomPoint.y = Random.Range(lowerBound, upperBound);
                     float distance = Vector2.Distance(randomSample, randomPoint);
                     if (distance >= minRadius && distance <= maxRadius)
-                    {
                         if (!samples.Any(s => Vector2.Distance(s, randomPoint) < minRadius))
                         {
                             samples.Add(randomPoint);
                             activeSamples.Add(randomPoint);
                             break;
                         }
-                    }
 
                     --targetSamples;
                 }
@@ -77,33 +73,31 @@ namespace SamsHelper
                 if (targetSamples == 0) activeSamples.Remove(randomSample);
             }
 
-            if(samples.Count != numberOfPoints) Debug.Log("Found " +samples.Count + " samples out of " + numberOfPoints + " desired samples, consider modifying the parameters to reach desired number of samples");
+            if (samples.Count != numberOfPoints)
+                Debug.Log("Found " + samples.Count + " samples out of " + numberOfPoints + " desired samples, consider modifying the parameters to reach desired number of samples");
             return samples;
         }
 
         public static Quaternion RotationToTarget(Vector3 origin, Vector3 target)
         {
             float angle = AngleFromUp(origin, target);
-            return Quaternion.Euler(new Vector3(0,0, angle));
+            return Quaternion.Euler(new Vector3(0, 0, angle));
         }
 
-        public static float AngleBetween(Transform from, Transform to, bool absoluteVal = true)
+        public static float AngleBetween(Vector3 from, Vector3 to, float fromRotation, bool absoluteVal = true)
         {
-            Vector3 direction = to.position - from.position;
-            float xDir = -Mathf.Sin(from.transform.rotation.eulerAngles.z * Mathf.Deg2Rad);
-            float yDir = Mathf.Cos(from.transform.rotation.eulerAngles.z * Mathf.Deg2Rad);
+            Vector3 direction = to - from;
+            float xDir = -Mathf.Sin(fromRotation * Mathf.Deg2Rad);
+            float yDir = Mathf.Cos(fromRotation * Mathf.Deg2Rad);
             Vector2 fromDir = new Vector2(xDir, yDir);
             float angle = Vector2.Angle(fromDir, direction);
             if (absoluteVal) return angle;
             Vector3 cross = Vector3.Cross(direction, fromDir);
-            if (cross.z < 0)
-            {
-                angle = -angle;
-            }
+            if (cross.z < 0) angle = -angle;
 
             return angle;
         }
-        
+
         public static bool IsPointInPolygon(Vector2 point, List<Vector2> polygon)
         {
             int polygonLength = polygon.Count, i = 0;
@@ -122,7 +116,7 @@ namespace SamsHelper
                 endX = endPoint.x;
                 endY = endPoint.y;
                 //
-                inside ^= endY > pointY ^ startY > pointY /* ? pointY inside [startY;endY] segment ? */
+                inside ^= (endY > pointY) ^ (startY > pointY) /* ? pointY inside [startY;endY] segment ? */
                           && /* if so, test if it is under the segment */
                           pointX - endX < (pointY - endY) * (startX - endX) / (startY - endY);
             }

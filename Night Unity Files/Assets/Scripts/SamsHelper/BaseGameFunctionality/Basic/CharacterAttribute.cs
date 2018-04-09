@@ -10,15 +10,15 @@ namespace SamsHelper.BaseGameFunctionality.Basic
     {
         public readonly AttributeType AttributeType;
         private float _addMod;
-        private float _multMod = 1;
         private float _calculatedValue;
+        private float _multMod = 1;
 
         public CharacterAttribute(AttributeType attributeType, float value, float min = 0, float max = float.MaxValue) : base(value, min, max)
         {
             AttributeType = attributeType;
-            AddOnValueChange(a => Recalculate());
+            AddOnValueChange(Recalculate);
         }
-        
+
         public void Save(XmlNode doc, PersistenceType saveType)
         {
             SaveController.CreateNodeAndAppend("AttributeType", doc, AttributeType);
@@ -36,7 +36,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             return base.CurrentValue();
         }
 
-        private void Recalculate()
+        private void Recalculate(Number n = null)
         {
             _calculatedValue = (OriginalValue() + _addMod) * _multMod;
             Assert.IsTrue(_multMod >= 0);
@@ -57,7 +57,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             Assert.IsTrue(_multMod >= 0);
             Recalculate();
         }
-        
+
         public void RemoveAddMod(float addMod)
         {
             _addMod -= addMod;

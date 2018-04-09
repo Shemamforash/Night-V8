@@ -1,5 +1,5 @@
 ﻿using Facilitating.Persistence;
-using Game.World;
+using Game.Global;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
@@ -17,13 +17,9 @@ namespace Facilitating.MenuNavigation
         public void StartNewGame()
         {
             if (SaveController.SaveExists())
-            {
                 MenuStateMachine.ShowMenu("Overwrite Save Warning");
-            }
             else
-            {
                 ClearSaveAndLoad();
-            }
         }
 
         public void ClearSaveAndLoad()

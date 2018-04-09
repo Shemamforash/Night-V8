@@ -6,8 +6,8 @@ namespace Game.Characters
 {
     public class CharacterTemplate
     {
-        public readonly List<string> StoryLines;
         public readonly CharacterClass CharacterClass;
+        public readonly List<string> StoryLines;
         public readonly int Strength, Endurance, Willpower, Perception;
 
         public CharacterTemplate(List<string> storyLines, string name, int strength, int endurance, int willpower, int perception)
@@ -23,15 +23,10 @@ namespace Game.Characters
         private static CharacterClass StringToClass(string className)
         {
             foreach (CharacterClass c in Enum.GetValues(typeof(CharacterClass)))
-            {
                 if (className.Contains(c.ToString()))
-                {
                     return c;
-                }
-            }
 
             throw new Exceptions.UnknownTraitException(className);
         }
-            
     }
 }

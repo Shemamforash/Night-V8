@@ -48,8 +48,8 @@ namespace SamsHelper
 
         public class UnspecificGameObjectNameException : Exception
         {
-            private readonly int _occurences;
             private readonly string _name;
+            private readonly int _occurences;
 
             public UnspecificGameObjectNameException(int occurences, string name)
             {
@@ -67,9 +67,9 @@ namespace SamsHelper
 
         public class ResourceValueChangeInvalid : Exception
         {
+            private readonly float _amount;
             private readonly string _direction;
             private readonly string _resourceName;
-            private readonly float _amount;
 
             public ResourceValueChangeInvalid(string resourceName, string decrement, float amount)
             {
@@ -95,8 +95,8 @@ namespace SamsHelper
 
         public class InventoryItemNotStackableException : Exception
         {
-            private readonly string _name;
             private readonly float _amount;
+            private readonly string _name;
 
             public InventoryItemNotStackableException(string name, float amount)
             {
@@ -150,8 +150,8 @@ namespace SamsHelper
 
         public class MaxOrMinWeightExceededException : Exception
         {
-            private readonly string _traitName, _name, _className;
             private readonly int _targetWeight;
+            private readonly string _traitName, _name, _className;
 
             public MaxOrMinWeightExceededException(string name, int targetWeight, string characterClassName, string characterTraitName)
             {

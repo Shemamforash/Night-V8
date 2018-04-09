@@ -10,7 +10,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         {
             return new Cooldown(this, duration);
         }
-        
+
         public void UpdateCooldowns()
         {
             for (int i = _activeCooldowns.Count - 1; i >= 0; --i)

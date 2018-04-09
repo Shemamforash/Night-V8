@@ -1,7 +1,7 @@
-﻿using UnityEngine.EventSystems;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
-namespace UI.Misc
+namespace Facilitating.UI
 {
     public class RefocusKeyboardInput : MonoBehaviour
     {
@@ -14,10 +14,7 @@ namespace UI.Misc
 
         public void Update()
         {
-            if (EventSystem.current.currentSelectedGameObject == null)
-            {
-                EventSystem.current.SetSelectedGameObject(selected);
-            }
+            if (EventSystem.current.currentSelectedGameObject == null) EventSystem.current.SetSelectedGameObject(selected);
             selected = EventSystem.current.currentSelectedGameObject;
         }
     }

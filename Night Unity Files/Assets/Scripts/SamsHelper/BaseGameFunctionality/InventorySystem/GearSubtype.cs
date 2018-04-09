@@ -1,4 +1,4 @@
-﻿namespace SamsHelper.BaseGameFunctionality.Characters
+﻿namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public enum GearSubtype
     {

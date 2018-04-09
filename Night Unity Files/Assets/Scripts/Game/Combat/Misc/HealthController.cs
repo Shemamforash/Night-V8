@@ -1,17 +1,17 @@
 ﻿using System;
-using Facilitating.UIControllers;
-using Game.Combat.CharacterUi;
+using Game.Combat.Player;
+using Game.Combat.Ui;
 using NUnit.Framework;
 using SamsHelper.ReactiveUI;
 
-namespace Game.Combat
+namespace Game.Combat.Misc
 {
     public class HealthController
     {
         private readonly Number _healthRemaining = new Number();
+        private CharacterCombat _character;
         private event Action<float> OnTakeDamage;
         private event Action<float> OnHeal;
-        private CharacterCombat _character;
 
         private UIHealthBarController GetHealthBarController()
         {
@@ -50,8 +50,15 @@ namespace Game.Combat
             OnHeal?.Invoke(amount);
         }
 
-        public void AddOnTakeDamage(Action<float> a) => OnTakeDamage += a;
-        public void AddOnHeal(Action<float> a) => OnHeal += a;
+        public void AddOnTakeDamage(Action<float> a)
+        {
+            OnTakeDamage += a;
+        }
+
+        public void AddOnHeal(Action<float> a)
+        {
+            OnHeal += a;
+        }
 
         public float GetNormalisedHealthValue()
         {

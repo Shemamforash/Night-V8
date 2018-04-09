@@ -1,19 +1,16 @@
-﻿using UnityEngine.UI;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
-namespace UI.Misc
+namespace Facilitating.UI
 {
     public class ButtonGroup : MonoBehaviour
     {
-        public Button initialActiveButton;
         private Button activeButton;
+        public Button initialActiveButton;
 
         public void OnEnable()
         {
-            if (activeButton != initialActiveButton)
-            {
-                MakeActiveInGroup(initialActiveButton);
-            }
+            if (activeButton != initialActiveButton) MakeActiveInGroup(initialActiveButton);
         }
 
         public void MakeActiveInGroup(Button btn)
@@ -24,10 +21,7 @@ namespace UI.Misc
 
         private void RevertActiveButton()
         {
-            if (activeButton != null)
-            {
-                activeButton = null;
-            }
+            if (activeButton != null) activeButton = null;
         }
 
         public void OnDisable()

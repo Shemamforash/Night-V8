@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
-using Game.Characters.Player;
-using Game.Combat.Skills;
-using SamsHelper;
+using Facilitating.UIControllers;
+using Game.Combat.Generation;
+using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
+using SamsHelper.Libraries;
 using UnityEngine;
 
-namespace Game.Combat
+namespace Game.Combat.Misc
 {
     public class SkillBar : MonoBehaviour
     {
@@ -20,7 +21,7 @@ namespace Game.Combat
         {
             CooldownControllers = new List<CooldownController>();
             CostControllers = new List<UISkillCostController>();
-            
+
             for (int i = 0; i < NoSlots; ++i)
             {
                 CooldownControllers.Add(Helper.FindChildWithName<CooldownController>(gameObject, "Skill " + (i + 1)));
@@ -33,7 +34,7 @@ namespace Game.Combat
             CooldownControllers.ForEach(s => _skillsCooldown.SetController(s));
         }
 
-        public static void BindSkills(Player player)
+        public static void BindSkills(Characters.Player player)
         {
             BindSkill(0, player.CharacterSkillOne);
             BindSkill(1, player.CharacterSkillTwo);

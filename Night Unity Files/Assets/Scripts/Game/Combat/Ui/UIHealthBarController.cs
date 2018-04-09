@@ -1,22 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using SamsHelper;
+using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Facilitating.UIControllers
+namespace Game.Combat.Ui
 {
     public class UIHealthBarController : MonoBehaviour
     {
-        private Slider _slider;
-        private RectTransform _fill;
-        private ParticleSystem _bleedEffect, _burnEffect;
-        private RectTransform _sliderRect;
-        private float _edgeWidthRatio = 3f;
-        private TextMeshProUGUI _healthText;
         private static readonly List<Fader> _faderPool = new List<Fader>();
-        
+        private ParticleSystem _bleedEffect, _burnEffect;
+        private float _edgeWidthRatio = 3f;
+        private RectTransform _fill;
+        private TextMeshProUGUI _healthText;
+        private Slider _slider;
+        private RectTransform _sliderRect;
+
         public void Awake()
         {
             GameObject healthBar = Helper.FindChildWithName(gameObject, "Health Bar");
@@ -61,41 +61,6 @@ namespace Facilitating.UIControllers
             fader.Restart();
         }
 
-        private class Fader : MonoBehaviour
-        {
-            private Image _faderImage;
-            private const float Duration = 0.5f;
-
-            public void Awake()
-            {
-                _faderImage = GetComponent<Image>();
-            }
-
-            private void OnDestroy()
-            {
-                _faderPool.Remove(this);
-            }
-
-            public void Restart()
-            {
-                StartCoroutine(Fade());
-            }
-
-            private IEnumerator Fade()
-            {
-                float age = 0f;
-                while (age < Duration)
-                {
-                    float alpha = 1 - age / Duration;
-                    _faderImage.color = new Color(1, 0, 0, alpha);
-                    age += Time.deltaTime;
-                    yield return null;
-                }
-                gameObject.SetActive(false);
-                _faderPool.Add(this);
-            }
-        }
-
         public void SetValue(float normalised, float current, float max)
         {
             float normalisedHealth = normalised;
@@ -136,6 +101,42 @@ namespace Facilitating.UIControllers
         public void StopBurning()
         {
             _burnEffect.Stop();
+        }
+
+        private class Fader : MonoBehaviour
+        {
+            private const float Duration = 0.5f;
+            private Image _faderImage;
+
+            public void Awake()
+            {
+                _faderImage = GetComponent<Image>();
+            }
+
+            private void OnDestroy()
+            {
+                _faderPool.Remove(this);
+            }
+
+            public void Restart()
+            {
+                StartCoroutine(Fade());
+            }
+
+            private IEnumerator Fade()
+            {
+                float age = 0f;
+                while (age < Duration)
+                {
+                    float alpha = 1 - age / Duration;
+                    _faderImage.color = new Color(1, 0, 0, alpha);
+                    age += Time.deltaTime;
+                    yield return null;
+                }
+
+                gameObject.SetActive(false);
+                _faderPool.Add(this);
+            }
         }
     }
 }

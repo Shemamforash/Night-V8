@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Combat.Enemies.EnemyTypes
+namespace Game.Combat.Enemies.Humans
 {
     public class Medic : EnemyBehaviour
     {
@@ -8,8 +8,8 @@ namespace Game.Combat.Enemies.EnemyTypes
         private const int HealTicks = 5;
         private const float HealDuration = 2f;
         private const float HealInterval = HealDuration / HealTicks;
-        private EnemyBehaviour _healTarget;
         private static GameObject _healPrefab;
+        private EnemyBehaviour _healTarget;
 
         public override void Initialise(Enemy enemy)
         {
@@ -38,6 +38,7 @@ namespace Game.Combat.Enemies.EnemyTypes
                     ChooseNextAction();
                     return;
                 }
+
                 if (age < currentTick * HealInterval) return;
                 ++currentTick;
                 _healTarget.HealthController.Heal(HealAmount);

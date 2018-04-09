@@ -4,6 +4,7 @@ using System.Linq;
 using Game.Gear.UI;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
@@ -13,12 +14,12 @@ namespace SamsHelper.ReactiveUI.InventoryUI
     public class MenuList : MonoBehaviour
     {
         [HideInInspector] public readonly List<ViewParent> Items = new List<ViewParent>();
+        public bool CentreOnSelectedItem;
+        public EnhancedButton CloseButton;
         [HideInInspector] public Transform InventoryContent;
         public int MaxDistance;
         [Range(0f, 1f)] public float MinFade = 1f;
         [Range(0, 1f)] public float UnselectedItemScale = 1f;
-        public bool CentreOnSelectedItem;
-        public EnhancedButton CloseButton;
         private event Action OnContentChange;
 
         public virtual void Awake()
@@ -48,13 +49,14 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             if (newItems.Count != 0)
             {
                 newItems.ForEach(item => AddItem(item));
-                if(autoSelectFirst) Items[0].PrimaryButton.Button().Select();
+                if (autoSelectFirst) Items[0].PrimaryButton.Button().Select();
                 return;
             }
+
             InventoryUi emptyButton = new InventoryUi(null, InventoryContent);
             emptyButton.SetCentralTextCallback(() => "None");
             AddPlainButton(emptyButton);
-            if(autoSelectFirst) CloseButton?.Button().Select();
+            if (autoSelectFirst) CloseButton?.Button().Select();
         }
 
         protected virtual void UpdateItem(MyGameObject item)
@@ -80,6 +82,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 existingUi.Update();
                 return existingUi;
             }
+
             ViewParent itemUi = item.CreateUi(InventoryContent);
             if (itemUi != null)
             {
@@ -91,6 +94,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 if (UnselectedItemScale != 1) itemUi.PrimaryButton.AddOnSelectEvent(() => ScaleItems(itemUi));
                 if (CentreOnSelectedItem) itemUi.PrimaryButton.AddOnSelectEvent(() => CentreContentOnItem(itemUi));
             }
+
             return itemUi;
         }
 
@@ -117,27 +121,21 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 EnhancedButton to = navigatableItems[i].PrimaryButton;
                 Helper.SetReciprocalNavigation(from, to);
             }
+
             OnContentChange?.Invoke();
             if (CloseButton == null) return;
             ViewParent lastItem = navigatableItems.Count > 0 ? navigatableItems.Last() : null;
             if (lastItem != null)
-            {
                 Helper.SetReciprocalNavigation(lastItem.PrimaryButton, CloseButton);
-            }
             else
-            {
                 CloseButton.Button().Select();
-            }
         }
 
         public void SendToLast(InventoryUi button)
         {
             int index = Items.IndexOf(button);
             if (index == 0 && Items.Count == 1) return;
-            for (int i = index + 1; i < Items.Count; ++i)
-            {
-                Items[i - 1] = Items[i];
-            }
+            for (int i = index + 1; i < Items.Count; ++i) Items[i - 1] = Items[i];
             Items[Items.Count - 1] = button;
             button.GetGameObject().transform.SetAsLastSibling();
         }
@@ -150,18 +148,13 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             {
                 ViewParent otherItem = Items[i];
                 float targetHeight = otherItem.GetGameObject().GetComponent<RectTransform>().rect.height;
-                if (i == itemIndex - 1 && otherItem is GearUi)
-                {
-                    targetHeight = 40f;
-                }
-                if (i == itemIndex && otherItem is GearUi)
-                {
-                    targetHeight = 190f;
-                }
+                if (i == itemIndex - 1 && otherItem is GearUi) targetHeight = 40f;
+                if (i == itemIndex && otherItem is GearUi) targetHeight = 190f;
                 if (i == itemIndex) targetHeight /= 2;
                 targetPosition += targetHeight;
                 if (otherItem == itemUi) break;
             }
+
             RectTransform rect = InventoryContent.GetComponent<RectTransform>();
             Vector2 rectPosition = rect.anchoredPosition;
             rectPosition.y = targetPosition;

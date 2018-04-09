@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using Facilitating.UI.Elements;
+using Game.Characters;
 using Game.Characters.CharacterActions;
-using Game.Characters.Player;
 using Game.Gear.Weapons;
-using Game.World;
-using SamsHelper;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
@@ -15,11 +14,11 @@ namespace Facilitating.UIControllers
     public class UiCreateAmmoController : Menu
     {
         private static Player _player;
-        private EnhancedButton _pistolButton, _rifleButton, _shotgunButton, _smgButton, _lmgButton, _closeButton;
         private static UiCreateAmmoController _instance;
-        private EnhancedText _scrapLeft;
         private List<EnhancedButton> _canAfford;
         private List<EnhancedButton> _cantAfford;
+        private EnhancedButton _pistolButton, _rifleButton, _shotgunButton, _smgButton, _lmgButton, _closeButton;
+        private EnhancedText _scrapLeft;
 
         public void Awake()
         {
@@ -32,7 +31,7 @@ namespace Facilitating.UIControllers
             _closeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Close Menu");
             _scrapLeft = Helper.FindChildWithName<EnhancedText>(gameObject, "Scrap Left");
         }
-    
+
         public void Start()
         {
             _pistolButton.AddOnClick(() => CraftAmmo(InventoryResourceType.PistolMag));
@@ -72,6 +71,7 @@ namespace Facilitating.UIControllers
                 _canAfford[i].GetComponent<CanvasGroup>().alpha = 1;
                 if (i != 0) _canAfford[i].SetUpNavigation(_canAfford[i - 1]);
             }
+
             _cantAfford.ForEach(t => t.GetComponent<CanvasGroup>().alpha = 0.4f);
             if (_canAfford.Count > 0)
             {
@@ -94,6 +94,7 @@ namespace Facilitating.UIControllers
                 _canAfford.Add(button);
                 return;
             }
+
             _cantAfford.Add(button);
         }
 
@@ -127,6 +128,7 @@ namespace Facilitating.UIControllers
                     quantity = (int) WorldState.HomeInventory().GetResourceQuantity(InventoryResourceType.LmgMag);
                     break;
             }
+
             return "have " + quantity;
         }
 

@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using Game.World;
-using SamsHelper;
+using Game.Global;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace Facilitating.MenuNavigation
 {
     public class Popup
     {
-        private readonly GameObject _popupObject;
-        private readonly Transform _container;
-        private readonly GameObject _previousSelectable;
-        private static string _optionPrefabName = "Prefabs/Inventory/SimpleItem";
-        private readonly List<GameObject> _options = new List<GameObject>();
+        private static readonly string _optionPrefabName = "Prefabs/Inventory/SimpleItem";
         private static readonly Stack<Popup> PopupStack = new Stack<Popup>();
+        private readonly Transform _container;
+        private readonly List<GameObject> _options = new List<GameObject>();
+        private readonly GameObject _popupObject;
         private readonly Popup _previousPopup;
+        private readonly GameObject _previousSelectable;
 
         public Popup(string title)
         {
@@ -32,6 +33,7 @@ namespace Facilitating.MenuNavigation
             {
                 _previousPopup.Hide();
             }
+
             _popupObject = Helper.InstantiateUiObject("Prefabs/Popup Menu", GameObject.Find("Canvas").transform);
             _container = _popupObject.transform.Find("Bar");
             _previousSelectable = EventSystem.current.currentSelectedGameObject;
@@ -41,13 +43,10 @@ namespace Facilitating.MenuNavigation
 
         private void Destroy(bool clearStack = false)
         {
-            GameObject.Destroy(_popupObject);
+            Object.Destroy(_popupObject);
             _previousSelectable.GetComponent<Selectable>().Select();
             Popup thisPopup = PopupStack.Pop();
-            if (thisPopup != this)
-            {
-                throw new Exception("Next popup in popup stack should have been this element, but ,uh, it wasn't.");
-            }
+            if (thisPopup != this) throw new Exception("Next popup in popup stack should have been this element, but ,uh, it wasn't.");
             if (_previousPopup == null)
             {
                 MenuStateMachine.ShowCurrentMenu();
@@ -55,10 +54,7 @@ namespace Facilitating.MenuNavigation
             }
             else
             {
-                if (clearStack)
-                {
-                    _previousPopup.Destroy(true);
-                }
+                if (clearStack) _previousPopup.Destroy(true);
                 _previousPopup.Show();
             }
         }
@@ -74,13 +70,10 @@ namespace Facilitating.MenuNavigation
             Button b = newOption.GetComponent<Button>();
             b.onClick.AddListener(() =>
             {
-                if(autoDestruct) Destroy(closeAll);
+                if (autoDestruct) Destroy(closeAll);
                 optionOnClick?.Invoke();
             });
-            if (_options.Count == 0)
-            {
-                b.Select();
-            }
+            if (_options.Count == 0) b.Select();
             Helper.FindChildWithName<TextMeshProUGUI>(newOption, "Text").text = optionText;
             _options.Add(newOption);
             int i = _options.IndexOf(newOption);
@@ -89,6 +82,7 @@ namespace Facilitating.MenuNavigation
                 Helper.SetReciprocalNavigation(b, _options[0].GetComponent<Button>());
                 Helper.SetReciprocalNavigation(_options[i - 1].GetComponent<Button>(), b);
             }
+
             b.Select();
         }
 

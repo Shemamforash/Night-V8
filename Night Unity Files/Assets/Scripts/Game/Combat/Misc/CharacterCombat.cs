@@ -1,46 +1,91 @@
 ﻿using System.Collections;
-using Game.Combat.Skills;
+using Game.Combat.Generation;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-namespace Game.Combat
+namespace Game.Combat.Misc
 {
     public abstract class CharacterCombat : MonoBehaviour
     {
-        public Bleed Bleeding;
-        public Burn Burn;
-        public Sickness Sick;
-
-        private Rigidbody2D _rigidbody;
-        private bool Sprinting;
         private const int SprintModifier = 2;
-        protected bool IsImmobilised;
         private const float DashForce = 300;
-
-        public bool IsDead;
-
-//        public bool IsDead;
-
-        private readonly Number Recoil = new Number(0, 0, 1f);
         private const float RecoilRecoveryRate = 0.02f;
         private const float TimeToStartRecovery = 0.5f;
-        private float _recoveryTimer;
-        private float _distanceToTarget = -1;
+
+        private const float KnockbackTime = 2f;
+
+        private readonly Number Recoil = new Number(0, 0, 1f);
         private Cell _currentCell;
-        public HealthController HealthController = new HealthController();
+        private float _distanceToTarget = -1;
+
+        private Vector2 _forceToadd = Vector2.zero;
+        private float _recoveryTimer;
+
+        private Rigidbody2D _rigidbody;
         protected ArmourController ArmourController;
+        public HealthController HealthController = new HealthController();
+
+        public bool IsDead;
+        protected bool IsImmobilised;
+        protected bool KnockedBack;
 
         public float Speed;
+        private bool Sprinting;
 
         public float DistanceToTarget()
         {
             if (_distanceToTarget == -1) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);
             return _distanceToTarget;
         }
+
+        public void Burn()
+        {
+            if (_burnTicksRemaining == 0) _burnTime = 1;
+            _burnTicksRemaining = ConditionTicksMax;
+        }
+
+        public void Bleed()
+        {
+            if (_bleedTicksRemaining == 0) _bleedTime = 1;
+            _bleedTicksRemaining = ConditionTicksMax;
+        }
+
+        private void UpdateConditions()
+        {
+            if (_burnTicksRemaining > 0)
+            {
+                if (_burnTime <= 0)
+                {
+                    _burnTime = 1 - _burnTime;
+                    ArmourController.TakeDamage(1);
+                    --_burnTicksRemaining;
+                }
+                else
+                {
+                    _burnTime -= Time.deltaTime;
+                }
+            }
+            if (_bleedTicksRemaining > 0)
+            {
+                if (_burnTime <= 0)
+                {
+                    _bleedTime = 1 - _bleedTime;
+                    HealthController.TakeDamage(1);
+                    --_bleedTicksRemaining;
+                }
+                else
+                {
+                    _bleedTime -= Time.deltaTime;
+                }
+            }
+        }
+
+        private const int ConditionTicksMax = 5;
+        private int _burnTicksRemaining, _bleedTicksRemaining;
+        private float _burnTime, _bleedTime;
 
         public Cell CurrentCell()
         {
@@ -56,13 +101,9 @@ namespace Game.Combat
         {
             float chanceToAbsorbDamage = shot.DidPierce() ? 0 : ArmourController.GetCurrentArmour() / 10f;
             if (chanceToAbsorbDamage >= Random.Range(0f, 1f))
-            {
                 ArmourController.TakeDamage(shot.DamageDealt());
-            }
             else
-            {
                 HealthController.TakeDamage(shot.DamageDealt());
-            }
         }
 
         public virtual void Kill()
@@ -70,9 +111,6 @@ namespace Game.Combat
             IsDead = true;
 //            Destroy(CharacterController.gameObject);
         }
-
-        private const float KnockbackTime = 2f;
-        protected bool KnockedBack = false;
 
         public virtual void Knockback(Vector3 source, float force = 10f)
         {
@@ -100,22 +138,8 @@ namespace Game.Combat
 
         //CONDITIONS
 
-        protected void SetConditions()
-        {
-            Bleeding = new Bleed(this);
-            Burn = new Burn(this);
-            Sick = new Sickness(this);
-//            Burn.OnConditionNonEmpty = HealthController.GetHealthBarController().StartBurning;
-//            Burn.OnConditionEmpty = HealthController.GetHealthBarController().StopBurning;
-//            Bleeding.OnConditionNonEmpty = HealthController.GetHealthBarController().StartBleeding;
-//            Bleeding.OnConditionEmpty = HealthController.GetHealthBarController().StopBleeding;
-        }
-
         public virtual void ExitCombat()
         {
-            Burn.Clear();
-            Bleeding.Clear();
-            Sick.Clear();
         }
 
         public void Immobilised(bool immobilised)
@@ -132,10 +156,8 @@ namespace Game.Combat
         {
             if (GetTarget() != null) _distanceToTarget = CurrentCell().Distance(GetTarget().CurrentCell());
             _currentCell = PathingGrid.PositionToCell(transform.position);
-            Burn.Update();
-            Sick.Update();
-            Bleeding.Update();
             UpdateRecoil();
+            UpdateConditions();
         }
 
         public void IncreaseRecoil()
@@ -171,8 +193,6 @@ namespace Game.Combat
             Recoil.Decrement(RecoilRecoveryRate + Time.deltaTime);
         }
 
-        private Vector2 _forceToadd = Vector2.zero;
-
         public void FixedUpdate()
         {
             KeepInBounds();
@@ -192,15 +212,17 @@ namespace Game.Combat
             int threshold = 3;
             float yForceModifier = 1;
             float xForceModifier = 1;
-            
-            if (distanceToTop <= threshold && _forceToadd.y < 0) yForceModifier = (float)distanceToTop / threshold - 1;
-            else if (distanceToBottom <= threshold && _forceToadd.y > 0)  yForceModifier = (float)distanceToBottom / threshold - 1;
 
-            if (distanceToLeft <= threshold && _forceToadd.x < 0) xForceModifier = (float)distanceToLeft / threshold - 1;
-            else if (distanceToRight <= threshold && _forceToadd.x > 0) xForceModifier = (float)distanceToRight / threshold - 1;
+            if (distanceToTop <= threshold && _forceToadd.y < 0) yForceModifier = (float) distanceToTop / threshold - 1;
+            else if (distanceToBottom <= threshold && _forceToadd.y > 0)
+                yForceModifier = (float) distanceToBottom / threshold - 1;
+
+            if (distanceToLeft <= threshold && _forceToadd.x < 0) xForceModifier = (float) distanceToLeft / threshold - 1;
+            else if (distanceToRight <= threshold && _forceToadd.x > 0)
+                xForceModifier = (float) distanceToRight / threshold - 1;
 
             _forceToadd.x *= Mathf.Clamp(xForceModifier, 0f, 1f);
-            _forceToadd.y *= Mathf.Clamp(yForceModifier, 0f ,1f);
+            _forceToadd.y *= Mathf.Clamp(yForceModifier, 0f, 1f);
         }
 
         protected virtual void Dash(Vector2 direction)

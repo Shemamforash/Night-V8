@@ -1,15 +1,15 @@
 ﻿using System;
-using Game.Combat.Enemies.EnemyTypes.Misc;
+using Game.Combat.Enemies.Misc;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.Combat.Enemies.EnemyTypes.Humans
+namespace Game.Combat.Enemies.Humans
 {
     public class Witch : EnemyBehaviour
     {
+        private float _cooldownTime;
         private int _damageTaken;
         private bool _throwing;
-        private float _cooldownTime;
 
         private Action ThrowGrenade()
         {

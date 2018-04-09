@@ -1,5 +1,6 @@
 ﻿using System;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
@@ -8,13 +9,13 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 {
     public class InventoryTransferManager : Menu
     {
-        private GameObject _inventory1, _inventory2;
-        public InventoryDisplay InventoryLeft, InventoryRight;
-
-        private Action _closeAction;
         private static EnhancedButton _closeButton;
 
         private static InventoryTransferManager _instance;
+
+        private Action _closeAction;
+        private GameObject _inventory1, _inventory2;
+        public InventoryDisplay InventoryLeft, InventoryRight;
 
         protected void Awake()
         {
@@ -54,6 +55,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                     origin.SetLeftNavigation(targetButton);
                     return;
                 }
+
                 origin.SetRightNavigation(targetButton);
             });
         }

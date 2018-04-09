@@ -1,4 +1,4 @@
-﻿namespace Game.World.Environment_and_Weather
+﻿namespace Game.Exploration.Weather
 {
     public enum TemperatureCategory
     {

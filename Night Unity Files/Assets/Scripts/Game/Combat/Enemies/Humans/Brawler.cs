@@ -1,4 +1,4 @@
-﻿namespace Game.Combat.Enemies.EnemyTypes.Humans
+﻿namespace Game.Combat.Enemies.Humans
 {
     public class Brawler : EnemyBehaviour
     {

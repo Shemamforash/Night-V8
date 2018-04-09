@@ -1,6 +1,6 @@
-﻿using SamsHelper;
-using SamsHelper.BaseGameFunctionality.Basic;
+﻿using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
@@ -11,6 +11,7 @@ namespace Game.Gear.UI
     {
         protected GameObject DetailedSection;
         protected GameObject SummarySection, ModifierSection, StatsSection;
+
         protected TextMeshProUGUI TitleText,
             SubTitleText,
             ModifierColumnOneText,

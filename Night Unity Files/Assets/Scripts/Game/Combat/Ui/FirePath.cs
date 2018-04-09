@@ -1,18 +1,19 @@
-﻿using UnityEngine;
+﻿using Game.Combat.Misc;
+using UnityEngine;
 
-namespace Game.Combat.Skills
+namespace Game.Combat.Ui
 {
     public class FirePath : MonoBehaviour
     {
         private const float FireDropDistance = 0.2f;
-        private Vector3 _lastDropPosition;
         private Vector3 _direction = Vector3.zero;
+        private Vector3 _lastDropPosition;
 
         public void Awake()
         {
             _lastDropPosition = transform.position;
         }
-        
+
         public void Update()
         {
             float distanceTravelled = Vector2.Distance(_lastDropPosition, transform.position);

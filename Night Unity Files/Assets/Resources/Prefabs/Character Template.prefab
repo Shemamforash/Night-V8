@@ -950,6 +950,7 @@ GameObject:
   - component: {fileID: 224787441924160268}
   - component: {fileID: 222731448142039746}
   - component: {fileID: 114183791573777744}
+  - component: {fileID: 114525448212507132}
   m_Layer: 5
   m_Name: Character Template
   m_TagString: Untagged
@@ -4773,6 +4774,20 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &114525448212507132
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1397653164224310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f456d6d212c48edbd84b188d9d289bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AccessoryController: {fileID: 0}
+  ArmourController: {fileID: 0}
+  WeaponController: {fileID: 0}
 --- !u!114 &114533002553622910
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6947,12 +6962,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00411df61e24d2c9149c5c8cb41d94c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CentreOnSelectedItem: 0
+  CloseButton: {fileID: 0}
   InventoryContent: {fileID: 0}
   MaxDistance: 0
   MinFade: 1
   UnselectedItemScale: 1
-  CentreOnSelectedItem: 0
-  CloseButton: {fileID: 0}
 --- !u!114 &114864535827677780
 MonoBehaviour:
   m_ObjectHideFlags: 1

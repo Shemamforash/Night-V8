@@ -1,4 +1,6 @@
-﻿namespace Game.Combat.Enemies.EnemyTypes
+﻿using Game.Combat.Misc;
+
+namespace Game.Combat.Enemies.Humans
 {
     public class Martyr : EnemyBehaviour
     {
@@ -19,7 +21,7 @@
         {
             MoveToPlayer();
         }
-        
+
         public override void ChooseNextAction()
         {
             CurrentAction = null;
@@ -27,14 +29,14 @@
 
         protected override void ReachPlayer()
         {
-            if(!_detonated) Detonate();
+            if (!_detonated) Detonate();
         }
-        
+
         private void Detonate()
         {
             _detonated = true;
             SetActionText("Detonating");
             Explosion.CreateExplosion(transform.position, 2, 50).Detonate();
         }
-    }    
+    }
 }

@@ -1,32 +1,34 @@
-﻿using Facilitating.UI.Elements;
-using Game.Characters;
-using SamsHelper;
+﻿using Game.Characters;
+using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIConditionController : MonoBehaviour
+namespace Facilitating.UIControllers
 {
-    public Slider ConditionSlider;
-    public EnhancedText ConditionText;
-
-    public void HookStarvation(DesolationAttributes attributes)
+    public class UIConditionController : MonoBehaviour
     {
-        attributes.Starvation.AddOnValueChange(a =>
-        {
-            if(ConditionSlider != null)
-                ConditionSlider.value = 1 - Helper.Normalise(a.CurrentValue(), a.Max);
-            ConditionText.Text(attributes.GetHungerStatus());
-        });
-    }
+        public Slider ConditionSlider;
+        public EnhancedText ConditionText;
 
-    public void HookDehydration(DesolationAttributes attributes)
-    {
-        attributes.Dehydration.AddOnValueChange(a =>
+        public void HookStarvation(DesolationAttributes attributes)
         {
-            if(ConditionSlider != null)
-                ConditionSlider.value = 1 - Helper.Normalise(a.CurrentValue(), a.Max);
-            ConditionText.Text(attributes.GetThirstStatus());
-        });
+            attributes.Starvation.AddOnValueChange(a =>
+            {
+                if (ConditionSlider != null)
+                    ConditionSlider.value = 1 - Helper.Normalise(a.CurrentValue(), a.Max);
+                ConditionText.Text(attributes.GetHungerStatus());
+            });
+        }
+
+        public void HookDehydration(DesolationAttributes attributes)
+        {
+            attributes.Dehydration.AddOnValueChange(a =>
+            {
+                if (ConditionSlider != null)
+                    ConditionSlider.value = 1 - Helper.Normalise(a.CurrentValue(), a.Max);
+                ConditionText.Text(attributes.GetThirstStatus());
+            });
+        }
     }
-    
 }

@@ -1,14 +1,15 @@
 ﻿using Facilitating.UIControllers;
 using Game.Characters;
-using SamsHelper;
+using Game.Combat.Misc;
+using SamsHelper.Libraries;
 using UnityEngine;
 
-namespace Game.Combat.CharacterUi
+namespace Game.Combat.Ui
 {
     public class CharacterUi : MonoBehaviour
     {
-        protected UIHealthBarController _healthBarController;
         protected UIArmourController _armourController;
+        protected UIHealthBarController _healthBarController;
 
         public virtual void Awake()
         {

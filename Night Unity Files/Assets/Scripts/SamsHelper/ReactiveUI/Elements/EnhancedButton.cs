@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using SamsHelper.Input;
+using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -12,43 +13,75 @@ namespace SamsHelper.ReactiveUI.Elements
     [RequireComponent(typeof(Button))]
     public class EnhancedButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler, IInputListener
     {
-        private event Action OnSelectActions;
-        private event Action OnDeselectActions;
+        private readonly List<Image> _borderImages = new List<Image>();
         private readonly List<HoldAction> _onHoldActions = new List<HoldAction>();
         private Button _button;
+        private Coroutine _fadeCoroutine;
+        private bool _justEntered;
+        private bool _needsFadeIn;
+        private Action _onDownAction, _onUpAction;
         public GameObject Border;
         [Range(0f, 5f)] public float FadeDuration = 0.5f;
-        private bool _justEntered;
-        private Action _onDownAction, _onUpAction;
-        private Coroutine _fadeCoroutine;
-        private readonly List<Image> _borderImages = new List<Image>();
-        private bool _needsFadeIn;
 
-        private class HoldAction
+        public void OnDeselect(BaseEventData eventData)
         {
-            private readonly Action _holdAction;
-            private readonly float _duration;
-            private float _startTime;
+            Exit();
+        }
 
-            public HoldAction(Action a, float duration)
+        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+            if (_button == null || !IsSelected()) return;
+            if (axis == InputAxis.Fire)
+                if (isHeld)
+                {
+                    if (_button.gameObject == EventSystem.current.currentSelectedGameObject) _onHoldActions.ForEach(a => a.ExecuteIfDone());
+                }
+                else
+                {
+                    _onHoldActions.ForEach(a => a.Reset());
+                }
+
+            if (isHeld || _justEntered || axis != InputAxis.Vertical) return;
+            if (direction > 0)
             {
-                _holdAction = a;
-                _duration = duration;
-                Reset();
+                if (_button.navigation.selectOnUp == null && _onUpAction == null) return;
+                _onUpAction?.Invoke();
+                Exit();
             }
-
-            public void Reset()
+            else if (direction < 0)
             {
-                _startTime = Time.time;
-            }
-
-            public void ExecuteIfDone()
-            {
-                if (!(Time.time - _startTime > _duration)) return;
-                _holdAction();
-                Reset();
+                if (_button.navigation.selectOnDown == null && _onDownAction == null) return;
+                _onDownAction?.Invoke();
+                Exit();
             }
         }
+
+        public void OnInputUp(InputAxis axis)
+        {
+            if (IsSelected() && axis == InputAxis.Vertical) _justEntered = false;
+        }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
+        }
+
+        public void OnPointerEnter(PointerEventData p)
+        {
+            Enter();
+        }
+
+        public void OnPointerExit(PointerEventData p)
+        {
+            Exit();
+        }
+
+        public void OnSelect(BaseEventData eventData)
+        {
+            Enter();
+        }
+
+        private event Action OnSelectActions;
+        private event Action OnDeselectActions;
 
         public Button Button()
         {
@@ -89,17 +122,24 @@ namespace SamsHelper.ReactiveUI.Elements
             GetComponent<Button>().onClick.AddListener(a);
         }
 
-        public void AddOnSelectEvent(Action a) => OnSelectActions += a;
-        public void AddOnDeselectEvent(Action a) => OnDeselectActions += a;
-        public void OnSelect(BaseEventData eventData) => Enter();
-        public void OnDeselect(BaseEventData eventData) => Exit();
-        public void OnPointerEnter(PointerEventData p) => Enter();
-        public void OnPointerExit(PointerEventData p) => Exit();
-        public void AddOnHold(Action a, float duration) => _onHoldActions.Add(new HoldAction(a, duration));
+        public void AddOnSelectEvent(Action a)
+        {
+            OnSelectActions += a;
+        }
+
+        public void AddOnDeselectEvent(Action a)
+        {
+            OnDeselectActions += a;
+        }
+
+        public void AddOnHold(Action a, float duration)
+        {
+            _onHoldActions.Add(new HoldAction(a, duration));
+        }
 
         private void UseSelectedColours()
         {
-            if(Border != null) Border?.SetActive(true);
+            if (Border != null) Border?.SetActive(true);
             TryStartFade(1);
         }
 
@@ -128,7 +168,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private void UseDeselectedColours()
         {
-            if(Border != null) Border.SetActive(false);
+            if (Border != null) Border.SetActive(false);
             TryStartFade(0);
         }
 
@@ -137,54 +177,9 @@ namespace SamsHelper.ReactiveUI.Elements
             return EventSystem.current.currentSelectedGameObject == gameObject;
         }
 
-        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-            if (_button == null || !IsSelected()) return;
-            if (axis == InputAxis.Fire)
-            {
-                if (isHeld)
-                {
-                    if (_button.gameObject == EventSystem.current.currentSelectedGameObject)
-                    {
-                        _onHoldActions.ForEach(a => a.ExecuteIfDone());
-                    }
-                }
-                else
-                {
-                    _onHoldActions.ForEach(a => a.Reset());
-                }
-            }
-
-            if (isHeld || _justEntered || axis != InputAxis.Vertical) return;
-            if (direction > 0)
-            {
-                if (_button.navigation.selectOnUp == null && _onUpAction == null) return;
-                _onUpAction?.Invoke();
-                Exit();
-            }
-            else if (direction < 0)
-            {
-                if (_button.navigation.selectOnDown == null && _onDownAction == null) return;
-                _onDownAction?.Invoke();
-                Exit();
-            }
-        }
-
         private void OnDestroy()
         {
             InputHandler.UnregisterInputListener(this);
-        }
-
-        public void OnInputUp(InputAxis axis)
-        {
-            if (IsSelected() && axis == InputAxis.Vertical)
-            {
-                _justEntered = false;
-            }
-        }
-
-        public void OnDoubleTap(InputAxis axis, float direction)
-        {
         }
 
         public void SetRightNavigation(EnhancedButton target, bool reciprocate = true)
@@ -273,5 +268,30 @@ namespace SamsHelper.ReactiveUI.Elements
             _onUpAction = a;
         }
 
+        private class HoldAction
+        {
+            private readonly float _duration;
+            private readonly Action _holdAction;
+            private float _startTime;
+
+            public HoldAction(Action a, float duration)
+            {
+                _holdAction = a;
+                _duration = duration;
+                Reset();
+            }
+
+            public void Reset()
+            {
+                _startTime = Time.time;
+            }
+
+            public void ExecuteIfDone()
+            {
+                if (!(Time.time - _startTime > _duration)) return;
+                _holdAction();
+                Reset();
+            }
+        }
     }
 }

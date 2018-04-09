@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 
-namespace Game.World
+namespace Game.Global
 {
     public class DesolationInventory : Inventory
     {

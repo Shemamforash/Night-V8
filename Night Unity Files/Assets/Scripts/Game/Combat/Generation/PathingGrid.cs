@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using SamsHelper;
+using SamsHelper.Libraries;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
-namespace Game.Combat
+namespace Game.Combat.Generation
 {
     public class PathingGrid : MonoBehaviour
     {
@@ -25,6 +24,8 @@ namespace Game.Combat
         private static readonly Collider2D[] colliders = new Collider2D[5000];
         private static Vector2 _lastPlayerPosition;
         private static readonly HashSet<Cell> _hiddenCells = new HashSet<Cell>(new CellComparer());
+
+        private static readonly List<Cell> _cellsInRange = new List<Cell>();
 
         public void Awake()
         {
@@ -96,7 +97,7 @@ namespace Game.Combat
         {
             Thread thread = new Thread(() =>
             {
-                List<Cell> newPath = Pathfinding.AStar(from.Node, to.Node, _gridNodes);
+                List<Cell> newPath = Pathfinding.AStar(from.Node, to.Node);
                 int currentIndex = 0;
                 while (currentIndex < newPath.Count)
                 {
@@ -107,13 +108,9 @@ namespace Game.Combat
                     {
                         Cell next = newPath[i];
                         if (noneHit)
-                        {
                             cellsToRemove.Add(next);
-                        }
                         else if (!IsLineObstructed(current.Position, next.Position, true))
-                        {
                             noneHit = true;
-                        }
                     }
 
                     cellsToRemove.ForEach(cell => newPath.Remove(cell));
@@ -125,19 +122,6 @@ namespace Game.Combat
             });
             thread.Start();
             return thread;
-        }
-
-        private class CellComparer : IEqualityComparer<Cell>
-        {
-            public bool Equals(Cell x, Cell y)
-            {
-                return x.id == y.id;
-            }
-
-            public int GetHashCode(Cell cell)
-            {
-                return cell.id;
-            }
         }
 
         private static List<Cell> CellsInRange(Cell origin, int maxRange, int minRange = 0)
@@ -154,15 +138,13 @@ namespace Game.Combat
             if (endY > GridWidth) endY = GridWidth;
 
             for (int x = startX; x < endX; ++x)
+            for (int y = startY; y < endY; ++y)
             {
-                for (int y = startY; y < endY; ++y)
-                {
-                    Cell current = Grid[x, y];
-                    if (!current.Reachable) continue;
-                    float distance = current.Distance(origin);
-                    if (distance < minRange || distance > maxRange) continue;
-                    cellsInRange.Add(current);
-                }
+                Cell current = Grid[x, y];
+                if (!current.Reachable) continue;
+                float distance = current.Distance(origin);
+                if (distance < minRange || distance > maxRange) continue;
+                cellsInRange.Add(current);
             }
 
             return cellsInRange;
@@ -181,8 +163,6 @@ namespace Game.Combat
                 Gizmos.DrawCube(new Vector3(cell.XPos, cell.YPos), new Vector3(CellWidth, CellWidth, 1));
             }
         }
-
-        private static List<Cell> _cellsInRange = new List<Cell>();
 
         public static Cell FindCellToAttackPlayer(Cell currentCell, int maxRange, int minRange = 0)
         {
@@ -251,10 +231,7 @@ namespace Game.Combat
         public static bool IsCellHidden(Cell c)
         {
             Vector2 currentPlayerPosition = CombatManager.Player.transform.position;
-            if (_lastPlayerPosition != currentPlayerPosition)
-            {
-                _hiddenCells.Clear();
-            }
+            if (_lastPlayerPosition != currentPlayerPosition) _hiddenCells.Clear();
 
             _lastPlayerPosition = currentPlayerPosition;
 
@@ -269,12 +246,23 @@ namespace Game.Combat
             _gridNodes.Clear();
             Grid = new Cell[GridWidth, GridWidth];
             for (int x = 0; x < GridWidth; ++x)
+            for (int y = 0; y < GridWidth; ++y)
             {
-                for (int y = 0; y < GridWidth; ++y)
-                {
-                    Grid[x, y] = Cell.Generate(x, y);
-                    _gridNodes.Add(Grid[x, y].Node);
-                }
+                Grid[x, y] = Cell.Generate(x, y);
+                _gridNodes.Add(Grid[x, y].Node);
+            }
+        }
+
+        private class CellComparer : IEqualityComparer<Cell>
+        {
+            public bool Equals(Cell x, Cell y)
+            {
+                return x.id == y.id;
+            }
+
+            public int GetHashCode(Cell cell)
+            {
+                return cell.id;
             }
         }
     }

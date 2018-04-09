@@ -3,7 +3,7 @@
     public class ScaleableValue
     {
         private readonly float _xSquaredCoefficient, _xCoefficient, _intercept;
-            
+
         public ScaleableValue(float xCoefficient, float intercept)
         {
             _xCoefficient = xCoefficient;
@@ -17,7 +17,7 @@
 
         public float GetScaledValue(float value)
         {
-            return _xSquaredCoefficient * value * value +_xCoefficient * value + _intercept;
+            return _xSquaredCoefficient * value * value + _xCoefficient * value + _intercept;
         }
     }
 }

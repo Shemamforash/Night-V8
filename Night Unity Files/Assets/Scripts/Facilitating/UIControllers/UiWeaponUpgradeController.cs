@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using Facilitating.UI.Elements;
 using Game.Characters;
-using Game.Characters.Player;
 using Game.Gear.Weapons;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine.UI;
 
@@ -13,15 +11,15 @@ namespace Facilitating.UIControllers
 {
     public class UiWeaponUpgradeController : UiGearMenuTemplate
     {
-        private bool _upgradingAllowed;
-
-        private EnhancedText _typeText, _nameText, _durabilityText;
         private EnhancedText _damageText, _fireRateText, _rangeText;
         private EnhancedText _dpsText, _capacityText;
-        private EnhancedText _reloadSpeedText, _accuracyText, _handlingText;
-        private EnhancedText _inscriptionText;
 
         private EnhancedButton _inscribeButton, _repairButton;
+        private EnhancedText _inscriptionText;
+        private EnhancedText _reloadSpeedText, _accuracyText, _handlingText;
+
+        private EnhancedText _typeText, _nameText, _durabilityText;
+        private bool _upgradingAllowed;
         private EnhancedButton _weaponButton;
 
         public void Awake()
@@ -45,7 +43,7 @@ namespace Facilitating.UIControllers
             _weaponButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Info");
             _weaponButton.AddOnClick(() =>
             {
-                if (GearIsAvailable()) UiGearMenuController.EnableInput();
+                if (GearIsAvailable()) UiGearMenuController.Instance().EnableInput();
             });
         }
 
@@ -123,7 +121,7 @@ namespace Facilitating.UIControllers
         private void SetTopToBottomNavigation(EnhancedButton button)
         {
             _weaponButton.SetDownNavigation(button);
-            button.SetDownNavigation(UiGearMenuController._closeButton);
+            button.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
         }
 
         private void SetNavigation()
@@ -135,12 +133,12 @@ namespace Facilitating.UIControllers
             else if (inscribeActive)
                 SetTopToBottomNavigation(_inscribeButton);
             else
-                _weaponButton.SetDownNavigation(UiGearMenuController._closeButton);
+                _weaponButton.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
 
             if (inscribeActive)
             {
                 _inscribeButton.SetUpNavigation(_weaponButton, false);
-                _inscribeButton.SetDownNavigation(UiGearMenuController._closeButton, false);
+                _inscribeButton.SetDownNavigation(UiGearMenuController.Instance()._closeButton, false);
             }
         }
 

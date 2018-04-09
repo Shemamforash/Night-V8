@@ -1,38 +1,28 @@
 ﻿using System.Collections.Generic;
-using Facilitating.UI.Elements;
+using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
 
 namespace SamsHelper.ReactiveUI.Elements
 {
 //    [ExecuteInEditMode]
-    public class UiAppearanceController : MonoBehaviour
+    public static class UiAppearanceController
     {
-        public TMP_FontAsset UniversalFont;
-        public int SmallFontSize = 10, MediumFontSize = 15, LargeFontSize = 30, TitleFontSize = 45;
-        private static UiAppearanceController _instance;
         public static readonly Color FadedColour = new Color(1f, 1f, 1f, 0.4f);
         public static readonly Color InvisibleColour = new Color(1f, 1f, 1f, 0f);
+        private const int SmallFontSize = 10, MediumFontSize = 20, LargeFontSize = 30, TitleFontSize = 45;
+        private static TMP_FontAsset UniversalFont;
 
-
-        public void Awake()
+        public static TMP_FontAsset GetFont()
         {
-            _instance = this;
+            if (UniversalFont == null) UniversalFont = Resources.Load<TMP_FontAsset>("ImFell SDF");
+            return UniversalFont;
         }
 
-        public static UiAppearanceController Instance()
+        public static void UpdateTextFont()
         {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<UiAppearanceController>();
-            }
-            return _instance;
-        }
-
-        public void UpdateTextFont()
-        {
-            List<EnhancedText> _texts = Helper.FindAllComponentsInChildren<EnhancedText>(transform);
-            _texts.ForEach(t => t.SetFont(UniversalFont));
+            List<EnhancedText> _texts = Helper.FindAllComponentsInChildren<EnhancedText>(GameObject.Find("Canvas").transform);
+            _texts.ForEach(t => t.SetFont(GetFont()));
         }
 
 //#if UNITY_EDITOR
@@ -63,7 +53,7 @@ namespace SamsHelper.ReactiveUI.Elements
 //            UpdateTextFont();
 //        }
 
-        public int GetFontSize(EnhancedText.FontSizes fontSizes)
+        public static int GetFontSize(EnhancedText.FontSizes fontSizes)
         {
             switch (fontSizes)
             {

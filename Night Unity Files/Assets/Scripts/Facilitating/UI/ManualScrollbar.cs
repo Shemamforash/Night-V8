@@ -5,9 +5,9 @@ namespace Facilitating.UI
 {
     public class ManualScrollbar : MonoBehaviour
     {
-        public ScrollRect Scrollrect;
         private readonly bool _selected = false;
         private float _scrollRectYPos;
+        public ScrollRect Scrollrect;
 
         public void Update()
         {
@@ -18,19 +18,13 @@ namespace Facilitating.UI
                 if (scrollAmount < 0)
                 {
                     _scrollRectYPos += 0.02f;
-                    if (_scrollRectYPos > 1)
-                    {
-                        _scrollRectYPos = 1;
-                    }
+                    if (_scrollRectYPos > 1) _scrollRectYPos = 1;
                     Scrollrect.verticalNormalizedPosition = _scrollRectYPos;
                 }
                 else if (scrollAmount > 0)
                 {
                     _scrollRectYPos -= 0.02f;
-                    if (_scrollRectYPos < 0)
-                    {
-                        _scrollRectYPos = 0;
-                    }
+                    if (_scrollRectYPos < 0) _scrollRectYPos = 0;
                     Scrollrect.verticalNormalizedPosition = _scrollRectYPos;
                 }
             }

@@ -2,39 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Facilitating.UIControllers;
-using Game.Combat.CharacterUi;
-using Game.Combat.Enemies;
-using Game.Combat.Enemies.EnemyTypes;
+using Game.Combat.Enemies.Humans;
+using Game.Combat.Generation;
+using Game.Combat.Misc;
+using Game.Combat.Ui;
 using Game.Gear.Weapons;
 using NUnit.Framework;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.Combat
+namespace Game.Combat.Enemies
 {
     public class EnemyBehaviour : CharacterCombat
     {
-        private readonly CharacterAttribute _visionRange = new CharacterAttribute(AttributeType.Vision, 5f);
-        private readonly CharacterAttribute _detectionRange = new CharacterAttribute(AttributeType.Detection, 2f);
-
         private const int EnemyReloadMultiplier = 4;
         private const float MaxAimTime = 2f;
 
-        protected bool Alerted;
-        private int IdealWeaponDistance;
+        private const float MeleeWarningTime = 2f;
+        private readonly CharacterAttribute _detectionRange = new CharacterAttribute(AttributeType.Detection, 2f);
+        private readonly CharacterAttribute _visionRange = new CharacterAttribute(AttributeType.Vision, 5f);
 
         private Vector2 _originPosition;
-        public Enemy Enemy;
-        private Queue<Cell> route = new Queue<Cell>();
-        public Action CurrentAction;
 
 
         //        private readonly Cooldown _firingCooldown;
         //        private const float KnockdownDuration = 5f;
         private bool _waitingForHeal;
+
+        public string ActionText;
+
+        protected bool Alerted;
+
+        protected bool CouldHitTarget;
+        public Action CurrentAction;
+        public Enemy Enemy;
+        private int IdealWeaponDistance;
+
+        private readonly Queue<Cell> route = new Queue<Cell>();
         //        private const float AlphaCutoff = 0.2f;
 //        private const float FadeVisibilityDistance = 5f;
 //        private float _currentAlpha;
@@ -69,10 +75,7 @@ namespace Game.Combat
         {
             if (route.Count == 0) return;
             Cell[] routeArr = route.ToArray();
-            for (int i = 1; i < routeArr.Length; ++i)
-            {
-                Gizmos.DrawLine(routeArr[i - 1].Position, routeArr[i].Position);
-            }
+            for (int i = 1; i < routeArr.Length; ++i) Gizmos.DrawLine(routeArr[i - 1].Position, routeArr[i].Position);
 
 //            Gizmos.color = new Color(0, 1, 0, 0.2f);
 //            Gizmos.DrawSphere(transform.position, (int)(IdealWeaponDistance * 1.5f / PathingGrid.CellResolution));
@@ -81,7 +84,10 @@ namespace Game.Combat
         }
 
 
-        public override CharacterCombat GetTarget() => CombatManager.Player;
+        public override CharacterCombat GetTarget()
+        {
+            return CombatManager.Player;
+        }
 
         public void SetSelected()
         {
@@ -103,7 +109,6 @@ namespace Game.Combat
             SetDistance(0.2f, 0.5f);
             _originPosition = transform.position;
             SetHealBehaviour();
-            SetConditions();
         }
 
         private void SetDistance(float rangeMin, float rangeMax)
@@ -166,8 +171,6 @@ namespace Game.Combat
             ChooseNextAction();
         }
 
-        private const float MeleeWarningTime = 2f;
-
         private Action Melee()
         {
             float currentTime = MeleeWarningTime;
@@ -198,8 +201,6 @@ namespace Game.Combat
             Alert();
         }
 
-        public string ActionText;
-        
         protected void SetActionText(string actionText)
         {
             ActionText = actionText;
@@ -231,10 +232,7 @@ namespace Game.Combat
         public override void Kill()
         {
             base.Kill();
-            for (int i = 0; i < Random.Range(0, 3); ++i)
-            {
-                PickupController.Create(transform.position, CombatManager.Player.Weapon().WeaponAttributes.AmmoType);
-            }
+            for (int i = 0; i < Random.Range(0, 3); ++i) PickupController.Create(transform.position, CombatManager.Player.Weapon().WeaponAttributes.AmmoType);
             UIEnemyController.Remove(this);
             Enemy.Kill();
             Destroy(gameObject);
@@ -334,8 +332,6 @@ namespace Game.Combat
             };
         }
 
-        protected bool CouldHitTarget;
-
         private void Fire()
         {
             bool automatic = Weapon().WeaponAttributes.Automatic;
@@ -390,10 +386,7 @@ namespace Game.Combat
 
         protected virtual void ReachTarget()
         {
-            if (Alerted)
-            {
-                ChooseNextAction();
-            }
+            if (Alerted) ChooseNextAction();
         }
 
         private bool OutOfRange()
@@ -464,15 +457,9 @@ namespace Game.Combat
                     return;
                 }
 
-                if (CurrentCell() == targetCell || targetCell == null)
-                {
-                    targetCell = route.Count == 0 ? null : route.Dequeue();
-                }
+                if (CurrentCell() == targetCell || targetCell == null) targetCell = route.Count == 0 ? null : route.Dequeue();
 
-                if (targetCell != null)
-                {
-                    MoveToCell(targetCell);
-                }
+                if (targetCell != null) MoveToCell(targetCell);
 
                 if (Vector2.Distance(character.transform.position, transform.position) > 0.25f) return;
                 reachCharacterAction();

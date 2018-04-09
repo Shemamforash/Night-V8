@@ -5,10 +5,10 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public sealed class ObjectPool<T> where T : MonoBehaviour
     {
-        private GameObject _prefab;
         private readonly List<T> _pool = new List<T>();
         private readonly string _prefabLocation;
-        
+        private GameObject _prefab;
+
         public ObjectPool(string prefabLocation)
         {
             _prefabLocation = prefabLocation;
@@ -19,11 +19,12 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             T newThing;
             if (_pool.Count == 0)
             {
-                if(_prefab == null) _prefab = Resources.Load<GameObject>(_prefabLocation);
-                GameObject newGameObject = GameObject.Instantiate(_prefab);
+                if (_prefab == null) _prefab = Resources.Load<GameObject>(_prefabLocation);
+                GameObject newGameObject = Object.Instantiate(_prefab);
                 newThing = newGameObject.GetComponent<T>();
                 return newThing;
             }
+
             int lastElement = _pool.Count - 1;
             newThing = _pool[lastElement];
             newThing.gameObject.SetActive(true);
@@ -40,7 +41,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public void Dispose(T thing)
         {
             _pool.Remove(thing);
-            GameObject.Destroy(thing.gameObject);
+            Object.Destroy(thing.gameObject);
         }
     }
 }

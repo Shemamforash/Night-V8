@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
-using Game.World.Region;
 using UnityEngine;
 
-namespace Game.World
+namespace Game.Exploration.Region
 {
     public class RegionTemplate
     {
-        public string InternalName, DisplayName;
-        public RegionType Type;
         public string Encounters, Items;
-        public int WaterAvailable, FoodAvailable, FuelAvailable, ScrapAvailable, AmmoAvailable;
+        public string InternalName, DisplayName;
         public List<string> Names;
-        
+        public int WaterAvailable, FoodAvailable, FuelAvailable, ScrapAvailable, AmmoAvailable;
+
         public string GenerateName()
         {
             int pos = Random.Range(0, Names.Count);

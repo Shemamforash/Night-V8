@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
-using UnityEngine;
-using Game.Characters.Player;
-using SamsHelper;
+using Game.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using TMPro;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.World.Region
+namespace Game.Exploration.Region
 {
     public class RegionManager : MonoBehaviour, IPersistenceTemplate
     {
@@ -19,6 +18,18 @@ namespace Game.World.Region
         private static TextMeshProUGUI _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
         private static readonly List<Region> _regions = new List<Region>();
         private static bool _loaded;
+
+        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        {
+            if (saveType != PersistenceType.Game) return null;
+            XmlNode regionNode = SaveController.CreateNodeAndAppend("Regions", doc);
+            foreach (Region region in _regions) region.Save(regionNode, saveType);
+            return regionNode;
+        }
+
+        public void Load(XmlNode doc, PersistenceType saveType)
+        {
+        }
 
         public static List<Region> GenerateRegions(int numberOfRegions)
         {
@@ -39,31 +50,14 @@ namespace Game.World.Region
             Region region = new Region(regionName, template);
             _regions.Add(region);
         }
-        
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
-        {
-            if (saveType != PersistenceType.Game) return null;
-            XmlNode regionNode = SaveController.CreateNodeAndAppend("Regions", doc);
-            foreach (Region region in _regions)
-            {
-                region.Save(regionNode, saveType);
-            }
-            return regionNode;
-        }
 
         private static void LoadNames(RegionTemplate template, string[] prefixes, string[] suffixes)
         {
             List<string> combinations = new List<string>();
             foreach (string prefix in prefixes)
-            {
-                foreach (string suffix in suffixes)
-                {
-                    if (prefix != suffix)
-                    {
-                        combinations.Add(prefix + "'s " + suffix);
-                    }
-                }
-            }
+            foreach (string suffix in suffixes)
+                if (prefix != suffix)
+                    combinations.Add(prefix + "'s " + suffix);
             Helper.Shuffle(ref combinations);
             template.Names = combinations;
         }
@@ -109,12 +103,11 @@ namespace Game.World.Region
                     RegionTemplate template = new RegionTemplate
                     {
                         DisplayName = name,
-                        Type = StringToRegionType(type),
                         WaterAvailable = water,
                         FoodAvailable = food,
                         FuelAvailable = fuel,
                         ScrapAvailable = scrap,
-                        AmmoAvailable = ammo,
+                        AmmoAvailable = ammo
                     };
                     LoadNames(template, prefixes, suffixes);
                     Templates[name] = template;
@@ -122,22 +115,6 @@ namespace Game.World.Region
             }
 
             _loaded = true;
-        }
-
-        private static RegionType StringToRegionType(string type)
-        {
-            foreach (RegionType regionType in Enum.GetValues(typeof(RegionType)))
-            {
-                if (regionType.ToString() == type)
-                {
-                    return regionType;
-                }
-            }
-            throw new Exceptions.UnknownRegionTypeException(type);
-        }
-
-        public void Load(XmlNode doc, PersistenceType saveType)
-        {
         }
     }
 }

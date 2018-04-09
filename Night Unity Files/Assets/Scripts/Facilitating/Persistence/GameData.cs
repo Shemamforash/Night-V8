@@ -7,7 +7,13 @@ namespace Facilitating.Persistence
     public class GameData : MonoBehaviour
     {
         //Playthrough Settings
-        public enum Difficulty { Easy, Normal, Hard };
+        public enum Difficulty
+        {
+            Easy,
+            Normal,
+            Hard
+        }
+
         public static Difficulty DifficultySetting = Difficulty.Normal;
         public static bool PermadeathOn = true;
 
@@ -16,7 +22,7 @@ namespace Facilitating.Persistence
         public static float MusicVolume = 1;
         public static float EffectsVolume = 1;
         public static List<Character> Party;
-        
+
         //Camp Data
         public static int StoredWater = 0, StoredFood = 0, StoredFuel = 0;
 
@@ -38,6 +44,5 @@ namespace Facilitating.Persistence
                     break;
             }
         }
-
     }
 }

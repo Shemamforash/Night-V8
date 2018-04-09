@@ -1,49 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using SamsHelper.BaseGameFunctionality.StateMachines;
-using TMPro;
 using UnityEngine;
 
-namespace Game.World.Environment_and_Weather
+namespace Game.Exploration.Weather
 {
-    public class WeatherManager : ProbabalisticStateMachine
+    public static class WeatherManager
     {
-        private static WeatherManager _instance;
-        private static TextMeshProUGUI _weatherText;
+        private static ProbabalisticStateMachine _weatherStates = new ProbabalisticStateMachine();
+        private static bool _loaded;
 
-        public WeatherManager()
+        public static void Start()
         {
-            _instance = this;
-        }
-
-        public void Start()
-        {
-            _weatherText = GameObject.Find("Weather").GetComponent<TextMeshProUGUI>();
             LoadWeather();
-            LoadProbabilities("WeatherProbabilityTable");
-            GetState("Clear").Enter();
-            WorldState.RegisterMinuteEvent(() => ((Weather)GetCurrentState()).UpdateWeather());
+            _weatherStates.LoadProbabilities("WeatherProbabilityTable");
+            _weatherStates.GetState("Clear").Enter();
 //            GenerateWeatherString(2000);
         }
 
-        public static WeatherManager Instance()
+        public static void GoToWeather()
         {
-            return _instance;
+            _weatherStates.GetState(_weatherStates.CalculateNextState()).Enter();
         }
 
-        public void GoToWeather()
+        public static Weather CurrentWeather()
         {
-            GetState(CalculateNextState()).Enter();
-            _weatherText.text = CurrentWeather().Name;
+            return (Weather) _weatherStates.GetCurrentState();
         }
 
-        public Weather CurrentWeather()
+        private static void LoadWeather()
         {
-            return (Weather) GetCurrentState();
-        }
-
-        private void LoadWeather()
-        {
+            if (_loaded) return;
             TextAsset weatherFile = Resources.Load<TextAsset>("XML/Weather");
             XmlDocument weatherXml = new XmlDocument();
             weatherXml.LoadXml(weatherFile.text);
@@ -63,35 +50,31 @@ namespace Game.World.Environment_and_Weather
                 float dust = float.Parse(particleNode.SelectSingleNode("Dust").InnerText);
                 float hail = float.Parse(particleNode.SelectSingleNode("Hail").InnerText);
                 float sun = float.Parse(particleNode.SelectSingleNode("Sun").InnerText);
-                Weather weather = new Weather(this, name, temperature, visibility, water, food, duration);
-                if (type == "Phenomena") AddState(weather);
+                Weather weather = new Weather(_weatherStates, name, temperature, visibility, water, food, duration);
+                if (type == "Phenomena") _weatherStates.AddState(weather);
                 weather.Attributes = new WeatherAttributes(rain, fog, dust, hail, sun);
             }
+
+            _loaded = true;
         }
 
-        private void GenerateWeatherString(int stringLength)
+        private static void GenerateWeatherString(int stringLength)
         {
             string weatherString = "";
             Dictionary<string, int> _weatherOccurences = new Dictionary<string, int>();
             while (stringLength > 0)
             {
-                string currentWeatherName = GetCurrentState().Name;
+                string currentWeatherName = CurrentWeather().Name;
                 if (_weatherOccurences.ContainsKey(currentWeatherName))
-                {
                     _weatherOccurences[currentWeatherName]++;
-                }
                 else
-                {
                     _weatherOccurences[currentWeatherName] = 1;
-                }
                 weatherString += currentWeatherName;
-                GetCurrentState().Exit();
+                CurrentWeather().Exit();
                 --stringLength;
             }
-            foreach (string key in _weatherOccurences.Keys)
-            {
-                Debug.Log(key + " occured " + _weatherOccurences[key] + " times.");
-            }
+
+            foreach (string key in _weatherOccurences.Keys) Debug.Log(key + " occured " + _weatherOccurences[key] + " times.");
             Debug.Log(weatherString);
         }
     }

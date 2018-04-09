@@ -1,5 +1,6 @@
 ﻿using System;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 
@@ -32,7 +33,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             ui.SetDestroyCondition(destroyCondition);
             return ui;
         }
-        
+
         public virtual bool IsStackable()
         {
             return true;

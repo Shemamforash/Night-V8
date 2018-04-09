@@ -1,43 +1,46 @@
 ﻿using System;
 using System.Collections;
+using Game.Combat.Enemies;
 using Game.Gear.Weapons;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
-namespace Game.Combat
+namespace Game.Combat.Misc
 {
     public class Shot : MonoBehaviour
     {
-        private int _damage;
-        private float _accuracy;
-        private float _pierceChance, _burnChance, _bleedChance, _sicknessChance;
-        private CharacterCombat _origin;
-        private Vector3 _direction;
-        private bool _moving, _fired;
         private const float Speed = 10f;
-        private float _age;
-        private float MaxAge = 3f;
-
-        private float _knockDownChance;
-        private float _finalDamageModifier = 1f;
-        private bool _guaranteeHit;
-        private int _knockbackForce;
-        private int _damageDealt;
-        private int _pierceDepth;
-        public bool DidHit;
-        private event Action OnHitAction;
         private static GameObject _bulletPrefab;
-        private Rigidbody2D _rigidBody;
-        private GameObject _fireTrail;
 
         private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Prefabs/Combat/Bullet");
+        private float _accuracy;
+        private float _age;
+
+        private GameObject _bulletTrail;
+        private int _damage;
+        private int _damageDealt;
+        private Vector3 _direction;
+        private float _finalDamageModifier = 1f;
+        private GameObject _fireTrail;
+        private bool _guaranteeHit;
+        private int _knockbackForce;
+
+        private float _knockDownChance;
+        private bool _moving, _fired;
+        private CharacterCombat _origin;
+        private Vector3 _originPosition;
+        private float _pierceChance, _burnChance, _bleedChance, _sicknessChance;
+        private int _pierceDepth;
+        private Rigidbody2D _rigidBody;
 
         private Transform _shotParent;
         private Weapon _weapon;
-        private Vector3 _originPosition;
+        public bool DidHit;
+        private float MaxAge = 3f;
+        private event Action OnHitAction;
 
         public void Awake()
         {
@@ -70,7 +73,7 @@ namespace Game.Combat
             shot.Initialise(origin, origin.GetTarget().transform.position);
             return shot;
         }
-        
+
         public static Shot Create(Shot origin)
         {
             Shot shot = _shotPool.Create();
@@ -97,11 +100,12 @@ namespace Game.Combat
             CacheWeaponAttributes();
             CalculateAccuracy();
         }
-        
+
         private void CalculateAccuracy()
         {
             if (_guaranteeHit) _accuracy = 0;
-            else if(_origin != null) _accuracy *= _origin.GetAccuracyModifier();
+            else if (_origin != null)
+                _accuracy *= _origin.GetAccuracyModifier();
         }
 
         private void Initialise(Shot shot)
@@ -139,7 +143,7 @@ namespace Game.Combat
             _finalDamageModifier = modifier;
         }
 
-        
+
         private void FixedUpdate()
         {
             if (!_fired || _moving) return;
@@ -147,8 +151,6 @@ namespace Game.Combat
             _moving = true;
         }
 
-        private GameObject _bulletTrail;
-        
         public void Fire(float distance = 0.2f)
         {
             _bulletTrail = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Bullet Trail"));
@@ -168,7 +170,6 @@ namespace Game.Combat
             MaxAge = _weapon.WeaponAttributes.GetCalculatedValue(AttributeType.Range) / Speed;
             while (_age < MaxAge)
             {
-                
                 _age += Time.deltaTime;
                 yield return null;
             }
@@ -187,10 +188,7 @@ namespace Game.Combat
         private void OnCollisionEnter2D(Collision2D collision)
         {
             GameObject other = collision.gameObject;
-            if (Random.Range(0f, 1f) < _burnChance)
-            {
-                FireBehaviour.Create(transform.position, 1f);
-            }
+            if (Random.Range(0f, 1f) < _burnChance) FireBehaviour.Create(transform.position, 1f);
             OnHitAction?.Invoke();
             EnemyBehaviour b = other.GetComponent<EnemyBehaviour>();
             if (b != null) ApplyDamage(b);
@@ -208,20 +206,22 @@ namespace Game.Combat
         private void ApplyConditions(CharacterCombat hit)
         {
             if (_knockbackForce != 0)
-            {
                 if (Random.Range(0, 1f) < _knockDownChance)
-                {
                     hit.Knockback(transform.position, _knockbackForce);
-                }
-            }
 
-            if (Random.Range(0f, 1f) < _bleedChance) hit.Bleeding.AddStack();
-            if (Random.Range(0f, 1f) < _sicknessChance) hit.Sick.AddStack();
+            if (Random.Range(0f, 1f) < _bleedChance) hit.Bleed();
+//            if (Random.Range(0f, 1f) < _sicknessChance) hit.Sick.AddStack();
         }
 
-        public void GuaranteeHit() => _guaranteeHit = true;
+        public void GuaranteeHit()
+        {
+            _guaranteeHit = true;
+        }
 
-        public void AddOnHit(Action a) => OnHitAction += a;
+        public void AddOnHit(Action a)
+        {
+            OnHitAction += a;
+        }
 
         public void SetKnockdownChance(float chance, int distance)
         {

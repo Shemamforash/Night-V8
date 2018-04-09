@@ -1,13 +1,23 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
 using SamsHelper.Persistence;
-using UI.Highlight;
 
-namespace Facilitating.UI.Main_Menu_Only
+namespace Facilitating.UI
 {
     public class PermadeathToggler : Toggler, IPersistenceTemplate
     {
         private bool _permadeathOn;
+
+        public void Load(XmlNode doc, PersistenceType saveType)
+        {
+            if (saveType == PersistenceType.Game) _permadeathOn = SaveController.ParseBoolFromSubNode(doc, nameof(_permadeathOn));
+        }
+
+        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        {
+            if (saveType == PersistenceType.Game) SaveController.CreateNodeAndAppend(nameof(_permadeathOn), doc);
+            return doc;
+        }
 
         public override void Awake()
         {
@@ -25,20 +35,6 @@ namespace Facilitating.UI.Main_Menu_Only
         {
             base.Off();
             _permadeathOn = false;
-        }
-
-        public void Load(XmlNode doc, PersistenceType saveType)
-        {
-            if (saveType == PersistenceType.Game)
-            {
-                _permadeathOn = SaveController.ParseBoolFromSubNode(doc, nameof(_permadeathOn));
-            }
-        }
-
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
-        {
-            if (saveType == PersistenceType.Game) SaveController.CreateNodeAndAppend(nameof(_permadeathOn), doc);
-            return doc;
         }
     }
 }

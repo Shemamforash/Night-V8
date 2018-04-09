@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace SamsHelper.Input
 {
     public class InputHandler : MonoBehaviour
     {
-        private readonly Dictionary<InputAxis, InputPress> _inputPressList = new Dictionary<InputAxis, InputPress>();
-        private static InputHandler _instance;
-        private readonly List<IInputListener> InputListeners = new List<IInputListener>();
-        private IInputListener _inputListener;
         private const float _doubleTapDuration = 300;
+        private readonly Dictionary<InputAxis, InputPress> _inputPressList = new Dictionary<InputAxis, InputPress>();
+        private static readonly List<IInputListener> InputListeners = new List<IInputListener>();
+        private static readonly List<IInputListener> ListenersToAdd = new List<IInputListener>();
+        private static readonly List<IInputListener> ListenersToRemove = new List<IInputListener>();
+        private static IInputListener _inputListener;
 
         public void Awake()
         {
-            foreach (InputAxis axis in Enum.GetValues(typeof(InputAxis)))
-            {
-                AddInputPress(axis);
-            }
-
-            _instance = this;
+            foreach (InputAxis axis in Enum.GetValues(typeof(InputAxis))) AddInputPress(axis);
         }
 
         private void AddInputPress(InputAxis axis)
@@ -27,26 +24,73 @@ namespace SamsHelper.Input
             _inputPressList[axis] = new InputPress(axis);
         }
 
-        private static InputHandler Instance()
+        private void OnDestroy()
         {
-            return _instance ?? FindObjectOfType<InputHandler>();
+            InputListeners.Clear();
+            ListenersToAdd.Clear();
+            ListenersToRemove.Clear();
         }
 
         public void Update()
         {
-            foreach (InputPress i in _inputPressList.Values)
+            if (ListenersToAdd.Count != 0)
             {
-                i.CheckPress();
+                InputListeners.AddRange(ListenersToAdd);
+                ListenersToAdd.Clear();
             }
+
+            if (ListenersToRemove.Count != 0)
+            {
+                InputListeners.RemoveAll(r => ListenersToRemove.Contains(r));
+                ListenersToRemove.Clear();
+            }
+
+            foreach (InputPress i in _inputPressList.Values) i.CheckPress();
+        }
+
+        private static void BroadcastInputDown(InputAxis axis, bool isHeld, float lastInputValue)
+        {
+            _inputListener?.OnInputDown(axis, isHeld, lastInputValue);
+            for (int i = InputListeners.Count - 1; i >= 0; --i) InputListeners[i].OnInputDown(axis, isHeld, lastInputValue);
+        }
+
+        private static void BroadcastInputUp(InputAxis axis)
+        {
+            _inputListener?.OnInputUp(axis);
+
+            for (int i = InputListeners.Count - 1; i >= 0; --i) InputListeners[i].OnInputUp(axis);
+        }
+
+        private static void BroadCastDoubleTap(InputAxis axis, float lastInputValue)
+        {
+            _inputListener?.OnDoubleTap(axis, lastInputValue);
+
+            for (int i = InputListeners.Count - 1; i >= 0; --i) InputListeners[i].OnDoubleTap(axis, lastInputValue);
+        }
+
+        public static void SetCurrentListener(IInputListener inputListener)
+        {
+            _inputListener = inputListener;
+        }
+
+        public static void RegisterInputListener(IInputListener inputListener)
+        {
+            if (InputListeners.Contains(inputListener)) return;
+            ListenersToAdd.Add(inputListener);
+        }
+
+        public static void UnregisterInputListener(IInputListener inputListener)
+        {
+            ListenersToRemove.Add(inputListener);
         }
 
         private class InputPress
         {
-            private bool _pressed;
             private readonly InputAxis _axis;
-            private float _lastInputValue;
-            private long _timeAtLastPress;
             private float _directionAtLastPress;
+            private float _lastInputValue;
+            private bool _pressed;
+            private long _timeAtLastPress;
 
             public InputPress(InputAxis axis)
             {
@@ -84,51 +128,6 @@ namespace SamsHelper.Input
 
                 _lastInputValue = currentInputValue;
             }
-        }
-
-        private static void BroadcastInputDown(InputAxis axis, bool isHeld, float lastInputValue)
-        {
-            Instance()._inputListener?.OnInputDown(axis, isHeld, lastInputValue);
-            for (int i = Instance().InputListeners.Count - 1; i >= 0; --i)
-            {
-                Instance().InputListeners[i].OnInputDown(axis, isHeld, lastInputValue);
-            }
-        }
-
-        private static void BroadcastInputUp(InputAxis axis)
-        {
-            Instance()._inputListener?.OnInputUp(axis);
-
-            for (int i = Instance().InputListeners.Count - 1; i >= 0; --i)
-            {
-                Instance().InputListeners[i].OnInputUp(axis);
-            }
-        }
-
-        private static void BroadCastDoubleTap(InputAxis axis, float lastInputValue)
-        {
-            Instance()._inputListener?.OnDoubleTap(axis, lastInputValue);
-
-            for (int i = Instance().InputListeners.Count - 1; i >= 0; --i)
-            {
-                Instance().InputListeners[i].OnDoubleTap(axis, lastInputValue);
-            }
-        }
-
-        public static void SetCurrentListener(IInputListener inputListener)
-        {
-            Instance()._inputListener = inputListener;
-        }
-        
-        public static void RegisterInputListener(IInputListener inputListener)
-        {
-            if (Instance().InputListeners.Contains(inputListener)) return;
-            Instance().InputListeners.Add(inputListener);
-        }
-
-        public static void UnregisterInputListener(IInputListener inputListener)
-        {
-            Instance().InputListeners.Remove(inputListener);
         }
     }
 }

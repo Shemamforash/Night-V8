@@ -1,4 +1,6 @@
-﻿namespace Game.Combat.Enemies.EnemyTypes.Misc
+﻿using Game.Combat.Misc;
+
+namespace Game.Combat.Enemies.Misc
 {
     public class IncendiaryGrenade : Grenade
     {

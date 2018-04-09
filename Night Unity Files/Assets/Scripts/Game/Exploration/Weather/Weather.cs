@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 
-namespace Game.World.Environment_and_Weather
+namespace Game.Exploration.Weather
 {
     public class Weather : ProbabalisticState
     {
         private readonly int _temperature, _water, _food, _duration;
         private readonly float _visibility;
-        private List<Danger> _dangers = new List<Danger>();
         private int _timeRemaining;
         public WeatherAttributes Attributes;
 
@@ -26,14 +26,10 @@ namespace Game.World.Environment_and_Weather
             return _visibility;
         }
 
-        public void AddDanger(string dangerType, float severity)
-        {
-            _dangers.Add(new Danger(dangerType, severity));
-        }
-
-        public override void Enter()
+       public override void Enter()
         {
             base.Enter();
+            WorldView.SetWeatherText(Name);
             _timeRemaining = _duration * WorldState.MinutesPerHour;
             WeatherSystemController.Instance().ChangeWeather(this, _timeRemaining);
         }
@@ -43,12 +39,12 @@ namespace Game.World.Environment_and_Weather
             return _temperature;
         }
 
-        public void UpdateWeather()
+        public void Update()
         {
             --_timeRemaining;
             if (_timeRemaining != 0) return;
             UpdateEnvironmentResources();
-            WeatherManager.Instance().GoToWeather();
+            WeatherManager.GoToWeather();
         }
 
         private void UpdateEnvironmentResources()
@@ -64,6 +60,21 @@ namespace Game.World.Environment_and_Weather
 
         private class Danger
         {
+            private DangerType _dangerType;
+            private float _severity;
+
+            public Danger(string dangerType, float severity)
+            {
+                foreach (DangerType type in Enum.GetValues(typeof(DangerType)))
+                    if (type.ToString() == dangerType)
+                    {
+                        _dangerType = type;
+                        break;
+                    }
+
+                _severity = severity;
+            }
+
             private enum DangerType
             {
                 Acid,
@@ -72,22 +83,6 @@ namespace Game.World.Environment_and_Weather
                 Lightning,
                 Fire,
                 Cold
-            }
-
-            private DangerType _dangerType;
-            private float _severity;
-
-            public Danger(string dangerType, float severity)
-            {
-                foreach (DangerType type in Enum.GetValues(typeof(DangerType)))
-                {
-                    if (type.ToString() == dangerType)
-                    {
-                        _dangerType = type;
-                        break;
-                    }
-                }
-                _severity = severity;
             }
         }
     }

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using SamsHelper;
+using Game.Combat.Misc;
+using SamsHelper.Libraries;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-namespace Game.Combat
+namespace Game.Combat.Generation
 {
     public class AreaGenerator : MonoBehaviour
     {
@@ -13,28 +13,11 @@ namespace Game.Combat
         private static GameObject _barrierPrefab;
         private static readonly List<Shape> _barriers = new List<Shape>();
 
+        public static Vector2 CampfirePosition = Vector2.zero;
+
         public void Awake()
         {
             _instance = this;
-        }
-
-        private class Ellipse
-        {
-            public readonly float InnerRingWidth, InnerRingHeight, OuterRingWidth, OuterRingHeight;
-            public bool IsCircle;
-
-            public Ellipse(float innerRingWidth, float innerRingHeight, float outerRingWidth, float outerRingHeight)
-            {
-                InnerRingWidth = innerRingWidth;
-                InnerRingHeight = innerRingHeight;
-                OuterRingWidth = outerRingWidth;
-                OuterRingHeight = outerRingHeight;
-            }
-
-            public Ellipse(float innerRadius, float outerRadius) : this(innerRadius, innerRadius, outerRadius, outerRadius)
-            {
-                IsCircle = true;
-            }
         }
 
         private static Shape GenerateDistortedPoly(int definition, Ellipse ellipse, GameObject o)
@@ -60,10 +43,7 @@ namespace Game.Combat
             mesh.vertices = vertices.ToArray();
             mesh.triangles = Triangulator.Triangulate(mesh.vertices);
             Vector3[] normals = new Vector3[vertices.Count];
-            for (int i = 0; i < normals.Length; i++)
-            {
-                normals[i] = -Vector3.forward;
-            }
+            for (int i = 0; i < normals.Length; i++) normals[i] = -Vector3.forward;
 
             mesh.normals = normals;
             return newShape;
@@ -133,18 +113,16 @@ namespace Game.Combat
             return shape;
         }
 
-        public static Vector2 CampfirePosition = Vector2.zero;
-
         private static List<Shape> GenerateCamp()
         {
             float size = PathingGrid.GameWorldWidth / 2f;
             CampfirePosition = new Vector2(Random.Range(-size, size), Random.Range(-size, size));
             List<Shape> stones = EnemyCampfire.Create(CampfirePosition);
-           
+
             for (int i = _barriers.Count - 1; i >= 0; --i)
             {
                 Shape b = _barriers[i];
-                foreach(Vector2 v in b.WorldVerts)
+                foreach (Vector2 v in b.WorldVerts)
                 {
                     if (Vector2.Distance(v, CampfirePosition) > 2f) continue;
                     _barriers.RemoveAt(i);
@@ -152,9 +130,10 @@ namespace Game.Combat
                     break;
                 }
             }
+
             return stones;
         }
-        
+
         public static List<Shape> GenerateArea()
         {
             _barrierNumber = 0;
@@ -162,8 +141,8 @@ namespace Game.Combat
 
             List<Vector2> positions = AdvancedMaths.GetPoissonDiscDistribution(500, 1f, 3f, PathingGrid.GameWorldWidth, true);
             positions.RemoveAt(0);
-            
-            foreach(Vector2 position in positions)
+
+            foreach (Vector2 position in positions)
             {
                 Shape shape = GeneratePoly(SmallPolyWidth);
                 _barriers.Add(shape);
@@ -174,13 +153,32 @@ namespace Game.Combat
             return _barriers;
         }
 
+        private class Ellipse
+        {
+            public readonly float InnerRingWidth, InnerRingHeight, OuterRingWidth, OuterRingHeight;
+            public readonly bool IsCircle;
+
+            public Ellipse(float innerRingWidth, float innerRingHeight, float outerRingWidth, float outerRingHeight)
+            {
+                InnerRingWidth = innerRingWidth;
+                InnerRingHeight = innerRingHeight;
+                OuterRingWidth = outerRingWidth;
+                OuterRingHeight = outerRingHeight;
+            }
+
+            public Ellipse(float innerRadius, float outerRadius) : this(innerRadius, innerRadius, outerRadius, outerRadius)
+            {
+                IsCircle = true;
+            }
+        }
+
         public class Shape
         {
-            public readonly List<Vector3> Vertices;
-            public GameObject ShapeObject;
-            public PolygonCollider2D Collider;
-            public readonly List<Vector2> WorldVerts = new List<Vector2>();
             public readonly List<Cell> OccupiedCells = new List<Cell>();
+            public readonly List<Vector3> Vertices;
+            public readonly List<Vector2> WorldVerts = new List<Vector2>();
+            public PolygonCollider2D Collider;
+            public GameObject ShapeObject;
 
             public Shape(GameObject shapeObject, List<Vector3> vertices)
             {
@@ -192,10 +190,7 @@ namespace Game.Combat
             public void SetPosition(float rx, float ry)
             {
                 ShapeObject.transform.position = new Vector2(rx, ry);
-                foreach (Vector2 colliderPoint in Collider.points)
-                {
-                    WorldVerts.Add(ShapeObject.transform.TransformPoint(colliderPoint));
-                }
+                foreach (Vector2 colliderPoint in Collider.points) WorldVerts.Add(ShapeObject.transform.TransformPoint(colliderPoint));
             }
         }
     }

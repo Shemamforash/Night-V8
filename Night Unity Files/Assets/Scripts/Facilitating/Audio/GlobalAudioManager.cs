@@ -9,15 +9,10 @@ namespace Facilitating.Audio
 {
     public class GlobalAudioManager : MonoBehaviour, IPersistenceTemplate
     {
-        private readonly List<AudioSource> _musicSources = new List<AudioSource>();
         private readonly List<AudioSource> _effectsSources = new List<AudioSource>();
-        public Slider MasterSlider, MusicSlider, EffectsSlider;
+        private readonly List<AudioSource> _musicSources = new List<AudioSource>();
         private float _musicVolume, _effectsVolume, _masterVolume;
-
-        public void Awake()
-        {
-            SaveController.AddPersistenceListener(this);
-        }
+        public Slider MasterSlider, MusicSlider, EffectsSlider;
 
         public void Load(XmlNode root, PersistenceType saveType)
         {
@@ -41,16 +36,15 @@ namespace Facilitating.Audio
             return node;
         }
 
+        public void Awake()
+        {
+            SaveController.AddPersistenceListener(this);
+        }
+
         private void UpdateVolumes()
         {
-            foreach (AudioSource a in _musicSources)
-            {
-                a.volume = _masterVolume < _musicVolume ? _masterVolume : _musicVolume;
-            }
-            foreach (AudioSource e in _effectsSources)
-            {
-                e.volume = _masterVolume < _effectsVolume ? _masterVolume : _effectsVolume;
-            }
+            foreach (AudioSource a in _musicSources) a.volume = _masterVolume < _musicVolume ? _masterVolume : _musicVolume;
+            foreach (AudioSource e in _effectsSources) e.volume = _masterVolume < _effectsVolume ? _masterVolume : _effectsVolume;
         }
 
         private void SetMasterVolume(float volume)
@@ -75,14 +69,8 @@ namespace Facilitating.Audio
         {
             List<GameObject> musicObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("MusicSource"));
             List<GameObject> effectsObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("SFXSource"));
-            foreach (GameObject m in musicObjects)
-            {
-                _musicSources.Add(m.GetComponent<AudioSource>());
-            }
-            foreach (GameObject e in effectsObjects)
-            {
-                _effectsSources.Add(e.GetComponent<AudioSource>());
-            }
+            foreach (GameObject m in musicObjects) _musicSources.Add(m.GetComponent<AudioSource>());
+            foreach (GameObject e in effectsObjects) _effectsSources.Add(e.GetComponent<AudioSource>());
 
             MasterSlider.onValueChanged.AddListener(SetMasterVolume);
             MusicSlider.onValueChanged.AddListener(SetMusicVolume);

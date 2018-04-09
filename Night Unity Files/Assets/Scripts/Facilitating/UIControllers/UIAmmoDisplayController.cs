@@ -1,43 +1,46 @@
-﻿using Facilitating.UI.Elements;
+﻿using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
-public class UIAmmoDisplayController : MonoBehaviour
+namespace Facilitating.UIControllers
 {
-    public EnhancedText PistolText, RifleText, ShotgunText, SMGText, LMGText;
-    private static UIAmmoDisplayController _instance;
-
-    public void Awake()
+    public class UIAmmoDisplayController : MonoBehaviour
     {
-        _instance = this;
-    }
+        private static UIAmmoDisplayController _instance;
+        public EnhancedText PistolText, RifleText, ShotgunText, SMGText, LMGText;
 
-    public static UIAmmoDisplayController Instance()
-    {
-        return _instance;
-    }
+        public void Awake()
+        {
+            _instance = this;
+        }
 
-    public void SetPistolText(string quantity)
-    {
-        PistolText.Text(quantity);
-    }
+        public static UIAmmoDisplayController Instance()
+        {
+            return _instance;
+        }
 
-    public void SetRifleText(string quantity)
-    {
-        RifleText.Text(quantity);
-    }
+        public void SetPistolText(string quantity)
+        {
+            PistolText.Text(quantity);
+        }
 
-    public void SetShotgunText(string quantity)
-    {
-        ShotgunText.Text(quantity);
-    }
+        public void SetRifleText(string quantity)
+        {
+            RifleText.Text(quantity);
+        }
 
-    public void SetSmgText(string quantity)
-    {
-        SMGText.Text(quantity);
-    }
+        public void SetShotgunText(string quantity)
+        {
+            ShotgunText.Text(quantity);
+        }
 
-    public void SetLmgText(string quantity)
-    {
-        LMGText.Text(quantity);
+        public void SetSmgText(string quantity)
+        {
+            SMGText.Text(quantity);
+        }
+
+        public void SetLmgText(string quantity)
+        {
+            LMGText.Text(quantity);
+        }
     }
 }

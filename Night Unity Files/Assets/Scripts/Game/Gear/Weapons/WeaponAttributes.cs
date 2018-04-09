@@ -13,21 +13,30 @@ namespace Game.Gear.Weapons
 {
     public class WeaponAttributes : AttributeContainer
     {
-        public CharacterAttribute FireRate, ReloadSpeed, Damage, Range, Handling, Capacity, Pellets, Accuracy;
-        public CharacterAttribute PierceChance, BurnChance, BleedChance, SicknessChance;
-        private float _dps;
-        private AttributeModifier _durabilityModifier;
-        public readonly Number Durability;
         private const int MaxDurability = 10;
         private const float MinDurabilityMod = 0.75f;
-        public float DurabilityModifier;
+        public readonly Number Durability;
+        private float _dps;
+        private readonly AttributeModifier _durabilityModifier;
+        private readonly Weapon _weapon;
+        public InventoryResourceType AmmoType;
         public bool Automatic = true;
+        public float DurabilityModifier;
+        public CharacterAttribute FireRate, ReloadSpeed, Damage, Range, Handling, Capacity, Pellets, Accuracy;
+        public string ModifierName, ModifierDescription;
+        public CharacterAttribute PierceChance, BurnChance, BleedChance, SicknessChance;
 
         public string WeaponClassName, WeaponClassDescription;
-        public string ModifierName, ModifierDescription;
         public WeaponType WeaponType;
-        public InventoryResourceType AmmoType;
-        private Weapon _weapon;
+
+        public WeaponAttributes(Weapon weapon, int durability = -1)
+        {
+            _weapon = weapon;
+            _durabilityModifier = new AttributeModifier(new List<AttributeType> {AttributeType.Damage, AttributeType.FireRate, AttributeType.Accuracy});
+            if (durability == -1) durability = Random.Range(0, MaxDurability / 4);
+            Durability = new Number(durability, 0, MaxDurability);
+            Durability.AddOnValueChange(RecalculateAttributeValues);
+        }
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
         {
@@ -47,15 +56,6 @@ namespace Game.Gear.Weapons
             SaveController.CreateNodeAndAppend("ModifierDescription", root, ModifierDescription);
             SaveController.CreateNodeAndAppend("WeaponType", root, WeaponType);
             return root;
-        }
-
-        public WeaponAttributes(Weapon weapon, int durability = -1)
-        {
-            _weapon = weapon;
-            _durabilityModifier = new AttributeModifier(new List<AttributeType> {AttributeType.Damage, AttributeType.FireRate, AttributeType.Accuracy});
-            if (durability == -1) durability = Random.Range(0, MaxDurability / 4);
-            Durability = new Number(durability, 0, MaxDurability);
-            Durability.AddOnValueChange(a => RecalculateAttributeValues());
         }
 
         public void SetDurability(int value)
@@ -106,7 +106,7 @@ namespace Game.Gear.Weapons
             return WeaponClassName;
         }
 
-        private void RecalculateAttributeValues()
+        private void RecalculateAttributeValues(Number number = null)
         {
             _durabilityModifier.Remove();
             float normalisedDurability = Durability.CurrentValue() / MaxDurability;

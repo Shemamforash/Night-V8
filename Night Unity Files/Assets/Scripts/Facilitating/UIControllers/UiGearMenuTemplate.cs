@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Game.Characters.Player;
+using Game.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +9,7 @@ namespace Facilitating.UIControllers
     public abstract class UiGearMenuTemplate : MonoBehaviour
     {
         protected Player CurrentPlayer;
-        
+
         public abstract bool GearIsAvailable();
         public abstract void SelectGearItem(GearItem item, UiGearMenuController.GearUi gearUi);
 
@@ -17,13 +17,14 @@ namespace Facilitating.UIControllers
         {
             gameObject.SetActive(true);
             CurrentPlayer = player;
-            UiGearMenuController.SelectGear();
+            UiGearMenuController.Instance().SelectGear();
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
         }
+
         public abstract void CompareTo(GearItem comparisonItem);
         public abstract void StopComparing();
         public abstract List<GearItem> GetAvailableGear();

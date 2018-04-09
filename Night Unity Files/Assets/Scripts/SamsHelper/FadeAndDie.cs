@@ -6,12 +6,12 @@ namespace SamsHelper
 {
     public class FadeAndDie : MonoBehaviour
     {
-        private float _fullOpacity;
         private float _age;
-        public float LifeTime;
+        public Action _callback;
+        private float _fullOpacity;
         private SpriteRenderer _spriteRenderer;
         private bool Fading;
-        public Action _callback;
+        public float LifeTime;
 
         public void Awake()
         {

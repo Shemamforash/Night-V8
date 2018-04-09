@@ -2,7 +2,7 @@
 using Facilitating.Persistence;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
-using Game.World;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
@@ -11,10 +11,16 @@ namespace Game.Characters
 {
     public abstract class Character : MyGameObject, IPersistenceTemplate
     {
-        protected readonly DesolationInventory CharacterInventory;
         public readonly ArmourController ArmourController;
-        public Weapon Weapon;
+        protected readonly DesolationInventory CharacterInventory;
         public Accessory Accessory;
+        public Weapon Weapon;
+
+        protected Character(string name) : base(name, GameObjectType.Character)
+        {
+            CharacterInventory = new DesolationInventory(name);
+            ArmourController = new ArmourController(this);
+        }
 
 
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
@@ -27,10 +33,10 @@ namespace Game.Characters
             return doc;
         }
 
-        protected Character(string name) : base(name, GameObjectType.Character)
+        public override void Load(XmlNode doc, PersistenceType saveType)
         {
-            CharacterInventory = new DesolationInventory(name);
-            ArmourController = new ArmourController(this);
+            base.Load(doc, saveType);
+            Name = doc.SelectSingleNode("Name").InnerText;
         }
 
         public virtual void EquipWeapon(Weapon weapon)
@@ -49,12 +55,6 @@ namespace Game.Characters
         }
 
         public abstract void Kill();
-
-        public override void Load(XmlNode doc, PersistenceType saveType)
-        {
-            base.Load(doc, saveType);
-            Name = doc.SelectSingleNode("Name").InnerText;
-        }
 
         public DesolationInventory Inventory()
         {

@@ -1,38 +1,34 @@
 ﻿using System.Collections.Generic;
-using Game.World.Region;
-using SamsHelper;
+using Game.Exploration.Weather;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
 
-namespace Game.World.Environment_and_Weather
+namespace Game.Exploration.Environment
 {
-    public class EnvironmentManager : StateMachine
+    public static class EnvironmentManager
     {
-        private TextMeshProUGUI _environmentText, _temperatureText;
-        private static EnvironmentManager _instance;
+        private static readonly StateMachine _environmentStates = new StateMachine();
 
-        public void Start()
+        public static void Start()
         {
-            _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();
-            _temperatureText = GameObject.Find("Temperature").GetComponent<TextMeshProUGUI>();
             LoadEnvironments();
             NavigateToState("Oasis");
-            WorldState.RegisterTravelEvent(GenerateEnvironment);
-            WorldState.RegisterMinuteEvent(UpdateTemperature);
 //            TestEnvironmentGenerator();
         }
 
-        private void NavigateToState(string stateName)
+        private static void NavigateToState(string stateName)
         {
-            GetState(stateName).Enter();
+            _environmentStates.GetState(stateName).Enter();
             MapGenerator.Generate();
-            _environmentText.text = GetCurrentState().Name;
+            WorldView.SetEnvironmentText(_environmentStates.GetCurrentState().Name);
         }
 
-        private void TestEnvironmentGenerator()
+        private static void TestEnvironmentGenerator()
         {
-            int expectedTransitions = StatesAsList().Count;
+            int expectedTransitions = _environmentStates.StatesAsList().Count;
             int fails = 0;
             const int trials = 10000;
             for (int i = 0; i < trials; ++i)
@@ -53,10 +49,11 @@ namespace Game.World.Environment_and_Weather
                     ++fails;
                 }
             }
+
             Debug.Log(fails + " failed tests from " + trials + " trials.");
         }
 
-        private void LoadEnvironments()
+        private static void LoadEnvironments()
         {
             Helper.ConstructObjectsFromCsv("EnvironmentBalance", delegate(string[] attributes)
             {
@@ -68,13 +65,13 @@ namespace Game.World.Environment_and_Weather
                 int fuelAbundance = int.Parse(attributes[5]);
                 int scrapAbundance = int.Parse(attributes[6]);
 
-                Environment environment = new Environment(this, name, temperature, climate, waterAbundance, foodAbundance, fuelAbundance, scrapAbundance);
-                AddState(environment);
+                Environment environment = new Environment(_environmentStates, name, temperature, climate, waterAbundance, foodAbundance, fuelAbundance, scrapAbundance);
+                _environmentStates.AddState(environment);
             });
-            SetDefaultState(GetState("Oasis"));
+            _environmentStates.SetDefaultState(_environmentStates.GetState("Oasis"));
         }
 
-        private void UpdateTemperature()
+        public static void UpdateTemperature()
         {
             int temperature = GetTemperature();
             TemperatureCategory temperatureCategory;
@@ -93,19 +90,19 @@ namespace Game.World.Environment_and_Weather
             int lengthDifference = targetLength - currentTemperature.Length;
             string seperators = "";
             for (int i = 0; i < lengthDifference; ++i) seperators += " ";
-            _temperatureText.text = temperatureCategory + seperators + "(" + currentTemperature  + ")";
+            WorldView.SetTemperatureText(temperatureCategory + seperators + "(" + currentTemperature + ")");
         }
 
-        public int GetTemperature()
+        public static int GetTemperature()
         {
-            Environment currentEnvironment = (Environment) GetCurrentState();
-            Weather currenWeather = (Weather) WeatherManager.Instance().GetCurrentState();
-            return  currentEnvironment.GetTemperature() + currenWeather.Temperature();
+            Environment currentEnvironment = (Environment) _environmentStates.GetCurrentState();
+            Weather.Weather currentWeather = WeatherManager.CurrentWeather();
+            return currentEnvironment.GetTemperature() + currentWeather.Temperature();
         }
 
-        private void GenerateEnvironment()
+        public static void GenerateEnvironment()
         {
-            NavigateToState(GetCurrentState().Name);
+            NavigateToState(_environmentStates.GetCurrentState().Name);
         }
     }
 }

@@ -2,7 +2,6 @@
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
@@ -44,6 +43,7 @@ namespace Game.Characters
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
                 return equippedGear == null ? "Nothing equipped" : equippedGear.Name;
             });
             ui.SetRightTextCallback(() => "Equip");
@@ -61,6 +61,7 @@ namespace Game.Characters
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             return ui;
         }
     }

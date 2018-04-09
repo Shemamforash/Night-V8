@@ -1,38 +1,35 @@
 ﻿using System.Collections.Generic;
-using SamsHelper;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIAttributeMarkerController : MonoBehaviour
+namespace Facilitating.UIControllers
 {
-    public bool FillFromLeft;
-    private readonly List<GameObject> _attributeMarkers = new List<GameObject>();
-
-    public void SetValue(int currentValue, int max)
+    public class UIAttributeMarkerController : MonoBehaviour
     {
-        _attributeMarkers.ForEach(Destroy);
-        if (FillFromLeft)
+        private readonly List<GameObject> _attributeMarkers = new List<GameObject>();
+        public bool FillFromLeft;
+
+        public void SetValue(int currentValue, int max)
         {
-            for (int i = 0; i < max; ++i)
+            _attributeMarkers.ForEach(Destroy);
+            if (FillFromLeft)
             {
-                CreateMarker(i, currentValue);
+                for (int i = 0; i < max; ++i) CreateMarker(i, currentValue);
+
+                return;
             }
 
-            return;
+            for (int i = max - 1; i >= 0; --i) CreateMarker(i, currentValue);
         }
 
-        for (int i = max - 1; i >= 0; --i)
+        private void CreateMarker(int i, int currentValue)
         {
-            CreateMarker(i, currentValue);
+            GameObject newMarker = Helper.InstantiateUiObject("Prefabs/AttributeMarkerPrefab", transform);
+            Image markerImage = newMarker.GetComponent<Image>();
+            markerImage.color = i < currentValue ? Color.white : UiAppearanceController.FadedColour;
+            _attributeMarkers.Add(newMarker);
         }
-    }
-
-    private void CreateMarker(int i, int currentValue)
-    {
-        GameObject newMarker = Helper.InstantiateUiObject("Prefabs/AttributeMarkerPrefab", transform);
-        Image markerImage = newMarker.GetComponent<Image>();
-        markerImage.color = i < currentValue ? Color.white : UiAppearanceController.FadedColour;
-        _attributeMarkers.Add(newMarker);
     }
 }

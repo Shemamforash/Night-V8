@@ -1,9 +1,9 @@
-﻿namespace Game.World.WorldEvents
+﻿namespace Game.Exploration.WorldEvents
 {
     public class WorldEvent
     {
         protected readonly string EventText;
-        
+
         public WorldEvent(string eventText)
         {
             EventText = eventText;

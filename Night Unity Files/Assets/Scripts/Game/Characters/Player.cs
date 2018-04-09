@@ -4,11 +4,11 @@ using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
-using Game.Combat.Skills;
+using Game.Combat.Player;
+using Game.Exploration.Region;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
-using Game.World;
-using Game.World.Region;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
@@ -16,30 +16,45 @@ using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Game.Characters.Player
+namespace Game.Characters
 {
     public class Player : Character
     {
-        public readonly StateMachine States = new StateMachine();
-        public readonly CharacterTemplate CharacterTemplate;
-        public int DistanceFromHome;
-        public CharacterView CharacterView;
-        public readonly DesolationAttributes Attributes;
-        public readonly Number Energy = new Number();
-
-        private CollectResources _collectResourcesAction;
-        public Rest RestAction;
-        public Travel TravelAction;
-        public Return ReturnAction;
-        private CraftAmmo _craftAmmoAction;
-        private CharacterActions.Combat _combatAction;
-        private LightFire _lightFireAction;
-        private BrandManager _brandManager;
-
-        private int _storyProgress;
-        public readonly Skill CharacterSkillOne, CharacterSkillTwo;
         public const int PlayerHealthChunkSize = 50;
 
+        private const float MinSpeed = 3, MaxSpeed = 6;
+
+        private const int HighWeightThreshold = 15, LowWeightThreshold = 5;
+        public readonly DesolationAttributes Attributes;
+        public readonly Skill CharacterSkillOne, CharacterSkillTwo;
+        public readonly CharacterTemplate CharacterTemplate;
+        public readonly StateMachine States = new StateMachine();
+        private readonly BrandManager _brandManager;
+
+        private CollectResources _collectResourcesAction;
+        private CharacterActions.Combat _combatAction;
+        private CraftAmmo _craftAmmoAction;
+        private LightFire _lightFireAction;
+
+        private int _storyProgress;
+        public CharacterView CharacterView;
+        public Rest RestAction;
+        public Travel TravelAction;
+
+        //Create Character in code only- no view section, no references to objects in the scene
+        public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
+        {
+            Attributes = new DesolationAttributes(this);
+            CharacterTemplate = characterTemplate;
+            CharacterSkillOne = CharacterSkills.GetCharacterSkillOne(this);
+            CharacterSkillTwo = CharacterSkills.GetCharacterSkillTwo(this);
+            CharacterInventory.MaxWeight = 50;
+
+            _brandManager = new BrandManager(this);
+            AddStates();
+            Attributes.Endurance.OnMin(RestAction.Enter);
+        }
+        
         public string GetCurrentStoryProgress()
         {
             if (_storyProgress == CharacterTemplate.StoryLines.Count) return null;
@@ -52,35 +67,17 @@ namespace Game.Characters.Player
         {
             if (SceneManager.GetActiveScene().name != "Game") return;
             WorldState.HomeInventory().RemoveItem(this);
-            WorldState.UnregisterMinuteEvent(UpdateCurrentState);
-        }
-
-        //Create Character in code only- no view section, no references to objects in the scene
-        public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
-        {
-            Debug.Log("Created");
-            Attributes = new DesolationAttributes(this);
-            CharacterTemplate = characterTemplate;
-            CharacterSkillOne = CharacterSkills.GetCharacterSkillOne(this);
-            CharacterSkillTwo = CharacterSkills.GetCharacterSkillTwo(this);
-            CharacterInventory.MaxWeight = 50;
-            Attributes.Endurance.AddOnValueChange(a => { Energy.Max = a.CurrentValue(); });
-
-            _brandManager = new BrandManager(this);
-            Energy.OnMin(() => RestAction?.Enter());
         }
 
         ~Player()
         {
-            Debug.Log("Destroyed " + Name);
+//            Debug.Log("Destroyed " + Name);
         }
 
         public float CalculateDashCooldown()
         {
             return 2f - 0.1f * Attributes.Endurance.CurrentValue();
         }
-
-        private const float MinSpeed = 3, MaxSpeed = 6;
 
         public float CalculateSpeed()
         {
@@ -107,8 +104,6 @@ namespace Game.Characters.Player
         {
             base.Save(doc, saveType);
             SaveController.CreateNodeAndAppend("Class", doc, Name);
-            SaveController.CreateNodeAndAppend("Distance", doc, DistanceFromHome);
-            SaveController.CreateNodeAndAppend("Energy", doc, Energy.CurrentValue());
             Attributes.Save(doc, saveType);
             return doc;
         }
@@ -116,19 +111,6 @@ namespace Game.Characters.Player
         public override ViewParent CreateUi(Transform parent)
         {
             return new InventoryUi(this, parent);
-        }
-
-        //Links character to object in scene
-        public override void SetGameObject(GameObject gameObject)
-        {
-            base.SetGameObject(gameObject);
-            SetCharacterUi();
-            AddStates();
-        }
-
-        private void SetCharacterUi()
-        {
-            CharacterView = new CharacterView(this);
         }
 
         public List<BaseCharacterAction> StatesAsList(bool includeInactiveStates)
@@ -142,16 +124,14 @@ namespace Game.Characters.Player
             _combatAction = new CharacterActions.Combat(this);
             RestAction = new Rest(this);
             TravelAction = new Travel(this);
-            ReturnAction = new Return(this);
             _lightFireAction = new LightFire(this);
             _craftAmmoAction = new CraftAmmo(this);
             States.SetDefaultState(RestAction);
-            CharacterView.FillActionList();
-            WorldState.RegisterMinuteEvent(UpdateCurrentState);
         }
 
-        private void UpdateCurrentState()
+        public void UpdateCurrentState()
         {
+            Debug.Log(((BaseCharacterAction)States.GetCurrentState()).Name);
             ((BaseCharacterAction) States.GetCurrentState()).UpdateAction();
         }
 
@@ -164,40 +144,23 @@ namespace Game.Characters.Player
         {
             int amount = 1;
             if (IsOverburdened()) amount *= 2;
-            Energy.Decrement(amount);
+            Attributes.Endurance.Decrement(amount);
         }
 
         public void Rest(int amount)
         {
-            if (Energy.ReachedMax())
-            {
-                _brandManager.IncreaseIdleTime();
-            }
-
-            Energy.Increment(amount);
+            if (Attributes.Endurance.ReachedMax()) _brandManager.IncreaseIdleTime();
+            Attributes.Endurance.Increment(amount);
         }
-
-        private const int HighWeightThreshold = 15, LowWeightThreshold = 5;
 
         public void Travel()
         {
             if (Inventory().Weight >= HighWeightThreshold)
-            {
                 _brandManager.IncreaseTimeSpentHighCapacity();
-            }
             else if (Inventory().Weight < LowWeightThreshold)
-            {
                 _brandManager.IncreaseTimeSpentLowCapacity();
-            }
 
             _brandManager.IncreaseTravelTime();
-            DistanceFromHome++;
-            Tire();
-        }
-
-        public void Return()
-        {
-            --DistanceFromHome;
             Tire();
         }
 

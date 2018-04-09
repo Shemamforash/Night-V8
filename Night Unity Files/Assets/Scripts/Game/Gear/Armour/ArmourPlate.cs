@@ -1,6 +1,4 @@
-﻿using Game.Gear.Weapons;
-using SamsHelper.BaseGameFunctionality.Characters;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
+﻿using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
@@ -8,17 +6,14 @@ namespace Game.Gear.Armour
 {
     public class ArmourPlate : GearItem
     {
-        public readonly bool Inscribable;
-        private readonly Number _plateHealth = new Number();
         public const float PlateHealthUnit = 100;
+        private readonly Number _plateHealth = new Number();
+        public readonly bool Inscribable;
         private bool _broken;
 
         private ArmourPlate(string name, float weight, ItemQuality itemQuality) : base(name, weight, GearSubtype.Armour, itemQuality)
         {
-            if (weight == 5 || weight == 4)
-            {
-                Inscribable = true;
-            }
+            if (weight == 5 || weight == 4) Inscribable = true;
 
             _plateHealth.Max = weight * 100;
             _plateHealth.SetCurrentValue(_plateHealth.Max);
@@ -26,7 +21,7 @@ namespace Game.Gear.Armour
 
         public static ArmourPlate GeneratePlate(ItemQuality plateQuality)
         {
-            int weight = (int)plateQuality + 1;
+            int weight = (int) plateQuality + 1;
             string name = plateQuality + " Plate";
             return new ArmourPlate(name, weight, plateQuality);
         }
@@ -62,7 +57,7 @@ namespace Game.Gear.Armour
         {
             return Mathf.CeilToInt(_plateHealth.CurrentValue() / PlateHealthUnit);
         }
-        
+
         public float GetMaxHealth()
         {
             return _plateHealth.Max;
@@ -73,5 +68,4 @@ namespace Game.Gear.Armour
             return _plateHealth.CurrentValue();
         }
     }
-    
 }

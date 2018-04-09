@@ -1,27 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using SamsHelper;
+using SamsHelper.Libraries;
 using UnityEngine;
 
-namespace Game.World.Region
+namespace Game.Exploration.Environment
 {
     public class Path : MonoBehaviour
     {
-        private Vector2 _direction;
-        private readonly List<PathSegment> _segments = new List<PathSegment>();
-        private Vector2 _currentPosition, _targetPosition;
         private const float MaxPathLength = 0.15f;
         private const float PathDrawTime = 0.1f;
+        private readonly List<PathSegment> _segments = new List<PathSegment>();
+        private Vector2 _currentPosition, _targetPosition;
         private float _currentTime;
-        private bool _glowing;
+        private Vector2 _direction;
         private float _glowAlpha = 1;
+        private bool _glowing;
 
         public void DrawPath(MapNode from, MapNode to)
         {
             from.AddPathTo(to, this);
             to.AddPathTo(from, this);
-            _targetPosition = to.transform.position;
-            _currentPosition = from.transform.position;
+            _targetPosition = to.Position;
+            _currentPosition = from.Position;
             _direction = _targetPosition - _currentPosition;
             _currentTime = 0f;
             _direction.Normalize();
@@ -62,7 +62,7 @@ namespace Game.World.Region
                     Vector2 to = _currentPosition + _direction * MaxPathLength;
                     bool passesTarget = AdvancedMaths.DoesLinePassThroughPoint(from, to, _targetPosition);
                     if (passesTarget) to = _targetPosition;
-                        segment.SetEnds(from, to);
+                    segment.SetEnds(from, to);
                     if (passesTarget) break;
                     _currentPosition = to + _direction * MaxPathLength / 2f;
                     if (AdvancedMaths.DoesLinePassThroughPoint(to, _currentPosition, _targetPosition)) break;

@@ -6,18 +6,17 @@ using Game.Gear.Weapons;
 using SamsHelper;
 using UnityEngine;
 
-namespace Game.Combat.Enemies.EnemyTypes
+namespace Game.Combat.Enemies
 {
     public class EnemyTemplate
     {
+        private static bool _loaded;
+        private static readonly Dictionary<EnemyType, EnemyTemplate> EnemyTemplates = new Dictionary<EnemyType, EnemyTemplate>();
+        public readonly List<WeaponType> AllowedWeaponTypes = new List<WeaponType>();
+        public readonly EnemyType EnemyType;
         public readonly int Health;
         public readonly int Speed;
         public readonly int Value;
-        public readonly EnemyType EnemyType;
-        public readonly List<WeaponType> AllowedWeaponTypes = new List<WeaponType>();
-
-        private static bool _loaded;
-        private static readonly Dictionary<EnemyType, EnemyTemplate> EnemyTemplates = new Dictionary<EnemyType, EnemyTemplate>();
 
         private EnemyTemplate(EnemyType type, int health, int speed, int value, string[] allowedWeaponTypes)
         {
@@ -26,14 +25,10 @@ namespace Game.Combat.Enemies.EnemyTypes
             Speed = speed;
             Value = value;
             foreach (WeaponType weaponType in Enum.GetValues(typeof(WeaponType)))
-            {
                 if (allowedWeaponTypes.Contains(weaponType.ToString()))
-                {
                     AllowedWeaponTypes.Add(weaponType);
-                }
-            }
         }
-        
+
         public static List<EnemyTemplate> GetEnemyTypes()
         {
             LoadTemplates();
@@ -42,16 +37,12 @@ namespace Game.Combat.Enemies.EnemyTypes
 
         private static EnemyType NameToType(string typeName)
         {
-            foreach(EnemyType enemyType in Enum.GetValues(typeof(EnemyType)))
-            {
+            foreach (EnemyType enemyType in Enum.GetValues(typeof(EnemyType)))
                 if (enemyType.ToString() == typeName)
-                {
                     return enemyType;
-                }
-            }
             throw new Exceptions.EnemyTypeDoesNotExistException(typeName);
         }
-        
+
         private static void LoadTemplates()
         {
             if (_loaded) return;
@@ -65,7 +56,7 @@ namespace Game.Combat.Enemies.EnemyTypes
                 EnemyType type = NameToType(name);
                 int health = int.Parse(accessoryNode.SelectSingleNode("Health").InnerText);
                 int speed = int.Parse(accessoryNode.SelectSingleNode("Speed").InnerText);
-                int value  = int.Parse(accessoryNode.SelectSingleNode("Value").InnerText);
+                int value = int.Parse(accessoryNode.SelectSingleNode("Value").InnerText);
                 string[] allowedWeaponTypes = accessoryNode.SelectSingleNode("WeaponTypes").InnerText.Replace(" ", "").Split(',');
                 EnemyTemplate t = new EnemyTemplate(type, health, speed, value, allowedWeaponTypes);
                 EnemyTemplates[type] = t;
@@ -77,10 +68,7 @@ namespace Game.Combat.Enemies.EnemyTypes
         public static EnemyTemplate GetEnemyTemplate(EnemyType enemyType)
         {
             LoadTemplates();
-            if (!EnemyTemplates.ContainsKey(enemyType))
-            {
-                throw new Exceptions.EnemyTypeDoesNotExistException(enemyType.ToString());
-            }
+            if (!EnemyTemplates.ContainsKey(enemyType)) throw new Exceptions.EnemyTypeDoesNotExistException(enemyType.ToString());
 
             return EnemyTemplates[enemyType];
         }

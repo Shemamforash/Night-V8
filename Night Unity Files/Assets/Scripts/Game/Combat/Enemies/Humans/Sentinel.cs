@@ -1,19 +1,19 @@
-﻿namespace Game.Combat.Enemies.EnemyTypes.Humans
+﻿namespace Game.Combat.Enemies.Humans
 {
     public class Sentinel : EnemyBehaviour
     {
-        private float _timeSinceLastHeal;
         private const float DefaultHealTime = 0.5f;
         private int _damageTaken;
         private bool _healingInCover;
         private int _targetHealAmount;
+        private float _timeSinceLastHeal;
 
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
 //            MinimumFindCoverDistance = 5f;
         }
-        
+
 //        public override void ChooseNextAction()
 //        {
 //            if (!_healingInCover)

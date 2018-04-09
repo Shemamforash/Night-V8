@@ -1,17 +1,19 @@
-﻿using Game.Combat;
+﻿using Facilitating;
+using Game.Combat.Generation;
+using Game.Combat.Misc;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
-namespace Game.Characters.Player
+namespace Game.Characters
 {
     public class RageController : ICombatListener
     {
-        private readonly Number _rageLevel = new Number(0, 0, 8);
-        private bool _activated;
-        private readonly AttributeModifier _reloadModifier = new AttributeModifier(AttributeType.ReloadSpeed);
         private readonly AttributeModifier _fireRateModifier = new AttributeModifier(AttributeType.FireRate);
-        
+        private readonly Number _rageLevel = new Number(0, 0, 8);
+        private readonly AttributeModifier _reloadModifier = new AttributeModifier(AttributeType.ReloadSpeed);
+        private bool _activated;
+
 
         public RageController()
         {
@@ -21,6 +23,21 @@ namespace Game.Characters.Player
             _rageLevel.AddOnValueChange(a => RageBarController.SetRageBarFill(a.Normalised(), _activated));
         }
 
+        public void EnterCombat()
+        {
+            _rageLevel.SetCurrentValue(0f);
+        }
+
+        public void ExitCombat()
+        {
+            End();
+        }
+
+        public void UpdateCombat()
+        {
+            if (_activated) _rageLevel.Decrement(0.1f * Time.deltaTime);
+        }
+
         public float CurrentValue()
         {
             return _rageLevel.CurrentValue();
@@ -28,13 +45,13 @@ namespace Game.Characters.Player
 
         public void Increase(float damage)
         {
-            if (!_activated)
-            {
-                _rageLevel.Increment(0.02f * damage);
-            }
+            if (!_activated) _rageLevel.Increment(0.02f * damage);
         }
 
-        public bool Active() => _activated;
+        public bool Active()
+        {
+            return _activated;
+        }
 
         private void End()
         {
@@ -50,24 +67,6 @@ namespace Game.Characters.Player
             _activated = true;
             _reloadModifier.Apply(CombatManager.Player.Weapon().WeaponAttributes);
             _fireRateModifier.Apply(CombatManager.Player.Weapon().WeaponAttributes);
-        }
-
-        public void EnterCombat()
-        {
-            _rageLevel.SetCurrentValue(0f);
-        }
-
-        public void ExitCombat()
-        {
-            End();
-        }
-
-        public void UpdateCombat()
-        {
-            if (_activated)
-            {
-                _rageLevel.Decrement(0.1f * Time.deltaTime);
-            }
         }
     }
 }

@@ -136,7 +136,6 @@
                 <e p="CraftAmmo.cs" t="Include" />
                 <e p="LightFire.cs" t="Include" />
                 <e p="Rest.cs" t="Include" />
-                <e p="Return.cs" t="Include" />
                 <e p="Travel.cs" t="Include" />
               </e>
               <e p="CharacterClass.cs" t="Include" />
@@ -151,12 +150,6 @@
               <e p="RageController.cs" t="Include" />
             </e>
             <e p="Combat" t="Include">
-              <e p="Conditions" t="Include">
-                <e p="Bleed.cs" t="Include" />
-                <e p="Burn.cs" t="Include" />
-                <e p="Condition.cs" t="Include" />
-                <e p="Sickness.cs" t="Include" />
-              </e>
               <e p="Enemies" t="Include">
                 <e p="Animals" t="Include">
                   <e p="Grazer.cs" t="Include" />
@@ -239,7 +232,6 @@
                 <e p="Region.cs" t="Include" />
                 <e p="RegionManager.cs" t="Include" />
                 <e p="RegionTemplate.cs" t="Include" />
-                <e p="RegionType.cs" t="Include" />
               </e>
               <e p="UI" t="Include">
                 <e p="CharacterVisionController.cs" t="Include" />
@@ -288,6 +280,7 @@
             </e>
             <e p="Global" t="Include">
               <e p="DesolationInventory.cs" t="Include" />
+              <e p="SceneChanger.cs" t="Include" />
               <e p="WorldState.cs" t="Include" />
               <e p="WorldView.cs" t="Include" />
             </e>
@@ -335,6 +328,7 @@
             </e>
             <e p="Libraries" t="Include">
               <e p="AdvancedMaths.cs" t="Include" />
+              <e p="Edge.cs" t="Include" />
               <e p="Helper.cs" t="Include" />
               <e p="Node.cs" t="Include" />
               <e p="Pathfinding.cs" t="Include" />
@@ -349,6 +343,7 @@
                 <e p="EnhancedText.cs" t="Include" />
                 <e p="UiAppearanceController.cs" t="Include" />
               </e>
+              <e p="INumberChangeListener.cs" t="Include" />
               <e p="InventoryUI" t="Include">
                 <e p="InventoryDisplay.cs" t="Include" />
                 <e p="InventoryTransferManager.cs" t="Include" />

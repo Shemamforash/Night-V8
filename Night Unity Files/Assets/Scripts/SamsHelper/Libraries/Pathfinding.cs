@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace SamsHelper
+namespace SamsHelper.Libraries
 {
     public static class Pathfinding
     {
-        public static List<T> AStar<T>(Node<T> from, Node<T> to, List<Node<T>> graph)
+        public static List<T> AStar<T>(Node<T> from, Node<T> to)
         {
             List<T> path = null;
-            
+
             HashSet<Node<T>> visited = new HashSet<Node<T>>();
             HashSet<Node<T>> unvisited = new HashSet<Node<T>>();
             unvisited.Add(from);
@@ -68,6 +68,40 @@ namespace SamsHelper
 
             path.Reverse();
             return path;
+        }
+
+        public static List<Edge<T>> MinimumSpanningTree<T>(List<Node<T>> nodes)
+        {
+            HashSet<Node<T>> tree = new HashSet<Node<T>>();
+            tree.Add(nodes[0]);
+            List<Node<T>> uncheckedNodes = new List<Node<T>>(nodes);
+            uncheckedNodes.Remove(nodes[0]);
+            List<Edge<T>> minSpanningTree = new List<Edge<T>>();
+
+            while (tree.Count != nodes.Count)
+            {
+                Node<T> nearestNode = null;
+                Node<T> origin = null;
+                float nearestNodeDistance = float.MaxValue;
+
+                foreach (Node<T> uncheckedNode in uncheckedNodes)
+                {
+                    foreach (Node<T> treeNode in tree)
+                    {
+                        float candidateDistance = uncheckedNode.Distance(treeNode);
+                        if(candidateDistance >= nearestNodeDistance) continue;
+                        nearestNode = uncheckedNode;
+                        origin = treeNode;
+                        nearestNodeDistance = candidateDistance;
+                    }
+                }
+
+                tree.Add(nearestNode);
+                uncheckedNodes.Remove(nearestNode);
+                minSpanningTree.Add(new Edge<T>(origin.Content, nearestNode.Content));
+            }
+            
+            return minSpanningTree;
         }
     }
 }

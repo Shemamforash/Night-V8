@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Gear.Armour;
-using SamsHelper;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
@@ -11,12 +11,12 @@ namespace Facilitating.UIControllers
     public class UIArmourController : MonoBehaviour
     {
         private const int ArmourDivisions = 10;
-        private readonly List<ArmourChunk> _armourChunks = new List<ArmourChunk>();
-        
-        private Transform _armourBar;
         private const int SegmentSpacing = 5;
-        private HorizontalLayoutGroup _layoutGroup;
+        private readonly List<ArmourChunk> _armourChunks = new List<ArmourChunk>();
+
+        private Transform _armourBar;
         private TextMeshProUGUI _armourText;
+        private HorizontalLayoutGroup _layoutGroup;
 
         // Use this for initialization
         public void Awake()
@@ -37,10 +37,7 @@ namespace Facilitating.UIControllers
                 segments.Add(newSegment);
             }
 
-            for (int i = ArmourDivisions - 1; i >= 0; --i)
-            {
-                _armourChunks.Add(new ArmourChunk(segments[i]));
-            }
+            for (int i = ArmourDivisions - 1; i >= 0; --i) _armourChunks.Add(new ArmourChunk(segments[i]));
         }
 
         private void SetSlotsFilled(ArmourController armourController, bool damageWasTaken = false)
@@ -52,21 +49,14 @@ namespace Facilitating.UIControllers
             {
                 ArmourChunk chunk = _armourChunks[i];
                 if (i < slotsAvailable)
-                {
                     if (i < slotsUsed)
-                    {
                         chunk.Activate(i == slotsUsed - 1 && damageWasTaken);
-                    }
                     else
-                    {
                         chunk.Deactivate();
-                    }
-                }
                 else
-                {
                     chunk.SetInvisible();
-                }
             }
+
             _armourText.text = armourController.GetCurrentArmour() / 10f + "x damage";
         }
 
@@ -87,8 +77,8 @@ namespace Facilitating.UIControllers
 
         private class ArmourChunk
         {
-            private readonly GameObject _armourObject;
             private const float MaxFadeTime = 1f;
+            private readonly GameObject _armourObject;
             private float _currentFadeTime;
 
             public ArmourChunk(GameObject armourObject)

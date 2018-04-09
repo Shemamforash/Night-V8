@@ -1,27 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Game.Characters;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Input;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
-using System.Linq;
-using Game.Characters;
-using SamsHelper.Input;
 using UnityEngine;
 
 namespace SamsHelper.ReactiveUI.InventoryUI
 {
     public class InventoryDisplay : MenuList, IInputListener
     {
-        private Inventory _inventory;
-        private TextMeshProUGUI _titleText, _capacityText;
-        private InventoryDisplay _moveToInventory;
-        public EnhancedButton AllButton, WeaponButton, ArmourButton, AccesoryButton, ResourceButton, CharacterButton;
         private readonly List<Action> _tabActions = new List<Action>();
         private int _currentTab;
+        private Inventory _inventory;
+        private InventoryDisplay _moveToInventory;
         private bool _selected;
+        private TextMeshProUGUI _titleText, _capacityText;
+        public EnhancedButton AllButton, WeaponButton, ArmourButton, AccesoryButton, ResourceButton, CharacterButton;
+
+        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+            if (axis != InputAxis.SwitchTab || isHeld || !gameObject.activeInHierarchy || !_selected) return;
+            if (direction < 0)
+            {
+                --_currentTab;
+                if (_currentTab < 0)
+                {
+                    _currentTab = 0;
+                    return;
+                }
+
+                _tabActions[_currentTab]();
+            }
+            else if (direction > 0)
+            {
+                ++_currentTab;
+                if (_currentTab == _tabActions.Count)
+                {
+                    _currentTab = _tabActions.Count - 1;
+                    return;
+                }
+
+                _tabActions[_currentTab]();
+            }
+        }
+
+        public void OnInputUp(InputAxis axis)
+        {
+        }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
+        }
 
         public override void Awake()
         {
@@ -56,10 +92,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             if (ResourceButton != button) ResourceButton.GetComponent<CanvasGroup>().alpha = 0.4f;
             if (CharacterButton != button) CharacterButton.GetComponent<CanvasGroup>().alpha = 0.4f;
             List<MyGameObject> filteredItems = _inventory.Contents();
-            if (itemType != "")
-            {
-                filteredItems = _inventory.Contents().Where(item => item.GetType().ToString() == itemType).ToList();
-            }
+            if (itemType != "") filteredItems = _inventory.Contents().Where(item => item.GetType().ToString() == itemType).ToList();
             SetItems(filteredItems);
         }
 
@@ -85,10 +118,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
 
         public override ViewParent AddItem(MyGameObject item)
         {
-            if (!(item is InventoryItem))
-            {
-                return null;
-            }
+            if (!(item is InventoryItem)) return null;
             if (((InventoryItem) item).Quantity() == 0) return null;
             ViewParent existingUi = FindItem(item);
             if (existingUi != null)
@@ -96,6 +126,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                 UpdateItem(item);
                 return existingUi;
             }
+
             InventoryUi inventoryItemUi = (InventoryUi) base.AddItem(item);
             if (_moveToInventory != null && inventoryItemUi != null)
             {
@@ -107,6 +138,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
                     _moveToInventory.Deselect();
                 });
             }
+
             UpdateInventoryWeight();
             return inventoryItemUi;
         }
@@ -131,39 +163,6 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             if (foundItem == null || _inventory.ContainsItem(inventoryItem)) return;
             Remove(itemUi);
             itemUi.Destroy();
-        }
-
-        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-            if (axis != InputAxis.SwitchTab || isHeld || !gameObject.activeInHierarchy || !_selected) return;
-            if (direction < 0)
-            {
-                --_currentTab;
-                if (_currentTab < 0)
-                {
-                    _currentTab = 0;
-                    return;
-                }
-                _tabActions[_currentTab]();
-            }
-            else if (direction > 0)
-            {
-                ++_currentTab;
-                if (_currentTab == _tabActions.Count)
-                {
-                    _currentTab = _tabActions.Count - 1;
-                    return;
-                }
-                _tabActions[_currentTab]();
-            }
-        }
-
-        public void OnInputUp(InputAxis axis)
-        {
-        }
-
-        public void OnDoubleTap(InputAxis axis, float direction)
-        {
         }
 
         private void Deselect()

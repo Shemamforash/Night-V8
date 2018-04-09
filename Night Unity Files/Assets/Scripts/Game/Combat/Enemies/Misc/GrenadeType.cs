@@ -1,4 +1,4 @@
-﻿namespace Game.Combat.Enemies.EnemyTypes.Misc
+﻿namespace Game.Combat.Enemies.Misc
 {
     public enum GrenadeType
     {

@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
-using SamsHelper;
+using SamsHelper.Libraries;
 using UnityEngine;
 
-namespace Game.Combat
+namespace Game.Combat.Generation
 {
     public class Cell : MonoBehaviour
     {
-        public float XPos, YPos;
-        public int XIndex, YIndex;
-        public Node<Cell> Node;
-        public List<Cell> AllNeighbors = new List<Cell>();
-        public List<Cell> ReachableNeighbors = new List<Cell>();
-        public Vector2 Position;
         private static GameObject _cellPrefab;
+        public List<Cell> AllNeighbors = new List<Cell>();
+        public bool Blocked;
         public int id;
-        public bool Blocked = false;
+        public Node<Cell> Node;
+        public Vector2 Position;
         public bool Reachable = true;
+        public List<Cell> ReachableNeighbors = new List<Cell>();
+        public int XIndex, YIndex;
+        public float XPos, YPos;
 
         public static Cell Generate(int xIndex, int yIndex)
         {

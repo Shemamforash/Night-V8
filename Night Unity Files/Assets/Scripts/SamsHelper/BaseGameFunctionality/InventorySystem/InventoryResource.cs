@@ -7,8 +7,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class InventoryResource : InventoryItem
     {
-        private readonly Number _quantity = new Number();
         private readonly InventoryResourceType _inventoryResourceType;
+        private readonly Number _quantity = new Number();
 
         public InventoryResource(InventoryResourceType inventoryResourceType, float weight) : base(inventoryResourceType.ToString(), GameObjectType.Resource, weight)
         {
@@ -19,14 +19,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             return _quantity.CurrentValue();
         }
-        
+
         public override bool Equals(object obj)
         {
             InventoryResource other = obj as InventoryResource;
-            if (other != null)
-            {
-                return other.Name == Name;
-            }
+            if (other != null) return other.Name == Name;
             return false;
         }
 
@@ -41,7 +38,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             ui.SetCentralTextCallback(() => Name + " x" + Quantity());
             return ui;
         }
-        
+
         public void AddOnUpdate(Action<Number> action)
         {
             _quantity.AddOnValueChange(action);

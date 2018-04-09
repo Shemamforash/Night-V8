@@ -1,4 +1,4 @@
-﻿namespace Game.Combat
+﻿namespace Game.Combat.Misc
 {
     public interface ICombatListener
     {

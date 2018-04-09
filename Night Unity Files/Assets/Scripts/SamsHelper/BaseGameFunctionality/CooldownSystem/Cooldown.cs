@@ -6,14 +6,14 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 {
     public class Cooldown
     {
-        private float _startTime;
-        public float Duration;
-        private Action _startOfCooldown, _endOfCooldown, _cancelCooldown;
         private Action<float> _duringCooldown;
-        private CooldownManager _manager;
         private bool _finished, _started;
-        private List<CooldownController> Controllers = new List<CooldownController>();
-        
+        private readonly CooldownManager _manager;
+        private Action _startOfCooldown, _endOfCooldown, _cancelCooldown;
+        private float _startTime;
+        private readonly List<CooldownController> Controllers = new List<CooldownController>();
+        public float Duration;
+
         public Cooldown(CooldownManager manager, float duration = 0)
         {
             Duration = duration;
@@ -50,8 +50,15 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             _endOfCooldown = a;
         }
 
-        public void SetCancelAction(Action a) => _cancelCooldown = a;
-        public void SetDuringAction(Action<float> a) => _duringCooldown = a;
+        public void SetCancelAction(Action a)
+        {
+            _cancelCooldown = a;
+        }
+
+        public void SetDuringAction(Action<float> a)
+        {
+            _duringCooldown = a;
+        }
 
         public bool Finished()
         {
@@ -80,6 +87,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
                 _endOfCooldown?.Invoke();
                 return;
             }
+
             _duringCooldown?.Invoke(Duration - elapsed);
             float normalisedDuration = 1 - (Duration - elapsed) / Duration;
             Controllers.ForEach(c => c.UpdateCooldownFill(normalisedDuration));

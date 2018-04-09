@@ -1,14 +1,15 @@
 ﻿using System;
-using Facilitating.UIControllers;
 using Game.Characters;
-using Game.Characters.Player;
-using Game.Combat.Enemies.EnemyTypes.Misc;
+using Game.Combat.Enemies;
+using Game.Combat.Enemies.Misc;
+using Game.Combat.Generation;
+using Game.Combat.Ui;
 
-namespace Game.Combat.Skills
+namespace Game.Combat.Player
 {
     public static class CharacterSkills
     {
-        public static Skill GetCharacterSkillOne(Player player)
+        public static Skill GetCharacterSkillOne(Characters.Player player)
         {
             switch (player.CharacterTemplate.CharacterClass)
             {
@@ -35,7 +36,7 @@ namespace Game.Combat.Skills
             }
         }
 
-        public static Skill GetCharacterSkillTwo(Player player)
+        public static Skill GetCharacterSkillTwo(Characters.Player player)
         {
             switch (player.CharacterTemplate.CharacterClass)
             {
@@ -72,7 +73,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            CombatManager.Player.HealthController.Heal(Characters.Player.Player.PlayerHealthChunkSize);
+            CombatManager.Player.HealthController.Heal(Characters.Player.PlayerHealthChunkSize);
         }
     }
 
@@ -85,14 +86,14 @@ namespace Game.Combat.Skills
         protected override void OnFire()
         {
             PlayerCombat pCombat = CombatManager.Player;
-            pCombat.GetTarget().Bleeding.AddStacks(pCombat.Bleeding.Size());
-            pCombat.Bleeding.Clear();
+//            pCombat.GetTarget().Bleeding.AddStacks(pCombat.Bleeding.Size());
+//            pCombat.Bleeding.Clear();
 
-            pCombat.GetTarget().Burn.AddStacks(pCombat.Burn.Size());
-            pCombat.Burn.Clear();
+//            pCombat.GetTarget().Burn.AddStacks(pCombat.Burn.Size());
+//            pCombat.Burn.Clear();
 
-            pCombat.GetTarget().Sick.AddStacks(pCombat.Sick.Size());
-            pCombat.Sick.Clear();
+//            pCombat.GetTarget().Sick.AddStacks(pCombat.Sick.Size());
+//            pCombat.Sick.Clear();
         }
     }
 
@@ -106,7 +107,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            IncendiaryGrenade.Create(CombatManager.Player.transform.position, CombatManager.Player.GetTarget().transform.position);
+            Grenade.Create(CombatManager.Player.transform.position, CombatManager.Player.GetTarget().transform.position);
         }
     }
 
@@ -118,7 +119,7 @@ namespace Game.Combat.Skills
 
         protected override void OnFire()
         {
-            SplinterGrenade.Create(CombatManager.Player.transform.position, CombatManager.Player.GetTarget().transform.position);
+            Grenade.Create(CombatManager.Player.transform.position, CombatManager.Player.GetTarget().transform.position);
         }
     }
 

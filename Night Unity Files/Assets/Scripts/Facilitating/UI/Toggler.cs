@@ -1,5 +1,4 @@
-﻿
-namespace UI.Highlight
+﻿namespace Facilitating.UI
 {
     public class Toggler : Highlight
     {
@@ -12,13 +11,9 @@ namespace UI.Highlight
         public void Toggle()
         {
             if (childTexts[0].text.ToLower() == "on")
-            {
                 Off();
-            }
             else
-            {
                 On();
-            }
         }
 
         protected virtual void On()

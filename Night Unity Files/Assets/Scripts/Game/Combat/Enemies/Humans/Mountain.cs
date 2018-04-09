@@ -1,4 +1,4 @@
-﻿namespace Game.Combat.Enemies.EnemyTypes.Humans
+﻿namespace Game.Combat.Enemies.Humans
 {
     public class Mountain : EnemyBehaviour
     {
@@ -17,6 +17,7 @@
                 base.ChooseNextAction();
                 return;
             }
+
             _firedVolley = false;
 //            CurrentAction = MoveToTargetPosition(CombatManager.Player.Position.CurrentValue() + 5);
         }

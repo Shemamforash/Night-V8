@@ -1,5 +1,6 @@
 ﻿using System;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,7 +56,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _rightTextCallback = a;
             Update();
         }
-        
+
         public void SetLeftTextWidth(int i)
         {
             _leftText.GetComponent<LayoutElement>().minWidth = i;

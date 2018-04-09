@@ -1,31 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
-using Game.Characters.Player;
+using Game.Combat.Generation;
+using Game.Combat.Misc;
 using SamsHelper;
 using UnityEngine;
 
-namespace Game.Combat.Skills
+namespace Game.Combat.Player
 {
     public abstract class Skill
     {
-        public readonly string Name;
-        private SkillValue _skillValue;
-
 //        protected Shot Shot;
         private static readonly Dictionary<string, SkillValue> _skillValues = new Dictionary<string, SkillValue>();
         private static bool _loaded;
         private readonly bool _waitForReload;
+        public readonly string Name;
+        private SkillValue _skillValue;
 
-        private class SkillValue
+        protected Skill(string name, bool waitForReload = false)
         {
-            public readonly int Cooldown;
-            public readonly string Description;
-
-            public SkillValue(int cooldown, string description)
-            {
-                Cooldown = cooldown;
-                Description = description;
-            }
+            Name = name;
+            _waitForReload = waitForReload;
+            ReadSkillValue(this);
         }
 
         //todo read cost and cooldown from file
@@ -34,10 +29,7 @@ namespace Game.Combat.Skills
         {
             LoadTemplates();
             string skillName = s.Name;
-            if (!_skillValues.ContainsKey(skillName))
-            {
-                throw new Exceptions.SkillDoesNotExistException(skillName);
-            }
+            if (!_skillValues.ContainsKey(skillName)) throw new Exceptions.SkillDoesNotExistException(skillName);
 
             SkillValue value = _skillValues[skillName];
             s._skillValue = value;
@@ -73,26 +65,16 @@ namespace Game.Combat.Skills
         }
 
 
-        protected static Player Player()
+        protected static Characters.Player Player()
         {
             return CombatManager.Player.Player;
-        }
-
-        protected Skill(string name, bool waitForReload = false)
-        {
-            Name = name;
-            _waitForReload = waitForReload;
-            ReadSkillValue(this);
         }
 
         public void Activate()
         {
             OnFire();
             CombatManager.Player.UpdateMagazineUi();
-            if (_waitForReload)
-            {
-                CombatManager.Player.OnReloadAction += StartOnReload;
-            }
+            if (_waitForReload) CombatManager.Player.OnReloadAction += StartOnReload;
         }
 
         private void StartOnReload()
@@ -105,6 +87,18 @@ namespace Game.Combat.Skills
         protected static Shot CreateShot()
         {
             return Shot.Create(CombatManager.Player);
+        }
+
+        private class SkillValue
+        {
+            public readonly int Cooldown;
+            public readonly string Description;
+
+            public SkillValue(int cooldown, string description)
+            {
+                Cooldown = cooldown;
+                Description = description;
+            }
         }
     }
 }

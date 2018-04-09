@@ -1,14 +1,15 @@
 ﻿using Facilitating.Persistence;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
 {
     public class MenuStateMachine : MonoBehaviour
     {
-        public Menu InitialMenu;
         private static MenuStateMachine _instance;
         public static readonly StateMachine States = new StateMachine();
+        public Menu InitialMenu;
 
         public void Awake()
         {
@@ -21,12 +22,11 @@ namespace SamsHelper.ReactiveUI.MenuSystem
                     t.gameObject.SetActive(true);
                     t.gameObject.SetActive(false);
                 }
+
                 States.AddState(menu);
             }
-            if (InitialMenu != null)
-            {
-                ShowMenu(InitialMenu.name);
-            }
+
+            if (InitialMenu != null) ShowMenu(InitialMenu.name);
         }
 
         public static void ShowMenu(string menuName)
@@ -43,12 +43,12 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public static void HideCurrentMenu()
         {
-            States.GetCurrentState().GetGameObject().SetActive(false);
+            ((MenuState)States.GetCurrentState()).SetActive(false);
         }
 
         public static void ShowCurrentMenu()
         {
-            States.GetCurrentState().GetGameObject().SetActive(true);
+            ((MenuState)States.GetCurrentState()).SetActive(true);
         }
 
         public static void GoToInitialMenu()

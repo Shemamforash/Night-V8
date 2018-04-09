@@ -1,4 +1,4 @@
-﻿namespace Game.Combat.Enemies.EnemyTypes
+﻿namespace Game.Combat.Enemies.Animals
 {
     public class Watcher : Enemy
     {
@@ -12,7 +12,7 @@
 //            EnemyBehaviour.EnableGrazing();
 //            EnemyBehaviour.EnableWatching();
 //        }
-        
+
 //        public override void InitialiseBehaviour(EnemyPlayerRelation relation)
 //        {
 //            base.InitialiseBehaviour(relation);

@@ -7,7 +7,6 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 {
     public abstract class State : MyGameObject, IInputListener
     {
-        private event Action OnExit;
         private readonly StateMachine _stateMachine;
 
         protected State(StateMachine stateMachine, string name) : base(name, GameObjectType.State)
@@ -16,11 +15,25 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
             _stateMachine.AddState(this);
         }
 
+        public virtual void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+        }
+
+        public virtual void OnInputUp(InputAxis axis)
+        {
+        }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
+        }
+
+        private event Action OnExit;
+
         public void AddOnExit(Action exitCallback)
         {
             OnExit += exitCallback;
         }
-        
+
         public virtual void Enter()
         {
             _stateMachine.GetCurrentState()?.Exit();
@@ -35,18 +48,6 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         public virtual void Exit()
         {
             OnExit?.Invoke();
-        }
-
-        public virtual void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-        }
-
-        public virtual void OnInputUp(InputAxis axis)
-        {
-        }
-
-        public void OnDoubleTap(InputAxis axis, float direction)
-        {
         }
     }
 }

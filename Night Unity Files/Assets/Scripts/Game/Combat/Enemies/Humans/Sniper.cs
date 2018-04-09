@@ -1,12 +1,12 @@
-﻿using UnityEngine;
-using Random = UnityEngine.Random;
+﻿using Game.Combat.Misc;
+using UnityEngine;
 
-namespace Game.Combat.Enemies.EnemyTypes
+namespace Game.Combat.Enemies.Humans
 {
     public class Sniper : EnemyBehaviour
     {
-        private float _powerShotCooldown;
         private bool _firing;
+        private float _powerShotCooldown;
 
         private void ResetCooldown()
         {
@@ -39,7 +39,7 @@ namespace Game.Combat.Enemies.EnemyTypes
             base.Update();
             if (_firing || !Alerted) return;
             _powerShotCooldown -= Time.deltaTime;
-            if(_powerShotCooldown < 0) FirePowerShot();
+            if (_powerShotCooldown < 0) FirePowerShot();
         }
     }
 }

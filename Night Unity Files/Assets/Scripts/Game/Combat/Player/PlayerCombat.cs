@@ -1,36 +1,116 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets;
+using Facilitating;
 using Facilitating.UIControllers;
-using Game.Characters.Player;
+using Game.Characters;
+using Game.Combat.Enemies;
+using Game.Combat.Generation;
+using Game.Combat.Misc;
+using Game.Combat.Ui;
 using Game.Gear.Weapons;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
-namespace Game.Combat
+namespace Game.Combat.Player
 {
     public class PlayerCombat : CharacterCombat, IInputListener
     {
-        private float _damageModifier, _skillCooldownModifier;
-        private int _initialArmour;
-        private Cooldown _dashCooldown;
-
-        public Player Player;
-
-        public RageController RageController;
-        public event Action<Shot> OnFireAction;
-        public event Action OnReloadAction;
-        public bool Retaliate;
-        private bool _fired;
         private EnemyBehaviour _currentTarget;
+        private float _damageModifier, _skillCooldownModifier;
+        private Cooldown _dashCooldown;
+        private bool _fired;
+        private int _initialArmour;
+        private Transform _pivot;
+
+        private Coroutine _reloadingCoroutine;
 
         private Number _strengthText;
-        private Transform _pivot;
+
+        public Characters.Player Player;
+
+        public RageController RageController;
+        public bool Retaliate;
+
+        //input
+        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+            if (IsImmobilised) return;
+            if (isHeld)
+                switch (axis)
+                {
+                    case InputAxis.Fire:
+                        if (!_fired || Player.Weapon.WeaponAttributes.Automatic) FireWeapon();
+                        break;
+                    case InputAxis.Horizontal:
+                        Move(direction * Vector2.right);
+                        break;
+                    case InputAxis.Vertical:
+                        Move(direction * Vector2.up);
+                        break;
+                }
+            else
+                switch (axis)
+                {
+                    case InputAxis.Enrage:
+                        RageController.TryStart();
+                        break;
+                    case InputAxis.Reload:
+                        Reload();
+                        break;
+                    case InputAxis.SkillOne:
+                        SkillBar.ActivateSkill(0);
+                        break;
+                    case InputAxis.SkillTwo:
+                        SkillBar.ActivateSkill(1);
+                        break;
+                    case InputAxis.SkillThree:
+                        SkillBar.ActivateSkill(2);
+                        break;
+                    case InputAxis.SkillFour:
+                        SkillBar.ActivateSkill(3);
+                        break;
+                    case InputAxis.SwitchTab:
+                        UIEnemyController.Select(direction);
+                        break;
+                    case InputAxis.Sprint:
+                        StartSprinting();
+                        break;
+                }
+        }
+
+        public void OnInputUp(InputAxis axis)
+        {
+            switch (axis)
+            {
+                case InputAxis.Fire:
+                    _fired = false;
+                    break;
+                case InputAxis.Sprint:
+                    StopSprinting();
+                    break;
+            }
+        }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
+            switch (axis)
+            {
+                case InputAxis.Horizontal:
+                    Dash(direction * Vector2.right);
+                    break;
+                case InputAxis.Vertical:
+                    Dash(direction * Vector2.up);
+                    break;
+            }
+        }
+
+        public event Action<Shot> OnFireAction;
+        public event Action OnReloadAction;
 
         public override void Kill()
         {
@@ -53,7 +133,7 @@ namespace Game.Combat
             }
         }
 
-        public void Initialise(Player player)
+        public void Initialise(Characters.Player player)
         {
             ArmourController = player.ArmourController;
 
@@ -92,8 +172,6 @@ namespace Game.Combat
 
             SkillBar.BindSkills(Player);
             UIMagazineController.SetWeapon(Weapon());
-
-            SetConditions();
         }
 
         protected override void Dash(Vector2 direction)
@@ -136,8 +214,6 @@ namespace Game.Combat
             StopReloading();
             _fired = false;
         }
-
-        private Coroutine _reloadingCoroutine;
 
         //RELOADING
         private void Reload()
@@ -230,83 +306,6 @@ namespace Game.Combat
         public override CharacterCombat GetTarget()
         {
             return _currentTarget;
-        }
-
-        //input
-        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-            if (IsImmobilised) return;
-            if (isHeld)
-            {
-                switch (axis)
-                {
-                    case InputAxis.Fire:
-                        if (!_fired || Player.Weapon.WeaponAttributes.Automatic) FireWeapon();
-                        break;
-                    case InputAxis.Horizontal:
-                        Move(direction * Vector2.right);
-                        break;
-                    case InputAxis.Vertical:
-                        Move(direction * Vector2.up);
-                        break;
-                }
-            }
-            else
-            {
-                switch (axis)
-                {
-                    case InputAxis.Enrage:
-                        RageController.TryStart();
-                        break;
-                    case InputAxis.Reload:
-                        Reload();
-                        break;
-                    case InputAxis.SkillOne:
-                        SkillBar.ActivateSkill(0);
-                        break;
-                    case InputAxis.SkillTwo:
-                        SkillBar.ActivateSkill(1);
-                        break;
-                    case InputAxis.SkillThree:
-                        SkillBar.ActivateSkill(2);
-                        break;
-                    case InputAxis.SkillFour:
-                        SkillBar.ActivateSkill(3);
-                        break;
-                    case InputAxis.SwitchTab:
-                        UIEnemyController.Select(direction);
-                        break;
-                    case InputAxis.Sprint:
-                        StartSprinting();
-                        break;
-                }
-            }
-        }
-
-        public void OnInputUp(InputAxis axis)
-        {
-            switch (axis)
-            {
-                case InputAxis.Fire:
-                    _fired = false;
-                    break;
-                case InputAxis.Sprint:
-                    StopSprinting();
-                    break;
-            }
-        }
-
-        public void OnDoubleTap(InputAxis axis, float direction)
-        {
-            switch (axis)
-            {
-                case InputAxis.Horizontal:
-                    Dash(direction * Vector2.right);
-                    break;
-                case InputAxis.Vertical:
-                    Dash(direction * Vector2.up);
-                    break;
-            }
         }
     }
 }

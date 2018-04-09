@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
-using Game.World.WorldEvents;
+using Game.Exploration.WorldEvents;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -84,15 +84,11 @@ namespace Game.Gear.Weapons
                 string modifierType = subNode.InnerText.Substring(0, 1);
                 string modifierValue = subNode.InnerText.Substring(1);
                 float value = float.Parse(modifierValue);
-                AttributeModifier attributeModifier = new AttributeModifier (attributeType);
+                AttributeModifier attributeModifier = new AttributeModifier(attributeType);
                 if (modifierType == "+")
-                {
                     attributeModifier.SetSummative(value);
-                }
                 else
-                {
                     attributeModifier.SetMultiplicative(value);
-                }
 
                 weaponClass.AddAttributeModifier(attributeModifier);
             }
@@ -101,12 +97,8 @@ namespace Game.Gear.Weapons
         private static AttributeType StringToAttributeType(string attributeString)
         {
             foreach (AttributeType type in Enum.GetValues(typeof(AttributeType)))
-            {
                 if (type.ToString() == attributeString)
-                {
                     return type;
-                }
-            }
 
             throw new Exception("Attribute string '" + attributeString + "' is not recognised.");
         }

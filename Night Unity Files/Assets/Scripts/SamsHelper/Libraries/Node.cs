@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace SamsHelper
+namespace SamsHelper.Libraries
 {
     public class Node<T>
     {
+        private readonly List<Node<T>> _neighbors = new List<Node<T>>();
         public readonly T Content;
         public readonly Vector3 Position;
-        public float Length;
-        private readonly List<Node<T>> _neighbors = new List<Node<T>>();
 
         public Node(T content, Vector3 position)
         {
@@ -18,7 +17,9 @@ namespace SamsHelper
 
         public void AddNeighbor(Node<T> neighbor)
         {
+            if(_neighbors.Contains(neighbor)) return;
             _neighbors.Add(neighbor);
+            neighbor._neighbors.Add(this);
         }
 
         public float Distance(Node<T> other)

@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-namespace Game.World.WorldEvents
+namespace Game.Exploration.WorldEvents
 {
     public class WeaponFindEvent : WorldEvent
     {
-        private string[] weaponFindStrings =
+        private readonly string[] weaponFindStrings =
         {
             "Found a {0}, let the blood flow.",
             "{0}- a generous gift, if only to take life.",

@@ -1,25 +1,27 @@
 ﻿using Facilitating.UIControllers;
 using Game.Characters;
-using SamsHelper;
+using Game.Combat.Enemies;
+using Game.Combat.Misc;
+using SamsHelper.Libraries;
 using TMPro;
 
-namespace Game.Combat.CharacterUi
+namespace Game.Combat.Ui
 {
     public class EnemyUi : CharacterUi
     {
-        public TextMeshProUGUI NameText;
-        public UIHitController UiHitController;
-        public TextMeshProUGUI ActionText;
         private static EnemyUi _instance;
         private EnemyBehaviour _selectedEnemy;
+        public TextMeshProUGUI ActionText;
+        public TextMeshProUGUI NameText;
+        public UIHitController UiHitController;
 
         public static EnemyUi Instance()
         {
             if (_instance != null) return _instance;
-            _instance =  FindObjectOfType<EnemyUi>();
+            _instance = FindObjectOfType<EnemyUi>();
             return _instance;
         }
-        
+
         public override void Awake()
         {
             base.Awake();

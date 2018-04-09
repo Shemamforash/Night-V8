@@ -1,25 +1,47 @@
 ﻿using System.Collections.Generic;
+using Facilitating.UIControllers;
 using Game.Characters;
-using SamsHelper;
+using Game.Exploration.Weather;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
-using UIControllers;
 using UnityEngine;
 
-namespace Game.World
+namespace Game.Global
 {
     public class WorldView : Menu
     {
         private static EnhancedButton _inventoryButton;
         private static TextMeshProUGUI _timeText;
         private static TextMeshProUGUI _stormDistanceText;
+        private static TextMeshProUGUI _weatherText;
+        private static TextMeshProUGUI _environmentText, _temperatureText;
+
+        public static void SetEnvironmentText(string text)
+        {
+            _environmentText.text = text;
+        }
+        
+        public static void SetTemperatureText(string text)
+        {
+            _temperatureText.text = text;
+        }
+        
+        public static void SetWeatherText(string text)
+        {
+            _weatherText.text = text;
+        }
         
         public void Awake()
         {
             PauseOnOpen = false;
+            _weatherText = GameObject.Find("Weather").GetComponent<TextMeshProUGUI>();
+            _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();
+            _temperatureText = GameObject.Find("Temperature").GetComponent<TextMeshProUGUI>();
             _timeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Time");
             _stormDistanceText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Storm Distance");
             _inventoryButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inventory");
@@ -31,10 +53,7 @@ namespace Game.World
                 UIInventoryController.ShowInventory(WorldState.HomeInventory(), g =>
                 {
                     GearItem item = g as GearItem;
-                    if (item != null)
-                    {
-                        ShowCharacterPopup(item.Name, item);
-                    }
+                    if (item != null) ShowCharacterPopup(item.Name, item);
                 });
             });
         }
@@ -46,18 +65,14 @@ namespace Game.World
 //            UIInventoryController.ShowInventory(characterGear);
 //            UIInventoryController.SetInventoryTitle("Equip " + name);
         }
-        
+
         public static void SetTime(int days, int hours, int minutes)
         {
             string dayTime;
             if (minutes < 10)
-            {
                 dayTime = hours + ":0" + minutes;
-            }
             else
-            {
                 dayTime = hours + ":" + minutes;
-            }
             dayTime = TimeToName(hours);
             dayTime += "   Day " + days;
             _timeText.text = dayTime;
@@ -66,7 +81,7 @@ namespace Game.World
         private static string TimeToName(int hours)
         {
             if (hours >= 5 && hours <= 7) return "Dawn";
-            if (hours > 7 && hours <= 11)return "Morning";
+            if (hours > 7 && hours <= 11) return "Morning";
             if (hours > 11 && hours <= 13) return "Noon";
             if (hours > 13 && hours <= 17) return "Afternoon";
             if (hours > 17 && hours < 20) return "Evening";
@@ -77,17 +92,17 @@ namespace Game.World
         {
             _stormDistanceText.text = "Storm is " + distance + " days away";
         }
-        
+
         public void Start()
         {
             SetResourceSuffix(InventoryResourceType.Water, "sips");
             SetResourceSuffix(InventoryResourceType.Food, "meals");
             SetResourceSuffix(InventoryResourceType.Fuel, "dregs");
-            WorldState.HomeInventory().GetResource(InventoryResourceType.PistolMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetPistolText(((int)f.CurrentValue()).ToString()));
-            WorldState.HomeInventory().GetResource(InventoryResourceType.RifleMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetRifleText(((int)f.CurrentValue()).ToString()));
-            WorldState.HomeInventory().GetResource(InventoryResourceType.ShotgunMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetShotgunText(((int)f.CurrentValue()).ToString()));
-            WorldState.HomeInventory().GetResource(InventoryResourceType.SmgMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetSmgText(((int)f.CurrentValue()).ToString()));
-            WorldState.HomeInventory().GetResource(InventoryResourceType.LmgMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetLmgText(((int)f.CurrentValue()).ToString()));
+            WorldState.HomeInventory().GetResource(InventoryResourceType.PistolMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetPistolText(((int) f.CurrentValue()).ToString()));
+            WorldState.HomeInventory().GetResource(InventoryResourceType.RifleMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetRifleText(((int) f.CurrentValue()).ToString()));
+            WorldState.HomeInventory().GetResource(InventoryResourceType.ShotgunMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetShotgunText(((int) f.CurrentValue()).ToString()));
+            WorldState.HomeInventory().GetResource(InventoryResourceType.SmgMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetSmgText(((int) f.CurrentValue()).ToString()));
+            WorldState.HomeInventory().GetResource(InventoryResourceType.LmgMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetLmgText(((int) f.CurrentValue()).ToString()));
             SetResourceSuffix(InventoryResourceType.Scrap, "bits");
         }
 
@@ -97,6 +112,9 @@ namespace Game.World
             WorldState.HomeInventory().GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f.CurrentValue()) + " " + convention; });
         }
 
-        public static EnhancedButton GetInventoryButton() => _inventoryButton;
+        public static EnhancedButton GetInventoryButton()
+        {
+            return _inventoryButton;
+        }
     }
 }

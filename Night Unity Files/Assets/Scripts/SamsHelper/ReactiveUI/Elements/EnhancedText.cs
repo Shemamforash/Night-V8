@@ -1,20 +1,17 @@
-﻿using SamsHelper.ReactiveUI.Elements;
-using TMPro;
-#if UNITY_EDITOR
+﻿using TMPro;
 using UnityEditor;
-#endif
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Facilitating.UI.Elements
+#if UNITY_EDITOR
+#endif
+
+namespace SamsHelper.ReactiveUI.Elements
 {
 //    [ExecuteInEditMode]
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class EnhancedText : MonoBehaviour
     {
-        private TextMeshProUGUI _text;
-        public int CustomFontSize;
-
         public enum FontSizes
         {
             Small,
@@ -24,6 +21,9 @@ namespace Facilitating.UI.Elements
             Custom
         }
 
+        private TextMeshProUGUI _text;
+        public int CustomFontSize;
+
         public FontSizes FontSize;
 
         public void Awake()
@@ -31,7 +31,7 @@ namespace Facilitating.UI.Elements
             _text = GetComponent<TextMeshProUGUI>();
             _text.richText = true;
             _text.extraPadding = true;
-            _text.font = UiAppearanceController.Instance().UniversalFont;
+            _text.font = UiAppearanceController.GetFont();
             TryReplaceText();
             UpdateFontSize();
         }
@@ -60,10 +60,11 @@ namespace Facilitating.UI.Elements
                 TextMeshProUGUI newtext = gameObject.AddComponent<TextMeshProUGUI>();
                 newtext.text = textContent;
             }
+
             _text = gameObject.GetComponent<TextMeshProUGUI>();
             _text.spriteAsset = Resources.Load("Icons") as TMP_SpriteAsset;
         }
-        
+
         public void Update()
         {
 #if UNITY_EDITOR
@@ -79,13 +80,9 @@ namespace Facilitating.UI.Elements
         {
             TryReplaceText();
             if (FontSize != FontSizes.Custom)
-            {
-                _text.fontSize = UiAppearanceController.Instance().GetFontSize(FontSize);
-            }
+                _text.fontSize = UiAppearanceController.GetFontSize(FontSize);
             else
-            {
                 _text.fontSize = CustomFontSize;
-            }
         }
 
         public void SetColor(Color color)

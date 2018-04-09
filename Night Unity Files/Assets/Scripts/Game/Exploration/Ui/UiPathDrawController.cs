@@ -1,13 +1,16 @@
-﻿using Game.World.Region;
+﻿using Game.Exploration.Environment;
 using UnityEngine;
 
-public class UiPathDrawController : MonoBehaviour
+namespace Game.Exploration.Ui
 {
-    public static void CreatePathBetweenNodes(MapNode from, MapNode to)
+    public class UiPathDrawController : MonoBehaviour
     {
-        GameObject pathObject = new GameObject();
-        pathObject.transform.SetParent(GameObject.Find("Path").transform);
-        pathObject.transform.position = Vector2.zero;
-        pathObject.AddComponent<Path>().DrawPath(from, to);
+        public static void CreatePathBetweenNodes(MapNode from, MapNode to)
+        {
+            GameObject pathObject = new GameObject();
+            pathObject.transform.SetParent(GameObject.Find("Path").transform);
+            pathObject.transform.position = Vector2.zero;
+            pathObject.AddComponent<Path>().DrawPath(from, to);
+        }
     }
 }

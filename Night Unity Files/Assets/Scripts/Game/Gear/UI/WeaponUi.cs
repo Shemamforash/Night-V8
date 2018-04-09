@@ -1,6 +1,6 @@
 ﻿using Game.Gear.Weapons;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Gear.UI
@@ -15,9 +15,9 @@ namespace Game.Gear.UI
         public override void Update()
         {
             base.Update();
-            Weapon weapon = (Weapon)LinkedObject;
+            Weapon weapon = (Weapon) LinkedObject;
             TitleText.text = Helper.Round(weapon.WeaponAttributes.DPS(), 1) + "DPS";
-            SubTitleText.text = "Magazine " + weapon.GetRemainingAmmo() + "/" + (int)weapon.WeaponAttributes.Capacity.CurrentValue();
+            SubTitleText.text = "Magazine " + weapon.GetRemainingAmmo() + "/" + (int) weapon.WeaponAttributes.Capacity.CurrentValue();
             ModifierColumnOneText.text = weapon.WeaponAttributes.WeaponClassDescription;
             ModifierColumn2Text.text = weapon.WeaponAttributes.ModifierDescription;
             TopLeftAttributeText.text = weapon.GetAttributeValue(AttributeType.Damage) + "DMG";

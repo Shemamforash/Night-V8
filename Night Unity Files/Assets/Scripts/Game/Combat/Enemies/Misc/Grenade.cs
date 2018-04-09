@@ -1,14 +1,15 @@
 ﻿using System.Collections;
+using Game.Combat.Misc;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
-namespace Game.Combat.Enemies.EnemyTypes.Misc
+namespace Game.Combat.Enemies.Misc
 {
     public class Grenade : MonoBehaviour
     {
-        private int _damage = 20;
-        private static float MaxSpeed = 2f;
+        private static readonly float MaxSpeed = 2f;
         private static readonly ObjectPool<Grenade> _grenadePool = new ObjectPool<Grenade>("Prefabs/Combat/Grenade");
+        private readonly int _damage = 20;
 
         public static void Create(Vector2 origin, Vector2 target)
         {

@@ -1,9 +1,10 @@
 ﻿using System;
 using Game.Characters;
-using Game.Combat.Enemies.EnemyTypes;
-using Game.Combat.Enemies.EnemyTypes.Humans;
+using Game.Combat.Enemies.Humans;
+using Game.Gear;
 using Game.Gear.Weapons;
 using UnityEngine;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
@@ -12,7 +13,7 @@ namespace Game.Combat.Enemies
     {
         public readonly EnemyTemplate Template;
         public bool IsDead;
-        
+
         public Enemy(EnemyType type) : base(type.ToString())
         {
             Template = EnemyTemplate.GetEnemyTemplate(type);
@@ -48,7 +49,7 @@ namespace Game.Combat.Enemies
         {
             Reset();
             EnemyBehaviour enemyBehaviour;
-            GameObject enemyObject = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Combat Character"));
+            GameObject enemyObject = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Combat Character"));
             switch (Template.EnemyType)
             {
                 case EnemyType.Brawler:
@@ -78,6 +79,7 @@ namespace Game.Combat.Enemies
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             enemyBehaviour.Initialise(this);
             return enemyBehaviour;
         }

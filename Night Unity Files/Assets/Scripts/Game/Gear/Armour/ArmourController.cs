@@ -2,28 +2,36 @@
 using System.Xml;
 using Facilitating.UIControllers;
 using Game.Characters;
-using Game.Characters.Player;
-using Game.Combat.CharacterUi;
-using Game.Gear.Weapons;
+using Game.Combat.Ui;
 using SamsHelper.Persistence;
 
 namespace Game.Gear.Armour
 {
     public class ArmourController : IPersistenceTemplate
     {
-        private ArmourPlate _plateOne, _plateTwo;
         private readonly Character _character;
-        private event Action _onArmourChange;
+        private ArmourPlate _plateOne, _plateTwo;
 
         public ArmourController(Character character)
         {
             _character = character;
         }
 
+        public void Load(XmlNode doc, PersistenceType saveType)
+        {
+        }
+
+        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        {
+            return doc;
+        }
+
+        private event Action _onArmourChange;
+
         public void TakeDamage(float amount)
         {
             Action<float> takeDamage = null;
-            if(_plateOne != null) takeDamage = _plateOne.TakeDamage;
+            if (_plateOne != null) takeDamage = _plateOne.TakeDamage;
             DivideDamageOrHeal(amount, takeDamage);
             GetUiArmourController()?.TakeDamage(this);
         }
@@ -43,15 +51,15 @@ namespace Game.Gear.Armour
             armourAction?.Invoke(amount * plateOneProportion);
             armourAction?.Invoke(amount * plateTwoPropotion);
         }
-        
+
         public void Repair(float amount)
         {
             Action<float> repair = null;
-            if(_plateOne != null) repair = _plateOne.Repair;
+            if (_plateOne != null) repair = _plateOne.Repair;
             DivideDamageOrHeal(amount, repair);
             GetUiArmourController()?.RepairArmour(this);
         }
-        
+
         public void SetPlateOne(ArmourPlate plate)
         {
             _plateOne?.Unequip();
@@ -99,15 +107,6 @@ namespace Game.Gear.Armour
             int plateOneWeight = (int) (_plateOne?.Weight ?? 0);
             int plateTwoWeight = (int) (_plateTwo?.Weight ?? 0);
             return plateOneWeight + plateTwoWeight;
-        }
-
-        public void Load(XmlNode doc, PersistenceType saveType)
-        {
-        }
-
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
-        {
-            return doc;
         }
 
         public ArmourPlate GetPlateOne()

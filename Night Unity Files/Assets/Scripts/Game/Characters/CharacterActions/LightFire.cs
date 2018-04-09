@@ -1,11 +1,12 @@
-﻿using Game.World;
+﻿using Facilitating;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 
 namespace Game.Characters.CharacterActions
 {
     public class LightFire : BaseCharacterAction
     {
-        public LightFire(Player.Player playerCharacter) : base("Tend Fire", playerCharacter)
+        public LightFire(Player playerCharacter) : base("Tend Fire", playerCharacter)
         {
             HourCallback = () =>
             {
@@ -21,13 +22,9 @@ namespace Game.Characters.CharacterActions
         {
             base.Enter();
             if (WorldState.HomeInventory().GetResource(InventoryResourceType.Fuel).Quantity() > 0)
-            {
                 Duration = 1;
-            }
             else
-            {
                 PlayerCharacter.RestAction.Enter();
-            }
         }
     }
 }

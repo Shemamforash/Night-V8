@@ -1,18 +1,17 @@
 ﻿using SamsHelper.ReactiveUI.Elements;
+using UnityEngine;
 
 namespace SamsHelper
 {
-    using UnityEngine;
-
     [RequireComponent(typeof(LineRenderer))]
     public class RingDrawer : MonoBehaviour
     {
-        private LineRenderer _lineRenderer;
         private const int Segments = 128;
         private const int Overlap = 1;
         private float _angleDelta;
-        [Range(0, 15)] public float radius;
         private float _lastRadius = -1;
+        private LineRenderer _lineRenderer;
+        [Range(0, 15)] public float radius;
 
         public void Awake()
         {

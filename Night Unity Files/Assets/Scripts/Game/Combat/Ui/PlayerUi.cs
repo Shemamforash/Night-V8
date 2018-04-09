@@ -1,4 +1,4 @@
-﻿namespace Game.Combat.CharacterUi
+﻿namespace Game.Combat.Ui
 {
     public class PlayerUi : CharacterUi
     {
@@ -14,7 +14,7 @@
         public static PlayerUi Instance()
         {
             if (_instance != null) return _instance;
-            _instance =  FindObjectOfType<PlayerUi>();
+            _instance = FindObjectOfType<PlayerUi>();
             return _instance;
         }
     }

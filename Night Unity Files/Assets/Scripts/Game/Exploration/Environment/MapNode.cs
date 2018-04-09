@@ -1,40 +1,64 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Game.Exploration.Ui;
 using UnityEngine;
 
-namespace Game.World.Region
+namespace Game.Exploration.Environment
 {
-    public class MapNode : MonoBehaviour
+    public class MapNode
     {
-        private Vector2Int Position;
-        public GameObject NodeObject;
-        public List<MapNode> Links = new List<MapNode>();
         private readonly Dictionary<MapNode, Path> _paths = new Dictionary<MapNode, Path>();
-        public Region Region;
+        private readonly HashSet<MapNode> _neighbors = new HashSet<MapNode>();
+        public string Name;
+        public GameObject NodeObject;
+        public Vector2 Position;
+        public Region.Region Region;
 
-        public static MapNode CreateNode(Vector2Int position, Region region)
+        public static MapNode CreateNode(Vector2Int position, Region.Region region)
         {
-            GameObject newNodeObject = Instantiate(Resources.Load("Prefabs/Map/Node") as GameObject);
-            MapNode mapNode = newNodeObject.AddComponent<MapNode>();
+            MapNode mapNode = new MapNode();
             mapNode.Region = region;
-            mapNode.NodeObject = newNodeObject;
             mapNode.SetPosition(position);
-            newNodeObject.transform.localScale = Vector3.one;
             return mapNode;
+        }
+
+        public void AddNeighbor(MapNode neighbor)
+        {
+            _neighbors.Add(neighbor);
+            neighbor._neighbors.Add(this);
+        }
+
+        public List<MapNode> Neighbors()
+        {
+            return _neighbors.ToList();
+        }
+
+        private static GameObject _nodePrefab;
+        
+        public void CreateObject()
+        {
+            if (!Discovered()) return;
+            if (_nodePrefab == null) _nodePrefab = Resources.Load<GameObject>("Prefabs/Map/Node");
+            NodeObject = GameObject.Instantiate(_nodePrefab);
+            NodeObject.transform.SetParent(MapGenerator.MapTransform);
+            NodeObject.name = Name;
+            NodeObject.transform.position = new Vector3(Position.x, Position.y, 0);
+            NodeObject.transform.localScale = Vector3.one;
+            UpdatePaths();
+            string regionName = Region == null ? "Vehicle" : Region.Name;
+            MapNodeController mapNodeController = NodeObject.transform.GetComponentInChildren<MapNodeController>(true);
+            mapNodeController.gameObject.SetActive(true);
+            mapNodeController.SetName(regionName);
         }
 
         public void AddPathTo(MapNode node, Path path)
         {
             _paths[node] = path;
         }
-        
+
         public Path GetPathTo(MapNode node)
         {
             return _paths[node];
-        }
-
-        public Vector2Int GetMapPosition()
-        {
-            return Position;
         }
 
         public bool Discovered()
@@ -42,42 +66,39 @@ namespace Game.World.Region
             return Region == null || Region.Discovered();
         }
 
-        public void Discover()
+        private void UpdatePaths()
         {
-            Region?.Discover();
-            MapNodeController mapNodeController = transform.GetComponentInChildren<MapNodeController>(true);
-            mapNodeController.gameObject.SetActive(true);
-            string regionName = Region == null ? "Vehicle" : Region.Name;
-            mapNodeController.SetName(regionName);
+            foreach (MapNode node in Neighbors())
+            {
+                if (node.Discovered() && !_paths.ContainsKey(node))
+                {
+                    UiPathDrawController.CreatePathBetweenNodes(this, node);
+                }
+            }
         }
 
         private void SetPosition(Vector2Int position)
         {
             Position = position;
-            NodeObject.transform.position = new Vector3(position.x, position.y, 0);
-            NodeObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         }
 
         public void UpdateColor()
         {
-            float distanceToCamera = Vector2.Distance(CharacterVisionController.Instance().transform.position, NodeObject.transform.position);
+            float distanceToCamera = Vector2.Distance(CharacterVisionController.Instance().transform.position, Position);
             float alpha = Discovered() ? 1 : 1 - distanceToCamera / MapGenerator.VisionRadius;
-            if (alpha < 0)
-            {
-                alpha = 0;
-            }
+            if (alpha < 0) alpha = 0;
 
 //            _spriteRenderer.color = new Color(1, 1, 1, alpha);
         }
 
         public float DistanceToPoint(MapNode node)
         {
-            return DistanceToPoint(node.transform.position);
+            return DistanceToPoint(node.Position);
         }
-        
+
         public float DistanceToPoint(Vector3 point)
         {
-            return Vector3.Distance(point, transform.position);
+            return Vector3.Distance(point, Position);
         }
     }
 }

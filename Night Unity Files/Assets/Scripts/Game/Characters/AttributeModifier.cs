@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Characters
 {
     public class AttributeModifier
     {
-        private float _sumMod;
-        private float _multMod = 1;
         private readonly List<AttributeType> _targetAttributes = new List<AttributeType>();
         private AttributeContainer _lastAppliedContainer;
+        private float _multMod = 1;
+        private float _sumMod;
 
         public AttributeModifier(AttributeType attributeType)
         {
@@ -70,10 +70,7 @@ namespace Game.Characters
         private string ModifierToString(float modifier)
         {
             string modifierString = "";
-            if (modifier != 0)
-            {
-                modifierString = Helper.AddSignPrefix(modifier);
-            }
+            if (modifier != 0) modifierString = Helper.AddSignPrefix(modifier);
 
             return modifierString;
         }

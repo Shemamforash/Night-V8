@@ -1,4 +1,4 @@
-﻿namespace Game.Gear.Weapons
+﻿namespace Game.Gear
 {
     public enum ItemQuality
     {

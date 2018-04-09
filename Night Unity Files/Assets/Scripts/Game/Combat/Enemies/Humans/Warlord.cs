@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Game.Combat.Generation;
+using UnityEngine;
 
-namespace Game.Combat.Enemies.EnemyTypes.Humans
+namespace Game.Combat.Enemies.Humans
 {
     public class Warlord : EnemyBehaviour
     {
@@ -25,16 +26,15 @@ namespace Game.Combat.Enemies.EnemyTypes.Humans
 //                }
 //            });
         }
-        
+
         private void SummonEnemies()
         {
             SetActionText("Reinforcing");
             _reinforceCallTime -= Time.deltaTime;
             if (!(_reinforceCallTime <= 0)) return;
-            
+
             CombatManager.EnemyController.QueueEnemyToAdd(EnemyType.Sentinel);
             ChooseNextAction();
-            return;
 //            switch (Random.Range(0, 4))
 //            {
 //                case 0:

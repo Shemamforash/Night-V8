@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections;
+using Facilitating;
+using Game.Global;
 using UnityEngine;
 
-namespace Game.World.Environment_and_Weather
+namespace Game.Exploration.Weather
 {
     public class WeatherSystemController : MonoBehaviour
     {
-        public ParticleSystem Fog, Rain, Hail, Dust;
-        public float FogMax;
-        public float RainMax;
-        public float HailMax;
-        public float DustMax;
+        private static WeatherSystemController _instance;
         private float _changeTime;
         private WeatherAttributes _prevAttributes, _targetAttributes;
-        private static WeatherSystemController _instance;
+        public float DustMax;
+        public ParticleSystem Fog, Rain, Hail, Dust;
+        public float FogMax;
+        public float HailMax;
+        public float RainMax;
 
         public static WeatherSystemController Instance()
         {
-            if (_instance == null)
-            {
-                return FindObjectOfType<WeatherSystemController>();
-            }
+            if (_instance == null) return FindObjectOfType<WeatherSystemController>();
             return _instance;
         }
 
@@ -43,7 +42,6 @@ namespace Game.World.Environment_and_Weather
             }
         }
 
-        
 
         private IEnumerator UpdateWeather()
         {
@@ -71,16 +69,12 @@ namespace Game.World.Environment_and_Weather
         {
             amount *= max;
             if (Math.Abs(amount) < 0.001)
-            {
                 particleSystem.Stop();
-            }
             else
-            {
                 particleSystem.Play();
-            }
             weatherChangeAction(amount);
         }
-        
+
         private void SetFog(float amount)
         {
             amount /= 255f;

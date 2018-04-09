@@ -1,25 +1,23 @@
 ﻿using System.Collections.Generic;
-using Game.Characters.Player;
-using Game.World.Region;
-using SamsHelper;
+using Game.Characters;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Menu = SamsHelper.ReactiveUI.MenuSystem.Menu;
 
-namespace Facilitating.UIControllers
+namespace Game.Exploration.Ui
 {
     public class UIExploreMenuController : Menu
     {
-        private TextMeshProUGUI _titleText;
-        private GameObject _regionContainer;
+        private static UIExploreMenuController _instance;
         private readonly List<GameObject> _regionUiList = new List<GameObject>();
+        private Region.Region _currentRegion;
         private EnhancedButton _lookAroundButton, _returnButton;
         private Player _player;
-        private Region _currentRegion;
-        private static UIExploreMenuController _instance;
+        private GameObject _regionContainer;
+        private TextMeshProUGUI _titleText;
 
         public void Awake()
         {
@@ -30,21 +28,21 @@ namespace Facilitating.UIControllers
             _instance = this;
         }
 
-        public void SetRegion(Region region, Player player)
+        public void SetRegion(Region.Region region, Player player)
         {
             _regionUiList.ForEach(Destroy);
             _regionUiList.Clear();
             _player = player;
             _currentRegion = region;
-            
+
 //            bool isInitialRegion = _currentRegion.Origin == null;
 //            _lookAroundButton.gameObject.SetActive(!isInitialRegion);
 //            _titleText.text = isInitialRegion ? "Setting Out" : _currentRegion.Name;
-            
+
             CreateRegionUi();
             SetNavigation();
-            
-            if(_regionUiList.Count != 0) _regionUiList[0].GetComponent<Button>().Select();
+
+            if (_regionUiList.Count != 0) _regionUiList[0].GetComponent<Button>().Select();
             else _lookAroundButton.Button().Select();
             MenuStateMachine.ShowMenu("Region Explore Menu");
         }
@@ -60,7 +58,7 @@ namespace Facilitating.UIControllers
 //                _regionUiList.Add(regionUi);
 //            }
         }
-        
+
         private void SetNavigation()
         {
             for (int i = 0; i < _regionUiList.Count; ++i)
@@ -81,6 +79,7 @@ namespace Facilitating.UIControllers
                 {
                     nextButton = _returnButton.GetComponent<EnhancedButton>();
                 }
+
                 currentButton.SetDownNavigation(nextButton);
                 nextButton.SetUpNavigation(currentButton);
             }
@@ -98,7 +97,6 @@ namespace Facilitating.UIControllers
 
         public void CloseAndReturn()
         {
-            _player.ReturnAction.Enter();
             MenuStateMachine.GoToInitialMenu();
         }
     }

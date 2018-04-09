@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UI.Highlight
+namespace Facilitating.UI
 {
     public class WindowSizer : Toggler
     {
@@ -13,7 +13,7 @@ namespace UI.Highlight
         protected override void Off()
         {
             base.Off();
-            Screen.SetResolution((int)(Screen.currentResolution.width * 0.75f), (int)(Screen.currentResolution.height * 0.75f), false);
+            Screen.SetResolution((int) (Screen.currentResolution.width * 0.75f), (int) (Screen.currentResolution.height * 0.75f), false);
         }
     }
 }

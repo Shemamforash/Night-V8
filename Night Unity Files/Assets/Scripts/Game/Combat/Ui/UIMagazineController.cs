@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Game.Combat;
+using Game.Combat.Generation;
 using Game.Gear.Weapons;
-using SamsHelper;
+using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
 
-namespace Assets
+namespace Game.Combat.Ui
 {
     public class UIMagazineController : MonoBehaviour
     {
@@ -22,6 +22,47 @@ namespace Assets
             _magazineContent = transform.Find("Magazine");
             _ammoPrefab = Resources.Load("Prefabs/Combat/Ammo Prefab") as GameObject;
             _ammoText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Ammo");
+        }
+
+        public static void UpdateMagazine(int remaining = -1)
+        {
+            if (remaining == -1) remaining = _weapon.GetRemainingAmmo();
+            for (int i = 0; i < MagazineAmmo.Count; ++i) MagazineAmmo[i].SetUnspent(i < remaining);
+            SetMessage(CombatManager.Player.Weapon().GetRemainingMagazines() + " mags");
+            _empty = false;
+        }
+
+        public static void SetMessage(string message)
+        {
+            _ammoText.text = message;
+        }
+
+        public static void EmptyMagazine()
+        {
+            if (_empty) return;
+            foreach (Ammo ammo in MagazineAmmo) ammo.SetUnspent(false);
+            _empty = true;
+        }
+
+        public static void UpdateReloadTime(float time)
+        {
+            int newCapacity = (int) (_capacity * time);
+            UpdateMagazine(newCapacity);
+        }
+
+        public static void SetWeapon(Weapon weapon)
+        {
+            _weapon = weapon;
+            _capacity = (int) weapon.WeaponAttributes.Capacity.CurrentValue();
+            MagazineAmmo.ForEach(a => a.Destroy());
+            MagazineAmmo.Clear();
+            for (int i = 0; i < _capacity; ++i)
+            {
+                Ammo newRound = new Ammo(Helper.InstantiateUiObject(_ammoPrefab, _magazineContent));
+                MagazineAmmo.Add(newRound);
+            }
+
+            UpdateMagazine();
         }
 
         private class Ammo
@@ -44,54 +85,8 @@ namespace Assets
 
             public void Destroy()
             {
-                GameObject.Destroy(_ammoObject);
+                Object.Destroy(_ammoObject);
             }
-        }
-
-        public static void UpdateMagazine(int remaining = -1)
-        {
-            if (remaining == -1) remaining = _weapon.GetRemainingAmmo();
-            for (int i = 0; i < MagazineAmmo.Count; ++i)
-            {
-                MagazineAmmo[i].SetUnspent(i < remaining);
-            }
-            SetMessage(CombatManager.Player.Weapon().GetRemainingMagazines() + " mags");
-            _empty = false;
-        }
-
-        public static void SetMessage(string message)
-        {
-            _ammoText.text = message;
-        }
-
-        public static void EmptyMagazine()
-        {
-            if (_empty) return;
-            foreach (Ammo ammo in MagazineAmmo)
-            {
-                ammo.SetUnspent(false);
-            }
-            _empty = true;
-        }
-
-        public static void UpdateReloadTime(float time)
-        {
-            int newCapacity = (int) (_capacity * time);
-            UpdateMagazine(newCapacity);
-        }
-
-        public static void SetWeapon(Weapon weapon)
-        {
-            _weapon = weapon;
-            _capacity = (int) weapon.WeaponAttributes.Capacity.CurrentValue();
-            MagazineAmmo.ForEach(a => a.Destroy());
-            MagazineAmmo.Clear();
-            for (int i = 0; i < _capacity; ++i)
-            {
-                Ammo newRound = new Ammo(Helper.InstantiateUiObject(_ammoPrefab, _magazineContent));
-                MagazineAmmo.Add(newRound);
-            }
-            UpdateMagazine();
         }
     }
 }

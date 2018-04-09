@@ -1,31 +1,19 @@
-﻿using Game.World.WorldEvents;
+﻿using Game.Exploration.WorldEvents;
 
 namespace Game.Characters.CharacterActions
 {
     public class Rest : BaseCharacterAction
     {
-        public Rest(Player.Player playerCharacter) : base(nameof(Rest), playerCharacter)
+        public Rest(Player playerCharacter) : base(nameof(Rest), playerCharacter)
         {
+            DisplayName = "Resting";
+            ShowTime = false;
             IsVisible = false;
             HourCallback = () =>
             {
                 string storyProgress = playerCharacter.GetCurrentStoryProgress();
-                if (storyProgress != null)
-                {
-                    WorldEventManager.GenerateEvent(new WorldEvent(storyProgress));
-                }
-
-                PlayerCharacter.Rest(1);
-                if (PlayerCharacter.Energy.ReachedMax() && PlayerCharacter.DistanceFromHome > 0)
-                {
-                    PlayerCharacter.ReturnAction.Enter();
-                }
+                if (storyProgress != null) WorldEventManager.GenerateEvent(new WorldEvent(storyProgress));
             };
-        }
-
-        public override string GetActionText()
-        {
-            return "Resting";
         }
     }
 }

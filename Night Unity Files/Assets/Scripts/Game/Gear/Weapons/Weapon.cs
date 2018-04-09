@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
-using Game.Combat;
-using Game.Combat.Skills;
-using Game.World;
+using Game.Combat.Misc;
+using Game.Combat.Player;
+using Game.Global;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
@@ -16,25 +16,25 @@ namespace Game.Gear.Weapons
 {
     public class Weapon : GearItem
     {
-        private int _ammoInMagazine;
-        public readonly WeaponAttributes WeaponAttributes;
-        public Skill WeaponSkillOne, WeaponSkillTwo;
-        private long _timeAtLastFire;
         private const float MaxAccuracyOffsetInDegrees = 25f;
         private const float RangeMin = 1f;
         private const float RangeMax = 4.5f;
+        public readonly WeaponAttributes WeaponAttributes;
+        private int _ammoInMagazine;
+        private long _timeAtLastFire;
+        public Skill WeaponSkillOne, WeaponSkillTwo;
+
+        public Weapon(string name, float weight, ItemQuality _itemQuality, int durability = -1) : base(name, weight, GearSubtype.Weapon, _itemQuality)
+        {
+            WeaponAttributes = new WeaponAttributes(this, durability);
+//            Durability.OnMin(() => { _canEquip = false; });
+        }
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
         {
             root = base.Save(root, saveType);
             WeaponAttributes.Save(root, saveType);
             return root;
-        }
-
-        public Weapon(string name, float weight, ItemQuality _itemQuality, int durability = -1) : base(name, weight, GearSubtype.Weapon, _itemQuality)
-        {
-            WeaponAttributes = new WeaponAttributes(this, durability);
-//            Durability.OnMin(() => { _canEquip = false; });
         }
 
         private bool FireRateElapsedTimeMet()
@@ -81,16 +81,14 @@ namespace Game.Gear.Weapons
             {
                 _timeAtLastFire = Helper.TimeInMillis();
                 //todo play sound GunFire.Fire(WeaponAttributes.WeaponType, distance);
-                for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
-                {
-                    shots.Add(Shot.Create(origin));
-                }
+                for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i) shots.Add(Shot.Create(origin));
 
                 ConsumeAmmo(1);
                 Assert.IsTrue(shots.Count > 0);
                 Assert.IsNotNull(shots);
                 if (fireShots) shots.ForEach(s => s.Fire());
             }
+
             return shots;
         }
 
@@ -112,10 +110,7 @@ namespace Game.Gear.Weapons
         public void ConsumeAmmo(int amount = 0)
         {
             _ammoInMagazine -= amount;
-            if (_ammoInMagazine < 0)
-            {
-                throw new Exceptions.MoreAmmoConsumedThanAvailableException();
-            }
+            if (_ammoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();
         }
 
         public float GetAttributeValue(AttributeType attributeType)
@@ -125,7 +120,7 @@ namespace Game.Gear.Weapons
 
         public int Capacity()
         {
-            return (int)WeaponAttributes.Get(AttributeType.Capacity).CurrentValue();
+            return (int) WeaponAttributes.Get(AttributeType.Capacity).CurrentValue();
         }
 
         public void IncreaseDurability()

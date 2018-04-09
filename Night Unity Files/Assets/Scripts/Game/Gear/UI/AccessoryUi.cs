@@ -15,7 +15,7 @@ namespace Game.Gear.UI
         public override void Update()
         {
             base.Update();
-            Accessory accessory = (Accessory)LinkedObject;
+            Accessory accessory = (Accessory) LinkedObject;
             TitleText.text = accessory.GetSummary();
             SubTitleText.text = "effect";
             ModifierSection.SetActive(false);

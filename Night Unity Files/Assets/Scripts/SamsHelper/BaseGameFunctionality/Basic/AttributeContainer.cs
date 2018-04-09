@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
 using SamsHelper.Persistence;
@@ -16,16 +17,13 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
         public virtual void Load(XmlNode doc, PersistenceType saveType)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             XmlNode attributeNode = SaveController.CreateNodeAndAppend("Attributes", doc);
-            foreach (AttributeType t in Attributes.Keys)
-            {
-                Attributes[t].Save(doc, saveType);
-            }
+            foreach (AttributeType t in Attributes.Keys) Attributes[t].Save(doc, saveType);
             return attributeNode;
         }
 
@@ -34,16 +32,16 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             return Attributes.ContainsKey(type) ? Attributes[type] : null;
         }
 
-        public float GetCalculatedValue(AttributeType type) => Get(type).CurrentValue();
+        public float GetCalculatedValue(AttributeType type)
+        {
+            return Get(type).CurrentValue();
+        }
 
         protected abstract void CacheAttributes();
-        
+
         protected void AddAttribute(CharacterAttribute a)
         {
-            if (Attributes.ContainsKey(a.AttributeType))
-            {
-                throw new Exceptions.AttributeContainerAlreadyContainsAttributeException(a.AttributeType);
-            }
+            if (Attributes.ContainsKey(a.AttributeType)) throw new Exceptions.AttributeContainerAlreadyContainsAttributeException(a.AttributeType);
             Attributes[a.AttributeType] = a;
         }
     }

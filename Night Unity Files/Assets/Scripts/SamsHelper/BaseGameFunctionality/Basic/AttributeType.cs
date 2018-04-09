@@ -10,7 +10,7 @@
         Hunger,
         Starvation,
         Dehydration,
-        
+
         Damage,
         Range,
         Accuracy,

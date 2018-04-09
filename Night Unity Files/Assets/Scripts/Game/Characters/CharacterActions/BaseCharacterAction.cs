@@ -1,5 +1,5 @@
 ﻿using System;
-using Game.World;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
@@ -8,13 +8,14 @@ namespace Game.Characters.CharacterActions
 {
     public class BaseCharacterAction : State
     {
-        protected Action HourCallback;
-        public bool IsVisible = true;
-        protected readonly Player.Player PlayerCharacter;
+        protected readonly Player PlayerCharacter;
         private int _timeRemaining;
         protected int Duration;
+        protected Action HourCallback;
+        protected Action MinuteCallback;
+        public bool IsVisible = true;
 
-        protected BaseCharacterAction(string name, Player.Player playerCharacter) : base(playerCharacter.States, name)
+        protected BaseCharacterAction(string name, Player playerCharacter) : base(playerCharacter.States, name)
         {
             PlayerCharacter = playerCharacter;
         }
@@ -30,12 +31,13 @@ namespace Game.Characters.CharacterActions
 
         protected virtual void OnClick()
         {
-            
         }
 
         public void UpdateAction()
         {
             --_timeRemaining;
+            MinuteCallback?.Invoke();
+            UpdateActionText();
             if (_timeRemaining != 0) return;
             HourCallback?.Invoke();
             ResetTimeRemaining();
@@ -51,15 +53,25 @@ namespace Game.Characters.CharacterActions
             base.Enter();
             ResetTimeRemaining();
         }
-        
-        private int TimeRemainingAsHours()
+
+        private string TimeRemainingToString()
         {
-            return (int) Math.Ceiling((float) _timeRemaining / WorldState.MinutesPerHour);
+            int hours = Mathf.FloorToInt((float)Duration / WorldState.MinutesPerHour);
+            int minutes = Duration - hours * WorldState.MinutesPerHour;
+            string timeString = "";
+            if (hours != 0) timeString += hours + "hrs ";
+            timeString += minutes * WorldState.IntervalSize + "mins";
+            return timeString;
         }
 
-        public virtual string GetActionText()
+        protected string DisplayName;
+        protected bool ShowTime = true;
+        
+        protected void UpdateActionText()
         {
-            return TimeRemainingAsHours() + " hrs";
+            string actionString = DisplayName;
+            if (ShowTime) actionString += "\n" + TimeRemainingToString();
+            PlayerCharacter.CharacterView.UpdateCurrentActionText(actionString);
         }
     }
 }

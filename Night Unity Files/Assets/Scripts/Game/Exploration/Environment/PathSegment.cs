@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
-namespace Game.World.Region
+namespace Game.Exploration.Environment
 {
     public class PathSegment : MonoBehaviour
     {
         private const float FullOpacity = 0.3f;
-        private float _age;
         private const float FadeInTime = 2f;
-        private LineRenderer _lineRenderer;
+        private float _age;
         private bool _fading = true;
+        private LineRenderer _lineRenderer;
         private int bgComponents = 1;
         private float lastAlpha = -1;
 
@@ -20,7 +20,7 @@ namespace Game.World.Region
 
         public void SetColor(float alpha, bool shouldGlow = false)
         {
-            if(!shouldGlow) alpha *= FullOpacity;
+            if (!shouldGlow) alpha *= FullOpacity;
             bgComponents = shouldGlow ? 0 : 1;
             Color c = new Color(1, bgComponents, bgComponents, alpha);
             _lineRenderer.startColor = c;
@@ -39,18 +39,12 @@ namespace Game.World.Region
                 if (_age > FadeInTime) _age = FadeInTime;
                 float normalisedLifeTime = _age / FadeInTime;
                 alpha *= normalisedLifeTime;
-                if (_age >= FadeInTime)
-                {
-                    _fading = false;
-                }
+                if (_age >= FadeInTime) _fading = false;
 
                 _age += Time.deltaTime;
             }
 
-            if (lastAlpha != alpha)
-            {
-                SetColor(alpha, glow);
-            }
+            if (lastAlpha != alpha) SetColor(alpha, glow);
 
             lastAlpha = alpha;
         }

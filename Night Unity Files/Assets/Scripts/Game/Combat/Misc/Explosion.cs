@@ -1,32 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Game.Combat.Generation;
 using LOS;
-using SamsHelper;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
-namespace Game.Combat
+namespace Game.Combat.Misc
 {
     public class Explosion : MonoBehaviour
     {
-        private SpriteRenderer _explosionSprite;
-        private ParticleSystem _particles;
-        private LOSRadialLight _light;
-        private float _explodeTime = 0.2f;
-        private float _fadeTime = 0.5f;
-        private float _explosionWarmupTime = 1f;
-        private SpriteRenderer _warningRing;
-        private float _age;
-        private float _explosionRadius = 1f;
-        private float _originalExplosionWidth, _originalWarningWidth;
-
-        private int _damage;
-
-        private float _knockbackDistance;
-        private bool _bleed, _burn, _sick, _pierce;
-
         private static GameObject _explosionPrefab;
         private static readonly List<Explosion> _explosionPool = new List<Explosion>();
+        private float _age;
+        private bool _bleed, _burn, _sick, _pierce;
+
+        private int _damage;
+        private readonly float _explodeTime = 0.2f;
+        private float _explosionRadius = 1f;
+        private SpriteRenderer _explosionSprite;
+        private readonly float _explosionWarmupTime = 1f;
+        private readonly float _fadeTime = 0.5f;
+
+        private float _knockbackDistance;
+        private LOSRadialLight _light;
+        private float _originalExplosionWidth, _originalWarningWidth;
+        private ParticleSystem _particles;
+        private SpriteRenderer _warningRing;
 
 
         public void Awake()
@@ -47,7 +47,7 @@ namespace Game.Combat
         {
             _explosionPool.Remove(this);
         }
-        
+
         public static Explosion CreateExplosion(Vector2 position, float radius, int damage)
         {
             Explosion explosion = GetNewExplosion();
@@ -91,15 +91,13 @@ namespace Game.Combat
         {
             List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(transform.position, _explosionRadius);
             foreach (CharacterCombat c in charactersInRange)
-            {
-//                if(_pierce) c.ArmourController.TakeDamage(_damage);
+                //                if(_pierce) c.ArmourController.TakeDamage(_damage);
 //                else
                 c.HealthController.TakeDamage(_damage);
 //                c.Knockback(_knockbackDistance);
 //                if (_bleed) c.Bleeding.AddStack();
 //                if (_burn) c.Burn.AddStack();
 //                if (_sick) c.Sick.AddStack();
-            }
         }
 
         private void ScaleSprite(SpriteRenderer sprite, float scalingValue, float originalSize)
