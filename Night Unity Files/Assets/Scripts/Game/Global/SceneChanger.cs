@@ -10,7 +10,6 @@ namespace Game.Global
     {
         private static Image _fader;
         private static SceneChanger _instance;
-        public static bool Fading;
 
         public void Awake()
         {
@@ -21,7 +20,6 @@ namespace Game.Global
 
         private IEnumerator FadeIn(float duration = 1f)
         {
-            Fading = true;
             float age = 0f;
             while (age < duration)
             {
@@ -31,32 +29,32 @@ namespace Game.Global
             }
 
             _fader.color = UiAppearanceController.InvisibleColour;
-            Fading = false;
             if(SceneManager.GetActiveScene().name == "Game") WorldState.UnPause();
         }
 
-        private IEnumerator FadeOut(string sceneName, float duration)
+        private IEnumerator FadeOut(string sceneName, bool fade)
         {
-            Fading = true;
             AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync(sceneName);
-            sceneLoaded.allowSceneActivation = false;
-            float age = 0f;
-            while (age < duration)
+            if (fade)
             {
-                age += Time.deltaTime;
-                _fader.color = new Color(0, 0, 0, age / duration);
-                yield return null;
+                sceneLoaded.allowSceneActivation = false;
+                float age = 0f;
+                while (age < 1)
+                {
+                    age += Time.deltaTime;
+                    _fader.color = new Color(0, 0, 0, age);
+                    yield return null;
+                }
             }
-
             _fader.color = Color.black;
             while (sceneLoaded.progress != 0.9f) yield return null;
             sceneLoaded.allowSceneActivation = true;
         }
-
-        public static void ChangeScene(string sceneName, float duration = 1f)
+        
+        public static void ChangeScene(string sceneName, bool fade = true)
         {
             WorldState.Pause();
-            _instance.StartCoroutine(_instance.FadeOut(sceneName, duration));
+            _instance.StartCoroutine(_instance.FadeOut(sceneName, fade));
         }
     }
 }

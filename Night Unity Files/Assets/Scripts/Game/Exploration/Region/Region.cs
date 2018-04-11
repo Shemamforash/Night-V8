@@ -4,6 +4,7 @@ using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
+using Game.Combat.Misc;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
@@ -17,7 +18,20 @@ namespace Game.Exploration.Region
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private readonly RegionTemplate _template;
         private bool _discovered;
+        public List<Barrier> Barriers = new List<Barrier>();
+        public List<EnemyCampfire> Fires = new List<EnemyCampfire>();
 
+        public override XmlNode Save(XmlNode doc, PersistenceType type)
+        {
+            XmlNode regionNode = base.Save(doc, type);
+            SaveController.CreateNodeAndAppend("Discovered", regionNode, _discovered);
+            XmlNode enemyNode = SaveController.CreateNodeAndAppend("Enemies", regionNode);
+            _enemies.ForEach(e => e.Save(enemyNode, type));
+            Barriers.ForEach(b => b.Save(enemyNode, type));
+            Fires.ForEach(f => f.Save(enemyNode, type));
+            return regionNode;
+        }
+        
         public void AddEnemy(Enemy enemy)
         {
             _enemies.Add(enemy);
@@ -83,15 +97,8 @@ namespace Game.Exploration.Region
             SetInitialResourceValues(InventoryResourceType.Fuel, _template.FuelAvailable);
             SetInitialResourceValues(InventoryResourceType.Scrap, _template.ScrapAvailable);
             GenerateSimpleEncounter();
+            AreaGenerator.GenerateArea(this);
             //TODO different combat scenarios for region tier and animal/human enemies
-        }
-
-        public override XmlNode Save(XmlNode doc, PersistenceType type)
-        {
-            XmlNode regionNode = base.Save(doc, type);
-            SaveController.CreateNodeAndAppend("Discovered", regionNode, _discovered);
-            XmlNode combatNode = SaveController.CreateNodeAndAppend("Scenario", regionNode);
-            return regionNode;
         }
 
         private void SetInitialResourceValues(InventoryResourceType resourceType, float resourceRating)

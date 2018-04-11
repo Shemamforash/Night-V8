@@ -89,6 +89,7 @@ namespace Game.Exploration.Ui
 
         private void SetSelectedButton(int offset = 0)
         {
+            Helper.PrintList(_menuButtons);
             if (_selectedButtonIndex + offset < 0) return;
             if (_selectedButtonIndex + offset >= _menuButtons.Count) return;
             _selectedButtonIndex += offset;

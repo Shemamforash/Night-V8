@@ -51,21 +51,33 @@ namespace SamsHelper.Input
         private static void BroadcastInputDown(InputAxis axis, bool isHeld, float lastInputValue)
         {
             _inputListener?.OnInputDown(axis, isHeld, lastInputValue);
-            for (int i = InputListeners.Count - 1; i >= 0; --i) InputListeners[i].OnInputDown(axis, isHeld, lastInputValue);
+            for (int i = InputListeners.Count - 1; i >= 0; --i)
+            {
+                if (InputListeners[i] == _inputListener) continue;
+                InputListeners[i].OnInputDown(axis, isHeld, lastInputValue);
+            }
         }
 
         private static void BroadcastInputUp(InputAxis axis)
         {
             _inputListener?.OnInputUp(axis);
 
-            for (int i = InputListeners.Count - 1; i >= 0; --i) InputListeners[i].OnInputUp(axis);
+            for (int i = InputListeners.Count - 1; i >= 0; --i)
+            {
+                if (InputListeners[i] == _inputListener) continue;
+                InputListeners[i].OnInputUp(axis);
+            }
         }
 
         private static void BroadCastDoubleTap(InputAxis axis, float lastInputValue)
         {
             _inputListener?.OnDoubleTap(axis, lastInputValue);
 
-            for (int i = InputListeners.Count - 1; i >= 0; --i) InputListeners[i].OnDoubleTap(axis, lastInputValue);
+            for (int i = InputListeners.Count - 1; i >= 0; --i)
+            {
+                if (InputListeners[i] == _inputListener) continue;
+                InputListeners[i].OnDoubleTap(axis, lastInputValue);
+            }
         }
 
         public static void SetCurrentListener(IInputListener inputListener)
@@ -90,7 +102,7 @@ namespace SamsHelper.Input
         {
             private readonly InputAxis _axis;
             private float _directionAtLastPress;
-            private float _lastInputValue;
+            private float _lastInputValue, _currentInputValue;
             private bool _pressed;
             private long _timeAtLastPress;
 
@@ -103,24 +115,24 @@ namespace SamsHelper.Input
             {
                 long currentTime = Helper.TimeInMillis();
                 float timeBetweenClicks = currentTime - _timeAtLastPress;
-                if (timeBetweenClicks < _doubleTapDuration && Helper.ValuesHaveSameSign(_directionAtLastPress, _lastInputValue))
+                if (timeBetweenClicks < _doubleTapDuration && Helper.ValuesHaveSameSign(_directionAtLastPress, _currentInputValue))
                 {
-                    BroadCastDoubleTap(_axis, _lastInputValue);
+                    BroadCastDoubleTap(_axis, _directionAtLastPress);
                     currentTime = 0;
                 }
 
-                _directionAtLastPress = _lastInputValue;
+                _directionAtLastPress = _currentInputValue < 0 ? -1 : 1;
                 _timeAtLastPress = currentTime;
             }
 
             public void CheckPress()
             {
-                float currentInputValue = UnityEngine.Input.GetAxis(_axis.ToString());
-                if (Math.Abs(currentInputValue) > 0f)
+                _currentInputValue = UnityEngine.Input.GetAxis(_axis.ToString());
+                if (Math.Abs(_currentInputValue) > 0f)
                 {
-                    _pressed = Helper.ValuesHaveSameSign(currentInputValue, _lastInputValue);
-                    BroadcastInputDown(_axis, _pressed, currentInputValue);
-                    CheckDoubleTap();
+                    _pressed = Helper.ValuesHaveSameSign(_currentInputValue, _lastInputValue);
+                    BroadcastInputDown(_axis, _pressed, _currentInputValue);
+                    if (!_pressed) CheckDoubleTap();
                 }
                 else
                 {
@@ -128,7 +140,7 @@ namespace SamsHelper.Input
                     BroadcastInputUp(_axis);
                 }
 
-                _lastInputValue = currentInputValue;
+                _lastInputValue = _currentInputValue;
             }
         }
     }

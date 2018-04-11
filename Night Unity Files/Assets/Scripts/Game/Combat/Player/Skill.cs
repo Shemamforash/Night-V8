@@ -67,26 +67,26 @@ namespace Game.Combat.Player
 
         protected static Characters.Player Player()
         {
-            return CombatManager.Player.Player;
+            return CombatManager.Player().Player;
         }
 
         public void Activate()
         {
             OnFire();
-            CombatManager.Player.UpdateMagazineUi();
-            if (_waitForReload) CombatManager.Player.OnReloadAction += StartOnReload;
+            CombatManager.Player().UpdateMagazineUi();
+            if (_waitForReload) CombatManager.Player().OnReloadAction += StartOnReload;
         }
 
         private void StartOnReload()
         {
-            CombatManager.Player.OnReloadAction -= StartOnReload;
+            CombatManager.Player().OnReloadAction -= StartOnReload;
         }
 
         protected abstract void OnFire();
 
         protected static Shot CreateShot()
         {
-            return Shot.Create(CombatManager.Player);
+            return Shot.Create(CombatManager.Player());
         }
 
         private class SkillValue

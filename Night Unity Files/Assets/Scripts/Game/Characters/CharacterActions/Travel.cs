@@ -33,6 +33,11 @@ namespace Game.Characters.CharacterActions
             };
         }
 
+        public bool AtHome()
+        {
+            return CurrentNode.Region == null;
+        }
+        
         private void ReachTarget()
         {
             CurrentNode = _target;
@@ -41,6 +46,7 @@ namespace Game.Characters.CharacterActions
             {
                 TimeSpentTravelling = 0;
                 PlayerCharacter.Inventory().MoveAllResources(WorldState.HomeInventory());
+                PlayerCharacter.RestAction.Enter();
             }
             else
             {

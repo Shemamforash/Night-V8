@@ -99,6 +99,7 @@ namespace Game.Exploration.Ui
                 smallestAngle = angle;
                 closestNode = n;
             });
+            //todo only return nodes within angle
             return closestNode;
         }
 

@@ -67,7 +67,7 @@ namespace Game.Characters.CharacterActions
         protected string DisplayName;
         protected bool ShowTime = true;
         
-        protected void UpdateActionText()
+        public void UpdateActionText()
         {
             string actionString = DisplayName;
             if (ShowTime) actionString += "\n" + TimeRemainingToString();

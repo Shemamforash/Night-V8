@@ -5,6 +5,7 @@ using System.Xml;
 using Facilitating.Persistence;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -124,16 +125,18 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             resource.Increment(amount);
         }
 
-        public float DecrementResource(InventoryResourceType type, float amount)
+        public bool DecrementResource(InventoryResourceType type, float amount)
         {
             return DecrementResource(GetResource(type), amount);
         }
 
-        private float DecrementResource(InventoryResource resource, float amount)
+        private bool DecrementResource(InventoryResource resource, float amount)
         {
             if (amount < 0) throw new Exceptions.ResourceValueChangeInvalid(resource.Name, "decrement", amount);
+            if (resource.Quantity() < amount) return false;
             Weight -= resource.GetWeight(amount);
-            return resource.Decrement(amount);
+            resource.Decrement(amount);
+            return true;
         }
 
         public float GetResourceQuantity(InventoryResourceType type)

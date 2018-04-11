@@ -39,6 +39,7 @@ namespace Game.Characters
             SwitchToSimpleView();
             BindUi();
             FillActionList();
+            ((BaseCharacterAction) _player.States.GetCurrentState()).UpdateActionText();
         }
 
         private void BindUi()
@@ -83,10 +84,15 @@ namespace Game.Characters
 
             WeaponController = FindInDetailedView<UIPlayerWeaponController>("Weapon");
             WeaponController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowWeaponMenu(_player));
+            WeaponController.SetWeapon(_player.Weapon);
+            
             ArmourController = FindInDetailedView<UIPlayerArmourController>("Armour");
             ArmourController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowArmourMenu(_player));
+            ArmourController.SetArmour(_player.ArmourController);
             _player.ArmourController.AddOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));
+
             AccessoryController = FindInDetailedView<UIPlayerAccessoryController>("Accessory");
+            AccessoryController.SetAccessory(_player.Accessory);
             AccessoryController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowAccessoryMenu(_player));
         }
 

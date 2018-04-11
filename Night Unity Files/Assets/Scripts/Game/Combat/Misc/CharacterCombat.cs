@@ -5,6 +5,7 @@ using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Combat.Misc
 {
@@ -138,10 +139,6 @@ namespace Game.Combat.Misc
 
         //CONDITIONS
 
-        public virtual void ExitCombat()
-        {
-        }
-
         public void Immobilised(bool immobilised)
         {
             IsImmobilised = immobilised;
@@ -154,6 +151,7 @@ namespace Game.Combat.Misc
 
         public virtual void Update()
         {
+            if (!CombatManager.InCombat()) return;
             if (GetTarget() != null) _distanceToTarget = CurrentCell().Distance(GetTarget().CurrentCell());
             _currentCell = PathingGrid.Instance().PositionToCell(transform.position);
             UpdateRecoil();
@@ -195,7 +193,7 @@ namespace Game.Combat.Misc
 
         public void FixedUpdate()
         {
-            KeepInBounds();
+//            KeepInBounds();
             _rigidbody.AddForce(_forceToadd);
             _forceToadd = Vector2.zero;
         }

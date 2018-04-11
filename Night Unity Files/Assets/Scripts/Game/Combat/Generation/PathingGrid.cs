@@ -18,7 +18,7 @@ namespace Game.Combat.Generation
         private readonly List<Node<Cell>> _gridNodes = new List<Node<Cell>>();
         private static PathingGrid _instance;
 
-        private List<AreaGenerator.Shape> _shapes;
+        private List<Barrier> _shapes;
         private ContactFilter2D cf;
 
         private readonly Collider2D[] colliders = new Collider2D[5000];
@@ -34,7 +34,7 @@ namespace Game.Combat.Generation
 
         public static PathingGrid Instance()
         {
-            if (_instance == null) _instance = GameObject.Find("Grid").GetComponent<PathingGrid>();
+            if (_instance == null) _instance = FindObjectOfType<PathingGrid>();
             return _instance;
         }
 
@@ -43,19 +43,18 @@ namespace Game.Combat.Generation
             _instance = null;
         }
 
-        public void GenerateGrid(List<AreaGenerator.Shape> barriers)
+        public void GenerateGrid(List<Barrier> barriers)
         {
             _shapes = barriers;
             cf.useTriggers = true;
             cf.SetLayerMask(1 << 9);
             GenerateBaseGrid();
-            foreach (AreaGenerator.Shape shape in _shapes)
+            foreach (Barrier shape in _shapes)
             {
                 int areas = shape.Collider.OverlapCollider(cf, colliders);
                 for (int i = 0; i < areas; ++i)
                 {
                     Cell c = colliders[i].GetComponent<Cell>();
-                    shape.OccupiedCells.Add(c);
                     c.Reachable = false;
                     if (AdvancedMaths.IsPointInPolygon(c.Position, shape.WorldVerts)) c.Blocked = true;
                 }
@@ -172,7 +171,7 @@ namespace Game.Combat.Generation
 
         public Cell FindCellToAttackPlayer(Cell currentCell, int maxRange, int minRange = 0)
         {
-            Cell playerCell = CombatManager.Player.CurrentCell();
+            Cell playerCell = CombatManager.Player().CurrentCell();
             List<Cell> cellsNearPlayer = CellsInRange(playerCell, maxRange, minRange);
             Cell nearestValidCell = FindNearestCell(cellsNearPlayer, false, currentCell);
             if (nearestValidCell == null) return currentCell;
@@ -236,7 +235,7 @@ namespace Game.Combat.Generation
 
         public bool IsCellHidden(Cell c)
         {
-            Vector2 currentPlayerPosition = CombatManager.Player.transform.position;
+            Vector2 currentPlayerPosition = CombatManager.Player().transform.position;
             if (_lastPlayerPosition != currentPlayerPosition) _hiddenCells.Clear();
 
             _lastPlayerPosition = currentPlayerPosition;

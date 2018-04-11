@@ -16,7 +16,7 @@ namespace Game.Characters
         private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
         private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
-        public readonly Player Player;
+        private readonly Player _player;
         public readonly CharacterAttribute Dehydration = new CharacterAttribute(AttributeType.Dehydration, 0, 0, 50);
         public readonly CharacterAttribute Endurance = new CharacterAttribute(AttributeType.Endurance, 0);
 
@@ -36,8 +36,7 @@ namespace Game.Characters
 
         public DesolationAttributes(Player player)
         {
-            Player = player;
-            RegisterTimedEvents();
+            _player = player;
         }
 
         public float GetSkillRechargeModifier()
@@ -48,12 +47,6 @@ namespace Game.Characters
         public float GetGunDamageModifier()
         {
             return Mathf.Pow(1.05f, Perception.CurrentValue());
-        }
-
-        private void RegisterTimedEvents()
-        {
-            SetConsumptionEvents(Hunger, Starvation, InventoryResourceType.Food);
-            SetConsumptionEvents(Thirst, Dehydration, InventoryResourceType.Water);
         }
 
         protected override void CacheAttributes()
@@ -85,37 +78,23 @@ namespace Game.Characters
                 Perception.SetCurrentValue(Perception.CurrentValue() + 1);
         }
 
-        private void Drink()
+        private void UpdateNeed(CharacterAttribute need, CharacterAttribute tolerance, InventoryResourceType targetResource)
         {
-            if (Dehydration.ReachedMin()) return;
-            float consumed = WorldState.HomeInventory().DecrementResource(InventoryResourceType.Water, 1);
-            if (consumed == 1) Dehydration.Decrement();
+            need.Increment();
+            if (!need.ReachedMax()) return;
+            if (tolerance.ReachedMin()) return;
+            int amountToConsume = Endurance.ReachedMin() ? 2 : 1;
+            bool consumed = _player.ConsumeResource(targetResource, amountToConsume);
+            if (consumed) tolerance.Decrement();
+            else tolerance.Increment();
+            if(tolerance.ReachedMax()) _player.Kill();
         }
-
-        private void Eat()
-        {
-            if (Starvation.ReachedMin()) return;
-            float consumed = WorldState.HomeInventory().DecrementResource(InventoryResourceType.Food, 1);
-            if (consumed == 1) Starvation.Decrement();
-        }
-
-        private void SetConsumptionEvents(CharacterAttribute need, CharacterAttribute tolerance, InventoryResourceType resourceType)
-        {
-            InventoryResource resource = WorldState.HomeInventory().GetResource(resourceType);
-            if (resource == null) return;
-            need.OnMax(() =>
-            {
-                if (resource.Decrement(1) != 1) tolerance.SetCurrentValue(tolerance.CurrentValue() + 1);
-                need.SetCurrentValue(0);
-            });
-            tolerance.OnMax(Player.Kill);
-        }
-
+        
         public void UpdateThirstAndHunger()
         {
             Thirst.Max = (int) (-0.2f * EnvironmentManager.GetTemperature() + 16f);
-            UpdateConsumableTolerance(Hunger, Eat);
-            UpdateConsumableTolerance(Thirst, Drink);
+            UpdateNeed(Thirst, Dehydration, InventoryResourceType.Water);
+            UpdateNeed(Hunger, Starvation, InventoryResourceType.Food);
         }
 
         private string GetAttributeStatus(CharacterAttribute characterAttribute, string[] levels)
@@ -138,12 +117,6 @@ namespace Game.Characters
         public string GetThirstStatus()
         {
             return GetAttributeStatus(Dehydration, _dehydrationLevels);
-        }
-
-        private void UpdateConsumableTolerance(Number requirement, Action consume)
-        {
-            requirement.Increment();
-            consume();
         }
 
         public override void Load(XmlNode doc, PersistenceType saveType)

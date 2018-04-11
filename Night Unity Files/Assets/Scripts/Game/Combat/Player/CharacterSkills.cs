@@ -73,7 +73,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player.HealthController.Heal(Characters.Player.PlayerHealthChunkSize);
+            CombatManager.Player().HealthController.Heal(Characters.Player.PlayerHealthChunkSize);
         }
     }
 
@@ -85,7 +85,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            PlayerCombat pCombat = CombatManager.Player;
+            PlayerCombat pCombat = CombatManager.Player();
 //            pCombat.GetTarget().Bleeding.AddStacks(pCombat.Bleeding.Size());
 //            pCombat.Bleeding.Clear();
 
@@ -107,7 +107,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            Grenade.Create(CombatManager.Player.transform.position, CombatManager.Player.GetTarget().transform.position);
+            Grenade.Create(CombatManager.Player().transform.position, CombatManager.Player().GetTarget().transform.position);
         }
     }
 
@@ -119,7 +119,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            Grenade.Create(CombatManager.Player.transform.position, CombatManager.Player.GetTarget().transform.position);
+            Grenade.Create(CombatManager.Player().transform.position, CombatManager.Player().GetTarget().transform.position);
         }
     }
 
@@ -133,7 +133,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-//            CombatManager.Player.CurrentTarget.CurrentAction = CombatManager.Player.CurrentTarget.MoveToPlayer;
+//            CombatManager.Player().CurrentTarget.CurrentAction = CombatManager.Player().CurrentTarget.MoveToPlayer;
         }
     }
 
@@ -145,8 +145,8 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            EnemyBehaviour nearestEnemy = UIEnemyController.NearestEnemy();
-            if (nearestEnemy == null || nearestEnemy.DistanceToTarget() > 5) return;
+//            EnemyBehaviour nearestEnemy = CombatManager.NearestEnemy();
+//            if (nearestEnemy == null || nearestEnemy.DistanceToTarget() > 5) return;
 //            nearestEnemy.Knockback(5);
 //            nearestEnemy.ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit);
         }
@@ -174,7 +174,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-//            DetailedEnemyCombat target = CombatManager.Player.CurrentTarget;
+//            DetailedEnemyCombat target = CombatManager.Player().CurrentTarget;
 //            if (target.Sick.Size() != 0)
 //            {
 //                target.Sick.AddStacks(Sickness.MaxStacks - target.Sick.Size());
@@ -192,7 +192,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-//            UIGrenadeController.AddGrenade(GrenadeType.Pierce, CombatManager.Player.Position.CurrentValue(), CombatManager.Player.CurrentTarget.Position.CurrentValue());
+//            UIGrenadeController.AddGrenade(GrenadeType.Pierce, CombatManager.Player().Position.CurrentValue(), CombatManager.Player().CurrentTarget.Position.CurrentValue());
         }
     }
 
@@ -204,9 +204,9 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-//            if (CombatManager.Player.ArmourController.CurrentArmour() == 0) return;
-//            CombatManager.Player.ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit);
-//            CombatManager.Player.HealthController.Heal(Characters.Player.Player.PlayerHealthChunkSize);
+//            if (CombatManager.Player().ArmourController.CurrentArmour() == 0) return;
+//            CombatManager.Player().ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit);
+//            CombatManager.Player().HealthController.Heal(Characters.Player.Player.PlayerHealthChunkSize);
         }
     }
 
@@ -220,8 +220,8 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-//            CombatManager.Player.HealthController.TakeDamage(Characters.Player.Player.PlayerHealthChunkSize);
-//            DetailedEnemyCombat target = CombatManager.Player.CurrentTarget;
+//            CombatManager.Player().HealthController.TakeDamage(Characters.Player.Player.PlayerHealthChunkSize);
+//            DetailedEnemyCombat target = CombatManager.Player().CurrentTarget;
 //            target.Burn.AddStacks(3);
 //            target.Bleeding.AddStacks(3);
 //            target.Sick.AddStacks(3);
@@ -236,12 +236,12 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            foreach (EnemyBehaviour e in UIEnemyController.Enemies)
-            {
+//            foreach (EnemyBehaviour e in UIEnemyController.Enemies)
+//            {
 //                if (e.DistanceToPlayer > 5 || e.HealthController.GetCurrentHealth() > 100) continue;
 //                e.HealthController.TakeDamage(101);
 //                break;
-            }
+//            }
         }
     }
 
@@ -255,7 +255,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-//            CombatManager.Player.ArmourController.RepairArmour(2 * ArmourPlate.PlateHealthUnit);
+//            CombatManager.Player().ArmourController.RepairArmour(2 * ArmourPlate.PlateHealthUnit);
         }
     }
 
@@ -281,7 +281,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-//            CombatManager.Player.Position.SetCurrentValue(CombatManager.Player.CurrentTarget.Position.CurrentValue());
+//            CombatManager.Player().Position.SetCurrentValue(CombatManager.Player().CurrentTarget.Position.CurrentValue());
         }
     }
 
@@ -306,7 +306,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-//            CombatManager.Player.CurrentTarget.Bleeding.AddStacks(5);
+//            CombatManager.Player().CurrentTarget.Bleeding.AddStacks(5);
         }
     }
 
@@ -318,7 +318,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-//            DetailedEnemyCombat target = CombatManager.Player.CurrentTarget;
+//            DetailedEnemyCombat target = CombatManager.Player().CurrentTarget;
 //            int healAmount = 0;
 //            if (target.Bleeding.Active())
 //            {
@@ -338,7 +338,7 @@ namespace Game.Combat.Player
 //                healAmount += Characters.Player.Player.PlayerHealthChunkSize;
 //            }
 
-//            CombatManager.Player.HealthController.Heal(healAmount);
+//            CombatManager.Player().HealthController.Heal(healAmount);
         }
     }
 }

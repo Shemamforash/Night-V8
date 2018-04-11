@@ -45,8 +45,14 @@ namespace Game.Combat.Enemies
 //        private const float FadeVisibilityDistance = 5f;
 //        private float _currentAlpha;
 
+        public bool OnScreen()
+        {
+            return Helper.IsObjectInCameraView(gameObject);
+        }
+
         public override void Update()
         {
+            if (!CombatManager.InCombat()) return;
             base.Update();
             CouldHitTarget = TargetVisible() && !OutOfRange();
             CurrentAction?.Invoke();
@@ -86,13 +92,7 @@ namespace Game.Combat.Enemies
 
         public override CharacterCombat GetTarget()
         {
-            return CombatManager.Player;
-        }
-
-        public void SetSelected()
-        {
-            CombatManager.Player.SetTarget(this);
-            EnemyUi.Instance().SetSelectedEnemy(this);
+            return CombatManager.Player();
         }
 
         private PathingGrid _grid;
@@ -116,7 +116,7 @@ namespace Game.Combat.Enemies
 
         private void SetDistance(float rangeMin, float rangeMax)
         {
-            Vector3 position = AreaGenerator.CampfirePosition;
+            Vector3 position = CombatManager.Region().Fires[0].FirePosition;
             float xOffset = Random.Range(rangeMin, rangeMax);
             float yOffset = Random.Range(rangeMin, rangeMax);
             if (Random.Range(0, 2) == 1) xOffset = -xOffset;
@@ -128,7 +128,7 @@ namespace Game.Combat.Enemies
 
         private static Medic FindMedic()
         {
-            foreach (EnemyBehaviour enemy in UIEnemyController.Enemies)
+            foreach (EnemyBehaviour enemy in CombatManager.EnemiesOnScreen())
             {
                 Medic medic = enemy as Medic;
                 if (medic == null || medic.HasTarget()) continue;
@@ -220,7 +220,7 @@ namespace Game.Combat.Enemies
             SetActionText("Fleeing");
             CurrentAction = () =>
             {
-                if (DistanceToTarget() > CombatManager.VisibilityRange) Kill();
+                if (DistanceToTarget() > CombatManager.VisibilityRange()) Kill();
             };
         }
 
@@ -229,14 +229,14 @@ namespace Game.Combat.Enemies
             base.TakeDamage(shot);
             EnemyUi.Instance().RegisterHit(this);
             Alert();
-            CombatManager.Player.RageController.Increase(shot.DamageDealt());
+            CombatManager.Player().RageController.Increase(shot.DamageDealt());
         }
 
         public override void Kill()
         {
             base.Kill();
-            for (int i = 0; i < Random.Range(0, 3); ++i) PickupController.Create(transform.position, CombatManager.Player.Weapon().WeaponAttributes.AmmoType);
-            UIEnemyController.Remove(this);
+            for (int i = 0; i < Random.Range(0, 3); ++i) PickupController.Create(transform.position, CombatManager.Player().Weapon().WeaponAttributes.AmmoType);
+            CombatManager.Remove(this);
             Enemy.Kill();
             Destroy(gameObject);
         }
@@ -282,7 +282,7 @@ namespace Game.Combat.Enemies
         {
             if (Alerted) return;
             Alerted = true;
-            UIEnemyController.AlertAll();
+            CombatManager.AlertAll();
             OnAlert();
         }
 
@@ -349,7 +349,7 @@ namespace Game.Combat.Enemies
                 }
 
                 List<Shot> shots = Weapon().Fire(this, true);
-                if (shots.Any(s => s.DidHit)) CombatManager.Player.TryRetaliate(this);
+                if (shots.Any(s => s.DidHit)) CombatManager.Player().TryRetaliate(this);
                 if (Weapon().Empty()) Reload();
                 else if (!automatic)
                     Aim();

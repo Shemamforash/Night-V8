@@ -28,7 +28,7 @@ namespace Game.Combat.Ui
         {
             if (remaining == -1) remaining = _weapon.GetRemainingAmmo();
             for (int i = 0; i < MagazineAmmo.Count; ++i) MagazineAmmo[i].SetUnspent(i < remaining);
-            SetMessage(CombatManager.Player.Weapon().GetRemainingMagazines() + " mags");
+            SetMessage(CombatManager.Player().Weapon().GetRemainingMagazines() + " mags");
             _empty = false;
         }
 
@@ -53,6 +53,7 @@ namespace Game.Combat.Ui
         public static void SetWeapon(Weapon weapon)
         {
             _weapon = weapon;
+            if (weapon == null) return;
             _capacity = (int) weapon.WeaponAttributes.Capacity.CurrentValue();
             MagazineAmmo.ForEach(a => a.Destroy());
             MagazineAmmo.Clear();

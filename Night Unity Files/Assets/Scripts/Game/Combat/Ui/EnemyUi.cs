@@ -4,6 +4,7 @@ using Game.Combat.Enemies;
 using Game.Combat.Misc;
 using SamsHelper.Libraries;
 using TMPro;
+using UnityEngine;
 
 namespace Game.Combat.Ui
 {
@@ -14,11 +15,11 @@ namespace Game.Combat.Ui
         public TextMeshProUGUI ActionText;
         public TextMeshProUGUI NameText;
         public UIHitController UiHitController;
+        private CanvasGroup _canvasGroup;
 
         public static EnemyUi Instance()
         {
-            if (_instance != null) return _instance;
-            _instance = FindObjectOfType<EnemyUi>();
+            if (_instance == null) _instance = FindObjectOfType<EnemyUi>();
             return _instance;
         }
 
@@ -26,6 +27,7 @@ namespace Game.Combat.Ui
         {
             base.Awake();
             _instance = this;
+            _canvasGroup = GetComponent<CanvasGroup>();
             NameText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
             UiHitController = Helper.FindChildWithName<UIHitController>(gameObject, "Cover");
             ActionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Action");
@@ -34,6 +36,13 @@ namespace Game.Combat.Ui
         public void SetSelectedEnemy(EnemyBehaviour enemy)
         {
             _selectedEnemy = enemy;
+            if (enemy == null)
+            {
+                _canvasGroup.alpha = 0;
+                return;
+            }
+
+            _canvasGroup.alpha = 1;
             NameText.text = enemy.Enemy.Name;
             ActionText.text = enemy.ActionText;
             enemy.HealthController.UpdateHealth();

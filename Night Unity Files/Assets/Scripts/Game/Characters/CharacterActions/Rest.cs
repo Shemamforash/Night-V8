@@ -11,6 +11,7 @@ namespace Game.Characters.CharacterActions
             IsVisible = false;
             HourCallback = () =>
             {
+                playerCharacter.Rest(1);
                 string storyProgress = playerCharacter.GetCurrentStoryProgress();
                 if (storyProgress != null) WorldEventManager.GenerateEvent(new WorldEvent(storyProgress));
             };

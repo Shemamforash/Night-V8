@@ -1,7 +1,9 @@
 ﻿using Facilitating;
+using Facilitating.Persistence;
 using Facilitating.UI;
 using Game.Characters;
 using Game.Exploration.Environment;
+using Game.Exploration.Region;
 using Game.Exploration.Weather;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
@@ -16,6 +18,7 @@ namespace Game.Global
         public static int DaysSpentHere;
         private static bool _started;
         private static readonly CharacterManager _homeInventory = new CharacterManager();
+        private static readonly RegionManager _regionManager = new RegionManager();
 
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
@@ -26,6 +29,7 @@ namespace Game.Global
 
         public void Awake()
         {
+            SaveController.AddPersistenceListener(_regionManager);
             _instance = this;
         }
 

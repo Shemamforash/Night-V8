@@ -33,7 +33,7 @@ namespace Game.Combat.Enemies.Humans
             _reinforceCallTime -= Time.deltaTime;
             if (!(_reinforceCallTime <= 0)) return;
 
-            CombatManager.EnemyController.QueueEnemyToAdd(EnemyType.Sentinel);
+            CombatManager.QueueEnemyToAdd(EnemyType.Sentinel);
             ChooseNextAction();
 //            switch (Random.Range(0, 4))
 //            {

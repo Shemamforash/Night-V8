@@ -1,26 +1,17 @@
 ﻿using System.Collections.Generic;
+using Game.Combat.Enemies;
 using Game.Combat.Misc;
+using Game.Exploration.Region;
 using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Generation
 {
-    public class AreaGenerator : MonoBehaviour
+    public static class AreaGenerator
     {
         private const float SmallPolyWidth = 0.4f, MediumPolyWidth = 1f, LargePolyWidth = 2f, HugePolyWidth = 4f;
-        private static AreaGenerator _instance;
-        private int _barrierNumber;
-        private GameObject _barrierPrefab;
-        private readonly List<Shape> _barriers = new List<Shape>();
 
-        public static Vector2 CampfirePosition = Vector2.zero;
-
-        public void Awake()
-        {
-            _instance = this;
-        }
-
-        private Shape GenerateDistortedPoly(int definition, Ellipse ellipse, GameObject o)
+        private static List<Vector3> GenerateDistortedPoly(int definition, Ellipse ellipse)
         {
             int angleIncrement;
             List<Vector3> polyVertices = new List<Vector3>();
@@ -31,25 +22,10 @@ namespace Game.Combat.Generation
                 angleIncrement = Random.Range(definition / 2, definition);
             }
 
-            Shape newPoly = new Shape(CreateMesh(polyVertices, o), polyVertices);
-            return newPoly;
+            return polyVertices;
         }
 
-        private GameObject CreateMesh(List<Vector3> vertices, GameObject newShape)
-        {
-            newShape.GetComponent<MeshRenderer>();
-            Mesh mesh = new Mesh();
-            newShape.GetComponent<MeshFilter>().mesh = mesh;
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = Triangulator.Triangulate(mesh.vertices);
-            Vector3[] normals = new Vector3[vertices.Count];
-            for (int i = 0; i < normals.Length; i++) normals[i] = -Vector3.forward;
-
-            mesh.normals = normals;
-            return newShape;
-        }
-
-        private Vector2 RandomPointBetweenRadii(float angle, Ellipse e)
+        private static Vector2 RandomPointBetweenRadii(float angle, Ellipse e)
         {
             Vector2 randomPoint;
             angle *= Mathf.Deg2Rad;
@@ -75,21 +51,8 @@ namespace Game.Combat.Generation
             return randomPoint;
         }
 
-        private GameObject GenerateBasicBarrier()
+        public static List<Vector3> GeneratePoly(float baseWidth)
         {
-            if (_barrierPrefab == null) _barrierPrefab = Resources.Load<GameObject>("Prefabs/Combat/Basic Barrier");
-            GameObject basicBarrier = Instantiate(_barrierPrefab);
-            basicBarrier.transform.SetParent(_instance.transform);
-            basicBarrier.layer = 8;
-            basicBarrier.name = "Barrier " + _barrierNumber;
-            ++_barrierNumber;
-            basicBarrier.tag = "Barrier";
-            return basicBarrier;
-        }
-
-        public Shape GeneratePoly(float baseWidth)
-        {
-            GameObject g = GenerateBasicBarrier();
             float width = baseWidth * Random.Range(0.6f, 1f);
             float radius = width / 2f;
             float minX = Random.Range(0, radius * 0.9f);
@@ -98,70 +61,47 @@ namespace Game.Combat.Generation
             float maxY = Random.Range(minY, radius);
 //            Ellipse e = new Ellipse(minX, minY, maxX, maxY);
             Ellipse e = new Ellipse(radius * 0.8f, radius);
-            Shape shape = GenerateDistortedPoly(50, e, g);
-            Vector2[] colliderPath = new Vector2[shape.Vertices.Count];
-            Vector3[] verts = shape.Vertices.ToArray();
-            for (int i = 0; i < verts.Length; i++)
-            {
-                Vector2 point = verts[i];
-                colliderPath[i] = point;
-            }
-
-            shape.Collider.SetPath(0, colliderPath);
-            g.transform.localScale = Vector2.one;
-            g.transform.rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
-            return shape;
+            List<Vector3> barrierVertices = GenerateDistortedPoly(50, e);
+            return barrierVertices;
         }
 
-        private List<Shape> GenerateCamp()
+        private static List<EnemyCampfire> GenerateCampfires(List<Barrier> barriers)
         {
             float size = PathingGrid.GameWorldWidth / 2f;
-            CampfirePosition = new Vector2(Random.Range(-size, size), Random.Range(-size, size));
-            List<Shape> stones = EnemyCampfire.Create(CampfirePosition);
-
-            for (int i = _barriers.Count - 1; i >= 0; --i)
+            Vector2 campfirePosition = new Vector2(Random.Range(-size, size), Random.Range(-size, size));
+            EnemyCampfire campfire = new EnemyCampfire(campfirePosition);
+            for (int i = barriers.Count - 1; i >= 0; --i)
             {
-                Shape b = _barriers[i];
+                Barrier b = barriers[i];
                 foreach (Vector2 v in b.WorldVerts)
                 {
-                    if (Vector2.Distance(v, CampfirePosition) > 2f) continue;
-                    _barriers.RemoveAt(i);
-                    Destroy(b.ShapeObject);
+                    if (Vector2.Distance(v, campfirePosition) > 2f) continue;
+                    barriers.RemoveAt(i);
                     break;
                 }
             }
-
-            return stones;
+            barriers.AddRange(campfire._stones);
+            return new List<EnemyCampfire> {campfire};
         }
 
-        public static AreaGenerator Instance()
+        public static void GenerateArea(Region region)
         {
-            if (_instance == null) _instance = GameObject.Find("Barriers").GetComponent<AreaGenerator>();
-            return _instance;
-        }
-
-        private void OnDestroy()
-        {
-            _instance = null;
-        }
-
-        public List<Shape> GenerateArea()
-        {
-            _barrierNumber = 0;
-            _barriers.Clear();
+            List<Barrier> barriers = new List<Barrier>();
+            int barrierNumber = 0;
 
             List<Vector2> positions = AdvancedMaths.GetPoissonDiscDistribution(500, 1f, 3f, PathingGrid.GameWorldWidth, true);
             positions.RemoveAt(0);
 
             foreach (Vector2 position in positions)
             {
-                Shape shape = GeneratePoly(SmallPolyWidth);
-                _barriers.Add(shape);
-                shape.SetPosition(position.x, position.y);
+                List<Vector3> barrierVertices = GeneratePoly(SmallPolyWidth);
+                Barrier barrier = new Barrier(barrierVertices.ToArray(), "Barrier " + barrierNumber, position);
+                barriers.Add(barrier);
+                ++barrierNumber;
             }
 
-            _barriers.AddRange(GenerateCamp());
-            return _barriers;
+            region.Fires = GenerateCampfires(barriers);
+            region.Barriers = barriers;
         }
 
         private class Ellipse
@@ -180,28 +120,6 @@ namespace Game.Combat.Generation
             public Ellipse(float innerRadius, float outerRadius) : this(innerRadius, innerRadius, outerRadius, outerRadius)
             {
                 IsCircle = true;
-            }
-        }
-
-        public class Shape
-        {
-            public readonly List<Cell> OccupiedCells = new List<Cell>();
-            public readonly List<Vector3> Vertices;
-            public readonly List<Vector2> WorldVerts = new List<Vector2>();
-            public PolygonCollider2D Collider;
-            public GameObject ShapeObject;
-
-            public Shape(GameObject shapeObject, List<Vector3> vertices)
-            {
-                ShapeObject = shapeObject;
-                Vertices = vertices;
-                Collider = shapeObject.GetComponent<PolygonCollider2D>();
-            }
-
-            public void SetPosition(float rx, float ry)
-            {
-                ShapeObject.transform.position = new Vector2(rx, ry);
-                foreach (Vector2 colliderPoint in Collider.points) WorldVerts.Add(ShapeObject.transform.TransformPoint(colliderPoint));
             }
         }
     }

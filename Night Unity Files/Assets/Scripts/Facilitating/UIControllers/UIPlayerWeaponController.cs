@@ -20,7 +20,6 @@ namespace Facilitating.UIControllers
             _typeText = Helper.FindChildWithName<EnhancedText>(gameObject, "Type");
             _dpsText = Helper.FindChildWithName<EnhancedText>(gameObject, "Dps");
             _qualityText = Helper.FindChildWithName<EnhancedText>(gameObject, "Quality");
-            SetWeapon(null);
         }
 
         public void SetWeapon(Weapon weapon)

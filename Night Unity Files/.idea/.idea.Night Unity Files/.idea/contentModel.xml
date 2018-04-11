@@ -131,8 +131,6 @@
               <e p="Character.cs" t="Include" />
               <e p="CharacterActions" t="Include">
                 <e p="BaseCharacterAction.cs" t="Include" />
-                <e p="CollectResources.cs" t="Include" />
-                <e p="Combat.cs" t="Include" />
                 <e p="CraftAmmo.cs" t="Include" />
                 <e p="LightFire.cs" t="Include" />
                 <e p="Rest.cs" t="Include" />
@@ -179,6 +177,7 @@
               </e>
               <e p="Generation" t="Include">
                 <e p="AreaGenerator.cs" t="Include" />
+                <e p="Barrier.cs" t="Include" />
                 <e p="Cell.cs" t="Include" />
                 <e p="CombatManager.cs" t="Include" />
                 <e p="PathingGrid.cs" t="Include" />
@@ -209,7 +208,6 @@
                 <e p="EnemyUi.cs" t="Include" />
                 <e p="FirePath.cs" t="Include" />
                 <e p="PlayerUi.cs" t="Include" />
-                <e p="UIEnemyController.cs" t="Include" />
                 <e p="UIHealthBarController.cs" t="Include" />
                 <e p="UIHitController.cs" t="Include" />
                 <e p="UIMagazineController.cs" t="Include" />

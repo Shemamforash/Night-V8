@@ -15,6 +15,7 @@ using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Combat.Player
 {
@@ -57,7 +58,6 @@ namespace Game.Combat.Player
                 switch (axis)
                 {
                     case InputAxis.Enrage:
-                        RageController.TryStart();
                         break;
                     case InputAxis.Reload:
                         Reload();
@@ -75,12 +75,33 @@ namespace Game.Combat.Player
                         SkillBar.ActivateSkill(3);
                         break;
                     case InputAxis.SwitchTab:
-                        UIEnemyController.Select(direction);
+                        CombatManager.Select(direction);
                         break;
                     case InputAxis.Sprint:
                         StartSprinting();
                         break;
                 }
+        }
+
+        private void TransitionOffScreen()
+        {
+            Cell current = CurrentCell();
+            int x = current.XIndex;
+            int y = current.YIndex;
+            float distanceToTop = y;
+            float distanceToBottom = PathingGrid.GridWidth - 1 - y;
+            float distanceToLeft = x;
+            float distanceToRight = PathingGrid.GridWidth - 1 - x;
+            float threshold = 4f;
+            float shortestDistance = Mathf.Min(distanceToTop, distanceToBottom, distanceToLeft, distanceToRight);
+            if (shortestDistance > threshold) return;
+            float alpha = 1 - (shortestDistance - 1) / (threshold - 1);
+            alpha = Mathf.Clamp(alpha, 0, 1);
+            GameObject.Find("Screen Fader").GetComponent<Image>().color = new Color(0,0,0,alpha);
+            if (alpha == 1)
+            {
+                CombatManager.ExitCombat();
+            }
         }
 
         public void OnInputUp(InputAxis axis)
@@ -116,12 +137,27 @@ namespace Game.Combat.Player
         {
             base.Kill();
             Player.Kill();
-            CombatManager.FailCombat();
+            CombatManager.ExitCombat();
         }
 
+        private void CheckForTarget()
+        {
+            if (_currentTarget != null && !_currentTarget.OnScreen())
+            {
+                CombatManager.Select(1);
+            }
+            if (_currentTarget == null)
+            {
+                SetTarget(CombatManager.NearestEnemy());
+            }
+        }
+        
         public override void Update()
         {
+            if (!CombatManager.InCombat()) return;
             base.Update();
+            CheckForTarget();
+            TransitionOffScreen();
             if (GetTarget() == null)
             {
                 _pivot.gameObject.SetActive(false);
@@ -148,7 +184,7 @@ namespace Game.Combat.Player
 //            _playerUi._playerName.text = player.Name;
             Speed = Player.CalculateSpeed();
 
-            _dashCooldown = CombatManager.CombatCooldowns.CreateCooldown();
+            _dashCooldown = CombatManager.CreateCooldown();
             _dashCooldown.Duration = Player.CalculateDashCooldown();
             _dashCooldown.SetDuringAction(a =>
             {
@@ -202,6 +238,7 @@ namespace Game.Combat.Player
         public void SetTarget(EnemyBehaviour e)
         {
             _currentTarget = e;
+            EnemyUi.Instance().SetSelectedEnemy(e);
         }
 
         public override Weapon Weapon()
@@ -209,7 +246,7 @@ namespace Game.Combat.Player
             return Player.Weapon;
         }
 
-        public override void ExitCombat()
+        public void ExitCombat()
         {
             StopReloading();
             _fired = false;

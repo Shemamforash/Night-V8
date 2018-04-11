@@ -21,13 +21,41 @@ namespace SamsHelper.Libraries
                 screenPosition.x < 1 &&
                 screenPosition.y < 1;
         }
+
+        public static string VectorToString(Vector2 vector)
+        {
+            return vector.x + ":" + vector.y;
+        }
         
+        public static string VectorToString(Vector3 vector)
+        {
+            return vector.x + ":" + vector.y + ":" + vector.z;
+        }
+
+        public static Vector3 StringToVector3(string vectorString)
+        {
+            string[] arr = vectorString.Split(':');
+            Vector3 vect = new Vector3();
+            vect.x = float.Parse(arr[0]);
+            vect.y = float.Parse(arr[1]);
+            vect.z = float.Parse(arr[2]);
+            return vect;
+        }
+        
+        public static Vector2 StringToVector2(string vectorString)
+        {
+            string[] arr = vectorString.Split(':');
+            Vector2 vect = new Vector2();
+            vect.x = float.Parse(arr[0]);
+            vect.y = float.Parse(arr[1]);
+            return vect;
+        }
         
         private class MinSearchList<T>
         {
             private List<T> _list;
             private Func<T, float> _compare;
-            private int indexPosition = 0;
+            private int indexPosition;
 
             public MinSearchList(List<T> list, Func<T, float> compare)
             {

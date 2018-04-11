@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
+using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
@@ -41,11 +42,14 @@ namespace Game.Characters
 
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
+            if (saveType != PersistenceType.Game) return null;
             doc = base.Save(doc, saveType);
+            Debug.Log(doc + " doc");
+
             foreach (Player c in Characters)
             {
-//                XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", doc);
-//                c.Save(characterNode, saveType);
+                XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", doc);
+                c.Save(characterNode, saveType);
             }
 
             return doc;
@@ -55,7 +59,7 @@ namespace Game.Characters
         {
             LoadTemplates();
             SaveController.AddPersistenceListener(this);
-            if (Characters.Count == 0) LoadInitialParty().ForEach(AddCharacter);
+            if (Characters.Count == 0) AddCharacter(GenerateDriver());
             InitialiseCharacterUI();
         }
 
@@ -172,10 +176,12 @@ namespace Game.Characters
             throw new Exceptions.UnknownTraitException(characterClass.ToString());
         }
 
-        private static List<Player> LoadInitialParty()
+        private Player GenerateDriver()
         {
-            List<Player> initialParty = new List<Player> {GenerateCharacter(CharacterClass.Driver), GenerateRandomCharacter()};
-            return initialParty;
+            Player driver =  GenerateCharacter(CharacterClass.Driver);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Worn, WeaponType.Pistol, 10);
+            driver.EquipWeapon(weapon);
+            return driver;
         }
 
         private static Player GenerateCharacter(CharacterClass characterClass)

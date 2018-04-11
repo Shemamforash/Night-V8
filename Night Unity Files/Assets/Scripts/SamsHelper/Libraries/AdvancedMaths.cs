@@ -73,8 +73,8 @@ namespace SamsHelper.Libraries
                 if (targetSamples == 0) activeSamples.Remove(randomSample);
             }
 
-            if (samples.Count != numberOfPoints)
-                Debug.Log("Found " + samples.Count + " samples out of " + numberOfPoints + " desired samples, consider modifying the parameters to reach desired number of samples");
+//            if (samples.Count != numberOfPoints)
+//                Debug.Log("Found " + samples.Count + " samples out of " + numberOfPoints + " desired samples, consider modifying the parameters to reach desired number of samples");
             return samples;
         }
 

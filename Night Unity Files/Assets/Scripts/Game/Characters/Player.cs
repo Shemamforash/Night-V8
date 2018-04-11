@@ -9,6 +9,7 @@ using Game.Exploration.Region;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
@@ -31,8 +32,6 @@ namespace Game.Characters
         public readonly StateMachine States = new StateMachine();
         private readonly BrandManager _brandManager;
 
-        private CollectResources _collectResourcesAction;
-        private CharacterActions.Combat _combatAction;
         private CraftAmmo _craftAmmoAction;
         private LightFire _lightFireAction;
 
@@ -53,6 +52,12 @@ namespace Game.Characters
             _brandManager = new BrandManager(this);
             AddStates();
             Attributes.Endurance.OnMin(RestAction.Enter);
+        }
+
+        public bool ConsumeResource(InventoryResourceType type, int amount)
+        {
+            DesolationInventory inventory = TravelAction.AtHome() ? WorldState.HomeInventory() : Inventory();
+            return inventory.DecrementResource(type, amount);
         }
         
         public string GetCurrentStoryProgress()
@@ -120,8 +125,6 @@ namespace Game.Characters
 
         private void AddStates()
         {
-            _collectResourcesAction = new CollectResources(this);
-            _combatAction = new CharacterActions.Combat(this);
             RestAction = new Rest(this);
             TravelAction = new Travel(this);
             _lightFireAction = new LightFire(this);
@@ -185,12 +188,6 @@ namespace Game.Characters
         {
             base.EquipAccessory(accessory);
             CharacterView?.AccessoryController.SetAccessory(accessory);
-        }
-
-
-        public void CollectResourcesInRegion(Region region)
-        {
-            _collectResourcesAction.SetTargetRegion(region);
         }
     }
 }

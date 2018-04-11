@@ -12,15 +12,15 @@ using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Region
 {
-    public class RegionManager : MonoBehaviour, IPersistenceTemplate
+    public class RegionManager : IPersistenceTemplate
     {
         private static readonly Dictionary<string, RegionTemplate> Templates = new Dictionary<string, RegionTemplate>();
-        private static TextMeshProUGUI _regionInfoNameText, _regionInfoTypeText, _regionInfoDescriptionText;
         private static readonly List<Region> _regions = new List<Region>();
         private static bool _loaded;
 
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
+            Debug.Log("Saved");
             if (saveType != PersistenceType.Game) return null;
             XmlNode regionNode = SaveController.CreateNodeAndAppend("Regions", doc);
             foreach (Region region in _regions) region.Save(regionNode, saveType);
@@ -60,15 +60,6 @@ namespace Game.Exploration.Region
                     combinations.Add(prefix + "'s " + suffix);
             Helper.Shuffle(ref combinations);
             template.Names = combinations;
-        }
-
-        protected void Awake()
-        {
-            SaveController.AddPersistenceListener(this);
-            _regionInfoNameText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
-            _regionInfoTypeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Type");
-            _regionInfoDescriptionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Description");
-            LoadRegionTemplates();
         }
 
         private static void AllocateTravelResources(Player currentCharacter, int duration)

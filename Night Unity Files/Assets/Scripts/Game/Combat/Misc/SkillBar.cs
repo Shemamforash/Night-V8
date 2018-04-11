@@ -30,7 +30,7 @@ namespace Game.Combat.Misc
 
             _skills = new Skill[NoSlots];
             _canvas = GetComponent<CanvasGroup>();
-            _skillsCooldown = CombatManager.CombatCooldowns.CreateCooldown();
+            _skillsCooldown = CombatManager.CreateCooldown();
             CooldownControllers.ForEach(s => _skillsCooldown.SetController(s));
         }
 

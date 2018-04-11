@@ -11,26 +11,62 @@ using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Game.Combat.Generation
 {
     public class CombatManager : Menu
     {
-        private const float _fadeTime = 1f;
-        public static readonly CooldownManager CombatCooldowns = new CooldownManager();
-        public static UIEnemyController EnemyController;
-        public static Region CurrentRegion;
-        private static bool _inMelee;
-        public static int VisibilityRange;
-        public static PlayerCombat Player;
+        private readonly CooldownManager _cooldowns = new CooldownManager();
+        private Region _currentRegion;
+        private bool _inMelee;
+        private int _visibilityRange;
+        private PlayerCombat _player;
+        private bool _inCombat;
+        private readonly List<EnemyBehaviour> _enemies = new List<EnemyBehaviour>();
+        private readonly List<EnemyBehaviour> _enemiesToAlert = new List<EnemyBehaviour>();
+        private bool _shouldAlertAll;
+        private static CombatManager _instance;
 
-        private static bool _failed;
+        public static float VisibilityRange()
+        {
+            return Instance()._visibilityRange;
+        }
+
+        public static Cooldown CreateCooldown()
+        {
+            return Instance()._cooldowns.CreateCooldown();
+        }
+
+        public static bool InCombat()
+        {
+            return Instance()._inCombat;
+        }
+
+        public static Region Region()
+        {
+            return Instance()._currentRegion;
+        }
+
+        public static PlayerCombat Player()
+        {
+            return Instance()._player;
+        }
 
         public void Awake()
         {
-            Player = GameObject.Find("Player").GetComponent<PlayerCombat>();
-            EnemyController = Helper.FindChildWithName<UIEnemyController>(gameObject, "Enemies");
+            _instance = this;
+            _player = GameObject.Find("Player").GetComponent<PlayerCombat>();
+        }
+
+        private static CombatManager Instance()
+        {
+            if (_instance == null) _instance = FindObjectOfType<CombatManager>();
+            return _instance;
+        }
+
+        private void OnDestroy()
+        {
+            _instance = null;
         }
 
         public void Start()
@@ -40,85 +76,140 @@ namespace Game.Combat.Generation
 
         public void Update()
         {
-            CombatCooldowns.UpdateCooldowns();
-            if (_failed)
-            {
-                SucceedCombat();
-                return;
-            }
-
-            if (CurrentRegion.Enemies().Any(e => !e.IsDead)) return;
-            SucceedCombat();
+            if (!_inCombat) return;
+            _cooldowns.UpdateCooldowns();
+            if (_currentRegion.Enemies().Any(e => !e.IsDead)) return;
+            ExitCombat();
+            if (!_shouldAlertAll || _enemiesToAlert.Count == 0) return;
+            _enemiesToAlert[0].Alert();
+            _enemiesToAlert.RemoveAt(0);
         }
 
         private void EnterCombat()
         {
-            _failed = false;
+            _inCombat = true;
             WorldState.Pause();
-            VisibilityRange = 200;
-            CurrentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Region;
+            _visibilityRange = 200;
+            _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Region;
 
-            List<AreaGenerator.Shape> barriers = AreaGenerator.Instance().GenerateArea();
-
-            PathingGrid.Instance().GenerateGrid(barriers);
+            _currentRegion.Barriers.ForEach(b => b.CreateObject());
+            _currentRegion.Fires.ForEach(f => f.CreateObject());
+            PathingGrid.Instance().GenerateGrid(_currentRegion.Barriers);
 
 //            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
 
-            Player.Initialise();
-            CombatCooldowns.Clear();
-            EnemyController.EnterCombat();
+            _player.Initialise();
+            _cooldowns.Clear();
+            _shouldAlertAll = false;
+            _currentRegion.Enemies().ForEach(e => { AddEnemy(e.GetEnemyBehaviour()); });
         }
 
-        private void SucceedCombat()
+        public static void ExitCombat()
         {
-            if (SceneManager.GetActiveScene().name == "Combat")
-            {
-                if (SceneChanger.Fading) return;
-                SceneChanger.ChangeScene("Combat");
-            }
-            else
-            {
-                MenuStateMachine.ShowMenu("Game Menu");
-            }
-
-            ExitCombat();
-        }
-
-        public static void FailCombat()
-        {
-            _failed = true;
-//            MenuStateMachine.ShowMenu(SceneManager.GetActiveScene().name == "Combat" ? "Minigame Menu" : "Game Menu");
-//            ExitCombat();
-        }
-
-        private static void ExitCombat()
-        {
-            WorldState.UnPause();
-            Player.ExitCombat();
-            EnemyController.ExitCombat();
-        }
-
-//        public static float DistanceBetween(float originPosition, CharacterCombat target)
-//        {
-//            return Math.Abs(originPosition - target.Position.CurrentValue());
-//        }
-
-        public static List<EnemyBehaviour> GetEnemiesBehindTarget(EnemyBehaviour target)
-        {
-            List<EnemyBehaviour> enemiesBehindTarget = new List<EnemyBehaviour>();
-            return enemiesBehindTarget;
+            if (!Instance()._inCombat) Debug.Log("Don't try and exit combat twice!");
+            Instance()._inCombat = false;
+            SceneChanger.ChangeScene("Map", false);
+            Instance()._player.ExitCombat();
         }
 
         public static List<CharacterCombat> GetCharactersInRange(Vector2 position, float range)
         {
             List<CharacterCombat> charactersInRange = new List<CharacterCombat>();
-            if (Vector2.Distance(Player.transform.position, position) <= range) charactersInRange.Add(Player);
+            if (Vector2.Distance(Instance()._player.transform.position, position) <= range) charactersInRange.Add(Instance()._player);
 
-            foreach (EnemyBehaviour enemy in UIEnemyController.Enemies)
+            foreach (EnemyBehaviour enemy in Instance()._enemies)
                 if (Vector2.Distance(enemy.transform.position, position) <= range)
                     charactersInRange.Add(enemy);
 
             return charactersInRange;
+        }
+
+
+        public static void Select(float direction)
+        {
+            if (direction > 0)
+                Instance().SelectAntiClockwise();
+            else
+                Instance().SelectClockwise();
+        }
+
+        public static List<EnemyBehaviour> EnemiesOnScreen()
+        {
+            return Instance()._enemies.FindAll(e => e.OnScreen());
+        }
+
+        private void SelectEnemy(int direction)
+        {
+            Vector2 playerTransform = _player.transform.position;
+            List<EnemyBehaviour> visibleEnemies = EnemiesOnScreen();
+            EnemyBehaviour newTarget = null;
+            if (visibleEnemies.Count != 0)
+            {
+                visibleEnemies.Sort((a, b) =>
+                {
+                    float aAngle = AdvancedMaths.AngleFromUp(playerTransform, a.transform.position);
+                    float bAngle = AdvancedMaths.AngleFromUp(playerTransform, b.transform.position);
+                    return aAngle.CompareTo(bAngle);
+                });
+                int currentTargetIndex = visibleEnemies.IndexOf((EnemyBehaviour) _player.GetTarget());
+                currentTargetIndex += direction;
+                if (currentTargetIndex == visibleEnemies.Count) currentTargetIndex = 0;
+                if (currentTargetIndex == -1) currentTargetIndex = visibleEnemies.Count - 1;
+                Debug.Log(currentTargetIndex + " " +visibleEnemies.Count);
+                newTarget = visibleEnemies[currentTargetIndex];
+            }
+
+            Player().SetTarget(newTarget);
+        }
+
+        private void SelectClockwise()
+        {
+            SelectEnemy(1);
+        }
+
+        private void SelectAntiClockwise()
+        {
+            SelectEnemy(-1);
+        }
+
+        public static void QueueEnemyToAdd(EnemyType type)
+        {
+            Enemy e = new Enemy(type);
+            EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
+            enemyBehaviour.Alert();
+            Instance().AddEnemy(enemyBehaviour);
+            Instance()._currentRegion.AddEnemy(e);
+        }
+
+        public static void AlertAll()
+        {
+            Instance()._shouldAlertAll = true;
+        }
+
+        public static void Remove(EnemyBehaviour enemy)
+        {
+            Instance()._enemies.Remove(enemy);
+            if (Instance()._enemies.Count != 0) Instance().SelectClockwise();
+        }
+
+        private void AddEnemy(EnemyBehaviour e)
+        {
+            _enemies.Add(e);
+            _enemiesToAlert.Add(e);
+        }
+
+        public static EnemyBehaviour NearestEnemy()
+        {
+            EnemyBehaviour nearestEnemy = null;
+            float nearestDistance = 10000;
+            EnemiesOnScreen().ForEach(e =>
+            {
+                float distance = e.DistanceToTarget();
+                if (distance >= nearestDistance) return;
+                nearestDistance = distance;
+                nearestEnemy = e;
+            });
+            return nearestEnemy;
         }
     }
 }

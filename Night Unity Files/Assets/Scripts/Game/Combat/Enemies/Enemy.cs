@@ -45,7 +45,7 @@ namespace Game.Combat.Enemies
             Weapon?.Reload(Inventory());
         }
 
-        public EnemyBehaviour CreateEnemyObject()
+        public EnemyBehaviour GetEnemyBehaviour()
         {
             Reset();
             EnemyBehaviour enemyBehaviour;
