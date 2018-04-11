@@ -20,16 +20,16 @@ namespace Game.Combat.Misc
 
         public void SetInitialHealth(int initialHealth, CharacterCombat character)
         {
-            _healthRemaining.AddOnValueChange(a => UpdateHealth());
             _character = character;
             _healthRemaining.Max = initialHealth;
             _healthRemaining.SetCurrentValue(initialHealth);
             _healthRemaining.OnMin(character.Kill);
+            UpdateHealth();
         }
 
         public void UpdateHealth()
         {
-            GetHealthBarController()?.SetValue(_healthRemaining.Normalised(), _healthRemaining.CurrentValue(), _healthRemaining.Max);
+            GetHealthBarController()?.SetValue(_healthRemaining);
         }
 
         public void TakeDamage(float amount)
@@ -40,6 +40,7 @@ namespace Game.Combat.Misc
             _healthRemaining.Decrement(amount);
             GetHealthBarController()?.FadeNewHealth();
             OnTakeDamage?.Invoke(amount);
+            UpdateHealth();
 //            (_character as DetailedEnemyCombat)?.UiHitController.RegisterShot();
         }
 
@@ -48,6 +49,7 @@ namespace Game.Combat.Misc
             Assert.IsTrue(amount >= 0);
             _healthRemaining.Increment(amount);
             OnHeal?.Invoke(amount);
+            UpdateHealth();
         }
 
         public void AddOnTakeDamage(Action<float> a)

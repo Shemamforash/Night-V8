@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Characters;
 using Game.Exploration.Environment;
+using NUnit.Framework;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -14,6 +16,7 @@ namespace Game.Exploration.Ui
         private readonly List<RegionUi> _regionUiList = new List<RegionUi>();
         private List<MapNode> _regions;
         private int _selectedRegion;
+        public static UiQuickTravelController Instance;
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -40,6 +43,7 @@ namespace Game.Exploration.Ui
 
         public void Awake()
         {
+            Instance = this;
             Transform listObject = Helper.FindChildWithName<Transform>(gameObject, "List");
             List<Transform> regions = Helper.FindAllChildren(listObject).FindAll(r => r.name == "Region");
             for (int i = 0; i < 15; ++i)
@@ -48,20 +52,22 @@ namespace Game.Exploration.Ui
                 _regionUiList.Add(regionUi);
                 regionUi.SetRegion();
             }
+            Disable();
         }
 
-        private void OnEnable()
+        public void Enable()
         {
+            gameObject.SetActive(true);
             InputHandler.SetCurrentListener(this);
             _regions = MapGenerator.DiscoveredNodes();
-            _regions.Remove(CharacterVisionController.Instance()?.CurrentNode);
+            _regions.Remove(CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode());
             _selectedRegion = 0;
             SelectRegion();
         }
 
-        public void OnDisable()
+        public void Disable()
         {
-            InputHandler.SetCurrentListener(this);
+            gameObject.SetActive(false);
         }
 
         private void TrySelectRegionBelow()
@@ -80,18 +86,18 @@ namespace Game.Exploration.Ui
 
         private void SelectRegion()
         {
-            if (CharacterVisionController.Instance()?.CurrentNode == null) return;
+            MapNode currentNode = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
+            Assert.NotNull(currentNode);
 
             for (int i = 0; i < _regionUiList.Count; ++i)
             {
                 int offset = i - Centre;
-                int targetGear = _selectedRegion + offset;
+                int targetRegion = _selectedRegion + offset;
                 MapNode node = null;
-                if (targetGear >= 0 && targetGear < _regions.Count) node = _regions[targetGear];
-
-                if (i == Centre) MapGenerator.SetRoute(CharacterVisionController.Instance().CurrentNode, node);
-                if (node == null) _regionUiList[i].SetRegion();
-                else _regionUiList[i].SetRegion(node.Region.Name, RoutePlotter.DistanceBetween(node, CharacterVisionController.Instance().CurrentNode));
+                if (targetRegion >= 0 && targetRegion < _regions.Count) node = _regions[targetRegion];
+                if (node == null) continue;
+                if (i == Centre) MapGenerator.SetRoute(currentNode, node);
+                _regionUiList[i].SetRegion(node.GetRegionName(), RoutePlotter.DistanceBetween(node, currentNode));
             }
         }
 

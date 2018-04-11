@@ -16,7 +16,7 @@ namespace Game.Characters
         private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
         private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
-        public readonly Character Character;
+        public readonly Player Player;
         public readonly CharacterAttribute Dehydration = new CharacterAttribute(AttributeType.Dehydration, 0, 0, 50);
         public readonly CharacterAttribute Endurance = new CharacterAttribute(AttributeType.Endurance, 0);
 
@@ -34,9 +34,9 @@ namespace Game.Characters
 
         private bool _starving, _dehydrated;
 
-        public DesolationAttributes(Character character)
+        public DesolationAttributes(Player player)
         {
-            Character = character;
+            Player = player;
             RegisterTimedEvents();
         }
 
@@ -108,7 +108,7 @@ namespace Game.Characters
                 if (resource.Decrement(1) != 1) tolerance.SetCurrentValue(tolerance.CurrentValue() + 1);
                 need.SetCurrentValue(0);
             });
-            tolerance.OnMax(Character.Kill);
+            tolerance.OnMax(Player.Kill);
         }
 
         public void UpdateThirstAndHunger()

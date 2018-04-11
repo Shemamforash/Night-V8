@@ -131,7 +131,6 @@ namespace Game.Characters
 
         public void UpdateCurrentState()
         {
-            Debug.Log(((BaseCharacterAction)States.GetCurrentState()).Name);
             ((BaseCharacterAction) States.GetCurrentState()).UpdateAction();
         }
 

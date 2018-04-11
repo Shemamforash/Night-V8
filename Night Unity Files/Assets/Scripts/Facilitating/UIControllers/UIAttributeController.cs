@@ -10,23 +10,23 @@ namespace Facilitating.UIControllers
 
         public void Awake()
         {
-            _strengthMarker = CacheText("Strength");
-            _perceptionMarker = CacheText("Perception");
-            _enduranceMarker = CacheText("Endurance");
-            _willpowerMarker = CacheText("Willpower");
+            _strengthMarker = CacheAttributeElement("Strength");
+            _perceptionMarker = CacheAttributeElement("Perception");
+            _enduranceMarker = CacheAttributeElement("Endurance");
+            _willpowerMarker = CacheAttributeElement("Willpower");
         }
 
-        private UIAttributeMarkerController CacheText(string name)
+        private UIAttributeMarkerController CacheAttributeElement(string elementName)
         {
-            return Helper.FindChildWithName(gameObject, name).transform.Find("Marker Container").GetComponent<UIAttributeMarkerController>();
+            return Helper.FindChildWithName(gameObject, elementName).transform.Find("Bar").GetComponent<UIAttributeMarkerController>();
         }
 
-        public void HookValues(DesolationAttributes attributes)
+        public void UpdateAttributes(Player player)
         {
-            attributes.Endurance.AddOnValueChange(a => _enduranceMarker.SetValue((int) a.CurrentValue(), (int) a.Max));
-            attributes.Strength.AddOnValueChange(a => _strengthMarker.SetValue((int) a.CurrentValue(), (int) a.Max));
-            attributes.Willpower.AddOnValueChange(a => _willpowerMarker.SetValue((int) a.CurrentValue(), (int) a.Max));
-            attributes.Perception.AddOnValueChange(a => _perceptionMarker.SetValue((int) a.CurrentValue(), (int) a.Max));
+            _strengthMarker.SetValue(player.Attributes.Strength);
+            _enduranceMarker.SetValue(player.Attributes.Endurance);
+            _perceptionMarker.SetValue(player.Attributes.Perception);
+            _willpowerMarker.SetValue(player.Attributes.Willpower);
         }
     }
 }

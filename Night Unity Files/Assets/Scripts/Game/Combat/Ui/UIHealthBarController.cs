@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,7 @@ namespace Game.Combat.Ui
         private TextMeshProUGUI _healthText;
         private Slider _slider;
         private RectTransform _sliderRect;
+        private bool _cached;
 
         public void Awake()
         {
@@ -61,12 +63,11 @@ namespace Game.Combat.Ui
             fader.Restart();
         }
 
-        public void SetValue(float normalised, float current, float max)
+        public void SetValue(Number health)
         {
-            float normalisedHealth = normalised;
-            _healthText.text = (int) current + "/" + (int) max;
-            _slider.value = normalisedHealth;
-            float edgeWidth = _edgeWidthRatio * normalisedHealth;
+            _healthText.text = (int) health.CurrentValue() + "/" + (int) health.Max;
+            _slider.value = health.Normalised();
+            float edgeWidth = _edgeWidthRatio * health.Normalised();
 
             ParticleSystem.ShapeModule burnShape = _burnEffect.shape;
             burnShape.radius = edgeWidth;

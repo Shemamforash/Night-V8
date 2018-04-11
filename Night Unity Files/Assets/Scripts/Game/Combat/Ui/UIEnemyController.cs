@@ -18,7 +18,7 @@ namespace Game.Combat.Ui
         {
             _shouldAlertAll = false;
             _enemiesToAlert.Clear();
-            CombatManager.CurrentScenario.Enemies().ForEach(e =>
+            CombatManager.CurrentRegion.Enemies().ForEach(e =>
             {
                 if (!e.IsDead) AddEnemy(e.CreateEnemyObject());
             });
@@ -85,7 +85,7 @@ namespace Game.Combat.Ui
             EnemyBehaviour enemyUi = e.CreateEnemyObject();
             enemyUi.Alert();
             AddEnemy(enemyUi);
-            CombatManager.CurrentScenario.AddEnemy(e);
+            CombatManager.CurrentRegion.AddEnemy(e);
         }
 
         public static bool AllEnemiesGone()

@@ -181,7 +181,6 @@
                 <e p="AreaGenerator.cs" t="Include" />
                 <e p="Cell.cs" t="Include" />
                 <e p="CombatManager.cs" t="Include" />
-                <e p="CombatScenario.cs" t="Include" />
                 <e p="PathingGrid.cs" t="Include" />
                 <e p="Triangulator.cs" t="Include" />
               </e>
@@ -234,9 +233,8 @@
                 <e p="RegionTemplate.cs" t="Include" />
               </e>
               <e p="UI" t="Include">
-                <e p="CharacterVisionController.cs" t="Include" />
                 <e p="MapNodeController.cs" t="Include" />
-                <e p="UIExploreMenuController.cs" t="Include" />
+                <e p="PlayerExplorationController.cs" t="Include" />
                 <e p="UiFootprintController.cs" t="Include" />
                 <e p="UIMapController.cs" t="Include" />
                 <e p="UiNodeFocusScript.cs" t="Include" />
@@ -358,7 +356,6 @@
                 <e p="MenuStateMachine.cs" t="Include" />
               </e>
               <e p="Number.cs" t="Include" />
-              <e p="ValueTextLink.cs" t="Include" />
             </e>
             <e p="RingDrawer.cs" t="Include" />
           </e>

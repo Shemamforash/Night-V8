@@ -89,7 +89,7 @@ namespace Game.Combat.Misc
 
         public Cell CurrentCell()
         {
-            return _currentCell == null ? PathingGrid.PositionToCell(transform.position) : _currentCell;
+            return _currentCell == null ? PathingGrid.Instance().PositionToCell(transform.position) : _currentCell;
         }
 
         protected void SetOwnedByEnemy(float speed)
@@ -155,7 +155,7 @@ namespace Game.Combat.Misc
         public virtual void Update()
         {
             if (GetTarget() != null) _distanceToTarget = CurrentCell().Distance(GetTarget().CurrentCell());
-            _currentCell = PathingGrid.PositionToCell(transform.position);
+            _currentCell = PathingGrid.Instance().PositionToCell(transform.position);
             UpdateRecoil();
             UpdateConditions();
         }

@@ -1,18 +1,79 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 
 namespace Game.Exploration.Region
 {
     public class Region : DesolationInventory
     {
-        private readonly CombatScenario _combatScenario;
+        private static List<EnemyTemplate> _enemyTypes = EnemyTemplate.GetEnemyTypes();
+        private readonly List<Enemy> _enemies = new List<Enemy>();
         private readonly RegionTemplate _template;
         private bool _discovered;
+
+        public void AddEnemy(Enemy enemy)
+        {
+            _enemies.Add(enemy);
+        }
+
+        public void GenerateSimpleEncounter()
+        {
+            AddEnemy(new Enemy(EnemyType.Sentinel));
+            AddEnemy(new Enemy(EnemyType.Witch));
+        }
+
+        private void AddEnemy(EnemyType enemyType, int difficulty)
+        {
+            Enemy newEnemy = new Enemy(enemyType);
+            AddEnemy(newEnemy);
+            newEnemy.GenerateArmour(difficulty);
+            newEnemy.GenerateWeapon(difficulty);
+        }
+
+        public void Generate(int difficulty, int size)
+        {
+            AddEnemy(EnemyType.Medic, difficulty);
+            AddEnemy(EnemyType.Sentinel, difficulty);
+            AddEnemy(EnemyType.Sniper, difficulty);
+
+//            if (size > MaxEncounterSize) size = MaxEncounterSize;
+//            for (int i = 0; i < size; ++i)
+//            {
+//                Helper.Shuffle(ref _enemyTypes);
+//                foreach (EnemyTemplate t in _enemyTypes)
+//                {
+//                    if (size < t.Value) continue;
+//                    AddEnemy(t.EnemyType, scenario, difficulty);
+//                    break;
+//                }
+//            }
+        }
+
+        public void Generate(int difficulty)
+        {
+            while (difficulty > 0)
+            {
+                Helper.Shuffle(ref _enemyTypes);
+                foreach (EnemyTemplate t in _enemyTypes)
+                {
+                    if (difficulty < t.Value) continue;
+                    AddEnemy(t.EnemyType, difficulty);
+                    difficulty -= t.Value;
+                }
+            }
+        }
+
+        public List<Enemy> Enemies()
+        {
+            return _enemies;
+        }
 
         public Region(string name, RegionTemplate template) : base(name)
         {
@@ -21,6 +82,7 @@ namespace Game.Exploration.Region
             SetInitialResourceValues(InventoryResourceType.Food, _template.FoodAvailable);
             SetInitialResourceValues(InventoryResourceType.Fuel, _template.FuelAvailable);
             SetInitialResourceValues(InventoryResourceType.Scrap, _template.ScrapAvailable);
+            GenerateSimpleEncounter();
             //TODO different combat scenarios for region tier and animal/human enemies
         }
 
@@ -29,7 +91,6 @@ namespace Game.Exploration.Region
             XmlNode regionNode = base.Save(doc, type);
             SaveController.CreateNodeAndAppend("Discovered", regionNode, _discovered);
             XmlNode combatNode = SaveController.CreateNodeAndAppend("Scenario", regionNode);
-            _combatScenario?.Save(combatNode, type);
             return regionNode;
         }
 
@@ -41,12 +102,9 @@ namespace Game.Exploration.Region
             IncrementResource(resourceType, initialQuantity);
         }
 
-        public void Enter(Player player)
+        public void Enter()
         {
-            if (_combatScenario != null && !_combatScenario.IsFinished())
-                CombatManager.EnterCombat(player, _combatScenario);
-            else
-                player.CollectResourcesInRegion(this);
+            SceneChanger.ChangeScene("Combat");
         }
 
         public void Discover()
@@ -87,11 +145,6 @@ namespace Game.Exploration.Region
             string amountRemaining = "";
             for (int i = 0; i < amount; i += 10) amountRemaining += "+";
             return amountRemaining;
-        }
-
-        public CombatScenario GetCombatScenario()
-        {
-            return _combatScenario;
         }
     }
 }

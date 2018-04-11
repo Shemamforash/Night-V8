@@ -1,4 +1,6 @@
-﻿using SamsHelper.ReactiveUI.Elements;
+﻿using Game.Global;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 namespace Facilitating.UIControllers
@@ -18,29 +20,13 @@ namespace Facilitating.UIControllers
             return _instance;
         }
 
-        public void SetPistolText(string quantity)
+        public void Update()
         {
-            PistolText.Text(quantity);
-        }
-
-        public void SetRifleText(string quantity)
-        {
-            RifleText.Text(quantity);
-        }
-
-        public void SetShotgunText(string quantity)
-        {
-            ShotgunText.Text(quantity);
-        }
-
-        public void SetSmgText(string quantity)
-        {
-            SMGText.Text(quantity);
-        }
-
-        public void SetLmgText(string quantity)
-        {
-            LMGText.Text(quantity);
+            PistolText.Text(WorldState.HomeInventory().GetResourceQuantity(InventoryResourceType.PistolMag).ToString());
+            RifleText.Text(WorldState.HomeInventory().GetResourceQuantity(InventoryResourceType.RifleMag).ToString());
+            ShotgunText.Text(WorldState.HomeInventory().GetResourceQuantity(InventoryResourceType.ShotgunMag).ToString());
+            SMGText.Text(WorldState.HomeInventory().GetResourceQuantity(InventoryResourceType.SmgMag).ToString());
+            LMGText.Text(WorldState.HomeInventory().GetResourceQuantity(InventoryResourceType.LmgMag).ToString());
         }
     }
 }

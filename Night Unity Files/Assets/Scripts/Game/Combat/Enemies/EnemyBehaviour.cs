@@ -95,11 +95,14 @@ namespace Game.Combat.Enemies
             EnemyUi.Instance().SetSelectedEnemy(this);
         }
 
+        private PathingGrid _grid;
+        
         public virtual void Initialise(Enemy enemy)
         {
+            _grid = PathingGrid.Instance();
             ArmourController = enemy.ArmourController;
             Enemy = enemy;
-            if (Weapon() != null) IdealWeaponDistance = PathingGrid.WorldToGridDistance(Weapon().CalculateIdealDistance());
+            if (Weapon() != null) IdealWeaponDistance = _grid.WorldToGridDistance(Weapon().CalculateIdealDistance());
             SetOwnedByEnemy(Enemy.Template.Speed);
             HealthController.SetInitialHealth(Enemy.Template.Health, this);
 //            if (!(this is Medic || this is Martyr)) SetHealBehaviour();
@@ -240,7 +243,7 @@ namespace Game.Combat.Enemies
 
         private bool TargetVisible()
         {
-            bool _obstructed = PathingGrid.IsLineObstructed(transform.position, GetTarget().transform.position);
+            bool _obstructed = _grid.IsLineObstructed(transform.position, GetTarget().transform.position);
 //            if (_obstructed) Debug.DrawLine(transform.position, GetTarget().transform.position, Color.yellow, 2f);
             return !_obstructed;
         }
@@ -287,13 +290,13 @@ namespace Game.Combat.Enemies
 
         private bool MoveToCover(Action reachCoverAction)
         {
-            if (PathingGrid.IsCellHidden(CurrentCell())) return false;
-            Cell safeCell = PathingGrid.FindCoverNearMe(CurrentCell());
+            if (_grid.IsCellHidden(CurrentCell())) return false;
+            Cell safeCell = _grid.FindCoverNearMe(CurrentCell());
             if (safeCell == null) return false;
             Immobilised(false);
             SetActionText("Seeking Cover");
             StartSprinting();
-            Thread safeRoute = PathingGrid.RouteToCell(CurrentCell(), safeCell, route);
+            Thread safeRoute = _grid.RouteToCell(CurrentCell(), safeCell, route);
             WaitForRoute(safeRoute, reachCoverAction);
             return true;
         }
@@ -375,9 +378,9 @@ namespace Game.Combat.Enemies
             Vector2 randomPoint = new Vector2();
             randomPoint.x = randomDistance * Mathf.Cos(randomAngle) + _originPosition.x;
             randomPoint.y = randomDistance * Mathf.Sin(randomAngle) + _originPosition.y;
-            Cell targetCell = PathingGrid.PositionToCell(randomPoint);
+            Cell targetCell = _grid.PositionToCell(randomPoint);
 //            Cell targetCell = PathingGrid.GetCellNearMe(CurrentCell(), randomDistance);
-            Thread routingThread = PathingGrid.RouteToCell(CurrentCell(), targetCell, route);
+            Thread routingThread = _grid.RouteToCell(CurrentCell(), targetCell, route);
             WaitForRoute(routingThread, WaitThenWander);
             SetActionText("Wandering");
         }
@@ -403,8 +406,8 @@ namespace Game.Combat.Enemies
 
             if (CouldHitTarget || Weapon() == null) return false;
             SetActionText("Moving");
-            Cell targetCell = PathingGrid.FindCellToAttackPlayer(CurrentCell(), (int) (IdealWeaponDistance * 1.25f), (int) (IdealWeaponDistance * 0.75f));
-            Thread pathThread = PathingGrid.RouteToCell(CurrentCell(), targetCell, route);
+            Cell targetCell = _grid.FindCellToAttackPlayer(CurrentCell(), (int) (IdealWeaponDistance * 1.25f), (int) (IdealWeaponDistance * 0.75f));
+            Thread pathThread = _grid.RouteToCell(CurrentCell(), targetCell, route);
             WaitForRoute(pathThread);
             return true;
         }
@@ -447,7 +450,7 @@ namespace Game.Combat.Enemies
         {
             Cell targetCell = null;
             SetActionText("Moving to " + character.name);
-            Thread pathThread = PathingGrid.RouteToCell(CurrentCell(), character.CurrentCell(), route);
+            Thread pathThread = _grid.RouteToCell(CurrentCell(), character.CurrentCell(), route);
             CurrentAction = () =>
             {
                 if (pathThread.IsAlive) return;

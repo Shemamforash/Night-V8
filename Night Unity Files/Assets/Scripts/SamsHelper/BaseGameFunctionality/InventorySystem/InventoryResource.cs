@@ -39,11 +39,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return ui;
         }
 
-        public void AddOnUpdate(Action<Number> action)
-        {
-            _quantity.AddOnValueChange(action);
-        }
-
         public float Decrement(float amount)
         {
             float previousQuantity = _quantity.CurrentValue();

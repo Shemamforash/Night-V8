@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
+using Game.Exploration.Region;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Libraries;
@@ -18,7 +20,7 @@ namespace Game.Combat.Generation
         private const float _fadeTime = 1f;
         public static readonly CooldownManager CombatCooldowns = new CooldownManager();
         public static UIEnemyController EnemyController;
-        public static CombatScenario CurrentScenario;
+        public static Region CurrentRegion;
         private static bool _inMelee;
         public static int VisibilityRange;
         public static PlayerCombat Player;
@@ -31,6 +33,11 @@ namespace Game.Combat.Generation
             EnemyController = Helper.FindChildWithName<UIEnemyController>(gameObject, "Enemies");
         }
 
+        public void Start()
+        {
+            EnterCombat();
+        }
+
         public void Update()
         {
             CombatCooldowns.UpdateCooldowns();
@@ -40,25 +47,24 @@ namespace Game.Combat.Generation
                 return;
             }
 
-            if (CurrentScenario.Enemies().Any(e => !e.IsDead)) return;
+            if (CurrentRegion.Enemies().Any(e => !e.IsDead)) return;
             SucceedCombat();
         }
 
-        public static void EnterCombat(Characters.Player player, CombatScenario scenario)
+        private void EnterCombat()
         {
             _failed = false;
             WorldState.Pause();
             VisibilityRange = 200;
-            CurrentScenario = scenario;
-            MenuStateMachine.ShowMenu("Combat Menu");
+            CurrentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Region;
 
-            List<AreaGenerator.Shape> barriers = AreaGenerator.GenerateArea();
+            List<AreaGenerator.Shape> barriers = AreaGenerator.Instance().GenerateArea();
 
             PathingGrid.Instance().GenerateGrid(barriers);
 
 //            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
 
-            Player.Initialise(player);
+            Player.Initialise();
             CombatCooldowns.Clear();
             EnemyController.EnterCombat();
         }
@@ -73,7 +79,6 @@ namespace Game.Combat.Generation
             else
             {
                 MenuStateMachine.ShowMenu("Game Menu");
-                if (UIEnemyController.AllEnemiesGone()) CurrentScenario.FinishCombat();
             }
 
             ExitCombat();

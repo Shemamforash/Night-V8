@@ -1,4 +1,5 @@
-﻿using Game.Exploration.Region;
+﻿using System;
+using Game.Exploration.Region;
 using SamsHelper.ReactiveUI.InventoryUI;
 using SamsHelper.ReactiveUI.MenuSystem;
 
@@ -14,7 +15,6 @@ namespace Game.Characters.CharacterActions
         {
             IsVisible = false;
 //            SetStateTransitionTarget(playerCharacter.ReturnAction);
-            AddOnExit(ReturnToGameScreen);
         }
 
         public void SetTargetRegion(Region targetRegion)
@@ -34,6 +34,11 @@ namespace Game.Characters.CharacterActions
 //        {
 //            Enter();
 //        }
+
+        public override void Exit()
+        {
+            ReturnToGameScreen();
+        }
 
         private void ReturnToGameScreen()
         {

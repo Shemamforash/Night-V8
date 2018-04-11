@@ -35,7 +35,6 @@ namespace Game.Gear.Weapons
             _durabilityModifier = new AttributeModifier(new List<AttributeType> {AttributeType.Damage, AttributeType.FireRate, AttributeType.Accuracy});
             if (durability == -1) durability = Random.Range(0, MaxDurability / 4);
             Durability = new Number(durability, 0, MaxDurability);
-            Durability.AddOnValueChange(RecalculateAttributeValues);
         }
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
@@ -61,6 +60,7 @@ namespace Game.Gear.Weapons
         public void SetDurability(int value)
         {
             Durability.SetCurrentValue(value);
+            RecalculateAttributeValues();
         }
 
         public void SetClass(WeaponClass weaponClass)
@@ -106,7 +106,7 @@ namespace Game.Gear.Weapons
             return WeaponClassName;
         }
 
-        private void RecalculateAttributeValues(Number number = null)
+        public void RecalculateAttributeValues(Number number = null)
         {
             _durabilityModifier.Remove();
             float normalisedDurability = Durability.CurrentValue() / MaxDurability;

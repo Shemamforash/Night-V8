@@ -45,6 +45,10 @@ namespace Game.Global
             _timeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Time");
             _stormDistanceText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Storm Distance");
             _inventoryButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inventory");
+            _waterText = GameObject.Find(InventoryResourceType.Water.ToString()).GetComponent<TextMeshProUGUI>();
+            _foodText = GameObject.Find(InventoryResourceType.Food.ToString()).GetComponent<TextMeshProUGUI>();
+            _fuelText = GameObject.Find(InventoryResourceType.Fuel.ToString()).GetComponent<TextMeshProUGUI>();
+            _scrapText = GameObject.Find(InventoryResourceType.Scrap.ToString()).GetComponent<TextMeshProUGUI>();
             DefaultSelectable = _inventoryButton.Button();
             PreserveLastSelected = true;
             PauseOnOpen = false;
@@ -93,25 +97,16 @@ namespace Game.Global
             _stormDistanceText.text = "Storm is " + distance + " days away";
         }
 
-        public void Start()
-        {
-            SetResourceSuffix(InventoryResourceType.Water, "sips");
-            SetResourceSuffix(InventoryResourceType.Food, "meals");
-            SetResourceSuffix(InventoryResourceType.Fuel, "dregs");
-            WorldState.HomeInventory().GetResource(InventoryResourceType.PistolMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetPistolText(((int) f.CurrentValue()).ToString()));
-            WorldState.HomeInventory().GetResource(InventoryResourceType.RifleMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetRifleText(((int) f.CurrentValue()).ToString()));
-            WorldState.HomeInventory().GetResource(InventoryResourceType.ShotgunMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetShotgunText(((int) f.CurrentValue()).ToString()));
-            WorldState.HomeInventory().GetResource(InventoryResourceType.SmgMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetSmgText(((int) f.CurrentValue()).ToString()));
-            WorldState.HomeInventory().GetResource(InventoryResourceType.LmgMag).AddOnUpdate(f => UIAmmoDisplayController.Instance().SetLmgText(((int) f.CurrentValue()).ToString()));
-            SetResourceSuffix(InventoryResourceType.Scrap, "bits");
-        }
+        private TextMeshProUGUI _waterText, _foodText, _fuelText, _scrapText;
 
-        private static void SetResourceSuffix(InventoryResourceType name, string convention)
+        public void Update()
         {
-            TextMeshProUGUI resourceText = GameObject.Find(name.ToString()).GetComponent<TextMeshProUGUI>();
-            WorldState.HomeInventory().GetResource(name).AddOnUpdate(f => { resourceText.text = "<sprite name=\"" + name + "\">" + Mathf.Round(f.CurrentValue()) + " " + convention; });
+            _waterText.text = "<sprite name=\"Water\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Water).Quantity()) + " sips";
+            _foodText.text = "<sprite name=\"Food\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Food).Quantity()) +"meals";
+            _fuelText.text = "<sprite name=\"Fuel\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Fuel).Quantity()) +"dregs";
+            _scrapText.text = "<sprite name=\"Scrap\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Quantity()) +"bits";
         }
-
+        
         public static EnhancedButton GetInventoryButton()
         {
             return _inventoryButton;

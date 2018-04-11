@@ -9,8 +9,7 @@ namespace Game.Exploration.Environment
     {
         private readonly Dictionary<MapNode, Path> _paths = new Dictionary<MapNode, Path>();
         private readonly HashSet<MapNode> _neighbors = new HashSet<MapNode>();
-        public string Name;
-        public GameObject NodeObject;
+        private string _name;
         public Vector2 Position;
         public Region.Region Region;
 
@@ -19,9 +18,15 @@ namespace Game.Exploration.Environment
             MapNode mapNode = new MapNode();
             mapNode.Region = region;
             mapNode.SetPosition(position);
+            mapNode._name = region == null ? "Vehicle" : region.Name;
             return mapNode;
         }
 
+        public string GetRegionName()
+        {
+            return _name;
+        }
+        
         public void AddNeighbor(MapNode neighbor)
         {
             _neighbors.Add(neighbor);
@@ -39,16 +44,15 @@ namespace Game.Exploration.Environment
         {
             if (!Discovered()) return;
             if (_nodePrefab == null) _nodePrefab = Resources.Load<GameObject>("Prefabs/Map/Node");
-            NodeObject = GameObject.Instantiate(_nodePrefab);
-            NodeObject.transform.SetParent(MapGenerator.MapTransform);
-            NodeObject.name = Name;
-            NodeObject.transform.position = new Vector3(Position.x, Position.y, 0);
-            NodeObject.transform.localScale = Vector3.one;
+            GameObject nodeObject = GameObject.Instantiate(_nodePrefab);
+            nodeObject.transform.SetParent(MapGenerator.MapTransform);
+            nodeObject.name = _name;
+            nodeObject.transform.position = new Vector3(Position.x, Position.y, 0);
+            nodeObject.transform.localScale = Vector3.one;
             UpdatePaths();
-            string regionName = Region == null ? "Vehicle" : Region.Name;
-            MapNodeController mapNodeController = NodeObject.transform.GetComponentInChildren<MapNodeController>(true);
+            MapNodeController mapNodeController = nodeObject.transform.GetComponentInChildren<MapNodeController>(true);
             mapNodeController.gameObject.SetActive(true);
-            mapNodeController.SetName(regionName);
+            mapNodeController.SetName(_name);
         }
 
         public void AddPathTo(MapNode node, Path path)
@@ -84,9 +88,9 @@ namespace Game.Exploration.Environment
 
         public void UpdateColor()
         {
-            float distanceToCamera = Vector2.Distance(CharacterVisionController.Instance().transform.position, Position);
-            float alpha = Discovered() ? 1 : 1 - distanceToCamera / MapGenerator.VisionRadius;
-            if (alpha < 0) alpha = 0;
+//            float distanceToCamera = Vector2.Distance(CharacterVisionController.Instance().transform.position, Position);
+//            float alpha = Discovered() ? 1 : 1 - distanceToCamera / MapGenerator.VisionRadius;
+//            if (alpha < 0) alpha = 0;
 
 //            _spriteRenderer.color = new Color(1, 1, 1, alpha);
         }

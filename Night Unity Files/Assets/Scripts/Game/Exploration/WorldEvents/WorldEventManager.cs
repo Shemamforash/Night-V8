@@ -12,7 +12,7 @@ namespace Game.Exploration.WorldEvents
 {
     public class WorldEventManager : MonoBehaviour, IPersistenceTemplate
     {
-        private static readonly ValueTextLink<string> _eventLogText = new ValueTextLink<string>();
+        private static TextMeshProUGUI _eventLogText;
         private static List<string> _eventLog = new List<string>();
 
         public void Load(XmlNode doc, PersistenceType saveType)
@@ -37,7 +37,7 @@ namespace Game.Exploration.WorldEvents
 
         public void Awake()
         {
-            if (SceneManager.GetActiveScene().name == "Game") _eventLogText.AddTextObject(Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Event Log"));
+            if (SceneManager.GetActiveScene().name == "Game") _eventLogText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Event Log");
             PrintFirstFourEvents();
         }
 
@@ -60,7 +60,7 @@ namespace Game.Exploration.WorldEvents
                 textSize -= 5;
             }
 
-            _eventLogText.Value(events);
+            _eventLogText.text = events;
         }
     }
 }

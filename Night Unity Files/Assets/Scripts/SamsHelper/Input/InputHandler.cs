@@ -75,12 +75,14 @@ namespace SamsHelper.Input
 
         public static void RegisterInputListener(IInputListener inputListener)
         {
+            if (ListenersToRemove.Contains(inputListener)) ListenersToRemove.Remove(inputListener);
             if (InputListeners.Contains(inputListener)) return;
             ListenersToAdd.Add(inputListener);
         }
 
         public static void UnregisterInputListener(IInputListener inputListener)
         {
+            if (ListenersToAdd.Contains(inputListener)) ListenersToAdd.Remove(inputListener);
             ListenersToRemove.Add(inputListener);
         }
 

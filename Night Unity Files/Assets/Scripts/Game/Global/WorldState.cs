@@ -12,7 +12,7 @@ namespace Game.Global
     {
         public const int MinutesPerHour = 12;
         public const int IntervalSize = 60 / MinutesPerHour;
-        public static Number StormDistance;
+        public static int StormDistance;
         public static int DaysSpentHere;
         private static bool _started;
         private static readonly CharacterManager _homeInventory = new CharacterManager();
@@ -40,22 +40,22 @@ namespace Game.Global
 //            SaveController.LoadSettings();
 //todo            SaveController.LoadGame();
 
-            StormDistance = new Number(15);
-            StormDistance.AddOnValueChange(UpdateStormDistance);
+            StormDistance = 15;
 #if UNITY_EDITOR
             _homeInventory.AddTestingResources(3);
 #endif
         }
 
-        private void UpdateStormDistance(Number n)
+        private void UpdateStormDistance()
         {
-            WorldView.SetStormDistance((int) n.CurrentValue());
+            WorldView.SetStormDistance(StormDistance);
         }
 
         private void IncrementDaysSpentHere()
         {
             ++DaysSpentHere;
-            StormDistance.Decrement();
+            --StormDistance;
+            UpdateStormDistance();
             if (DaysSpentHere == 7)
             {
                 //TODO gameover
@@ -64,21 +64,22 @@ namespace Game.Global
 
         public float GetCurrentDanger()
         {
-            if (StormDistance.CurrentValue() <= 30f) return StormDistance / 30f;
+            if (StormDistance <= 30f) return StormDistance / 30f;
             return 1;
         }
 
         private void FindNewLocation()
         {
-            if (StormDistance.ReachedMin())
+            if (StormDistance == 0)
             {
                 InitiateFinalEncounter();
                 return;
             }
 
-            if (DaysSpentHere >= 4) StormDistance.Increment(2);
+            if (DaysSpentHere >= 4) StormDistance += 2;
             else if (DaysSpentHere >= 3)
-                StormDistance.Increment();
+                ++StormDistance;
+            UpdateStormDistance();
             EnvironmentManager.GenerateEnvironment();
         }
 

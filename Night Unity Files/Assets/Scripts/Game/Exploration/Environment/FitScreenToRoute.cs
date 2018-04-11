@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Characters;
 using UnityEngine;
 
 namespace Game.Exploration.Environment
@@ -34,15 +35,22 @@ namespace Game.Exploration.Environment
             float height = (highestNode - lowestNode) / 2f;
             Vector3 centre = new Vector3(xCentre, yCentre, -10f);
             if (coroutine != null) StopCoroutine(coroutine);
-            coroutine = MoveToCentre(centre, height);
+            coroutine = MoveToCentre(centre, height * 1.5f);
+            StartCoroutine(coroutine);
+        }
+
+        public void Recenter()
+        {
+            Vector3 position = CharacterManager.SelectedCharacter.TravelAction.GetCurrentPosition();
+            position.z = -10;
+            coroutine = MoveToCentre(position, 5);
             StartCoroutine(coroutine);
         }
 
         private IEnumerator MoveToCentre(Vector3 centre, float height)
         {
             float startSize = GetComponent<Camera>().orthographicSize;
-            float targetSize = height * 1.5f;
-            if (targetSize < MinSize) targetSize = MinSize;
+            if (height < MinSize) height = MinSize;
             _timeElapsed = 0f;
             Vector3 origin = transform.position;
             while (_timeElapsed < TimeToMove)
@@ -60,7 +68,7 @@ namespace Game.Exploration.Environment
                 Vector3 newPosition = Vector3.Lerp(origin, centre, easedTime);
                 transform.position = newPosition;
 
-                gameObject.GetComponent<Camera>().orthographicSize = Mathf.Lerp(startSize, targetSize, easedTime);
+                gameObject.GetComponent<Camera>().orthographicSize = Mathf.Lerp(startSize, height, easedTime);
                 yield return null;
             }
         }

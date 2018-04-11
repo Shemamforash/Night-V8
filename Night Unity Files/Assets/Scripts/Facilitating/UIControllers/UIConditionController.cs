@@ -1,4 +1,5 @@
 ﻿using Game.Characters;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -11,24 +12,18 @@ namespace Facilitating.UIControllers
         public Slider ConditionSlider;
         public EnhancedText ConditionText;
 
-        public void HookStarvation(DesolationAttributes attributes)
+        public void UpdateDehydration(Player player)
         {
-            attributes.Starvation.AddOnValueChange(a =>
-            {
-                if (ConditionSlider != null)
-                    ConditionSlider.value = 1 - Helper.Normalise(a.CurrentValue(), a.Max);
-                ConditionText.Text(attributes.GetHungerStatus());
-            });
+            ConditionText.Text(player.Attributes.GetThirstStatus());
+            if (ConditionSlider == null) return;
+            ConditionSlider.value = 1 - player.Attributes.Dehydration.Normalised();
         }
 
-        public void HookDehydration(DesolationAttributes attributes)
+        public void UpdateHunger(Player player)
         {
-            attributes.Dehydration.AddOnValueChange(a =>
-            {
-                if (ConditionSlider != null)
-                    ConditionSlider.value = 1 - Helper.Normalise(a.CurrentValue(), a.Max);
-                ConditionText.Text(attributes.GetThirstStatus());
-            });
+            ConditionText.Text(player.Attributes.GetHungerStatus());
+            if (ConditionSlider == null) return;
+            ConditionSlider.value = 1 - player.Attributes.Starvation.Normalised();
         }
     }
 }

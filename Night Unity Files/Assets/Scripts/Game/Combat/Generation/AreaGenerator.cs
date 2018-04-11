@@ -9,9 +9,9 @@ namespace Game.Combat.Generation
     {
         private const float SmallPolyWidth = 0.4f, MediumPolyWidth = 1f, LargePolyWidth = 2f, HugePolyWidth = 4f;
         private static AreaGenerator _instance;
-        private static int _barrierNumber;
-        private static GameObject _barrierPrefab;
-        private static readonly List<Shape> _barriers = new List<Shape>();
+        private int _barrierNumber;
+        private GameObject _barrierPrefab;
+        private readonly List<Shape> _barriers = new List<Shape>();
 
         public static Vector2 CampfirePosition = Vector2.zero;
 
@@ -20,7 +20,7 @@ namespace Game.Combat.Generation
             _instance = this;
         }
 
-        private static Shape GenerateDistortedPoly(int definition, Ellipse ellipse, GameObject o)
+        private Shape GenerateDistortedPoly(int definition, Ellipse ellipse, GameObject o)
         {
             int angleIncrement;
             List<Vector3> polyVertices = new List<Vector3>();
@@ -35,7 +35,7 @@ namespace Game.Combat.Generation
             return newPoly;
         }
 
-        private static GameObject CreateMesh(List<Vector3> vertices, GameObject newShape)
+        private GameObject CreateMesh(List<Vector3> vertices, GameObject newShape)
         {
             newShape.GetComponent<MeshRenderer>();
             Mesh mesh = new Mesh();
@@ -49,7 +49,7 @@ namespace Game.Combat.Generation
             return newShape;
         }
 
-        private static Vector2 RandomPointBetweenRadii(float angle, Ellipse e)
+        private Vector2 RandomPointBetweenRadii(float angle, Ellipse e)
         {
             Vector2 randomPoint;
             angle *= Mathf.Deg2Rad;
@@ -75,7 +75,7 @@ namespace Game.Combat.Generation
             return randomPoint;
         }
 
-        private static GameObject GenerateBasicBarrier()
+        private GameObject GenerateBasicBarrier()
         {
             if (_barrierPrefab == null) _barrierPrefab = Resources.Load<GameObject>("Prefabs/Combat/Basic Barrier");
             GameObject basicBarrier = Instantiate(_barrierPrefab);
@@ -87,7 +87,7 @@ namespace Game.Combat.Generation
             return basicBarrier;
         }
 
-        public static Shape GeneratePoly(float baseWidth)
+        public Shape GeneratePoly(float baseWidth)
         {
             GameObject g = GenerateBasicBarrier();
             float width = baseWidth * Random.Range(0.6f, 1f);
@@ -113,7 +113,7 @@ namespace Game.Combat.Generation
             return shape;
         }
 
-        private static List<Shape> GenerateCamp()
+        private List<Shape> GenerateCamp()
         {
             float size = PathingGrid.GameWorldWidth / 2f;
             CampfirePosition = new Vector2(Random.Range(-size, size), Random.Range(-size, size));
@@ -134,7 +134,18 @@ namespace Game.Combat.Generation
             return stones;
         }
 
-        public static List<Shape> GenerateArea()
+        public static AreaGenerator Instance()
+        {
+            if (_instance == null) _instance = GameObject.Find("Barriers").GetComponent<AreaGenerator>();
+            return _instance;
+        }
+
+        private void OnDestroy()
+        {
+            _instance = null;
+        }
+
+        public List<Shape> GenerateArea()
         {
             _barrierNumber = 0;
             _barriers.Clear();

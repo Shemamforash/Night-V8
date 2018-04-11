@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using Facilitating.Persistence;
 using NUnit.Framework;
 using SamsHelper.Persistence;
@@ -16,7 +17,6 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public CharacterAttribute(AttributeType attributeType, float value, float min = 0, float max = float.MaxValue) : base(value, min, max)
         {
             AttributeType = attributeType;
-            AddOnValueChange(Recalculate);
         }
 
         public void Save(XmlNode doc, PersistenceType saveType)
@@ -26,6 +26,12 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             SaveController.CreateNodeAndAppend("MultiplicativeModifier", doc, _multMod);
         }
 
+        public override void SetCurrentValue(float value)
+        {
+            base.SetCurrentValue(value);
+            Recalculate();
+        }
+        
         public override float CurrentValue()
         {
             return _calculatedValue;
@@ -36,7 +42,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             return base.CurrentValue();
         }
 
-        private void Recalculate(Number n = null)
+        private void Recalculate()
         {
             _calculatedValue = (OriginalValue() + _addMod) * _multMod;
             Assert.IsTrue(_multMod >= 0);

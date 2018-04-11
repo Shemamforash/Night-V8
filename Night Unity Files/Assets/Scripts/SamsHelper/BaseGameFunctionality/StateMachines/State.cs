@@ -27,13 +27,6 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         {
         }
 
-        private event Action OnExit;
-
-        public void AddOnExit(Action exitCallback)
-        {
-            OnExit += exitCallback;
-        }
-
         public virtual void Enter()
         {
             _stateMachine.GetCurrentState()?.Exit();
@@ -47,7 +40,6 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 
         public virtual void Exit()
         {
-            OnExit?.Invoke();
         }
     }
 }

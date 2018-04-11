@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,28 +7,20 @@ namespace Facilitating.UIControllers
 {
     public class UIAttributeMarkerController : MonoBehaviour
     {
-        private readonly List<GameObject> _attributeMarkers = new List<GameObject>();
-        public bool FillFromLeft;
+        private Image _active, _inactive;
 
-        public void SetValue(int currentValue, int max)
+        public void Awake()
         {
-            _attributeMarkers.ForEach(Destroy);
-            if (FillFromLeft)
-            {
-                for (int i = 0; i < max; ++i) CreateMarker(i, currentValue);
-
-                return;
-            }
-
-            for (int i = max - 1; i >= 0; --i) CreateMarker(i, currentValue);
+            _active = Helper.FindChildWithName<Image>(gameObject, "Active");
+            _inactive = Helper.FindChildWithName<Image>(gameObject, "Inactive");
         }
-
-        private void CreateMarker(int i, int currentValue)
+        
+        public void SetValue(CharacterAttribute attribute)
         {
-            GameObject newMarker = Helper.InstantiateUiObject("Prefabs/AttributeMarkerPrefab", transform);
-            Image markerImage = newMarker.GetComponent<Image>();
-            markerImage.color = i < currentValue ? Color.white : UiAppearanceController.FadedColour;
-            _attributeMarkers.Add(newMarker);
+            int currentValue = (int) attribute.CurrentValue();
+            int max = (int) attribute.Max;
+            _inactive.fillAmount = max / 10f;
+            _active.fillAmount = currentValue / 10f;
         }
     }
 }

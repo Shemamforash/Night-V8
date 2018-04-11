@@ -17,7 +17,7 @@ namespace Game.Characters
     public class CharacterView : MonoBehaviour
     {
         private Player _player;
-        private MenuList _actionMenuList;
+        private Transform _actionList;
         private TextMeshProUGUI _currentActionText;
         private TextMeshProUGUI _detailedCurrentActionText;
         private GameObject _detailedView;
@@ -25,6 +25,10 @@ namespace Game.Characters
         public UIPlayerAccessoryController AccessoryController;
         public UIPlayerArmourController ArmourController;
         public UIPlayerWeaponController WeaponController;
+        private UIAttributeController _attributeControllerSimple;
+        private UIAttributeController _attributeControllerDetailed;
+        private UIConditionController _thirstControllerSimple, _hungerControllerSimple;
+        private UIConditionController _thirstControllerDetailed, _hungerControllerDetailed;
 
         public void SetPlayer(Player player)
         {
@@ -39,12 +43,23 @@ namespace Game.Characters
 
         private void BindUi()
         {
-            FindInSimpleView<UIAttributeController>("Attributes").HookValues(_player.Attributes);
-            FindInDetailedView<UIAttributeController>("Attributes").HookValues(_player.Attributes);
-            FindInDetailedView<UIConditionController>("Thirst").HookDehydration(_player.Attributes);
-            FindInDetailedView<UIConditionController>("Hunger").HookStarvation(_player.Attributes);
-            FindInSimpleView<UIConditionController>("Thirst").HookDehydration(_player.Attributes);
-            FindInSimpleView<UIConditionController>("Hunger").HookStarvation(_player.Attributes);
+            _attributeControllerSimple = FindInSimpleView<UIAttributeController>("Attributes");
+            _attributeControllerDetailed = FindInDetailedView<UIAttributeController>("Attributes");
+
+            _thirstControllerDetailed = FindInDetailedView<UIConditionController>("Thirst");
+            _hungerControllerDetailed = FindInDetailedView<UIConditionController>("Hunger");
+            _thirstControllerSimple = FindInSimpleView<UIConditionController>("Thirst");
+            _hungerControllerSimple = FindInSimpleView<UIConditionController>("Hunger");
+        }
+
+        public void Update()
+        {
+            _attributeControllerSimple.UpdateAttributes(_player);
+            _attributeControllerDetailed.UpdateAttributes(_player);
+            _thirstControllerDetailed.UpdateDehydration(_player);
+            _hungerControllerDetailed.UpdateHunger(_player);
+            _thirstControllerSimple.UpdateDehydration(_player);
+            _hungerControllerSimple.UpdateHunger(_player);
         }
 
         private void CacheSimpleViewElements()
@@ -61,8 +76,7 @@ namespace Game.Characters
             _detailedView.SetActive(true);
             _detailedView.SetActive(false);
 
-            _actionMenuList = FindInDetailedView<MenuList>("Action List");
-
+            _actionList = FindInDetailedView<Transform>("Action List");
             _detailedCurrentActionText = FindInDetailedView<TextMeshProUGUI>("CurrentAction");
 
             FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _player.Name;
@@ -79,18 +93,30 @@ namespace Game.Characters
         private void FillActionList()
         {
             List<BaseCharacterAction> availableActions = _player.StatesAsList(false).ToList();
-            _actionMenuList.SetItems(new List<MyGameObject>(availableActions), false);
-            List<ViewParent> actionUiList = _actionMenuList.Items;
+            Helper.FindAllChildren(_actionList).ForEach(Destroy);
+            List<ViewParent> actionUiList = new List<ViewParent>();
+            availableActions.ForEach(a =>
+            {
+                ViewParent actionUi = a.CreateUi(_actionList);
+                actionUiList.Add(actionUi);
+            });
 
             for (int i = 0; i < actionUiList.Count; ++i)
             {
                 ViewParent actionUi = actionUiList[i];
 
                 Helper.SetNavigation(actionUi.PrimaryButton, WeaponController.EnhancedButton, Direction.Left);
-                if (i != 0) continue;
-                Helper.SetNavigation(WeaponController.EnhancedButton, actionUi.PrimaryButton, Direction.Right);
-                Helper.SetNavigation(ArmourController.EnhancedButton.Button(), actionUi.PrimaryButton, Direction.Right);
-                Helper.SetNavigation(AccessoryController.EnhancedButton.Button(), actionUi.PrimaryButton, Direction.Right);
+                if (i > 0)
+                {
+                    Helper.SetNavigation(actionUi.PrimaryButton, actionUiList[i - 1].PrimaryButton, Direction.Up);
+                    Helper.SetNavigation(actionUiList[i - 1].PrimaryButton, actionUi.PrimaryButton, Direction.Down);
+                }
+                else
+                {
+                    Helper.SetNavigation(WeaponController.EnhancedButton, actionUi.PrimaryButton, Direction.Right);
+                    Helper.SetNavigation(ArmourController.EnhancedButton.Button(), actionUi.PrimaryButton, Direction.Right);
+                    Helper.SetNavigation(AccessoryController.EnhancedButton.Button(), actionUi.PrimaryButton, Direction.Right);
+                }
             }
         }
 
@@ -107,7 +133,7 @@ namespace Game.Characters
                 WorldView.GetInventoryButton().SetOnDownAction(() =>
                 {
                     CharacterManager.SelectCharacter(_player);
-                    if(_actionListActive) GetFirstActionButton().Button().Select();
+                    if (_actionListActive) GetFirstActionButton().Button().Select();
                     else WeaponController.EnhancedButton.Button().Select();
                 });
                 GetFirstActionButton().SetOnUpAction(() =>
@@ -127,14 +153,14 @@ namespace Game.Characters
                 {
                     CharacterManager.ExitCharacter(_previousCharacterView._player);
                     CharacterManager.SelectCharacter(_player);
-                    if(_actionListActive) GetFirstActionButton().Button().Select();
+                    if (_actionListActive) GetFirstActionButton().Button().Select();
                     else WeaponController.EnhancedButton.Button().Select();
                 });
                 GetFirstActionButton().SetOnUpAction(() =>
                 {
                     CharacterManager.ExitCharacter(_player);
                     CharacterManager.SelectCharacter(_previousCharacterView._player);
-                    if(_previousCharacterView._actionListActive) _previousCharacterView.GetLastActionButton().Button().Select();
+                    if (_previousCharacterView._actionListActive) _previousCharacterView.GetLastActionButton().Button().Select();
                     else _previousCharacterView.ArmourController.EnhancedButton.Button().Select();
                 });
                 WeaponController.EnhancedButton.SetOnUpAction(() =>
@@ -154,12 +180,12 @@ namespace Game.Characters
 
         private EnhancedButton GetLastActionButton()
         {
-            return _actionMenuList.Items[_actionMenuList.Items.Count - 1].PrimaryButton;
+            return _actionList.GetChild(_actionList.childCount - 1).GetComponent<EnhancedButton>();
         }
 
         private EnhancedButton GetFirstActionButton()
         {
-            return _actionMenuList.Items[0].PrimaryButton;
+            return _actionList.GetChild(0).GetComponent<EnhancedButton>();
         }
 
         public void UpdateCurrentActionText(string currentActionString)
@@ -179,12 +205,12 @@ namespace Game.Characters
         }
 
         private bool _actionListActive = true;
-        
+
         private void SetActionListActive(bool active)
         {
             RefreshNavigation();
             _actionListActive = active;
-            _actionMenuList.InventoryContent.gameObject.SetActive(active);
+            _actionList.gameObject.SetActive(active);
             _detailedCurrentActionText.gameObject.SetActive(!active);
         }
 
@@ -203,7 +229,7 @@ namespace Game.Characters
             GetComponent<LayoutElement>().preferredHeight = 200;
             _detailedView.SetActive(true);
             SimpleView.SetActive(false);
-            _actionMenuList.Items[0].Select();
+            _actionList.GetChild(0).GetComponent<EnhancedButton>().Button().Select();
         }
 
         public void SwitchToSimpleView()

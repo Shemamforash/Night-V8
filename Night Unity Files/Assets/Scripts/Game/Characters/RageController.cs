@@ -20,7 +20,6 @@ namespace Game.Characters
             _reloadModifier.SetMultiplicative(0.5f);
             _fireRateModifier.SetMultiplicative(2f);
             _rageLevel.OnMin(End);
-            _rageLevel.AddOnValueChange(a => RageBarController.SetRageBarFill(a.Normalised(), _activated));
         }
 
         public void EnterCombat()
@@ -36,6 +35,7 @@ namespace Game.Characters
         public void UpdateCombat()
         {
             if (_activated) _rageLevel.Decrement(0.1f * Time.deltaTime);
+            RageBarController.SetRageBarFill(_rageLevel.Normalised(), _activated);
         }
 
         public float CurrentValue()
@@ -46,6 +46,7 @@ namespace Game.Characters
         public void Increase(float damage)
         {
             if (!_activated) _rageLevel.Increment(0.02f * damage);
+            RageBarController.SetRageBarFill(_rageLevel.Normalised(), _activated);
         }
 
         public bool Active()

@@ -133,17 +133,17 @@ namespace Game.Combat.Player
             }
         }
 
-        public void Initialise(Characters.Player player)
+        public void Initialise()
         {
-            ArmourController = player.ArmourController;
 
             _pivot = Helper.FindChildWithName<Transform>(gameObject, "Pivot");
             InputHandler.SetCurrentListener(this);
 
-            Player = player;
+            Player = CharacterManager.SelectedCharacter;
+            ArmourController = Player.ArmourController;
             _damageModifier = Player.CalculateDamageModifier();
             _skillCooldownModifier = Player.CalculateSkillCooldownModifier();
-            _initialArmour = player.ArmourController.GetProtectionLevel();
+            _initialArmour = Player.ArmourController.GetProtectionLevel();
 
 //            _playerUi._playerName.text = player.Name;
             Speed = Player.CalculateSpeed();

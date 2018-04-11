@@ -1,8 +1,8 @@
 <Game>
   <Inventory>
     <Name>Vehicle</Name>
-    <Water>1000</Water>
-    <Food>1000</Food>
+    <Water>998</Water>
+    <Food>998</Food>
     <Fuel>1000</Fuel>
     <Scrap>1000</Scrap>
     <PistolMag>10</PistolMag>
@@ -12,7 +12,7 @@
     <LmgMag>10</LmgMag>
   </Inventory>
   <Character>
-    <Id>679</Id>
+    <Id>16</Id>
     <Name>The Driver</Name>
     <ExtendedName>
     </ExtendedName>
@@ -21,8 +21,8 @@
     <Type>Character</Type>
   </Character>
   <Character>
-    <Id>690</Id>
-    <Name>The Deserter</Name>
+    <Id>33</Id>
+    <Name>The Beast</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>0</Weight>
@@ -30,8 +30,8 @@
     <Type>Character</Type>
   </Character>
   <Gear>
-    <Id>715</Id>
-    <Name>Shining Deepdriver</Name>
+    <Id>1676</Id>
+    <Name>Shining Leadspreader</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>10</Weight>
@@ -39,7 +39,7 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>716</Id>
+    <Id>1677</Id>
     <Name>Empty Flask</Name>
     <ExtendedName>
     </ExtendedName>
@@ -48,8 +48,8 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>717</Id>
-    <Name>Might</Name>
+    <Id>1678</Id>
+    <Name>Ashes</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>0.25</Weight>
@@ -57,7 +57,7 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>718</Id>
+    <Id>1679</Id>
     <Name>Shining Plate</Name>
     <ExtendedName>
     </ExtendedName>
@@ -66,8 +66,8 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>719</Id>
-    <Name>Shining Groundrider</Name>
+    <Id>1680</Id>
+    <Name>Shining Shortshooter</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>10</Weight>
@@ -75,8 +75,8 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>720</Id>
-    <Name>1</Name>
+    <Id>1681</Id>
+    <Name>Empty Flask</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>2</Weight>
@@ -84,8 +84,8 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>721</Id>
-    <Name>Cinders</Name>
+    <Id>1682</Id>
+    <Name>Light</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>0.25</Weight>
@@ -93,7 +93,7 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>722</Id>
+    <Id>1683</Id>
     <Name>Shining Plate</Name>
     <ExtendedName>
     </ExtendedName>
@@ -102,8 +102,8 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>723</Id>
-    <Name>Shining Voidwalker</Name>
+    <Id>1684</Id>
+    <Name>Shining Annihilator</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>10</Weight>
@@ -111,8 +111,8 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>724</Id>
-    <Name>Obscuring Aura</Name>
+    <Id>1685</Id>
+    <Name>Empty Flask</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>2</Weight>
@@ -120,8 +120,8 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>725</Id>
-    <Name>Piercing</Name>
+    <Id>1686</Id>
+    <Name>Focus</Name>
     <ExtendedName>
     </ExtendedName>
     <Weight>0.25</Weight>
@@ -129,7 +129,145 @@
     <Type>Gear</Type>
   </Gear>
   <Gear>
-    <Id>726</Id>
+    <Id>1687</Id>
+    <Name>Shining Plate</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>3</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Inventory>
+    <Name>Vehicle</Name>
+    <Water>998</Water>
+    <Food>998</Food>
+    <Fuel>1000</Fuel>
+    <Scrap>1000</Scrap>
+    <PistolMag>10</PistolMag>
+    <RifleMag>10</RifleMag>
+    <ShotgunMag>10</ShotgunMag>
+    <SmgMag>10</SmgMag>
+    <LmgMag>10</LmgMag>
+  </Inventory>
+  <Character>
+    <Id>16</Id>
+    <Name>The Driver</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>0</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Character</Type>
+  </Character>
+  <Character>
+    <Id>33</Id>
+    <Name>The Beast</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>0</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Character</Type>
+  </Character>
+  <Gear>
+    <Id>1676</Id>
+    <Name>Shining Leadspreader</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>10</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>1677</Id>
+    <Name>Empty Flask</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>2</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>1678</Id>
+    <Name>Ashes</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>0.25</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>1679</Id>
+    <Name>Shining Plate</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>3</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>1680</Id>
+    <Name>Shining Shortshooter</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>10</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>1681</Id>
+    <Name>Empty Flask</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>2</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>1682</Id>
+    <Name>Light</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>0.25</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>1683</Id>
+    <Name>Shining Plate</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>3</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>1684</Id>
+    <Name>Shining Annihilator</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>10</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>1685</Id>
+    <Name>Empty Flask</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>2</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>1686</Id>
+    <Name>Focus</Name>
+    <ExtendedName>
+    </ExtendedName>
+    <Weight>0.25</Weight>
+    <ParentInventory>0</ParentInventory>
+    <Type>Gear</Type>
+  </Gear>
+  <Gear>
+    <Id>1687</Id>
     <Name>Shining Plate</Name>
     <ExtendedName>
     </ExtendedName>

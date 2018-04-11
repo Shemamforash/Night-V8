@@ -25,7 +25,7 @@ namespace Game.Combat.Misc
             int numberOfStones = Random.Range(6, 10);
             while (numberOfStones > 0)
             {
-                stones.Add(AreaGenerator.GeneratePoly(StoneWidth));
+                stones.Add(AreaGenerator.Instance().GeneratePoly(StoneWidth));
                 --numberOfStones;
             }
 

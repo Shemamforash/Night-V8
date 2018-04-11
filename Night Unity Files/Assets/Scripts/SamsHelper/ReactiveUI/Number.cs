@@ -7,7 +7,6 @@ namespace SamsHelper.ReactiveUI
 {
     public class Number
     {
-        protected event Action<Number> OnValueChange;
         private float _currentValue;
         private float _max;
         private float _min;
@@ -19,7 +18,6 @@ namespace SamsHelper.ReactiveUI
             _currentValue = initialValue;
             _min = min;
             _max = max;
-            BroadcastChange();
         }
 
         public float Max
@@ -40,27 +38,6 @@ namespace SamsHelper.ReactiveUI
                 _min = value;
                 SetCurrentValue(_currentValue < _min ? _min : _currentValue);
             }
-        }
-
-        public void AddOnValueChange(Action<Number> a)
-        {
-            a(this);
-            OnValueChange += a;
-        }
-
-        public void UpdateValueChange()
-        {
-            OnValueChange?.Invoke(this);
-        }
-        
-        public void ClearOnValueChange()
-        {
-            OnValueChange = null;
-        }
-
-        private void BroadcastChange()
-        {
-            OnValueChange?.Invoke(this);
         }
 
         public virtual float CurrentValue()
@@ -108,7 +85,7 @@ namespace SamsHelper.ReactiveUI
             SetCurrentValue(_currentValue - amount);
         }
 
-        public void SetCurrentValue(float value)
+        public virtual void SetCurrentValue(float value)
         {
             if (value >= _max)
             {
@@ -124,8 +101,6 @@ namespace SamsHelper.ReactiveUI
             {
                 _currentValue = value;
             }
-
-            BroadcastChange();
         }
 
         //OPERATORS
@@ -177,11 +152,6 @@ namespace SamsHelper.ReactiveUI
         public static float operator *(Number a, float b)
         {
             return a._currentValue + b;
-        }
-
-        public override int GetHashCode()
-        {
-            return _currentValue.GetHashCode();
         }
     }
 }

@@ -126,6 +126,7 @@ namespace Game.Gear.Weapons
         public void IncreaseDurability()
         {
             WeaponAttributes.Durability.Increment();
+            WeaponAttributes.RecalculateAttributeValues();
             WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Decrement(GetUpgradeCost());
             SetName();
         }
@@ -139,6 +140,7 @@ namespace Game.Gear.Weapons
         public void DecreaseDurability()
         {
             WeaponAttributes.Durability.Decrement();
+            WeaponAttributes.RecalculateAttributeValues();
         }
 
         public string GetWeaponType()

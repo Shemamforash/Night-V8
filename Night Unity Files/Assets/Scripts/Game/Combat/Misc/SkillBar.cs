@@ -38,6 +38,7 @@ namespace Game.Combat.Misc
         {
             BindSkill(0, player.CharacterSkillOne);
             BindSkill(1, player.CharacterSkillTwo);
+            if (player.Weapon == null) return;
             BindSkill(2, player.Weapon.WeaponSkillOne);
             BindSkill(3, player.Weapon.WeaponSkillTwo);
         }

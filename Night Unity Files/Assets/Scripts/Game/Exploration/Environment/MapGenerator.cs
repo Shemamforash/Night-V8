@@ -51,7 +51,6 @@ namespace Game.Exploration.Environment
                 if (i == 0)
                 {
                     initialNode = MapNode.CreateNode(point, null);
-                    initialNode.Name = "Initial Node";
                     storedNodes.Add(initialNode);
                 }
                 else
@@ -148,7 +147,6 @@ namespace Game.Exploration.Environment
         private static void CreateNewNode(Vector2Int point, Region.Region region)
         {
             MapNode newMapNode = MapNode.CreateNode(point, region);
-            newMapNode.Name = "Node " + _currentSamples;
             storedNodes.Add(newMapNode);
             --_currentSamples;
         }

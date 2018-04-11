@@ -14,18 +14,18 @@ namespace Game.Combat.Generation
         public const int GridWidth = GameWorldWidth * CellResolution;
 
 
-        public static Cell[,] Grid;
-        private static readonly List<Node<Cell>> _gridNodes = new List<Node<Cell>>();
+        public Cell[,] Grid;
+        private readonly List<Node<Cell>> _gridNodes = new List<Node<Cell>>();
         private static PathingGrid _instance;
 
-        private static List<AreaGenerator.Shape> _shapes;
-        private static ContactFilter2D cf;
+        private List<AreaGenerator.Shape> _shapes;
+        private ContactFilter2D cf;
 
-        private static readonly Collider2D[] colliders = new Collider2D[5000];
-        private static Vector2 _lastPlayerPosition;
-        private static readonly HashSet<Cell> _hiddenCells = new HashSet<Cell>(new CellComparer());
+        private readonly Collider2D[] colliders = new Collider2D[5000];
+        private Vector2 _lastPlayerPosition;
+        private readonly HashSet<Cell> _hiddenCells = new HashSet<Cell>(new CellComparer());
 
-        private static readonly List<Cell> _cellsInRange = new List<Cell>();
+        private readonly List<Cell> _cellsInRange = new List<Cell>();
 
         public void Awake()
         {
@@ -34,7 +34,13 @@ namespace Game.Combat.Generation
 
         public static PathingGrid Instance()
         {
+            if (_instance == null) _instance = GameObject.Find("Grid").GetComponent<PathingGrid>();
             return _instance;
+        }
+
+        private void OnDestroy()
+        {
+            _instance = null;
         }
 
         public void GenerateGrid(List<AreaGenerator.Shape> barriers)
@@ -58,7 +64,7 @@ namespace Game.Combat.Generation
             _gridNodes.ForEach(n => n.Content.SetNeighbors());
         }
 
-        public static Cell PositionToCell(Vector2 position)
+        public Cell PositionToCell(Vector2 position)
         {
             position.x += CellWidth / 2f;
             position.y += CellWidth / 2f;
@@ -78,7 +84,7 @@ namespace Game.Combat.Generation
             }
         }
 
-        public static bool IsLineObstructed(Vector3 start, Vector3 end, bool includeReachable = false)
+        public bool IsLineObstructed(Vector3 start, Vector3 end, bool includeReachable = false)
         {
             Vector3 direction = (end - start).normalized;
             float distance = Vector2.Distance(start, end);
@@ -93,7 +99,7 @@ namespace Game.Combat.Generation
             return false;
         }
 
-        public static Thread RouteToCell(Cell from, Cell to, Queue<Cell> path)
+        public Thread RouteToCell(Cell from, Cell to, Queue<Cell> path)
         {
             Thread thread = new Thread(() =>
             {
@@ -124,7 +130,7 @@ namespace Game.Combat.Generation
             return thread;
         }
 
-        private static List<Cell> CellsInRange(Cell origin, int maxRange, int minRange = 0)
+        private List<Cell> CellsInRange(Cell origin, int maxRange, int minRange = 0)
         {
             if (origin == null) Debug.Log("initial node was null");
             List<Cell> cellsInRange = new List<Cell>();
@@ -150,7 +156,7 @@ namespace Game.Combat.Generation
             return cellsInRange;
         }
 
-        public static Cell GetCellNearMe(Cell current, int distance)
+        public Cell GetCellNearMe(Cell current, int distance)
         {
             return Helper.RandomInList(CellsInRange(current, distance));
         }
@@ -164,7 +170,7 @@ namespace Game.Combat.Generation
             }
         }
 
-        public static Cell FindCellToAttackPlayer(Cell currentCell, int maxRange, int minRange = 0)
+        public Cell FindCellToAttackPlayer(Cell currentCell, int maxRange, int minRange = 0)
         {
             Cell playerCell = CombatManager.Player.CurrentCell();
             List<Cell> cellsNearPlayer = CellsInRange(playerCell, maxRange, minRange);
@@ -180,7 +186,7 @@ namespace Game.Combat.Generation
             return Helper.RandomInList(cellsNearTarget);
         }
 
-        private static Cell FindNearestCell(List<Cell> cells, bool shouldCellBeHidden, Cell currentCell)
+        private Cell FindNearestCell(List<Cell> cells, bool shouldCellBeHidden, Cell currentCell)
         {
             Cell nearestValidCell = null;
             int iteratorStart = 0;
@@ -217,18 +223,18 @@ namespace Game.Combat.Generation
             return nearestValidCell;
         }
 
-        public static Cell FindCoverNearMe(Cell currentCell)
+        public Cell FindCoverNearMe(Cell currentCell)
         {
             List<Cell> cellsNearby = CellsInRange(currentCell, 10);
             return FindNearestCell(cellsNearby, true, currentCell);
         }
 
-        public static int WorldToGridDistance(float distance)
+        public int WorldToGridDistance(float distance)
         {
             return Mathf.FloorToInt(distance * CellResolution);
         }
 
-        public static bool IsCellHidden(Cell c)
+        public bool IsCellHidden(Cell c)
         {
             Vector2 currentPlayerPosition = CombatManager.Player.transform.position;
             if (_lastPlayerPosition != currentPlayerPosition) _hiddenCells.Clear();
