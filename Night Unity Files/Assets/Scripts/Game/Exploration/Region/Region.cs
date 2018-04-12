@@ -12,8 +12,9 @@ using SamsHelper.Persistence;
 
 namespace Game.Exploration.Region
 {
-    public class Region : DesolationInventory
+    public class Region : IPersistenceTemplate
     {
+        public readonly string Name;
         private static List<EnemyTemplate> _enemyTypes = EnemyTemplate.GetEnemyTypes();
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private readonly RegionTemplate _template;
@@ -21,14 +22,22 @@ namespace Game.Exploration.Region
         public List<Barrier> Barriers = new List<Barrier>();
         public List<EnemyCampfire> Fires = new List<EnemyCampfire>();
 
-        public override XmlNode Save(XmlNode doc, PersistenceType type)
+        public void Load(XmlNode doc, PersistenceType saveType)
         {
-            XmlNode regionNode = base.Save(doc, type);
+        }
+
+        public XmlNode Save(XmlNode doc, PersistenceType type)
+        {
+            if (type != PersistenceType.Game) return doc;
+            XmlNode regionNode = SaveController.CreateNodeAndAppend("Region", doc);
+            SaveController.CreateNodeAndAppend("Name", regionNode, Name);
             SaveController.CreateNodeAndAppend("Discovered", regionNode, _discovered);
             XmlNode enemyNode = SaveController.CreateNodeAndAppend("Enemies", regionNode);
             _enemies.ForEach(e => e.Save(enemyNode, type));
-            Barriers.ForEach(b => b.Save(enemyNode, type));
-            Fires.ForEach(f => f.Save(enemyNode, type));
+//            XmlNode barrierNode = SaveController.CreateNodeAndAppend("Barriers", regionNode);
+//            Barriers.ForEach(b => b.Save(barrierNode, type));
+//            XmlNode fireNode = SaveController.CreateNodeAndAppend("Fires", regionNode);
+//            Fires.ForEach(f => f.Save(fireNode, type));
             return regionNode;
         }
         
@@ -89,8 +98,9 @@ namespace Game.Exploration.Region
             return _enemies;
         }
 
-        public Region(string name, RegionTemplate template) : base(name)
+        public Region(string name, RegionTemplate template)
         {
+            Name = name;
             _template = template;
             SetInitialResourceValues(InventoryResourceType.Water, _template.WaterAvailable);
             SetInitialResourceValues(InventoryResourceType.Food, _template.FoodAvailable);
@@ -103,10 +113,10 @@ namespace Game.Exploration.Region
 
         private void SetInitialResourceValues(InventoryResourceType resourceType, float resourceRating)
         {
-            InventoryResource resource = GetResource(resourceType);
-            float initialQuantity = resourceRating * 10;
-            resource.SetMax(initialQuantity);
-            IncrementResource(resourceType, initialQuantity);
+//            InventoryResource resource = GetResource(resourceType);
+//            float initialQuantity = resourceRating * 10;
+//            resource.SetMax(initialQuantity);
+//            IncrementResource(resourceType, initialQuantity);
         }
 
         public void Enter()
@@ -127,10 +137,10 @@ namespace Game.Exploration.Region
         public string Description()
         {
             string description = "";
-            description += "Water: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Water).Quantity());
-            description += "\nFood: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Food).Quantity());
-            description += "\nFuel: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Fuel).Quantity());
-            description += "\nScrap: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Scrap).Quantity());
+//            description += "Water: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Water).Quantity());
+//            description += "\nFood: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Food).Quantity());
+//            description += "\nFuel: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Fuel).Quantity());
+//            description += "\nScrap: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Scrap).Quantity());
 //            description += "\nAmmo: " + GetAmountRemainingDescripter(GetResource(InventoryResourceType.Ammo).Quantity());
             description += "\nEncounters: " + _template.Encounters;
             description += "\nPossible items: " + _template.Items;
@@ -139,12 +149,12 @@ namespace Game.Exploration.Region
 
         public void AddWater(int ratingPoints)
         {
-            IncrementResource(InventoryResourceType.Water, 10 * ratingPoints);
+//            IncrementResource(InventoryResourceType.Water, 10 * ratingPoints);
         }
 
         public void AddFood(int ratingPoints)
         {
-            IncrementResource(InventoryResourceType.Food, 10 * ratingPoints);
+//            IncrementResource(InventoryResourceType.Food, 10 * ratingPoints);
         }
 
         private static string GetAmountRemainingDescripter(float amount)

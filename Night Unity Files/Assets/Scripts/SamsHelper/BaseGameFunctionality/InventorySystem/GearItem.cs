@@ -20,11 +20,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _gearType = gearSubtype;
         }
 
-        public virtual void Load(XmlNode doc, PersistenceType saveType)
+        public override void Load(XmlNode doc, PersistenceType saveType)
         {
         }
 
-        public virtual XmlNode Save(XmlNode root, PersistenceType saveType)
+        public override XmlNode Save(XmlNode root, PersistenceType saveType)
         {
             root = base.Save(root, saveType);
             SaveController.CreateNodeAndAppend("GearType", root, _gearType);

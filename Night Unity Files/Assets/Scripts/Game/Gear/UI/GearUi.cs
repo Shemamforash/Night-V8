@@ -27,7 +27,7 @@ namespace Game.Gear.UI
         {
             GearItem gear = (GearItem) linkedObject;
             SetLeftTextCallback(gear.GetGearType().ToString);
-            SetCentralTextCallback(linkedObject.ExtendedName);
+            SetCentralTextCallback(() => linkedObject.Name);
             SetRightTextCallback(() => linkedObject.Weight + "kg");
 //            PrimaryButton.AddOnSelectEvent(() => DetailedSection.SetActive(true));
 //            PrimaryButton.AddOnDeselectEvent(() => DetailedSection.SetActive(false));

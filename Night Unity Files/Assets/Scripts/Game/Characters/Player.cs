@@ -107,8 +107,7 @@ namespace Game.Characters
 
         public override XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
-            base.Save(doc, saveType);
-            SaveController.CreateNodeAndAppend("Class", doc, Name);
+            doc = base.Save(doc, saveType);
             Attributes.Save(doc, saveType);
             return doc;
         }

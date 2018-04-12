@@ -20,7 +20,6 @@ namespace Game.Exploration.Region
 
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
-            Debug.Log("Saved");
             if (saveType != PersistenceType.Game) return null;
             XmlNode regionNode = SaveController.CreateNodeAndAppend("Regions", doc);
             foreach (Region region in _regions) region.Save(regionNode, saveType);

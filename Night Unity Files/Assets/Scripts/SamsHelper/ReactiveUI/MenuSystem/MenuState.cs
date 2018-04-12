@@ -23,7 +23,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         public override void Enter()
         {
             base.Enter();
-            _menu.gameObject.SetActive(true);
+            _menu.Enter();
             if (_menu.PauseOnOpen) WorldState.Pause();
             if (_menu.PreserveLastSelected && _lastSelectedItem != null)
             {
@@ -40,9 +40,8 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         {
             _lastSelectedItem = EventSystem.current?.currentSelectedGameObject?.GetComponent<Selectable>();
             if (_menu.PauseOnOpen) WorldState.UnPause();
-
             if (_menu == null) return;
-            _menu.gameObject.SetActive(false);
+            _menu.Exit();
         }
     }
 }

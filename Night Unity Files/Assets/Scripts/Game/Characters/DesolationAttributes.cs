@@ -5,13 +5,14 @@ using Game.Exploration.Environment;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Input;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
 namespace Game.Characters
 {
-    public class DesolationAttributes : AttributeContainer
+    public class DesolationAttributes : AttributeContainer, IPersistenceTemplate
     {
         private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
@@ -87,9 +88,9 @@ namespace Game.Characters
             bool consumed = _player.ConsumeResource(targetResource, amountToConsume);
             if (consumed) tolerance.Decrement();
             else tolerance.Increment();
-            if(tolerance.ReachedMax()) _player.Kill();
+            if (tolerance.ReachedMax()) _player.Kill();
         }
-        
+
         public void UpdateThirstAndHunger()
         {
             Thirst.Max = (int) (-0.2f * EnvironmentManager.GetTemperature() + 16f);
@@ -119,7 +120,7 @@ namespace Game.Characters
             return GetAttributeStatus(Dehydration, _dehydrationLevels);
         }
 
-        public override void Load(XmlNode doc, PersistenceType saveType)
+        public void Load(XmlNode doc, PersistenceType saveType)
         {
             LoadAttribute(doc, nameof(Strength), Strength);
             LoadAttribute(doc, nameof(Endurance), Endurance);
@@ -132,7 +133,7 @@ namespace Game.Characters
             LoadAttribute(doc, nameof(Thirst), Thirst);
         }
 
-        public override XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             SaveAttribute(doc, nameof(Strength), Strength);
             SaveAttribute(doc, nameof(Endurance), Endurance);
@@ -157,9 +158,7 @@ namespace Game.Characters
 
         private void SaveAttribute(XmlNode root, string attributeName, CharacterAttribute characterAttribute)
         {
-            XmlNode attributeNode = SaveController.CreateNodeAndAppend(attributeName, root);
-            SaveController.CreateNodeAndAppend("Val", attributeNode, characterAttribute.Max);
-            SaveController.CreateNodeAndAppend("Max", attributeNode, characterAttribute.CurrentValue());
+            SaveController.CreateNodeAndAppend(attributeName, root, characterAttribute.CurrentValue() + "/" + characterAttribute.Max);
         }
     }
 }

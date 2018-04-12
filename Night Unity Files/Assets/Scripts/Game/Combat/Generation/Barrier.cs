@@ -5,6 +5,7 @@ using Facilitating.Persistence;
 using NUnit.Framework;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
+using UnityEditor;
 using UnityEngine;
 
 namespace Game.Combat.Generation
@@ -27,6 +28,7 @@ namespace Game.Combat.Generation
 
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
+            XmlNode barrierNode = SaveController.CreateNodeAndAppend("Barrier", doc);
             string vertexString = "";
             for (int i = 0; i < Vertices.Length; ++i)
             {
@@ -34,11 +36,11 @@ namespace Game.Combat.Generation
                 if (i == Vertices.Length - 1) break;
                 vertexString += ",";
             }
-            SaveController.CreateNodeAndAppend("Name", doc, _barrierName);
-            SaveController.CreateNodeAndAppend("Rotation", doc, _rotation);
-            SaveController.CreateNodeAndAppend("Position", doc, Helper.VectorToString(Position));
-            SaveController.CreateNodeAndAppend("Vertices", doc, vertexString);
-            return doc;
+            SaveController.CreateNodeAndAppend("Name", barrierNode, _barrierName);
+            SaveController.CreateNodeAndAppend("Rotation", barrierNode, _rotation);
+            SaveController.CreateNodeAndAppend("Position", barrierNode, Helper.VectorToString(Position));
+            SaveController.CreateNodeAndAppend("Vertices", barrierNode, vertexString);
+            return barrierNode;
         }
         
         public Barrier(Vector3[] vertices, string barrierName, Vector2 position)

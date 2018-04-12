@@ -37,23 +37,12 @@ namespace Game.Gear.Weapons
             Durability = new Number(durability, 0, MaxDurability);
         }
 
-        public override XmlNode Save(XmlNode root, PersistenceType saveType)
+        public XmlNode Save(XmlNode root, PersistenceType saveType)
         {
-            root = base.Save(root, saveType);
-            SaveController.CreateNodeAndAppend("FireRate", root, FireRate);
-            SaveController.CreateNodeAndAppend("ReloadSpeed", root, ReloadSpeed);
-            SaveController.CreateNodeAndAppend("Damage", root, Damage);
-            SaveController.CreateNodeAndAppend("Range", root, Range);
-            SaveController.CreateNodeAndAppend("Accuracy", root, Accuracy);
-            SaveController.CreateNodeAndAppend("Handling", root, Capacity);
-            SaveController.CreateNodeAndAppend("Capacity", root, Capacity);
-            SaveController.CreateNodeAndAppend("Pellets", root, Pellets);
-            SaveController.CreateNodeAndAppend("Durability", root, Durability.CurrentValue());
-            SaveController.CreateNodeAndAppend("Automatic", root, Automatic);
-            SaveController.CreateNodeAndAppend("WeaponClassDescription", root, WeaponClassDescription);
-            SaveController.CreateNodeAndAppend("ModifierName", root, ModifierName);
-            SaveController.CreateNodeAndAppend("ModifierDescription", root, ModifierDescription);
             SaveController.CreateNodeAndAppend("WeaponType", root, WeaponType);
+            SaveController.CreateNodeAndAppend("Class", root, WeaponClassName);
+            SaveController.CreateNodeAndAppend("Durability", root, Durability.CurrentValue());
+            SaveController.CreateNodeAndAppend("Quality", root, _weapon.Quality());
             return root;
         }
 

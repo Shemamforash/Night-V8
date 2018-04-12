@@ -36,8 +36,9 @@ namespace Game.Global
             _weatherText.text = text;
         }
         
-        public void Awake()
+        public override void Awake()
         {
+            base.Awake();
             PauseOnOpen = false;
             _weatherText = GameObject.Find("Weather").GetComponent<TextMeshProUGUI>();
             _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();

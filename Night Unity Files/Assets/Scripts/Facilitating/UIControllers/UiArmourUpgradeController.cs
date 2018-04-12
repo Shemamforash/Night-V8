@@ -66,7 +66,7 @@ namespace Facilitating.UIControllers
         {
             ArmourPlate plate = item as ArmourPlate;
             gearUi.SetTypeText(plate.Weight + " Armour");
-            gearUi.SetNameText(plate.ExtendedName());
+            gearUi.SetNameText(plate.Name);
             gearUi.SetDpsText("");
         }
 
@@ -175,7 +175,7 @@ namespace Facilitating.UIControllers
                     return;
                 }
 
-                _nameText.Text(plate.ExtendedName());
+                _nameText.Text(plate.Name);
                 _currentArmourText.Text(plate.Weight + " Armour");
                 _armourDetailText.Text("TODO");
                 SetPlateInserted(plate);

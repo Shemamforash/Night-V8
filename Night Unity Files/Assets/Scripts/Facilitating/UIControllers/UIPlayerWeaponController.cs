@@ -33,7 +33,7 @@ namespace Facilitating.UIControllers
             {
                 _notEquippedObject.SetActive(false);
                 _equippedObject.SetActive(true);
-                _nameText.Text(weapon.ExtendedName());
+                _nameText.Text(weapon.Name);
                 _typeText.Text(weapon.GetWeaponType());
                 _dpsText.Text(Helper.Round(weapon.WeaponAttributes.DPS(), 1) + " DPS");
                 _qualityText.Text(weapon.Quality() + " " + weapon.WeaponAttributes.Durability.CurrentValue());

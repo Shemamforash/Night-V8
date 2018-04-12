@@ -51,6 +51,7 @@
           </e>
         </e>
         <e p="CombatShaderController.cs" t="Include" />
+        <e p="ContainerController.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Plugins" t="Include">
@@ -143,7 +144,6 @@
               <e p="CharacterView.cs" t="Include" />
               <e p="ConditionType.cs" t="Include" />
               <e p="DesolationAttributes.cs" t="Include" />
-              <e p="EquipmentController.cs" t="Include" />
               <e p="Player.cs" t="Include" />
               <e p="RageController.cs" t="Include" />
             </e>
@@ -382,6 +382,7 @@
             </e>
           </e>
         </e>
+        <e p="UiAreaInventoryController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

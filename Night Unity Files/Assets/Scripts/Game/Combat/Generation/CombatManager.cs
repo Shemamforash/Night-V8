@@ -4,7 +4,6 @@ using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Combat.Ui;
 using Game.Exploration.Region;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
@@ -52,8 +51,9 @@ namespace Game.Combat.Generation
             return Instance()._player;
         }
 
-        public void Awake()
+        public override void Awake()
         {
+            base.Awake();
             _instance = this;
             _player = GameObject.Find("Player").GetComponent<PlayerCombat>();
         }
@@ -132,7 +132,7 @@ namespace Game.Combat.Generation
             else
                 Instance().SelectClockwise();
         }
-
+        
         public static List<EnemyBehaviour> EnemiesOnScreen()
         {
             return Instance()._enemies.FindAll(e => e.OnScreen());

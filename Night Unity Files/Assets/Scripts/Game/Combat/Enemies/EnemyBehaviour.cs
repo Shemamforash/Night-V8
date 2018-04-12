@@ -9,6 +9,7 @@ using Game.Combat.Ui;
 using Game.Gear.Weapons;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -236,6 +237,7 @@ namespace Game.Combat.Enemies
         {
             base.Kill();
             for (int i = 0; i < Random.Range(0, 3); ++i) PickupController.Create(transform.position, CombatManager.Player().Weapon().WeaponAttributes.AmmoType);
+            ContainerController.CreateContainer(transform.position, Enemy.Inventory());
             CombatManager.Remove(this);
             Enemy.Kill();
             Destroy(gameObject);

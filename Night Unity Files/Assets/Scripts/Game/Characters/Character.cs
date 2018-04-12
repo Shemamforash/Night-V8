@@ -6,10 +6,9 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
-
 namespace Game.Characters
 {
-    public abstract class Character : MyGameObject, IPersistenceTemplate
+    public abstract class Character : MyGameObject
     {
         public readonly ArmourController ArmourController;
         protected readonly DesolationInventory CharacterInventory;
@@ -23,8 +22,9 @@ namespace Game.Characters
         }
 
 
-        public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public override XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
+            doc = base.Save(doc, saveType);
             SaveController.CreateNodeAndAppend("Name", doc, Name);
             Weapon?.Save(doc, saveType);
             ArmourController?.Save(doc, saveType);

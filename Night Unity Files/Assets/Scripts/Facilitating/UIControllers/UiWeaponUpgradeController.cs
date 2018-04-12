@@ -107,7 +107,7 @@ namespace Facilitating.UIControllers
         {
             WeaponAttributes attr = weapon.WeaponAttributes;
             _typeText.Text(weapon.GetWeaponType());
-            _nameText.Text(weapon.ExtendedName());
+            _nameText.Text(weapon.Name);
             _durabilityText.Text(attr.Durability.CurrentValue() + " Durability");
             _damageText.Text(Helper.Round(attr.Damage.CurrentValue(), 1) + " Dam");
             _fireRateText.Text(Helper.Round(attr.FireRate.CurrentValue(), 1) + " RoF");
@@ -193,7 +193,7 @@ namespace Facilitating.UIControllers
         {
             Weapon weapon = item as Weapon;
             gearUi.SetTypeText(weapon.GetWeaponType());
-            gearUi.SetNameText(weapon.ExtendedName());
+            gearUi.SetNameText(weapon.Name);
             gearUi.SetDpsText(Helper.Round(weapon.WeaponAttributes.DPS(), 1) + " DPS");
         }
     }

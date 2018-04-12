@@ -19,13 +19,6 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             AttributeType = attributeType;
         }
 
-        public void Save(XmlNode doc, PersistenceType saveType)
-        {
-            SaveController.CreateNodeAndAppend("AttributeType", doc, AttributeType);
-            SaveController.CreateNodeAndAppend("SummativeModifier", doc, _addMod);
-            SaveController.CreateNodeAndAppend("MultiplicativeModifier", doc, _multMod);
-        }
-
         public override void SetCurrentValue(float value)
         {
             base.SetCurrentValue(value);

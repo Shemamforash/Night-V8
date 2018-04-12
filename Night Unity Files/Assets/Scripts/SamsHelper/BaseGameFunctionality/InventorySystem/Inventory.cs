@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
+using Game.Characters;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
 using UnityEngine;
@@ -43,10 +45,14 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public virtual XmlNode Save(XmlNode root, PersistenceType saveType)
         {
             if (saveType != PersistenceType.Game) return null;
+            root = base.Save(root, saveType);
             XmlNode inventoryNode = SaveController.CreateNodeAndAppend("Inventory", root);
             SaveController.CreateNodeAndAppend("Name", inventoryNode, Name);
             InventoryResources().ForEach(r => SaveResource(r.GetResourceType(), inventoryNode));
-            Items().ForEach(i => i.Save(root, saveType));
+            Items().ForEach(i =>
+            {
+                i.Save(inventoryNode, saveType);
+            });
             return inventoryNode;
         }
 

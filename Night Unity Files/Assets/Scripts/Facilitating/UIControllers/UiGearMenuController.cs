@@ -64,8 +64,9 @@ namespace Facilitating.UIControllers
         {
         }
 
-        public void Awake()
+        public override void Awake()
         {
+            base.Awake();
             _instance = this;
             GameObject tabObject = Helper.FindChildWithName(gameObject, "Tabs");
             EnhancedButton weaponTab = Helper.FindChildWithName<EnhancedButton>(tabObject, "Weapons");

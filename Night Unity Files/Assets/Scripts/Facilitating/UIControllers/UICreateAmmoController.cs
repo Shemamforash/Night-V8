@@ -20,8 +20,9 @@ namespace Facilitating.UIControllers
         private EnhancedButton _pistolButton, _rifleButton, _shotgunButton, _smgButton, _lmgButton, _closeButton;
         private EnhancedText _scrapLeft;
 
-        public void Awake()
+        public override void Awake()
         {
+            base.Awake();
             _instance = this;
             _pistolButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Pistol Ammo");
             _rifleButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Rifle Ammo");

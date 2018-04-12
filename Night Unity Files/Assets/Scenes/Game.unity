@@ -5342,6 +5342,22 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 69204a4bb1ddf194eba35ffcdacef1f2, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &675494269 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1939382387699380, guid: 69204a4bb1ddf194eba35ffcdacef1f2,
+    type: 2}
+  m_PrefabInternal: {fileID: 675494268}
+--- !u!225 &675494270
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 675494269}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &692569393 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1613119569196936, guid: 69204a4bb1ddf194eba35ffcdacef1f2,
@@ -6362,6 +6378,17 @@ MonoBehaviour:
   DefaultSelectable: {fileID: 1694219938}
   PauseOnOpen: 1
   PreserveLastSelected: 1
+--- !u!225 &1001909861
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1001909859}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1010588610 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1042293995053672, guid: 77e68aa26a269e24099190a2eddca6b7,
@@ -8474,7 +8501,7 @@ Prefab:
     - target: {fileID: 224163206085617980, guid: e24cbf12718937c4895d56679b8826ff,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -382.00003
+      value: -382
       objectReference: {fileID: 0}
     - target: {fileID: 224163206085617980, guid: e24cbf12718937c4895d56679b8826ff,
         type: 2}
@@ -8624,7 +8651,7 @@ Prefab:
     - target: {fileID: 224077497515395700, guid: e24cbf12718937c4895d56679b8826ff,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -382.00003
+      value: -382
       objectReference: {fileID: 0}
     - target: {fileID: 224077497515395700, guid: e24cbf12718937c4895d56679b8826ff,
         type: 2}
@@ -8714,7 +8741,7 @@ Prefab:
     - target: {fileID: 224094028683248810, guid: e24cbf12718937c4895d56679b8826ff,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -382.00003
+      value: -382
       objectReference: {fileID: 0}
     - target: {fileID: 224094028683248810, guid: e24cbf12718937c4895d56679b8826ff,
         type: 2}
@@ -8804,7 +8831,7 @@ Prefab:
     - target: {fileID: 224624673505499708, guid: e24cbf12718937c4895d56679b8826ff,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -382.00003
+      value: -382
       objectReference: {fileID: 0}
     - target: {fileID: 224624673505499708, guid: e24cbf12718937c4895d56679b8826ff,
         type: 2}
@@ -9034,7 +9061,7 @@ Prefab:
     - target: {fileID: 224486687842549408, guid: e24cbf12718937c4895d56679b8826ff,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -364.00003
+      value: -364
       objectReference: {fileID: 0}
     - target: {fileID: 224486687842549408, guid: e24cbf12718937c4895d56679b8826ff,
         type: 2}
@@ -9185,6 +9212,22 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e24cbf12718937c4895d56679b8826ff, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1107366654 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1214854448176638, guid: e24cbf12718937c4895d56679b8826ff,
+    type: 2}
+  m_PrefabInternal: {fileID: 1107366653}
+--- !u!225 &1107366655
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1107366654}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1116345281
 GameObject:
   m_ObjectHideFlags: 0
@@ -10050,12 +10093,12 @@ Prefab:
     - target: {fileID: 224098725039836154, guid: 77e68aa26a269e24099190a2eddca6b7,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 899.4023
+      value: 899.4022
       objectReference: {fileID: 0}
     - target: {fileID: 224650360973590766, guid: 77e68aa26a269e24099190a2eddca6b7,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 899.4023
+      value: 899.4022
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114738582555983454, guid: 77e68aa26a269e24099190a2eddca6b7, type: 2}
@@ -10074,6 +10117,22 @@ Prefab:
     - {fileID: 114835597296909608, guid: 77e68aa26a269e24099190a2eddca6b7, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 77e68aa26a269e24099190a2eddca6b7, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1184696384 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1444875677980186, guid: 77e68aa26a269e24099190a2eddca6b7,
+    type: 2}
+  m_PrefabInternal: {fileID: 1184696383}
+--- !u!225 &1184696385
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1184696384}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1225907746
 GameObject:
   m_ObjectHideFlags: 0

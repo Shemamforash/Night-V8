@@ -31,13 +31,14 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public static void ShowMenu(string menuName)
         {
+            if (States.GetCurrentState()?.Name == menuName) return;
             States.GetState(menuName).Enter();
         }
 
         //TODO move me somewhere more suitable
         public void OnApplicationQuit()
         {
-            SaveController.SaveSettings();
+//            SaveController.SaveSettings();
             SaveController.SaveGame();
         }
 

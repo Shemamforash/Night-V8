@@ -14,6 +14,7 @@ using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -97,7 +98,7 @@ namespace Game.Combat.Player
             if (shortestDistance > threshold) return;
             float alpha = 1 - (shortestDistance - 1) / (threshold - 1);
             alpha = Mathf.Clamp(alpha, 0, 1);
-            GameObject.Find("Screen Fader").GetComponent<Image>().color = new Color(0,0,0,alpha);
+            GameObject.Find("Screen Fader").GetComponent<Image>().color = new Color(0, 0, 0, alpha);
             if (alpha == 1)
             {
                 CombatManager.ExitCombat();
@@ -146,18 +147,20 @@ namespace Game.Combat.Player
             {
                 CombatManager.Select(1);
             }
+
             if (_currentTarget == null)
             {
                 SetTarget(CombatManager.NearestEnemy());
             }
         }
-        
+
         public override void Update()
         {
             if (!CombatManager.InCombat()) return;
             base.Update();
             CheckForTarget();
             TransitionOffScreen();
+            CheckForContainersNearby();
             if (GetTarget() == null)
             {
                 _pivot.gameObject.SetActive(false);
@@ -169,9 +172,25 @@ namespace Game.Combat.Player
             }
         }
 
+        private const float MaxShowInventoryDistance = 0.5f;
+        private ContainerController _lastNearestContainer;
+
+        private void CheckForContainersNearby()
+        {
+            ContainerController nearestContainer = null;
+            float nearestContainerDistance = MaxShowInventoryDistance;
+            ContainerController.Containers.ForEach(c =>
+            {
+                float distance = Vector2.Distance(c.transform.position, CombatManager.Player().transform.position);
+                if (distance > nearestContainerDistance) return;
+                nearestContainerDistance = distance;
+                nearestContainer = c;
+            });
+            UiAreaInventoryController.SetNearestContainer(nearestContainer);
+        }
+
         public void Initialise()
         {
-
             _pivot = Helper.FindChildWithName<Transform>(gameObject, "Pivot");
             InputHandler.SetCurrentListener(this);
 

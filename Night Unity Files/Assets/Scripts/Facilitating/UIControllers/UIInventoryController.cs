@@ -14,8 +14,9 @@ namespace Facilitating.UIControllers
         private static InventoryDisplay _inventoryDisplay;
         private static Button _closeButton;
 
-        public void Awake()
+        public override void Awake()
         {
+            base.Awake();
             _closeButton = Helper.FindChildWithName<Button>(gameObject, "Close Menu");
             _inventoryDisplay = GetComponent<InventoryDisplay>();
         }

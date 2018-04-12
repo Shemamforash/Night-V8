@@ -47,8 +47,9 @@ namespace Game.Exploration.Ui
         {
         }
 
-        public void Awake()
+        public override void Awake()
         {
+            base.Awake();
             _instance = this;
             GameObject mapOptions = Helper.FindChildWithName(gameObject, "Map Options");
             _enterButton = Helper.FindChildWithName<EnhancedButton>(mapOptions, "Enter");

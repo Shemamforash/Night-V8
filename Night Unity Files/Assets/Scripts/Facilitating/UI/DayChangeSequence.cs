@@ -15,8 +15,9 @@ namespace Facilitating.UI
         public float TimeToRead = 3f;
         private static DayChangeSequence _instance;
         
-        protected void Awake()
+        public override void Awake()
         {
+            base.Awake();
             _instance = this;
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _menuScreen = GameObject.Find("Game Menu").GetComponent<CanvasGroup>();

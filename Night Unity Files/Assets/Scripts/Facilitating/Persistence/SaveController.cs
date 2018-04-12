@@ -36,10 +36,10 @@ namespace Facilitating.Persistence
             return Save(GameSaveLocation, PersistenceType.Game);
         }
 
-        public static bool SaveSettings()
-        {
-            return Save(SettingsSaveLocation, PersistenceType.Settings);
-        }
+//        public static bool SaveSettings()
+//        {
+//            return Save(SettingsSaveLocation, PersistenceType.Settings);
+//        }
 
         public static bool LoadGame()
         {

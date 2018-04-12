@@ -17,8 +17,9 @@ namespace SamsHelper.ReactiveUI.InventoryUI
         private GameObject _inventory1, _inventory2;
         public InventoryDisplay InventoryLeft, InventoryRight;
 
-        protected void Awake()
+        public override void Awake()
         {
+            base.Awake();
             _instance = this;
             _closeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Confirm");
             _closeButton.AddOnClick(Close);

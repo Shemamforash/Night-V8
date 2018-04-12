@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace Game.Characters
 {
-    public class CharacterManager : DesolationInventory, IPersistenceTemplate
+    public class CharacterManager : DesolationInventory
     {
         public static Player SelectedCharacter;
         public static readonly List<Weapon> Weapons = new List<Weapon>();
@@ -46,11 +46,11 @@ namespace Game.Characters
             doc = base.Save(doc, saveType);
             Debug.Log(doc + " doc");
 
-            foreach (Player c in Characters)
-            {
-                XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", doc);
-                c.Save(characterNode, saveType);
-            }
+//            foreach (Player c in Characters)
+//            {
+//                XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", doc);
+//                c.Save(characterNode, saveType);
+//            }
 
             return doc;
         }
@@ -179,6 +179,7 @@ namespace Game.Characters
         private Player GenerateDriver()
         {
             Player driver =  GenerateCharacter(CharacterClass.Driver);
+            driver.Inventory().AddTestingResources();
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Worn, WeaponType.Pistol, 10);
             driver.EquipWeapon(weapon);
             return driver;
