@@ -18,22 +18,22 @@ namespace Game.Characters
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
         private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
         private readonly Player _player;
-        public readonly CharacterAttribute Dehydration = new CharacterAttribute(AttributeType.Dehydration, 0, 0, 50);
+        
         public readonly CharacterAttribute Endurance = new CharacterAttribute(AttributeType.Endurance, 0);
+        public readonly CharacterAttribute Perception = new CharacterAttribute(AttributeType.Perception, 0);
+        public readonly CharacterAttribute Strength = new CharacterAttribute(AttributeType.Strength, 0);
+        public readonly CharacterAttribute Willpower = new CharacterAttribute(AttributeType.Willpower, 0);
 
         /*instead of consuming x food or water every minutes, consume 1 food or water every x minutes
         use the max value of the hunger and thirst to keep track of the interval at which eating or drinking should occur
         consume 1 food or water whenever the current value reaches the max value, then reset
         this allows the duration to easily change depending on temperature, modifiers, etc.
         */
-        public readonly CharacterAttribute Hunger = new CharacterAttribute(AttributeType.Hunger, 0, 0, 12);
-        public readonly CharacterAttribute Perception = new CharacterAttribute(AttributeType.Perception, 0);
-        public readonly CharacterAttribute Starvation = new CharacterAttribute(AttributeType.Starvation, 0, 0, 50);
-        public readonly CharacterAttribute Strength = new CharacterAttribute(AttributeType.Strength, 0);
-        public readonly CharacterAttribute Thirst = new CharacterAttribute(AttributeType.Thirst, 0, 0, 12);
-        public readonly CharacterAttribute Willpower = new CharacterAttribute(AttributeType.Willpower, 0);
 
-        private bool _starving, _dehydrated;
+        public readonly CharacterAttribute Hunger = new CharacterAttribute(AttributeType.Hunger, 0, 0, 24);
+        public readonly CharacterAttribute Starvation = new CharacterAttribute(AttributeType.Starvation, 0, 0, 50);
+        public readonly CharacterAttribute Thirst = new CharacterAttribute(AttributeType.Thirst, 0, 0, 12);
+        public readonly CharacterAttribute Dehydration = new CharacterAttribute(AttributeType.Dehydration, 0, 0, 50);
 
         public DesolationAttributes(Player player)
         {
@@ -83,7 +83,8 @@ namespace Game.Characters
         {
             need.Increment();
             if (!need.ReachedMax()) return;
-            if (tolerance.ReachedMin()) return;
+            if (tolerance.ReachedMax()) return;
+            need.SetCurrentValue(need.Min);
             int amountToConsume = Endurance.ReachedMin() ? 2 : 1;
             bool consumed = _player.ConsumeResource(targetResource, amountToConsume);
             if (consumed) tolerance.Decrement();
@@ -107,7 +108,7 @@ namespace Game.Characters
                 if (tolerancePercentage <= threshold) return levels[i - 1];
             }
 
-            return levels[_toleranceThresholds.Length];
+            return levels[_toleranceThresholds.Length - 1];
         }
 
         public string GetHungerStatus()

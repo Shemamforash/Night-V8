@@ -20,12 +20,15 @@ namespace SamsHelper.ReactiveUI.MenuSystem
                 if (!t.gameObject.activeInHierarchy)
                 {
                     t.gameObject.SetActive(true);
-                    t.gameObject.SetActive(false);
+                    t.GetComponent<CanvasGroup>().alpha = 0;
                 }
 
                 States.AddState(menu);
             }
+        }
 
+        public void Start()
+        {
             if (InitialMenu != null) ShowMenu(InitialMenu.name);
         }
 

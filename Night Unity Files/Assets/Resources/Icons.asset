@@ -35,8 +35,8 @@ MonoBehaviour:
     y: 300
     width: 100
     height: 100
-    xOffset: -50
-    yOffset: 50
+    xOffset: 11.4
+    yOffset: 61
     xAdvance: 100
     scale: 2
     name: Water
@@ -91,8 +91,8 @@ MonoBehaviour:
     y: 200
     width: 100
     height: 100
-    xOffset: -50
-    yOffset: 50
+    xOffset: 6.3
+    yOffset: 62.5
     xAdvance: 100
     scale: 2
     name: Fuel
@@ -129,11 +129,11 @@ MonoBehaviour:
     pivot: {x: -50, y: 50}
     sprite: {fileID: 21300014, guid: 2aa4a1fd4631a8545a973d9e5ce7c25e, type: 3}
   - id: 8
-    x: 200
+    x: 195.9
     y: 100
     width: 100
     height: 100
-    xOffset: -50
+    xOffset: -9.3
     yOffset: 50
     xAdvance: 100
     scale: 2
@@ -161,8 +161,8 @@ MonoBehaviour:
     y: 0
     width: 100
     height: 100
-    xOffset: -50
-    yOffset: 50
+    xOffset: 5
+    yOffset: 57.44
     xAdvance: 100
     scale: 2
     name: Scrap

@@ -25,7 +25,7 @@ namespace Game.Global
         private static bool _isNight, _isPaused;
         private static WorldState _instance;
 
-        public static float MinuteInSeconds = .2f;
+        public static float MinuteInSeconds = 1f;//.2f;
 
         public void Awake()
         {
@@ -40,11 +40,12 @@ namespace Game.Global
             _started = true;
             EnvironmentManager.Start();
             WeatherManager.Start();
+            StormDistance = 10;
+            WorldView.SetStormDistance(StormDistance);
 
 //            SaveController.LoadSettings();
 //todo            SaveController.LoadGame();
 
-            StormDistance = 15;
 #if UNITY_EDITOR
             _homeInventory.AddTestingResources(3);
 #endif

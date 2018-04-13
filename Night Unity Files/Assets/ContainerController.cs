@@ -1,52 +1,69 @@
 ﻿using System.Collections.Generic;
 using Game.Combat.Generation;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
-public class ContainerController : MonoBehaviour
+public class ContainerController : DesolationInventory 
 {
-    public DesolationInventory Inventory;
-    private SpriteRenderer _renderer;
     private const int MinDistanceToFlash = 4;
-    private float _currentFlashIntensity;
     private static GameObject _prefab;
-    public static List<ContainerController> Containers = new List<ContainerController>();
+    public static List<ContainerBehaviour> Containers = new List<ContainerBehaviour>();
+    private Vector2 _position;
 
-    public static void CreateContainer(Vector2 position, DesolationInventory inventory)
+    public ContainerController(Vector2 position, DesolationInventory inventory = null) : base("Cache")
     {
-        if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Container");
-        GameObject container = Instantiate(_prefab);
-        container.transform.position = position;
-        container.transform.localScale = Vector3.one * 0.03f;
-        container.GetComponent<ContainerController>().Inventory = inventory;
+        _position = position;
+        inventory?.Contents().ForEach(i => Move(i, i.Quantity()));
     }
     
-    public void Awake()
+    public void CreateObject()
     {
-        Containers.Add(this);
-        _renderer = GetComponent<SpriteRenderer>();
+        if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Container");
+        GameObject container = GameObject.Instantiate(_prefab);
+        container.transform.position = _position;
+        container.transform.localScale = Vector3.one * 0.03f;
+        container.AddComponent<ContainerBehaviour>().SetContainerController(this);
     }
 
-    private void OnDestroy()
+    public class ContainerBehaviour : MonoBehaviour
     {
-        Containers.Remove(this);
-    }
+        private float _currentFlashIntensity;
+        private SpriteRenderer _renderer;
+        public ContainerController ContainerController;
 
-    public void Update()
-    {
-        float distanceToPlayer = Vector2.Distance(transform.position, CombatManager.Player().transform.position);
-        if (distanceToPlayer > MinDistanceToFlash)
+        public void Awake()
         {
-            _currentFlashIntensity = 0;
-            return;
+            Containers.Add(this);
+            _renderer = GetComponent<SpriteRenderer>();
         }
-        float normalisedDistance = 1 - distanceToPlayer / MinDistanceToFlash;
-        Color c = _renderer.color;
-        float intensityModifier = _currentFlashIntensity <= 1 ? _currentFlashIntensity : 1 - (_currentFlashIntensity - 1);
-        c.a = intensityModifier * normalisedDistance;
-        _renderer.color = c;
-        _currentFlashIntensity += Time.deltaTime;
-        if (_currentFlashIntensity > 2) _currentFlashIntensity = 0;
-    }
 
+        public void SetContainerController(ContainerController containerController)
+        {
+            ContainerController = containerController;
+        }
+        
+        private void OnDestroy()
+        {
+            Containers.Remove(this);
+        }
+
+        public void Update()
+        {
+            float distanceToPlayer = Vector2.Distance(transform.position, CombatManager.Player().transform.position);
+            if (distanceToPlayer > MinDistanceToFlash)
+            {
+                _currentFlashIntensity = 0;
+                return;
+            }
+            float normalisedDistance = 1 - distanceToPlayer / MinDistanceToFlash;
+            Color c = _renderer.color;
+            float intensityModifier = _currentFlashIntensity <= 1 ? _currentFlashIntensity : 1 - (_currentFlashIntensity - 1);
+            c.a = intensityModifier * normalisedDistance;
+            _renderer.color = c;
+            _currentFlashIntensity += Time.deltaTime;
+            if (_currentFlashIntensity > 2) _currentFlashIntensity = 0;
+        }
+    }
 }

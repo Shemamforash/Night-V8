@@ -24,6 +24,12 @@ namespace SamsHelper.Libraries
             return 360 - angle;
         }
 
+        public static Vector2 RandomVectorWithinRange(Vector2 origin, float range)
+        {
+            float newX = Random.Range(origin.x - range, origin.x + range);
+            float newY = Random.RandomRange(origin.y - range, origin.y + range);
+            return new Vector2(newX, newY);
+        }
 
         public static List<Vector2> GetPoissonDiscDistribution(int numberOfPoints, float minRadius, float maxRadius, float maxSampleDistance, bool includeInitialSample = false)
         {

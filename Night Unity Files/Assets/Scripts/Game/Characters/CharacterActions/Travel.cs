@@ -35,7 +35,7 @@ namespace Game.Characters.CharacterActions
 
         public bool AtHome()
         {
-            return CurrentNode.Region == null;
+            return CurrentNode?.Region == null;
         }
         
         private void ReachTarget()

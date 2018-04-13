@@ -68,10 +68,10 @@ namespace Game.Characters
             return currentLine;
         }
 
-        public override void Kill()
+        public virtual void Kill()
         {
             if (SceneManager.GetActiveScene().name != "Game") return;
-            WorldState.HomeInventory().RemoveItem(this);
+            WorldState.HomeInventory().RemoveCharacter(this);
         }
 
         ~Player()

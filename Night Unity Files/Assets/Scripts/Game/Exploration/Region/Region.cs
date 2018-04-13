@@ -21,6 +21,7 @@ namespace Game.Exploration.Region
         private bool _discovered;
         public List<Barrier> Barriers = new List<Barrier>();
         public List<EnemyCampfire> Fires = new List<EnemyCampfire>();
+        public List<ContainerController> Containers = new List<ContainerController>();
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
@@ -41,23 +42,19 @@ namespace Game.Exploration.Region
             return regionNode;
         }
         
-        public void AddEnemy(Enemy enemy)
+        public Enemy AddEnemy(EnemyType enemyType, int difficulty)
         {
-            _enemies.Add(enemy);
+            Enemy newEnemy = new Enemy(enemyType);
+            newEnemy.GenerateArmour(difficulty);
+            newEnemy.GenerateWeapon(difficulty);
+            _enemies.Add(newEnemy);
+            return newEnemy;
         }
 
         public void GenerateSimpleEncounter()
         {
-            AddEnemy(new Enemy(EnemyType.Sentinel));
-            AddEnemy(new Enemy(EnemyType.Witch));
-        }
-
-        private void AddEnemy(EnemyType enemyType, int difficulty)
-        {
-            Enemy newEnemy = new Enemy(enemyType);
-            AddEnemy(newEnemy);
-            newEnemy.GenerateArmour(difficulty);
-            newEnemy.GenerateWeapon(difficulty);
+            AddEnemy(EnemyType.Sentinel, 10);
+            AddEnemy(EnemyType.Witch, 10);
         }
 
         public void Generate(int difficulty, int size)

@@ -22,9 +22,9 @@ namespace Game.Global
             AddResource(InventoryResourceType.LmgMag, 2);
         }
 
-        public override List<MyGameObject> SortByType()
+        public override List<InventoryItem> SortByType()
         {
-            List<MyGameObject> sortedItems = new List<MyGameObject>();
+            List<InventoryItem> sortedItems = new List<InventoryItem>();
             sortedItems.AddRange(InventoryResources());
             sortedItems.AddRange(GetItemsOfType(item => item is Weapon));
             sortedItems.AddRange(GetItemsOfType(item => item is ArmourPlate));
@@ -32,17 +32,17 @@ namespace Game.Global
             return sortedItems;
         }
 
-        public void AddTestingResources(int noItems = 0)
+        public void AddTestingResources(int resourceCount, int noItems = 0)
         {
             IncrementResource(InventoryResourceType.PistolMag, 10);
             IncrementResource(InventoryResourceType.RifleMag, 10);
             IncrementResource(InventoryResourceType.ShotgunMag, 10);
             IncrementResource(InventoryResourceType.SmgMag, 10);
             IncrementResource(InventoryResourceType.LmgMag, 10);
-            IncrementResource(InventoryResourceType.Food, 1000);
-            IncrementResource(InventoryResourceType.Fuel, 1000);
-            IncrementResource(InventoryResourceType.Scrap, 1000);
-            IncrementResource(InventoryResourceType.Water, 1000);
+            IncrementResource(InventoryResourceType.Food, resourceCount);
+            IncrementResource(InventoryResourceType.Fuel, resourceCount);
+            IncrementResource(InventoryResourceType.Scrap, resourceCount);
+            IncrementResource(InventoryResourceType.Water, resourceCount);
             for (int i = 0; i < noItems; ++i)
             {
                 AddItem(WeaponGenerator.GenerateWeapon(ItemQuality.Shining));
@@ -50,15 +50,6 @@ namespace Game.Global
                 AddItem(Inscription.GenerateInscription(ItemQuality.Shining));
                 AddItem(ArmourPlate.GeneratePlate(ItemQuality.Shining));
             }
-        }
-
-        public void SetEnemyResources()
-        {
-            IncrementResource(InventoryResourceType.PistolMag, 1000);
-            IncrementResource(InventoryResourceType.RifleMag, 1000);
-            IncrementResource(InventoryResourceType.ShotgunMag, 1000);
-            IncrementResource(InventoryResourceType.SmgMag, 1000);
-            IncrementResource(InventoryResourceType.LmgMag, 1000);
         }
     }
 }

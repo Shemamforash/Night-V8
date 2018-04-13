@@ -78,8 +78,6 @@ namespace Game.Combat.Generation
         {
             if (!_inCombat) return;
             _cooldowns.UpdateCooldowns();
-            if (_currentRegion.Enemies().Any(e => !e.IsDead)) return;
-            ExitCombat();
             if (!_shouldAlertAll || _enemiesToAlert.Count == 0) return;
             _enemiesToAlert[0].Alert();
             _enemiesToAlert.RemoveAt(0);
@@ -94,6 +92,7 @@ namespace Game.Combat.Generation
 
             _currentRegion.Barriers.ForEach(b => b.CreateObject());
             _currentRegion.Fires.ForEach(f => f.CreateObject());
+            _currentRegion.Containers.ForEach(c => c.CreateObject());
             PathingGrid.Instance().GenerateGrid(_currentRegion.Barriers);
 
 //            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
@@ -132,7 +131,7 @@ namespace Game.Combat.Generation
             else
                 Instance().SelectClockwise();
         }
-        
+
         public static List<EnemyBehaviour> EnemiesOnScreen()
         {
             return Instance()._enemies.FindAll(e => e.OnScreen());
@@ -155,7 +154,7 @@ namespace Game.Combat.Generation
                 currentTargetIndex += direction;
                 if (currentTargetIndex == visibleEnemies.Count) currentTargetIndex = 0;
                 if (currentTargetIndex == -1) currentTargetIndex = visibleEnemies.Count - 1;
-                Debug.Log(currentTargetIndex + " " +visibleEnemies.Count);
+                Debug.Log(currentTargetIndex + " " + visibleEnemies.Count);
                 newTarget = visibleEnemies[currentTargetIndex];
             }
 
@@ -174,11 +173,10 @@ namespace Game.Combat.Generation
 
         public static void QueueEnemyToAdd(EnemyType type)
         {
-            Enemy e = new Enemy(type);
+            Enemy e = Instance()._currentRegion.AddEnemy(type, 10);
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
             enemyBehaviour.Alert();
             Instance().AddEnemy(enemyBehaviour);
-            Instance()._currentRegion.AddEnemy(e);
         }
 
         public static void AlertAll()

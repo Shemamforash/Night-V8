@@ -7,6 +7,7 @@ using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -80,12 +81,11 @@ namespace Game.Characters
 
         private void AddCharacter(Player playerCharacter)
         {
-            AddItem(playerCharacter);
             Characters.Add(playerCharacter);
             InitialiseCharacterUI();
         }
 
-        protected override void AddItem(MyGameObject item)
+        protected override void AddItem(InventoryItem item)
         {
             base.AddItem(item);
             if (item is Weapon) Weapons.Add((Weapon) item);
@@ -93,18 +93,19 @@ namespace Game.Characters
             if (item is Accessory) Accessories.Add((Accessory) item);
         }
 
-        public override MyGameObject RemoveItem(MyGameObject item)
+        public void RemoveCharacter(Player playerCharacter)
         {
-            base.RemoveItem(item);
-            Player playerCharacter = item as Player;
-            Weapons.Remove(item as Weapon);
-            Armour.Remove(item as ArmourPlate);
-            Accessories.Remove(item as Accessory);
-            if (playerCharacter == null) return item;
             Characters.Remove(playerCharacter);
             Characters.ForEach(c => c.CharacterView.RefreshNavigation());
             if (playerCharacter.Name == "Driver") MenuStateMachine.ShowMenu("Game Over Menu");
+        }
 
+        protected override InventoryItem RemoveItem(InventoryItem item)
+        {
+            base.RemoveItem(item);
+            Weapons.Remove(item as Weapon);
+            Armour.Remove(item as ArmourPlate);
+            Accessories.Remove(item as Accessory);
             return item;
         }
 
@@ -179,8 +180,8 @@ namespace Game.Characters
         private Player GenerateDriver()
         {
             Player driver =  GenerateCharacter(CharacterClass.Driver);
-            driver.Inventory().AddTestingResources();
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Worn, WeaponType.Pistol, 10);
+            driver.Inventory().IncrementResource(weapon.WeaponAttributes.AmmoType, 20);
             driver.EquipWeapon(weapon);
             return driver;
         }

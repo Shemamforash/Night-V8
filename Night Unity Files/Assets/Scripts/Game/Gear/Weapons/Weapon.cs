@@ -44,16 +44,6 @@ namespace Game.Gear.Weapons
             return !(timeElapsed < targetTime);
         }
 
-        public float CalculateHitProbability(float distance)
-        {
-            float accuracy = CalculateBaseAccuracy();
-            float targetWidth = 0.1f;
-            float oppositeLength = distance * Mathf.Tan(accuracy * Mathf.Deg2Rad);
-            float probability = targetWidth / 2f / oppositeLength;
-            probability = Mathf.Clamp(probability, 0f, 1f);
-            return probability;
-        }
-
         public float CalculateIdealDistance()
         {
             float range = WeaponAttributes.GetCalculatedValue(AttributeType.Accuracy) / 100f;
@@ -148,11 +138,13 @@ namespace Game.Gear.Weapons
             return WeaponAttributes.WeaponType.ToString();
         }
 
-        public void Reload(Inventory inventory)
+        public void Reload(Inventory inventory = null)
         {
-            if (!(inventory?.GetResourceQuantity(WeaponAttributes.AmmoType) >= 1)) return;
             _ammoInMagazine = (int) WeaponAttributes.Capacity.CurrentValue();
-            inventory.DecrementResource(WeaponAttributes.AmmoType, 1);
+            if (inventory != null && inventory.GetResourceQuantity(WeaponAttributes.AmmoType) >= 1)
+            {
+                inventory.DecrementResource(WeaponAttributes.AmmoType, 1);
+            }
         }
 
         public bool FullyLoaded()

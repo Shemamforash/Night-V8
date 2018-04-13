@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
+using Game.Characters;
 using Game.Gear;
 using Game.Global;
 using SamsHelper.Persistence;
@@ -8,11 +9,10 @@ using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public abstract class GearItem : InventoryItem, IPersistenceTemplate
+    public abstract class GearItem : InventoryItem
     {
         private readonly GearSubtype _gearType;
         private ItemQuality _itemItemQuality;
-        public bool Equipped;
 
         protected GearItem(string name, float weight, GearSubtype gearSubtype, ItemQuality itemQuality) : base(name, GameObjectType.Gear, weight)
         {
@@ -41,7 +41,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _itemItemQuality = quality;
         }
 
-        public void Equip(DesolationInventory p)
+        public void Equip(Character character)
         {
             //if in inventory, auto equip and replace
             //if not in inventory open equip window
@@ -49,14 +49,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 //            c.AddItemToInventory(this);
 //            _equipped = true;
 //            c.ReplaceGearInSlot(_gearslot, this);
-            MoveTo(p);
-            Equipped = true;
+            MoveTo(character.Inventory());
         }
 
         public void Unequip()
         {
             MoveTo(WorldState.HomeInventory());
-            Equipped = false;
         }
 
         public abstract string GetSummary();
@@ -78,7 +76,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         private void MoveTo(Inventory targetInventory)
         {
-            ParentInventory?.Move(this, targetInventory, 1);
+            targetInventory.Move(this, 1);
             ParentInventory = targetInventory;
         }
     }

@@ -46,7 +46,8 @@ namespace Game.Combat.Player
                 switch (axis)
                 {
                     case InputAxis.Fire:
-                        if (!_fired || Player.Weapon.WeaponAttributes.Automatic) FireWeapon();
+                        if(CombatManager.EnemiesOnScreen().Count == 0) UiAreaInventoryController.SetNearestContainer(_lastNearestContainer);
+                        else if (!_fired || Player.Weapon.WeaponAttributes.Automatic) FireWeapon();
                         break;
                     case InputAxis.Horizontal:
                         Move(direction * Vector2.right);
@@ -184,9 +185,9 @@ namespace Game.Combat.Player
                 float distance = Vector2.Distance(c.transform.position, CombatManager.Player().transform.position);
                 if (distance > nearestContainerDistance) return;
                 nearestContainerDistance = distance;
-                nearestContainer = c;
+                nearestContainer = c.ContainerController;
             });
-            UiAreaInventoryController.SetNearestContainer(nearestContainer);
+            _lastNearestContainer = nearestContainer;
         }
 
         public void Initialise()

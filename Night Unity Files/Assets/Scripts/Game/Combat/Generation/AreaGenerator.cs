@@ -2,6 +2,9 @@
 using Game.Combat.Enemies;
 using Game.Combat.Misc;
 using Game.Exploration.Region;
+using Game.Gear;
+using Game.Gear.Weapons;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -102,6 +105,10 @@ namespace Game.Combat.Generation
 
             region.Fires = GenerateCampfires(barriers);
             region.Barriers = barriers;
+            DesolationInventory inventory = new DesolationInventory("Cache");
+            inventory.Move(WeaponGenerator.GenerateWeapon(ItemQuality.Shining, WeaponType.Rifle, 5), 1);
+            ContainerController container = new ContainerController(AdvancedMaths.RandomVectorWithinRange(region.Fires[0].FirePosition, 1), inventory);
+            region.Containers.Add(container);
         }
 
         private class Ellipse

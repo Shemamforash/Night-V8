@@ -21,7 +21,6 @@ namespace Game.Characters
             ArmourController = new ArmourController(this);
         }
 
-
         public override XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             doc = base.Save(doc, saveType);
@@ -42,7 +41,7 @@ namespace Game.Characters
         public virtual void EquipWeapon(Weapon weapon)
         {
             Weapon?.Unequip();
-            weapon.Equip(CharacterInventory);
+            weapon.Equip(this);
             Weapon = weapon;
             Weapon.Reload(Inventory());
         }
@@ -50,11 +49,9 @@ namespace Game.Characters
         public virtual void EquipAccessory(Accessory accessory)
         {
             Accessory?.Unequip();
-            accessory.Equip(CharacterInventory);
+            accessory.Equip(this);
             Accessory = accessory;
         }
-
-        public abstract void Kill();
 
         public DesolationInventory Inventory()
         {

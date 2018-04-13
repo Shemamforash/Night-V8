@@ -91,7 +91,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             if (AccesoryButton != button) AccesoryButton.GetComponent<CanvasGroup>().alpha = 0.4f;
             if (ResourceButton != button) ResourceButton.GetComponent<CanvasGroup>().alpha = 0.4f;
             if (CharacterButton != button) CharacterButton.GetComponent<CanvasGroup>().alpha = 0.4f;
-            List<MyGameObject> filteredItems = _inventory.Contents();
+            List<InventoryItem> filteredItems = _inventory.Contents();
             if (itemType != "") filteredItems = _inventory.Contents().Where(item => item.GetType().ToString() == itemType).ToList();
             SetItems(filteredItems);
         }
@@ -116,10 +116,9 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             _capacityText.text = capacityString;
         }
 
-        public override ViewParent AddItem(MyGameObject item)
+        public override ViewParent AddItem(InventoryItem item)
         {
-            if (!(item is InventoryItem)) return null;
-            if (((InventoryItem) item).Quantity() == 0) return null;
+            if (item.Quantity() == 0) return null;
             ViewParent existingUi = FindItem(item);
             if (existingUi != null)
             {
@@ -143,18 +142,18 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             return inventoryItemUi;
         }
 
-        private Action GetMoveAction(MyGameObject inventoryItem, int quantity)
+        private Action GetMoveAction(InventoryItem inventoryItem, int quantity)
         {
             return () =>
             {
-                MyGameObject transferredItem = _inventory.Move(inventoryItem, _moveToInventory._inventory, quantity);
+                InventoryItem transferredItem = _moveToInventory._inventory.Move(inventoryItem, quantity);
                 if (transferredItem == null) return;
                 _moveToInventory.AddItem(transferredItem);
                 UpdateItem(inventoryItem);
             };
         }
 
-        protected override void UpdateItem(MyGameObject inventoryItem)
+        protected override void UpdateItem(InventoryItem inventoryItem)
         {
             base.UpdateItem(inventoryItem);
             UpdateInventoryWeight();

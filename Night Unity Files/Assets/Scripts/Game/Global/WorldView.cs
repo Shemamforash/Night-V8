@@ -16,35 +16,59 @@ namespace Game.Global
     public class WorldView : Menu
     {
         private static EnhancedButton _inventoryButton;
-        private static TextMeshProUGUI _timeText;
-        private static TextMeshProUGUI _stormDistanceText;
-        private static TextMeshProUGUI _weatherText;
-        private static TextMeshProUGUI _environmentText, _temperatureText;
+        private static TextMeshProUGUI _environmentText;
+        private static string _environmentString, _temperatureString, _weatherString, _timeString;
+        private static int stormDistance;
 
         public static void SetEnvironmentText(string text)
         {
-            _environmentText.text = text;
+            _environmentString = text;
+            UpdateDescription();
         }
-        
+
         public static void SetTemperatureText(string text)
         {
-            _temperatureText.text = text;
+            _temperatureString = text;
+            UpdateDescription();
         }
-        
+
         public static void SetWeatherText(string text)
         {
-            _weatherText.text = text;
+            _weatherString = text;
+            UpdateDescription();
         }
-        
+
+        public static void SetStormDistance(int distance)
+        {
+            stormDistance = distance;
+            UpdateDescription();
+        }
+
+        public static void SetTime(int days, int hours, int minutes)
+        {
+            _timeString = TimeToName(hours);
+//            dayTime += "   Day " + days;
+            UpdateDescription();
+        }
+
+        private static void UpdateDescription()
+        {
+            string stormString;
+            if (stormDistance < 1) stormString = "here.";
+            else if (stormDistance < 3)
+                stormString = "looming.";
+            else if (stormDistance < 6)
+                stormString = "distant.";
+            else
+                stormString = "a whisper on the breeze.";
+            _environmentText.text = _timeString + ". It is " + _temperatureString + " and there is " + _weatherString + " in the " + _environmentString + ". The storm is " + stormString + ".";
+        }
+
         public override void Awake()
         {
             base.Awake();
             PauseOnOpen = false;
-            _weatherText = GameObject.Find("Weather").GetComponent<TextMeshProUGUI>();
             _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();
-            _temperatureText = GameObject.Find("Temperature").GetComponent<TextMeshProUGUI>();
-            _timeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Time");
-            _stormDistanceText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Storm Distance");
             _inventoryButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inventory");
             _waterText = GameObject.Find(InventoryResourceType.Water.ToString()).GetComponent<TextMeshProUGUI>();
             _foodText = GameObject.Find(InventoryResourceType.Food.ToString()).GetComponent<TextMeshProUGUI>();
@@ -71,18 +95,6 @@ namespace Game.Global
 //            UIInventoryController.SetInventoryTitle("Equip " + name);
         }
 
-        public static void SetTime(int days, int hours, int minutes)
-        {
-            string dayTime;
-            if (minutes < 10)
-                dayTime = hours + ":0" + minutes;
-            else
-                dayTime = hours + ":" + minutes;
-            dayTime = TimeToName(hours);
-            dayTime += "   Day " + days;
-            _timeText.text = dayTime;
-        }
-
         private static string TimeToName(int hours)
         {
             if (hours >= 5 && hours <= 7) return "Dawn";
@@ -93,21 +105,16 @@ namespace Game.Global
             return "Night";
         }
 
-        public static void SetStormDistance(int distance)
-        {
-            _stormDistanceText.text = "Storm is " + distance + " days away";
-        }
-
         private TextMeshProUGUI _waterText, _foodText, _fuelText, _scrapText;
 
         public void Update()
         {
-            _waterText.text = "<sprite name=\"Water\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Water).Quantity()) + " sips";
-            _foodText.text = "<sprite name=\"Food\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Food).Quantity()) +"meals";
-            _fuelText.text = "<sprite name=\"Fuel\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Fuel).Quantity()) +"dregs";
-            _scrapText.text = "<sprite name=\"Scrap\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Quantity()) +"bits";
+            _waterText.text = "<sprite name=\"Water\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Water).Quantity());
+            _foodText.text = "<sprite name=\"Food\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Food).Quantity());
+            _fuelText.text = "<sprite name=\"Fuel\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Fuel).Quantity());
+            _scrapText.text = "<sprite name=\"Scrap\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Quantity());
         }
-        
+
         public static EnhancedButton GetInventoryButton()
         {
             return _inventoryButton;

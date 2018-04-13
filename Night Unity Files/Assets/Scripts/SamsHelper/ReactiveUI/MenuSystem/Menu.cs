@@ -19,7 +19,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             if(_canvasGroup == null) Debug.Log(gameObject.name);
         }
 
-        public void Enter()
+        public virtual void Enter()
         {
             _canvasGroup.alpha = 1;
         }

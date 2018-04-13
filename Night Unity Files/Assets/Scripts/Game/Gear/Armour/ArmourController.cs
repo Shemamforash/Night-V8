@@ -63,7 +63,7 @@ namespace Game.Gear.Armour
         public void SetPlateOne(ArmourPlate plate)
         {
             _plateOne?.Unequip();
-            plate?.Equip(_character.Inventory());
+            plate?.Equip(_character);
             _plateOne = plate;
             _onArmourChange?.Invoke();
         }
@@ -90,7 +90,7 @@ namespace Game.Gear.Armour
         public void SetPlateTwo(ArmourPlate plate)
         {
             _plateTwo?.Unequip();
-            plate?.Equip(_character.Inventory());
+            plate?.Equip(_character);
             _plateTwo = plate;
             _onArmourChange?.Invoke();
         }

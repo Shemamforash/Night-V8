@@ -41,7 +41,6 @@ namespace Game.Combat.Enemies
 
         private void Reset()
         {
-            CharacterInventory.SetEnemyResources();
             Weapon?.Reload(Inventory());
         }
 
@@ -84,7 +83,7 @@ namespace Game.Combat.Enemies
             return enemyBehaviour;
         }
 
-        public override void Kill()
+        public virtual void Kill()
         {
             IsDead = true;
             //todo register kill

@@ -43,7 +43,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             Items.Clear();
         }
 
-        public void SetItems<T>(List<T> newItems, bool autoSelectFirst = true) where T : MyGameObject
+        public void SetItems(List<InventoryItem> newItems, bool autoSelectFirst = true)
         {
             Clear();
             if (newItems.Count != 0)
@@ -59,7 +59,7 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             if (autoSelectFirst) CloseButton?.Button().Select();
         }
 
-        protected virtual void UpdateItem(MyGameObject item)
+        protected virtual void UpdateItem(InventoryItem item)
         {
             ViewParent foundItem = FindItem(item);
             if (foundItem == null) return;
@@ -67,15 +67,15 @@ namespace SamsHelper.ReactiveUI.InventoryUI
             RefreshNavigation();
         }
 
-        protected ViewParent FindItem(MyGameObject item)
+        protected ViewParent FindItem(InventoryItem item)
         {
             return Items.FirstOrDefault(i => i.GetLinkedObject() != null && i.GetLinkedObject().Equals(item));
         }
 
-        public virtual ViewParent AddItem(MyGameObject item)
+        public virtual ViewParent AddItem(InventoryItem item)
         {
             ViewParent existingUi = FindItem(item);
-            InventoryItem inventoryItem = item as InventoryItem;
+            InventoryItem inventoryItem = item;
             if (existingUi != null)
             {
                 if (inventoryItem == null || !inventoryItem.IsStackable()) throw new Exceptions.ItemAlreadyExistsInMenuListException(item, gameObject);
