@@ -49,6 +49,7 @@ namespace Game.Exploration.WorldEvents
 
         private static void PrintFirstFourEvents()
         {
+            if (_eventLogText == null) return;
             string events = "";
             int textSize = 35;
             string[] colours = {"#ffffffff", "#ffffffdd", "#ffffffbb", "#ffffff99"};

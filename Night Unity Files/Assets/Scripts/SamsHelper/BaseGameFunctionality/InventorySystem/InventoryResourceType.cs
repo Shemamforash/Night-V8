@@ -6,10 +6,6 @@
         Water,
         Fuel,
         Scrap,
-        PistolMag,
-        RifleMag,
-        ShotgunMag,
-        SmgMag,
-        LmgMag
+        Essence
     }
 }

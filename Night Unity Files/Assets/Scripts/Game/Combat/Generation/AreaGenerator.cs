@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Game.Combat.Enemies;
 using Game.Combat.Misc;
 using Game.Exploration.Region;
@@ -12,20 +13,53 @@ namespace Game.Combat.Generation
 {
     public static class AreaGenerator
     {
-        private const float SmallPolyWidth = 0.4f, MediumPolyWidth = 1f, LargePolyWidth = 2f, HugePolyWidth = 4f;
+        private const float SmallPolyWidth = 0.2f, MediumPolyWidth = 2f, LargePolyWidth = 4f, HugePolyWidth = 8f;
 
-        private static List<Vector3> GenerateDistortedPoly(int definition, Ellipse ellipse)
+        private static void GenerateGenericRock(float scale, float radiusVariation, float smoothness, Vector2? position = null)
         {
+            smoothness = Mathf.Clamp(smoothness, 0.01f, 1f);
+            radiusVariation = 1 - Mathf.Clamp(radiusVariation, 0f, 1f);
+
+            int definition = (int) ((1f - smoothness) * 150f);
+            radiusVariation *= scale;
+            float minX = Random.Range(0, radiusVariation);
+            float minY = Random.Range(0, radiusVariation);
+            float maxX = Random.Range(minX, scale);
+            float maxY = Random.Range(minY, scale);
+//            Ellipse e = new Ellipse(minX, minY, maxX, maxY);
+            Ellipse e = new Ellipse(radiusVariation, scale);
             int angleIncrement;
-            List<Vector3> polyVertices = new List<Vector3>();
+            List<Vector3> barrierVertices = new List<Vector3>();
             for (int i = 0; i < 360; i += angleIncrement)
             {
-                Vector3 vertex = RandomPointBetweenRadii(i, ellipse);
-                polyVertices.Add(vertex);
+                Vector3 vertex = RandomPointBetweenRadii(i, e);
+                barrierVertices.Add(vertex);
                 angleIncrement = Random.Range(definition / 2, definition);
             }
 
-            return polyVertices;
+            AssignRockPosition(scale, barrierVertices, position);
+        }
+
+        private static void AssignRockPosition(float radius, List<Vector3> barrierVertices, Vector2? position)
+        {
+            if (position == null) position = GetValidPosition(radius);
+            if (position == Vector2.negativeInfinity) return;
+            Barrier barrier = new Barrier(barrierVertices.ToArray(), "Barrier " + barrierNumber, (Vector2) position);
+            barriers.Add(barrier);
+            ++barrierNumber;
+        }
+
+        private static Vector2 GetValidPosition(float radius)
+        {
+            for (int i = 0; i < MaxPlacementAttempts; ++i)
+            {
+                Vector2 randomPosition = Helper.RandomInList(validPositions);
+                if (ShapeIsTooCloseToPoint(randomPosition, radius * 1.2f)) continue;
+                validPositions.Remove(randomPosition);
+                return randomPosition;
+            }
+
+            return Vector2.negativeInfinity;
         }
 
         private static Vector2 RandomPointBetweenRadii(float angle, Ellipse e)
@@ -54,61 +88,67 @@ namespace Game.Combat.Generation
             return randomPoint;
         }
 
-        public static List<Vector3> GeneratePoly(float baseWidth)
+        private const int MaxPlacementAttempts = 20;
+
+        private static void GenerateHugeRock() => GenerateGenericRock(Random.Range(HugePolyWidth * 0.75f, HugePolyWidth * 1.25f), 0.75f, 0.75f);
+
+        private static void GenerateLargeRock() => GenerateGenericRock(Random.Range(LargePolyWidth * 0.75f, LargePolyWidth * 1.25f), 0.7f, 0.5f);
+
+        private static void GenerateMediumRock() => GenerateGenericRock(Random.Range(MediumPolyWidth * 0.75f, MediumPolyWidth * 1.25f), 0.5f, 0.75f);
+
+        private static void GenerateSmallRock() => GenerateGenericRock(Random.Range(SmallPolyWidth * 0.75f, SmallPolyWidth * 1.25f), 0.1f, 0.75f);
+
+        private static List<Vector2> validPositions;
+        private static int barrierNumber;
+
+        //generate fire -> huge rock -> large rock -> medium rock -> small rock
+
+        private static bool ShapeIsTooCloseToPoint(Vector2 point, float distance)
         {
-            float width = baseWidth * Random.Range(0.6f, 1f);
-            float radius = width / 2f;
-            float minX = Random.Range(0, radius * 0.9f);
-            float minY = Random.Range(0, radius * 0.9f);
-            float maxX = Random.Range(minX, radius);
-            float maxY = Random.Range(minY, radius);
-//            Ellipse e = new Ellipse(minX, minY, maxX, maxY);
-            Ellipse e = new Ellipse(radius * 0.8f, radius);
-            List<Vector3> barrierVertices = GenerateDistortedPoly(50, e);
-            return barrierVertices;
+            return barriers.Any(b => Vector2.Distance(b.Position, point) * 2 <= distance);
         }
 
-        private static List<EnemyCampfire> GenerateCampfires(List<Barrier> barriers)
+        public static void GenerateArea(Region region, int hugeRockCount, int largeRockCount, int mediumRockCount, int smallRockCount)
         {
-            float size = PathingGrid.GameWorldWidth / 2f;
-            Vector2 campfirePosition = new Vector2(Random.Range(-size, size), Random.Range(-size, size));
-            EnemyCampfire campfire = new EnemyCampfire(campfirePosition);
-            for (int i = barriers.Count - 1; i >= 0; --i)
-            {
-                Barrier b = barriers[i];
-                foreach (Vector2 v in b.WorldVerts)
-                {
-                    if (Vector2.Distance(v, campfirePosition) > 2f) continue;
-                    barriers.RemoveAt(i);
-                    break;
-                }
-            }
-            barriers.AddRange(campfire._stones);
-            return new List<EnemyCampfire> {campfire};
-        }
+            barriers = new List<Barrier>();
+            barrierNumber = 0;
+            validPositions = AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.GameWorldWidth);
 
-        public static void GenerateArea(Region region)
-        {
-            List<Barrier> barriers = new List<Barrier>();
-            int barrierNumber = 0;
+            region.Fire = GenerateFire();
+            for (int i = 0; i < hugeRockCount; ++i) GenerateHugeRock();
+            for (int i = 0; i < largeRockCount; ++i) GenerateLargeRock();
+            for (int i = 0; i < mediumRockCount; ++i) GenerateMediumRock();
+            for (int i = 0; i < smallRockCount; ++i) GenerateSmallRock();
 
-            List<Vector2> positions = AdvancedMaths.GetPoissonDiscDistribution(500, 1f, 3f, PathingGrid.GameWorldWidth, true);
-            positions.RemoveAt(0);
-
-            foreach (Vector2 position in positions)
-            {
-                List<Vector3> barrierVertices = GeneratePoly(SmallPolyWidth);
-                Barrier barrier = new Barrier(barrierVertices.ToArray(), "Barrier " + barrierNumber, position);
-                barriers.Add(barrier);
-                ++barrierNumber;
-            }
-
-            region.Fires = GenerateCampfires(barriers);
             region.Barriers = barriers;
+
             DesolationInventory inventory = new DesolationInventory("Cache");
             inventory.Move(WeaponGenerator.GenerateWeapon(ItemQuality.Shining, WeaponType.Rifle, 5), 1);
-            ContainerController container = new ContainerController(AdvancedMaths.RandomVectorWithinRange(region.Fires[0].FirePosition, 1), inventory);
+            ContainerController container = new ContainerController(AdvancedMaths.RandomVectorWithinRange(region.Fire.FirePosition, 1), inventory);
             region.Containers.Add(container);
+        }
+
+        private static List<Barrier> barriers;
+
+        private static EnemyCampfire GenerateFire()
+        {
+            float size = PathingGrid.GameWorldWidth / 2f;
+            Vector2 campfirePosition = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 2);
+            int numberOfStones = Random.Range(6, 10);
+            float radius = 0.2f;
+            int angle = 0;
+            int angleStep = 360 / numberOfStones;
+            while (numberOfStones > 0)
+            {
+                float randomisedAngle = (angle + Random.Range(-angleStep, angleStep)) * Mathf.Deg2Rad;
+                float x = radius * Mathf.Cos(randomisedAngle) + campfirePosition.x;
+                float y = radius * Mathf.Sin(randomisedAngle) + campfirePosition.y;
+                GenerateGenericRock(0.05f, 0.2f, 0.5f, new Vector2(x, y));
+                angle += angleStep;
+                --numberOfStones;
+            }
+
+            return new EnemyCampfire(campfirePosition);
         }
 
         private class Ellipse

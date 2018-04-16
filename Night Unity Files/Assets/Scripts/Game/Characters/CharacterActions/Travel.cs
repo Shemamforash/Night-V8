@@ -1,5 +1,6 @@
 ﻿using Game.Exploration.Environment;
 using Game.Global;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Game.Characters.CharacterActions
@@ -93,6 +94,11 @@ namespace Game.Characters.CharacterActions
                 Duration = MapGenerator.NodeDistanceToTime(distance);
                 JourneyTime = Duration;
             }
+        }
+
+        public void SetCurrentNode(MapNode node)
+        {
+            CurrentNode = node;
         }
     }
 }

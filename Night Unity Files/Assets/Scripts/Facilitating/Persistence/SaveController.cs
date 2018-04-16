@@ -31,9 +31,9 @@ namespace Facilitating.Persistence
             OnSave.ForEach(a => a(root, persistenceType));
         }
 
-        public static bool SaveGame()
+        public static void SaveGame()
         {
-            return Save(GameSaveLocation, PersistenceType.Game);
+            Save(GameSaveLocation, PersistenceType.Game);
         }
 
 //        public static bool SaveSettings()
@@ -41,14 +41,9 @@ namespace Facilitating.Persistence
 //            return Save(SettingsSaveLocation, PersistenceType.Settings);
 //        }
 
-        public static bool LoadGame()
+        public static void LoadGame()
         {
-            return Load(GameSaveLocation, PersistenceType.Game);
-        }
-
-        public static bool LoadSettings()
-        {
-            return Load(SettingsSaveLocation, PersistenceType.Settings);
+//            return Load(GameSaveLocation, PersistenceType.Game);
         }
 
         public static bool SaveExists()

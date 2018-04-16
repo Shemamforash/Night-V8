@@ -116,7 +116,7 @@ namespace Game.Combat.Enemies
 
         private void SetDistance(float rangeMin, float rangeMax)
         {
-            Vector3 position = CombatManager.Region().Fires[0].FirePosition;
+            Vector3 position = CombatManager.Region().Fire.FirePosition;
             float xOffset = Random.Range(rangeMin, rangeMax);
             float yOffset = Random.Range(rangeMin, rangeMax);
             if (Random.Range(0, 2) == 1) xOffset = -xOffset;
@@ -235,7 +235,6 @@ namespace Game.Combat.Enemies
         public override void Kill()
         {
             base.Kill();
-            for (int i = 0; i < Random.Range(0, 3); ++i) PickupController.Create(transform.position, CombatManager.Player().Weapon().WeaponAttributes.AmmoType);
             ContainerController controller = new ContainerController(transform.position, Enemy.Inventory());
             controller.CreateObject();
             CombatManager.Remove(this);
@@ -306,12 +305,7 @@ namespace Game.Combat.Enemies
         private void Reload()
         {
             if (MoveToCover(Reload)) return;
-            if (Weapon().GetRemainingMagazines() == 0)
-            {
-                Flee();
-                return;
-            }
-
+//                Flee();
             SetActionText("Reloading");
             float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed) * EnemyReloadMultiplier;
             CurrentAction = () =>

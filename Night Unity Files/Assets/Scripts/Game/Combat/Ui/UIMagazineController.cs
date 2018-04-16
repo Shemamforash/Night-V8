@@ -11,7 +11,6 @@ namespace Game.Combat.Ui
     {
         private static GameObject _ammoPrefab;
         private static Transform _magazineContent;
-        private static TextMeshProUGUI _ammoText;
         private static readonly List<Ammo> MagazineAmmo = new List<Ammo>();
         private static int _capacity;
         private static Weapon _weapon;
@@ -19,23 +18,17 @@ namespace Game.Combat.Ui
 
         public void Awake()
         {
-            _magazineContent = transform.Find("Magazine");
+            _magazineContent = transform;
             _ammoPrefab = Resources.Load("Prefabs/Combat/Ammo Prefab") as GameObject;
-            _ammoText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Ammo");
         }
 
         public static void UpdateMagazine(int remaining = -1)
         {
             if (remaining == -1) remaining = _weapon.GetRemainingAmmo();
             for (int i = 0; i < MagazineAmmo.Count; ++i) MagazineAmmo[i].SetUnspent(i < remaining);
-            SetMessage(CombatManager.Player().Weapon().GetRemainingMagazines() + " mags");
             _empty = false;
         }
 
-        public static void SetMessage(string message)
-        {
-            _ammoText.text = message;
-        }
 
         public static void EmptyMagazine()
         {

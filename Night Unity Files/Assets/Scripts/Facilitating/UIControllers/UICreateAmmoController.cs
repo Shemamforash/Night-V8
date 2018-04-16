@@ -35,11 +35,6 @@ namespace Facilitating.UIControllers
 
         public void Start()
         {
-            _pistolButton.AddOnClick(() => CraftAmmo(InventoryResourceType.PistolMag));
-            _rifleButton.AddOnClick(() => CraftAmmo(InventoryResourceType.RifleMag));
-            _shotgunButton.AddOnClick(() => CraftAmmo(InventoryResourceType.ShotgunMag));
-            _smgButton.AddOnClick(() => CraftAmmo(InventoryResourceType.SmgMag));
-            _lmgButton.AddOnClick(() => CraftAmmo(InventoryResourceType.LmgMag));
             _closeButton.AddOnClick(MenuStateMachine.GoToInitialMenu);
             SetAmmoCostText();
         }
@@ -111,25 +106,6 @@ namespace Facilitating.UIControllers
         private string NumberOfMagazinesOfType(WeaponType t)
         {
             int quantity = 0;
-            switch (t)
-            {
-                case WeaponType.Pistol:
-                    quantity = (int) WorldState.HomeInventory().GetResourceQuantity(InventoryResourceType.PistolMag);
-                    break;
-                case WeaponType.Rifle:
-                    quantity = (int) WorldState.HomeInventory().GetResourceQuantity(InventoryResourceType.RifleMag);
-                    break;
-                case WeaponType.Shotgun:
-                    quantity = (int) WorldState.HomeInventory().GetResourceQuantity(InventoryResourceType.ShotgunMag);
-                    break;
-                case WeaponType.SMG:
-                    quantity = (int) WorldState.HomeInventory().GetResourceQuantity(InventoryResourceType.SmgMag);
-                    break;
-                case WeaponType.LMG:
-                    quantity = (int) WorldState.HomeInventory().GetResourceQuantity(InventoryResourceType.LmgMag);
-                    break;
-            }
-
             return "have " + quantity;
         }
 

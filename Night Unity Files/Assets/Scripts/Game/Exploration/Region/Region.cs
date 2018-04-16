@@ -9,6 +9,7 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
+using UnityEngine;
 
 namespace Game.Exploration.Region
 {
@@ -20,7 +21,7 @@ namespace Game.Exploration.Region
         private readonly RegionTemplate _template;
         private bool _discovered;
         public List<Barrier> Barriers = new List<Barrier>();
-        public List<EnemyCampfire> Fires = new List<EnemyCampfire>();
+        public EnemyCampfire Fire;
         public List<ContainerController> Containers = new List<ContainerController>();
 
         public void Load(XmlNode doc, PersistenceType saveType)
@@ -104,7 +105,9 @@ namespace Game.Exploration.Region
             SetInitialResourceValues(InventoryResourceType.Fuel, _template.FuelAvailable);
             SetInitialResourceValues(InventoryResourceType.Scrap, _template.ScrapAvailable);
             GenerateSimpleEncounter();
-            AreaGenerator.GenerateArea(this);
+//            AreaGenerator.GenerateArea(this, 3, 2, 5, 20);
+            AreaGenerator.GenerateArea(this, 2, 0, 20, 100);
+
             //TODO different combat scenarios for region tier and animal/human enemies
         }
 

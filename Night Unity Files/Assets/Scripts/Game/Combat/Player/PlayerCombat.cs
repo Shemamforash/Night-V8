@@ -277,7 +277,6 @@ namespace Game.Combat.Player
         {
             if (_reloadingCoroutine != null) return;
             if (Player.Weapon.FullyLoaded()) return;
-            if (Player.Weapon.GetRemainingMagazines() == 0) return;
             _reloadingCoroutine = StartCoroutine(StartReloading());
         }
 
@@ -346,8 +345,7 @@ namespace Game.Combat.Player
         public void UpdateMagazineUi()
         {
             string magazineMessage = "";
-            if (Player.Weapon.GetRemainingMagazines() == 0) magazineMessage = "NO AMMO";
-            else if (Player.Weapon.Empty())
+            if (Player.Weapon.Empty())
                 magazineMessage = "RELOAD";
             if (magazineMessage == "")
             {
@@ -356,7 +354,6 @@ namespace Game.Combat.Player
             else
             {
                 UIMagazineController.EmptyMagazine();
-                UIMagazineController.SetMessage(magazineMessage);
             }
         }
 

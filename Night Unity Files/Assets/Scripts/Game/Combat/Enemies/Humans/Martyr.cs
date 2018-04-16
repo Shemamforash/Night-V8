@@ -36,7 +36,7 @@ namespace Game.Combat.Enemies.Humans
         {
             _detonated = true;
             SetActionText("Detonating");
-            Explosion.CreateExplosion(transform.position, 2, 50).Detonate();
+            Explosion.CreateExplosion(transform.position, 50, 2).Detonate();
         }
     }
 }

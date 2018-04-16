@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Game.Exploration.Region;
 using Game.Global;
 using SamsHelper.Libraries;
@@ -24,7 +25,25 @@ namespace Game.Exploration.Environment
         {
             MapTransform = transform;
             storedNodes.ForEach(n => n.CreateObject());
+//            CreateFogOfWar();
             UpdateNodeColor();
+        }
+
+        private void CreateFogOfWar()
+        {
+            GameObject fowprefab = Resources.Load<GameObject>("Prefabs/Map/FOW");
+            for (float x = -20; x < 20; x += 0.5f)
+            {
+                for (float y = -20; y < 20; y += 0.5f)
+                {
+                    Vector3 fowPos = new Vector3(x, y, 0);
+                    if (storedNodes.Any(n => n.Discovered() && Vector2.Distance(n.Position, fowPos) < 3)) continue;
+                    GameObject g = Instantiate(fowprefab);
+                    g.transform.position = new Vector3(x, y, 0);
+                    g.transform.rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
+                    g.transform.localScale = Vector2.one;
+                }
+            }
         }
 
         public static MapNode GetInitialNode()
@@ -39,7 +58,7 @@ namespace Game.Exploration.Environment
             int ticks = Mathf.CeilToInt(distance / ticksPerUnit);
             return ticks;
         }
-        
+
         public static void Generate()
         {
             List<Region.Region> regions = RegionManager.GenerateRegions(DesiredSamples);

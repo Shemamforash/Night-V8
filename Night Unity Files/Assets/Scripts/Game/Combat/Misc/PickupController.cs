@@ -50,21 +50,6 @@ namespace Game.Combat.Misc
                 case InventoryResourceType.Scrap:
                     textString = "S";
                     break;
-                case InventoryResourceType.PistolMag:
-                    textString = "A";
-                    break;
-                case InventoryResourceType.RifleMag:
-                    textString = "A";
-                    break;
-                case InventoryResourceType.ShotgunMag:
-                    textString = "A";
-                    break;
-                case InventoryResourceType.SmgMag:
-                    textString = "A";
-                    break;
-                case InventoryResourceType.LmgMag:
-                    textString = "A";
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -267,7 +267,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            Player().Inventory().IncrementResource(Player().Weapon.WeaponAttributes.AmmoType, 1);
+//            Player().Inventory().IncrementResource(Player().Weapon.WeaponAttributes.AmmoType, 1);
         }
     }
 

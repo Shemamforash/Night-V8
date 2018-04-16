@@ -48,14 +48,14 @@ namespace Game.Combat.Misc
             _explosionPool.Remove(this);
         }
 
-        public static Explosion CreateExplosion(Vector2 position, float radius, int damage)
+        public static Explosion CreateExplosion(Vector2 position, int damage, float radius = 1)
         {
             Explosion explosion = GetNewExplosion();
-            explosion.Initialise(position, radius, damage);
+            explosion.Initialise(position, damage, radius);
             return explosion;
         }
 
-        private void Initialise(Vector2 position, float radius, int damage)
+        private void Initialise(Vector2 position, int damage, float radius = 1)
         {
             transform.position = position;
             _explosionRadius = radius;

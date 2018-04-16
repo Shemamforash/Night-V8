@@ -15,7 +15,6 @@ namespace Game.Global
 {
     public class WorldView : Menu
     {
-        private static EnhancedButton _inventoryButton;
         private static TextMeshProUGUI _environmentText;
         private static string _environmentString, _temperatureString, _weatherString, _timeString;
         private static int stormDistance;
@@ -69,30 +68,12 @@ namespace Game.Global
             base.Awake();
             PauseOnOpen = false;
             _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();
-            _inventoryButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inventory");
             _waterText = GameObject.Find(InventoryResourceType.Water.ToString()).GetComponent<TextMeshProUGUI>();
             _foodText = GameObject.Find(InventoryResourceType.Food.ToString()).GetComponent<TextMeshProUGUI>();
             _fuelText = GameObject.Find(InventoryResourceType.Fuel.ToString()).GetComponent<TextMeshProUGUI>();
             _scrapText = GameObject.Find(InventoryResourceType.Scrap.ToString()).GetComponent<TextMeshProUGUI>();
-            DefaultSelectable = _inventoryButton.Button();
             PreserveLastSelected = true;
             PauseOnOpen = false;
-            _inventoryButton.AddOnClick(() =>
-            {
-                UIInventoryController.ShowInventory(WorldState.HomeInventory(), g =>
-                {
-                    GearItem item = g as GearItem;
-                    if (item != null) ShowCharacterPopup(item.Name, item);
-                });
-            });
-        }
-
-        private void ShowCharacterPopup(string name, GearItem gearItem)
-        {
-            List<MyGameObject> characterGear = new List<MyGameObject>();
-            CharacterManager.Characters.ForEach(c => characterGear.Add(new CharacterGearComparison(c, gearItem)));
-//            UIInventoryController.ShowInventory(characterGear);
-//            UIInventoryController.SetInventoryTitle("Equip " + name);
         }
 
         private static string TimeToName(int hours)
@@ -113,11 +94,6 @@ namespace Game.Global
             _foodText.text = "<sprite name=\"Food\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Food).Quantity());
             _fuelText.text = "<sprite name=\"Fuel\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Fuel).Quantity());
             _scrapText.text = "<sprite name=\"Scrap\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Quantity());
-        }
-
-        public static EnhancedButton GetInventoryButton()
-        {
-            return _inventoryButton;
         }
     }
 }

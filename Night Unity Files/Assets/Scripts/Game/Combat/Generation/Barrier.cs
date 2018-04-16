@@ -19,7 +19,7 @@ namespace Game.Combat.Generation
         private static GameObject _barrierPrefab;
         private readonly string _barrierName;
         private readonly float _rotation;
-        private readonly Vector2 Position;
+        public readonly Vector2 Position;
         private static Transform _barrierParent;
 
         public void Load(XmlNode doc, PersistenceType saveType)
@@ -45,6 +45,7 @@ namespace Game.Combat.Generation
         
         public Barrier(Vector3[] vertices, string barrierName, Vector2 position)
         {
+            if(position == Vector2.negativeInfinity) Debug.Log("wat!?");
             _barrierName = barrierName;
             Vertices = vertices;
             _rotation = Random.RandomRange(0, 360);

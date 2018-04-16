@@ -126,6 +126,13 @@ namespace Game.Characters
             }
         }
 
+        public void SelectInitial()
+        {
+            CharacterManager.SelectCharacter(_player);
+            if (_actionListActive) GetFirstActionButton().Button().Select();
+            else WeaponController.EnhancedButton.Button().Select();
+        }
+        
         //actions[0], weaponui, & consumption toggle navigate to actions[last], accessoryui, & consumption buttons respectively
         //inverse is true to navigate to character below
         //if no character above, all navigate to inventory button
@@ -134,54 +141,34 @@ namespace Game.Characters
         {
             CharacterView _previousCharacterView = CharacterManager.PreviousCharacter(_player)?.CharacterView;
 
-            if (_previousCharacterView == null)
+            if (_previousCharacterView == null) return;
+            
+            _previousCharacterView.GetLastActionButton().SetOnDownAction(() =>
             {
-                WorldView.GetInventoryButton().SetOnDownAction(() =>
-                {
-                    CharacterManager.SelectCharacter(_player);
-                    if (_actionListActive) GetFirstActionButton().Button().Select();
-                    else WeaponController.EnhancedButton.Button().Select();
-                });
-                GetFirstActionButton().SetOnUpAction(() =>
-                {
-                    CharacterManager.ExitCharacter(_player);
-                    WorldView.GetInventoryButton().Button().Select();
-                });
-                WeaponController.EnhancedButton.SetOnUpAction(() =>
-                {
-                    CharacterManager.ExitCharacter(_player);
-                    WorldView.GetInventoryButton().Button().Select();
-                });
-            }
-            else
+                CharacterManager.ExitCharacter(_previousCharacterView._player);
+                CharacterManager.SelectCharacter(_player);
+                if (_actionListActive) GetFirstActionButton().Button().Select();
+                else WeaponController.EnhancedButton.Button().Select();
+            });
+            GetFirstActionButton().SetOnUpAction(() =>
             {
-                _previousCharacterView.GetLastActionButton().SetOnDownAction(() =>
-                {
-                    CharacterManager.ExitCharacter(_previousCharacterView._player);
-                    CharacterManager.SelectCharacter(_player);
-                    if (_actionListActive) GetFirstActionButton().Button().Select();
-                    else WeaponController.EnhancedButton.Button().Select();
-                });
-                GetFirstActionButton().SetOnUpAction(() =>
-                {
-                    CharacterManager.ExitCharacter(_player);
-                    CharacterManager.SelectCharacter(_previousCharacterView._player);
-                    if (_previousCharacterView._actionListActive) _previousCharacterView.GetLastActionButton().Button().Select();
-                    else _previousCharacterView.ArmourController.EnhancedButton.Button().Select();
-                });
-                WeaponController.EnhancedButton.SetOnUpAction(() =>
-                {
-                    CharacterManager.ExitCharacter(_player);
-                    CharacterManager.SelectCharacter(_previousCharacterView._player);
-                    _previousCharacterView.ArmourController.EnhancedButton.Button().Select();
-                });
-                _previousCharacterView.ArmourController.EnhancedButton.SetOnDownAction(() =>
-                {
-                    CharacterManager.ExitCharacter(_previousCharacterView._player);
-                    CharacterManager.SelectCharacter(_player);
-                    WeaponController.EnhancedButton.Button().Select();
-                });
-            }
+                CharacterManager.ExitCharacter(_player);
+                CharacterManager.SelectCharacter(_previousCharacterView._player);
+                if (_previousCharacterView._actionListActive) _previousCharacterView.GetLastActionButton().Button().Select();
+                else _previousCharacterView.ArmourController.EnhancedButton.Button().Select();
+            });
+            WeaponController.EnhancedButton.SetOnUpAction(() =>
+            {
+                CharacterManager.ExitCharacter(_player);
+                CharacterManager.SelectCharacter(_previousCharacterView._player);
+                _previousCharacterView.ArmourController.EnhancedButton.Button().Select();
+            });
+            _previousCharacterView.ArmourController.EnhancedButton.SetOnDownAction(() =>
+            {
+                CharacterManager.ExitCharacter(_previousCharacterView._player);
+                CharacterManager.SelectCharacter(_player);
+                WeaponController.EnhancedButton.Button().Select();
+            });
         }
 
         private EnhancedButton GetLastActionButton()

@@ -24,31 +24,31 @@ namespace Game.Combat.Misc
 
         public void Start()
         {
-//            new CharacterManager();
-//            _instance = this;
-//            RestartCombat();
+            new CharacterManager();
+            _instance = this;
+            RestartCombat();
         }
 
         public static void RestartCombat()
         {
-//            _playerCharacter = CharacterManager.GenerateRandomCharacter();
-//            _playerCharacter.Inventory().AddTestingResources();
-//            List<WeaponType> weaponsWanted = new List<WeaponType>();
-//            if (_instance.Smg) weaponsWanted.Add(WeaponType.SMG);
-//            if (_instance.Lmg) weaponsWanted.Add(WeaponType.LMG);
-//            if (_instance.Rifle) weaponsWanted.Add(WeaponType.Rifle);
-//            if (_instance.Pistol) weaponsWanted.Add(WeaponType.Pistol);
-//            if (_instance.Shotgun) weaponsWanted.Add(WeaponType.Shotgun);
-//            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Shining, weaponsWanted);
-//            weapon.WeaponAttributes.SetDurability(_instance.Durability);
-//            Debug.Log(weapon.WeaponAttributes.Print());
-//            _playerCharacter.EquipWeapon(weapon);
-//            weapon.Reload(_playerCharacter.Inventory());
-//
-//            _encounter = RegionManager.GenerateRegions(1)[0];
-//            CharacterManager.SelectedCharacter = _playerCharacter;
-//            MapNode node = MapNode.CreateNode(Vector2Int.zero, _encounter);
-//            _playerCharacter.TravelAction.SetCurrentNode(node);
+            _playerCharacter = CharacterManager.GenerateRandomCharacter();
+            _playerCharacter.Inventory().AddTestingResources(5);
+            List<WeaponType> weaponsWanted = new List<WeaponType>();
+            if (_instance.Smg) weaponsWanted.Add(WeaponType.SMG);
+            if (_instance.Lmg) weaponsWanted.Add(WeaponType.LMG);
+            if (_instance.Rifle) weaponsWanted.Add(WeaponType.Rifle);
+            if (_instance.Pistol) weaponsWanted.Add(WeaponType.Pistol);
+            if (_instance.Shotgun) weaponsWanted.Add(WeaponType.Shotgun);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Shining, weaponsWanted);
+            weapon.WeaponAttributes.SetDurability(_instance.Durability);
+            Debug.Log(weapon.WeaponAttributes.Print());
+            _playerCharacter.EquipWeapon(weapon);
+            weapon.Reload(_playerCharacter.Inventory());
+
+            _encounter = RegionManager.GenerateRegions(1)[0];
+            CharacterManager.SelectedCharacter = _playerCharacter;
+            MapNode node = MapNode.CreateNode(Vector2Int.zero, _encounter);
+            _playerCharacter.TravelAction.SetCurrentNode(node);
         }
     }
 }

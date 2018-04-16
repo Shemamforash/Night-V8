@@ -19,7 +19,6 @@ namespace Game.Gear.Weapons
         private float _dps;
         private readonly AttributeModifier _durabilityModifier;
         private readonly Weapon _weapon;
-        public InventoryResourceType AmmoType;
         public bool Automatic = true;
         public float DurabilityModifier;
         public CharacterAttribute FireRate, ReloadSpeed, Damage, Range, Handling, Capacity, Pellets, Accuracy;
@@ -58,27 +57,6 @@ namespace Game.Gear.Weapons
             WeaponType = weaponClass.Type;
             Automatic = weaponClass.Automatic;
             WeaponClassName = weaponClass.Name;
-            switch (WeaponType)
-            {
-                case WeaponType.Pistol:
-                    AmmoType = InventoryResourceType.PistolMag;
-                    break;
-                case WeaponType.Rifle:
-                    AmmoType = InventoryResourceType.RifleMag;
-                    break;
-                case WeaponType.Shotgun:
-                    AmmoType = InventoryResourceType.ShotgunMag;
-                    break;
-                case WeaponType.SMG:
-                    AmmoType = InventoryResourceType.SmgMag;
-                    break;
-                case WeaponType.LMG:
-                    AmmoType = InventoryResourceType.LmgMag;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
             RecalculateAttributeValues();
         }
 

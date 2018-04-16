@@ -12,7 +12,7 @@ namespace Game.Combat.Misc
 {
     public class Shot : MonoBehaviour
     {
-        private const float Speed = 10f;
+        private const float Speed = 30f;
         private static GameObject _bulletPrefab;
 
         private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Prefabs/Combat/Bullet");

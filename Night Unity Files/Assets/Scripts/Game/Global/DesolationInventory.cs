@@ -15,11 +15,6 @@ namespace Game.Global
             AddResource(InventoryResourceType.Food, 1);
             AddResource(InventoryResourceType.Fuel, 1);
             AddResource(InventoryResourceType.Scrap, 0.5f);
-            AddResource(InventoryResourceType.PistolMag, 0.5f);
-            AddResource(InventoryResourceType.RifleMag, 1f);
-            AddResource(InventoryResourceType.ShotgunMag, 1.5f);
-            AddResource(InventoryResourceType.SmgMag, 1f);
-            AddResource(InventoryResourceType.LmgMag, 2);
         }
 
         public override List<InventoryItem> SortByType()
@@ -34,11 +29,6 @@ namespace Game.Global
 
         public void AddTestingResources(int resourceCount, int noItems = 0)
         {
-            IncrementResource(InventoryResourceType.PistolMag, 10);
-            IncrementResource(InventoryResourceType.RifleMag, 10);
-            IncrementResource(InventoryResourceType.ShotgunMag, 10);
-            IncrementResource(InventoryResourceType.SmgMag, 10);
-            IncrementResource(InventoryResourceType.LmgMag, 10);
             IncrementResource(InventoryResourceType.Food, resourceCount);
             IncrementResource(InventoryResourceType.Fuel, resourceCount);
             IncrementResource(InventoryResourceType.Scrap, resourceCount);

@@ -51,7 +51,7 @@ namespace Game.Combat.Enemies.Misc
 
         protected virtual void CreateExplosion()
         {
-            Explosion explosion = Explosion.CreateExplosion(transform.position, 5, _damage);
+            Explosion explosion = Explosion.CreateExplosion(transform.position, _damage);
             explosion.SetKnockbackDistance(5);
             explosion.Detonate();
         }

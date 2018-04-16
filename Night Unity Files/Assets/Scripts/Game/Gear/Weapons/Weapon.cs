@@ -92,11 +92,6 @@ namespace Game.Gear.Weapons
             return WeaponAttributes.WeaponType;
         }
 
-        public int GetRemainingMagazines()
-        {
-            return (int) ParentInventory.GetResourceQuantity(WeaponAttributes.AmmoType);
-        }
-
         public void ConsumeAmmo(int amount = 0)
         {
             _ammoInMagazine -= amount;
@@ -141,10 +136,6 @@ namespace Game.Gear.Weapons
         public void Reload(Inventory inventory = null)
         {
             _ammoInMagazine = (int) WeaponAttributes.Capacity.CurrentValue();
-            if (inventory != null && inventory.GetResourceQuantity(WeaponAttributes.AmmoType) >= 1)
-            {
-                inventory.DecrementResource(WeaponAttributes.AmmoType, 1);
-            }
         }
 
         public bool FullyLoaded()

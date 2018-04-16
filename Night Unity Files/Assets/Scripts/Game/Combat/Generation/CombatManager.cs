@@ -91,7 +91,7 @@ namespace Game.Combat.Generation
             _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Region;
 
             _currentRegion.Barriers.ForEach(b => b.CreateObject());
-            _currentRegion.Fires.ForEach(f => f.CreateObject());
+            _currentRegion.Fire.CreateObject();
             _currentRegion.Containers.ForEach(c => c.CreateObject());
             PathingGrid.Instance().GenerateGrid(_currentRegion.Barriers);
 

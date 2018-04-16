@@ -76,6 +76,7 @@ namespace Game.Characters
                 characterObject.name = player.Name;
             }
 
+            Characters[0].CharacterView.SelectInitial();
             Characters.ForEach(c => c.CharacterView.RefreshNavigation());
         }
 
@@ -179,9 +180,8 @@ namespace Game.Characters
 
         private Player GenerateDriver()
         {
-            Player driver =  GenerateCharacter(CharacterClass.Driver);
+            Player driver = GenerateCharacter(CharacterClass.Driver);
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Worn, WeaponType.Pistol, 10);
-            driver.Inventory().IncrementResource(weapon.WeaponAttributes.AmmoType, 20);
             driver.EquipWeapon(weapon);
             return driver;
         }
