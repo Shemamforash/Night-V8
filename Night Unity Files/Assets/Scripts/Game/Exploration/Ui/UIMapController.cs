@@ -2,6 +2,7 @@
 using System.Linq;
 using Game.Characters;
 using Game.Exploration.Environment;
+using Game.Exploration.Regions;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -15,7 +16,7 @@ namespace Game.Exploration.Ui
     {
         private static EnhancedButton _exploreButton;
         private static UIMapController _instance;
-        private readonly List<EnhancedButton> _menuButtons = new List<EnhancedButton>();
+        private List<EnhancedButton> _menuButtons = new List<EnhancedButton>();
         private EnhancedButton _enterButton;
         private EnhancedButton _planButton;
         private UiQuickTravelController _quickTravel;
@@ -55,7 +56,7 @@ namespace Game.Exploration.Ui
             _enterButton = Helper.FindChildWithName<EnhancedButton>(mapOptions, "Enter");
             _exploreButton = Helper.FindChildWithName<EnhancedButton>(mapOptions, "Explore");
             _planButton = Helper.FindChildWithName<EnhancedButton>(mapOptions, "Plan");
-            _menuButtons.AddRange(new[] {_enterButton, _exploreButton, _planButton});
+            _menuButtons = new List<EnhancedButton>{_enterButton, _exploreButton, _planButton};
 
             _quickTravel = UiQuickTravelController.Instance;
             _playerExploration = PlayerExplorationController.Instance;
@@ -63,13 +64,14 @@ namespace Game.Exploration.Ui
 
         public void Start()
         {
+            Awake();
             if (MapGenerator.AllNodes().FindAll(r => r.Discovered()).Count == 1 || CharacterManager.SelectedCharacter.TravelAction.InTransit())
             {
                 _planButton.gameObject.SetActive(false);
                 _menuButtons.Remove(_planButton);
             }
 
-            if (CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Region == null)
+            if (CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().RegionType == RegionType.Gate)
             {
                 _enterButton.gameObject.SetActive(false);
                 _menuButtons.Remove(_enterButton);
@@ -81,7 +83,7 @@ namespace Game.Exploration.Ui
             _exploreButton.AddOnSelectEvent(() => _playerExploration.Enable());
             _exploreButton.AddOnDeselectEvent(() => _playerExploration.Disable());
 
-            _enterButton.AddOnClick(() => CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Region.Enter());
+            _enterButton.AddOnClick(() => CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Enter());
 
             InputHandler.SetCurrentListener(_instance);
             InputHandler.RegisterInputListener(_instance);
@@ -90,7 +92,6 @@ namespace Game.Exploration.Ui
 
         private void SetSelectedButton(int offset = 0)
         {
-            Helper.PrintList(_menuButtons);
             if (_selectedButtonIndex + offset < 0) return;
             if (_selectedButtonIndex + offset >= _menuButtons.Count) return;
             _selectedButtonIndex += offset;

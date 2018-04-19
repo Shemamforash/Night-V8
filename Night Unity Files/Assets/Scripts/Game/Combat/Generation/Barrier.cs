@@ -25,7 +25,7 @@ namespace Game.Combat.Generation
         public void Load(XmlNode doc, PersistenceType saveType)
         {
         }
-
+        
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             XmlNode barrierNode = SaveController.CreateNodeAndAppend("Barrier", doc);
@@ -52,6 +52,8 @@ namespace Game.Combat.Generation
             Position = position;
         }
 
+        
+        
         public void CreateObject()
         {
             Assert.IsNull(_barrierObject);
@@ -89,9 +91,7 @@ namespace Game.Combat.Generation
 
         private void CreateMesh()
         {
-            _barrierObject.GetComponent<MeshRenderer>();
-            Mesh mesh = new Mesh();
-            _barrierObject.GetComponent<MeshFilter>().mesh = mesh;
+            Mesh mesh = _barrierObject.GetComponent<MeshFilter>().mesh;
             mesh.vertices = Vertices;
             mesh.triangles = Triangulator.Triangulate(Vertices);
             Vector3[] normals = new Vector3[Vertices.Length];

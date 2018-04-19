@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Exploration.Region;
+using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Libraries;
@@ -88,7 +87,7 @@ namespace Game.Combat.Generation
             _inCombat = true;
             WorldState.Pause();
             _visibilityRange = 200;
-            _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Region;
+            _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
 
             _currentRegion.Barriers.ForEach(b => b.CreateObject());
             _currentRegion.Fire.CreateObject();
@@ -154,10 +153,8 @@ namespace Game.Combat.Generation
                 currentTargetIndex += direction;
                 if (currentTargetIndex == visibleEnemies.Count) currentTargetIndex = 0;
                 if (currentTargetIndex == -1) currentTargetIndex = visibleEnemies.Count - 1;
-                Debug.Log(currentTargetIndex + " " + visibleEnemies.Count);
                 newTarget = visibleEnemies[currentTargetIndex];
             }
-
             Player().SetTarget(newTarget);
         }
 

@@ -19,6 +19,10 @@ namespace SamsHelper
             _lineRenderer.positionCount = Segments + Overlap;
             _lineRenderer.useWorldSpace = false;
             _angleDelta = 2 * Mathf.PI / Segments;
+            if (_lineRenderer.material == null)
+            {
+                _lineRenderer.material= new Material(Shader.Find("Unlit/Texture"));
+            }
         }
 
         public void SetLineWidth(float lineWidth)
@@ -56,8 +60,8 @@ namespace SamsHelper
             for (int i = 0; i < Segments + Overlap; i++)
             {
                 float x = radius * Mathf.Cos(currentAngle);
-                float z = radius * Mathf.Sin(currentAngle);
-                Vector3 pos = new Vector3(x, 0, z);
+                float y = radius * Mathf.Sin(currentAngle);
+                Vector3 pos = new Vector3(x, y, 0);
                 _lineRenderer.SetPosition(i, pos);
                 currentAngle += _angleDelta;
             }

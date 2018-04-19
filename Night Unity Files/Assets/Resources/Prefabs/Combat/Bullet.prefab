@@ -37,9 +37,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4737165623535846}
-  - component: {fileID: 114548556356789562}
   - component: {fileID: 33421053080709002}
   - component: {fileID: 23933244099645758}
+  - component: {fileID: 114372154691296960}
   m_Layer: 8
   m_Name: Light
   m_TagString: Untagged
@@ -214,7 +214,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.05
---- !u!114 &114548556356789562
+--- !u!114 &114372154691296960
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -222,24 +222,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1141465292194388}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d744d5574916149e0854dfab5c4f781d, type: 3}
+  m_Script: {fileID: 11500000, guid: 72222bbca7e42b94ab82d1ed6b2eb699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isStatic: 0
-  coneAngle: 0
-  faceAngle: 0
-  degreeStep: 0.45
-  invertMode: 0
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  color: {r: 0.990566, g: 0.27714908, b: 0, a: 0.1764706}
-  material: {fileID: 2100000, guid: 2e91f08796cbd44849f1e15382cade3d, type: 2}
-  orderInLayer: 0
-  sortingLayer: 0
-  radius: 5
-  flashFrequency: 0
-  flashOffset: 0
+  Colour: {r: 0.735849, g: 0.101740636, b: 0.03818085, a: 0.7075956}
+  Radius: 1
+  LightMaterial: {fileID: 0}
 --- !u!114 &114700656792231492
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4726889822844966}
   - component: {fileID: 212459324117532364}
-  - component: {fileID: 114160086852880260}
   m_Layer: 0
   m_Name: Ring 3
   m_TagString: Untagged
@@ -37,7 +36,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4829227994754968}
   - component: {fileID: 212248987328201432}
-  - component: {fileID: 114580932797615150}
   m_Layer: 0
   m_Name: Ring 1
   m_TagString: Untagged
@@ -103,7 +101,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4573518759716990}
   - component: {fileID: 212538834893508220}
-  - component: {fileID: 114952760315690336}
   m_Layer: 0
   m_Name: Ring 2
   m_TagString: Untagged
@@ -164,7 +161,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1964705321651252}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 367.3614, y: 126.718704, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4530146907698534}
@@ -228,18 +225,6 @@ Transform:
   m_Father: {fileID: 4530146907698534}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114160086852880260
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1014587609269724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2c2f833c17e9804ea11cd1a2624d867, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: -4
 --- !u!114 &114480233143002334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -256,18 +241,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &114580932797615150
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1162700280084958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2c2f833c17e9804ea11cd1a2624d867, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
 --- !u!114 &114774137617336312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -392,18 +365,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8775a810aea95494793d39cbae943db9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114952760315690336
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1611266707278548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2c2f833c17e9804ea11cd1a2624d867, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 3
 --- !u!212 &212248987328201432
 SpriteRenderer:
   m_ObjectHideFlags: 1

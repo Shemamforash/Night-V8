@@ -1,6 +1,7 @@
 ﻿using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Exploration.Environment;
+using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -12,7 +13,7 @@ namespace Game.Exploration.Ui
     {
         private const float RotateSpeed = 1f;
         private Transform _visionTransform;
-        private MapNode _currentNode;
+        private Region _currentNode;
         private Travel travelAction;
         public static PlayerExplorationController Instance;
 
@@ -88,10 +89,10 @@ namespace Game.Exploration.Ui
             _visionTransform.localScale = new Vector3(xScale, 1, 1);
         }
 
-        private MapNode FindTargetNode()
+        private Region FindTargetNode()
         {
             float smallestAngle = 500;
-            MapNode closestNode = null;
+            Region closestNode = null;
             _currentNode.Neighbors().ForEach(n =>
             {
                 float angle = AdvancedMaths.AngleBetween(transform.position, n.Position, transform.rotation.eulerAngles.z);
@@ -114,16 +115,17 @@ namespace Game.Exploration.Ui
             StartTravel(null, targetPosition);
         }
 
-        private void StartTravel(MapNode nearestNode, Vector3 targetPosition)
+        private void StartTravel(Region nearestNode, Vector3 targetPosition)
         {
-            GetComponent<Rigidbody2D>().velocity = (targetPosition - transform.position).normalized * 10f;
-            travelAction.TravelTo(nearestNode, targetPosition);
+            float distance = Vector2.Distance(_currentNode.Position, targetPosition);
+            int duration = MapGenerator.NodeDistanceToTime(distance);
+            travelAction.TravelTo(nearestNode, targetPosition, duration);
             SceneChanger.ChangeScene("Game");
         }
         
         private void SetDestination()
         {
-            MapNode nearestNode = FindTargetNode();
+            Region nearestNode = FindTargetNode();
             if (nearestNode == null)
             {
                 WalkToNowhere();

@@ -1,4 +1,5 @@
 ﻿using Game.Exploration.Environment;
+using Game.Exploration.Regions;
 using Game.Global;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -8,9 +9,9 @@ namespace Game.Characters.CharacterActions
     public class Travel : BaseCharacterAction
     {
         private int TimeSpentTravelling;
-        private MapNode _target;
+        private Region _target;
         private Vector3 TargetPosition;
-        private MapNode CurrentNode;
+        private Region CurrentNode;
         private bool _inTransit;
         private float JourneyTime;
 
@@ -36,14 +37,15 @@ namespace Game.Characters.CharacterActions
 
         public bool AtHome()
         {
-            return CurrentNode?.Region == null;
+            Debug.Log(CurrentNode.Discovered());
+            return CurrentNode.RegionType == RegionType.Gate;
         }
         
         private void ReachTarget()
         {
             CurrentNode = _target;
             _inTransit = false;
-            if (CurrentNode.Region == null)
+            if (AtHome())
             {
                 TimeSpentTravelling = 0;
                 PlayerCharacter.Inventory().MoveAllResources(WorldState.HomeInventory());
@@ -51,7 +53,7 @@ namespace Game.Characters.CharacterActions
             }
             else
             {
-                CurrentNode.Region.Discover();
+                CurrentNode.Discover();
                 SceneChanger.ChangeScene("Map");
             }
         }
@@ -61,7 +63,7 @@ namespace Game.Characters.CharacterActions
             SceneChanger.ChangeScene("Map");
         }
 
-        public MapNode GetCurrentNode()
+        public Region GetCurrentNode()
         {
             return CurrentNode ?? (CurrentNode = MapGenerator.GetInitialNode());
         }
@@ -78,25 +80,20 @@ namespace Game.Characters.CharacterActions
             return Vector3.Lerp(CurrentNode.Position, TargetPosition, progress);
         }
         
-        public void TravelTo(MapNode target, Vector3 targetPosition)
+        public void TravelTo(Region target, Vector3 targetPosition, int duration)
         {
             Enter();
             _inTransit = true;
             _target = target;
             TargetPosition = targetPosition;
-            if (target == null)
+            Duration = duration;
+            if (target != null)
             {
-                Duration = Random.Range(2, 5);
-            }
-            else
-            {
-                float distance = Vector2.Distance(CurrentNode.Position, targetPosition);
-                Duration = MapGenerator.NodeDistanceToTime(distance);
                 JourneyTime = Duration;
             }
         }
 
-        public void SetCurrentNode(MapNode node)
+        public void SetCurrentNode(Region node)
         {
             CurrentNode = node;
         }

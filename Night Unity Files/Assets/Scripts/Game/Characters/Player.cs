@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.Combat.Player;
-using Game.Exploration.Region;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI;
 using SamsHelper.ReactiveUI.InventoryUI;
 using UnityEngine;
 using UnityEngine.SceneManagement;

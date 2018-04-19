@@ -1,11 +1,12 @@
 ﻿using Game.Exploration.Environment;
+using Game.Exploration.Regions;
 using UnityEngine;
 
 namespace Game.Exploration.Ui
 {
     public class UiPathDrawController : MonoBehaviour
     {
-        public static void CreatePathBetweenNodes(MapNode from, MapNode to)
+        public static void CreatePathBetweenNodes(Region from, Region to)
         {
             GameObject pathObject = new GameObject();
             pathObject.transform.SetParent(GameObject.Find("Path").transform);

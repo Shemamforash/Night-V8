@@ -23,6 +23,25 @@ namespace SamsHelper.Libraries
             if (cross.z < 0) return angle;
             return 360 - angle;
         }
+        
+        private static float Cross(Vector2 a, Vector2 b)
+        {
+            return a.x * b.y - a.y * b.x;
+        }
+        
+        public static bool LineIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d, out Vector2 intersectionPoint)
+        {
+            intersectionPoint = new Vector2();
+            Vector2 r = b - a;
+            Vector2 s = d - c;
+            float rxs = Cross(r, s);
+            if (Mathf.Abs(rxs) < 0.00001f) return false;
+            float t = Cross(c - a, s) / rxs;
+            float u = Cross(c - a, r) / rxs;
+            if (Mathf.Abs(rxs) < 0.00001f || !(0 <= t) || !(t <= 1) || !(0 <= u) || !(u <= 1)) return false;
+            intersectionPoint = a + t * r;
+            return true;
+        }
 
         public static Vector2 RandomVectorWithinRange(Vector2 origin, float range)
         {
@@ -49,10 +68,11 @@ namespace SamsHelper.Libraries
 
             for (int i = 0; i < numberOfPoints - 1 && activeSamples.Count != 0; ++i)
             {
-                Vector2 randomSample = activeSamples[Random.Range(0, activeSamples.Count)];
-                int targetSamples = 20;
+                int targetSamples = 100;
+                Vector2 randomSample = Vector2.positiveInfinity;
                 while (targetSamples != 0)
                 {
+                    randomSample = activeSamples[Random.Range(0, activeSamples.Count)];
                     Vector2 randomPoint = new Vector2();
                     float leftBound = randomSample.x - maxRadius;
                     leftBound = Mathf.Clamp(leftBound, -maxSampleDistance, maxSampleDistance);
@@ -79,8 +99,8 @@ namespace SamsHelper.Libraries
                 if (targetSamples == 0) activeSamples.Remove(randomSample);
             }
 
-//            if (samples.Count != numberOfPoints)
-//                Debug.Log("Found " + samples.Count + " samples out of " + numberOfPoints + " desired samples, consider modifying the parameters to reach desired number of samples");
+            if (samples.Count != numberOfPoints)
+                Debug.Log("Found " + samples.Count + " samples out of " + numberOfPoints + " desired samples, consider modifying the parameters to reach desired number of samples");
             return samples;
         }
 
@@ -104,6 +124,11 @@ namespace SamsHelper.Libraries
             return angle;
         }
 
+        public static float Dot(Vector2 from, Vector2 to, Vector2 point)
+        {
+            return (point.x - from.x) * (to.y - from.y) - (point.y - from.y) * (to.x - from.x);
+        }
+        
         public static bool IsPointInPolygon(Vector2 point, List<Vector2> polygon)
         {
             int polygonLength = polygon.Count, i = 0;
@@ -128,6 +153,15 @@ namespace SamsHelper.Libraries
             }
 
             return inside;
+        }
+
+        public static float CosineRule(float a, float b, float c)
+        {
+            float numerator = b * b + c * c - a * a;
+            float denominator = 2 * b * c;
+            float result = numerator / denominator;
+            result = Mathf.Acos(result);
+            return result;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net.Mime;
 using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace Game.Exploration.Ui
         private bool _doneFading;
         private TextMeshProUGUI _fadeText;
 
-        private Transform _ring1, _ring2, _ring3;
+        private SpriteRenderer _ring1, _ring2, _ring3, _icon;
 
         public void SetName(string nodeName)
         {
@@ -27,9 +28,10 @@ namespace Game.Exploration.Ui
                 if (i > 0) _letters[i - 1].SetNextLetter(_letters[i]);
             }
 
-            _ring1 = Helper.FindChildWithName(gameObject, "Ring 1").transform;
-            _ring2 = Helper.FindChildWithName(gameObject, "Ring 2").transform;
-            _ring3 = Helper.FindChildWithName(gameObject, "Ring 3").transform;
+            _ring1 = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring 1");
+            _ring2 = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring 2");
+            _ring3 = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring 3");
+            _icon = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Icon");
 
             _letters[0]?.StartFade();
             if (gameObject.activeInHierarchy) StartCoroutine(FadeInLetters());
@@ -37,9 +39,13 @@ namespace Game.Exploration.Ui
 
         public void Update()
         {
-            _ring1.Rotate(new Vector3(0, 0, 1), 5 * Time.deltaTime);
-            _ring2.Rotate(new Vector3(0, 0, 1), 3 * Time.deltaTime);
-            _ring3.Rotate(new Vector3(0, 0, 1), -4 * Time.deltaTime);
+            _ring1.transform.Rotate(new Vector3(0, 0, 1), 5 * Time.deltaTime);
+            _ring2.transform.Rotate(new Vector3(0, 0, 1), 3 * Time.deltaTime);
+            _ring3.transform.Rotate(new Vector3(0, 0, 1), -4 * Time.deltaTime);
+        }
+
+        public void SetAlpha(float alpha)
+        {
         }
 
         private IEnumerator FadeInLetters()

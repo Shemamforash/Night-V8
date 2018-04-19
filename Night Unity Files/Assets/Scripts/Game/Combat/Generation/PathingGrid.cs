@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using SamsHelper;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 namespace Game.Combat.Generation
 {
     public class PathingGrid : MonoBehaviour
     {
-        public const int GameWorldWidth = 20;
+        public const int CombatAreaWidth = 30;
+        public const int CombatMovementDistance = CombatAreaWidth - 3;
         public const int CellResolution = 5;
         public const float CellWidth = 1f / CellResolution;
-        public const int GridWidth = GameWorldWidth * CellResolution;
-
+        public const int GridWidth = CombatAreaWidth * CellResolution;
 
         public Cell[,] Grid;
         private readonly List<Node<Cell>> _gridNodes = new List<Node<Cell>>();
         private static PathingGrid _instance;
 
-        private List<Barrier> _shapes;
+        private List<Barrier> _barriers;
+        public List<GameObject> BarrierObjects;
         private ContactFilter2D cf;
 
         private readonly Collider2D[] colliders = new Collider2D[5000];
@@ -30,6 +33,25 @@ namespace Game.Combat.Generation
         public void Awake()
         {
             _instance = this;
+            DrawEdge();
+        }
+
+        private void DrawEdge()
+        {
+            CreateRing(CombatMovementDistance / 2f, 0.02f, Color.white);
+            CreateRing(CombatAreaWidth / 2f, 0.01f, UiAppearanceController.FadedColour);
+        }
+
+        private void CreateRing(float radius, float width, Color colour)
+        {
+            GameObject ring = new GameObject();
+            ring.transform.SetParent(transform);
+            ring.transform.position = Vector2.zero;
+            ring.transform.localScale = Vector2.one;
+            RingDrawer rd = ring.AddComponent<RingDrawer>();
+            rd.SetLineWidth(width);
+            rd.SetColor(colour);
+            rd.DrawCircle(radius);
         }
 
         public static PathingGrid Instance()
@@ -43,13 +65,22 @@ namespace Game.Combat.Generation
             _instance = null;
         }
 
+        private void OnDrawGizmos()
+        {
+            foreach (Cell cell in _cellsInRange)
+            {
+                Gizmos.color = IsCellHidden(cell) ? new Color(1, 0, 1, 0.4f) : new Color(0, 1, 1, 0.4f);
+                Gizmos.DrawCube(new Vector3(cell.XPos, cell.YPos), new Vector3(CellWidth, CellWidth, 1));
+            }
+        }
+
         public void GenerateGrid(List<Barrier> barriers)
         {
-            _shapes = barriers;
+            _barriers = barriers;
             cf.useTriggers = true;
             cf.SetLayerMask(1 << 9);
             GenerateBaseGrid();
-            foreach (Barrier shape in _shapes)
+            foreach (Barrier shape in _barriers)
             {
                 int areas = shape.Collider.OverlapCollider(cf, colliders);
                 for (int i = 0; i < areas; ++i)
@@ -146,7 +177,7 @@ namespace Game.Combat.Generation
             for (int y = startY; y < endY; ++y)
             {
                 Cell current = Grid[x, y];
-                if (!current.Reachable) continue;
+                if (current == null || !current.Reachable) continue;
                 float distance = current.Distance(origin);
                 if (distance < minRange || distance > maxRange) continue;
                 cellsInRange.Add(current);
@@ -158,15 +189,6 @@ namespace Game.Combat.Generation
         public Cell GetCellNearMe(Cell current, int distance)
         {
             return Helper.RandomInList(CellsInRange(current, distance));
-        }
-
-        private void OnDrawGizmos()
-        {
-            foreach (Cell cell in _cellsInRange)
-            {
-                Gizmos.color = IsCellHidden(cell) ? new Color(1, 0, 1, 0.4f) : new Color(0, 1, 1, 0.4f);
-                Gizmos.DrawCube(new Vector3(cell.XPos, cell.YPos), new Vector3(CellWidth, CellWidth, 1));
-            }
         }
 
         public Cell FindCellToAttackPlayer(Cell currentCell, int maxRange, int minRange = 0)
@@ -250,9 +272,19 @@ namespace Game.Combat.Generation
         {
             _gridNodes.Clear();
             Grid = new Cell[GridWidth, GridWidth];
+            float worldRadius = CombatAreaWidth / 2f * CellResolution;
             for (int x = 0; x < GridWidth; ++x)
             for (int y = 0; y < GridWidth; ++y)
             {
+                float xComp = Mathf.Pow(x - GridWidth / 2f, 2f);
+                float yComp = Mathf.Pow(y - GridWidth / 2f, 2f);
+                float distance = Mathf.Sqrt(xComp + yComp);
+                if (distance > worldRadius)
+                {
+                    Grid[x, y] = null;
+                    continue;
+                }
+
                 Grid[x, y] = Cell.Generate(x, y);
                 _gridNodes.Add(Grid[x, y].Node);
             }

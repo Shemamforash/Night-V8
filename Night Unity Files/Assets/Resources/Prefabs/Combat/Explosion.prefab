@@ -35,9 +35,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4933852252436344}
-  - component: {fileID: 114155377578513888}
   - component: {fileID: 33162448263427168}
   - component: {fileID: 23719301310897374}
+  - component: {fileID: 114022848514243232}
   m_Layer: 0
   m_Name: Light
   m_TagString: Untagged
@@ -140,7 +140,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1924024157971058}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.1719891, y: -0.9780705, z: 0.125957}
+  m_LocalPosition: {x: -3.3082366, y: -0.068935215, z: 0.125957}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4691370292434034}
@@ -205,7 +205,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1294871524958956}
   m_Mesh: {fileID: 0}
---- !u!114 &114155377578513888
+--- !u!114 &114022848514243232
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -213,24 +213,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1294871524958956}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d744d5574916149e0854dfab5c4f781d, type: 3}
+  m_Script: {fileID: 11500000, guid: 72222bbca7e42b94ab82d1ed6b2eb699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isStatic: 0
-  coneAngle: 0
-  faceAngle: 0
-  degreeStep: 0.2
-  invertMode: 0
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  color: {r: 1, g: 1, b: 1, a: 1}
-  material: {fileID: 2100000, guid: 2e91f08796cbd44849f1e15382cade3d, type: 2}
-  orderInLayer: 0
-  sortingLayer: 0
-  radius: 3
-  flashFrequency: 0
-  flashOffset: 0
+  Colour: {r: 0.5754717, g: 0.122833565, b: 0.078720205, a: 0.7075956}
+  Radius: 0
+  LightMaterial: {fileID: 2100000, guid: 2e91f08796cbd44849f1e15382cade3d, type: 2}
 --- !u!114 &114924968492087094
 MonoBehaviour:
   m_ObjectHideFlags: 1

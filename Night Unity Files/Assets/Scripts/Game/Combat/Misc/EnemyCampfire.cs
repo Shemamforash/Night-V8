@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Xml;
+﻿using System.Xml;
 using Facilitating.Persistence;
-using Game.Combat.Generation;
-using LOS;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
@@ -40,18 +37,18 @@ namespace Game.Combat.Misc
 
         private class CampfireBehaviour : MonoBehaviour
         {
-            private LOSRadialLight _light;
+            private FastLight _light;
 
             public void Awake()
             {
-                _light = Helper.FindChildWithName<LOSRadialLight>(gameObject, "Light");
+                _light = Helper.FindChildWithName<FastLight>(gameObject, "Light");
             }
 
             public void Update()
             {
-                Color c = _light.color;
+                Color c = _light.Colour;
                 c.a = Mathf.PerlinNoise(Time.time, 0) * 0.5f + 0.5f;
-                _light.color = c;
+                _light.Colour = c;
             }
         }
     }

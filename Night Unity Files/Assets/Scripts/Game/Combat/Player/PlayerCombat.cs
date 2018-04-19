@@ -87,23 +87,15 @@ namespace Game.Combat.Player
 
         private void TransitionOffScreen()
         {
-            Cell current = CurrentCell();
-            int x = current.XIndex;
-            int y = current.YIndex;
-            float distanceToTop = y;
-            float distanceToBottom = PathingGrid.GridWidth - 1 - y;
-            float distanceToLeft = x;
-            float distanceToRight = PathingGrid.GridWidth - 1 - x;
-            float threshold = 4f;
-            float shortestDistance = Mathf.Min(distanceToTop, distanceToBottom, distanceToLeft, distanceToRight);
-            if (shortestDistance > threshold) return;
-            float alpha = 1 - (shortestDistance - 1) / (threshold - 1);
-            alpha = Mathf.Clamp(alpha, 0, 1);
+            float playerDistance = Vector2.Distance(Vector2.zero, transform.position);
+            if (playerDistance < PathingGrid.CombatMovementDistance / 2f) return;
+            playerDistance -= PathingGrid.CombatMovementDistance / 2f;
+            float alpha = Mathf.Clamp(playerDistance, 0, 1);
             GameObject.Find("Screen Fader").GetComponent<Image>().color = new Color(0, 0, 0, alpha);
-            if (alpha == 1)
-            {
-                CombatManager.ExitCombat();
-            }
+            if (alpha != 1) return;
+            InputHandler.SetCurrentListener(null);
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            CombatManager.ExitCombat();
         }
 
         public void OnInputUp(InputAxis axis)

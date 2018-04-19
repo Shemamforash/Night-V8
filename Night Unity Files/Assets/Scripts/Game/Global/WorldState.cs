@@ -3,9 +3,8 @@ using Facilitating.Persistence;
 using Facilitating.UI;
 using Game.Characters;
 using Game.Exploration.Environment;
-using Game.Exploration.Region;
+using Game.Exploration.Regions;
 using Game.Exploration.Weather;
-using SamsHelper.ReactiveUI;
 using UnityEngine;
 
 namespace Game.Global
@@ -15,6 +14,7 @@ namespace Game.Global
         public const int MinutesPerHour = 12;
         public const int IntervalSize = 60 / MinutesPerHour;
         public static int StormDistance;
+        public static readonly int StormDistanceMax = 10;
         public static int DaysSpentHere;
         private static bool _started;
         private static readonly CharacterManager _homeInventory = new CharacterManager();
@@ -40,7 +40,7 @@ namespace Game.Global
             _started = true;
             EnvironmentManager.Start();
             WeatherManager.Start();
-            StormDistance = 10;
+            StormDistance = StormDistanceMax;
             WorldView.SetStormDistance(StormDistance);
 
 //            SaveController.LoadSettings();
@@ -67,6 +67,16 @@ namespace Game.Global
             }
         }
 
+        public static string TimeToHours(int duration)
+        {
+            int hours = Mathf.FloorToInt((float)duration / MinutesPerHour);
+            int minutes = duration - hours * MinutesPerHour;
+            string timeString = "";
+            if (hours != 0) timeString += hours + "hrs ";
+            timeString += minutes * IntervalSize + "mins";
+            return timeString;
+        }
+
         public float GetCurrentDanger()
         {
             if (StormDistance <= 30f) return StormDistance / 30f;
@@ -83,9 +93,13 @@ namespace Game.Global
 
             if (DaysSpentHere >= 4) StormDistance += 2;
             else if (DaysSpentHere >= 3)
+            {
                 ++StormDistance;
+                if (StormDistance > StormDistanceMax) StormDistance = StormDistanceMax;
+            }
+
             UpdateStormDistance();
-            EnvironmentManager.GenerateEnvironment();
+            EnvironmentManager.NextLevel();
         }
 
         private void InitiateFinalEncounter()

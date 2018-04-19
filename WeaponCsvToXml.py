@@ -135,12 +135,13 @@ class EnvironmentImporter(XMLWriter):
             write_tag(self, get_value(self, "A", row), self.read_single_environment, [row])
 
     def read_single_environment(self, row):
-        write_single_value(self, "Temperature", get_value(self, "B", row))
-        write_single_value(self, "Wetness", get_value(self, "C", row))
-        write_single_value(self, "Water", get_value(self, "D", row))
-        write_single_value(self, "Food", get_value(self, "E", row))
-        write_single_value(self, "Fuel", get_value(self, "F", row))
-        write_single_value(self, "Scrap", get_value(self, "G", row))
+        write_single_value(self, "Level", get_value(self, "B", row))
+        write_single_value(self, "Temperature", get_value(self, "C", row))
+        write_single_value(self, "Shelter", get_value(self, "D", row))
+        write_single_value(self, "Temples", get_value(self, "F", row))
+        write_single_value(self, "CompleteKeys", get_value(self, "G", row))
+        write_single_value(self, "Resources", get_value(self, "I", row))
+        write_single_value(self, "Danger", get_value(self, "J", row))
 
 
 class RegionImporter(XMLWriter):
@@ -149,17 +150,15 @@ class RegionImporter(XMLWriter):
         write_tag(self, "RegionType", self.read_regions)
 
     def read_regions(self):
-        for offset in range(0, 5):
-            column = 2 + offset * 3
+        for offset in range(0, 4):
+            column = offset * 2 + 1
             column_letter = num2alpha[column]
-            write_tag(self, get_value(self, column_letter, 2), self.read_region_type, [column])
+            print(column_letter)
+            write_tag(self, get_value(self, column_letter, 1), self.read_region_type, [column])
 
     def read_region_type(self, column):
         self.read_region_names(num2alpha[column], "Prefixes")
         self.read_region_names(num2alpha[column + 1], "Suffixes")
-        write_tag(self, "Region", self.read_single_region, [column])
-        write_tag(self, "Region", self.read_single_region, [column + 1])
-        write_tag(self, "Region", self.read_single_region, [column + 2])
 
     def read_region_names(self, column_letter, name_type):
         prefix_string = ""
@@ -276,12 +275,13 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-WeaponImporter()
+# WeaponImporter()
 # GearImporter()
 # WeatherImporter()
-# RegionImporter()
+RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
-InscriptionImporter()
+# InscriptionImporter()
 # SkillImporter()
 # TraitImporter()
+# EnvironmentImporter()

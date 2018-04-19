@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Game.Combat.Generation;
-using LOS;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -23,7 +22,7 @@ namespace Game.Combat.Misc
         private readonly float _fadeTime = 0.5f;
 
         private float _knockbackDistance;
-        private LOSRadialLight _light;
+        private FastLight _light;
         private float _originalExplosionWidth, _originalWarningWidth;
         private ParticleSystem _particles;
         private SpriteRenderer _warningRing;
@@ -34,10 +33,10 @@ namespace Game.Combat.Misc
             _warningRing = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Warning");
             _explosionSprite = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Explosion");
             _particles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Fragments");
-            _light = Helper.FindChildWithName<LOSRadialLight>(gameObject, "Light");
+            _light = Helper.FindChildWithName<FastLight>(gameObject, "Light");
 
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
-            _light.color = UiAppearanceController.InvisibleColour;
+            _light.Colour = UiAppearanceController.InvisibleColour;
 
             _originalExplosionWidth = _explosionSprite.bounds.size.x;
             _originalWarningWidth = _warningRing.bounds.size.x;
@@ -133,15 +132,15 @@ namespace Game.Combat.Misc
             {
                 if (!shownWarning && _age < _explodeTime / 2f)
                 {
-                    _light.color = UiAppearanceController.FadedColour;
-//				_light.radius = 1;
+                    _light.Colour = UiAppearanceController.FadedColour;
+                    _light.Radius = 1;
                     ScaleSprite(_explosionSprite, _explosionRadius / 4f, _originalExplosionWidth);
                     _explosionSprite.color = Color.white;
                     shownWarning = true;
                 }
                 else if (!shownLight && _age > _explodeTime / 2f && _age < _explodeTime)
                 {
-                    _light.color = UiAppearanceController.InvisibleColour;
+                    _light.Colour = UiAppearanceController.InvisibleColour;
                     _explosionSprite.color = UiAppearanceController.InvisibleColour;
                     shownLight = true;
                 }
@@ -152,12 +151,12 @@ namespace Game.Combat.Misc
                         DealDamage();
                         _particles.Emit(100);
                         emitted = true;
-//					_light.radius = 3;
+                        _light.Radius = 3;
                     }
 
                     float normalisedTime = (_age - _explodeTime) / _fadeTime;
                     float alpha = 1 - normalisedTime;
-                    _light.color = new Color(1, 1, 1, alpha * 0.4f);
+                    _light.Colour = new Color(1, 1, 1, alpha * 0.4f);
                     ScaleSprite(_explosionSprite, _explosionRadius * 0.75f + 0.25f * normalisedTime, _originalExplosionWidth);
                     _explosionSprite.color = new Color(1, 1, 1, alpha);
                 }
@@ -167,7 +166,7 @@ namespace Game.Combat.Misc
             }
 
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
-            _light.color = UiAppearanceController.InvisibleColour;
+            _light.Colour = UiAppearanceController.InvisibleColour;
             gameObject.SetActive(false);
             _explosionPool.Add(this);
         }

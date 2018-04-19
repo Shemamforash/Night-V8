@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
-using Game.Combat.Generation;
-using Game.Exploration.Environment;
-using Game.Exploration.Region;
+using Game.Exploration.Regions;
 using Game.Gear;
 using Game.Gear.Weapons;
 using UnityEngine;
@@ -45,9 +43,10 @@ namespace Game.Combat.Misc
             _playerCharacter.EquipWeapon(weapon);
             weapon.Reload(_playerCharacter.Inventory());
 
-            _encounter = RegionManager.GenerateRegions(1)[0];
             CharacterManager.SelectedCharacter = _playerCharacter;
-            MapNode node = MapNode.CreateNode(Vector2Int.zero, _encounter);
+            Region node = new Region();
+            node.RegionType = RegionType.Danger;
+            node.Position = Vector2.zero;
             _playerCharacter.TravelAction.SetCurrentNode(node);
         }
     }

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Characters;
+using Game.Characters.CharacterActions;
 using Game.Exploration.Environment;
+using Game.Exploration.Regions;
+using Game.Global;
 using NUnit.Framework;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -14,7 +17,7 @@ namespace Game.Exploration.Ui
     {
         private const int Centre = 7;
         private readonly List<RegionUi> _regionUiList = new List<RegionUi>();
-        private List<MapNode> _regions;
+        private List<Region> _regions;
         private int _selectedRegion;
         public static UiQuickTravelController Instance;
 
@@ -28,7 +31,9 @@ namespace Game.Exploration.Ui
                         TrySelectRegionBelow();
                     else
                         TrySelectRegionAbove();
-
+                    break;
+                case InputAxis.Fire:
+                    TravelToRegion();
                     break;
             }
         }
@@ -50,9 +55,18 @@ namespace Game.Exploration.Ui
             {
                 RegionUi regionUi = new RegionUi(regions[i].gameObject, Math.Abs(i - Centre));
                 _regionUiList.Add(regionUi);
-                regionUi.SetRegion();
+                regionUi.SetNoRegion();
             }
             Disable();
+        }
+        
+        private void TravelToRegion()
+        {
+            Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
+            float distance = Vector2.Distance(travelAction.GetCurrentNode().Position, _targetRegion.Position);
+            int duration = MapGenerator.NodeDistanceToTime(distance);
+            travelAction.TravelTo(travelAction.GetCurrentNode(), travelAction.GetCurrentNode().Position, duration);
+            SceneChanger.ChangeScene("Game");
         }
 
         public void Enable()
@@ -84,20 +98,31 @@ namespace Game.Exploration.Ui
             SelectRegion();
         }
 
+        private Region _targetRegion;
+        
         private void SelectRegion()
         {
-            MapNode currentNode = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
+            Region currentNode = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
             Assert.NotNull(currentNode);
 
             for (int i = 0; i < _regionUiList.Count; ++i)
             {
                 int offset = i - Centre;
-                int targetRegion = _selectedRegion + offset;
-                MapNode node = null;
-                if (targetRegion >= 0 && targetRegion < _regions.Count) node = _regions[targetRegion];
-                if (node == null) continue;
-                if (i == Centre) MapGenerator.SetRoute(currentNode, node);
-                _regionUiList[i].SetRegion(node.GetRegionName(), RoutePlotter.DistanceBetween(node, currentNode));
+                int regionIndex = _selectedRegion + offset;
+                Region node = null;
+                if (regionIndex >= 0 && regionIndex < _regions.Count) node = _regions[regionIndex];
+                if (node == null)
+                {
+                    _regionUiList[i].SetNoRegion();
+                    continue;
+                }
+
+                if (i == Centre)
+                {
+                    MapGenerator.SetRoute(currentNode, node);
+                    _targetRegion = node;
+                }
+                _regionUiList[i].SetRegion(node.Name, RoutePlotter.DistanceBetween(node, currentNode));
             }
         }
 
@@ -121,15 +146,15 @@ namespace Game.Exploration.Ui
                 _distanceText.SetColor(c);
             }
 
-            public void SetRegion()
+            public void SetNoRegion()
             {
                 SetColor(UiAppearanceController.InvisibleColour);
             }
 
-            public void SetRegion(string name, float distance)
+            public void SetRegion(string name, float duration)
             {
                 _nameText.Text(name);
-                _distanceText.Text(Helper.Round(distance / (MapGenerator.MinRadius * 2f), 1) + "hrs");
+                _distanceText.Text(WorldState.TimeToHours((int) (duration / MapGenerator.MinRadius * WorldState.MinutesPerHour)));
                 SetColor(_activeColour);
             }
         }

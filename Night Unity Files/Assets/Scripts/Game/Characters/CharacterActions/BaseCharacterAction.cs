@@ -54,23 +54,13 @@ namespace Game.Characters.CharacterActions
             ResetTimeRemaining();
         }
 
-        private string TimeRemainingToString()
-        {
-            int hours = Mathf.FloorToInt((float)Duration / WorldState.MinutesPerHour);
-            int minutes = Duration - hours * WorldState.MinutesPerHour;
-            string timeString = "";
-            if (hours != 0) timeString += hours + "hrs ";
-            timeString += minutes * WorldState.IntervalSize + "mins";
-            return timeString;
-        }
-
         protected string DisplayName;
         protected bool ShowTime = true;
         
         public void UpdateActionText()
         {
             string actionString = DisplayName;
-            if (ShowTime) actionString += "\n" + TimeRemainingToString();
+            if (ShowTime) actionString += "\n" + WorldState.TimeToHours(Duration);
             PlayerCharacter.CharacterView.UpdateCurrentActionText(actionString);
         }
     }

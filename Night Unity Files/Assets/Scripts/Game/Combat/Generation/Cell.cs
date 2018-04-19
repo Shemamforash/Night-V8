@@ -28,6 +28,7 @@ namespace Game.Combat.Generation
 
         private void AddNeighbor(Cell c)
         {
+            if (c == null) return;
             AllNeighbors.Add(c);
             if (!c.Reachable) return;
             ReachableNeighbors.Add(c);
@@ -49,8 +50,8 @@ namespace Game.Combat.Generation
             gameObject.name = "Cell " + xIndex + " " + yIndex;
             XIndex = xIndex;
             YIndex = yIndex;
-            XPos = (float) xIndex / PathingGrid.CellResolution - PathingGrid.GameWorldWidth / 2f;
-            YPos = (float) yIndex / PathingGrid.CellResolution - PathingGrid.GameWorldWidth / 2f;
+            XPos = (float) xIndex / PathingGrid.CellResolution - PathingGrid.CombatAreaWidth / 2f;
+            YPos = (float) yIndex / PathingGrid.CellResolution - PathingGrid.CombatAreaWidth / 2f;
             Position = new Vector2(XPos, YPos);
             Node = new Node<Cell>(this, Position);
 //            BoxCollider2D col = gameObject.GetComponent<BoxCollider2D>();

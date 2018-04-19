@@ -66,8 +66,8 @@ namespace Game.Combat.Generation
             float A = 0.0f;
             for (int p = n - 1, q = 0; q < n; p = q++)
             {
-                Vector2 pval = m_points[p];
-                Vector2 qval = m_points[q];
+                Vector3 pval = m_points[p];
+                Vector3 qval = m_points[q];
                 A += pval.x * qval.y - qval.x * pval.y;
             }
 
@@ -77,16 +77,16 @@ namespace Game.Combat.Generation
         private static bool Snip(int u, int v, int w, int n, int[] V)
         {
             int p;
-            Vector2 A = m_points[V[u]];
-            Vector2 B = m_points[V[v]];
-            Vector2 C = m_points[V[w]];
+            Vector3 A = m_points[V[u]];
+            Vector3 B = m_points[V[v]];
+            Vector3 C = m_points[V[w]];
             if (Mathf.Epsilon > (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x))
                 return false;
             for (p = 0; p < n; p++)
             {
                 if (p == u || p == v || p == w)
                     continue;
-                Vector2 P = m_points[V[p]];
+                Vector3 P = m_points[V[p]];
                 if (InsideTriangle(A, B, C, P))
                     return false;
             }
@@ -94,26 +94,13 @@ namespace Game.Combat.Generation
             return true;
         }
 
-        private static bool InsideTriangle(Vector2 A, Vector2 B, Vector2 C, Vector2 P)
+        private static bool InsideTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p)
         {
-            float ax = C.x - B.x;
-            float ay = C.y - B.y;
-            float bx = A.x - C.x;
-            float by = A.y - C.y;
-            float cx = B.x - A.x;
-            float cy = B.y - A.y;
-            float apx = P.x - A.x;
-            float apy = P.y - A.y;
-            float bpx = P.x - B.x;
-            float bpy = P.y - B.y;
-            float cpx = P.x - C.x;
-            float cpy = P.y - C.y;
-
-            float aCROSSbp = ax * bpy - ay * bpx;
-            float cCROSSap = cx * apy - cy * apx;
-            float bCROSScp = bx * cpy - by * cpx;
-
-            return aCROSSbp >= 0.0f && bCROSScp >= 0.0f && cCROSSap >= 0.0f;
+            float A = 0.5f * (-p1.y * p2.x + p0.y * (-p1.x + p2.x) + p0.x * (p1.y - p2.y) + p1.x * p2.y);
+            int sign = A < 0 ? -1 : 1;
+            float s = (p0.y * p2.x - p0.x * p2.y + (p2.y - p0.y) * p.x + (p0.x - p2.x) * p.y) * sign;
+            float t = (p0.x * p1.y - p0.y * p1.x + (p0.y - p1.y) * p.x + (p1.x - p0.x) * p.y) * sign;
+            return s > 0 && t > 0 && (s + t) < 2 * A * sign;
         }
     }
 }
