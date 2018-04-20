@@ -39,6 +39,7 @@ namespace Game.Combat.Enemies
         public Action CurrentAction;
         public Enemy Enemy;
         private int IdealWeaponDistance;
+        private SpriteRenderer _sprite;
 
         private readonly Queue<Cell> route = new Queue<Cell>();
         //        private const float AlphaCutoff = 0.2f;
@@ -56,25 +57,21 @@ namespace Game.Combat.Enemies
             base.Update();
             CouldHitTarget = TargetVisible() && !OutOfRange();
             CurrentAction?.Invoke();
+            UpdateDistanceAlpha();
         }
 
         private void UpdateDistanceAlpha()
         {
-//            float distanceToMaxVisibility = CombatManager.VisibilityRange + FadeVisibilityDistance - DistanceToTarget();
-//            float alpha = 0;
-//            if (DistanceToTarget() < CombatManager.VisibilityRange)
-//            {
-//                float normalisedDistance = Helper.Normalise(DistanceToTarget(), CombatManager.VisibilityRange);
-//                alpha = 1f - normalisedDistance;
-//                alpha = Mathf.Clamp(alpha, AlphaCutoff, 1f);
-//            }
-//            else if (distanceToMaxVisibility >= 0)
-//            {
-//                alpha = Helper.Normalise(distanceToMaxVisibility, FadeVisibilityDistance);
-//                alpha = Mathf.Clamp(alpha, 0, AlphaCutoff);
-//            }
-
-//            SetAlpha(alpha);
+            float distanceToPlayer = DistanceToTarget();
+            float alpha = 0;
+            if (distanceToPlayer <= CombatManager.VisibilityRange())
+            {
+                alpha = distanceToPlayer / CombatManager.VisibilityRange();
+                alpha = 1 - alpha;
+            } 
+            Color spriteColour = _sprite.color;
+            spriteColour.a = alpha;
+            _sprite.color = spriteColour;
         }
 
         public void OnDrawGizmos()
@@ -99,6 +96,7 @@ namespace Game.Combat.Enemies
         
         public virtual void Initialise(Enemy enemy)
         {
+            _sprite = GetComponent<SpriteRenderer>();
             _grid = PathingGrid.Instance();
             ArmourController = enemy.ArmourController;
             Enemy = enemy;

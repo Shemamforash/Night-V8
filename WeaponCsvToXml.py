@@ -153,7 +153,6 @@ class RegionImporter(XMLWriter):
         for offset in range(0, 4):
             column = offset * 2 + 1
             column_letter = num2alpha[column]
-            print(column_letter)
             write_tag(self, get_value(self, column_letter, 1), self.read_region_type, [column])
 
     def read_region_type(self, column):
@@ -170,16 +169,6 @@ class RegionImporter(XMLWriter):
                 prefix_string += ","
             prefix_string += prefix
         write_single_value(self, name_type, prefix_string)
-
-    def read_single_region(self, column):
-        column_letter = num2alpha[column]
-        write_single_value(self, "Name", get_value(self, column_letter, 1))
-        write_single_value(self, "Type", get_value(self, column_letter, 2))
-        write_single_value(self, "Food", get_value(self, column_letter, 3))
-        write_single_value(self, "Water", get_value(self, column_letter, 4))
-        write_single_value(self, "Fuel", get_value(self, column_letter, 5))
-        write_single_value(self, "Scrap", get_value(self, column_letter, 6))
-        write_single_value(self, "Ammo", get_value(self, column_letter, 7))
 
 
 class CharacterImporter(XMLWriter):

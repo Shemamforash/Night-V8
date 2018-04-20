@@ -86,7 +86,7 @@ namespace Game.Combat.Generation
         {
             _inCombat = true;
             WorldState.Pause();
-            _visibilityRange = 200;
+            _visibilityRange = 5;
             _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
 
             _currentRegion.Barriers.ForEach(b => b.CreateObject());

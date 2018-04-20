@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -22,58 +21,74 @@ namespace DefaultNamespace
             FastLight.UnregisterObstacle(this);
         }
 
-        public List<Vector2> GetVisibleVertices(Vector3 origin, float maxDistance)
+        public List<List<Vector2>> GetVisibleVertices(Vector3 origin, float radius)
         {
-            List<Vector3> vertices = mesh.vertices.ToList();
-            float biggestAngle = 0;
-            Vector2 widestVertexA = Vector3.negativeInfinity;
-            Vector2 widestVertexB = Vector3.negativeInfinity;
-            float b = Vector2.Distance(origin, transform.position);
-            float largestLeftAngle = 0;
-            float largestRightAngle = 0;
-
-            foreach (Vector3 v in vertices)
+            HashSet<int> visibleVerticesIndexes = new HashSet<int>();
+            List<Vector3> worldVertices = mesh.vertices.Where(v => Vector2.Distance(v, origin) <= radius).ToList();
+            worldVertices = worldVertices.Select(meshVertex => transform.TransformPoint(meshVertex)).ToList();
+            for (int i = 0; i < worldVertices.Count; ++i)
             {
-                Vector3 worldVertex = transform.TransformPoint(v);
-                float dot = AdvancedMaths.Dot(origin, transform.position, worldVertex);
-                float c = Vector2.Distance(origin, worldVertex);
-                if (c > maxDistance) continue;
-                float a = Vector2.Distance(worldVertex, transform.position);
-                float angle = AdvancedMaths.CosineRule(a, b, c);
-                if (dot < 0)
+                Vector3 from = worldVertices[i];
+                int toIndex = i + 1 == worldVertices.Count ? 0 : i + 1;
+                Vector3 to = worldVertices[toIndex];
+                Vector3 normal = from - to;
+                normal = Quaternion.AngleAxis(90, Vector3.forward) * normal;
+                Vector3 midpoint = (from + to) / 2f;
+                float dot = Vector3.Dot(normal, origin - midpoint);
+                if (dot <= 0) continue;
+                visibleVerticesIndexes.Add(i);
+                visibleVerticesIndexes.Add(toIndex);
+            }
+
+            List<int> sortedVertices = visibleVerticesIndexes.ToList();
+            sortedVertices.Sort((a, b) => a.CompareTo(b));
+
+            List<List<int>> edges = new List<List<int>>();
+            List<int> currentList = null;
+            int prevValue = -10;
+            bool beganAtZero = false;
+            bool endedAtEndOfList = false;
+
+            foreach (int vertIndex in sortedVertices)
+            {
+                if (vertIndex == worldVertices.Count - 1) endedAtEndOfList = true;
+                if (currentList == null || vertIndex != prevValue + 1)
                 {
-                    if (angle <= largestLeftAngle) continue;
-                    largestLeftAngle = angle;
-                    widestVertexA = worldVertex;
+                    currentList = new List<int>();
+                    edges.Add(currentList);
+                    currentList.Add(vertIndex);
+                    if (vertIndex == 0) beganAtZero = true;
                 }
-                else
+                else if (vertIndex == prevValue + 1)
                 {
-                    if (angle <= largestRightAngle) continue;
-                    largestRightAngle = angle;
-                    widestVertexB = worldVertex;
+                    currentList.Add(vertIndex);
+                }
+
+                prevValue = vertIndex;
+            }
+
+            if (beganAtZero && endedAtEndOfList && edges.Count > 1)
+            {
+                List<int> startList = edges[0];
+                List<int> endList = edges[edges.Count - 1];
+                edges.RemoveAt(0);
+                edges.RemoveAt(edges.Count - 1);
+                endList.AddRange(startList);
+                edges.Add(endList);
+            }
+
+            List<List<Vector2>> finalEdges = new List<List<Vector2>>();
+            foreach (List<int> edge in edges)
+            {
+                List<Vector2> edgeList = new List<Vector2>();
+                finalEdges.Add(edgeList);
+                foreach (int vertIndex in edge)
+                {
+                    edgeList.Add(worldVertices[vertIndex]);
                 }
             }
 
-//            for (int i = 0; i < vertices.Count; ++i)
-//            {
-//                Vector2 leftPoint = transform.TransformPoint(vertices[i]);
-//                float b = Vector2.Distance(leftPoint, origin);
-//                if (b > maxDistance) continue;
-//                for (int j = i + 1; j < vertices.Count; ++j)
-//                {
-//                    Vector3 rightPoint = transform.TransformPoint(vertices[j]);
-//                    float c = Vector2.Distance(rightPoint, origin);
-//                    if (c > maxDistance) continue;
-//                    float a = Vector2.Distance(leftPoint, rightPoint);
-//                    float candidateAngle = AdvancedMaths.CosineRule(a, b, c);
-////                    float candidateAngle = Vector2.Angle(origin - leftPoint, origin - rightPoint);
-//                    if (candidateAngle <= biggestAngle) continue;
-//                    biggestAngle = candidateAngle;
-//                    widestVertexA = leftPoint;
-//                    widestVertexB = rightPoint;
-//                }
-//            }
-            return new List<Vector2> {widestVertexA, widestVertexB};
+            return finalEdges;
         }
     }
 

@@ -36,7 +36,6 @@ public class FastLight : MonoBehaviour
         _meshFilter = GetComponent<MeshFilter>();
         _meshRenderer.material = LightMaterial;
         Vector3 position = transform.position;
-        position.z = 2;
         transform.position = position;
     }
 
@@ -60,14 +59,16 @@ public class FastLight : MonoBehaviour
     {
         public Vertex From;
         public Vertex To;
-
+        
         public bool BelongsToEdge(Vertex v)
         {
             return v.Edge == this;
         }
 
-        public void SetVertices(Vertex a, Vertex b, Vector2 origin)
+        public void SetVertices(Vertex a, Vertex b, Vector2 origin, bool fromEdge, bool toEdge)
         {
+            a.Edge = this;
+            b.Edge = this;
             Vector2 midPoint = (a.Position + b.Position) / 2f;
             float dot = AdvancedMaths.Dot(origin, midPoint, a.Position);
             if (dot < 0)
@@ -83,20 +84,19 @@ public class FastLight : MonoBehaviour
         }
     }
 
-   
 
     private class Vertex
     {
         public readonly Vector2 Position;
         public readonly float Distance;
-        public readonly Edge Edge;
+        public Edge Edge;
         public readonly float Angle;
+        public Vertex PreviousVertex, NextVertex;
 
-        public Vertex(Vector2 position, float distance, Edge e, float angle)
+        public Vertex(Vector2 position, float distance, float angle)
         {
             Position = position;
             Distance = distance;
-            Edge = e;
             Angle = angle;
         }
     }
@@ -121,6 +121,11 @@ public class FastLight : MonoBehaviour
         return new Tuple<bool, Vector2, float>(intersectionExists, nearestIntersection, nearestDistance);
     }
 
+    private bool CheckIsNan(Vector2 vect)
+    {
+        return float.IsNaN(vect.x) || float.IsNaN(vect.y);
+    }
+
     private void DrawLight()
     {
         List<Vertex> vertices = new List<Vertex>();
@@ -130,19 +135,50 @@ public class FastLight : MonoBehaviour
             float maxRadius = o.mesh.bounds.max.magnitude;
             float distanceToMesh = Vector2.Distance(o.transform.position, _position);
             if (distanceToMesh - maxRadius > Radius) return;
-            List<Vector2> widestPoint = o.GetVisibleVertices(_position, Radius);
-            Edge e = new Edge();
-            float aDistance = Vector2.Distance(_position, widestPoint[0]);
-            float bDistance = Vector2.Distance(_position, widestPoint[1]);
-            if (aDistance > Radius && bDistance > Radius) return;
-            Vertex a = new Vertex(widestPoint[0], aDistance, e, 360 - AdvancedMaths.AngleFromUp(_position, widestPoint[0]));
-            Vertex b = new Vertex(widestPoint[1], bDistance, e, 360 - AdvancedMaths.AngleFromUp(_position, widestPoint[1]));
-            e.SetVertices(a, b, _position);
-            edges.Add(e);
-            vertices.Add(a);
-            vertices.Add(b);
+            List<List<Vector2>> visibleEdges = o.GetVisibleVertices(_position, Radius);
+
+            foreach (List<Vector2> visibleVertices in visibleEdges)
+            {
+                List<Vertex> verticesInMesh = new List<Vertex>();
+                for (int i = 0; i < visibleVertices.Count; i++)
+                {
+                    Vector2 vertex = visibleVertices[i];
+                    Vertex a = new Vertex(vertex, Vector2.Distance(_position, vertex), 360 - AdvancedMaths.AngleFromUp(_position, vertex));
+                    verticesInMesh.Add(a);
+                    if (i == 0) continue;
+                    a.PreviousVertex = verticesInMesh[i - 1];
+                    verticesInMesh[i - 1].NextVertex = a;
+                }
+                
+                verticesInMesh.Reverse();
+
+                if (verticesInMesh[0].Angle > verticesInMesh[1].Angle)
+                {
+                    verticesInMesh[1].PreviousVertex = null;
+                    verticesInMesh.RemoveAt(0);
+                }
+
+                if (verticesInMesh[verticesInMesh.Count - 1].Angle < verticesInMesh[verticesInMesh.Count - 2].Angle)
+                {
+                    verticesInMesh[verticesInMesh.Count - 2].NextVertex = null;
+                    verticesInMesh.RemoveAt(verticesInMesh.Count - 1);
+                }
+                
+                for (int i = 0; i < verticesInMesh.Count - 1; ++i)
+                {
+                    Edge e = new Edge();
+                    Vertex from = verticesInMesh[i];
+                    Vertex to = verticesInMesh[i + 1];
+                    Debug.DrawLine(from.Position, to.Position, Color.magenta, 2f);
+                    e.SetVertices(from, to, _position, i == 0, i == verticesInMesh.Count - 1);
+                    edges.Add(e);
+                }
+
+                vertices.AddRange(verticesInMesh);
+            }
         });
         vertices.Sort((a, b) => a.Angle.CompareTo(b.Angle));
+
         List<Vector2> meshVertices = new List<Vector2>();
 
         if (vertices.Count == 0)
@@ -156,11 +192,14 @@ public class FastLight : MonoBehaviour
             Vector2 dirToVertex = (vertex.Position - _position).normalized;
             Vector2 lineSegmentEnd = _position + dirToVertex * Radius;
             Tuple<bool, Vector2, float> intersection = GetIntersectionWithEdge(lineSegmentEnd, edges, vertex);
+
+            //if there is no intersection check to see if the current vertex is at the end of the mesh, if it is, draw a circular area from this vertex to the next vertex to round off the light
             if (intersection.Item1 == false)
             {
-                if (vertex.Edge.To == vertex)
+                if (vertex.NextVertex == null) // && vertex.Edge.To == vertex)
                 {
-                    Vertex nextVertex = i + 1 == vertices.Count ? vertices[0] : vertices[i + 1];
+                    int nextVertexIndex = i + 1 == vertices.Count ? 0 : i + 1;
+                    Vertex nextVertex = vertices[nextVertexIndex];
                     Vector2 dirToNextVertex = (nextVertex.Position - _position).normalized;
                     Vector2 nextLineSegmentEnd = _position + dirToNextVertex * Radius;
                     meshVertices.Add(vertex.Position);
@@ -168,40 +207,67 @@ public class FastLight : MonoBehaviour
                     InsertLineSegments(meshVertices, vertex.Angle, nextVertex.Angle);
                     meshVertices.Add(nextLineSegmentEnd);
                     meshVertices.Add(nextVertex.Position);
+                    Debug.DrawLine(vertex.Position, lineSegmentEnd, Color.yellow, 5f);
+                    Debug.DrawLine(nextVertex.Position, nextLineSegmentEnd, Color.green, 5f);
+                }
+                else
+                {
+                    meshVertices.Add(vertex.Position);
                 }
 
                 continue;
             }
 
+            //if these is an intersection, but it is closer than the current vertex, we can ignore it as it will be dealt with later
             if (intersection.Item3 < vertex.Distance) continue;
-            if (vertex.Edge.From == vertex)
+            Debug.DrawLine(vertex.Position, intersection.Item2, Color.cyan, 0.1f);
+            if (vertex.Edge.From == vertex && vertex.PreviousVertex == null)
             {
                 meshVertices.Add(intersection.Item2);
                 meshVertices.Add(vertex.Position);
             }
-            else
+            else if (vertex.Edge.To == vertex && vertex.NextVertex == null)
             {
                 meshVertices.Add(vertex.Position);
                 meshVertices.Add(intersection.Item2);
+            }
+            else
+            {
+                meshVertices.Add(vertex.Position);
             }
         }
 
         Mesh mesh = _meshFilter.mesh;
         mesh.Clear();
+        meshVertices.Insert(0, _position);
         Vector3[] v = new Vector3[meshVertices.Count];
         for (int i = 0; i < meshVertices.Count; ++i)
         {
             Vector3 vert = transform.InverseTransformPoint(meshVertices[i]);
-            vert.z = -1;
+            vert.z = 2;
             v[i] = vert;
         }
 
         mesh.vertices = v;
-        mesh.triangles = Triangulator.Triangulate(v);
+        mesh.triangles = Triangulate(v);
         Vector3[] normals = new Vector3[mesh.vertices.Length];
         for (int i = 0; i < normals.Length; i++) normals[i] = Vector2.up;
         mesh.normals = normals;
         mesh.uv = CalculateUvs(mesh.vertices);
+    }
+
+    private int[] Triangulate(Vector3[] vertices)
+    {
+        List<int> triangles = new List<int>();
+        for (int i = 1; i < vertices.Length; ++i)
+        {
+            int nextTriangle = i + 1 == vertices.Length ? 1 : i + 1;
+            triangles.Add(0);
+            triangles.Add(i);
+            triangles.Add(nextTriangle);
+        }
+
+        return triangles.ToArray();
     }
 
     private Vector2[] CalculateUvs(Vector3[] vertices)
@@ -237,7 +303,7 @@ public class FastLight : MonoBehaviour
     private void ResizeLight()
     {
         Mesh mesh = _meshFilter.mesh;
-        for (int i = 0; i < mesh.vertices.Length; ++i)
+        for (int i = 1; i < mesh.vertices.Length; ++i)
         {
             Vector2 vertex = transform.TransformPoint(mesh.vertices[i]);
             Vector2 dir = (_position - vertex).normalized;
@@ -245,6 +311,8 @@ public class FastLight : MonoBehaviour
             mesh.vertices[i] = transform.InverseTransformPoint(vertex);
         }
     }
+
+    private bool _hasUpdated;
 
     private void UpdateLight(Vector2 newPosition)
     {
@@ -259,14 +327,15 @@ public class FastLight : MonoBehaviour
         {
             DrawLight();
         }
-        UpdateColour();
+
         _needsUpdate = false;
+        _hasUpdated = true;
         _lastRadius = Radius;
     }
 
     private void UpdateColour()
     {
-        if (_lastColour == Colour) return;
+        if (!_hasUpdated && _lastColour == Colour) return;
         Mesh mesh = _meshFilter.mesh;
         Color32[] colors = new Color32[mesh.vertices.Length];
         for (int i = 0; i < colors.Length; ++i)
@@ -283,5 +352,6 @@ public class FastLight : MonoBehaviour
         Vector2 newPosition = new Vector2(transform.position.x, transform.position.y);
         UpdateLight(newPosition);
         UpdateColour();
+        _hasUpdated = false;
     }
 }
