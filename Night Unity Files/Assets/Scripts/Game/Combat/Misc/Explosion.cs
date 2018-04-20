@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Fastlights;
 using Game.Combat.Generation;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;

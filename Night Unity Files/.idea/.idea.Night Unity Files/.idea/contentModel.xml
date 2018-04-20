@@ -9,9 +9,7 @@
       <e p="Assets" t="Include">
         <e p="CombatShaderController.cs" t="Include" />
         <e p="ContainerController.cs" t="Include" />
-        <e p="FastLight.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
-        <e p="LightObstructor.cs" t="Include" />
         <e p="MeshViewer.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Plugins" t="Include">
@@ -85,6 +83,12 @@
               <e p="UISkillCostController.cs" t="Include" />
               <e p="UIWeaponUpgradeController.cs" t="Include" />
             </e>
+          </e>
+          <e p="FastLights" t="Include">
+            <e p="FastLight.cs" t="Include" />
+            <e p="FLEdge.cs" t="Include" />
+            <e p="FLVertex.cs" t="Include" />
+            <e p="LightObstructor.cs" t="Include" />
           </e>
           <e p="Game" t="Include">
             <e p="Characters" t="Include">
