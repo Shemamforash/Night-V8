@@ -10,13 +10,11 @@ namespace FastLights
         
         public bool BelongsToEdge(FLVertex v)
         {
-            return v.FlEdge == this;
+            return v == From || v == To;
         }
 
-        public void SetVertices(FLVertex a, FLVertex b, Vector2 origin, bool fromEdge, bool toEdge)
+        public void SetVertices(FLVertex a, FLVertex b, Vector2 origin)
         {
-            a.FlEdge = this;
-            b.FlEdge = this;
             Vector2 midPoint = (a.Position + b.Position) / 2f;
             float dot = AdvancedMaths.Dot(origin, midPoint, a.Position);
             if (dot < 0)

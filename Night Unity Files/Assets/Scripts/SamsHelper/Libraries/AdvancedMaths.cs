@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace SamsHelper.Libraries
 {
@@ -29,18 +31,19 @@ namespace SamsHelper.Libraries
             return a.x * b.y - a.y * b.x;
         }
         
-        public static bool LineIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d, out Vector2 intersectionPoint)
+        public static Tuple<bool, Vector2> LineIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
         {
-            intersectionPoint = new Vector2();
+            Vector2 intersectionPoint = new Vector2();
             Vector2 r = b - a;
             Vector2 s = d - c;
             float rxs = Cross(r, s);
-            if (Mathf.Abs(rxs) < 0.00001f) return false;
+            if (Mathf.Abs(rxs) < 0.001f) return Tuple.Create(false, intersectionPoint);
             float t = Cross(c - a, s) / rxs;
             float u = Cross(c - a, r) / rxs;
-            if (Mathf.Abs(rxs) < 0.00001f || !(0 <= t) || !(t <= 1) || !(0 <= u) || !(u <= 1)) return false;
+            if (0 > t || t > 1 || 0 > u || u > 1) return Tuple.Create(false, intersectionPoint);
             intersectionPoint = a + t * r;
-            return true;
+            if(intersectionPoint == Vector2.zero || a == Vector2.zero) Debug.Log(a + " " + t + " " + r);
+            return Tuple.Create(true, intersectionPoint);
         }
 
         public static Vector2 RandomVectorWithinRange(Vector2 origin, float range)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using FastLights;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -56,22 +57,24 @@ namespace Fastlights
             _allObstructors.Remove(lightObstructor);
         }
 
-        private Vector2 intersectionPoint;
-
         private Tuple<bool, Vector2, float> GetIntersectionWithEdge(Vector2 end, List<FLEdge> edges, FLVertex flVertex)
         {
             Vector2 nearestIntersection = Vector2.negativeInfinity;
             float nearestDistance = float.MaxValue;
             bool intersectionExists = false;
+            float rayAngle = 360 - AdvancedMaths.AngleFromUp(_position, end);
             edges.ForEach(e =>
             {
+                if (e.From.Angle > rayAngle && e.To.Angle > rayAngle) return;
+                if (e.From.Angle < rayAngle && e.To.Angle < rayAngle) return;
                 if (e.BelongsToEdge(flVertex)) return;
-                if (!AdvancedMaths.LineIntersection(e.From.Position, e.To.Position, _position, end, out intersectionPoint)) return;
-                float distance = Vector2.Distance(_position, intersectionPoint);
+                Tuple<bool, Vector2> intersection = AdvancedMaths.LineIntersection(e.From.Position, e.To.Position, _position, end);
+                if (!intersection.Item1) return;
+                float distance = Vector2.Distance(_position, intersection.Item2);
                 if (distance >= nearestDistance) return;
                 nearestDistance = distance;
-                nearestIntersection = intersectionPoint;
                 intersectionExists = true;
+                nearestIntersection = intersection.Item2;
             });
             return new Tuple<bool, Vector2, float>(intersectionExists, nearestIntersection, nearestDistance);
         }
@@ -94,28 +97,15 @@ namespace Fastlights
 
                 foreach (List<FLVertex> visibleVertices in visibleEdges)
                 {
-                    List<FLVertex> verticesInMesh = new List<FLVertex>();
-                    for (int i = 0; i < visibleVertices.Count; i++)
-                    {
-                        FLVertex a = visibleVertices[i];
-                        verticesInMesh.Add(a);
-                        if (i == 0) continue;
-                        a.PreviousFlVertex = verticesInMesh[i - 1];
-                        verticesInMesh[i - 1].NextFlVertex = a;
-                    }
-
-                    verticesInMesh.Reverse();
-
-                    for (int i = 0; i < verticesInMesh.Count - 1; ++i)
+                    for (int i = 0; i < visibleVertices.Count - 1; ++i)
                     {
                         FLEdge e = new FLEdge();
-                        FLVertex from = verticesInMesh[i];
-                        FLVertex to = verticesInMesh[i + 1];
-                        e.SetVertices(from, to, _position, i == 0, i == verticesInMesh.Count - 1);
+                        FLVertex from = visibleVertices[i];
+                        FLVertex to = visibleVertices[i + 1];
+                        e.SetVertices(from, to, _position);
                         edges.Add(e);
                     }
-
-                    vertices.AddRange(verticesInMesh);
+                    vertices.AddRange(visibleVertices);
                 }
             });
             vertices.Sort((a, b) => a.Angle.CompareTo(b.Angle));
@@ -148,8 +138,6 @@ namespace Fastlights
                         InsertLineSegments(meshVertices, flVertex.Angle, nextFlVertex.Angle);
                         meshVertices.Add(nextLineSegmentEnd);
                         meshVertices.Add(nextFlVertex.Position);
-                        Debug.DrawLine(flVertex.Position, lineSegmentEnd, Color.yellow, 5f);
-                        Debug.DrawLine(nextFlVertex.Position, nextLineSegmentEnd, Color.green, 5f);
                     }
                     else
                     {
@@ -160,17 +148,23 @@ namespace Fastlights
                 }
 
                 //if these is an intersection, but it is closer than the current vertex, we can ignore it as it will be dealt with later
-                if (intersection.Item3 < flVertex.Distance) continue;
-                Debug.DrawLine(flVertex.Position, intersection.Item2, Color.cyan, 0.1f);
-                if (flVertex.FlEdge.From == flVertex && flVertex.PreviousFlVertex == null)
+                if (intersection.Item3 < flVertex.DistanceToOrigin) continue;
+                Vector2 intersectionPoint = intersection.Item2;
+                if (flVertex.PreviousFlVertex == null)
                 {
-                    meshVertices.Add(intersection.Item2);
+//                    Vector2 mid = (flVertex.Position + intersectionPoint) / 2f;
+//                    Debug.DrawLine(flVertex.Position, mid, new Color(0.5f, 0f, 1, 1f), 2f);
+//                    Debug.DrawLine(mid, intersectionPoint, new Color(0, 1f, 1, 1f), 2f);          
+                    meshVertices.Add(intersectionPoint);
                     meshVertices.Add(flVertex.Position);
                 }
-                else if (flVertex.FlEdge.To == flVertex && flVertex.NextFlVertex == null)
+                else if (flVertex.NextFlVertex == null)
                 {
+//                    Vector2 mid = (flVertex.Position + intersectionPoint) / 2f;
+//                    Debug.DrawLine(flVertex.Position, mid, new Color(1, 0.5f, 0, 1f), 2f);
+//                    Debug.DrawLine(mid, intersectionPoint, new Color(1, 0.5f, 1, 1f), 2f);
                     meshVertices.Add(flVertex.Position);
-                    meshVertices.Add(intersection.Item2);
+                    meshVertices.Add(intersectionPoint);
                 }
                 else
                 {
