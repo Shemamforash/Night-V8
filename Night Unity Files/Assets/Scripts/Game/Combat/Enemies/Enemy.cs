@@ -49,6 +49,7 @@ namespace Game.Combat.Enemies
             Reset();
             EnemyBehaviour enemyBehaviour;
             GameObject enemyObject = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Combat Character"));
+            enemyObject.name = Template.EnemyType.ToString() + Id;
             switch (Template.EnemyType)
             {
                 case EnemyType.Brawler:

@@ -15,10 +15,11 @@ Shader "LOS/Radial Light" {
             Tags {
                 "LightMode"="Always"
             }
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend SrcAlpha One
+            Cull off
             ZWrite Off
-            
             Fog {Mode Off}
+            
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -52,7 +53,11 @@ Shader "LOS/Radial Light" {
             	_intensity = 1;
                 float4 _MainTex_var = tex2D(_MainTex, i.uv0);
                 float texRGBAverage = (_MainTex_var.r + _MainTex_var.g + _MainTex_var.b) / 3;
-                return fixed4(i.color.rgb * _intensity, texRGBAverage * i.color.a);
+                fixed4 color = fixed4(i.color.rgb * _intensity, texRGBAverage * i.color.a);
+                if(i.color.r > color.r) {
+                    color.r = i.color.r;
+                }
+                return color;
             }
             ENDCG
         }

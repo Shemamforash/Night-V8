@@ -186,21 +186,23 @@ namespace Game.Combat.Generation
             return cellsInRange;
         }
 
-        public Cell GetCellNearMe(Cell current, int distance)
+        public Cell GetCellNearMe(Cell current, float distance)
         {
-            return Helper.RandomInList(CellsInRange(current, distance));
+            return Helper.RandomInList(CellsInRange(current, WorldToGridDistance(distance)));
         }
 
-        public Cell FindCellToAttackPlayer(Cell currentCell, int maxRange, int minRange = 0)
+        public Cell FindCellToAttackPlayer(Cell currentCell, float maxRange, float minRange = 0)
         {
+            int max = WorldToGridDistance(maxRange);
+            int min = WorldToGridDistance(minRange);
             Cell playerCell = CombatManager.Player().CurrentCell();
-            List<Cell> cellsNearPlayer = CellsInRange(playerCell, maxRange, minRange);
+            List<Cell> cellsNearPlayer = CellsInRange(playerCell, max, min);
             Cell nearestValidCell = FindNearestCell(cellsNearPlayer, false, currentCell);
             if (nearestValidCell == null) return currentCell;
             List<Cell> cellsNearTarget = CellsInRange(nearestValidCell, 3).FindAll(c =>
             {
                 float distance = c.Distance(playerCell);
-                bool outOfRange = distance < minRange || distance > maxRange;
+                bool outOfRange = distance < min || distance > max;
                 if (outOfRange) return false;
                 return !IsCellHidden(c);
             });
@@ -250,7 +252,7 @@ namespace Game.Combat.Generation
             return FindNearestCell(cellsNearby, true, currentCell);
         }
 
-        public int WorldToGridDistance(float distance)
+        private int WorldToGridDistance(float distance)
         {
             return Mathf.FloorToInt(distance * CellResolution);
         }

@@ -38,7 +38,7 @@ namespace Game.Combat.Enemies
         protected bool CouldHitTarget;
         public Action CurrentAction;
         public Enemy Enemy;
-        private int IdealWeaponDistance;
+        protected float IdealWeaponDistance;
         private SpriteRenderer _sprite;
 
         private readonly Queue<Cell> route = new Queue<Cell>();
@@ -68,7 +68,8 @@ namespace Game.Combat.Enemies
             {
                 alpha = distanceToPlayer / CombatManager.VisibilityRange();
                 alpha = 1 - alpha;
-            } 
+            }
+
             Color spriteColour = _sprite.color;
             spriteColour.a = alpha;
             _sprite.color = spriteColour;
@@ -93,14 +94,14 @@ namespace Game.Combat.Enemies
         }
 
         private PathingGrid _grid;
-        
+
         public virtual void Initialise(Enemy enemy)
         {
             _sprite = GetComponent<SpriteRenderer>();
             _grid = PathingGrid.Instance();
             ArmourController = enemy.ArmourController;
             Enemy = enemy;
-            if (Weapon() != null) IdealWeaponDistance = _grid.WorldToGridDistance(Weapon().CalculateIdealDistance());
+            if (Weapon() != null) IdealWeaponDistance = Weapon().CalculateIdealDistance();
             SetOwnedByEnemy(Enemy.Template.Speed);
             HealthController.SetInitialHealth(Enemy.Template.Health, this);
 //            if (!(this is Medic || this is Martyr)) SetHealBehaviour();
@@ -287,7 +288,7 @@ namespace Game.Combat.Enemies
 
         //Firing
 
-        private bool MoveToCover(Action reachCoverAction)
+        public bool MoveToCover(Action reachCoverAction)
         {
             if (_grid.IsCellHidden(CurrentCell())) return false;
             Cell safeCell = _grid.FindCoverNearMe(CurrentCell());
@@ -393,17 +394,17 @@ namespace Game.Combat.Enemies
 
         private bool NeedsRepositioning()
         {
-//            if (DistanceToTarget() <= MeleeDistance)
-//            {
-//                return Melee();
-//            }
-
             if (CouldHitTarget || Weapon() == null) return false;
-            SetActionText("Moving");
             Cell targetCell = _grid.FindCellToAttackPlayer(CurrentCell(), (int) (IdealWeaponDistance * 1.25f), (int) (IdealWeaponDistance * 0.75f));
-            Thread pathThread = _grid.RouteToCell(CurrentCell(), targetCell, route);
-            WaitForRoute(pathThread);
+            Reposition(targetCell);
             return true;
+        }
+
+        protected void Reposition(Cell c)
+        {
+            SetActionText("Moving");
+            Thread pathThread = _grid.RouteToCell(CurrentCell(), c, route);
+            WaitForRoute(pathThread);
         }
 
         private void MoveToCell(Cell target)

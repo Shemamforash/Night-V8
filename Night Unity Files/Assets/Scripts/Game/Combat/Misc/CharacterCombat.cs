@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using Game.Combat.Enemies;
 using Game.Combat.Generation;
+using Game.Combat.Player;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -44,49 +46,105 @@ namespace Game.Combat.Misc
 
         public void Burn()
         {
-            if (_burnTicksRemaining == 0) _burnTime = 1;
-            _burnTicksRemaining = ConditionTicksMax;
+            if (_burnTicks == 0) _burnDuration = 1;
+            _burnTicks = ConditionTicksMax;
         }
 
-        public void Bleed()
+        public bool IsBurning()
         {
-            if (_bleedTicksRemaining == 0) _bleedTime = 1;
-            _bleedTicksRemaining = ConditionTicksMax;
+            return _burnTicks > 0;
+        }
+
+        public void Decay()
+        {
+            if (_decayTicks == 0) _decayDuration = 1;
+            _decayTicks = ConditionTicksMax;
+        }
+
+        public bool IsDecaying()
+        {
+            return _decayTicks > 0;
+        }
+
+        public void Sicken(int stacks = 1)
+        {
+            _sicknessTicks += stacks;
+            if (_sicknessTicks >= SicknessTargetTicks)
+            {
+                HealthController.TakeDamage(HealthController.GetMaxHealth() / 4f);
+                _sicknessTicks = 0;
+            }
+
+            _sicknessDuration = 0;
+        }
+
+        public bool IsSick()
+        {
+            return _sicknessTicks > 0;
+        }
+
+        public void Ram(CharacterCombat target, float ramForce)
+        {
+            Vector2 direction = (target.transform.position - transform.position).normalized;
+            _forceToadd += direction * ramForce;
+        }
+
+        public void ClearConditions()
+        {
+            _decayTicks = 0;
+            _burnTicks = 0;
+            _sicknessTicks = 0;
         }
 
         private void UpdateConditions()
         {
-            if (_burnTicksRemaining > 0)
+            if (_burnTicks > 0)
             {
-                if (_burnTime <= 0)
+                if (_burnDuration <= 0)
                 {
-                    _burnTime = 1 - _burnTime;
-                    ArmourController.TakeDamage(1);
-                    --_burnTicksRemaining;
+                    _burnDuration = 1 - _burnDuration;
+                    HealthController.TakeDamage(1);
+                    --_burnTicks;
                 }
                 else
                 {
-                    _burnTime -= Time.deltaTime;
+                    _burnDuration -= Time.deltaTime;
                 }
             }
-            if (_bleedTicksRemaining > 0)
+
+            if (_decayTicks > 0)
             {
-                if (_burnTime <= 0)
+                if (_burnDuration <= 0)
                 {
-                    _bleedTime = 1 - _bleedTime;
-                    HealthController.TakeDamage(1);
-                    --_bleedTicksRemaining;
+                    _decayDuration = 1 - _decayDuration;
+                    ArmourController.TakeDamage(1);
+                    --_decayTicks;
                 }
                 else
                 {
-                    _bleedTime -= Time.deltaTime;
+                    _decayDuration -= Time.deltaTime;
+                }
+            }
+
+            if (_sicknessTicks > 0)
+            {
+                if (_sicknessDuration > SicknessDurationMax)
+                {
+                    _sicknessDuration = 0;
+                    --_sicknessTicks;
+                }
+                else
+                {
+                    _sicknessDuration += Time.deltaTime;
                 }
             }
         }
 
         private const int ConditionTicksMax = 5;
-        private int _burnTicksRemaining, _bleedTicksRemaining;
-        private float _burnTime, _bleedTime;
+        private const float SicknessDurationMax = 5f;
+        private const int SicknessTargetTicks = 10;
+        private int _burnTicks, _decayTicks, _sicknessTicks;
+        private float _burnDuration, _decayDuration, _sicknessDuration;
 
         public Cell CurrentCell()
         {
@@ -152,7 +210,7 @@ namespace Game.Combat.Misc
         public virtual void Update()
         {
             if (!CombatManager.InCombat()) return;
-            if (GetTarget() != null) _distanceToTarget = CurrentCell().Distance(GetTarget().CurrentCell());
+            if (GetTarget() != null) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);
             _currentCell = PathingGrid.Instance().PositionToCell(transform.position);
             UpdateRecoil();
             UpdateConditions();
@@ -175,9 +233,7 @@ namespace Game.Combat.Misc
 
         public float GetAccuracyModifier()
         {
-            float baseRecoilModifier = -0.5f * Recoil.CurrentValue() + 1;
-//            float movementModifier = Moving() ? 0.5f : 1f;
-            return baseRecoilModifier;
+            return Recoil.CurrentValue() * (Moving() ? 0.5f : 1f);
         }
 
         private void UpdateRecoil()

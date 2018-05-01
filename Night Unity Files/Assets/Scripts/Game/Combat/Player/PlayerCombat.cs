@@ -28,6 +28,7 @@ namespace Game.Combat.Player
         private bool _fired;
         private int _initialArmour;
         private Transform _pivot;
+        private Quaternion _lastTargetRotation;
 
         private Coroutine _reloadingCoroutine;
 
@@ -161,10 +162,22 @@ namespace Game.Combat.Player
             else
             {
                 _pivot.gameObject.SetActive(true);
-                _pivot.rotation = AdvancedMaths.RotationToTarget(transform.position, GetTarget().transform.position);
+                Quaternion targetRotation = AdvancedMaths.RotationToTarget(transform.position, GetTarget().transform.position);
+                if (_rotateAimTime <= 0f)
+                {
+                    _pivot.rotation = targetRotation;
+                }
+                else
+                {
+                   _rotateAimTime -= Time.deltaTime;
+                    if (_rotateAimTime < 0) _rotateAimTime = 0;
+                    _pivot.rotation = Quaternion.Lerp(_lastTargetRotation, targetRotation, 1f - _rotateAimTime / RotateAimMaxTime);
+                }
             }
         }
 
+        private float RotateAimMaxTime = 0.2f;
+        private float _rotateAimTime;
         private const float MaxShowInventoryDistance = 0.5f;
         private ContainerController _lastNearestContainer;
 
@@ -249,6 +262,11 @@ namespace Game.Combat.Player
 
         public void SetTarget(EnemyBehaviour e)
         {
+            if (_currentTarget != null)
+            {
+                _lastTargetRotation = AdvancedMaths.RotationToTarget(transform.position, GetTarget().transform.position);
+                _rotateAimTime = RotateAimMaxTime;
+            }
             _currentTarget = e;
             EnemyUi.Instance().SetSelectedEnemy(e);
         }

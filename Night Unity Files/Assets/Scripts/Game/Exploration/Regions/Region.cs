@@ -127,6 +127,7 @@ namespace Game.Exploration.Regions
         {
             AddEnemy(EnemyType.Sentinel, 10);
             AddEnemy(EnemyType.Witch, 10);
+            AddEnemy(EnemyType.Brawler, 10);
         }
 
         private int CalculateDanger()

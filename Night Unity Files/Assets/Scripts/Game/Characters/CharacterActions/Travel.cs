@@ -1,7 +1,6 @@
 ﻿using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Game.Characters.CharacterActions
@@ -37,7 +36,8 @@ namespace Game.Characters.CharacterActions
 
         public bool AtHome()
         {
-            Debug.Log(CurrentNode.Discovered());
+            //todo fix me
+            if (CurrentNode == null) return true;
             return CurrentNode.RegionType == RegionType.Gate;
         }
         

@@ -22,7 +22,7 @@ namespace Game.Combat.Ui
 
         public void Update()
         {
-            float newHeight = MaxHeight * (CombatManager.Player().GetAccuracyModifier() * 2f - 1f);
+            float newHeight = MaxHeight * 1 - CombatManager.Player().GetAccuracyModifier();
             if (_currentShotTime > 0)
             {
                 float rValue = 1 - _currentShotTime / FadeTime;

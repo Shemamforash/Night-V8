@@ -133,11 +133,9 @@
                   <e p="Witch.cs" t="Include" />
                 </e>
                 <e p="Misc" t="Include">
+                  <e p="DecayGrenade.cs" t="Include" />
                   <e p="Grenade.cs" t="Include" />
-                  <e p="GrenadeType.cs" t="Include" />
                   <e p="IncendiaryGrenade.cs" t="Include" />
-                  <e p="PierceGrenade.cs" t="Include" />
-                  <e p="SplinterGrenade.cs" t="Include" />
                 </e>
               </e>
               <e p="Generation" t="Include">
@@ -348,6 +346,7 @@
             </e>
           </e>
         </e>
+        <e p="UiAimController.cs" t="Include" />
         <e p="UiAreaInventoryController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />

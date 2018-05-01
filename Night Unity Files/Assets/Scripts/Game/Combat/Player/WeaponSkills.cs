@@ -99,7 +99,7 @@ namespace Game.Combat.Player
         {
             Shot shot = CreateShot();
             shot.GuaranteeHit();
-            shot.SetKnockdownChance(1, 5);
+            shot.SetKnockbackForce(5);
             shot.Fire();
         }
     }
@@ -142,7 +142,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().OnFireAction += s => { s.SetKnockdownChance(0.25f, 2); };
+            CombatManager.Player().OnFireAction += s => { s.SetKnockbackForce(25); };
         }
     }
 
@@ -168,7 +168,14 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-//            CombatManager.Player().OnFireAction += s => { s.AddOnHit(() => { Explosion.CreateAndDetonate(s.Target().Position.CurrentValue(), 5, s.DamageDealt()); }); };
+            CombatManager.Player().OnFireAction += s =>
+            {
+                s.AddOnHit(() =>
+                {
+                    Explosion e = Explosion.CreateExplosion(s.transform.position, s.DamageDealt(), 0.25f);
+                    e.InstantDetonate();
+                });
+            };
         }
     }
 

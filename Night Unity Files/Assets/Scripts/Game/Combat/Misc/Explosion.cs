@@ -13,7 +13,6 @@ namespace Game.Combat.Misc
         private static GameObject _explosionPrefab;
         private static readonly List<Explosion> _explosionPool = new List<Explosion>();
         private float _age;
-        private bool _bleed, _burn, _sick, _pierce;
 
         private int _damage;
         private readonly float _explodeTime = 0.2f;
@@ -54,16 +53,12 @@ namespace Game.Combat.Misc
             explosion.Initialise(position, damage, radius);
             return explosion;
         }
-
+        
         private void Initialise(Vector2 position, int damage, float radius = 1)
         {
             transform.position = position;
             _explosionRadius = radius;
             _damage = damage;
-            _bleed = false;
-            _burn = false;
-            _sick = false;
-            _pierce = false;
         }
 
         private static Explosion GetNewExplosion()
@@ -87,17 +82,17 @@ namespace Game.Combat.Misc
             StartCoroutine(Warmup());
         }
 
+        public void InstantDetonate()
+        {
+            gameObject.SetActive(true);
+            StartCoroutine(Explode());
+        }
+
         private void DealDamage()
         {
             List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(transform.position, _explosionRadius);
             foreach (CharacterCombat c in charactersInRange)
-                //                if(_pierce) c.ArmourController.TakeDamage(_damage);
-//                else
                 c.HealthController.TakeDamage(_damage);
-//                c.Knockback(_knockbackDistance);
-//                if (_bleed) c.Bleeding.AddStack();
-//                if (_burn) c.Burn.AddStack();
-//                if (_sick) c.Sick.AddStack();
         }
 
         private void ScaleSprite(SpriteRenderer sprite, float scalingValue, float originalSize)
@@ -118,7 +113,6 @@ namespace Game.Combat.Misc
                 yield return null;
             }
 
-            _warningRing.color = UiAppearanceController.InvisibleColour;
             StartCoroutine(Explode());
         }
 
@@ -128,7 +122,7 @@ namespace Game.Combat.Misc
             bool emitted = false;
             bool shownWarning = false;
             bool shownLight = false;
-            FireBehaviour.Create(transform.position, _explosionRadius);
+            _warningRing.color = UiAppearanceController.InvisibleColour;
             while (_age < _explodeTime + _fadeTime)
             {
                 if (!shownWarning && _age < _explodeTime / 2f)
@@ -150,9 +144,11 @@ namespace Game.Combat.Misc
                     if (!emitted)
                     {
                         DealDamage();
+                        ParticleSystem.ShapeModule shape = _particles.shape;
+                        shape.radius = _explosionRadius * 0.3f;
                         _particles.Emit(100);
                         emitted = true;
-                        _light.Radius = 3;
+                        _light.Radius = _explosionRadius * 3;
                     }
 
                     float normalisedTime = (_age - _explodeTime) / _fadeTime;
@@ -175,26 +171,6 @@ namespace Game.Combat.Misc
         public void SetKnockbackDistance(float distance)
         {
             _knockbackDistance = distance;
-        }
-
-        public void SetBurning()
-        {
-            _burn = true;
-        }
-
-        public void SetBleeding()
-        {
-            _bleed = true;
-        }
-
-        public void SetSickness()
-        {
-            _sick = true;
-        }
-
-        public void SetPiercing()
-        {
-            _pierce = true;
         }
     }
 }

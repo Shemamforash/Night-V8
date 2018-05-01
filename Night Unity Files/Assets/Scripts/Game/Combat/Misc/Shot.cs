@@ -4,6 +4,7 @@ using Game.Combat.Enemies;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
@@ -28,11 +29,10 @@ namespace Game.Combat.Misc
         private bool _guaranteeHit;
         private int _knockbackForce;
 
-        private float _knockDownChance;
         private bool _moving, _fired;
         private CharacterCombat _origin;
         private Vector3 _originPosition;
-        private float _pierceChance, _burnChance, _bleedChance, _sicknessChance;
+        private float _pierceChance, _burnChance, _decayChange, _sicknessChance;
         private int _pierceDepth;
         private Rigidbody2D _rigidBody;
 
@@ -54,7 +54,6 @@ namespace Game.Combat.Misc
 
         private void ResetValues()
         {
-            _knockDownChance = 0;
             _finalDamageModifier = 1f;
             _guaranteeHit = false;
             _knockbackForce = 0;
@@ -82,9 +81,12 @@ namespace Game.Combat.Misc
             return shot;
         }
 
+        private bool _isEnemyShot;
+
         private void Initialise(CharacterCombat origin, Vector3 target)
         {
             _origin = origin;
+            _isEnemyShot = origin is EnemyBehaviour;
             _direction = (target - _origin.transform.position).normalized;
             _weapon = origin.Weapon();
             _originPosition = origin.transform.position;
@@ -132,7 +134,7 @@ namespace Game.Combat.Misc
             WeaponAttributes attributes = _weapon.WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
             _accuracy = _weapon.CalculateBaseAccuracy();
-            _bleedChance = attributes.GetCalculatedValue(AttributeType.BleedChance);
+            _decayChange = attributes.GetCalculatedValue(AttributeType.BleedChance);
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
             _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
             _pierceChance = attributes.GetCalculatedValue(AttributeType.PierceChance);
@@ -154,6 +156,17 @@ namespace Game.Combat.Misc
         public void Fire(float distance = 0.2f)
         {
             _bulletTrail = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Bullet Trail"));
+            if (!_isEnemyShot)
+            {
+                _bulletTrail.GetComponent<TrailRenderer>().startColor = Color.white;
+                _bulletTrail.GetComponent<TrailRenderer>().endColor = UiAppearanceController.InvisibleColour;
+            }
+            else
+            {
+                _bulletTrail.GetComponent<TrailRenderer>().startColor = Color.red;
+                _bulletTrail.GetComponent<TrailRenderer>().endColor = new Color(1f, 0f, 0f, 0f);
+            }
+
             _bulletTrail.transform.SetParent(transform);
             _bulletTrail.transform.position = transform.position;
             _age = 0;
@@ -206,11 +219,11 @@ namespace Game.Combat.Misc
         private void ApplyConditions(CharacterCombat hit)
         {
             if (_knockbackForce != 0)
-                if (Random.Range(0, 1f) < _knockDownChance)
-                    hit.Knockback(transform.position, _knockbackForce);
+                hit.Knockback(transform.position, _knockbackForce);
 
-            if (Random.Range(0f, 1f) < _bleedChance) hit.Bleed();
-//            if (Random.Range(0f, 1f) < _sicknessChance) hit.Sick.AddStack();
+            if (Random.Range(0f, 1f) < _decayChange) hit.Decay();
+            if (Random.Range(0f, 1f) < _sicknessChance) hit.Sicken();
+            if (Random.Range(0f, 1f) < _burnChance) hit.Burn();
         }
 
         public void GuaranteeHit()
@@ -223,10 +236,9 @@ namespace Game.Combat.Misc
             OnHitAction += a;
         }
 
-        public void SetKnockdownChance(float chance, int distance)
+        public void SetKnockbackForce(int distance)
         {
             Assert.IsTrue(distance >= 0);
-            _knockDownChance = Mathf.Clamp(chance, 0f, 1f);
             _knockbackForce = distance;
         }
 
@@ -236,10 +248,10 @@ namespace Game.Combat.Misc
             _burnChance = chance;
         }
 
-        public void SetBleedChance(float chance)
+        public void SetDecayChance(float chance)
         {
             Assert.IsTrue(chance >= 0 && chance <= 1);
-            _bleedChance = chance;
+            _decayChange = chance;
         }
 
         public void SetSicknessChance(float chance)

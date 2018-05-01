@@ -15,6 +15,7 @@ namespace Game.Global
             AddResource(InventoryResourceType.Food, 1);
             AddResource(InventoryResourceType.Fuel, 1);
             AddResource(InventoryResourceType.Scrap, 0.5f);
+            AddTestingResources(10);
         }
 
         public override List<InventoryItem> SortByType()
