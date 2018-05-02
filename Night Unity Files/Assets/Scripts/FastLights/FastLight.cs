@@ -24,6 +24,7 @@ namespace Fastlights
         public Color Colour = Color.white;
         public float Radius;
         public Material LightMaterial;
+        public GameObject Target;
 
         private static void UpdateLights()
         {
@@ -284,10 +285,17 @@ namespace Fastlights
 
         public void Update()
         {
+            FollowTarget();
             Vector2 newPosition = new Vector2(transform.position.x, transform.position.y);
             UpdateLight(newPosition);
             UpdateColour();
             _hasUpdated = false;
+        }
+
+        private void FollowTarget()
+        {
+            if (Target == null) return;
+            transform.position = Target.transform.position;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using DG.Tweening;
 using Game.Combat.Enemies.Humans;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
@@ -53,8 +54,8 @@ namespace Game.Combat.Enemies
 
         public override void Update()
         {
-            if (!CombatManager.InCombat()) return;
             base.Update();
+            if (!CombatManager.InCombat()) return;
             CouldHitTarget = TargetVisible() && !OutOfRange();
             CurrentAction?.Invoke();
             UpdateDistanceAlpha();
@@ -111,6 +112,16 @@ namespace Game.Combat.Enemies
             SetDistance(0.2f, 0.5f);
             _originPosition = transform.position;
             SetHealBehaviour();
+
+            Sprite sprite = Resources.Load<Sprite>("Images/Enemy Symbols/" + enemy.Template.EnemyType);
+            if (sprite == null) return;
+            GetComponent<SpriteRenderer>().sprite = sprite;
+            Bounds bounds = sprite.bounds;
+            Vector3 newScale = transform.localScale;
+            newScale.x = 25f / (bounds.size.x * sprite.pixelsPerUnit);
+            newScale.y = 25f / (bounds.size.y * sprite.pixelsPerUnit);
+            Debug.Log(newScale.x + " " + bounds.size.x);
+            transform.localScale = newScale;
         }
 
         private void SetDistance(float rangeMin, float rangeMax)
@@ -163,29 +174,6 @@ namespace Game.Combat.Enemies
                 medic = FindMedic();
                 if (medic == null) ChooseNextAction();
                 else WaitForHeal(medic);
-            };
-        }
-
-        private void KnockedDown()
-        {
-//            float duration = KnockdownDuration;
-            SetActionText("Knocked Down");
-            ChooseNextAction();
-        }
-
-        private Action Melee()
-        {
-            float currentTime = MeleeWarningTime;
-            SetActionText("Meleeing");
-            return () =>
-            {
-                currentTime -= Time.deltaTime;
-                if (currentTime > 0) return;
-//                if (Math.Abs(DistanceToTarget()) > MeleeDistance)
-//                {
-//                    CurrentAction = Stagger();
-//                    return;
-//                }
             };
         }
 
@@ -244,7 +232,6 @@ namespace Game.Combat.Enemies
         private bool TargetVisible()
         {
             bool _obstructed = _grid.IsLineObstructed(transform.position, GetTarget().transform.position);
-//            if (_obstructed) Debug.DrawLine(transform.position, GetTarget().transform.position, Color.yellow, 2f);
             return !_obstructed;
         }
 
@@ -325,7 +312,7 @@ namespace Game.Combat.Enemies
             CurrentAction = () =>
             {
                 if (!CouldHitTarget) ChooseNextAction();
-                if (GetAccuracyModifier() < 0.75f) return;
+                if (GetAccuracyModifier() > 0.25f) return;
                 Fire();
             };
         }
@@ -382,11 +369,6 @@ namespace Game.Combat.Enemies
 
         //Movement
 
-        protected virtual void ReachTarget()
-        {
-            if (Alerted) ChooseNextAction();
-        }
-
         private bool OutOfRange()
         {
             return DistanceToTarget() < IdealWeaponDistance * 0.5f || DistanceToTarget() > IdealWeaponDistance * 1.5f;
@@ -435,7 +417,7 @@ namespace Game.Combat.Enemies
                 MoveToCell(target);
             };
         }
-
+        
         protected void MoveToPlayer()
         {
             MoveToCharacter(GetTarget(), ReachPlayer);

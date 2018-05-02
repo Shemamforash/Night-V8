@@ -5,6 +5,7 @@ using Game.Combat.Player;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -210,12 +211,27 @@ namespace Game.Combat.Misc
         public virtual void Update()
         {
             if (!CombatManager.InCombat()) return;
+            UpdateRotation();
             if (GetTarget() != null) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);
             _currentCell = PathingGrid.Instance().PositionToCell(transform.position);
             UpdateRecoil();
             UpdateConditions();
         }
 
+        private void UpdateRotation()
+        {
+            if (!CombatManager.InCombat())
+            {
+                float rotation = AdvancedMaths.AngleFromUp(transform.position, GetComponent<Rigidbody2D>().velocity);
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+            }
+            else if(GetTarget() != null)
+            {
+                float rotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+            }
+        }
+        
         public void IncreaseRecoil()
         {
             float recoilLoss = Weapon().GetAttributeValue(AttributeType.Handling);
@@ -226,14 +242,14 @@ namespace Game.Combat.Misc
             _recoveryTimer = TimeToStartRecovery;
         }
 
-        protected bool Moving()
+        private bool Moving()
         {
             return _rigidbody.velocity == Vector2.zero;
         }
 
         public float GetAccuracyModifier()
         {
-            return Recoil.CurrentValue() * (Moving() ? 0.5f : 1f);
+            return Recoil.CurrentValue();
         }
 
         private void UpdateRecoil()

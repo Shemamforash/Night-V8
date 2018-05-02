@@ -14,7 +14,6 @@ using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
-using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -47,8 +46,9 @@ namespace Game.Combat.Player
                 switch (axis)
                 {
                     case InputAxis.Fire:
-                        if(CombatManager.EnemiesOnScreen().Count == 0) UiAreaInventoryController.SetNearestContainer(_lastNearestContainer);
-                        else if (!_fired || Player.Weapon.WeaponAttributes.Automatic) FireWeapon();
+                        if (CombatManager.EnemiesOnScreen().Count == 0) UiAreaInventoryController.SetNearestContainer(_lastNearestContainer);
+                        else if (!_fired || Player.Weapon.WeaponAttributes.Automatic)
+                            FireWeapon();
                         break;
                     case InputAxis.Horizontal:
                         Move(direction * Vector2.right);
@@ -150,7 +150,10 @@ namespace Game.Combat.Player
 
         public override void Update()
         {
-            if (!CombatManager.InCombat()) return;
+            Vector3 cameraPosition = Camera.main.transform.position;
+            cameraPosition.x = transform.position.x;
+            cameraPosition.y = transform.position.y;
+            Camera.main.transform.position = cameraPosition;
             base.Update();
             CheckForTarget();
             TransitionOffScreen();
@@ -169,7 +172,7 @@ namespace Game.Combat.Player
                 }
                 else
                 {
-                   _rotateAimTime -= Time.deltaTime;
+                    _rotateAimTime -= Time.deltaTime;
                     if (_rotateAimTime < 0) _rotateAimTime = 0;
                     _pivot.rotation = Quaternion.Lerp(_lastTargetRotation, targetRotation, 1f - _rotateAimTime / RotateAimMaxTime);
                 }
@@ -267,6 +270,7 @@ namespace Game.Combat.Player
                 _lastTargetRotation = AdvancedMaths.RotationToTarget(transform.position, GetTarget().transform.position);
                 _rotateAimTime = RotateAimMaxTime;
             }
+
             _currentTarget = e;
             EnemyUi.Instance().SetSelectedEnemy(e);
         }

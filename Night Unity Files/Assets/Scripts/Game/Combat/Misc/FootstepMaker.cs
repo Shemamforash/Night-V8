@@ -58,7 +58,7 @@ namespace Game.Combat.Misc
 
         private Quaternion GetRotation()
         {
-            float zRotation = AdvancedMaths.AngleFromUp(Vector3.zero, _rigidBody.velocity.normalized);
+            float zRotation = AdvancedMaths.AngleFromUp(Vector3.zero, _rigidBody.velocity);
             return Quaternion.Euler(new Vector3(0, 0, zRotation));
         }
 
