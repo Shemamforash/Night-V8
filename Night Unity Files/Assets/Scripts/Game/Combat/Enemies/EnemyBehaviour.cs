@@ -7,6 +7,7 @@ using Game.Combat.Enemies.Humans;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
+using Game.Exploration.Regions;
 using Game.Gear.Weapons;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -56,9 +57,24 @@ namespace Game.Combat.Enemies
         {
             base.Update();
             if (!CombatManager.InCombat()) return;
+            UpdateRotation();
             CouldHitTarget = TargetVisible() && !OutOfRange();
             CurrentAction?.Invoke();
             UpdateDistanceAlpha();
+        }
+        
+        private void UpdateRotation()
+        {
+            if (!CombatManager.InCombat())
+            {
+                float rotation = AdvancedMaths.AngleFromUp(transform.position, GetComponent<Rigidbody2D>().velocity);
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+            }
+            else if(GetTarget() != null)
+            {
+                float rotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+            }
         }
 
         private void UpdateDistanceAlpha()
@@ -109,7 +125,15 @@ namespace Game.Combat.Enemies
             if (Random.Range(0, 3) == 1) SetActionText("Resting");
             else CurrentAction = Wander;
             transform.SetParent(GameObject.Find("World").transform);
-            SetDistance(0.2f, 0.5f);
+            if (CombatManager.Region().GetRegionType() == RegionType.Nightmare)
+            {
+                SetDistance(Vector2.zero, 4f, 8f);
+            }
+            else
+            {
+                SetDistance(CombatManager.Region().Fire.FirePosition, 0.2f, 0.5f);
+            }
+
             _originPosition = transform.position;
             SetHealBehaviour();
 
@@ -120,13 +144,13 @@ namespace Game.Combat.Enemies
             Vector3 newScale = transform.localScale;
             newScale.x = 25f / (bounds.size.x * sprite.pixelsPerUnit);
             newScale.y = 25f / (bounds.size.y * sprite.pixelsPerUnit);
-            Debug.Log(newScale.x + " " + bounds.size.x);
             transform.localScale = newScale;
+            GetComponent<CircleCollider2D>().radius = 0.08f / transform.localScale.x;
         }
 
-        private void SetDistance(float rangeMin, float rangeMax)
+        private void SetDistance(Vector3 pivot, float rangeMin, float rangeMax)
         {
-            Vector3 position = CombatManager.Region().Fire.FirePosition;
+            Vector3 position = pivot;
             float xOffset = Random.Range(rangeMin, rangeMax);
             float yOffset = Random.Range(rangeMin, rangeMax);
             if (Random.Range(0, 2) == 1) xOffset = -xOffset;

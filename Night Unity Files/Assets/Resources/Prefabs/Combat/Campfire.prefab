@@ -126,9 +126,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72222bbca7e42b94ab82d1ed6b2eb699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Colour: {r: 0.5754717, g: 0.122833565, b: 0.078720205, a: 0.7075956}
+  Colour: {r: 0.8018868, g: 0.06945475, b: 0, a: 0.7075956}
   Radius: 3
   LightMaterial: {fileID: 2100000, guid: 2e91f08796cbd44849f1e15382cade3d, type: 2}
+  Target: {fileID: 0}
 --- !u!198 &198720697638477112
 ParticleSystem:
   m_ObjectHideFlags: 1

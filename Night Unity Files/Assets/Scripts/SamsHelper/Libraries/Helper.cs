@@ -359,5 +359,12 @@ namespace SamsHelper.Libraries
             delineator.transform.SetParent(parent);
             delineator.transform.localScale = new Vector3(1, 1, 1);
         }
+
+        public static float Polarity(float direction)
+        {
+            if (direction < 0) return -1;
+            if (direction > 0) return 1;
+            return 0;
+        }
     }
 }

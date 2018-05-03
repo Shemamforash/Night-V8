@@ -65,14 +65,15 @@ namespace Game.Gear.Weapons
 
         public List<Shot> Fire(CharacterCombat origin, bool fireShots = false)
         {
-            Assert.IsNotNull(origin.GetTarget());
             List<Shot> shots = new List<Shot>();
             if (CanFire())
             {
                 _timeAtLastFire = Helper.TimeInMillis();
                 //todo play sound GunFire.Fire(WeaponAttributes.WeaponType, distance);
-                for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i) shots.Add(Shot.Create(origin));
-
+                for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
+                {
+                    shots.Add(Shot.Create(origin));
+                }
                 ConsumeAmmo(1);
                 Assert.IsTrue(shots.Count > 0);
                 Assert.IsNotNull(shots);

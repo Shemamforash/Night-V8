@@ -9,6 +9,8 @@
         Sentinel,
         Sniper,
         Warlord,
-        Witch
+        Witch,
+        Ghoul,
+        GhoulMother
     }
 }

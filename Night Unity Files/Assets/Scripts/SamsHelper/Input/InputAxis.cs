@@ -15,6 +15,6 @@
         SkillTwo,
         SkillThree,
         SkillFour,
-        Enrage
+        Enrage,
     }
 }

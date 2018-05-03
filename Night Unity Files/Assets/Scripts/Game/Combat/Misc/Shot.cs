@@ -69,7 +69,7 @@ namespace Game.Combat.Misc
         {
             Shot shot = _shotPool.Create();
             shot.gameObject.layer = 11;
-            shot.Initialise(origin, origin.GetTarget().transform.position);
+            shot.Initialise(origin, origin.Direction());
             return shot;
         }
 
@@ -83,13 +83,22 @@ namespace Game.Combat.Misc
 
         private bool _isEnemyShot;
 
-        private void Initialise(CharacterCombat origin, Vector3 target)
+        private void Initialise(CharacterCombat origin, Vector3 direction)
         {
             _origin = origin;
             _isEnemyShot = origin is EnemyBehaviour;
-            _direction = (target - _origin.transform.position).normalized;
+            _direction = direction;
             _weapon = origin.Weapon();
             _originPosition = origin.transform.position;
+            SetUpComponents();
+        }
+
+        private void Initialise(Shot shot)
+        {
+            _origin = null;
+            _direction = shot._direction;
+            _weapon = shot._weapon;
+            _originPosition = shot.transform.position;
             SetUpComponents();
         }
 
@@ -108,15 +117,6 @@ namespace Game.Combat.Misc
             if (_guaranteeHit) _accuracy = 0;
             else if (_origin != null)
                 _accuracy *= _origin.GetAccuracyModifier();
-        }
-
-        private void Initialise(Shot shot)
-        {
-            _origin = null;
-            _direction = shot._direction;
-            _weapon = shot._weapon;
-            _originPosition = shot.transform.position;
-            SetUpComponents();
         }
 
         public void ActivateFireTrail()
@@ -144,7 +144,6 @@ namespace Game.Combat.Misc
         {
             _finalDamageModifier = modifier;
         }
-
 
         private void FixedUpdate()
         {
@@ -201,10 +200,20 @@ namespace Game.Combat.Misc
         private void OnCollisionEnter2D(Collision2D collision)
         {
             GameObject other = collision.gameObject;
-            if (Random.Range(0f, 1f) < _burnChance) FireBehaviour.Create(transform.position, 1f);
-            OnHitAction?.Invoke();
-            EnemyBehaviour b = other.GetComponent<EnemyBehaviour>();
-            if (b != null) ApplyDamage(b);
+            if (other.gameObject != null)
+            {
+                if (collision.contacts.Length > 0)
+                {
+                    float angle = AdvancedMaths.AngleFromUp(Vector2.zero, _direction) + 180 + Random.Range(-10f, 10f);
+                    BulletImpactBehaviour.Create(collision.contacts[0].point, angle);
+                }
+
+                if (Random.Range(0f, 1f) < _burnChance) FireBehaviour.Create(transform.position, 1f);
+                OnHitAction?.Invoke();
+                EnemyBehaviour b = other.GetComponent<EnemyBehaviour>();
+                if (b != null) ApplyDamage(b);
+            }
+
             DeactivateShot();
         }
 

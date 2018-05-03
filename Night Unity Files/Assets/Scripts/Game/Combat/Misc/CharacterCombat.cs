@@ -45,6 +45,11 @@ namespace Game.Combat.Misc
             return _distanceToTarget;
         }
 
+        public Vector3 Direction()
+        {
+            return transform.up;
+        }
+
         public void Burn()
         {
             if (_burnTicks == 0) _burnDuration = 1;
@@ -211,27 +216,12 @@ namespace Game.Combat.Misc
         public virtual void Update()
         {
             if (!CombatManager.InCombat()) return;
-            UpdateRotation();
             if (GetTarget() != null) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);
             _currentCell = PathingGrid.Instance().PositionToCell(transform.position);
             UpdateRecoil();
             UpdateConditions();
         }
 
-        private void UpdateRotation()
-        {
-            if (!CombatManager.InCombat())
-            {
-                float rotation = AdvancedMaths.AngleFromUp(transform.position, GetComponent<Rigidbody2D>().velocity);
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
-            }
-            else if(GetTarget() != null)
-            {
-                float rotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
-            }
-        }
-        
         public void IncreaseRecoil()
         {
             float recoilLoss = Weapon().GetAttributeValue(AttributeType.Handling);

@@ -45,7 +45,8 @@ namespace Game.Combat.Misc
 
             CharacterManager.SelectedCharacter = _playerCharacter;
             Region node = new Region();
-            node.RegionType = RegionType.Danger;
+            node.SetRegionType(RegionType.Danger);
+//            node.SetRegionType(RegionType.Nightmare);
             node.Position = Vector2.zero;
             _playerCharacter.TravelAction.SetCurrentNode(node);
         }

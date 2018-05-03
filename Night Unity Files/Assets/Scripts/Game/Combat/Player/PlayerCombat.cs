@@ -51,16 +51,20 @@ namespace Game.Combat.Player
                             FireWeapon();
                         break;
                     case InputAxis.Horizontal:
-                        Move(direction * Vector2.right);
+                        Rotate(direction);
                         break;
                     case InputAxis.Vertical:
-                        Move(direction * Vector2.up);
+                        Move(direction * transform.up);
+                        break;
+                    case InputAxis.SwitchTab:
+//                        Move(direction * transform.right);
                         break;
                 }
             else
                 switch (axis)
                 {
                     case InputAxis.Enrage:
+                        LockTarget();
                         break;
                     case InputAxis.Reload:
                         Reload();
@@ -77,13 +81,41 @@ namespace Game.Combat.Player
                     case InputAxis.SkillFour:
                         SkillBar.ActivateSkill(3);
                         break;
-                    case InputAxis.SwitchTab:
-                        CombatManager.Select(direction);
-                        break;
                     case InputAxis.Sprint:
                         StartSprinting();
                         break;
                 }
+        }
+
+        private CharacterCombat _lockedTarget;
+
+        private void FollowTarget()
+        {
+            if (_lockedTarget != null && !Helper.IsObjectInCameraView(_lockedTarget.gameObject)) _lockedTarget = null;
+            if (_lockedTarget == null) return;
+            float rotation = AdvancedMaths.AngleFromUp(transform.position, _lockedTarget.transform.position);
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+        }
+        
+        private void LockTarget()
+        {
+            _lockedTarget = GetTarget();
+        }
+
+        private const float RotateSpeedMax = 90;
+        private float _rotateSpeedCurrent;
+        private const float _rotateAcceleration = 200f;
+
+        private void Rotate(float direction)
+        {
+            if (_lockedTarget != null)
+            {
+                Move(direction * transform.right);
+                return;
+            }
+            _rotateSpeedCurrent += _rotateAcceleration * Time.deltaTime;
+            if (_rotateSpeedCurrent > RotateSpeedMax) _rotateSpeedCurrent = RotateSpeedMax;
+            transform.Rotate(Vector3.forward, _rotateSpeedCurrent * Time.deltaTime * Helper.Polarity(-direction));
         }
 
         private void TransitionOffScreen()
@@ -109,6 +141,9 @@ namespace Game.Combat.Player
                 case InputAxis.Sprint:
                     StopSprinting();
                     break;
+                case InputAxis.Horizontal:
+                    _rotateSpeedCurrent = 0f;
+                    break;
             }
         }
 
@@ -117,10 +152,10 @@ namespace Game.Combat.Player
             switch (axis)
             {
                 case InputAxis.Horizontal:
-                    Dash(direction * Vector2.right);
+                    Dash(direction * transform.right);
                     break;
                 case InputAxis.Vertical:
-                    Dash(direction * Vector2.up);
+                    Dash(direction * transform.up);
                     break;
             }
         }
@@ -137,15 +172,20 @@ namespace Game.Combat.Player
 
         private void CheckForTarget()
         {
-            if (_currentTarget != null && !_currentTarget.OnScreen())
-            {
-                CombatManager.Select(1);
-            }
+//            if (_currentTarget != null && !_currentTarget.OnScreen())
+//            {
+//                CombatManager.Select(1);
+//            }
+//
+//            if (_currentTarget == null)
+//            {
+//                SetTarget(CombatManager.NearestEnemy());
+//            }
+        }
 
-            if (_currentTarget == null)
-            {
-                SetTarget(CombatManager.NearestEnemy());
-            }
+        private void CheckForEnemiesOnScreen()
+        {
+            PlayerUi.Instance().SetAlpha(CombatManager.EnemiesOnScreen().Count == 0 ? 0 : 1);
         }
 
         public override void Update()
@@ -155,32 +195,32 @@ namespace Game.Combat.Player
             cameraPosition.y = transform.position.y;
             Camera.main.transform.position = cameraPosition;
             base.Update();
+            FollowTarget();
             CheckForTarget();
             TransitionOffScreen();
             CheckForContainersNearby();
-            if (GetTarget() == null)
-            {
-                _pivot.gameObject.SetActive(false);
-            }
-            else
-            {
-                _pivot.gameObject.SetActive(true);
-                Quaternion targetRotation = AdvancedMaths.RotationToTarget(transform.position, GetTarget().transform.position);
-                if (_rotateAimTime <= 0f)
-                {
-                    _pivot.rotation = targetRotation;
-                }
-                else
-                {
-                    _rotateAimTime -= Time.deltaTime;
-                    if (_rotateAimTime < 0) _rotateAimTime = 0;
-                    _pivot.rotation = Quaternion.Lerp(_lastTargetRotation, targetRotation, 1f - _rotateAimTime / RotateAimMaxTime);
-                }
-            }
+            CheckForEnemiesOnScreen();
+//            if (GetTarget() == null)
+//            {
+//                _pivot.gameObject.SetActive(false);
+//            }
+//            else
+//            {
+//                _pivot.gameObject.SetActive(true);
+//                Quaternion targetRotation = AdvancedMaths.RotationToTarget(transform.position, GetTarget().transform.position);
+//                if (_rotateAimTime <= 0f)
+//                {
+//                    _pivot.rotation = targetRotation;
+//                }
+//                else
+//                {
+//                    _rotateAimTime -= Time.deltaTime;
+//                    if (_rotateAimTime < 0) _rotateAimTime = 0;
+//                    _pivot.rotation = Quaternion.Lerp(_lastTargetRotation, targetRotation, 1f - _rotateAimTime / RotateAimMaxTime);
+//                }
+//            }
         }
 
-        private float RotateAimMaxTime = 0.2f;
-        private float _rotateAimTime;
         private const float MaxShowInventoryDistance = 0.5f;
         private ContainerController _lastNearestContainer;
 
@@ -265,12 +305,8 @@ namespace Game.Combat.Player
 
         public void SetTarget(EnemyBehaviour e)
         {
-            if (_currentTarget != null)
-            {
-                _lastTargetRotation = AdvancedMaths.RotationToTarget(transform.position, GetTarget().transform.position);
-                _rotateAimTime = RotateAimMaxTime;
-            }
-
+            if (_lockedTarget != null) return;
+            if (e != null && !Helper.IsObjectInCameraView(e.gameObject)) return;
             _currentTarget = e;
             EnemyUi.Instance().SetSelectedEnemy(e);
         }
@@ -339,7 +375,7 @@ namespace Game.Combat.Player
         //FIRING
         public void FireWeapon()
         {
-            if (GetTarget() == null) return;
+//            if (GetTarget() == null) return;
             if (Weapon().Empty()) return;
             List<Shot> shots = Weapon().Fire(this);
             if (shots == null) return;

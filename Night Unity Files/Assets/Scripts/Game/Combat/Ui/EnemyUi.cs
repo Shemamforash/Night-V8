@@ -15,7 +15,6 @@ namespace Game.Combat.Ui
         public TextMeshProUGUI ActionText;
         public TextMeshProUGUI NameText;
         public UIHitController UiHitController;
-        private CanvasGroup _canvasGroup;
 
         public static EnemyUi Instance()
         {
@@ -27,7 +26,6 @@ namespace Game.Combat.Ui
         {
             base.Awake();
             _instance = this;
-            _canvasGroup = GetComponent<CanvasGroup>();
             NameText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
             UiHitController = Helper.FindChildWithName<UIHitController>(gameObject, "Cover");
             ActionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Action");
@@ -38,11 +36,11 @@ namespace Game.Combat.Ui
             _selectedEnemy = enemy;
             if (enemy == null)
             {
-                _canvasGroup.alpha = 0;
+                SetAlpha(0);
                 return;
             }
 
-            _canvasGroup.alpha = 1;
+            SetAlpha(1);
             NameText.text = enemy.Enemy.Name;
             ActionText.text = enemy.ActionText;
             enemy.HealthController.UpdateHealth();
@@ -67,6 +65,7 @@ namespace Game.Combat.Ui
 
         public override UIArmourController GetArmourController(Character character)
         {
+            if (_selectedEnemy == null) return null;
             return character != _selectedEnemy.Enemy ? null : _armourController;
         }
     }

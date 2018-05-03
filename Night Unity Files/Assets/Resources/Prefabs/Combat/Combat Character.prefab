@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4617966485975958}
   - component: {fileID: 212512663963840750}
-  - component: {fileID: 60217017832833010}
   - component: {fileID: 50151284105191016}
   - component: {fileID: 114723455048528354}
+  - component: {fileID: 58716105349068796}
   m_Layer: 10
   m_Name: Combat Character
   m_TagString: Untagged
@@ -63,8 +63,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!60 &60217017832833010
-PolygonCollider2D:
+--- !u!58 &58716105349068796
+CircleCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -76,21 +76,8 @@ PolygonCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0.049999997, y: 0.049999997, z: 0.049999997, w: 0.049999997}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.1, y: 0.1}
-    newSize: {x: 0.65, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.049999997, y: 0.049999997}
-      - {x: -0.049999997, y: -0.049999997}
-      - {x: 0.049999997, y: -0.049999997}
-      - {x: 0.049999997, y: 0.049999997}
+  serializedVersion: 2
+  m_Radius: 0.08
 --- !u!114 &114723455048528354
 MonoBehaviour:
   m_ObjectHideFlags: 1

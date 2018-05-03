@@ -71,7 +71,7 @@ namespace Game.Exploration.Ui
                 _menuButtons.Remove(_planButton);
             }
 
-            if (CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().RegionType == RegionType.Gate)
+            if (CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().GetRegionType() == RegionType.Gate)
             {
                 _enterButton.gameObject.SetActive(false);
                 _menuButtons.Remove(_enterButton);

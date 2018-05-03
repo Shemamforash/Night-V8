@@ -67,7 +67,7 @@ namespace Game.Exploration.Regions
         {
             if (_regionsDiscovered == 0)
             {
-                region.RegionType = RegionType.Gate;
+                region.SetRegionType(RegionType.Gate);
                 region.Name = "Gate";
             }
             else
@@ -80,7 +80,7 @@ namespace Game.Exploration.Regions
                 int randomRegionIndex = Random.Range(0, _regionTypes.Count);
                 RegionType randomRegionType = _regionTypes[randomRegionIndex];
                 _regionTypes.RemoveAt(randomRegionIndex);
-                region.RegionType = randomRegionType;
+                region.SetRegionType(randomRegionType);
                 region.Name = GenerateName(randomRegionType) + " " + _regionsDiscovered;
             }
 

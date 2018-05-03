@@ -4,12 +4,6 @@
     {
         private bool _firedVolley;
 
-        public override void Initialise(Enemy enemy)
-        {
-            base.Initialise(enemy);
-//            MinimumFindCoverDistance = 20f;
-        }
-
         public override void ChooseNextAction()
         {
             if (!_firedVolley)

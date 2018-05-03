@@ -21,7 +21,7 @@ namespace Game.Exploration.Regions
         public string Name;
         private static List<EnemyTemplate> _enemyTypes = EnemyTemplate.GetEnemyTypes();
         private readonly List<Enemy> _enemies = new List<Enemy>();
-        public RegionType RegionType;
+        private RegionType _regionType;
         private bool _discovered;
         public List<Barrier> Barriers = new List<Barrier>();
         public EnemyCampfire Fire;
@@ -73,10 +73,9 @@ namespace Game.Exploration.Regions
             UpdatePaths();
             MapNodeController mapNodeController = nodeObject.transform.GetComponentInChildren<MapNodeController>(true);
             mapNodeController.gameObject.SetActive(true);
-            string name = Name + "\n" + RegionType + " d=" + CalculateDanger();
+            string name = Name + "\n" + _regionType + " d=" + CalculateDanger();
             mapNodeController.SetName(name);
         }
-
 
         private void UpdatePaths()
         {
@@ -123,11 +122,17 @@ namespace Game.Exploration.Regions
             return newEnemy;
         }
 
-        public void GenerateSimpleEncounter()
+        private void GenerateSimpleEncounter()
         {
             AddEnemy(EnemyType.Sentinel, 10);
             AddEnemy(EnemyType.Witch, 10);
             AddEnemy(EnemyType.Brawler, 10);
+        }
+
+        private void GenerateNightmare()
+        {
+            AddEnemy(EnemyType.GhoulMother, 10);
+            AddEnemy(EnemyType.GhoulMother, 10);
         }
 
         private int CalculateDanger()
@@ -175,13 +180,27 @@ namespace Game.Exploration.Regions
             return _enemies;
         }
 
-        public Region()
-        {
-            GenerateSimpleEncounter();
-            AreaGenerator.GenerateForest(this);
-//            AreaGenerator.GenerateCanyon(this);
 
+        public RegionType GetRegionType()
+        {
+            return _regionType;
+        }
+        
+        public void SetRegionType(RegionType regionType)
+        {
             //TODO different combat scenarios for region tier and animal/human enemies
+            _regionType = regionType;
+            switch (regionType)
+            {
+                case RegionType.Danger:
+                    GenerateSimpleEncounter();
+                    AreaGenerator.GenerateForest(this);
+//            AreaGenerator.GenerateCanyon(this);
+                    break;
+                case RegionType.Nightmare:
+                    GenerateNightmare();
+                    break;
+            }
         }
 
 

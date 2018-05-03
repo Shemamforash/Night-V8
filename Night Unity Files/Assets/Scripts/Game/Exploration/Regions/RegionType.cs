@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-namespace Game.Exploration.Regions
+﻿namespace Game.Exploration.Regions
 {
     public enum RegionType
     {
@@ -9,6 +6,7 @@ namespace Game.Exploration.Regions
         Gate,
         Temple,
         Resource,
-        Danger
+        Danger,
+        Nightmare
     }
 }

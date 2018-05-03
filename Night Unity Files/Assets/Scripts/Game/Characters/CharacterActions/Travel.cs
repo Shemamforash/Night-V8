@@ -38,7 +38,7 @@ namespace Game.Characters.CharacterActions
         {
             //todo fix me
             if (CurrentNode == null) return true;
-            return CurrentNode.RegionType == RegionType.Gate;
+            return CurrentNode.GetRegionType() == RegionType.Gate;
         }
         
         private void ReachTarget()

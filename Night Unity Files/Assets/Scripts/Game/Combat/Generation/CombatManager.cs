@@ -90,7 +90,7 @@ namespace Game.Combat.Generation
             _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
 
             _currentRegion.Barriers.ForEach(b => b.CreateObject());
-            _currentRegion.Fire.CreateObject();
+            _currentRegion.Fire?.CreateObject();
             _currentRegion.Containers.ForEach(c => c.CreateObject());
             PathingGrid.Instance().GenerateGrid(_currentRegion.Barriers);
 
@@ -123,57 +123,58 @@ namespace Game.Combat.Generation
         }
 
 
-        public static void Select(float direction)
-        {
-            if (direction > 0)
-                Instance().SelectAntiClockwise();
-            else
-                Instance().SelectClockwise();
-        }
+//        public static void Select(float direction)
+//        {
+//            if (direction > 0)
+//                Instance().SelectAntiClockwise();
+//            else
+//                Instance().SelectClockwise();
+//        }
 
         public static List<EnemyBehaviour> EnemiesOnScreen()
         {
             return Instance()._enemies.FindAll(e => e.OnScreen());
         }
 
-        private void SelectEnemy(int direction)
-        {
-            Vector2 playerTransform = _player.transform.position;
-            List<EnemyBehaviour> visibleEnemies = EnemiesOnScreen();
-            EnemyBehaviour newTarget = null;
-            if (visibleEnemies.Count != 0)
-            {
-                visibleEnemies.Sort((a, b) =>
-                {
-                    float aAngle = AdvancedMaths.AngleFromUp(playerTransform, a.transform.position);
-                    float bAngle = AdvancedMaths.AngleFromUp(playerTransform, b.transform.position);
-                    return aAngle.CompareTo(bAngle);
-                });
-                int currentTargetIndex = visibleEnemies.IndexOf((EnemyBehaviour) _player.GetTarget());
-                currentTargetIndex += direction;
-                if (currentTargetIndex == visibleEnemies.Count) currentTargetIndex = 0;
-                if (currentTargetIndex == -1) currentTargetIndex = visibleEnemies.Count - 1;
-                newTarget = visibleEnemies[currentTargetIndex];
-            }
-            Player().SetTarget(newTarget);
-        }
+//        private void SelectEnemy(int direction)
+//        {
+//            Vector2 playerTransform = _player.transform.position;
+//            List<EnemyBehaviour> visibleEnemies = EnemiesOnScreen();
+//            EnemyBehaviour newTarget = null;
+//            if (visibleEnemies.Count != 0)
+//            {
+//                visibleEnemies.Sort((a, b) =>
+//                {
+//                    float aAngle = AdvancedMaths.AngleFromUp(playerTransform, a.transform.position);
+//                    float bAngle = AdvancedMaths.AngleFromUp(playerTransform, b.transform.position);
+//                    return aAngle.CompareTo(bAngle);
+//                });
+//                int currentTargetIndex = visibleEnemies.IndexOf((EnemyBehaviour) _player.GetTarget());
+//                currentTargetIndex += direction;
+//                if (currentTargetIndex == visibleEnemies.Count) currentTargetIndex = 0;
+//                if (currentTargetIndex == -1) currentTargetIndex = visibleEnemies.Count - 1;
+//                newTarget = visibleEnemies[currentTargetIndex];
+//            }
+//            Player().SetTarget(newTarget);
+//        }
 
-        private void SelectClockwise()
-        {
-            SelectEnemy(1);
-        }
+//        private void SelectClockwise()
+//        {
+//            SelectEnemy(1);
+//        }
+//
+//        private void SelectAntiClockwise()
+//        {
+//            SelectEnemy(-1);
+//        }
 
-        private void SelectAntiClockwise()
-        {
-            SelectEnemy(-1);
-        }
-
-        public static void QueueEnemyToAdd(EnemyType type)
+        public static EnemyBehaviour QueueEnemyToAdd(EnemyType type)
         {
             Enemy e = Instance()._currentRegion.AddEnemy(type, 10);
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
             enemyBehaviour.Alert();
             Instance().AddEnemy(enemyBehaviour);
+            return enemyBehaviour;
         }
 
         public static void AlertAll()
@@ -184,7 +185,7 @@ namespace Game.Combat.Generation
         public static void Remove(EnemyBehaviour enemy)
         {
             Instance()._enemies.Remove(enemy);
-            if (Instance()._enemies.Count != 0) Instance().SelectClockwise();
+//            if (Instance()._enemies.Count != 0) Instance().SelectClockwise();
         }
 
         private void AddEnemy(EnemyBehaviour e)

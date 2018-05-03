@@ -1,6 +1,7 @@
 ﻿using System;
 using Game.Characters;
 using Game.Combat.Enemies.Humans;
+using Game.Combat.Enemies.Nightmares;
 using Game.Gear;
 using Game.Gear.Weapons;
 using UnityEngine;
@@ -75,6 +76,12 @@ namespace Game.Combat.Enemies
                     break;
                 case EnemyType.Witch:
                     enemyBehaviour = enemyObject.AddComponent<Witch>();
+                    break;
+                case EnemyType.GhoulMother:
+                    enemyBehaviour = enemyObject.AddComponent<GhoulMother>();
+                    break;
+                case EnemyType.Ghoul:
+                    enemyBehaviour = enemyObject.AddComponent<Ghoul>();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

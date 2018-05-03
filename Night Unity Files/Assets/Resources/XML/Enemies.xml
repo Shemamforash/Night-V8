@@ -1,1 +1,72 @@
-<Enemies><Enemy><Name>Sniper</Name><Health>200</Health><Speed>5</Speed><Value>2</Value><WeaponTypes>Rifle</WeaponTypes></Enemy><Enemy><Name>Brawler</Name><Health>100</Health><Speed>8</Speed><Value>2</Value><WeaponTypes>1</WeaponTypes></Enemy><Enemy><Name>Medic</Name><Health>200</Health><Speed>5</Speed><Value>3</Value><WeaponTypes>SMG, Pistol</WeaponTypes></Enemy><Enemy><Name>Sentinel</Name><Health>200</Health><Speed>4</Speed><Value>1</Value><WeaponTypes>SMG, Shotgun, Pistol</WeaponTypes></Enemy><Enemy><Name>Warlord</Name><Health>400</Health><Speed>4</Speed><Value>4</Value><WeaponTypes>LMG, Rifle</WeaponTypes></Enemy><Enemy><Name>Mountain</Name><Health>600</Health><Speed>1</Speed><Value>3</Value><WeaponTypes>LMG, Shotgun</WeaponTypes></Enemy><Enemy><Name>Martyr</Name><Health>50</Health><Speed>10</Speed><Value>1</Value><WeaponTypes>1</WeaponTypes></Enemy><Enemy><Name>Witch</Name><Health>150</Health><Speed>5</Speed><Value>3</Value><WeaponTypes>SMG, Pistol</WeaponTypes></Enemy></Enemies>
+<Enemies>
+    <Enemy>
+        <Name>Sniper</Name>
+        <Health>200</Health>
+        <Speed>5</Speed>
+        <Value>2</Value>
+        <WeaponTypes>Rifle</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Brawler</Name>
+        <Health>100</Health>
+        <Speed>8</Speed>
+        <Value>2</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Medic</Name>
+        <Health>200</Health>
+        <Speed>5</Speed>
+        <Value>3</Value>
+        <WeaponTypes>SMG, Pistol</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Sentinel</Name>
+        <Health>200</Health>
+        <Speed>4</Speed>
+        <Value>1</Value>
+        <WeaponTypes>SMG, Shotgun, Pistol</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Warlord</Name>
+        <Health>400</Health>
+        <Speed>4</Speed>
+        <Value>4</Value>
+        <WeaponTypes>LMG, Rifle</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Mountain</Name>
+        <Health>600</Health>
+        <Speed>1</Speed>
+        <Value>3</Value>
+        <WeaponTypes>LMG, Shotgun</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Martyr</Name>
+        <Health>50</Health>
+        <Speed>10</Speed>
+        <Value>1</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Witch</Name>
+        <Health>150</Health>
+        <Speed>5</Speed>
+        <Value>3</Value>
+        <WeaponTypes>SMG, Pistol</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Ghoul</Name>
+        <Health>50</Health>
+        <Speed>6</Speed>
+        <Value>1</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>GhoulMother</Name>
+        <Health>400</Health>
+        <Speed>3</Speed>
+        <Value>3</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+</Enemies>
