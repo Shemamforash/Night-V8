@@ -21,6 +21,7 @@ namespace Game.Combat.Generation
         private readonly float _rotation;
         public readonly Vector2 Position;
         private static Transform _barrierParent;
+        public readonly float Radius;
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
@@ -43,13 +44,14 @@ namespace Game.Combat.Generation
             return barrierNode;
         }
         
-        public Barrier(Vector3[] vertices, string barrierName, Vector2 position)
+        public Barrier(Vector3[] vertices, string barrierName, Vector2 position, float radius)
         {
             if(position == Vector2.negativeInfinity) Debug.Log("wat!?");
             _barrierName = barrierName;
             Vertices = vertices;
             _rotation = Random.Range(0, 360);
             Position = position;
+            Radius = radius;
         }
 
         

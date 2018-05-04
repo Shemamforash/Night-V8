@@ -29,6 +29,7 @@
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
         <e p="GameSettings.xml" t="Include" />
+        <e p="MaelstromShotBehaviour.cs" t="Include" />
         <e p="MeshViewer.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Resources" t="Include">
@@ -152,6 +153,8 @@
                 <e p="Nightmares" t="Include">
                   <e p="Ghoul.cs" t="Include" />
                   <e p="GhoulMother.cs" t="Include" />
+                  <e p="Maelstrom.cs" t="Include" />
+                  <e p="MaelstromImage.cs" t="Include" />
                 </e>
               </e>
               <e p="Generation" t="Include">

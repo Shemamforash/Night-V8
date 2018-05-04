@@ -23,9 +23,9 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             ++_idCounter;
         }
 
-        public string Name { get; set; }
-        public float Weight { get; set; }
-        public Inventory ParentInventory { get; set; }
+        public string Name;
+        public float Weight;
+        public Inventory ParentInventory;
 
         public virtual void Load(XmlNode doc, PersistenceType saveType)
         {

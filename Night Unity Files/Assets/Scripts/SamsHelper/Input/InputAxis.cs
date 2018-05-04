@@ -9,7 +9,6 @@
         Cover,
         Fire,
         Reload,
-        Melee,
         Sprint,
         SkillOne,
         SkillTwo,

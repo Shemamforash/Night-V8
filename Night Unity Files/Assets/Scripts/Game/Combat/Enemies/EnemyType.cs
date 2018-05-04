@@ -11,6 +11,8 @@
         Warlord,
         Witch,
         Ghoul,
-        GhoulMother
+        GhoulMother,
+        Maelstrom,
+        MaelstromImage
     }
 }

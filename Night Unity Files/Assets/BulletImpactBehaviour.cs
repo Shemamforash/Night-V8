@@ -9,9 +9,9 @@ public class BulletImpactBehaviour : MonoBehaviour {
 	public static void Create(Vector3 position, float rotation)
 	{
 		BulletImpactBehaviour impact = _bulletPool.Create();
-		impact._particles.Emit(Random.Range(2, 6));
 		impact.transform.position = position;
 		impact.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+		impact._particles.Emit(Random.Range(2, 6));
 	}
 
 	public void Awake()

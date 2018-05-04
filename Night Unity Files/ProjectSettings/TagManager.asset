@@ -9,6 +9,7 @@ TagManager:
   - Barrier
   - Bullet
   - FPS Counter
+  - UiCollider
   layers:
   - Default
   - TransparentFX

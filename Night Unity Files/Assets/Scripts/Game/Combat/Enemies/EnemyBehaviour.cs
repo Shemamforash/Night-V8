@@ -137,15 +137,15 @@ namespace Game.Combat.Enemies
             _originPosition = transform.position;
             SetHealBehaviour();
 
-            Sprite sprite = Resources.Load<Sprite>("Images/Enemy Symbols/" + enemy.Template.EnemyType);
+            Sprite sprite = Resources.Load<Sprite>("Images/Enemy Symbols/" + GetEnemyName());
             if (sprite == null) return;
             GetComponent<SpriteRenderer>().sprite = sprite;
-            Bounds bounds = sprite.bounds;
-            Vector3 newScale = transform.localScale;
-            newScale.x = 25f / (bounds.size.x * sprite.pixelsPerUnit);
-            newScale.y = 25f / (bounds.size.y * sprite.pixelsPerUnit);
-            transform.localScale = newScale;
-            GetComponent<CircleCollider2D>().radius = 0.08f / transform.localScale.x;
+//            Bounds bounds = sprite.bounds;
+//            Vector3 newScale = transform.localScale;
+//            newScale.x = 25f / (bounds.size.x * sprite.pixelsPerUnit);
+//            newScale.y = 25f / (bounds.size.y * sprite.pixelsPerUnit);
+//            transform.localScale = newScale;
+//            GetComponent<CircleCollider2D>().radius = 0.08f / transform.localScale.x;
         }
 
         private void SetDistance(Vector3 pivot, float rangeMin, float rangeMax)
@@ -306,7 +306,6 @@ namespace Game.Combat.Enemies
             if (safeCell == null) return false;
             Immobilised(false);
             SetActionText("Seeking Cover");
-            StartSprinting();
             Thread safeRoute = _grid.RouteToCell(CurrentCell(), safeCell, route);
             WaitForRoute(safeRoute, reachCoverAction);
             return true;
@@ -428,7 +427,6 @@ namespace Game.Combat.Enemies
             {
                 if (CurrentCell() == target)
                 {
-                    StopSprinting();
                     if (newRoute.Count == 0)
                     {
                         ReachTargetAction();
@@ -472,6 +470,11 @@ namespace Game.Combat.Enemies
 
         protected virtual void ReachPlayer()
         {
+        }
+
+        public virtual string GetEnemyName()
+        {
+            return Enemy.Name;
         }
     }
 }

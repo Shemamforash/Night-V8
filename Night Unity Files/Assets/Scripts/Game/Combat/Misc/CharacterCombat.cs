@@ -14,7 +14,6 @@ namespace Game.Combat.Misc
 {
     public abstract class CharacterCombat : MonoBehaviour
     {
-        private const int SprintModifier = 2;
         private const float DashForce = 300;
         private const float RecoilRecoveryRate = 0.02f;
         private const float TimeToStartRecovery = 0.5f;
@@ -37,7 +36,6 @@ namespace Game.Combat.Misc
         protected bool KnockedBack;
 
         public float Speed;
-        private bool Sprinting;
 
         public float DistanceToTarget()
         {
@@ -291,24 +289,11 @@ namespace Game.Combat.Misc
             _forceToadd += direction * DashForce;
         }
 
-        public void Move(Vector2 direction)
+        protected virtual void Move(Vector2 direction)
         {
             if (IsImmobilised) return;
             float speed = Speed;
-            if (Sprinting) speed *= SprintModifier;
             _forceToadd += direction * speed;
-        }
-
-        protected void StartSprinting()
-        {
-            if (Sprinting) return;
-            Sprinting = true;
-        }
-
-        protected void StopSprinting()
-        {
-            if (!Sprinting) return;
-            Sprinting = false;
         }
 
         public abstract CharacterCombat GetTarget();

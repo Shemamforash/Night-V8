@@ -22,13 +22,11 @@ namespace Game.Combat.Enemies.Nightmares
         private void ReleaseGhouls()
         {
             int ghoulsToRelease = Random.Range(MinGhoulsReleased + 1, MaxGhoulsReleased + 1);
-            Debug.Log("trying to release ghouls");
             for (int i = MinGhoulsReleased; i < ghoulsToRelease; ++i)
             {
                 Cell c = PathingGrid.Instance().GetCellNearMe(CurrentCell(), 2f);
                 EnemyBehaviour ghoul = CombatManager.QueueEnemyToAdd(EnemyType.Ghoul);
                 ghoul.gameObject.transform.position = c.Position;
-                Debug.Log("released ghoul");
             }
         }
     }

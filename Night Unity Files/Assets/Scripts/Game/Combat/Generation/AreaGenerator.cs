@@ -5,6 +5,7 @@ using Game.Exploration.Regions;
 using Game.Gear;
 using Game.Gear.Weapons;
 using Game.Global;
+using NUnit.Framework;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -18,6 +19,9 @@ namespace Game.Combat.Generation
         {
             smoothness = Mathf.Clamp(1 - smoothness, 0.01f, 1f);
             radiusVariation = 1 - Mathf.Clamp(radiusVariation, 0f, 1f);
+
+            Assert.IsTrue(radiusVariation <= 1);
+            Assert.IsTrue(smoothness <= 1);
 
             float definition = smoothness * 150f;
             radiusVariation *= scale;
@@ -36,14 +40,14 @@ namespace Game.Combat.Generation
                 angleIncrement = Random.Range(definition / 2f, definition);
             }
 
-            AssignRockPosition(scale, barrierVertices, position);
+            AssignRockPosition(scale, barrierVertices, position, scale);
         }
 
-        private static void AssignRockPosition(float radius, List<Vector3> barrierVertices, Vector2? position)
+        private static void AssignRockPosition(float radius, List<Vector3> barrierVertices, Vector2? position, float scale)
         {
             if (position == null) position = GetValidPosition(radius);
             if (position == Vector2.negativeInfinity) return;
-            Barrier barrier = new Barrier(barrierVertices.ToArray(), "Barrier " + barrierNumber, (Vector2) position);
+            Barrier barrier = new Barrier(barrierVertices.ToArray(), "Barrier " + barrierNumber, (Vector2) position, scale);
             barriers.Add(barrier);
             ++barrierNumber;
         }
@@ -54,7 +58,7 @@ namespace Game.Combat.Generation
             for (int i = 0; i < MaxPlacementAttempts; ++i)
             {
                 Vector2 randomPosition = Helper.RandomInList(validPositions);
-                if (ShapeIsTooCloseToPoint(randomPosition, radius * 1.2f)) continue;
+                if (ShapeIsTooCloseToPoint(randomPosition, radius * 1.1f)) continue;
                 validPositions.Remove(randomPosition);
                 return randomPosition;
             }
@@ -107,7 +111,11 @@ namespace Game.Combat.Generation
 
         private static bool ShapeIsTooCloseToPoint(Vector2 point, float distance)
         {
-            return barriers.Any(b => Vector2.Distance(b.Position, point) * 2 <= distance);
+            return barriers.Any(b =>
+            {
+                float minDistance = distance + b.Radius * 1.1f;
+                return Vector2.Distance(b.Position, point) <= minDistance;
+            });
         }
 
         public static void GenerateForest(Region region)
@@ -124,7 +132,7 @@ namespace Game.Combat.Generation
         {
             barriers = new List<Barrier>();
             barrierNumber = 0;
-            if(allValidPositions == null) allValidPositions = AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f);
+            if (allValidPositions == null) allValidPositions = AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f);
             validPositions = new List<Vector2>();
             allValidPositions.ForEach(v => validPositions.Add(v));
 

@@ -25,6 +25,11 @@ namespace Game.Combat.Generation
         private bool _shouldAlertAll;
         private static CombatManager _instance;
 
+        public static bool AllEnemiesDead()
+        {
+            return Instance()._enemies.Count == 0;
+        }
+
         public static float VisibilityRange()
         {
             return Instance()._visibilityRange;

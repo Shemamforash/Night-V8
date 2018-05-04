@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Facilitating;
 using Facilitating.UIControllers;
 using Game.Characters;
@@ -15,6 +16,7 @@ using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
+using UnityEngine.Assertions.Comparers;
 using UnityEngine.UI;
 
 namespace Game.Combat.Player
@@ -38,6 +40,16 @@ namespace Game.Combat.Player
         public RageController RageController;
         public bool Retaliate;
 
+        protected override void Move(Vector2 direction)
+        {
+            if (CanDash())
+            {
+                Dash(direction);
+                _dashPressed = false;
+            }
+            else base.Move(direction);
+        }
+        
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -46,18 +58,18 @@ namespace Game.Combat.Player
                 switch (axis)
                 {
                     case InputAxis.Fire:
-                        if (CombatManager.EnemiesOnScreen().Count == 0) UiAreaInventoryController.SetNearestContainer(_lastNearestContainer);
-                        else if (!_fired || Player.Weapon.WeaponAttributes.Automatic)
+                        if (CombatManager.AllEnemiesDead()) UiAreaInventoryController.SetNearestContainer(_lastNearestContainer);
+                        if (!_fired || Player.Weapon.WeaponAttributes.Automatic)
                             FireWeapon();
                         break;
                     case InputAxis.Horizontal:
-                        Rotate(direction);
+                        Move(direction * transform.right);
                         break;
                     case InputAxis.Vertical:
                         Move(direction * transform.up);
-                        break;
+                       break;
                     case InputAxis.SwitchTab:
-//                        Move(direction * transform.right);
+                        Rotate(direction);
                         break;
                 }
             else
@@ -82,10 +94,12 @@ namespace Game.Combat.Player
                         SkillBar.ActivateSkill(3);
                         break;
                     case InputAxis.Sprint:
-                        StartSprinting();
+                        _dashPressed = true;
                         break;
                 }
         }
+
+        private bool _dashPressed;
 
         private CharacterCombat _lockedTarget;
 
@@ -96,7 +110,7 @@ namespace Game.Combat.Player
             float rotation = AdvancedMaths.AngleFromUp(transform.position, _lockedTarget.transform.position);
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         }
-        
+
         private void LockTarget()
         {
             _lockedTarget = GetTarget();
@@ -108,11 +122,13 @@ namespace Game.Combat.Player
 
         private void Rotate(float direction)
         {
-            if (_lockedTarget != null)
+            if (CanDash())
             {
-                Move(direction * transform.right);
+                Spin(direction);
+                _dashPressed = false;
                 return;
             }
+            if (_lockedTarget != null) return;
             _rotateSpeedCurrent += _rotateAcceleration * Time.deltaTime;
             if (_rotateSpeedCurrent > RotateSpeedMax) _rotateSpeedCurrent = RotateSpeedMax;
             transform.Rotate(Vector3.forward, _rotateSpeedCurrent * Time.deltaTime * Helper.Polarity(-direction));
@@ -138,26 +154,22 @@ namespace Game.Combat.Player
                 case InputAxis.Fire:
                     _fired = false;
                     break;
-                case InputAxis.Sprint:
-                    StopSprinting();
-                    break;
-                case InputAxis.Horizontal:
+                case InputAxis.SwitchTab:
                     _rotateSpeedCurrent = 0f;
+                    break;
+                case InputAxis.Sprint:
+                    _dashPressed = false;
                     break;
             }
         }
 
         public void OnDoubleTap(InputAxis axis, float direction)
         {
-            switch (axis)
-            {
-                case InputAxis.Horizontal:
-                    Dash(direction * transform.right);
-                    break;
-                case InputAxis.Vertical:
-                    Dash(direction * transform.up);
-                    break;
-            }
+        }
+
+        private void Spin(float direction)
+        {
+            transform.DORotate(new Vector3(0, 0, 180f * -direction), 0.5f, RotateMode.FastBeyond360).SetRelative();
         }
 
         public event Action<Shot> OnFireAction;
@@ -185,7 +197,7 @@ namespace Game.Combat.Player
 
         private void CheckForEnemiesOnScreen()
         {
-            PlayerUi.Instance().SetAlpha(CombatManager.EnemiesOnScreen().Count == 0 ? 0 : 1);
+            PlayerUi.Instance().SetAlpha(CombatManager.AllEnemiesDead() ? 0 : 1);
         }
 
         public override void Update()
@@ -280,14 +292,13 @@ namespace Game.Combat.Player
 
         protected override void Dash(Vector2 direction)
         {
-            if (!CanDash()) return;
             base.Dash(direction);
             _dashCooldown.Start();
         }
 
         private bool CanDash()
         {
-            return _dashCooldown.Finished();
+            return _dashCooldown.Finished() && _dashPressed;
         }
 
         public void TryRetaliate(EnemyBehaviour origin)
@@ -299,7 +310,6 @@ namespace Game.Combat.Player
         {
             base.Knockback(source, force);
             StopReloading();
-            StopSprinting();
             UpdateMagazineUi();
         }
 

@@ -17,7 +17,7 @@ public class UiAimController : MonoBehaviour
 
     public void Update()
     {
-        if (CombatManager.EnemiesOnScreen().Count == 0)
+        if (CombatManager.AllEnemiesDead())
         {
             _lineRenderer.enabled = false;
             return;
@@ -28,11 +28,15 @@ public class UiAimController : MonoBehaviour
         Vector3 start = transform.position + forwardDir * 0.1f;
         RaycastHit2D hit = Physics2D.Raycast(start, forwardDir, RayDistance, _layerMask);
         Vector3 end = start + forwardDir * RayDistance;
-        if (hit.collider != null)
+        if (hit.collider != null && hit.collider.CompareTag("UiCollider"))
         {
             end = hit.point;
-            EnemyBehaviour enemyBehaviour = hit.collider.GetComponent<EnemyBehaviour>();
+            EnemyBehaviour enemyBehaviour = hit.collider.transform.parent.GetComponent<EnemyBehaviour>();
             CombatManager.Player().SetTarget(enemyBehaviour);
+        }
+        else
+        {
+            CombatManager.Player().SetTarget(null);
         }
 
         _lineRenderer.SetPositions(new[] {start, end});

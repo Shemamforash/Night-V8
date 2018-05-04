@@ -69,4 +69,18 @@
         <Value>3</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>
+    <Enemy>
+        <Name>Maelstrom</Name>
+        <Health>300</Health>
+        <Speed>5</Speed>
+        <Value>3</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>MaelstromImage</Name>
+        <Health>1</Health>
+        <Speed>5</Speed>
+        <Value>3</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
 </Enemies>

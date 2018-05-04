@@ -2,8 +2,8 @@
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using UnityEngine;
 
 namespace Game.Global
 {
@@ -41,6 +41,22 @@ namespace Game.Global
                 AddItem(Inscription.GenerateInscription(ItemQuality.Shining));
                 AddItem(ArmourPlate.GeneratePlate(ItemQuality.Shining));
             }
+        }
+
+        public void Print()
+        {
+            string contents = "Resources: \n\n";
+            foreach (InventoryResource r in InventoryResources())
+            {
+                contents += r.Name + " x" + r.Quantity() + "\n";
+            }
+
+            contents += "Items: \n\n";
+            foreach (InventoryItem item in Items())
+            {
+                contents += item.Name + " x" + item.Quantity() + "\n";
+            }
+            Debug.Log(contents);
         }
     }
 }

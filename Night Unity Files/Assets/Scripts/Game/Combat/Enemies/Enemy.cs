@@ -83,6 +83,12 @@ namespace Game.Combat.Enemies
                 case EnemyType.Ghoul:
                     enemyBehaviour = enemyObject.AddComponent<Ghoul>();
                     break;
+                case EnemyType.Maelstrom:
+                    enemyBehaviour = enemyObject.AddComponent<Maelstrom>();
+                    break;
+                case EnemyType.MaelstromImage:
+                    enemyBehaviour = enemyObject.AddComponent<MaelstromImage>();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

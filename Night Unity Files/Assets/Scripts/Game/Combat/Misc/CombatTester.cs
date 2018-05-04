@@ -27,7 +27,7 @@ namespace Game.Combat.Misc
             RestartCombat();
         }
 
-        public static void RestartCombat()
+        private static void RestartCombat()
         {
             _playerCharacter = CharacterManager.GenerateRandomCharacter();
             _playerCharacter.Inventory().AddTestingResources(5);
@@ -37,9 +37,8 @@ namespace Game.Combat.Misc
             if (_instance.Rifle) weaponsWanted.Add(WeaponType.Rifle);
             if (_instance.Pistol) weaponsWanted.Add(WeaponType.Pistol);
             if (_instance.Shotgun) weaponsWanted.Add(WeaponType.Shotgun);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Shining, weaponsWanted);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Radiant, weaponsWanted);
             weapon.WeaponAttributes.SetDurability(_instance.Durability);
-            Debug.Log(weapon.WeaponAttributes.Print());
             _playerCharacter.EquipWeapon(weapon);
             weapon.Reload(_playerCharacter.Inventory());
 
@@ -49,6 +48,7 @@ namespace Game.Combat.Misc
 //            node.SetRegionType(RegionType.Nightmare);
             node.Position = Vector2.zero;
             _playerCharacter.TravelAction.SetCurrentNode(node);
+            _playerCharacter.Inventory().Print();
         }
     }
 }

@@ -41,7 +41,7 @@ namespace Game.Combat.Ui
             }
 
             SetAlpha(1);
-            NameText.text = enemy.Enemy.Name;
+            NameText.text = enemy.GetEnemyName();
             ActionText.text = enemy.ActionText;
             enemy.HealthController.UpdateHealth();
         }

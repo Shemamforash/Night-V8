@@ -132,7 +132,7 @@ namespace Game.Exploration.Regions
         private void GenerateNightmare()
         {
             AddEnemy(EnemyType.GhoulMother, 10);
-            AddEnemy(EnemyType.GhoulMother, 10);
+            AddEnemy(EnemyType.Maelstrom, 10);
         }
 
         private int CalculateDanger()
@@ -202,7 +202,6 @@ namespace Game.Exploration.Regions
                     break;
             }
         }
-
 
         public void Enter()
         {
