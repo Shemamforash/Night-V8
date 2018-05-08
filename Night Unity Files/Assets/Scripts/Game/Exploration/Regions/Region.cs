@@ -133,6 +133,7 @@ namespace Game.Exploration.Regions
         {
             AddEnemy(EnemyType.GhoulMother, 10);
             AddEnemy(EnemyType.Maelstrom, 10);
+            AddEnemy(EnemyType.Ghast, 10);
         }
 
         private int CalculateDanger()

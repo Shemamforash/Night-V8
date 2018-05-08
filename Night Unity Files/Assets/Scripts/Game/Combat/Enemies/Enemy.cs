@@ -13,7 +13,7 @@ namespace Game.Combat.Enemies
     public class Enemy : Character
     {
         public readonly EnemyTemplate Template;
-        public bool IsDead;
+        private bool IsDead;
 
         public Enemy(EnemyType type) : base(type.ToString())
         {
@@ -48,51 +48,10 @@ namespace Game.Combat.Enemies
         public EnemyBehaviour GetEnemyBehaviour()
         {
             Reset();
-            EnemyBehaviour enemyBehaviour;
-            GameObject enemyObject = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Combat Character"));
+            GameObject enemyPrefab = Resources.Load<GameObject>("Prefabs/Combat/Enemies/" + Template.EnemyType);
+            GameObject enemyObject = GameObject.Instantiate(enemyPrefab);
             enemyObject.name = Template.EnemyType.ToString() + Id;
-            switch (Template.EnemyType)
-            {
-                case EnemyType.Brawler:
-                    enemyBehaviour = enemyObject.AddComponent<Brawler>();
-                    break;
-                case EnemyType.Martyr:
-                    enemyBehaviour = enemyObject.AddComponent<Martyr>();
-                    break;
-                case EnemyType.Medic:
-                    enemyBehaviour = enemyObject.AddComponent<Medic>();
-                    break;
-                case EnemyType.Mountain:
-                    enemyBehaviour = enemyObject.AddComponent<Mountain>();
-                    break;
-                case EnemyType.Sentinel:
-                    enemyBehaviour = enemyObject.AddComponent<Sentinel>();
-                    break;
-                case EnemyType.Sniper:
-                    enemyBehaviour = enemyObject.AddComponent<Sniper>();
-                    break;
-                case EnemyType.Warlord:
-                    enemyBehaviour = enemyObject.AddComponent<Warlord>();
-                    break;
-                case EnemyType.Witch:
-                    enemyBehaviour = enemyObject.AddComponent<Witch>();
-                    break;
-                case EnemyType.GhoulMother:
-                    enemyBehaviour = enemyObject.AddComponent<GhoulMother>();
-                    break;
-                case EnemyType.Ghoul:
-                    enemyBehaviour = enemyObject.AddComponent<Ghoul>();
-                    break;
-                case EnemyType.Maelstrom:
-                    enemyBehaviour = enemyObject.AddComponent<Maelstrom>();
-                    break;
-                case EnemyType.MaelstromImage:
-                    enemyBehaviour = enemyObject.AddComponent<MaelstromImage>();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
+            EnemyBehaviour enemyBehaviour = enemyObject.GetComponent<EnemyBehaviour>();
             enemyBehaviour.Initialise(this);
             return enemyBehaviour;
         }

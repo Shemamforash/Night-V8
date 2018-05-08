@@ -13,6 +13,7 @@
         Ghoul,
         GhoulMother,
         Maelstrom,
-        MaelstromImage
+        MaelstromImage,
+        Ghast
     }
 }

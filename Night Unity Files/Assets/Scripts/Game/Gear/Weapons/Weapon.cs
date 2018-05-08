@@ -74,6 +74,7 @@ namespace Game.Gear.Weapons
                 {
                     shots.Add(Shot.Create(origin));
                 }
+
                 ConsumeAmmo(1);
                 Assert.IsTrue(shots.Count > 0);
                 Assert.IsNotNull(shots);

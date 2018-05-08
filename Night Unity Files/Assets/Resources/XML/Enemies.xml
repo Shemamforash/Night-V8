@@ -83,4 +83,11 @@
         <Value>3</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>
+    <Enemy>
+        <Name>Ghast</Name>
+        <Health>100</Health>
+        <Speed>3</Speed>
+        <Value>3</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
 </Enemies>

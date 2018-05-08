@@ -151,6 +151,7 @@
                   <e p="IncendiaryGrenade.cs" t="Include" />
                 </e>
                 <e p="Nightmares" t="Include">
+                  <e p="Ghast.cs" t="Include" />
                   <e p="Ghoul.cs" t="Include" />
                   <e p="GhoulMother.cs" t="Include" />
                   <e p="Maelstrom.cs" t="Include" />

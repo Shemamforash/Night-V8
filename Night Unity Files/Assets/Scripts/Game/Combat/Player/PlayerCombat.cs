@@ -15,9 +15,10 @@ using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
-using UnityEngine.Assertions.Comparers;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Player
 {
@@ -49,7 +50,7 @@ namespace Game.Combat.Player
             }
             else base.Move(direction);
         }
-        
+
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -67,7 +68,7 @@ namespace Game.Combat.Player
                         break;
                     case InputAxis.Vertical:
                         Move(direction * transform.up);
-                       break;
+                        break;
                     case InputAxis.SwitchTab:
                         Rotate(direction);
                         break;
@@ -128,6 +129,7 @@ namespace Game.Combat.Player
                 _dashPressed = false;
                 return;
             }
+
             if (_lockedTarget != null) return;
             _rotateSpeedCurrent += _rotateAcceleration * Time.deltaTime;
             if (_rotateSpeedCurrent > RotateSpeedMax) _rotateSpeedCurrent = RotateSpeedMax;
@@ -212,25 +214,6 @@ namespace Game.Combat.Player
             TransitionOffScreen();
             CheckForContainersNearby();
             CheckForEnemiesOnScreen();
-//            if (GetTarget() == null)
-//            {
-//                _pivot.gameObject.SetActive(false);
-//            }
-//            else
-//            {
-//                _pivot.gameObject.SetActive(true);
-//                Quaternion targetRotation = AdvancedMaths.RotationToTarget(transform.position, GetTarget().transform.position);
-//                if (_rotateAimTime <= 0f)
-//                {
-//                    _pivot.rotation = targetRotation;
-//                }
-//                else
-//                {
-//                    _rotateAimTime -= Time.deltaTime;
-//                    if (_rotateAimTime < 0) _rotateAimTime = 0;
-//                    _pivot.rotation = Quaternion.Lerp(_lastTargetRotation, targetRotation, 1f - _rotateAimTime / RotateAimMaxTime);
-//                }
-//            }
         }
 
         private const float MaxShowInventoryDistance = 0.5f;
@@ -382,13 +365,14 @@ namespace Game.Combat.Player
             StopReloading();
         }
 
+
         //FIRING
         public void FireWeapon()
         {
 //            if (GetTarget() == null) return;
             if (Weapon().Empty()) return;
             List<Shot> shots = Weapon().Fire(this);
-            if (shots == null) return;
+            if (shots.Count == 0) return;
             shots.ForEach(shot =>
             {
                 shot.SetDamageModifier(_damageModifier);
@@ -396,8 +380,24 @@ namespace Game.Combat.Player
                 shot.Fire();
             });
             _fired = true;
-
             UpdateMagazineUi();
+        }
+
+        private bool ShowMuzzleFlash;
+        private SpriteRenderer _muzzleFlash;
+
+        private void UpdateMuzzleFlash()
+        {
+            if (_muzzleFlash == null) _muzzleFlash = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Muzzle Flash");
+            if (ShowMuzzleFlash)
+            {
+                _muzzleFlash.color = new Color(1,1,1, Random.Range(0.2f, 0.8f));
+                ShowMuzzleFlash = false;
+            }
+            else
+            {
+                _muzzleFlash.color = UiAppearanceController.InvisibleColour;
+            }
         }
 
         //MISC
