@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Game.Combat.Generation;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
@@ -13,17 +14,40 @@ namespace Game.Combat.Enemies.Nightmares
         private const float TeleportTimerMax = 0.5f;
         private float _teleportTimer;
         private bool _teleporting;
+        private SpriteRenderer _spriteRenderer;
+        private CircleCollider2D _collider;
 
-        public void Awake()
+        private float _fireTimer = 3f;
+        
+        public override void Initialise(Enemy enemy)
         {
+            base.Initialise(enemy);
             _teleportInParticles = Helper.FindChildWithName<ParticleSystem>(gameObject, "In");
             _teleportOutParticles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Out");
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+            _collider = GetComponent<CircleCollider2D>();
+            ChooseNextAction();
+        }
+
+        public override void ChooseNextAction()
+        {
+            Reposition(PathingGrid.Instance().FindCellToAttackPlayer(CurrentCell(), 5f, 2f));
         }
         
         public override void Update()
         {
             if (_teleporting) return;
             base.Update();
+            if (_fireTimer > 0) _fireTimer -= Time.deltaTime;
+            else
+            {
+                for (int i = Random.Range(3, 7); i >= 0; --i)
+                {
+                    GhastProjectile.Create(transform.position, (GetTarget().transform.position - transform.position).normalized);
+                }
+
+                _fireTimer = 3f;
+            }
             UpdateTeleport();
         }
 
@@ -35,23 +59,33 @@ namespace Game.Combat.Enemies.Nightmares
             StartCoroutine(Teleport());
         }
 
+        private void SetVisible(bool visible)
+        {
+            _spriteRenderer.enabled = visible;
+            _collider.enabled = visible;
+        }
+        
         private IEnumerator Teleport()
         {
             _teleporting = true;
             _teleportOutParticles.Play();
+            while (_teleportOutParticles.isPlaying)
+            {
+                yield return null;
+            }
             _teleportTimer = 0f;
-            transform.position = new Vector2(400, 400);
-            
+            SetVisible(false);
             while (_teleportTimer < TeleportTimerMax)
             {
                 _teleportTimer += Time.deltaTime;
                 yield return null;
             }
-
             Cell c = PathingGrid.Instance().GetCellNearMe(CombatManager.Player().CurrentCell(), 4);
-            _teleportInParticles.Play();
             transform.position = c.transform.position;
+            _teleportInParticles.Play();
+            SetVisible(true);
             _teleporting = false;
+            ChooseNextAction();
         }
     }
 }

@@ -86,6 +86,13 @@
     <Enemy>
         <Name>Ghast</Name>
         <Health>100</Health>
+        <Speed>6</Speed>
+        <Value>3</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Nightmare</Name>
+        <Health>500</Health>
         <Speed>3</Speed>
         <Value>3</Value>
         <WeaponTypes>1</WeaponTypes>

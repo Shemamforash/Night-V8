@@ -14,6 +14,7 @@
         GhoulMother,
         Maelstrom,
         MaelstromImage,
-        Ghast
+        Ghast,
+        Nightmare
     }
 }
