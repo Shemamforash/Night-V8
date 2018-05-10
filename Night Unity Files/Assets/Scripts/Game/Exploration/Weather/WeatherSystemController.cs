@@ -25,6 +25,7 @@ namespace Game.Exploration.Weather
 
         public void ChangeWeather(Weather w, int minutes)
         {
+            return;
             float time = minutes * WorldState.MinuteInSeconds;
             _changeTime = time / 10;
             _prevAttributes = _targetAttributes;

@@ -48,6 +48,7 @@
             <e p="Weather.xml" t="Include" />
           </e>
         </e>
+        <e p="SceneryController.cs" t="Include" />
         <e p="Scripts" t="Include">
           <e p="Facilitating" t="Include">
             <e p="Audio" t="Include">

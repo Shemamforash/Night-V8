@@ -46436,9 +46436,9 @@ MonoBehaviour:
   Difficulty: 5
   Durability: 20
   ManualOnly: 0
-  Smg: 1
+  Smg: 0
   Lmg: 0
-  Rifle: 0
+  Rifle: 1
   Pistol: 0
   Shotgun: 0
 --- !u!114 &1116345287

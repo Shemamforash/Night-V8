@@ -13,7 +13,7 @@ namespace Game.Characters.CharacterActions
             {
                 playerCharacter.Rest(1);
                 string storyProgress = playerCharacter.GetCurrentStoryProgress();
-                if (storyProgress != null) WorldEventManager.GenerateEvent(new WorldEvent(storyProgress));
+//            todo    if (storyProgress != null) WorldEventManager.GenerateEvent(new WorldEvent(storyProgress));
             };
         }
     }

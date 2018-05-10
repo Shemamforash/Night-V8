@@ -25,7 +25,9 @@ namespace Game.Global
         private static bool _isNight, _isPaused;
         private static WorldState _instance;
 
-        public static float MinuteInSeconds = 1f;//.2f;
+        public static float MinuteInSeconds = 0.2f;
+        private float _dayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
+        private int _minuteInterval = 60 / MinutesPerHour;
 
         public void Awake()
         {
@@ -69,7 +71,7 @@ namespace Game.Global
 
         public static string TimeToHours(int duration)
         {
-            int hours = Mathf.FloorToInt((float)duration / MinutesPerHour);
+            int hours = Mathf.FloorToInt((float) duration / MinutesPerHour);
             int minutes = duration - hours * MinutesPerHour;
             string timeString = "";
             if (hours != 0) timeString += hours + "hrs ";
@@ -129,6 +131,10 @@ namespace Game.Global
 
         private void IncrementWorldTime()
         {
+            int minutesPassed = Hours * MinutesPerHour + Minutes / _minuteInterval;
+            float timePassed = minutesPassed * MinuteInSeconds + _currentTime;
+            float normalisedTime = timePassed / _dayLengthInSeconds;
+            SceneryController.SetTime(normalisedTime);
             _currentTime += Time.deltaTime;
             if (_currentTime < MinuteInSeconds) return;
             _currentTime = _currentTime - MinuteInSeconds;
@@ -138,7 +144,7 @@ namespace Game.Global
 
         private void IncrementMinutes()
         {
-            Minutes += 60 / MinutesPerHour;
+            Minutes += _minuteInterval;
             MinutePasses();
             if (Minutes != 60) return;
             Minutes = 0;
