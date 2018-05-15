@@ -89,14 +89,13 @@ namespace Game.Exploration.Environment
 
         private static void CreateMinimumSpanningTree()
         {
-            List<Node<Region>> nodes = new List<Node<Region>>();
-            storedNodes.ForEach(n => nodes.Add(new Node<Region>(n, n.Position)));
-            List<Edge<Region>> minTree = Pathfinding.MinimumSpanningTree(nodes);
-
-            foreach (Edge<Region> edge in minTree)
+            Graph<Region> map = new Graph<Region>();
+            storedNodes.ForEach(n => map.AddNode(new Node<Region>(n, n.Position)));
+            map.ComputeMinimumSpanningTree();
+            map.Edges().ForEach(edge =>
             {
                 edge.A.AddNeighbor(edge.B);
-            }
+            });
         }
 
         private static void ConnectNodes()

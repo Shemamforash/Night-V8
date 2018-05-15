@@ -30,8 +30,6 @@ namespace Game.Combat.Enemies.Nightmares
             _direction = direction;
             targetPosition = AdvancedMaths.RandomVectorWithinRange(CombatManager.Player().transform.position, 1f);
             Vector3 startingVelocity = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 2f);
-            Debug.DrawLine(transform.position, targetPosition, Color.red, 3f);
-            Debug.DrawLine(transform.position, transform.position + startingVelocity, Color.green, 3f);
             _rigidbody2D.velocity = startingVelocity;
             _duration = Random.Range(10f, 12f);
             StartCoroutine(Steer());

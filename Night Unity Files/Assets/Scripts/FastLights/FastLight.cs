@@ -61,7 +61,7 @@ namespace Fastlights
         private Tuple<bool, Vector2, float> GetIntersectionWithEdge(Vector2 end, List<FLEdge> edges, FLVertex flVertex)
         {
             Vector2 nearestIntersection = Vector2.negativeInfinity;
-            float nearestDistance = float.MaxValue;
+            float nearestSqrDistance = float.MaxValue;
             bool intersectionExists = false;
             float rayAngle = 360 - AdvancedMaths.AngleFromUp(_position, end);
             edges.ForEach(e =>
@@ -71,13 +71,13 @@ namespace Fastlights
                 if (e.BelongsToEdge(flVertex)) return;
                 Tuple<bool, Vector2> intersection = AdvancedMaths.LineIntersection(e.From.Position, e.To.Position, _position, end);
                 if (!intersection.Item1) return;
-                float distance = Vector2.Distance(_position, intersection.Item2);
-                if (distance >= nearestDistance) return;
-                nearestDistance = distance;
+                float sqrDistance = Vector2.SqrMagnitude(_position - intersection.Item2);
+                if (sqrDistance >= nearestSqrDistance) return;
+                nearestSqrDistance = sqrDistance;
                 intersectionExists = true;
                 nearestIntersection = intersection.Item2;
             });
-            return new Tuple<bool, Vector2, float>(intersectionExists, nearestIntersection, nearestDistance);
+            return new Tuple<bool, Vector2, float>(intersectionExists, nearestIntersection, nearestSqrDistance);
         }
 
         private bool CheckIsNan(Vector2 vect)
@@ -85,18 +85,22 @@ namespace Fastlights
             return float.IsNaN(vect.x) || float.IsNaN(vect.y);
         }
 
+        private List<List<FLVertex>> _visibleEdges;
+        private Tuple<bool, Vector2, float> _intersection;
+        
         private void DrawLight()
         {
             List<FLVertex> vertices = new List<FLVertex>();
             List<FLEdge> edges = new List<FLEdge>();
+            float sqrRadius = Radius * Radius;
             _allObstructors.ForEach(o =>
             {
                 float maxRadius = o.mesh.bounds.max.magnitude;
-                float distanceToMesh = Vector2.Distance(o.transform.position, _position);
-                if (distanceToMesh - maxRadius > Radius) return;
-                List<List<FLVertex>> visibleEdges = o.GetVisibleVertices(_position, Radius);
+                float sqrDistanceToMesh = Vector2.SqrMagnitude((Vector2)o.transform.position - _position);
+                if (sqrDistanceToMesh - maxRadius > sqrRadius) return;
+                _visibleEdges = o.GetVisibleVertices(_position, sqrRadius);
 
-                foreach (List<FLVertex> visibleVertices in visibleEdges)
+                foreach (List<FLVertex> visibleVertices in _visibleEdges)
                 {
                     for (int i = 0; i < visibleVertices.Count - 1; ++i)
                     {
@@ -123,10 +127,10 @@ namespace Fastlights
                 FLVertex flVertex = vertices[i];
                 Vector2 dirToVertex = (flVertex.Position - _position).normalized;
                 Vector2 lineSegmentEnd = _position + dirToVertex * Radius;
-                Tuple<bool, Vector2, float> intersection = GetIntersectionWithEdge(lineSegmentEnd, edges, flVertex);
+                _intersection = GetIntersectionWithEdge(lineSegmentEnd, edges, flVertex);
 
                 //if there is no intersection check to see if the current vertex is at the end of the mesh, if it is, draw a circular area from this vertex to the next vertex to round off the light
-                if (intersection.Item1 == false)
+                if (_intersection.Item1 == false)
                 {
                     if (flVertex.NextFlVertex == null) // && vertex.Edge.To == vertex)
                     {
@@ -149,8 +153,8 @@ namespace Fastlights
                 }
 
                 //if these is an intersection, but it is closer than the current vertex, we can ignore it as it will be dealt with later
-                if (intersection.Item3 < flVertex.DistanceToOrigin) continue;
-                Vector2 intersectionPoint = intersection.Item2;
+                if (_intersection.Item3 < flVertex.SqrDistanceToOrigin) continue;
+                Vector2 intersectionPoint = _intersection.Item2;
                 if (flVertex.PreviousFlVertex == null)
                 {
 //                    Vector2 mid = (flVertex.Position + intersectionPoint) / 2f;

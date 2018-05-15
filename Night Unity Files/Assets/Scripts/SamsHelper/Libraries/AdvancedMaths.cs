@@ -25,12 +25,12 @@ namespace SamsHelper.Libraries
             if (cross.z < 0) return angle;
             return 360 - angle;
         }
-        
+
         private static float Cross(Vector2 a, Vector2 b)
         {
             return a.x * b.y - a.y * b.x;
         }
-        
+
         public static Tuple<bool, Vector2> LineIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
         {
             Vector2 intersectionPoint = new Vector2();
@@ -42,7 +42,7 @@ namespace SamsHelper.Libraries
             float u = Cross(c - a, r) / rxs;
             if (0 > t || t > 1 || 0 > u || u > 1) return Tuple.Create(false, intersectionPoint);
             intersectionPoint = a + t * r;
-            if(intersectionPoint == Vector2.zero || a == Vector2.zero) Debug.Log(a + " " + t + " " + r);
+            if (intersectionPoint == Vector2.zero || a == Vector2.zero) Debug.Log(a + " " + t + " " + r);
             return Tuple.Create(true, intersectionPoint);
         }
 
@@ -131,7 +131,7 @@ namespace SamsHelper.Libraries
         {
             return (point.x - from.x) * (to.y - from.y) - (point.y - from.y) * (to.x - from.x);
         }
-        
+
         public static bool IsPointInPolygon(Vector2 point, List<Vector2> polygon)
         {
             int polygonLength = polygon.Count, i = 0;
@@ -158,6 +158,15 @@ namespace SamsHelper.Libraries
             return inside;
         }
 
+        public static bool DoesLineIntersectWithCircle(Vector2 a, Vector2 b, Vector2 c, float radius)
+        {
+            Vector2 ab = b - a;
+            Vector2 ac = c - a;
+            Vector2 closest = a + (Vector2) Vector3.Project(ac, ab);
+            float distance = Vector2.Distance(c, closest);
+            return distance <= radius;
+        }
+
         public static float CosineRule(float a, float b, float c)
         {
             float numerator = b * b + c * c - a * a;
@@ -165,6 +174,15 @@ namespace SamsHelper.Libraries
             float result = numerator / denominator;
             result = Mathf.Acos(result);
             return result;
+        }
+
+        public static Vector3 RotateVector(Vector3 direction, float angle)
+        {
+            float newX = direction.x * Mathf.Cos(angle) - direction.y * Mathf.Sin(angle);
+            float newY = direction.x * Mathf.Sin(angle) + direction.y * Mathf.Cos(angle);
+            direction.x = newX;
+            direction.y = newY;
+            return direction;
         }
     }
 }

@@ -196,8 +196,9 @@ namespace Game.Exploration.Regions
             {
                 case RegionType.Danger:
                     GenerateSimpleEncounter();
-                    AreaGenerator.GenerateForest(this);
+//                    AreaGenerator.GenerateForest(this);
 //            AreaGenerator.GenerateCanyon(this);
+                    AreaGenerator.GenerateSplitRock(this);
                     break;
                 case RegionType.Nightmare:
                     GenerateNightmare();

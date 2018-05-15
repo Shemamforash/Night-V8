@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SamsHelper.Libraries
 {
@@ -70,15 +71,14 @@ namespace SamsHelper.Libraries
             return path;
         }
 
-        public static List<Edge<T>> MinimumSpanningTree<T>(List<Node<T>> nodes)
+        public static void MinimumSpanningTree<T>(Graph<T> graph, Func<Node<T>, Node<T>, float> edgeWeightFunction = null)
         {
             HashSet<Node<T>> tree = new HashSet<Node<T>>();
-            tree.Add(nodes[0]);
-            List<Node<T>> uncheckedNodes = new List<Node<T>>(nodes);
-            uncheckedNodes.Remove(nodes[0]);
-            List<Edge<T>> minSpanningTree = new List<Edge<T>>();
+            tree.Add(graph.Nodes()[0]);
+            List<Node<T>> uncheckedNodes = new List<Node<T>>(graph.Nodes());
+            uncheckedNodes.Remove(graph.Nodes()[0]);
 
-            while (tree.Count != nodes.Count)
+            while (tree.Count != graph.Nodes().Count)
             {
                 Node<T> nearestNode = null;
                 Node<T> origin = null;
@@ -89,7 +89,9 @@ namespace SamsHelper.Libraries
                     foreach (Node<T> treeNode in tree)
                     {
                         float candidateDistance = uncheckedNode.Distance(treeNode);
-                        if(candidateDistance >= nearestNodeDistance) continue;
+                        float edgeWeightMultiplier = 1;
+                        if (edgeWeightFunction != null) edgeWeightMultiplier = edgeWeightFunction(treeNode, uncheckedNode);
+                        if(candidateDistance * edgeWeightMultiplier >= nearestNodeDistance) continue;
                         nearestNode = uncheckedNode;
                         origin = treeNode;
                         nearestNodeDistance = candidateDistance;
@@ -98,10 +100,9 @@ namespace SamsHelper.Libraries
 
                 tree.Add(nearestNode);
                 uncheckedNodes.Remove(nearestNode);
-                minSpanningTree.Add(new Edge<T>(origin.Content, nearestNode.Content));
+                origin.AddNeighbor(nearestNode);
+                graph.AddEdge(new Edge<T>(origin, nearestNode));
             }
-            
-            return minSpanningTree;
         }
     }
 }

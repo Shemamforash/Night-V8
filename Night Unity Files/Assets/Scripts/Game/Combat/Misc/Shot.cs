@@ -15,12 +15,12 @@ namespace Game.Combat.Misc
     {
         private const float Speed = 30f;
         private static GameObject _bulletPrefab;
+        private BulletTrailFade _bulletTrail;
 
         private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Prefabs/Combat/Bullet");
         private float _accuracy;
         private float _age;
 
-        private GameObject _bulletTrail;
         private int _damage;
         private int _damageDealt;
         private Vector3 _direction;
@@ -69,7 +69,11 @@ namespace Game.Combat.Misc
         {
             Shot shot = _shotPool.Create();
             shot.gameObject.layer = 11;
-            shot.Initialise(origin, origin.Direction());
+            Vector3 direction = origin.Direction();
+            float directionOffset = Random.Range(-origin.GetAccuracyModifier(), origin.GetAccuracyModifier());
+            directionOffset = 20f * directionOffset * Mathf.Deg2Rad;
+            direction = AdvancedMaths.RotateVector(direction, directionOffset);
+            shot.Initialise(origin, direction);
             return shot;
         }
 
@@ -115,8 +119,8 @@ namespace Game.Combat.Misc
         private void CalculateAccuracy()
         {
             if (_guaranteeHit) _accuracy = 0;
-            else if (_origin != null)
-                _accuracy *= _origin.GetAccuracyModifier();
+//            else if (_origin != null)
+//                _accuracy *= _origin.GetAccuracyModifier();
         }
 
         public void ActivateFireTrail()
@@ -152,47 +156,48 @@ namespace Game.Combat.Misc
             _moving = true;
         }
 
-        public void Fire(float distance = 0.2f)
-        {
-            _bulletTrail = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Bullet Trail"));
-            if (!_isEnemyShot)
-            {
-                _bulletTrail.GetComponent<TrailRenderer>().startColor = Color.white;
-                _bulletTrail.GetComponent<TrailRenderer>().endColor = UiAppearanceController.InvisibleColour;
-            }
-            else
-            {
-                _bulletTrail.GetComponent<TrailRenderer>().startColor = Color.red;
-                _bulletTrail.GetComponent<TrailRenderer>().endColor = new Color(1f, 0f, 0f, 0f);
-            }
-
-            _bulletTrail.transform.SetParent(transform);
-            _bulletTrail.transform.position = transform.position;
-            _age = 0;
-            float angleOffset = Random.Range(-_accuracy, _accuracy);
-            transform.position = _originPosition + _direction * distance;
-            _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
-            _fired = true;
-            _origin?.IncreaseRecoil();
-            StartCoroutine(WaitToDie());
-        }
-
         private IEnumerator WaitToDie()
         {
             MaxAge = _weapon.WeaponAttributes.GetCalculatedValue(AttributeType.Range) / Speed;
+            _age = 0;
             while (_age < MaxAge)
             {
                 _age += Time.deltaTime;
+                _bulletTrail.SetAlpha(1f - _age / MaxAge);
                 yield return null;
             }
 
             _rigidBody.velocity = Vector2.zero;
+            _bulletTrail.StartFade(0f);
             DeactivateShot();
+        }
+
+        public void Fire(float distance = 0.15f)
+        {
+            float angleOffset = Random.Range(-_accuracy, _accuracy);
+            transform.position = _originPosition + _direction * distance;
+            _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
+//            transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, AdvancedMaths.AngleFromUp(Vector3.zero, _direction)));
+            _fired = true;
+            if (_origin != null) _origin.IncreaseRecoil();
+
+            _bulletTrail = BulletTrailFade.Create();
+//            if (_moving)
+//            {
+            _bulletTrail.SetAlpha(1);
+//            }
+//            else
+//            {
+//                _bulletTrail.GetComponent<TrailRenderer>().startColor = Color.red;
+//                _bulletTrail.GetComponent<TrailRenderer>().endColor = new Color(1f, 0f, 0f, 0f);
+//            }
+
+            _bulletTrail.SetPosition(transform);
+            StartCoroutine(WaitToDie());
         }
 
         private void DeactivateShot()
         {
-            _bulletTrail.transform.SetParent(null);
             _fireTrail.SetActive(false);
             _shotPool.Return(this);
         }
@@ -215,6 +220,7 @@ namespace Game.Combat.Misc
             }
 
             DeactivateShot();
+            _bulletTrail.StartFade(0.2f);
         }
 
         private void ApplyDamage(CharacterCombat hit)

@@ -60,6 +60,7 @@ namespace Game.Combat.Enemies.Nightmares
             bool dead = false;
             while (_particles.isPlaying)
             {
+                if (target == null) break;
                 _particles.transform.rotation = Quaternion.Euler(new Vector3(0, 0, AdvancedMaths.AngleFromUp(transform.position, target.transform.position) - transform.parent.rotation.z));
                 float distance = Vector2.Distance(transform.position, target.transform.position);
                 float duration = distance / _particles.main.startSpeed.constant;
@@ -78,7 +79,15 @@ namespace Game.Combat.Enemies.Nightmares
                 timePassed += Time.deltaTime;
                 yield return null;
             }
-            Kill();
+
+            if (target != null)
+            {
+                Kill();
+            }
+            else
+            {
+                Immobilised(false);
+            }
         }
     }
 }

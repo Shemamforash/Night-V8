@@ -15,7 +15,8 @@ namespace Game.Combat.Misc
 
         private UIHealthBarController GetHealthBarController()
         {
-            return _character is PlayerCombat ? PlayerUi.Instance().GetHealthController(_character) : EnemyUi.Instance().GetHealthController(_character);
+            if (_character is PlayerCombat) return PlayerUi.Instance().GetHealthController(_character);
+            return EnemyUi.Instance().GetHealthController(_character);
         }
 
         public void SetInitialHealth(int initialHealth, CharacterCombat character)

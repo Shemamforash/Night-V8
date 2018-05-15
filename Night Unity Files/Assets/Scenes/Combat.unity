@@ -46436,9 +46436,9 @@ MonoBehaviour:
   Difficulty: 5
   Durability: 20
   ManualOnly: 0
-  Smg: 0
+  Smg: 1
   Lmg: 0
-  Rifle: 1
+  Rifle: 0
   Pistol: 0
   Shotgun: 0
 --- !u!114 &1116345287
@@ -58330,7 +58330,7 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 0.1764706}
+      key0: {r: 1, g: 1, b: 1, a: 0.078431375}
       key1: {r: 1, g: 1, b: 1, a: 0.019607844}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}

@@ -28,23 +28,23 @@ namespace FastLights
             Vector3 directionToPoint = targetPoint - pointOnLine;
             float dot = Vector3.Dot(directionToPoint, lineDirection);
             Vector3 pointOnline = pointOnLine + lineDirection * dot;
-            float distance = Vector2.Distance(targetPoint, pointOnline);
-            if (AdvancedMaths.Dot(pointOnLine, pointOnLine + lineDirection, targetPoint) < 0) distance = -distance;
-            return distance;
+            float sqrDistance = Vector2.SqrMagnitude(targetPoint - pointOnline);
+            if (AdvancedMaths.Dot(pointOnLine, pointOnLine + lineDirection, targetPoint) < 0) sqrDistance = -sqrDistance;
+            return sqrDistance;
         }
 
-        private List<FLVertex> GetVerticesInRange(Vector3 origin, float radius)
+        private List<FLVertex> GetVerticesInRange(Vector3 origin, float sqrRadius)
         {
             List<FLVertex> verts = new List<FLVertex>();
             Vector2 dirToObstructor = (origin - transform.position).normalized;
             foreach (Vector3 v in mesh.vertices)
             {
                 Vector3 worldVertex = transform.TransformPoint(v);
-                float distance = Vector2.Distance(worldVertex, origin);
-                if (distance > radius) continue;
+                float sqrDistance = Vector2.SqrMagnitude(worldVertex - origin);
+                if (sqrDistance > sqrRadius) continue;
                 float angle = 360 - AdvancedMaths.AngleFromUp(origin, worldVertex);
-                FLVertex flVertex = new FLVertex(worldVertex, distance, angle);
-                flVertex.PerpendicularDistance = PerpendicularDistance(transform.position, dirToObstructor, worldVertex);
+                FLVertex flVertex = new FLVertex(worldVertex, sqrDistance, angle);
+                flVertex.SqrPerpendicularDistance = PerpendicularDistance(transform.position, dirToObstructor, worldVertex);
                 verts.Add(flVertex);
             }
 
@@ -114,7 +114,7 @@ namespace FastLights
                 List<FLVertex> edgeList = new List<FLVertex>();
                 finalEdges.Add(edgeList);
                 edge.ForEach(i => edgeList.Add(worldVertices[i]));
-                edgeList.Sort((a, b) => a.PerpendicularDistance.CompareTo(b.PerpendicularDistance));
+                edgeList.Sort((a, b) => a.SqrPerpendicularDistance.CompareTo(b.SqrPerpendicularDistance));
                 edgeList.Reverse();
                 for (int i = 0; i < edgeList.Count - 1; ++i)
                 {
