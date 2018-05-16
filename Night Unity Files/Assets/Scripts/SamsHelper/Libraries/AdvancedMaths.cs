@@ -184,5 +184,43 @@ namespace SamsHelper.Libraries
             direction.y = newY;
             return direction;
         }
+        
+        public static Vector2 RandomPointOnLine(Vector3 start, Vector3 end)
+        {
+            float random = Random.Range(0f, 1f);
+            return PointAlongLine(start, end, random);
+        }
+
+        public static Vector3 PointAlongLine(Vector3 start, Vector3 end, float amount)
+        {
+            float newX = (1 - amount) * start.x + amount * end.x;
+            float newY = (1 - amount) * start.y + amount * end.y;
+            return new Vector2(newX, newY);
+        }
+
+        public class BoundingBox
+        {
+            public readonly Vector2 TopLeft, TopRight, BottomLeft, BottomRight;
+
+            public BoundingBox(float width) : this(width, width)
+            {
+            }
+
+            public BoundingBox(float width, float height)
+            {
+                TopLeft = new Vector2(-width / 2, height / 2);
+                TopRight = new Vector2(width / 2, height / 2);
+                BottomLeft = new Vector2(-width / 2, -height / 2);
+                BottomRight = new Vector2(width / 2, -height / 2);
+            }
+
+            public void Draw()
+            {
+                Debug.DrawLine(TopLeft, TopRight, Color.green, 5f);
+                Debug.DrawLine(BottomRight, TopRight, Color.green, 5f);
+                Debug.DrawLine(TopLeft, BottomLeft, Color.green, 5f);
+                Debug.DrawLine(BottomLeft, BottomRight, Color.green, 5f);
+            }
+        }
     }
 }

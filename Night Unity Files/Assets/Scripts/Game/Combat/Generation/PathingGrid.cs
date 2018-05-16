@@ -17,7 +17,7 @@ namespace Game.Combat.Generation
         public const int GridWidth = CombatAreaWidth * CellResolution;
 
         public Cell[,] Grid;
-        private readonly List<Node<Cell>> _gridNodes = new List<Node<Cell>>();
+        private readonly List<Cell> _gridNodes = new List<Cell>();
         private static PathingGrid _instance;
 
         private List<Barrier> _barriers;
@@ -91,7 +91,7 @@ namespace Game.Combat.Generation
                 }
             }
 
-            _gridNodes.ForEach(n => n.Content.SetNeighbors());
+            _gridNodes.ForEach(n => n.SetNeighbors());
         }
 
         public Cell PositionToCell(Vector2 position)
@@ -133,7 +133,9 @@ namespace Game.Combat.Generation
         {
             Thread thread = new Thread(() =>
             {
-                List<Cell> newPath = Pathfinding.AStar(from.Node, to.Node);
+                List<Node> nodePath = Pathfinding.AStar(from.Node, to.Node);
+                List<Cell> newPath = new List<Cell>();
+                nodePath.ForEach(n => newPath.Add(PositionToCell(n.Position)));
                 int currentIndex = 0;
                 while (currentIndex < newPath.Count)
                 {
@@ -288,7 +290,7 @@ namespace Game.Combat.Generation
                 }
 
                 Grid[x, y] = Cell.Generate(x, y);
-                _gridNodes.Add(Grid[x, y].Node);
+                _gridNodes.Add(Grid[x, y]);
             }
         }
 

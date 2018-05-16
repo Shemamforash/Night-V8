@@ -22,6 +22,7 @@ namespace Game.Combat.Generation
         public readonly Vector2 Position;
         private static Transform _barrierParent;
         public readonly float Radius;
+        public bool RotateLocked;
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
@@ -68,7 +69,7 @@ namespace Game.Combat.Generation
             _barrierObject.name = _barrierName;
             _barrierObject.tag = "Barrier";
             _barrierObject.transform.localScale = Vector2.one;
-            _barrierObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, _rotation));
+            if(!RotateLocked) _barrierObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, _rotation));
             _barrierObject.transform.position = Position;
             WorldVerts.Clear();
             Collider = _barrierObject.GetComponent<PolygonCollider2D>();

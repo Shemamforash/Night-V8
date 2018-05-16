@@ -5,31 +5,31 @@ namespace SamsHelper.Libraries
 {
     public static class Pathfinding
     {
-        public static List<T> AStar<T>(Node<T> from, Node<T> to)
+        public static List<Node> AStar(Node from, Node to)
         {
-            List<T> path = null;
+            List<Node> path = null;
 
-            HashSet<Node<T>> visited = new HashSet<Node<T>>();
-            HashSet<Node<T>> unvisited = new HashSet<Node<T>>();
+            HashSet<Node> visited = new HashSet<Node>();
+            HashSet<Node> unvisited = new HashSet<Node>();
             unvisited.Add(from);
-            Dictionary<Node<T>, Node<T>> _fromDict = new Dictionary<Node<T>, Node<T>>();
-            Dictionary<Node<T>, float> gScore = new Dictionary<Node<T>, float>();
-            Dictionary<Node<T>, float> fScore = new Dictionary<Node<T>, float>();
+            Dictionary<Node, Node> _fromDict = new Dictionary<Node, Node>();
+            Dictionary<Node, float> gScore = new Dictionary<Node, float>();
+            Dictionary<Node, float> fScore = new Dictionary<Node, float>();
             gScore[from] = 0;
             fScore[from] = from.Distance(to);
 
             while (unvisited.Count != 0)
             {
                 float minScore = float.MaxValue;
-                Node<T> minNode = null;
-                foreach (Node<T> n in unvisited)
+                Node minNode = null;
+                foreach (Node n in unvisited)
                 {
                     if (fScore[n] >= minScore) continue;
                     minScore = fScore[n];
                     minNode = n;
                 }
 
-                Node<T> current = minNode;
+                Node current = minNode;
                 if (current == to)
                 {
                     path = GetPath(current, _fromDict);
@@ -39,7 +39,7 @@ namespace SamsHelper.Libraries
                 unvisited.Remove(current);
                 visited.Add(current);
 
-                foreach (Node<T> neighbor in current.Neighbors())
+                foreach (Node neighbor in current.Neighbors())
                 {
                     if (visited.Contains(neighbor)) continue;
                     if (!unvisited.Contains(neighbor)) unvisited.Add(neighbor);
@@ -58,12 +58,12 @@ namespace SamsHelper.Libraries
             return path;
         }
 
-        private static List<T> GetPath<T>(Node<T> current, Dictionary<Node<T>, Node<T>> fromDict)
+        private static List<Node> GetPath(Node current, Dictionary<Node, Node> fromDict)
         {
-            List<T> path = new List<T>();
+            List<Node> path = new List<Node>();
             while (current != null)
             {
-                path.Add(current.Content);
+                path.Add(current);
                 fromDict.TryGetValue(current, out current);
             }
 
@@ -71,22 +71,23 @@ namespace SamsHelper.Libraries
             return path;
         }
 
-        public static void MinimumSpanningTree<T>(Graph<T> graph, Func<Node<T>, Node<T>, float> edgeWeightFunction = null)
+        public static List<Edge> MinimumSpanningTree(Graph graph, Func<Node, Node, float> edgeWeightFunction = null)
         {
-            HashSet<Node<T>> tree = new HashSet<Node<T>>();
+            List<Edge> minTreeEdges = new List<Edge>();
+            HashSet<Node> tree = new HashSet<Node>();
             tree.Add(graph.Nodes()[0]);
-            List<Node<T>> uncheckedNodes = new List<Node<T>>(graph.Nodes());
+            List<Node> uncheckedNodes = new List<Node>(graph.Nodes());
             uncheckedNodes.Remove(graph.Nodes()[0]);
 
             while (tree.Count != graph.Nodes().Count)
             {
-                Node<T> nearestNode = null;
-                Node<T> origin = null;
+                Node nearestNode = null;
+                Node origin = null;
                 float nearestNodeDistance = float.MaxValue;
 
-                foreach (Node<T> uncheckedNode in uncheckedNodes)
+                foreach (Node uncheckedNode in uncheckedNodes)
                 {
-                    foreach (Node<T> treeNode in tree)
+                    foreach (Node treeNode in tree)
                     {
                         float candidateDistance = uncheckedNode.Distance(treeNode);
                         float edgeWeightMultiplier = 1;
@@ -101,8 +102,10 @@ namespace SamsHelper.Libraries
                 tree.Add(nearestNode);
                 uncheckedNodes.Remove(nearestNode);
                 origin.AddNeighbor(nearestNode);
-                graph.AddEdge(new Edge<T>(origin, nearestNode));
+                minTreeEdges.Add(new Edge(origin, nearestNode));
             }
+
+            return minTreeEdges;
         }
     }
 }

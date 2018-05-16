@@ -10,7 +10,7 @@ namespace Game.Combat.Generation
         public List<Cell> AllNeighbors = new List<Cell>();
         public bool Blocked;
         public int id;
-        public Node<Cell> Node;
+        public Node Node;
         public Vector2 Position;
         public bool Reachable = true;
         public List<Cell> ReachableNeighbors = new List<Cell>();
@@ -53,7 +53,7 @@ namespace Game.Combat.Generation
             XPos = (float) xIndex / PathingGrid.CellResolution - PathingGrid.CombatAreaWidth / 2f;
             YPos = (float) yIndex / PathingGrid.CellResolution - PathingGrid.CombatAreaWidth / 2f;
             Position = new Vector2(XPos, YPos);
-            Node = new Node<Cell>(this, Position);
+            Node = new Node(Position);
 //            BoxCollider2D col = gameObject.GetComponent<BoxCollider2D>();
             transform.position = new Vector3(XPos, YPos, 0);
             transform.localScale = new Vector3(PathingGrid.CellWidth, PathingGrid.CellWidth, 1);

@@ -89,8 +89,8 @@ namespace Game.Exploration.Environment
 
         private static void CreateMinimumSpanningTree()
         {
-            Graph<Region> map = new Graph<Region>();
-            storedNodes.ForEach(n => map.AddNode(new Node<Region>(n, n.Position)));
+            Graph map = new Graph();
+            storedNodes.ForEach(n => map.AddNode(n));
             map.ComputeMinimumSpanningTree();
             map.Edges().ForEach(edge =>
             {

@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace Game.Exploration.Regions
 {
-    public class Region : IPersistenceTemplate
+    public class Region : Node, IPersistenceTemplate
     {
         public string Name;
         private static List<EnemyTemplate> _enemyTypes = EnemyTemplate.GetEnemyTypes();
@@ -182,7 +182,6 @@ namespace Game.Exploration.Regions
             return _enemies;
         }
 
-
         public RegionType GetRegionType()
         {
             return _regionType;
@@ -244,6 +243,10 @@ namespace Game.Exploration.Regions
             string amountRemaining = "";
             for (int i = 0; i < amount; i += 10) amountRemaining += "+";
             return amountRemaining;
+        }
+
+        public Region() : base(Vector2.zero)
+        {
         }
     }
 }
