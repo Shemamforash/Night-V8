@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game.Combat.Misc;
 using Game.Exploration.Regions;
@@ -9,6 +10,8 @@ using NUnit.Framework;
 using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Node = SamsHelper.Libraries.Node;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Generation
 {
@@ -150,9 +153,8 @@ namespace Game.Combat.Generation
 
         public static void GenerateSplitRock(Region region)
         {
-            GenerateSplinteredArea(50, 2);
-
             barriers = new List<Barrier>();
+            GenerateSplinteredArea(5);
             barrierNumber = 0;
             if (allValidPositions == null) allValidPositions = AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f);
             validPositions = new List<Vector2>();
@@ -237,134 +239,83 @@ namespace Game.Combat.Generation
             }
         }
 
-        private static Vector2 RandomPointOnLine(Vector3 start, Vector3 end)
-        {
-            float random = Random.Range(0f, 1f);
-            float newX = (1 - random) * start.x + random * end.x;
-            float newY = (1 - random) * start.y + random * end.y;
-            return new Vector2(newX, newY);
-        }
-
-        private class BoundingBox
-        {
-            public readonly Vector2 TopLeft, TopRight, BottomLeft, BottomRight;
-
-            public BoundingBox(float width) : this(width, width)
-            {
-            }
-
-            public BoundingBox(float width, float height)
-            {
-                TopLeft = new Vector2(-PathingGrid.CombatAreaWidth, PathingGrid.CombatAreaWidth);
-                TopRight = new Vector2(PathingGrid.CombatAreaWidth, PathingGrid.CombatAreaWidth);
-                BottomLeft = new Vector2(-PathingGrid.CombatAreaWidth, -PathingGrid.CombatAreaWidth);
-                BottomRight = new Vector2(PathingGrid.CombatAreaWidth, -PathingGrid.CombatAreaWidth);
-            }
-
-            public void Draw()
-            {
-                Debug.DrawLine(TopLeft, TopRight, Color.green, 5f);
-                Debug.DrawLine(BottomRight, TopRight, Color.green, 5f);
-                Debug.DrawLine(TopLeft, BottomLeft, Color.green, 5f);
-                Debug.DrawLine(BottomLeft, BottomRight, Color.green, 5f);
-            }
-        }
-
-        private static List<Node<Vector2>> CreateEdge(Vector2 start, Vector2 end, Graph<Vector2> graph)
-        {
-            List<Node<Vector2>> edgeNodes = new List<Node<Vector2>>();
-            edgeNodes.Add(new Node<Vector2>(start));
-            edgeNodes.Add(new Node<Vector2>(end));
-            for (int i = 1; i < Random.Range(2, 6); ++i) edgeNodes.Add(new Node<Vector2>(RandomPointOnLine(start, end)));
-            edgeNodes.Sort((a, b) => a.Position.x.CompareTo(b.Position.x));
-            graph.Nodes().AddRange(edgeNodes);
-            return edgeNodes;
-        }
-
-        private static void FillEdge(List<Node<Vector2>> edge, Graph<Vector2> tree)
-        {
-            for (int i = 1; i < edge.Count; ++i)
-            {
-                Edge<Vector2> e = new Edge<Vector2>(edge[i - 1], edge[i]);
-                if (tree.ContainsEdge(e)) continue;
-                edge[i - 1].AddNeighbor(edge[i]);
-                tree.AddEdge(e);
-            }
-        }
-
-        private class CrackNode
+        private class CrackNode : Node
         {
             public readonly float AngleFrom, AngleRange, Angle;
-            public readonly Vector2 Position;
             private readonly List<CrackNode> _neighbors = new List<CrackNode>();
 
-            public CrackNode(float angleFrom, float angleRange, float radius)
+            public static CrackNode Create(float angleFrom, float angleRange, float radius)
+            {
+                float randomAngle = Random.Range(angleFrom, angleFrom + angleRange);
+                float x = Mathf.Cos(randomAngle * Mathf.Deg2Rad) * radius;
+                float y = Mathf.Sin(randomAngle * Mathf.Deg2Rad) * radius;
+                Vector2 nodePosition = new Vector2(x, y);
+                return new CrackNode(nodePosition, angleFrom, angleRange, randomAngle);
+            }
+
+            private CrackNode(Vector2 position, float angleFrom, float angleRange, float angle) : base(position)
             {
                 AngleFrom = angleFrom;
                 AngleRange = angleRange;
-                Angle = Random.Range(AngleFrom, AngleFrom + AngleRange);
-                float x = Mathf.Cos(Angle * Mathf.Deg2Rad) * radius;
-                float y = Mathf.Sin(Angle * Mathf.Deg2Rad) * radius;
-                Position = new Vector2(x, y);
-            }
-
-            public void AddNeighbor(CrackNode node)
-            {
-                if (_neighbors.Contains(node)) return;
-                _neighbors.Add(node);
-                node._neighbors.Add(this);
-            }
-
-            public List<CrackNode> Neighbors()
-            {
-                return _neighbors;
+                Angle = angle;
             }
         }
 
-        private static void JoinNeighbors(List<CrackNode> points, float lastRadius, float originalRadius)
+        private static void JoinNeighbors(List<CrackNode> points, List<Edge> existingEdges)
         {
             for (int i = 0; i < points.Count; ++i)
             {
-                int next = i + 1 == points.Count ? 0 : i + 1;
-                int previous = i - 1 == -1 ? points.Count - 1 : i - 1;
-                bool neighborAIntersects = false;
-                bool neighborBIntersects = false;
-                if (lastRadius >= originalRadius)
+                int nextIndex = i + 1 == points.Count ? 0 : i + 1;
+                int previousIndex = i - 1 == -1 ? points.Count - 1 : i - 1;
+                CrackNode next = points[nextIndex];
+                CrackNode previous = points[previousIndex];
+                bool previousPointIntersects = false;
+                bool nextPointIntersects = false;
+                if (existingEdges != null)
                 {
-                    neighborAIntersects = AdvancedMaths.DoesLineIntersectWithCircle(points[i].Position, points[previous].Position, Vector2.zero, lastRadius);
-                    neighborBIntersects = AdvancedMaths.DoesLineIntersectWithCircle(points[i].Position, points[next].Position, Vector2.zero, lastRadius);
+                    foreach (Edge e in existingEdges)
+                    {
+                        if (nextPointIntersects && previousPointIntersects) break;
+                        if (!nextPointIntersects && AdvancedMaths.LineIntersection(points[i].Position, next.Position, e.A.Position, e.B.Position).Item1) nextPointIntersects = true;
+                        if (!nextPointIntersects && AdvancedMaths.LineIntersection(points[i].Position, previous.Position, e.A.Position, e.B.Position).Item1) previousPointIntersects = true;
+                    }
                 }
-                if (!neighborAIntersects) points[i].AddNeighbor(points[previous]);
-                if (!neighborBIntersects) points[i].AddNeighbor(points[next]);
+
+                if (!previousPointIntersects) points[i].AddNeighbor(previous);
+                if (!nextPointIntersects) points[i].AddNeighbor(next);
             }
         }
 
         private static void GenerateSplinteredArea(int complexity)
         {
+            Graph graph = new Graph();
+
+            Assert.IsTrue(complexity >= 4);
             float originalRadius = 2;
             float radius = originalRadius;
-            float lastRadius = originalRadius / 2f;
             float radiusMultiplier = 1.5f;
             List<CrackNode> paths = new List<CrackNode>();
-            
-            CrackNode origin = new CrackNode(0, 360f / complexity, 0);
+
+            CrackNode origin = CrackNode.Create(0, 360f / complexity, 0);
+            graph.AddNode(origin);
             int iterations = 0;
             for (int i = 0; i < complexity; ++i)
             {
                 float angleFrom = i * origin.AngleRange;
                 float angleRange = origin.AngleRange;
-                CrackNode newNode = new CrackNode(angleFrom, angleRange, radius);
+                CrackNode newNode = CrackNode.Create(angleFrom, angleRange, radius);
+                graph.AddNode(newNode);
                 origin.AddNeighbor(newNode);
                 paths.Add(newNode);
             }
-            
-            JoinNeighbors(paths, lastRadius, originalRadius);
-            lastRadius = radius;
+
+            JoinNeighbors(paths, null);
             radius += originalRadius * Mathf.Pow(radiusMultiplier, iterations);
 
             while (radius < PathingGrid.CombatAreaWidth)
             {
                 List<CrackNode> newPaths = new List<CrackNode>();
+                List<Edge> existingEdges = graph.GenerateEdges();
                 foreach (CrackNode parent in paths)
                 {
                     int splitCount = (int) (radius / originalRadius);
@@ -372,96 +323,142 @@ namespace Game.Combat.Generation
                     if (splitCount > 3) splitCount = 3;
                     splitCount = Random.Range(1, splitCount);
                     float splitAngleRange = parent.AngleRange / splitCount;
-                    
+
                     for (int j = 0; j < splitCount; ++j)
                     {
                         float angleFrom = parent.AngleFrom + j * splitAngleRange;
-                        CrackNode splitNode = new CrackNode(angleFrom, splitAngleRange, radius);
+                        CrackNode splitNode = CrackNode.Create(angleFrom, splitAngleRange, radius);
+                        graph.AddNode(splitNode);
                         parent.AddNeighbor(splitNode);
                         newPaths.Add(splitNode);
                     }
                 }
 
-                JoinNeighbors(newPaths, lastRadius, originalRadius);
-
+                JoinNeighbors(newPaths, existingEdges);
+//                paths = CreateNewPaths(paths, graph, radius, originalRadius, lastRadius);
                 paths = newPaths;
-                lastRadius = radius;
                 radius += originalRadius * Mathf.Pow(radiusMultiplier, iterations);
                 ++iterations;
             }
 
-            HashSet<CrackNode> visited = new HashSet<CrackNode>();
-            Queue<CrackNode> unvisited = new Queue<CrackNode>();
-            unvisited.Enqueue(origin);
-            visited.Add(origin);
-            while (unvisited.Count != 0)
-            {
-                CrackNode current = unvisited.Dequeue();
-                foreach(CrackNode neighbor in current.Neighbors())
-                {
-                    Debug.DrawLine(current.Position, neighbor.Position, Color.red, 5f);
-                    if (visited.Contains(neighbor)) continue;
-                    visited.Add(neighbor);
-                    unvisited.Enqueue(neighbor);
-                }
-            }
+            graph.GenerateEdges();
+
+            HashSet<Vector3> seenPairs = new HashSet<Vector3>();
+            graph.Nodes().ForEach(n => { CreatePolygon(n, seenPairs); });
         }
 
-        private static void GenerateSplinteredArea(int complexity, int connectedness)
+//        private static List<CrackNode> CreateNewPaths(List<CrackNode> paths, Graph graph, float radius, float originalRadius, float lastRadius)
+//        {
+//            List<CrackNode> newPaths = new List<CrackNode>();
+//            foreach (CrackNode parent in paths)
+//            {
+//                int splitCount = (int) (radius / originalRadius);
+//                if (splitCount < 1) splitCount = 1;
+//                if (splitCount > 3) splitCount = 3;
+//                splitCount = Random.Range(1, splitCount);
+//                float splitAngleRange = parent.AngleRange / splitCount;
+//
+//                for (int j = 0; j < splitCount; ++j)
+//                {
+//                    float angleFrom = parent.AngleFrom + j * splitAngleRange;
+//                    CrackNode splitNode = CrackNode.Create(angleFrom, splitAngleRange, radius);
+//                    graph.AddNode(splitNode);
+//                    parent.AddNeighbor(splitNode);
+//                    newPaths.Add(splitNode);
+//                }
+//            }
+//
+//            JoinNeighbors(newPaths, lastRadius, originalRadius);
+//            return newPaths;
+//        }
+
+        private static int polygonNumber;
+
+        private static void CreatePolygon(Node initialNode, HashSet<Vector3> seenPairs)
         {
-            GenerateSplinteredArea(5);
-            return;
-            List<Vector2> points = AdvancedMaths.GetPoissonDiscDistribution(4 * complexity, PathingGrid.CombatAreaWidth / 5f, PathingGrid.CombatAreaWidth, PathingGrid.CombatAreaWidth, false);
-            Helper.Shuffle(ref points);
-            Graph<Vector2> graph = new Graph<Vector2>();
-            graph.AddNode(new Node<Vector2>(Vector2.zero));
-            while (complexity > 0)
+            foreach (Node neighbor in initialNode.Neighbors())
             {
-                graph.AddNode(new Node<Vector2>(points[complexity]));
-                --complexity;
-            }
-
-            BoundingBox box = new BoundingBox(PathingGrid.CombatAreaWidth);
-
-            List<Node<Vector2>> topEdge = CreateEdge(box.TopLeft, box.TopRight, graph);
-            List<Node<Vector2>> rightEdge = CreateEdge(box.TopRight, box.BottomRight, graph);
-            List<Node<Vector2>> leftEdge = CreateEdge(box.BottomRight, box.BottomLeft, graph);
-            List<Node<Vector2>> bottomEdge = CreateEdge(box.BottomLeft, box.TopLeft, graph);
-
-            graph.ComputeMinimumSpanningTree((a, b) => ((a.Position + b.Position) / 2f).magnitude / 10f + 1f);
-            FillEdge(topEdge, graph);
-            FillEdge(rightEdge, graph);
-            FillEdge(leftEdge, graph);
-            FillEdge(bottomEdge, graph);
-
-//            box.Draw();
-            graph.Edges().ForEach(e => { Debug.DrawLine(e.A.Position, e.B.Position, Color.red, 5f); });
-
-            List<Edge<Vector2>> newEdges = new List<Edge<Vector2>>();
-            graph.Nodes().ForEach(n =>
-            {
-                if (!n.IsLeaf()) return;
-                int randomStops = Random.Range(0, 4);
-                Node<Vector2> currentNode = Helper.RandomInList(n.Neighbors());
-                Node<Vector2> from = n;
-                while (randomStops > 0)
+                Vector3 midPoint = neighbor.Position - initialNode.Position;
+                if (seenPairs.Contains(midPoint)) continue;
+                List<Vector3> polygon = new List<Vector3>();
+                polygon.Add(initialNode.Position);
+                Node currentNode = neighbor;
+                Node last = initialNode;
+                bool polyExists = false;
+                while (currentNode != initialNode)
                 {
-                    Node<Vector2> nextNode = currentNode.NavigateLeft(from);
-                    from = currentNode;
+                    polygon.Add(currentNode.Position);
+                    Node nextNode = currentNode.NavigateClockwise(last);
+                    Vector3 mid = nextNode.Position - currentNode.Position;
+                    if (seenPairs.Contains(mid))
+                    {
+                        polyExists = true;
+                        break;
+                    }
+
+                    last = currentNode;
                     currentNode = nextNode;
-                    --randomStops;
                 }
 
-                if (currentNode == n) currentNode = currentNode.NavigateLeft(from);
-                newEdges.Add(new Edge<Vector2>(n, currentNode));
-            });
-//            newEdges.ForEach(e => graph.AddEdge(e));
+                if (polyExists) continue;
 
-            graph.Edges().ForEach(e => { Debug.DrawLine(e.A.Position, e.B.Position, Color.green, 5f); });
+                seenPairs.Add(midPoint);
 
-            while (connectedness > 0)
-            {
-                --connectedness;
+                //find centre of bounding box
+                Vector3 topLeft = polygon[0];
+                Vector3 bottomRight = polygon[0];
+
+                polygon.ForEach(n =>
+                {
+                    if (n.x < topLeft.x) topLeft.x = n.x;
+                    else if (n.x > bottomRight.x) bottomRight.x = n.x;
+                    if (n.y < topLeft.y) topLeft.y = n.y;
+                    else if (n.y > bottomRight.y) bottomRight.y = n.y;
+                });
+
+                List<Vector3> newPoints = new List<Vector3>();
+                for (int i = 0; i < polygon.Count; ++i)
+                {
+                    int nextIndex = i + 1 == polygon.Count ? 0 : i + 1;
+                    Vector3 current = polygon[i];
+                    newPoints.Add(current);
+                    Vector3 next = polygon[nextIndex];
+                    int extraPoints = Random.Range(1, 10);
+                    List<float> points = new List<float>();
+                    while (extraPoints > 0)
+                    {
+                        points.Add(Random.Range(0f, 1f));
+                        --extraPoints;
+                    }
+
+                    points.Sort();
+                    points.ForEach(f =>
+                    {
+                        Vector3 randomPoint = AdvancedMaths.PointAlongLine(current, next, f);
+                        newPoints.Add(randomPoint);
+                    });
+                }
+
+                polygon = newPoints;
+
+                Vector3 centre = (topLeft + bottomRight) / 2f;
+                float distToCentre = centre.magnitude;
+                if (distToCentre <= 1) continue;
+                float mod = 1f - 1f / distToCentre;
+                mod = Mathf.Clamp(mod, 0.2f, 1f);
+                
+                for (int i = 0; i < polygon.Count; ++i)
+                {
+                    polygon[i] -= centre;
+                    polygon[i] *= Random.Range(mod * 0.8f, mod);
+                }
+
+                polygon.Sort((a, b) => AdvancedMaths.AngleFromUp(Vector3.zero, a).CompareTo(AdvancedMaths.AngleFromUp(Vector3.zero, b)));
+
+                Barrier barrier = new Barrier(polygon.ToArray(), "Polygon " + polygonNumber, centre, 0f);
+                barrier.RotateLocked = true;
+                barriers.Add(barrier);
+                ++polygonNumber;
             }
         }
     }
