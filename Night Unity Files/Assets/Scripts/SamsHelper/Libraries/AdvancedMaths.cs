@@ -158,71 +158,10 @@ namespace SamsHelper.Libraries
             return inside;
         }
 
-        public static bool DoPolygonsCollide(Polygon polygonA, Polygon polygonB)
-        {
-            bool Intersect = true;
-
-            int edgeCountA = polygonA.Edges.Count;
-            int edgeCountB = polygonB.Edges.Count;
-
-            for (int edgeIndex = 0; edgeIndex < edgeCountA + edgeCountB; edgeIndex++)
-            {
-                Vector2 edge = edgeIndex < edgeCountA ? polygonA.Edges[edgeIndex] : polygonB.Edges[edgeIndex - edgeCountA];
-
-                Vector2 axis = new Vector2(-edge.y, edge.x);
-                axis.Normalize();
-
-                float minA = 0;
-                float minB = 0;
-                float maxA = 0;
-                float maxB = 0;
-                ProjectPolygon(axis, polygonA, ref minA, ref maxA);
-                ProjectPolygon(axis, polygonB, ref minB, ref maxB);
-
-                if (IntervalDistance(minA, maxA, minB, maxB) > 0) Intersect = false;
-            }
-
-            return Intersect;
-        }
-
-        private static float IntervalDistance(float minA, float maxA, float minB, float maxB)
-        {
-            if (minA < minB)
-            {
-                return minB - maxA;
-            }
-
-            return minA - maxB;
-        }
-
         private static float Dot(Vector2 a, Vector2 b)
         {
             return a.x * b.x + a.y * b.y;
         }
-
-        private static void ProjectPolygon(Vector2 axis, Polygon polygon, ref float min, ref float max)
-        {
-            // To project a point on an axis use the dot product
-            float d = Dot(axis, polygon.Vertices[0] + polygon.Position);
-            min = d;
-            max = d;
-            foreach (Vector2 vertex in polygon.Vertices)
-            {
-                d = Dot(vertex + polygon.Position, axis);
-                if (d < min)
-                {
-                    min = d;
-                }
-                else
-                {
-                    if (d > max)
-                    {
-                        max = d;
-                    }
-                }
-            }
-        }
-
 
         public static Tuple<Vector3, Vector3> GetBoundingCornersOfPolygon(List<Vector2> vertices)
         {

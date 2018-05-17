@@ -49,7 +49,7 @@ public class UiAreaInventoryController : Menu, IInputListener
             if (nearestContainer != _lastNearestContainer)
             {
                 _instance._playerInventory.SetInventory(CharacterManager.SelectedCharacter.Inventory());
-                _instance._worldInventory.SetInventory(nearestContainer);
+                _instance._worldInventory.SetInventory(nearestContainer.Inventory);
                 MenuStateMachine.ShowMenu("Inventory");
             }
         }
@@ -104,7 +104,6 @@ public class UiAreaInventoryController : Menu, IInputListener
     public void OnDoubleTap(InputAxis axis, float direction)
     {
     }
-
 
     private class AreaInventory
     {

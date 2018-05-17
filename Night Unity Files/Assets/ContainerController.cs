@@ -5,17 +5,19 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
-public class ContainerController : DesolationInventory 
+public class ContainerController //: DesolationInventory 
 {
     private const int MinDistanceToFlash = 4;
     private static GameObject _prefab;
-    public static List<ContainerBehaviour> Containers = new List<ContainerBehaviour>();
-    private Vector2 _position;
+    public static readonly List<ContainerBehaviour> Containers = new List<ContainerBehaviour>();
+    private readonly Vector2 _position;
+    public readonly DesolationInventory Inventory;
 
-    public ContainerController(Vector2 position, DesolationInventory inventory = null) : base("Cache")
+    public ContainerController(Vector2 position, DesolationInventory inventory = null)
     {
         _position = position;
-        inventory?.Contents().ForEach(i => Move(i, i.Quantity()));
+        Inventory = inventory;
+//        inventory?.Contents().ForEach(i => Move(i, i.Quantity()));
     }
     
     public void CreateObject()

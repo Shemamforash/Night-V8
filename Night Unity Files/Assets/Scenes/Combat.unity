@@ -43629,7 +43629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3b9b6474b34fd09ba8cc59d2ce5001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BarrierObjects: []
+  DrawGrid: 0
 --- !u!114 &879416292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46437,9 +46437,9 @@ MonoBehaviour:
   Difficulty: 5
   Durability: 20
   ManualOnly: 0
-  Smg: 1
+  Smg: 0
   Lmg: 0
-  Rifle: 0
+  Rifle: 1
   Pistol: 0
   Shotgun: 0
 --- !u!114 &1116345287

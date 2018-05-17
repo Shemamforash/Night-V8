@@ -147,6 +147,7 @@ namespace FastLights
 
 //            Debug.Log(finalEdges.Count);
 
+            finalEdges.ForEach(DrawVertices);
             return finalEdges;
         }
 

@@ -59,7 +59,7 @@ namespace Game.Combat.Player
                 switch (axis)
                 {
                     case InputAxis.Fire:
-                        if (CombatManager.AllEnemiesDead()) UiAreaInventoryController.SetNearestContainer(_lastNearestContainer);
+                        if (CombatManager.EnemiesOnScreen().Count == 0) UiAreaInventoryController.SetNearestContainer(_lastNearestContainer);
                         if (!_fired || Player.Weapon.WeaponAttributes.Automatic)
                             FireWeapon();
                         break;

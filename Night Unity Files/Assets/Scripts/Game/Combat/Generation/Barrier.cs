@@ -47,7 +47,7 @@ namespace Game.Combat.Generation
         {
             if (position == Vector2.negativeInfinity) Debug.Log("wat!?");
             _barrierName = barrierName;
-            _rotation = Random.Range(0, 360);
+//            _rotation = Random.Range(0, 360);
             Radius = radius;
         }
 

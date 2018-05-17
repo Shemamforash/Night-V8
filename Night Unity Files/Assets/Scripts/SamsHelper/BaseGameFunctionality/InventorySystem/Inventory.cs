@@ -7,6 +7,7 @@ using Game.Characters;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -115,7 +116,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         protected void AddResource(InventoryResourceType type, float weight)
         {
             if (_resources.FirstOrDefault(r => r.GetResourceType() == type) != null) throw new Exceptions.ResourceAlreadyExistsException(type.ToString());
-            _resources.Add(new InventoryResource(type, weight));
+            InventoryResource newResource = new InventoryResource(type, weight);
+            newResource.ParentInventory = this;
+            _resources.Add(newResource);
         }
 
         public void IncrementResource(InventoryResourceType type, float amount)
@@ -153,6 +156,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         private void UpdateContents()
         {
+            _contents.Clear();
             _items.ForEach(i => _contents.Add(i));
             _resources.ForEach(r =>
             {

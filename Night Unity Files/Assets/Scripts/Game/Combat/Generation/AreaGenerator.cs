@@ -419,7 +419,7 @@ namespace Game.Combat.Generation
                 for (int i = 0; i < polygon.Count; ++i)
                 {
                     int next = i + 1 == polygon.Count ? 0 : i + 1;
-                    Debug.DrawLine(polygon[i], polygon[next], Color.white, 10f);
+//                    Debug.DrawLine(polygon[i], polygon[next], Color.white, 10f);
                 }
 
                 List<Vector2> newPoints = new List<Vector2>();
