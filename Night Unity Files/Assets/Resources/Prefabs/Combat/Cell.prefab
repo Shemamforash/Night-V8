@@ -19,8 +19,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4830559100754994}
-  - component: {fileID: 114622341834618096}
   - component: {fileID: 61546004024270042}
+  - component: {fileID: 114532375703793280}
   m_Layer: 0
   m_Name: Cell
   m_TagString: Untagged
@@ -66,7 +66,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &114622341834618096
+--- !u!114 &114532375703793280
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -74,14 +74,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1709425756022674}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e97a65caefde46afb116ccd399a8f121, type: 3}
+  m_Script: {fileID: 11500000, guid: 24e8221f84e9447fb7e6962a0b19bf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XPos: 0
-  YPos: 0
+  Blocked: 0
+  id: 0
+  Position: {x: 0, y: 0}
+  Reachable: 1
   XIndex: 0
   YIndex: 0
-  AllNeighbors: []
-  ReachableNeighbors: []
-  Position: {x: 0, y: 0}
-  id: 0
+  XPos: 0
+  YPos: 0

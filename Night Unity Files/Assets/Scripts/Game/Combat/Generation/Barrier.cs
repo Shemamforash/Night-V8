@@ -1,25 +1,22 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
 using System.Xml;
 using Facilitating.Persistence;
 using NUnit.Framework;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
-using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Generation
 {
-    public class Barrier : IPersistenceTemplate
+    public class Barrier : Polygon, IPersistenceTemplate
     {
-        private readonly Vector3[] Vertices;
         public readonly List<Vector2> WorldVerts = new List<Vector2>();
         public PolygonCollider2D Collider;
         private GameObject _barrierObject;
         private static GameObject _barrierPrefab;
         private readonly string _barrierName;
         private readonly float _rotation;
-        public readonly Vector2 Position;
         private static Transform _barrierParent;
         public readonly float Radius;
         public bool RotateLocked;
@@ -27,36 +24,33 @@ namespace Game.Combat.Generation
         public void Load(XmlNode doc, PersistenceType saveType)
         {
         }
-        
+
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             XmlNode barrierNode = SaveController.CreateNodeAndAppend("Barrier", doc);
             string vertexString = "";
-            for (int i = 0; i < Vertices.Length; ++i)
+            for (int i = 0; i < Vertices.Count; ++i)
             {
                 vertexString += Helper.VectorToString(Vertices[i]);
-                if (i == Vertices.Length - 1) break;
+                if (i == Vertices.Count - 1) break;
                 vertexString += ",";
             }
+
             SaveController.CreateNodeAndAppend("Name", barrierNode, _barrierName);
             SaveController.CreateNodeAndAppend("Rotation", barrierNode, _rotation);
             SaveController.CreateNodeAndAppend("Position", barrierNode, Helper.VectorToString(Position));
             SaveController.CreateNodeAndAppend("Vertices", barrierNode, vertexString);
             return barrierNode;
         }
-        
-        public Barrier(Vector3[] vertices, string barrierName, Vector2 position, float radius)
+
+        public Barrier(List<Vector2> vertices, string barrierName, Vector2 position, float radius) : base(vertices, position)
         {
-            if(position == Vector2.negativeInfinity) Debug.Log("wat!?");
+            if (position == Vector2.negativeInfinity) Debug.Log("wat!?");
             _barrierName = barrierName;
-            Vertices = vertices;
             _rotation = Random.Range(0, 360);
-            Position = position;
             Radius = radius;
         }
 
-        
-        
         public void CreateObject()
         {
             Assert.IsNull(_barrierObject);
@@ -69,22 +63,24 @@ namespace Game.Combat.Generation
             _barrierObject.name = _barrierName;
             _barrierObject.tag = "Barrier";
             _barrierObject.transform.localScale = Vector2.one;
-            if(!RotateLocked) _barrierObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, _rotation));
+            if (!RotateLocked) _barrierObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, _rotation));
             _barrierObject.transform.position = Position;
             WorldVerts.Clear();
             Collider = _barrierObject.GetComponent<PolygonCollider2D>();
             foreach (Vector2 colliderPoint in Collider.points) WorldVerts.Add(_barrierObject.transform.TransformPoint(colliderPoint));
-            CreateMesh();
-            AddCollider();
+            Vector3[] meshVerts = CreateMesh();
+            AddCollider(meshVerts);
         }
-        
+
         private class BarrierBehaviour : MonoBehaviour
         {
             private Barrier _barrier;
+
             public void SetBarrier(Barrier b)
             {
                 _barrier = b;
             }
+
             private void OnDestroy()
             {
                 _barrierParent = null;
@@ -92,28 +88,28 @@ namespace Game.Combat.Generation
             }
         }
 
-        private void CreateMesh()
+        private Vector3[] CreateMesh()
         {
             Mesh mesh = _barrierObject.GetComponent<MeshFilter>().mesh;
-            mesh.vertices = Vertices;
-            mesh.triangles = Triangulator.Triangulate(Vertices);
-            Vector3[] normals = new Vector3[Vertices.Length];
+            Vector3[] meshVerts = new Vector3[Vertices.Count];
+            for (int i = 0; i < Vertices.Count; ++i) meshVerts[i] = Vertices[i];
+            mesh.vertices = meshVerts;
+            mesh.triangles = Triangulator.Triangulate(meshVerts);
+            Vector3[] normals = new Vector3[meshVerts.Length];
             for (int i = 0; i < normals.Length; i++) normals[i] = -Vector3.forward;
             mesh.normals = normals;
+            return meshVerts;
         }
 
-        private void AddCollider()
+        private void AddCollider(Vector3[] meshVerts)
         {
-            Vector2[] colliderPath = new Vector2[Vertices.Length];
-            Vector3[] verts = Vertices;
-            for (int i = 0; i < verts.Length; i++)
+            Vector2[] colliderPath = new Vector2[meshVerts.Length];
+            for (int i = 0; i < meshVerts.Length; i++)
             {
-                Vector2 point = verts[i];
+                Vector2 point = meshVerts[i];
                 colliderPath[i] = point;
             }
-
             Collider.SetPath(0, colliderPath);
         }
-
     }
 }

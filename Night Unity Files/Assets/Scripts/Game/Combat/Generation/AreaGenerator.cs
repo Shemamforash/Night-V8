@@ -36,10 +36,10 @@ namespace Game.Combat.Generation
 //            Ellipse e = new Ellipse(minX, minY, maxX, maxY);
             Ellipse e = new Ellipse(radiusVariation, scale);
             float angleIncrement;
-            List<Vector3> barrierVertices = new List<Vector3>();
+            List<Vector2> barrierVertices = new List<Vector2>();
             for (float i = 0; i < 360; i += angleIncrement)
             {
-                Vector3 vertex = RandomPointBetweenRadii(i, e);
+                Vector2 vertex = RandomPointBetweenRadii(i, e);
                 barrierVertices.Add(vertex);
                 angleIncrement = Random.Range(definition / 2f, definition);
             }
@@ -53,7 +53,7 @@ namespace Game.Combat.Generation
             Assert.IsTrue(depth > 0 && depth < 1);
             depth *= width / 2f;
             bumpiness = 1 - bumpiness;
-            List<Vector3> wallVertices = new List<Vector3>();
+            List<Vector2> wallVertices = new List<Vector2>();
             Vector2 topLeft = new Vector2(position.x - width / 2f, position.y + width / 2f);
             Vector2 topRight = new Vector2(position.x + width / 2f, position.y + width / 2f);
             Vector2 bottomLeft = new Vector2(position.x - width / 2f, position.y - width / 2f);
@@ -71,16 +71,16 @@ namespace Game.Combat.Generation
                 y -= Random.Range(0f, bumpiness);
             }
 
-            Barrier wall = new Barrier(wallVertices.ToArray(), "Wall " + wallNumber, position, width);
+            Barrier wall = new Barrier(wallVertices, "Wall " + wallNumber, position, width);
             barriers.Add(wall);
             ++wallNumber;
         }
 
-        private static void AssignRockPosition(float radius, List<Vector3> barrierVertices, Vector2? position, float scale)
+        private static void AssignRockPosition(float radius, List<Vector2> barrierVertices, Vector2? position, float scale)
         {
             if (position == null) position = GetValidPosition(radius);
             if (position == Vector2.negativeInfinity) return;
-            Barrier barrier = new Barrier(barrierVertices.ToArray(), "Barrier " + barrierNumber, (Vector2) position, scale);
+            Barrier barrier = new Barrier(barrierVertices, "Barrier " + barrierNumber, (Vector2) position, scale);
             barriers.Add(barrier);
             ++barrierNumber;
         }
@@ -378,9 +378,9 @@ namespace Game.Combat.Generation
         {
             foreach (Node neighbor in initialNode.Neighbors())
             {
-                Vector3 midPoint = neighbor.Position - initialNode.Position;
+                Vector2 midPoint = neighbor.Position - initialNode.Position;
                 if (seenPairs.Contains(midPoint)) continue;
-                List<Vector3> polygon = new List<Vector3>();
+                List<Vector2> polygon = new List<Vector2>();
                 polygon.Add(initialNode.Position);
                 Node currentNode = neighbor;
                 Node last = initialNode;
@@ -389,7 +389,7 @@ namespace Game.Combat.Generation
                 {
                     polygon.Add(currentNode.Position);
                     Node nextNode = currentNode.NavigateClockwise(last);
-                    Vector3 mid = nextNode.Position - currentNode.Position;
+                    Vector2 mid = nextNode.Position - currentNode.Position;
                     if (seenPairs.Contains(mid))
                     {
                         polyExists = true;
@@ -405,8 +405,8 @@ namespace Game.Combat.Generation
                 seenPairs.Add(midPoint);
 
                 //find centre of bounding box
-                Vector3 topLeft = polygon[0];
-                Vector3 bottomRight = polygon[0];
+                Vector2 topLeft = polygon[0];
+                Vector2 bottomRight = polygon[0];
 
                 polygon.ForEach(n =>
                 {
@@ -416,13 +416,19 @@ namespace Game.Combat.Generation
                     else if (n.y > bottomRight.y) bottomRight.y = n.y;
                 });
 
-                List<Vector3> newPoints = new List<Vector3>();
+                for (int i = 0; i < polygon.Count; ++i)
+                {
+                    int next = i + 1 == polygon.Count ? 0 : i + 1;
+                    Debug.DrawLine(polygon[i], polygon[next], Color.white, 10f);
+                }
+
+                List<Vector2> newPoints = new List<Vector2>();
                 for (int i = 0; i < polygon.Count; ++i)
                 {
                     int nextIndex = i + 1 == polygon.Count ? 0 : i + 1;
-                    Vector3 current = polygon[i];
+                    Vector2 current = polygon[i];
                     newPoints.Add(current);
-                    Vector3 next = polygon[nextIndex];
+                    Vector2 next = polygon[nextIndex];
                     int extraPoints = Random.Range(1, 10);
                     List<float> points = new List<float>();
                     while (extraPoints > 0)
@@ -434,28 +440,37 @@ namespace Game.Combat.Generation
                     points.Sort();
                     points.ForEach(f =>
                     {
-                        Vector3 randomPoint = AdvancedMaths.PointAlongLine(current, next, f);
+                        Vector2 randomPoint = AdvancedMaths.PointAlongLine(current, next, f);
                         newPoints.Add(randomPoint);
                     });
                 }
 
+                Vector2 centre = (topLeft + bottomRight) / 2f;
+                if (!AdvancedMaths.IsPointInPolygon(centre, polygon)) continue;
+
                 polygon = newPoints;
 
-                Vector3 centre = (topLeft + bottomRight) / 2f;
                 float distToCentre = centre.magnitude;
                 if (distToCentre <= 1) continue;
                 float mod = 1f - 1f / distToCentre;
+                if (Random.Range(0f, 1f) < 1 - mod) continue;
                 mod = Mathf.Clamp(mod, 0.2f, 1f);
-                
+
                 for (int i = 0; i < polygon.Count; ++i)
                 {
                     polygon[i] -= centre;
-                    polygon[i] *= Random.Range(mod * 0.8f, mod);
+                    float offset = Mathf.PerlinNoise(polygon[i].x, polygon[i].y);
+                    offset = (offset / 2f + 0.5f) * mod;
+                    float vertexLength = polygon[i].magnitude;
+                    float minOffsetDistance = vertexLength - 1;
+                    float minOffset = minOffsetDistance / vertexLength;
+                    if (offset < minOffset) offset = minOffset;
+                    polygon[i] *= offset;
                 }
 
-                polygon.Sort((a, b) => AdvancedMaths.AngleFromUp(Vector3.zero, a).CompareTo(AdvancedMaths.AngleFromUp(Vector3.zero, b)));
+                polygon.Sort((a, b) => AdvancedMaths.AngleFromUp(Vector2.zero, a).CompareTo(AdvancedMaths.AngleFromUp(Vector2.zero, b)));
 
-                Barrier barrier = new Barrier(polygon.ToArray(), "Polygon " + polygonNumber, centre, 0f);
+                Barrier barrier = new Barrier(polygon, "Polygon " + polygonNumber, centre, 0f);
                 barrier.RotateLocked = true;
                 barriers.Add(barrier);
                 ++polygonNumber;

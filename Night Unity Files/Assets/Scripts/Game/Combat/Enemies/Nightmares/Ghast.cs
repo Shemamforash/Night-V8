@@ -81,7 +81,7 @@ namespace Game.Combat.Enemies.Nightmares
                 yield return null;
             }
             Cell c = PathingGrid.Instance().GetCellNearMe(CombatManager.Player().CurrentCell(), 4);
-            transform.position = c.transform.position;
+            transform.position = c.Position;
             _teleportInParticles.Play();
             SetVisible(true);
             _teleporting = false;

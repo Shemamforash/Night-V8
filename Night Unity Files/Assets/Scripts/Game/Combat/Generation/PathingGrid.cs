@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using SamsHelper;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Game.Combat.Generation
 {
     public class PathingGrid : MonoBehaviour
     {
-        public const int CombatAreaWidth = 30;
+        public const int CombatAreaWidth = 60;
         public const int CombatMovementDistance = CombatAreaWidth - 3;
-        public const int CellResolution = 5;
+        public const int CellResolution = 10;
         public const float CellWidth = 1f / CellResolution;
         public const int GridWidth = CombatAreaWidth * CellResolution;
 
@@ -21,10 +24,7 @@ namespace Game.Combat.Generation
         private static PathingGrid _instance;
 
         private List<Barrier> _barriers;
-        public List<GameObject> BarrierObjects;
-        private ContactFilter2D cf;
 
-        private readonly Collider2D[] colliders = new Collider2D[5000];
         private Vector2 _lastPlayerPosition;
         private readonly HashSet<Cell> _hiddenCells = new HashSet<Cell>(new CellComparer());
 
@@ -36,92 +36,57 @@ namespace Game.Combat.Generation
             DrawEdge();
         }
 
-        private void DrawEdge()
-        {
-            CreateRing(CombatMovementDistance / 2f, 0.02f, Color.white);
-            CreateRing(CombatAreaWidth / 2f, 0.01f, UiAppearanceController.FadedColour);
-        }
-
-        private void CreateRing(float radius, float width, Color colour)
-        {
-            GameObject ring = new GameObject();
-            ring.transform.SetParent(transform);
-            ring.transform.position = Vector2.zero;
-            ring.transform.localScale = Vector2.one;
-            RingDrawer rd = ring.AddComponent<RingDrawer>();
-            rd.SetLineWidth(width);
-            rd.SetColor(colour);
-            rd.DrawCircle(radius);
-        }
-
         public static PathingGrid Instance()
         {
             if (_instance == null) _instance = FindObjectOfType<PathingGrid>();
             return _instance;
         }
 
-        private void OnDestroy()
-        {
-            _instance = null;
-        }
-
-        private void OnDrawGizmos()
-        {
-            foreach (Cell cell in _cellsInRange)
-            {
-                Gizmos.color = IsCellHidden(cell) ? new Color(1, 0, 1, 0.4f) : new Color(0, 1, 1, 0.4f);
-                Gizmos.DrawCube(new Vector3(cell.XPos, cell.YPos), new Vector3(CellWidth, CellWidth, 1));
-            }
-        }
 
         public void GenerateGrid(List<Barrier> barriers)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             _barriers = barriers;
-            cf.useTriggers = true;
-            cf.SetLayerMask(1 << 9);
             GenerateBaseGrid();
             foreach (Barrier shape in _barriers)
             {
-                int areas = shape.Collider.OverlapCollider(cf, colliders);
-                for (int i = 0; i < areas; ++i)
-                {
-                    Cell c = colliders[i].GetComponent<Cell>();
-                    c.Reachable = false;
-                    if (AdvancedMaths.IsPointInPolygon(c.Position, shape.WorldVerts)) c.Blocked = true;
-                }
+                GetIntersectingGridCells(shape);
             }
 
             _gridNodes.ForEach(n => n.SetNeighbors());
+            stopwatch.Stop();
+            Debug.Log("no physics: " + stopwatch.Elapsed.ToString("mm\\:ss\\.ff"));
         }
+
 
         public Cell PositionToCell(Vector2 position)
         {
-            position.x += CellWidth / 2f;
-            position.y += CellWidth / 2f;
-            int x = Mathf.FloorToInt(position.x * CellResolution);
-            int y = Mathf.FloorToInt(position.y * CellResolution);
-            x += GridWidth / 2;
-            y += GridWidth / 2;
+            Vector2Int gridPosition = WorldToGridPosition(position);
+            int x = gridPosition.x;
+            int y = gridPosition.y;
             try
             {
                 return Grid[x, y];
             }
-            catch (IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException)
             {
-                Debug.Log("(" + x + " ," + y + ")");
-                Debug.Log(e.StackTrace);
+                Debug.Log("Invalid cell position: (" + x + " ," + y + ")");
                 return null;
             }
         }
 
-        public bool IsLineObstructed(Vector3 start, Vector3 end, bool includeReachable = false)
+        public bool IsLineObstructed(Vector2 start, Vector2 end, bool includeReachable = false)
         {
-            Vector3 direction = (end - start).normalized;
             float distance = Vector2.Distance(start, end);
-            for (float j = 0; j <= distance; j += 0.05f)
+            float obstructionInterval = 1f / (CellResolution * 2);
+            int interval = (int) (distance / obstructionInterval);
+            for (float j = 0; j <= interval; ++j)
             {
-                Vector3 currentPosition = start + direction * j;
-                Cell cellHere = PositionToCell(currentPosition);
+                float lerpVal = j / interval;
+                Vector2 currentPosition = Vector2.Lerp(start, end, lerpVal);
+                Vector2Int pos = WorldToGridPosition(currentPosition);
+                if (pos.x < 0 || pos.x > GridWidth || pos.y < 0 || pos.y > GridWidth) continue;
+                Cell cellHere = Grid[pos.x, pos.y];
                 if (cellHere.Blocked) return true;
                 if (!cellHere.Reachable && includeReachable) return true;
             }
@@ -162,6 +127,48 @@ namespace Game.Combat.Generation
             return thread;
         }
 
+        public Cell GetCellNearMe(Cell current, float distance)
+        {
+            return Helper.RandomInList(CellsInRange(current, WorldToGridDistance(distance)));
+        }
+
+        public Cell FindCellToAttackPlayer(Cell currentCell, float maxRange, float minRange = 0)
+        {
+            int max = WorldToGridDistance(maxRange);
+            int min = WorldToGridDistance(minRange);
+            Cell playerCell = CombatManager.Player().CurrentCell();
+            List<Cell> cellsNearPlayer = CellsInRange(playerCell, max, min);
+            Cell nearestValidCell = FindNearestCell(cellsNearPlayer, false, currentCell);
+            if (nearestValidCell == null) return currentCell;
+            List<Cell> cellsNearTarget = CellsInRange(nearestValidCell, 3).FindAll(c =>
+            {
+                float distance = c.Distance(playerCell);
+                bool outOfRange = distance < min || distance > max;
+                if (outOfRange) return false;
+                return !IsCellHidden(c);
+            });
+            return Helper.RandomInList(cellsNearTarget);
+        }
+
+        public Cell FindCoverNearMe(Cell currentCell)
+        {
+            List<Cell> cellsNearby = CellsInRange(currentCell, 10);
+            return FindNearestCell(cellsNearby, true, currentCell);
+        }
+
+        public bool IsCellHidden(Cell c)
+        {
+            Vector2 currentPlayerPosition = CombatManager.Player().transform.position;
+            if (_lastPlayerPosition != currentPlayerPosition) _hiddenCells.Clear();
+
+            _lastPlayerPosition = currentPlayerPosition;
+
+            if (_hiddenCells.Contains(c)) return true;
+            bool hidden = IsLineObstructed(c.Position, currentPlayerPosition);
+            if (hidden) _hiddenCells.Add(c);
+            return hidden;
+        }
+
         private List<Cell> CellsInRange(Cell origin, int maxRange, int minRange = 0)
         {
             if (origin == null) Debug.Log("initial node was null");
@@ -188,27 +195,139 @@ namespace Game.Combat.Generation
             return cellsInRange;
         }
 
-        public Cell GetCellNearMe(Cell current, float distance)
+        private void OnDestroy()
         {
-            return Helper.RandomInList(CellsInRange(current, WorldToGridDistance(distance)));
+            _instance = null;
         }
 
-        public Cell FindCellToAttackPlayer(Cell currentCell, float maxRange, float minRange = 0)
+        public bool DrawGrid;
+
+        private void OnDrawGizmos()
         {
-            int max = WorldToGridDistance(maxRange);
-            int min = WorldToGridDistance(minRange);
-            Cell playerCell = CombatManager.Player().CurrentCell();
-            List<Cell> cellsNearPlayer = CellsInRange(playerCell, max, min);
-            Cell nearestValidCell = FindNearestCell(cellsNearPlayer, false, currentCell);
-            if (nearestValidCell == null) return currentCell;
-            List<Cell> cellsNearTarget = CellsInRange(nearestValidCell, 3).FindAll(c =>
+            foreach (Cell cell in _cellsInRange)
             {
-                float distance = c.Distance(playerCell);
-                bool outOfRange = distance < min || distance > max;
-                if (outOfRange) return false;
-                return !IsCellHidden(c);
-            });
-            return Helper.RandomInList(cellsNearTarget);
+                Gizmos.color = IsCellHidden(cell) ? new Color(1, 0, 1, 0.4f) : new Color(0, 1, 1, 0.4f);
+                Gizmos.DrawCube(new Vector3(cell.XPos, cell.YPos), new Vector3(CellWidth, CellWidth, 1));
+            }
+
+            if (!DrawGrid) return;
+            Gizmos.color = new Color(1, 0, 1, 0.4f);
+            if (Grid == null) return;
+            for (int i = 0; i < GridWidth; ++i)
+            {
+                for (int j = 0; j < GridWidth; ++j)
+                {
+                    if (Grid[i, j] == null || !Grid[i, j].Reachable) continue;
+                    Gizmos.DrawCube(new Vector3(Grid[i, j].XPos, Grid[i, j].YPos), new Vector3(CellWidth, CellWidth, 1));
+                }
+            }
+        }
+
+        private void DrawEdge()
+        {
+            CreateRing(CombatMovementDistance / 2f, 0.02f, Color.white);
+            CreateRing(CombatAreaWidth / 2f, 0.01f, UiAppearanceController.FadedColour);
+        }
+
+        private void CreateRing(float radius, float width, Color colour)
+        {
+            GameObject ring = new GameObject();
+            ring.transform.SetParent(transform);
+            ring.transform.position = Vector2.zero;
+            ring.transform.localScale = Vector2.one;
+            RingDrawer rd = ring.AddComponent<RingDrawer>();
+            rd.SetLineWidth(width);
+            rd.SetColor(colour);
+            rd.DrawCircle(radius);
+        }
+
+        private List<Cell> CellsInSquare(Vector3 topLeft, Vector3 bottomRight)
+        {
+            Vector2Int topLeftGridPosition = WorldToGridPosition(topLeft);
+            Vector2Int bottomRightGridPosition = WorldToGridPosition(bottomRight);
+            int xMin = topLeftGridPosition.x;
+            int yMin = topLeftGridPosition.y;
+            int xMax = bottomRightGridPosition.x;
+            int yMax = bottomRightGridPosition.y;
+            xMin = Mathf.Clamp(xMin, 0, GridWidth - 1);
+            yMin = Mathf.Clamp(yMin, 0, GridWidth - 1);
+            xMax = Mathf.Clamp(xMax, 0, GridWidth - 1);
+            yMax = Mathf.Clamp(yMax, 0, GridWidth - 1);
+            List<Cell> cellsInSquare = new List<Cell>();
+            for (int x = xMin; x <= xMax; ++x)
+            {
+                for (int y = yMin; y <= yMax; ++y)
+                {
+                    if (Grid[x, y] == null) continue;
+                    cellsInSquare.Add(Grid[x, y]);
+                }
+            }
+
+            return cellsInSquare;
+        }
+
+        private void GetIntersectingGridCells(Polygon p)
+        {
+            List<Cell> possibleCells = CellsInSquare(p.TopLeft, p.BottomRight);
+//            Debug.DrawLine(p.TopLeft, new Vector2(p.TopLeft.x, p.BottomRight.y), Color.white, 50f);
+//            Debug.DrawLine(p.TopLeft, new Vector2(p.BottomRight.x, p.TopLeft.y), Color.white, 50f);
+//            Debug.DrawLine(p.BottomRight, new Vector2(p.TopLeft.x, p.BottomRight.y), Color.white, 50f);
+//            Debug.DrawLine(p.BottomRight, new Vector2(p.BottomRight.x, p.TopLeft.y), Color.white, 50f);
+            foreach (Cell c in possibleCells)
+            {
+                if (!c.Reachable) continue;
+                if (AdvancedMaths.IsPointInPolygon(c.Position - p.Position, p.Vertices))
+                {
+                    c.Blocked = true;
+                    c.Reachable = false;
+                    continue;
+                }
+
+//                if (AdvancedMaths.DoPolygonsCollide(c, p)) c.Reachable = false;
+            }
+
+            for (int i = 0; i < p.Vertices.Count; ++i)
+            {
+                Vector2 start = p.Vertices[i] + p.Position;
+                Vector2 end = p.Vertices[i + 1 == p.Vertices.Count ? 0 : i + 1] + p.Position;
+                List<Cell> cells = CellsOnLine(start, end);
+                cells.ForEach(c =>
+                {
+                    if (c != null) c.Reachable = false;
+                });
+            }
+        }
+
+        private List<Cell> CellsOnLine(Vector2 start, Vector2 end)
+        {
+            HashSet<Cell> cells = new HashSet<Cell>();
+            float distance = Vector2.Distance(start, end);
+            float obstructionInterval = 1f / (CellResolution * 2);
+            int interval = (int) (distance / obstructionInterval);
+            for (float j = 0; j <= interval; ++j)
+            {
+                float lerpVal = j / interval;
+                Vector2 currentPosition = Vector2.Lerp(start, end, lerpVal);
+                Vector2Int pos = WorldToGridPosition(currentPosition);
+                if (pos.x < 0 || pos.x >= GridWidth || pos.y < 0 || pos.y >= GridWidth) continue;
+                Cell cellHere = Grid[pos.x, pos.y];
+                cells.Add(cellHere);
+            }
+
+            Vector2Int endPos = WorldToGridPosition(end);
+            if (!(endPos.x < 0 || endPos.x >= GridWidth || endPos.y < 0 || endPos.y >= GridWidth)) cells.Add(Grid[endPos.x, endPos.y]);
+            return cells.ToList();
+        }
+
+        private Vector2Int WorldToGridPosition(Vector2 position)
+        {
+            position.x += CellWidth / 2f;
+            position.y += CellWidth / 2f;
+            int x = Mathf.FloorToInt(position.x * CellResolution);
+            int y = Mathf.FloorToInt(position.y * CellResolution);
+            x += GridWidth / 2;
+            y += GridWidth / 2;
+            return new Vector2Int(x, y);
         }
 
         private Cell FindNearestCell(List<Cell> cells, bool shouldCellBeHidden, Cell currentCell)
@@ -248,28 +367,9 @@ namespace Game.Combat.Generation
             return nearestValidCell;
         }
 
-        public Cell FindCoverNearMe(Cell currentCell)
-        {
-            List<Cell> cellsNearby = CellsInRange(currentCell, 10);
-            return FindNearestCell(cellsNearby, true, currentCell);
-        }
-
         private int WorldToGridDistance(float distance)
         {
             return Mathf.FloorToInt(distance * CellResolution);
-        }
-
-        public bool IsCellHidden(Cell c)
-        {
-            Vector2 currentPlayerPosition = CombatManager.Player().transform.position;
-            if (_lastPlayerPosition != currentPlayerPosition) _hiddenCells.Clear();
-
-            _lastPlayerPosition = currentPlayerPosition;
-
-            if (_hiddenCells.Contains(c)) return true;
-            bool hidden = IsLineObstructed(c.Position, currentPlayerPosition);
-            if (hidden) _hiddenCells.Add(c);
-            return hidden;
         }
 
         private void GenerateBaseGrid()
@@ -278,19 +378,21 @@ namespace Game.Combat.Generation
             Grid = new Cell[GridWidth, GridWidth];
             float worldRadius = CombatAreaWidth / 2f * CellResolution;
             for (int x = 0; x < GridWidth; ++x)
-            for (int y = 0; y < GridWidth; ++y)
             {
-                float xComp = Mathf.Pow(x - GridWidth / 2f, 2f);
-                float yComp = Mathf.Pow(y - GridWidth / 2f, 2f);
-                float distance = Mathf.Sqrt(xComp + yComp);
-                if (distance > worldRadius)
+                for (int y = 0; y < GridWidth; ++y)
                 {
-                    Grid[x, y] = null;
-                    continue;
-                }
+                    float xComp = Mathf.Pow(x - GridWidth / 2f, 2f);
+                    float yComp = Mathf.Pow(y - GridWidth / 2f, 2f);
+                    float distance = Mathf.Sqrt(xComp + yComp);
+                    if (distance > worldRadius)
+                    {
+                        Grid[x, y] = null;
+                        continue;
+                    }
 
-                Grid[x, y] = Cell.Generate(x, y);
-                _gridNodes.Add(Grid[x, y]);
+                    Grid[x, y] = Cell.Generate(x, y);
+                    _gridNodes.Add(Grid[x, y]);
+                }
             }
         }
 

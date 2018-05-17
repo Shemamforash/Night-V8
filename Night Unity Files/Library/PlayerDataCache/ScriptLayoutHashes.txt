@@ -220,6 +220,7 @@ d672cee35261f9935d5ce974c746730f TextMeshPro-1.0.55.2017.1.0b12.dll:TMPro.TMP_Te
 f266a453cd4bfbe81533762a3e3589f4 DOTween.dll:DG.Tweening.Core.DOTweenComponent
 0869883b6445f616fc171fe47d5fa3a0 DOTween.dll:DG.Tweening.Core.DOTweenSettings
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Misc.Explosion
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.BulletTrailFade
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MaelstromShotBehaviour
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Ui.PlayerUi
 620016765a4969fe0bbb13a33584de57 Assembly-CSharp.dll:Facilitating.UIControllers.UiGearMenuController
@@ -286,6 +287,7 @@ eac8b4284b21e820b70e2d089ba46a3f DOTweenPro.dll:DG.Tweening.DOTweenPath
 13826d2bb917f0a8342900f74b30b86b Assembly-CSharp.dll:Fastlights.FastLight
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Global.WorldState
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facilitating.UI.RefocusKeyboardInput
+fe451ee8e9b8cbf8e98b94172c1479df Assembly-CSharp.dll:.BasicRotate
 047e0291c50d208ada27bc33da0053f4 Assembly-CSharp.dll:Facilitating.Persistence.StatsTracker
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Exploration.WorldEvents.WorldEventManager
 77f8cf0d943cf84eea1d6b64657c9c9f Assembly-CSharp.dll:Game.Characters.CharacterView
@@ -307,5 +309,3 @@ e210b9ec26b1357a1a26e568807276be Assembly-CSharp.dll:Facilitating.Campfire
 9c12199ed38452212766e19b6c359a18 Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.Nightmare
 c727d5d0b81c3630fe97e64e1cb39494 Assembly-CSharp.dll:Facilitating.UIControllers.UIPlayerAccessoryController
 d0ecf326424f251715d9d0fa0b236dd1 Assembly-CSharp.dll:SamsHelper.ReactiveUI.InventoryUI.MenuList
-fe451ee8e9b8cbf8e98b94172c1479df Assembly-CSharp.dll:.BasicRotate
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.BulletTrailFade

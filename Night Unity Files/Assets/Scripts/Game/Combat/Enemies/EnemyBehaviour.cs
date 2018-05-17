@@ -125,14 +125,14 @@ namespace Game.Combat.Enemies
             if (Random.Range(0, 3) == 1) SetActionText("Resting");
             else CurrentAction = Wander;
             transform.SetParent(GameObject.Find("World").transform);
-            if (CombatManager.Region().GetRegionType() == RegionType.Nightmare)
-            {
+//            if (CombatManager.Region().GetRegionType() == RegionType.Nightmare)
+//            {
                 SetDistance(Vector2.zero, 4f, 8f);
-            }
-            else
-            {
-                SetDistance(CombatManager.Region().Fire.FirePosition, 0.2f, 0.5f);
-            }
+//            }
+//            else
+//            {
+//                SetDistance(CombatManager.Region().Fire.FirePosition, 0.2f, 0.5f);
+//            }
 
             _originPosition = transform.position;
             SetHealBehaviour();
@@ -383,8 +383,9 @@ namespace Game.Combat.Enemies
             Vector2 randomPoint = new Vector2();
             randomPoint.x = randomDistance * Mathf.Cos(randomAngle) + _originPosition.x;
             randomPoint.y = randomDistance * Mathf.Sin(randomAngle) + _originPosition.y;
-            Cell targetCell = _grid.PositionToCell(randomPoint);
-//            Cell targetCell = PathingGrid.GetCellNearMe(CurrentCell(), randomDistance);
+            
+            Cell targetCell = _grid.PositionToCell(_originPosition);
+            targetCell = PathingGrid.Instance().GetCellNearMe(targetCell, 3);
             Thread routingThread = _grid.RouteToCell(CurrentCell(), targetCell, route);
             WaitForRoute(routingThread, WaitThenWander);
             SetActionText("Wandering");
