@@ -1,13 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
-using Game.Global;
 using SamsHelper;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
-using SamsHelper.ReactiveUI.InventoryUI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -85,7 +80,7 @@ namespace Game.Characters
             WeaponController = FindInDetailedView<UIPlayerWeaponController>("Weapon");
             WeaponController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowWeaponMenu(_player));
             WeaponController.SetWeapon(_player.Weapon);
-            
+
             ArmourController = FindInDetailedView<UIPlayerArmourController>("Armour");
             ArmourController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowArmourMenu(_player));
             ArmourController.SetArmour(_player.ArmourController);
@@ -96,43 +91,28 @@ namespace Game.Characters
             AccessoryController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowAccessoryMenu(_player));
         }
 
+        private EnhancedButton _exploreButton, _craftButton;
+        
         private void FillActionList()
         {
-            List<BaseCharacterAction> availableActions = _player.StatesAsList(false).ToList();
-            Helper.FindAllChildren(_actionList).ForEach(Destroy);
-            List<ViewParent> actionUiList = new List<ViewParent>();
-            availableActions.ForEach(a =>
-            {
-                ViewParent actionUi = a.CreateUi(_actionList);
-                actionUiList.Add(actionUi);
-            });
-
-            for (int i = 0; i < actionUiList.Count; ++i)
-            {
-                ViewParent actionUi = actionUiList[i];
-
-                Helper.SetNavigation(actionUi.PrimaryButton, WeaponController.EnhancedButton, Direction.Left);
-                if (i > 0)
-                {
-                    Helper.SetNavigation(actionUi.PrimaryButton, actionUiList[i - 1].PrimaryButton, Direction.Up);
-                    Helper.SetNavigation(actionUiList[i - 1].PrimaryButton, actionUi.PrimaryButton, Direction.Down);
-                }
-                else
-                {
-                    Helper.SetNavigation(WeaponController.EnhancedButton, actionUi.PrimaryButton, Direction.Right);
-                    Helper.SetNavigation(ArmourController.EnhancedButton.Button(), actionUi.PrimaryButton, Direction.Right);
-                    Helper.SetNavigation(AccessoryController.EnhancedButton.Button(), actionUi.PrimaryButton, Direction.Right);
-                }
-            }
+            _exploreButton = Helper.FindChildWithName<EnhancedButton>(_actionList.gameObject, "Explore");
+            _craftButton = Helper.FindChildWithName<EnhancedButton>(_actionList.gameObject, "Craft");
+            _player.TravelAction.SetButton(_exploreButton);
+            _player.CraftAction.SetButton(_craftButton);
+            Helper.SetNavigation(_exploreButton, WeaponController.EnhancedButton, Direction.Left);
+            Helper.SetNavigation(_craftButton, ArmourController.EnhancedButton, Direction.Left);
+            Helper.SetNavigation(WeaponController.EnhancedButton, _exploreButton, Direction.Right);
+            Helper.SetNavigation(ArmourController.EnhancedButton.Button(), _exploreButton, Direction.Right);
+            Helper.SetNavigation(AccessoryController.EnhancedButton.Button(), _exploreButton, Direction.Right);
         }
 
         public void SelectInitial()
         {
             CharacterManager.SelectCharacter(_player);
-            if (_actionListActive) GetFirstActionButton().Button().Select();
+            if (_actionListActive) _exploreButton.Button().Select();
             else WeaponController.EnhancedButton.Button().Select();
         }
-        
+
         //actions[0], weaponui, & consumption toggle navigate to actions[last], accessoryui, & consumption buttons respectively
         //inverse is true to navigate to character below
         //if no character above, all navigate to inventory button
@@ -142,19 +122,19 @@ namespace Game.Characters
             CharacterView _previousCharacterView = CharacterManager.PreviousCharacter(_player)?.CharacterView;
 
             if (_previousCharacterView == null) return;
-            
-            _previousCharacterView.GetLastActionButton().SetOnDownAction(() =>
+
+            _previousCharacterView._craftButton.SetOnDownAction(() =>
             {
                 CharacterManager.ExitCharacter(_previousCharacterView._player);
                 CharacterManager.SelectCharacter(_player);
-                if (_actionListActive) GetFirstActionButton().Button().Select();
+                if (_actionListActive) _exploreButton.Button().Select();
                 else WeaponController.EnhancedButton.Button().Select();
             });
-            GetFirstActionButton().SetOnUpAction(() =>
+            _exploreButton.SetOnUpAction(() =>
             {
                 CharacterManager.ExitCharacter(_player);
                 CharacterManager.SelectCharacter(_previousCharacterView._player);
-                if (_previousCharacterView._actionListActive) _previousCharacterView.GetLastActionButton().Button().Select();
+                if (_previousCharacterView._actionListActive) _previousCharacterView._craftButton.Button().Select();
                 else _previousCharacterView.ArmourController.EnhancedButton.Button().Select();
             });
             WeaponController.EnhancedButton.SetOnUpAction(() =>
@@ -169,16 +149,6 @@ namespace Game.Characters
                 CharacterManager.SelectCharacter(_player);
                 WeaponController.EnhancedButton.Button().Select();
             });
-        }
-
-        private EnhancedButton GetLastActionButton()
-        {
-            return _actionList.GetChild(_actionList.childCount - 1).GetComponent<EnhancedButton>();
-        }
-
-        private EnhancedButton GetFirstActionButton()
-        {
-            return _actionList.GetChild(0).GetComponent<EnhancedButton>();
         }
 
         public void UpdateCurrentActionText(string currentActionString)

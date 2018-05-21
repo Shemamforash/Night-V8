@@ -1,6 +1,4 @@
-﻿using Game.Exploration.WorldEvents;
-
-namespace Game.Characters.CharacterActions
+﻿namespace Game.Characters.CharacterActions
 {
     public class Rest : BaseCharacterAction
     {

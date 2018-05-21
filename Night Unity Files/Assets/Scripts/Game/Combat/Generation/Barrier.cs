@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
+using FastLights;
 using NUnit.Framework;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
@@ -98,6 +99,8 @@ namespace Game.Combat.Generation
             Vector3[] normals = new Vector3[meshVerts.Length];
             for (int i = 0; i < normals.Length; i++) normals[i] = -Vector3.forward;
             mesh.normals = normals;
+            _barrierObject.GetComponent<LightObstructor>().UpdateMesh();
+            Draw();
             return meshVerts;
         }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using SamsHelper.ReactiveUI;
-using SamsHelper.ReactiveUI.InventoryUI;
-using UnityEngine;
+﻿using SamsHelper.ReactiveUI;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -30,13 +27,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public InventoryResourceType GetResourceType()
         {
             return _inventoryResourceType;
-        }
-
-        public override ViewParent CreateUi(Transform parent)
-        {
-            InventoryUi ui = (InventoryUi) base.CreateUi(parent);
-            ui.SetCentralTextCallback(() => Name + " x" + Quantity());
-            return ui;
         }
 
         public float Decrement(float amount)

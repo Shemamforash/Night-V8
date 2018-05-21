@@ -1,8 +1,5 @@
-﻿using System;
-using SamsHelper.BaseGameFunctionality.Basic;
+﻿using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.InventoryUI;
-using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -20,18 +17,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public float TotalWeight()
         {
             return Helper.Round(Weight * Quantity(), 1);
-        }
-
-        public override ViewParent CreateUi(Transform parent)
-        {
-            Func<bool> destroyCondition = () => Quantity() == 0;
-            if (destroyCondition()) return null;
-            InventoryUi ui = new InventoryUi(this, parent);
-            ui.SetCentralTextCallback(() => Name);
-            ui.SetLeftTextCallback(() => Type.ToString());
-            ui.SetRightTextCallback(() => TotalWeight() + "kg");
-            ui.SetDestroyCondition(destroyCondition);
-            return ui;
         }
 
         public virtual bool IsStackable()

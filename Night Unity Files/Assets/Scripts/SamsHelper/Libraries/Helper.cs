@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using FastLights;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
@@ -365,6 +366,26 @@ namespace SamsHelper.Libraries
             if (direction < 0) return -1;
             if (direction > 0) return 1;
             return 0;
+        }
+
+        public static int NextIndex<T>(int iteratorPosition, List<T> list)
+        {
+            if (iteratorPosition + 1 == list.Count) return 0;
+            return iteratorPosition + 1;
+        }
+
+        public static int PrevIndex<T>(int iteratorPosition, List<T> list)
+        {
+            if (iteratorPosition - 1 == -1) return list.Count - 1;
+            return iteratorPosition - 1;
+        }
+
+        public static T RemoveEnd<T>(List<T> list)
+        {
+            int endIndex = list.Count - 1;
+            T end = list[endIndex];
+            list.RemoveAt(endIndex);
+            return end;
         }
     }
 }

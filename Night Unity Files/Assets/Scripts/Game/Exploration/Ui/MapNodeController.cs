@@ -111,8 +111,8 @@ namespace Game.Exploration.Ui
 
             private string LetterToHex(float alpha)
             {
-                string hexString = "<color=#" + ColorUtility.ToHtmlStringRGBA(new Color(1, 1, 1, alpha)) + ">";
-                return hexString + _letter + "</color>";
+                string hexString = "<color=#FFFFFF" + ((int)(alpha * 255)).ToString("X2") + ">" + _letter + "</color>";
+                return hexString;
             }
         }
     }

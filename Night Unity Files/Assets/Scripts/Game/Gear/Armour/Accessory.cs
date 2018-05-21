@@ -48,10 +48,6 @@ namespace Game.Gear.Armour
             return new Accessory(randomTemplate, quality);
         }
 
-//        public override ViewParent CreateUi(Transform parent)
-//        {
-//            return new AccessoryUi(this, parent);
-//        }
         public bool Inscribable()
         {
             return Quality() == ItemQuality.Radiant;

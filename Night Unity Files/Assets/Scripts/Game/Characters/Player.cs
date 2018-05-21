@@ -10,13 +10,11 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI.InventoryUI;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Game.Characters
 {
-    public class Player : Character
+    public sealed class Player : Character
     {
         public const int PlayerHealthChunkSize = 50;
 
@@ -29,7 +27,7 @@ namespace Game.Characters
         public readonly StateMachine States = new StateMachine();
         private readonly BrandManager _brandManager;
 
-        private CraftAmmo _craftAmmoAction;
+        public CraftAmmo CraftAction;
         private LightFire _lightFireAction;
 
         private int _storyProgress;
@@ -65,7 +63,7 @@ namespace Game.Characters
             return currentLine;
         }
 
-        public virtual void Kill()
+        public void Kill()
         {
             if (SceneManager.GetActiveScene().name != "Game") return;
             WorldState.HomeInventory().RemoveCharacter(this);
@@ -109,11 +107,6 @@ namespace Game.Characters
             return doc;
         }
 
-        public override ViewParent CreateUi(Transform parent)
-        {
-            return new InventoryUi(this, parent);
-        }
-
         public List<BaseCharacterAction> StatesAsList(bool includeInactiveStates)
         {
             return (from BaseCharacterAction s in States.StatesAsList() where s.IsVisible || includeInactiveStates select s).ToList();
@@ -124,7 +117,7 @@ namespace Game.Characters
             RestAction = new Rest(this);
             TravelAction = new Travel(this);
             _lightFireAction = new LightFire(this);
-            _craftAmmoAction = new CraftAmmo(this);
+            CraftAction = new CraftAmmo(this);
             States.SetDefaultState(RestAction);
         }
 

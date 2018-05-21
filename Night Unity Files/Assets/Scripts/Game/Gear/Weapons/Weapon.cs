@@ -8,8 +8,6 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI.InventoryUI;
-using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Game.Gear.Weapons
@@ -163,12 +161,6 @@ namespace Game.Gear.Weapons
         public int GetUpgradeCost()
         {
             return (int) (WeaponAttributes.Durability.CurrentValue() * 10 + 100);
-        }
-
-        public override ViewParent CreateUi(Transform parent)
-        {
-            ViewParent weaponUi = base.CreateUi(parent);
-            return weaponUi;
         }
 
         public bool Inscribable()

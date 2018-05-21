@@ -1,8 +1,7 @@
 ﻿using System;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
-using SamsHelper.ReactiveUI.InventoryUI;
-using UnityEngine;
+using SamsHelper.ReactiveUI.Elements;
 
 namespace Game.Characters.CharacterActions
 {
@@ -20,13 +19,9 @@ namespace Game.Characters.CharacterActions
             PlayerCharacter = playerCharacter;
         }
 
-        public override ViewParent CreateUi(Transform parent)
+        public void SetButton(EnhancedButton button)
         {
-            SimpleView ui = new SimpleView(this, parent, "Prefabs/Player Action");
-            ui.SetPreferredHeight(30);
-            ui.SetCentralTextCallback(() => Name);
-            ui.PrimaryButton.AddOnClick(OnClick);
-            return ui;
+            button.AddOnClick(OnClick);
         }
 
         protected virtual void OnClick()

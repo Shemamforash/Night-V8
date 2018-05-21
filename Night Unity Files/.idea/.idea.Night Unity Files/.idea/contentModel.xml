@@ -7,11 +7,6 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="BasicRotate.cs" t="Include" />
-        <e p="BeamController.cs" t="Include" />
-        <e p="BulletImpactBehaviour.cs" t="Include" />
-        <e p="BulletTrailFade.cs" t="Include" />
-        <e p="CombatShaderController.cs" t="Include" />
-        <e p="ContainerController.cs" t="Include" />
         <e p="Demigiant" t="Include">
           <e p="DemiLib" t="Include">
             <e p="Core" t="Include">
@@ -32,8 +27,6 @@
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
         <e p="GameSettings.xml" t="Include" />
-        <e p="MaelstromShotBehaviour.cs" t="Include" />
-        <e p="MeshViewer.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Resources" t="Include">
           <e p="names.txt" t="Include" />
@@ -50,7 +43,6 @@
             <e p="Weather.xml" t="Include" />
           </e>
         </e>
-        <e p="SceneryController.cs" t="Include" />
         <e p="Scripts" t="Include">
           <e p="Facilitating" t="Include">
             <e p="Audio" t="Include">
@@ -84,16 +76,18 @@
             <e p="UIControllers" t="Include">
               <e p="HeartBeatController.cs" t="Include" />
               <e p="UiAccessoryController.cs" t="Include" />
+              <e p="UiAimController.cs" t="Include" />
               <e p="UIAmmoDisplayController.cs" t="Include" />
+              <e p="UiAreaInventoryController.cs" t="Include" />
               <e p="UIArmourController.cs" t="Include" />
               <e p="UiArmourUpgradeController.cs" t="Include" />
               <e p="UIAttributeController.cs" t="Include" />
               <e p="UIAttributeMarkerController.cs" t="Include" />
               <e p="UIConditionController.cs" t="Include" />
+              <e p="UICraftingController.cs" t="Include" />
               <e p="UICreateAmmoController.cs" t="Include" />
               <e p="UiGearMenuController.cs" t="Include" />
               <e p="UiGearMenuTemplate.cs" t="Include" />
-              <e p="UIInventoryController.cs" t="Include" />
               <e p="UIPlayerAccessoryController.cs" t="Include" />
               <e p="UIPlayerArmourController.cs" t="Include" />
               <e p="UIPlayerWeaponController.cs" t="Include" />
@@ -120,7 +114,6 @@
                 <e p="Travel.cs" t="Include" />
               </e>
               <e p="CharacterClass.cs" t="Include" />
-              <e p="CharacterGearComparison.cs" t="Include" />
               <e p="CharacterManager.cs" t="Include" />
               <e p="CharacterTemplate.cs" t="Include" />
               <e p="CharacterView.cs" t="Include" />
@@ -155,12 +148,14 @@
                   <e p="IncendiaryGrenade.cs" t="Include" />
                 </e>
                 <e p="Nightmares" t="Include">
+                  <e p="BeamController.cs" t="Include" />
                   <e p="Ghast.cs" t="Include" />
                   <e p="GhastProjectile.cs" t="Include" />
                   <e p="Ghoul.cs" t="Include" />
                   <e p="GhoulMother.cs" t="Include" />
                   <e p="Maelstrom.cs" t="Include" />
                   <e p="MaelstromImage.cs" t="Include" />
+                  <e p="MaelstromShotBehaviour.cs" t="Include" />
                   <e p="Nightmare.cs" t="Include" />
                 </e>
               </e>
@@ -169,10 +164,13 @@
                 <e p="Barrier.cs" t="Include" />
                 <e p="Cell.cs" t="Include" />
                 <e p="CombatManager.cs" t="Include" />
+                <e p="ContainerController.cs" t="Include" />
                 <e p="PathingGrid.cs" t="Include" />
                 <e p="Triangulator.cs" t="Include" />
               </e>
               <e p="Misc" t="Include">
+                <e p="BulletImpactBehaviour.cs" t="Include" />
+                <e p="BulletTrailFade.cs" t="Include" />
                 <e p="CharacterCombat.cs" t="Include" />
                 <e p="CombatTester.cs" t="Include" />
                 <e p="EnemyCampfire.cs" t="Include" />
@@ -185,6 +183,7 @@
                 <e p="PickupController.cs" t="Include" />
                 <e p="Shot.cs" t="Include" />
                 <e p="SkillBar.cs" t="Include" />
+                <e p="TempleBehaviour.cs" t="Include" />
               </e>
               <e p="Player" t="Include">
                 <e p="CharacterSkills.cs" t="Include" />
@@ -248,11 +247,6 @@
               </e>
               <e p="Inscription.cs" t="Include" />
               <e p="ItemQuality.cs" t="Include" />
-              <e p="UI" t="Include">
-                <e p="AccessoryUi.cs" t="Include" />
-                <e p="GearUi.cs" t="Include" />
-                <e p="WeaponUi.cs" t="Include" />
-              </e>
               <e p="Weapons" t="Include">
                 <e p="Weapon.cs" t="Include" />
                 <e p="WeaponAttributes.cs" t="Include" />
@@ -264,7 +258,9 @@
             </e>
             <e p="Global" t="Include">
               <e p="DesolationInventory.cs" t="Include" />
+              <e p="Recipe.cs" t="Include" />
               <e p="SceneChanger.cs" t="Include" />
+              <e p="SceneryController.cs" t="Include" />
               <e p="WorldState.cs" t="Include" />
               <e p="WorldView.cs" t="Include" />
             </e>
@@ -330,14 +326,6 @@
                 <e p="UiAppearanceController.cs" t="Include" />
               </e>
               <e p="INumberChangeListener.cs" t="Include" />
-              <e p="InventoryUI" t="Include">
-                <e p="InventoryDisplay.cs" t="Include" />
-                <e p="InventoryTransferManager.cs" t="Include" />
-                <e p="InventoryUi.cs" t="Include" />
-                <e p="MenuList.cs" t="Include" />
-                <e p="SimpleView.cs" t="Include" />
-                <e p="ViewParent.cs" t="Include" />
-              </e>
               <e p="MenuSystem" t="Include">
                 <e p="Menu.cs" t="Include" />
                 <e p="MenuState.cs" t="Include" />
@@ -352,7 +340,6 @@
           <e p="CombatShader.shader" t="Include" />
           <e p="RadialLight.shader" t="Include" />
         </e>
-        <e p="TempleBehaviour.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />
@@ -374,8 +361,6 @@
             </e>
           </e>
         </e>
-        <e p="UiAimController.cs" t="Include" />
-        <e p="UiAreaInventoryController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

@@ -2,6 +2,7 @@
 {
     public enum InventoryResourceType
     {
+        None,
         Food,
         Water,
         Fuel,

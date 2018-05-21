@@ -4,8 +4,6 @@ using Game.Characters;
 using Game.Gear;
 using Game.Global;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI.InventoryUI;
-using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -62,16 +60,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public GearSubtype GetGearType()
         {
             return _gearType;
-        }
-
-        public override ViewParent CreateUi(Transform parent)
-        {
-            InventoryUi ui = (InventoryUi) base.CreateUi(parent);
-            if (ui == null) return ui;
-            ui.SetRightTextCallback(GetSummary);
-            ui.SetLeftTextCallback(() => GetGearType().ToString());
-            ui.SetCentralTextCallback(() => Name);
-            return ui;
         }
 
         private void MoveTo(Inventory targetInventory)

@@ -2,8 +2,6 @@
 using Facilitating.Persistence;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI.InventoryUI;
-using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
@@ -41,11 +39,6 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             SaveController.CreateNodeAndAppend("ParentInventory", itemNode, ParentInventory?.Id ?? -1);
             SaveController.CreateNodeAndAppend("Type", itemNode, Type);
             return itemNode;
-        }
-
-        public virtual ViewParent CreateUi(Transform parent)
-        {
-            return new SimpleView(this, parent);
         }
     }
 }

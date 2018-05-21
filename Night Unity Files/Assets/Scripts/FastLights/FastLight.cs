@@ -66,9 +66,9 @@ namespace Fastlights
             float rayAngle = 360 - AdvancedMaths.AngleFromUp(_position, end);
             edges.ForEach(e =>
             {
+                if (e.BelongsToEdge(flVertex)) return;
                 if (e.From.Angle > rayAngle && e.To.Angle > rayAngle) return;
                 if (e.From.Angle < rayAngle && e.To.Angle < rayAngle) return;
-                if (e.BelongsToEdge(flVertex)) return;
                 Tuple<bool, Vector2> intersection = AdvancedMaths.LineIntersection(e.From.Position, e.To.Position, _position, end);
                 if (!intersection.Item1) return;
                 float sqrDistance = Vector2.SqrMagnitude(_position - intersection.Item2);
@@ -85,42 +85,74 @@ namespace Fastlights
             return float.IsNaN(vect.x) || float.IsNaN(vect.y);
         }
 
-        private List<List<FLVertex>> _visibleEdges;
+        private List<List<FLEdge>> _visibleEdges;
         private Tuple<bool, Vector2, float> _intersection;
-        
+
         private void DrawLight()
         {
-            List<FLVertex> vertices = new List<FLVertex>();
-            List<FLEdge> edges = new List<FLEdge>();
+            List<List<FLEdge>> edgeSegments = new List<List<FLEdge>>();
+
             float sqrRadius = Radius * Radius;
             _allObstructors.ForEach(o =>
             {
                 float maxRadius = o.mesh.bounds.max.magnitude;
-                float sqrDistanceToMesh = Vector2.SqrMagnitude((Vector2)o.transform.position - _position);
+                float sqrDistanceToMesh = Vector2.SqrMagnitude((Vector2) o.transform.position - _position);
                 if (sqrDistanceToMesh - maxRadius > sqrRadius) return;
                 _visibleEdges = o.GetVisibleVertices(_position, sqrRadius);
-
-                foreach (List<FLVertex> visibleVertices in _visibleEdges)
-                {
-                    for (int i = 0; i < visibleVertices.Count - 1; ++i)
-                    {
-                        FLEdge e = new FLEdge();
-                        FLVertex from = visibleVertices[i];
-                        FLVertex to = visibleVertices[i + 1];
-                        e.SetVertices(from, to, _position);
-                        edges.Add(e);
-                    }
-                    vertices.AddRange(visibleVertices);
-                }
+                edgeSegments.AddRange(_visibleEdges);
             });
-            vertices.Sort((a, b) => a.Angle.CompareTo(b.Angle));
+
+            List<int> positionsToRemoveAt = new List<int>();
+            for (int i = 0; i < edgeSegments.Count; ++i)
+            {
+                float angleFromA = edgeSegments[i][0].From.Angle;
+                int lastSegmentIndex = edgeSegments[i].Count - 1;
+                float angleToA = edgeSegments[i][lastSegmentIndex].To.Angle;
+                if (angleFromA > angleToA) angleFromA = angleFromA - 360;
+
+                for (int j = i + 1; j < edgeSegments.Count; ++j)
+                {
+                    if (i == j || positionsToRemoveAt.Contains(j)) continue;
+                    float angleFromB = edgeSegments[j][0].From.Angle;
+                    lastSegmentIndex = edgeSegments[j].Count - 1;
+                    float angleToB = edgeSegments[j][lastSegmentIndex].To.Angle;
+
+                    if (angleFromB < angleFromA || angleToB > angleToA) continue;
+                    positionsToRemoveAt.Add(j);
+                }
+            }
+
+            positionsToRemoveAt.Sort();
+            for (int i = positionsToRemoveAt.Count - 1; i >= 0; --i)
+            {
+                edgeSegments.RemoveAt(positionsToRemoveAt[i]);
+            }
+
+            edgeSegments.ForEach(s =>
+            {
+                Debug.DrawLine(s[0].From.Position, _position, Color.yellow, 10f);
+                Debug.DrawLine(s[s.Count - 1].To.Position, _position, Color.magenta, 10f);
+//                s.ForEach(e => e.Draw());
+            });
 
             List<Vector2> meshVertices = new List<Vector2>();
-
-            if (vertices.Count == 0)
+            if (edgeSegments.Count == 0)
             {
                 InsertLineSegments(meshVertices, 0, 360);
             }
+
+            //works to here
+
+            List<FLVertex> vertices = new List<FLVertex>();
+            List<FLEdge> edges = new List<FLEdge>();
+
+            edgeSegments.ForEach(s => s.ForEach(e =>
+            {
+                vertices.Add(e.From);
+                vertices.Add(e.To);
+                edges.Add(e);
+            }));
+            vertices.Sort((a, b) => a.Angle.CompareTo(b.Angle));
 
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -132,9 +164,9 @@ namespace Fastlights
                 //if there is no intersection check to see if the current vertex is at the end of the mesh, if it is, draw a circular area from this vertex to the next vertex to round off the light
                 if (_intersection.Item1 == false)
                 {
-                    if (flVertex.NextFlVertex == null) // && vertex.Edge.To == vertex)
+                    if (flVertex.IsEnd)
                     {
-                        int nextVertexIndex = i + 1 == vertices.Count ? 0 : i + 1;
+                        int nextVertexIndex = Helper.NextIndex(i, vertices);
                         FLVertex nextFlVertex = vertices[nextVertexIndex];
                         Vector2 dirToNextVertex = (nextFlVertex.Position - _position).normalized;
                         Vector2 nextLineSegmentEnd = _position + dirToNextVertex * Radius;

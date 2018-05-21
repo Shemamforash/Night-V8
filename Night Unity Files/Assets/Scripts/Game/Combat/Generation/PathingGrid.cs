@@ -13,7 +13,7 @@ namespace Game.Combat.Generation
 {
     public class PathingGrid : MonoBehaviour
     {
-        public const int CombatAreaWidth = 60;
+        public const int CombatAreaWidth = 45;
         public const int CombatMovementDistance = CombatAreaWidth - 3;
         public const int CellResolution = 10;
         public const float CellWidth = 1f / CellResolution;

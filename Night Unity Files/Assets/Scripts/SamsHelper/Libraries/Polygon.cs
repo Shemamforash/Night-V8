@@ -33,7 +33,7 @@ namespace SamsHelper.Libraries
             {
                 int next = i + 1 == Vertices.Count ? 0 : i + 1;
                 float pos = (float)i / Vertices.Count;
-                Debug.DrawLine(Vertices[i] + Position, Vertices[next] + Position, Color.Lerp(Color.red, Color.cyan, pos), 20f);
+                Debug.DrawLine(Vertices[i] + Position, Vertices[next] + Position, Color.Lerp(Color.yellow, Color.cyan, pos), 20f);
             }
         }
     }
