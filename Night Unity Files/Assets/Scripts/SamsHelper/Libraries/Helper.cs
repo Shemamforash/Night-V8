@@ -387,5 +387,16 @@ namespace SamsHelper.Libraries
             list.RemoveAt(endIndex);
             return end;
         }
+
+        public static Color RandomColour(bool randomAlpha = false)
+        {
+            Color c = new Color();
+            c.r = Random.Range(0f, 1f);
+            c.g = Random.Range(0f, 1f);
+            c.b = Random.Range(0f, 1f);
+            if (randomAlpha) c.a = Random.Range(0f, 1f);
+            else c.a = 1;
+            return c;
+        }
     }
 }

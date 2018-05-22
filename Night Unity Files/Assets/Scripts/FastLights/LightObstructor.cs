@@ -4,6 +4,7 @@ using System.Linq;
 using Fastlights;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Random = System.Random;
 
 namespace FastLights
 {
@@ -49,16 +50,13 @@ namespace FastLights
         private List<FLEdge> GetVisibleEdges(Vector2 origin, float sqrRadius)
         {
             List<FLEdge> visibleEdges = new List<FLEdge>();
-            //direction from light source to the obstructor
-            Vector2 dirToObstructor = (origin - (Vector2) transform.position).normalized;
-            _worldVerts.ForEach(v => { v.SetDistanceAndAngle(origin, sqrRadius, dirToObstructor); });
-
+            _worldVerts.ForEach(v => { v.SetDistanceAndAngle(origin, sqrRadius); });
             _edges.ForEach(e =>
             {
                 if (e.From.OutOfRange && e.To.OutOfRange) return;
                 if (!e.CalculateVisibility(origin)) return;
                 visibleEdges.Add(e);
-//                e.Draw();
+//                e.Draw(Color.yellow, Color.blue);
             });
 
             return visibleEdges;
@@ -110,7 +108,12 @@ namespace FastLights
                 edgeSegments[0] = endSegment;
             }
 
-            edgeSegments.ForEach(s => s.ForEach(e => e.Draw()));
+//            edgeSegments.ForEach(s =>
+//            {
+//                Color a = Helper.RandomColour();
+//                Color b = Helper.RandomColour();
+//                s.ForEach(e => e.Draw(a, b));
+//            });
 
             return edgeSegments;
         }

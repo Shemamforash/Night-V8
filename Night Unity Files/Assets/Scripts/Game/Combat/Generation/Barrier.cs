@@ -100,7 +100,7 @@ namespace Game.Combat.Generation
             for (int i = 0; i < normals.Length; i++) normals[i] = -Vector3.forward;
             mesh.normals = normals;
             _barrierObject.GetComponent<LightObstructor>().UpdateMesh();
-            Draw();
+//            Draw();
             return meshVerts;
         }
 

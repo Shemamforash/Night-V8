@@ -10,6 +10,7 @@ namespace FastLights
         public float SqrDistanceToOrigin;
         public float Angle;
         public FLVertex PreviousFlVertex, NextFlVertex;
+        public Vector2 InRangePosition;
         public bool OutOfRange;
 
         public FLVertex(Transform parentTransform, Vector3 localPosition)
@@ -19,12 +20,15 @@ namespace FastLights
         }
 
         public bool IsStart, IsEnd;
-
-        public void SetDistanceAndAngle(Vector2 lightPosition, float range, Vector2 directionToLightPos)
+        
+        public void SetDistanceAndAngle(Vector2 lightPosition, float range)
         {
+            IsStart = false;
+            IsEnd = false;
             SqrDistanceToOrigin = Vector2.SqrMagnitude(Position - lightPosition);
             OutOfRange = SqrDistanceToOrigin > range;
             Angle = 360 - AdvancedMaths.AngleFromUp(lightPosition, Position);
+            InRangePosition = Position;
         }
 
         public void Draw()

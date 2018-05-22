@@ -243,5 +243,65 @@ namespace SamsHelper.Libraries
                 Debug.DrawLine(BottomLeft, BottomRight, Color.green, 5f);
             }
         }
+
+        public static List<Vector2> FindLineCircleIntersections(Vector2 a, Vector2 b, Vector2 c, float radius)
+        {
+            List<Vector2> intersections = new List<Vector2>();
+
+            float dx = b.x - a.x;
+            float dy = b.y - a.y;
+
+            float cx = c.x;
+            float cy = c.y;
+
+            float A = dx * dx + dy * dy;
+            float B = 2 * (dx * (a.x - cx) + dy * (a.y - cy));
+            float C = (a.x - cx) * (a.x - cx) + (a.y - cy) * (a.y - cy) - radius * radius;
+
+            float det = B * B - 4 * A * C;
+
+            float t;
+            if (A < 0.0000001 || det < 0) return intersections;
+
+            if (det == 0)
+            {
+                t = -B / (2 * A);
+                intersections.Add(new Vector2(a.x + t * dx, a.y + t * dy));
+                return intersections;
+            }
+
+            t = (float) ((-B + Math.Sqrt(det)) / (2 * A));
+            intersections.Add(new Vector2(a.x + t * dx, a.y + t * dy));
+            t = (float) ((-B - Math.Sqrt(det)) / (2 * A));
+            intersections.Add(new Vector2(a.x + t * dx, a.y + t * dy));
+            return intersections;
+        }
+
+        public static List<Vector2> FindLineSegmentCircleIntersections(Vector2 a, Vector2 b, Vector2 c, float radius)
+        {
+            List<Vector2> intersections = FindLineCircleIntersections(a, b, c, radius);
+            switch (intersections.Count)
+            {
+                case 1:
+                    if (!DoesPointLieOnLine(a, b, intersections[0])) intersections.RemoveAt(0);
+                    break;
+                case 2:
+                    if (!DoesPointLieOnLine(a, b, intersections[1])) intersections.RemoveAt(1);
+                    if (!DoesPointLieOnLine(a, b, intersections[0])) intersections.RemoveAt(0);
+                    break;
+            }
+            return intersections;
+        }
+
+        public static bool DoesPointLieOnLine(Vector2 a, Vector2 b, Vector2 c)
+        {
+            float cross = (c.y - a.y) * (b.x - a.x) - (c.x - a.x) * (b.y - a.y);
+            if (Mathf.Abs(cross) > 0.0001f) return false;
+            float dot = (c.x - a.x) * (b.x - a.x) + (c.y - a.y) * (b.y - a.y);
+            if (dot < 0) return false;
+            float sqrLen = (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y);
+            if (dot > sqrLen) return false;
+            return true;
+        }
     }
 }
