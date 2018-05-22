@@ -368,6 +368,16 @@ namespace SamsHelper.Libraries
             return 0;
         }
 
+        public static T NextElement<T>(int iterator, List<T> list)
+        {
+            return list[NextIndex(iterator, list)];
+        }
+
+        public static T PrevElement<T>(int iterator, List<T> list)
+        {
+            return list[PrevIndex(iterator, list)];
+        }
+        
         public static int NextIndex<T>(int iteratorPosition, List<T> list)
         {
             if (iteratorPosition + 1 == list.Count) return 0;

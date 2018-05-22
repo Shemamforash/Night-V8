@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using FastLights;
+using NUnit.Framework;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace Fastlights
         public Material LightMaterial;
         public GameObject Target;
 
-        private static void UpdateLights()
+        public static void UpdateLights()
         {
             _lights.ForEach(l => l._needsUpdate = true);
         }
@@ -67,8 +68,8 @@ namespace Fastlights
             edges.ForEach(e =>
             {
                 if (e.BelongsToEdge(flVertex)) return;
-                float fromAngle = e.From.Angle;
-                float toAngle = e.To.Angle;
+                float fromAngle = e.From.InRangeAngle;
+                float toAngle = e.To.InRangeAngle;
                 float tempRayAngle = rayAngle;
                 if (fromAngle > toAngle)
                 {
@@ -108,9 +109,8 @@ namespace Fastlights
             float sqrRadius = Radius * Radius;
             _allObstructors.ForEach(o =>
             {
-                float maxRadius = o.mesh.bounds.max.magnitude;
                 float sqrDistanceToMesh = Vector2.SqrMagnitude((Vector2) o.transform.position - _position);
-                if (sqrDistanceToMesh - maxRadius > sqrRadius) return;
+                if (sqrDistanceToMesh - o.MaxRadius() > sqrRadius) return;
                 _visibleEdges = o.GetVisibleVertices(_position, sqrRadius);
                 edgeSegments.AddRange(_visibleEdges);
             });
@@ -132,7 +132,20 @@ namespace Fastlights
                     if (angleFromB > angleToB) angleFromB = angleFromB - 360f;
 
                     if (angleFromB < angleFromA || angleToB > angleToA) continue;
-                    positionsToRemoveAt.Add(j);
+//                    positionsToRemoveAt.Add(j);
+                }
+            }
+            
+            //try walk along edge algorithm
+            edgeSegments.Sort((a,b) => a[0].From.Angle.CompareTo(b[0].From.Angle));
+
+            for (int i = 0; i < edgeSegments.Count; ++i)
+            {
+                float pos = (float)i / edgeSegments.Count;
+                Color c = Color.Lerp(Color.red, Color.green, pos);
+                for (int j = 0; j < edgeSegments[i].Count; ++j)
+                {
+                    Debug.DrawLine(edgeSegments[i][j].From.InRangePosition, edgeSegments[i][j].To.InRangePosition, c, 5f);
                 }
             }
 
@@ -169,7 +182,8 @@ namespace Fastlights
                 {
                     Color c = Helper.RandomColour();
 //                    Debug.DrawLine(e.From.InRangePosition, _position, c, 5f);
-                    e.From.InRangePosition = AdvancedMaths.FindLineSegmentCircleIntersections(e.From.Position, e.To.Position, _position, Radius)[0];
+                    Vector2 newVertexPos = AdvancedMaths.FindLineSegmentCircleIntersections(e.From.Position, e.To.Position, _position, Radius)[0];
+                    e.From.SetInRangePosition(newVertexPos, _position);
                     c.a = 0.5f;
 //                    Debug.DrawLine(e.From.InRangePosition, _position, c, 5f);
                 }
@@ -177,39 +191,52 @@ namespace Fastlights
                 {
                     Color c = Helper.RandomColour();
 //                    Debug.DrawLine(e.To.InRangePosition, _position, c, 5f);
-                    e.To.InRangePosition = AdvancedMaths.FindLineSegmentCircleIntersections(e.From.Position, e.To.Position, _position, Radius)[0];
+                    Vector2 newVertexPos = AdvancedMaths.FindLineSegmentCircleIntersections(e.From.Position, e.To.Position, _position, Radius)[0];
+                    e.To.SetInRangePosition(newVertexPos, _position);
                     c.a = 0.5f;
 //                    Debug.DrawLine(e.To.InRangePosition, _position, c, 5f);
                 }
+
                 vertices.Add(e.From);
                 vertices.Add(e.To);
                 edges.Add(e);
             }));
-            vertices.Sort((a, b) => a.Angle.CompareTo(b.Angle));
+            vertices.Sort((a, b) => a.InRangeAngle.CompareTo(b.InRangeAngle));
 
+            for (int i = 0; i < vertices.Count; ++i)
+            {
+                FLVertex nextIndex = Helper.NextElement(i, vertices);
+//                Debug.DrawLine(vertices[i].InRangePosition, nextIndex.InRangePosition, Color.red, 5f);
+            }
+            
             for (int i = 0; i < vertices.Count; i++)
             {
                 FLVertex flVertex = vertices[i];
-                Vector2 dirToVertex = (flVertex.Position - _position).normalized;
+                Vector2 dirToVertex = (flVertex.InRangePosition - _position).normalized;
                 Vector2 lineSegmentEnd = _position + dirToVertex * Radius;
                 _intersection = GetIntersectionWithEdge(lineSegmentEnd, edges, flVertex);
+
+                int nextVertexIndex = Helper.NextIndex(i, vertices);
+                FLVertex nextFlVertex = vertices[nextVertexIndex];
 
                 //if there is no intersection check to see if the current vertex is at the end of the mesh, if it is, draw a circular area from this vertex to the next vertex to round off the light
                 if (_intersection.Item1 == false)
                 {
                     if (flVertex.IsEnd)
                     {
-                        int nextVertexIndex = Helper.NextIndex(i, vertices);
-                        FLVertex nextFlVertex = vertices[nextVertexIndex];
-                        Vector2 dirToNextVertex = (nextFlVertex.InRangePosition - _position).normalized;
-                        Vector2 nextLineSegmentEnd = _position + dirToNextVertex * Radius;
+                        if (flVertex.OutOfRange) Debug.DrawLine(_position, flVertex.InRangePosition, Color.white, 5f);
+                        if (!nextFlVertex.SharesTransform(flVertex))
+                        {
+                            Vector2 dirToNextVertex = (nextFlVertex.InRangePosition - _position).normalized;
+                            Vector2 nextLineSegmentEnd = _position + dirToNextVertex * Radius;
 //                        Debug.DrawLine(_position, lineSegmentEnd, Color.yellow, 5f);
 //                        Debug.DrawLine(_position, nextLineSegmentEnd, Color.magenta, 5f);
-                        meshVertices.Add(flVertex.InRangePosition);
-                        meshVertices.Add(lineSegmentEnd);
-                        InsertLineSegments(meshVertices, flVertex.Angle, nextFlVertex.Angle);
-                        meshVertices.Add(nextLineSegmentEnd);
-                        meshVertices.Add(nextFlVertex.InRangePosition);
+                            meshVertices.Add(flVertex.InRangePosition);
+                            meshVertices.Add(lineSegmentEnd);
+                            InsertLineSegments(meshVertices, flVertex.InRangeAngle, nextFlVertex.InRangeAngle);
+                            meshVertices.Add(nextLineSegmentEnd);
+                            meshVertices.Add(nextFlVertex.InRangePosition);
+                        }
                     }
                     else
                     {
@@ -232,7 +259,9 @@ namespace Fastlights
                 {
                     //end edge intersects with further edge, add closer point then further point
                     meshVertices.Add(flVertex.InRangePosition);
-                    meshVertices.Add(intersectionPoint);
+                    float angle = AdvancedMaths.AngleFromUp(_position, intersectionPoint);
+                    if (angle < flVertex.Angle) angle += 360;
+                    if(angle >= nextFlVertex.Angle) meshVertices.Add(intersectionPoint);
                 }
                 else
                 {

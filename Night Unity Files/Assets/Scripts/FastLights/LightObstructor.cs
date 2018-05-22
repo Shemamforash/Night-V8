@@ -2,30 +2,95 @@
 using System.Collections.Generic;
 using System.Linq;
 using Fastlights;
+using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
-using Random = System.Random;
 
 namespace FastLights
 {
     public class LightObstructor : MonoBehaviour
     {
-        [HideInInspector] public Mesh mesh;
+        public bool UseCollider;
+        private Mesh _mesh;
+        private Collider2D _collider;
         private readonly List<FLVertex> _worldVerts = new List<FLVertex>();
         private readonly List<FLEdge> _edges = new List<FLEdge>();
+        private Vector3 position;
+        private Vector3 scale;
+        private float rotation;
 
         public void Awake()
         {
-            mesh = GetComponent<MeshFilter>().mesh;
-            if (mesh == null) throw new UnnassignedMeshException();
+            if (UseCollider)
+            {
+                _collider = GetComponent<Collider2D>();
+                if (_collider == null) throw new Exceptions.ComponentNotFoundException(gameObject.name, typeof(Collider2D));
+            }
+            else
+            {
+                _mesh = GetComponent<MeshFilter>().mesh;
+                if (_mesh == null) throw new UnnassignedMeshException();
+            }
+
             FastLight.RegisterObstacle(this);
+            position = transform.position;
+            scale = transform.localScale;
+            rotation = transform.rotation.eulerAngles.z;
+        }
+
+        public float MaxRadius()
+        {
+            return UseCollider ? _collider.bounds.max.magnitude : _mesh.bounds.max.magnitude;
+        }
+
+        private List<Vector3> GetVertices()
+        {
+            if (!UseCollider) return _mesh.vertices.ToList();
+            List<Vector3> points = new List<Vector3>();
+            if (_collider is PolygonCollider2D)
+            {
+                PolygonCollider2D polygon = (PolygonCollider2D) _collider;
+                points.AddRange(polygon.points.Select(polygonPoint => (Vector3) polygonPoint));
+            }
+            else if (_collider is BoxCollider2D)
+            {
+                BoxCollider2D box = (BoxCollider2D) _collider;
+                points.Add(new Vector2(-box.size.x / 2, box.size.y / 2));
+                points.Add(new Vector2(box.size.x / 2, box.size.y / 2));
+                points.Add(new Vector2(box.size.x / 2, -box.size.y / 2));
+                points.Add(new Vector2(-box.size.x / 2, -box.size.y / 2));
+            }
+            else if (_collider is CircleCollider2D)
+            {
+                CircleCollider2D circle = (CircleCollider2D) _collider;
+                float radius = circle.radius;
+                float angleInterval = 5 / radius;
+                for (float angle = 0; angle < 360; angle += angleInterval)
+                {
+                    float x = Mathf.Cos(angle * Mathf.Deg2Rad);
+                    float y = Mathf.Sin(angle * Mathf.Deg2Rad);
+                    points.Add(new Vector2(x, y));
+                }
+            }
+
+            return points;
+        }
+
+        public void Update()
+        {
+            if (transform.position == position && transform.localScale == scale && transform.rotation.eulerAngles.z == rotation) return;
+            UpdateMesh();
+            FastLight.UpdateLights();
+            position = transform.position;
+            scale = transform.localScale;
+            rotation = transform.rotation.eulerAngles.z;
         }
 
         public void UpdateMesh()
         {
             _worldVerts.Clear();
             _edges.Clear();
-            foreach (Vector3 meshVertex in mesh.vertices)
+            foreach (Vector3 meshVertex in GetVertices())
             {
                 FLVertex vertex = new FLVertex(transform, meshVertex);
                 _worldVerts.Add(vertex);
@@ -38,6 +103,8 @@ namespace FastLights
                 _worldVerts[i].PreviousFlVertex = _worldVerts[prevIndex];
                 _worldVerts[i].NextFlVertex = _worldVerts[nextIndex];
                 FLEdge edge = new FLEdge(_worldVerts[prevIndex], _worldVerts[i]);
+                _worldVerts[prevIndex].EdgeB = edge;
+                _worldVerts[i].EdgeA = edge;
                 _edges.Add(edge);
             }
         }
