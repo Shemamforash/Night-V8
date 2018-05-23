@@ -6,57 +6,35 @@ namespace FastLights
 {
     public class FLVertex
     {
-        private Transform _parentTransform;
         public readonly Vector2 Position;
         public float SqrDistanceToOrigin;
-        public float Angle;
         public FLVertex PreviousFlVertex, NextFlVertex;
         public Vector2 InRangePosition;
         public float InRangeAngle;
         public bool OutOfRange;
-        public FLEdge EdgeA, EdgeB;
         private List<FLVertex> _segment;
-        public int segmentIndex;
-        public int vertIndex;
 
         public FLVertex(Transform parentTransform, Vector3 localPosition)
         {
-            _parentTransform = parentTransform;
-            Position = _parentTransform.TransformPoint(localPosition);
+            Position = parentTransform.TransformPoint(localPosition);
         }
 
         public bool IsStart, IsEnd;
 
-        public bool SharesTransform(FLVertex v)
-        {
-            return v._parentTransform == _parentTransform;
-        }
-
-        public void SetSegment(List<FLVertex> segment, int i)
-        {
-            _segment = segment;
-            segmentIndex = i;
-        }
-
-        public List<FLVertex> Segment()
-        {
-            return _segment;
-        }
-        
         public void SetDistanceAndAngle(Vector2 lightPosition, float range)
         {
             IsStart = false;
             IsEnd = false;
             SqrDistanceToOrigin = Vector2.SqrMagnitude(Position - lightPosition);
             OutOfRange = SqrDistanceToOrigin > range;
-            Angle = 360 - AdvancedMaths.AngleFromUp(lightPosition, Position);
             InRangePosition = Position;
-            InRangeAngle = Angle;
+            InRangeAngle = 360 - AdvancedMaths.AngleFromUp(lightPosition, Position);
         }
 
         public void SetInRangePosition(Vector2 inRangePosition, Vector2 lightPosition)
         {
             InRangePosition = inRangePosition;
+            SqrDistanceToOrigin = Vector2.SqrMagnitude(Position - lightPosition);
             InRangeAngle = 360 - AdvancedMaths.AngleFromUp(lightPosition, InRangePosition);
         }
         

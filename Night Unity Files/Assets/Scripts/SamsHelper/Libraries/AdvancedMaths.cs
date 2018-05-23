@@ -33,6 +33,21 @@ namespace SamsHelper.Libraries
 
         public static Tuple<bool, Vector2> LineIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
         {
+//            float x1 = a.x;
+//            float x2 = b.x;
+//            float x3 = c.x;
+//            float x4 = d.x;
+//            float y1 = a.y;
+//            float y2 = b.y;
+//            float y3 = c.y;
+//            float y4 = d.y;
+//
+//            float xNumerator = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4);
+//            float yNumerator = (x1 * y2 - y1 * x2) * (x3 - x4) - (y1 - y2) * (x3 * y4 - y3 * x4);
+//            float denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+//            if (denominator == 0) return Tuple.Create(false, Vector2.zero);
+//            return Tuple.Create(true, new Vector2(xNumerator / denominator, yNumerator / denominator));
+
             Vector2 intersectionPoint = new Vector2();
             Vector2 r = b - a;
             Vector2 s = d - c;
@@ -42,7 +57,7 @@ namespace SamsHelper.Libraries
             float u = Cross(c - a, r) / rxs;
             if (0 > t || t > 1 || 0 > u || u > 1) return Tuple.Create(false, intersectionPoint);
             intersectionPoint = a + t * r;
-//            if (intersectionPoint == Vector2.zero || a == Vector2.zero) Debug.Log(a + " " + t + " " + r);
+            if (intersectionPoint == Vector2.zero) Debug.Log(a + " " + t + " " + r);
             return Tuple.Create(true, intersectionPoint);
         }
 

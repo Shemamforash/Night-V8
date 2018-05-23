@@ -103,8 +103,6 @@ namespace FastLights
                 _worldVerts[i].PreviousFlVertex = _worldVerts[prevIndex];
                 _worldVerts[i].NextFlVertex = _worldVerts[nextIndex];
                 FLEdge edge = new FLEdge(_worldVerts[prevIndex], _worldVerts[i]);
-                _worldVerts[prevIndex].EdgeB = edge;
-                _worldVerts[i].EdgeA = edge;
                 _edges.Add(edge);
             }
         }
@@ -143,7 +141,7 @@ namespace FastLights
 
         private float _sqrRadius, _radius;
         private Vector3 _origin;
-        
+
         public List<List<FLEdge>> GetVisibleVertices(Vector3 origin, float sqrRadius, float radius)
         {
             _sqrRadius = sqrRadius;
@@ -186,35 +184,12 @@ namespace FastLights
                 }
             }
 
-            if (!completedSegment)
-            {
-                List<FLEdge> endSegment = Helper.RemoveEnd(edgeSegments);
-                endSegment.AddRange(edgeSegments[0]);
-                edgeSegments[0] = endSegment;
-            }
-
-//            edgeSegments.ForEach(s =>
-//            {
-//                Color a = Helper.RandomColour();
-//                Color b = Helper.RandomColour();
-//                s.ForEach(e => e.Draw(a, b));
-//            });
+            if (completedSegment) return edgeSegments;
+            List<FLEdge> endSegment = Helper.RemoveEnd(edgeSegments);
+            endSegment.AddRange(edgeSegments[0]);
+            edgeSegments[0] = endSegment;
 
             return edgeSegments;
-        }
-
-        private void DrawVertices(List<FLVertex> vertices)
-        {
-            float alphaIncrement = 0.5f / vertices.Count;
-
-            float currentAlpha = 0.5f;
-            for (int i = 0; i < vertices.Count - 1; ++i)
-            {
-                Vector2 mid = (vertices[i].Position + vertices[i + 1].Position) / 2;
-                Debug.DrawLine(vertices[i].Position, mid, new Color(0, 1, 0, currentAlpha - alphaIncrement), 2f);
-                Debug.DrawLine(mid, vertices[i + 1].Position, new Color(0, 1, 0, currentAlpha), 2f);
-                currentAlpha += alphaIncrement;
-            }
         }
     }
 
