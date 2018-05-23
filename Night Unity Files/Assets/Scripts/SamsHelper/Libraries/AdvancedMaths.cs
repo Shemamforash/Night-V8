@@ -42,10 +42,18 @@ namespace SamsHelper.Libraries
             float u = Cross(c - a, r) / rxs;
             if (0 > t || t > 1 || 0 > u || u > 1) return Tuple.Create(false, intersectionPoint);
             intersectionPoint = a + t * r;
-            if (intersectionPoint == Vector2.zero || a == Vector2.zero) Debug.Log(a + " " + t + " " + r);
+//            if (intersectionPoint == Vector2.zero || a == Vector2.zero) Debug.Log(a + " " + t + " " + r);
             return Tuple.Create(true, intersectionPoint);
         }
 
+        public static Tuple<bool, Vector2> LineSegmentIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+        {
+            Tuple<bool, Vector2> intersection = LineIntersection(a, b, c, d);
+            if (!intersection.Item1) return intersection;
+            if (!DoesPointLieOnLine(a, b, intersection.Item2)) intersection = Tuple.Create(false, intersection.Item2);
+            return intersection;
+        }
+        
         public static Vector2 RandomVectorWithinRange(Vector2 origin, float range)
         {
             float newX = Random.Range(origin.x - range, origin.x + range);

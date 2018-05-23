@@ -114,14 +114,26 @@ namespace FastLights
             FastLight.UnregisterObstacle(this);
         }
 
-        private List<FLEdge> GetVisibleEdges(Vector2 origin, float sqrRadius)
+        private List<FLEdge> GetVisibleEdges()
         {
             List<FLEdge> visibleEdges = new List<FLEdge>();
-            _worldVerts.ForEach(v => { v.SetDistanceAndAngle(origin, sqrRadius); });
+            _worldVerts.ForEach(v => { v.SetDistanceAndAngle(_origin, _sqrRadius); });
             _edges.ForEach(e =>
             {
                 if (e.From.OutOfRange && e.To.OutOfRange) return;
-                if (!e.CalculateVisibility(origin)) return;
+                if (e.From.OutOfRange)
+                {
+                    Vector2 newVertexPos = AdvancedMaths.FindLineSegmentCircleIntersections(e.From.Position, e.To.Position, _origin, _radius)[0];
+                    e.From.SetInRangePosition(newVertexPos, _origin);
+                }
+
+                if (e.To.OutOfRange)
+                {
+                    Vector2 newVertexPos = AdvancedMaths.FindLineSegmentCircleIntersections(e.From.Position, e.To.Position, _origin, _radius)[0];
+                    e.To.SetInRangePosition(newVertexPos, _origin);
+                }
+
+                if (!e.CalculateVisibility(_origin)) return;
                 visibleEdges.Add(e);
 //                e.Draw(Color.yellow, Color.blue);
             });
@@ -129,11 +141,17 @@ namespace FastLights
             return visibleEdges;
         }
 
-        public List<List<FLEdge>> GetVisibleVertices(Vector3 origin, float radius)
+        private float _sqrRadius, _radius;
+        private Vector3 _origin;
+        
+        public List<List<FLEdge>> GetVisibleVertices(Vector3 origin, float sqrRadius, float radius)
         {
+            _sqrRadius = sqrRadius;
+            _radius = radius;
+            _origin = origin;
             List<List<FLEdge>> edgeSegments = new List<List<FLEdge>>();
 
-            List<FLEdge> edges = GetVisibleEdges(origin, radius);
+            List<FLEdge> edges = GetVisibleEdges();
             if (edges.Count == 1)
             {
                 edges[0].From.IsStart = true;

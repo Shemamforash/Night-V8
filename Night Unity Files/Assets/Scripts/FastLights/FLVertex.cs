@@ -1,4 +1,5 @@
-﻿using SamsHelper.Libraries;
+﻿using System.Collections.Generic;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace FastLights
@@ -14,6 +15,9 @@ namespace FastLights
         public float InRangeAngle;
         public bool OutOfRange;
         public FLEdge EdgeA, EdgeB;
+        private List<FLVertex> _segment;
+        public int segmentIndex;
+        public int vertIndex;
 
         public FLVertex(Transform parentTransform, Vector3 localPosition)
         {
@@ -26,6 +30,17 @@ namespace FastLights
         public bool SharesTransform(FLVertex v)
         {
             return v._parentTransform == _parentTransform;
+        }
+
+        public void SetSegment(List<FLVertex> segment, int i)
+        {
+            _segment = segment;
+            segmentIndex = i;
+        }
+
+        public List<FLVertex> Segment()
+        {
+            return _segment;
         }
         
         public void SetDistanceAndAngle(Vector2 lightPosition, float range)
