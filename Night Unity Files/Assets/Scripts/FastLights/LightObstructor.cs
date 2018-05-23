@@ -90,13 +90,16 @@ namespace FastLights
         {
             _worldVerts.Clear();
             _edges.Clear();
-            foreach (Vector3 meshVertex in GetVertices())
+            List<Vector3> vertices = GetVertices();
+            int vertexCount = vertices.Count;
+            for (int i = 0; i < vertexCount; i++)
             {
+                Vector3 meshVertex = vertices[i];
                 FLVertex vertex = new FLVertex(transform, meshVertex);
                 _worldVerts.Add(vertex);
             }
 
-            for (int i = 0; i < _worldVerts.Count; ++i)
+            for (int i = 0; i < vertexCount; ++i)
             {
                 int prevIndex = Helper.PrevIndex(i, _worldVerts);
                 int nextIndex = Helper.NextIndex(i, _worldVerts);
@@ -115,10 +118,18 @@ namespace FastLights
         private List<FLEdge> GetVisibleEdges()
         {
             List<FLEdge> visibleEdges = new List<FLEdge>();
-            _worldVerts.ForEach(v => { v.SetDistanceAndAngle(_origin, _sqrRadius); });
-            _edges.ForEach(e =>
+            int vertCount = _worldVerts.Count;
+            for (int i = 0; i < vertCount; i++)
             {
-                if (e.From.OutOfRange && e.To.OutOfRange) return;
+                FLVertex v = _worldVerts[i];
+                v.SetDistanceAndAngle(_origin, _sqrRadius);
+            }
+
+            int edgeCount = _edges.Count;
+            for (int i = 0; i < edgeCount; i++)
+            {
+                FLEdge e = _edges[i];
+                if (e.From.OutOfRange && e.To.OutOfRange) continue;
                 if (e.From.OutOfRange)
                 {
                     Vector2 newVertexPos = AdvancedMaths.FindLineSegmentCircleIntersections(e.From.Position, e.To.Position, _origin, _radius)[0];
@@ -131,10 +142,10 @@ namespace FastLights
                     e.To.SetInRangePosition(newVertexPos, _origin);
                 }
 
-                if (!e.CalculateVisibility(_origin)) return;
+                if (!e.CalculateVisibility(_origin)) continue;
                 visibleEdges.Add(e);
 //                e.Draw(Color.yellow, Color.blue);
-            });
+            }
 
             return visibleEdges;
         }
@@ -150,7 +161,9 @@ namespace FastLights
             List<List<FLEdge>> edgeSegments = new List<List<FLEdge>>();
 
             List<FLEdge> edges = GetVisibleEdges();
-            if (edges.Count == 1)
+            int edgeCount = edges.Count;
+
+            if (edgeCount == 1)
             {
                 edges[0].From.IsStart = true;
                 edges[0].To.IsEnd = true;
@@ -159,9 +172,10 @@ namespace FastLights
             }
 
             List<FLEdge> currentEdgeSegment = new List<FLEdge>();
+            int segmentCount = 0;
 
             bool completedSegment = true;
-            for (int i = 0; i < edges.Count; ++i)
+            for (int i = 0; i < edgeCount; ++i)
             {
                 FLEdge next = edges[Helper.NextIndex(i, edges)];
                 FLEdge current = edges[i];
@@ -170,8 +184,10 @@ namespace FastLights
                     next.From.IsStart = true;
                     current.To.IsEnd = true;
                     currentEdgeSegment.Add(current);
-                    if (currentEdgeSegment.Count == 1) edgeSegments.Add(currentEdgeSegment);
+                    ++segmentCount;
+                    if (segmentCount == 1) edgeSegments.Add(currentEdgeSegment);
                     currentEdgeSegment = new List<FLEdge>();
+                    segmentCount = 0;
                     completedSegment = true;
                 }
                 else
@@ -179,7 +195,8 @@ namespace FastLights
                     next.From.IsEnd = false;
                     current.To.IsStart = false;
                     currentEdgeSegment.Add(current);
-                    if (currentEdgeSegment.Count == 1) edgeSegments.Add(currentEdgeSegment);
+                    ++segmentCount;
+                    if (segmentCount == 1) edgeSegments.Add(currentEdgeSegment);
                     completedSegment = false;
                 }
             }

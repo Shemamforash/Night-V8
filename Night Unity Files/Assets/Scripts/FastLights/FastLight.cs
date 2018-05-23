@@ -62,7 +62,47 @@ namespace Fastlights
 
         private readonly List<Vector2> meshVertices = new List<Vector2>();
 
-        private Tuple<bool, Vector2> CalculateNearestIntersection(FLVertex target, List<FLEdge> edges)
+//        private class EdgeBucket
+//        {
+//            public readonly float AngleFrom, AngleTo;
+//            public readonly List<FLEdge> edges = new List<FLEdge>();
+
+//            public EdgeBucket(float angleFrom, float angleTo)
+//            {
+//                AngleFrom = angleFrom;
+//                AngleTo = angleTo;
+//            }
+            
+//            public void AddEdgeToBucket(FLEdge edge)
+//            {
+//                if (edge.From.InRangeAngle >= AngleFrom && edge.From.InRangeAngle <= AngleTo)
+//                {
+//                    edges.Add(edge);
+//                    return;
+//                }
+
+//                if (edge.To.InRangeAngle >= AngleFrom && edge.To.InRangeAngle <= AngleTo)
+//                {
+//                    edges.Add(edge);
+//                }
+//            }
+
+//            public bool AngleFallsInBucket(float angle)
+//            {
+//                return angle >= AngleFrom && angle <= AngleTo;
+//            }
+            
+            //d = 90
+            //angle = 45
+            //360 / 90 = 4
+            //angle / 90 = 0
+//        }
+
+//        private readonly List<EdgeBucket> _edgeBuckets = new List<EdgeBucket>();
+//        private float bucketAngle = 10f;
+
+        
+        private void CalculateNearestIntersection(FLVertex target, List<FLEdge> edges)
         {
             Vector2 dirToVertex = (target.InRangePosition - _position).normalized;
             Vector2 lineSegmentEnd = _position + dirToVertex * Radius;
@@ -71,53 +111,68 @@ namespace Fastlights
             float nearestDistance = float.MaxValue;
             bool didIntersect = false;
 
-            for (int i = 0; i < edges.Count; i++)
-            {
-                FLEdge e = edges[i];
-                if (e.BelongsToEdge(target)) continue;
-                float fromAngle = e.From.InRangeAngle;
-                float toAngle = e.To.InRangeAngle;
-                float tempRayAngle = target.InRangeAngle;
-                if (fromAngle > toAngle)
+//            int targetBucket = Mathf.FloorToInt(target.InRangeAngle / bucketAngle);
+//            int bucketCount = _edgeBuckets.Count;
+//            for (int j = 0; j < bucketCount; ++j)
+//            {
+//                EdgeBucket b = _edgeBuckets[j];
+//                if (!b.AngleFallsInBucket(target.InRangeAngle)) continue;
+                int edgeCount = edges.Count;
+
+                for (int i = 0; i < edgeCount; i++)
                 {
-                    if (tempRayAngle > fromAngle && tempRayAngle > toAngle)
+                    FLEdge e = edges[i];
+                    if (e.BelongsToEdge(target)) continue;
+                    float fromAngle = e.From.InRangeAngle;
+                    float toAngle = e.To.InRangeAngle;
+                    float tempRayAngle = target.InRangeAngle;
+                    if (fromAngle > toAngle)
                     {
-                        tempRayAngle -= 360;
+                        if (tempRayAngle > fromAngle && tempRayAngle > toAngle)
+                        {
+                            tempRayAngle -= 360;
+                        }
+
+                        fromAngle -= 360f;
                     }
 
-                    fromAngle -= 360f;
+                    if (fromAngle > tempRayAngle && toAngle > tempRayAngle) continue;
+                    if (fromAngle < tempRayAngle && toAngle < tempRayAngle) continue;
+
+                    Tuple<bool, Vector2> tempIntersect = AdvancedMaths.LineIntersection(_position, lineSegmentEnd, e.From.InRangePosition, e.To.InRangePosition);
+                    if (!tempIntersect.Item1) continue;
+
+                    didIntersect = true;
+
+                    float distance = Vector2.SqrMagnitude(_position - tempIntersect.Item2);
+                    if (distance >= nearestDistance) continue;
+                    nearestDistance = distance;
+                    intersectPoint = tempIntersect.Item2;
                 }
+//            }
 
-                if (fromAngle > tempRayAngle && toAngle > tempRayAngle) continue;
-                if (fromAngle < tempRayAngle && toAngle < tempRayAngle) continue;
-
-                Tuple<bool, Vector2> tempIntersect = AdvancedMaths.LineIntersection(_position, lineSegmentEnd, e.From.InRangePosition, e.To.InRangePosition);
-                if (!tempIntersect.Item1) continue;
-
-                didIntersect = true;
-
-                float distance = Vector2.SqrMagnitude(_position - tempIntersect.Item2);
-                if (distance >= nearestDistance) continue;
-                nearestDistance = distance;
-                intersectPoint = tempIntersect.Item2;
-            }
-
-            return Tuple.Create(didIntersect, intersectPoint);
+            _intersectionExists = didIntersect;
+            _intersectionPoint = intersectPoint;
         }
 
+        private bool _intersectionExists;
+        private Vector2 _intersectionPoint;
+        
         private void DrawLight()
         {
             meshVertices.Clear();
             List<List<FLEdge>> edgeSegments = new List<List<FLEdge>>();
 
             float sqrRadius = Radius * Radius;
-            _allObstructors.ForEach(o =>
+            int obstructorCount = _allObstructors.Count;
+            for (int i = 0; i < obstructorCount; i++)
             {
+                LightObstructor o = _allObstructors[i];
                 float sqrDistanceToMesh = Vector2.SqrMagnitude((Vector2) o.transform.position - _position);
-                if (sqrDistanceToMesh - o.MaxRadius() * o.MaxRadius() > sqrRadius) return;
+                if (sqrDistanceToMesh - o.MaxRadius() * o.MaxRadius() > sqrRadius) continue;
                 _visibleEdges = o.GetVisibleVertices(_position, sqrRadius, Radius);
                 edgeSegments.AddRange(_visibleEdges);
-            });
+            }
 
             if (edgeSegments.Count == 0)
             {
@@ -126,44 +181,65 @@ namespace Fastlights
                 return;
             }
 
-            List<FLEdge> es = new List<FLEdge>();
 
+//            _edgeBuckets.Clear();
+//            for (float angle = 0; angle < 360; angle += bucketAngle)
+//            {
+//                EdgeBucket bucket = new EdgeBucket(angle, angle+bucketAngle);
+//                _edgeBuckets.Add(bucket);
+//            }
+
+            List<FLEdge> edges = new List<FLEdge>();
             List<FLVertex> verts = new List<FLVertex>();
-            edgeSegments.ForEach(s =>
+            int edgeSegmentCount = edgeSegments.Count;
+//            int bucketCount = _edgeBuckets.Count;
+            for (int i = 0; i < edgeSegmentCount; i++)
             {
-                for (int i = 0; i < s.Count; ++i)
+                List<FLEdge> s = edgeSegments[i];
+                int segmentLength = s.Count;
+                for (int j = 0; j < segmentLength; ++j)
                 {
-                    es.Add(s[i]);
-                    verts.Add(s[i].From);
-                    if (i != s.Count - 1) continue;
-                    verts.Add(s[i].To);
+//                    for (int k = 0; k < bucketCount; k++)
+//                    {
+//                        EdgeBucket b = _edgeBuckets[k];
+//                        b.AddEdgeToBucket(s[j]);
+//                    }
+
+                    edges.Add(s[j]);
+                    verts.Add(s[j].From);
+                    if (j != segmentLength - 1) continue;
+                    verts.Add(s[j].To);
                 }
-            });
+            }
+
             verts.Sort((a, b) => a.InRangeAngle.CompareTo(b.InRangeAngle));
 
             float endAngle = -1f;
-            verts.ForEach(vert =>
+            int vertCount = verts.Count;
+            for (int i = 0; i < vertCount; i++)
             {
-                Tuple<bool, Vector2> intersection = CalculateNearestIntersection(vert, es);
+                FLVertex vert = verts[i];
+                CalculateNearestIntersection(vert, edges);
 
-                if (intersection.Item1)
+                if (_intersectionExists)
                 {
-                    float distance = Vector2.SqrMagnitude(intersection.Item2 - _position);
+                    float distance = Vector2.SqrMagnitude(_intersectionPoint - _position);
                     if (distance > vert.SqrDistanceToOrigin)
                     {
                         if (vert.IsStart)
                         {
-                            meshVertices.Add(intersection.Item2);
+                            meshVertices.Add(_intersectionPoint);
                             meshVertices.Add(vert.InRangePosition);
                         }
+
                         if (vert.IsEnd)
                         {
                             meshVertices.Add(vert.InRangePosition);
-                            meshVertices.Add(intersection.Item2);
+                            meshVertices.Add(_intersectionPoint);
                         }
                         else meshVertices.Add(vert.InRangePosition);
                     }
-                    else meshVertices.Add(intersection.Item2);
+                    else meshVertices.Add(_intersectionPoint);
                 }
                 else
                 {
@@ -179,7 +255,8 @@ namespace Fastlights
                     else
                         endAngle = -1f;
                 }
-            });
+            }
+
             if(endAngle != -1) InsertLineSegments(endAngle, verts[0].InRangeAngle);
 
             BuildMesh();
