@@ -70,10 +70,26 @@ namespace Fastlights
 
             float nearestDistance = float.MaxValue;
             bool didIntersect = false;
-            
-            foreach (FLEdge e in edges)
+
+            for (int i = 0; i < edges.Count; i++)
             {
+                FLEdge e = edges[i];
                 if (e.BelongsToEdge(target)) continue;
+                float fromAngle = e.From.InRangeAngle;
+                float toAngle = e.To.InRangeAngle;
+                float tempRayAngle = target.InRangeAngle;
+                if (fromAngle > toAngle)
+                {
+                    if (tempRayAngle > fromAngle && tempRayAngle > toAngle)
+                    {
+                        tempRayAngle -= 360;
+                    }
+
+                    fromAngle -= 360f;
+                }
+
+                if (fromAngle > tempRayAngle && toAngle > tempRayAngle) continue;
+                if (fromAngle < tempRayAngle && toAngle < tempRayAngle) continue;
 
                 Tuple<bool, Vector2> tempIntersect = AdvancedMaths.LineIntersection(_position, lineSegmentEnd, e.From.InRangePosition, e.To.InRangePosition);
                 if (!tempIntersect.Item1) continue;
