@@ -13,7 +13,6 @@ namespace Game.Characters.CharacterActions
                 --Duration;
                 if (Duration != 0) return;
                 Campfire.Tend();
-                WorldState.HomeInventory().DecrementResource(InventoryResourceType.Fuel, 1);
                 Exit();
             };
         }
@@ -21,10 +20,7 @@ namespace Game.Characters.CharacterActions
         public override void Enter()
         {
             base.Enter();
-            if (WorldState.HomeInventory().GetResource(InventoryResourceType.Fuel).Quantity() > 0)
-                Duration = 1;
-            else
-                PlayerCharacter.RestAction.Enter();
+            Duration = 1;
         }
     }
 }

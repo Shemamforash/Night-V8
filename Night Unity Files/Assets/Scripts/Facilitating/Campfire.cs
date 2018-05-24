@@ -42,6 +42,11 @@ namespace Facilitating
             if (_intensity > 1) _intensity = 1;
         }
 
+        public static bool IsLit()
+        {
+            return _intensity > 0;
+        }
+
         public void Update()
         {
             ParticleSystem.EmissionModule fireEmission = FireSystem.emission;

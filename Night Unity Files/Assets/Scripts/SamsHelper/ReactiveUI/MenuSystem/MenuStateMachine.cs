@@ -1,7 +1,9 @@
-﻿using Facilitating.Persistence;
+﻿using System.Collections;
+using Facilitating.Persistence;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
 {
@@ -35,6 +37,42 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         public static void ShowMenu(string menuName)
         {
             if (States.GetCurrentState()?.Name == menuName) return;
+            _instance.StartCoroutine(_instance.FadeMenu(menuName));
+        }
+
+        private IEnumerator FadeMenu(string menuName)
+        {
+            float fadeTime = 0.1f;
+            float currentTime = fadeTime;
+            EventSystem.current.sendNavigationEvents = false;
+            
+            MenuState currentState = (MenuState) States.GetCurrentState();
+            if (currentState != null)
+            {
+                while (currentTime > 0)
+                {
+                    currentTime -= Time.deltaTime;
+                    float alpha = currentTime / fadeTime;
+                    currentState.Menu.SetAlpha(alpha);
+                    yield return null;
+                }
+
+                currentState.Menu.SetAlpha(0);
+            }
+
+            currentState = (MenuState) States.GetState(menuName);
+            currentTime = fadeTime;
+            
+            while (currentTime > 0)
+            {
+                currentTime -= Time.deltaTime;
+                float alpha = 1 - currentTime / fadeTime;
+                currentState.Menu.SetAlpha(alpha);
+                yield return null;
+            }
+            currentState.Menu.SetAlpha(1);
+
+            EventSystem.current.sendNavigationEvents = true;
             States.GetState(menuName).Enter();
         }
 
@@ -55,7 +93,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             ((MenuState)States.GetCurrentState()).SetActive(true);
         }
 
-        public static void GoToInitialMenu()
+        public static void ReturnToDefault()
         {
             ShowMenu(_instance.InitialMenu.name);
         }

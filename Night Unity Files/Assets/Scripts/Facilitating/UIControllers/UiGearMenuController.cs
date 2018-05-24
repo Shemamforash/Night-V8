@@ -7,6 +7,7 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Facilitating.UIControllers
 {
@@ -95,7 +96,7 @@ namespace Facilitating.UIControllers
             _armourUpgradeController.Hide();
             _weaponUpgradeController.Hide();
             _accessoryController.Hide();
-            MenuStateMachine.GoToInitialMenu();
+            MenuStateMachine.ReturnToDefault();
             _open = false;
         }
 
@@ -137,6 +138,7 @@ namespace Facilitating.UIControllers
 
         public void ShowWeaponMenu(Player player)
         {
+            Debug.Log(EventSystem.current.sendNavigationEvents);
             OpenGearMenu(player, 0, _weaponUpgradeController);
         }
 

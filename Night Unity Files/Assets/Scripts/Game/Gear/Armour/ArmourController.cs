@@ -97,8 +97,8 @@ namespace Game.Gear.Armour
 
         public void AutoFillSlots()
         {
-            SetPlateOne(ArmourPlate.GeneratePlate(ItemQuality.Radiant));
-            SetPlateTwo(ArmourPlate.GeneratePlate(ItemQuality.Radiant));
+            SetPlateOne(ArmourPlate.Create("Living Metal Plate"));
+            SetPlateTwo(ArmourPlate.Create("Living Metal Plate"));
         }
 
         public int GetProtectionLevel()

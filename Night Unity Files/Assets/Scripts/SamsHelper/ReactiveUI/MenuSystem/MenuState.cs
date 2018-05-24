@@ -1,5 +1,6 @@
 ﻿using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -7,41 +8,32 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 {
     public class MenuState : State
     {
-        private readonly Menu _menu;
-        private Selectable _lastSelectedItem;
+        public readonly Menu Menu;
 
         public MenuState(StateMachine stateMachine, string name, Menu menu) : base(stateMachine, name)
         {
-            _menu = menu;
+            Menu = menu;
         }
 
         public void SetActive(bool active)
         {
-            _menu.gameObject.SetActive(active);
+            Menu.gameObject.SetActive(active);
         }
 
         public override void Enter()
         {
             base.Enter();
-            _menu.Enter();
-            if (_menu.PauseOnOpen) WorldState.Pause();
-            if (_menu.PreserveLastSelected && _lastSelectedItem != null)
-            {
-                _lastSelectedItem.Select();
-            }
-            else
-            {
-                if (_menu.DefaultSelectable == null) return;
-                _menu.DefaultSelectable.Select();
-            }
+            Menu.Enter();
+            if (Menu.PauseOnOpen) WorldState.Pause();
+            if (Menu.DefaultSelectable == null) return;
+            Menu.DefaultSelectable.Select();
         }
 
         public override void Exit()
         {
-            _lastSelectedItem = EventSystem.current?.currentSelectedGameObject?.GetComponent<Selectable>();
-            if (_menu.PauseOnOpen) WorldState.UnPause();
-            if (_menu == null) return;
-            _menu.Exit();
+            if (Menu.PauseOnOpen) WorldState.UnPause();
+            if (Menu == null) return;
+            Menu.Exit();
         }
     }
 }

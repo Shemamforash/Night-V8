@@ -1,4 +1,5 @@
-﻿using SamsHelper.BaseGameFunctionality.InventorySystem;
+﻿using System;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Game.Gear.Armour
         public readonly bool Inscribable;
         private bool _broken;
 
-        private ArmourPlate(string name, float weight, ItemQuality itemQuality) : base(name, weight, GearSubtype.Armour, itemQuality)
+        private ArmourPlate(string name, float weight, ItemQuality quality) : base(name, weight, GearSubtype.Armour, quality)
         {
             if (weight == 5 || weight == 4) Inscribable = true;
 
@@ -19,11 +20,31 @@ namespace Game.Gear.Armour
             _plateHealth.SetCurrentValue(_plateHealth.Max);
         }
 
-        public static ArmourPlate GeneratePlate(ItemQuality plateQuality)
+        private static ItemQuality NameToQuality(string name)
         {
-            int weight = (int) plateQuality + 1;
-            string name = plateQuality + " Plate";
-            return new ArmourPlate(name, weight, plateQuality);
+            switch (name)
+            {
+                case "Leather Plate":
+                    return ItemQuality.Flawed;
+                case "Reinforced Leather Plate":
+                    return ItemQuality.Worn;
+                case "Metal Plate":
+                    return ItemQuality.Shining;
+                case "Alloy Plate":
+                    return ItemQuality.Faultless;
+                case "Living Metal Plate":
+                    return ItemQuality.Radiant;
+            }
+
+            throw new ArgumentOutOfRangeException("Unknown armour type '" + name + "'");
+        }
+
+
+        public static ArmourPlate Create(string plateName)
+        {
+            ItemQuality quality = NameToQuality(plateName);
+            int weight = (int) quality + 1;
+            return new ArmourPlate(plateName, weight, quality);
         }
 
         public override string GetSummary()

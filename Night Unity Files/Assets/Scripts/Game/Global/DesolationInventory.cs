@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Xml;
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
@@ -9,13 +11,41 @@ namespace Game.Global
 {
     public class DesolationInventory : Inventory
     {
+        private static bool _loaded;
+        private static Dictionary<InventoryResourceType, float> _resources = new Dictionary<InventoryResourceType, float>();
+
         public DesolationInventory(string name) : base(name)
         {
-            AddResource(InventoryResourceType.Water, 1);
-            AddResource(InventoryResourceType.Food, 1);
-            AddResource(InventoryResourceType.Fuel, 1);
-            AddResource(InventoryResourceType.Scrap, 0.5f);
+            LoadResources();
+            foreach (InventoryResourceType resourceType in _resources.Keys)
+            {
+                AddResource(resourceType, _resources[resourceType]);
+            }
             AddTestingResources(10);
+        }
+
+        private static void LoadResources()
+        {
+            if (_loaded) return;
+            TextAsset resourceFile = Resources.Load<TextAsset>("XML/Resources");
+            XmlDocument resourceXml = new XmlDocument();
+            resourceXml.LoadXml(resourceFile.text);
+            XmlNode root = resourceXml.SelectSingleNode("Resources");
+            foreach (XmlNode resourceNode in root.SelectNodes("Resource"))
+            {
+                string name = resourceNode.SelectSingleNode("Name").InnerText;
+                float weight = float.Parse(resourceNode.SelectSingleNode("Weight").InnerText);
+
+                foreach (InventoryResourceType resourceType in Enum.GetValues(typeof(InventoryResourceType)))
+                {
+                    if (resourceType.ToString() == name)
+                    {
+                        _resources.Add(resourceType, weight);
+                    }
+                }
+            }
+
+            _loaded = true;
         }
 
         public override List<InventoryItem> SortByType()
@@ -39,7 +69,7 @@ namespace Game.Global
                 AddItem(WeaponGenerator.GenerateWeapon(ItemQuality.Shining));
                 AddItem(Accessory.GenerateAccessory(ItemQuality.Shining));
                 AddItem(Inscription.GenerateInscription(ItemQuality.Shining));
-                AddItem(ArmourPlate.GeneratePlate(ItemQuality.Shining));
+                AddItem(ArmourPlate.Create("Living Metal Plate"));
             }
         }
 

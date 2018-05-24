@@ -28,5 +28,10 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         {
             _canvasGroup.alpha = 0;
         }
+
+        public void SetAlpha(float alpha)
+        {
+            _canvasGroup.alpha = alpha;
+        }
     }
 }

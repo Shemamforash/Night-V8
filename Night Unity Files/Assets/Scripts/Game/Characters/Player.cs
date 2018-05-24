@@ -27,8 +27,8 @@ namespace Game.Characters
         public readonly StateMachine States = new StateMachine();
         private readonly BrandManager _brandManager;
 
-        public CraftAmmo CraftAction;
-        private LightFire _lightFireAction;
+        public Craft CraftAction;
+        public LightFire LightFireAction;
 
         private int _storyProgress;
         public CharacterView CharacterView;
@@ -116,8 +116,8 @@ namespace Game.Characters
         {
             RestAction = new Rest(this);
             TravelAction = new Travel(this);
-            _lightFireAction = new LightFire(this);
-            CraftAction = new CraftAmmo(this);
+            LightFireAction = new LightFire(this);
+            CraftAction = new Craft(this);
             States.SetDefaultState(RestAction);
         }
 

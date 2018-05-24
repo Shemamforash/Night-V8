@@ -17,7 +17,7 @@ namespace Game.Global
         public static readonly int StormDistanceMax = 10;
         public static int DaysSpentHere;
         private static bool _started;
-        private static readonly CharacterManager _homeInventory = new CharacterManager();
+        private static CharacterManager _homeInventory;
         private static readonly RegionManager _regionManager = new RegionManager();
 
         private static float _currentTime;
@@ -31,6 +31,7 @@ namespace Game.Global
 
         public void Awake()
         {
+            if(_homeInventory == null) _homeInventory = new CharacterManager();
             SaveController.AddPersistenceListener(_regionManager);
             _instance = this;
         }
@@ -74,8 +75,17 @@ namespace Game.Global
             int hours = Mathf.FloorToInt((float) duration / MinutesPerHour);
             int minutes = duration - hours * MinutesPerHour;
             string timeString = "";
-            if (hours != 0) timeString += hours + "hrs ";
-            timeString += minutes * IntervalSize + "mins";
+            if (hours != 0)
+            {
+                if (hours == 1) timeString += hours + "hr";
+                else timeString += hours + "hrs ";
+            }
+
+            if (minutes != 0)
+            {
+                timeString += minutes * IntervalSize + "mins";
+            }
+
             return timeString;
         }
 

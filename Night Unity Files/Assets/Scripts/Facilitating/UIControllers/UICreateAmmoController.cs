@@ -35,7 +35,7 @@ namespace Facilitating.UIControllers
 
         public void Start()
         {
-            _closeButton.AddOnClick(MenuStateMachine.GoToInitialMenu);
+            _closeButton.AddOnClick(MenuStateMachine.ReturnToDefault);
             SetAmmoCostText();
         }
 
@@ -111,8 +111,7 @@ namespace Facilitating.UIControllers
 
         private void CraftAmmo(InventoryResourceType type)
         {
-            CraftAmmo craftState = (CraftAmmo) _player.States.GetState("Craft Ammo");
-            craftState.SetAmmoType(type);
+            Craft craftState = (Craft) _player.States.GetState("Craft Ammo");
         }
 
         private void UpdateScrap()

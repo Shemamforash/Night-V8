@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -12,15 +13,22 @@ using UnityEngine;
 public class UICraftingController : Menu, IInputListener
 {
     private static UICraftingController _instance;
-    private const int centre = 5;
+    private const int centre = 4;
     private int _selectedRecipe;
     private readonly List<RecipeUi> _recipeUis = new List<RecipeUi>();
+    private Player _player;
 
     public override void Awake()
     {
         base.Awake();
         _instance = this;
         Initialise();
+    }
+
+    public static void ShowMenu()
+    {
+        MenuStateMachine.ShowMenu("Crafting Menu");
+        _instance.SelectItem();
     }
 
     private void OnDestroy()
@@ -46,10 +54,12 @@ public class UICraftingController : Menu, IInputListener
                     TrySelectItemAbove();
                 break;
             case InputAxis.Fire:
-                Recipe.Recipes()[_selectedRecipe].Craft();
+                if (Recipe.Recipes()[_selectedRecipe].Craft())
+                {
+                    MenuStateMachine.ReturnToDefault();
+                }
                 break;
             case InputAxis.Reload:
-                InputHandler.SetCurrentListener(CombatManager.Player());
                 break;
         }
     }
@@ -113,14 +123,15 @@ public class UICraftingController : Menu, IInputListener
         {
             _productText = Helper.FindChildWithName<EnhancedText>(uiObject, "Name");
             _durationText = Helper.FindChildWithName<EnhancedText>(uiObject, "Duration");
-            _ingredient1Text = Helper.FindChildWithName<EnhancedText>(uiObject, "Ingredient 1");
             _ingredient1Text = Helper.FindChildWithName<EnhancedText>(uiObject, "Ingredient 2");
+            _ingredient2Text = Helper.FindChildWithName<EnhancedText>(uiObject, "Ingredient 1");
             _activeColour = new Color(1f, 1f, 1f, 1f / (offset + 1));
         }
 
         private void SetColour(Color c)
         {
             _ingredient1Text.SetColor(c);
+            _ingredient2Text.SetColor(c);
             _productText.SetColor(c);
             _durationText.SetColor(c);
         }
@@ -131,22 +142,27 @@ public class UICraftingController : Menu, IInputListener
             _durationText.Text(text);
         }
 
-        private void SetProductText(string text)
+        private void SetProductText(string text, int quantity)
         {
             _productText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
+            if (quantity > 1) text += " x" + quantity;
             _productText.Text(text);
         }
 
         private void SetIngredient1Text(InventoryResourceType type, int quantity)
         {
             _ingredient1Text.SetColor(type == InventoryResourceType.None ? UiAppearanceController.InvisibleColour : _activeColour);
-            _ingredient1Text.Text(type + " x" + quantity);
+            string text = type.ToString();
+            if (quantity > 1) text += " x" + quantity;
+            _ingredient1Text.Text(text);
         }
 
         private void SetIngredient2Text(InventoryResourceType type, int quantity)
         {
             _ingredient2Text.SetColor(type == InventoryResourceType.None ? UiAppearanceController.InvisibleColour : _activeColour);
-            _ingredient2Text.Text(type + " x" + quantity);
+            string text = type.ToString();
+            if (quantity > 1) text += " x" + quantity;
+            _ingredient2Text.Text(text);
         }
 
         public void SetRecipe(Recipe recipe)
@@ -157,8 +173,8 @@ public class UICraftingController : Menu, IInputListener
                 return;
             }
 
-            SetDurationText(recipe.DurationInHours * WorldState.MinutesPerHour + " mins");
-            SetProductText(recipe.Product.Name);
+            SetDurationText(WorldState.TimeToHours((int) (recipe.DurationInHours * WorldState.MinutesPerHour)));
+            SetProductText(recipe.ProductName, recipe.ProductQuantity);
             SetIngredient1Text(recipe.Ingredient1, recipe.Ingredient1Quantity);
             SetIngredient2Text(recipe.Ingredient2, recipe.Ingredient2Quantity);
         }

@@ -7,6 +7,16 @@
         Water,
         Fuel,
         Scrap,
-        Essence
+        Essence,
+        Skin,
+        Salt,
+        Metal,
+        Meat,
+        Fruit,
+        Leather,
+        Charcoal,
+        Meteor,
+        Ice,
+        Alloy
     }
 }

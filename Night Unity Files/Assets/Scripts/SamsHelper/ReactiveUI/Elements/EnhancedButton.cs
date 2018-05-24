@@ -13,15 +13,17 @@ namespace SamsHelper.ReactiveUI.Elements
     [RequireComponent(typeof(Button))]
     public class EnhancedButton : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler, IInputListener
     {
-        private readonly List<Image> _borderImages = new List<Image>();
+        private const float FadeTime = 0.25f;
+        private readonly List<Image> _buttonImages = new List<Image>();
         private readonly List<HoldAction> _onHoldActions = new List<HoldAction>();
+        private float _borderAlpha;
         private Button _button;
-        private Coroutine _fadeCoroutine;
+        private Coroutine _fadeIn, _fadeOut;
         private bool _justEntered;
-        private bool _needsFadeIn;
         private Action _onDownAction, _onUpAction;
         public GameObject Border;
-        [Range(0f, 5f)] public float FadeDuration = 0.5f;
+        private event Action OnSelectActions;
+        private event Action OnDeselectActions;
 
         public void OnDeselect(BaseEventData eventData)
         {
@@ -80,8 +82,6 @@ namespace SamsHelper.ReactiveUI.Elements
             Enter();
         }
 
-        private event Action OnSelectActions;
-        private event Action OnDeselectActions;
 
         public Button Button()
         {
@@ -92,29 +92,21 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             InputHandler.RegisterInputListener(this);
             _button = GetComponent<Button>();
-            if (Border == null) return;
-            Border?.SetActive(false);
-            _borderImages.AddRange(Helper.FindAllComponentsInChildren<Image>(Border?.transform));
-        }
-
-        public void Start()
-        {
-            if (_needsFadeIn) TryStartFade(1);
+            if(Border != null) _buttonImages.AddRange(Helper.FindAllComponentsInChildren<Image>(Border.transform));
+            else _buttonImages.Add(GetComponent<Image>());
         }
 
         private void Enter()
         {
-            UseSelectedColours();
             OnSelectActions?.Invoke();
             _justEntered = true;
+            _fadeIn = StartCoroutine(FadeIn());
         }
 
         private void Exit()
         {
-            UseDeselectedColours();
             OnDeselectActions?.Invoke();
-            if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
-            SetBorderColor(UiAppearanceController.InvisibleColour);
+            _fadeOut = StartCoroutine(FadeOut());
         }
 
         public void AddOnClick(UnityAction a)
@@ -137,39 +129,34 @@ namespace SamsHelper.ReactiveUI.Elements
             _onHoldActions.Add(new HoldAction(a, duration));
         }
 
-        private void UseSelectedColours()
+        private void UpdateBorderAlpha()
         {
-            if (Border != null) Border?.SetActive(true);
-            TryStartFade(1);
+            _buttonImages.ForEach(b => b.color = new Color(1, 1, 1, _borderAlpha));
         }
 
-        private void TryStartFade(int target)
-        {
-            if (_fadeCoroutine != null) StopCoroutine(_fadeCoroutine);
-            if (gameObject.activeInHierarchy) _fadeCoroutine = StartCoroutine(Fade(target));
-            else _needsFadeIn = true;
-        }
 
-        private void SetBorderColor(Color c)
+        private IEnumerator FadeIn()
         {
-            _borderImages.ForEach(b => b.color = c);
-        }
-
-        private IEnumerator Fade(float targetVal)
-        {
-            float alpha = 1 - targetVal;
-            SetBorderColor(new Color(1, 1, 1, alpha));
-            for (float t = 0; t < 1; t += Time.deltaTime / FadeDuration)
+            if (_fadeOut != null) StopCoroutine(_fadeOut);
+            while (_borderAlpha < 1)
             {
-                SetBorderColor(new Color(1, 1, 1, Mathf.Lerp(alpha, targetVal, t)));
+                _borderAlpha += 1f / FadeTime * Time.deltaTime;
+                if (_borderAlpha >= 1) _borderAlpha = 1;
+                UpdateBorderAlpha();
                 yield return null;
             }
         }
 
-        private void UseDeselectedColours()
+        private IEnumerator FadeOut()
         {
-            if (Border != null) Border.SetActive(false);
-            TryStartFade(0);
+            if (_fadeIn != null) StopCoroutine(_fadeIn);
+            while (_borderAlpha > 0)
+            {
+                _borderAlpha -= 1f / FadeTime * Time.deltaTime;
+                if (_borderAlpha <= 0) _borderAlpha = 0;
+                UpdateBorderAlpha();
+                yield return null;
+            }
         }
 
         private bool IsSelected()

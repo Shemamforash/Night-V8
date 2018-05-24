@@ -1,12 +1,7 @@
-﻿using System.Collections.Generic;
-using Facilitating.UIControllers;
-using Game.Characters;
-using Game.Exploration.Weather;
-using SamsHelper.BaseGameFunctionality.Basic;
+﻿using System;
+using System.Collections.Generic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI;
-using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
@@ -68,10 +63,15 @@ namespace Game.Global
             base.Awake();
             PauseOnOpen = false;
             _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();
-            _waterText = GameObject.Find(InventoryResourceType.Water.ToString()).GetComponent<TextMeshProUGUI>();
-            _foodText = GameObject.Find(InventoryResourceType.Food.ToString()).GetComponent<TextMeshProUGUI>();
-            _fuelText = GameObject.Find(InventoryResourceType.Fuel.ToString()).GetComponent<TextMeshProUGUI>();
-            _scrapText = GameObject.Find(InventoryResourceType.Scrap.ToString()).GetComponent<TextMeshProUGUI>();
+
+            GameObject resourcesObject= GameObject.Find("Resources");
+            foreach (InventoryResourceType resourceType in Enum.GetValues(typeof(InventoryResourceType)))
+            {
+                if (resourceType == InventoryResourceType.None) continue;
+                TextMeshProUGUI resourceText = Helper.FindChildWithName<TextMeshProUGUI>(resourcesObject, resourceType.ToString());
+                _resourceText.Add(resourceType, resourceText);
+            }
+            
             PreserveLastSelected = true;
             PauseOnOpen = false;
         }
@@ -86,14 +86,23 @@ namespace Game.Global
             return "Night";
         }
 
-        private TextMeshProUGUI _waterText, _foodText, _fuelText, _scrapText;
-
+        private readonly Dictionary<InventoryResourceType, TextMeshProUGUI> _resourceText = new Dictionary<InventoryResourceType, TextMeshProUGUI>();
+        
         public void Update()
         {
-            _waterText.text = "<sprite name=\"Water\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Water).Quantity());
-            _foodText.text = "<sprite name=\"Food\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Food).Quantity());
-            _fuelText.text = "<sprite name=\"Fuel\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Fuel).Quantity());
-            _scrapText.text = "<sprite name=\"Scrap\">" + Mathf.FloorToInt(WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Quantity());
+            foreach (InventoryResourceType resourceType in Enum.GetValues(typeof(InventoryResourceType)))
+            {
+                if (resourceType == InventoryResourceType.None) continue;
+                int quantity = Mathf.FloorToInt(WorldState.HomeInventory().GetResource(resourceType).Quantity());
+                if (quantity == 0 && resourceType != InventoryResourceType.Food && resourceType != InventoryResourceType.Water)
+                {
+                    _resourceText[resourceType].gameObject.SetActive(false);
+                    continue;
+                }
+
+                _resourceText[resourceType].gameObject.SetActive(true);
+                _resourceText[resourceType].text = resourceType + " " + quantity;
+            }
         }
     }
 }
