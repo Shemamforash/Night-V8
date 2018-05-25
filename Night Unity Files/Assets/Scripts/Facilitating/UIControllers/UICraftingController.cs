@@ -17,6 +17,9 @@ public class UICraftingController : Menu, IInputListener
     private int _selectedRecipe;
     private readonly List<RecipeUi> _recipeUis = new List<RecipeUi>();
     private Player _player;
+    private EnhancedButton _closeButton;
+    private EnhancedButton _recipeButton;
+    private bool _focussed;
 
     public override void Awake()
     {
@@ -54,12 +57,14 @@ public class UICraftingController : Menu, IInputListener
                     TrySelectItemAbove();
                 break;
             case InputAxis.Fire:
-                if (Recipe.Recipes()[_selectedRecipe].Craft())
+                if (_focussed && Recipe.Recipes()[_selectedRecipe].Craft())
                 {
                     MenuStateMachine.ReturnToDefault();
                 }
+
                 break;
             case InputAxis.Reload:
+                MenuStateMachine.ReturnToDefault();
                 break;
         }
     }
@@ -74,14 +79,26 @@ public class UICraftingController : Menu, IInputListener
 
     private void TrySelectItemBelow()
     {
-        if (_selectedRecipe == Recipe.Recipes().Count - 1) return;
+        if (_selectedRecipe == Recipe.Recipes().Count - 1)
+        {
+            _focussed = false;
+            _closeButton.Select();
+            return;
+        }
+
         ++_selectedRecipe;
         SelectItem();
     }
 
     private void TrySelectItemAbove()
     {
-        if (_selectedRecipe == 0) return;
+        if (_selectedRecipe == 0)
+        {
+            _focussed = false;
+            _closeButton.Select();
+            return;
+        }
+
         --_selectedRecipe;
         SelectItem();
     }
@@ -98,6 +115,9 @@ public class UICraftingController : Menu, IInputListener
             if (targetRecipeIndex >= 0 && targetRecipeIndex < recipes.Count) recipe = recipes[targetRecipeIndex];
             _recipeUis[i].SetRecipe(recipe);
         }
+
+        _recipeButton.Select();
+        _focussed = true;
     }
 
     private void Initialise()
@@ -106,9 +126,31 @@ public class UICraftingController : Menu, IInputListener
         {
             GameObject uiObject = Helper.FindChildWithName(gameObject, "Recipe " + i);
             RecipeUi recipeUi = new RecipeUi(uiObject, Math.Abs(i - centre));
+            if (i == centre)
+            {
+                _recipeButton = uiObject.GetComponent<EnhancedButton>();
+            }
+
             _recipeUis.Add(recipeUi);
             recipeUi.SetRecipe(null);
         }
+
+        _closeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Close");
+        _closeButton.AddOnClick(MenuStateMachine.ReturnToDefault);
+        _closeButton.SetOnUpAction(SelectLast);
+        _closeButton.SetOnDownAction(SelectFirst);
+    }
+
+    private void SelectLast()
+    {
+        _selectedRecipe = Recipe.Recipes().Count - 1;
+        SelectItem();
+    }
+
+    private void SelectFirst()
+    {
+        _selectedRecipe = 0;
+        SelectItem();
     }
 
     private class RecipeUi

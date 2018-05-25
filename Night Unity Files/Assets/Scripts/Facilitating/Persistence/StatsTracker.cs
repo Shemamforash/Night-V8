@@ -1,4 +1,5 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,8 +8,13 @@ namespace Facilitating.Persistence
     public class StatsTracker : MonoBehaviour
     {
         private static float sessionTime;
-        public Text statsText;
+        private TextMeshProUGUI _statsText;
 
+        private void Awake()
+        {
+            _statsText = GetComponent<TextMeshProUGUI>();
+        }
+        
         private void Update()
         {
             sessionTime += Time.deltaTime;
@@ -22,7 +28,7 @@ namespace Facilitating.Persistence
             statString += "\nRemnants found: 0";
             statString += "\nTears spilled: 0";
             statString += "\nKilometres travelled: 0";
-            statsText.text = statString;
+            _statsText.text = statString;
         }
     }
 }

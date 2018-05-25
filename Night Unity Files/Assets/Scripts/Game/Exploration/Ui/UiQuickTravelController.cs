@@ -9,17 +9,20 @@ using NUnit.Framework;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
+using TMPro;
 using UnityEngine;
 
 namespace Game.Exploration.Ui
 {
     public class UiQuickTravelController : MonoBehaviour, IInputListener
     {
-        private const int Centre = 7;
+        private const int Centre = 6;
         private readonly List<RegionUi> _regionUiList = new List<RegionUi>();
         private List<Region> _regions;
         private int _selectedRegion;
         public static UiQuickTravelController Instance;
+
+        private TextMeshProUGUI _regionName, _regionType, _regionDescription;
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -49,9 +52,12 @@ namespace Game.Exploration.Ui
         public void Awake()
         {
             Instance = this;
+            _regionName = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Region Name");
+            _regionType = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Region Type");
+            _regionDescription = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Description");
             Transform listObject = Helper.FindChildWithName<Transform>(gameObject, "List");
             List<Transform> regions = Helper.FindAllChildren(listObject).FindAll(r => r.name == "Region");
-            for (int i = 0; i < 15; ++i)
+            for (int i = 0; i < 13; ++i)
             {
                 RegionUi regionUi = new RegionUi(regions[i].gameObject, Math.Abs(i - Centre));
                 _regionUiList.Add(regionUi);
@@ -82,6 +88,7 @@ namespace Game.Exploration.Ui
         public void Disable()
         {
             gameObject.SetActive(false);
+            InputHandler.SetCurrentListener(null);
         }
 
         private void TrySelectRegionBelow()
@@ -102,16 +109,16 @@ namespace Game.Exploration.Ui
         
         private void SelectRegion()
         {
-            Region currentNode = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
-            Assert.NotNull(currentNode);
+            Region currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
+            Assert.NotNull(currentRegion);
 
             for (int i = 0; i < _regionUiList.Count; ++i)
             {
                 int offset = i - Centre;
                 int regionIndex = _selectedRegion + offset;
-                Region node = null;
-                if (regionIndex >= 0 && regionIndex < _regions.Count) node = _regions[regionIndex];
-                if (node == null)
+                Region region = null;
+                if (regionIndex >= 0 && regionIndex < _regions.Count) region = _regions[regionIndex];
+                if (region == null)
                 {
                     _regionUiList[i].SetNoRegion();
                     continue;
@@ -119,11 +126,21 @@ namespace Game.Exploration.Ui
 
                 if (i == Centre)
                 {
-                    MapGenerator.SetRoute(currentNode, node);
-                    _targetRegion = node;
+                    MapGenerator.SetRoute(currentRegion, region);
+                    UpdateCurrentRegionInfo(region);
+                    _targetRegion = region;
                 }
-                _regionUiList[i].SetRegion(node.Name, RoutePlotter.DistanceBetween(node, currentNode));
+                _regionUiList[i].SetRegion(region.Name, RoutePlotter.DistanceBetween(region, currentRegion));
             }
+        }
+
+        private void UpdateCurrentRegionInfo(Region region)
+        {
+            _regionName.text = region.Name;
+            _regionType.text = region.GetRegionType().ToString();
+            string regionDescription = "";
+            //todo region description
+            _regionDescription.text = regionDescription;
         }
 
         private class RegionUi

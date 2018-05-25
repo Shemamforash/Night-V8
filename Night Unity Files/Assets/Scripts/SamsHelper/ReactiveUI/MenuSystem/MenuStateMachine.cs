@@ -10,11 +10,12 @@ namespace SamsHelper.ReactiveUI.MenuSystem
     public class MenuStateMachine : MonoBehaviour
     {
         private static MenuStateMachine _instance;
-        public static readonly StateMachine States = new StateMachine();
+        public static StateMachine States;
         public Menu InitialMenu;
 
         public void Awake()
         {
+            States = new StateMachine();
             _instance = this;
             foreach (Menu t in Helper.FindAllComponentsInChildren<Menu>(transform))
             {

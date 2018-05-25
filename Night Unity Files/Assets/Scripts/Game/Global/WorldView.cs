@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Game.Global
 {
@@ -71,9 +73,13 @@ namespace Game.Global
                 TextMeshProUGUI resourceText = Helper.FindChildWithName<TextMeshProUGUI>(resourcesObject, resourceType.ToString());
                 _resourceText.Add(resourceType, resourceText);
             }
-            
-            PreserveLastSelected = true;
-            PauseOnOpen = false;
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            Player selectedCharacter = CharacterManager.SelectedCharacter;
+            CharacterManager.SelectCharacter(selectedCharacter);
         }
 
         private static string TimeToName(int hours)

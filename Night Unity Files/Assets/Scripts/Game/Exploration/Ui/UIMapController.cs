@@ -3,6 +3,7 @@ using System.Linq;
 using Game.Characters;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
+using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -19,6 +20,7 @@ namespace Game.Exploration.Ui
         private List<EnhancedButton> _menuButtons = new List<EnhancedButton>();
         private EnhancedButton _enterButton;
         private EnhancedButton _planButton;
+        private EnhancedButton _cancelButton;
         private UiQuickTravelController _quickTravel;
         private PlayerExplorationController _playerExploration;
         private int _selectedButtonIndex;
@@ -56,7 +58,8 @@ namespace Game.Exploration.Ui
             _enterButton = Helper.FindChildWithName<EnhancedButton>(mapOptions, "Enter");
             _exploreButton = Helper.FindChildWithName<EnhancedButton>(mapOptions, "Explore");
             _planButton = Helper.FindChildWithName<EnhancedButton>(mapOptions, "Plan");
-            _menuButtons = new List<EnhancedButton>{_enterButton, _exploreButton, _planButton};
+            _cancelButton = Helper.FindChildWithName<EnhancedButton>(mapOptions, "Cancel");
+            _menuButtons = new List<EnhancedButton> {_enterButton, _exploreButton, _planButton, _cancelButton};
 
             _quickTravel = UiQuickTravelController.Instance;
             _playerExploration = PlayerExplorationController.Instance;
@@ -84,6 +87,7 @@ namespace Game.Exploration.Ui
             _exploreButton.AddOnDeselectEvent(() => _playerExploration.Disable());
 
             _enterButton.AddOnClick(() => CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Enter());
+            _cancelButton.AddOnClick(() => SceneChanger.ChangeScene("Game"));
 
             InputHandler.SetCurrentListener(_instance);
             InputHandler.RegisterInputListener(_instance);
@@ -99,7 +103,7 @@ namespace Game.Exploration.Ui
             {
                 if (i == _selectedButtonIndex)
                 {
-                    _menuButtons[i].Button().Select();
+                    _menuButtons[i].Select();
                     _menuButtons[i].transform.Find("Text").GetComponent<EnhancedText>().SetColor(Color.white);
                 }
                 else

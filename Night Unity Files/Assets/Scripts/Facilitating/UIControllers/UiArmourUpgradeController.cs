@@ -183,7 +183,7 @@ namespace Facilitating.UIControllers
 
             public void SetSelected(bool selected)
             {
-                if (selected) Button.Button().Select();
+                if (selected) Button.Select();
             }
 
             public void SetNoPlateInserted()

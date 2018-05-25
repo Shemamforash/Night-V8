@@ -21,9 +21,12 @@ namespace SamsHelper.ReactiveUI.Elements
         private Coroutine _fadeIn, _fadeOut;
         private bool _justEntered;
         private Action _onDownAction, _onUpAction;
-        public GameObject Border;
+        private static GameObject _borderPrefab;
+        private static GameObject _basicBorderPrefab;
+        private GameObject _border;
         private event Action OnSelectActions;
         private event Action OnDeselectActions;
+        public bool UseAdvancedBorder;
 
         public void OnDeselect(BaseEventData eventData)
         {
@@ -92,8 +95,26 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             InputHandler.RegisterInputListener(this);
             _button = GetComponent<Button>();
-            if(Border != null) _buttonImages.AddRange(Helper.FindAllComponentsInChildren<Image>(Border.transform));
+            if (_borderPrefab == null)
+            {
+                _borderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border");
+                _basicBorderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border Basic");
+            }
+            _border = Instantiate(UseAdvancedBorder ? _borderPrefab : _basicBorderPrefab);
+            _border.transform.SetParent(transform, false);
+            RectTransform rect = _border.GetComponent<RectTransform>();
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            if (_border != null)
+            {
+                _buttonImages.AddRange(Helper.FindAllComponentsInChildren<Image>(_border.transform));
+                Image i = _border.GetComponent<Image>();
+                if (i != null) _buttonImages.Add(i);
+            }
             else _buttonImages.Add(GetComponent<Image>());
+
+            _borderAlpha = 0f;
+            UpdateBorderAlpha();
         }
 
         private void Enter()
@@ -279,6 +300,11 @@ namespace SamsHelper.ReactiveUI.Elements
                 _holdAction();
                 Reset();
             }
+        }
+
+        public void Select()
+        {
+            Button().Select();
         }
     }
 }

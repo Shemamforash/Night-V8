@@ -1,16 +1,16 @@
-﻿using UnityEngine;
+﻿using SamsHelper.Input;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public abstract class Menu : MonoBehaviour
+    public class Menu : MonoBehaviour
     {
         public Selectable DefaultSelectable;
 
         [HideInInspector] public bool PauseOnOpen = true;
 
-        public bool PreserveLastSelected = true;
         private CanvasGroup _canvasGroup;
 
         public virtual void Awake()
@@ -27,6 +27,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         public void Exit()
         {
             _canvasGroup.alpha = 0;
+            InputHandler.SetCurrentListener(null);
         }
 
         public void SetAlpha(float alpha)

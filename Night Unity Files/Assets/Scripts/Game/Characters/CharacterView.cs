@@ -109,8 +109,8 @@ namespace Game.Characters
         public void SelectInitial()
         {
             CharacterManager.SelectCharacter(_player);
-            if (_actionListActive) _exploreButton.Button().Select();
-            else WeaponController.EnhancedButton.Button().Select();
+            if (_actionListActive) _exploreButton.Select();
+            else WeaponController.EnhancedButton.Select();
         }
 
         //actions[0], weaponui, & consumption toggle navigate to actions[last], accessoryui, & consumption buttons respectively
@@ -127,27 +127,27 @@ namespace Game.Characters
             {
                 CharacterManager.ExitCharacter(_previousCharacterView._player);
                 CharacterManager.SelectCharacter(_player);
-                if (_actionListActive) _exploreButton.Button().Select();
-                else WeaponController.EnhancedButton.Button().Select();
+                if (_actionListActive) _exploreButton.Select();
+                else WeaponController.EnhancedButton.Select();
             });
             _exploreButton.SetOnUpAction(() =>
             {
                 CharacterManager.ExitCharacter(_player);
                 CharacterManager.SelectCharacter(_previousCharacterView._player);
-                if (_previousCharacterView._actionListActive) _previousCharacterView._craftButton.Button().Select();
-                else _previousCharacterView.ArmourController.EnhancedButton.Button().Select();
+                if (_previousCharacterView._actionListActive) _previousCharacterView._craftButton.Select();
+                else _previousCharacterView.ArmourController.EnhancedButton.Select();
             });
             WeaponController.EnhancedButton.SetOnUpAction(() =>
             {
                 CharacterManager.ExitCharacter(_player);
                 CharacterManager.SelectCharacter(_previousCharacterView._player);
-                _previousCharacterView.ArmourController.EnhancedButton.Button().Select();
+                _previousCharacterView.ArmourController.EnhancedButton.Select();
             });
             _previousCharacterView.ArmourController.EnhancedButton.SetOnDownAction(() =>
             {
                 CharacterManager.ExitCharacter(_previousCharacterView._player);
                 CharacterManager.SelectCharacter(_player);
-                WeaponController.EnhancedButton.Button().Select();
+                WeaponController.EnhancedButton.Select();
             });
         }
 
@@ -192,7 +192,7 @@ namespace Game.Characters
             GetComponent<LayoutElement>().preferredHeight = 200;
             _detailedView.SetActive(true);
             SimpleView.SetActive(false);
-            _actionList.GetChild(0).GetComponent<EnhancedButton>().Button().Select();
+            _exploreButton.Select();
         }
 
         public void SwitchToSimpleView()

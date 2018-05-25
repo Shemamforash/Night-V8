@@ -103,7 +103,7 @@ namespace Facilitating.UIControllers
         private void SetCurrentTab(int currentTab)
         {
             _currentTab = currentTab;
-            _tabs[_currentTab].Button().Select();
+            _tabs[_currentTab].Select();
         }
 
         private void OpenGearMenu(Player player, int tabNumber, UiGearMenuTemplate gearMenu)
@@ -175,7 +175,7 @@ namespace Facilitating.UIControllers
         public void EnableInput()
         {
             SelectGear();
-            _centreButton.Button().Select();
+            _centreButton.Select();
             _gearSelectAllowed = true;
         }
 

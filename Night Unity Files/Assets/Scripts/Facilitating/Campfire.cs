@@ -12,17 +12,22 @@ namespace Facilitating
         private static bool _tending;
         private static float _intensityLoss;
         private Image _fireImage;
-        private float _x, _y;
+        private float _x;
         public float ClampMin, ClampMax = 1;
         public int EmissionRate = 150;
         public ParticleSystem FireSystem;
         public float FlickerRate = 0.1f;
         public int TimeToDie = 3;
+        private ParticleSystem.EmissionModule emission;
+        public bool Eternal;
 
         public void Start()
         {
             _fireImage = GetComponent<Image>();
             _intensityLoss = 1f / (TimeToDie * WorldState.MinutesPerHour);
+            emission = FireSystem.emission;
+            emission.rateOverTime = EmissionRate;
+            if (Eternal) _intensity = 1;
         }
 
         public static float Intensity()
@@ -49,13 +54,10 @@ namespace Facilitating
 
         public void Update()
         {
-            ParticleSystem.EmissionModule fireEmission = FireSystem.emission;
-            fireEmission.rateOverTime = EmissionRate * _intensity;
-            _x += Random.Range(0f, FlickerRate);
-            _y += Random.Range(0f, FlickerRate);
+            if(!Eternal) emission.rateOverTime = EmissionRate * _intensity;
+            _x += FlickerRate;
             if (_x > 1) _x -= 1;
-            if (_y > 1) _y -= 1;
-            float newOpacity = Mathf.PerlinNoise(_x, _y);
+            float newOpacity = Mathf.PerlinNoise(_x, 0);
             if (ClampMin >= ClampMax) throw new Exception("Clamp min should not be greater than or equal to clamp max.");
             float clampDiff = ClampMax - ClampMin;
             newOpacity = newOpacity * clampDiff + ClampMin;
