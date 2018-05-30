@@ -36,6 +36,7 @@ namespace FastLights
             position = transform.position;
             scale = transform.localScale;
             rotation = transform.rotation.eulerAngles.z;
+            UpdateMesh();
         }
 
         public float MaxRadius()
@@ -49,6 +50,7 @@ namespace FastLights
             List<Vector3> points = new List<Vector3>();
             if (_collider is PolygonCollider2D)
             {
+                Debug.Log("banana");
                 PolygonCollider2D polygon = (PolygonCollider2D) _collider;
                 points.AddRange(polygon.points.Select(polygonPoint => (Vector3) polygonPoint));
             }
@@ -67,8 +69,8 @@ namespace FastLights
                 float angleInterval = 5 / radius;
                 for (float angle = 0; angle < 360; angle += angleInterval)
                 {
-                    float x = Mathf.Cos(angle * Mathf.Deg2Rad);
-                    float y = Mathf.Sin(angle * Mathf.Deg2Rad);
+                    float x = Mathf.Cos(angle * Mathf.Deg2Rad) * radius;
+                    float y = Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
                     points.Add(new Vector2(x, y));
                 }
             }
@@ -88,6 +90,7 @@ namespace FastLights
 
         public void UpdateMesh()
         {
+            Debug.Log("banana");
             _worldVerts.Clear();
             _edges.Clear();
             List<Vector3> vertices = GetVertices();

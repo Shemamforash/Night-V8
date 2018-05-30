@@ -2,6 +2,7 @@
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Player;
+using Game.Combat.Ui;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -52,6 +53,7 @@ namespace Game.Combat.Misc
         {
             if (_burnTicks == 0) _burnDuration = 1;
             _burnTicks = ConditionTicksMax;
+            if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StartBurning();
         }
 
         public bool IsBurning()
@@ -63,6 +65,7 @@ namespace Game.Combat.Misc
         {
             if (_decayTicks == 0) _decayDuration = 1;
             _decayTicks = ConditionTicksMax;
+            if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StartBleeding();
         }
 
         public bool IsDecaying()
@@ -115,6 +118,10 @@ namespace Game.Combat.Misc
                     _burnDuration -= Time.deltaTime;
                 }
             }
+            else
+            {
+                if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StopBurning();
+            }
 
             if (_decayTicks > 0)
             {
@@ -128,6 +135,10 @@ namespace Game.Combat.Misc
                 {
                     _decayDuration -= Time.deltaTime;
                 }
+            }
+            else
+            {
+                if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StopBleeding();
             }
 
             if (_sicknessTicks > 0)

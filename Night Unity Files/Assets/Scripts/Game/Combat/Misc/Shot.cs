@@ -13,7 +13,7 @@ namespace Game.Combat.Misc
 {
     public class Shot : MonoBehaviour
     {
-        private const float Speed = 30f;
+        private const float Speed = 25f;
         private static GameObject _bulletPrefab;
         private BulletTrailFade _bulletTrail;
 
@@ -33,13 +33,12 @@ namespace Game.Combat.Misc
         private CharacterCombat _origin;
         private Vector3 _originPosition;
         private float _pierceChance, _burnChance, _decayChange, _sicknessChance;
-        private int _pierceDepth;
         private Rigidbody2D _rigidBody;
 
         private Transform _shotParent;
         private Weapon _weapon;
         public bool DidHit;
-        private float MaxAge = 3f;
+        private const float MaxAge = 3f;
         private event Action OnHitAction;
 
         public void Awake()
@@ -58,7 +57,6 @@ namespace Game.Combat.Misc
             _guaranteeHit = false;
             _knockbackForce = 0;
             _damageDealt = 0;
-            _pierceDepth = 0;
             _moving = false;
             _fired = false;
             DidHit = false;
@@ -70,9 +68,6 @@ namespace Game.Combat.Misc
             Shot shot = _shotPool.Create();
             shot.gameObject.layer = 11;
             Vector3 direction = origin.Direction();
-            float directionOffset = Random.Range(-origin.GetAccuracyModifier(), origin.GetAccuracyModifier());
-            directionOffset = 20f * directionOffset * Mathf.Deg2Rad;
-            direction = AdvancedMaths.RotateVector(direction, directionOffset);
             shot.Initialise(origin, direction);
             return shot;
         }
@@ -85,12 +80,9 @@ namespace Game.Combat.Misc
             return shot;
         }
 
-        private bool _isEnemyShot;
-
         private void Initialise(CharacterCombat origin, Vector3 direction)
         {
             _origin = origin;
-            _isEnemyShot = origin is EnemyBehaviour;
             _direction = direction;
             _weapon = origin.Weapon();
             _originPosition = origin.transform.position;
@@ -119,8 +111,6 @@ namespace Game.Combat.Misc
         private void CalculateAccuracy()
         {
             if (_guaranteeHit) _accuracy = 0;
-//            else if (_origin != null)
-//                _accuracy *= _origin.GetAccuracyModifier();
         }
 
         public void ActivateFireTrail()
@@ -158,7 +148,6 @@ namespace Game.Combat.Misc
 
         private IEnumerator WaitToDie()
         {
-            MaxAge = _weapon.WeaponAttributes.GetCalculatedValue(AttributeType.Range) / Speed;
             _age = 0;
             while (_age < MaxAge)
             {
@@ -174,10 +163,9 @@ namespace Game.Combat.Misc
 
         public void Fire(float distance = 0.15f)
         {
-            float angleOffset = Random.Range(-_accuracy, _accuracy);
+            float angleOffset = Random.Range(-_accuracy, _accuracy) * _origin.GetAccuracyModifier();
             transform.position = _originPosition + _direction * distance;
             _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
-//            transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, AdvancedMaths.AngleFromUp(Vector3.zero, _direction)));
             _fired = true;
             if (_origin != null) _origin.IncreaseRecoil();
 

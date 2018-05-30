@@ -12,7 +12,6 @@
         Dehydration,
 
         Damage,
-        Range,
         Accuracy,
         FireRate,
         ReloadSpeed,

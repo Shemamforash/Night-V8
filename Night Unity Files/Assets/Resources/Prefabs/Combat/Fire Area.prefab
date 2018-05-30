@@ -22,7 +22,8 @@ GameObject:
   - component: {fileID: 198509302513675492}
   - component: {fileID: 199898745675066594}
   - component: {fileID: 114501947257554716}
-  m_Layer: 0
+  - component: {fileID: 58830113216107470}
+  m_Layer: 13
   m_Name: Fire Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +41,7 @@ GameObject:
   - component: {fileID: 33337508330705242}
   - component: {fileID: 23250501310411746}
   - component: {fileID: 114015597341239456}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +55,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1829739791206876}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.925662, y: -1.4292284, z: 0}
+  m_LocalPosition: {x: -0.54957765, y: -1.5131639, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4669558979525160}
@@ -116,6 +117,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1885869952232138}
   m_Mesh: {fileID: 0}
+--- !u!58 &58830113216107470
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1829739791206876}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1
 --- !u!114 &114015597341239456
 MonoBehaviour:
   m_ObjectHideFlags: 1

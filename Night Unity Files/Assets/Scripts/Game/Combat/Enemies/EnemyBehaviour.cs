@@ -193,11 +193,11 @@ namespace Game.Combat.Enemies
 
         //Movement
 
-        protected void Reposition(Cell c)
+        protected void Reposition(Cell c, Action reachTargetAction = null)
         {
             SetActionText("Moving");
             Thread pathThread = _grid.RouteToCell(CurrentCell(), c, route);
-            WaitForRoute(pathThread);
+            WaitForRoute(pathThread, reachTargetAction);
         }
 
         private void MoveToCell(Cell target)

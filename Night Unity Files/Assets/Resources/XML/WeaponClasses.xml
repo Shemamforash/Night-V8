@@ -2,7 +2,6 @@
     <Class name="Pistol" ammoCost="1">
         <Subtype name="Slinger" automatic="True">
             <Damage>+7</Damage>
-            <Range>+3</Range>
             <FireRate>+6</FireRate>
             <ReloadSpeed>+0.5</ReloadSpeed>
             <Accuracy>+50</Accuracy>
@@ -12,7 +11,6 @@
         </Subtype>
         <Subtype name="Shortshooter" automatic="False">
             <Damage>+18</Damage>
-            <Range>+2</Range>
             <FireRate>+3</FireRate>
             <ReloadSpeed>+0.5</ReloadSpeed>
             <Accuracy>+50</Accuracy>
@@ -22,7 +20,6 @@
         </Subtype>
         <Subtype name="Deepdriver" automatic="False">
             <Damage>+13</Damage>
-            <Range>+5</Range>
             <FireRate>+3</FireRate>
             <ReloadSpeed>+2</ReloadSpeed>
             <Accuracy>+50</Accuracy>
@@ -34,7 +31,6 @@
     <Class name="Rifle" ammoCost="1">
         <Subtype name="Groundrider" automatic="False">
             <Damage>+40</Damage>
-            <Range>+10</Range>
             <FireRate>+1</FireRate>
             <ReloadSpeed>+3</ReloadSpeed>
             <Accuracy>+90</Accuracy>
@@ -44,7 +40,6 @@
         </Subtype>
         <Subtype name="Shoulderbreaker" automatic="False">
             <Damage>+80</Damage>
-            <Range>+8</Range>
             <FireRate>+1</FireRate>
             <ReloadSpeed>+3</ReloadSpeed>
             <Accuracy>+90</Accuracy>
@@ -54,7 +49,6 @@
         </Subtype>
         <Subtype name="Voidwalker" automatic="True">
             <Damage>+40</Damage>
-            <Range>+8</Range>
             <FireRate>+1</FireRate>
             <ReloadSpeed>+3</ReloadSpeed>
             <Accuracy>+90</Accuracy>
@@ -66,7 +60,6 @@
     <Class name="Shotgun" ammoCost="1">
         <Subtype name="Leadspreader" automatic="False">
             <Damage>+4</Damage>
-            <Range>+1</Range>
             <FireRate>+1.5</FireRate>
             <ReloadSpeed>+2.5</ReloadSpeed>
             <Accuracy>+20</Accuracy>
@@ -76,7 +69,6 @@
         </Subtype>
         <Subtype name="Bonebreaker" automatic="True">
             <Damage>+13</Damage>
-            <Range>+1</Range>
             <FireRate>+1.5</FireRate>
             <ReloadSpeed>+2.5</ReloadSpeed>
             <Accuracy>+20</Accuracy>
@@ -86,7 +78,6 @@
         </Subtype>
         <Subtype name="Skullcrusher" automatic="True">
             <Damage>+8</Damage>
-            <Range>+3</Range>
             <FireRate>+3</FireRate>
             <ReloadSpeed>+2.5</ReloadSpeed>
             <Accuracy>+20</Accuracy>
@@ -98,7 +89,6 @@
     <Class name="SMG" ammoCost="1">
         <Subtype name="Spitter" automatic="True">
             <Damage>+6</Damage>
-            <Range>+5</Range>
             <FireRate>+10</FireRate>
             <ReloadSpeed>+1</ReloadSpeed>
             <Accuracy>+30</Accuracy>
@@ -108,7 +98,6 @@
         </Subtype>
         <Subtype name="Gripshaker" automatic="True">
             <Damage>+4</Damage>
-            <Range>+5</Range>
             <FireRate>+17</FireRate>
             <ReloadSpeed>+1</ReloadSpeed>
             <Accuracy>+30</Accuracy>
@@ -118,7 +107,6 @@
         </Subtype>
         <Subtype name="Spewer" automatic="True">
             <Damage>+4</Damage>
-            <Range>+3</Range>
             <FireRate>+10</FireRate>
             <ReloadSpeed>+1</ReloadSpeed>
             <Accuracy>+30</Accuracy>
@@ -130,7 +118,6 @@
     <Class name="LMG" ammoCost="1">
         <Subtype name="Breacher" automatic="True">
             <Damage>+12</Damage>
-            <Range>+7</Range>
             <FireRate>+5</FireRate>
             <ReloadSpeed>+5</ReloadSpeed>
             <Accuracy>+40</Accuracy>
@@ -140,7 +127,6 @@
         </Subtype>
         <Subtype name="Gouger" automatic="True">
             <Damage>+18</Damage>
-            <Range>+5</Range>
             <FireRate>+5</FireRate>
             <ReloadSpeed>+7</ReloadSpeed>
             <Accuracy>+40</Accuracy>
@@ -150,7 +136,6 @@
         </Subtype>
         <Subtype name="Annihilator" automatic="True">
             <Damage>+12</Damage>
-            <Range>+5</Range>
             <FireRate>+10</FireRate>
             <ReloadSpeed>+5</ReloadSpeed>
             <Accuracy>+40</Accuracy>

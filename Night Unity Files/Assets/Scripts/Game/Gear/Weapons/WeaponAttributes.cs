@@ -21,7 +21,7 @@ namespace Game.Gear.Weapons
         private readonly Weapon _weapon;
         public bool Automatic = true;
         public float DurabilityModifier;
-        public CharacterAttribute FireRate, ReloadSpeed, Damage, Range, Handling, Capacity, Pellets, Accuracy;
+        public CharacterAttribute FireRate, ReloadSpeed, Damage, Handling, Capacity, Pellets, Accuracy;
         public string ModifierName, ModifierDescription;
         public CharacterAttribute PierceChance, BurnChance, BleedChance, SicknessChance;
 
@@ -100,7 +100,6 @@ namespace Game.Gear.Weapons
         protected override void CacheAttributes()
         {
             Damage = new CharacterAttribute(AttributeType.Damage, 0);
-            Range = new CharacterAttribute(AttributeType.Range, 0);
             Accuracy = new CharacterAttribute(AttributeType.Accuracy, 0, 0, 100);
             FireRate = new CharacterAttribute(AttributeType.FireRate, 0);
             ReloadSpeed = new CharacterAttribute(AttributeType.ReloadSpeed, 0);
@@ -115,7 +114,6 @@ namespace Game.Gear.Weapons
             SicknessChance = new CharacterAttribute(AttributeType.SicknessChance, 0);
 
             AddAttribute(Damage);
-            AddAttribute(Range);
             AddAttribute(Accuracy);
             AddAttribute(ReloadSpeed);
             AddAttribute(FireRate);
@@ -139,7 +137,6 @@ namespace Game.Gear.Weapons
                    + "\nCapacity:   " + Capacity.CurrentValue()
                    + "\nPellets:    " + Pellets.CurrentValue()
                    + "\nDamage:     " + Damage.CurrentValue()
-                   + "\nRange:   " + Range.CurrentValue()
                    + "\nFire Rate:  " + FireRate.CurrentValue()
                    + "\nReload:     " + ReloadSpeed.CurrentValue()
                    + "\nAccuracy: " + Accuracy.CurrentValue()

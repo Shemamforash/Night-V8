@@ -40,6 +40,9 @@ namespace Game.Combat.Player
 
         public RageController RageController;
         public bool Retaliate;
+        private float _reloadPressedTime;
+        private const float MaxReloadPressedTime = 1f;
+        private bool _inCombat;
 
         protected override void Move(Vector2 direction)
         {
@@ -51,6 +54,13 @@ namespace Game.Combat.Player
             else base.Move(direction);
         }
 
+        private void SetInCombat(bool inCombat)
+        {
+            _inCombat = inCombat;
+            if (_inCombat) PlayerUi.Instance().Show();
+            else PlayerUi.Instance().Hide();
+        }
+
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -60,8 +70,7 @@ namespace Game.Combat.Player
                 {
                     case InputAxis.Fire:
                         if (CombatManager.EnemiesOnScreen().Count == 0) UiAreaInventoryController.SetNearestContainer(_lastNearestContainer);
-                        if (!_fired || Player.Weapon.WeaponAttributes.Automatic)
-                            FireWeapon();
+                        if (_inCombat && (!_fired || Player.Weapon.WeaponAttributes.Automatic)) FireWeapon();
                         break;
                     case InputAxis.Horizontal:
                         Move(direction * transform.right);
@@ -72,32 +81,71 @@ namespace Game.Combat.Player
                     case InputAxis.SwitchTab:
                         Rotate(direction);
                         break;
+                    case InputAxis.Reload:
+                        float _lastPressedTime = _reloadPressedTime;
+                        _reloadPressedTime += Time.deltaTime;
+                        if (_reloadPressedTime >= MaxReloadPressedTime && _lastPressedTime < MaxReloadPressedTime)
+                        {
+                            SetInCombat(!_inCombat);
+                        }
+
+                        break;
                 }
             else
                 switch (axis)
                 {
+                    case InputAxis.Fire:
+                        if (!_inCombat) UiCompassController.EmitPulse();
+                        break;
                     case InputAxis.Enrage:
-                        LockTarget();
+                        if (_inCombat) LockTarget();
                         break;
                     case InputAxis.Reload:
-                        Reload();
+                        if (_inCombat) Reload();
                         break;
                     case InputAxis.SkillOne:
-                        SkillBar.ActivateSkill(0);
+                        if (_inCombat) SkillBar.ActivateSkill(0);
                         break;
                     case InputAxis.SkillTwo:
-                        SkillBar.ActivateSkill(1);
+                        if (_inCombat) SkillBar.ActivateSkill(1);
                         break;
                     case InputAxis.SkillThree:
-                        SkillBar.ActivateSkill(2);
+                        if (_inCombat) SkillBar.ActivateSkill(2);
                         break;
                     case InputAxis.SkillFour:
-                        SkillBar.ActivateSkill(3);
+                        if (_inCombat) SkillBar.ActivateSkill(3);
                         break;
                     case InputAxis.Sprint:
                         _dashPressed = true;
                         break;
                 }
+        }
+
+        private void SwitchUi()
+        {
+        }
+
+        public void OnInputUp(InputAxis axis)
+        {
+            switch (axis)
+            {
+                case InputAxis.Fire:
+                    _fired = false;
+                    break;
+                case InputAxis.SwitchTab:
+                    _rotateSpeedCurrent = 0f;
+                    break;
+                case InputAxis.Sprint:
+                    _dashPressed = false;
+                    break;
+                case InputAxis.Reload:
+                    _reloadPressedTime = 0f;
+                    break;
+            }
+        }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
         }
 
         private bool _dashPressed;
@@ -114,7 +162,8 @@ namespace Game.Combat.Player
 
         private void LockTarget()
         {
-            _lockedTarget = GetTarget();
+            if (_lockedTarget == null) _lockedTarget = GetTarget();
+            else _lockedTarget = null;
         }
 
         private const float RotateSpeedMax = 90;
@@ -149,26 +198,6 @@ namespace Game.Combat.Player
             CombatManager.ExitCombat();
         }
 
-        public void OnInputUp(InputAxis axis)
-        {
-            switch (axis)
-            {
-                case InputAxis.Fire:
-                    _fired = false;
-                    break;
-                case InputAxis.SwitchTab:
-                    _rotateSpeedCurrent = 0f;
-                    break;
-                case InputAxis.Sprint:
-                    _dashPressed = false;
-                    break;
-            }
-        }
-
-        public void OnDoubleTap(InputAxis axis, float direction)
-        {
-        }
-
         private void Spin(float direction)
         {
             transform.DORotate(new Vector3(0, 0, 180f * -direction), 0.5f, RotateMode.FastBeyond360).SetRelative();
@@ -199,7 +228,7 @@ namespace Game.Combat.Player
 
         private void CheckForEnemiesOnScreen()
         {
-            PlayerUi.Instance().SetAlpha(CombatManager.AllEnemiesDead() ? 0 : 1);
+//            PlayerUi.Instance().SetAlpha(CombatManager.AllEnemiesDead() ? 0 : 1);
         }
 
         public override void Update()
@@ -271,6 +300,7 @@ namespace Game.Combat.Player
 
             SkillBar.BindSkills(Player);
             UIMagazineController.SetWeapon(Weapon());
+            SetInCombat(false);
         }
 
         protected override void Dash(Vector2 direction)
@@ -281,7 +311,7 @@ namespace Game.Combat.Player
 
         private bool CanDash()
         {
-            return _dashCooldown.Finished() && _dashPressed;
+            return _dashCooldown.Finished() && _dashPressed && !_reloading;
         }
 
         public void TryRetaliate(EnemyBehaviour origin)
@@ -327,20 +357,22 @@ namespace Game.Combat.Player
         {
             if (_reloadingCoroutine != null) StopCoroutine(_reloadingCoroutine);
             _reloadingCoroutine = null;
-            Immobilised(false);
             UpdateMagazineUi();
+            _reloading = false;
         }
+
+        private bool _reloading;
 
         //COOLDOWNS
 
         private IEnumerator StartReloading()
         {
-            Immobilised(true);
             float duration = Player.Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
             UIMagazineController.EmptyMagazine();
             _fired = false;
             OnFireAction = null;
             Retaliate = false;
+            _reloading = true;
 
             float age = 0;
             while (age < duration)
@@ -369,7 +401,7 @@ namespace Game.Combat.Player
         //FIRING
         public void FireWeapon()
         {
-//            if (GetTarget() == null) return;
+            if (_reloading) return;
             if (Weapon().Empty()) return;
             List<Shot> shots = Weapon().Fire(this);
             if (shots.Count == 0) return;
@@ -391,7 +423,7 @@ namespace Game.Combat.Player
             if (_muzzleFlash == null) _muzzleFlash = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Muzzle Flash");
             if (ShowMuzzleFlash)
             {
-                _muzzleFlash.color = new Color(1,1,1, Random.Range(0.2f, 0.8f));
+                _muzzleFlash.color = new Color(1, 1, 1, Random.Range(0.2f, 0.8f));
                 ShowMuzzleFlash = false;
             }
             else

@@ -10,18 +10,18 @@ namespace Game.Combat.Ui
     {
         protected UIArmourController _armourController;
         protected UIHealthBarController _healthBarController;
-        private CanvasGroup _canvasGroup;
+        protected CanvasGroup CanvasGroup;
 
         public virtual void Awake()
         {
             _armourController = Helper.FindChildWithName<UIArmourController>(gameObject, "Armour");
             _healthBarController = Helper.FindChildWithName<UIHealthBarController>(gameObject, "Health");
-            _canvasGroup = GetComponent<CanvasGroup>();
+            CanvasGroup = GetComponent<CanvasGroup>();
         }
 
-        public void SetAlpha(float a)
+        protected void SetAlpha(float a)
         {
-            _canvasGroup.alpha = a;
+            CanvasGroup.alpha = a;
         }
         
         public virtual UIHealthBarController GetHealthController(CharacterCombat enemy)

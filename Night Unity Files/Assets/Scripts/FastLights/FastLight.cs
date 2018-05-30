@@ -270,9 +270,9 @@ namespace Fastlights
             Vector3[] v = new Vector3[meshVertices.Count];
             for (int i = 0; i < meshVertices.Count; ++i)
             {
-                Vector3 vert = transform.InverseTransformPoint(meshVertices[i]);
-                vert.z = 2;
-                v[i] = vert;
+//                Vector3 vert = transform.InverseTransformPoint(meshVertices[i]);
+//                vert.z = 0;
+//                v[i] = vert;
             }
 
             mesh.vertices = v;
@@ -285,16 +285,17 @@ namespace Fastlights
 
         private int[] Triangulate(Vector3[] vertices)
         {
-            List<int> triangles = new List<int>();
+            int[] triangles = new int[(vertices.Length - 1) * 3];
             for (int i = 1; i < vertices.Length; ++i)
             {
                 int nextTriangle = i + 1 == vertices.Length ? 1 : i + 1;
-                triangles.Add(0);
-                triangles.Add(i);
-                triangles.Add(nextTriangle);
+                int triIndex = (i - 1) * 3;
+                triangles[triIndex] = 0;
+                triangles[triIndex + 1] = i;
+                triangles[triIndex + 2] = nextTriangle;
             }
 
-            return triangles.ToArray();
+            return triangles;
         }
 
         private Vector2[] CalculateUvs(Vector3[] vertices)
@@ -335,13 +336,16 @@ namespace Fastlights
         private void ResizeLight()
         {
             Mesh mesh = _meshFilter.mesh;
-            for (int i = 1; i < mesh.vertices.Length; ++i)
+            Vector3[] verts = mesh.vertices;
+            for (int i = 1; i < verts.Length; ++i)
             {
-                Vector2 vertex = transform.TransformPoint(mesh.vertices[i]);
+                Vector2 vertex = transform.TransformPoint(verts[i]);
                 Vector2 dir = (_position - vertex).normalized;
                 vertex = dir * Radius;
-                mesh.vertices[i] = transform.InverseTransformPoint(vertex);
+                verts[i] = transform.InverseTransformPoint(vertex);
             }
+
+            mesh.vertices = verts;
         }
 
         private bool _hasUpdated;

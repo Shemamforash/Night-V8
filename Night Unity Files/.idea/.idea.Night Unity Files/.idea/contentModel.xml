@@ -27,6 +27,7 @@
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
         <e p="GameSettings.xml" t="Include" />
+        <e p="Mine.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Resources" t="Include">
           <e p="names.txt" t="Include" />
@@ -85,6 +86,7 @@
               <e p="UiArmourUpgradeController.cs" t="Include" />
               <e p="UIAttributeController.cs" t="Include" />
               <e p="UIAttributeMarkerController.cs" t="Include" />
+              <e p="UiCompassController.cs" t="Include" />
               <e p="UIConditionController.cs" t="Include" />
               <e p="UICraftingController.cs" t="Include" />
               <e p="UICreateAmmoController.cs" t="Include" />
@@ -161,6 +163,7 @@
                   <e p="MaelstromShotBehaviour.cs" t="Include" />
                   <e p="Nightmare.cs" t="Include" />
                   <e p="Revenant.cs" t="Include" />
+                  <e p="Shadow.cs" t="Include" />
                 </e>
                 <e p="UnarmedBehaviour.cs" t="Include" />
               </e>

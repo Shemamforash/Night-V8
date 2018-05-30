@@ -8,15 +8,17 @@ public class UiAimController : MonoBehaviour
     private LineRenderer _lineRenderer;
     private const float RayDistance = 20f;
     private int _layerMask;
+    private static float _alpha;
 
     public void Awake()
     {
         _lineRenderer = GetComponent<LineRenderer>();
-        _layerMask = ~(1 << 9);
+        _layerMask = ~((1 << 9) | (1 << 13));
     }
 
     public void Update()
     {
+        if (_alpha == 0) return;
         if (CombatManager.AllEnemiesDead())
         {
             _lineRenderer.enabled = false;
@@ -40,5 +42,12 @@ public class UiAimController : MonoBehaviour
         }
 
         _lineRenderer.SetPositions(new[] {start, end});
+        _lineRenderer.startColor = new Color(1,1,1, _alpha * 0.2f);
+        _lineRenderer.endColor = new Color(1, 1, 1, _alpha * 0.1f);
+    }
+
+    public static void SetAlpha(float alpha)
+    {
+        _alpha = alpha;
     }
 }

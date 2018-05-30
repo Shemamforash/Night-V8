@@ -16,12 +16,15 @@ namespace Game.Combat.Misc
         private float _age;
         private FastLight _light;
         private ParticleSystem _particles;
+        private CircleCollider2D _collider;
         private int EmissionRate;
+        private static Transform _fireParent;
 
         public void Awake()
         {
             _particles = GetComponent<ParticleSystem>();
             _light = Helper.FindChildWithName<FastLight>(gameObject, "Light");
+            _collider = GetComponent<CircleCollider2D>();
         }
 
         public static void Create(Vector3 position, float size, bool lightOn = true)
@@ -30,12 +33,19 @@ namespace Game.Combat.Misc
             fire.StartCoroutine(fire.Burn(position, size, lightOn));
         }
 
+        public void OnTriggerEnter2D(Collider2D other)
+        {
+            CharacterCombat character = other.GetComponent<CharacterCombat>();
+            if (character == null) return;
+            character.Burn();
+        }
+        
         private IEnumerator Burn(Vector3 position, float size, bool lightOn)
         {
             EmissionRate = (int) (size * size * MaxEmissionRate);
-            Debug.Log(EmissionRate);
             ParticleSystem.ShapeModule shape = _particles.shape;
             shape.radius = size;
+            _collider.radius = size;
             _light.Radius = size * LightMaxRadius;
             _light.gameObject.SetActive(lightOn);
             gameObject.SetActive(true);
@@ -58,6 +68,7 @@ namespace Game.Combat.Misc
         private void OnDestroy()
         {
             _firePool.Remove(this);
+            if (_firePool.Count == 0) _fireParent = null;
         }
 
         private static FireBehaviour GetNewFire()
@@ -66,6 +77,8 @@ namespace Game.Combat.Misc
             {
                 if (_firePrefab == null) _firePrefab = Resources.Load<GameObject>("Prefabs/Combat/Fire Area");
                 GameObject fireObject = Instantiate(_firePrefab);
+                if (_fireParent == null) _fireParent = GameObject.Find("Fires").transform;
+                fireObject.transform.SetParent(_fireParent);
                 fireObject.transform.localScale = Vector3.one;
                 return fireObject.GetComponent<FireBehaviour>();
             }

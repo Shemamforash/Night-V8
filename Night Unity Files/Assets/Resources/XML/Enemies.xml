@@ -97,4 +97,11 @@
         <Value>1</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>
+    <Enemy>
+        <Name>Shadow</Name>
+        <Health>300</Health>
+        <Speed>6</Speed>
+        <Value>1</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
 </Enemies>

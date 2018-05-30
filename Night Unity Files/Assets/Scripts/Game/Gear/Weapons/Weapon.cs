@@ -8,6 +8,7 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Game.Gear.Weapons

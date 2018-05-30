@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 50151284105191016}
   - component: {fileID: 58716105349068796}
   - component: {fileID: 114162025541304092}
-  - component: {fileID: 96187956934143562}
+  - component: {fileID: 96229915752635090}
   m_Layer: 10
   m_Name: Revenant
   m_TagString: Untagged
@@ -248,7 +248,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.08
---- !u!96 &96187956934143562
+--- !u!96 &96229915752635090
 TrailRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 1

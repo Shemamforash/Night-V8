@@ -9,9 +9,9 @@ InputManager:
     m_Name: Horizontal
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
-    positiveButton: 
-    altNegativeButton: a
+    negativeButton: a
+    positiveButton: d
+    altNegativeButton: 
     altPositiveButton: d
     gravity: 1000
     dead: 0.001
@@ -92,7 +92,7 @@ InputManager:
     negativeButton: 
     positiveButton: k
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: joystick button 5
     gravity: 1000
     dead: 0
     sensitivity: 1
@@ -108,7 +108,7 @@ InputManager:
     negativeButton: 
     positiveButton: r
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: joystick button 4
     gravity: 1000
     dead: 0
     sensitivity: 1
@@ -124,7 +124,7 @@ InputManager:
     negativeButton: 
     positiveButton: left shift
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: joystick button 11
     gravity: 1000
     dead: 0
     sensitivity: 1
@@ -140,7 +140,7 @@ InputManager:
     negativeButton: 
     positiveButton: 1
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: joystick button 1
     gravity: 1000
     dead: 0
     sensitivity: 1
@@ -156,7 +156,7 @@ InputManager:
     negativeButton: 
     positiveButton: 2
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: joystick button 0
     gravity: 1000
     dead: 0
     sensitivity: 1
@@ -172,7 +172,7 @@ InputManager:
     negativeButton: 
     positiveButton: 3
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: joystick button 3
     gravity: 1000
     dead: 0
     sensitivity: 1
@@ -188,7 +188,7 @@ InputManager:
     negativeButton: 
     positiveButton: 4
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: joystick button 2
     gravity: 1000
     dead: 0
     sensitivity: 1
@@ -204,7 +204,7 @@ InputManager:
     negativeButton: 
     positiveButton: space
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: joystick button 10
     gravity: 1000
     dead: 0
     sensitivity: 1
@@ -212,4 +212,52 @@ InputManager:
     invert: 0
     type: 0
     axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Horizontal
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.1
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Vertical
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.1
+    sensitivity: 1
+    snap: 0
+    invert: 1
+    type: 2
+    axis: 1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: SwitchTab
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: space
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.1
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 2
     joyNum: 0

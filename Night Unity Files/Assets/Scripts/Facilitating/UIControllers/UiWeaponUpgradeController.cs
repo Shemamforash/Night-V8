@@ -87,7 +87,6 @@ namespace Facilitating.UIControllers
             {
                 _damageText.Text(GetAttributePrefix(compareWeapon, AttributeType.Damage) + " Dam");
                 _fireRateText.Text(GetAttributePrefix(compareWeapon, AttributeType.FireRate) + " RoF");
-                _rangeText.Text(GetAttributePrefix(compareWeapon, AttributeType.Range) + "M");
                 _accuracyText.Text(GetAttributePrefix(compareWeapon, AttributeType.Accuracy) + "%");
                 _reloadSpeedText.Text(GetAttributePrefix(compareWeapon, AttributeType.ReloadSpeed) + "s Reload ");
                 _handlingText.Text(GetAttributePrefix(compareWeapon, AttributeType.Handling) + "% Handling ");
@@ -111,7 +110,6 @@ namespace Facilitating.UIControllers
             _durabilityText.Text(attr.Durability.CurrentValue() + " Durability");
             _damageText.Text(Helper.Round(attr.Damage.CurrentValue(), 1) + " Dam");
             _fireRateText.Text(Helper.Round(attr.FireRate.CurrentValue(), 1) + " RoF");
-            _rangeText.Text(Helper.Round(attr.Range.CurrentValue(), 1) + "M");
             _reloadSpeedText.Text(Helper.Round(attr.ReloadSpeed.CurrentValue(), 1) + "s Reload");
             _handlingText.Text(Helper.Round(attr.Handling.CurrentValue(), 1) + "% Handling");
             _dpsText.Text(Helper.Round(attr.DPS(), 1) + " DPS");

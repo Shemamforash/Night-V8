@@ -12,7 +12,6 @@ namespace Game.Combat.Ui
     {
         private static readonly List<Fader> _faderPool = new List<Fader>();
         private ParticleSystem _bleedEffect, _burnEffect;
-        private float _edgeWidthRatio = 3f;
         private RectTransform _fill;
         private TextMeshProUGUI _healthText;
         private Slider _slider;
@@ -27,11 +26,6 @@ namespace Game.Combat.Ui
             _burnEffect = Helper.FindChildWithName<ParticleSystem>(healthBar, "Burning");
             _bleedEffect = Helper.FindChildWithName<ParticleSystem>(healthBar, "Bleeding");
             _healthText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Health Text");
-        }
-
-        public void SetIsPlayerBar()
-        {
-            _edgeWidthRatio = 7.2f;
         }
 
         public void FadeNewHealth()
@@ -67,19 +61,6 @@ namespace Game.Combat.Ui
         {
             _healthText.text = (int) health.CurrentValue() + "/" + (int) health.Max;
             _slider.value = health.Normalised();
-            float edgeWidth = _edgeWidthRatio * health.Normalised();
-
-            ParticleSystem.ShapeModule burnShape = _burnEffect.shape;
-            burnShape.radius = edgeWidth;
-
-            ParticleSystem.EmissionModule burnEmission = _burnEffect.emission;
-            burnEmission.rateOverTime = (int) (edgeWidth / _edgeWidthRatio * 50f);
-
-            ParticleSystem.ShapeModule bleedShapeModule = _bleedEffect.shape;
-            bleedShapeModule.radius = edgeWidth;
-
-            ParticleSystem.EmissionModule bleedEmission = _bleedEffect.emission;
-            bleedEmission.rateOverTime = (int) (edgeWidth / _edgeWidthRatio * 10f);
         }
 
         public void StartBleeding()
