@@ -229,7 +229,7 @@ class EnemyImporter(XMLWriter):
         write_tag(self, "Enemies", self.read_enemies)
 
     def read_enemies(self):
-        for row in range(3, 13):
+        for row in range(3, 17):
             write_tag(self, "Enemy", self.read_enemy, [row])
 
     def read_enemy(self, row):
@@ -303,9 +303,9 @@ def write_single_value(xml_writer, stat_name, value):
 # WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
-# EnemyImporter()
-RecipeImporter()
-ResourceImporter()
+EnemyImporter()
+# RecipeImporter()
+# ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
 # TraitImporter()

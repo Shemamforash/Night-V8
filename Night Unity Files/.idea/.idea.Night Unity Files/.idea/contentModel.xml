@@ -130,6 +130,7 @@
                   <e p="Grazer.cs" t="Include" />
                   <e p="Watcher.cs" t="Include" />
                 </e>
+                <e p="ArmedBehaviour.cs" t="Include" />
                 <e p="Enemy.cs" t="Include" />
                 <e p="EnemyBehaviour.cs" t="Include" />
                 <e p="EnemyTemplate.cs" t="Include" />
@@ -159,7 +160,9 @@
                   <e p="MaelstromImage.cs" t="Include" />
                   <e p="MaelstromShotBehaviour.cs" t="Include" />
                   <e p="Nightmare.cs" t="Include" />
+                  <e p="Revenant.cs" t="Include" />
                 </e>
+                <e p="UnarmedBehaviour.cs" t="Include" />
               </e>
               <e p="Generation" t="Include">
                 <e p="AreaGenerator.cs" t="Include" />

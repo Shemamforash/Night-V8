@@ -6,7 +6,6 @@ using Game.Combat.Player;
 using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
-using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
@@ -21,39 +20,19 @@ namespace Game.Combat.Generation
         private PlayerCombat _player;
         private bool _inCombat;
         private readonly List<EnemyBehaviour> _enemies = new List<EnemyBehaviour>();
-        private readonly List<EnemyBehaviour> _enemiesToAlert = new List<EnemyBehaviour>();
-        private bool _shouldAlertAll;
         private static CombatManager _instance;
 
-        public static bool AllEnemiesDead()
-        {
-            return Instance()._enemies.Count == 0;
-        }
+        public static bool AllEnemiesDead() => Instance()._enemies.Count == 0;
 
-        public static float VisibilityRange()
-        {
-            return Instance()._visibilityRange;
-        }
+        public static float VisibilityRange() => Instance()._visibilityRange;
 
-        public static Cooldown CreateCooldown()
-        {
-            return Instance()._cooldowns.CreateCooldown();
-        }
+        public static Cooldown CreateCooldown() => Instance()._cooldowns.CreateCooldown();
 
-        public static bool InCombat()
-        {
-            return Instance()._inCombat;
-        }
+        public static bool InCombat() => Instance()._inCombat;
 
-        public static Region Region()
-        {
-            return Instance()._currentRegion;
-        }
+        public static Region Region() => Instance()._currentRegion;
 
-        public static PlayerCombat Player()
-        {
-            return Instance()._player;
-        }
+        public static PlayerCombat Player() => Instance()._player;
 
         public override void Awake()
         {
@@ -82,9 +61,6 @@ namespace Game.Combat.Generation
         {
             if (!_inCombat) return;
             _cooldowns.UpdateCooldowns();
-            if (!_shouldAlertAll || _enemiesToAlert.Count == 0) return;
-            _enemiesToAlert[0].Alert();
-            _enemiesToAlert.RemoveAt(0);
         }
 
         private void EnterCombat()
@@ -103,7 +79,6 @@ namespace Game.Combat.Generation
 
             _player.Initialise();
             _cooldowns.Clear();
-            _shouldAlertAll = false;
             _currentRegion.Enemies().ForEach(e => { AddEnemy(e.GetEnemyBehaviour()); });
         }
 
@@ -121,8 +96,12 @@ namespace Game.Combat.Generation
             if (Vector2.Distance(Instance()._player.transform.position, position) <= range) charactersInRange.Add(Instance()._player);
 
             foreach (EnemyBehaviour enemy in Instance()._enemies)
+            {
                 if (Vector2.Distance(enemy.transform.position, position) <= range)
+                {
                     charactersInRange.Add(enemy);
+                }
+            }
 
             return charactersInRange;
         }
@@ -177,14 +156,9 @@ namespace Game.Combat.Generation
         {
             Enemy e = Instance()._currentRegion.AddEnemy(type, 10);
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
-            enemyBehaviour.Alert();
+            (enemyBehaviour as UnarmedBehaviour)?.Alert(false);
             Instance().AddEnemy(enemyBehaviour);
             return enemyBehaviour;
-        }
-
-        public static void AlertAll()
-        {
-            Instance()._shouldAlertAll = true;
         }
 
         public static void Remove(EnemyBehaviour enemy)
@@ -196,7 +170,6 @@ namespace Game.Combat.Generation
         private void AddEnemy(EnemyBehaviour e)
         {
             _enemies.Add(e);
-            _enemiesToAlert.Add(e);
         }
 
         public static EnemyBehaviour NearestEnemy()
@@ -212,5 +185,7 @@ namespace Game.Combat.Generation
             });
             return nearestEnemy;
         }
+
+        public static List<EnemyBehaviour> Enemies() => Instance()._enemies;
     }
 }

@@ -131,10 +131,11 @@ namespace Game.Exploration.Regions
 
         private void GenerateNightmare()
         {
-            AddEnemy(EnemyType.GhoulMother, 10);
-            AddEnemy(EnemyType.Maelstrom, 10);
-            AddEnemy(EnemyType.Ghast, 10);
-            AddEnemy(EnemyType.Nightmare, 10);
+//            AddEnemy(EnemyType.GhoulMother, 10);
+//            AddEnemy(EnemyType.Maelstrom, 10);
+//            AddEnemy(EnemyType.Ghast, 10);
+//            AddEnemy(EnemyType.Nightmare, 10);
+            AddEnemy(EnemyType.Revenant, 10);
         }
 
         private int CalculateDanger()

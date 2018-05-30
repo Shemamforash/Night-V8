@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Humans
 {
-    public class Warlord : EnemyBehaviour
+    public class Warlord : ArmedBehaviour
     {
         private float _reinforceCallTime;
         private float _reinforceDuration = 5f;

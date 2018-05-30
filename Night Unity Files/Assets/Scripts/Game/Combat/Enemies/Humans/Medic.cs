@@ -2,7 +2,7 @@
 
 namespace Game.Combat.Enemies.Humans
 {
-    public class Medic : EnemyBehaviour
+    public class Medic : ArmedBehaviour
     {
         private const int HealAmount = 10;
         private const int HealTicks = 5;

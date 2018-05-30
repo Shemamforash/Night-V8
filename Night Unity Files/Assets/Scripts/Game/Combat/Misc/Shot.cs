@@ -288,7 +288,7 @@ namespace Game.Combat.Misc
 
         public void SetAccuracy(float accuracy)
         {
-            Assert.IsTrue(accuracy >= 0 && accuracy <= 1);
+            Assert.IsTrue(accuracy >= 0 && accuracy <= 180);
             _accuracy = accuracy;
         }
     }

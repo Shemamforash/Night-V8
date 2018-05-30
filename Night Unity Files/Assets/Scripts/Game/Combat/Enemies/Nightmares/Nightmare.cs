@@ -28,10 +28,10 @@ namespace Game.Combat.Enemies.Nightmares
             Immobilised(true);
             _beamAttackTimer -= Time.deltaTime;
             if (_beamAttackTimer > 0f) return;
-            BeamController.Create(transform.position, transform.right);
-            BeamController.Create(transform.position, -transform.right);
-            BeamController.Create(transform.position, transform.up);
-            BeamController.Create(transform.position, -transform.up);
+//            BeamController.Create(transform, transform.position + transform.right * 30);
+//            BeamController.Create(transform, transform.position - transform.right * 30);
+//            BeamController.Create(transform, transform.position + transform.up * 30);
+//            BeamController.Create(transform, transform.position - transform.up * 30);
             _beamAttackTimer = BeamAttackTimerMax;
         }
 

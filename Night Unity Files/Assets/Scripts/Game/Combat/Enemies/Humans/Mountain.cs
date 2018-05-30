@@ -1,6 +1,6 @@
 ﻿namespace Game.Combat.Enemies.Humans
 {
-    public class Mountain : EnemyBehaviour
+    public class Mountain : ArmedBehaviour
     {
         private bool _firedVolley;
 

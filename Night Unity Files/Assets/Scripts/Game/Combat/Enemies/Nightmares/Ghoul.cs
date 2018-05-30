@@ -17,7 +17,6 @@ namespace Game.Combat.Enemies.Nightmares
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            Alerted = true;
             CurrentAction = SeekPlayer;
             _particles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Dissolve Particles");
         }

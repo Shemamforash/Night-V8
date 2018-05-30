@@ -1,6 +1,6 @@
 ﻿namespace Game.Combat.Enemies.Humans
 {
-    public class Sentinel : EnemyBehaviour
+    public class Sentinel : ArmedBehaviour
     {
     }
 }

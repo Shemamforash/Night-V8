@@ -15,6 +15,7 @@
         Maelstrom,
         MaelstromImage,
         Ghast,
-        Nightmare
+        Nightmare,
+        Revenant
     }
 }

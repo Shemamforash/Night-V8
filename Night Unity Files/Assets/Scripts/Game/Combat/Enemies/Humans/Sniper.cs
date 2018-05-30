@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Humans
 {
-    public class Sniper : EnemyBehaviour
+    public class Sniper : ArmedBehaviour
     {
         private bool _firing;
         private float _powerShotCooldown;

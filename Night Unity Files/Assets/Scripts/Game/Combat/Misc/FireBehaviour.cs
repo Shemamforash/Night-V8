@@ -33,6 +33,7 @@ namespace Game.Combat.Misc
         private IEnumerator Burn(Vector3 position, float size, bool lightOn)
         {
             EmissionRate = (int) (size * size * MaxEmissionRate);
+            Debug.Log(EmissionRate);
             ParticleSystem.ShapeModule shape = _particles.shape;
             shape.radius = size;
             _light.Radius = size * LightMaxRadius;

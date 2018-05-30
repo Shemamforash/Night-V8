@@ -2,7 +2,7 @@
 
 namespace Game.Combat.Enemies.Humans
 {
-    public class Martyr : EnemyBehaviour
+    public class Martyr : UnarmedBehaviour
     {
         private bool _detonated;
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Humans
 {
-    public class Brawler : EnemyBehaviour
+    public class Brawler : UnarmedBehaviour
     {
         private const float MinMeleeDistance = 1;
         private const float MeleeWarmupDuration = 1f;
@@ -13,12 +13,6 @@ namespace Game.Combat.Enemies.Humans
         private bool _meleeing;
         private const float MeleeForce = 200;
 
-        public override void Initialise(Enemy enemy)
-        {
-            base.Initialise(enemy);
-            IdealWeaponDistance = 1;
-        }
-        
         public override void ChooseNextAction()
         {
             CurrentAction = MoveToPlayer;
@@ -28,7 +22,6 @@ namespace Game.Combat.Enemies.Humans
         {
             base.Update();
             if (!Alerted) return;
-            if (!CouldHitTarget) return;
             if (_meleeing) return;
             if (DistanceToTarget() > MinMeleeDistance) return;
             StrikePlayer();

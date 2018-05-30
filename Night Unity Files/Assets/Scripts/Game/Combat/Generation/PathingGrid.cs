@@ -58,7 +58,32 @@ namespace Game.Combat.Generation
             Debug.Log("no physics: " + stopwatch.Elapsed.ToString("mm\\:ss\\.ff"));
         }
 
+        public List<Cell> GetCellsInFrontOfMe(Cell current, Vector2 direction, float distance)
+        {
+            Vector2 positionInFront = current.Position + direction.normalized * distance;
+            Cell cellInFrontOfMe = PositionToCell(positionInFront);
+            while (cellInFrontOfMe == null && distance > 0)
+            {
+                cellInFrontOfMe = PositionToCell(positionInFront);
+                distance -= 0.1f;
+                positionInFront = current.Position + direction * distance;
+            }
 
+            return cellInFrontOfMe == null ? null : CellsInRange(cellInFrontOfMe, WorldToGridDistance(distance));
+        }
+
+        public Cell GetCellOrbitingTarget(Cell current, Cell target, Vector2 direction, float distanceFromTarget, float distanceFromCurrent)
+        {
+            List<Cell> cellsAroundTarget = CellsInRange(target, WorldToGridDistance(distanceFromTarget), 3);
+            List<Cell> cellsInFrontOfMe = GetCellsInFrontOfMe(current, direction, distanceFromCurrent);
+            List<Cell> sharedCells = new List<Cell>(cellsAroundTarget.Intersect(cellsInFrontOfMe));
+            if (sharedCells.Count == 0)
+            {
+               return FindNearestCell(cellsAroundTarget, false, current);
+            }
+            return Helper.RandomInList(sharedCells);
+        }
+        
         public Cell PositionToCell(Vector2 position)
         {
             Vector2Int gridPosition = WorldToGridPosition(position);

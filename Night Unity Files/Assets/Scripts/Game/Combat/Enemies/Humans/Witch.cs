@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.Humans
 {
-    public class Witch : EnemyBehaviour
+    public class Witch : ArmedBehaviour
     {
         private float _cooldownTime;
         private int _damageTaken;
