@@ -70,9 +70,9 @@ namespace Game.Combat.Enemies
             randomPoint.x = randomDistance * Mathf.Cos(randomAngle) + _originPosition.x;
             randomPoint.y = randomDistance * Mathf.Sin(randomAngle) + _originPosition.y;
 
-            Cell targetCell = _grid.PositionToCell(_originPosition);
-            targetCell = PathingGrid.Instance().GetCellNearMe(targetCell, 3);
-            Thread routingThread = _grid.RouteToCell(CurrentCell(), targetCell, route);
+            Cell targetCell = PathingGrid.WorldToCellPosition(_originPosition);
+            targetCell = PathingGrid.GetCellNearMe(targetCell, 3);
+            Thread routingThread = PathingGrid.RouteToCell(CurrentCell(), targetCell, route);
             WaitForRoute(routingThread, WaitThenWander);
             SetActionText("Wandering");
         }

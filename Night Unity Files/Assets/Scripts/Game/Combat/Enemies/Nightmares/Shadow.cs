@@ -17,11 +17,11 @@ namespace Game.Combat.Enemies.Nightmares
         public override void ChooseNextAction()
         {
             if (_layingMines) return;
-            layMineTarget = PathingGrid.Instance().GetCellNearMe(CombatManager.Player().CurrentCell(), 4f);
+            layMineTarget = PathingGrid.GetCellNearMe(CombatManager.Player().CurrentCell(), 4f);
             Reposition(layMineTarget, () =>
             {
                 _layingMines = true;
-                layMineTarget = PathingGrid.Instance().GetCellNearMe(CurrentCell(), 5);
+                layMineTarget = PathingGrid.GetCellNearMe(CurrentCell(), 5);
                 Reposition(layMineTarget, () => { _layingMines = false; });
             });
         }

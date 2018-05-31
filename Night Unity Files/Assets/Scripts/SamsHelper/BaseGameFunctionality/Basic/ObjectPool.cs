@@ -14,7 +14,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             _prefabLocation = prefabLocation;
         }
 
-        public T Create()
+        public T Create(Transform parent = null)
         {
             T newThing;
             if (_pool.Count == 0)
@@ -22,6 +22,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
                 if (_prefab == null) _prefab = Resources.Load<GameObject>(_prefabLocation);
                 GameObject newGameObject = Object.Instantiate(_prefab);
                 newThing = newGameObject.GetComponent<T>();
+                if(parent != null) newThing.transform.SetParent(parent, false);
                 return newThing;
             }
 
@@ -42,6 +43,11 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         {
             _pool.Remove(thing);
             Object.Destroy(thing.gameObject);
+        }
+
+        public bool Empty()
+        {
+            return _pool.Count == 0;
         }
     }
 }

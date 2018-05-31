@@ -19,7 +19,7 @@ namespace Game.Combat.Enemies.Nightmares
 
         public override void ChooseNextAction()
         {
-            Cell c = PathingGrid.Instance().GetCellOrbitingTarget(CurrentCell(), GetTarget().CurrentCell(), GetComponent<Rigidbody2D>().velocity, 4f, 0.5f);
+            Cell c = PathingGrid.GetCellOrbitingTarget(CurrentCell(), GetTarget().CurrentCell(), GetComponent<Rigidbody2D>().velocity, 4f, 0.5f);
             if (c != null) Debug.DrawLine(CurrentCell().Position, c.Position);
             Reposition(c);
         }

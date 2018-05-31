@@ -270,7 +270,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            Cell c = PathingGrid.Instance().GetCellNearMe(CombatManager.Player().GetTarget().CurrentCell(), 1f);
+            Cell c = PathingGrid.GetCellNearMe(CombatManager.Player().GetTarget().CurrentCell(), 1f);
             CombatManager.Player().transform.position = c.Position;
         }
     }

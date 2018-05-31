@@ -31,7 +31,7 @@ namespace Game.Combat.Enemies.Nightmares
 
         public override void ChooseNextAction()
         {
-            Reposition(PathingGrid.Instance().FindCellToAttackPlayer(CurrentCell(), 5f, 2f));
+            Reposition(PathingGrid.FindCellToAttackPlayer(CurrentCell(), 5f, 2f));
         }
         
         public override void Update()
@@ -80,7 +80,7 @@ namespace Game.Combat.Enemies.Nightmares
                 _teleportTimer += Time.deltaTime;
                 yield return null;
             }
-            Cell c = PathingGrid.Instance().GetCellNearMe(CombatManager.Player().CurrentCell(), 4);
+            Cell c = PathingGrid.GetCellNearMe(CombatManager.Player().CurrentCell(), 4);
             transform.position = c.Position;
             _teleportInParticles.Play();
             SetVisible(true);

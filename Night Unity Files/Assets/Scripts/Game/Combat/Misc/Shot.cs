@@ -35,20 +35,17 @@ namespace Game.Combat.Misc
         private float _pierceChance, _burnChance, _decayChange, _sicknessChance;
         private Rigidbody2D _rigidBody;
 
-        private Transform _shotParent;
+        private static Transform _shotParent;
         private Weapon _weapon;
         public bool DidHit;
         private const float MaxAge = 3f;
         private event Action OnHitAction;
 
-        public void Awake()
-        {
-            if (_shotParent == null) _shotParent = GameObject.Find("World").transform.Find("Bullets");
-        }
 
         private void OnDestroy()
         {
             _shotPool.Dispose(this);
+            if (_shotPool.Empty()) _shotParent = null;
         }
 
         private void ResetValues()
@@ -65,7 +62,8 @@ namespace Game.Combat.Misc
 
         public static Shot Create(CharacterCombat origin)
         {
-            Shot shot = _shotPool.Create();
+            if (_shotParent == null) _shotParent = GameObject.Find("World").transform.Find("Bullets");
+            Shot shot = _shotPool.Create(_shotParent);
             shot.gameObject.layer = 11;
             Vector3 direction = origin.Direction();
             shot.Initialise(origin, direction);
@@ -163,7 +161,8 @@ namespace Game.Combat.Misc
 
         public void Fire(float distance = 0.15f)
         {
-            float angleOffset = Random.Range(-_accuracy, _accuracy) * _origin.GetAccuracyModifier();
+            float angleOffset = Random.Range(-_accuracy, _accuracy);
+            if(_origin != null) angleOffset *= _origin.GetAccuracyModifier();
             transform.position = _originPosition + _direction * distance;
             _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
             _fired = true;

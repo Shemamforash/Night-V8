@@ -270,11 +270,9 @@ namespace Fastlights
             Vector3[] v = new Vector3[meshVertices.Count];
             for (int i = 0; i < meshVertices.Count; ++i)
             {
-//                Vector3 vert = transform.InverseTransformPoint(meshVertices[i]);
-//                vert.z = 0;
-//                v[i] = vert;
+                v[i] = meshVertices[i];
+                if(Target != null) v[i] -= Target.transform.position;
             }
-
             mesh.vertices = v;
             mesh.triangles = Triangulate(v);
             Vector3[] normals = new Vector3[mesh.vertices.Length];

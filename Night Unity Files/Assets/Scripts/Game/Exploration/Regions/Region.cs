@@ -135,8 +135,8 @@ namespace Game.Exploration.Regions
 //            AddEnemy(EnemyType.Maelstrom, 10);
 //            AddEnemy(EnemyType.Ghast, 10);
 //            AddEnemy(EnemyType.Nightmare, 10);
-//            AddEnemy(EnemyType.Revenant, 10);
-            AddEnemy(EnemyType.Shadow, 10);
+            AddEnemy(EnemyType.Revenant, 10);
+//            AddEnemy(EnemyType.Shadow, 10);
         }
 
         private int CalculateDanger()
@@ -188,7 +188,7 @@ namespace Game.Exploration.Regions
         {
             return _regionType;
         }
-        
+
         public void SetRegionType(RegionType regionType)
         {
             //TODO different combat scenarios for region tier and animal/human enemies
@@ -197,9 +197,9 @@ namespace Game.Exploration.Regions
             {
                 case RegionType.Danger:
                     GenerateSimpleEncounter();
-//                    AreaGenerator.GenerateForest(this);
-//            AreaGenerator.GenerateCanyon(this);
-                    AreaGenerator.GenerateSplitRock(this);
+                    AreaGenerator.GenerateForest(this);
+//                    AreaGenerator.GenerateCanyon(this);
+//                    AreaGenerator.GenerateSplitRock(this);
                     break;
                 case RegionType.Nightmare:
                     GenerateNightmare();
@@ -214,7 +214,7 @@ namespace Game.Exploration.Regions
 
         public void Discover()
         {
-            if (_discovered) return; 
+            if (_discovered) return;
             _discovered = true;
             RegionManager.GetRegionType(this);
         }
@@ -230,6 +230,13 @@ namespace Game.Exploration.Regions
             return description;
         }
 
+        public float GetResourceQuantity(InventoryResourceType resourceType)
+        {
+            float total = 0;
+            Containers.ForEach(c => total += c.Inventory.GetResourceQuantity(resourceType));
+            return total;
+        }
+        
         public void AddWater(int ratingPoints)
         {
 //            IncrementResource(InventoryResourceType.Water, 10 * ratingPoints);

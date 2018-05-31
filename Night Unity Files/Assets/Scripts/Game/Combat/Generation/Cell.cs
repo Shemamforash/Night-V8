@@ -38,10 +38,10 @@ namespace Game.Combat.Generation
 
         public void SetNeighbors()
         {
-            if (XIndex - 1 >= 0) AddNeighbor(PathingGrid.Instance().Grid[XIndex - 1, YIndex]);
-            if (YIndex - 1 >= 0) AddNeighbor(PathingGrid.Instance().Grid[XIndex, YIndex - 1]);
-            if (XIndex + 1 < PathingGrid.GridWidth) AddNeighbor(PathingGrid.Instance().Grid[XIndex + 1, YIndex]);
-            if (YIndex + 1 < PathingGrid.GridWidth) AddNeighbor(PathingGrid.Instance().Grid[XIndex, YIndex + 1]);
+            if (XIndex - 1 >= 0) AddNeighbor(PathingGrid.Grid[XIndex - 1, YIndex]);
+            if (YIndex - 1 >= 0) AddNeighbor(PathingGrid.Grid[XIndex, YIndex - 1]);
+            if (XIndex + 1 < PathingGrid.GridWidth) AddNeighbor(PathingGrid.Grid[XIndex + 1, YIndex]);
+            if (YIndex + 1 < PathingGrid.GridWidth) AddNeighbor(PathingGrid.Grid[XIndex, YIndex + 1]);
         }
 
         public float Distance(Cell other)

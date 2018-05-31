@@ -32,7 +32,7 @@ namespace Game.Combat.Enemies.Nightmares
             int ghoulsToRelease = Random.Range(MinImagesReleased + 1, MaxImagesReleased + 1);
             for (int i = MinImagesReleased; i < ghoulsToRelease; ++i)
             {
-                Cell c = PathingGrid.Instance().GetCellNearMe(CurrentCell(), 1f);
+                Cell c = PathingGrid.GetCellNearMe(CurrentCell(), 1f);
                 EnemyBehaviour image = CombatManager.QueueEnemyToAdd(EnemyType.MaelstromImage);
                 image.gameObject.transform.position = c.Position;
             }

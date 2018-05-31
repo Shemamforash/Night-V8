@@ -49,13 +49,14 @@ namespace Game.Combat.Enemies
 
         private bool TargetVisible()
         {
-            bool _obstructed = _grid.IsLineObstructed(transform.position, GetTarget().transform.position);
+            bool _obstructed = PathingGrid.IsLineObstructed(transform.position, GetTarget().transform.position);
             return !_obstructed;
         }
 
         public override void ChooseNextAction()
         {
             base.ChooseNextAction();
+            FacePlayer = false;
             if (NeedsRepositioning()) return;
             if (Weapon().Empty())
             {
@@ -70,7 +71,7 @@ namespace Game.Combat.Enemies
         private bool NeedsRepositioning()
         {
             if (CouldHitTarget || Weapon() == null) return false;
-            Cell targetCell = _grid.FindCellToAttackPlayer(CurrentCell(), (int) (IdealWeaponDistance * 1.25f), (int) (IdealWeaponDistance * 0.75f));
+            Cell targetCell = PathingGrid.FindCellToAttackPlayer(CurrentCell(), (int) (IdealWeaponDistance * 1.25f), (int) (IdealWeaponDistance * 0.75f));
             Reposition(targetCell);
             return true;
         }
@@ -141,6 +142,7 @@ namespace Game.Combat.Enemies
 
         private void Aim()
         {
+            FacePlayer = true;
             Immobilised(true);
             Assert.IsNotNull(Weapon());
             Assert.IsFalse(Weapon().Empty());
@@ -171,6 +173,7 @@ namespace Game.Combat.Enemies
                 if (Weapon().Empty())
                 {
                     Reload();
+                    FacePlayer = false;
                 }
                 else if (!automatic)
                 {

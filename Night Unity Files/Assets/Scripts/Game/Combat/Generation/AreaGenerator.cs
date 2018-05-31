@@ -78,25 +78,18 @@ namespace Game.Combat.Generation
 
         private static void AssignRockPosition(float radius, List<Vector2> barrierVertices, Vector2? position, float scale)
         {
-            if (position == null) position = GetValidPosition(radius);
-            if (position == Vector2.negativeInfinity) return;
+            if (position == null) position = GetValidPosition();
+            if (position == null) return;
             Barrier barrier = new Barrier(barrierVertices, "Barrier " + barrierNumber, (Vector2) position, scale);
             barriers.Add(barrier);
             ++barrierNumber;
         }
 
-
-        private static Vector2 GetValidPosition(float radius)
+        private static Vector2? GetValidPosition()
         {
-            for (int i = 0; i < MaxPlacementAttempts; ++i)
-            {
-                Vector2 randomPosition = Helper.RandomInList(validPositions);
-                if (ShapeIsTooCloseToPoint(randomPosition, radius * 1.1f)) continue;
-                validPositions.Remove(randomPosition);
-                return randomPosition;
-            }
-
-            return Vector2.negativeInfinity;
+            Vector2 randomPosition = Helper.RandomInList(validPositions);
+            validPositions.Remove(randomPosition);
+            return randomPosition;
         }
 
         private static Vector2 RandomPointBetweenRadii(float angle, Ellipse e)
@@ -125,8 +118,6 @@ namespace Game.Combat.Generation
             return randomPoint;
         }
 
-        private const int MaxPlacementAttempts = 20;
-
         private static void GenerateHugeRock() => GenerateGenericRock(Random.Range(LargePolyWidth, HugePolyWidth), 0.25f, 0.75f);
 
         private static void GenerateLargeRock() => GenerateGenericRock(Random.Range(MediumPolyWidth, LargePolyWidth), 0.7f, 0.5f);
@@ -142,19 +133,14 @@ namespace Game.Combat.Generation
 
         //generate fire -> huge rock -> large rock -> medium rock -> small rock
 
-        private static bool ShapeIsTooCloseToPoint(Vector2 point, float distance)
-        {
-            return barriers.Any(b =>
-            {
-                float minDistance = distance + b.Radius * 1.1f;
-                return Vector2.Distance(b.Position, point) <= minDistance;
-            });
-        }
-
         public static void GenerateSplitRock(Region region)
         {
             barriers = new List<Barrier>();
             GenerateSplinteredArea(5);
+            for (int i = barriers.Count - 1; i >= 0; --i)
+            {
+                if(Random.Range(0, 2) == 0) barriers.RemoveAt(i);
+            }
             barrierNumber = 0;
             if (allValidPositions == null) allValidPositions = AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f);
             validPositions = new List<Vector2>();
@@ -164,6 +150,46 @@ namespace Game.Combat.Generation
 //            GenerateMediumRock();
 
             region.Barriers = barriers;
+        }
+
+        private static void PlaceFire(Region region)
+        {
+            for (int i = 0; i < validPositions.Count; ++i)
+            {
+                Vector2 topLeft = new Vector2(validPositions[i].x - 0.5f, validPositions[i].y - 0.5f);
+                Vector2 bottomRight = new Vector2(validPositions[i].x + 0.5f, validPositions[i].y + 0.5f);
+                if (validPositions[i].magnitude > 10) continue;
+                if (PathingGrid.WorldToCellPosition(validPositions[i]) == null) continue;
+                if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
+                region.Fire = GenerateFire(validPositions[i]);
+                validPositions.RemoveAt(i);
+                return;
+            }
+
+            int randomIndex = Random.Range(0, barriers.Count);
+            Barrier b = barriers[randomIndex];
+            barriers.RemoveAt(randomIndex);
+            region.Fire = GenerateFire(b.Position);
+        }
+
+        private static EnemyCampfire GenerateFire(Vector2 position)
+        {
+            float size = PathingGrid.CombatAreaWidth / 2f;
+            int numberOfStones = Random.Range(6, 10);
+            float radius = 0.2f;
+            int angle = 0;
+            int angleStep = 360 / numberOfStones;
+            while (numberOfStones > 0)
+            {
+                float randomisedAngle = (angle + Random.Range(-angleStep, angleStep)) * Mathf.Deg2Rad;
+                float x = radius * Mathf.Cos(randomisedAngle) + position.x;
+                float y = radius * Mathf.Sin(randomisedAngle) + position.y;
+                GenerateGenericRock(0.05f, 0.2f, 0.5f, new Vector2(x, y));
+                angle += angleStep;
+                --numberOfStones;
+            }
+
+            return new EnemyCampfire(position);
         }
 
         public static void GenerateForest(Region region)
@@ -176,6 +202,25 @@ namespace Game.Combat.Generation
             GenerateArea(region, Random.Range(5, 10), Random.Range(5, 10), Random.Range(20, 30), 0);
         }
 
+        private static void AddItems(Region region)
+        {
+            int itemsToAdd = 10;
+            Helper.Shuffle(ref validPositions);
+            for (int i = validPositions.Count - 1; i >= 0 && itemsToAdd > 0; --i)
+            {
+                if (validPositions[i].magnitude > PathingGrid.CombatAreaWidth) continue;
+                Cell c = PathingGrid.WorldToCellPosition(validPositions[i]);
+                if (c == null) continue;
+                if (!c.Reachable) continue;
+                DesolationInventory inventory = new DesolationInventory("Cache");
+                inventory.Move(WeaponGenerator.GenerateWeapon(ItemQuality.Shining, WeaponType.Rifle, 5), 1);
+                ContainerController container = new ContainerController(validPositions[i], inventory);
+                region.Containers.Add(container);
+                --itemsToAdd;
+                validPositions.RemoveAt(i);
+            }
+        }
+
         private static void GenerateArea(Region region, int hugeRockCount, int largeRockCount, int mediumRockCount, int smallRockCount)
         {
             barriers = new List<Barrier>();
@@ -184,41 +229,29 @@ namespace Game.Combat.Generation
             validPositions = new List<Vector2>();
             allValidPositions.ForEach(v => validPositions.Add(v));
 
-            region.Fire = GenerateFire();
             for (int i = 0; i < hugeRockCount; ++i) GenerateHugeRock();
             for (int i = 0; i < largeRockCount; ++i) GenerateLargeRock();
             for (int i = 0; i < mediumRockCount; ++i) GenerateMediumRock();
             for (int i = 0; i < smallRockCount; ++i) GenerateSmallRock();
+            List<Barrier> invalidBarriers = new List<Barrier>();
+            PathingGrid.InitialiseGrid();
+            barriers.ForEach(b =>
+            {
+                if (PathingGrid.AddBarrier(b)) return;
+                invalidBarriers.Add(b);
+            });
+            invalidBarriers.ForEach(b => barriers.Remove(b));
+
             region.Barriers = barriers;
 
-            DesolationInventory inventory = new DesolationInventory("Cache");
-            inventory.Move(WeaponGenerator.GenerateWeapon(ItemQuality.Shining, WeaponType.Rifle, 5), 1);
-            ContainerController container = new ContainerController(AdvancedMaths.RandomVectorWithinRange(region.Fire.FirePosition, 1), inventory);
-            region.Containers.Add(container);
+            PathingGrid.FinaliseGrid();
+
+            PlaceFire(region);
+
+            AddItems(region);
         }
 
         private static List<Barrier> barriers;
-
-        private static EnemyCampfire GenerateFire()
-        {
-            float size = PathingGrid.CombatAreaWidth / 2f;
-            Vector2 campfirePosition = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 2);
-            int numberOfStones = Random.Range(6, 10);
-            float radius = 0.2f;
-            int angle = 0;
-            int angleStep = 360 / numberOfStones;
-            while (numberOfStones > 0)
-            {
-                float randomisedAngle = (angle + Random.Range(-angleStep, angleStep)) * Mathf.Deg2Rad;
-                float x = radius * Mathf.Cos(randomisedAngle) + campfirePosition.x;
-                float y = radius * Mathf.Sin(randomisedAngle) + campfirePosition.y;
-                GenerateGenericRock(0.05f, 0.2f, 0.5f, new Vector2(x, y));
-                angle += angleStep;
-                --numberOfStones;
-            }
-
-            return new EnemyCampfire(campfirePosition);
-        }
 
         private class Ellipse
         {

@@ -90,7 +90,6 @@ namespace FastLights
 
         public void UpdateMesh()
         {
-            Debug.Log("banana");
             _worldVerts.Clear();
             _edges.Clear();
             List<Vector3> vertices = GetVertices();

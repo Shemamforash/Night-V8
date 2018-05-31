@@ -26,7 +26,7 @@ namespace Game.Combat.Enemies
         public Action CurrentAction;
         public Enemy Enemy;
         private SpriteRenderer _sprite;
-        protected PathingGrid _grid;
+        protected bool FacePlayer;
 
         protected readonly Queue<Cell> route = new Queue<Cell>();
         //        private const float AlphaCutoff = 0.2f;
@@ -49,22 +49,22 @@ namespace Game.Combat.Enemies
             if (!CombatManager.InCombat()) return;
             UpdateRotation();
             UpdateDistanceAlpha();
-            if(CurrentAction == null) ChooseNextAction();
+            if (CurrentAction == null) ChooseNextAction();
             else CurrentAction.Invoke();
         }
-        
+
         private void UpdateRotation()
         {
-            if (!CombatManager.InCombat())
+            float rotation;
+            if (FacePlayer && GetTarget() != null)
             {
-                float rotation = AdvancedMaths.AngleFromUp(transform.position, GetComponent<Rigidbody2D>().velocity);
+                rotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
                 transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+                return;
             }
-            else if(GetTarget() != null)
-            {
-                float rotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
-            }
+
+            rotation = AdvancedMaths.AngleFromUp(transform.position, transform.position + (Vector3)GetComponent<Rigidbody2D>().velocity);
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         }
 
         private void UpdateDistanceAlpha()
@@ -102,7 +102,6 @@ namespace Game.Combat.Enemies
         public virtual void Initialise(Enemy enemy)
         {
             _sprite = GetComponent<SpriteRenderer>();
-            _grid = PathingGrid.Instance();
             ArmourController = enemy.ArmourController;
             Enemy = enemy;
             SetOwnedByEnemy(Enemy.Template.Speed);
@@ -111,7 +110,7 @@ namespace Game.Combat.Enemies
             transform.SetParent(GameObject.Find("World").transform);
 //            if (CombatManager.Region().GetRegionType() == RegionType.Nightmare)
 //            {
-                SetDistance(Vector2.zero, 4f, 8f);
+            SetDistance(Vector2.zero, 4f, 8f);
 //            }
 //            else
 //            {
@@ -133,7 +132,9 @@ namespace Game.Combat.Enemies
             if (Random.Range(0, 2) == 1) yOffset = -yOffset;
             position.x += xOffset;
             position.y += yOffset;
-            transform.position = position;
+//            transform.position = position;
+            Cell cell = PathingGrid.GetCellNearMe(CurrentCell(), 15);
+            transform.position = cell.Position;
         }
 
         protected void SetActionText(string actionText)
@@ -178,12 +179,12 @@ namespace Game.Combat.Enemies
 
         public bool MoveToCover(Action reachCoverAction)
         {
-            if (_grid.IsCellHidden(CurrentCell())) return false;
-            Cell safeCell = _grid.FindCoverNearMe(CurrentCell());
+            if (PathingGrid.IsCellHidden(CurrentCell())) return false;
+            Cell safeCell = PathingGrid.FindCoverNearMe(CurrentCell());
             if (safeCell == null) return false;
             Immobilised(false);
             SetActionText("Seeking Cover");
-            Thread safeRoute = _grid.RouteToCell(CurrentCell(), safeCell, route);
+            Thread safeRoute = PathingGrid.RouteToCell(CurrentCell(), safeCell, route);
             WaitForRoute(safeRoute, reachCoverAction);
             return true;
         }
@@ -196,7 +197,7 @@ namespace Game.Combat.Enemies
         protected void Reposition(Cell c, Action reachTargetAction = null)
         {
             SetActionText("Moving");
-            Thread pathThread = _grid.RouteToCell(CurrentCell(), c, route);
+            Thread pathThread = PathingGrid.RouteToCell(CurrentCell(), c, route);
             WaitForRoute(pathThread, reachTargetAction);
         }
 
@@ -227,7 +228,7 @@ namespace Game.Combat.Enemies
                 MoveToCell(target);
             };
         }
-        
+
         protected void MoveToPlayer()
         {
             MoveToCharacter(GetTarget(), ReachPlayer);
@@ -237,7 +238,7 @@ namespace Game.Combat.Enemies
         {
             Cell targetCell = null;
             SetActionText("Moving to " + character.name);
-            Thread pathThread = _grid.RouteToCell(CurrentCell(), character.CurrentCell(), route);
+            Thread pathThread = PathingGrid.RouteToCell(CurrentCell(), character.CurrentCell(), route);
             CurrentAction = () =>
             {
                 if (pathThread.IsAlive) return;

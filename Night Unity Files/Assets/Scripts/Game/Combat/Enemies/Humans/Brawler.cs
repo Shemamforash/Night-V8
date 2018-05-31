@@ -54,7 +54,7 @@ namespace Game.Combat.Enemies.Humans
                         return;
                     }
 
-                    Cell c =  PathingGrid.Instance().GetCellNearMe(CurrentCell(), 2f);
+                    Cell c =  PathingGrid.GetCellNearMe(CurrentCell(), 2f);
                     Reposition(c);
                     _meleeing = false;
                 }

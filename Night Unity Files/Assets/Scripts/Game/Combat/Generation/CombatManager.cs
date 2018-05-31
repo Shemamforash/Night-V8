@@ -70,10 +70,15 @@ namespace Game.Combat.Generation
             _visibilityRange = 5;
             _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
 
-            _currentRegion.Barriers.ForEach(b => b.CreateObject());
             _currentRegion.Fire?.CreateObject();
             _currentRegion.Containers.ForEach(c => c.CreateObject());
-            PathingGrid.Instance().GenerateGrid(_currentRegion.Barriers);
+            PathingGrid.InitialiseGrid();
+            _currentRegion.Barriers.ForEach(b =>
+            {
+                PathingGrid.AddBarrier(b);
+                b.CreateObject();
+            });
+            PathingGrid.FinaliseGrid();
 
 //            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
 
@@ -106,51 +111,10 @@ namespace Game.Combat.Generation
             return charactersInRange;
         }
 
-
-//        public static void Select(float direction)
-//        {
-//            if (direction > 0)
-//                Instance().SelectAntiClockwise();
-//            else
-//                Instance().SelectClockwise();
-//        }
-
         public static List<EnemyBehaviour> EnemiesOnScreen()
         {
             return Instance()._enemies.FindAll(e => e.OnScreen());
         }
-
-//        private void SelectEnemy(int direction)
-//        {
-//            Vector2 playerTransform = _player.transform.position;
-//            List<EnemyBehaviour> visibleEnemies = EnemiesOnScreen();
-//            EnemyBehaviour newTarget = null;
-//            if (visibleEnemies.Count != 0)
-//            {
-//                visibleEnemies.Sort((a, b) =>
-//                {
-//                    float aAngle = AdvancedMaths.AngleFromUp(playerTransform, a.transform.position);
-//                    float bAngle = AdvancedMaths.AngleFromUp(playerTransform, b.transform.position);
-//                    return aAngle.CompareTo(bAngle);
-//                });
-//                int currentTargetIndex = visibleEnemies.IndexOf((EnemyBehaviour) _player.GetTarget());
-//                currentTargetIndex += direction;
-//                if (currentTargetIndex == visibleEnemies.Count) currentTargetIndex = 0;
-//                if (currentTargetIndex == -1) currentTargetIndex = visibleEnemies.Count - 1;
-//                newTarget = visibleEnemies[currentTargetIndex];
-//            }
-//            Player().SetTarget(newTarget);
-//        }
-
-//        private void SelectClockwise()
-//        {
-//            SelectEnemy(1);
-//        }
-//
-//        private void SelectAntiClockwise()
-//        {
-//            SelectEnemy(-1);
-//        }
 
         public static EnemyBehaviour QueueEnemyToAdd(EnemyType type)
         {

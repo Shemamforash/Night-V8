@@ -301,6 +301,7 @@ namespace Game.Combat.Player
             SkillBar.BindSkills(Player);
             UIMagazineController.SetWeapon(Weapon());
             SetInCombat(false);
+            transform.position = PathingGrid.FindCellToAttackPlayer(CurrentCell(), PathingGrid.CombatAreaWidth, PathingGrid.CombatAreaWidth - 4).Position;
         }
 
         protected override void Dash(Vector2 direction)

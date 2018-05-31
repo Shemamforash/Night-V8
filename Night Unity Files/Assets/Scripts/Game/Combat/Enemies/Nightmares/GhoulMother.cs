@@ -24,7 +24,7 @@ namespace Game.Combat.Enemies.Nightmares
             int ghoulsToRelease = Random.Range(MinGhoulsReleased + 1, MaxGhoulsReleased + 1);
             for (int i = MinGhoulsReleased; i < ghoulsToRelease; ++i)
             {
-                Cell c = PathingGrid.Instance().GetCellNearMe(CurrentCell(), 2f);
+                Cell c = PathingGrid.GetCellNearMe(CurrentCell(), 2f);
                 EnemyBehaviour ghoul = CombatManager.QueueEnemyToAdd(EnemyType.Ghoul);
                 ghoul.gameObject.transform.position = c.Position;
             }

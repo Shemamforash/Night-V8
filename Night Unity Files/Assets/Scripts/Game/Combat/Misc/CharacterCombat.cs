@@ -163,7 +163,7 @@ namespace Game.Combat.Misc
 
         public Cell CurrentCell()
         {
-            return _currentCell == null ? PathingGrid.Instance().PositionToCell(transform.position) : _currentCell;
+            return _currentCell == null ? PathingGrid.WorldToCellPosition(transform.position) : _currentCell;
         }
 
         protected void SetOwnedByEnemy(float speed)
@@ -173,11 +173,11 @@ namespace Game.Combat.Misc
 
         public virtual void TakeDamage(Shot shot)
         {
-            float chanceToAbsorbDamage = shot.DidPierce() ? 0 : ArmourController.GetCurrentArmour() / 10f;
-            if (chanceToAbsorbDamage >= Random.Range(0f, 1f))
-                ArmourController.TakeDamage(shot.DamageDealt());
-            else
-                HealthController.TakeDamage(shot.DamageDealt());
+            float armourProtection = ArmourController.GetCurrentArmour() / 10f;
+            float armourDamage = shot.DamageDealt() * armourProtection;
+            float healthDamage = shot.DamageDealt() - armourDamage;
+            ArmourController.TakeDamage(Mathf.CeilToInt(armourDamage));
+            HealthController.TakeDamage(Mathf.CeilToInt(healthDamage));
         }
 
         public virtual void Kill()
@@ -226,7 +226,7 @@ namespace Game.Combat.Misc
         {
             if (!CombatManager.InCombat()) return;
             if (GetTarget() != null) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);
-            _currentCell = PathingGrid.Instance().PositionToCell(transform.position);
+            _currentCell = PathingGrid.WorldToCellPosition(transform.position);
             UpdateRecoil();
             UpdateConditions();
         }
