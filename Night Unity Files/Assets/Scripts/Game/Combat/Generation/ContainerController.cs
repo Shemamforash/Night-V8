@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -7,65 +8,66 @@ using UnityEngine;
 
 public class ContainerController //: DesolationInventory 
 {
-    private const int MinDistanceToFlash = 4;
-    private static GameObject _prefab;
     public static readonly List<ContainerBehaviour> Containers = new List<ContainerBehaviour>();
     private readonly Vector2 _position;
     public readonly DesolationInventory Inventory;
+    private string _prefabLocation;
 
-    public ContainerController(Vector2 position, DesolationInventory inventory = null)
+    private ContainerController(Vector2 position, string name)
     {
         _position = position;
-        Inventory = inventory;
-//        inventory?.Contents().ForEach(i => Move(i, i.Quantity()));
+        Inventory = new DesolationInventory(name);
     }
-    
-    public void CreateObject()
+
+    public static ContainerController CreateWaterSource(Vector2 position)
     {
-        if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Container");
-        GameObject container = GameObject.Instantiate(_prefab);
+        ContainerController container = new ContainerController(position, "Source");
+        container.Inventory.IncrementResource(InventoryResourceType.Water, 5);
+        container.Inventory.SetReadonly(true);
+        container._prefabLocation = "Puddle";
+        return container;
+    }
+
+    public static ContainerController CreateFoodSource(Vector2 position)
+    {
+        string sourceName;
+        int quantity;
+        int rand = Random.Range(0, 4);
+        if (rand != 0)
+        {
+            sourceName = "Bush";
+            quantity = 1;
+        }
+        else
+        {
+            sourceName = "Tree";
+            quantity = 3;
+        }
+
+        ContainerController container = new ContainerController(position, sourceName);
+        container.Inventory.IncrementResource(InventoryResourceType.Fruit, quantity);
+        container.Inventory.SetReadonly(true);
+        container._prefabLocation = sourceName;
+        return container;
+    }
+
+    public static ContainerController CreateEnemyLoot(Vector2 position, Enemy e)
+    {
+        ContainerController container = new ContainerController(position, e.Name);
+        if (Random.Range(0, 10) != 0 || e.Weapon == null) return null;
+        container.Inventory.Move(e.Weapon, 1);
+        container.Inventory.SetReadonly(true);
+        container._prefabLocation = "Container";
+        return container;
+    }
+
+    public void CreateObject() //InventoryResourceType type)
+    {
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/Combat/" + _prefabLocation);
+        GameObject container = GameObject.Instantiate(prefab);
         container.transform.position = _position;
-        container.transform.localScale = Vector3.one * 0.03f;
-        container.AddComponent<ContainerBehaviour>().SetContainerController(this);
-    }
-
-    public class ContainerBehaviour : MonoBehaviour
-    {
-        private float _currentFlashIntensity;
-        private SpriteRenderer _renderer;
-        public ContainerController ContainerController;
-
-        public void Awake()
-        {
-            Containers.Add(this);
-            _renderer = GetComponent<SpriteRenderer>();
-        }
-
-        public void SetContainerController(ContainerController containerController)
-        {
-            ContainerController = containerController;
-        }
-        
-        private void OnDestroy()
-        {
-            Containers.Remove(this);
-        }
-
-        public void Update()
-        {
-            float distanceToPlayer = Vector2.Distance(transform.position, CombatManager.Player().transform.position);
-            if (distanceToPlayer > MinDistanceToFlash)
-            {
-                _currentFlashIntensity = 0;
-                return;
-            }
-            float normalisedDistance = 1 - distanceToPlayer / MinDistanceToFlash;
-            Color c = _renderer.color;
-            float intensityModifier = _currentFlashIntensity <= 1 ? _currentFlashIntensity : 1 - (_currentFlashIntensity - 1);
-            c.a = intensityModifier * normalisedDistance;
-            _renderer.color = c;
-            _currentFlashIntensity += Time.deltaTime;
-            if (_currentFlashIntensity > 2) _currentFlashIntensity = 0;
-        }
+        container.transform.localScale = Vector3.one;
+        ContainerBehaviour cb = container.GetComponent<ContainerBehaviour>();
+        cb.SetContainerController(this);
     }
 }

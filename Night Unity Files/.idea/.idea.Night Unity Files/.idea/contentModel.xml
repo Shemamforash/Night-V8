@@ -6,7 +6,7 @@
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="BasicRotate.cs" t="Include" />
+        <e p="ColourPulse.cs" t="Include" />
         <e p="Demigiant" t="Include">
           <e p="DemiLib" t="Include">
             <e p="Core" t="Include">
@@ -46,6 +46,8 @@
             <e p="Weather.xml" t="Include" />
           </e>
         </e>
+        <e p="Rotate.cs" t="Include" />
+        <e p="SaltBehaviour.cs" t="Include" />
         <e p="Scripts" t="Include">
           <e p="Facilitating" t="Include">
             <e p="Audio" t="Include">
@@ -172,6 +174,7 @@
                 <e p="Barrier.cs" t="Include" />
                 <e p="Cell.cs" t="Include" />
                 <e p="CombatManager.cs" t="Include" />
+                <e p="ContainerBehaviour.cs" t="Include" />
                 <e p="ContainerController.cs" t="Include" />
                 <e p="PathingGrid.cs" t="Include" />
                 <e p="Triangulator.cs" t="Include" />

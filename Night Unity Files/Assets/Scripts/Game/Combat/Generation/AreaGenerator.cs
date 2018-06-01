@@ -202,22 +202,28 @@ namespace Game.Combat.Generation
             GenerateArea(region, Random.Range(5, 10), Random.Range(5, 10), Random.Range(20, 30), 0);
         }
 
-        private static void AddItems(Region region)
+        private static Vector2 FindAndRemoveValidPosition()
         {
-            int itemsToAdd = 10;
-            Helper.Shuffle(ref validPositions);
-            for (int i = validPositions.Count - 1; i >= 0 && itemsToAdd > 0; --i)
+            for (int i = validPositions.Count - 1; i >= 0; --i)
             {
                 if (validPositions[i].magnitude > PathingGrid.CombatAreaWidth) continue;
                 Cell c = PathingGrid.WorldToCellPosition(validPositions[i]);
                 if (c == null) continue;
                 if (!c.Reachable) continue;
-                DesolationInventory inventory = new DesolationInventory("Cache");
-                inventory.Move(WeaponGenerator.GenerateWeapon(ItemQuality.Shining, WeaponType.Rifle, 5), 1);
-                ContainerController container = new ContainerController(validPositions[i], inventory);
-                region.Containers.Add(container);
-                --itemsToAdd;
                 validPositions.RemoveAt(i);
+                return c.Position;
+            }
+
+            return Vector2.zero;
+        }
+        
+        private static void AddItems(Region region)
+        {
+            Helper.Shuffle(ref validPositions);
+            for (int i = 0; i < 5; ++i)
+            {
+                region.Containers.Add(ContainerController.CreateFoodSource(FindAndRemoveValidPosition()));
+                region.Containers.Add(ContainerController.CreateWaterSource(FindAndRemoveValidPosition()));
             }
         }
 

@@ -61,6 +61,11 @@ namespace Game.Combat.Player
             else PlayerUi.Instance().Hide();
         }
 
+        public bool InCombat()
+        {
+            return _inCombat;
+        }
+
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {

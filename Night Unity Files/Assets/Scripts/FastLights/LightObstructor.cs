@@ -50,7 +50,6 @@ namespace FastLights
             List<Vector3> points = new List<Vector3>();
             if (_collider is PolygonCollider2D)
             {
-                Debug.Log("banana");
                 PolygonCollider2D polygon = (PolygonCollider2D) _collider;
                 points.AddRange(polygon.points.Select(polygonPoint => (Vector3) polygonPoint));
             }

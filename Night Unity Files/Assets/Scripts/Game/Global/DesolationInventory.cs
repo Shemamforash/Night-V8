@@ -21,7 +21,7 @@ namespace Game.Global
             {
                 AddResource(resourceType, _resources[resourceType]);
             }
-            AddTestingResources(10);
+//            AddTestingResources(10);
         }
 
         private static void LoadResources()

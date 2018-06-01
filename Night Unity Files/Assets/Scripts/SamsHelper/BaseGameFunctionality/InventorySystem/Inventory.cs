@@ -18,6 +18,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private bool _isWeightLimited;
         private float _maxWeight;
         private readonly List<InventoryItem> _contents = new List<InventoryItem>();
+        private bool _readonly;
 
         protected Inventory(string name, float maxWeight = 0) : base(name, GameObjectType.Inventory)
         {
@@ -54,6 +55,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return inventoryNode;
         }
 
+        public void SetReadonly(bool readOnly)
+        {
+            _readonly = readOnly;
+        }
+        
         public bool IsBottomless()
         {
             return !_isWeightLimited;
@@ -182,6 +188,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public InventoryItem Move(InventoryItem item, float quantity)
         {
+            if (_readonly) return null;
             InventoryResource resource = item as InventoryResource;
             if (resource == null) return Move(item);
             if (quantity > resource.Quantity()) quantity = resource.Quantity();

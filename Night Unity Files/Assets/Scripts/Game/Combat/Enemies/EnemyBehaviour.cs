@@ -153,8 +153,18 @@ namespace Game.Combat.Enemies
         public override void Kill()
         {
             base.Kill();
-            ContainerController controller = new ContainerController(transform.position, Enemy.Inventory());
-            controller.CreateObject();
+            for (int i = 0; i < Random.Range(2, 10); ++i)
+            {
+                SaltBehaviour.Create(transform.position);
+            }
+
+            ContainerController controller = ContainerController.CreateEnemyLoot(transform.position, Enemy);
+            if (controller != null)
+            {
+                controller.CreateObject();
+                CombatManager.Region().Containers.Add(controller);
+            }
+
             CombatManager.Remove(this);
             Enemy.Kill();
             Destroy(gameObject);

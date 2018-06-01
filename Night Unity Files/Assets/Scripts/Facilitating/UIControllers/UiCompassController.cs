@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Combat.Generation;
 using NUnit.Framework;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -11,7 +12,7 @@ public class UiCompassController : MonoBehaviour
     private ParticleSystem _compassPulse;
     private GameObject _indicatorPrefab;
     private float _showItemTimeCurrent;
-    private const float ShowItemTimeMax = 2f;
+    private const float ShowItemTimeMax = 5f;
     private static UiCompassController _instance;
     private const float MaxDetectDistance = 10f;
     
@@ -27,14 +28,17 @@ public class UiCompassController : MonoBehaviour
         if (_instance._compassPulse.particleCount != 0) return;
         _instance._compassPulse.Play();
         _instance.StartCoroutine(_instance.ShowItems());
+        ContainerController.Containers.ForEach(c => c.TryReveal());
     }
+
 
     private IEnumerator ShowItems()
     {
-        List<Tuple<ContainerController.ContainerBehaviour, SpriteRenderer>> _indicators = new List<Tuple<ContainerController.ContainerBehaviour, SpriteRenderer>>();
+        List<Tuple<ContainerBehaviour, SpriteRenderer>> _indicators = new List<Tuple<ContainerBehaviour, SpriteRenderer>>();
         _showItemTimeCurrent = 0f;
         ContainerController.Containers.ForEach(c =>
         {
+            if (c.Revealed() && Helper.IsObjectInCameraView(c.gameObject)) return;
             if (Vector2.Distance(c.transform.position, transform.position) > MaxDetectDistance) return;
             GameObject indicator = Instantiate(_indicatorPrefab);
             indicator.transform.SetParent(transform, false);
@@ -54,10 +58,12 @@ public class UiCompassController : MonoBehaviour
                 distance = 1 - distance;
                 modifiedLerpVal *= distance;
                 i.Item2.transform.rotation = Quaternion.Euler(new Vector3(0, 0, AdvancedMaths.AngleFromUp(transform.position, i.Item1.transform.position)));
+                if (i.Item1.Revealed()) modifiedLerpVal = Mathf.Pow(modifiedLerpVal, 3f);
                 i.Item2.color = new Color(1,1,1, modifiedLerpVal);
             });
             yield return null;
         }
+        _indicators.ForEach(i => Destroy(i.Item2.gameObject));
         _indicators.Clear();
     }
 }

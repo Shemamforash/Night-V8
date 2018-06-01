@@ -6,6 +6,7 @@ using Game.Combat.Player;
 using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
+using SamsHelper.Input;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
@@ -57,6 +58,12 @@ namespace Game.Combat.Generation
             EnterCombat();
         }
 
+        public override void Enter()
+        {
+            base.Enter();
+            InputHandler.SetCurrentListener(_player);
+        }
+        
         public void Update()
         {
             if (!_inCombat) return;
