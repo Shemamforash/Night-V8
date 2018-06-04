@@ -1,62 +1,211 @@
 <Resources>
     <Resource>
-        <Name>Food</Name>
+        <Name>Tainted Water</Name>
+        <Environment>Ruins</Environment>
+        <Region>All</Region>
+        <Drop>Puddle</Drop>
+        <Consumable>TRUE</Consumable>
+        <Effect1>-1 Strength</Effect1>
+        <Effect2>-1 Thirst</Effect2>
+        <Duration></Duration>
         <Weight>1</Weight>
+    </Resource>
+    <Resource>
+        <Name>Iridescent Funghi</Name>
+        <Environment>Defiles</Environment>
+        <Region>All</Region>
+        <Drop>Floor</Drop>
+        <Consumable>TRUE</Consumable>
+        <Effect1>-2 Willpower</Effect1>
+        <Effect2>-1 Hunger</Effect2>
+        <Duration></Duration>
+        <Weight>0.5</Weight>
     </Resource>
     <Resource>
         <Name>Water</Name>
+        <Environment>All</Environment>
+        <Region>All</Region>
+        <Drop>Puddle</Drop>
+        <Consumable>TRUE</Consumable>
+        <Effect1>-5 Thirst</Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
         <Weight>1</Weight>
-    </Resource>
-    <Resource>
-        <Name>Fuel</Name>
-        <Weight>2</Weight>
-    </Resource>
-    <Resource>
-        <Name>Scrap</Name>
-        <Weight>2</Weight>
-    </Resource>
-    <Resource>
-        <Name>Essence</Name>
-        <Weight>0</Weight>
-    </Resource>
-    <Resource>
-        <Name>Skin</Name>
-        <Weight>3</Weight>
-    </Resource>
-    <Resource>
-        <Name>Salt</Name>
-        <Weight>1</Weight>
-    </Resource>
-    <Resource>
-        <Name>Metal</Name>
-        <Weight>5</Weight>
     </Resource>
     <Resource>
         <Name>Meat</Name>
+        <Environment>All</Environment>
+        <Region>All</Region>
+        <Drop>Animals</Drop>
+        <Consumable>TRUE</Consumable>
+        <Effect1>-5 Hunger</Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
+        <Weight>2</Weight>
+    </Resource>
+    <Resource>
+        <Name>Rotten Meat</Name>
+        <Environment>All</Environment>
+        <Region>All</Region>
+        <Drop>Dead Animal</Drop>
+        <Consumable>TRUE</Consumable>
+        <Effect1>-3 Hunger</Effect1>
+        <Effect2>-2 Endurance</Effect2>
+        <Duration></Duration>
         <Weight>2</Weight>
     </Resource>
     <Resource>
         <Name>Fruit</Name>
+        <Environment>All</Environment>
+        <Region>All</Region>
+        <Drop>Bushes</Drop>
+        <Consumable>TRUE</Consumable>
+        <Effect1>-2 Hunger</Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
         <Weight>1</Weight>
     </Resource>
     <Resource>
+        <Name>Ash Fruit</Name>
+        <Environment>Wasteland</Environment>
+        <Region>All</Region>
+        <Drop>Bushes</Drop>
+        <Consumable>TRUE</Consumable>
+        <Effect1>+1 Thirst</Effect1>
+        <Effect2>-1 Hunger</Effect2>
+        <Duration></Duration>
+        <Weight>1</Weight>
+    </Resource>
+    <Resource>
+        <Name>Succulent Fruit</Name>
+        <Environment>Oasis</Environment>
+        <Region>All</Region>
+        <Drop>Bushes</Drop>
+        <Consumable>TRUE</Consumable>
+        <Effect1>-1 Thirst</Effect1>
+        <Effect2>-1 Hunger</Effect2>
+        <Duration>-</Duration>
+        <Weight>1</Weight>
+    </Resource>
+    <Resource>
+        <Name>Fuel</Name>
+        <Environment>All</Environment>
+        <Region>All</Region>
+        <Drop>Cache, Litter</Drop>
+        <Consumable>False</Consumable>
+        <Effect1></Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
+        <Weight>2</Weight>
+    </Resource>
+    <Resource>
+        <Name>Scrap</Name>
+        <Environment>All</Environment>
+        <Region>All</Region>
+        <Drop>Cache, Litter</Drop>
+        <Consumable>False</Consumable>
+        <Effect1></Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
+        <Weight>2</Weight>
+    </Resource>
+    <Resource>
+        <Name>Essence</Name>
+        <Environment>All</Environment>
+        <Region>Nightmare</Region>
+        <Drop>Nightmares</Drop>
+        <Consumable>False</Consumable>
+        <Effect1></Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
+        <Weight>0</Weight>
+    </Resource>
+    <Resource>
+        <Name>Skin</Name>
+        <Environment>All</Environment>
+        <Region>Animal</Region>
+        <Drop>Animals</Drop>
+        <Consumable>False</Consumable>
+        <Effect1></Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
+        <Weight>3</Weight>
+    </Resource>
+    <Resource>
+        <Name>Salt</Name>
+        <Environment>All</Environment>
+        <Region>Human</Region>
+        <Drop>Humans</Drop>
+        <Consumable>False</Consumable>
+        <Effect1></Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
+        <Weight>1</Weight>
+    </Resource>
+    <Resource>
+        <Name>Metal</Name>
+        <Environment>None</Environment>
+        <Region>None</Region>
+        <Drop>Wrecks</Drop>
+        <Consumable>False</Consumable>
+        <Effect1></Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
+        <Weight>5</Weight>
+    </Resource>
+    <Resource>
         <Name>Leather</Name>
+        <Environment>None</Environment>
+        <Region>None</Region>
+        <Drop>Crafting</Drop>
+        <Consumable>False</Consumable>
+        <Effect1></Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
         <Weight>2</Weight>
     </Resource>
     <Resource>
         <Name>Charcoal</Name>
+        <Environment>All</Environment>
+        <Region>All</Region>
+        <Drop>Crafting, Litter</Drop>
+        <Consumable>False</Consumable>
+        <Effect1></Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
         <Weight>0.5</Weight>
     </Resource>
     <Resource>
         <Name>Meteor</Name>
+        <Environment>All</Environment>
+        <Region>Nightmare</Region>
+        <Drop>Nightmare litter</Drop>
+        <Consumable>False</Consumable>
+        <Effect1></Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
         <Weight>10</Weight>
     </Resource>
     <Resource>
         <Name>Ice</Name>
+        <Environment>Steppe</Environment>
+        <Region>All</Region>
+        <Drop>Litter</Drop>
+        <Consumable>False</Consumable>
+        <Effect1></Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
         <Weight>5</Weight>
     </Resource>
     <Resource>
         <Name>Alloy</Name>
+        <Environment>None</Environment>
+        <Region>None</Region>
+        <Drop></Drop>
+        <Consumable>False</Consumable>
+        <Effect1></Effect1>
+        <Effect2></Effect2>
+        <Duration></Duration>
         <Weight>10</Weight>
     </Resource>
 </Resources>

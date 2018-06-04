@@ -64,15 +64,22 @@ class RecipeImporter(XMLWriter):
 
 class ResourceImporter(XMLWriter):
     def __init__(self):
-        super(ResourceImporter, self).__init__("Recipes", "Resources")
+        super(ResourceImporter, self).__init__("Resources", "Resources")
         write_tag(self, "Resources", self.read_resources)
 
     def read_resource(self, row):
         write_single_value(self, "Name", get_value(self, "A", row, ""))
-        write_single_value(self, "Weight", get_value(self, "C", row, "0"))
+        write_single_value(self, "Environment", get_value(self, "B", row, ""))
+        write_single_value(self, "Region", get_value(self, "C", row, ""))
+        write_single_value(self, "Drop", get_value(self, "D", row, ""))
+        write_single_value(self, "Consumable", get_value(self, "E", row, ""))
+        write_single_value(self, "Effect1", get_value(self, "F", row, ""))
+        write_single_value(self, "Effect2", get_value(self, "G", row, ""))
+        write_single_value(self, "Duration", get_value(self, "H", row, ""))
+        write_single_value(self, "Weight", get_value(self, "I", row, "0"))
 
     def read_resources(self):
-        for row_no in range(21, 36):
+        for row_no in range(2, 21):
             write_tag(self, "Resource", self.read_resource, [row_no])
 
 
@@ -303,9 +310,9 @@ def write_single_value(xml_writer, stat_name, value):
 # WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
-EnemyImporter()
+# EnemyImporter()
 # RecipeImporter()
-# ResourceImporter()
+ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
 # TraitImporter()

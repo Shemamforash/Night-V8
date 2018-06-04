@@ -10,19 +10,19 @@ public class ContainerController //: DesolationInventory
 {
     public static readonly List<ContainerBehaviour> Containers = new List<ContainerBehaviour>();
     private readonly Vector2 _position;
-    public readonly DesolationInventory Inventory;
+    public readonly Inventory Inventory;
     private string _prefabLocation;
 
     private ContainerController(Vector2 position, string name)
     {
         _position = position;
-        Inventory = new DesolationInventory(name);
+        Inventory = new Inventory(name);
     }
 
     public static ContainerController CreateWaterSource(Vector2 position)
     {
         ContainerController container = new ContainerController(position, "Source");
-        container.Inventory.IncrementResource(InventoryResourceType.Water, 5);
+        container.Inventory.IncrementResource("Water", 5);
         container.Inventory.SetReadonly(true);
         container._prefabLocation = "Puddle";
         return container;
@@ -45,7 +45,7 @@ public class ContainerController //: DesolationInventory
         }
 
         ContainerController container = new ContainerController(position, sourceName);
-        container.Inventory.IncrementResource(InventoryResourceType.Fruit, quantity);
+        container.Inventory.IncrementResource("Fruit", quantity);
         container.Inventory.SetReadonly(true);
         container._prefabLocation = sourceName;
         return container;

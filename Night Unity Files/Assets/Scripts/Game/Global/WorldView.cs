@@ -60,6 +60,8 @@ namespace Game.Global
             _environmentText.text = _timeString + ". It is " + _temperatureString + " and there is " + _weatherString + " in the " + _environmentString + ". The storm is " + stormString + ".";
         }
 
+        private static readonly string[] resources = {"Food", "Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Meat", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
+
         public override void Awake()
         {
             base.Awake();
@@ -67,10 +69,9 @@ namespace Game.Global
             _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();
 
             GameObject resourcesObject= GameObject.Find("Resources");
-            foreach (InventoryResourceType resourceType in Enum.GetValues(typeof(InventoryResourceType)))
+            foreach (string resourceType in resources)
             {
-                if (resourceType == InventoryResourceType.None) continue;
-                TextMeshProUGUI resourceText = Helper.FindChildWithName<TextMeshProUGUI>(resourcesObject, resourceType.ToString());
+                TextMeshProUGUI resourceText = Helper.FindChildWithName<TextMeshProUGUI>(resourcesObject, resourceType);
                 _resourceText.Add(resourceType, resourceText);
             }
         }
@@ -92,15 +93,14 @@ namespace Game.Global
             return "Night";
         }
 
-        private readonly Dictionary<InventoryResourceType, TextMeshProUGUI> _resourceText = new Dictionary<InventoryResourceType, TextMeshProUGUI>();
+        private readonly Dictionary<string, TextMeshProUGUI> _resourceText = new Dictionary<string, TextMeshProUGUI>();
         
         public void Update()
         {
-            foreach (InventoryResourceType resourceType in Enum.GetValues(typeof(InventoryResourceType)))
+            foreach (string resourceType in resources)
             {
-                if (resourceType == InventoryResourceType.None) continue;
                 int quantity = Mathf.FloorToInt(WorldState.HomeInventory().GetResource(resourceType).Quantity());
-                if (quantity == 0 && resourceType != InventoryResourceType.Food && resourceType != InventoryResourceType.Water)
+                if (quantity == 0 && resourceType != "Food" && resourceType != "Water")
                 {
                     _resourceText[resourceType].gameObject.SetActive(false);
                     continue;

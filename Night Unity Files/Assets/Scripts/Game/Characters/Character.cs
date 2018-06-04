@@ -11,13 +11,13 @@ namespace Game.Characters
     public abstract class Character : MyGameObject
     {
         public readonly ArmourController ArmourController;
-        protected readonly DesolationInventory CharacterInventory;
+        protected readonly Inventory CharacterInventory;
         public Accessory Accessory;
         public Weapon Weapon;
 
         protected Character(string name) : base(name, GameObjectType.Character)
         {
-            CharacterInventory = new DesolationInventory(name);
+            CharacterInventory = new Inventory(name);
             ArmourController = new ArmourController(this);
         }
 
@@ -53,7 +53,7 @@ namespace Game.Characters
             Accessory = accessory;
         }
 
-        public DesolationInventory Inventory()
+        public Inventory Inventory()
         {
             return CharacterInventory;
         }

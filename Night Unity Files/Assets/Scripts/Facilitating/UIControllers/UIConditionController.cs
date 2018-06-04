@@ -16,14 +16,14 @@ namespace Facilitating.UIControllers
         {
             ConditionText.Text(player.Attributes.GetThirstStatus());
             if (ConditionSlider == null) return;
-            ConditionSlider.value = 1 - player.Attributes.Dehydration.Normalised();
+            ConditionSlider.value = 1 - player.Attributes.Thirst.Normalised();
         }
 
         public void UpdateHunger(Player player)
         {
             ConditionText.Text(player.Attributes.GetHungerStatus());
             if (ConditionSlider == null) return;
-            ConditionSlider.value = 1 - player.Attributes.Starvation.Normalised();
+            ConditionSlider.value = 1 - player.Attributes.Hunger.Normalised();
         }
     }
 }

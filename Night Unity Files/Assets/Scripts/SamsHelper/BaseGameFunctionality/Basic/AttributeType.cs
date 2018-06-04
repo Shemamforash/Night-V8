@@ -8,8 +8,6 @@
         Willpower,
         Thirst,
         Hunger,
-        Starvation,
-        Dehydration,
 
         Damage,
         Accuracy,

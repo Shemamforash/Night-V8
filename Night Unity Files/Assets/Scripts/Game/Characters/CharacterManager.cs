@@ -15,7 +15,7 @@ using UnityEngine;
 
 namespace Game.Characters
 {
-    public class CharacterManager : DesolationInventory
+    public class CharacterManager : Inventory
     {
         public static Player SelectedCharacter;
         public static readonly List<Weapon> Weapons = new List<Weapon>();

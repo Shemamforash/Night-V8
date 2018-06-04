@@ -2,14 +2,10 @@
 {
     public enum GameObjectType
     {
-        Gear,
         Character,
-        Region,
-        Enemy,
-        Resource,
+        Gear,
         Inventory,
-        State,
-        MiscCombat,
-        Inscription
+        Resource,
+        State
     }
 }

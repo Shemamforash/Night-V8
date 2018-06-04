@@ -81,8 +81,8 @@ namespace Game.Exploration.Environment
             r.Discover();
             r.Neighbors().ForEach(r2 =>
             {
-                if (r2.Discovered()) return;
-                DiscoverNode(r2);
+//                if (r2.Discovered()) return;
+//                DiscoverNode(r2);
             });
         }
 

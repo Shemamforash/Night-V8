@@ -110,8 +110,8 @@ namespace Game.Exploration.Regions
         {
             int foodRequired = (int) (currentCharacter.Attributes.Hunger.Max / 12f * duration);
             int waterRequired = (int) (currentCharacter.Attributes.Thirst.Max / 12f * duration);
-            currentCharacter.Inventory().IncrementResource(InventoryResourceType.Food, foodRequired);
-            currentCharacter.Inventory().IncrementResource(InventoryResourceType.Water, waterRequired);
+            currentCharacter.Inventory().IncrementResource("Fruit", foodRequired);
+            currentCharacter.Inventory().IncrementResource("Water", waterRequired);
         }
 
         private static void LoadRegionTemplates()

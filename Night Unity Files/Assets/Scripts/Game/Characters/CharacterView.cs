@@ -97,10 +97,13 @@ namespace Game.Characters
         {
             _exploreButton = Helper.FindChildWithName<EnhancedButton>(_actionList.gameObject, "Explore");
             _craftButton = Helper.FindChildWithName<EnhancedButton>(_actionList.gameObject, "Craft");
+            _consumeButton = Helper.FindChildWithName<EnhancedButton>(_actionList.gameObject, "Consume");
             _player.TravelAction.SetButton(_exploreButton);
             _player.CraftAction.SetButton(_craftButton);
+            _player.ConsumeAction.SetButton(_consumeButton);
             Helper.SetNavigation(_exploreButton, WeaponController.EnhancedButton, Direction.Left);
             Helper.SetNavigation(_craftButton, ArmourController.EnhancedButton, Direction.Left);
+            Helper.SetNavigation(_consumeButton, AccessoryController.EnhancedButton, Direction.Left);
             Helper.SetNavigation(WeaponController.EnhancedButton, _exploreButton, Direction.Right);
             Helper.SetNavigation(ArmourController.EnhancedButton.Button(), _exploreButton, Direction.Right);
             Helper.SetNavigation(AccessoryController.EnhancedButton.Button(), _exploreButton, Direction.Right);
@@ -123,7 +126,7 @@ namespace Game.Characters
 
             if (_previousCharacterView == null) return;
 
-            _previousCharacterView._craftButton.SetOnDownAction(() =>
+            _previousCharacterView._consumeButton.SetOnDownAction(() =>
             {
                 CharacterManager.ExitCharacter(_previousCharacterView._player);
                 CharacterManager.SelectCharacter(_player);
@@ -134,7 +137,7 @@ namespace Game.Characters
             {
                 CharacterManager.ExitCharacter(_player);
                 CharacterManager.SelectCharacter(_previousCharacterView._player);
-                if (_previousCharacterView._actionListActive) _previousCharacterView._craftButton.Select();
+                if (_previousCharacterView._actionListActive) _previousCharacterView._consumeButton.Select();
                 else _previousCharacterView.ArmourController.EnhancedButton.Select();
             });
             WeaponController.EnhancedButton.SetOnUpAction(() =>
@@ -168,6 +171,7 @@ namespace Game.Characters
         }
 
         private bool _actionListActive = true;
+        private EnhancedButton _consumeButton;
 
         private void SetActionListActive(bool active)
         {

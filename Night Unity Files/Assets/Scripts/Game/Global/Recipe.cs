@@ -10,8 +10,8 @@ namespace Game.Global
 {
     public class Recipe
     {
-        public readonly InventoryResourceType Ingredient1;
-        public readonly InventoryResourceType Ingredient2;
+        public readonly string Ingredient1;
+        public readonly string Ingredient2;
         public readonly int Ingredient1Quantity;
         public readonly int Ingredient2Quantity;
         public InventoryItem Product;
@@ -24,8 +24,8 @@ namespace Game.Global
 
         private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string productName, int productQuantity, float duration)
         {
-            Ingredient1 = IngredientNameToType(ingredient1);
-            Ingredient2 = ingredient2 == "" ? InventoryResourceType.None : IngredientNameToType(ingredient2);
+            Ingredient1 = ingredient1;
+            Ingredient2 = ingredient2;
             Ingredient1Quantity = ingredient1Quantity;
             Ingredient2Quantity = ingredient2Quantity;
             ProductQuantity = productQuantity;
@@ -42,7 +42,7 @@ namespace Game.Global
 
             float ingredient1OwnedQuantity = WorldState.HomeInventory().GetResourceQuantity(Ingredient1);
             if (ingredient1OwnedQuantity < Ingredient1Quantity) return false;
-            if (Ingredient2 == InventoryResourceType.None) return true;
+            if (Ingredient2 == "") return true;
             float ingredient2OwnedQuantity = WorldState.HomeInventory().GetResourceQuantity(Ingredient2);
             return ingredient2OwnedQuantity >= Ingredient2Quantity;
         }
@@ -51,29 +51,11 @@ namespace Game.Global
         {
             if (!CanCraft()) return false;
             WorldState.HomeInventory().DecrementResource(Ingredient1, Ingredient1Quantity);
-            if (Ingredient2 != InventoryResourceType.None) WorldState.HomeInventory().DecrementResource(Ingredient2, Ingredient2Quantity);
+            if (Ingredient2 != "") WorldState.HomeInventory().DecrementResource(Ingredient2, Ingredient2Quantity);
             if (ProductName == "Fire") CharacterManager.SelectedCharacter.LightFireAction.Enter();
             return true;
         }
 
-        private InventoryResourceType IngredientNameToType(string ingredientName)
-        {
-            if (ingredientName == "Fire")
-            {
-                _requiresFire = true;
-                return InventoryResourceType.None;
-            }
-
-            foreach (InventoryResourceType inventoryResourceType in Enum.GetValues(typeof(InventoryResourceType)))
-            {
-                if (inventoryResourceType.ToString() == ingredientName)
-                {
-                    return inventoryResourceType;
-                }
-            }
-
-            throw new ArgumentOutOfRangeException("Unknown ingredient type: '" + ingredientName + "'");
-        }
 
         private bool _unlocked;
 

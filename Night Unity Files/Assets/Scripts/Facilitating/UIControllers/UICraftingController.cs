@@ -191,18 +191,18 @@ public class UICraftingController : Menu, IInputListener
             _productText.Text(text);
         }
 
-        private void SetIngredient1Text(InventoryResourceType type, int quantity)
+        private void SetIngredient1Text(string type, int quantity)
         {
-            _ingredient1Text.SetColor(type == InventoryResourceType.None ? UiAppearanceController.InvisibleColour : _activeColour);
-            string text = type.ToString();
+            _ingredient1Text.SetColor(type == "" ? UiAppearanceController.InvisibleColour : _activeColour);
+            string text = type;
             if (quantity > 1) text += " x" + quantity;
             _ingredient1Text.Text(text);
         }
 
-        private void SetIngredient2Text(InventoryResourceType type, int quantity)
+        private void SetIngredient2Text(string type, int quantity)
         {
-            _ingredient2Text.SetColor(type == InventoryResourceType.None ? UiAppearanceController.InvisibleColour : _activeColour);
-            string text = type.ToString();
+            _ingredient2Text.SetColor(type == "" ? UiAppearanceController.InvisibleColour : _activeColour);
+            string text = type;
             if (quantity > 1) text += " x" + quantity;
             _ingredient2Text.Text(text);
         }

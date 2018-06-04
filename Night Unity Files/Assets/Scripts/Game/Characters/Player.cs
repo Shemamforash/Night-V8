@@ -29,6 +29,7 @@ namespace Game.Characters
 
         public Craft CraftAction;
         public LightFire LightFireAction;
+        public Consume ConsumeAction;
 
         private int _storyProgress;
         public CharacterView CharacterView;
@@ -49,11 +50,11 @@ namespace Game.Characters
             Attributes.Endurance.OnMin(RestAction.Enter);
         }
 
-        public bool ConsumeResource(InventoryResourceType type, int amount)
-        {
-            DesolationInventory inventory = TravelAction.AtHome() ? WorldState.HomeInventory() : Inventory();
-            return inventory.DecrementResource(type, amount);
-        }
+//        public bool ConsumeResource(InventoryResourceType type, int amount)
+//        {
+//            DesolationInventory inventory = TravelAction.AtHome() ? WorldState.HomeInventory() : Inventory();
+//            return inventory.DecrementResource(type, amount);
+//        }
         
         public string GetCurrentStoryProgress()
         {
@@ -118,6 +119,7 @@ namespace Game.Characters
             TravelAction = new Travel(this);
             LightFireAction = new LightFire(this);
             CraftAction = new Craft(this);
+            ConsumeAction = new Consume(this);
             States.SetDefaultState(RestAction);
         }
 

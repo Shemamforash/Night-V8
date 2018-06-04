@@ -174,7 +174,6 @@ namespace Game.Global
 
         private void HourPasses()
         {
-            CharacterManager.Characters.ForEach(c => { c.Attributes.Fatigue(); });
             Campfire.Die();
         }
 

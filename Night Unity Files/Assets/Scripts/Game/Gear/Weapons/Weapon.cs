@@ -113,7 +113,7 @@ namespace Game.Gear.Weapons
         {
             WeaponAttributes.Durability.Increment();
             WeaponAttributes.RecalculateAttributeValues();
-            WorldState.HomeInventory().GetResource(InventoryResourceType.Scrap).Decrement(GetUpgradeCost());
+            WorldState.HomeInventory().GetResource("Scrap").Decrement(GetUpgradeCost());
             SetName();
         }
 

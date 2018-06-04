@@ -108,7 +108,7 @@ public class UiAreaInventoryController : Menu, IInputListener
     private class AreaInventory
     {
         private int _selectedItem;
-        private DesolationInventory _inventory;
+        private Inventory _inventory;
         private readonly List<ItemUi> _gearUis = new List<ItemUi>();
         private CanvasGroup _canvasGroup;
 
@@ -132,7 +132,7 @@ public class UiAreaInventoryController : Menu, IInputListener
             inventory._canvasGroup.alpha = 0.4f;
         }
 
-        public void SetInventory(DesolationInventory inventory)
+        public void SetInventory(Inventory inventory)
         {
             _inventory = inventory;
             _selectedItem = 0;

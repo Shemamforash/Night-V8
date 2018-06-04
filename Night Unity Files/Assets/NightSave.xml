@@ -1,1 +1,130 @@
-<Game />
+<Game>
+  <Regions>
+    <Region>
+      <Name>Gate</Name>
+      <Discovered>True</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+  </Regions>
+  <Inventory>
+    <Id>0</Id>
+    <Name>Vehicle</Name>
+    <Weight>18</Weight>
+    <ParentInventory>-1</ParentInventory>
+    <Type>Inventory</Type>
+    <Inventory>
+      <Name>Vehicle</Name>
+      <Food>3</Food>
+      <Water>3</Water>
+      <Fuel>3</Fuel>
+      <Scrap>3</Scrap>
+      <Essence>0</Essence>
+      <Skin>0</Skin>
+      <Salt>0</Salt>
+      <Metal>0</Metal>
+      <Meat>0</Meat>
+      <Fruit>0</Fruit>
+      <Leather>0</Leather>
+      <Charcoal>0</Charcoal>
+      <Meteor>0</Meteor>
+      <Ice>0</Ice>
+      <Alloy>0</Alloy>
+    </Inventory>
+  </Inventory>
+</Game>

@@ -230,10 +230,10 @@ namespace Game.Exploration.Regions
             return description;
         }
 
-        public float GetResourceQuantity(InventoryResourceType resourceType)
+        public float GetResourceQuantity(string resource)
         {
             float total = 0;
-            Containers.ForEach(c => total += c.Inventory.GetResourceQuantity(resourceType));
+            Containers.ForEach(c => total += c.Inventory.GetResourceQuantity(resource));
             return total;
         }
         

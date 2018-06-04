@@ -34,7 +34,7 @@ public class SaltBehaviour : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (!other.gameObject.CompareTag("Player")) return;
-        CombatManager.Player().Player.Inventory().IncrementResource(InventoryResourceType.Salt, 1);
+        CombatManager.Player().Player.Inventory().IncrementResource("Salt", 1);
         Destroy(gameObject);
     }
 }
