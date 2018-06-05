@@ -90,7 +90,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().HealthController.Heal((int) (Characters.Player.PlayerHealthChunkSize / 2f));
+            CombatManager.Player().HealthController.Heal((int) (DesolationAttributes.PlayerHealthChunkSize / 2f));
         }
     }
 
@@ -212,7 +212,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().HealthController.TakeDamage(Characters.Player.PlayerHealthChunkSize);
+            CombatManager.Player().HealthController.TakeDamage(DesolationAttributes.PlayerHealthChunkSize);
             CharacterCombat target = CombatManager.Player().GetTarget();
             target.Burn();
             target.Decay();

@@ -1,6 +1,7 @@
 using System;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace SamsHelper
@@ -17,16 +18,16 @@ namespace SamsHelper
             public override string Message => "Unrecognised Weight Category Assigned: ";
         }
 
-        public class TraitAttributeNotRecognisedException : Exception
+        public class AttributeNotRecognisedException : Exception
         {
             private readonly string _attribute;
 
-            public TraitAttributeNotRecognisedException(string attribute)
+            public AttributeNotRecognisedException(string attribute)
             {
                 _attribute = attribute;
             }
 
-            public override string Message => "Trait attribute not recognised in traits.txt file: " + _attribute;
+            public override string Message => "Attribute not recognised: " + _attribute;
         }
 
         public class UnknownTraitException : Exception
@@ -259,15 +260,16 @@ namespace SamsHelper
 
         public class ChildNotFoundException : Exception
         {
-            private readonly string _parent, _target;
+            private readonly GameObject _parent;
+            private readonly string _target;
 
-            public ChildNotFoundException(string parent, string target)
+            public ChildNotFoundException(GameObject parent, string target)
             {
                 _parent = parent;
                 _target = target;
             }
 
-            public override string Message => "Could not find child '" + _target + "' under '" + _parent + "'.";
+            public override string Message => "Could not find child '" + _target + "' under '" + Helper.PrintHierarchy(_parent) + "'.";
         }
 
         public class ComponentNotFoundException : Exception

@@ -1,22 +1,41 @@
-﻿using System;
-using System.Xml;
-using Facilitating.Persistence;
+﻿using System.Collections.Generic;
+using Game.Characters;
 using NUnit.Framework;
-using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public class CharacterAttribute : Number
     {
         public readonly AttributeType AttributeType;
-        private float _addMod;
+        private float _rawBonus;
+        private float _finalBonus;
+        private readonly List<AttributeModifier> _modifiers = new List<AttributeModifier>();
         private float _calculatedValue;
-        private float _multMod = 1;
 
-        public CharacterAttribute(AttributeType attributeType, float value, float min = 0, float max = float.MaxValue) : base(value, min, max)
+        public CharacterAttribute(AttributeContainer attributeContainer, AttributeType attributeType, float value, float min = 0, float max = float.MaxValue) : base(value, min, max)
         {
             AttributeType = attributeType;
+            attributeContainer.AddAttribute(this);
+            Recalculate();
+        }
+
+        public override float CurrentValue()
+        {
+            return Mathf.Clamp(_calculatedValue, Min, Max);
+        }
+
+        public override void Increment(float amount = 1)
+        {
+            base.Increment(amount);
+            Recalculate();
+        }
+
+        public override void Decrement(float amount = 1)
+        {
+            base.Decrement(amount);
+            Recalculate();
         }
 
         public override void SetCurrentValue(float value)
@@ -24,49 +43,37 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             base.SetCurrentValue(value);
             Recalculate();
         }
-        
-        public override float CurrentValue()
+
+        private void CalculateFinalValue()
         {
-            return _calculatedValue;
+            _calculatedValue = (base.CurrentValue() + _rawBonus) * _finalBonus;
         }
 
-        private float OriginalValue()
+        public void Recalculate()
         {
-            return base.CurrentValue();
+            _rawBonus = 0;
+            _finalBonus = 1;
+
+            _modifiers.ForEach(m =>
+            {
+                _rawBonus += m.RawBonus();
+                _finalBonus += m.FinalBonus();
+            });
+            CalculateFinalValue();
         }
 
-        private void Recalculate()
+        public void AddModifier(AttributeModifier modifier)
         {
-            _calculatedValue = (OriginalValue() + _addMod) * _multMod;
-            Assert.IsTrue(_multMod >= 0);
-            Assert.IsTrue(_addMod + OriginalValue() >= 0);
-            if (_calculatedValue > Max) _calculatedValue = Max;
-            if (_calculatedValue < Min) _calculatedValue = Min;
-        }
-
-        public void ApplyAddMod(float addMod)
-        {
-            _addMod += addMod;
+            Assert.IsFalse(_modifiers.Contains(modifier));
+            _modifiers.Add(modifier);
+            modifier.AddTargetAttribute(this);
             Recalculate();
         }
 
-        public void ApplyMultMod(float multMod)
+        public void RemoveModifier(AttributeModifier modifier)
         {
-            _multMod *= multMod;
-            Assert.IsTrue(_multMod >= 0);
-            Recalculate();
-        }
-
-        public void RemoveAddMod(float addMod)
-        {
-            _addMod -= addMod;
-            Recalculate();
-        }
-
-        public void RemoveMultMod(float multMod)
-        {
-            _multMod /= multMod;
-            Assert.IsTrue(_multMod >= 0);
+            _modifiers.Remove(modifier);
+            modifier.RemoveTargetAttribute(this);
             Recalculate();
         }
 

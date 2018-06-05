@@ -1,93 +1,69 @@
 ﻿using System.Collections.Generic;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
-using UnityEngine;
 
 namespace Game.Characters
 {
     public class AttributeModifier
     {
-        private readonly List<AttributeType> _targetAttributes = new List<AttributeType>();
-        private AttributeContainer _lastAppliedContainer;
-        private float _multMod = 1;
-        private float _sumMod;
+        private float _finalBonus, _rawBonus;
+        private List<CharacterAttribute> _targetAttributes = new List<CharacterAttribute>();
 
-        public AttributeModifier(AttributeType attributeType)
+        public void SetFinalBonus(float finalBonus)
         {
-            _targetAttributes.Add(attributeType);
+            _finalBonus = finalBonus;
+            UpdateTargetAttributes();
         }
 
-        public AttributeModifier(List<AttributeType> attributeTypes)
+        public void SetRawBonus(float rawBonus)
         {
-            _targetAttributes = attributeTypes;
+            _rawBonus = rawBonus;
+            UpdateTargetAttributes();
         }
 
-        public void SetSummative(float summativeModifer)
+        private void UpdateTargetAttributes()
         {
-            _sumMod = summativeModifer;
+            _targetAttributes.ForEach(t => t.Recalculate());
         }
 
-        public void SetMultiplicative(float multiplicativeModifier)
+        public void AddTargetAttribute(CharacterAttribute c)
         {
-            _multMod = multiplicativeModifier;
+            _targetAttributes.Add(c);
         }
 
-        public void ApplyOnce(AttributeContainer attributeContainer)
+        public void RemoveTargetAttribute(CharacterAttribute c)
         {
-            ApplyModifiers(attributeContainer);
-        }
-
-        private void ApplyModifiers(AttributeContainer attributeContainer)
-        {
-            foreach (AttributeType attribute in attributeContainer.Attributes.Keys)
-            {
-                if (!_targetAttributes.Contains(attribute)) continue;
-                attributeContainer.Attributes[attribute].ApplyAddMod(_sumMod);
-                attributeContainer.Attributes[attribute].ApplyMultMod(_multMod);
-            }
-        }
-
-        public void Apply(AttributeContainer attributeContainer)
-        {
-            if (_lastAppliedContainer != null) Debug.Log("Did you mean to remove the modifiers from the last container?");
-            ApplyModifiers(attributeContainer);
-            _lastAppliedContainer = attributeContainer;
-        }
-
-        public void Remove()
-        {
-            if (_lastAppliedContainer == null) return;
-            foreach (AttributeType attribute in _lastAppliedContainer.Attributes.Keys)
-            {
-                if (!_targetAttributes.Contains(attribute)) continue;
-                _lastAppliedContainer.Attributes[attribute].RemoveAddMod(_sumMod);
-                _lastAppliedContainer.Attributes[attribute].RemoveMultMod(_multMod);
-            }
-
-            _lastAppliedContainer = null;
+            _targetAttributes.Remove(c);
         }
 
         private string ModifierToString(float modifier)
         {
             string modifierString = "";
             if (modifier != 0) modifierString = Helper.AddSignPrefix(modifier);
-
             return modifierString;
         }
 
-        public string AddModString()
+        public string RawBonusToString()
         {
-            string addModString = ModifierToString(_sumMod);
-            if (addModString == "") return addModString;
-            return addModString;
+            string rawBonusString = ModifierToString(_rawBonus);
+            return rawBonusString; // + " " + _targetAttribute;
         }
 
-        public string MultModString()
+        public string FinalBonusToString()
         {
-            if (_multMod == 1) return "";
-            string multModString = ModifierToString((_multMod - 1) * 100);
-            if (multModString == "") return multModString;
-            return multModString;
+            if (_finalBonus == 0) return "";
+            string finalBonusString = ModifierToString((_finalBonus - 1) * 100);
+            return finalBonusString; // + " " + _targetAttribute;
+        }
+
+        public float FinalBonus()
+        {
+            return _finalBonus;
+        }
+
+        public float RawBonus()
+        {
+            return _rawBonus;
         }
     }
 }

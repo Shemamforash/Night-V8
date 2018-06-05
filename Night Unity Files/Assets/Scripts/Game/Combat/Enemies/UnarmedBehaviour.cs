@@ -10,10 +10,9 @@ namespace Game.Combat.Enemies
     public class UnarmedBehaviour : EnemyBehaviour
     {
         protected bool Alerted;
-        private readonly CharacterAttribute _detectionRange = new CharacterAttribute(AttributeType.Detection, 2f);
-        private readonly CharacterAttribute _visionRange = new CharacterAttribute(AttributeType.Vision, 5f);
+        private const float DetectionRange = 2f;
+        private const float VisionRange = 5f;
         private Vector2 _originPosition;
-
 
         public override void Initialise(Enemy enemy)
         {
@@ -88,15 +87,15 @@ namespace Game.Combat.Enemies
 
         private void CheckForPlayer()
         {
-            if (DistanceToTarget() > _visionRange) return;
+            if (DistanceToTarget() > VisionRange) return;
             CurrentAction = Suspicious;
         }
 
         private void Suspicious()
         {
             SetActionText("Suspicious");
-            if (DistanceToTarget() >= _detectionRange.CurrentValue()) return;
-            if (DistanceToTarget() >= _visionRange.CurrentValue()) CurrentAction = Wander;
+            if (DistanceToTarget() >= DetectionRange) return;
+            if (DistanceToTarget() >= VisionRange) CurrentAction = Wander;
             Alert();
         }
     }

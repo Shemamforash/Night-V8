@@ -176,6 +176,7 @@ namespace Game.Combat.Misc
             float armourProtection = ArmourController.GetCurrentArmour() / 10f;
             float armourDamage = shot.DamageDealt() * armourProtection;
             float healthDamage = shot.DamageDealt() - armourDamage;
+            if(!(this is PlayerCombat)) Debug.Log(shot.DamageDealt() + " " + Mathf.CeilToInt(armourDamage) + " " + Mathf.CeilToInt(healthDamage) + " " +Weapon().WeaponAttributes.DPS());
             ArmourController.TakeDamage(Mathf.CeilToInt(armourDamage));
             HealthController.TakeDamage(Mathf.CeilToInt(healthDamage));
         }

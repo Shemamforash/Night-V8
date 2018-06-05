@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Exploration.Environment;
-using Game.Global;
+using Game.Exploration.Weather;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
+using SamsHelper.ReactiveUI;
 using UnityEngine;
 
 namespace Game.Characters
@@ -14,12 +15,12 @@ namespace Game.Characters
         private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
         private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
+        private const float MinSpeed = 3, MaxSpeed = 6;
+        public const int PlayerHealthChunkSize = 50;
+
         private readonly Player _player;
-        
-        public readonly CharacterAttribute Endurance = new CharacterAttribute(AttributeType.Endurance, 0);
-        public readonly CharacterAttribute Perception = new CharacterAttribute(AttributeType.Perception, 0);
-        public readonly CharacterAttribute Strength = new CharacterAttribute(AttributeType.Strength, 0);
-        public readonly CharacterAttribute Willpower = new CharacterAttribute(AttributeType.Willpower, 0);
+
+        public CharacterAttribute Endurance, Perception, Strength, Willpower;
 
         /*instead of consuming x food or water every minutes, consume 1 food or water every x minutes
         use the max value of the hunger and thirst to keep track of the interval at which eating or drinking should occur
@@ -27,8 +28,13 @@ namespace Game.Characters
         this allows the duration to easily change depending on temperature, modifiers, etc.
         */
 
-        public readonly CharacterAttribute Hunger = new CharacterAttribute(AttributeType.Hunger, 0, 0, 24);
-        public readonly CharacterAttribute Thirst = new CharacterAttribute(AttributeType.Thirst, 0, 0, 12);
+        public CharacterAttribute Hunger, Thirst;
+
+        //summative
+        public CharacterAttribute ScrapFindBonus, FoodFindBonus, WaterFindBonus, EssenceFindBonus, HealthBonus, WillpowerLossBonus, FireChanceBonus, DecayChanceBonus, SicknessChanceBonus;
+
+        //multiplicative
+        public CharacterAttribute EssenceLossBonus, DamageBonus, SkillRechargeBonus, AdrenalineRechargeBonus;
 
         public DesolationAttributes(Player player)
         {
@@ -44,18 +50,38 @@ namespace Game.Characters
         {
             return Mathf.Pow(1.05f, Perception.CurrentValue());
         }
-        
-        private readonly AttributeModifier _hungerModifier = new AttributeModifier(new List<AttributeType> {AttributeType.Strength, AttributeType.Endurance});
-        private readonly AttributeModifier _thirstModifier = new AttributeModifier(new List<AttributeType> {AttributeType.Willpower, AttributeType.Perception});
+
+        private readonly AttributeModifier _hungerModifier = new AttributeModifier();
+        private readonly AttributeModifier _thirstModifier = new AttributeModifier();
 
         protected override void CacheAttributes()
         {
-            AddAttribute(Strength);
-            AddAttribute(Perception);
-            AddAttribute(Endurance);
-            AddAttribute(Willpower);
-            AddAttribute(Hunger);
-            AddAttribute(Thirst);
+            Endurance = new CharacterAttribute(this, AttributeType.Endurance, 0);
+            Perception = new CharacterAttribute(this, AttributeType.Perception, 0);
+            Strength = new CharacterAttribute(this, AttributeType.Strength, 0);
+            Willpower = new CharacterAttribute(this, AttributeType.Willpower, 0);
+
+            Strength.AddModifier(_hungerModifier);
+            Endurance.AddModifier(_hungerModifier);
+            Willpower.AddModifier(_thirstModifier);
+            Perception.AddModifier(_thirstModifier);
+
+            ScrapFindBonus = new CharacterAttribute(this, AttributeType.ScrapFindBonus, 0, float.NegativeInfinity);
+            FoodFindBonus = new CharacterAttribute(this, AttributeType.FoodFindBonus, 0, float.NegativeInfinity);
+            WaterFindBonus = new CharacterAttribute(this, AttributeType.WaterFindBonus, 0, float.NegativeInfinity);
+            EssenceFindBonus = new CharacterAttribute(this, AttributeType.EssenceFindBonus, 0, float.NegativeInfinity);
+            HealthBonus = new CharacterAttribute(this, AttributeType.HealthBonus, 0, float.NegativeInfinity);
+            WillpowerLossBonus = new CharacterAttribute(this, AttributeType.WillpowerLossBonus, 0, float.NegativeInfinity);
+            FireChanceBonus = new CharacterAttribute(this, AttributeType.FireChanceBonus, 0, float.NegativeInfinity);
+            DecayChanceBonus = new CharacterAttribute(this, AttributeType.DecayChanceBonus, 0, float.NegativeInfinity);
+            SicknessChanceBonus = new CharacterAttribute(this, AttributeType.SicknessChanceBonus, 0, float.NegativeInfinity);
+            EssenceLossBonus = new CharacterAttribute(this, AttributeType.EssenceLossBonus, 1, float.NegativeInfinity);
+            DamageBonus = new CharacterAttribute(this, AttributeType.DamageBonus, 1, float.NegativeInfinity);
+            SkillRechargeBonus = new CharacterAttribute(this, AttributeType.SkillRechargeBonus, 1, float.NegativeInfinity);
+            AdrenalineRechargeBonus = new CharacterAttribute(this, AttributeType.AdrenalineRechargeBonus, 1, float.NegativeInfinity);
+
+            Hunger = new CharacterAttribute(this, AttributeType.Hunger, 0, 0, 10);
+            Thirst = new CharacterAttribute(this, AttributeType.Thirst, 0, 0, 10);
         }
 
         public float RemainingCarryCapacity()
@@ -63,27 +89,77 @@ namespace Game.Characters
             return Strength.CurrentValue();
         }
 
+        public float CalculateDashCooldown()
+        {
+            return 2f - 0.1f * Endurance.CurrentValue();
+        }
+
+        public float CalculateSpeed()
+        {
+            float normalisedSpeed = Endurance.Normalised();
+            return normalisedSpeed * (MaxSpeed - MinSpeed) + MinSpeed;
+        }
+
+        public float CalculateDamageModifier()
+        {
+            return (float) Math.Pow(1.05f, Perception.CurrentValue()) * DamageBonus.CurrentValue();
+        }
+
+        public float CalculateSkillCooldownModifier()
+        {
+            return (float) Math.Pow(0.95f, Willpower.CurrentValue()) * SkillRechargeBonus.CurrentValue();
+        }
+
+        public int CalculateCombatHealth()
+        {
+            return (int) (Strength.CurrentValue() * (PlayerHealthChunkSize + HealthBonus.CurrentValue()));
+        }
+
         public void UpdateThirstAndHunger()
         {
-            Thirst.Max = (int) (-0.2f * EnvironmentManager.GetTemperature() + 16f);
-            float temperature = EnvironmentManager.GetTemperature();
-            float thirstModifier = 0.02f * (temperature + 20f) + 0.2f;
-            thirstModifier /= WorldState.MinutesPerHour;
-            float hungerModifier = -0.02f * (temperature - 50f) + 0.4f;
-            hungerModifier /= WorldState.MinutesPerHour;
-            Hunger.Increment(hungerModifier);
-            _thirstModifier.Remove();
-            _hungerModifier.SetMultiplicative(1 - Hunger.Normalised());
-            _thirstModifier.Apply(this);
-            if(Hunger.ReachedMax()) _player.Kill();
-            Thirst.Increment(thirstModifier);
-            _thirstModifier.Remove();
-            _thirstModifier.SetMultiplicative(1 - Thirst.Normalised());
-            _thirstModifier.Apply(this);
+            TemperatureCategory temperature = EnvironmentManager.GetTemperature();
+            float thirstTemperatureModifier;
+            float hungerTemperatureModifier;
+            switch (temperature)
+            {
+                case TemperatureCategory.Freezing:
+                    thirstTemperatureModifier = 0.5f;
+                    hungerTemperatureModifier = 1.5f;
+                    break;
+                case TemperatureCategory.Cold:
+                    thirstTemperatureModifier = 0.75f;
+                    hungerTemperatureModifier = 1.25f;
+                    break;
+                case TemperatureCategory.Warm:
+                    thirstTemperatureModifier = 1f;
+                    hungerTemperatureModifier = 1f;
+                    break;
+                case TemperatureCategory.Hot:
+                    thirstTemperatureModifier = 1.25f;
+                    hungerTemperatureModifier = 0.75f;
+                    break;
+                case TemperatureCategory.Boiling:
+                    thirstTemperatureModifier = 1.5f;
+                    hungerTemperatureModifier = 0.5f;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+
+            float thirstIncrementAmount = thirstTemperatureModifier / 12f;
+            float hungerIncrementAmount = hungerTemperatureModifier / 24f;
+
+            Hunger.Increment(hungerIncrementAmount);
+            _hungerModifier.SetFinalBonus(-Hunger.Normalised());
+            if (Hunger.ReachedMax()) _player.Kill();
+
+            Thirst.Increment(thirstIncrementAmount);
+            _thirstModifier.SetFinalBonus(-Thirst.Normalised());
             if (Thirst.ReachedMax()) _player.Kill();
         }
 
-        private string GetAttributeStatus(CharacterAttribute characterAttribute, string[] levels)
+        private string GetAttributeStatus(Number characterAttribute, string[] levels)
         {
             float tolerancePercentage = characterAttribute.Normalised();
             for (int i = 1; i < _toleranceThresholds.Length; ++i)
@@ -112,8 +188,11 @@ namespace Game.Characters
             LoadAttribute(doc, nameof(Willpower), Willpower);
             LoadAttribute(doc, nameof(Perception), Perception);
 
-            LoadAttribute(doc, nameof(Hunger), Hunger);
-            LoadAttribute(doc, nameof(Thirst), Thirst);
+            float hungerVal = float.Parse(doc.SelectSingleNode("Hunger").InnerText);
+            float thirstVal = float.Parse(doc.SelectSingleNode("Thirst").InnerText);
+
+            Hunger.SetCurrentValue(hungerVal);
+            Thirst.SetCurrentValue(thirstVal);
         }
 
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
@@ -123,8 +202,8 @@ namespace Game.Characters
             SaveAttribute(doc, nameof(Willpower), Willpower);
             SaveAttribute(doc, nameof(Perception), Perception);
 
-            SaveAttribute(doc, nameof(Hunger), Hunger);
-            SaveAttribute(doc, nameof(Thirst), Thirst);
+            SaveController.CreateNodeAndAppend("Hunger", doc, Hunger.CurrentValue());
+            SaveController.CreateNodeAndAppend("Thirst", doc, Thirst.CurrentValue());
             return doc;
         }
 

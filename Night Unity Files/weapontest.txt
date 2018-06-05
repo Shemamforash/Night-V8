@@ -1,400 +1,350 @@
-Type: Pistol  ---  Durability: 0  ---  Quality: Flawed
-        DPS: 25.3 (min: 18.5 /max: 31.3 )
-        Damage: 9.5 (min: 5.2 /max: 13.5)
-        Range: 28.3 (min: 15 /max: 45)
-        CriticalChance: 0.2 (min: 0.2 /max: 0.2)
-        FireRate: 3 (min: 2.2 /max: 4.5)
-
-Type: Pistol  ---  Durability: 10  ---  Quality: Flawed
-        DPS: 34.5 (min: 24.7 /max: 42.8 )
-        Damage: 10.3 (min: 5.2 /max: 15.8)
-        Range: 28.3 (min: 15 /max: 45)
-        CriticalChance: 0.2 (min: 0.2 /max: 0.3)
-        FireRate: 3.3 (min: 2.2 /max: 5.2)
-
-
-
-Type: Pistol  ---  Durability: 0  ---  Quality: Worn
-        DPS: 25 (min: 18.5 /max: 31.3 )
-        Damage: 9.6 (min: 5.2 /max: 13.5)
-        Range: 29.1 (min: 15 /max: 45)
-        CriticalChance: 0.2 (min: 0.2 /max: 0.2)
-        FireRate: 2.9 (min: 2.2 /max: 4.5)
-
-Type: Pistol  ---  Durability: 10  ---  Quality: Worn
-        DPS: 44.9 (min: 31.7 /max: 56.2 )
-        Damage: 11.1 (min: 5.2 /max: 18)
-        Range: 28.8 (min: 15 /max: 45)
-        CriticalChance: 0.3 (min: 0.2 /max: 0.3)
-        FireRate: 3.5 (min: 2.2 /max: 6)
-
-
-
-Type: Pistol  ---  Durability: 0  ---  Quality: Shining
-        DPS: 25.2 (min: 18.5 /max: 31.3 )
-        Damage: 9.5 (min: 5.2 /max: 13.5)
-        Range: 28.7 (min: 15 /max: 45)
-        CriticalChance: 0.2 (min: 0.2 /max: 0.2)
-        FireRate: 3 (min: 2.2 /max: 4.5)
-
-Type: Pistol  ---  Durability: 10  ---  Quality: Shining
-        DPS: 57.7 (min: 39.4 /max: 71.3 )
-        Damage: 12 (min: 5.2 /max: 20.2)
-        Range: 28.2 (min: 15 /max: 45)
-        CriticalChance: 0.3 (min: 0.2 /max: 0.3)
-        FireRate: 3.7 (min: 2.2 /max: 6.8)
-
-
-
-Type: Pistol  ---  Durability: 0  ---  Quality: Faultless
-        DPS: 25.5 (min: 18.5 /max: 31.3 )
-        Damage: 9.5 (min: 5.2 /max: 13.5)
-        Range: 27.9 (min: 15 /max: 45)
-        CriticalChance: 0.2 (min: 0.2 /max: 0.2)
-        FireRate: 3 (min: 2.2 /max: 4.5)
-
-Type: Pistol  ---  Durability: 10  ---  Quality: Faultless
-        DPS: 70.9 (min: 47.9 /max: 88.4 )
-        Damage: 12.7 (min: 5.2 /max: 22.5)
-        Range: 28.1 (min: 15 /max: 45)
-        CriticalChance: 0.3 (min: 0.2 /max: 0.4)
-        FireRate: 4 (min: 2.2 /max: 7.5)
-
-
-
 Type: Pistol  ---  Durability: 0  ---  Quality: Radiant
-        DPS: 25.2 (min: 18.5 /max: 31.3 )
-        Damage: 9.4 (min: 5.2 /max: 13.5)
-        Range: 28.6 (min: 15 /max: 45)
-        CriticalChance: 0.2 (min: 0.2 /max: 0.2)
-        FireRate: 3 (min: 2.2 /max: 4.5)
+        DPS: 20.9 (min: 15.1 /max: 25.6 )
+        Damage: 10.2 (min: 5.2 /max: 13.5)
+        Accuracy: 37.5 (min: 37.5 /max: 37.5)
+        FireRate: 2.8 (min: 2.2 /max: 4.5)
 
-Type: Pistol  ---  Durability: 10  ---  Quality: Radiant
-        DPS: 85.3 (min: 57.1 /max: 107.3 )
-        Damage: 13.4 (min: 5.2 /max: 24.8)
-        Range: 28.6 (min: 15 /max: 45)
-        CriticalChance: 0.3 (min: 0.2 /max: 0.4)
-        FireRate: 4.3 (min: 2.2 /max: 8.2)
-
-
-
-Type: Rifle  ---  Durability: 0  ---  Quality: Flawed
-        DPS: 26.8 (min: 24.1 /max: 29.1 )
-        Damage: 39.8 (min: 30 /max: 60)
-        Range: 100 (min: 100 /max: 100)
-        CriticalChance: 0.4 (min: 0.4 /max: 0.6)
-        FireRate: 0.8 (min: 0.8 /max: 0.8)
-
-Type: Rifle  ---  Durability: 10  ---  Quality: Flawed
-        DPS: 36.4 (min: 33.1 /max: 38.2 )
-        Damage: 43.3 (min: 30 /max: 70)
-        Range: 100 (min: 100 /max: 100)
-        CriticalChance: 0.5 (min: 0.4 /max: 0.7)
-        FireRate: 0.8 (min: 0.8 /max: 0.9)
+Pistol Shortshooter 
+Durability: 0 (-0.25)
+DPS: 25.57895
+Automatic: False
+Capacity:   6
+Pellets:    1
+Damage:     13.5
+Fire Rate:  2.25
+Reload:     0.5
+Accuracy: 37.5
 
 
 
-Type: Rifle  ---  Durability: 0  ---  Quality: Worn
-        DPS: 26.9 (min: 24.1 /max: 29.1 )
-        Damage: 40.2 (min: 30 /max: 60)
-        Range: 100 (min: 100 /max: 100)
-        CriticalChance: 0.4 (min: 0.4 /max: 0.6)
-        FireRate: 0.8 (min: 0.8 /max: 0.8)
 
-Type: Rifle  ---  Durability: 10  ---  Quality: Worn
-        DPS: 47.5 (min: 43.6 /max: 50.9 )
-        Damage: 47.1 (min: 30 /max: 80)
-        Range: 100 (min: 100 /max: 100)
-        CriticalChance: 0.5 (min: 0.4 /max: 0.8)
-        FireRate: 0.9 (min: 0.8 /max: 1)
+Pistol Deepdriver 
+Durability: 0 (-0.25)
+DPS: 15.12931
+Automatic: False
+Capacity:   10
+Pellets:    1
+Damage:     9.75
+Fire Rate:  2.25
+Reload:     2
+Accuracy: 37.5
 
 
 
-Type: Rifle  ---  Durability: 0  ---  Quality: Shining
-        DPS: 26.9 (min: 24.1 /max: 29.1 )
-        Damage: 40.4 (min: 30 /max: 60)
-        Range: 100 (min: 100 /max: 100)
-        CriticalChance: 0.4 (min: 0.4 /max: 0.6)
-        FireRate: 0.8 (min: 0.8 /max: 0.8)
 
-Type: Rifle  ---  Durability: 10  ---  Quality: Shining
-        DPS: 60 (min: 55.6 /max: 65.6 )
-        Damage: 50.3 (min: 30 /max: 90)
-        Range: 100 (min: 100 /max: 100)
-        CriticalChance: 0.5 (min: 0.4 /max: 0.8)
-        FireRate: 0.9 (min: 0.8 /max: 1.1)
+Type: Pistol  ---  Durability: 50  ---  Quality: Radiant
+        DPS: 104.7 (min: 64.5 /max: 129.3 )
+        Damage: 17.2 (min: 5.2 /max: 33.8)
+        Accuracy: 65.6 (min: 37.5 /max: 93.8)
+        FireRate: 5.1 (min: 2.2 /max: 11.2)
+
+Pistol Shortshooter 
+Durability: 50 (0.875)
+DPS: 129.2553
+Automatic: False
+Capacity:   6
+Pellets:    1
+Damage:     33.75
+Fire Rate:  5.625
+Reload:     0.5
+Accuracy: 93.75
 
 
 
-Type: Rifle  ---  Durability: 0  ---  Quality: Faultless
-        DPS: 27 (min: 24.1 /max: 29.1 )
-        Damage: 40.1 (min: 30 /max: 60)
-        Range: 100 (min: 100 /max: 100)
-        CriticalChance: 0.4 (min: 0.4 /max: 0.6)
-        FireRate: 0.8 (min: 0.8 /max: 0.8)
 
-Type: Rifle  ---  Durability: 10  ---  Quality: Faultless
-        DPS: 74 (min: 69.1 /max: 82.4 )
-        Damage: 53.2 (min: 30 /max: 100)
-        Range: 100 (min: 100 /max: 100)
-        CriticalChance: 0.6 (min: 0.4 /max: 0.9)
-        FireRate: 1 (min: 0.8 /max: 1.2)
+Pistol Deepdriver 
+Durability: 50 (0.875)
+DPS: 64.52206
+Automatic: False
+Capacity:   10
+Pellets:    1
+Damage:     24.375
+Fire Rate:  5.625
+Reload:     2
+Accuracy: 93.75
+
+
+
 
 
 
 Type: Rifle  ---  Durability: 0  ---  Quality: Radiant
-        DPS: 27 (min: 24.1 /max: 29.1 )
-        Damage: 41.2 (min: 30 /max: 60)
-        Range: 100 (min: 100 /max: 100)
-        CriticalChance: 0.4 (min: 0.4 /max: 0.6)
+        DPS: 18.8 (min: 17.6 /max: 21.2 )
+        Damage: 39.9 (min: 30 /max: 60)
+        Accuracy: 67.5 (min: 67.5 /max: 67.5)
         FireRate: 0.8 (min: 0.8 /max: 0.8)
 
-Type: Rifle  ---  Durability: 10  ---  Quality: Radiant
-        DPS: 88.9 (min: 83.3 /max: 99.8 )
-        Damage: 57.7 (min: 30 /max: 110)
-        Range: 100 (min: 100 /max: 100)
-        CriticalChance: 0.6 (min: 0.4 /max: 1)
-        FireRate: 1.1 (min: 0.8 /max: 1.4)
+Rifle Shoulderbreaker 
+Durability: 0 (-0.25)
+DPS: 21.17647
+Automatic: False
+Capacity:   2
+Pellets:    1
+Damage:     60
+Fire Rate:  0.75
+Reload:     3
+Accuracy: 67.5
 
 
 
-Type: Shotgun  ---  Durability: 0  ---  Quality: Flawed
-        DPS: 47.3 (min: 44.4 /max: 52.7 )
-        Damage: 6.2 (min: 3 /max: 9.8)
-        Range: 13.1 (min: 0 /max: 30)
-        CriticalChance: 0 (min: 0 /max: 0)
-        FireRate: 1.5 (min: 1.1 /max: 2.2)
 
-Type: Shotgun  ---  Durability: 10  ---  Quality: Flawed
-        DPS: 61 (min: 57.9 /max: 66.3 )
-        Damage: 6.8 (min: 3 /max: 11.4)
-        Range: 13.2 (min: 0 /max: 30)
-        CriticalChance: 0 (min: 0 /max: 0)
-        FireRate: 1.6 (min: 1.1 /max: 2.6)
+Rifle Voidwalker 
+Durability: 0 (-0.25)
+DPS: 17.56098
+Automatic: True
+Capacity:   8
+Pellets:    1
+Damage:     30
+Fire Rate:  0.75
+Reload:     3
+Accuracy: 67.5
 
 
 
-Type: Shotgun  ---  Durability: 0  ---  Quality: Worn
-        DPS: 47.2 (min: 44.4 /max: 52.7 )
-        Damage: 6.2 (min: 3 /max: 9.8)
-        Range: 12.9 (min: 0 /max: 30)
-        CriticalChance: 0 (min: 0 /max: 0)
-        FireRate: 1.5 (min: 1.1 /max: 2.2)
 
-Type: Shotgun  ---  Durability: 10  ---  Quality: Worn
-        DPS: 75.7 (min: 72 /max: 80.6 )
-        Damage: 7.3 (min: 3 /max: 13)
-        Range: 13.2 (min: 0 /max: 30)
-        CriticalChance: 0 (min: 0 /max: 0.1)
-        FireRate: 1.7 (min: 1.1 /max: 3)
+Type: Rifle  ---  Durability: 50  ---  Quality: Radiant
+        DPS: 80.1 (min: 73.8 /max: 82.6 )
+        Damage: 67.9 (min: 30 /max: 150)
+        Accuracy: 83.8 (min: 67.5 /max: 100)
+        FireRate: 1.3 (min: 0.8 /max: 1.9)
 
-
-
-Type: Shotgun  ---  Durability: 0  ---  Quality: Shining
-        DPS: 47.2 (min: 44.4 /max: 52.7 )
-        Damage: 6.2 (min: 3 /max: 9.8)
-        Range: 12.9 (min: 0 /max: 30)
-        CriticalChance: 0 (min: 0 /max: 0)
-        FireRate: 1.5 (min: 1.1 /max: 2.2)
-
-Type: Shotgun  ---  Durability: 10  ---  Quality: Shining
-        DPS: 91.4 (min: 87 /max: 95.5 )
-        Damage: 7.8 (min: 3 /max: 14.6)
-        Range: 13.2 (min: 0 /max: 30)
-        CriticalChance: 0 (min: 0 /max: 0.1)
-        FireRate: 1.9 (min: 1.1 /max: 3.4)
+Rifle Groundrider 
+Durability: 50 (0.875)
+DPS: 82.5688
+Automatic: False
+Capacity:   8
+Pellets:    1
+Damage:     75
+Fire Rate:  1.875
+Reload:     3
+Accuracy: 100
 
 
 
-Type: Shotgun  ---  Durability: 0  ---  Quality: Faultless
-        DPS: 47.5 (min: 44.4 /max: 52.7 )
-        Damage: 6.3 (min: 3 /max: 9.8)
-        Range: 13.9 (min: 0 /max: 30)
-        CriticalChance: 0 (min: 0 /max: 0)
-        FireRate: 1.5 (min: 1.1 /max: 2.2)
 
-Type: Shotgun  ---  Durability: 10  ---  Quality: Faultless
-        DPS: 107.9 (min: 102.8 /max: 110.9 )
-        Damage: 8.4 (min: 3 /max: 16.2)
-        Range: 13.4 (min: 0 /max: 30)
-        CriticalChance: 0.1 (min: 0 /max: 0.1)
-        FireRate: 2 (min: 1.1 /max: 3.8)
+Rifle Shoulderbreaker 
+Durability: 50 (0.875)
+DPS: 73.77049
+Automatic: False
+Capacity:   2
+Pellets:    1
+Damage:     150
+Fire Rate:  1.875
+Reload:     3
+Accuracy: 100
+
+
+
 
 
 
 Type: Shotgun  ---  Durability: 0  ---  Quality: Radiant
-        DPS: 47.4 (min: 44.4 /max: 52.7 )
-        Damage: 6.3 (min: 3 /max: 9.8)
-        Range: 13.6 (min: 0 /max: 30)
-        CriticalChance: 0 (min: 0 /max: 0)
+        DPS: 45.4 (min: 42.8 /max: 50.8 )
+        Damage: 6 (min: 3 /max: 9.8)
+        Accuracy: 15 (min: 15 /max: 15)
         FireRate: 1.5 (min: 1.1 /max: 2.2)
 
-Type: Shotgun  ---  Durability: 10  ---  Quality: Radiant
-        DPS: 125.4 (min: 119.4 /max: 130 )
-        Damage: 8.9 (min: 3 /max: 17.9)
-        Range: 13.6 (min: 0 /max: 30)
-        CriticalChance: 0.1 (min: 0 /max: 0.1)
-        FireRate: 2.1 (min: 1.1 /max: 4.1)
+Shotgun Skullcrusher 
+Durability: 0 (-0.25)
+DPS: 50.82353
+Automatic: True
+Capacity:   5
+Pellets:    8
+Damage:     6
+Fire Rate:  2.25
+Reload:     2.5
+Accuracy: 15
 
 
 
-Type: SMG  ---  Durability: 0  ---  Quality: Flawed
-        DPS: 31 (min: 29 /max: 34 )
-        Damage: 3.5 (min: 3 /max: 4.5)
-        Range: 43.4 (min: 30 /max: 50)
-        CriticalChance: 0.1 (min: 0 /max: 0.1)
-        FireRate: 9.3 (min: 7.5 /max: 12.8)
 
-Type: SMG  ---  Durability: 10  ---  Quality: Flawed
-        DPS: 41 (min: 38.7 /max: 44.5 )
-        Damage: 3.8 (min: 3 /max: 5.2)
-        Range: 43.2 (min: 30 /max: 50)
-        CriticalChance: 0.1 (min: 0 /max: 0.1)
-        FireRate: 10 (min: 7.5 /max: 14.9)
+Shotgun Bonebreaker 
+Durability: 0 (-0.25)
+DPS: 42.80488
+Automatic: True
+Capacity:   10
+Pellets:    5
+Damage:     9.75
+Fire Rate:  1.125
+Reload:     2.5
+Accuracy: 15
 
 
 
-Type: SMG  ---  Durability: 0  ---  Quality: Worn
-        DPS: 31.1 (min: 29 /max: 34 )
-        Damage: 3.5 (min: 3 /max: 4.5)
-        Range: 42.9 (min: 30 /max: 50)
-        CriticalChance: 0 (min: 0 /max: 0.1)
-        FireRate: 9.2 (min: 7.5 /max: 12.8)
 
-Type: SMG  ---  Durability: 10  ---  Quality: Worn
-        DPS: 51.7 (min: 49.5 /max: 56 )
-        Damage: 4.1 (min: 3 /max: 6)
-        Range: 43.4 (min: 30 /max: 50)
-        CriticalChance: 0.1 (min: 0 /max: 0.1)
-        FireRate: 10.8 (min: 7.5 /max: 17)
+Type: Shotgun  ---  Durability: 50  ---  Quality: Radiant
+        DPS: 185.7 (min: 175.3 /max: 201.3 )
+        Damage: 11.2 (min: 3 /max: 24.4)
+        Accuracy: 26.2 (min: 15 /max: 37.5)
+        FireRate: 2.6 (min: 1.1 /max: 5.6)
 
-
-
-Type: SMG  ---  Durability: 0  ---  Quality: Shining
-        DPS: 31 (min: 29 /max: 34 )
-        Damage: 3.5 (min: 3 /max: 4.5)
-        Range: 43.3 (min: 30 /max: 50)
-        CriticalChance: 0.1 (min: 0 /max: 0.1)
-        FireRate: 9.2 (min: 7.5 /max: 12.8)
-
-Type: SMG  ---  Durability: 10  ---  Quality: Shining
-        DPS: 63.8 (min: 61.4 /max: 68.4 )
-        Damage: 4.4 (min: 3 /max: 6.8)
-        Range: 43.2 (min: 30 /max: 50)
-        CriticalChance: 0.1 (min: 0 /max: 0.1)
-        FireRate: 11.6 (min: 7.5 /max: 19.1)
+Shotgun Bonebreaker 
+Durability: 50 (0.875)
+DPS: 201.2615
+Automatic: True
+Capacity:   10
+Pellets:    5
+Damage:     24.375
+Fire Rate:  2.8125
+Reload:     2.5
+Accuracy: 37.5
 
 
 
-Type: SMG  ---  Durability: 0  ---  Quality: Faultless
-        DPS: 31 (min: 29 /max: 34 )
-        Damage: 3.5 (min: 3 /max: 4.5)
-        Range: 43.5 (min: 30 /max: 50)
-        CriticalChance: 0 (min: 0 /max: 0.1)
-        FireRate: 9.3 (min: 7.5 /max: 12.8)
 
-Type: SMG  ---  Durability: 10  ---  Quality: Faultless
-        DPS: 76.7 (min: 73.7 /max: 81.7 )
-        Damage: 4.6 (min: 3 /max: 7.5)
-        Range: 43.3 (min: 30 /max: 50)
-        CriticalChance: 0.1 (min: 0 /max: 0.1)
-        FireRate: 12.4 (min: 7.5 /max: 21.2)
+Shotgun Leadspreader 
+Durability: 50 (0.875)
+DPS: 175.3247
+Automatic: False
+Capacity:   5
+Pellets:    20
+Damage:     7.5
+Fire Rate:  2.8125
+Reload:     2.5
+Accuracy: 37.5
+
+
+
 
 
 
 Type: SMG  ---  Durability: 0  ---  Quality: Radiant
-        DPS: 31 (min: 29 /max: 34 )
+        DPS: 29.7 (min: 27 /max: 32.7 )
         Damage: 3.5 (min: 3 /max: 4.5)
-        Range: 43.6 (min: 30 /max: 50)
-        CriticalChance: 0.1 (min: 0 /max: 0.1)
-        FireRate: 9.3 (min: 7.5 /max: 12.8)
+        Accuracy: 22.5 (min: 22.5 /max: 22.5)
+        FireRate: 9.1 (min: 7.5 /max: 12.8)
 
-Type: SMG  ---  Durability: 10  ---  Quality: Radiant
-        DPS: 90.3 (min: 86.7 /max: 95.8 )
-        Damage: 5 (min: 3 /max: 8.2)
-        Range: 43.5 (min: 30 /max: 50)
-        CriticalChance: 0.1 (min: 0 /max: 0.1)
-        FireRate: 13.1 (min: 7.5 /max: 23.4)
-
-
-
-Type: LMG  ---  Durability: 0  ---  Quality: Flawed
-        DPS: 36.5 (min: 28.6 /max: 44.4 )
-        Damage: 10.4 (min: 9 /max: 13.5)
-        Range: 57.3 (min: 50 /max: 70)
-        CriticalChance: 0.1 (min: 0.1 /max: 0.2)
-        FireRate: 4.9 (min: 3.8 /max: 7.5)
-
-Type: LMG  ---  Durability: 10  ---  Quality: Flawed
-        DPS: 48.8 (min: 38.1 /max: 57.6 )
-        Damage: 11.4 (min: 9 /max: 15.8)
-        Range: 56.7 (min: 50 /max: 70)
-        CriticalChance: 0.1 (min: 0.1 /max: 0.2)
-        FireRate: 5.4 (min: 3.8 /max: 8.8)
+SMG Spewer 
+Durability: 0 (-0.25)
+DPS: 32.72727
+Automatic: True
+Capacity:   20
+Pellets:    2
+Damage:     3
+Fire Rate:  7.5
+Reload:     1
+Accuracy: 22.5
 
 
 
-Type: LMG  ---  Durability: 0  ---  Quality: Worn
-        DPS: 37.2 (min: 28.6 /max: 44.4 )
-        Damage: 10.5 (min: 9 /max: 13.5)
-        Range: 56.4 (min: 50 /max: 70)
-        CriticalChance: 0.1 (min: 0.1 /max: 0.2)
-        FireRate: 5.1 (min: 3.8 /max: 7.5)
 
-Type: LMG  ---  Durability: 10  ---  Quality: Worn
-        DPS: 61 (min: 48.6 /max: 72 )
-        Damage: 12.3 (min: 9 /max: 18)
-        Range: 56.5 (min: 50 /max: 70)
-        CriticalChance: 0.1 (min: 0.1 /max: 0.2)
-        FireRate: 5.8 (min: 3.8 /max: 10)
+SMG Spitter 
+Durability: 0 (-0.25)
+DPS: 27
+Automatic: True
+Capacity:   30
+Pellets:    1
+Damage:     4.5
+Fire Rate:  7.5
+Reload:     1
+Accuracy: 22.5
 
 
 
-Type: LMG  ---  Durability: 0  ---  Quality: Shining
-        DPS: 36.9 (min: 28.6 /max: 44.4 )
-        Damage: 10.6 (min: 9 /max: 13.5)
-        Range: 56.6 (min: 50 /max: 70)
-        CriticalChance: 0.1 (min: 0.1 /max: 0.2)
-        FireRate: 4.9 (min: 3.8 /max: 7.5)
 
-Type: LMG  ---  Durability: 10  ---  Quality: Shining
-        DPS: 74.9 (min: 60.3 /max: 87.6 )
-        Damage: 13.2 (min: 9 /max: 20.2)
-        Range: 56.5 (min: 50 /max: 70)
-        CriticalChance: 0.1 (min: 0.1 /max: 0.2)
-        FireRate: 6.2 (min: 3.8 /max: 11.2)
+Type: SMG  ---  Durability: 50  ---  Quality: Radiant
+        DPS: 137.3 (min: 129.8 /max: 145.2 )
+        Damage: 6.1 (min: 3 /max: 11.2)
+        Accuracy: 39.4 (min: 22.5 /max: 56.2)
+        FireRate: 15.4 (min: 7.5 /max: 31.9)
+
+SMG Spewer 
+Durability: 50 (0.875)
+DPS: 145.1613
+Automatic: True
+Capacity:   20
+Pellets:    2
+Damage:     7.5
+Fire Rate:  18.75
+Reload:     1
+Accuracy: 56.25
 
 
 
-Type: LMG  ---  Durability: 0  ---  Quality: Faultless
-        DPS: 37.1 (min: 28.6 /max: 44.4 )
-        Damage: 10.5 (min: 9 /max: 13.5)
-        Range: 56.5 (min: 50 /max: 70)
-        CriticalChance: 0.1 (min: 0.1 /max: 0.2)
-        FireRate: 5.1 (min: 3.8 /max: 7.5)
 
-Type: LMG  ---  Durability: 10  ---  Quality: Faultless
-        DPS: 89.8 (min: 72.9 /max: 104.2 )
-        Damage: 14 (min: 9 /max: 22.5)
-        Range: 56.5 (min: 50 /max: 70)
-        CriticalChance: 0.1 (min: 0.1 /max: 0.2)
-        FireRate: 6.7 (min: 3.8 /max: 12.5)
+SMG Spitter 
+Durability: 50 (0.875)
+DPS: 129.8077
+Automatic: True
+Capacity:   30
+Pellets:    1
+Damage:     11.25
+Fire Rate:  18.75
+Reload:     1
+Accuracy: 56.25
+
+
+
 
 
 
 Type: LMG  ---  Durability: 0  ---  Quality: Radiant
-        DPS: 36.7 (min: 28.6 /max: 44.4 )
-        Damage: 10.5 (min: 9 /max: 13.5)
-        Range: 57 (min: 50 /max: 70)
-        CriticalChance: 0.1 (min: 0.1 /max: 0.2)
+        DPS: 34.2 (min: 26.6 /max: 38.6 )
+        Damage: 10.8 (min: 9 /max: 13.5)
+        Accuracy: 30 (min: 30 /max: 30)
         FireRate: 5 (min: 3.8 /max: 7.5)
 
-Type: LMG  ---  Durability: 10  ---  Quality: Radiant
-        DPS: 105.4 (min: 86.5 /max: 121.8 )
-        Damage: 14.9 (min: 9 /max: 24.8)
-        Range: 56.8 (min: 50 /max: 70)
-        CriticalChance: 0.1 (min: 0.1 /max: 0.3)
-        FireRate: 7.1 (min: 3.8 /max: 13.8)
+LMG Annihilator 
+Durability: 0 (-0.25)
+DPS: 38.57143
+Automatic: True
+Capacity:   50
+Pellets:    1
+Damage:     9
+Fire Rate:  7.5
+Reload:     5
+Accuracy: 30
+
+
+
+
+LMG Breacher 
+Durability: 0 (-0.25)
+DPS: 26.61972
+Automatic: True
+Capacity:   70
+Pellets:    1
+Damage:     9
+Fire Rate:  3.75
+Reload:     5
+Accuracy: 30
+
+
+
+
+Type: LMG  ---  Durability: 50  ---  Quality: Radiant
+        DPS: 141.6 (min: 126.3 /max: 151.1 )
+        Damage: 18.8 (min: 9 /max: 33.8)
+        Accuracy: 52.5 (min: 30 /max: 75)
+        FireRate: 8.6 (min: 3.8 /max: 18.8)
+
+LMG Gouger 
+Durability: 50 (0.875)
+DPS: 151.1194
+Automatic: True
+Capacity:   60
+Pellets:    1
+Damage:     33.75
+Fire Rate:  9.375
+Reload:     7
+Accuracy: 75
+
+
+
+
+LMG Breacher 
+Durability: 50 (0.875)
+DPS: 126.3369
+Automatic: True
+Capacity:   70
+Pellets:    1
+Damage:     22.5
+Fire Rate:  9.375
+Reload:     5
+Accuracy: 75
+
+
+
 
 
 

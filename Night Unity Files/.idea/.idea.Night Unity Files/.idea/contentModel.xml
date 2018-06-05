@@ -125,6 +125,7 @@
               <e p="CharacterView.cs" t="Include" />
               <e p="ConditionType.cs" t="Include" />
               <e p="DesolationAttributes.cs" t="Include" />
+              <e p="Effect.cs" t="Include" />
               <e p="Player.cs" t="Include" />
               <e p="RageController.cs" t="Include" />
             </e>
@@ -300,6 +301,7 @@
                 <e p="InventoryItem.cs" t="Include" />
                 <e p="InventoryResource.cs" t="Include" />
                 <e p="InventoryResourceType.cs" t="Include" />
+                <e p="ResourceTemplate.cs" t="Include" />
               </e>
               <e p="StateMachines" t="Include">
                 <e p="ProbabalisticState.cs" t="Include" />

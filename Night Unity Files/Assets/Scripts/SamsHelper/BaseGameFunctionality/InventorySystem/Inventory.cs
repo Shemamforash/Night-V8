@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
-using Game.Characters;
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
@@ -22,17 +22,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private readonly List<InventoryItem> _contents = new List<InventoryItem>();
         private bool _readonly;
         private static bool _loaded;
-        private static readonly Dictionary<string, float> resourceNames = new Dictionary<string, float>();
+        private static readonly List<ResourceTemplate> resourceTemplates = new List<ResourceTemplate>();
         private readonly List<Consumable> _consumables = new List<Consumable>();
 
         public Inventory(string name, float maxWeight = 0) : base(name, GameObjectType.Inventory)
         {
             LoadResources();
-            foreach (string resourceType in resourceNames.Keys)
-            {
-                AddResource(resourceType, resourceNames[resourceType]);
-            }
-
+            foreach (ResourceTemplate template in resourceTemplates) AddResource(template);
 //            AddTestingResources(10);
             if (maxWeight == 0) return;
             MaxWeight = maxWeight;
@@ -41,7 +37,21 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public List<Consumable> Consumables()
         {
-            return _consumables;
+            return _consumables.Where(c => c.Quantity() != 0).ToList();
+        }
+
+        private void AddResource(ResourceTemplate template)
+        {
+            if (_resources.FirstOrDefault(r => r.Name == template.Name) != null) throw new Exceptions.ResourceAlreadyExistsException(template.Name);
+            InventoryItem newResource = template.Create();
+            newResource.ParentInventory = this;
+            if (newResource is Consumable)
+            {
+                _consumables.Add((Consumable) newResource);
+                newResource.Increment(Random.Range(1, 5));
+            }
+
+            _resources.Add(newResource);
         }
 
         private static void LoadResources()
@@ -53,9 +63,27 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             XmlNode root = resourceXml.SelectSingleNode("Resources");
             foreach (XmlNode resourceNode in root.SelectNodes("Resource"))
             {
+                ResourceTemplate resourceTemplate;
                 string name = resourceNode.SelectSingleNode("Name").InnerText;
+                string environment = resourceNode.SelectSingleNode("Environment").InnerText;
+                string region = resourceNode.SelectSingleNode("Region").InnerText;
+                string droplocation = resourceNode.SelectSingleNode("Drop").InnerText;
                 float weight = float.Parse(resourceNode.SelectSingleNode("Weight").InnerText);
-                resourceNames.Add(name, weight);
+                bool consumable = resourceNode.SelectSingleNode("Consumable").InnerText == "TRUE";
+                if (consumable)
+                {
+                    string effect1 = resourceNode.SelectSingleNode("Effect1").InnerText;
+                    string effect2 = resourceNode.SelectSingleNode("Effect2").InnerText;
+                    float duration1 = float.Parse(resourceNode.SelectSingleNode("Duration1").InnerText);
+                    float duration2 = float.Parse(resourceNode.SelectSingleNode("Duration2").InnerText);
+                    resourceTemplate = new ResourceTemplate(name, weight, environment, region, droplocation, effect1, effect2, duration1, duration2);
+                }
+                else
+                {
+                    resourceTemplate = new ResourceTemplate(name, weight, environment, region, droplocation);
+                }
+
+                resourceTemplates.Add(resourceTemplate);
             }
 
             _loaded = true;
@@ -63,7 +91,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public void AddTestingResources(int resourceCount, int noItems = 0)
         {
-            IncrementResource("Food", resourceCount);
+            IncrementResource("Fruit", resourceCount);
             IncrementResource("Fuel", resourceCount);
             IncrementResource("Scrap", resourceCount);
             IncrementResource("Water", resourceCount);
@@ -125,7 +153,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             _readonly = readOnly;
         }
-        
+
         public bool IsBottomless()
         {
             return !_isWeightLimited;
@@ -173,6 +201,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             {
                 _consumables.Add((Consumable) item);
             }
+
             UpdateContents();
         }
 
@@ -189,20 +218,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             {
                 _consumables.Remove((Consumable) item);
             }
-            return item;
-        }
 
-        protected void AddResource(string type, float weight)
-        {
-            if (_resources.FirstOrDefault(r => r.Name == type) != null) throw new Exceptions.ResourceAlreadyExistsException(type);
-            InventoryItem newResource = new InventoryItem(type, GameObjectType.Resource, weight);
-            newResource.SetStackable(true);
-            newResource.ParentInventory = this;
-            if (newResource is Consumable)
-            {
-                _consumables.Add((Consumable) newResource);
-            }
-            _resources.Add(newResource);
+            return item;
         }
 
         public void IncrementResource(string type, int amount)
@@ -239,7 +256,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 _contents.Add(r);
             });
         }
-        
+
         public List<InventoryItem> Contents()
         {
             return _contents;

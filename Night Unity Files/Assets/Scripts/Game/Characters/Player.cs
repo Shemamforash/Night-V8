@@ -10,22 +10,20 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Game.Characters
 {
     public sealed class Player : Character
     {
-        public const int PlayerHealthChunkSize = 50;
-
-        private const float MinSpeed = 3, MaxSpeed = 6;
-
         private const int HighWeightThreshold = 15, LowWeightThreshold = 5;
         public readonly DesolationAttributes Attributes;
         public readonly Skill CharacterSkillOne, CharacterSkillTwo;
         public readonly CharacterTemplate CharacterTemplate;
         public readonly StateMachine States = new StateMachine();
         private readonly BrandManager _brandManager;
+        private readonly List<Effect> _effects = new List<Effect>();
 
         public Craft CraftAction;
         public LightFire LightFireAction;
@@ -55,6 +53,16 @@ namespace Game.Characters
 //            DesolationInventory inventory = TravelAction.AtHome() ? WorldState.HomeInventory() : Inventory();
 //            return inventory.DecrementResource(type, amount);
 //        }
+
+        public void AddEffect(Effect effect)
+        {
+            _effects.Add(effect);
+        }
+
+        public void RemoveEffect(Effect effect)
+        {
+            _effects.Remove(effect);
+        }
         
         public string GetCurrentStoryProgress()
         {
@@ -73,32 +81,6 @@ namespace Game.Characters
         ~Player()
         {
 //            Debug.Log("Destroyed " + Name);
-        }
-
-        public float CalculateDashCooldown()
-        {
-            return 2f - 0.1f * Attributes.Endurance.CurrentValue();
-        }
-
-        public float CalculateSpeed()
-        {
-            float normalisedSpeed = Attributes.Endurance.Normalised();
-            return normalisedSpeed * (MaxSpeed - MinSpeed) + MinSpeed;
-        }
-
-        public float CalculateDamageModifier()
-        {
-            return (float) Math.Pow(1.05f, Attributes.Perception.CurrentValue());
-        }
-
-        public float CalculateSkillCooldownModifier()
-        {
-            return (float) Math.Pow(0.95f, Attributes.Willpower.CurrentValue());
-        }
-
-        public int CalculateCombatHealth()
-        {
-            return (int) (Attributes.Strength.CurrentValue() * PlayerHealthChunkSize);
         }
 
         public override XmlNode Save(XmlNode doc, PersistenceType saveType)
@@ -123,9 +105,13 @@ namespace Game.Characters
             States.SetDefaultState(RestAction);
         }
 
-        public void UpdateCurrentState()
+        public void Update()
         {
             ((BaseCharacterAction) States.GetCurrentState()).UpdateAction();
+            for (int i = _effects.Count - 1; i >= 0; --i)
+            {
+                _effects[i].UpdateEffect();
+            }
         }
 
         private bool IsOverburdened()
@@ -142,7 +128,11 @@ namespace Game.Characters
 
         public void Rest(int amount)
         {
-            if (Attributes.Endurance.ReachedMax()) _brandManager.IncreaseIdleTime();
+            if (Attributes.Endurance.ReachedMax())
+            {
+                _brandManager.IncreaseIdleTime();
+                return;
+            }
             Attributes.Endurance.Increment(amount);
         }
 

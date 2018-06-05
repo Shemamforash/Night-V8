@@ -25,8 +25,7 @@ namespace Game.Combat.Enemies
         {
             if (Template.AllowedWeaponTypes.Count == 0) return;
             ItemQuality targetQuality = (ItemQuality) Enum.Parse(typeof(ItemQuality), Mathf.FloorToInt(difficulty * 5).ToString());
-            int durability = Random.Range(0, 10);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality, Template.AllowedWeaponTypes, durability);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality, Template.AllowedWeaponTypes);
             EquipWeapon(weapon);
         }
 

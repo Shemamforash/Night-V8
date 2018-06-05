@@ -11,6 +11,7 @@ namespace Game.Exploration.Environment
         private static bool _loaded;
         private static readonly Dictionary<int, Environment> _environments = new Dictionary<int, Environment>();
         private static Environment _currentEnvironment;
+        private static TemperatureCategory _temperatureCategory;
         
         public static void Start()
         {
@@ -64,27 +65,31 @@ namespace Game.Exploration.Environment
 
         public static void UpdateTemperature()
         {
-            int temperature = GetTemperature();
-            TemperatureCategory temperatureCategory;
+            int temperature = CalculateTemperature();
             if (temperature < -20)
-                temperatureCategory = TemperatureCategory.Freezing;
+                _temperatureCategory = TemperatureCategory.Freezing;
             else if (temperature < 0)
-                temperatureCategory = TemperatureCategory.Cold;
+                _temperatureCategory = TemperatureCategory.Cold;
             else if (temperature < 20)
-                temperatureCategory = TemperatureCategory.Warm;
+                _temperatureCategory = TemperatureCategory.Warm;
             else if (temperature < 40)
-                temperatureCategory = TemperatureCategory.Hot;
+                _temperatureCategory = TemperatureCategory.Hot;
             else
-                temperatureCategory = TemperatureCategory.Boiling;
+                _temperatureCategory = TemperatureCategory.Boiling;
             int targetLength = 6;
-            string currentTemperature = GetTemperature() + "\u00B0" + "C";
+            string currentTemperature = CalculateTemperature() + "\u00B0" + "C";
             int lengthDifference = targetLength - currentTemperature.Length;
             string seperators = "";
             for (int i = 0; i < lengthDifference; ++i) seperators += " ";
-            WorldView.SetTemperatureText(temperatureCategory + seperators + "(" + currentTemperature + ")");
+            WorldView.SetTemperatureText(_temperatureCategory + seperators + "(" + currentTemperature + ")");
         }
 
-        public static int GetTemperature()
+        public static TemperatureCategory GetTemperature()
+        {
+            return _temperatureCategory;
+        }
+
+        private static int CalculateTemperature()
         {
             Environment currentEnvironment = _currentEnvironment;
             Weather.Weather currentWeather = WeatherManager.CurrentWeather();

@@ -167,7 +167,7 @@ namespace Game.Global
             EnvironmentManager.UpdateTemperature();
             CharacterManager.Characters.ForEach(c =>
             {
-                c.UpdateCurrentState();
+                c.Update();
                 c.Attributes.UpdateThirstAndHunger();
             });
         }

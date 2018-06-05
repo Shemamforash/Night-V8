@@ -14,10 +14,10 @@ namespace Facilitating.UIControllers
             _active = Helper.FindChildWithName<Image>(gameObject, "Active");
             _inactive = Helper.FindChildWithName<Image>(gameObject, "Inactive");
         }
-        
+
         public void SetValue(CharacterAttribute attribute)
         {
-            int currentValue = (int) attribute.CurrentValue();
+            int currentValue = Mathf.CeilToInt(attribute.CurrentValue());
             int max = (int) attribute.Max;
             _inactive.fillAmount = max / 10f;
             _active.fillAmount = currentValue / 10f;

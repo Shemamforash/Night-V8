@@ -74,9 +74,10 @@ class ResourceImporter(XMLWriter):
         write_single_value(self, "Drop", get_value(self, "D", row, ""))
         write_single_value(self, "Consumable", get_value(self, "E", row, ""))
         write_single_value(self, "Effect1", get_value(self, "F", row, ""))
-        write_single_value(self, "Effect2", get_value(self, "G", row, ""))
-        write_single_value(self, "Duration", get_value(self, "H", row, ""))
-        write_single_value(self, "Weight", get_value(self, "I", row, "0"))
+        write_single_value(self, "Duration1", get_value(self, "G", row, "0"))
+        write_single_value(self, "Effect2", get_value(self, "H", row, ""))
+        write_single_value(self, "Duration2", get_value(self, "I", row, "0"))
+        write_single_value(self, "Weight", get_value(self, "J", row, "0"))
 
     def read_resources(self):
         for row_no in range(2, 21):

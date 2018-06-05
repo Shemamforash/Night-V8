@@ -75,12 +75,12 @@ namespace SamsHelper.ReactiveUI
             return _currentValue >= _max;
         }
 
-        public void Increment(float amount = 1)
+        public virtual void Increment(float amount = 1)
         {
             SetCurrentValue(_currentValue + amount);
         }
 
-        public void Decrement(float amount = 1)
+        public virtual void Decrement(float amount = 1)
         {
             SetCurrentValue(_currentValue - amount);
         }

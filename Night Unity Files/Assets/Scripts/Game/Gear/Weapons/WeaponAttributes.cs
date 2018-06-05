@@ -7,13 +7,15 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
+using UnityEditor;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Gear.Weapons
 {
     public class WeaponAttributes : AttributeContainer
     {
-        private const int MaxDurability = 10;
+        private int MaxDurability;
         private const float MinDurabilityMod = 0.75f;
         public readonly Number Durability;
         private float _dps;
@@ -28,12 +30,15 @@ namespace Game.Gear.Weapons
         public string WeaponClassName, WeaponClassDescription;
         public WeaponType WeaponType;
 
-        public WeaponAttributes(Weapon weapon, int durability = -1)
+        public WeaponAttributes(Weapon weapon)
         {
             _weapon = weapon;
-            _durabilityModifier = new AttributeModifier(new List<AttributeType> {AttributeType.Damage, AttributeType.FireRate, AttributeType.Accuracy});
-            if (durability == -1) durability = Random.Range(0, MaxDurability / 4);
-            Durability = new Number(durability, 0, MaxDurability);
+            _durabilityModifier = new AttributeModifier();
+            Damage.AddModifier(_durabilityModifier);
+            FireRate.AddModifier(_durabilityModifier);
+            Accuracy.AddModifier(_durabilityModifier);
+            MaxDurability = ((int) weapon.Quality() + 1) * 10;
+            Durability = new Number(MaxDurability, 0, MaxDurability);
         }
 
         public XmlNode Save(XmlNode root, PersistenceType saveType)
@@ -53,7 +58,13 @@ namespace Game.Gear.Weapons
 
         public void SetClass(WeaponClass weaponClass)
         {
-            weaponClass.Modifiers.ForEach(m => m.ApplyOnce(this));
+            FireRate.SetCurrentValue(weaponClass.FireRate);
+            ReloadSpeed.SetCurrentValue(weaponClass.ReloadSpeed);
+            Damage.SetCurrentValue(weaponClass.Damage);
+            Handling.SetCurrentValue(weaponClass.Handling);
+            Capacity.SetCurrentValue(weaponClass.Capacity);
+            Pellets.SetCurrentValue(weaponClass.Pellets);
+            Accuracy.SetCurrentValue(weaponClass.Accuracy);
             WeaponType = weaponClass.Type;
             Automatic = weaponClass.Automatic;
             WeaponClassName = weaponClass.Name;
@@ -73,14 +84,13 @@ namespace Game.Gear.Weapons
             return WeaponClassName;
         }
 
-        public void RecalculateAttributeValues(Number number = null)
+        public void RecalculateAttributeValues()
         {
-            _durabilityModifier.Remove();
             float normalisedDurability = Durability.CurrentValue() / MaxDurability;
             float qualityModifier = (int) _weapon.Quality() + 1 / 2f;
             DurabilityModifier = MinDurabilityMod + (1 - MinDurabilityMod) * normalisedDurability * qualityModifier;
-            _durabilityModifier.SetMultiplicative(DurabilityModifier);
-            _durabilityModifier.Apply(this);
+            --DurabilityModifier;
+            _durabilityModifier.SetFinalBonus(DurabilityModifier);
             CalculateDPS();
         }
 
@@ -99,33 +109,19 @@ namespace Game.Gear.Weapons
 
         protected override void CacheAttributes()
         {
-            Damage = new CharacterAttribute(AttributeType.Damage, 0);
-            Accuracy = new CharacterAttribute(AttributeType.Accuracy, 0, 0, 100);
-            FireRate = new CharacterAttribute(AttributeType.FireRate, 0);
-            ReloadSpeed = new CharacterAttribute(AttributeType.ReloadSpeed, 0);
-            Handling = new CharacterAttribute(AttributeType.Handling, 0);
+            Damage = new CharacterAttribute(this, AttributeType.Damage, 0);
+            Accuracy = new CharacterAttribute(this,AttributeType.Accuracy, 0, 0, 100);
+            FireRate = new CharacterAttribute(this,AttributeType.FireRate, 0);
+            ReloadSpeed = new CharacterAttribute(this,AttributeType.ReloadSpeed, 0);
+            Handling = new CharacterAttribute(this,AttributeType.Handling, 0);
 
-            Capacity = new CharacterAttribute(AttributeType.Capacity, 0);
-            Pellets = new CharacterAttribute(AttributeType.Pellets, 0);
+            Capacity = new CharacterAttribute(this,AttributeType.Capacity, 0);
+            Pellets = new CharacterAttribute(this,AttributeType.Pellets, 0);
 
-            BurnChance = new CharacterAttribute(AttributeType.BurnChance, 0);
-            BleedChance = new CharacterAttribute(AttributeType.BleedChance, 0);
-            PierceChance = new CharacterAttribute(AttributeType.PierceChance, 0);
-            SicknessChance = new CharacterAttribute(AttributeType.SicknessChance, 0);
-
-            AddAttribute(Damage);
-            AddAttribute(Accuracy);
-            AddAttribute(ReloadSpeed);
-            AddAttribute(FireRate);
-            AddAttribute(Handling);
-
-            AddAttribute(Capacity);
-            AddAttribute(Pellets);
-
-            AddAttribute(BurnChance);
-            AddAttribute(BleedChance);
-            AddAttribute(PierceChance);
-            AddAttribute(SicknessChance);
+            BurnChance = new CharacterAttribute(this,AttributeType.BurnChance, 0);
+            BleedChance = new CharacterAttribute(this,AttributeType.BleedChance, 0);
+            PierceChance = new CharacterAttribute(this,AttributeType.PierceChance, 0);
+            SicknessChance = new CharacterAttribute(this,AttributeType.SicknessChance, 0);
         }
 
         public string Print()
@@ -142,6 +138,19 @@ namespace Game.Gear.Weapons
                    + "\nAccuracy: " + Accuracy.CurrentValue()
                    + "\n" + WeaponClassDescription?.Replace("\n", " ")
                    + "\n" + ModifierDescription?.Replace("\n", " ") + "\n\n";
+        }
+
+        public void DecreaseDurability()
+        {
+            float durabilityLoss = (Damage.CurrentValue() * Pellets.CurrentValue()) / ReloadSpeed.CurrentValue();
+            durabilityLoss /= 200f;
+            Durability.Decrement(durabilityLoss);
+            RecalculateAttributeValues();
+        }
+
+        public void IncreaseDurability()
+        {
+            
         }
     }
 }

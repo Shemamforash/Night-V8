@@ -161,7 +161,7 @@ MonoBehaviour:
     y: 6
     width: 22.4375
     height: 1.875
-    xOffset: 4.3125
+    xOffset: -8.5
     yOffset: 18.375
     xAdvance: 18.625
     scale: 1

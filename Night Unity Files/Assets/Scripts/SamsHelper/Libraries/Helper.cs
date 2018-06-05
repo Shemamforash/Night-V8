@@ -167,7 +167,7 @@ namespace SamsHelper.Libraries
             if (typeof(T) == typeof(GameObject)) throw new Exceptions.CannotGetGameObjectComponent();
             Transform t = g.transform;
             Transform foundChild = FindChildWithName(t, name);
-            if (foundChild == null) throw new Exceptions.ChildNotFoundException(g.name, name);
+            if (foundChild == null) throw new Exceptions.ChildNotFoundException(g, name);
             T foundComponent = foundChild.GetComponent<T>();
             if (foundComponent == null) throw new Exceptions.ComponentNotFoundException(foundChild.name, foundComponent.GetType());
             return foundComponent;
@@ -407,6 +407,19 @@ namespace SamsHelper.Libraries
             if (randomAlpha) c.a = Random.Range(0f, 1f);
             else c.a = 1;
             return c;
+        }
+
+        public static string PrintHierarchy(GameObject parent)
+        {
+            string hierarchy = "";
+            Transform t = parent.transform;
+            while (t != null)
+            {
+                hierarchy = t.name + "/" + hierarchy;
+                t = t.parent;
+            }
+
+            return hierarchy;
         }
     }
 }

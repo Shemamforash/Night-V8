@@ -274,15 +274,15 @@ namespace Game.Combat.Player
 
             Player = CharacterManager.SelectedCharacter;
             ArmourController = Player.ArmourController;
-            _damageModifier = Player.CalculateDamageModifier();
-            _skillCooldownModifier = Player.CalculateSkillCooldownModifier();
+            _damageModifier = Player.Attributes.CalculateDamageModifier();
+            _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
             _initialArmour = Player.ArmourController.GetProtectionLevel();
 
 //            _playerUi._playerName.text = player.Name;
-            Speed = Player.CalculateSpeed();
+            Speed = Player.Attributes.CalculateSpeed();
 
             _dashCooldown = CombatManager.CreateCooldown();
-            _dashCooldown.Duration = Player.CalculateDashCooldown();
+            _dashCooldown.Duration = Player.Attributes.CalculateDashCooldown();
             _dashCooldown.SetDuringAction(a =>
             {
                 float normalisedTime = a / _dashCooldown.Duration;
@@ -297,7 +297,7 @@ namespace Game.Combat.Player
             RageController = new RageController();
             RageController.EnterCombat();
 
-            HealthController.SetInitialHealth(Player.CalculateCombatHealth(), this);
+            HealthController.SetInitialHealth(Player.Attributes.CalculateCombatHealth(), this);
             HealthController.AddOnHeal(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
             HealthController.AddOnTakeDamage(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
 

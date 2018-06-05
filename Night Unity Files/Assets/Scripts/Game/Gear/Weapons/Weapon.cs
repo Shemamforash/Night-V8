@@ -23,9 +23,9 @@ namespace Game.Gear.Weapons
         private long _timeAtLastFire;
         public Skill WeaponSkillOne, WeaponSkillTwo;
 
-        public Weapon(string name, float weight, ItemQuality _itemQuality, int durability = -1) : base(name, weight, GearSubtype.Weapon, _itemQuality)
+        public Weapon(string name, float weight, ItemQuality _itemQuality) : base(name, weight, GearSubtype.Weapon, _itemQuality)
         {
-            WeaponAttributes = new WeaponAttributes(this, durability);
+            WeaponAttributes = new WeaponAttributes(this);
 //            Durability.OnMin(() => { _canEquip = false; });
         }
 
@@ -95,6 +95,7 @@ namespace Game.Gear.Weapons
 
         public void ConsumeAmmo(int amount = 0)
         {
+            WeaponAttributes.DecreaseDurability();
             _ammoInMagazine -= amount;
             if (_ammoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();
         }
@@ -109,24 +110,10 @@ namespace Game.Gear.Weapons
             return (int) WeaponAttributes.Get(AttributeType.Capacity).CurrentValue();
         }
 
-        public void IncreaseDurability()
-        {
-            WeaponAttributes.Durability.Increment();
-            WeaponAttributes.RecalculateAttributeValues();
-            WorldState.HomeInventory().GetResource("Scrap").Decrement(GetUpgradeCost());
-            SetName();
-        }
-
         public void SetName()
         {
             string quality = Quality().ToString();
             Name = quality + " " + WeaponAttributes.GetName();
-        }
-
-        public void DecreaseDurability()
-        {
-            WeaponAttributes.Durability.Decrement();
-            WeaponAttributes.RecalculateAttributeValues();
         }
 
         public string GetWeaponType()

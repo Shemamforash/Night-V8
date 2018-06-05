@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Game.Characters;
-using Game.Combat.Player;
+﻿using Game.Combat.Player;
 
 namespace Game.Gear.Weapons
 {
@@ -8,31 +6,34 @@ namespace Game.Gear.Weapons
     {
         public readonly int AmmoCost;
         public readonly bool Automatic;
-        public readonly List<AttributeModifier> Modifiers = new List<AttributeModifier>();
         public readonly string Name;
         public readonly WeaponType Type;
+        public readonly int Pellets, Capacity, Handling, Accuracy, Damage;
+        public readonly float ReloadSpeed, FireRate;
 
-        public WeaponClass(WeaponType type, string name, bool automatic, int ammoCost)
+        public WeaponClass(WeaponType type, string name, bool automatic, int ammoCost, int damage, float fireRate, float reloadSpeed, int accuracy, int handling, int capacity, int pellets)
         {
             Type = type;
             Automatic = automatic;
             AmmoCost = ammoCost;
             Name = name;
+            Damage = damage;
+            FireRate = fireRate;
+            ReloadSpeed = reloadSpeed;
+            Accuracy = accuracy;
+            Handling = handling;
+            Capacity = capacity;
+            Pellets = pellets;
         }
 
-        public Weapon CreateWeapon(ItemQuality quality, int durability = -1)
+        public Weapon CreateWeapon(ItemQuality quality)
         {
-            Weapon w = new Weapon(Type.ToString(), 10, quality, durability);
+            Weapon w = new Weapon(Type.ToString(), 10, quality);
             WeaponAttributes weaponAttributes = w.WeaponAttributes;
             weaponAttributes.SetClass(this);
             w.WeaponSkillOne = WeaponSkills.GetWeaponSkillOne(w);
             w.WeaponSkillTwo = WeaponSkills.GetWeaponSkillTwo(w);
             return w;
-        }
-
-        public void AddAttributeModifier(AttributeModifier modifier)
-        {
-            Modifiers.Add(modifier);
         }
     }
 }

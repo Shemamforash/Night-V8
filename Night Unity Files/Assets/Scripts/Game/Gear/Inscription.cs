@@ -43,14 +43,14 @@ namespace Game.Gear
                     float value = float.Parse(attributeText.Substring(1));
                     if (prefix == 'x' && value != 1)
                     {
-                        AttributeModifier modifier = new AttributeModifier(attributeType);
-                        modifier.SetMultiplicative(value);
+                        AttributeModifier modifier = new AttributeModifier();
+                        modifier.SetFinalBonus(value);
                         inscriptionTemplate.SetModifier(modifier);
                     }
                     else if (prefix == '+' && value != 0)
                     {
-                        AttributeModifier modifier = new AttributeModifier(attributeType);
-                        modifier.SetSummative(value);
+                        AttributeModifier modifier = new AttributeModifier();
+                        modifier.SetFinalBonus(value);
                         inscriptionTemplate.SetModifier(modifier);
                     }
                 }

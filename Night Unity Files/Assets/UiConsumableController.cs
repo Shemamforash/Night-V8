@@ -58,7 +58,11 @@ public class UiConsumableController : Menu , IInputListener{
                 break;
             case InputAxis.Fire:
 
-                if (_focussed) CharacterManager.SelectedCharacter.Inventory().Consumables()[_selectedConsumable].Consume(CharacterManager.SelectedCharacter);
+                if (_focussed)
+                {
+                    CharacterManager.SelectedCharacter.Inventory().Consumables()[_selectedConsumable].Consume(CharacterManager.SelectedCharacter);
+                    SelectItem();
+                }
                 break;
             case InputAxis.Reload:
                 MenuStateMachine.ReturnToDefault();
@@ -200,8 +204,8 @@ public class UiConsumableController : Menu , IInputListener{
             }
 
             SetName(consumable.Name, consumable.Quantity());
-            SetEffect1Text(consumable.Effect1);
-            SetEffect2Text(consumable.Effect2);
+            SetEffect1Text(consumable.Effect1());
+            SetEffect2Text(consumable.Effect2());
         }
     }
 }

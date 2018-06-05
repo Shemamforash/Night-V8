@@ -1,4 +1,8 @@
-﻿using Game.Characters;
+﻿using System;
+using Game.Characters;
+using Game.Exploration.Environment;
+using Game.Exploration.Weather;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -9,14 +13,46 @@ namespace Facilitating.UIControllers
 {
     public class UIConditionController : MonoBehaviour
     {
-        public Slider ConditionSlider;
-        public EnhancedText ConditionText;
+        private Slider ConditionSlider;
+        private EnhancedText ConditionText, ModifierIndicator;
 
+        public void Awake()
+        {
+            if (transform.parent.parent.name == "Simple")
+            {
+                ConditionText = GetComponent<EnhancedText>();
+                return;
+            }
+            ConditionText = Helper.FindChildWithName<EnhancedText>(gameObject, "Text");
+            ConditionSlider = Helper.FindChildWithName<Slider>(gameObject, "Progress");
+            ModifierIndicator = Helper.FindChildWithName<EnhancedText>(gameObject, "Modifier Indicator");
+        }
+        
         public void UpdateDehydration(Player player)
         {
             ConditionText.Text(player.Attributes.GetThirstStatus());
             if (ConditionSlider == null) return;
             ConditionSlider.value = 1 - player.Attributes.Thirst.Normalised();
+            switch (EnvironmentManager.GetTemperature())
+            {
+                case TemperatureCategory.Freezing:
+                    ModifierIndicator.Text("++");
+                    break;
+                case TemperatureCategory.Cold:
+                    ModifierIndicator.Text("+");
+                    break;
+                case TemperatureCategory.Warm:
+                    ModifierIndicator.Text("");
+                    break;
+                case TemperatureCategory.Hot:
+                    ModifierIndicator.Text("-");
+                    break;
+                case TemperatureCategory.Boiling:
+                    ModifierIndicator.Text("--");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void UpdateHunger(Player player)
@@ -24,6 +60,26 @@ namespace Facilitating.UIControllers
             ConditionText.Text(player.Attributes.GetHungerStatus());
             if (ConditionSlider == null) return;
             ConditionSlider.value = 1 - player.Attributes.Hunger.Normalised();
+            switch (EnvironmentManager.GetTemperature())
+            {
+                case TemperatureCategory.Freezing:
+                    ModifierIndicator.Text("--");
+                    break;
+                case TemperatureCategory.Cold:
+                    ModifierIndicator.Text("-");
+                    break;
+                case TemperatureCategory.Warm:
+                    ModifierIndicator.Text("");
+                    break;
+                case TemperatureCategory.Hot:
+                    ModifierIndicator.Text("+");
+                    break;
+                case TemperatureCategory.Boiling:
+                    ModifierIndicator.Text("++");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

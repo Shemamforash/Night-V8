@@ -60,7 +60,7 @@ namespace Game.Global
             _environmentText.text = _timeString + ". It is " + _temperatureString + " and there is " + _weatherString + " in the " + _environmentString + ". The storm is " + stormString + ".";
         }
 
-        private static readonly string[] resources = {"Food", "Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Meat", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
+        private static readonly string[] resources = {"Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Meat", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
 
         public override void Awake()
         {
