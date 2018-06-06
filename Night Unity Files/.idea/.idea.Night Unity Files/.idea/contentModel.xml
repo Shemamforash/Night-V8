@@ -171,13 +171,19 @@
                 <e p="UnarmedBehaviour.cs" t="Include" />
               </e>
               <e p="Generation" t="Include">
-                <e p="AreaGenerator.cs" t="Include" />
                 <e p="Barrier.cs" t="Include" />
                 <e p="Cell.cs" t="Include" />
                 <e p="CombatManager.cs" t="Include" />
                 <e p="ContainerBehaviour.cs" t="Include" />
                 <e p="ContainerController.cs" t="Include" />
                 <e p="PathingGrid.cs" t="Include" />
+                <e p="RegionGenerator.cs" t="Include" />
+                <e p="Regions" t="Include">
+                  <e p="Canyon.cs" t="Include" />
+                  <e p="Forest.cs" t="Include" />
+                  <e p="Labyrinth.cs" t="Include" />
+                  <e p="Nightmare.cs" t="Include" />
+                </e>
                 <e p="Triangulator.cs" t="Include" />
               </e>
               <e p="Misc" t="Include">

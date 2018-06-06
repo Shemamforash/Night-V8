@@ -20,7 +20,7 @@ namespace Facilitating.UIControllers
             UiGearMenuController.Instance().SelectGear();
         }
 
-        public void Hide()
+        public virtual void Hide()
         {
             gameObject.SetActive(false);
         }

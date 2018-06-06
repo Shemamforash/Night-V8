@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Humans
 {
-    public class Brawler : UnarmedBehaviour
+    public class Brawler : ArmedBehaviour
     {
         private const float MinMeleeDistance = 1;
         private const float MeleeWarmupDuration = 1f;

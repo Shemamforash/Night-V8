@@ -44,7 +44,6 @@ namespace Game.Combat.Enemies
             Aim();
         }
 
-
         private bool OutOfRange() => DistanceToTarget() < IdealWeaponDistance * 0.5f || DistanceToTarget() > IdealWeaponDistance * 1.5f;
 
         private bool TargetVisible()

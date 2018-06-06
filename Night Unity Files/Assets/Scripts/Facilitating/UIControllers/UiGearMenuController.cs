@@ -138,7 +138,6 @@ namespace Facilitating.UIControllers
 
         public void ShowWeaponMenu(Player player)
         {
-            Debug.Log(EventSystem.current.sendNavigationEvents);
             OpenGearMenu(player, 0, _weaponUpgradeController);
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Misc;
@@ -76,18 +77,24 @@ namespace Game.Combat.Generation
             WorldState.Pause();
             _visibilityRange = 5;
             _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
-
-            _currentRegion.Fire?.CreateObject();
-            _currentRegion.Containers.ForEach(c => c.CreateObject());
-            PathingGrid.InitialiseGrid();
-            _currentRegion.Barriers.ForEach(b =>
+            GameObject.Find("World").AddComponent<Canyon>().Initialise(_currentRegion);
+            switch (_currentRegion.GetRegionType())
             {
-                PathingGrid.AddBarrier(b);
-                b.CreateObject();
-            });
-            PathingGrid.FinaliseGrid();
-
-//            VisibilityRange = (int) (100 * WeatherManager.Instance().CurrentWeather().GetVisibility());
+                case RegionType.Shelter:
+                    break;
+                case RegionType.Gate:
+                    break;
+                case RegionType.Temple:
+                    break;
+                case RegionType.Resource:
+                    break;
+                case RegionType.Danger:
+                    break;
+                case RegionType.Nightmare:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             _player.Initialise();
             _cooldowns.Clear();

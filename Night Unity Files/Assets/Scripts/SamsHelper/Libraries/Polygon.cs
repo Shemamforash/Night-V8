@@ -7,7 +7,7 @@ namespace SamsHelper.Libraries
 {
     public class Polygon
     {
-        public readonly Vector2 Position;
+        public Vector2 Position;
         public readonly List<Vector2> Vertices;
         public Vector2 TopLeft, BottomRight;
 
@@ -17,8 +17,8 @@ namespace SamsHelper.Libraries
             Position = position;
             SetBoundingCorners();
         }
-        
-        private void SetBoundingCorners()
+
+        protected void SetBoundingCorners()
         {
             Tuple<Vector3, Vector3> boundingCorners = AdvancedMaths.GetBoundingCornersOfPolygon(Vertices);
             TopLeft = boundingCorners.Item1;

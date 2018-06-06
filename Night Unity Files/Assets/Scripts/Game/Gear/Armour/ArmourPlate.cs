@@ -25,7 +25,7 @@ namespace Game.Gear.Armour
             switch (name)
             {
                 case "Leather Plate":
-                    return ItemQuality.Flawed;
+                    return ItemQuality.Rusted;
                 case "Reinforced Leather Plate":
                     return ItemQuality.Worn;
                 case "Metal Plate":

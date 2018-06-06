@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
+using Game.Gear;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Facilitating.UIControllers
@@ -18,15 +20,17 @@ namespace Facilitating.UIControllers
         private EnhancedText _inscriptionText;
         private EnhancedText _reloadSpeedText, _accuracyText, _handlingText;
 
-        private EnhancedText _typeText, _nameText, _durabilityText;
+        private EnhancedText _nameText;
+        private RectTransform _durabilityTransform;
+        private ParticleSystem _durabilityParticles;
         private bool _upgradingAllowed;
         private EnhancedButton _weaponButton;
 
         public void Awake()
         {
-            _typeText = Helper.FindChildWithName<EnhancedText>(gameObject, "Type");
+            _durabilityTransform = Helper.FindChildWithName<RectTransform>(gameObject, "Max");
             _nameText = Helper.FindChildWithName<EnhancedText>(gameObject, "Name");
-            _durabilityText = Helper.FindChildWithName<EnhancedText>(gameObject, "Durability");
+            _durabilityParticles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Current");
             _damageText = Helper.FindChildWithName<EnhancedText>(gameObject, "Damage");
             _fireRateText = Helper.FindChildWithName<EnhancedText>(gameObject, "Fire Rate");
             _rangeText = Helper.FindChildWithName<EnhancedText>(gameObject, "Range");
@@ -94,6 +98,12 @@ namespace Facilitating.UIControllers
             }
         }
 
+        public override void Hide()
+        {
+            base.Hide();
+            _durabilityParticles.Stop();
+        }
+
         private string GetAttributePrefix(Weapon compare, AttributeType attribute)
         {
             Weapon equipped = CurrentPlayer.Weapon;
@@ -105,9 +115,19 @@ namespace Facilitating.UIControllers
         private void SetWeaponInfo(Weapon weapon)
         {
             WeaponAttributes attr = weapon.WeaponAttributes;
-            _typeText.Text(weapon.GetWeaponType());
             _nameText.Text(weapon.Name);
-            _durabilityText.Text(attr.Durability.CurrentValue() + " Durability");
+            float absoluteMaxDurability = ((int) ItemQuality.Radiant + 1) * 10;
+            float maxDurability = ((int) weapon.Quality() + 1) * 10;
+            float currentDurability = weapon.WeaponAttributes.Durability.CurrentValue();
+            float rectAnchorOffset = maxDurability / absoluteMaxDurability / 2;
+            float particleOffset = 5.6f * (currentDurability / absoluteMaxDurability);
+            _durabilityTransform.anchorMin = new Vector2(0.5f - rectAnchorOffset, 0.5f);
+            _durabilityTransform.anchorMax = new Vector2(0.5f + rectAnchorOffset, 0.5f);
+            ParticleSystem.ShapeModule shape = _durabilityParticles.shape;
+            shape.radius = particleOffset;
+            ParticleSystem.EmissionModule emission = _durabilityParticles.emission;
+            emission.rateOverTime = 300 * particleOffset / 5.6f;
+            _durabilityParticles.Play();
             _damageText.Text(Helper.Round(attr.Damage.CurrentValue(), 1) + " Dam");
             _fireRateText.Text(Helper.Round(attr.FireRate.CurrentValue(), 1) + " RoF");
             _reloadSpeedText.Text(Helper.Round(attr.ReloadSpeed.CurrentValue(), 1) + "s Reload");
@@ -160,9 +180,11 @@ namespace Facilitating.UIControllers
 
         private void SetNoWeaponInfo()
         {
-            _typeText.Text("");
+            _durabilityTransform.anchorMin = Vector2.zero;
+            _durabilityTransform.anchorMax = Vector2.zero;
             _nameText.Text("");
-            _durabilityText.Text("");
+            ParticleSystem.EmissionModule emission = _durabilityParticles.emission;
+            emission.rateOverTime = 0f;
             _damageText.Text("");
             _fireRateText.Text("");
             _rangeText.Text("");

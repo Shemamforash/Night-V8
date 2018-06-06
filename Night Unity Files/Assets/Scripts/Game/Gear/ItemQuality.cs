@@ -2,7 +2,7 @@
 {
     public enum ItemQuality
     {
-        Flawed,
+        Rusted,
         Worn,
         Shining,
         Faultless,

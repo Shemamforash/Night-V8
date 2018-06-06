@@ -12,15 +12,11 @@ namespace Game.Combat.Generation
 {
     public class Barrier : Polygon, IPersistenceTemplate
     {
-        public readonly List<Vector2> WorldVerts = new List<Vector2>();
         public PolygonCollider2D Collider;
         private GameObject _barrierObject;
         private static GameObject _barrierPrefab;
         private readonly string _barrierName;
-        private readonly float _rotation;
         private static Transform _barrierParent;
-        public readonly float Radius;
-        public bool RotateLocked;
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
@@ -38,25 +34,26 @@ namespace Game.Combat.Generation
             }
 
             SaveController.CreateNodeAndAppend("Name", barrierNode, _barrierName);
-            SaveController.CreateNodeAndAppend("Rotation", barrierNode, _rotation);
             SaveController.CreateNodeAndAppend("Position", barrierNode, Helper.VectorToString(Position));
             SaveController.CreateNodeAndAppend("Vertices", barrierNode, vertexString);
             return barrierNode;
         }
 
-        public Barrier(List<Vector2> vertices, string barrierName, Vector2 position, float radius) : base(vertices, position)
+        public Barrier(List<Vector2> vertices, string barrierName, Vector2 position) : base(vertices, position)
         {
             if (position == Vector2.negativeInfinity) Debug.Log("wat!?");
             _barrierName = barrierName;
-//            _rotation = Random.Range(0, 360);
-            Radius = radius;
+            Valid = PathingGrid.AddBarrier(this);
         }
+
+        public readonly bool Valid;
 
         public void CreateObject()
         {
             Assert.IsNull(_barrierObject);
             if (_barrierPrefab == null) _barrierPrefab = Resources.Load<GameObject>("Prefabs/Combat/Basic Barrier");
             if (_barrierParent == null) _barrierParent = GameObject.Find("Barriers").transform;
+            PathingGrid.AddBarrier(this);
             _barrierObject = GameObject.Instantiate(_barrierPrefab);
             _barrierObject.AddComponent<BarrierBehaviour>().SetBarrier(this);
             _barrierObject.transform.SetParent(_barrierParent);
@@ -64,11 +61,8 @@ namespace Game.Combat.Generation
             _barrierObject.name = _barrierName;
             _barrierObject.tag = "Barrier";
             _barrierObject.transform.localScale = Vector2.one;
-            if (!RotateLocked) _barrierObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, _rotation));
             _barrierObject.transform.position = Position;
-            WorldVerts.Clear();
             Collider = _barrierObject.GetComponent<PolygonCollider2D>();
-            foreach (Vector2 colliderPoint in Collider.points) WorldVerts.Add(_barrierObject.transform.TransformPoint(colliderPoint));
             Vector3[] meshVerts = CreateMesh();
             AddCollider(meshVerts);
         }

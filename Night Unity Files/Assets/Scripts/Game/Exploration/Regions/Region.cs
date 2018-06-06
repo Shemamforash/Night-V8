@@ -24,12 +24,13 @@ namespace Game.Exploration.Regions
         private RegionType _regionType;
         private bool _discovered;
         public List<Barrier> Barriers = new List<Barrier>();
-        public EnemyCampfire Fire;
+        public List<EnemyCampfire> Fires = new List<EnemyCampfire>();
         public List<ContainerController> Containers = new List<ContainerController>();
         private readonly Dictionary<Region, Path> _paths = new Dictionary<Region, Path>();
         private readonly HashSet<Region> _neighbors = new HashSet<Region>();
         public Vector2 Position;
         private static GameObject _nodePrefab;
+        public bool Visited;
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
@@ -197,9 +198,6 @@ namespace Game.Exploration.Regions
             {
                 case RegionType.Danger:
                     GenerateSimpleEncounter();
-                    AreaGenerator.GenerateForest(this);
-//                    AreaGenerator.GenerateCanyon(this);
-//                    AreaGenerator.GenerateSplitRock(this);
                     break;
                 case RegionType.Nightmare:
                     GenerateNightmare();
@@ -236,7 +234,7 @@ namespace Game.Exploration.Regions
             Containers.ForEach(c => total += c.Inventory.GetResourceQuantity(resource));
             return total;
         }
-        
+
         public void AddWater(int ratingPoints)
         {
 //            IncrementResource(InventoryResourceType.Water, 10 * ratingPoints);

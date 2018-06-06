@@ -326,5 +326,16 @@ namespace SamsHelper.Libraries
             if (dot > sqrLen) return false;
             return true;
         }
+
+        public static Vector2 RotatePoint(Vector2 point, int rotateAmount, Vector2 origin)
+        {
+            float x = point.x - origin.x;
+            float y = point.y - origin.y;
+            point.x = x * Mathf.Cos(rotateAmount) - y * Mathf.Sin(rotateAmount);
+            point.y = x * Mathf.Sin(rotateAmount) + y * Mathf.Cos(rotateAmount);
+            point.x += origin.x;
+            point.y += origin.y;
+            return point;
+        }
     }
 }
