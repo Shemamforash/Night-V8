@@ -203,6 +203,7 @@ namespace SamsHelper.Libraries
                 if (i != 0) listString += ", ";
                 listString += list[i];
             }
+            Debug.Log(listString);
         }
 
         public static void PrintList<T>(T[] arr)

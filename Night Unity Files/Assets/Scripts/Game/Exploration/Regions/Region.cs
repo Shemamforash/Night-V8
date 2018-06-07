@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
@@ -31,6 +32,7 @@ namespace Game.Exploration.Regions
         public Vector2 Position;
         private static GameObject _nodePrefab;
         public bool Visited;
+        public readonly int RegionID;
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
@@ -252,8 +254,30 @@ namespace Game.Exploration.Regions
             return amountRemaining;
         }
 
+        private static List<int> _availableIds;
+        private const int _totalIds = 1000;
+
+        private static int GetId()
+        {
+            if (_availableIds == null)
+            {
+                _availableIds = new List<int>();
+                int anchor = Random.Range(0, 10000);
+                for (int i = 0; i < _totalIds; ++i)
+                {
+                    _availableIds.Add(anchor + i);
+                }
+            }
+
+            int randomIndex = Random.Range(0, _availableIds.Count);
+            int id = _availableIds[randomIndex];
+            _availableIds.RemoveAt(randomIndex);
+            return id;
+        }
+        
         public Region() : base(Vector2.zero)
         {
+            RegionID = GetId();
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Game.Combat.Generation
         public void Initialise(Region region)
         {
             _region = region;
+            Random.InitState(region.RegionID);
             if (!_region.Visited)
             {
                 GenerateFreshEnvironment();
@@ -101,7 +102,7 @@ namespace Game.Combat.Generation
             _region.Fires.Add(GenerateFire(b.Position));
         }
 
-        private Vector2? FindAndRemoveValidPosition()
+        protected Vector2? FindAndRemoveValidPosition()
         {
             for (int i = _availablePositions.Count - 1; i >= 0; --i)
             {

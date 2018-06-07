@@ -183,6 +183,7 @@
                   <e p="Forest.cs" t="Include" />
                   <e p="Labyrinth.cs" t="Include" />
                   <e p="Nightmare.cs" t="Include" />
+                  <e p="Ruins.cs" t="Include" />
                 </e>
                 <e p="Triangulator.cs" t="Include" />
               </e>

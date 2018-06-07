@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Generation
@@ -27,7 +29,6 @@ namespace Game.Combat.Generation
             float yStretch = Random.Range(7.5f, 12.5f);
             float verticalOffset = Random.Range(0f, 100f);
             float xStretch = Random.Range(2f, 4f);
-            Debug.Log(verticalOffset);
             while (current.y < PathingGrid.CombatAreaWidth * 0.7f)
             {
                 points.Add(current);

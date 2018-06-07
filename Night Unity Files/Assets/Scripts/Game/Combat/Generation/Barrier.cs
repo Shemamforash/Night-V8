@@ -39,11 +39,11 @@ namespace Game.Combat.Generation
             return barrierNode;
         }
 
-        public Barrier(List<Vector2> vertices, string barrierName, Vector2 position) : base(vertices, position)
+        public Barrier(List<Vector2> vertices, string barrierName, Vector2 position, bool forcePlace = false) : base(vertices, position)
         {
             if (position == Vector2.negativeInfinity) Debug.Log("wat!?");
             _barrierName = barrierName;
-            Valid = PathingGrid.AddBarrier(this);
+            Valid = PathingGrid.AddBarrier(this, forcePlace);
         }
 
         public readonly bool Valid;
@@ -53,7 +53,7 @@ namespace Game.Combat.Generation
             Assert.IsNull(_barrierObject);
             if (_barrierPrefab == null) _barrierPrefab = Resources.Load<GameObject>("Prefabs/Combat/Basic Barrier");
             if (_barrierParent == null) _barrierParent = GameObject.Find("Barriers").transform;
-            PathingGrid.AddBarrier(this);
+            PathingGrid.AddBarrier(this, true);
             _barrierObject = GameObject.Instantiate(_barrierPrefab);
             _barrierObject.AddComponent<BarrierBehaviour>().SetBarrier(this);
             _barrierObject.transform.SetParent(_barrierParent);

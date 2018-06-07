@@ -77,7 +77,7 @@ namespace Game.Combat.Generation
             WorldState.Pause();
             _visibilityRange = 5;
             _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
-            GameObject.Find("World").AddComponent<Canyon>().Initialise(_currentRegion);
+            GameObject.Find("World").AddComponent<Ruins>().Initialise(_currentRegion);
             switch (_currentRegion.GetRegionType())
             {
                 case RegionType.Shelter:

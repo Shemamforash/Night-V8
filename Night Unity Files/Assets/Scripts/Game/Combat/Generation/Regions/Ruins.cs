@@ -1,0 +1,522 @@
+﻿using System;
+using System.Collections.Generic;
+using SamsHelper;
+using SamsHelper.Libraries;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+namespace Game.Combat.Generation
+{
+    public class Ruins : RegionGenerator
+    {
+        private RuinNode[,] nodes;
+        private const float CellWidth = 2f;
+
+        private class RuinNode
+        {
+            private List<Vector2> _topEdge;
+            public List<Vector2> RightEdge;
+            private List<Vector2> _leftEdge;
+            public List<Vector2> BottomEdge;
+            public RuinNode TopNeighbor;
+            public RuinNode RightNeighbor;
+            public RuinNode BottomNeighbor;
+            public RuinNode LeftNeighbor;
+            private readonly int _id;
+            public readonly Vector2 Position;
+            public bool Visited;
+            public readonly int X, Y;
+
+            public RuinNode(int id, Vector3 position, int x, int y)
+            {
+                _id = id;
+                Position = position;
+                X = x;
+                Y = y;
+            }
+
+            public RuinNode GetNeighbor(Direction direction)
+            {
+                switch (direction)
+                {
+                    case Direction.Up:
+                        return TopNeighbor;
+                    case Direction.Down:
+                        return BottomNeighbor;
+                    case Direction.Left:
+                        return LeftNeighbor;
+                    case Direction.Right:
+                        return RightNeighbor;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                }
+            }
+
+            public void CreatePassage(Direction direction)
+            {
+                switch (direction)
+                {
+                    case Direction.Up:
+                        _topEdge = null;
+                        TopNeighbor.BottomEdge = null;
+                        break;
+                    case Direction.Down:
+                        BottomEdge = null;
+                        BottomNeighbor._topEdge = null;
+                        break;
+                    case Direction.Left:
+                        _leftEdge = null;
+                        LeftNeighbor.RightEdge = null;
+                        break;
+                    case Direction.Right:
+                        RightEdge = null;
+                        RightNeighbor._leftEdge = null;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                }
+
+                if (RightEdge == null && BottomEdge == null) _nodesWithWalls.Remove(this);
+            }
+
+            public void SetNeighbors(RuinNode topNeighbor, RuinNode rightNeighbor, RuinNode bottomNeighbor, RuinNode leftNeighbor)
+            {
+                TopNeighbor = topNeighbor;
+                _topEdge = TopNeighbor?.BottomEdge;
+                LeftNeighbor = leftNeighbor;
+                _leftEdge = LeftNeighbor?.RightEdge;
+
+                RightNeighbor = rightNeighbor;
+                if (RightNeighbor == null) RightEdge = null;
+                BottomNeighbor = bottomNeighbor;
+                if (BottomNeighbor == null) BottomEdge = null;
+                if (RightEdge == null && BottomEdge == null) _nodesWithWalls.Remove(this);
+            }
+
+            public void GenerateBarriers(Ruins ruins)
+            {
+                Barrier b;
+                if (BottomEdge != null)
+                {
+                    b = new Barrier(BottomEdge, "Wall " + _id, Position, true);
+                    ruins.barriers.Add(b);
+                }
+
+                if (RightEdge != null)
+                {
+                    b = new Barrier(RightEdge, "Wall " + _id, Position, true);
+                    ruins.barriers.Add(b);
+                }
+
+                for (int i = 0; i < 4; ++i)
+                {
+                    int next = i + 1 == 4 ? 0 : i + 1;
+//                    if (_bottomEdge != null) Debug.DrawLine(_bottomEdge[i] + Position, _bottomEdge[next] + Position, Color.red, 10f);
+//                    if (_rightEdge != null) Debug.DrawLine(_rightEdge[i] + Position, _rightEdge[next] + Position, Color.red, 10f);
+                }
+            }
+
+            public void SetBottomEdge(List<Vector2> edge)
+            {
+                BottomEdge = edge;
+            }
+
+            public void SetRightEdge(List<Vector2> edge)
+            {
+                RightEdge = edge;
+            }
+
+            private void DrawEdges(List<Vector2> verts)
+            {
+                Vector2 mida = (verts[0] + verts[1]) / 2f;
+                Vector2 midb = (verts[2] + verts[3]) / 2f;
+                Debug.DrawLine(verts[0] + Position, mida + Position, Color.magenta, 10f);
+                Debug.DrawLine(mida + Position, verts[1] + Position, Color.blue, 10f);
+                Debug.DrawLine(verts[2] + Position, midb + Position, Color.yellow, 10f);
+                Debug.DrawLine(midb + Position, verts[3] + Position, Color.green, 10f);
+            }
+
+            public void Clear()
+            {
+                BottomEdge = null;
+                RightEdge = null;
+                _leftEdge = null;
+                _topEdge = null;
+                _nodesWithWalls.Remove(this);
+            }
+
+            public Vector2 RightEdgeVert(int index)
+            {
+                index = 3 - index;
+                return RightEdge[index];
+            }
+
+            public Vector2 BottomEdgeVert(int index)
+            {
+                index = 3 - index;
+                return BottomEdge[index];
+            }
+        }
+
+        private static List<RuinNode> _nodesWithWalls = new List<RuinNode>();
+
+        private void CarvePassages(int x, int y)
+        {
+            RuinNode n = nodes[x, y];
+            n.Visited = true;
+            List<Direction> directions = new List<Direction> {Direction.Left, Direction.Down, Direction.Right, Direction.Up};
+            Helper.Shuffle(ref directions);
+            directions.ForEach(direction =>
+            {
+                RuinNode neighbor = n.GetNeighbor(direction);
+                if (neighbor == null || neighbor.Visited) return;
+                n.CreatePassage(direction);
+                CarvePassages(neighbor.X, neighbor.Y);
+            });
+        }
+
+        private void GenerateCell(int x, int y, int startPos, int width)
+        {
+            Vector2 cellPosition = new Vector2(x * CellWidth, y * CellWidth);
+            RuinNode n = new RuinNode(GetObjectNumber(), cellPosition, x - startPos, y - startPos);
+            _nodesWithWalls.Add(n);
+            nodes[x - startPos, y - startPos] = n;
+
+            List<Vector2> verts = new List<Vector2>();
+            Barrier b;
+
+            //bottom
+            if (y > -width)
+            {
+                verts.Add(new Vector2(0.9f, -1.1f)); //0
+                verts.Add(new Vector2(-0.9f, -1.1f)); //1
+                verts.Add(new Vector2(-0.9f, -0.9f)); //2
+                verts.Add(new Vector2(0.9f, -0.9f)); //3
+                n.SetBottomEdge(verts);
+            }
+
+            if (x + 2 < width)
+            {
+                //right
+                verts = new List<Vector2>();
+                verts.Add(new Vector2(1.1f, -0.9f)); //0
+                verts.Add(new Vector2(0.9f, -0.9f)); //1
+                verts.Add(new Vector2(0.9f, 0.9f)); //2
+                verts.Add(new Vector2(1.1f, 0.9f)); //3
+                n.SetRightEdge(verts);
+            }
+        }
+
+        private const int WidthInCells = 30;
+
+        protected override void Generate()
+        {
+//            float width = PathingGrid.CombatAreaWidth / 4f;
+//            int widthInCells = (int) (width / CellWidth);
+            nodes = new RuinNode[WidthInCells, WidthInCells];
+            int startPos = (int) -(WidthInCells / CellWidth);
+            for (int x = startPos; x < startPos + WidthInCells; ++x)
+            {
+                for (int y = startPos; y < startPos + WidthInCells; ++y)
+                {
+                    GenerateCell(x, y, startPos, WidthInCells);
+                }
+            }
+
+            for (int x = 0; x < WidthInCells; ++x)
+            {
+                for (int y = 0; y < WidthInCells; ++y)
+                {
+                    RuinNode topNeighbor = y + 1 == WidthInCells ? null : nodes[x, y + 1];
+                    RuinNode rightNeighbor = x + 1 == WidthInCells ? null : nodes[x + 1, y];
+                    RuinNode bottomNeighbor = y - 1 == -1 ? null : nodes[x, y - 1];
+                    RuinNode leftNeighbor = x - 1 == -1 ? null : nodes[x - 1, y];
+                    nodes[x, y].SetNeighbors(topNeighbor, rightNeighbor, bottomNeighbor, leftNeighbor);
+                }
+            }
+
+            CarvePassages(0, 0);
+            CreateIslands(6);
+
+            for (int x = 0; x < WidthInCells; ++x)
+            {
+                for (int y = 0; y < WidthInCells; ++y)
+                {
+                    nodes[x, y].GenerateBarriers(this);
+                }
+            }
+
+            CombineWalls();
+        }
+
+//get random cell with a wall
+//select any wall from cell
+//progress to next wall:
+//	if last wall was bottom wall:
+//		if next wall is bottom wall:
+//			if next wall.x > last wall.x add last wall 2,3 and next wall 2,3
+//			else add last wall 3,0 and next wall 3,0
+//		if next wall is right wall:
+//			if next wall.x > last wall.x
+//				if next wall.y > last wall.y add last wall 2,3 and next wall 1,2
+//				else add last wall 2,3 and next wall 3,0
+//			else
+//				if next wall.y > last wall.y add last wall 3,2 and next wall 0,3
+//				else add last wall 0,1 and next wall 3,0
+//	if last wall was right wall:
+//		if next wall is bottom wall:
+//			if next wall.x > last wall.x
+//				if next wall.y > last wall.y add last wall 3,2 and next wall 0,3
+//				else add last wall 3,0 and next wall 2,3
+//			else
+//				if next wall.y > last wall.y add last wall 3,2 and next wall 0,1
+//				else add last wall 3,0 and next wall 0,1
+//		if next wall is right wall:
+//			if next wall.x > last wall.x add last wall 2,3 and next wall 2,3
+//			else add last wall 0,1 and next wall 0,1
+//
+//	if this is bottom wall:
+//		if right wall is not null, it is the next wall, add 2,3
+//		else if right cell, bottom wall is not null, it is the next wall, add 2,3
+//		else if bottom cell, right wall is not null, it is the next wall, add 2,3
+//		else if left cell, bottom cell, right wall is not null, it is the next wall, add 2,3,0,1
+//		else if left cell, bottom wall is not null, it is the next wall, add 2,3,0,1
+//		else if left cell, right wall is not null, it is the next wall, add 2,3,0,1
+// 	if this is right wall:
+//		else if right cell, bottom wall is not null, it is the next wall, add 3,0
+//		else if bottom cell, right wall is not null, it is the next wall, add 3,0
+//		else if the bottom wall is not null, it is the next wall, add 3,0
+//		else if top cell, bottom wall is not null, it is the next wall, add 3,0,1,2
+//		else if top cell, right wall is not null, it is the next wall, add 3,0,1,2
+//		else if top cell, right cell, bottom wall is not null, it is the next wall, add 3,0,1,2
+//		else finish
+//		repeat from progress to the next wall
+
+
+        private void AddFinalShapePoints(int a, int b, int c, int d)
+        {
+            Debug.Log("banana");
+            _finalShape.Add(_lastWall[a] + lastCell.Position);
+            _finalShape.Add(_lastWall[b] + lastCell.Position);
+            _finalShape.Add(_nextWall[c] + nextCell.Position);
+            _finalShape.Add(_nextWall[d] + nextCell.Position);
+        }
+
+        private readonly List<Vector2> _finalShape = new List<Vector2>();
+        private List<Vector2> _lastWall, _nextWall;
+        private RuinNode lastCell, nextCell;
+
+        private void CombineWalls()
+        {
+            RuinNode start = _nodesWithWalls[0];
+            List<Vector2> startWall = start.BottomEdge ?? start.RightEdge;
+            nextCell = start;
+            _nextWall = startWall;
+
+            int cnt = 50;
+            while (true)
+            {
+                _nodesWithWalls.Remove(nextCell);
+
+                _lastWall = _nextWall;
+                lastCell = nextCell;
+                if (_nextWall == nextCell.BottomEdge)
+                {
+                    if (nextCell.RightEdge != null)
+                    {
+                        _nextWall = nextCell.RightEdge;
+                        Debug.Log("A");
+                    }
+                    else if (nextCell.RightNeighbor?.BottomEdge != null)
+                    {
+                        nextCell = nextCell.RightNeighbor;
+                        _nextWall = nextCell.BottomEdge;
+                        Debug.Log("B");
+                    }
+                    else if (nextCell.BottomNeighbor?.RightEdge != null)
+                    {
+                        nextCell = nextCell.BottomNeighbor;
+                        _nextWall = nextCell.RightEdge;
+                        Debug.Log("C");
+                    }
+                    else if (nextCell.LeftNeighbor?.BottomNeighbor?.RightEdge != null)
+                    {
+                        nextCell = nextCell.LeftNeighbor.BottomNeighbor;
+                        _nextWall = nextCell.RightEdge;
+                        Debug.Log("D");
+                    }
+                    else if (nextCell.LeftNeighbor?.BottomEdge != null)
+                    {
+                        nextCell = nextCell.LeftNeighbor;
+                        _nextWall = nextCell.BottomEdge;
+                        Debug.Log("E");
+                    }
+                    else if (nextCell.LeftNeighbor?.RightEdge != null)
+                    {
+                        nextCell = nextCell.LeftNeighbor;
+                        _nextWall = nextCell.RightEdge;
+                        Debug.Log("F");
+                    }
+                    else
+                    {
+                        Debug.Log("G");
+                    }
+                }
+                else
+                {
+                    if (nextCell.RightNeighbor?.BottomEdge != null)
+                    {
+                        nextCell = nextCell.RightNeighbor;
+                        _nextWall = nextCell.BottomEdge;
+                        Debug.Log("H");
+                    }
+                    else if (nextCell.BottomNeighbor?.RightEdge != null)
+                    {
+                        nextCell = nextCell.BottomNeighbor;
+                        _nextWall = nextCell.RightEdge;
+                        Debug.Log("I");
+                    }
+                    else if (nextCell.BottomEdge != null)
+                    {
+                        _nextWall = nextCell.BottomEdge;
+                        Debug.Log("J");
+                    }
+                    else if (nextCell.TopNeighbor.BottomEdge != null)
+                    {
+                        nextCell = nextCell.TopNeighbor;
+                        _nextWall = nextCell.BottomEdge;
+                        Debug.Log("K");
+                    }
+                    else if (nextCell.TopNeighbor.RightEdge != null)
+                    {
+                        nextCell = nextCell.TopNeighbor;
+                        _nextWall = nextCell.RightEdge;
+                        Debug.Log("L");
+                    }
+                    else if (nextCell.TopNeighbor.RightNeighbor.BottomEdge != null)
+                    {
+                        nextCell = nextCell.TopNeighbor.RightNeighbor;
+                        _nextWall = nextCell.BottomEdge;
+                        Debug.Log("M");
+                    }
+                    else
+                    {
+                        Debug.Log("N");
+                    }
+                }
+
+                if (nextCell == lastCell && _nextWall == _lastWall)
+                {
+                    _finalShape.Add(_lastWall[0] + lastCell.Position);
+                    _finalShape.Add(_lastWall[1] + lastCell.Position);
+                    _finalShape.Add(_lastWall[2] + nextCell.Position);
+                    _finalShape.Add(_lastWall[3] + nextCell.Position);
+                    break;
+                }
+
+                bool lastCellBottom = _lastWall == lastCell.BottomEdge;
+                bool nextCellBottom = _nextWall == nextCell.BottomEdge;
+                float nextWallX = (_nextWall[0].x + _nextWall[1].x) / 2f + nextCell.Position.x;
+                float lastWallX = (_lastWall[0].x + _lastWall[1].x) / 2f + lastCell.Position.x;
+                bool nextCellFurtherRight = nextWallX > lastWallX;
+                float nextWallY = (_nextWall[0].y + _nextWall[3].y) / 2f + nextCell.Position.y;
+                float lastWallY = (_nextWall[0].y + _nextWall[3].y) / 2f + lastCell.Position.y;
+                bool nextCellAbove = nextWallY > lastWallY;
+
+                Debug.Log(lastCellBottom + " " + nextCellBottom + " " + nextCellFurtherRight + " " + nextCellAbove + " " + lastCell.Position + " " + nextCell.Position + " " + lastWallX + " " + nextWallX);
+
+                if (lastCellBottom)
+                {
+                    if (nextCellBottom)
+                    {
+                        if (nextCellFurtherRight) AddFinalShapePoints(2, 3, 2, 3);
+                        else AddFinalShapePoints(3, 0, 3, 0);
+                    }
+                    else
+                    {
+                        if (nextCellFurtherRight)
+                        {
+                            if (nextCellAbove) AddFinalShapePoints(2, 3, 1, 2);
+                            else AddFinalShapePoints(2, 3, 3, 0);
+                        }
+                        else
+                        {
+                            if (nextCellAbove) AddFinalShapePoints(3, 2, 0, 3);
+                            else AddFinalShapePoints(0, 1, 3, 0);
+                        }
+                    }
+                }
+                else
+                {
+                    if (nextCellBottom)
+                    {
+                        if (nextCellFurtherRight)
+                        {
+                            if (nextCellAbove) AddFinalShapePoints(3, 2, 0, 3);
+                            else AddFinalShapePoints(3, 0, 2, 3);
+                        }
+                        else
+                        {
+                            if (nextCellAbove) AddFinalShapePoints(3, 2, 0, 1);
+                            else AddFinalShapePoints(3, 0, 0, 1);
+                        }
+                    }
+                    else
+                    {
+                        if (nextCellFurtherRight) AddFinalShapePoints(2, 3, 2, 3);
+                        else AddFinalShapePoints(0, 1, 0, 1);
+                    }
+                }
+
+                if (nextCell == start && _nextWall == startWall) break;
+                if (cnt == 0) break;
+
+                --cnt;
+            }
+
+            for (int i = 0; i < _finalShape.Count; ++i)
+            {
+                int next = Helper.NextIndex(i, _finalShape);
+                Debug.DrawLine(_finalShape[i], _finalShape[next], Color.red, 10f);
+            }
+
+            if (_nodesWithWalls.Count > 0)
+            {
+//                CombineWalls();
+            }
+        }
+
+        private void CreateIslands(int i)
+        {
+            HashSet<RuinNode> nodesToKeep = new HashSet<RuinNode>();
+            while (i > 0)
+            {
+                Vector2 randomPosition = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, PathingGrid.CombatAreaWidth / 3f);
+                randomPosition = FindAndRemoveValidPosition().Value;
+                float range = Random.Range(5, 10);
+                for (int x = 0; x < WidthInCells; ++x)
+                {
+                    for (int y = 0; y < WidthInCells; ++y)
+                    {
+                        float distance = Vector2.Distance(randomPosition, nodes[x, y].Position);
+                        if (distance > range) continue;
+                        float chanceToRemove = 1f - distance / range;
+                        if (Random.Range(0f, 1f) > chanceToRemove) continue;
+                        nodesToKeep.Add(nodes[x, y]);
+                    }
+                }
+
+                --i;
+            }
+
+            for (int x = 0; x < WidthInCells; ++x)
+            {
+                for (int y = 0; y < WidthInCells; ++y)
+                {
+                    if (nodesToKeep.Contains(nodes[x, y])) continue;
+                    nodes[x, y].Clear();
+                }
+            }
+        }
+    }
+}

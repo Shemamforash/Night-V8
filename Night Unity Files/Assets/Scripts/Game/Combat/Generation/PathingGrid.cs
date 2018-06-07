@@ -36,10 +36,10 @@ namespace Game.Combat.Generation
             _invalidCells.Clear();
         }
 
-        public static bool AddBarrier(Barrier barrier)
+        public static bool AddBarrier(Barrier barrier, bool forcePlace)
         {
             HashSet<Cell> intersectingCells = GetIntersectingGridCells(barrier);
-            if (intersectingCells.Intersect(_invalidCells).Count() != 0) return false;
+            if (intersectingCells.Intersect(_invalidCells).Count() != 0 && !forcePlace) return false;
             foreach (Cell cell in intersectingCells)
             {
                 _invalidCells.Add(cell);
