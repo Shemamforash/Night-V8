@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using SamsHelper.Libraries;
 using UnityEngine;
-using UnityEngine.Assertions;
-using Random = UnityEngine.Random;
 
 namespace Game.Combat.Generation
 {
@@ -57,10 +54,7 @@ namespace Game.Combat.Generation
         private void GenerateRockWall(Vector2 position, float width, bool left, int rotateAmount)
         {
             List<Vector2> wallVertices = RockWall(left);
-            for (int i = 0; i < wallVertices.Count; i++)
-            {
-                wallVertices[i] = AdvancedMaths.RotatePoint(wallVertices[i], rotateAmount, Vector2.zero);
-            }
+            for (int i = 0; i < wallVertices.Count; i++) wallVertices[i] = AdvancedMaths.RotatePoint(wallVertices[i], rotateAmount, Vector2.zero);
 
             position = AdvancedMaths.RotatePoint(position, rotateAmount, Vector2.zero);
 

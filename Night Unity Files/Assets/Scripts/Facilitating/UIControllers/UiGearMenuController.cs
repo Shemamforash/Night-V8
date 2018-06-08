@@ -7,7 +7,6 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Facilitating.UIControllers
 {
@@ -38,9 +37,13 @@ namespace Facilitating.UIControllers
             {
                 case InputAxis.SwitchTab:
                     if (direction < 0 && _currentTab - 1 >= 0)
+                    {
                         SetCurrentTab(_currentTab - 1);
+                    }
                     else if (direction > 0 && _currentTab + 1 < _tabs.Count)
+                    {
                         SetCurrentTab(_currentTab + 1);
+                    }
 
                     break;
                 case InputAxis.Cover:
@@ -49,9 +52,13 @@ namespace Facilitating.UIControllers
                 case InputAxis.Vertical:
                     if (!_gearSelectAllowed) return;
                     if (direction < 0)
+                    {
                         TrySelectGearBelow();
+                    }
                     else
+                    {
                         TrySelectGearAbove();
+                    }
 
                     break;
             }
@@ -127,8 +134,14 @@ namespace Facilitating.UIControllers
 
         private void TrySelectMenu(UiGearMenuTemplate gearMenu)
         {
-            if (_currentGearMenu == gearMenu) gearMenu.Show(_currentPlayer);
-            else gearMenu.Hide();
+            if (_currentGearMenu == gearMenu)
+            {
+                gearMenu.Show(_currentPlayer);
+            }
+            else
+            {
+                gearMenu.Hide();
+            }
         }
 
         public void ShowArmourMenu(Player player)
@@ -265,9 +278,6 @@ namespace Facilitating.UIControllers
             }
         }
 
-        public static UiGearMenuController Instance()
-        {
-            return _instance;
-        }
+        public static UiGearMenuController Instance() => _instance;
     }
 }

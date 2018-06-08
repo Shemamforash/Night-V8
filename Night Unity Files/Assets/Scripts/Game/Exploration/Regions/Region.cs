@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Xml;
 using Facilitating.Persistence;
-using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Exploration.Environment;
 using Game.Exploration.Ui;
 using Game.Global;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
@@ -59,10 +56,7 @@ namespace Game.Exploration.Regions
             neighbor._neighbors.Add(this);
         }
 
-        public List<Region> Neighbors()
-        {
-            return _neighbors.ToList();
-        }
+        public List<Region> Neighbors() => _neighbors.ToList();
 
         public void CreateObject()
         {
@@ -96,25 +90,16 @@ namespace Game.Exploration.Regions
             _paths[node] = path;
         }
 
-        public Path GetPathTo(Region node)
-        {
-            return _paths[node];
-        }
+        public Path GetPathTo(Region node) => _paths[node];
 
         public void SetPosition(Vector2 position)
         {
             Position = position;
         }
 
-        public float DistanceToPoint(Region node)
-        {
-            return DistanceToPoint(node.Position);
-        }
+        public float DistanceToPoint(Region node) => DistanceToPoint(node.Position);
 
-        public float DistanceToPoint(Vector3 point)
-        {
-            return Vector3.Distance(point, Position);
-        }
+        public float DistanceToPoint(Vector3 point) => Vector3.Distance(point, Position);
 
         public Enemy AddEnemy(EnemyType enemyType, int difficulty)
         {
@@ -142,10 +127,7 @@ namespace Game.Exploration.Regions
 //            AddEnemy(EnemyType.Shadow, 10);
         }
 
-        private int CalculateDanger()
-        {
-            return WorldState.StormDistanceMax - WorldState.StormDistance + (int) (Vector2.Distance(Position, Vector2.zero) / 5f);
-        }
+        private int CalculateDanger() => WorldState.StormDistanceMax - WorldState.StormDistance + (int) (Vector2.Distance(Position, Vector2.zero) / 5f);
 
         public void Generate(int size)
         {
@@ -182,15 +164,9 @@ namespace Game.Exploration.Regions
             }
         }
 
-        public List<Enemy> Enemies()
-        {
-            return _enemies;
-        }
+        public List<Enemy> Enemies() => _enemies;
 
-        public RegionType GetRegionType()
-        {
-            return _regionType;
-        }
+        public RegionType GetRegionType() => _regionType;
 
         public void SetRegionType(RegionType regionType)
         {
@@ -219,10 +195,7 @@ namespace Game.Exploration.Regions
             RegionManager.GetRegionType(this);
         }
 
-        public bool Discovered()
-        {
-            return _discovered;
-        }
+        public bool Discovered() => _discovered;
 
         public string Description()
         {
@@ -263,10 +236,7 @@ namespace Game.Exploration.Regions
             {
                 _availableIds = new List<int>();
                 int anchor = Random.Range(0, 10000);
-                for (int i = 0; i < _totalIds; ++i)
-                {
-                    _availableIds.Add(anchor + i);
-                }
+                for (int i = 0; i < _totalIds; ++i) _availableIds.Add(anchor + i);
             }
 
             int randomIndex = Random.Range(0, _availableIds.Count);
@@ -274,7 +244,7 @@ namespace Game.Exploration.Regions
             _availableIds.RemoveAt(randomIndex);
             return id;
         }
-        
+
         public Region() : base(Vector2.zero)
         {
             RegionID = GetId();

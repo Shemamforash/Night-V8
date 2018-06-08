@@ -31,15 +31,9 @@ namespace SamsHelper.Libraries
             _isLeaf = _neighbors.Count == 1;
         }
 
-        public float Distance(Node other)
-        {
-            return Vector3.Distance(Position, other.Position);
-        }
+        public float Distance(Node other) => Vector3.Distance(Position, other.Position);
 
-        public List<Node> Neighbors()
-        {
-            return _rawNeighbors;
-        }
+        public List<Node> Neighbors() => _rawNeighbors;
 
         public Node NavigateClockwise(Node from)
         {
@@ -67,10 +61,7 @@ namespace SamsHelper.Libraries
             return null;
         }
 
-        public bool IsLeaf()
-        {
-            return _isLeaf;
-        }
+        public bool IsLeaf() => _isLeaf;
 
         public Edge GetEdge(Node n)
         {

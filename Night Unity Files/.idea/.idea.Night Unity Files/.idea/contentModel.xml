@@ -29,6 +29,7 @@
         <e p="GameSettings.xml" t="Include" />
         <e p="Mine.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
+        <e p="packages" t="Include" />
         <e p="Resources" t="Include">
           <e p="names.txt" t="Include" />
           <e p="XML" t="Include">

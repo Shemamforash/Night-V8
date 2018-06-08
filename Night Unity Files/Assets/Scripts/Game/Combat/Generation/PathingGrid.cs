@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using SamsHelper;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -40,10 +38,7 @@ namespace Game.Combat.Generation
         {
             HashSet<Cell> intersectingCells = GetIntersectingGridCells(barrier);
             if (intersectingCells.Intersect(_invalidCells).Count() != 0 && !forcePlace) return false;
-            foreach (Cell cell in intersectingCells)
-            {
-                _invalidCells.Add(cell);
-            }
+            foreach (Cell cell in intersectingCells) _invalidCells.Add(cell);
 
             return true;
         }
@@ -134,9 +129,13 @@ namespace Game.Combat.Generation
                     {
                         Cell next = newPath[i];
                         if (noneHit)
+                        {
                             cellsToRemove.Add(next);
+                        }
                         else if (!IsLineObstructed(current.Position, next.Position, true))
+                        {
                             noneHit = true;
+                        }
                     }
 
                     cellsToRemove.ForEach(cell => newPath.Remove(cell));
@@ -150,10 +149,7 @@ namespace Game.Combat.Generation
             return thread;
         }
 
-        public static Cell GetCellNearMe(Cell current, float distance)
-        {
-            return Helper.RandomInList(CellsInRange(current, WorldToGridDistance(distance)));
-        }
+        public static Cell GetCellNearMe(Cell current, float distance) => Helper.RandomInList(CellsInRange(current, WorldToGridDistance(distance)));
 
         public static Cell FindCellToAttackPlayer(Cell currentCell, float maxRange, float minRange = 0)
         {
@@ -370,10 +366,7 @@ namespace Game.Combat.Generation
             return nearestValidCell;
         }
 
-        private static int WorldToGridDistance(float distance)
-        {
-            return Mathf.FloorToInt(distance * CellResolution);
-        }
+        private static int WorldToGridDistance(float distance) => Mathf.FloorToInt(distance * CellResolution);
 
         private static void GenerateBaseGrid()
         {
@@ -401,15 +394,9 @@ namespace Game.Combat.Generation
 
         private class CellComparer : IEqualityComparer<Cell>
         {
-            public bool Equals(Cell x, Cell y)
-            {
-                return x.id == y.id;
-            }
+            public bool Equals(Cell x, Cell y) => x.id == y.id;
 
-            public int GetHashCode(Cell cell)
-            {
-                return cell.id;
-            }
+            public int GetHashCode(Cell cell) => cell.id;
         }
     }
 }

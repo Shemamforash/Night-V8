@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using FastLights;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,21 +16,15 @@ namespace SamsHelper.Libraries
         {
             Vector3 screenPosition = Camera.main.WorldToViewportPoint(gameObject.transform.position);
             return screenPosition.z > 0 &&
-                screenPosition.x > 0 &&
-                screenPosition.y > 0 &&
-                screenPosition.x < 1 &&
-                screenPosition.y < 1;
+                   screenPosition.x > 0 &&
+                   screenPosition.y > 0 &&
+                   screenPosition.x < 1 &&
+                   screenPosition.y < 1;
         }
 
-        public static string VectorToString(Vector2 vector)
-        {
-            return vector.x + ":" + vector.y;
-        }
-        
-        public static string VectorToString(Vector3 vector)
-        {
-            return vector.x + ":" + vector.y + ":" + vector.z;
-        }
+        public static string VectorToString(Vector2 vector) => vector.x + ":" + vector.y;
+
+        public static string VectorToString(Vector3 vector) => vector.x + ":" + vector.y + ":" + vector.z;
 
         public static Vector3 StringToVector3(string vectorString)
         {
@@ -42,7 +35,7 @@ namespace SamsHelper.Libraries
             vect.z = float.Parse(arr[2]);
             return vect;
         }
-        
+
         public static Vector2 StringToVector2(string vectorString)
         {
             string[] arr = vectorString.Split(':');
@@ -51,11 +44,11 @@ namespace SamsHelper.Libraries
             vect.y = float.Parse(arr[1]);
             return vect;
         }
-        
+
         private class MinSearchList<T>
         {
-            private List<T> _list;
-            private Func<T, float> _compare;
+            private readonly List<T> _list;
+            private readonly Func<T, float> _compare;
             private int indexPosition;
 
             public MinSearchList(List<T> list, Func<T, float> compare)
@@ -64,11 +57,8 @@ namespace SamsHelper.Libraries
                 _compare = compare;
             }
 
-            public bool HasNext()
-            {
-                return indexPosition != _list.Count;
-            }
-            
+            public bool HasNext() => indexPosition != _list.Count;
+
             public T Next()
             {
                 float smallestValue = float.MaxValue;
@@ -90,7 +80,7 @@ namespace SamsHelper.Libraries
                 return smallestElement;
             }
         }
-        
+
         public static List<string> ReadLinesFromFile(string fileName)
         {
             TextAsset file = Resources.Load(fileName) as TextAsset;
@@ -98,8 +88,13 @@ namespace SamsHelper.Libraries
             string[] tempLines = Regex.Split(contents, "\r\n|\r|\n");
             List<string> lines = new List<string>();
             foreach (string line in tempLines)
+            {
                 if (line != "")
+                {
                     lines.Add(line);
+                }
+            }
+
             return lines;
         }
 
@@ -203,6 +198,7 @@ namespace SamsHelper.Libraries
                 if (i != 0) listString += ", ";
                 listString += list[i];
             }
+
             Debug.Log(listString);
         }
 
@@ -219,10 +215,7 @@ namespace SamsHelper.Libraries
             return newUiObject;
         }
 
-        public static GameObject InstantiateUiObject(string prefabLocation, Transform parent)
-        {
-            return InstantiateUiObject(Resources.Load(prefabLocation) as GameObject, parent);
-        }
+        public static GameObject InstantiateUiObject(string prefabLocation, Transform parent) => InstantiateUiObject(Resources.Load(prefabLocation) as GameObject, parent);
 
         public static GameObject InstantiateUiObject(GameObject prefab, Transform parent)
         {
@@ -317,10 +310,7 @@ namespace SamsHelper.Libraries
             }
         }
 
-        public static long TimeInMillis()
-        {
-            return DateTime.Now.Ticks / 10000;
-        }
+        public static long TimeInMillis() => DateTime.Now.Ticks / 10000;
 
         public static bool ValuesHaveSameSign(float a, float b)
         {
@@ -328,15 +318,9 @@ namespace SamsHelper.Libraries
             return true;
         }
 
-        public static T RandomInList<T>(T[] arr)
-        {
-            return arr[Random.Range(0, arr.Length)];
-        }
+        public static T RandomInList<T>(T[] arr) => arr[Random.Range(0, arr.Length)];
 
-        public static T RandomInList<T>(List<T> arr)
-        {
-            return arr[Random.Range(0, arr.Count)];
-        }
+        public static T RandomInList<T>(List<T> arr) => arr[Random.Range(0, arr.Count)];
 
         public static float Normalise(float value, float maxValue)
         {
@@ -369,16 +353,10 @@ namespace SamsHelper.Libraries
             return 0;
         }
 
-        public static T NextElement<T>(int iterator, List<T> list)
-        {
-            return list[NextIndex(iterator, list)];
-        }
+        public static T NextElement<T>(int iterator, List<T> list) => list[NextIndex(iterator, list)];
 
-        public static T PrevElement<T>(int iterator, List<T> list)
-        {
-            return list[PrevIndex(iterator, list)];
-        }
-        
+        public static T PrevElement<T>(int iterator, List<T> list) => list[PrevIndex(iterator, list)];
+
         public static int NextIndex<T>(int iteratorPosition, List<T> list)
         {
             if (iteratorPosition + 1 == list.Count) return 0;
@@ -405,8 +383,15 @@ namespace SamsHelper.Libraries
             c.r = Random.Range(0f, 1f);
             c.g = Random.Range(0f, 1f);
             c.b = Random.Range(0f, 1f);
-            if (randomAlpha) c.a = Random.Range(0f, 1f);
-            else c.a = 1;
+            if (randomAlpha)
+            {
+                c.a = Random.Range(0f, 1f);
+            }
+            else
+            {
+                c.a = 1;
+            }
+
             return c;
         }
 

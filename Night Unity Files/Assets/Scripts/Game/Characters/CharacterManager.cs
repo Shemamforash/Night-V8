@@ -4,9 +4,7 @@ using Facilitating.Persistence;
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
-using Game.Global;
 using SamsHelper;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
@@ -172,8 +170,12 @@ namespace Game.Characters
         private static CharacterTemplate FindClass(CharacterClass characterClass)
         {
             foreach (CharacterTemplate t in Templates)
+            {
                 if (t.CharacterClass == characterClass)
+                {
                     return t;
+                }
+            }
 
             throw new Exceptions.UnknownTraitException(characterClass.ToString());
         }

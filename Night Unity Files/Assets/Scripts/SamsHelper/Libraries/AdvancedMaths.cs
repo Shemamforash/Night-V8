@@ -26,10 +26,7 @@ namespace SamsHelper.Libraries
             return 360 - angle;
         }
 
-        private static float Cross(Vector2 a, Vector2 b)
-        {
-            return a.x * b.y - a.y * b.x;
-        }
+        private static float Cross(Vector2 a, Vector2 b) => a.x * b.y - a.y * b.x;
 
         public static Tuple<bool, Vector2> LineIntersection(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
         {
@@ -68,7 +65,7 @@ namespace SamsHelper.Libraries
             if (!DoesPointLieOnLine(a, b, intersection.Item2)) intersection = Tuple.Create(false, intersection.Item2);
             return intersection;
         }
-        
+
         public static Vector2 RandomVectorWithinRange(Vector2 origin, float range)
         {
             float newX = Random.Range(origin.x - range, origin.x + range);
@@ -112,12 +109,14 @@ namespace SamsHelper.Libraries
                     randomPoint.y = Random.Range(lowerBound, upperBound);
                     float distance = Vector2.Distance(randomSample, randomPoint);
                     if (distance >= minRadius && distance <= maxRadius)
+                    {
                         if (!samples.Any(s => Vector2.Distance(s, randomPoint) < minRadius))
                         {
                             samples.Add(randomPoint);
                             activeSamples.Add(randomPoint);
                             break;
                         }
+                    }
 
                     --targetSamples;
                 }
@@ -126,7 +125,10 @@ namespace SamsHelper.Libraries
             }
 
             if (samples.Count != numberOfPoints)
+            {
                 Debug.Log("Found " + samples.Count + " samples out of " + numberOfPoints + " desired samples, consider modifying the parameters to reach desired number of samples");
+            }
+
             return samples;
         }
 
@@ -150,10 +152,7 @@ namespace SamsHelper.Libraries
             return angle;
         }
 
-        public static float Dot(Vector2 from, Vector2 to, Vector2 point)
-        {
-            return (point.x - from.x) * (to.y - from.y) - (point.y - from.y) * (to.x - from.x);
-        }
+        public static float Dot(Vector2 from, Vector2 to, Vector2 point) => (point.x - from.x) * (to.y - from.y) - (point.y - from.y) * (to.x - from.x);
 
         public static bool IsPointInPolygon(Vector2 point, List<Vector2> polygon)
         {
@@ -181,10 +180,7 @@ namespace SamsHelper.Libraries
             return inside;
         }
 
-        private static float Dot(Vector2 a, Vector2 b)
-        {
-            return a.x * b.x + a.y * b.y;
-        }
+        private static float Dot(Vector2 a, Vector2 b) => a.x * b.x + a.y * b.y;
 
         public static Tuple<Vector3, Vector3> GetBoundingCornersOfPolygon(List<Vector2> vertices)
         {
@@ -193,9 +189,16 @@ namespace SamsHelper.Libraries
 
             foreach (Vector3 n in vertices)
             {
-                if (n.x < topLeft.x) topLeft.x = n.x;
+                if (n.x < topLeft.x)
+                {
+                    topLeft.x = n.x;
+                }
                 else if (n.x > bottomRight.x) bottomRight.x = n.x;
-                if (n.y < topLeft.y) topLeft.y = n.y;
+
+                if (n.y < topLeft.y)
+                {
+                    topLeft.y = n.y;
+                }
                 else if (n.y > bottomRight.y) bottomRight.y = n.y;
             }
 
@@ -313,6 +316,7 @@ namespace SamsHelper.Libraries
                     if (!DoesPointLieOnLine(a, b, intersections[0])) intersections.RemoveAt(0);
                     break;
             }
+
             return intersections;
         }
 

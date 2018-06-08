@@ -47,10 +47,7 @@ namespace Game.Gear.Armour
             return new ArmourPlate(plateName, weight, quality);
         }
 
-        public override string GetSummary()
-        {
-            return "+" + Weight + " Armour";
-        }
+        public override string GetSummary() => "+" + Weight + " Armour";
 
         public void TakeDamage(float amount)
         {
@@ -64,29 +61,14 @@ namespace Game.Gear.Armour
             _broken = false;
         }
 
-        public int GetRepairCost()
-        {
-            return Mathf.CeilToInt((_plateHealth.Max - _plateHealth.CurrentValue()) / PlateHealthUnit);
-        }
+        public int GetRepairCost() => Mathf.CeilToInt((_plateHealth.Max - _plateHealth.CurrentValue()) / PlateHealthUnit);
 
-        public int GetMaxProtection()
-        {
-            return Mathf.CeilToInt(_plateHealth.Max / PlateHealthUnit);
-        }
+        public int GetMaxProtection() => Mathf.CeilToInt(_plateHealth.Max / PlateHealthUnit);
 
-        public int GetCurrentProtection()
-        {
-            return Mathf.CeilToInt(_plateHealth.CurrentValue() / PlateHealthUnit);
-        }
+        public int GetCurrentProtection() => Mathf.CeilToInt(_plateHealth.CurrentValue() / PlateHealthUnit);
 
-        public float GetMaxHealth()
-        {
-            return _plateHealth.Max;
-        }
+        public float GetMaxHealth() => _plateHealth.Max;
 
-        public float GetRemainingHealth()
-        {
-            return _plateHealth.CurrentValue();
-        }
+        public float GetRemainingHealth() => _plateHealth.CurrentValue();
     }
 }

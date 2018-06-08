@@ -156,9 +156,16 @@ namespace Game.Combat.Generation
 
                 polygon.ForEach(n =>
                 {
-                    if (n.x < topLeft.x) topLeft.x = n.x;
+                    if (n.x < topLeft.x)
+                    {
+                        topLeft.x = n.x;
+                    }
                     else if (n.x > bottomRight.x) bottomRight.x = n.x;
-                    if (n.y < topLeft.y) topLeft.y = n.y;
+
+                    if (n.y < topLeft.y)
+                    {
+                        topLeft.y = n.y;
+                    }
                     else if (n.y > bottomRight.y) bottomRight.y = n.y;
                 });
 

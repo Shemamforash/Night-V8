@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using DG.Tweening;
-using Game.Combat.Enemies.Humans;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
-using Game.Exploration.Regions;
 using Game.Gear.Weapons;
 using NUnit.Framework;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -33,15 +28,9 @@ namespace Game.Combat.Enemies
 //        private const float FadeVisibilityDistance = 5f;
 //        private float _currentAlpha;
 
-        public bool OnScreen()
-        {
-            return Helper.IsObjectInCameraView(gameObject);
-        }
+        public bool OnScreen() => Helper.IsObjectInCameraView(gameObject);
 
-        public override Weapon Weapon()
-        {
-            return null;
-        }
+        public override Weapon Weapon() => null;
 
         public override void Update()
         {
@@ -49,8 +38,14 @@ namespace Game.Combat.Enemies
             if (!CombatManager.InCombat()) return;
             UpdateRotation();
             UpdateDistanceAlpha();
-            if (CurrentAction == null) ChooseNextAction();
-            else CurrentAction.Invoke();
+            if (CurrentAction == null)
+            {
+                ChooseNextAction();
+            }
+            else
+            {
+                CurrentAction.Invoke();
+            }
         }
 
         private void UpdateRotation()
@@ -63,7 +58,7 @@ namespace Game.Combat.Enemies
                 return;
             }
 
-            rotation = AdvancedMaths.AngleFromUp(transform.position, transform.position + (Vector3)GetComponent<Rigidbody2D>().velocity);
+            rotation = AdvancedMaths.AngleFromUp(transform.position, transform.position + (Vector3) GetComponent<Rigidbody2D>().velocity);
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         }
 
@@ -94,10 +89,7 @@ namespace Game.Combat.Enemies
 //            Gizmos.DrawSphere(transform.position, (int)(IdealWeaponDistance * 0.5f / PathingGrid.CellResolution));
         }
 
-        public override CharacterCombat GetTarget()
-        {
-            return CombatManager.Player();
-        }
+        public override CharacterCombat GetTarget() => CombatManager.Player();
 
         public virtual void Initialise(Enemy enemy)
         {
@@ -153,10 +145,7 @@ namespace Game.Combat.Enemies
         public override void Kill()
         {
             base.Kill();
-            for (int i = 0; i < Random.Range(2, 10); ++i)
-            {
-                SaltBehaviour.Create(transform.position);
-            }
+            for (int i = 0; i < Random.Range(2, 10); ++i) SaltBehaviour.Create(transform.position);
 
             ContainerController controller = ContainerController.CreateEnemyLoot(transform.position, Enemy);
             if (controller != null)
@@ -271,9 +260,6 @@ namespace Game.Combat.Enemies
         {
         }
 
-        public virtual string GetEnemyName()
-        {
-            return Enemy.Name;
-        }
+        public virtual string GetEnemyName() => Enemy.Name;
     }
 }

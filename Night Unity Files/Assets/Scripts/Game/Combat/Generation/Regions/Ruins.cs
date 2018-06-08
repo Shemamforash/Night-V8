@@ -93,28 +93,28 @@ namespace Game.Combat.Generation
                 if (RightEdge == null && BottomEdge == null) _nodesWithWalls.Remove(this);
             }
 
-            public void GenerateBarriers(Ruins ruins)
-            {
-                Barrier b;
-                if (BottomEdge != null)
-                {
-                    b = new Barrier(BottomEdge, "Wall " + _id, Position, true);
-                    ruins.barriers.Add(b);
-                }
-
-                if (RightEdge != null)
-                {
-                    b = new Barrier(RightEdge, "Wall " + _id, Position, true);
-                    ruins.barriers.Add(b);
-                }
-
-                for (int i = 0; i < 4; ++i)
-                {
-                    int next = i + 1 == 4 ? 0 : i + 1;
-//                    if (_bottomEdge != null) Debug.DrawLine(_bottomEdge[i] + Position, _bottomEdge[next] + Position, Color.red, 10f);
-//                    if (_rightEdge != null) Debug.DrawLine(_rightEdge[i] + Position, _rightEdge[next] + Position, Color.red, 10f);
-                }
-            }
+//            public void GenerateBarriers(Ruins ruins)
+//            {
+//                Barrier b;
+//                if (BottomEdge != null)
+//                {
+//                    b = new Barrier(BottomEdge, "Wall " + _id, Position, true);
+//                    ruins.barriers.Add(b);
+//                }
+//
+//                if (RightEdge != null)
+//                {
+//                    b = new Barrier(RightEdge, "Wall " + _id, Position, true);
+//                    ruins.barriers.Add(b);
+//                }
+//
+//                for (int i = 0; i < 4; ++i)
+//                {
+//                    int next = i + 1 == 4 ? 0 : i + 1;
+////                    if (_bottomEdge != null) Debug.DrawLine(_bottomEdge[i] + Position, _bottomEdge[next] + Position, Color.red, 10f);
+////                    if (_rightEdge != null) Debug.DrawLine(_rightEdge[i] + Position, _rightEdge[next] + Position, Color.red, 10f);
+//                }
+//            }
 
             public void SetBottomEdge(List<Vector2> edge)
             {
@@ -158,7 +158,7 @@ namespace Game.Combat.Generation
             }
         }
 
-        private static List<RuinNode> _nodesWithWalls = new List<RuinNode>();
+        private static readonly List<RuinNode> _nodesWithWalls = new List<RuinNode>();
 
         private void CarvePassages(int x, int y)
         {
@@ -195,33 +195,25 @@ namespace Game.Combat.Generation
                 n.SetBottomEdge(verts);
             }
 
-            if (x + 2 < width)
-            {
-                //right
-                verts = new List<Vector2>();
-                verts.Add(new Vector2(1.1f, -0.9f)); //0
-                verts.Add(new Vector2(0.9f, -0.9f)); //1
-                verts.Add(new Vector2(0.9f, 0.9f)); //2
-                verts.Add(new Vector2(1.1f, 0.9f)); //3
-                n.SetRightEdge(verts);
-            }
+            if (x + 2 >= width) return;
+            //right
+            verts = new List<Vector2>();
+            verts.Add(new Vector2(1.1f, -0.9f)); //0
+            verts.Add(new Vector2(0.9f, -0.9f)); //1
+            verts.Add(new Vector2(0.9f, 0.9f)); //2
+            verts.Add(new Vector2(1.1f, 0.9f)); //3
+            n.SetRightEdge(verts);
         }
 
         private const int WidthInCells = 30;
 
         protected override void Generate()
         {
-//            float width = PathingGrid.CombatAreaWidth / 4f;
-//            int widthInCells = (int) (width / CellWidth);
             nodes = new RuinNode[WidthInCells, WidthInCells];
             int startPos = (int) -(WidthInCells / CellWidth);
             for (int x = startPos; x < startPos + WidthInCells; ++x)
-            {
-                for (int y = startPos; y < startPos + WidthInCells; ++y)
-                {
-                    GenerateCell(x, y, startPos, WidthInCells);
-                }
-            }
+            for (int y = startPos; y < startPos + WidthInCells; ++y)
+                GenerateCell(x, y, startPos, WidthInCells);
 
             for (int x = 0; x < WidthInCells; ++x)
             {
@@ -237,16 +229,7 @@ namespace Game.Combat.Generation
 
             CarvePassages(0, 0);
             CreateIslands(6);
-
-            for (int x = 0; x < WidthInCells; ++x)
-            {
-                for (int y = 0; y < WidthInCells; ++y)
-                {
-                    nodes[x, y].GenerateBarriers(this);
-                }
-            }
-
-            CombineWalls();
+            while (_nodesWithWalls.Count > 0) CombineWalls();
         }
 
 //get random cell with a wall
@@ -295,14 +278,36 @@ namespace Game.Combat.Generation
 
         private void AddFinalShapePoints(int a, int b, int c, int d)
         {
-            Debug.Log("banana");
-            _finalShape.Add(_lastWall[a] + lastCell.Position);
-            _finalShape.Add(_lastWall[b] + lastCell.Position);
-            _finalShape.Add(_nextWall[c] + nextCell.Position);
-            _finalShape.Add(_nextWall[d] + nextCell.Position);
+            Vector2 vertexA = _lastWall[a] + lastCell.Position;
+            Vector2 vertexB = _lastWall[b] + lastCell.Position;
+            Vector2 vertexC = _nextWall[c] + nextCell.Position;
+            Vector2 vertexD = _nextWall[d] + nextCell.Position;
+
+            if (_finalShape.Count >= 2)
+            {
+                Vector2 secondToLastVertex = _finalShape[_finalShape.Count - 2];
+                Vector2 lastVertex = _finalShape[_finalShape.Count - 1];
+                if (secondToLastVertex != vertexA)
+                {
+                    if (lastVertex != vertexA)
+                    {
+                        _finalShape.Add(vertexA);
+                    }
+
+                    _finalShape.Add(vertexB);
+                }
+            }
+            else
+            {
+                _finalShape.Add(vertexA);
+                _finalShape.Add(vertexB);
+            }
+
+            if (vertexB != vertexC) _finalShape.Add(vertexC);
+            _finalShape.Add(vertexD);
         }
 
-        private readonly List<Vector2> _finalShape = new List<Vector2>();
+        private List<Vector2> _finalShape = new List<Vector2>();
         private List<Vector2> _lastWall, _nextWall;
         private RuinNode lastCell, nextCell;
 
@@ -312,96 +317,46 @@ namespace Game.Combat.Generation
             List<Vector2> startWall = start.BottomEdge ?? start.RightEdge;
             nextCell = start;
             _nextWall = startWall;
+            _lastWall = null;
+            lastCell = null;
+            _finalShape = new List<Vector2>();
 
-            int cnt = 50;
             while (true)
             {
                 _nodesWithWalls.Remove(nextCell);
 
+                bool lastWallRight = false;
+                bool lastWallAbove = false;
+
+                if (_lastWall != null)
+                {
+                    lastWallRight = (_lastWall[0].x + _lastWall[1].x) / 2f + lastCell.Position.x > (_nextWall[0].x + _nextWall[1].x) / 2f + nextCell.Position.x;
+                    lastWallAbove = (_lastWall[0].y + _lastWall[3].y) / 2f + lastCell.Position.y > (_nextWall[0].y + _nextWall[3].y) / 2f + nextCell.Position.y;
+                }
+
                 _lastWall = _nextWall;
                 lastCell = nextCell;
+
                 if (_nextWall == nextCell.BottomEdge)
                 {
-                    if (nextCell.RightEdge != null)
+                    if (lastWallRight)
                     {
-                        _nextWall = nextCell.RightEdge;
-                        Debug.Log("A");
-                    }
-                    else if (nextCell.RightNeighbor?.BottomEdge != null)
-                    {
-                        nextCell = nextCell.RightNeighbor;
-                        _nextWall = nextCell.BottomEdge;
-                        Debug.Log("B");
-                    }
-                    else if (nextCell.BottomNeighbor?.RightEdge != null)
-                    {
-                        nextCell = nextCell.BottomNeighbor;
-                        _nextWall = nextCell.RightEdge;
-                        Debug.Log("C");
-                    }
-                    else if (nextCell.LeftNeighbor?.BottomNeighbor?.RightEdge != null)
-                    {
-                        nextCell = nextCell.LeftNeighbor.BottomNeighbor;
-                        _nextWall = nextCell.RightEdge;
-                        Debug.Log("D");
-                    }
-                    else if (nextCell.LeftNeighbor?.BottomEdge != null)
-                    {
-                        nextCell = nextCell.LeftNeighbor;
-                        _nextWall = nextCell.BottomEdge;
-                        Debug.Log("E");
-                    }
-                    else if (nextCell.LeftNeighbor?.RightEdge != null)
-                    {
-                        nextCell = nextCell.LeftNeighbor;
-                        _nextWall = nextCell.RightEdge;
-                        Debug.Log("F");
+                        CheckCellsLeft(() => CheckCellsRight());
                     }
                     else
                     {
-                        Debug.Log("G");
+                        CheckCellsRight(() => CheckCellsLeft());
                     }
                 }
                 else
                 {
-                    if (nextCell.RightNeighbor?.BottomEdge != null)
+                    if (lastWallAbove)
                     {
-                        nextCell = nextCell.RightNeighbor;
-                        _nextWall = nextCell.BottomEdge;
-                        Debug.Log("H");
-                    }
-                    else if (nextCell.BottomNeighbor?.RightEdge != null)
-                    {
-                        nextCell = nextCell.BottomNeighbor;
-                        _nextWall = nextCell.RightEdge;
-                        Debug.Log("I");
-                    }
-                    else if (nextCell.BottomEdge != null)
-                    {
-                        _nextWall = nextCell.BottomEdge;
-                        Debug.Log("J");
-                    }
-                    else if (nextCell.TopNeighbor.BottomEdge != null)
-                    {
-                        nextCell = nextCell.TopNeighbor;
-                        _nextWall = nextCell.BottomEdge;
-                        Debug.Log("K");
-                    }
-                    else if (nextCell.TopNeighbor.RightEdge != null)
-                    {
-                        nextCell = nextCell.TopNeighbor;
-                        _nextWall = nextCell.RightEdge;
-                        Debug.Log("L");
-                    }
-                    else if (nextCell.TopNeighbor.RightNeighbor.BottomEdge != null)
-                    {
-                        nextCell = nextCell.TopNeighbor.RightNeighbor;
-                        _nextWall = nextCell.BottomEdge;
-                        Debug.Log("M");
+                        CheckCellsBelow(() => CheckCellsAbove());
                     }
                     else
                     {
-                        Debug.Log("N");
+                        CheckCellsAbove(() => CheckCellsBelow());
                     }
                 }
 
@@ -414,75 +369,143 @@ namespace Game.Combat.Generation
                     break;
                 }
 
-                bool lastCellBottom = _lastWall == lastCell.BottomEdge;
-                bool nextCellBottom = _nextWall == nextCell.BottomEdge;
-                float nextWallX = (_nextWall[0].x + _nextWall[1].x) / 2f + nextCell.Position.x;
-                float lastWallX = (_lastWall[0].x + _lastWall[1].x) / 2f + lastCell.Position.x;
-                bool nextCellFurtherRight = nextWallX > lastWallX;
-                float nextWallY = (_nextWall[0].y + _nextWall[3].y) / 2f + nextCell.Position.y;
-                float lastWallY = (_nextWall[0].y + _nextWall[3].y) / 2f + lastCell.Position.y;
-                bool nextCellAbove = nextWallY > lastWallY;
-
-                Debug.Log(lastCellBottom + " " + nextCellBottom + " " + nextCellFurtherRight + " " + nextCellAbove + " " + lastCell.Position + " " + nextCell.Position + " " + lastWallX + " " + nextWallX);
-
-                if (lastCellBottom)
-                {
-                    if (nextCellBottom)
-                    {
-                        if (nextCellFurtherRight) AddFinalShapePoints(2, 3, 2, 3);
-                        else AddFinalShapePoints(3, 0, 3, 0);
-                    }
-                    else
-                    {
-                        if (nextCellFurtherRight)
-                        {
-                            if (nextCellAbove) AddFinalShapePoints(2, 3, 1, 2);
-                            else AddFinalShapePoints(2, 3, 3, 0);
-                        }
-                        else
-                        {
-                            if (nextCellAbove) AddFinalShapePoints(3, 2, 0, 3);
-                            else AddFinalShapePoints(0, 1, 3, 0);
-                        }
-                    }
-                }
-                else
-                {
-                    if (nextCellBottom)
-                    {
-                        if (nextCellFurtherRight)
-                        {
-                            if (nextCellAbove) AddFinalShapePoints(3, 2, 0, 3);
-                            else AddFinalShapePoints(3, 0, 2, 3);
-                        }
-                        else
-                        {
-                            if (nextCellAbove) AddFinalShapePoints(3, 2, 0, 1);
-                            else AddFinalShapePoints(3, 0, 0, 1);
-                        }
-                    }
-                    else
-                    {
-                        if (nextCellFurtherRight) AddFinalShapePoints(2, 3, 2, 3);
-                        else AddFinalShapePoints(0, 1, 0, 1);
-                    }
-                }
-
                 if (nextCell == start && _nextWall == startWall) break;
-                if (cnt == 0) break;
-
-                --cnt;
             }
 
+            _finalShape.Reverse();
+
+            Vector2 centre = Vector2.zero;
+            _finalShape.ForEach(v => centre += v);
+            centre /= _finalShape.Count;
+            for (int i = 0; i < _finalShape.Count; ++i) _finalShape[i] -= centre;
+
+            Barrier b = new Barrier(_finalShape, "Wall " + GetObjectNumber(), centre);
+            barriers.Add(b);
+        }
+
+        private void DrawShape()
+        {
             for (int i = 0; i < _finalShape.Count; ++i)
             {
                 int next = Helper.NextIndex(i, _finalShape);
-                Debug.DrawLine(_finalShape[i], _finalShape[next], Color.red, 10f);
+                float lerpVal = (float) i / _finalShape.Count;
+                Debug.DrawLine(_finalShape[i], _finalShape[next], Color.Lerp(Color.green, Color.red, lerpVal), 10f);
             }
 
-            if (_nodesWithWalls.Count > 0)
+            Helper.PrintList(_finalShape);
+        }
+
+        private void CheckCellsRight(Action fallback = null)
+        {
+            if (nextCell.RightEdge != null)
             {
-//                CombineWalls();
+                _nextWall = nextCell.RightEdge;
+                AddFinalShapePoints(2, 3, 1, 2); //a
+//                Debug.Log("A");
+            }
+            else if (nextCell.RightNeighbor?.BottomEdge != null)
+            {
+                nextCell = nextCell.RightNeighbor;
+                _nextWall = nextCell.BottomEdge;
+                AddFinalShapePoints(2, 3, 2, 3);
+//                Debug.Log("B");
+            } //
+            else if (nextCell.BottomNeighbor?.RightEdge != null)
+            {
+                nextCell = nextCell.BottomNeighbor;
+                _nextWall = nextCell.RightEdge;
+                AddFinalShapePoints(2, 3, 3, 0); //c
+                //Debug.Log("C");
+            }
+            else
+            {
+                fallback?.Invoke();
+            }
+        }
+
+        private void CheckCellsLeft(Action fallback = null)
+        {
+            if (nextCell.LeftNeighbor?.BottomNeighbor?.RightEdge != null)
+            {
+                nextCell = nextCell.LeftNeighbor.BottomNeighbor;
+                _nextWall = nextCell.RightEdge;
+                AddFinalShapePoints(0, 1, 3, 0); //d
+                //Debug.Log("D");
+            }
+            else if (nextCell.LeftNeighbor?.BottomEdge != null)
+            {
+                nextCell = nextCell.LeftNeighbor;
+                _nextWall = nextCell.BottomEdge;
+                AddFinalShapePoints(0, 1, 0, 1); //e
+                //Debug.Log("E");
+            }
+            else if (nextCell.LeftNeighbor?.RightEdge != null)
+            {
+                nextCell = nextCell.LeftNeighbor;
+                _nextWall = nextCell.RightEdge;
+                AddFinalShapePoints(0, 1, 1, 2); //f
+                //Debug.Log("F");
+            }
+            else
+            {
+                fallback?.Invoke();
+            }
+        }
+
+        private void CheckCellsAbove(Action fallback = null)
+        {
+            if (nextCell.TopNeighbor.BottomEdge != null)
+            {
+                nextCell = nextCell.TopNeighbor;
+                _nextWall = nextCell.BottomEdge;
+                AddFinalShapePoints(1, 2, 0, 1); //h
+                //Debug.Log("H");
+            }
+            else if (nextCell.TopNeighbor.RightEdge != null)
+            {
+                nextCell = nextCell.TopNeighbor;
+                _nextWall = nextCell.RightEdge;
+                AddFinalShapePoints(1, 2, 1, 2); //i
+                //Debug.Log("I");
+            }
+            else if (nextCell.TopNeighbor.RightNeighbor.BottomEdge != null)
+            {
+                nextCell = nextCell.TopNeighbor.RightNeighbor;
+                _nextWall = nextCell.BottomEdge;
+                AddFinalShapePoints(1, 2, 2, 3); //j
+                //Debug.Log("J");
+            }
+            else
+            {
+                fallback?.Invoke();
+            }
+        }
+
+        private void CheckCellsBelow(Action fallback = null)
+        {
+            if (nextCell.RightNeighbor?.BottomEdge != null)
+            {
+                nextCell = nextCell.RightNeighbor;
+                _nextWall = nextCell.BottomEdge;
+                AddFinalShapePoints(3, 0, 2, 3); //k
+                //Debug.Log("K");
+            }
+            else if (nextCell.BottomNeighbor?.RightEdge != null)
+            {
+                nextCell = nextCell.BottomNeighbor;
+                _nextWall = nextCell.RightEdge;
+                AddFinalShapePoints(3, 0, 3, 0); //l
+                //Debug.Log("L");
+            }
+            else if (nextCell.BottomEdge != null)
+            {
+                _nextWall = nextCell.BottomEdge;
+                AddFinalShapePoints(3, 0, 0, 1); //m
+                //Debug.Log("M");
+            }
+            else
+            {
+                fallback?.Invoke();
             }
         }
 

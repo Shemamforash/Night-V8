@@ -62,10 +62,7 @@ namespace Facilitating.UIControllers
             SetWeapon();
         }
 
-        public override List<GearItem> GetAvailableGear()
-        {
-            return new List<GearItem>(CharacterManager.Weapons);
-        }
+        public override List<GearItem> GetAvailableGear() => new List<GearItem>(CharacterManager.Weapons);
 
         public override void Equip(int selectedGear)
         {
@@ -74,10 +71,7 @@ namespace Facilitating.UIControllers
             Show(CurrentPlayer);
         }
 
-        public override Button GetGearButton()
-        {
-            return _weaponButton.Button();
-        }
+        public override Button GetGearButton() => _weaponButton.Button();
 
         public override void CompareTo(GearItem comparisonItem)
         {
@@ -147,11 +141,18 @@ namespace Facilitating.UIControllers
             bool inscribeActive = _inscribeButton.Button().interactable;
             bool repairActive = _repairButton.Button().interactable;
 
-            if (repairActive) SetTopToBottomNavigation(_repairButton);
+            if (repairActive)
+            {
+                SetTopToBottomNavigation(_repairButton);
+            }
             else if (inscribeActive)
+            {
                 SetTopToBottomNavigation(_inscribeButton);
+            }
             else
+            {
                 _weaponButton.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
+            }
 
             if (inscribeActive)
             {
@@ -204,10 +205,7 @@ namespace Facilitating.UIControllers
             SetNavigation();
         }
 
-        public override bool GearIsAvailable()
-        {
-            return CharacterManager.Weapons.Count != 0;
-        }
+        public override bool GearIsAvailable() => CharacterManager.Weapons.Count != 0;
 
         public override void SelectGearItem(GearItem item, UiGearMenuController.GearUi gearUi)
         {

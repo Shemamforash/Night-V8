@@ -219,6 +219,7 @@ namespace Game.Combat.Generation
                 _region.Containers.Add(ContainerController.CreateWaterSource(position.Value));
             }
         }
+
         protected abstract void Generate();
 
         private class Ellipse

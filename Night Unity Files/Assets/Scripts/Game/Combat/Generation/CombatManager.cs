@@ -64,7 +64,7 @@ namespace Game.Combat.Generation
             base.Enter();
             InputHandler.SetCurrentListener(_player);
         }
-        
+
         public void Update()
         {
             if (!_inCombat) return;

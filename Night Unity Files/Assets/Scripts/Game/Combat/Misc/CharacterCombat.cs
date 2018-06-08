@@ -1,15 +1,12 @@
 ﻿using System.Collections;
-using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Combat.Misc
 {
@@ -44,10 +41,7 @@ namespace Game.Combat.Misc
             return _distanceToTarget;
         }
 
-        public Vector3 Direction()
-        {
-            return transform.up;
-        }
+        public Vector3 Direction() => transform.up;
 
         public void Burn()
         {
@@ -56,10 +50,7 @@ namespace Game.Combat.Misc
             if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StartBurning();
         }
 
-        public bool IsBurning()
-        {
-            return _burnTicks > 0;
-        }
+        public bool IsBurning() => _burnTicks > 0;
 
         public void Decay()
         {
@@ -68,10 +59,7 @@ namespace Game.Combat.Misc
             if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StartBleeding();
         }
 
-        public bool IsDecaying()
-        {
-            return _decayTicks > 0;
-        }
+        public bool IsDecaying() => _decayTicks > 0;
 
         public void Sicken(int stacks = 1)
         {
@@ -85,10 +73,7 @@ namespace Game.Combat.Misc
             _sicknessDuration = 0;
         }
 
-        public bool IsSick()
-        {
-            return _sicknessTicks > 0;
-        }
+        public bool IsSick() => _sicknessTicks > 0;
 
         public void Ram(CharacterCombat target, float ramForce)
         {
@@ -161,10 +146,7 @@ namespace Game.Combat.Misc
         private int _burnTicks, _decayTicks, _sicknessTicks;
         private float _burnDuration, _decayDuration, _sicknessDuration;
 
-        public Cell CurrentCell()
-        {
-            return _currentCell == null ? PathingGrid.WorldToCellPosition(transform.position) : _currentCell;
-        }
+        public Cell CurrentCell() => _currentCell == null ? PathingGrid.WorldToCellPosition(transform.position) : _currentCell;
 
         protected void SetOwnedByEnemy(float speed)
         {
@@ -241,15 +223,9 @@ namespace Game.Combat.Misc
             _recoveryTimer = TimeToStartRecovery;
         }
 
-        private bool Moving()
-        {
-            return _rigidbody.velocity == Vector2.zero;
-        }
+        private bool Moving() => _rigidbody.velocity == Vector2.zero;
 
-        public float GetAccuracyModifier()
-        {
-            return Recoil.CurrentValue();
-        }
+        public float GetAccuracyModifier() => Recoil.CurrentValue();
 
         private void UpdateRecoil()
         {
@@ -282,13 +258,23 @@ namespace Game.Combat.Misc
             float yForceModifier = 1;
             float xForceModifier = 1;
 
-            if (distanceToTop <= threshold && _forceToadd.y < 0) yForceModifier = (float) distanceToTop / threshold - 1;
+            if (distanceToTop <= threshold && _forceToadd.y < 0)
+            {
+                yForceModifier = (float) distanceToTop / threshold - 1;
+            }
             else if (distanceToBottom <= threshold && _forceToadd.y > 0)
+            {
                 yForceModifier = (float) distanceToBottom / threshold - 1;
+            }
 
-            if (distanceToLeft <= threshold && _forceToadd.x < 0) xForceModifier = (float) distanceToLeft / threshold - 1;
+            if (distanceToLeft <= threshold && _forceToadd.x < 0)
+            {
+                xForceModifier = (float) distanceToLeft / threshold - 1;
+            }
             else if (distanceToRight <= threshold && _forceToadd.x > 0)
+            {
                 xForceModifier = (float) distanceToRight / threshold - 1;
+            }
 
             _forceToadd.x *= Mathf.Clamp(xForceModifier, 0f, 1f);
             _forceToadd.y *= Mathf.Clamp(yForceModifier, 0f, 1f);
