@@ -29,7 +29,6 @@
         <e p="GameSettings.xml" t="Include" />
         <e p="Mine.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
-        <e p="packages" t="Include" />
         <e p="Resources" t="Include">
           <e p="names.txt" t="Include" />
           <e p="XML" t="Include">
@@ -158,6 +157,13 @@
                 </e>
                 <e p="Nightmares" t="Include">
                   <e p="BeamController.cs" t="Include" />
+                  <e p="EnemyAttackBehaviours" t="Include">
+                    <e p="BasicAttackBehaviour.cs" t="Include" />
+                    <e p="Bombardment.cs" t="Include" />
+                    <e p="LifeDrain.cs" t="Include" />
+                    <e p="Spawn.cs" t="Include" />
+                    <e p="Teleport.cs" t="Include" />
+                  </e>
                   <e p="Ghast.cs" t="Include" />
                   <e p="GhastProjectile.cs" t="Include" />
                   <e p="Ghoul.cs" t="Include" />
@@ -267,9 +273,20 @@
               <e p="Inscription.cs" t="Include" />
               <e p="ItemQuality.cs" t="Include" />
               <e p="Weapons" t="Include">
+                <e p="Behaviour" t="Include">
+                  <e p="AccuracyGainer.cs" t="Include" />
+                  <e p="AttributeGainer.cs" t="Include" />
+                  <e p="BaseWeaponBehaviour.cs" t="Include" />
+                  <e p="Burstfire.cs" t="Include" />
+                  <e p="DefaultBehaviour.cs" t="Include" />
+                  <e p="DoubleFireDelay.cs" t="Include" />
+                  <e p="DoubleFireInstant.cs" t="Include" />
+                  <e p="RandomFire.cs" t="Include" />
+                </e>
                 <e p="Weapon.cs" t="Include" />
                 <e p="WeaponAttributes.cs" t="Include" />
                 <e p="WeaponClass.cs" t="Include" />
+                <e p="WeaponClassType.cs" t="Include" />
                 <e p="WeaponGenerationTester.cs" t="Include" />
                 <e p="WeaponGenerator.cs" t="Include" />
                 <e p="WeaponType.cs" t="Include" />
@@ -355,6 +372,122 @@
               <e p="Number.cs" t="Include" />
             </e>
             <e p="RingDrawer.cs" t="Include" />
+          </e>
+          <e p="Triangle-NET-Unity-Port-master" t="Include">
+            <e p="Behavior.cs" t="Include" />
+            <e p="Configuration.cs" t="Include" />
+            <e p="Enums.cs" t="Include" />
+            <e p="Geometry" t="Include">
+              <e p="Contour.cs" t="Include" />
+              <e p="Edge.cs" t="Include" />
+              <e p="ExtensionMethods.cs" t="Include" />
+              <e p="IEdge.cs" t="Include" />
+              <e p="IPolygon.cs" t="Include" />
+              <e p="ISegment.cs" t="Include" />
+              <e p="ITriangle.cs" t="Include" />
+              <e p="Point.cs" t="Include" />
+              <e p="Polygon.cs" t="Include" />
+              <e p="Rectangle.cs" t="Include" />
+              <e p="RegionPointer.cs" t="Include" />
+              <e p="Segment.cs" t="Include" />
+              <e p="Vertex.cs" t="Include" />
+            </e>
+            <e p="IO" t="Include">
+              <e p="DebugWriter.cs" t="Include" />
+              <e p="FileProcessor.cs" t="Include" />
+              <e p="IFileFormat.cs" t="Include" />
+              <e p="IMeshFormat.cs" t="Include" />
+              <e p="InputTriangle.cs" t="Include" />
+              <e p="IPolygonFormat.cs" t="Include" />
+              <e p="TriangleFormat.cs" t="Include" />
+              <e p="TriangleReader.cs" t="Include" />
+              <e p="TriangleWriter.cs" t="Include" />
+            </e>
+            <e p="IPredicates.cs" t="Include" />
+            <e p="Log.cs" t="Include" />
+            <e p="Logging" t="Include">
+              <e p="ILog.cs" t="Include" />
+              <e p="ILogItem.cs" t="Include" />
+              <e p="LogItem.cs" t="Include" />
+            </e>
+            <e p="Mesh.cs" t="Include" />
+            <e p="Meshing" t="Include">
+              <e p="Algorithm" t="Include">
+                <e p="Dwyer.cs" t="Include" />
+                <e p="Incremental.cs" t="Include" />
+                <e p="SweepLine.cs" t="Include" />
+              </e>
+              <e p="ConstraintMesher.cs" t="Include" />
+              <e p="ConstraintOptions.cs" t="Include" />
+              <e p="Converter.cs" t="Include" />
+              <e p="Data" t="Include">
+                <e p="BadSubseg.cs" t="Include" />
+                <e p="BadTriangle.cs" t="Include" />
+                <e p="BadTriQueue.cs" t="Include" />
+              </e>
+              <e p="GenericMesher.cs" t="Include" />
+              <e p="IConstraintMesher.cs" t="Include" />
+              <e p="IMesh.cs" t="Include" />
+              <e p="IQualityMesher.cs" t="Include" />
+              <e p="Iterators" t="Include">
+                <e p="EdgeIterator.cs" t="Include" />
+                <e p="RegionIterator.cs" t="Include" />
+                <e p="VertexCirculator.cs" t="Include" />
+              </e>
+              <e p="ITriangulator.cs" t="Include" />
+              <e p="QualityMesher.cs" t="Include" />
+              <e p="QualityOptions.cs" t="Include" />
+            </e>
+            <e p="MeshValidator.cs" t="Include" />
+            <e p="NewLocation.cs" t="Include" />
+            <e p="Properties" t="Include">
+              <e p="AssemblyInfo.cs" t="Include" />
+            </e>
+            <e p="RobustPredicates.cs" t="Include" />
+            <e p="Smoothing" t="Include">
+              <e p="ISmoother.cs" t="Include" />
+              <e p="SimpleSmoother.cs" t="Include" />
+              <e p="VoronoiFactory.cs" t="Include" />
+            </e>
+            <e p="Tools" t="Include">
+              <e p="AdjacencyMatrix.cs" t="Include" />
+              <e p="CuthillMcKee.cs" t="Include" />
+              <e p="Interpolation.cs" t="Include" />
+              <e p="IntersectionHelper.cs" t="Include" />
+              <e p="PolygonValidator.cs" t="Include" />
+              <e p="QualityMeasure.cs" t="Include" />
+              <e p="Statistic.cs" t="Include" />
+              <e p="TriangleQuadTree.cs" t="Include" />
+              <e p="VertexSorter.cs" t="Include" />
+            </e>
+            <e p="Topology" t="Include">
+              <e p="DCEL" t="Include">
+                <e p="DcelMesh.cs" t="Include" />
+                <e p="Face.cs" t="Include" />
+                <e p="HalfEdge.cs" t="Include" />
+                <e p="Vertex.cs" t="Include" />
+              </e>
+              <e p="Osub.cs" t="Include" />
+              <e p="Otri.cs" t="Include" />
+              <e p="SubSegment.cs" t="Include" />
+              <e p="Triangle.cs" t="Include" />
+            </e>
+            <e p="TriangleLocator.cs" t="Include" />
+            <e p="TrianglePool.cs" t="Include" />
+            <e p="TriangleSampler.cs" t="Include" />
+            <e p="Voronoi" t="Include">
+              <e p="BoundedVoronoi.cs" t="Include" />
+              <e p="DefaultVoronoiFactory.cs" t="Include" />
+              <e p="IVoronoiFactory.cs" t="Include" />
+              <e p="Legacy" t="Include">
+                <e p="BoundedVoronoiLegacy.cs" t="Include" />
+                <e p="IVoronoi.cs" t="Include" />
+                <e p="SimpleVoronoi.cs" t="Include" />
+                <e p="VoronoiRegion.cs" t="Include" />
+              </e>
+              <e p="StandardVoronoi.cs" t="Include" />
+              <e p="VoronoiBase.cs" t="Include" />
+            </e>
           </e>
         </e>
         <e p="Shaders" t="Include">

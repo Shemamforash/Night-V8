@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Game.Combat.Generation;
+﻿using Game.Combat.Generation;
 using Game.Combat.Misc;
 using SamsHelper.Libraries;
 using UnityEngine;

@@ -1,29 +1,41 @@
-﻿using Game.Combat.Player;
+﻿using System;
+using Game.Combat.Player;
 
 namespace Game.Gear.Weapons
 {
     public class WeaponClass
     {
-        public readonly int AmmoCost;
         public readonly bool Automatic;
-        public readonly string Name;
+        public readonly WeaponClassType Name;
         public readonly WeaponType Type;
         public readonly int Pellets, Capacity, Handling, Accuracy, Damage;
         public readonly float ReloadSpeed, FireRate;
 
-        public WeaponClass(WeaponType type, string name, bool automatic, int ammoCost, int damage, float fireRate, float reloadSpeed, int accuracy, int handling, int capacity, int pellets)
+        public WeaponClass(WeaponType type, string name, bool automatic, int damage, float fireRate, float reloadSpeed, int accuracy, int handling, int capacity)
         {
             Type = type;
             Automatic = automatic;
-            AmmoCost = ammoCost;
-            Name = name;
+            Name = NameToClassType(name);
             Damage = damage;
             FireRate = fireRate;
             ReloadSpeed = reloadSpeed;
             Accuracy = accuracy;
             Handling = handling;
             Capacity = capacity;
-            Pellets = pellets;
+            Pellets = type == WeaponType.Shotgun ? 10 : 1;
+        }
+
+        private WeaponClassType NameToClassType(string name)
+        {
+            foreach (WeaponClassType classType in Enum.GetValues(typeof(WeaponClassType)))
+            {
+                if (classType.ToString() == name)
+                {
+                    return classType;
+                }
+            }
+
+            throw new ArgumentOutOfRangeException("Unknown class type: '" + name + "'");
         }
 
         public Weapon CreateWeapon(ItemQuality quality)

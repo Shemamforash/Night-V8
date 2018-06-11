@@ -1,12 +1,8 @@
 ﻿using System;
 using Game.Characters;
-using Game.Combat.Enemies.Humans;
-using Game.Combat.Enemies.Nightmares;
 using Game.Gear;
 using Game.Gear.Weapons;
 using UnityEngine;
-using Object = UnityEngine.Object;
-using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
@@ -18,7 +14,6 @@ namespace Game.Combat.Enemies
         public Enemy(EnemyType type) : base(type.ToString())
         {
             Template = EnemyTemplate.GetEnemyTemplate(type);
-            Reset();
         }
 
         public void GenerateWeapon(float difficulty)
@@ -39,14 +34,8 @@ namespace Game.Combat.Enemies
             ArmourController.AutoFillSlots();
         }
 
-        private void Reset()
-        {
-            Weapon?.Reload(Inventory());
-        }
-
         public EnemyBehaviour GetEnemyBehaviour()
         {
-            Reset();
             GameObject enemyPrefab = Resources.Load<GameObject>("Prefabs/Combat/Enemies/" + Template.EnemyType);
             GameObject enemyObject = GameObject.Instantiate(enemyPrefab);
             enemyObject.name = Template.EnemyType.ToString() + Id;

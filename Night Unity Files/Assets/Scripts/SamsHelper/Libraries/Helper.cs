@@ -310,7 +310,13 @@ namespace SamsHelper.Libraries
             }
         }
 
-        public static long TimeInMillis() => DateTime.Now.Ticks / 10000;
+        private static float _startingTime = -1;
+
+        public static float TimeInSeconds()
+        {
+            if (_startingTime == -1) _startingTime = Time.timeSinceLevelLoad;
+            return Time.timeSinceLevelLoad;
+        }
 
         public static bool ValuesHaveSameSign(float a, float b)
         {

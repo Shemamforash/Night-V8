@@ -29,10 +29,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return root;
         }
 
-        public ItemQuality Quality()
-        {
-            return _itemItemQuality;
-        }
+        public ItemQuality Quality() => _itemItemQuality;
 
         public void SetQuality(ItemQuality quality)
         {
@@ -57,10 +54,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public abstract string GetSummary();
 
-        public GearSubtype GetGearType()
-        {
-            return _gearType;
-        }
+        public GearSubtype GetGearType() => _gearType;
 
         private void MoveTo(Inventory targetInventory)
         {

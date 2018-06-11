@@ -17,12 +17,15 @@ namespace Game.Combat.Enemies
         protected bool CouldHitTarget;
         private bool _waitingForHeal;
         private const float MaxAimTime = 2f;
+        private BaseWeaponBehaviour _weaponBehaviour;
 
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
             SetHealBehaviour();
-            if (Weapon() != null) IdealWeaponDistance = Weapon().CalculateIdealDistance();
+            Assert.IsTrue(enemy.Weapon != null);
+            _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
+            IdealWeaponDistance = Weapon().CalculateIdealDistance();
         }
 
         public override void Update()
@@ -57,7 +60,7 @@ namespace Game.Combat.Enemies
             base.ChooseNextAction();
             FacePlayer = false;
             if (NeedsRepositioning()) return;
-            if (Weapon().Empty())
+            if (_weaponBehaviour.Empty())
             {
                 Reload();
             }
@@ -99,7 +102,7 @@ namespace Game.Combat.Enemies
             {
                 duration -= Time.deltaTime;
                 if (duration > 0) return;
-                Weapon().Reload();
+                _weaponBehaviour.Reload();
                 ChooseNextAction();
             };
         }
@@ -144,7 +147,7 @@ namespace Game.Combat.Enemies
             FacePlayer = true;
             Immobilised(true);
             Assert.IsNotNull(Weapon());
-            Assert.IsFalse(Weapon().Empty());
+            Assert.IsFalse(_weaponBehaviour.Empty());
             SetActionText("Aiming");
             CurrentAction = () =>
             {
@@ -167,9 +170,9 @@ namespace Game.Combat.Enemies
                     return;
                 }
 
-                List<Shot> shots = Weapon().Fire(this, true);
-                if (shots.Any(s => s.DidHit)) CombatManager.Player().TryRetaliate(this);
-                if (Weapon().Empty())
+                _weaponBehaviour.StartFiring(this);
+//                if (shots.Any(s => s.DidHit)) CombatManager.Player().TryRetaliate(this);
+                if (_weaponBehaviour.Empty())
                 {
                     Reload();
                     FacePlayer = false;

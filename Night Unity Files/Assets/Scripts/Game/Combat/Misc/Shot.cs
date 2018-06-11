@@ -4,7 +4,6 @@ using Game.Combat.Enemies;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
@@ -116,10 +115,7 @@ namespace Game.Combat.Misc
             _fireTrail.SetActive(true);
         }
 
-        public bool DidPierce()
-        {
-            return Random.Range(0f, 1f) <= _pierceChance;
-        }
+        public bool DidPierce() => Random.Range(0f, 1f) <= _pierceChance;
 
         private void CacheWeaponAttributes()
         {
@@ -162,7 +158,7 @@ namespace Game.Combat.Misc
         public void Fire(float distance = 0.15f)
         {
             float angleOffset = Random.Range(-_accuracy, _accuracy);
-            if(_origin != null) angleOffset *= _origin.GetAccuracyModifier();
+            if (_origin != null) angleOffset *= _origin.GetAccuracyModifier();
             transform.position = _originPosition + _direction * distance;
             _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
             _fired = true;
@@ -221,7 +217,9 @@ namespace Game.Combat.Misc
         private void ApplyConditions(CharacterCombat hit)
         {
             if (_knockbackForce != 0)
+            {
                 hit.Knockback(transform.position, _knockbackForce);
+            }
 
             if (Random.Range(0f, 1f) < _decayChange) hit.Decay();
             if (Random.Range(0f, 1f) < _sicknessChance) hit.Sicken();
@@ -262,10 +260,7 @@ namespace Game.Combat.Misc
             _sicknessChance = chance;
         }
 
-        public int DamageDealt()
-        {
-            return _damageDealt;
-        }
+        public int DamageDealt() => _damageDealt;
 
         public void SetPierceChance(float chance)
         {

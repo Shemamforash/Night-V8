@@ -1,27 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Xml;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Global;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Game.Gear.Weapons
 {
     public class Weapon : GearItem
     {
+        public readonly WeaponAttributes WeaponAttributes;
+        public Skill WeaponSkillOne, WeaponSkillTwo;
         private const float MaxAccuracyOffsetInDegrees = 25f;
         private const float RangeMin = 1f;
         private const float RangeMax = 4.5f;
-        public readonly WeaponAttributes WeaponAttributes;
-        private int _ammoInMagazine;
-        private long _timeAtLastFire;
-        public Skill WeaponSkillOne, WeaponSkillTwo;
 
         public Weapon(string name, float weight, ItemQuality _itemQuality) : base(name, weight, GearSubtype.Weapon, _itemQuality)
         {
@@ -34,13 +29,6 @@ namespace Game.Gear.Weapons
             root = base.Save(root, saveType);
             WeaponAttributes.Save(root, saveType);
             return root;
-        }
-
-        private bool FireRateElapsedTimeMet()
-        {
-            long timeElapsed = Helper.TimeInMillis() - _timeAtLastFire;
-            long targetTime = (long) (1f / GetAttributeValue(AttributeType.FireRate) * 1000);
-            return !(timeElapsed < targetTime);
         }
 
         public float CalculateIdealDistance()
@@ -57,103 +45,57 @@ namespace Game.Gear.Weapons
             return accuracy;
         }
 
-        private bool CanFire()
-        {
-            return !Empty() && FireRateElapsedTimeMet();
-        }
+        public override bool IsStackable() => false;
 
-        public List<Shot> Fire(CharacterCombat origin, bool fireShots = false)
-        {
-            List<Shot> shots = new List<Shot>();
-            if (CanFire())
-            {
-                _timeAtLastFire = Helper.TimeInMillis();
-                //todo play sound GunFire.Fire(WeaponAttributes.WeaponType, distance);
-                for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
-                {
-                    shots.Add(Shot.Create(origin));
-                }
+        public WeaponType WeaponType() => WeaponAttributes.WeaponType;
 
-                ConsumeAmmo(1);
-                Assert.IsTrue(shots.Count > 0);
-                Assert.IsNotNull(shots);
-                if (fireShots) shots.ForEach(s => s.Fire());
-            }
-
-            return shots;
-        }
-
-        public override bool IsStackable()
-        {
-            return false;
-        }
-
-        public WeaponType WeaponType()
-        {
-            return WeaponAttributes.WeaponType;
-        }
-
-        public void ConsumeAmmo(int amount = 0)
-        {
-            WeaponAttributes.DecreaseDurability();
-            _ammoInMagazine -= amount;
-            if (_ammoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();
-        }
-
-        public float GetAttributeValue(AttributeType attributeType)
-        {
-            return WeaponAttributes.Get(attributeType).CurrentValue();
-        }
-
-        public int Capacity()
-        {
-            return (int) WeaponAttributes.Get(AttributeType.Capacity).CurrentValue();
-        }
+        public float GetAttributeValue(AttributeType attributeType) => WeaponAttributes.Get(attributeType).CurrentValue();
 
         public void SetName()
         {
             string quality = Quality().ToString();
-            Name = quality + " " + WeaponAttributes.GetName();
+            Name = quality + " " + WeaponAttributes.GetWeaponClass();
         }
 
-        public string GetWeaponType()
-        {
-            return WeaponAttributes.WeaponType.ToString();
-        }
+        public string GetWeaponType() => WeaponAttributes.WeaponType.ToString();
 
-        public void Reload(Inventory inventory = null)
-        {
-            _ammoInMagazine = (int) WeaponAttributes.Capacity.CurrentValue();
-        }
+        public override string GetSummary() => Helper.Round(WeaponAttributes.DPS(), 1) + "DPS";
 
-        public bool FullyLoaded()
-        {
-            return GetRemainingAmmo() == (int) WeaponAttributes.Capacity.CurrentValue();
-        }
+        public int GetUpgradeCost() => (int) (WeaponAttributes.Durability.CurrentValue() * 10 + 100);
 
-        public bool Empty()
-        {
-            return GetRemainingAmmo() == 0;
-        }
+        public bool Inscribable() => Quality() == ItemQuality.Shining;
 
-        public int GetRemainingAmmo()
+        public BaseWeaponBehaviour InstantiateWeaponBehaviour(CharacterCombat player)
         {
-            return _ammoInMagazine;
-        }
-
-        public override string GetSummary()
-        {
-            return Helper.Round(WeaponAttributes.DPS(), 1) + "DPS";
-        }
-
-        public int GetUpgradeCost()
-        {
-            return (int) (WeaponAttributes.Durability.CurrentValue() * 10 + 100);
-        }
-
-        public bool Inscribable()
-        {
-            return Quality() == ItemQuality.Shining;
+            BaseWeaponBehaviour weaponBehaviour;
+            switch (WeaponAttributes.GetWeaponClass())
+            {
+                case WeaponClassType.Shortshooter:
+                    weaponBehaviour = player.gameObject.AddComponent<DoubleFireInstant>();
+                    break;
+//                case WeaponClassType.Voidwalker:
+//                    break;
+                case WeaponClassType.Skullcrusher:
+                    weaponBehaviour = player.gameObject.AddComponent<DoubleFireDelay>();
+                    break;
+                case WeaponClassType.Spitter:
+                    weaponBehaviour = player.gameObject.AddComponent<Burstfire>();
+                    break;
+                case WeaponClassType.Spewer:
+                    weaponBehaviour = player.gameObject.AddComponent<AttributeGainer>();
+                    break;
+                case WeaponClassType.Breacher:
+                    weaponBehaviour = player.gameObject.AddComponent<AttributeGainer>();
+                    break;
+                case WeaponClassType.Annihilator:
+                    weaponBehaviour = player.gameObject.AddComponent<RandomFire>();
+                    break;
+                default:
+                    weaponBehaviour = player.gameObject.AddComponent<DefaultBehaviour>();
+                    break;
+            }
+            weaponBehaviour.Initialise(player.Weapon());
+            return weaponBehaviour;
         }
     }
 }

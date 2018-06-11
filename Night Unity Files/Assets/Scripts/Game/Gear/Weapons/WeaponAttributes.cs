@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml;
+﻿using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
-using UnityEditor;
-using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Gear.Weapons
 {
     public class WeaponAttributes : AttributeContainer
     {
-        private int MaxDurability;
+        private readonly int MaxDurability;
         private const float MinDurabilityMod = 0.75f;
         public readonly Number Durability;
         private float _dps;
@@ -27,7 +21,8 @@ namespace Game.Gear.Weapons
         public string ModifierName, ModifierDescription;
         public CharacterAttribute PierceChance, BurnChance, BleedChance, SicknessChance;
 
-        public string WeaponClassName, WeaponClassDescription;
+        public WeaponClassType WeaponClassName;
+        public string WeaponClassDescription;
         public WeaponType WeaponType;
 
         public WeaponAttributes(Weapon weapon)
@@ -71,6 +66,7 @@ namespace Game.Gear.Weapons
             RecalculateAttributeValues();
         }
 
+
         public void SetInscription(Inscription inscription)
         {
 //            inscription.ApplyToGear(this);
@@ -79,10 +75,7 @@ namespace Game.Gear.Weapons
 //            RecalculateAttributeValues();
         }
 
-        public string GetName()
-        {
-            return WeaponClassName;
-        }
+        public WeaponClassType GetWeaponClass() => WeaponClassName;
 
         public void RecalculateAttributeValues()
         {
@@ -102,47 +95,41 @@ namespace Game.Gear.Weapons
             _dps = magazineDamage / magazineDuration;
         }
 
-        public float DPS()
-        {
-            return _dps;
-        }
+        public float DPS() => _dps;
 
         protected override void CacheAttributes()
         {
             Damage = new CharacterAttribute(this, AttributeType.Damage, 0);
-            Accuracy = new CharacterAttribute(this,AttributeType.Accuracy, 0, 0, 100);
-            FireRate = new CharacterAttribute(this,AttributeType.FireRate, 0);
-            ReloadSpeed = new CharacterAttribute(this,AttributeType.ReloadSpeed, 0);
-            Handling = new CharacterAttribute(this,AttributeType.Handling, 0);
+            Accuracy = new CharacterAttribute(this, AttributeType.Accuracy, 0, 0, 100);
+            FireRate = new CharacterAttribute(this, AttributeType.FireRate, 0);
+            ReloadSpeed = new CharacterAttribute(this, AttributeType.ReloadSpeed, 0);
+            Handling = new CharacterAttribute(this, AttributeType.Handling, 0);
 
-            Capacity = new CharacterAttribute(this,AttributeType.Capacity, 0);
-            Pellets = new CharacterAttribute(this,AttributeType.Pellets, 0);
+            Capacity = new CharacterAttribute(this, AttributeType.Capacity, 0);
+            Pellets = new CharacterAttribute(this, AttributeType.Pellets, 0);
 
-            BurnChance = new CharacterAttribute(this,AttributeType.BurnChance, 0);
-            BleedChance = new CharacterAttribute(this,AttributeType.BleedChance, 0);
-            PierceChance = new CharacterAttribute(this,AttributeType.PierceChance, 0);
-            SicknessChance = new CharacterAttribute(this,AttributeType.SicknessChance, 0);
+            BurnChance = new CharacterAttribute(this, AttributeType.BurnChance, 0);
+            BleedChance = new CharacterAttribute(this, AttributeType.BleedChance, 0);
+            PierceChance = new CharacterAttribute(this, AttributeType.PierceChance, 0);
+            SicknessChance = new CharacterAttribute(this, AttributeType.SicknessChance, 0);
         }
 
-        public string Print()
-        {
-            return WeaponType + " " + WeaponClassName + " " + ModifierName
-                   + "\nDurability: " + Durability.CurrentValue() + " (" + DurabilityModifier + ")"
-                   + "\nDPS: " + DPS()
-                   + "\nAutomatic: " + Automatic
-                   + "\nCapacity:   " + Capacity.CurrentValue()
-                   + "\nPellets:    " + Pellets.CurrentValue()
-                   + "\nDamage:     " + Damage.CurrentValue()
-                   + "\nFire Rate:  " + FireRate.CurrentValue()
-                   + "\nReload:     " + ReloadSpeed.CurrentValue()
-                   + "\nAccuracy: " + Accuracy.CurrentValue()
-                   + "\n" + WeaponClassDescription?.Replace("\n", " ")
-                   + "\n" + ModifierDescription?.Replace("\n", " ") + "\n\n";
-        }
+        public string Print() => WeaponType + " " + WeaponClassName + " " + ModifierName
+                                 + "\nDurability: " + Durability.CurrentValue() + " (" + DurabilityModifier + ")"
+                                 + "\nDPS: " + DPS()
+                                 + "\nAutomatic: " + Automatic
+                                 + "\nCapacity:   " + Capacity.CurrentValue()
+                                 + "\nPellets:    " + Pellets.CurrentValue()
+                                 + "\nDamage:     " + Damage.CurrentValue()
+                                 + "\nFire Rate:  " + FireRate.CurrentValue()
+                                 + "\nReload:     " + ReloadSpeed.CurrentValue()
+                                 + "\nAccuracy: " + Accuracy.CurrentValue()
+                                 + "\n" + WeaponClassDescription?.Replace("\n", " ")
+                                 + "\n" + ModifierDescription?.Replace("\n", " ") + "\n\n";
 
         public void DecreaseDurability()
         {
-            float durabilityLoss = (Damage.CurrentValue() * Pellets.CurrentValue()) / ReloadSpeed.CurrentValue();
+            float durabilityLoss = Damage.CurrentValue() * Pellets.CurrentValue() / ReloadSpeed.CurrentValue();
             durabilityLoss /= 200f;
             Durability.Decrement(durabilityLoss);
             RecalculateAttributeValues();
@@ -150,7 +137,6 @@ namespace Game.Gear.Weapons
 
         public void IncreaseDurability()
         {
-            
         }
     }
 }

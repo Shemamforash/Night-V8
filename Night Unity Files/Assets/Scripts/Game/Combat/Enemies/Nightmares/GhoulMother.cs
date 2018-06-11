@@ -1,5 +1,4 @@
-﻿using Game.Combat.Generation;
-using UnityEngine;
+﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 
 namespace Game.Combat.Enemies.Nightmares
 {
@@ -10,24 +9,9 @@ namespace Game.Combat.Enemies.Nightmares
         private const float GhoulCooldownMax = 10f;
         private float _ghoulCooldown;
 
-        public override void Update()
+        public void Awake()
         {
-            base.Update();
-            _ghoulCooldown -= Time.deltaTime;
-            if (_ghoulCooldown > 0) return;
-            _ghoulCooldown = GhoulCooldownMax;
-            ReleaseGhouls();
-        }
-
-        private void ReleaseGhouls()
-        {
-            int ghoulsToRelease = Random.Range(MinGhoulsReleased + 1, MaxGhoulsReleased + 1);
-            for (int i = MinGhoulsReleased; i < ghoulsToRelease; ++i)
-            {
-                Cell c = PathingGrid.GetCellNearMe(CurrentCell(), 2f);
-                EnemyBehaviour ghoul = CombatManager.QueueEnemyToAdd(EnemyType.Ghoul);
-                ghoul.gameObject.transform.position = c.Position;
-            }
+            gameObject.AddComponent<Spawn>().Initialise(EnemyType.Ghoul, GhoulCooldownMax, MinGhoulsReleased, MaxGhoulsReleased);
         }
     }
 }

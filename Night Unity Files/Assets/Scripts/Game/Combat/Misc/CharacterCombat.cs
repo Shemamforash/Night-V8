@@ -188,6 +188,12 @@ namespace Game.Combat.Misc
             KnockedBack = false;
         }
 
+        public virtual void ApplyShotEffects(Shot s)
+        {
+
+        }
+
+
         public abstract Weapon Weapon();
 
         //FIRING
@@ -225,7 +231,7 @@ namespace Game.Combat.Misc
 
         private bool Moving() => _rigidbody.velocity == Vector2.zero;
 
-        public float GetAccuracyModifier() => Recoil.CurrentValue();
+        public virtual float GetAccuracyModifier() => Recoil.CurrentValue();
 
         private void UpdateRecoil()
         {

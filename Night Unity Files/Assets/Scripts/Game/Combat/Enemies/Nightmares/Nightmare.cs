@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using UnityEngine;
@@ -58,10 +59,10 @@ namespace Game.Combat.Enemies.Nightmares
             foreach (CharacterCombat c in charactersInRange)
             {
                 if (maxDraw == 0) return;
-                Ghoul g = c as Ghoul;
-                if (g == null) continue;
+                LifeDrain drain = c.GetComponent<LifeDrain>();
+                if (drain == null) continue;
                 --maxDraw;
-                g.StartDrawLife(this);
+                drain.StartDrawLife(this);
                 Immobilised(true);
                 ++_drawLifeCount;
             }

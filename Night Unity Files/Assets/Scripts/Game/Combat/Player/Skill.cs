@@ -2,6 +2,7 @@
 using System.Xml;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
+using Game.Combat.Ui;
 using SamsHelper;
 using UnityEngine;
 
@@ -73,7 +74,7 @@ namespace Game.Combat.Player
         public void Activate()
         {
             OnFire();
-            CombatManager.Player().UpdateMagazineUi();
+            UIMagazineController.UpdateMagazineUi();
             if (_waitForReload) CombatManager.Player().OnReloadAction += StartOnReload;
         }
 

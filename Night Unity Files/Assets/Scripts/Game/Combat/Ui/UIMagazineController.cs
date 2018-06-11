@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using Game.Combat.Generation;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
-using TMPro;
 using UnityEngine;
 
 namespace Game.Combat.Ui
@@ -13,7 +11,7 @@ namespace Game.Combat.Ui
         private static Transform _magazineContent;
         private static readonly List<Ammo> MagazineAmmo = new List<Ammo>();
         private static int _capacity;
-        private static Weapon _weapon;
+        private static BaseWeaponBehaviour _weapon;
         private static bool _empty;
 
         public void Awake()
@@ -22,13 +20,30 @@ namespace Game.Combat.Ui
             _ammoPrefab = Resources.Load("Prefabs/Combat/Ammo Prefab") as GameObject;
         }
 
-        public static void UpdateMagazine(int remaining = -1)
+        public static void UpdateMagazineUi()
+        {
+            string magazineMessage = "";
+            if (_weapon.Empty())
+            {
+                magazineMessage = "RELOAD";
+            }
+
+            if (magazineMessage == "")
+            {
+                UpdateMagazine();
+            }
+            else
+            {
+                EmptyMagazine();
+            }
+        }
+
+        private static void UpdateMagazine(int remaining = -1)
         {
             if (remaining == -1) remaining = _weapon.GetRemainingAmmo();
             for (int i = 0; i < MagazineAmmo.Count; ++i) MagazineAmmo[i].SetUnspent(i < remaining);
             _empty = false;
         }
-
 
         public static void EmptyMagazine()
         {
@@ -43,11 +58,11 @@ namespace Game.Combat.Ui
             UpdateMagazine(newCapacity);
         }
 
-        public static void SetWeapon(Weapon weapon)
+        public static void SetWeapon(BaseWeaponBehaviour weapon)
         {
             _weapon = weapon;
             if (weapon == null) return;
-            _capacity = (int) weapon.WeaponAttributes.Capacity.CurrentValue();
+            _capacity = weapon.Capacity();
             MagazineAmmo.ForEach(a => a.Destroy());
             MagazineAmmo.Clear();
             for (int i = 0; i < _capacity; ++i)

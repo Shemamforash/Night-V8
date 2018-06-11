@@ -27,6 +27,28 @@ namespace Game.Gear.Weapons
             return GenerateWeapon(quality, new List<WeaponType> {type});
         }
 
+        public static Weapon GenerateWeapon(ItemQuality quality, WeaponClassType type)
+        {
+            LoadBaseWeapons();
+            WeaponClass weaponClass = null;
+
+            foreach (KeyValuePair<WeaponType, List<WeaponClass>> keyValuePair in WeaponClasses)
+            {
+                foreach (WeaponClass w in keyValuePair.Value)
+                {
+                    if (w.Name == type)
+                    {
+                        weaponClass = w;
+                    }
+                }
+            }
+
+            Weapon weapon = weaponClass.CreateWeapon(quality);
+            WorldEventManager.GenerateEvent(new WeaponFindEvent(weapon.Name));
+            weapon.SetName();
+            return weapon;
+        }
+
         public static Weapon GenerateWeapon(ItemQuality quality, List<WeaponType> weaponsWanted = null)
         {
             LoadBaseWeapons();
@@ -59,8 +81,6 @@ namespace Game.Gear.Weapons
             {
                 WeaponClasses[type] = new List<WeaponClass>();
                 XmlNode classNode = classesNode.SelectSingleNode("Class[@name='" + type + "']");
-                int ammoCost = int.Parse(classNode.Attributes["ammoCost"].Value);
-
                 foreach (XmlNode subtypeNode in classNode.SelectNodes("Subtype"))
                 {
                     bool automatic = subtypeNode.Attributes["automatic"].Value == "True";
@@ -71,8 +91,7 @@ namespace Game.Gear.Weapons
                     int accuracy = int.Parse(subtypeNode.SelectSingleNode("Accuracy").InnerText);
                     int handling = int.Parse(subtypeNode.SelectSingleNode("Handling").InnerText);
                     int capacity = int.Parse(subtypeNode.SelectSingleNode("Capacity").InnerText);
-                    int pellets = int.Parse(subtypeNode.SelectSingleNode("Pellets").InnerText);
-                    WeaponClass weapon = new WeaponClass(type, name, automatic, ammoCost, damage, fireRate, reloadSpeed, accuracy, handling, capacity, pellets);
+                    WeaponClass weapon = new WeaponClass(type, name, automatic, damage, fireRate, reloadSpeed, accuracy, handling, capacity);
                     WeaponClasses[type].Add(weapon);
                 }
             }

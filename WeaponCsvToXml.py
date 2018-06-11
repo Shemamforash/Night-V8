@@ -16,18 +16,16 @@ class XMLWriter:
 
 class WeaponImporter(XMLWriter):
     def __init__(self):
-        super(WeaponImporter, self).__init__("Weapon Data V4", "WeaponClasses")
+        super(WeaponImporter, self).__init__("Weapon Data V5", "WeaponClasses")
         write_tag(self, "Weapons", self.read_weapon_classes)
 
     def write_weapon_stats(self, row):
-        write_single_value(self, "Damage", "+" + get_value(self, "L", row))
-        write_single_value(self, "Range", "+" + get_value(self, "M", row))
-        write_single_value(self, "FireRate", "+" + get_value(self, "N", row))
-        write_single_value(self, "ReloadSpeed", "+" + get_value(self, "O", row))
-        write_single_value(self, "Accuracy", "+" + get_value(self, "P", row))
-        write_single_value(self, "Handling", "+" + get_value(self, "Q", row))
-        write_single_value(self, "Capacity", "+" + get_value(self, "R", row))
-        write_single_value(self, "Pellets", "+" + get_value(self, "S", row))
+        write_single_value(self, "Damage", get_value(self, "D", row))
+        write_single_value(self, "FireRate", get_value(self, "E", row))
+        write_single_value(self, "ReloadSpeed", get_value(self, "F", row))
+        write_single_value(self, "Accuracy", get_value(self, "G", row))
+        write_single_value(self, "Handling", get_value(self, "H", row))
+        write_single_value(self, "Capacity", get_value(self, "I", row))
 
     def read_weapon_subtypes(self, subtype_row):
         for i in range(0, 3):
@@ -37,11 +35,10 @@ class WeaponImporter(XMLWriter):
                       [subtype_name, automatic])
 
     def read_weapon_classes(self):
-        for row_no in range(3, 8):
-            weapon_class = get_value(self, "A", row_no)
-            magazine_cost = get_value(self, "N", row_no)
-            write_tag(self, "Class", self.read_weapon_subtypes, [row_no * 3 + 2], ["name", "ammoCost"],
-                      [weapon_class, magazine_cost])
+        for row_no in range(1, 6):
+            weapon_class = get_value(self, "A", row_no * 3)
+            write_tag(self, "Class", self.read_weapon_subtypes, [row_no * 3], ["name"],
+                      [weapon_class])
 
 
 class RecipeImporter(XMLWriter):
@@ -306,14 +303,14 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-# WeaponImporter()
+WeaponImporter()
 # GearImporter()
 # WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
 # RecipeImporter()
-ResourceImporter()
+# ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
 # TraitImporter()

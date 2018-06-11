@@ -17,8 +17,8 @@ namespace Game.Combat.Misc
 
         [Range(1, 20)] public int Durability;
 
-        public bool ManualOnly;
-        public bool Smg = true, Lmg = true, Rifle = true, Pistol = true, Shotgun = true;
+//        public bool Smg = true, Lmg = true, Rifle = true, Pistol = true, Shotgun = true;
+        public WeaponClassType WeaponClass;
 
         public void Start()
         {
@@ -31,21 +31,13 @@ namespace Game.Combat.Misc
         {
             _playerCharacter = CharacterManager.GenerateRandomCharacter();
             _playerCharacter.Inventory().AddTestingResources(5);
-            List<WeaponType> weaponsWanted = new List<WeaponType>();
-            if (_instance.Smg) weaponsWanted.Add(WeaponType.SMG);
-            if (_instance.Lmg) weaponsWanted.Add(WeaponType.LMG);
-            if (_instance.Rifle) weaponsWanted.Add(WeaponType.Rifle);
-            if (_instance.Pistol) weaponsWanted.Add(WeaponType.Pistol);
-            if (_instance.Shotgun) weaponsWanted.Add(WeaponType.Shotgun);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Radiant, weaponsWanted);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Radiant, _instance.WeaponClass);
             weapon.WeaponAttributes.SetDurability(_instance.Durability);
             _playerCharacter.EquipWeapon(weapon);
-            weapon.Reload(_playerCharacter.Inventory());
-
             CharacterManager.SelectedCharacter = _playerCharacter;
             Region node = new Region();
-            node.SetRegionType(RegionType.Danger);
-//            node.SetRegionType(RegionType.Nightmare);
+//            node.SetRegionType(RegionType.Danger);
+            node.SetRegionType(RegionType.Nightmare);
             node.Position = Vector2.zero;
             _playerCharacter.TravelAction.SetCurrentNode(node);
             _playerCharacter.Inventory().Print();

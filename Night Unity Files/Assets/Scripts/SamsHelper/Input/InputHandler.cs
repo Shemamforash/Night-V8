@@ -7,7 +7,7 @@ namespace SamsHelper.Input
 {
     public class InputHandler : MonoBehaviour
     {
-        private const float _doubleTapDuration = 300;
+        private const float DoubleTapDuration = 0.3f;
         private readonly Dictionary<InputAxis, InputPress> _inputPressList = new Dictionary<InputAxis, InputPress>();
         private static readonly List<IInputListener> InputListeners = new List<IInputListener>();
         private static readonly List<IInputListener> ListenersToAdd = new List<IInputListener>();
@@ -104,7 +104,7 @@ namespace SamsHelper.Input
             private float _directionAtLastPress;
             private float _lastInputValue, _currentInputValue;
             private bool _pressed;
-            private long _timeAtLastPress;
+            private float _timeAtLastPress;
 
             public InputPress(InputAxis axis)
             {
@@ -113,9 +113,9 @@ namespace SamsHelper.Input
 
             private void CheckDoubleTap()
             {
-                long currentTime = Helper.TimeInMillis();
+                float currentTime = Helper.TimeInSeconds();
                 float timeBetweenClicks = currentTime - _timeAtLastPress;
-                if (timeBetweenClicks < _doubleTapDuration && Helper.ValuesHaveSameSign(_directionAtLastPress, _currentInputValue))
+                if (timeBetweenClicks < DoubleTapDuration && Helper.ValuesHaveSameSign(_directionAtLastPress, _currentInputValue))
                 {
                     BroadCastDoubleTap(_axis, _directionAtLastPress);
                     currentTime = 0;

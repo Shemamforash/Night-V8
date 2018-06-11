@@ -2,10 +2,10 @@
 using Facilitating.Persistence;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
-using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Persistence;
+
 namespace Game.Characters
 {
     public abstract class Character : MyGameObject
@@ -43,7 +43,6 @@ namespace Game.Characters
             Weapon?.Unequip();
             weapon.Equip(this);
             Weapon = weapon;
-            Weapon.Reload(Inventory());
         }
 
         public virtual void EquipAccessory(Accessory accessory)
@@ -53,9 +52,6 @@ namespace Game.Characters
             Accessory = accessory;
         }
 
-        public Inventory Inventory()
-        {
-            return CharacterInventory;
-        }
+        public Inventory Inventory() => CharacterInventory;
     }
 }

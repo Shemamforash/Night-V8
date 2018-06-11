@@ -27,7 +27,6 @@ namespace Game.Combat.Player
         private EnemyBehaviour _currentTarget;
         private float _damageModifier, _skillCooldownModifier;
         private Cooldown _dashCooldown;
-        private bool _fired;
         private int _initialArmour;
         private Transform _pivot;
         private Quaternion _lastTargetRotation;
@@ -51,31 +50,38 @@ namespace Game.Combat.Player
                 Dash(direction);
                 _dashPressed = false;
             }
-            else base.Move(direction);
+            else
+            {
+                base.Move(direction);
+            }
         }
 
         private void SetInCombat(bool inCombat)
         {
             _inCombat = inCombat;
-            if (_inCombat) PlayerUi.Instance().Show();
-            else PlayerUi.Instance().Hide();
+            if (_inCombat)
+            {
+                PlayerUi.Instance().Show();
+            }
+            else
+            {
+                PlayerUi.Instance().Hide();
+            }
         }
 
-        public bool InCombat()
-        {
-            return _inCombat;
-        }
+        public bool InCombat() => _inCombat;
 
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
             if (IsImmobilised) return;
             if (isHeld)
+            {
                 switch (axis)
                 {
                     case InputAxis.Fire:
                         if (CombatManager.EnemiesOnScreen().Count == 0) UiAreaInventoryController.SetNearestContainer(_lastNearestContainer);
-                        if (_inCombat && (!_fired || Player.Weapon.WeaponAttributes.Automatic)) FireWeapon();
+                        if (_inCombat) FireWeapon();
                         break;
                     case InputAxis.Horizontal:
                         Move(direction * transform.right);
@@ -96,7 +102,9 @@ namespace Game.Combat.Player
 
                         break;
                 }
+            }
             else
+            {
                 switch (axis)
                 {
                     case InputAxis.Fire:
@@ -124,6 +132,7 @@ namespace Game.Combat.Player
                         _dashPressed = true;
                         break;
                 }
+            }
         }
 
         private void SwitchUi()
@@ -135,7 +144,7 @@ namespace Game.Combat.Player
             switch (axis)
             {
                 case InputAxis.Fire:
-                    _fired = false;
+                    _weaponBehaviour.EndFiring();
                     break;
                 case InputAxis.SwitchTab:
                     _rotateSpeedCurrent = 0f;
@@ -167,8 +176,14 @@ namespace Game.Combat.Player
 
         private void LockTarget()
         {
-            if (_lockedTarget == null) _lockedTarget = GetTarget();
-            else _lockedTarget = null;
+            if (_lockedTarget == null)
+            {
+                _lockedTarget = GetTarget();
+            }
+            else
+            {
+                _lockedTarget = null;
+            }
         }
 
         private const float RotateSpeedMax = 90;
@@ -273,6 +288,7 @@ namespace Game.Combat.Player
             InputHandler.SetCurrentListener(this);
 
             Player = CharacterManager.SelectedCharacter;
+            _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             ArmourController = Player.ArmourController;
             _damageModifier = Player.Attributes.CalculateDamageModifier();
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
@@ -304,10 +320,18 @@ namespace Game.Combat.Player
             HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue());
 
             SkillBar.BindSkills(Player);
-            UIMagazineController.SetWeapon(Weapon());
+            UIMagazineController.SetWeapon(_weaponBehaviour);
             SetInCombat(false);
             transform.position = PathingGrid.FindCellToAttackPlayer(CurrentCell(), PathingGrid.CombatAreaWidth, PathingGrid.CombatAreaWidth - 4).Position;
         }
+
+        public override float GetAccuracyModifier()
+        {
+            if (_weaponBehaviour is AccuracyGainer) return 1 - base.GetAccuracyModifier();
+            return base.GetAccuracyModifier();
+        }
+
+        private BaseWeaponBehaviour _weaponBehaviour;
 
         protected override void Dash(Vector2 direction)
         {
@@ -315,10 +339,7 @@ namespace Game.Combat.Player
             _dashCooldown.Start();
         }
 
-        private bool CanDash()
-        {
-            return _dashCooldown.Finished() && _dashPressed && !_reloading;
-        }
+        private bool CanDash() => _dashCooldown.Finished() && _dashPressed && !_reloading;
 
         public void TryRetaliate(EnemyBehaviour origin)
         {
@@ -329,7 +350,6 @@ namespace Game.Combat.Player
         {
             base.Knockback(source, force);
             StopReloading();
-            UpdateMagazineUi();
         }
 
         public void SetTarget(EnemyBehaviour e)
@@ -340,22 +360,21 @@ namespace Game.Combat.Player
             EnemyUi.Instance().SetSelectedEnemy(e);
         }
 
-        public override Weapon Weapon()
-        {
-            return Player.Weapon;
-        }
+        public override Weapon Weapon() => Player.Weapon;
 
         public void ExitCombat()
         {
             StopReloading();
-            _fired = false;
         }
 
         //RELOADING
         private void Reload()
         {
+            Debug.Log(_weaponBehaviour.CanReload()  + " " + _weaponBehaviour.FullyLoaded());
+            
             if (_reloadingCoroutine != null) return;
-            if (Player.Weapon.FullyLoaded()) return;
+            if (_weaponBehaviour.FullyLoaded()) return;
+            if (!_weaponBehaviour.CanReload()) return;
             _reloadingCoroutine = StartCoroutine(StartReloading());
         }
 
@@ -363,7 +382,7 @@ namespace Game.Combat.Player
         {
             if (_reloadingCoroutine != null) StopCoroutine(_reloadingCoroutine);
             _reloadingCoroutine = null;
-            UpdateMagazineUi();
+            UIMagazineController.UpdateMagazineUi();
             _reloading = false;
         }
 
@@ -375,7 +394,6 @@ namespace Game.Combat.Player
         {
             float duration = Player.Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
             UIMagazineController.EmptyMagazine();
-            _fired = false;
             OnFireAction = null;
             Retaliate = false;
             _reloading = true;
@@ -398,27 +416,24 @@ namespace Game.Combat.Player
                 yield return null;
             }
 
-            Player.Weapon.Reload(Player.Inventory());
+            _weaponBehaviour.Reload();
             OnReloadAction?.Invoke();
             StopReloading();
         }
 
 
+        public override void ApplyShotEffects(Shot s)
+        {
+            s.SetDamageModifier(_damageModifier);
+            OnFireAction?.Invoke(s);
+        }
+        
         //FIRING
         public void FireWeapon()
         {
             if (_reloading) return;
-            if (Weapon().Empty()) return;
-            List<Shot> shots = Weapon().Fire(this);
-            if (shots.Count == 0) return;
-            shots.ForEach(shot =>
-            {
-                shot.SetDamageModifier(_damageModifier);
-                OnFireAction?.Invoke(shot);
-                shot.Fire();
-            });
-            _fired = true;
-            UpdateMagazineUi();
+            if (!_weaponBehaviour.CanFire()) return;
+            _weaponBehaviour.StartFiring(this);
         }
 
         private bool ShowMuzzleFlash;
@@ -440,24 +455,6 @@ namespace Game.Combat.Player
 
         //MISC
 
-        public void UpdateMagazineUi()
-        {
-            string magazineMessage = "";
-            if (Player.Weapon.Empty())
-                magazineMessage = "RELOAD";
-            if (magazineMessage == "")
-            {
-                UIMagazineController.UpdateMagazine();
-            }
-            else
-            {
-                UIMagazineController.EmptyMagazine();
-            }
-        }
-
-        public override CharacterCombat GetTarget()
-        {
-            return _currentTarget;
-        }
+        public override CharacterCombat GetTarget() => _currentTarget;
     }
 }

@@ -83,7 +83,7 @@ namespace Game.Combat.Player
             Shot s = Shot.Create(CombatManager.Player());
             s.SetBurnChance(1);
             s.Fire();
-            CombatManager.Player().Weapon().ConsumeAmmo(CombatManager.Player().Weapon().GetRemainingAmmo());
+//            CombatManager.Player().Weapon().ConsumeAmmo(CombatManager.Player().Weapon().GetRemainingAmmo());
         }
     }
 
@@ -130,7 +130,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().Weapon().Reload(CombatManager.Player().Player.Inventory());
+//            CombatManager.Player().Weapon().Reload(CombatManager.Player().Player.Inventory());
         }
     }
 

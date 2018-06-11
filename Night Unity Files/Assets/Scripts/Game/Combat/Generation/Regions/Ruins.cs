@@ -14,22 +14,18 @@ namespace Game.Combat.Generation
 
         private class RuinNode
         {
-            private List<Vector2> _topEdge;
             public List<Vector2> RightEdge;
-            private List<Vector2> _leftEdge;
             public List<Vector2> BottomEdge;
             public RuinNode TopNeighbor;
             public RuinNode RightNeighbor;
             public RuinNode BottomNeighbor;
             public RuinNode LeftNeighbor;
-            private readonly int _id;
             public readonly Vector2 Position;
             public bool Visited;
             public readonly int X, Y;
 
-            public RuinNode(int id, Vector3 position, int x, int y)
+            public RuinNode(Vector3 position, int x, int y)
             {
-                _id = id;
                 Position = position;
                 X = x;
                 Y = y;
@@ -57,20 +53,16 @@ namespace Game.Combat.Generation
                 switch (direction)
                 {
                     case Direction.Up:
-                        _topEdge = null;
                         TopNeighbor.BottomEdge = null;
                         break;
                     case Direction.Down:
                         BottomEdge = null;
-                        BottomNeighbor._topEdge = null;
                         break;
                     case Direction.Left:
-                        _leftEdge = null;
                         LeftNeighbor.RightEdge = null;
                         break;
                     case Direction.Right:
                         RightEdge = null;
-                        RightNeighbor._leftEdge = null;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
@@ -82,9 +74,7 @@ namespace Game.Combat.Generation
             public void SetNeighbors(RuinNode topNeighbor, RuinNode rightNeighbor, RuinNode bottomNeighbor, RuinNode leftNeighbor)
             {
                 TopNeighbor = topNeighbor;
-                _topEdge = TopNeighbor?.BottomEdge;
                 LeftNeighbor = leftNeighbor;
-                _leftEdge = LeftNeighbor?.RightEdge;
 
                 RightNeighbor = rightNeighbor;
                 if (RightNeighbor == null) RightEdge = null;
@@ -92,29 +82,6 @@ namespace Game.Combat.Generation
                 if (BottomNeighbor == null) BottomEdge = null;
                 if (RightEdge == null && BottomEdge == null) _nodesWithWalls.Remove(this);
             }
-
-//            public void GenerateBarriers(Ruins ruins)
-//            {
-//                Barrier b;
-//                if (BottomEdge != null)
-//                {
-//                    b = new Barrier(BottomEdge, "Wall " + _id, Position, true);
-//                    ruins.barriers.Add(b);
-//                }
-//
-//                if (RightEdge != null)
-//                {
-//                    b = new Barrier(RightEdge, "Wall " + _id, Position, true);
-//                    ruins.barriers.Add(b);
-//                }
-//
-//                for (int i = 0; i < 4; ++i)
-//                {
-//                    int next = i + 1 == 4 ? 0 : i + 1;
-////                    if (_bottomEdge != null) Debug.DrawLine(_bottomEdge[i] + Position, _bottomEdge[next] + Position, Color.red, 10f);
-////                    if (_rightEdge != null) Debug.DrawLine(_rightEdge[i] + Position, _rightEdge[next] + Position, Color.red, 10f);
-//                }
-//            }
 
             public void SetBottomEdge(List<Vector2> edge)
             {
@@ -140,21 +107,7 @@ namespace Game.Combat.Generation
             {
                 BottomEdge = null;
                 RightEdge = null;
-                _leftEdge = null;
-                _topEdge = null;
                 _nodesWithWalls.Remove(this);
-            }
-
-            public Vector2 RightEdgeVert(int index)
-            {
-                index = 3 - index;
-                return RightEdge[index];
-            }
-
-            public Vector2 BottomEdgeVert(int index)
-            {
-                index = 3 - index;
-                return BottomEdge[index];
             }
         }
 
@@ -178,30 +131,29 @@ namespace Game.Combat.Generation
         private void GenerateCell(int x, int y, int startPos, int width)
         {
             Vector2 cellPosition = new Vector2(x * CellWidth, y * CellWidth);
-            RuinNode n = new RuinNode(GetObjectNumber(), cellPosition, x - startPos, y - startPos);
+            RuinNode n = new RuinNode(cellPosition, x - startPos, y - startPos);
             _nodesWithWalls.Add(n);
             nodes[x - startPos, y - startPos] = n;
 
             List<Vector2> verts = new List<Vector2>();
-            Barrier b;
 
             //bottom
             if (y > -width)
             {
-                verts.Add(new Vector2(0.9f, -1.1f)); //0
-                verts.Add(new Vector2(-0.9f, -1.1f)); //1
-                verts.Add(new Vector2(-0.9f, -0.9f)); //2
-                verts.Add(new Vector2(0.9f, -0.9f)); //3
+                verts.Add(new Vector2(0.8f, -1.2f)); //0
+                verts.Add(new Vector2(-0.8f, -1.2f)); //1
+                verts.Add(new Vector2(-0.8f, -0.8f)); //2
+                verts.Add(new Vector2(0.8f, -0.8f)); //3
                 n.SetBottomEdge(verts);
             }
 
             if (x + 2 >= width) return;
             //right
             verts = new List<Vector2>();
-            verts.Add(new Vector2(1.1f, -0.9f)); //0
-            verts.Add(new Vector2(0.9f, -0.9f)); //1
-            verts.Add(new Vector2(0.9f, 0.9f)); //2
-            verts.Add(new Vector2(1.1f, 0.9f)); //3
+            verts.Add(new Vector2(1.2f, -0.8f)); //0
+            verts.Add(new Vector2(0.8f, -0.8f)); //1
+            verts.Add(new Vector2(0.8f, 0.8f)); //2
+            verts.Add(new Vector2(1.2f, 0.8f)); //3
             n.SetRightEdge(verts);
         }
 
@@ -228,7 +180,7 @@ namespace Game.Combat.Generation
             }
 
             CarvePassages(0, 0);
-            CreateIslands(6);
+            CreateIslands(10);
             while (_nodesWithWalls.Count > 0) CombineWalls();
         }
 
@@ -328,7 +280,7 @@ namespace Game.Combat.Generation
                 bool lastWallRight = false;
                 bool lastWallAbove = false;
 
-                if (_lastWall != null)
+                if (_lastWall != null && lastCell != null)
                 {
                     lastWallRight = (_lastWall[0].x + _lastWall[1].x) / 2f + lastCell.Position.x > (_nextWall[0].x + _nextWall[1].x) / 2f + nextCell.Position.x;
                     lastWallAbove = (_lastWall[0].y + _lastWall[3].y) / 2f + lastCell.Position.y > (_nextWall[0].y + _nextWall[3].y) / 2f + nextCell.Position.y;
@@ -373,6 +325,39 @@ namespace Game.Combat.Generation
             }
 
             _finalShape.Reverse();
+
+//            List<Vector2> shape = new List<Vector2>();
+//            for (int i = 0; i < _finalShape.Count; ++i)
+//            {
+//                Vector2 current = _finalShape[i];
+//                Vector2 next = Helper.NextElement(i, _finalShape);
+//                shape.Add(current);
+//                float distance = Vector2.Distance(current, next);
+//                int numIntervals = Mathf.FloorToInt(distance / 5f);
+//                List<float> intervals = new List<float>();
+//                while (numIntervals > 0)
+//                {
+//                    intervals.Add(Random.Range(0f, 1f));
+//                    --numIntervals;
+//                }
+//
+//                intervals.Sort();
+//                intervals.ForEach(interval =>
+//                {
+//                    Vector2 point = AdvancedMaths.PointAlongLine(current, next, interval);
+//                    shape.Add(point);
+//                });
+//                shape.Add(next);
+//            }
+            //todo perturb me!
+
+//            for (int i = 0; i < shape.Count; i++)
+//            {
+//                Vector2 s = shape[i];
+//                s.x += 0.1f * Mathf.PerlinNoise(s.x, s.y);
+//                s.y += 0.1f * Mathf.PerlinNoise(s.x, s.y);
+//                shape[i] = s;
+//            }
 
             Vector2 centre = Vector2.zero;
             _finalShape.ForEach(v => centre += v);
@@ -454,21 +439,21 @@ namespace Game.Combat.Generation
 
         private void CheckCellsAbove(Action fallback = null)
         {
-            if (nextCell.TopNeighbor.BottomEdge != null)
+            if (nextCell.TopNeighbor?.BottomEdge != null)
             {
                 nextCell = nextCell.TopNeighbor;
                 _nextWall = nextCell.BottomEdge;
                 AddFinalShapePoints(1, 2, 0, 1); //h
                 //Debug.Log("H");
             }
-            else if (nextCell.TopNeighbor.RightEdge != null)
+            else if (nextCell.TopNeighbor?.RightEdge != null)
             {
                 nextCell = nextCell.TopNeighbor;
                 _nextWall = nextCell.RightEdge;
                 AddFinalShapePoints(1, 2, 1, 2); //i
                 //Debug.Log("I");
             }
-            else if (nextCell.TopNeighbor.RightNeighbor.BottomEdge != null)
+            else if (nextCell.TopNeighbor?.RightNeighbor?.BottomEdge != null)
             {
                 nextCell = nextCell.TopNeighbor.RightNeighbor;
                 _nextWall = nextCell.BottomEdge;

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
@@ -11,16 +10,10 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         {
             CacheAttributes();
         }
-        
-        public CharacterAttribute Get(AttributeType type)
-        {
-            return Attributes.ContainsKey(type) ? Attributes[type] : null;
-        }
 
-        public float GetCalculatedValue(AttributeType type)
-        {
-            return Get(type).CurrentValue();
-        }
+        public CharacterAttribute Get(AttributeType type) => Attributes.ContainsKey(type) ? Attributes[type] : null;
+
+        public float GetCalculatedValue(AttributeType type) => Get(type).CurrentValue();
 
         public void AddAttribute(CharacterAttribute a)
         {
