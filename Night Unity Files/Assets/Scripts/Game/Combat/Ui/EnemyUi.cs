@@ -29,6 +29,7 @@ namespace Game.Combat.Ui
             NameText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
             UiHitController = Helper.FindChildWithName<UIHitController>(gameObject, "Cover");
             ActionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Action");
+            SetSelectedEnemy(null);
         }
 
         public void SetSelectedEnemy(EnemyBehaviour enemy)

@@ -44,7 +44,7 @@ namespace Game.Combat.Enemies
             return enemyBehaviour;
         }
 
-        public virtual void Kill()
+        public void Kill()
         {
             IsDead = true;
             //todo register kill

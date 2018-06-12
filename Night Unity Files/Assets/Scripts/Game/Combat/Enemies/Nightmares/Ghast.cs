@@ -10,7 +10,7 @@ namespace Game.Combat.Enemies.Nightmares
             base.Initialise(enemy);
             ChooseNextAction();
             gameObject.AddComponent<Teleport>().Initialise(5);
-            gameObject.AddComponent<Bombardment>();
+            gameObject.AddComponent<Bombardment>().Initialise(3, 7);
         }
 
         public override void ChooseNextAction()

@@ -1,12 +1,12 @@
 ﻿namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 {
-    public class Bombardment : BasicAttackBehaviour
+    public class Bombardment : TimedAttackBehaviour
     {
         private int _projectileCount;
 
-        public void Initialise(float timerInterval, int projectileCount)
+        public void Initialise(float maxTimer, int projectileCount)
         {
-            MaxTimer = timerInterval;
+            Initialise(maxTimer);
             _projectileCount = projectileCount;
         }
 

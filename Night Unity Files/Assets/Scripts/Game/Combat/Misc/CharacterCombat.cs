@@ -33,6 +33,8 @@ namespace Game.Combat.Misc
         protected bool IsImmobilised;
         protected bool KnockedBack;
 
+        protected bool FireImmune, SicknessImmune, DecayImmune;
+
         public float Speed;
 
         public float DistanceToTarget()
@@ -45,15 +47,17 @@ namespace Game.Combat.Misc
 
         public void Burn()
         {
+            if (FireImmune) return;
             if (_burnTicks == 0) _burnDuration = 1;
             _burnTicks = ConditionTicksMax;
             if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StartBurning();
         }
-
+        
         public bool IsBurning() => _burnTicks > 0;
 
         public void Decay()
         {
+            if (DecayImmune) return;
             if (_decayTicks == 0) _decayDuration = 1;
             _decayTicks = ConditionTicksMax;
             if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StartBleeding();
@@ -63,6 +67,7 @@ namespace Game.Combat.Misc
 
         public void Sicken(int stacks = 1)
         {
+            if (SicknessImmune) return;
             _sicknessTicks += stacks;
             if (_sicknessTicks >= SicknessTargetTicks)
             {
@@ -246,44 +251,9 @@ namespace Game.Combat.Misc
 
         public void FixedUpdate()
         {
-//            KeepInBounds();
+            if(_rigidbody == null) Debug.Log(name);
             _rigidbody.AddForce(_forceToadd);
             _forceToadd = Vector2.zero;
-        }
-
-        private void KeepInBounds()
-        {
-            Cell current = CurrentCell();
-            int x = current.XIndex;
-            int y = current.YIndex;
-            int distanceToTop = y;
-            int distanceToBottom = PathingGrid.GridWidth - 1 - y;
-            int distanceToLeft = x;
-            int distanceToRight = PathingGrid.GridWidth - 1 - x;
-            int threshold = 3;
-            float yForceModifier = 1;
-            float xForceModifier = 1;
-
-            if (distanceToTop <= threshold && _forceToadd.y < 0)
-            {
-                yForceModifier = (float) distanceToTop / threshold - 1;
-            }
-            else if (distanceToBottom <= threshold && _forceToadd.y > 0)
-            {
-                yForceModifier = (float) distanceToBottom / threshold - 1;
-            }
-
-            if (distanceToLeft <= threshold && _forceToadd.x < 0)
-            {
-                xForceModifier = (float) distanceToLeft / threshold - 1;
-            }
-            else if (distanceToRight <= threshold && _forceToadd.x > 0)
-            {
-                xForceModifier = (float) distanceToRight / threshold - 1;
-            }
-
-            _forceToadd.x *= Mathf.Clamp(xForceModifier, 0f, 1f);
-            _forceToadd.y *= Mathf.Clamp(yForceModifier, 0f, 1f);
         }
 
         protected virtual void Dash(Vector2 direction)

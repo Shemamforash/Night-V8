@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Game.Characters;
+﻿using Game.Characters;
 using Game.Exploration.Regions;
 using Game.Gear;
 using Game.Gear.Weapons;

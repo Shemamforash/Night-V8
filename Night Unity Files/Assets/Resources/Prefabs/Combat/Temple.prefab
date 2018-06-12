@@ -53,6 +53,7 @@ GameObject:
   - component: {fileID: 4990543117572788}
   - component: {fileID: 198560768201635530}
   - component: {fileID: 199127466839414122}
+  - component: {fileID: 114835886710937396}
   m_Layer: 0
   m_Name: Altar
   m_TagString: Untagged
@@ -125,7 +126,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1992471863193080}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.625, y: -0.5794801, z: 0}
+  m_LocalPosition: {x: -1.7874047, y: 0.96819, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4990543117572788}
@@ -154,13 +155,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1890391365717024}
-  m_LocalRotation: {x: -0, y: -0, z: 0.35858554, w: 0.9334969}
+  m_LocalRotation: {x: -0, y: -0, z: -0.72718614, w: 0.6864403}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4516295771459242}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 42.027}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -93.302}
 --- !u!114 &114443556518787564
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -172,6 +173,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a196bbd5548bb6746a1be532efae1c2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114835886710937396
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1890391365717024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7b4d90d04575a84f8c2f0c3079ea680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RotateSpeed: 5
 --- !u!198 &198560768201635530
 ParticleSystem:
   m_ObjectHideFlags: 1

@@ -13,7 +13,7 @@ public class UiAimController : MonoBehaviour
     public void Awake()
     {
         _lineRenderer = GetComponent<LineRenderer>();
-        _layerMask = ~((1 << 9) | (1 << 13));
+        _layerMask = ~((1 << 9) | (1 << 12));
     }
 
     public void Update()

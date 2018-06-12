@@ -5,5 +5,9 @@
         protected override void Generate()
         {
         }
+
+        protected override void PlaceItems()
+        {
+        }
     }
 }

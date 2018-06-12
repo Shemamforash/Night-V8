@@ -38,10 +38,10 @@ GameObject:
   - component: {fileID: 212512663963840750}
   - component: {fileID: 50151284105191016}
   - component: {fileID: 58716105349068796}
-  - component: {fileID: 114169882414005498}
   - component: {fileID: 96884538727698284}
+  - component: {fileID: 114237934338201166}
   m_Layer: 10
-  m_Name: MaelstromImage
+  m_Name: Decoy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,7 +54,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1974458938391760}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.26517138, y: 1.0718029, z: 0}
+  m_LocalPosition: {x: -16.048882, y: -12.291173, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4780353313822832}
@@ -224,7 +224,7 @@ TrailRenderer:
     generateLightingData: 0
   m_MinVertexDistance: 0.05
   m_Autodestruct: 0
---- !u!114 &114169882414005498
+--- !u!114 &114237934338201166
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}

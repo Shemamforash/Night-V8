@@ -4,25 +4,14 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 {
     public abstract class BasicAttackBehaviour : MonoBehaviour
     {
-        private float _currentTimer;
-        protected float MaxTimer;
         protected bool Paused;
         protected EnemyBehaviour Enemy;
 
-        public void Awake()
+        public virtual void Awake()
         {
             Enemy = GetComponent<EnemyBehaviour>();
         }
         
-        public void Update()
-        {
-            if (Paused) return;
-            _currentTimer += Time.deltaTime;
-            if (_currentTimer < MaxTimer) return;
-            Attack();
-            _currentTimer = 0;
-        }
-
         protected abstract void Attack();
 
         public void PauseOthers()

@@ -316,7 +316,7 @@ namespace Fastlights
 
         private void InsertLineSegments(float from, float to)
         {
-            float angleIncrement = 0.5f;
+            float angleIncrement = 25f;//0.5f;
             if (to < from) to += 360;
             float x, y;
             for (float angle = from; angle < to - angleIncrement; angle += angleIncrement)
@@ -337,12 +337,10 @@ namespace Fastlights
             Vector3[] verts = mesh.vertices;
             for (int i = 1; i < verts.Length; ++i)
             {
-                Vector2 vertex = transform.TransformPoint(verts[i]);
-                Vector2 dir = (_position - vertex).normalized;
-                vertex = dir * Radius;
-                verts[i] = transform.InverseTransformPoint(vertex);
+                float length = verts[i].magnitude;
+                if (length <= Radius) continue;
+                verts[i] = verts[i].normalized * Radius;
             }
-
             mesh.vertices = verts;
         }
 

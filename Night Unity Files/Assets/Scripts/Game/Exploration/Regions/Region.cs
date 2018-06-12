@@ -123,7 +123,7 @@ namespace Game.Exploration.Regions
 //            AddEnemy(EnemyType.Maelstrom, 10);
 //            AddEnemy(EnemyType.Ghast, 10);
 //            AddEnemy(EnemyType.Nightmare, 10);
-            AddEnemy(EnemyType.Revenant, 10);
+//            AddEnemy(EnemyType.Revenant, 10);
 //            AddEnemy(EnemyType.Shadow, 10);
         }
 

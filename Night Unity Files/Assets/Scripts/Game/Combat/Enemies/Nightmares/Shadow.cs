@@ -30,8 +30,6 @@ namespace Game.Combat.Enemies.Nightmares
         public override void Update()
         {
             base.Update();
-            Debug.Log(CurrentAction);
-            Debug.Log(_layingMines);
             if (!_layingMines) return;
             _layMineTimer += Time.deltaTime;
             if (_layMineTimer < LayMineTimerMax) return;

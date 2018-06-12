@@ -57,7 +57,7 @@
     </Enemy>
     <Enemy>
         <Name>Ghoul</Name>
-        <Health>50</Health>
+        <Health>5</Health>
         <Speed>6</Speed>
         <Value>1</Value>
         <WeaponTypes>1</WeaponTypes>
@@ -101,6 +101,13 @@
         <Name>Shadow</Name>
         <Health>300</Health>
         <Speed>6</Speed>
+        <Value>1</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Decoy</Name>
+        <Health>1</Health>
+        <Speed>0</Speed>
         <Value>1</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>

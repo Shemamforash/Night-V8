@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
@@ -16,7 +17,7 @@ namespace Game.Combat.Enemies.Nightmares
         {
             base.Initialise(enemy);
             CurrentAction = SeekPlayer;
-            gameObject.AddComponent<LifeDrain>();
+            gameObject.AddComponent<FeedTarget>();
         }
 
         private void SeekPlayer()
@@ -28,6 +29,16 @@ namespace Game.Combat.Enemies.Nightmares
         public override void Update()
         {
             base.Update();
+            List<CharacterCombat> chars = CombatManager.GetCharactersInRange(transform.position, 1f);
+            Vector2 forceDir = Vector2.zero;
+            chars.ForEach(c =>
+            {
+                if (c == this) return;
+                Vector2 dir = c.transform.position - transform.position;
+                float force = 1 / dir.magnitude;
+                forceDir += -dir * force;
+            });
+            GetComponent<Rigidbody2D>().AddForce(forceDir);
             if (DistanceToTarget() > _distanceToTouch) return;
             GetTarget().Sicken();
             Kill();

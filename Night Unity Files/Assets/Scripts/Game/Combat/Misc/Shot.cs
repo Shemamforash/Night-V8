@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Game.Combat.Enemies;
+using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
@@ -63,7 +64,7 @@ namespace Game.Combat.Misc
         {
             if (_shotParent == null) _shotParent = GameObject.Find("World").transform.Find("Bullets");
             Shot shot = _shotPool.Create(_shotParent);
-            shot.gameObject.layer = 11;
+            shot.gameObject.layer = origin is PlayerCombat ? 16 : 15;
             Vector3 direction = origin.Direction();
             shot.Initialise(origin, direction);
             return shot;
@@ -72,7 +73,7 @@ namespace Game.Combat.Misc
         public static Shot Create(Shot origin)
         {
             Shot shot = _shotPool.Create();
-            shot.gameObject.layer = 11;
+            shot.gameObject.layer = origin.gameObject.layer;
             shot.Initialise(origin);
             return shot;
         }
@@ -136,7 +137,7 @@ namespace Game.Combat.Misc
         private void FixedUpdate()
         {
             if (!_fired || _moving) return;
-            _rigidBody.velocity = _direction * Speed;
+            _rigidBody.velocity = _direction * Speed * Random.Range(0.9f, 1.1f);
             _moving = true;
         }
 

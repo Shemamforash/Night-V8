@@ -157,19 +157,27 @@
                 </e>
                 <e p="Nightmares" t="Include">
                   <e p="BeamController.cs" t="Include" />
+                  <e p="Decoy.cs" t="Include" />
                   <e p="EnemyAttackBehaviours" t="Include">
                     <e p="BasicAttackBehaviour.cs" t="Include" />
                     <e p="Bombardment.cs" t="Include" />
-                    <e p="LifeDrain.cs" t="Include" />
+                    <e p="DamageThresholdAttackBehaviour.cs" t="Include" />
+                    <e p="Feed.cs" t="Include" />
+                    <e p="FeedTarget.cs" t="Include" />
+                    <e p="Heavyshot.cs" t="Include" />
+                    <e p="LeaveFireTrail.cs" t="Include" />
+                    <e p="Shield.cs" t="Include" />
                     <e p="Spawn.cs" t="Include" />
+                    <e p="Split.cs" t="Include" />
                     <e p="Teleport.cs" t="Include" />
+                    <e p="TeleportInOnly.cs" t="Include" />
+                    <e p="TimedAttackBehaviour.cs" t="Include" />
                   </e>
                   <e p="Ghast.cs" t="Include" />
                   <e p="GhastProjectile.cs" t="Include" />
                   <e p="Ghoul.cs" t="Include" />
                   <e p="GhoulMother.cs" t="Include" />
                   <e p="Maelstrom.cs" t="Include" />
-                  <e p="MaelstromImage.cs" t="Include" />
                   <e p="MaelstromShotBehaviour.cs" t="Include" />
                   <e p="Nightmare.cs" t="Include" />
                   <e p="Revenant.cs" t="Include" />
@@ -494,6 +502,7 @@
           <e p="CombatShader.shader" t="Include" />
           <e p="RadialLight.shader" t="Include" />
         </e>
+        <e p="ShrineBehaviour.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />

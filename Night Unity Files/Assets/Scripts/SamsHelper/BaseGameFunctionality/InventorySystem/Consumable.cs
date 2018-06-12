@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
@@ -8,6 +10,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public class Consumable : InventoryItem
     {
         private readonly Tuple<AttributeType, AttributeModifier, float> _effect1, _effect2;
+        private static List<AttributeType> _attributeTypes = null;
         
         public Consumable(ResourceTemplate template, GameObjectType type, Inventory parentInventory = null) : base(template, type, parentInventory)
         {
@@ -38,7 +41,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         
         private AttributeType StringToAttribute(string attributeString)
         {
-            foreach (AttributeType attribute in Enum.GetValues(typeof(AttributeType)))
+            if (_attributeTypes == null) _attributeTypes = Enum.GetValues(typeof(AttributeType)).Cast<AttributeType>().ToList();
+            foreach (AttributeType attribute in _attributeTypes)
             {
                 if (attribute.ToString() == attributeString)
                 {

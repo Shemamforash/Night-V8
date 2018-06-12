@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 {
-    public class LifeDrain : MonoBehaviour
+    public class FeedTarget : MonoBehaviour
     {
         private bool _drawingLife;
-        private Nightmare _target;
+        private Feed _target;
         private ParticleSystem _particles;
         private EnemyBehaviour _enemy;
 
@@ -18,13 +18,13 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             _enemy = GetComponent<EnemyBehaviour>();
         }
         
-        public void StartDrawLife(Nightmare target)
+        public void StartDrawLife(Feed target)
         {
             if (_drawingLife) return;
             StartCoroutine(DrawLife(target));
         }
         
-        private IEnumerator DrawLife(Nightmare target)
+        private IEnumerator DrawLife(Feed target)
         {
             _target = target;
            _enemy.Immobilised(true);

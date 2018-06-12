@@ -370,8 +370,6 @@ namespace Game.Combat.Player
         //RELOADING
         private void Reload()
         {
-            Debug.Log(_weaponBehaviour.CanReload()  + " " + _weaponBehaviour.FullyLoaded());
-            
             if (_reloadingCoroutine != null) return;
             if (_weaponBehaviour.FullyLoaded()) return;
             if (!_weaponBehaviour.CanReload()) return;
@@ -427,7 +425,7 @@ namespace Game.Combat.Player
             s.SetDamageModifier(_damageModifier);
             OnFireAction?.Invoke(s);
         }
-        
+
         //FIRING
         public void FireWeapon()
         {

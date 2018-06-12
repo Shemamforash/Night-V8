@@ -77,7 +77,7 @@ namespace Game.Combat.Generation
             WorldState.Pause();
             _visibilityRange = 5;
             _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
-            GameObject.Find("World").AddComponent<Ruins>().Initialise(_currentRegion);
+            
             switch (_currentRegion.GetRegionType())
             {
                 case RegionType.Shelter:
@@ -89,8 +89,10 @@ namespace Game.Combat.Generation
                 case RegionType.Resource:
                     break;
                 case RegionType.Danger:
+                    GameObject.Find("World").AddComponent<Ruins>().Initialise(_currentRegion);
                     break;
                 case RegionType.Nightmare:
+                    GameObject.Find("World").AddComponent<Nightmare>().Initialise(_currentRegion);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

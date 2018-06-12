@@ -24,7 +24,6 @@ namespace Game.Combat.Misc
             _character = character;
             _healthRemaining.Max = initialHealth;
             _healthRemaining.SetCurrentValue(initialHealth);
-            _healthRemaining.OnMin(character.Kill);
             UpdateHealth();
         }
 
@@ -41,6 +40,7 @@ namespace Game.Combat.Misc
             _healthRemaining.Decrement(amount);
             GetHealthBarController()?.FadeNewHealth();
             OnTakeDamage?.Invoke(amount);
+            if(_healthRemaining.ReachedMin()) _character.Kill();
             UpdateHealth();
 //            (_character as DetailedEnemyCombat)?.UiHitController.RegisterShot();
         }

@@ -22,12 +22,12 @@ TagManager:
   - Barrier
   - Pathing
   - Enemies
-  - Bullets
   - Pickups
   - Fire
-  - 
-  - 
-  - 
+  - EnemyShield
+  - PlayerShield
+  - EnemyBullets
+  - PlayerBullets
   - 
   - 
   - 

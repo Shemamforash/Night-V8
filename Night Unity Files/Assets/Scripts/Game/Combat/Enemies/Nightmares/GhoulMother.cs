@@ -9,8 +9,9 @@ namespace Game.Combat.Enemies.Nightmares
         private const float GhoulCooldownMax = 10f;
         private float _ghoulCooldown;
 
-        public void Awake()
+        public override void Initialise(Enemy enemy)
         {
+            base.Initialise(enemy);
             gameObject.AddComponent<Spawn>().Initialise(EnemyType.Ghoul, GhoulCooldownMax, MinGhoulsReleased, MaxGhoulsReleased);
         }
     }

@@ -13,7 +13,7 @@
         Ghoul,
         GhoulMother,
         Maelstrom,
-        MaelstromImage,
+        Decoy,
         Ghast,
         Nightmare,
         Revenant,

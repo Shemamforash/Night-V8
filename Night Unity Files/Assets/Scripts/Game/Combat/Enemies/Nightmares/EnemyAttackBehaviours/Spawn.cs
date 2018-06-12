@@ -3,18 +3,18 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 {
-    public class Spawn : BasicAttackBehaviour
+    public class Spawn : TimedAttackBehaviour
     {
         private EnemyType _spawnType;
         private int _countMin, _countMax;
-        
+
         public void Initialise(EnemyType spawnType, float maxTimer, int countMin, int countMax = -1)
         {
             if (countMax == -1) countMax = countMin;
             _countMin = countMin;
             _countMax = countMax;
             _spawnType = spawnType;
-            MaxTimer = maxTimer;
+            Initialise(maxTimer);
         }
 
         protected override void Attack()
@@ -23,8 +23,9 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             for (int i = _countMin; i < enemiesToSpawn; ++i)
             {
                 Cell c = PathingGrid.GetCellNearMe(Enemy.CurrentCell(), 2f);
-                EnemyBehaviour ghoul = CombatManager.QueueEnemyToAdd(_spawnType);
-                ghoul.gameObject.transform.position = c.Position;
+                EnemyBehaviour enemy = CombatManager.QueueEnemyToAdd(_spawnType);
+                enemy.gameObject.transform.position = c.Position;
+                enemy.gameObject.AddComponent<Shield>().Initialise(2f);
             }
         }
     }

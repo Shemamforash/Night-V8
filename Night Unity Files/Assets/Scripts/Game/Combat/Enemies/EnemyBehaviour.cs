@@ -4,6 +4,7 @@ using System.Threading;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
+using Game.Exploration.Regions;
 using Game.Gear.Weapons;
 using NUnit.Framework;
 using SamsHelper.Libraries;
@@ -100,10 +101,10 @@ namespace Game.Combat.Enemies
             HealthController.SetInitialHealth(Enemy.Template.Health, this);
 //            if (!(this is Medic || this is Martyr)) SetHealBehaviour();
             transform.SetParent(GameObject.Find("World").transform);
-//            if (CombatManager.Region().GetRegionType() == RegionType.Nightmare)
-//            {
-            SetDistance(Vector2.zero, 4f, 8f);
-//            }
+            if (CombatManager.Region().GetRegionType() == RegionType.Nightmare)
+            {
+//            SetDistance(Vector2.zero, 4f, 8f);
+            }
 //            else
 //            {
 //                SetDistance(CombatManager.Region().Fire.FirePosition, 0.2f, 0.5f);

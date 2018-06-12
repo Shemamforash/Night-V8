@@ -1,26 +1,23 @@
-﻿using System.Collections.Generic;
-using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
-using Game.Combat.Generation;
-using Game.Combat.Misc;
+﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
 {
     public class Nightmare : EnemyBehaviour
     {
-        private bool drawnlife;
-        private const float DrawLifeTimerMax = 5f;
         private const float BeamAttackTimerMax = 7f;
-        private float _drawLifeTimer;
         private float _beamAttackTimer;
-        private int _drawLifeCount;
-        private bool _firing;
-        private bool _drawingLife;
+        private const int HealthLostTarget = 200;
+
+        public override void Initialise(Enemy enemy)
+        {
+            base.Initialise(enemy);
+            gameObject.AddComponent<Feed>().Initialise(HealthLostTarget);
+        }
 
         public override void Update()
         {
             base.Update();
-            UpdateDrawLife();
             UpdateBeamAttack();
         }
 
@@ -34,38 +31,6 @@ namespace Game.Combat.Enemies.Nightmares
 //            BeamController.Create(transform, transform.position + transform.up * 30);
 //            BeamController.Create(transform, transform.position - transform.up * 30);
             _beamAttackTimer = BeamAttackTimerMax;
-        }
-
-        public void DecreaseDrawLifeCount(int health)
-        {
-            HealthController.Heal(health);
-            --_drawLifeCount;
-            if (_drawLifeCount > 0) return;
-            Immobilised(false);
-            _drawLifeTimer = DrawLifeTimerMax;
-        }
-
-        private void UpdateDrawLife()
-        {
-            if (_drawLifeTimer > 0f)
-            {
-                _drawLifeTimer -= Time.deltaTime;
-                return;
-            }
-
-            if (_drawLifeCount > 0) return;
-            List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(transform.position, 5f);
-            int maxDraw = Random.Range(2, 5);
-            foreach (CharacterCombat c in charactersInRange)
-            {
-                if (maxDraw == 0) return;
-                LifeDrain drain = c.GetComponent<LifeDrain>();
-                if (drain == null) continue;
-                --maxDraw;
-                drain.StartDrawLife(this);
-                Immobilised(true);
-                ++_drawLifeCount;
-            }
         }
     }
 }
