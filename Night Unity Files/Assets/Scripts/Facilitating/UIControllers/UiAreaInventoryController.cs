@@ -92,7 +92,7 @@ public class UiAreaInventoryController : Menu, IInputListener
                 break;
             case InputAxis.Reload:
                 SetNearestContainer(null);
-                InputHandler.SetCurrentListener(CombatManager.Player());
+                InputHandler.SetCurrentListener(PlayerCombat.Instance);
                 break;
         }
     }

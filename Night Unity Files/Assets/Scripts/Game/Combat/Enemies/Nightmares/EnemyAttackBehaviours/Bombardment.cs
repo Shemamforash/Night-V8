@@ -4,9 +4,9 @@
     {
         private int _projectileCount;
 
-        public void Initialise(float maxTimer, int projectileCount)
+        public void Initialise(int projectileCount, float maxTimer, float minTimer = -1)
         {
-            Initialise(maxTimer);
+            Initialise(maxTimer, minTimer);
             _projectileCount = projectileCount;
         }
 

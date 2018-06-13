@@ -17,6 +17,7 @@
         Ghast,
         Nightmare,
         Revenant,
-        Shadow
+        Shadow,
+        Drone
     }
 }

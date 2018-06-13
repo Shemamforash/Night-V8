@@ -22,7 +22,7 @@ namespace Game.Combat.Ui
             {
                 Vector2 dropPosition = _lastDropPosition + _direction * FireDropDistance;
                 _lastDropPosition = dropPosition;
-                FireBehaviour.Create(dropPosition, FireDropDistance / 2f, false);
+                FireBehaviour.Create(dropPosition, FireDropDistance / 2f, false, false);
             }
         }
     }

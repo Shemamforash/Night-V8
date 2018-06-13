@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Combat.Generation;
+using Game.Combat.Player;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
@@ -17,7 +18,7 @@ namespace Game.Combat.Enemies.Nightmares
         public override void ChooseNextAction()
         {
             if (_layingMines) return;
-            layMineTarget = PathingGrid.GetCellNearMe(CombatManager.Player().CurrentCell(), 4f);
+            layMineTarget = PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 4f);
             Reposition(layMineTarget, () =>
             {
                 _layingMines = true;

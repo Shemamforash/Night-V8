@@ -7,8 +7,10 @@ Assets/Scenes/Game.unity
 Assets/Scenes/Menu.unity
 Assets/Scenes/Map.unity
 SceneListEnd?
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Bombardment
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Exploration.Ui.MapNodeController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Global.SceneChanger
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.Burstfire
 3a878f0c6a46f916712d4aa77050b43b Assembly-CSharp.dll:SamsHelper.FadeAndDie
 771a5f3656411339072e16946aa58b0a Assembly-CSharp.dll:Game.Combat.Ui.EnemyUi
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
@@ -28,6 +30,7 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 ad02314611040e448fbf4fe973a74d23 Assembly-CSharp.dll:FastLights.LightObstructor
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Misc.FireBehaviour
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SaltBehaviour
+b5da45c8443cc4178e3c87b93def49ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Split
 c727d5d0b81c3630fe97e64e1cb39494 Assembly-CSharp.dll:Facilitating.UIControllers.UIPlayerArmourController
 9c12199ed38452212766e19b6c359a18 Assembly-CSharp.dll:Game.Combat.Enemies.Humans.Witch
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Misc.DecayGrenade
@@ -147,6 +150,7 @@ c5f2762577703967cd758896534233e4 Assembly-CSharp.dll:Facilitating.Audio.ThunderC
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 6020777e7c319c9a8db970f05d7acca0 Assembly-CSharp.dll:Facilitating.SunController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facilitating.UIControllers.UISkillCostController
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.BaseWeaponBehaviour
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facilitating.UIControllers.UiWeaponUpgradeController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Exploration.Ui.UiQuickTravelController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.UiCompassController
@@ -182,15 +186,17 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 a1bfd0c26c825a85049b15428436b455 Assembly-CSharp.dll:.ColourPulse
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Misc.IncendiaryGrenade
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.AccuracyGainer
 6bac750cc0ef4a89dc214e71609990a1 DemiLib.dll:DG.DemiLib.External.DeHierarchyComponent
 755479b05f5f6535481957a884ba75b3 Assembly-CSharp.dll:Game.Exploration.Ui.UIMapController
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Shield
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Exploration.Ui.UiNodeFocusScript
 9c12199ed38452212766e19b6c359a18 Assembly-CSharp.dll:Game.Combat.Enemies.UnarmedBehaviour
+b5da45c8443cc4178e3c87b93def49ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Feed
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.TempleBehaviour
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Exploration.Environment.RoutePlotter
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facilitating.RageBarController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Ui.UIMagazineController
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.UiAimController
 f0bdc1041dee6504f25216b38b2bb3cb TextMeshPro-1.0.55.2017.1.0b12.dll:TMPro.InlineGraphic
 cd5f66d713a060bf891e329290b64cc4 TextMeshPro-1.0.55.2017.1.0b12.dll:TMPro.InlineGraphicManager
 f4bd1aee67eeef7953cce6c44588b3d7 TextMeshPro-1.0.55.2017.1.0b12.dll:TMPro.TextContainer
@@ -221,13 +227,17 @@ d672cee35261f9935d5ce974c746730f TextMeshPro-1.0.55.2017.1.0b12.dll:TMPro.TMP_Te
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
 9c12199ed38452212766e19b6c359a18 Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.Ghast
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.DoubleFireDelay
 0a7edec54342337970813c4bbcc15c90 Assembly-CSharp.dll:Facilitating.Audio.GunFire
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.AttributeGainer
 9c12199ed38452212766e19b6c359a18 Assembly-CSharp.dll:Game.Combat.Enemies.ArmedBehaviour
 f266a453cd4bfbe81533762a3e3589f4 DOTween.dll:DG.Tweening.Core.DOTweenComponent
 0869883b6445f616fc171fe47d5fa3a0 DOTween.dll:DG.Tweening.Core.DOTweenSettings
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Misc.Explosion
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.BulletTrailFade
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.TeleportInOnly
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MaelstromShotBehaviour
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Generation.Shrines.WaveShrine
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Ui.PlayerUi
 9c12199ed38452212766e19b6c359a18 Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.Revenant
 344ec67b331058a4e306b26b1d554b84 Assembly-CSharp.dll:Facilitating.UIControllers.UiGearMenuController
@@ -261,6 +271,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 20951e68be088a07bcc8fd77278a5803 Assembly-CSharp.dll:Facilitating.UI.DayChangeSequence
 f369414f9bba428b3ce53d8bd7c7fb2e Assembly-CSharp.dll:Game.Exploration.Weather.WeatherSystemController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Ui.UIHealthBarController
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Heavyshot
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Exploration.Environment.MapGenerator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
 96d0fbde9fd209878a0a291f82c9bcdd UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.PlaymodeTestsController
@@ -275,6 +286,7 @@ e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.DefaultBehaviour
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Ui.FirePath
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
@@ -284,7 +296,9 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 eac8b4284b21e820b70e2d089ba46a3f DOTweenPro.dll:DG.Tweening.DOTweenPath
 55ea52667834e0e787f572b6ef49bd6a DOTweenPro.dll:DG.Tweening.DOTweenVisualManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facilitating.UI.PermadeathToggler
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Teleport
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facilitating.UIControllers.UIConditionController
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.RandomFire
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Mine
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 755479b05f5f6535481957a884ba75b3 Assembly-CSharp.dll:Game.Global.WorldView
@@ -299,6 +313,7 @@ fe451ee8e9b8cbf8e98b94172c1479df Assembly-CSharp.dll:.Rotate
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facilitating.Persistence.StatsTracker
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.UiCombatRingBoundDrawer
 9c12199ed38452212766e19b6c359a18 Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.Shadow
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Spawn
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Exploration.WorldEvents.WorldEventManager
 77f8cf0d943cf84eea1d6b64657c9c9f Assembly-CSharp.dll:Game.Characters.CharacterView
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Exploration.Environment.PathSegment
@@ -313,27 +328,15 @@ fe451ee8e9b8cbf8e98b94172c1479df Assembly-CSharp.dll:.Rotate
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Exploration.Environment.Path
 34f062794db7bfd49f8ed5894ad15e1b Assembly-CSharp.dll:Game.Combat.Misc.Shot
 feb41be848a2528250dd278d3393f73e Assembly-CSharp.dll:Facilitating.UI.ButtonGroup
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.DoubleFireInstant
 9c12199ed38452212766e19b6c359a18 Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.Ghoul
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Exploration.Environment.FitScreenToRoute
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.FeedTarget
 d274d82f35465203429997c03d409743 Assembly-CSharp.dll:Facilitating.Campfire
 9c12199ed38452212766e19b6c359a18 Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.Nightmare
 c727d5d0b81c3630fe97e64e1cb39494 Assembly-CSharp.dll:Facilitating.UIControllers.UIPlayerAccessoryController
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.BaseWeaponBehaviour
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.DoubleFireDelay
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.DoubleFireInstant
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.Burstfire
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.AttributeGainer
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.RandomFire
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.DefaultBehaviour
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Gear.Weapons.AccuracyGainer
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Bombardment
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Teleport
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.FeedTarget
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Spawn
-b5da45c8443cc4178e3c87b93def49ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Split
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.LeaveFireTrail
-b5da45c8443cc4178e3c87b93def49ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Feed
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Heavyshot
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Shield
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ShrineBehaviour
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.TeleportInOnly
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Generation.Shrines.FireShrine
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Orbit
+9c12199ed38452212766e19b6c359a18 Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Drone
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Beam

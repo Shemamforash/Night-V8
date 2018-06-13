@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Game.Combat.Generation;
+using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -51,7 +52,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 yield return null;
             }
 
-            Cell c = PathingGrid.GetCellNearMe(CombatManager.Player().CurrentCell(), 4);
+            Cell c = PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 4);
             transform.position = c.Position;
             _teleportInParticles.Play();
             SetVisible(true);

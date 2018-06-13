@@ -81,7 +81,6 @@
             <e p="UIControllers" t="Include">
               <e p="HeartBeatController.cs" t="Include" />
               <e p="UiAccessoryController.cs" t="Include" />
-              <e p="UiAimController.cs" t="Include" />
               <e p="UIAmmoDisplayController.cs" t="Include" />
               <e p="UiAreaInventoryController.cs" t="Include" />
               <e p="UIArmourController.cs" t="Include" />
@@ -160,12 +159,15 @@
                   <e p="Decoy.cs" t="Include" />
                   <e p="EnemyAttackBehaviours" t="Include">
                     <e p="BasicAttackBehaviour.cs" t="Include" />
+                    <e p="Beam.cs" t="Include" />
                     <e p="Bombardment.cs" t="Include" />
                     <e p="DamageThresholdAttackBehaviour.cs" t="Include" />
+                    <e p="Drone.cs" t="Include" />
                     <e p="Feed.cs" t="Include" />
                     <e p="FeedTarget.cs" t="Include" />
                     <e p="Heavyshot.cs" t="Include" />
                     <e p="LeaveFireTrail.cs" t="Include" />
+                    <e p="Orbit.cs" t="Include" />
                     <e p="Shield.cs" t="Include" />
                     <e p="Spawn.cs" t="Include" />
                     <e p="Split.cs" t="Include" />
@@ -199,6 +201,11 @@
                   <e p="Labyrinth.cs" t="Include" />
                   <e p="Nightmare.cs" t="Include" />
                   <e p="Ruins.cs" t="Include" />
+                </e>
+                <e p="Shrines" t="Include">
+                  <e p="FireShrine.cs" t="Include" />
+                  <e p="ShrineBehaviour.cs" t="Include" />
+                  <e p="WaveShrine.cs" t="Include" />
                 </e>
                 <e p="Triangulator.cs" t="Include" />
               </e>
@@ -502,7 +509,6 @@
           <e p="CombatShader.shader" t="Include" />
           <e p="RadialLight.shader" t="Include" />
         </e>
-        <e p="ShrineBehaviour.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />

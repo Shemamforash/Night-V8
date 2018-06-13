@@ -53,7 +53,7 @@
     </Class>
     <Class name="Shotgun">
         <Subtype name="Leadspreader" automatic="True">
-            <Damage>3</Damage>
+            <Damage>10</Damage>
             <FireRate>6</FireRate>
             <ReloadSpeed>2.5</ReloadSpeed>
             <Accuracy>20</Accuracy>

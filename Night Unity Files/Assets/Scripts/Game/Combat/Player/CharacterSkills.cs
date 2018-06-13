@@ -77,7 +77,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().ClearConditions();
+            PlayerCombat.Instance.ClearConditions();
 
         }
     }
@@ -90,7 +90,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().HealthController.Heal((int) (DesolationAttributes.PlayerHealthChunkSize / 2f));
+            PlayerCombat.Instance.HealthController.Heal((int) (DesolationAttributes.PlayerHealthChunkSize / 2f));
         }
     }
 
@@ -104,7 +104,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            IncendiaryGrenade.Create(CombatManager.Player().transform.position, CombatManager.Player().GetTarget().transform.position);
+            IncendiaryGrenade.Create(PlayerCombat.Instance.transform.position, PlayerCombat.Instance.GetTarget().transform.position);
         }
     }
 
@@ -116,7 +116,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            Grenade.Create(CombatManager.Player().transform.position, CombatManager.Player().GetTarget().transform.position);
+            Grenade.Create(PlayerCombat.Instance.transform.position, PlayerCombat.Instance.GetTarget().transform.position);
         }
     }
 
@@ -131,7 +131,7 @@ namespace Game.Combat.Player
         protected override void OnFire()
         {
             //todo
-//            CombatManager.Player().CurrentTarget.CurrentAction = CombatManager.Player().CurrentTarget.MoveToPlayer;
+//            PlayerCombat.Instance.CurrentTarget.CurrentAction = PlayerCombat.Instance.CurrentTarget.MoveToPlayer;
         }
     }
 
@@ -143,7 +143,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().Ram(CombatManager.Player().GetTarget(), 200);
+            PlayerCombat.Instance.Ram(PlayerCombat.Instance.GetTarget(), 200);
         }
     }
 
@@ -169,7 +169,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().GetTarget().Sicken(5);
+            PlayerCombat.Instance.GetTarget().Sicken(5);
         }
     }
 
@@ -183,7 +183,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            DecayGrenade.Create(CombatManager.Player().transform.position, CombatManager.Player().GetTarget().transform.position);
+            DecayGrenade.Create(PlayerCombat.Instance.transform.position, PlayerCombat.Instance.GetTarget().transform.position);
         }
     }
 
@@ -195,10 +195,10 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            ArmourController armour = CombatManager.Player().Player.ArmourController;
+            ArmourController armour = PlayerCombat.Instance.Player.ArmourController;
             if(armour.GetCurrentArmour() == 0) return;
             armour.TakeDamage(ArmourPlate.PlateHealthUnit);
-            CombatManager.Player().HealthController.Heal(50);
+            PlayerCombat.Instance.HealthController.Heal(50);
         }
     }
 
@@ -212,8 +212,8 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().HealthController.TakeDamage(DesolationAttributes.PlayerHealthChunkSize);
-            CharacterCombat target = CombatManager.Player().GetTarget();
+            PlayerCombat.Instance.HealthController.TakeDamage(DesolationAttributes.PlayerHealthChunkSize);
+            CharacterCombat target = PlayerCombat.Instance.GetTarget();
             target.Burn();
             target.Decay();
         }
@@ -227,7 +227,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CharacterCombat target = CombatManager.Player().GetTarget();
+            CharacterCombat target = PlayerCombat.Instance.GetTarget();
             if (target.DistanceToTarget() > 0.5f || target.HealthController.GetCurrentHealth() > 100) return;
             target.HealthController.TakeDamage(101);
         }
@@ -243,7 +243,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().Player.ArmourController.Repair(2 * ArmourPlate.PlateHealthUnit);
+            PlayerCombat.Instance.Player.ArmourController.Repair(2 * ArmourPlate.PlateHealthUnit);
         }
     }
 
@@ -270,8 +270,8 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            Cell c = PathingGrid.GetCellNearMe(CombatManager.Player().GetTarget().CurrentCell(), 1f);
-            CombatManager.Player().transform.position = c.Position;
+            Cell c = PathingGrid.GetCellNearMe(PlayerCombat.Instance.GetTarget().CurrentCell(), 1f);
+            PlayerCombat.Instance.transform.position = c.Position;
         }
     }
 
@@ -297,7 +297,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().GetTarget().Decay();
+            PlayerCombat.Instance.GetTarget().Decay();
         }
     }
 
@@ -309,13 +309,13 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CharacterCombat target = CombatManager.Player().GetTarget();
+            CharacterCombat target = PlayerCombat.Instance.GetTarget();
             int healAmount = 0;
             if (target.IsBurning()) healAmount += 10;
             if (target.IsDecaying()) healAmount += 10;
             if (target.IsSick()) healAmount += 10;
             target.ClearConditions();
-            CombatManager.Player().HealthController.Heal(healAmount);
+            PlayerCombat.Instance.HealthController.Heal(healAmount);
         }
     }
 }

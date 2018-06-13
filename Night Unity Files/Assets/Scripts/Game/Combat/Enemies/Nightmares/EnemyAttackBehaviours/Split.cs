@@ -9,7 +9,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
     {
         private EnemyBehaviour _enemy;
         private int _splitCountMin, _splitCountMax;
-        private float _spawnForce;
+        private float _spawnForce = 10;
         private readonly List<EnemyBehaviour> _enemies = new List<EnemyBehaviour>();
         private EnemyType _enemyType;
 
@@ -22,7 +22,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 EnemyBehaviour enemy = _enemyType == EnemyType.Decoy ? Decoy.Create(GetComponent<EnemyBehaviour>()) : CombatManager.QueueEnemyToAdd(_enemyType);
                 Vector2 randomDir = AdvancedMaths.RandomVectorWithinRange(Vector3.zero, 1).normalized;
                 enemy.gameObject.transform.position = transform.position;
-                enemy.GetComponent<Rigidbody2D>().AddForce(randomDir * _spawnForce);
+                enemy.AddForce(randomDir * _spawnForce);
                 _enemies.Add(enemy);
             }
         }

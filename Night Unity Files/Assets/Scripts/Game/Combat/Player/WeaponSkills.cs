@@ -58,7 +58,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            Shot s = Shot.Create(CombatManager.Player());
+            Shot s = Shot.Create(PlayerCombat.Instance);
             s.AddOnHit(() =>
             {
                 for (int i = 0; i < 10; ++i)
@@ -80,10 +80,10 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            Shot s = Shot.Create(CombatManager.Player());
+            Shot s = Shot.Create(PlayerCombat.Instance);
             s.SetBurnChance(1);
             s.Fire();
-//            CombatManager.Player().Weapon().ConsumeAmmo(CombatManager.Player().Weapon().GetRemainingAmmo());
+//            PlayerCombat.Instance.Weapon().ConsumeAmmo(PlayerCombat.Instance.Weapon().GetRemainingAmmo());
         }
     }
 
@@ -114,7 +114,7 @@ namespace Game.Combat.Player
         {
             foreach (EnemyBehaviour e in CombatManager.EnemiesOnScreen())
             {
-                Shot s = Shot.Create(CombatManager.Player());
+                Shot s = Shot.Create(PlayerCombat.Instance);
                 s.Fire();
             }
         }
@@ -130,7 +130,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-//            CombatManager.Player().Weapon().Reload(CombatManager.Player().Player.Inventory());
+//            PlayerCombat.Instance.Weapon().Reload(PlayerCombat.Instance.Player.Inventory());
         }
     }
 
@@ -142,7 +142,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().OnFireAction += s => { s.SetKnockbackForce(25); };
+            PlayerCombat.Instance.OnFireAction += s => { s.SetKnockbackForce(50); };
         }
     }
 
@@ -156,7 +156,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().OnFireAction += s => { CombatManager.Player().FireWeapon(); };
+            PlayerCombat.Instance.OnFireAction += s => { PlayerCombat.Instance.FireWeapon(); };
         }
     }
 
@@ -168,7 +168,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().OnFireAction += s =>
+            PlayerCombat.Instance.OnFireAction += s =>
             {
                 s.AddOnHit(() =>
                 {
@@ -189,7 +189,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().OnFireAction += s => { s.SetBurnChance(1); };
+            PlayerCombat.Instance.OnFireAction += s => { s.SetBurnChance(1); };
         }
     }
 
@@ -201,7 +201,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.Player().Retaliate = true;
+            PlayerCombat.Instance.Retaliate = true;
         }
     }
 }

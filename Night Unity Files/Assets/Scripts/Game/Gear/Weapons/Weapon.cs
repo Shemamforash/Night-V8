@@ -82,7 +82,7 @@ namespace Game.Gear.Weapons
                     weaponBehaviour = player.gameObject.AddComponent<Burstfire>();
                     break;
                 case WeaponClassType.Spewer:
-                    weaponBehaviour = player.gameObject.AddComponent<AttributeGainer>();
+                    weaponBehaviour = player.gameObject.AddComponent<AccuracyGainer>();
                     break;
                 case WeaponClassType.Breacher:
                     weaponBehaviour = player.gameObject.AddComponent<AttributeGainer>();

@@ -171,7 +171,7 @@ namespace Game.Combat.Enemies
                 }
 
                 _weaponBehaviour.StartFiring(this);
-//                if (shots.Any(s => s.DidHit)) CombatManager.Player().TryRetaliate(this);
+//                if (shots.Any(s => s.DidHit)) PlayerCombat.Instance.TryRetaliate(this);
                 if (_weaponBehaviour.Empty())
                 {
                     Reload();

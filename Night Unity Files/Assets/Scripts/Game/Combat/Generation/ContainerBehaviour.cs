@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ namespace Game.Combat.Generation
 
         public void Update()
         {
-            float distanceToPlayer = Vector2.Distance(transform.position, CombatManager.Player().transform.position);
+            float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
             if (distanceToPlayer > 10f)
             {
                 _glowColour.SetAlphaMultiplier(0);
@@ -67,7 +68,7 @@ namespace Game.Combat.Generation
         public void TryReveal()
         {
             if (_revealed) return;
-            float distanceToPlayer = Vector2.Distance(transform.position, CombatManager.Player().transform.position);
+            float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
             if (distanceToPlayer > MinDistanceToReveal) return;
             _revealed = true;
             StartCoroutine(Reveal());

@@ -86,6 +86,11 @@ namespace Game.Combat.Misc
             _forceToadd += direction * ramForce;
         }
 
+        public void AddForce(Vector2 force)
+        {
+            _forceToadd += force;
+        }
+
         public void ClearConditions()
         {
             _decayTicks = 0;
@@ -151,7 +156,7 @@ namespace Game.Combat.Misc
         private int _burnTicks, _decayTicks, _sicknessTicks;
         private float _burnDuration, _decayDuration, _sicknessDuration;
 
-        public Cell CurrentCell() => _currentCell == null ? PathingGrid.WorldToCellPosition(transform.position) : _currentCell;
+        public Cell CurrentCell() => PathingGrid.WorldToCellPosition(transform.position);
 
         protected void SetOwnedByEnemy(float speed)
         {
@@ -210,7 +215,7 @@ namespace Game.Combat.Misc
             IsImmobilised = immobilised;
         }
 
-        public void Awake()
+        public virtual void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
         }

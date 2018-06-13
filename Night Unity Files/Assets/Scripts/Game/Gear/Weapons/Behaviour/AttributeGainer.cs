@@ -25,6 +25,7 @@ namespace Game.Gear.Weapons
 
         public override void EndFiring()
         {
+            base.EndFiring();
             _timeAtFirstFire = 0f;
         }
     }

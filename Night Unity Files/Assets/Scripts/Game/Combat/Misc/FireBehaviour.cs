@@ -19,6 +19,7 @@ namespace Game.Combat.Misc
         private CircleCollider2D _collider;
         private int EmissionRate;
         private static Transform _fireParent;
+        private bool _keepAlive;
 
         public void Awake()
         {
@@ -27,10 +28,12 @@ namespace Game.Combat.Misc
             _collider = GetComponent<CircleCollider2D>();
         }
 
-        public static void Create(Vector3 position, float size, bool lightOn = true)
+        public static FireBehaviour Create(Vector3 position, float size, bool keepAlive = false, bool lightOn = true)
         {
             FireBehaviour fire = GetNewFire();
+            fire._keepAlive = keepAlive;
             fire.StartCoroutine(fire.Burn(position, size, lightOn));
+            return fire;
         }
 
         public void OnTriggerEnter2D(Collider2D other)
@@ -39,22 +42,30 @@ namespace Game.Combat.Misc
             if (character == null) return;
             character.Burn();
         }
-        
+
+        public void LetDie()
+        {
+            _keepAlive = false;
+        }
+
         private IEnumerator Burn(Vector3 position, float size, bool lightOn)
         {
+            transform.position = position;
             EmissionRate = (int) (size * size * MaxEmissionRate);
+            ParticleSystem.EmissionModule emission = _particles.emission;
+            emission.rateOverTime = EmissionRate;
             ParticleSystem.ShapeModule shape = _particles.shape;
             shape.radius = size;
             _collider.radius = size;
             _light.Radius = size * LightMaxRadius;
             _light.gameObject.SetActive(lightOn);
             gameObject.SetActive(true);
-            transform.position = position;
             _age = 0f;
+            while (_keepAlive) yield return null;
             while (_age < LifeTime)
             {
                 float normalisedTime = 1 - _age / LifeTime;
-                ParticleSystem.EmissionModule emission = _particles.emission;
+                emission = _particles.emission;
                 emission.rateOverTime = (int) (normalisedTime * EmissionRate);
                 _light.Colour = new Color(0.6f, 0.1f, 0.1f, 0.6f * normalisedTime * size);
                 _age += Time.deltaTime;
@@ -78,7 +89,7 @@ namespace Game.Combat.Misc
                 if (_firePrefab == null) _firePrefab = Resources.Load<GameObject>("Prefabs/Combat/Fire Area");
                 GameObject fireObject = Instantiate(_firePrefab);
                 if (_fireParent == null) _fireParent = GameObject.Find("Fires").transform;
-                fireObject.transform.SetParent(_fireParent);
+                fireObject.transform.SetParent(_fireParent, false);
                 fireObject.transform.localScale = Vector3.one;
                 return fireObject.GetComponent<FireBehaviour>();
             }

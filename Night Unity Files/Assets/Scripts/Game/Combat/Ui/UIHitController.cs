@@ -1,4 +1,5 @@
 ﻿using Game.Combat.Generation;
+using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,7 +23,7 @@ namespace Game.Combat.Ui
 
         public void Update()
         {
-            float newHeight = MaxHeight * 1 - CombatManager.Player().GetAccuracyModifier();
+            float newHeight = MaxHeight * 1 - PlayerCombat.Instance.GetAccuracyModifier();
             if (_currentShotTime > 0)
             {
                 float rValue = 1 - _currentShotTime / FadeTime;

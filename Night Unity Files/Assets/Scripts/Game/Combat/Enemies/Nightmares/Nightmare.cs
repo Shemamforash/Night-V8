@@ -1,36 +1,31 @@
 ﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+using Game.Combat.Generation;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
 {
     public class Nightmare : EnemyBehaviour
     {
-        private const float BeamAttackTimerMax = 7f;
-        private float _beamAttackTimer;
         private const int HealthLostTarget = 200;
 
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
             gameObject.AddComponent<Feed>().Initialise(HealthLostTarget);
+            gameObject.AddComponent<Bombardment>().Initialise(1, 0.5f, 0.2f);
         }
 
-        public override void Update()
+        public void Start()
         {
-            base.Update();
-            UpdateBeamAttack();
-        }
-
-        private void UpdateBeamAttack()
-        {
-            Immobilised(true);
-            _beamAttackTimer -= Time.deltaTime;
-            if (_beamAttackTimer > 0f) return;
-//            BeamController.Create(transform, transform.position + transform.right * 30);
-//            BeamController.Create(transform, transform.position - transform.right * 30);
-//            BeamController.Create(transform, transform.position + transform.up * 30);
-//            BeamController.Create(transform, transform.position - transform.up * 30);
-            _beamAttackTimer = BeamAttackTimerMax;
+//            int numberOfDrones = Random.Range(2, 5);
+            int numberOfDrones = 1;
+            for (int i = 0; i < numberOfDrones; ++i)
+            {
+                EnemyBehaviour drone = CombatManager.QueueEnemyToAdd(EnemyType.Drone);
+                drone.transform.position = AdvancedMaths.CalculatePointOnCircle(Random.Range(0, 360), 5f, transform.position);
+                ((Drone) drone).SetTarget(transform);
+            }
         }
     }
 }

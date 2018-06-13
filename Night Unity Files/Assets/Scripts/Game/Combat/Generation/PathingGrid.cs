@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -155,7 +156,7 @@ namespace Game.Combat.Generation
         {
             int max = WorldToGridDistance(maxRange);
             int min = WorldToGridDistance(minRange);
-            Cell playerCell = CombatManager.Player().CurrentCell();
+            Cell playerCell = PlayerCombat.Instance.CurrentCell();
             List<Cell> cellsNearPlayer = CellsInRange(playerCell, max, min);
             Cell nearestValidCell = FindNearestCell(cellsNearPlayer, false, currentCell);
             if (nearestValidCell == null) return currentCell;
@@ -177,7 +178,7 @@ namespace Game.Combat.Generation
 
         public static bool IsCellHidden(Cell c)
         {
-            Vector2 currentPlayerPosition = CombatManager.Player().transform.position;
+            Vector2 currentPlayerPosition = PlayerCombat.Instance.transform.position;
             if (_lastPlayerPosition != currentPlayerPosition) _hiddenCells.Clear();
 
             _lastPlayerPosition = currentPlayerPosition;

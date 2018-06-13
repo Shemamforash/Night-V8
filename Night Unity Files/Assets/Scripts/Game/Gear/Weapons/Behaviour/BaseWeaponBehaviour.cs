@@ -29,6 +29,7 @@ namespace Game.Gear.Weapons
         public void Reload()
         {
             AmmoInMagazine = (int) WeaponAttributes.Capacity.CurrentValue();
+            _fired = false;
         }
 
         public bool FullyLoaded() => GetRemainingAmmo() == (int) WeaponAttributes.Capacity.CurrentValue();
@@ -63,7 +64,7 @@ namespace Game.Gear.Weapons
 
         public bool CanReload()
         {
-            return !_fired;
+            return !_fired || Empty();
         }
 
         protected void Fire(CharacterCombat origin)

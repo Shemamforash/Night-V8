@@ -1,4 +1,5 @@
 ﻿using Game.Combat.Generation;
+using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -25,7 +26,7 @@ public class SaltBehaviour : MonoBehaviour
 
     public void Update()
     {
-        Vector2 directionToPlayer = CombatManager.Player().transform.position - transform.position;
+        Vector2 directionToPlayer = PlayerCombat.Instance.transform.position - transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
         if (distanceToPlayer > PickupRadius) return;
         float forceMod = 1f - distanceToPlayer / PickupRadius;
@@ -35,7 +36,7 @@ public class SaltBehaviour : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (!other.gameObject.CompareTag("Player")) return;
-        CombatManager.Player().Player.Inventory().IncrementResource("Salt", 1);
+        PlayerCombat.Instance.Player.Inventory().IncrementResource("Salt", 1);
         Destroy(gameObject);
     }
 }

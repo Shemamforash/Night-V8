@@ -27,7 +27,7 @@ namespace Game.Combat.Misc
         private float _finalDamageModifier = 1f;
         private GameObject _fireTrail;
         private bool _guaranteeHit;
-        private int _knockbackForce;
+        private int _knockbackForce = 10;
 
         private bool _moving, _fired;
         private CharacterCombat _origin;
@@ -52,7 +52,7 @@ namespace Game.Combat.Misc
         {
             _finalDamageModifier = 1f;
             _guaranteeHit = false;
-            _knockbackForce = 0;
+            _knockbackForce = 10;
             _damageDealt = 0;
             _moving = false;
             _fired = false;
@@ -237,10 +237,10 @@ namespace Game.Combat.Misc
             OnHitAction += a;
         }
 
-        public void SetKnockbackForce(int distance)
+        public void SetKnockbackForce(int force)
         {
-            Assert.IsTrue(distance >= 0);
-            _knockbackForce = distance;
+            Assert.IsTrue(force >= 0);
+            _knockbackForce = force;
         }
 
         public void SetBurnChance(float chance)

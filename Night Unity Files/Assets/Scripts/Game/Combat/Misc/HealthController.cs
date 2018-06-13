@@ -40,7 +40,7 @@ namespace Game.Combat.Misc
             _healthRemaining.Decrement(amount);
             GetHealthBarController()?.FadeNewHealth();
             OnTakeDamage?.Invoke(amount);
-            if(_healthRemaining.ReachedMin()) _character.Kill();
+            if (_healthRemaining.ReachedMin()) _character.Kill();
             UpdateHealth();
 //            (_character as DetailedEnemyCombat)?.UiHitController.RegisterShot();
         }
@@ -57,6 +57,7 @@ namespace Game.Combat.Misc
         {
             OnTakeDamage += a;
         }
+
 
         public void AddOnHeal(Action<float> a)
         {

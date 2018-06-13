@@ -28,7 +28,6 @@ namespace Game.Combat.Player
         private float _damageModifier, _skillCooldownModifier;
         private Cooldown _dashCooldown;
         private int _initialArmour;
-        private Transform _pivot;
         private Quaternion _lastTargetRotation;
 
         private Coroutine _reloadingCoroutine;
@@ -42,6 +41,7 @@ namespace Game.Combat.Player
         private float _reloadPressedTime;
         private const float MaxReloadPressedTime = 1f;
         private bool _inCombat;
+        public static PlayerCombat Instance;
 
         protected override void Move(Vector2 direction)
         {
@@ -69,6 +69,12 @@ namespace Game.Combat.Player
             }
         }
 
+        public override void Awake()
+        {
+            base.Awake();
+            Instance = this;
+        }
+        
         public bool InCombat() => _inCombat;
 
         //input
@@ -274,7 +280,7 @@ namespace Game.Combat.Player
             float nearestContainerDistance = MaxShowInventoryDistance;
             ContainerController.Containers.ForEach(c =>
             {
-                float distance = Vector2.Distance(c.transform.position, CombatManager.Player().transform.position);
+                float distance = Vector2.Distance(c.transform.position, PlayerCombat.Instance.transform.position);
                 if (distance > nearestContainerDistance) return;
                 nearestContainerDistance = distance;
                 nearestContainer = c.ContainerController;
@@ -284,7 +290,6 @@ namespace Game.Combat.Player
 
         public void Initialise()
         {
-            _pivot = Helper.FindChildWithName<Transform>(gameObject, "Pivot");
             InputHandler.SetCurrentListener(this);
 
             Player = CharacterManager.SelectedCharacter;

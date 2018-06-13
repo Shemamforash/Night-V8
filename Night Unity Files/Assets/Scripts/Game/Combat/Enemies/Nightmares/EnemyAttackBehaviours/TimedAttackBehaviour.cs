@@ -5,20 +5,29 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
     public abstract class TimedAttackBehaviour : BasicAttackBehaviour
     {
         private float _currentTimer;
-        protected float MaxTimer;
+        private float MaxTimer, MinTimer;
+        private float _targetTime;
 
-        public void Initialise(float maxTimer)
+        public void Initialise(float maxTimer, float minTimer = -1)
         {
             MaxTimer = maxTimer;
+            MinTimer = minTimer < 0 ? MaxTimer : minTimer;
+            SetTargetTime();
+        }
+
+        private void SetTargetTime()
+        {
+            _targetTime = Random.Range(MinTimer, MaxTimer);
         }
         
         public void Update()
         {
             if (Paused) return;
             _currentTimer += Time.deltaTime;
-            if (_currentTimer < MaxTimer) return;
+            if (_currentTimer < _targetTime) return;
             Attack();
             _currentTimer = 0;
+            SetTargetTime();
         }
     }
 }

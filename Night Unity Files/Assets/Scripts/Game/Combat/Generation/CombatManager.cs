@@ -19,7 +19,6 @@ namespace Game.Combat.Generation
         private Region _currentRegion;
         private bool _inMelee;
         private int _visibilityRange;
-        private PlayerCombat _player;
         private bool _inCombat;
         private readonly List<EnemyBehaviour> _enemies = new List<EnemyBehaviour>();
         private static CombatManager _instance;
@@ -34,13 +33,10 @@ namespace Game.Combat.Generation
 
         public static Region Region() => Instance()._currentRegion;
 
-        public static PlayerCombat Player() => Instance()._player;
-
         public override void Awake()
         {
             base.Awake();
             _instance = this;
-            _player = GameObject.Find("Player").GetComponent<PlayerCombat>();
         }
 
         private static CombatManager Instance()
@@ -62,7 +58,7 @@ namespace Game.Combat.Generation
         public override void Enter()
         {
             base.Enter();
-            InputHandler.SetCurrentListener(_player);
+            InputHandler.SetCurrentListener(PlayerCombat.Instance);
         }
 
         public void Update()
@@ -98,7 +94,7 @@ namespace Game.Combat.Generation
                     throw new ArgumentOutOfRangeException();
             }
 
-            _player.Initialise();
+            PlayerCombat.Instance.Initialise();
             _cooldowns.Clear();
             _currentRegion.Enemies().ForEach(e => { AddEnemy(e.GetEnemyBehaviour()); });
         }
@@ -108,13 +104,13 @@ namespace Game.Combat.Generation
             if (!Instance()._inCombat) Debug.Log("Don't try and exit combat twice!");
             Instance()._inCombat = false;
             SceneChanger.ChangeScene("Map", false);
-            Instance()._player.ExitCombat();
+            PlayerCombat.Instance.ExitCombat();
         }
 
         public static List<CharacterCombat> GetCharactersInRange(Vector2 position, float range)
         {
             List<CharacterCombat> charactersInRange = new List<CharacterCombat>();
-            if (Vector2.Distance(Instance()._player.transform.position, position) <= range) charactersInRange.Add(Instance()._player);
+            if (Vector2.Distance(PlayerCombat.Instance.transform.position, position) <= range) charactersInRange.Add(PlayerCombat.Instance);
 
             foreach (EnemyBehaviour enemy in Instance()._enemies)
             {

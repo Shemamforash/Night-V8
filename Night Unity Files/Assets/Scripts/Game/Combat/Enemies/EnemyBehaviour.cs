@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Threading;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
+using Game.Combat.Player;
 using Game.Combat.Ui;
 using Game.Exploration.Regions;
 using Game.Gear.Weapons;
+using JetBrains.Annotations;
 using NUnit.Framework;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -21,13 +23,19 @@ namespace Game.Combat.Enemies
         public string ActionText;
         public Action CurrentAction;
         public Enemy Enemy;
-        private SpriteRenderer _sprite;
         protected bool FacePlayer;
+
+        private event Action<EnemyBehaviour> OnKill;
 
         protected readonly Queue<Cell> route = new Queue<Cell>();
         //        private const float AlphaCutoff = 0.2f;
 //        private const float FadeVisibilityDistance = 5f;
 //        private float _currentAlpha;
+
+        public void AddOnKill(Action<EnemyBehaviour> a)
+        {
+            OnKill += a;
+        }
 
         public bool OnScreen() => Helper.IsObjectInCameraView(gameObject);
 
@@ -36,9 +44,9 @@ namespace Game.Combat.Enemies
         public override void Update()
         {
             base.Update();
+            PushAwayFromNeighbors();
             if (!CombatManager.InCombat()) return;
             UpdateRotation();
-            UpdateDistanceAlpha();
             if (CurrentAction == null)
             {
                 ChooseNextAction();
@@ -47,6 +55,20 @@ namespace Game.Combat.Enemies
             {
                 CurrentAction.Invoke();
             }
+        }
+
+        private void PushAwayFromNeighbors()
+        {
+            List<CharacterCombat> chars = CombatManager.GetCharactersInRange(transform.position, 1f);
+            Vector2 forceDir = Vector2.zero;
+            chars.ForEach(c =>
+            {
+                if (c == this) return;
+                Vector2 dir = c.transform.position - transform.position;
+                float force = 1 / dir.magnitude;
+                forceDir += -dir * force;
+            });
+            AddForce(forceDir);
         }
 
         private void UpdateRotation()
@@ -63,21 +85,6 @@ namespace Game.Combat.Enemies
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         }
 
-        private void UpdateDistanceAlpha()
-        {
-            float distanceToPlayer = DistanceToTarget();
-            float alpha = 0;
-            if (distanceToPlayer <= CombatManager.VisibilityRange())
-            {
-                alpha = distanceToPlayer / CombatManager.VisibilityRange();
-                alpha = 1 - alpha;
-            }
-
-            Color spriteColour = _sprite.color;
-            spriteColour.a = alpha;
-            _sprite.color = spriteColour;
-        }
-
         public void OnDrawGizmos()
         {
             if (route.Count == 0) return;
@@ -90,11 +97,10 @@ namespace Game.Combat.Enemies
 //            Gizmos.DrawSphere(transform.position, (int)(IdealWeaponDistance * 0.5f / PathingGrid.CellResolution));
         }
 
-        public override CharacterCombat GetTarget() => CombatManager.Player();
+        public override CharacterCombat GetTarget() => PlayerCombat.Instance;
 
         public virtual void Initialise(Enemy enemy)
         {
-            _sprite = GetComponent<SpriteRenderer>();
             ArmourController = enemy.ArmourController;
             Enemy = enemy;
             SetOwnedByEnemy(Enemy.Template.Speed);
@@ -140,13 +146,14 @@ namespace Game.Combat.Enemies
         {
             base.TakeDamage(shot);
             EnemyUi.Instance().RegisterHit(this);
-            CombatManager.Player().RageController.Increase(shot.DamageDealt());
+            PlayerCombat.Instance.RageController.Increase(shot.DamageDealt());
         }
 
         public override void Kill()
         {
             base.Kill();
-            for (int i = 0; i < Random.Range(2, 10); ++i) SaltBehaviour.Create(transform.position);
+            OnKill?.Invoke(this);
+//            for (int i = 0; i < Random.Range(2, 10); ++i) SaltBehaviour.Create(transform.position);
 
             ContainerController controller = ContainerController.CreateEnemyLoot(transform.position, Enemy);
             if (controller != null)
@@ -241,6 +248,13 @@ namespace Game.Combat.Enemies
             Thread pathThread = PathingGrid.RouteToCell(CurrentCell(), character.CurrentCell(), route);
             CurrentAction = () =>
             {
+                Cell currentCharacterCell = character.CurrentCell();
+                if (currentCharacterCell != targetCell)
+                {
+                    pathThread = PathingGrid.RouteToCell(CurrentCell(), currentCharacterCell, route);
+                    targetCell = currentCharacterCell;
+                }
+
                 if (pathThread.IsAlive) return;
                 if (character.IsDead)
                 {

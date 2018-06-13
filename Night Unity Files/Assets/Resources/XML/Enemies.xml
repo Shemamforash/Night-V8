@@ -71,7 +71,7 @@
     </Enemy>
     <Enemy>
         <Name>Maelstrom</Name>
-        <Health>300</Health>
+        <Health>100</Health>
         <Speed>5</Speed>
         <Value>2</Value>
         <WeaponTypes>1</WeaponTypes>
@@ -108,6 +108,13 @@
         <Name>Decoy</Name>
         <Health>1</Health>
         <Speed>0</Speed>
+        <Value>1</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Drone</Name>
+        <Health>20</Health>
+        <Speed>6</Speed>
         <Value>1</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>

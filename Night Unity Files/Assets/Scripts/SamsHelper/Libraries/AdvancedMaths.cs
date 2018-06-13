@@ -341,5 +341,12 @@ namespace SamsHelper.Libraries
             point.y += origin.y;
             return point;
         }
+
+        public static Vector2 CalculatePointOnCircle(float angle, float radius, Vector3 origin)
+        {
+            float x = Mathf.Cos(angle * Mathf.Deg2Rad) * radius + origin.x;
+            float y = Mathf.Sin(angle * Mathf.Deg2Rad) * radius + origin.y;
+            return new Vector2(x, y);
+        }
     }
 }
