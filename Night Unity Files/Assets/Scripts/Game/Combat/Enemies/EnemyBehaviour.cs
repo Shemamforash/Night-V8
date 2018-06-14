@@ -65,6 +65,7 @@ namespace Game.Combat.Enemies
             {
                 if (c == this) return;
                 Vector2 dir = c.transform.position - transform.position;
+                if (dir == Vector2.zero) dir = AdvancedMaths.RandomVectorWithinRange(transform.position, 1).normalized;
                 float force = 1 / dir.magnitude;
                 forceDir += -dir * force;
             });

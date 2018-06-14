@@ -13,13 +13,12 @@ namespace Game.Combat.Misc
     public abstract class CharacterCombat : MonoBehaviour
     {
         private const float DashForce = 300;
-        private const float RecoilRecoveryRate = 0.02f;
+        private const float RecoilRecoveryRate = 2f;
         private const float TimeToStartRecovery = 0.5f;
 
         private const float KnockbackTime = 2f;
 
         private readonly Number Recoil = new Number(0, 0, 1f);
-        private Cell _currentCell;
         private float _distanceToTarget = -1;
 
         private Vector2 _forceToadd = Vector2.zero;
@@ -52,7 +51,7 @@ namespace Game.Combat.Misc
             _burnTicks = ConditionTicksMax;
             if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StartBurning();
         }
-        
+
         public bool IsBurning() => _burnTicks > 0;
 
         public void Decay()
@@ -200,7 +199,6 @@ namespace Game.Combat.Misc
 
         public virtual void ApplyShotEffects(Shot s)
         {
-
         }
 
 
@@ -224,7 +222,6 @@ namespace Game.Combat.Misc
         {
             if (!CombatManager.InCombat()) return;
             if (GetTarget() != null) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);
-            _currentCell = PathingGrid.WorldToCellPosition(transform.position);
             UpdateRecoil();
             UpdateConditions();
         }
@@ -251,12 +248,12 @@ namespace Game.Combat.Misc
                 return;
             }
 
-            Recoil.Decrement(RecoilRecoveryRate + Time.deltaTime);
+            Recoil.Decrement(RecoilRecoveryRate * Time.deltaTime);
         }
 
         public void FixedUpdate()
         {
-            if(_rigidbody == null) Debug.Log(name);
+            if (_rigidbody == null) Debug.Log(name);
             _rigidbody.AddForce(_forceToadd);
             _forceToadd = Vector2.zero;
         }

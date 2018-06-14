@@ -11,7 +11,7 @@ namespace Game.Combat.Generation
         public readonly float XPos, YPos;
         public readonly int id;
         private static int CellNumber;
-        
+
         public bool Reachable = true;
         public bool Blocked;
 
@@ -21,9 +21,9 @@ namespace Game.Combat.Generation
             float xPos = (float) xIndex / PathingGrid.CellResolution - PathingGrid.CombatAreaWidth / 2f;
             float yPos = (float) yIndex / PathingGrid.CellResolution - PathingGrid.CombatAreaWidth / 2f;
             Vector2 position = new Vector2(xPos, yPos);
-            verts.Add(new Vector2(- PathingGrid.CellWidth / 2f, - PathingGrid.CellWidth / 2f));
-            verts.Add(new Vector2(- PathingGrid.CellWidth / 2f, PathingGrid.CellWidth / 2f));
-            verts.Add(new Vector2(PathingGrid.CellWidth / 2f, - PathingGrid.CellWidth / 2f));
+            verts.Add(new Vector2(-PathingGrid.CellWidth / 2f, -PathingGrid.CellWidth / 2f));
+            verts.Add(new Vector2(-PathingGrid.CellWidth / 2f, PathingGrid.CellWidth / 2f));
+            verts.Add(new Vector2(PathingGrid.CellWidth / 2f, -PathingGrid.CellWidth / 2f));
             verts.Add(new Vector2(PathingGrid.CellWidth / 2f, PathingGrid.CellWidth / 2f));
             Cell cell = new Cell(verts, position, xIndex, yIndex);
             return cell;
@@ -33,15 +33,15 @@ namespace Game.Combat.Generation
         {
             if (c == null) return;
             if (!c.Reachable) return;
-            Node.AddNeighbor(c.Node);
+            Node.AddNeighborSimple(c.Node);
         }
 
         public void SetNeighbors()
         {
-            if (XIndex - 1 >= 0) AddNeighbor(PathingGrid.Grid[XIndex - 1, YIndex]);
-            if (YIndex - 1 >= 0) AddNeighbor(PathingGrid.Grid[XIndex, YIndex - 1]);
-            if (XIndex + 1 < PathingGrid.GridWidth) AddNeighbor(PathingGrid.Grid[XIndex + 1, YIndex]);
-            if (YIndex + 1 < PathingGrid.GridWidth) AddNeighbor(PathingGrid.Grid[XIndex, YIndex + 1]);
+            if (XIndex - 1 >= 0) AddNeighbor(PathingGrid.Grid[XIndex - 1][YIndex]);
+            if (YIndex - 1 >= 0) AddNeighbor(PathingGrid.Grid[XIndex][YIndex - 1]);
+            if (XIndex + 1 < PathingGrid.GridWidth) AddNeighbor(PathingGrid.Grid[XIndex + 1][YIndex]);
+            if (YIndex + 1 < PathingGrid.GridWidth) AddNeighbor(PathingGrid.Grid[XIndex][YIndex + 1]);
         }
 
         public float Distance(Cell other)

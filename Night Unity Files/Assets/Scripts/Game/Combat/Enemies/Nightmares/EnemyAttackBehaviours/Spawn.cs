@@ -1,4 +1,5 @@
-﻿using Game.Combat.Generation;
+﻿using System.Collections.Generic;
+using Game.Combat.Generation;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
@@ -20,11 +21,11 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         protected override void Attack()
         {
             int enemiesToSpawn = Random.Range(_countMin + 1, _countMax + 1);
-            for (int i = _countMin; i < enemiesToSpawn; ++i)
+            List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(Enemy.CurrentCell(), enemiesToSpawn, 2f, 0.5f);
+            enemiesToSpawn = cellsNearMe.Count;
+            for (int i = 0; i < enemiesToSpawn; ++i)
             {
-                Cell c = PathingGrid.GetCellNearMe(Enemy.CurrentCell(), 2f);
-                EnemyBehaviour enemy = CombatManager.QueueEnemyToAdd(_spawnType);
-                enemy.gameObject.transform.position = c.Position;
+                EnemyBehaviour enemy = CombatManager.SpawnEnemy(_spawnType, cellsNearMe[i].Position);
                 enemy.gameObject.AddComponent<Shield>().Initialise(2f);
             }
         }

@@ -163,12 +163,15 @@
                     <e p="Bombardment.cs" t="Include" />
                     <e p="DamageThresholdAttackBehaviour.cs" t="Include" />
                     <e p="Drone.cs" t="Include" />
+                    <e p="ErraticDash.cs" t="Include" />
                     <e p="Feed.cs" t="Include" />
                     <e p="FeedTarget.cs" t="Include" />
                     <e p="Heavyshot.cs" t="Include" />
                     <e p="LeaveFireTrail.cs" t="Include" />
                     <e p="Orbit.cs" t="Include" />
+                    <e p="Push.cs" t="Include" />
                     <e p="Shield.cs" t="Include" />
+                    <e p="Slice.cs" t="Include" />
                     <e p="Spawn.cs" t="Include" />
                     <e p="Split.cs" t="Include" />
                     <e p="Teleport.cs" t="Include" />
@@ -203,8 +206,11 @@
                   <e p="Ruins.cs" t="Include" />
                 </e>
                 <e p="Shrines" t="Include">
+                  <e p="BossShrine.cs" t="Include" />
+                  <e p="ChaseShrine.cs" t="Include" />
                   <e p="FireShrine.cs" t="Include" />
                   <e p="ShrineBehaviour.cs" t="Include" />
+                  <e p="ShrinePickup.cs" t="Include" />
                   <e p="WaveShrine.cs" t="Include" />
                 </e>
                 <e p="Triangulator.cs" t="Include" />

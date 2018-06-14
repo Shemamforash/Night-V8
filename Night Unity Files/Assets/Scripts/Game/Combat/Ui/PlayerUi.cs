@@ -1,7 +1,10 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
+using Game.Combat.Misc;
 using Game.Combat.Player;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Ui
@@ -12,20 +15,12 @@ namespace Game.Combat.Ui
         private float _currentAlpha;
         private Coroutine _fadeInCoroutine, _fadeOutCoroutine;
         private bool _shown;
-        private const float RayDistance = 20f;
-        private const int LayerMask = (1 << 8) | (1 << 10);
-        private Transform _playerTransform;
 
         public override void Awake()
         {
             base.Awake();
             _instance = this;
             _currentAlpha = CanvasGroup.alpha;
-        }
-
-        public void Start()
-        {
-            _playerTransform = PlayerCombat.Instance.transform;
         }
 
         public static PlayerUi Instance()
@@ -74,18 +69,24 @@ namespace Game.Combat.Ui
         public void Update()
         {
             if (!_shown) return;
-            Vector3 forwardDir = _playerTransform.up;
-            Vector3 start = _playerTransform.position + forwardDir * 0.1f;
-            RaycastHit2D hit = Physics2D.Raycast(start, forwardDir, RayDistance, LayerMask);
-            if (hit.collider != null && hit.collider.CompareTag("UiCollider"))
+
+            List<CharacterCombat> chars = CombatManager.GetCharactersInRange(transform.position, 10f);
+            Vector2 playerDir = transform.up;
+            float nearestAngle = 360;
+            CharacterCombat nearestCharacter = null;
+            chars.ForEach(c =>
             {
-                EnemyBehaviour enemyBehaviour = hit.collider.transform.parent.GetComponent<EnemyBehaviour>();
-                PlayerCombat.Instance.SetTarget(enemyBehaviour);
-            }
-            else
-            {
-                PlayerCombat.Instance.SetTarget(null);
-            }
+                if (c == PlayerCombat.Instance) return;
+                if (!Helper.IsObjectInCameraView(c.gameObject)) return;
+                Vector2 enemyDir = c.transform.position - transform.position;
+                float enemyAngle = Vector2.Angle(playerDir, enemyDir);
+                if (enemyAngle > 5) return;
+                if (enemyAngle > nearestAngle) return;
+                nearestAngle = enemyAngle;
+                nearestCharacter = c;
+            });
+
+            PlayerCombat.Instance.SetTarget(nearestCharacter as EnemyBehaviour);
         }
     }
 }

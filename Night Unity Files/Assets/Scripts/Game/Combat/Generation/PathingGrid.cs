@@ -18,7 +18,7 @@ namespace Game.Combat.Generation
         public const float CellWidth = 1f / CellResolution;
         public const int GridWidth = CombatAreaWidth * CellResolution;
 
-        public static Cell[,] Grid;
+        public static Cell[][] Grid;
         private static readonly List<Cell> _gridNodes = new List<Cell>();
         private static readonly HashSet<Cell> _invalidCells = new HashSet<Cell>();
 
@@ -33,6 +33,9 @@ namespace Game.Combat.Generation
             _stopwatch = Stopwatch.StartNew();
             GenerateBaseGrid();
             _invalidCells.Clear();
+            _stopwatch.Stop();
+            Debug.Log("grid: " + _stopwatch.Elapsed.ToString("mm\\:ss\\.ff"));
+            _stopwatch = Stopwatch.StartNew();
         }
 
         public static bool AddBarrier(Barrier barrier, bool forcePlace)
@@ -46,9 +49,12 @@ namespace Game.Combat.Generation
 
         public static void FinaliseGrid()
         {
+            _stopwatch.Stop();
+            Debug.Log("barriers: " + _stopwatch.Elapsed.ToString("mm\\:ss\\.ff"));
+            _stopwatch = Stopwatch.StartNew();
             _gridNodes.ForEach(n => n.SetNeighbors());
             _stopwatch.Stop();
-            Debug.Log("no physics: " + _stopwatch.Elapsed.ToString("mm\\:ss\\.ff"));
+            Debug.Log("neighbors: " + _stopwatch.Elapsed.ToString("mm\\:ss\\.ff"));
         }
 
         public static List<Cell> GetCellsInFrontOfMe(Cell current, Vector2 direction, float distance)
@@ -85,7 +91,7 @@ namespace Game.Combat.Generation
             int y = gridPosition.y;
             try
             {
-                return Grid[x, y];
+                return Grid[x][y];
             }
             catch (IndexOutOfRangeException)
             {
@@ -105,7 +111,7 @@ namespace Game.Combat.Generation
                 Vector2 currentPosition = Vector2.Lerp(start, end, lerpVal);
                 Vector2Int pos = WorldToGridPosition(currentPosition);
                 if (pos.x < 0 || pos.x > GridWidth || pos.y < 0 || pos.y > GridWidth) continue;
-                Cell cellHere = Grid[pos.x, pos.y];
+                Cell cellHere = Grid[pos.x][pos.y];
                 if (cellHere.Blocked) return true;
                 if (!cellHere.Reachable && includeReachable) return true;
             }
@@ -150,7 +156,15 @@ namespace Game.Combat.Generation
             return thread;
         }
 
-        public static Cell GetCellNearMe(Cell current, float distance) => Helper.RandomInList(CellsInRange(current, WorldToGridDistance(distance)));
+        public static Cell GetCellNearMe(Cell current, float distanceMax, float distanceMin = 0) =>
+            Helper.RandomInList(CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin)));
+
+        public static List<Cell> GetCellsNearMe(Cell current, int noCells, float distanceMax, float distanceMin = 0)
+        {
+            List<Cell> cells = CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin));
+            Helper.Shuffle(ref cells);
+            return cells.Take(noCells).ToList();
+        }
 
         public static Cell FindCellToAttackPlayer(Cell currentCell, float maxRange, float minRange = 0)
         {
@@ -205,7 +219,7 @@ namespace Game.Combat.Generation
             for (int x = startX; x < endX; ++x)
             for (int y = startY; y < endY; ++y)
             {
-                Cell current = Grid[x, y];
+                Cell current = Grid[x][y];
                 if (current == null || !current.Reachable) continue;
                 float distance = current.Distance(origin);
                 if (distance < minRange || distance > maxRange) continue;
@@ -232,8 +246,8 @@ namespace Game.Combat.Generation
             {
                 for (int j = 0; j < GridWidth; ++j)
                 {
-                    if (Grid[i, j] == null || !Grid[i, j].Reachable) continue;
-                    Gizmos.DrawCube(new Vector3(Grid[i, j].XPos, Grid[i, j].YPos), new Vector3(CellWidth, CellWidth, 1));
+                    if (Grid[i][j] == null || !Grid[i][j].Reachable) continue;
+                    Gizmos.DrawCube(new Vector3(Grid[i][j].XPos, Grid[i][j].YPos), new Vector3(CellWidth, CellWidth, 1));
                 }
             }
         }
@@ -261,8 +275,8 @@ namespace Game.Combat.Generation
             {
                 for (int y = yMin; y <= yMax; ++y)
                 {
-                    if (Grid[x, y] == null) continue;
-                    cellsInSquare.Add(Grid[x, y]);
+                    if (Grid[x][y] == null) continue;
+                    cellsInSquare.Add(Grid[x][y]);
                 }
             }
 
@@ -310,12 +324,12 @@ namespace Game.Combat.Generation
                 Vector2 currentPosition = Vector2.Lerp(start, end, lerpVal);
                 Vector2Int pos = WorldToGridPosition(currentPosition);
                 if (pos.x < 0 || pos.x >= GridWidth || pos.y < 0 || pos.y >= GridWidth) continue;
-                Cell cellHere = Grid[pos.x, pos.y];
+                Cell cellHere = Grid[pos.x][pos.y];
                 cells.Add(cellHere);
             }
 
             Vector2Int endPos = WorldToGridPosition(end);
-            if (!(endPos.x < 0 || endPos.x >= GridWidth || endPos.y < 0 || endPos.y >= GridWidth)) cells.Add(Grid[endPos.x, endPos.y]);
+            if (!(endPos.x < 0 || endPos.x >= GridWidth || endPos.y < 0 || endPos.y >= GridWidth)) cells.Add(Grid[endPos.x][endPos.y]);
             return cells.ToList();
         }
 
@@ -372,10 +386,11 @@ namespace Game.Combat.Generation
         private static void GenerateBaseGrid()
         {
             _gridNodes.Clear();
-            Grid = new Cell[GridWidth, GridWidth];
             float worldRadius = CombatAreaWidth / 2f * CellResolution;
+            if (Grid == null) Grid = new Cell[GridWidth][];
             for (int x = 0; x < GridWidth; ++x)
             {
+                if (Grid[x] == null) Grid[x] = new Cell[GridWidth];
                 for (int y = 0; y < GridWidth; ++y)
                 {
                     float xComp = Mathf.Pow(x - GridWidth / 2f, 2f);
@@ -383,12 +398,12 @@ namespace Game.Combat.Generation
                     float distance = Mathf.Sqrt(xComp + yComp);
                     if (distance > worldRadius)
                     {
-                        Grid[x, y] = null;
+                        Grid[x][y] = null;
                         continue;
                     }
 
-                    Grid[x, y] = Cell.Generate(x, y);
-                    _gridNodes.Add(Grid[x, y]);
+                    Grid[x][y] = Cell.Generate(x, y);
+                    _gridNodes.Add(Grid[x][y]);
                 }
             }
         }

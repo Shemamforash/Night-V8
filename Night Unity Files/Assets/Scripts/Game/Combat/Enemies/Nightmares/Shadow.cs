@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using UnityEngine;
@@ -15,27 +16,36 @@ namespace Game.Combat.Enemies.Nightmares
         private const float LayMineTimerMax = 0.5f;
         private GameObject _minePrefab;
 
-        public override void ChooseNextAction()
+
+        public void Start()
         {
-            if (_layingMines) return;
-            layMineTarget = PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 4f);
-            Reposition(layMineTarget, () =>
-            {
-                _layingMines = true;
-                layMineTarget = PathingGrid.GetCellNearMe(CurrentCell(), 5);
-                Reposition(layMineTarget, () => { _layingMines = false; });
-            });
+            gameObject.AddComponent<ErraticDash>();
+//            gameObject.AddComponent<Slice>().Initialise(4, 2);
+            gameObject.AddComponent<Push>().Initialise(4, 2);
         }
+        
+//        public override void ChooseNextAction()
+//        {
+//            if (_layingMines) return;
+//            layMineTarget = PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 4f);
+//            Reposition(layMineTarget, () =>
+//            {
+//                _layingMines = true;
+//                layMineTarget = PathingGrid.GetCellNearMe(CurrentCell(), 5);
+//                Reposition(layMineTarget, () => { _layingMines = false; });
+//            });
+
+//        }
 
 
         public override void Update()
         {
             base.Update();
-            if (!_layingMines) return;
-            _layMineTimer += Time.deltaTime;
-            if (_layMineTimer < LayMineTimerMax) return;
-            _layMineTimer = 0;
-            LayMine();
+//            if (!_layingMines) return;
+//            _layMineTimer += Time.deltaTime;
+//            if (_layMineTimer < LayMineTimerMax) return;
+//            _layMineTimer = 0;
+//            LayMine();
         }
 
         private void LayMine()

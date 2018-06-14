@@ -11,34 +11,31 @@ namespace Game.Combat.Generation.Shrines
     {
         private readonly List<FireBehaviour> _fires = new List<FireBehaviour>();
 
-        public void Start()
-        {
-            DangerIndicator.sprite = Resources.Load<Sprite>("Images/Danger Indicators/Evil Circle 5");
-        }
-        
+
         protected override IEnumerator StartShrine()
         {
-            int numberOfEnemies = 4;
+            int numberOfEnemies = 1;
             float angleSize = 360f / numberOfEnemies;
             for (int i = 0; i < numberOfEnemies; ++i)
             {
                 float angle = Random.Range(i * angleSize, (i + 1) * angleSize);
                 float radius = Random.Range(3f, 5f);
                 Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, radius, transform.position);
-                SpawnEnemy(EnemyType.Maelstrom, position);
+                EnemyBehaviour b = CombatManager.SpawnEnemy(EnemyType.Maelstrom, position);
+                AddEnemy(b);
             }
 
-            int fireCount = 20;
+            int fireCount = 30;
             for (int i = 0; i < fireCount; ++i)
             {
-                Vector2 firePosition = AdvancedMaths.CalculatePointOnCircle(360f / fireCount * i, 8f, transform.position);
-                _fires.Add(FireBehaviour.Create(firePosition, 2f, true, false));
+                Vector2 firePosition = AdvancedMaths.CalculatePointOnCircle(360f / fireCount * i, 6.5f, transform.position);
+                _fires.Add(FireBehaviour.Create(firePosition, 1f, true, false));
             }
 
             float roundTime = numberOfEnemies * 20;
             float currentTime = roundTime;
             float timeToNextBurst = Random.Range(1f, 3f);
-            
+
             while (currentTime > 0)
             {
                 currentTime -= Time.deltaTime;
@@ -46,21 +43,30 @@ namespace Game.Combat.Generation.Shrines
                 if (timeToNextBurst < 0)
                 {
                     timeToNextBurst = Random.Range(0.5f, 2f);
-                    StartCoroutine(MakeFireBurst());
+                    MakeFireBurst();
                 }
 
                 UpdateCountdown(currentTime, roundTime);
                 if (EnemiesDead())
                 {
                     Succeed();
-                    yield break;
+                    break;
                 }
+
                 yield return null;
             }
-            _fires.ForEach(f => f.LetDie());
+
+            EndChallenge();
         }
 
-        private IEnumerator MakeFireBurst()
+        protected override void EndChallenge()
+        {
+            _fires.ForEach(f => f.LetDie());
+            if (!EnemiesDead()) Fail();
+            base.EndChallenge();
+        }
+
+        private void MakeFireBurst()
         {
             float angleFrom = Random.Range(0, 360);
             float angleTo = angleFrom + Random.Range(90, 270);
@@ -72,8 +78,6 @@ namespace Game.Combat.Generation.Shrines
                 Vector2 position = AdvancedMaths.PointAlongLine(from, to, pos);
                 FireBehaviour.Create(position, 0.25f, false, false);
             }
-
-            yield break;
         }
     }
 }

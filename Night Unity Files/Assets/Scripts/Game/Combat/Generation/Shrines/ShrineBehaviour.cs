@@ -19,7 +19,8 @@ public abstract class ShrineBehaviour : MonoBehaviour
     private SpriteRenderer _glow;
     protected SpriteMask _countdownMask;
     protected SpriteRenderer _countdown;
-    private readonly List<EnemyBehaviour> _enemiesAlive = new List<EnemyBehaviour>();
+    protected readonly List<EnemyBehaviour> _enemiesAlive = new List<EnemyBehaviour>();
+    private static GameObject _disappearPrefab;
 
     public void Awake()
     {
@@ -29,11 +30,12 @@ public abstract class ShrineBehaviour : MonoBehaviour
         _ring = Helper.FindChildWithName<ParticleSystem>(gameObject, "Ring");
         _flash = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Flash");
         DangerIndicator = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Danger Indicator");
-        _countdown= Helper.FindChildWithName<SpriteRenderer>(gameObject, "Countdown");
+        _countdown = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Countdown");
         _glow = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Glow");
         _countdownMask = Helper.FindChildWithName<SpriteMask>(gameObject, "Countdown Mask");
         _flash.color = UiAppearanceController.InvisibleColour;
         _countdownMask.alphaCutoff = 1f;
+        if (_disappearPrefab == null) _disappearPrefab = Resources.Load<GameObject>("Prefabs/Combat/Disappear");
     }
 
     protected void Succeed()
@@ -41,19 +43,44 @@ public abstract class ShrineBehaviour : MonoBehaviour
         StartCoroutine(SucceedGlow());
     }
 
-    protected EnemyBehaviour SpawnEnemy(EnemyType enemyType, Vector2 position)
+    protected void Fail()
     {
-        EnemyBehaviour enemy = CombatManager.QueueEnemyToAdd(enemyType);
-        _enemiesAlive.Add(enemy);
-        enemy.AddOnKill(e => _enemiesAlive.Remove(e));
-        enemy.transform.position = position;
-        TeleportInOnly.TeleportObjectIn(enemy.gameObject);
-        return enemy;
+        StartCoroutine(FailGlow());
+    }
+
+    protected void AddEnemy(EnemyBehaviour b)
+    {
+        _enemiesAlive.Add(b);
+        b.AddOnKill(e => _enemiesAlive.Remove(e));
     }
 
     protected bool EnemiesDead()
     {
         return _enemiesAlive.Count == 0;
+    }
+
+    private IEnumerator FailGlow()
+    {
+        float glowTimeMax = 1f;
+        float glowTime = glowTimeMax;
+
+        Color startingColour = DangerIndicator.color;
+        Color timerStartColor = _countdown.color;
+        while (glowTime > 0f)
+        {
+            float lerpVal = 1 - glowTime / glowTimeMax;
+            Color c = Color.Lerp(startingColour, UiAppearanceController.InvisibleColour, lerpVal);
+            DangerIndicator.color = c;
+            Helper.FindAllComponentsInChildren<SpriteRenderer>(DangerIndicator.transform).ForEach(s => { s.color = c; });
+            _countdown.color = Color.Lerp(timerStartColor, UiAppearanceController.InvisibleColour, lerpVal);
+            glowTime -= Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(_glow.gameObject);
+        Destroy(_countdown.gameObject);
+        Destroy(DangerIndicator.gameObject);
+        Destroy(this);
     }
 
     private IEnumerator SucceedGlow()
@@ -63,7 +90,7 @@ public abstract class ShrineBehaviour : MonoBehaviour
         float glowTime = glowTimeMax;
 
         _countdownMask.alphaCutoff = 0f;
-        
+
         while (glowTime > 0f)
         {
             float lerpVal = 1 - glowTime / glowTimeMax;
@@ -75,7 +102,7 @@ public abstract class ShrineBehaviour : MonoBehaviour
             glowTime -= Time.deltaTime;
             yield return null;
         }
-        
+
         Destroy(_glow.gameObject);
         Destroy(_countdown.gameObject);
         Destroy(DangerIndicator.gameObject);
@@ -84,7 +111,9 @@ public abstract class ShrineBehaviour : MonoBehaviour
 
     protected void UpdateCountdown(float currentTime, float maxTime)
     {
-        _countdownMask.alphaCutoff = 1 - currentTime / maxTime;
+        float normalisedTime = currentTime / maxTime;
+        _countdownMask.alphaCutoff = 1 - normalisedTime;
+        _countdown.color = new Color(1, normalisedTime, normalisedTime, _countdown.color.a);
     }
 
     public void Update()
@@ -117,4 +146,13 @@ public abstract class ShrineBehaviour : MonoBehaviour
     }
 
     protected abstract IEnumerator StartShrine();
+
+    protected virtual void EndChallenge()
+    {
+        for (int i = _enemiesAlive.Count - 1; i >= 0; --i)
+        {
+            Instantiate(_disappearPrefab).transform.position = _enemiesAlive[i].transform.position;
+            _enemiesAlive[i].Kill();
+        }
+    }
 }

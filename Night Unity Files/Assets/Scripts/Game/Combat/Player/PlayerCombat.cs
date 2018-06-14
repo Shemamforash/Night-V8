@@ -74,7 +74,7 @@ namespace Game.Combat.Player
             base.Awake();
             Instance = this;
         }
-        
+
         public bool InCombat() => _inCombat;
 
         //input
@@ -192,9 +192,9 @@ namespace Game.Combat.Player
             }
         }
 
-        private const float RotateSpeedMax = 90;
+        private const float RotateSpeedMax = 100f;
         private float _rotateSpeedCurrent;
-        private const float _rotateAcceleration = 200f;
+        private const float RotateAcceleration = 400f;
 
         private void Rotate(float direction)
         {
@@ -206,7 +206,7 @@ namespace Game.Combat.Player
             }
 
             if (_lockedTarget != null) return;
-            _rotateSpeedCurrent += _rotateAcceleration * Time.deltaTime;
+            _rotateSpeedCurrent += RotateAcceleration * Time.deltaTime;
             if (_rotateSpeedCurrent > RotateSpeedMax) _rotateSpeedCurrent = RotateSpeedMax;
             transform.Rotate(Vector3.forward, _rotateSpeedCurrent * Time.deltaTime * Helper.Polarity(-direction));
         }
@@ -239,19 +239,6 @@ namespace Game.Combat.Player
             CombatManager.ExitCombat();
         }
 
-        private void CheckForTarget()
-        {
-//            if (_currentTarget != null && !_currentTarget.OnScreen())
-//            {
-//                CombatManager.Select(1);
-//            }
-//
-//            if (_currentTarget == null)
-//            {
-//                SetTarget(CombatManager.NearestEnemy());
-//            }
-        }
-
         private void CheckForEnemiesOnScreen()
         {
 //            PlayerUi.Instance().SetAlpha(CombatManager.AllEnemiesDead() ? 0 : 1);
@@ -265,7 +252,6 @@ namespace Game.Combat.Player
             Camera.main.transform.position = cameraPosition;
             base.Update();
             FollowTarget();
-            CheckForTarget();
             TransitionOffScreen();
             CheckForContainersNearby();
             CheckForEnemiesOnScreen();
@@ -344,7 +330,7 @@ namespace Game.Combat.Player
             _dashCooldown.Start();
         }
 
-        private bool CanDash() => _dashCooldown.Finished() && _dashPressed && !_reloading;
+        private bool CanDash() => _dashCooldown.Finished() && _dashPressed;
 
         public void TryRetaliate(EnemyBehaviour origin)
         {

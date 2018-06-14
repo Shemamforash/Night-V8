@@ -61,46 +61,6 @@ namespace Fastlights
         private Tuple<bool, Vector2, float> _intersection;
 
         private readonly List<Vector2> meshVertices = new List<Vector2>();
-
-//        private class EdgeBucket
-//        {
-//            public readonly float AngleFrom, AngleTo;
-//            public readonly List<FLEdge> edges = new List<FLEdge>();
-
-//            public EdgeBucket(float angleFrom, float angleTo)
-//            {
-//                AngleFrom = angleFrom;
-//                AngleTo = angleTo;
-//            }
-            
-//            public void AddEdgeToBucket(FLEdge edge)
-//            {
-//                if (edge.From.InRangeAngle >= AngleFrom && edge.From.InRangeAngle <= AngleTo)
-//                {
-//                    edges.Add(edge);
-//                    return;
-//                }
-
-//                if (edge.To.InRangeAngle >= AngleFrom && edge.To.InRangeAngle <= AngleTo)
-//                {
-//                    edges.Add(edge);
-//                }
-//            }
-
-//            public bool AngleFallsInBucket(float angle)
-//            {
-//                return angle >= AngleFrom && angle <= AngleTo;
-//            }
-            
-            //d = 90
-            //angle = 45
-            //360 / 90 = 4
-            //angle / 90 = 0
-//        }
-
-//        private readonly List<EdgeBucket> _edgeBuckets = new List<EdgeBucket>();
-//        private float bucketAngle = 10f;
-
         
         private void CalculateNearestIntersection(FLVertex target, List<FLEdge> edges)
         {
@@ -181,30 +141,15 @@ namespace Fastlights
                 return;
             }
 
-
-//            _edgeBuckets.Clear();
-//            for (float angle = 0; angle < 360; angle += bucketAngle)
-//            {
-//                EdgeBucket bucket = new EdgeBucket(angle, angle+bucketAngle);
-//                _edgeBuckets.Add(bucket);
-//            }
-
             List<FLEdge> edges = new List<FLEdge>();
             List<FLVertex> verts = new List<FLVertex>();
             int edgeSegmentCount = edgeSegments.Count;
-//            int bucketCount = _edgeBuckets.Count;
             for (int i = 0; i < edgeSegmentCount; i++)
             {
                 List<FLEdge> s = edgeSegments[i];
                 int segmentLength = s.Count;
                 for (int j = 0; j < segmentLength; ++j)
                 {
-//                    for (int k = 0; k < bucketCount; k++)
-//                    {
-//                        EdgeBucket b = _edgeBuckets[k];
-//                        b.AddEdgeToBucket(s[j]);
-//                    }
-
                     edges.Add(s[j]);
                     verts.Add(s[j].From);
                     if (j != segmentLength - 1) continue;

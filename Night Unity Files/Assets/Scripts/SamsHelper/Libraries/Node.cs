@@ -11,7 +11,6 @@ namespace SamsHelper.Libraries
         private readonly List<Node> _rawNeighbors = new List<Node>();
         private readonly List<Edge> _edges = new List<Edge>();
         public readonly Vector3 Position;
-        private bool _isLeaf;
         private bool _generatedEdges;
 
         public Node(Vector3 position)
@@ -28,7 +27,11 @@ namespace SamsHelper.Libraries
             _neighbors.Sort((a, b) => a.Item1.CompareTo(b.Item1));
             _rawNeighbors.Clear();
             _neighbors.ForEach(n => _rawNeighbors.Add(n.Item2));
-            _isLeaf = _neighbors.Count == 1;
+        }
+
+        public void AddNeighborSimple(Node neighbor)
+        {
+            _rawNeighbors.Add(neighbor);
         }
 
         public float Distance(Node other) => Vector3.Distance(Position, other.Position);
@@ -47,21 +50,6 @@ namespace SamsHelper.Libraries
 
             return null;
         }
-
-        public Node NavigateAnticlockwise(Node from)
-        {
-            for (int i = 0; i < _rawNeighbors.Count; ++i)
-            {
-                if (_rawNeighbors[i] != from) continue;
-                int prev = i - 1;
-                if (prev == -1) prev = _rawNeighbors.Count - 1;
-                return _rawNeighbors[prev];
-            }
-
-            return null;
-        }
-
-        public bool IsLeaf() => _isLeaf;
 
         public Edge GetEdge(Node n)
         {

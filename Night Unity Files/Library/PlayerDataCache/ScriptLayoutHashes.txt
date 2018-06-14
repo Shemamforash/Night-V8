@@ -1,11 +1,8 @@
 WindowsStandalone
 PlayerPath?
-C:/Users/Sam/Desktop/Desktop.exe
+C:/Users/Sam/Desktop/Desolation - The Last Road/Builds/Builds.exe
 SceneListBegin?
 Assets/Scenes/Combat.unity
-Assets/Scenes/Game.unity
-Assets/Scenes/Menu.unity
-Assets/Scenes/Map.unity
 SceneListEnd?
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Bombardment
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Exploration.Ui.MapNodeController
@@ -340,3 +337,9 @@ c727d5d0b81c3630fe97e64e1cb39494 Assembly-CSharp.dll:Facilitating.UIControllers.
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Orbit
 9c12199ed38452212766e19b6c359a18 Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Drone
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Beam
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.ErraticDash
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Slice
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Generation.Shrines.ChaseShrine
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Generation.Shrines.ShrinePickup
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Push
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Generation.Shrines.BossShrine

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class BulletTrailFade : MonoBehaviour
 {
-    private static ObjectPool<BulletTrailFade> _pool = new ObjectPool<BulletTrailFade>("Prefabs/Combat/Bullet Trail");
+    private static readonly ObjectPool<BulletTrailFade> _pool = new ObjectPool<BulletTrailFade>("Prefabs/Combat/Bullet Trail");
     private TrailRenderer _trailRenderer;
 
     public void Awake()
@@ -44,7 +44,9 @@ public class BulletTrailFade : MonoBehaviour
 
     public static BulletTrailFade Create()
     {
-        return _pool.Create();
+        BulletTrailFade bulletTrail = _pool.Create();
+        bulletTrail._trailRenderer.Clear();
+        return bulletTrail;
     }
 
     public void OnDestroy()

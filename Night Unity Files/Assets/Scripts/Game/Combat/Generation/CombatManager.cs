@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Exploration.Regions;
@@ -137,6 +138,14 @@ namespace Game.Combat.Generation
             return enemyBehaviour;
         }
 
+        public static EnemyBehaviour SpawnEnemy(EnemyType enemyType, Vector2 position)
+        {
+            EnemyBehaviour enemy = QueueEnemyToAdd(enemyType);
+            enemy.transform.position = position;
+            TeleportInOnly.TeleportObjectIn(enemy.gameObject);
+            return enemy;
+        }
+        
         public static void Remove(EnemyBehaviour enemy)
         {
             Instance()._enemies.Remove(enemy);

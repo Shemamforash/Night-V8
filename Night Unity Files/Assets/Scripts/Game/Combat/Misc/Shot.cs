@@ -166,15 +166,7 @@ namespace Game.Combat.Misc
             if (_origin != null) _origin.IncreaseRecoil();
 
             _bulletTrail = BulletTrailFade.Create();
-//            if (_moving)
-//            {
             _bulletTrail.SetAlpha(1);
-//            }
-//            else
-//            {
-//                _bulletTrail.GetComponent<TrailRenderer>().startColor = Color.red;
-//                _bulletTrail.GetComponent<TrailRenderer>().endColor = new Color(1f, 0f, 0f, 0f);
-//            }
 
             _bulletTrail.SetPosition(transform);
             StartCoroutine(WaitToDie());

@@ -51,7 +51,7 @@ namespace Game.Combat.Enemies.Nightmares
                 yield return null;
             }
 
-            Explosion.CreateExplosion(transform.position, 10, 0.2f).InstantDetonate();
+            Explosion.CreateExplosion(transform.position, 10, 0.4f).InstantDetonate();
             Destroy(gameObject);
         }
     }

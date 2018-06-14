@@ -8,7 +8,7 @@ namespace Game.Combat.Misc
 {
     public class FireBehaviour : MonoBehaviour
     {
-        private const int MaxEmissionRate = 500;
+        private const int MaxEmissionRate = 400;
         private const float LightMaxRadius = 5f;
         private const float LifeTime = 4f;
         private static readonly List<FireBehaviour> _firePool = new List<FireBehaviour>();

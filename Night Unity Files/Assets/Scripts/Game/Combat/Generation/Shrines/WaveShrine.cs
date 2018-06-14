@@ -48,7 +48,8 @@ namespace Game.Combat.Generation.Shrines
                 while (currentTime < SpawnDelay)
                 {
                     Vector2 ghoulPos = AdvancedMaths.CalculatePointOnCircle(currentAngle, SpawnRadius, transform.position);
-                    EnemyBehaviour enemy = SpawnEnemy(EnemyType.Ghoul, ghoulPos);
+                    EnemyBehaviour enemy = CombatManager.SpawnEnemy(EnemyType.Ghoul, ghoulPos);
+                    AddEnemy(enemy);
                     waveDuration += enemy.HealthController.GetMaxHealth() * Mathf.Sqrt(enemy.Enemy.ArmourController.GetCurrentArmour() + 1);
                     currentTime += SpawnDelay;
                     yield return null;
@@ -68,10 +69,10 @@ namespace Game.Combat.Generation.Shrines
                 yield return null;
             }
 
-            EndRound();
+            EndChallenge();
         }
 
-        private void EndRound()
+        protected override void EndChallenge()
         {
             if (EnemiesDead())
             {
@@ -79,6 +80,7 @@ namespace Game.Combat.Generation.Shrines
                 if (_currentShrineLevel == _shrineLevelMax)
                 {
                     Succeed();
+                    base.EndChallenge();
                     return;
                 }
 
@@ -87,7 +89,8 @@ namespace Game.Combat.Generation.Shrines
             }
             else
             {
-                Destroy(this);
+                Fail();
+                base.EndChallenge();
             }
         }
     }

@@ -53,7 +53,7 @@ namespace Game.Combat.Misc
             explosion.Initialise(position, damage, radius);
             return explosion;
         }
-        
+
         private void Initialise(Vector2 position, int damage, float radius = 1)
         {
             transform.position = position;
@@ -92,7 +92,13 @@ namespace Game.Combat.Misc
         {
             List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(transform.position, _explosionRadius);
             foreach (CharacterCombat c in charactersInRange)
+            {
                 c.HealthController.TakeDamage(_damage);
+                Vector2 dir = c.transform.position - transform.position;
+                float distance = dir.magnitude;
+                dir.Normalize();
+                c.AddForce(dir * 1f / distance * 10f);
+            }
         }
 
         private void ScaleSprite(SpriteRenderer sprite, float scalingValue, float originalSize)
@@ -129,7 +135,7 @@ namespace Game.Combat.Misc
                 {
                     _light.Colour = UiAppearanceController.FadedColour;
                     _light.Radius = 1;
-                    ScaleSprite(_explosionSprite, _explosionRadius / 4f, _originalExplosionWidth);
+                    ScaleSprite(_explosionSprite, _explosionRadius / 8f, _originalExplosionWidth);
                     _explosionSprite.color = Color.white;
                     shownWarning = true;
                 }
@@ -145,16 +151,16 @@ namespace Game.Combat.Misc
                     {
                         DealDamage();
                         ParticleSystem.ShapeModule shape = _particles.shape;
-                        shape.radius = _explosionRadius * 0.3f;
+                        shape.radius = _explosionRadius * 0.1f;
                         _particles.Emit(100);
                         emitted = true;
-                        _light.Radius = _explosionRadius * 3;
+                        _light.Radius = _explosionRadius * 1.5f;
                     }
 
                     float normalisedTime = (_age - _explodeTime) / _fadeTime;
                     float alpha = 1 - normalisedTime;
                     _light.Colour = new Color(1, 1, 1, alpha * 0.4f);
-                    ScaleSprite(_explosionSprite, _explosionRadius * 0.75f + 0.25f * normalisedTime, _originalExplosionWidth);
+                    ScaleSprite(_explosionSprite, _explosionRadius * 0.2f + 0.25f * normalisedTime, _originalExplosionWidth);
                     _explosionSprite.color = new Color(1, 1, 1, alpha);
                 }
 
