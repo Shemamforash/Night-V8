@@ -343,3 +343,7 @@ c727d5d0b81c3630fe97e64e1cb39494 Assembly-CSharp.dll:Facilitating.UIControllers.
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Generation.Shrines.ShrinePickup
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Push
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Generation.Shrines.BossShrine
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.HealShrineBehaviour
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.EssenceCloudBehaviour
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.TargetBehaviour
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Misc.FireGenerator

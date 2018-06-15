@@ -7,7 +7,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
     {
         private static GameObject _particlesPrefab;
         private ParticleSystem _particles;
-        
+
         public override void Awake()
         {
             base.Awake();
@@ -17,7 +17,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             shotParticles.transform.localPosition = Vector3.zero;
             _particles = shotParticles.GetComponent<ParticleSystem>();
         }
-        
+
         protected override void Attack()
         {
             StartCoroutine(FireMaelstromShot());
@@ -27,12 +27,13 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             PauseOthers();
             _particles.Play();
-            float shotTime = _particles.main.duration + 1;
+            float shotTime = _particles.main.duration + 0.5f;
             while (shotTime > 0)
             {
                 shotTime -= Time.deltaTime;
                 yield return null;
             }
+
             MaelstromShotBehaviour.Create(Enemy.GetTarget().transform.position - transform.position, transform.position);
             UnpauseOthers();
         }

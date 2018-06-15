@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Characters;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Game.Global
 {
@@ -14,7 +11,6 @@ namespace Game.Global
     {
         private static TextMeshProUGUI _environmentText;
         private static string _environmentString, _temperatureString, _weatherString, _timeString;
-        private static int stormDistance;
 
         public static void SetEnvironmentText(string text)
         {
@@ -34,12 +30,6 @@ namespace Game.Global
             UpdateDescription();
         }
 
-        public static void SetStormDistance(int distance)
-        {
-            stormDistance = distance;
-            UpdateDescription();
-        }
-
         public static void SetTime(int days, int hours, int minutes)
         {
             _timeString = TimeToName(hours);
@@ -49,15 +39,7 @@ namespace Game.Global
 
         private static void UpdateDescription()
         {
-            string stormString;
-            if (stormDistance < 1) stormString = "here.";
-            else if (stormDistance < 3)
-                stormString = "looming.";
-            else if (stormDistance < 6)
-                stormString = "distant.";
-            else
-                stormString = "a whisper on the breeze.";
-            _environmentText.text = _timeString + ". It is " + _temperatureString + " and there is " + _weatherString + " in the " + _environmentString + ". The storm is " + stormString + ".";
+            _environmentText.text = _timeString + ". It is " + _temperatureString + " and there is " + _weatherString + " in the " + _environmentString + ".";
         }
 
         private static readonly string[] resources = {"Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Meat", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
@@ -68,7 +50,7 @@ namespace Game.Global
             PauseOnOpen = false;
             _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();
 
-            GameObject resourcesObject= GameObject.Find("Resources");
+            GameObject resourcesObject = GameObject.Find("Resources");
             foreach (string resourceType in resources)
             {
                 TextMeshProUGUI resourceText = Helper.FindChildWithName<TextMeshProUGUI>(resourcesObject, resourceType);
@@ -94,7 +76,7 @@ namespace Game.Global
         }
 
         private readonly Dictionary<string, TextMeshProUGUI> _resourceText = new Dictionary<string, TextMeshProUGUI>();
-        
+
         public void Update()
         {
             foreach (string resourceType in resources)

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
+using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
@@ -127,7 +128,7 @@ namespace Game.Exploration.Regions
 //            AddEnemy(EnemyType.Shadow, 10);
         }
 
-        private int CalculateDanger() => WorldState.StormDistanceMax - WorldState.StormDistance + (int) (Vector2.Distance(Position, Vector2.zero) / 5f);
+        private int CalculateDanger() => WorldState.GetCurrentDanger() + (int)(Vector2.Distance(Position, Vector2.zero) / 5f);
 
         public void Generate(int size)
         {
@@ -180,7 +181,20 @@ namespace Game.Exploration.Regions
                 case RegionType.Nightmare:
                     GenerateNightmare();
                     break;
+                case RegionType.Shelter :
+                    GenerateShelter();
+                    break;
             }
+        }
+
+        private void GenerateShelter()
+        {
+            if (CharacterManager.Characters.Count < 4)
+            {
+                //todo add character;
+                return;
+            }
+            //todo add resources
         }
 
         public void Enter()

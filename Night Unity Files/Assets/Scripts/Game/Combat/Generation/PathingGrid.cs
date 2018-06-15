@@ -156,8 +156,18 @@ namespace Game.Combat.Generation
             return thread;
         }
 
+        public static Cell GetCellNearMe(Vector2 position, float distanceMax, float distanceMin = 0)
+        {
+            return GetCellNearMe(WorldToCellPosition(position), distanceMax, distanceMin);
+        }
+        
         public static Cell GetCellNearMe(Cell current, float distanceMax, float distanceMin = 0) =>
             Helper.RandomInList(CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin)));
+
+        public static List<Cell> GetCellsNearMe(Vector2 position, int noCells, float distanceMax, float distanceMin = 0)
+        {
+            return GetCellsNearMe(WorldToCellPosition(position), noCells, distanceMax, distanceMin);
+        }
 
         public static List<Cell> GetCellsNearMe(Cell current, int noCells, float distanceMax, float distanceMin = 0)
         {

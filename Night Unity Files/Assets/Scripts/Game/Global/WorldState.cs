@@ -12,10 +12,8 @@ namespace Game.Global
     public class WorldState : MonoBehaviour
     {
         public const int MinutesPerHour = 12;
-        public const int IntervalSize = 60 / MinutesPerHour;
-        public static int StormDistance;
-        public static readonly int StormDistanceMax = 10;
-        public static int DaysSpentHere;
+        private const int IntervalSize = 60 / MinutesPerHour;
+        private static int DaysSpentHere;
         private static bool _started;
         private static CharacterManager _homeInventory;
         private static readonly RegionManager _regionManager = new RegionManager();
@@ -23,17 +21,15 @@ namespace Game.Global
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
         private static bool _isNight, _isPaused;
-        private static WorldState _instance;
 
-        public static float MinuteInSeconds = 0.2f;
-        private float _dayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
-        private int _minuteInterval = 60 / MinutesPerHour;
+        public const float MinuteInSeconds = 0.2f;
+        private const float DayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
+        private const int MinuteInterval = 60 / MinutesPerHour;
 
         public void Awake()
         {
             if(_homeInventory == null) _homeInventory = new CharacterManager();
             SaveController.AddPersistenceListener(_regionManager);
-            _instance = this;
         }
 
         public void Start()
@@ -43,8 +39,6 @@ namespace Game.Global
             _started = true;
             EnvironmentManager.Start();
             WeatherManager.Start();
-            StormDistance = StormDistanceMax;
-            WorldView.SetStormDistance(StormDistance);
 
 //            SaveController.LoadSettings();
 //todo            SaveController.LoadGame();
@@ -54,16 +48,9 @@ namespace Game.Global
 #endif
         }
 
-        private void UpdateStormDistance()
-        {
-            WorldView.SetStormDistance(StormDistance);
-        }
-
         private void IncrementDaysSpentHere()
         {
             ++DaysSpentHere;
-            --StormDistance;
-            UpdateStormDistance();
             if (DaysSpentHere == 7)
             {
                 //TODO gameover
@@ -89,44 +76,19 @@ namespace Game.Global
             return timeString;
         }
 
-        public float GetCurrentDanger()
+        public static int GetCurrentDanger()
         {
-            if (StormDistance <= 30f) return StormDistance / 30f;
-            return 1;
+            return DaysSpentHere + DaysSpentHere * EnvironmentManager.CurrentEnvironment.LevelNo;
         }
 
         private void FindNewLocation()
         {
-            if (StormDistance == 0)
-            {
-                InitiateFinalEncounter();
-                return;
-            }
-
-            if (DaysSpentHere >= 4) StormDistance += 2;
-            else if (DaysSpentHere >= 3)
-            {
-                ++StormDistance;
-                if (StormDistance > StormDistanceMax) StormDistance = StormDistanceMax;
-            }
-
-            UpdateStormDistance();
             EnvironmentManager.NextLevel();
-        }
-
-        private void InitiateFinalEncounter()
-        {
-            //TODO
         }
 
         public static CharacterManager HomeInventory()
         {
             return _homeInventory;
-        }
-
-        public static WorldState Instance()
-        {
-            return _instance ?? (_instance = (WorldState) FindObjectOfType(typeof(WorldState)));
         }
 
         public static void Pause()
@@ -141,9 +103,9 @@ namespace Game.Global
 
         private void IncrementWorldTime()
         {
-            int minutesPassed = Hours * MinutesPerHour + Minutes / _minuteInterval;
+            int minutesPassed = Hours * MinutesPerHour + Minutes / MinuteInterval;
             float timePassed = minutesPassed * MinuteInSeconds + _currentTime;
-            float normalisedTime = timePassed / _dayLengthInSeconds;
+            float normalisedTime = timePassed / DayLengthInSeconds;
             SceneryController.SetTime(normalisedTime);
             _currentTime += Time.deltaTime;
             if (_currentTime < MinuteInSeconds) return;
@@ -154,7 +116,7 @@ namespace Game.Global
 
         private void IncrementMinutes()
         {
-            Minutes += _minuteInterval;
+            Minutes += MinuteInterval;
             MinutePasses();
             if (Minutes != 60) return;
             Minutes = 0;
@@ -205,26 +167,5 @@ namespace Game.Global
 //            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
             if (!_isPaused) IncrementWorldTime();
         }
-
-
-//        public static void RegisterMinuteEvent(Action a)
-//        {
-//            if (Instance() != null) Instance().MinuteEvent += a;
-//        }
-//
-//        public static void UnregisterMinuteEvent(Action a)
-//        {
-//            if (Instance() != null) Instance().MinuteEvent -= a;
-//        }
-//
-//        public static void RegisterHourEvent(Action a)
-//        {
-//            if (Instance() != null) Instance().HourEvent += a;
-//        }
-//
-//        public static void UnregisterHourEvent(Action a)
-//        {
-//            if (Instance() != null) Instance().HourEvent -= a;
-//        }
     }
 }

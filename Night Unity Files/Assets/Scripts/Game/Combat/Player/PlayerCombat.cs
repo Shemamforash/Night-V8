@@ -246,10 +246,6 @@ namespace Game.Combat.Player
 
         public override void Update()
         {
-            Vector3 cameraPosition = Camera.main.transform.position;
-            cameraPosition.x = transform.position.x;
-            cameraPosition.y = transform.position.y;
-            Camera.main.transform.position = cameraPosition;
             base.Update();
             FollowTarget();
             TransitionOffScreen();
@@ -347,8 +343,10 @@ namespace Game.Combat.Player
         {
             if (_lockedTarget != null) return;
             if (e != null && !Helper.IsObjectInCameraView(e.gameObject)) return;
+            TargetBehaviour.SetTarget(e == null ? null : e.transform);
             _currentTarget = e;
             EnemyUi.Instance().SetSelectedEnemy(e);
+            
         }
 
         public override Weapon Weapon() => Player.Weapon;

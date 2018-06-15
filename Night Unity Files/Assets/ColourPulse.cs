@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ColourPulse : MonoBehaviour
@@ -11,6 +12,7 @@ public class ColourPulse : MonoBehaviour
     private SpriteRenderer _sprite;
     private Image _image;
     [SerializeField] private float _alphaMultiplier = 1f;
+    private bool _pulse = true;
 
     public void Awake()
     {
@@ -28,6 +30,7 @@ public class ColourPulse : MonoBehaviour
 
     public void Update()
     {
+        if (!_pulse) return;
         Color col = new Color(1,1,1,0f);
         if (_alphaMultiplier != 0)
         {
@@ -45,5 +48,28 @@ public class ColourPulse : MonoBehaviour
         }
         if (_sprite != null) _sprite.color = col;
         if (_image != null) _image.color = col;
+    }
+
+    public void PulseAndEnd()
+    {
+        _pulse = false;
+        StartCoroutine(EndPulse());
+    }
+
+    private IEnumerator EndPulse()
+    {
+        float currentTime = Duration;
+        while (currentTime > 0)
+        {
+            currentTime -= Time.deltaTime;
+            Color col = Color.Lerp(_currentTo, _currentFrom, _currentTime / Duration);
+            if (_sprite != null) _sprite.color = col;
+            if (_image != null) _image.color = col;
+            yield return null;
+        }
+
+        if (_sprite != null) _sprite.color = _currentFrom;
+        if (_image != null) _image.color = _currentFrom;
+        Destroy(this);
     }
 }

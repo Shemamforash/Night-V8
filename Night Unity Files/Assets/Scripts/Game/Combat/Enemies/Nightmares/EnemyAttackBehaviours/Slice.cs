@@ -32,6 +32,12 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             StartCoroutine(DisableCollider());
         }
 
+        public void OnTriggerEnter2D(Collider2D other)
+        {
+            if (!other.gameObject.CompareTag("Player")) return;
+            PlayerCombat.Instance.HealthController.TakeDamage(5);
+        }
+        
         private IEnumerator DisableCollider()
         {
             PauseOthers();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
@@ -50,6 +51,7 @@ namespace Game.Exploration.Regions
             for (int i = 0; i < currentEnvironment.Shelters; ++i) _regionTypes.Add(RegionType.Shelter);
             for (int i = 0; i < currentEnvironment.Resources; ++i) _regionTypes.Add(RegionType.Resource);
             for (int i = 0; i < currentEnvironment.Dangers; ++i) _regionTypes.Add(RegionType.Danger);
+            _regionTypes.Add(RegionType.Shelter);
             _noTemples = currentEnvironment.Temples;
             _regionsBeforeTemple = _regionTypes.Count / 2;
 

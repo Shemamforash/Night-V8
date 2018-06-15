@@ -71,16 +71,16 @@ namespace Game.Combat.Ui
             if (!_shown) return;
 
             List<CharacterCombat> chars = CombatManager.GetCharactersInRange(transform.position, 10f);
-            Vector2 playerDir = transform.up;
+            Vector2 playerDir = PlayerCombat.Instance.transform.up;
             float nearestAngle = 360;
             CharacterCombat nearestCharacter = null;
             chars.ForEach(c =>
             {
                 if (c == PlayerCombat.Instance) return;
                 if (!Helper.IsObjectInCameraView(c.gameObject)) return;
-                Vector2 enemyDir = c.transform.position - transform.position;
+                Vector2 enemyDir = c.transform.position - PlayerCombat.Instance.transform.position;
                 float enemyAngle = Vector2.Angle(playerDir, enemyDir);
-                if (enemyAngle > 5) return;
+                if (enemyAngle > 10) return;
                 if (enemyAngle > nearestAngle) return;
                 nearestAngle = enemyAngle;
                 nearestCharacter = c;
