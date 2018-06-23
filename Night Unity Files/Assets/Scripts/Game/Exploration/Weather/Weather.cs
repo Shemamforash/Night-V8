@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Game.Global;
+﻿using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 
 namespace Game.Exploration.Weather
@@ -56,34 +54,6 @@ namespace Game.Exploration.Weather
 //                r.AddWater(_water);
 //                r.AddFood(_food);
 //            });
-        }
-
-        private class Danger
-        {
-            private DangerType _dangerType;
-            private float _severity;
-
-            public Danger(string dangerType, float severity)
-            {
-                foreach (DangerType type in Enum.GetValues(typeof(DangerType)))
-                    if (type.ToString() == dangerType)
-                    {
-                        _dangerType = type;
-                        break;
-                    }
-
-                _severity = severity;
-            }
-
-            private enum DangerType
-            {
-                Acid,
-                Physical,
-                Mental,
-                Lightning,
-                Fire,
-                Cold
-            }
         }
     }
 }

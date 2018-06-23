@@ -25,7 +25,7 @@ namespace Game.Combat.Player
                     return new Taunt();
                 case CharacterClass.Watcher:
                     return new Terrify();
-                case CharacterClass.Wanderer:
+                case CharacterClass.Survivor:
                     return new Shatter();
                 case CharacterClass.Protector:
                     return new Sacrifice();
@@ -33,7 +33,7 @@ namespace Game.Combat.Player
                     return new Restock();
                 case CharacterClass.Ghost:
                     return new Blink();
-                case CharacterClass.Driver:
+                case CharacterClass.Wanderer:
                     return new Defile();
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -52,7 +52,7 @@ namespace Game.Combat.Player
                     return new Crush();
                 case CharacterClass.Watcher:
                     return new Afflict();
-                case CharacterClass.Wanderer:
+                case CharacterClass.Survivor:
                     return new Brace();
                 case CharacterClass.Protector:
                     return new Execute();
@@ -60,7 +60,7 @@ namespace Game.Combat.Player
                     return new Fortify();
                 case CharacterClass.Ghost:
                     return new Unearth();
-                case CharacterClass.Driver:
+                case CharacterClass.Wanderer:
                     return new Absolve();
                 default:
                     throw new ArgumentOutOfRangeException();

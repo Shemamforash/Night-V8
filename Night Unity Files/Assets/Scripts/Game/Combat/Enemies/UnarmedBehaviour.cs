@@ -1,8 +1,10 @@
-﻿using System.Threading;
+﻿using System.Collections;
+using System.Threading;
+using Game.Combat.Enemies.Nightmares;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 namespace Game.Combat.Enemies
@@ -13,6 +15,7 @@ namespace Game.Combat.Enemies
         private const float DetectionRange = 2f;
         private const float VisionRange = 5f;
         private Vector2 _originPosition;
+        protected bool AlertAll;
 
         public override void Initialise(Enemy enemy)
         {
@@ -22,18 +25,19 @@ namespace Game.Combat.Enemies
             else CurrentAction = Wander;
         }
 
-        public void Alert(bool alertAll = true)
+        public void Alert()
         {
             if (Alerted) return;
             Alerted = true;
             OnAlert();
-            if (!alertAll) return;
+            if (!AlertAll) return;
             CombatManager.Enemies().ForEach(e =>
             {
                 if (e == this) return;
                 UnarmedBehaviour enemy = e as UnarmedBehaviour;
                 if (enemy == null) return;
-                enemy.Alert(false);
+                enemy.AlertAll = false;
+                enemy.Alert();
             });
         }
 
@@ -59,16 +63,14 @@ namespace Game.Combat.Enemies
             MoveToPlayer();
         }
 
+        public override void Update()
+        {
+            base.Update();
+            CheckForPlayer();
+        }
+
         private void Wander()
         {
-            float randomDistance = Random.Range(0.5f, 1.5f);
-            float currentAngle = AdvancedMaths.AngleFromUp(_originPosition, transform.position);
-            float randomAngle = currentAngle + Random.Range(20f, 60f);
-            randomAngle *= Mathf.Deg2Rad;
-            Vector2 randomPoint = new Vector2();
-            randomPoint.x = randomDistance * Mathf.Cos(randomAngle) + _originPosition.x;
-            randomPoint.y = randomDistance * Mathf.Sin(randomAngle) + _originPosition.y;
-
             Cell targetCell = PathingGrid.WorldToCellPosition(_originPosition);
             targetCell = PathingGrid.GetCellNearMe(targetCell, 3);
             Thread routingThread = PathingGrid.RouteToCell(CurrentCell(), targetCell, route);
@@ -76,16 +78,7 @@ namespace Game.Combat.Enemies
             SetActionText("Wandering");
         }
 
-        private void Flee()
-        {
-            SetActionText("Fleeing");
-            CurrentAction = () =>
-            {
-                if (DistanceToTarget() > CombatManager.VisibilityRange()) Kill();
-            };
-        }
-
-        private void CheckForPlayer()
+        protected virtual void CheckForPlayer()
         {
             if (DistanceToTarget() > VisionRange) return;
             CurrentAction = Suspicious;

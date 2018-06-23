@@ -18,6 +18,11 @@
         Nightmare,
         Revenant,
         Shadow,
-        Drone
+        Drone,
+        Grazer,
+        Watcher,
+        Slinger,
+        Snapper,
+        Curio
     }
 }

@@ -93,21 +93,19 @@ class InscriptionImporter(XMLWriter):
     def read_inscription(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
         write_single_value(self, "Damage", "x" + get_value(self, "B", row))
-        write_single_value(self, "Range", "x" + get_value(self, "C", row))
-        write_single_value(self, "FireRate", "x" + get_value(self, "D", row))
-        write_single_value(self, "ReloadSpeed", "x" + get_value(self, "E", row))
-        write_single_value(self, "Accuracy", "x" + get_value(self, "F", row))
-        write_single_value(self, "Handling", "x" + get_value(self, "G", row))
-        write_single_value(self, "Capacity", "x" + get_value(self, "H", row))
-        write_single_value(self, "Pellets", "x" + get_value(self, "I", row))
-        write_single_value(self, "PierceChance", "+" + get_value(self, "J", row, "0"))
-        write_single_value(self, "BleedChance", "+" + get_value(self, "K", row, "0"))
-        write_single_value(self, "BurnChance", "+" + get_value(self, "L", row, "0"))
-        write_single_value(self, "SicknessChance", "+" + get_value(self, "M", row, "0"))
-        write_single_value(self, "Strength", "+" + get_value(self, "N", row, "0"))
-        write_single_value(self, "Endurance", "+" + get_value(self, "O", row, "0"))
-        write_single_value(self, "Perception", "+" + get_value(self, "P", row, "0"))
-        write_single_value(self, "Willpower", "+" + get_value(self, "Q", row, "0"))
+        write_single_value(self, "FireRate", "x" + get_value(self, "C", row))
+        write_single_value(self, "ReloadSpeed", "x" + get_value(self, "D", row))
+        write_single_value(self, "Accuracy", "x" + get_value(self, "E", row))
+        write_single_value(self, "Handling", "x" + get_value(self, "F", row))
+        write_single_value(self, "Capacity", "x" + get_value(self, "G", row))
+        write_single_value(self, "Pellets", "x" + get_value(self, "H", row))
+        write_single_value(self, "DecayChance", "+" + get_value(self, "I", row, "0"))
+        write_single_value(self, "BurnChance", "+" + get_value(self, "J", row, "0"))
+        write_single_value(self, "SicknessChance", "+" + get_value(self, "K", row, "0"))
+        write_single_value(self, "Strength", "+" + get_value(self, "L", row, "0"))
+        write_single_value(self, "Endurance", "+" + get_value(self, "M", row, "0"))
+        write_single_value(self, "Perception", "+" + get_value(self, "N", row, "0"))
+        write_single_value(self, "Willpower", "+" + get_value(self, "O", row, "0"))
 
 
 class GearImporter(XMLWriter):
@@ -222,10 +220,14 @@ class CharacterImporter(XMLWriter):
     def read_class(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
         write_single_value(self, "Endurance", get_value(self, "D", row))
-        write_single_value(self, "Strength", get_value(self, "E", row))
-        write_single_value(self, "Willpower", get_value(self, "F", row))
-        write_single_value(self, "Perception", get_value(self, "G", row))
-        write_single_value(self, "Story", get_value(self, "N", row))
+        write_single_value(self, "Strength", get_value(self, "F", row))
+        write_single_value(self, "Willpower", get_value(self, "H", row))
+        write_single_value(self, "Perception", get_value(self, "J", row))
+        write_single_value(self, "EnduranceCap", get_value(self, "E", row, ''))
+        write_single_value(self, "StrengthCap", get_value(self, "G", row, ''))
+        write_single_value(self, "WillpowerCap", get_value(self, "I", row, ''))
+        write_single_value(self, "PerceptionCap", get_value(self, "K", row, ''))
+        write_single_value(self, "Story", get_value(self, "Q", row))
 
 
 class EnemyImporter(XMLWriter):
@@ -234,7 +236,7 @@ class EnemyImporter(XMLWriter):
         write_tag(self, "Enemies", self.read_enemies)
 
     def read_enemies(self):
-        for row in range(3, 17):
+        for row in range(3, 25):
             write_tag(self, "Enemy", self.read_enemy, [row])
 
     def read_enemy(self, row):
@@ -303,11 +305,11 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-WeaponImporter()
+# WeaponImporter()
 # GearImporter()
 # WeatherImporter()
 # RegionImporter()
-# CharacterImporter()
+CharacterImporter()
 # EnemyImporter()
 # RecipeImporter()
 # ResourceImporter()

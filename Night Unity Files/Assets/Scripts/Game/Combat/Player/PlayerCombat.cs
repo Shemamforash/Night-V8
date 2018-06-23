@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using DG.Tweening;
 using Facilitating;
 using Facilitating.UIControllers;
+using Fastlights;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
@@ -25,10 +27,12 @@ namespace Game.Combat.Player
     public class PlayerCombat : CharacterCombat, IInputListener
     {
         private EnemyBehaviour _currentTarget;
-        private float _damageModifier, _skillCooldownModifier;
+        private float  _skillCooldownModifier, _adrenalineGain;
+        private readonly Number _adrenalineLevel = new Number(0, 0, 8);
         private Cooldown _dashCooldown;
         private int _initialArmour;
         private Quaternion _lastTargetRotation;
+        private int _compassPulses;
 
         private Coroutine _reloadingCoroutine;
 
@@ -36,12 +40,19 @@ namespace Game.Combat.Player
 
         public Characters.Player Player;
 
-        public RageController RageController;
-        public bool Retaliate;
         private float _reloadPressedTime;
         private const float MaxReloadPressedTime = 1f;
         private bool _inCombat;
         public static PlayerCombat Instance;
+        public float MuzzleFlashOpacity { get; set; }
+
+        private bool ConsumeAdrenaline(int amount)
+        {
+            if (amount > _adrenalineLevel.CurrentValue()) return false;
+            _adrenalineLevel.Decrement(amount);
+            RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
+            return true;
+        }
 
         protected override void Move(Vector2 direction)
         {
@@ -74,8 +85,6 @@ namespace Game.Combat.Player
             base.Awake();
             Instance = this;
         }
-
-        public bool InCombat() => _inCombat;
 
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -114,7 +123,7 @@ namespace Game.Combat.Player
                 switch (axis)
                 {
                     case InputAxis.Fire:
-                        if (!_inCombat) UiCompassController.EmitPulse();
+                        if (!_inCombat) TryEmitPulse();
                         break;
                     case InputAxis.Enrage:
                         if (_inCombat) LockTarget();
@@ -141,8 +150,11 @@ namespace Game.Combat.Player
             }
         }
 
-        private void SwitchUi()
+        private void TryEmitPulse()
         {
+            if (_compassPulses == 0) return;
+            UiCompassController.EmitPulse();
+            --_compassPulses;
         }
 
         public void OnInputUp(InputAxis axis)
@@ -251,6 +263,20 @@ namespace Game.Combat.Player
             TransitionOffScreen();
             CheckForContainersNearby();
             CheckForEnemiesOnScreen();
+            _adrenalineLevel.Increment(_adrenalineGain);
+            UpdateMuzzleFlash();
+        }
+
+        private FastLight _muzzleFlash;
+        
+        private void UpdateMuzzleFlash()
+        {
+            MuzzleFlashOpacity -= Time.deltaTime;
+            if (MuzzleFlashOpacity < 0) MuzzleFlashOpacity = 0;
+            Color c = _muzzleFlash.Colour;
+            if (c.a == 0 && MuzzleFlashOpacity == 0) return;
+            c.a = MuzzleFlashOpacity;
+            _muzzleFlash.Colour = c;
         }
 
         private const float MaxShowInventoryDistance = 0.5f;
@@ -274,18 +300,21 @@ namespace Game.Combat.Player
         {
             InputHandler.SetCurrentListener(this);
 
+            _muzzleFlash = GameObject.Find("Muzzle Flash").GetComponent<FastLight>();
             Player = CharacterManager.SelectedCharacter;
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             ArmourController = Player.ArmourController;
-            _damageModifier = Player.Attributes.CalculateDamageModifier();
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
             _initialArmour = Player.ArmourController.GetProtectionLevel();
 
-//            _playerUi._playerName.text = player.Name;
             Speed = Player.Attributes.CalculateSpeed();
 
+            _adrenalineGain = Player.Attributes.CalculateAdrenalineRecoveryRate();
+            _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
+            _compassPulses = Player.Attributes.CalculateCompassPulses();
+            
             _dashCooldown = CombatManager.CreateCooldown();
-            _dashCooldown.Duration = Player.Attributes.CalculateDashCooldown();
+            _dashCooldown.Duration = 1;
             _dashCooldown.SetDuringAction(a =>
             {
                 float normalisedTime = a / _dashCooldown.Duration;
@@ -297,8 +326,7 @@ namespace Game.Combat.Player
                 RageBarController.PlayFlash();
             });
 
-            RageController = new RageController();
-            RageController.EnterCombat();
+            _adrenalineLevel.SetCurrentValue(0f);
 
             HealthController.SetInitialHealth(Player.Attributes.CalculateCombatHealth(), this);
             HealthController.AddOnHeal(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
@@ -326,11 +354,9 @@ namespace Game.Combat.Player
             _dashCooldown.Start();
         }
 
-        private bool CanDash() => _dashCooldown.Finished() && _dashPressed;
-
-        public void TryRetaliate(EnemyBehaviour origin)
+        private bool CanDash()
         {
-            if (Retaliate) FireWeapon();
+            return _dashCooldown.Finished() && _dashPressed && ConsumeAdrenaline(2);
         }
 
         public override void Knockback(Vector3 source, float force = 10f)
@@ -354,6 +380,7 @@ namespace Game.Combat.Player
         public void ExitCombat()
         {
             StopReloading();
+            Player.Attributes.DecreaseWillpower();
         }
 
         //RELOADING
@@ -382,7 +409,6 @@ namespace Game.Combat.Player
             float duration = Player.Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
             UIMagazineController.EmptyMagazine();
             OnFireAction = null;
-            Retaliate = false;
             _reloading = true;
 
             float age = 0;
@@ -411,7 +437,6 @@ namespace Game.Combat.Player
 
         public override void ApplyShotEffects(Shot s)
         {
-            s.SetDamageModifier(_damageModifier);
             OnFireAction?.Invoke(s);
         }
 
@@ -421,23 +446,6 @@ namespace Game.Combat.Player
             if (_reloading) return;
             if (!_weaponBehaviour.CanFire()) return;
             _weaponBehaviour.StartFiring(this);
-        }
-
-        private bool ShowMuzzleFlash;
-        private SpriteRenderer _muzzleFlash;
-
-        private void UpdateMuzzleFlash()
-        {
-            if (_muzzleFlash == null) _muzzleFlash = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Muzzle Flash");
-            if (ShowMuzzleFlash)
-            {
-                _muzzleFlash.color = new Color(1, 1, 1, Random.Range(0.2f, 0.8f));
-                ShowMuzzleFlash = false;
-            }
-            else
-            {
-                _muzzleFlash.color = UiAppearanceController.InvisibleColour;
-            }
         }
 
         //MISC

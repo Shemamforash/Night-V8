@@ -36,7 +36,8 @@ namespace Game.Combat.Misc
             CharacterManager.SelectedCharacter = _playerCharacter;
             Region node = new Region();
 //            node.SetRegionType(RegionType.Danger);
-            node.SetRegionType(RegionType.Nightmare);
+//            node.SetRegionType(RegionType.Nightmare);
+            node.SetRegionType(RegionType.Animal);
             node.Position = Vector2.zero;
             _playerCharacter.TravelAction.SetCurrentNode(node);
             _playerCharacter.Inventory().Print();

@@ -201,7 +201,6 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            PlayerCombat.Instance.Retaliate = true;
         }
     }
 }

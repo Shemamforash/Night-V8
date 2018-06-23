@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Game.Combat.Generation;
+using Game.Combat.Player;
 using NUnit.Framework;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -30,7 +31,6 @@ public class UiCompassController : MonoBehaviour
         _instance.StartCoroutine(_instance.ShowItems());
         ContainerController.Containers.ForEach(c => c.TryReveal());
     }
-
 
     private IEnumerator ShowItems()
     {

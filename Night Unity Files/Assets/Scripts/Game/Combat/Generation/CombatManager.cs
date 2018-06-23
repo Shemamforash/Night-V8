@@ -91,6 +91,9 @@ namespace Game.Combat.Generation
                 case RegionType.Nightmare:
                     GameObject.Find("World").AddComponent<Nightmare>().Initialise(_currentRegion);
                     break;
+                case RegionType.Animal:
+                    GameObject.Find("World").AddComponent<Canyon>().Initialise(_currentRegion);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -133,7 +136,7 @@ namespace Game.Combat.Generation
         {
             Enemy e = Instance()._currentRegion.AddEnemy(type, 10);
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
-            (enemyBehaviour as UnarmedBehaviour)?.Alert(false);
+            (enemyBehaviour as UnarmedBehaviour)?.Alert();
             Instance().AddEnemy(enemyBehaviour);
             return enemyBehaviour;
         }

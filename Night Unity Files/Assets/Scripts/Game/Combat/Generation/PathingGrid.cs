@@ -6,15 +6,16 @@ using System.Threading;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Debug = UnityEngine.Debug;
 
 namespace Game.Combat.Generation
 {
     public static class PathingGrid
     {
-        public const int CombatAreaWidth = 45;
+        public const int CombatAreaWidth = 40;
         public const int CombatMovementDistance = CombatAreaWidth - 3;
-        public const int CellResolution = 10;
+        public const int CellResolution = 8;
         public const float CellWidth = 1f / CellResolution;
         public const int GridWidth = CombatAreaWidth * CellResolution;
 
@@ -42,7 +43,11 @@ namespace Game.Combat.Generation
         {
             HashSet<Cell> intersectingCells = GetIntersectingGridCells(barrier);
             if (intersectingCells.Intersect(_invalidCells).Count() != 0 && !forcePlace) return false;
-            foreach (Cell cell in intersectingCells) _invalidCells.Add(cell);
+            foreach (Cell cell in intersectingCells)
+            {
+                _invalidCells.Add(cell);
+                _outOfRangeSet.Remove(cell);
+            }
 
             return true;
         }
@@ -55,6 +60,8 @@ namespace Game.Combat.Generation
             _gridNodes.ForEach(n => n.SetNeighbors());
             _stopwatch.Stop();
             Debug.Log("neighbors: " + _stopwatch.Elapsed.ToString("mm\\:ss\\.ff"));
+
+            _outOfRangeList = _outOfRangeSet.ToList();
         }
 
         public static List<Cell> GetCellsInFrontOfMe(Cell current, Vector2 direction, float distance)
@@ -160,14 +167,12 @@ namespace Game.Combat.Generation
         {
             return GetCellNearMe(WorldToCellPosition(position), distanceMax, distanceMin);
         }
-        
+
         public static Cell GetCellNearMe(Cell current, float distanceMax, float distanceMin = 0) =>
             Helper.RandomInList(CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin)));
 
-        public static List<Cell> GetCellsNearMe(Vector2 position, int noCells, float distanceMax, float distanceMin = 0)
-        {
-            return GetCellsNearMe(WorldToCellPosition(position), noCells, distanceMax, distanceMin);
-        }
+        public static List<Cell> GetCellsNearMe(Vector2 position, int noCells, float distanceMax, float distanceMin = 0) =>
+            GetCellsNearMe(WorldToCellPosition(position), noCells, distanceMax, distanceMin);
 
         public static List<Cell> GetCellsNearMe(Cell current, int noCells, float distanceMax, float distanceMin = 0)
         {
@@ -213,10 +218,13 @@ namespace Game.Combat.Generation
             return hidden;
         }
 
+        public static Cell GetCellOutOfRange() => Helper.RandomInList(_outOfRangeList);
+
         private static List<Cell> CellsInRange(Cell origin, int maxRange, int minRange = 0)
         {
+            Assert.IsTrue(minRange <= maxRange);
             if (origin == null) Debug.Log("initial node was null");
-            List<Cell> cellsInRange = new List<Cell>();
+            _cellsInRange.Clear();
             int startX = origin.XIndex - maxRange;
             if (startX < 0) startX = 0;
             int startY = origin.YIndex - maxRange;
@@ -230,36 +238,13 @@ namespace Game.Combat.Generation
             for (int y = startY; y < endY; ++y)
             {
                 Cell current = Grid[x][y];
-                if (current == null || !current.Reachable) continue;
+                if (!current.Reachable) continue;
                 float distance = current.Distance(origin);
                 if (distance < minRange || distance > maxRange) continue;
-                cellsInRange.Add(current);
+                _cellsInRange.Add(current);
             }
 
-            return cellsInRange;
-        }
-
-        public static bool DrawGrid;
-
-        private static void OnDrawGizmos()
-        {
-            foreach (Cell cell in _cellsInRange)
-            {
-                Gizmos.color = IsCellHidden(cell) ? new Color(1, 0, 1, 0.4f) : new Color(0, 1, 1, 0.4f);
-                Gizmos.DrawCube(new Vector3(cell.XPos, cell.YPos), new Vector3(CellWidth, CellWidth, 1));
-            }
-
-            if (!DrawGrid) return;
-            Gizmos.color = new Color(1, 0, 1, 0.4f);
-            if (Grid == null) return;
-            for (int i = 0; i < GridWidth; ++i)
-            {
-                for (int j = 0; j < GridWidth; ++j)
-                {
-                    if (Grid[i][j] == null || !Grid[i][j].Reachable) continue;
-                    Gizmos.DrawCube(new Vector3(Grid[i][j].XPos, Grid[i][j].YPos), new Vector3(CellWidth, CellWidth, 1));
-                }
-            }
+            return _cellsInRange;
         }
 
         public static bool IsSpaceAvailable(Vector3 topLeft, Vector3 bottomRight)
@@ -299,7 +284,6 @@ namespace Game.Combat.Generation
             List<Cell> possibleCells = CellsInSquare(p.TopLeft, p.BottomRight);
             foreach (Cell c in possibleCells)
             {
-//                if (!c.Reachable) continue;
                 if (!AdvancedMaths.IsPointInPolygon(c.Position - p.Position, p.Vertices)) continue;
                 c.Blocked = true;
                 c.Reachable = false;
@@ -313,7 +297,6 @@ namespace Game.Combat.Generation
                 List<Cell> cells = CellsOnLine(start, end);
                 cells.ForEach(c =>
                 {
-                    if (c == null) return;
                     c.Reachable = false;
                     intersectingCells.Add(c);
                 });
@@ -393,11 +376,14 @@ namespace Game.Combat.Generation
 
         private static int WorldToGridDistance(float distance) => Mathf.FloorToInt(distance * CellResolution);
 
+        private static readonly HashSet<Cell> _outOfRangeSet = new HashSet<Cell>();
+        public static List<Cell> _outOfRangeList = new List<Cell>();
+
         private static void GenerateBaseGrid()
         {
             _gridNodes.Clear();
-            float worldRadius = CombatAreaWidth / 2f * CellResolution;
             if (Grid == null) Grid = new Cell[GridWidth][];
+            int outOfRangeDistanceSqrd = (int) Mathf.Pow(CombatMovementDistance * CellResolution * 0.5f, 2f);
             for (int x = 0; x < GridWidth; ++x)
             {
                 if (Grid[x] == null) Grid[x] = new Cell[GridWidth];
@@ -405,14 +391,14 @@ namespace Game.Combat.Generation
                 {
                     float xComp = Mathf.Pow(x - GridWidth / 2f, 2f);
                     float yComp = Mathf.Pow(y - GridWidth / 2f, 2f);
-                    float distance = Mathf.Sqrt(xComp + yComp);
-                    if (distance > worldRadius)
+                    float distanceSqrd = xComp + yComp;
+                    Grid[x][y] = Cell.Generate(x, y);
+
+                    if (distanceSqrd > outOfRangeDistanceSqrd)
                     {
-                        Grid[x][y] = null;
-                        continue;
+                        _outOfRangeSet.Add(Grid[x][y]);
                     }
 
-                    Grid[x][y] = Cell.Generate(x, y);
                     _gridNodes.Add(Grid[x][y]);
                 }
             }

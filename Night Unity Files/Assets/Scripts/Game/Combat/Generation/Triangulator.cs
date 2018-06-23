@@ -20,9 +20,8 @@ namespace Game.Combat.Generation
             List<Vertex> verts = points.Select(vector3 => new Vertex(vector3.x, vector3.y)).ToList();
             p.Add(new Contour(verts));
             
-            ConstraintOptions options = new ConstraintOptions{ConformingDelaunay = true};
-            IMesh m = p.Triangulate(options);
-            int[] triangles = new int[points.Length * 3];
+            IMesh m = p.Triangulate();
+            int[] triangles = new int[m.Triangles.Count * 3];
             int current = 0;
             foreach (Triangle mTriangle in m.Triangles)
             {

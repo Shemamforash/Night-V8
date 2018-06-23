@@ -34,6 +34,7 @@
         SicknessChance,
         PierceChance,
         BleedChance,
-        BurnChance
+        BurnChance,
+        CompassBonus
     }
 }

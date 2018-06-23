@@ -17,6 +17,8 @@ namespace Game.Combat.Enemies
         public readonly int Health;
         public readonly int Speed;
         public readonly int Value;
+        private static readonly List<WeaponType> _weaponTypes = new List<WeaponType>();
+        private static readonly List<EnemyType> _enemyTypes = new List<EnemyType>();
 
         private EnemyTemplate(EnemyType type, int health, int speed, int value, string[] allowedWeaponTypes)
         {
@@ -24,7 +26,11 @@ namespace Game.Combat.Enemies
             Health = health;
             Speed = speed;
             Value = value;
-            foreach (WeaponType weaponType in Enum.GetValues(typeof(WeaponType)))
+            if (_weaponTypes.Count == 0)
+            {
+                foreach (WeaponType weaponType in Enum.GetValues(typeof(WeaponType))) _weaponTypes.Add(weaponType);    
+            }
+            foreach (WeaponType weaponType in _weaponTypes)
                 if (allowedWeaponTypes.Contains(weaponType.ToString()))
                     AllowedWeaponTypes.Add(weaponType);
         }
@@ -37,7 +43,11 @@ namespace Game.Combat.Enemies
 
         private static EnemyType NameToType(string typeName)
         {
-            foreach (EnemyType enemyType in Enum.GetValues(typeof(EnemyType)))
+            if (_enemyTypes.Count == 0)
+            {
+                foreach (EnemyType enemyType in Enum.GetValues(typeof(EnemyType))) _enemyTypes.Add(enemyType);    
+            }
+            foreach (EnemyType enemyType in _enemyTypes)
                 if (enemyType.ToString() == typeName)
                     return enemyType;
             throw new Exceptions.EnemyTypeDoesNotExistException(typeName);

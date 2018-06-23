@@ -57,21 +57,21 @@
     </Enemy>
     <Enemy>
         <Name>Ghoul</Name>
-        <Health>5</Health>
+        <Health>25</Health>
         <Speed>6</Speed>
         <Value>1</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>
     <Enemy>
         <Name>GhoulMother</Name>
-        <Health>400</Health>
+        <Health>150</Health>
         <Speed>3</Speed>
         <Value>3</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>
     <Enemy>
         <Name>Maelstrom</Name>
-        <Health>100</Health>
+        <Health>150</Health>
         <Speed>5</Speed>
         <Value>2</Value>
         <WeaponTypes>1</WeaponTypes>
@@ -79,28 +79,28 @@
     <Enemy>
         <Name>Ghast</Name>
         <Health>100</Health>
-        <Speed>1</Speed>
+        <Speed>5</Speed>
         <Value>1</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>
     <Enemy>
         <Name>Revenant</Name>
-        <Health>100</Health>
+        <Health>60</Health>
         <Speed>5</Speed>
         <Value>1</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>
     <Enemy>
         <Name>Nightmare</Name>
-        <Health>1000</Health>
-        <Speed>1</Speed>
+        <Health>400</Health>
+        <Speed>5</Speed>
         <Value>1</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>
     <Enemy>
         <Name>Shadow</Name>
-        <Health>300</Health>
-        <Speed>6</Speed>
+        <Health>100</Health>
+        <Speed>5</Speed>
         <Value>1</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>
@@ -114,7 +114,42 @@
     <Enemy>
         <Name>Drone</Name>
         <Health>20</Health>
-        <Speed>6</Speed>
+        <Speed>0</Speed>
+        <Value>1</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Grazer</Name>
+        <Health>150</Health>
+        <Speed>9</Speed>
+        <Value>1</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Watcher</Name>
+        <Health>50</Health>
+        <Speed>7</Speed>
+        <Value>1</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Curio</Name>
+        <Health>10</Health>
+        <Speed>10</Speed>
+        <Value>1</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Slinger</Name>
+        <Health>100</Health>
+        <Speed>5</Speed>
+        <Value>1</Value>
+        <WeaponTypes>1</WeaponTypes>
+    </Enemy>
+    <Enemy>
+        <Name>Snapper</Name>
+        <Health>200</Health>
+        <Speed>3</Speed>
         <Value>1</Value>
         <WeaponTypes>1</WeaponTypes>
     </Enemy>

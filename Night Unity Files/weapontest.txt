@@ -1,66 +1,66 @@
 Type: Pistol  ---  Quality: Worn
-        DPS: 43 (min: 29.5 /max: 53.3 )
-        Damage: 14.9 (min: 7.9 /max: 20.2)
-        Accuracy: 56.2 (min: 56.2 /max: 56.2)
-        FireRate: 4.3 (min: 3.4 /max: 6.8)
-
-Pistol Shortshooter 
-Durability: 20 (0.125)
-DPS: 53.34146
-Automatic: False
-Capacity:   6
-Pellets:    1
-Damage:     20.25
-Fire Rate:  3.375
-Reload:     0.5
-Accuracy: 56.25
-
-
-
+        DPS: 41 (min: 32.4 /max: 58.4 )
+        Damage: 18.4 (min: 11.2 /max: 28.1)
+        Accuracy: 65.5 (min: 56.2 /max: 84.4)
+        FireRate: 4.1 (min: 2.2 /max: 6.8)
 
 Pistol Deepdriver 
 Durability: 20 (0.125)
-DPS: 29.46828
+DPS: 58.41346
 Automatic: False
-Capacity:   10
+Capacity:   6
 Pellets:    1
-Damage:     14.625
-Fire Rate:  3.375
+Damage:     28.125
+Fire Rate:  6.75
 Reload:     2
+Accuracy: 84.375
+
+
+
+
+Pistol Shortshooter 
+Durability: 20 (0.125)
+DPS: 32.4
+Automatic: False
+Capacity:   12
+Pellets:    1
+Damage:     15.75
+Fire Rate:  2.25
+Reload:     0.5
 Accuracy: 56.25
 
 
 
 
 Type: Pistol  ---  Quality: Radiant
-        DPS: 100.5 (min: 64.5 /max: 129.3 )
-        Damage: 18.6 (min: 7.9 /max: 33.8)
-        Accuracy: 75 (min: 56.2 /max: 93.8)
-        FireRate: 6.1 (min: 3.4 /max: 11.2)
-
-Pistol Shortshooter 
-Durability: 50 (0.875)
-DPS: 129.2553
-Automatic: False
-Capacity:   6
-Pellets:    1
-Damage:     33.75
-Fire Rate:  5.625
-Reload:     0.5
-Accuracy: 93.75
-
-
-
+        DPS: 93 (min: 82.3 /max: 111 )
+        Damage: 24.6 (min: 11.2 /max: 46.9)
+        Accuracy: 80.7 (min: 56.2 /max: 100)
+        FireRate: 5.5 (min: 2.2 /max: 11.2)
 
 Pistol Deepdriver 
 Durability: 50 (0.875)
-DPS: 64.52206
+DPS: 111.0197
 Automatic: False
+Capacity:   6
+Pellets:    1
+Damage:     46.875
+Fire Rate:  11.25
+Reload:     2
+Accuracy: 100
+
+
+
+
+Pistol Slinger 
+Durability: 50 (0.875)
+DPS: 82.31708
+Automatic: True
 Capacity:   10
 Pellets:    1
-Damage:     24.375
+Damage:     18.75
 Fire Rate:  5.625
-Reload:     2
+Reload:     0.5
 Accuracy: 93.75
 
 
@@ -69,18 +69,18 @@ Accuracy: 93.75
 
 
 Type: Rifle  ---  Quality: Worn
-        DPS: 36.2 (min: 35.6 /max: 37.7 )
-        Damage: 57.2 (min: 45 /max: 90)
+        DPS: 59.6 (min: 58.8 /max: 60.8 )
+        Damage: 84.9 (min: 56.2 /max: 101.2)
         Accuracy: 100 (min: 100 /max: 100)
-        FireRate: 1.1 (min: 1.1 /max: 1.1)
+        FireRate: 1.4 (min: 1.1 /max: 2.2)
 
-Rifle Shoulderbreaker 
+Rifle Groundrider 
 Durability: 20 (0.125)
-DPS: 37.67442
+DPS: 60.75
 Automatic: False
-Capacity:   2
+Capacity:   6
 Pellets:    1
-Damage:     90
+Damage:     84.375
 Fire Rate:  1.125
 Reload:     3
 Accuracy: 100
@@ -90,31 +90,31 @@ Accuracy: 100
 
 Rifle Voidwalker 
 Durability: 20 (0.125)
-DPS: 35.6044
-Automatic: True
-Capacity:   8
+DPS: 58.79033
+Automatic: False
+Capacity:   6
 Pellets:    1
-Damage:     45
+Damage:     101.25
 Fire Rate:  1.125
-Reload:     3
+Reload:     5
 Accuracy: 100
 
 
 
 
 Type: Rifle  ---  Quality: Radiant
-        DPS: 79.7 (min: 73.8 /max: 82.6 )
-        Damage: 78.4 (min: 45 /max: 150)
+        DPS: 126.5 (min: 122.3 /max: 136.1 )
+        Damage: 110.3 (min: 56.2 /max: 168.8)
         Accuracy: 100 (min: 100 /max: 100)
-        FireRate: 1.5 (min: 1.1 /max: 1.9)
+        FireRate: 2 (min: 1.1 /max: 3.8)
 
-Rifle Voidwalker 
+Rifle Groundrider 
 Durability: 50 (0.875)
-DPS: 82.5688
-Automatic: True
-Capacity:   8
+DPS: 136.0887
+Automatic: False
+Capacity:   6
 Pellets:    1
-Damage:     75
+Damage:     140.625
 Fire Rate:  1.875
 Reload:     3
 Accuracy: 100
@@ -124,12 +124,12 @@ Accuracy: 100
 
 Rifle Shoulderbreaker 
 Durability: 50 (0.875)
-DPS: 73.77049
-Automatic: False
-Capacity:   2
+DPS: 122.2826
+Automatic: True
+Capacity:   6
 Pellets:    1
-Damage:     150
-Fire Rate:  1.875
+Damage:     93.75
+Fire Rate:  3.75
 Reload:     3
 Accuracy: 100
 
@@ -139,17 +139,31 @@ Accuracy: 100
 
 
 Type: Shotgun  ---  Quality: Worn
-        DPS: 86.5 (min: 82.4 /max: 90.4 )
-        Damage: 9 (min: 4.5 /max: 14.6)
+        DPS: 59.2 (min: 58.2 /max: 59.8 )
+        Damage: 6.3 (min: 3.4 /max: 9)
         Accuracy: 22.5 (min: 22.5 /max: 22.5)
-        FireRate: 2.3 (min: 1.7 /max: 3.4)
+        FireRate: 3.4 (min: 1.7 /max: 6.8)
+
+Shotgun Leadspreader 
+Durability: 20 (0.125)
+DPS: 59.7541
+Automatic: True
+Capacity:   6
+Pellets:    10
+Damage:     3.375
+Fire Rate:  6.75
+Reload:     2.5
+Accuracy: 22.5
+
+
+
 
 Shotgun Skullcrusher 
 Durability: 20 (0.125)
-DPS: 90.4186
-Automatic: True
-Capacity:   5
-Pellets:    8
+DPS: 58.20359
+Automatic: False
+Capacity:   2
+Pellets:    10
 Damage:     9
 Fire Rate:  3.375
 Reload:     2.5
@@ -158,48 +172,34 @@ Accuracy: 22.5
 
 
 
-Shotgun Leadspreader 
-Durability: 20 (0.125)
-DPS: 82.37288
-Automatic: False
-Capacity:   5
-Pellets:    20
-Damage:     4.5
-Fire Rate:  1.6875
-Reload:     2.5
-Accuracy: 22.5
-
-
-
-
 Type: Shotgun  ---  Quality: Radiant
-        DPS: 185.7 (min: 175.3 /max: 201.3 )
-        Damage: 12.6 (min: 4.5 /max: 24.4)
+        DPS: 116.6 (min: 105.1 /max: 132.9 )
+        Damage: 8.1 (min: 3.4 /max: 15)
         Accuracy: 30 (min: 22.5 /max: 37.5)
-        FireRate: 3 (min: 1.7 /max: 5.6)
+        FireRate: 5 (min: 1.7 /max: 11.2)
 
 Shotgun Bonebreaker 
 Durability: 50 (0.875)
-DPS: 201.2615
-Automatic: True
+DPS: 132.874
+Automatic: False
 Capacity:   10
-Pellets:    5
-Damage:     24.375
+Pellets:    10
+Damage:     9.375
 Fire Rate:  2.8125
-Reload:     2.5
+Reload:     3.5
 Accuracy: 37.5
 
 
 
 
-Shotgun Leadspreader 
+Shotgun Skullcrusher 
 Durability: 50 (0.875)
-DPS: 175.3247
+DPS: 105.0584
 Automatic: False
-Capacity:   5
-Pellets:    20
-Damage:     7.5
-Fire Rate:  2.8125
+Capacity:   2
+Pellets:    10
+Damage:     15
+Fire Rate:  5.625
 Reload:     2.5
 Accuracy: 37.5
 
@@ -209,68 +209,68 @@ Accuracy: 37.5
 
 
 Type: SMG  ---  Quality: Worn
-        DPS: 59.4 (min: 55.2 /max: 64.8 )
-        Damage: 5 (min: 4.5 /max: 6.8)
+        DPS: 61.2 (min: 59.4 /max: 62.8 )
+        Damage: 7 (min: 5.6 /max: 9)
         Accuracy: 33.8 (min: 33.8 /max: 33.8)
-        FireRate: 15.3 (min: 11.2 /max: 19.1)
+        FireRate: 14 (min: 11.2 /max: 16.9)
 
 SMG Spewer 
 Durability: 20 (0.125)
-DPS: 64.8
+DPS: 62.84483
 Automatic: True
-Capacity:   20
-Pellets:    2
-Damage:     4.5
-Fire Rate:  11.25
+Capacity:   30
+Pellets:    1
+Damage:     6.75
+Fire Rate:  13.5
 Reload:     1
 Accuracy: 33.75
 
 
 
 
-SMG Spitter 
+SMG Gripshaker 
 Durability: 20 (0.125)
-DPS: 55.22727
+DPS: 59.44954
 Automatic: True
-Capacity:   30
+Capacity:   20
 Pellets:    1
-Damage:     6.75
+Damage:     9
 Fire Rate:  11.25
-Reload:     1
+Reload:     1.25
 Accuracy: 33.75
 
 
 
 
 Type: SMG  ---  Quality: Radiant
-        DPS: 137 (min: 129.8 /max: 145.2 )
-        Damage: 6.8 (min: 4.5 /max: 11.2)
+        DPS: 137.9 (min: 129.5 /max: 144.6 )
+        Damage: 9.2 (min: 5.6 /max: 15)
         Accuracy: 45 (min: 33.8 /max: 56.2)
-        FireRate: 19 (min: 11.2 /max: 31.9)
+        FireRate: 18.8 (min: 11.2 /max: 28.1)
 
 SMG Spewer 
 Durability: 50 (0.875)
-DPS: 145.1613
+DPS: 144.6429
 Automatic: True
-Capacity:   20
-Pellets:    2
-Damage:     7.5
-Fire Rate:  18.75
+Capacity:   30
+Pellets:    1
+Damage:     11.25
+Fire Rate:  22.5
 Reload:     1
 Accuracy: 56.25
 
 
 
 
-SMG Spitter 
+SMG Gripshaker 
 Durability: 50 (0.875)
-DPS: 129.8077
+DPS: 129.4964
 Automatic: True
-Capacity:   30
+Capacity:   20
 Pellets:    1
-Damage:     11.25
+Damage:     15
 Fire Rate:  18.75
-Reload:     1
+Reload:     1.25
 Accuracy: 56.25
 
 
@@ -279,20 +279,20 @@ Accuracy: 56.25
 
 
 Type: LMG  ---  Quality: Worn
-        DPS: 64 (min: 54.2 /max: 71.5 )
-        Damage: 15.8 (min: 13.5 /max: 20.2)
+        DPS: 60.4 (min: 58.3 /max: 63.7 )
+        Damage: 13.1 (min: 6.8 /max: 20.2)
         Accuracy: 45 (min: 45 /max: 45)
-        FireRate: 7.2 (min: 5.6 /max: 11.2)
+        FireRate: 13 (min: 5.6 /max: 22.5)
 
-LMG Annihilator 
+LMG Gouger 
 Durability: 20 (0.125)
-DPS: 71.47059
+DPS: 63.72377
 Automatic: True
 Capacity:   50
 Pellets:    1
-Damage:     13.5
-Fire Rate:  11.25
-Reload:     5
+Damage:     20.25
+Fire Rate:  5.625
+Reload:     7
 Accuracy: 45
 
 
@@ -300,12 +300,12 @@ Accuracy: 45
 
 LMG Breacher 
 Durability: 20 (0.125)
-DPS: 54.17197
+DPS: 58.25343
 Automatic: True
 Capacity:   70
 Pellets:    1
-Damage:     13.5
-Fire Rate:  5.625
+Damage:     6.75
+Fire Rate:  22.5
 Reload:     5
 Accuracy: 45
 
@@ -313,16 +313,16 @@ Accuracy: 45
 
 
 Type: LMG  ---  Quality: Radiant
-        DPS: 140.6 (min: 126.3 /max: 151.1 )
-        Damage: 20.7 (min: 13.5 /max: 33.8)
+        DPS: 127.3 (min: 114.7 /max: 136.8 )
+        Damage: 18.2 (min: 6.8 /max: 33.8)
         Accuracy: 60 (min: 45 /max: 75)
-        FireRate: 10 (min: 5.6 /max: 18.8)
+        FireRate: 15.6 (min: 5.6 /max: 37.5)
 
 LMG Gouger 
 Durability: 50 (0.875)
-DPS: 151.1194
+DPS: 136.8243
 Automatic: True
-Capacity:   60
+Capacity:   50
 Pellets:    1
 Damage:     33.75
 Fire Rate:  9.375
@@ -334,12 +334,12 @@ Accuracy: 75
 
 LMG Breacher 
 Durability: 50 (0.875)
-DPS: 126.3369
+DPS: 114.6845
 Automatic: True
 Capacity:   70
 Pellets:    1
-Damage:     22.5
-Fire Rate:  9.375
+Damage:     11.25
+Fire Rate:  37.5
 Reload:     5
 Accuracy: 75
 

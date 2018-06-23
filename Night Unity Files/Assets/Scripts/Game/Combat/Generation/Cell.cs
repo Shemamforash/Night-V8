@@ -8,7 +8,6 @@ namespace Game.Combat.Generation
     {
         public readonly Node Node;
         public readonly int XIndex, YIndex;
-        public readonly float XPos, YPos;
         public readonly int id;
         private static int CellNumber;
 
@@ -56,8 +55,6 @@ namespace Game.Combat.Generation
             XIndex = xIndex;
             YIndex = yIndex;
             Node = new Node(Position);
-            XPos = position.x;
-            YPos = position.y;
             id = CellNumber;
             ++CellNumber;
         }

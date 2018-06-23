@@ -251,7 +251,7 @@ namespace Game.Combat.Misc
             Recoil.Decrement(RecoilRecoveryRate * Time.deltaTime);
         }
 
-        public void FixedUpdate()
+        public virtual void FixedUpdate()
         {
             if (_rigidbody == null) Debug.Log(name);
             _rigidbody.AddForce(_forceToadd);
@@ -268,7 +268,7 @@ namespace Game.Combat.Misc
         {
             if (IsImmobilised) return;
             float speed = Speed;
-            _forceToadd += direction * speed;
+            _forceToadd += direction * speed * Time.deltaTime / 0.016f;
         }
 
         public abstract CharacterCombat GetTarget();

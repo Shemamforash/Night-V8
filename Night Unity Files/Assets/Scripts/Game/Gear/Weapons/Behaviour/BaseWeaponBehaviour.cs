@@ -78,9 +78,12 @@ namespace Game.Gear.Weapons
                 origin.ApplyShotEffects(shot);
                 shot.Fire();
             }
-
             ConsumeAmmo(1);
-            if (origin is PlayerCombat) UIMagazineController.UpdateMagazineUi();
+            if (origin is PlayerCombat)
+            {
+                PlayerCombat.Instance.MuzzleFlashOpacity = 0.2f;
+                UIMagazineController.UpdateMagazineUi();
+            }
         }
 
         private void ConsumeAmmo(int amount = 0)

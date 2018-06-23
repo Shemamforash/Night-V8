@@ -6,10 +6,10 @@
         Deserter,
         Beast,
         Watcher,
-        Wanderer,
+        Survivor,
         Protector,
         Hunter,
         Ghost,
-        Driver
+        Wanderer
     }
 }

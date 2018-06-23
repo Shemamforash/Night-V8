@@ -4,6 +4,7 @@ using System.Xml;
 using Game.Characters;
 using Game.Exploration.WorldEvents;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,6 +14,7 @@ namespace Game.Gear.Weapons
     {
         private static readonly Dictionary<WeaponType, List<WeaponClass>> WeaponClasses = new Dictionary<WeaponType, List<WeaponClass>>();
         private static bool _readWeapons;
+        private static readonly List<WeaponType> _weaponTypes = new List<WeaponType>();
 
 
         public static WeaponClass GetWeaponClassWithType(WeaponType type)
@@ -53,14 +55,17 @@ namespace Game.Gear.Weapons
         {
             LoadBaseWeapons();
             WeaponType weaponType;
+            if (_weaponTypes.Count == 0)
+            {
+                foreach(WeaponType w in Enum.GetValues(typeof(WeaponType))) _weaponTypes.Add(w);
+            }
             if (weaponsWanted != null)
             {
                 weaponType = weaponsWanted.Count != 0 ? weaponsWanted[Random.Range(0, weaponsWanted.Count)] : weaponsWanted[0];
             }
             else
             {
-                Array types = Enum.GetValues(typeof(WeaponType));
-                weaponType = (WeaponType) types.GetValue(Random.Range(0, types.Length));
+                weaponType = Helper.RandomInList(_weaponTypes);
             }
 
             WeaponClass weaponClass = GetWeaponClassWithType(weaponType);

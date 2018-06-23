@@ -30,11 +30,11 @@ namespace SamsHelper
             public override string Message => "Attribute not recognised: " + _attribute;
         }
 
-        public class UnknownTraitException : Exception
+        public class UnknownCharacterClassException : Exception
         {
             private readonly string _trait;
 
-            public UnknownTraitException(string trait)
+            public UnknownCharacterClassException(string trait)
             {
                 _trait = trait;
             }

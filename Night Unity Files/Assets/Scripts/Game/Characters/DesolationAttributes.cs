@@ -34,7 +34,7 @@ namespace Game.Characters
         public CharacterAttribute ScrapFindBonus, FoodFindBonus, WaterFindBonus, EssenceFindBonus, HealthBonus, WillpowerLossBonus, FireChanceBonus, DecayChanceBonus, SicknessChanceBonus;
 
         //multiplicative
-        public CharacterAttribute EssenceLossBonus, DamageBonus, SkillRechargeBonus, AdrenalineRechargeBonus;
+        public CharacterAttribute EssenceLossBonus, SkillRechargeBonus, AdrenalineRechargeBonus, DamageBonus, CompassBonus;
 
         public DesolationAttributes(Player player)
         {
@@ -77,6 +77,7 @@ namespace Game.Characters
             SicknessChanceBonus = new CharacterAttribute(this, AttributeType.SicknessChanceBonus, 0, float.NegativeInfinity);
             EssenceLossBonus = new CharacterAttribute(this, AttributeType.EssenceLossBonus, 1, float.NegativeInfinity);
             DamageBonus = new CharacterAttribute(this, AttributeType.DamageBonus, 1, float.NegativeInfinity);
+            CompassBonus = new CharacterAttribute(this, AttributeType.CompassBonus, 0);
             SkillRechargeBonus = new CharacterAttribute(this, AttributeType.SkillRechargeBonus, 1, float.NegativeInfinity);
             AdrenalineRechargeBonus = new CharacterAttribute(this, AttributeType.AdrenalineRechargeBonus, 1, float.NegativeInfinity);
 
@@ -84,30 +85,52 @@ namespace Game.Characters
             Thirst = new CharacterAttribute(this, AttributeType.Thirst, 0, 0, 10);
         }
 
+        public void IncreaseEnduranceMax(int amount)
+        {
+            int newEnduranceMax = (int) (Endurance.Max + amount);
+            newEnduranceMax = Mathf.Clamp(newEnduranceMax, 0, _player.CharacterTemplate.EnduranceCap);
+            Endurance.Max = newEnduranceMax;
+        }
+
+        public void IncreaseStrengthMax(int amount)
+        {
+            int newStrengthMax = (int) (Strength.Max + amount);
+            newStrengthMax = Mathf.Clamp(newStrengthMax, 0, _player.CharacterTemplate.StrengthCap);
+            Strength.Max = newStrengthMax;
+        }
+
+        public void IncreasePerceptionMax(int amount)
+        {
+            int newPerceptionMax = (int) (Perception.Max + amount);
+            newPerceptionMax = Mathf.Clamp(newPerceptionMax, 0, _player.CharacterTemplate.PerceptionCap);
+            Perception.Max = newPerceptionMax;
+        }
+
+        public void IncreaseWillpowerMax(int amount)
+        {
+            int newWillpowerMax = (int) (Willpower.Max + amount);
+            newWillpowerMax = Mathf.Clamp(newWillpowerMax, 0, _player.CharacterTemplate.WillpowerCap);
+            Willpower.Max = newWillpowerMax;
+        }
+
         public float RemainingCarryCapacity()
         {
             return Strength.CurrentValue();
         }
 
-        public float CalculateDashCooldown()
+        public float CalculateAdrenalineRecoveryRate()
         {
-            return 2f - 0.1f * Endurance.CurrentValue();
+            return Mathf.Pow(1.05f, Perception.CurrentValue() + AdrenalineRechargeBonus.CurrentValue());
         }
 
         public float CalculateSpeed()
         {
-            float normalisedSpeed = Endurance.Normalised();
-            return normalisedSpeed * (MaxSpeed - MinSpeed) + MinSpeed;
-        }
-
-        public float CalculateDamageModifier()
-        {
-            return (float) Math.Pow(1.05f, Perception.CurrentValue()) * DamageBonus.CurrentValue();
+            return 3f + (Endurance.CurrentValue() - 1f) * 0.3f;
         }
 
         public float CalculateSkillCooldownModifier()
         {
-            return (float) Math.Pow(0.95f, Willpower.CurrentValue()) * SkillRechargeBonus.CurrentValue();
+            return (float) Math.Pow(0.95f, Willpower.CurrentValue()) + SkillRechargeBonus.CurrentValue();
         }
 
         public int CalculateCombatHealth()
@@ -219,6 +242,26 @@ namespace Game.Characters
         private void SaveAttribute(XmlNode root, string attributeName, CharacterAttribute characterAttribute)
         {
             SaveController.CreateNodeAndAppend(attributeName, root, characterAttribute.CurrentValue() + "/" + characterAttribute.Max);
+        }
+
+        public void DecreaseWillpower()
+        {
+            Willpower.Decrement();
+            int minorBreakThreshold = Mathf.FloorToInt(Willpower.Max / 2f);
+            int majorBreakThreshold = Mathf.FloorToInt(Willpower.Max / 4f);
+            if (Willpower.CurrentValue() <= majorBreakThreshold)
+            {
+                //todo major break;                
+            }
+            else if (Willpower.CurrentValue() <= minorBreakThreshold)
+            {
+                //todo minor break;
+            }
+        }
+
+        public int CalculateCompassPulses()
+        {
+            return (int) (Perception.CurrentValue() + CompassBonus.CurrentValue());
         }
     }
 }

@@ -10,8 +10,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public class Consumable : InventoryItem
     {
         private readonly Tuple<AttributeType, AttributeModifier, float> _effect1, _effect2;
-        private static List<AttributeType> _attributeTypes = null;
-        
+        private static readonly List<AttributeType> _attributeTypes = new List<AttributeType>();
+
         public Consumable(ResourceTemplate template, GameObjectType type, Inventory parentInventory = null) : base(template, type, parentInventory)
         {
             GenerateEffect(template.Effect1, ref _effect1, template.Duration1);
@@ -38,10 +38,14 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             return _effect2 == null ? "" : _effect2.Item2.RawBonusToString() + " " + _effect2.Item1;
         }
-        
-        private AttributeType StringToAttribute(string attributeString)
+
+        private static AttributeType StringToAttribute(string attributeString)
         {
-            if (_attributeTypes == null) _attributeTypes = Enum.GetValues(typeof(AttributeType)).Cast<AttributeType>().ToList();
+            if (_attributeTypes.Count == 0)
+            {
+                foreach (AttributeType attributeType in Enum.GetValues(typeof(AttributeType))) _attributeTypes.Add(attributeType);
+            }
+
             foreach (AttributeType attribute in _attributeTypes)
             {
                 if (attribute.ToString() == attributeString)
@@ -49,6 +53,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                     return attribute;
                 }
             }
+
             throw new Exceptions.AttributeNotRecognisedException(attributeString);
         }
 
@@ -58,7 +63,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             CharacterAttribute attribute = selectedCharacter.Attributes.Get(effect.Item1);
             new Effect(selectedCharacter, effect.Item2, attribute, effect.Item3);
         }
-        
+
         public void Consume(Player selectedCharacter)
         {
             ApplyEffect(_effect1, selectedCharacter);

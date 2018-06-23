@@ -16,6 +16,7 @@ namespace Game.Combat.Misc
         private Vector3 _lastPosition;
         private bool _leftLast;
         private Rigidbody2D _rigidBody;
+        public bool UseHoofprint;
 
         public void Awake()
         {
@@ -35,7 +36,11 @@ namespace Game.Combat.Misc
             GameObject footprintObject;
             if (_footstepPool.Count == 0)
             {
-                if (_footprintPrefab == null) _footprintPrefab = Resources.Load<GameObject>("Prefabs/Map/Footprint");
+                if (_footprintPrefab == null)
+                {
+                    _footprintPrefab = Resources.Load<GameObject>(UseHoofprint ? "Prefabs/Map/Hoofprint" : "Prefabs/Map/Footprint");
+                }
+
                 footprintObject = Instantiate(_footprintPrefab, transform.position, GetRotation());
                 footprintObject.transform.SetParent(_footstepParent);
                 FadeAndDie footprint = footprintObject.GetComponent<FadeAndDie>();

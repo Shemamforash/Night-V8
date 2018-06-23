@@ -128,7 +128,7 @@ namespace Game.Exploration.Regions
 //            AddEnemy(EnemyType.Shadow, 10);
         }
 
-        private int CalculateDanger() => WorldState.GetCurrentDanger() + (int)(Vector2.Distance(Position, Vector2.zero) / 5f);
+        private int CalculateDanger() => WorldState.GetCurrentDanger() + (int) (Vector2.Distance(Position, Vector2.zero) / 5f);
 
         public void Generate(int size)
         {
@@ -181,9 +181,20 @@ namespace Game.Exploration.Regions
                 case RegionType.Nightmare:
                     GenerateNightmare();
                     break;
-                case RegionType.Shelter :
+                case RegionType.Shelter:
                     GenerateShelter();
                     break;
+                case RegionType.Animal:
+                    GenerateAnimals();
+                    break;
+            }
+        }
+
+        private void GenerateAnimals()
+        {
+            for (int i = 0; i < Random.Range(5, 15); ++i)
+            {
+                AddEnemy(EnemyType.Grazer, 10);
             }
         }
 
@@ -194,6 +205,7 @@ namespace Game.Exploration.Regions
                 //todo add character;
                 return;
             }
+
             //todo add resources
         }
 

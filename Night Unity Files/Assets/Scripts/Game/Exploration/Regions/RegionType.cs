@@ -7,6 +7,7 @@
         Temple,
         Resource,
         Danger,
-        Nightmare
+        Nightmare,
+        Animal
     }
 }

@@ -159,12 +159,30 @@ namespace Game.Characters
                 int willpower = int.Parse(classNode.SelectSingleNode("Willpower").InnerText);
                 int strength = int.Parse(classNode.SelectSingleNode("Strength").InnerText);
                 int perception = int.Parse(classNode.SelectSingleNode("Perception").InnerText);
+                int enduranceCap = AttributeCapStringToValue("EnduranceCap", classNode);
+                int willpowerCap = AttributeCapStringToValue("WillpowerCap", classNode);
+                int strengthCap = AttributeCapStringToValue("StrengthCap", classNode);
+                int perceptionCap = AttributeCapStringToValue("PerceptionCap", classNode);
                 List<string> storyLines = new List<string>(classNode.SelectSingleNode("Story").InnerText.Split('.'));
-                CharacterTemplate newTemplate = new CharacterTemplate(storyLines, name, strength, endurance, willpower, perception);
+                CharacterTemplate newTemplate = new CharacterTemplate(storyLines, name, strength, endurance, willpower, perception, strengthCap, enduranceCap, willpowerCap, perceptionCap);
                 Templates.Add(newTemplate);
             }
 
             _loaded = true;
+        }
+
+        private static int AttributeCapStringToValue(string nodeName, XmlNode node)
+        {
+            string capString = node.SelectSingleNode(nodeName).InnerText;
+            switch (capString)
+            {
+                case "+":
+                    return 15;
+                case "++":
+                    return 20;
+                default:
+                    return 10;
+            }
         }
 
         private static CharacterTemplate FindClass(CharacterClass characterClass)
@@ -177,12 +195,12 @@ namespace Game.Characters
                 }
             }
 
-            throw new Exceptions.UnknownTraitException(characterClass.ToString());
+            throw new Exceptions.UnknownCharacterClassException(characterClass.ToString());
         }
 
         private Player GenerateDriver()
         {
-            Player driver = GenerateCharacter(CharacterClass.Driver);
+            Player driver = GenerateCharacter(CharacterClass.Wanderer);
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Rusted, WeaponType.Pistol);
             WeaponGenerationTester.Test();
             driver.EquipWeapon(weapon);

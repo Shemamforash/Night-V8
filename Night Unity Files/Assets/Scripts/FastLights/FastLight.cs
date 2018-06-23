@@ -61,7 +61,7 @@ namespace Fastlights
         private Tuple<bool, Vector2, float> _intersection;
 
         private readonly List<Vector2> meshVertices = new List<Vector2>();
-        
+
         private void CalculateNearestIntersection(FLVertex target, List<FLEdge> edges)
         {
             Vector2 dirToVertex = (target.InRangePosition - _position).normalized;
@@ -77,38 +77,38 @@ namespace Fastlights
 //            {
 //                EdgeBucket b = _edgeBuckets[j];
 //                if (!b.AngleFallsInBucket(target.InRangeAngle)) continue;
-                int edgeCount = edges.Count;
+            int edgeCount = edges.Count;
 
-                for (int i = 0; i < edgeCount; i++)
+            for (int i = 0; i < edgeCount; i++)
+            {
+                FLEdge e = edges[i];
+                if (e.BelongsToEdge(target)) continue;
+                float fromAngle = e.From.InRangeAngle;
+                float toAngle = e.To.InRangeAngle;
+                float tempRayAngle = target.InRangeAngle;
+                if (fromAngle > toAngle)
                 {
-                    FLEdge e = edges[i];
-                    if (e.BelongsToEdge(target)) continue;
-                    float fromAngle = e.From.InRangeAngle;
-                    float toAngle = e.To.InRangeAngle;
-                    float tempRayAngle = target.InRangeAngle;
-                    if (fromAngle > toAngle)
+                    if (tempRayAngle > fromAngle && tempRayAngle > toAngle)
                     {
-                        if (tempRayAngle > fromAngle && tempRayAngle > toAngle)
-                        {
-                            tempRayAngle -= 360;
-                        }
-
-                        fromAngle -= 360f;
+                        tempRayAngle -= 360;
                     }
 
-                    if (fromAngle > tempRayAngle && toAngle > tempRayAngle) continue;
-                    if (fromAngle < tempRayAngle && toAngle < tempRayAngle) continue;
-
-                    Tuple<bool, Vector2> tempIntersect = AdvancedMaths.LineIntersection(_position, lineSegmentEnd, e.From.InRangePosition, e.To.InRangePosition);
-                    if (!tempIntersect.Item1) continue;
-
-                    didIntersect = true;
-
-                    float distance = Vector2.SqrMagnitude(_position - tempIntersect.Item2);
-                    if (distance >= nearestDistance) continue;
-                    nearestDistance = distance;
-                    intersectPoint = tempIntersect.Item2;
+                    fromAngle -= 360f;
                 }
+
+                if (fromAngle > tempRayAngle && toAngle > tempRayAngle) continue;
+                if (fromAngle < tempRayAngle && toAngle < tempRayAngle) continue;
+
+                Tuple<bool, Vector2> tempIntersect = AdvancedMaths.LineIntersection(_position, lineSegmentEnd, e.From.InRangePosition, e.To.InRangePosition);
+                if (!tempIntersect.Item1) continue;
+
+                didIntersect = true;
+
+                float distance = Vector2.SqrMagnitude(_position - tempIntersect.Item2);
+                if (distance >= nearestDistance) continue;
+                nearestDistance = distance;
+                intersectPoint = tempIntersect.Item2;
+            }
 //            }
 
             _intersectionExists = didIntersect;
@@ -117,7 +117,7 @@ namespace Fastlights
 
         private bool _intersectionExists;
         private Vector2 _intersectionPoint;
-        
+
         private void DrawLight()
         {
             meshVertices.Clear();
@@ -159,13 +159,12 @@ namespace Fastlights
 
             verts.Sort((a, b) => a.InRangeAngle.CompareTo(b.InRangeAngle));
 
-            float endAngle = -1f;
+            FLVertex endVert = null;
             int vertCount = verts.Count;
             for (int i = 0; i < vertCount; i++)
             {
                 FLVertex vert = verts[i];
                 CalculateNearestIntersection(vert, edges);
-
                 if (_intersectionExists)
                 {
                     float distance = Vector2.SqrMagnitude(_intersectionPoint - _position);
@@ -188,22 +187,13 @@ namespace Fastlights
                 }
                 else
                 {
-                    if (endAngle != -1)
-                    {
-                        InsertLineSegments(endAngle, vert.InRangeAngle);
-                    }
-
+                    if (endVert != null) InsertLineSegments(endVert.InRangeAngle, vert.InRangeAngle);
                     meshVertices.Add(vert.InRangePosition);
-
-                    if (vert.IsEnd)
-                        endAngle = vert.InRangeAngle;
-                    else
-                        endAngle = -1f;
+                    endVert = vert.IsEnd ? vert : null;
                 }
             }
 
-            if(endAngle != -1) InsertLineSegments(endAngle, verts[0].InRangeAngle);
-
+            if (endVert != null) InsertLineSegments(endVert.InRangeAngle, verts[0].InRangeAngle);
             BuildMesh();
         }
 
@@ -216,8 +206,9 @@ namespace Fastlights
             for (int i = 0; i < meshVertices.Count; ++i)
             {
                 v[i] = meshVertices[i];
-                if(Target != null) v[i] -= Target.transform.position;
+                if (Target != null) v[i] -= Target.transform.position;
             }
+
             mesh.vertices = v;
             mesh.triangles = Triangulate(v);
             Vector3[] normals = new Vector3[mesh.vertices.Length];
@@ -259,21 +250,20 @@ namespace Fastlights
             return uvs;
         }
 
+        private void AddPointOnCircleEdge(float angle)
+        {
+            float x = _position.x + Radius * Mathf.Sin(angle * Mathf.Deg2Rad);
+            float y = _position.y + Radius * Mathf.Cos(angle * Mathf.Deg2Rad);
+            meshVertices.Add(new Vector2(x, y));
+        }
+
         private void InsertLineSegments(float from, float to)
         {
-            float angleIncrement = 25f;//0.5f;
+            float angleIncrement = 0.2f * Radius + 0.5f;
             if (to < from) to += 360;
-            float x, y;
-            for (float angle = from; angle < to - angleIncrement; angle += angleIncrement)
-            {
-                x = _position.x + Radius * Mathf.Sin(angle * Mathf.Deg2Rad);
-                y = _position.y + Radius * Mathf.Cos(angle * Mathf.Deg2Rad);
-                meshVertices.Add(new Vector2(x, y));
-            }
-
-            x = _position.x + Radius * Mathf.Sin(to * Mathf.Deg2Rad);
-            y = _position.y + Radius * Mathf.Cos(to * Mathf.Deg2Rad);
-            meshVertices.Add(new Vector2(x, y));
+            AddPointOnCircleEdge(from);
+            for (float angle = from + angleIncrement; angle < to - angleIncrement; angle += angleIncrement) AddPointOnCircleEdge(angle);
+            AddPointOnCircleEdge(to);
         }
 
         private void ResizeLight()
@@ -286,6 +276,7 @@ namespace Fastlights
                 if (length <= Radius) continue;
                 verts[i] = verts[i].normalized * Radius;
             }
+
             mesh.vertices = verts;
         }
 

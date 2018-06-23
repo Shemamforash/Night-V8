@@ -1,4 +1,5 @@
 ﻿using System;
+using Boo.Lang;
 using Game.Combat.Player;
 
 namespace Game.Gear.Weapons
@@ -10,6 +11,7 @@ namespace Game.Gear.Weapons
         public readonly WeaponType Type;
         public readonly int Pellets, Capacity, Handling, Accuracy, Damage;
         public readonly float ReloadSpeed, FireRate;
+        private static readonly List<WeaponClassType> _weaponClassTypes = new List<WeaponClassType>();
 
         public WeaponClass(WeaponType type, string name, bool automatic, int damage, float fireRate, float reloadSpeed, int accuracy, int handling, int capacity)
         {
@@ -27,7 +29,11 @@ namespace Game.Gear.Weapons
 
         private WeaponClassType NameToClassType(string name)
         {
-            foreach (WeaponClassType classType in Enum.GetValues(typeof(WeaponClassType)))
+            if (_weaponClassTypes.Count == 0)
+            {
+                foreach (WeaponClassType classType in Enum.GetValues(typeof(WeaponClassType))) _weaponClassTypes.Add(classType);
+            }
+            foreach (WeaponClassType classType in _weaponClassTypes)
             {
                 if (classType.ToString() == name)
                 {

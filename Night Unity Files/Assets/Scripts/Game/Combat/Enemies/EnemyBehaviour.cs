@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
@@ -45,6 +46,7 @@ namespace Game.Combat.Enemies
         {
             base.Update();
             PushAwayFromNeighbors();
+            UpdateAlpha();
             if (!CombatManager.InCombat()) return;
             UpdateRotation();
             if (CurrentAction == null)
@@ -55,6 +57,19 @@ namespace Game.Combat.Enemies
             {
                 CurrentAction.Invoke();
             }
+        }
+
+        private SpriteRenderer _sprite;
+
+        private void UpdateAlpha()
+        {
+            float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
+            float alpha;
+            if (distanceToPlayer > 3) alpha = 0;
+            else alpha = 1 - distanceToPlayer / 3f;
+            Color c = _sprite.color;
+            c.a = alpha;
+            _sprite.color = c;
         }
 
         private void PushAwayFromNeighbors()
@@ -108,33 +123,12 @@ namespace Game.Combat.Enemies
             HealthController.SetInitialHealth(Enemy.Template.Health, this);
 //            if (!(this is Medic || this is Martyr)) SetHealBehaviour();
             transform.SetParent(GameObject.Find("World").transform);
-            if (CombatManager.Region().GetRegionType() == RegionType.Nightmare)
-            {
-//            SetDistance(Vector2.zero, 4f, 8f);
-            }
-//            else
-//            {
-//                SetDistance(CombatManager.Region().Fire.FirePosition, 0.2f, 0.5f);
-//            }
-
+            transform.position = PathingGrid.GetCellNearMe(Vector2.zero, 8f, 4f).Position;
 
             Sprite sprite = Resources.Load<Sprite>("Images/Enemy Symbols/" + GetEnemyName());
+            _sprite = GetComponent<SpriteRenderer>();
             if (sprite == null) return;
-            GetComponent<SpriteRenderer>().sprite = sprite;
-        }
-
-        private void SetDistance(Vector3 pivot, float rangeMin, float rangeMax)
-        {
-            Vector3 position = pivot;
-            float xOffset = Random.Range(rangeMin, rangeMax);
-            float yOffset = Random.Range(rangeMin, rangeMax);
-            if (Random.Range(0, 2) == 1) xOffset = -xOffset;
-            if (Random.Range(0, 2) == 1) yOffset = -yOffset;
-            position.x += xOffset;
-            position.y += yOffset;
-//            transform.position = position;
-            Cell cell = PathingGrid.GetCellNearMe(CurrentCell(), 15);
-            transform.position = cell.Position;
+            _sprite.sprite = sprite;
         }
 
         protected void SetActionText(string actionText)
@@ -147,7 +141,6 @@ namespace Game.Combat.Enemies
         {
             base.TakeDamage(shot);
             EnemyUi.Instance().RegisterHit(this);
-            PlayerCombat.Instance.RageController.Increase(shot.DamageDealt());
         }
 
         public override void Kill()
@@ -205,6 +198,7 @@ namespace Game.Combat.Enemies
         protected void Reposition(Cell c, Action reachTargetAction = null)
         {
             SetActionText("Moving");
+            Debug.DrawLine(CurrentCell().Position, c.Position, Color.red, 5f);
             Thread pathThread = PathingGrid.RouteToCell(CurrentCell(), c, route);
             WaitForRoute(pathThread, reachTargetAction);
         }
@@ -215,25 +209,42 @@ namespace Game.Combat.Enemies
             Move(direction);
         }
 
+        public override void FixedUpdate()
+        {
+            base.FixedUpdate();
+            if (_targetCell == null) return;
+            _reachedTarget = CurrentCell() == _targetCell;
+        }
+
+        private Cell _targetCell;
+        private bool _reachedTarget;
+
         private void MoveToTargetPosition(Action ReachTargetAction)
         {
             Queue<Cell> newRoute = new Queue<Cell>(route);
+            List<Cell> r = route.ToList();
+            for (int i = 1; i < r.Count; ++i)
+            {
+                Debug.DrawLine(r[i - 1].Position, r[i].Position, Color.cyan, 5f);
+            }
+
             Assert.IsTrue(newRoute.Count > 0);
-            Cell target = newRoute.Dequeue();
+            _targetCell = newRoute.Dequeue();
             CurrentAction = () =>
             {
-                if (CurrentCell() == target)
+                if (_reachedTarget)
                 {
                     if (newRoute.Count == 0)
                     {
+                        _targetCell = null;
                         ReachTargetAction();
                         return;
                     }
 
-                    target = newRoute.Dequeue();
+                    _targetCell = newRoute.Dequeue();
                 }
 
-                MoveToCell(target);
+                MoveToCell(_targetCell);
             };
         }
 

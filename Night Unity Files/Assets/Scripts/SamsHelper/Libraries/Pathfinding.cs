@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SamsHelper.Libraries
 {
@@ -54,6 +55,8 @@ namespace SamsHelper.Libraries
                     fScore[neighbor] = tentativeGScore + neighbor.Distance(to);
                 }
             }
+
+            if (path == null) Debug.Log("No path exists between " + from.Position + " and " + to.Position);
 
             return path;
         }

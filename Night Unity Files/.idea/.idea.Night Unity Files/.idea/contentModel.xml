@@ -128,12 +128,14 @@
               <e p="DesolationAttributes.cs" t="Include" />
               <e p="Effect.cs" t="Include" />
               <e p="Player.cs" t="Include" />
-              <e p="RageController.cs" t="Include" />
             </e>
             <e p="Combat" t="Include">
               <e p="Enemies" t="Include">
                 <e p="Animals" t="Include">
+                  <e p="Curio.cs" t="Include" />
                   <e p="Grazer.cs" t="Include" />
+                  <e p="Slinger.cs" t="Include" />
+                  <e p="Snapper.cs" t="Include" />
                   <e p="Watcher.cs" t="Include" />
                 </e>
                 <e p="ArmedBehaviour.cs" t="Include" />
@@ -157,6 +159,7 @@
                   <e p="IncendiaryGrenade.cs" t="Include" />
                 </e>
                 <e p="Nightmares" t="Include">
+                  <e p="AnimalBehaviour.cs" t="Include" />
                   <e p="BeamController.cs" t="Include" />
                   <e p="Decoy.cs" t="Include" />
                   <e p="EnemyAttackBehaviours" t="Include">

@@ -30,17 +30,12 @@ namespace Facilitating
         public void Start()
         {
             for (int i = 1; i < 17; ++i) RoseProngs.Add(Helper.FindChildWithName<Image>(gameObject, i.ToString()));
-            SetRageBarFill(0f, false);
+            SetRageBarFill(0f);
         }
 
-        public static void SetRageBarFill(float value, bool rageActive)
+        public static void SetRageBarFill(float value)
         {
             if (_instance == null) return;
-            if (rageActive && !_rageFire.isPlaying)
-                _rageFire.Play();
-            else if (_rageFire.isPlaying && !rageActive)
-                _rageFire.Stop();
-
             int completeProngs = (int) Math.Floor(value / 0.0625f);
             float remainder = value - completeProngs * 0.0625f;
             float normalisedRemainder = remainder / 0.0625f;

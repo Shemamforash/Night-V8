@@ -17,6 +17,7 @@ namespace Game.Gear
         private AttributeModifier _modifier;
         private ItemQuality _quality;
         private InscriptionTemplate _template;
+        private static readonly List<AttributeType> _attributeTypes = new List<AttributeType>();
 
         private Inscription(InscriptionTemplate template, ItemQuality quality) : base(template.Name, 0.25f, GearSubtype.Inscription, quality)
         {
@@ -26,6 +27,11 @@ namespace Game.Gear
         private static void ReadTemplates()
         {
             if (_readTemplates) return;
+            if (_attributeTypes.Count == 0)
+            {
+                foreach (AttributeType attributeType in Enum.GetValues(typeof(AttributeType))) _attributeTypes.Add(attributeType);
+            }
+            
             TextAsset inscriptionFile = Resources.Load<TextAsset>("XML/Inscriptions");
             XmlDocument inscriptionXml = new XmlDocument();
             inscriptionXml.LoadXml(inscriptionFile.text);
@@ -34,7 +40,7 @@ namespace Game.Gear
             {
                 string inscriptionName = inscriptionNode.SelectSingleNode("Name").InnerText;
                 InscriptionTemplate inscriptionTemplate = new InscriptionTemplate(inscriptionName);
-                foreach (AttributeType attributeType in Enum.GetValues(typeof(AttributeType)))
+                foreach (AttributeType attributeType in _attributeTypes)
                 {
                     XmlNode attributeNode = inscriptionNode.SelectSingleNode(attributeType.ToString());
                     if (attributeNode == null) continue;
