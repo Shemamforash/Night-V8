@@ -231,7 +231,6 @@
                 <e p="FireGenerator.cs" t="Include" />
                 <e p="FootstepMaker.cs" t="Include" />
                 <e p="HealthController.cs" t="Include" />
-                <e p="HealthRise.cs" t="Include" />
                 <e p="ICombatListener.cs" t="Include" />
                 <e p="Shot.cs" t="Include" />
                 <e p="SkillBar.cs" t="Include" />

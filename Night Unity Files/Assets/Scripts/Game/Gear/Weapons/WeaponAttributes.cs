@@ -19,7 +19,7 @@ namespace Game.Gear.Weapons
         public float DurabilityModifier;
         public CharacterAttribute FireRate, ReloadSpeed, Damage, Handling, Capacity, Pellets, Accuracy;
         public string ModifierName, ModifierDescription;
-        public CharacterAttribute PierceChance, BurnChance, BleedChance, SicknessChance;
+        public CharacterAttribute BurnChance, BleedChance, SicknessChance;
 
         public WeaponClassType WeaponClassName;
         public string WeaponClassDescription;
@@ -109,8 +109,7 @@ namespace Game.Gear.Weapons
             Pellets = new CharacterAttribute(this, AttributeType.Pellets, 0);
 
             BurnChance = new CharacterAttribute(this, AttributeType.BurnChance, 0);
-            BleedChance = new CharacterAttribute(this, AttributeType.BleedChance, 0);
-            PierceChance = new CharacterAttribute(this, AttributeType.PierceChance, 0);
+            BleedChance = new CharacterAttribute(this, AttributeType.DecayChance, 0);
             SicknessChance = new CharacterAttribute(this, AttributeType.SicknessChance, 0);
         }
 

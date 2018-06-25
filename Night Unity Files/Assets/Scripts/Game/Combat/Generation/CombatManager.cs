@@ -6,6 +6,7 @@ using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Exploration.Regions;
+using Game.Exploration.Weather;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
@@ -19,7 +20,7 @@ namespace Game.Combat.Generation
         private readonly CooldownManager _cooldowns = new CooldownManager();
         private Region _currentRegion;
         private bool _inMelee;
-        private int _visibilityRange;
+        private float _visibilityRange;
         private bool _inCombat;
         private readonly List<EnemyBehaviour> _enemies = new List<EnemyBehaviour>();
         private static CombatManager _instance;
@@ -72,9 +73,10 @@ namespace Game.Combat.Generation
         {
             _inCombat = true;
             WorldState.Pause();
-            _visibilityRange = 5;
+            Weather currentWeather = WeatherManager.CurrentWeather();
+            _visibilityRange = 10f * (currentWeather?.GetVisibility() ?? 0.5f);
             _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
-            
+
             switch (_currentRegion.GetRegionType())
             {
                 case RegionType.Shelter:
@@ -148,7 +150,7 @@ namespace Game.Combat.Generation
             TeleportInOnly.TeleportObjectIn(enemy.gameObject);
             return enemy;
         }
-        
+
         public static void Remove(EnemyBehaviour enemy)
         {
             Instance()._enemies.Remove(enemy);

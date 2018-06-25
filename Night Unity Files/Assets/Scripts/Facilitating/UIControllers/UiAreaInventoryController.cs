@@ -201,7 +201,7 @@ public class UiAreaInventoryController : Menu, IInputListener
                     return;
                 }
 
-                SetWeightText(inventoryItem.Weight + "kg");
+                SetWeightText("Remove me");
                 SetQuantityText("x" + inventoryItem.Quantity());
                 SetNameText(inventoryItem.Name);
             }

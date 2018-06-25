@@ -104,9 +104,9 @@ namespace Game.Gear.Armour
         public int GetProtectionLevel()
         {
             //todo plate damage
-            int plateOneWeight = (int) (_plateOne?.Weight ?? 0);
-            int plateTwoWeight = (int) (_plateTwo?.Weight ?? 0);
-            return plateOneWeight + plateTwoWeight;
+            int plateOneProtection = _plateOne?.Protection ?? 0;
+            int plateTwoProtection = _plateTwo?.Protection ?? 0;
+            return plateOneProtection + plateTwoProtection;
         }
 
         public ArmourPlate GetPlateOne()

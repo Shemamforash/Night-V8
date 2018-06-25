@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
+using Game.Gear.Weapons;
+using Game.Global;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Gear
 {
-    public class Inscription : GearItem
+    public class Inscription : InventoryItem
     {
         private static readonly List<InscriptionTemplate> _inscriptionTemplates = new List<InscriptionTemplate>();
         private static bool _readTemplates;
@@ -18,10 +21,194 @@ namespace Game.Gear
         private ItemQuality _quality;
         private InscriptionTemplate _template;
         private static readonly List<AttributeType> _attributeTypes = new List<AttributeType>();
+        private InscriptionTier _tier;
 
-        private Inscription(InscriptionTemplate template, ItemQuality quality) : base(template.Name, 0.25f, GearSubtype.Inscription, quality)
+        private Inscription(InscriptionTemplate template, InscriptionTier tier) : base(template.Name, GameObjectType.Gear)
         {
             _template = template;
+            _modifier = _template.GetModifier();
+            _tier = tier;
+            float finalBonus = _modifier.FinalBonus();
+            float rawBonus = _modifier.RawBonus();
+            int tierModifier = (int) (_tier + 1);
+            finalBonus *= tierModifier;
+            rawBonus *= tierModifier;
+            _modifier.SetFinalBonus(finalBonus);
+            _modifier.SetRawBonus(rawBonus);
+            Debug.Log(GetSummary());
+        }
+
+        public void ApplyModifier(Character character)
+        {
+            Player player = character as Player;
+            if (player == null) return;
+            switch (_template.AttributeTarget)
+            {
+                case AttributeType.Strength:
+                    player.Attributes.Strength.AddModifier(_modifier);
+                    break;
+                case AttributeType.Endurance:
+                    player.Attributes.Endurance.AddModifier(_modifier);
+                    break;
+                case AttributeType.Perception:
+                    player.Attributes.Perception.AddModifier(_modifier);
+                    break;
+                case AttributeType.Willpower:
+                    player.Attributes.Willpower.AddModifier(_modifier);
+                    break;
+            }
+        }
+
+        public void ApplyModifier(Weapon item)
+        {
+            switch (_template.AttributeTarget)
+            {
+                case AttributeType.Damage:
+                    item.WeaponAttributes.Damage.AddModifier(_modifier);
+                    break;
+                case AttributeType.Accuracy:
+                    item.WeaponAttributes.Accuracy.AddModifier(_modifier);
+                    break;
+                case AttributeType.FireRate:
+                    item.WeaponAttributes.FireRate.AddModifier(_modifier);
+                    break;
+                case AttributeType.ReloadSpeed:
+                    item.WeaponAttributes.ReloadSpeed.AddModifier(_modifier);
+                    break;
+                case AttributeType.Handling:
+                    item.WeaponAttributes.Handling.AddModifier(_modifier);
+                    break;
+                case AttributeType.Pellets:
+                    item.WeaponAttributes.Pellets.AddModifier(_modifier);
+                    break;
+                case AttributeType.Capacity:
+                    item.WeaponAttributes.Capacity.AddModifier(_modifier);
+                    break;
+                case AttributeType.SicknessChance:
+                    item.WeaponAttributes.SicknessChance.AddModifier(_modifier);
+                    break;
+                case AttributeType.DecayChance:
+                    item.WeaponAttributes.BleedChance.AddModifier(_modifier);
+                    break;
+                case AttributeType.BurnChance:
+                    item.WeaponAttributes.BurnChance.AddModifier(_modifier);
+                    break;
+            }
+        }
+
+        public void RemoveModifier(Character character)
+        {
+            Player player = character as Player;
+            if (player == null) return;
+            switch (_template.AttributeTarget)
+            {
+                case AttributeType.Strength:
+                    player.Attributes.Strength.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.Endurance:
+                    player.Attributes.Endurance.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.Perception:
+                    player.Attributes.Perception.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.Willpower:
+                    player.Attributes.Willpower.RemoveModifier(_modifier);
+                    break;
+            }
+        }
+
+        public void RemoveModifier(Weapon item)
+        {
+            switch (_template.AttributeTarget)
+            {
+                case AttributeType.Damage:
+                    item.WeaponAttributes.Damage.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.Accuracy:
+                    item.WeaponAttributes.Accuracy.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.FireRate:
+                    item.WeaponAttributes.FireRate.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.ReloadSpeed:
+                    item.WeaponAttributes.ReloadSpeed.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.Handling:
+                    item.WeaponAttributes.Handling.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.Pellets:
+                    item.WeaponAttributes.Pellets.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.Capacity:
+                    item.WeaponAttributes.Capacity.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.SicknessChance:
+                    item.WeaponAttributes.SicknessChance.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.DecayChance:
+                    item.WeaponAttributes.BleedChance.RemoveModifier(_modifier);
+                    break;
+                case AttributeType.BurnChance:
+                    item.WeaponAttributes.BurnChance.RemoveModifier(_modifier);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public static Inscription Generate(int diff = -1)
+        {
+            ReadTemplates();
+            int difficulty = diff == -1 ? WorldState.Difficulty() : diff;
+            float maxRange = 7 * 5;
+            float range = difficulty / maxRange * 2 + 1.5f;
+            float rand = Random.Range(0, range);
+            InscriptionTier tier = InscriptionTier.Bellow;
+            if (rand < 1)
+            {
+                tier = InscriptionTier.Whisper;
+            }
+            else if (rand < 2)
+            {
+                tier = InscriptionTier.Wail;
+            }
+
+            InscriptionTemplate randomTemplate = Helper.RandomInList(_inscriptionTemplates);
+            return new Inscription(randomTemplate, tier);
+        }
+
+        public static void Test()
+        {
+            string results = "";
+            for (int i = 0; i <= 10; ++i)
+            {
+                int diff = i * 10;
+                int cnt = 1000;
+                int whisperCount = 0;
+                int wailCount = 0;
+                int bellowCount = 0;
+                for (int j = 0; j < cnt; ++j)
+                {
+                    Inscription inscription = Generate(diff);
+                    switch (inscription._tier)
+                    {
+                        case InscriptionTier.Whisper:
+                            ++whisperCount;
+                            break;
+                        case InscriptionTier.Wail:
+                            ++wailCount;
+                            break;
+                        case InscriptionTier.Bellow:
+                            ++bellowCount;
+                            break;
+                    }
+                }
+
+                results += "difficulty" + diff + "---   whisper: " + Mathf.Round((float) whisperCount / cnt * 100) + "%   wail: " + Mathf.Round((float) wailCount / cnt * 100) + "%   bellow:" + Mathf
+                               .Round((float) bellowCount / cnt * 100) + "%\n";
+            }
+
+            Debug.Log(results);
         }
 
         private static void ReadTemplates()
@@ -31,7 +218,7 @@ namespace Game.Gear
             {
                 foreach (AttributeType attributeType in Enum.GetValues(typeof(AttributeType))) _attributeTypes.Add(attributeType);
             }
-            
+
             TextAsset inscriptionFile = Resources.Load<TextAsset>("XML/Inscriptions");
             XmlDocument inscriptionXml = new XmlDocument();
             inscriptionXml.LoadXml(inscriptionFile.text);
@@ -39,66 +226,57 @@ namespace Game.Gear
             foreach (XmlNode inscriptionNode in inscriptions.SelectNodes("Inscription"))
             {
                 string inscriptionName = inscriptionNode.SelectSingleNode("Name").InnerText;
-                InscriptionTemplate inscriptionTemplate = new InscriptionTemplate(inscriptionName);
                 foreach (AttributeType attributeType in _attributeTypes)
                 {
                     XmlNode attributeNode = inscriptionNode.SelectSingleNode(attributeType.ToString());
                     if (attributeNode == null) continue;
+
                     string attributeText = attributeNode.InnerText;
-                    char prefix = attributeText[0];
+                    bool additive = attributeText[0] == '+';
                     float value = float.Parse(attributeText.Substring(1));
-                    if (prefix == 'x' && value != 1)
-                    {
-                        AttributeModifier modifier = new AttributeModifier();
-                        modifier.SetFinalBonus(value);
-                        inscriptionTemplate.SetModifier(modifier);
-                    }
-                    else if (prefix == '+' && value != 0)
-                    {
-                        AttributeModifier modifier = new AttributeModifier();
-                        modifier.SetFinalBonus(value);
-                        inscriptionTemplate.SetModifier(modifier);
-                    }
+                    InscriptionTemplate inscriptionTemplate = new InscriptionTemplate(inscriptionName, attributeType, additive, value);
+                    _inscriptionTemplates.Add(inscriptionTemplate);
+                    break;
                 }
             }
 
             _readTemplates = true;
         }
 
-        public static Inscription GenerateInscription(ItemQuality quality)
+        public enum InscriptionTier
         {
-            ReadTemplates();
-            InscriptionTemplate randomTemplate = _inscriptionTemplates[Random.Range(0, _inscriptionTemplates.Count)];
-            return new Inscription(randomTemplate, quality);
+            Whisper,
+            Wail,
+            Bellow
         }
 
-        public override string GetSummary()
+        public string GetSummary()
         {
-            return "Inscription summary";
+            return "A " + _tier + " of " + _template.Name;
         }
 
-        public class InscriptionTemplate
+        private class InscriptionTemplate
         {
             public readonly string Name;
-            private AttributeModifier _modifierOne;
-            private AttributeModifier _modifierTwo;
+            public readonly AttributeType AttributeTarget;
+            private readonly bool _additive;
+            private readonly float _modifierValue;
 
-            public InscriptionTemplate(string name)
+            public InscriptionTemplate(string name, AttributeType attributeType, bool additive, float modifierValue)
             {
                 Name = name;
+                AttributeTarget = attributeType;
                 _inscriptionTemplates.Add(this);
+                _additive = additive;
+                _modifierValue = modifierValue;
             }
 
-            public void SetModifier(AttributeModifier modifier)
+            public AttributeModifier GetModifier()
             {
-                if (_modifierOne == null)
-                {
-                    _modifierOne = modifier;
-                    return;
-                }
-
-                if (_modifierTwo != null) throw new Exceptions.InscriptionModificationException(Name);
-                _modifierTwo = modifier;
+                AttributeModifier modifier = new AttributeModifier();
+                if (_additive) modifier.SetRawBonus(_modifierValue);
+                else modifier.SetFinalBonus(_modifierValue);
+                return modifier;
             }
         }
     }

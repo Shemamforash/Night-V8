@@ -12,7 +12,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private readonly GearSubtype _gearType;
         private ItemQuality _itemItemQuality;
 
-        protected GearItem(string name, float weight, GearSubtype gearSubtype, ItemQuality itemQuality) : base(name, GameObjectType.Gear, weight)
+        protected GearItem(string name, GearSubtype gearSubtype, ItemQuality itemQuality) : base(name, GameObjectType.Gear)
         {
             SetQuality(itemQuality);
             _gearType = gearSubtype;
@@ -36,7 +36,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _itemItemQuality = quality;
         }
 
-        public void Equip(Character character)
+        public virtual void Equip(Character character)
         {
             //if in inventory, auto equip and replace
             //if not in inventory open equip window
@@ -47,7 +47,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             MoveTo(character.Inventory());
         }
 
-        public void Unequip()
+        public virtual void Unequip()
         {
             MoveTo(WorldState.HomeInventory());
         }

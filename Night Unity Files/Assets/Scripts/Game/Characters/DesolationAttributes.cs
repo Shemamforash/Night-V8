@@ -72,7 +72,7 @@ namespace Game.Characters
             EssenceFindBonus = new CharacterAttribute(this, AttributeType.EssenceFindBonus, 0, float.NegativeInfinity);
             HealthBonus = new CharacterAttribute(this, AttributeType.HealthBonus, 0, float.NegativeInfinity);
             WillpowerLossBonus = new CharacterAttribute(this, AttributeType.WillpowerLossBonus, 0, float.NegativeInfinity);
-            FireChanceBonus = new CharacterAttribute(this, AttributeType.FireChanceBonus, 0, float.NegativeInfinity);
+            FireChanceBonus = new CharacterAttribute(this, AttributeType.BurnChanceBonus, 0, float.NegativeInfinity);
             DecayChanceBonus = new CharacterAttribute(this, AttributeType.DecayChanceBonus, 0, float.NegativeInfinity);
             SicknessChanceBonus = new CharacterAttribute(this, AttributeType.SicknessChanceBonus, 0, float.NegativeInfinity);
             EssenceLossBonus = new CharacterAttribute(this, AttributeType.EssenceLossBonus, 1, float.NegativeInfinity);

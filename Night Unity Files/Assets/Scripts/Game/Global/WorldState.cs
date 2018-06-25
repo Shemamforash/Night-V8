@@ -76,9 +76,9 @@ namespace Game.Global
             return timeString;
         }
 
-        public static int GetCurrentDanger()
+        public static int Difficulty()
         {
-            return DaysSpentHere + DaysSpentHere * EnvironmentManager.CurrentEnvironment.LevelNo;
+            return DaysSpentHere + (Days - DaysSpentHere) * EnvironmentManager.CurrentEnvironment.LevelNo;
         }
 
         private void FindNewLocation()

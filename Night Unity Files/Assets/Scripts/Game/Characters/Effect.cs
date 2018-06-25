@@ -16,12 +16,12 @@ namespace Game.Characters
             _target = target;
             _modifier = modifier;
             _player = player;
-            _target.AddModifier(_modifier);
             if (duration == 0)
             {
                 target.Increment(modifier.RawBonus());
                 return;
             }
+            _target.AddModifier(_modifier);
             Duration = Mathf.FloorToInt(duration * WorldState.MinutesPerHour);
             player.AddEffect(this);
         }

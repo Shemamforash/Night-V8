@@ -11,12 +11,13 @@ namespace Game.Gear.Armour
         private readonly Number _plateHealth = new Number();
         public readonly bool Inscribable;
         private bool _broken;
+        public  readonly int Protection;
 
-        private ArmourPlate(string name, float weight, ItemQuality quality) : base(name, weight, GearSubtype.Armour, quality)
+        private ArmourPlate(string name, int protection, ItemQuality quality) : base(name, GearSubtype.Armour, quality)
         {
-            if (weight == 5 || weight == 4) Inscribable = true;
-
-            _plateHealth.Max = weight * 100;
+            if (protection == 5 || protection == 4) Inscribable = true;
+            Protection = protection;
+            _plateHealth.Max = protection * 100;
             _plateHealth.SetCurrentValue(_plateHealth.Max);
         }
 
@@ -47,7 +48,7 @@ namespace Game.Gear.Armour
             return new ArmourPlate(plateName, weight, quality);
         }
 
-        public override string GetSummary() => "+" + Weight + " Armour";
+        public override string GetSummary() => "+" + Protection + " Armour";
 
         public void TakeDamage(float amount)
         {

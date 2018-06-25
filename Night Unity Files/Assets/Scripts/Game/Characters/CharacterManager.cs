@@ -202,7 +202,8 @@ namespace Game.Characters
         {
             Player driver = GenerateCharacter(CharacterClass.Wanderer);
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Rusted, WeaponType.Pistol);
-            WeaponGenerationTester.Test();
+//            WeaponGenerationTester.Test();
+//            Inscription.Test();
             driver.EquipWeapon(weapon);
             return driver;
         }

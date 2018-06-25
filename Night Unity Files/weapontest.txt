@@ -1,8 +1,8 @@
 Type: Pistol  ---  Quality: Worn
-        DPS: 41 (min: 32.4 /max: 58.4 )
-        Damage: 18.4 (min: 11.2 /max: 28.1)
-        Accuracy: 65.5 (min: 56.2 /max: 84.4)
-        FireRate: 4.1 (min: 2.2 /max: 6.8)
+        DPS: 41.5 (min: 32.4 /max: 58.4 )
+        Damage: 18.7 (min: 11.2 /max: 28.1)
+        Accuracy: 66.1 (min: 56.2 /max: 84.4)
+        FireRate: 4.2 (min: 2.2 /max: 6.8)
 
 Pistol Deepdriver 
 Durability: 20 (0.125)
@@ -33,10 +33,10 @@ Accuracy: 56.25
 
 
 Type: Pistol  ---  Quality: Radiant
-        DPS: 93 (min: 82.3 /max: 111 )
-        Damage: 24.6 (min: 11.2 /max: 46.9)
-        Accuracy: 80.7 (min: 56.2 /max: 100)
-        FireRate: 5.5 (min: 2.2 /max: 11.2)
+        DPS: 91 (min: 82.3 /max: 111 )
+        Damage: 23.8 (min: 11.2 /max: 46.9)
+        Accuracy: 80.8 (min: 56.2 /max: 100)
+        FireRate: 5.3 (min: 2.2 /max: 11.2)
 
 Pistol Deepdriver 
 Durability: 50 (0.875)
@@ -70,9 +70,9 @@ Accuracy: 93.75
 
 Type: Rifle  ---  Quality: Worn
         DPS: 59.6 (min: 58.8 /max: 60.8 )
-        Damage: 84.9 (min: 56.2 /max: 101.2)
+        Damage: 77.5 (min: 56.2 /max: 101.2)
         Accuracy: 100 (min: 100 /max: 100)
-        FireRate: 1.4 (min: 1.1 /max: 2.2)
+        FireRate: 1.6 (min: 1.1 /max: 2.2)
 
 Rifle Groundrider 
 Durability: 20 (0.125)
@@ -103,10 +103,10 @@ Accuracy: 100
 
 
 Type: Rifle  ---  Quality: Radiant
-        DPS: 126.5 (min: 122.3 /max: 136.1 )
-        Damage: 110.3 (min: 56.2 /max: 168.8)
+        DPS: 128.4 (min: 122.3 /max: 136.1 )
+        Damage: 109.1 (min: 56.2 /max: 168.8)
         Accuracy: 100 (min: 100 /max: 100)
-        FireRate: 2 (min: 1.1 /max: 3.8)
+        FireRate: 1.9 (min: 1.1 /max: 3.8)
 
 Rifle Groundrider 
 Durability: 50 (0.875)
@@ -139,10 +139,10 @@ Accuracy: 100
 
 
 Type: Shotgun  ---  Quality: Worn
-        DPS: 59.2 (min: 58.2 /max: 59.8 )
-        Damage: 6.3 (min: 3.4 /max: 9)
+        DPS: 59.3 (min: 58.2 /max: 59.8 )
+        Damage: 5.6 (min: 3.4 /max: 9)
         Accuracy: 22.5 (min: 22.5 /max: 22.5)
-        FireRate: 3.4 (min: 1.7 /max: 6.8)
+        FireRate: 4.2 (min: 1.7 /max: 6.8)
 
 Shotgun Leadspreader 
 Durability: 20 (0.125)
@@ -173,10 +173,10 @@ Accuracy: 22.5
 
 
 Type: Shotgun  ---  Quality: Radiant
-        DPS: 116.6 (min: 105.1 /max: 132.9 )
-        Damage: 8.1 (min: 3.4 /max: 15)
+        DPS: 117.1 (min: 105.1 /max: 132.9 )
+        Damage: 7.9 (min: 3.4 /max: 15)
         Accuracy: 30 (min: 22.5 /max: 37.5)
-        FireRate: 5 (min: 1.7 /max: 11.2)
+        FireRate: 5.2 (min: 1.7 /max: 11.2)
 
 Shotgun Bonebreaker 
 Durability: 50 (0.875)
@@ -209,10 +209,10 @@ Accuracy: 37.5
 
 
 Type: SMG  ---  Quality: Worn
-        DPS: 61.2 (min: 59.4 /max: 62.8 )
-        Damage: 7 (min: 5.6 /max: 9)
+        DPS: 60.8 (min: 59.4 /max: 62.8 )
+        Damage: 7.3 (min: 5.6 /max: 9)
         Accuracy: 33.8 (min: 33.8 /max: 33.8)
-        FireRate: 14 (min: 11.2 /max: 16.9)
+        FireRate: 13.7 (min: 11.2 /max: 16.9)
 
 SMG Spewer 
 Durability: 20 (0.125)
@@ -243,10 +243,10 @@ Accuracy: 33.75
 
 
 Type: SMG  ---  Quality: Radiant
-        DPS: 137.9 (min: 129.5 /max: 144.6 )
-        Damage: 9.2 (min: 5.6 /max: 15)
+        DPS: 136.9 (min: 129.5 /max: 144.6 )
+        Damage: 9.6 (min: 5.6 /max: 15)
         Accuracy: 45 (min: 33.8 /max: 56.2)
-        FireRate: 18.8 (min: 11.2 /max: 28.1)
+        FireRate: 18.4 (min: 11.2 /max: 28.1)
 
 SMG Spewer 
 Durability: 50 (0.875)
@@ -279,10 +279,10 @@ Accuracy: 56.25
 
 
 Type: LMG  ---  Quality: Worn
-        DPS: 60.4 (min: 58.3 /max: 63.7 )
-        Damage: 13.1 (min: 6.8 /max: 20.2)
+        DPS: 60.8 (min: 58.3 /max: 63.7 )
+        Damage: 14.2 (min: 6.8 /max: 20.2)
         Accuracy: 45 (min: 45 /max: 45)
-        FireRate: 13 (min: 5.6 /max: 22.5)
+        FireRate: 11.4 (min: 5.6 /max: 22.5)
 
 LMG Gouger 
 Durability: 20 (0.125)
@@ -313,10 +313,10 @@ Accuracy: 45
 
 
 Type: LMG  ---  Quality: Radiant
-        DPS: 127.3 (min: 114.7 /max: 136.8 )
-        Damage: 18.2 (min: 6.8 /max: 33.8)
+        DPS: 127 (min: 114.7 /max: 136.8 )
+        Damage: 18.7 (min: 6.8 /max: 33.8)
         Accuracy: 60 (min: 45 /max: 75)
-        FireRate: 15.6 (min: 5.6 /max: 37.5)
+        FireRate: 15.4 (min: 5.6 /max: 37.5)
 
 LMG Gouger 
 Durability: 50 (0.875)

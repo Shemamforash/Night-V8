@@ -128,7 +128,7 @@ namespace Game.Exploration.Regions
 //            AddEnemy(EnemyType.Shadow, 10);
         }
 
-        private int CalculateDanger() => WorldState.GetCurrentDanger() + (int) (Vector2.Distance(Position, Vector2.zero) / 5f);
+        private int CalculateDanger() => WorldState.Difficulty() + (int) (Vector2.Distance(Position, Vector2.zero) / 5f);
 
         public void Generate(int size)
         {

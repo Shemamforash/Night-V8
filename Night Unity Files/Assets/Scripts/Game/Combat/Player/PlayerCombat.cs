@@ -27,7 +27,7 @@ namespace Game.Combat.Player
     public class PlayerCombat : CharacterCombat, IInputListener
     {
         private EnemyBehaviour _currentTarget;
-        private float  _skillCooldownModifier, _adrenalineGain;
+        private float _skillCooldownModifier, _adrenalineGain;
         private readonly Number _adrenalineLevel = new Number(0, 0, 8);
         private Cooldown _dashCooldown;
         private int _initialArmour;
@@ -39,12 +39,13 @@ namespace Game.Combat.Player
         private Number _strengthText;
 
         public Characters.Player Player;
+        private FastLight _playerLight;
 
         private float _reloadPressedTime;
         private const float MaxReloadPressedTime = 1f;
         private bool _inCombat;
         public static PlayerCombat Instance;
-        public float MuzzleFlashOpacity { get; set; }
+        public float MuzzleFlashOpacity;
 
         private bool ConsumeAdrenaline(int amount)
         {
@@ -268,7 +269,7 @@ namespace Game.Combat.Player
         }
 
         private FastLight _muzzleFlash;
-        
+
         private void UpdateMuzzleFlash()
         {
             MuzzleFlashOpacity -= Time.deltaTime;
@@ -312,7 +313,7 @@ namespace Game.Combat.Player
             _adrenalineGain = Player.Attributes.CalculateAdrenalineRecoveryRate();
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
             _compassPulses = Player.Attributes.CalculateCompassPulses();
-            
+
             _dashCooldown = CombatManager.CreateCooldown();
             _dashCooldown.Duration = 1;
             _dashCooldown.SetDuringAction(a =>
@@ -334,7 +335,10 @@ namespace Game.Combat.Player
 
             HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue());
 
-            SkillBar.BindSkills(Player);
+            _playerLight = GameObject.Find("Player Light").GetComponent<FastLight>();
+            _playerLight.Radius = CombatManager.VisibilityRange();
+
+            SkillBar.BindSkills(Player, _skillCooldownModifier);
             UIMagazineController.SetWeapon(_weaponBehaviour);
             SetInCombat(false);
             transform.position = PathingGrid.FindCellToAttackPlayer(CurrentCell(), PathingGrid.CombatAreaWidth, PathingGrid.CombatAreaWidth - 4).Position;
@@ -372,7 +376,6 @@ namespace Game.Combat.Player
             TargetBehaviour.SetTarget(e == null ? null : e.transform);
             _currentTarget = e;
             EnemyUi.Instance().SetSelectedEnemy(e);
-            
         }
 
         public override Weapon Weapon() => Player.Weapon;

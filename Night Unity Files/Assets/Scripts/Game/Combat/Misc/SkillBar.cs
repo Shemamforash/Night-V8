@@ -16,6 +16,7 @@ namespace Game.Combat.Misc
         private static List<UISkillCostController> CostControllers;
         private static CanvasGroup _canvas;
         private static Cooldown _skillsCooldown;
+        private static float _cooldownModifier;
 
         public void Awake()
         {
@@ -34,8 +35,9 @@ namespace Game.Combat.Misc
             CooldownControllers.ForEach(s => _skillsCooldown.SetController(s));
         }
 
-        public static void BindSkills(Characters.Player player)
+        public static void BindSkills(Characters.Player player, float skillCooldownModifier)
         {
+            _cooldownModifier = skillCooldownModifier;
             BindSkill(0, player.CharacterSkillOne);
             BindSkill(1, player.CharacterSkillTwo);
             if (player.Weapon == null) return;
@@ -59,7 +61,7 @@ namespace Game.Combat.Misc
         {
             if (_skillsCooldown.Running()) return;
             _skills[skillNo].Activate();
-            _skillsCooldown.Duration = _skills[skillNo].Cooldown();
+            _skillsCooldown.Duration = _skills[skillNo].Cooldown() * _cooldownModifier;
             _skillsCooldown.Start();
         }
     }

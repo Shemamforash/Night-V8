@@ -20,7 +20,7 @@
         WillpowerLossBonus,
         SkillRechargeBonus,
         AdrenalineRechargeBonus,
-        FireChanceBonus,
+        BurnChanceBonus,
         DecayChanceBonus,
         SicknessChanceBonus,
 
@@ -32,8 +32,7 @@
         Pellets,
         Capacity,
         SicknessChance,
-        PierceChance,
-        BleedChance,
+        DecayChance,
         BurnChance,
         CompassBonus
     }

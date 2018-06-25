@@ -65,7 +65,7 @@ namespace Facilitating.UIControllers
         public override void SelectGearItem(GearItem item, UiGearMenuController.GearUi gearUi)
         {
             ArmourPlate plate = item as ArmourPlate;
-            gearUi.SetTypeText(plate.Weight + " Armour");
+            gearUi.SetTypeText(plate.Protection + " Armour");
             gearUi.SetNameText(plate.Name);
             gearUi.SetDpsText("");
         }
@@ -176,7 +176,7 @@ namespace Facilitating.UIControllers
                 }
 
                 _nameText.Text(plate.Name);
-                _currentArmourText.Text(plate.Weight + " Armour");
+                _currentArmourText.Text(plate.Protection + " Armour");
                 _armourDetailText.Text("TODO");
                 SetPlateInserted(plate);
             }

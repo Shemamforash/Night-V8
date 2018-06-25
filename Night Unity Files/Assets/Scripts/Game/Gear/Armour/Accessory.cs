@@ -12,7 +12,7 @@ namespace Game.Gear.Armour
         private static bool _readTemplates;
         private readonly AccessoryTemplate _template;
 
-        public Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, template.Weight, GearSubtype.Accessory, itemQuality)
+        public Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, GearSubtype.Accessory, itemQuality)
         {
             _template = template;
         }
@@ -35,7 +35,7 @@ namespace Game.Gear.Armour
                 int weight = int.Parse(accessoryNode.SelectSingleNode("Weight").InnerText);
                 string description = accessoryNode.SelectSingleNode("Description").InnerText;
                 string effect = accessoryNode.SelectSingleNode("Effect").InnerText;
-                new AccessoryTemplate(name, weight, description, effect);
+                new AccessoryTemplate(name, description);
             }
 
             _readTemplates = true;
@@ -56,13 +56,11 @@ namespace Game.Gear.Armour
         public class AccessoryTemplate
         {
             public readonly string Name, Description;
-            public readonly float Weight;
 
-            public AccessoryTemplate(string name, int weight, string description, string effect)
+            public AccessoryTemplate(string name, string description)
             {
                 _accessoryTemplates.Add(this);
                 Name = name;
-                Weight = weight;
                 Description = description;
             }
         }

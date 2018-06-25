@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -17,8 +18,10 @@ namespace Game.Gear.Weapons
         private const float MaxAccuracyOffsetInDegrees = 25f;
         private const float RangeMin = 1f;
         private const float RangeMax = 4.5f;
+        private Inscription _inscription;
+        private Character _character;
 
-        public Weapon(string name, float weight, ItemQuality _itemQuality) : base(name, weight, GearSubtype.Weapon, _itemQuality)
+        public Weapon(string name, float weight, ItemQuality _itemQuality) : base(name, GearSubtype.Weapon, _itemQuality)
         {
             WeaponAttributes = new WeaponAttributes(this);
 //            Durability.OnMin(() => { _canEquip = false; });
@@ -96,6 +99,46 @@ namespace Game.Gear.Weapons
             }
             weaponBehaviour.Initialise(player.Weapon());
             return weaponBehaviour;
+        }
+
+        private void AddInscription(Inscription i)
+        {
+            if (_inscription != null)
+            {
+                _inscription.RemoveModifier(this);
+                UnapplyInscription();
+            }
+
+            _inscription = i;
+            ParentInventory.DestroyItem(i);
+            ApplyInscription();
+        }
+
+        public override void Equip(Character character)
+        {
+            base.Equip(character);
+            _character = character;
+            ApplyInscription();
+        }
+
+        public override void Unequip()
+        {
+            base.Unequip();
+            UnapplyInscription();
+        }
+        
+        private  void ApplyInscription()
+        {
+            if (_inscription == null) return;
+            _inscription.ApplyModifier(this);
+            _inscription.ApplyModifier(_character);
+        }
+
+        private void UnapplyInscription()
+        {
+            if (_inscription == null) return;
+            _inscription.RemoveModifier(this);
+            _inscription.RemoveModifier(_character);
         }
     }
 }

@@ -74,7 +74,6 @@ class ResourceImporter(XMLWriter):
         write_single_value(self, "Duration1", get_value(self, "G", row, "0"))
         write_single_value(self, "Effect2", get_value(self, "H", row, ""))
         write_single_value(self, "Duration2", get_value(self, "I", row, "0"))
-        write_single_value(self, "Weight", get_value(self, "J", row, "0"))
 
     def read_resources(self):
         for row_no in range(2, 21):
@@ -87,25 +86,31 @@ class InscriptionImporter(XMLWriter):
         write_tag(self, "Inscriptions", self.read_inscriptions)
 
     def read_inscriptions(self):
-        for row in range(2, 27):
+        for row in range(2, 16):
             write_tag(self, "Inscription", self.read_inscription, [row])
+
+    def read_single_modifier(self, row, column, name, prefix):
+        val = get_value(self, column, row, "0")
+        if val == "0":
+            return
+        write_single_value(self, name, prefix + val)
 
     def read_inscription(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "Damage", "x" + get_value(self, "B", row))
-        write_single_value(self, "FireRate", "x" + get_value(self, "C", row))
-        write_single_value(self, "ReloadSpeed", "x" + get_value(self, "D", row))
-        write_single_value(self, "Accuracy", "x" + get_value(self, "E", row))
-        write_single_value(self, "Handling", "x" + get_value(self, "F", row))
-        write_single_value(self, "Capacity", "x" + get_value(self, "G", row))
-        write_single_value(self, "Pellets", "x" + get_value(self, "H", row))
-        write_single_value(self, "DecayChance", "+" + get_value(self, "I", row, "0"))
-        write_single_value(self, "BurnChance", "+" + get_value(self, "J", row, "0"))
-        write_single_value(self, "SicknessChance", "+" + get_value(self, "K", row, "0"))
-        write_single_value(self, "Strength", "+" + get_value(self, "L", row, "0"))
-        write_single_value(self, "Endurance", "+" + get_value(self, "M", row, "0"))
-        write_single_value(self, "Perception", "+" + get_value(self, "N", row, "0"))
-        write_single_value(self, "Willpower", "+" + get_value(self, "O", row, "0"))
+        self.read_single_modifier(row, "B", "Damage", "x")
+        self.read_single_modifier(row, "C", "FireRate", "x")
+        self.read_single_modifier(row, "D", "ReloadSpeed", "x")
+        self.read_single_modifier(row, "E", "Accuracy", "x")
+        self.read_single_modifier(row, "F", "Handling", "x")
+        self.read_single_modifier(row, "G", "Capacity", "x")
+        self.read_single_modifier(row, "H", "Pellets", "x")
+        self.read_single_modifier(row, "I", "DecayChance", "+")
+        self.read_single_modifier(row, "J", "BurnChance", "+")
+        self.read_single_modifier(row, "K", "SicknessChance", "+")
+        self.read_single_modifier(row, "L", "Strength", "+")
+        self.read_single_modifier(row, "M", "Endurance", "+")
+        self.read_single_modifier(row, "N", "Perception", "+")
+        self.read_single_modifier(row, "O", "Willpower", "+")
 
 
 class GearImporter(XMLWriter):
@@ -114,25 +119,14 @@ class GearImporter(XMLWriter):
         write_tag(self, "GearList", self.read_gear)
 
     def read_gear(self):
-        for row in range(3, 19):
-            name = get_value(self, "B", row)
-            if name is 1:
-                name = get_value(self, "A", row)
-            gear_type = get_value(self, "C", row)
-            write_tag(self, gear_type, self.read_single_gear, [name, gear_type, row])
+        for row in range(3, 13):
+            name = get_value(self, "A", row)
+            write_tag(self, self.read_single_gear, [name, gear_type, row])
 
-    def read_single_gear(self, name, gear_type, row):
+    def read_single_gear(self, name, row):
         write_single_value(self, "Name", name)
-        write_single_value(self, "Weight", "+" + get_value(self, "D", row))
         write_single_value(self, "Description", get_value(self, "E", row))
-        if gear_type == "Accessory":
-            write_single_value(self, "Effect", get_value(self, "F", row) + get_value(self, "G", row))
-        else:
-            write_single_value(self, "Armour", "+" + get_value(self, "H", row, "0"))
-            write_single_value(self, "Perception", "+" + get_value(self, "I", row, "0"))
-            write_single_value(self, "Willpower", "+" + get_value(self, "J", row, "0"))
-            write_single_value(self, "Strength", "+" + get_value(self, "K", row, "0"))
-            write_single_value(self, "Endurance", "+" + get_value(self, "L", row, "0"))
+        write_single_value(self, "Effect", get_value(self, "F", row) + get_value(self, "G", row))
 
 
 class WeatherImporter(XMLWriter):
@@ -309,11 +303,11 @@ def write_single_value(xml_writer, stat_name, value):
 # GearImporter()
 # WeatherImporter()
 # RegionImporter()
-CharacterImporter()
+# CharacterImporter()
 # EnemyImporter()
 # RecipeImporter()
 # ResourceImporter()
-# InscriptionImporter()
+InscriptionImporter()
 # SkillImporter()
 # TraitImporter()
 # EnvironmentImporter()

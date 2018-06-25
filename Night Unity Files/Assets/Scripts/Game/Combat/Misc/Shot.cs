@@ -116,17 +116,14 @@ namespace Game.Combat.Misc
             _fireTrail.SetActive(true);
         }
 
-        public bool DidPierce() => Random.Range(0f, 1f) <= _pierceChance;
-
         private void CacheWeaponAttributes()
         {
             WeaponAttributes attributes = _weapon.WeaponAttributes;
             _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
             _accuracy = _weapon.CalculateBaseAccuracy();
-            _decayChange = attributes.GetCalculatedValue(AttributeType.BleedChance);
+            _decayChange = attributes.GetCalculatedValue(AttributeType.DecayChance);
             _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
             _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
-            _pierceChance = attributes.GetCalculatedValue(AttributeType.PierceChance);
         }
 
         public void SetDamageModifier(float modifier)
@@ -254,12 +251,6 @@ namespace Game.Combat.Misc
         }
 
         public int DamageDealt() => _damageDealt;
-
-        public void SetPierceChance(float chance)
-        {
-            Assert.IsTrue(chance >= 0 && chance <= 1);
-            _pierceChance = chance;
-        }
 
         public void SetAccuracy(float accuracy)
         {

@@ -18,14 +18,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private readonly List<InventoryItem> _items = new List<InventoryItem>();
         private readonly List<InventoryItem> _resources = new List<InventoryItem>();
         private bool _isWeightLimited;
-        private float _maxWeight;
+        private int _maxWeight;
         private readonly List<InventoryItem> _contents = new List<InventoryItem>();
         private bool _readonly;
         private static bool _loaded;
         private static readonly List<ResourceTemplate> resourceTemplates = new List<ResourceTemplate>();
         private readonly List<Consumable> _consumables = new List<Consumable>();
+        public int Weight;
 
-        public Inventory(string name, float maxWeight = 0) : base(name, GameObjectType.Inventory)
+        public Inventory(string name, int maxWeight = 0) : base(name, GameObjectType.Inventory)
         {
             LoadResources();
             foreach (ResourceTemplate template in resourceTemplates) AddResource(template);
@@ -99,7 +100,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             {
                 AddItem(WeaponGenerator.GenerateWeapon(ItemQuality.Shining));
                 AddItem(Accessory.GenerateAccessory(ItemQuality.Shining));
-                AddItem(Inscription.GenerateInscription(ItemQuality.Shining));
+                AddItem(Inscription.Generate());
                 AddItem(ArmourPlate.Create("Living Metal Plate"));
             }
         }
@@ -121,7 +122,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             Debug.Log(contents);
         }
 
-        public float MaxWeight
+        public int MaxWeight
         {
             get { return _maxWeight; }
             set
@@ -194,7 +195,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         protected virtual void AddItem(InventoryItem item)
         {
-            Weight += item.Weight;
+            ++Weight;
             item.ParentInventory = this;
             _items.Add(item);
             if (item is Consumable)
@@ -212,7 +213,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             if (!_items.Contains(item)) throw new Exceptions.ItemNotInInventoryException(item.Name);
             _items.Remove(item);
-            Weight -= item.Weight;
+            --Weight;
             UpdateContents();
             if (item is Consumable)
             {
@@ -226,7 +227,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             InventoryItem resource = GetResource(type);
             if (amount < 0) throw new Exceptions.ResourceValueChangeInvalid(resource.Name, "increment", amount);
-            Weight += resource.Weight * amount;
+            Weight += amount;
             resource.Increment(amount);
             UpdateContents();
         }
@@ -236,7 +237,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             InventoryItem resource = GetResource(type);
             if (amount < 0) throw new Exceptions.ResourceValueChangeInvalid(resource.Name, "decrement", amount);
             if (resource.Quantity() < amount) return;
-            Weight -= resource.Weight * amount;
+            Weight -= amount;
             resource.Decrement(amount);
             UpdateContents();
         }
@@ -265,7 +266,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         //Returns item in target inventory if the item was successfully moved
         private void Move(InventoryItem item)
         {
-            if (InventoryHasSpace(item.Weight)) return;
+            if (InventoryHasSpace(1)) return;
             Inventory parent = item.ParentInventory;
             InventoryItem movedItem = parent == null ? item : parent.RemoveItem(item);
             AddItem(movedItem);
@@ -282,10 +283,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
 
             if (quantity > item.Quantity()) quantity = Mathf.FloorToInt(item.Quantity());
-            if (!InventoryHasSpace(item.Weight * quantity))
+            if (!InventoryHasSpace(quantity))
             {
-                float remainingSpace = MaxWeight - Weight;
-                quantity = (int) Math.Floor(remainingSpace / item.Weight);
+                int remainingSpace = MaxWeight - Weight;
+                quantity = remainingSpace;
             }
 
             if (quantity <= 0) return;
@@ -316,6 +317,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             sortedItems.AddRange(GetItemsOfType(item => item is ArmourPlate));
             sortedItems.AddRange(GetItemsOfType(item => item is Accessory));
             return sortedItems;
+        }
+
+        public void DestroyItem(Inscription inscription)
+        {
+            _items.Remove(inscription);
         }
     }
 }

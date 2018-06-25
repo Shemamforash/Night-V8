@@ -11,10 +11,9 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public readonly int Id;
         public readonly GameObjectType Type;
 
-        protected MyGameObject(string name, GameObjectType type, float weight = 0, Inventory parentInventory = null)
+        protected MyGameObject(string name, GameObjectType type, Inventory parentInventory = null)
         {
             Name = name;
-            Weight = weight;
             ParentInventory = parentInventory;
             Type = type;
             Id = _idCounter;
@@ -22,7 +21,6 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         }
 
         public string Name;
-        public float Weight;
         public Inventory ParentInventory;
 
         public virtual void Load(XmlNode doc, PersistenceType saveType)
@@ -35,7 +33,6 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             XmlNode itemNode = SaveController.CreateNodeAndAppend(Type.ToString(), doc);
             SaveController.CreateNodeAndAppend("Id", itemNode, Id);
             SaveController.CreateNodeAndAppend("Name", itemNode, Name);
-            SaveController.CreateNodeAndAppend("Weight", itemNode, Weight);
             SaveController.CreateNodeAndAppend("ParentInventory", itemNode, ParentInventory?.Id ?? -1);
             SaveController.CreateNodeAndAppend("Type", itemNode, Type);
             return itemNode;
