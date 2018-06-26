@@ -9,10 +9,8 @@ namespace Game.Characters.CharacterActions
     {
         private int TimeSpentTravelling;
         private Region _target;
-        private Vector3 TargetPosition;
         private Region CurrentNode;
         private bool _inTransit;
-        private float JourneyTime;
 
         public Travel(Player playerCharacter) : base("Travel", playerCharacter)
         {
@@ -21,15 +19,17 @@ namespace Game.Characters.CharacterActions
             {
                 if (Duration == 0)
                 {
-                    if(_inTransit) ReachTarget();
+                    if (_inTransit) ReachTarget();
                     return;
                 }
+
                 ++TimeSpentTravelling;
                 if (TimeSpentTravelling == WorldState.MinutesPerHour)
                 {
                     PlayerCharacter.Travel();
                     TimeSpentTravelling = 0;
                 }
+
                 --Duration;
             };
         }
@@ -40,7 +40,7 @@ namespace Game.Characters.CharacterActions
             if (CurrentNode == null) return true;
             return CurrentNode.GetRegionType() == RegionType.Gate;
         }
-        
+
         private void ReachTarget()
         {
             CurrentNode = _target;
@@ -54,7 +54,7 @@ namespace Game.Characters.CharacterActions
             else
             {
                 CurrentNode.Discover();
-                SceneChanger.ChangeScene("Map");
+                CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Enter();
             }
         }
 
@@ -73,24 +73,12 @@ namespace Game.Characters.CharacterActions
             return _inTransit;
         }
 
-        public Vector3 GetCurrentPosition()
-        {
-            if (!_inTransit) return CurrentNode.Position;
-            float progress = 1f - Duration / JourneyTime;
-            return Vector3.Lerp(CurrentNode.Position, TargetPosition, progress);
-        }
-        
-        public void TravelTo(Region target, Vector3 targetPosition, int duration)
+        public void TravelTo(Region target, int duration)
         {
             Enter();
             _inTransit = true;
             _target = target;
-            TargetPosition = targetPosition;
             Duration = duration;
-            if (target != null)
-            {
-                JourneyTime = Duration;
-            }
         }
 
         public void SetCurrentNode(Region node)

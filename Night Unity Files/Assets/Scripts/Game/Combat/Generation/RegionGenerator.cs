@@ -20,13 +20,14 @@ namespace Game.Combat.Generation
         {
             _region = region;
             Random.InitState(region.RegionID);
-            if (!_region.Visited)
+            if (!_region.Visited())
             {
                 GenerateFreshEnvironment();
-                _region.Visited = true;
+                _region.Visit();
                 return;
             }
 
+            _region.Visit();
             PathingGrid.InitialiseGrid();
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
@@ -48,10 +49,25 @@ namespace Game.Combat.Generation
             }
 
             _region.Barriers = barriers;
+            PlaceShrines();
             PlaceItems();
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
             PathingGrid.FinaliseGrid();
+        }
+
+        private void PlaceShrines()
+        {
+            for (int i = 0; i < _availablePositions.Count; ++i)
+            {
+                Vector2 topLeft = new Vector2(_availablePositions[i].x - 3f, _availablePositions[i].y - 3f);
+                Vector2 bottomRight = new Vector2(_availablePositions[i].x + 3f, _availablePositions[i].y + 3f);
+                if (_availablePositions[i].magnitude > 20) continue;
+                if (PathingGrid.WorldToCellPosition(_availablePositions[i]) == null) continue;
+                if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
+                _availablePositions.RemoveAt(i);
+                return;
+            }
         }
 
         private void GenerateGenericRock(float scale, float radiusVariation, float smoothness, Vector2? position = null)
@@ -209,14 +225,14 @@ namespace Game.Combat.Generation
         protected virtual void PlaceItems()
         {
             Helper.Shuffle(ref _availablePositions);
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 4; ++i)
             {
                 Vector2? position = FindAndRemoveValidPosition();
                 if (position == null) return;
-                _region.Containers.Add(ContainerController.CreateFoodSource(position.Value));
+                _region.Containers.Add(new FoodSource(position.Value));
                 position = FindAndRemoveValidPosition();
                 if (position == null) return;
-                _region.Containers.Add(ContainerController.CreateWaterSource(position.Value));
+                _region.Containers.Add(new WaterSource(position.Value));
             }
         }
 

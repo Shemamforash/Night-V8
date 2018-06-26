@@ -118,7 +118,7 @@ namespace Fastlights
         private bool _intersectionExists;
         private Vector2 _intersectionPoint;
 
-        private void DrawLight()
+        public void DrawLight()
         {
             meshVertices.Clear();
             List<List<FLEdge>> edgeSegments = new List<List<FLEdge>>();

@@ -44,7 +44,7 @@ namespace Game.Global
 //todo            SaveController.LoadGame();
 
 #if UNITY_EDITOR
-            _homeInventory.AddTestingResources(3);
+            _homeInventory.AddTestingResources(3, 1);
 #endif
         }
 

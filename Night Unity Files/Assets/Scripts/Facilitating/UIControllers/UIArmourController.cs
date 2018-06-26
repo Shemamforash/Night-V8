@@ -60,11 +60,6 @@ namespace Facilitating.UIControllers
             _armourText.text = armourController.GetCurrentArmour() / 10f + "x damage";
         }
 
-        public void RepairArmour(ArmourController controller)
-        {
-            SetSlotsFilled(controller);
-        }
-
         public void TakeDamage(ArmourController controller)
         {
             SetSlotsFilled(controller, true);

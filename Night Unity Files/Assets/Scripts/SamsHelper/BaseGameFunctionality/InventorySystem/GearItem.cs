@@ -50,6 +50,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public virtual void Unequip()
         {
             MoveTo(WorldState.HomeInventory());
+            WorldState.HomeInventory().Print();
         }
 
         public abstract string GetSummary();

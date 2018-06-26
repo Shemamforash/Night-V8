@@ -20,6 +20,7 @@ namespace Game.Combat.Enemies
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
+            IsHuman = true;
             _originPosition = transform.position;
             if (Random.Range(0, 3) == 1) SetActionText("Resting");
             else CurrentAction = Wander;

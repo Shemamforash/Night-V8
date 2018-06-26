@@ -243,7 +243,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            PlayerCombat.Instance.Player.ArmourController.Repair(2 * ArmourPlate.PlateHealthUnit);
+//            PlayerCombat.Instance.Player.ArmourController.GetPlateOne();
         }
     }
 

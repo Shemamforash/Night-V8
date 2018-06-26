@@ -26,7 +26,6 @@ public class MaelstromShotBehaviour : MonoBehaviour
         Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
         float angle = Vector2.Angle(dir, PlayerCombat.Instance.transform.position - transform.position);
         float force = 1000;
-        Debug.Log(angle);
         if (angle > 90)
         {
             force = -force;

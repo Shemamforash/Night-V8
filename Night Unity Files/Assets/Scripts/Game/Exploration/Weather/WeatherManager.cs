@@ -40,9 +40,9 @@ namespace Game.Exploration.Weather
                 string name = weatherNode.SelectSingleNode("Name").InnerText;
                 string type = weatherNode.SelectSingleNode("Type").InnerText;
                 int temperature = int.Parse(weatherNode.SelectSingleNode("Temperature").InnerText);
-                int visibility = int.Parse(weatherNode.SelectSingleNode("Visibility").InnerText);
-                int water = int.Parse(weatherNode.SelectSingleNode("Water").InnerText);
-                int food = int.Parse(weatherNode.SelectSingleNode("Food").InnerText);
+                float visibility = float.Parse(weatherNode.SelectSingleNode("Visibility").InnerText);
+                float water = float.Parse(weatherNode.SelectSingleNode("Water").InnerText);
+                float food = float.Parse(weatherNode.SelectSingleNode("Food").InnerText);
                 int duration = int.Parse(weatherNode.SelectSingleNode("Duration").InnerText);
                 XmlNode particleNode = weatherNode.SelectSingleNode("Particles");
                 float rain = float.Parse(particleNode.SelectSingleNode("Rain").InnerText);

@@ -6,6 +6,7 @@ using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Generation;
 using Game.Exploration.Environment;
+using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
@@ -46,7 +47,6 @@ namespace Game.Exploration.Regions
             _regions.Clear();
             _regionTypes.Clear();
             _regions.Add(new Region());
-            _regions[0].Discover();
             Environment.Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
             for (int i = 0; i < currentEnvironment.Shelters; ++i) _regionTypes.Add(RegionType.Shelter);
             for (int i = 0; i < currentEnvironment.Resources; ++i) _regionTypes.Add(RegionType.Resource);
@@ -67,6 +67,9 @@ namespace Game.Exploration.Regions
 
         public static void GetRegionType(Region region)
         {
+//            Debug.Log(_regionsDiscovered + "/" + _regions.Count + "  --- " + _regionsBeforeTemple + " " + _regionTypes.Count + " " + _noTemples);
+
+            Assert.IsFalse(region.Discovered());
             if (_regionsDiscovered == 0)
             {
                 region.SetRegionType(RegionType.Gate);
@@ -74,7 +77,7 @@ namespace Game.Exploration.Regions
             }
             else
             {
-                if (_regionsDiscovered == _regionsBeforeTemple)
+                if (_regionsDiscovered - 1 == _regionsBeforeTemple)
                 {
                     for (int i = 0; i < _noTemples; ++i) _regionTypes.Add(RegionType.Temple);
                 }

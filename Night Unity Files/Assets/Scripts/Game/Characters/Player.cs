@@ -150,7 +150,7 @@ namespace Game.Characters
         public override void EquipWeapon(Weapon weapon)
         {
             base.EquipWeapon(weapon);
-            CharacterView?.WeaponController.SetWeapon(weapon);
+            if(CharacterView != null) CharacterView.WeaponController.SetWeapon(weapon);
         }
 
         public void EquipArmourSlotOne(ArmourPlate plate)

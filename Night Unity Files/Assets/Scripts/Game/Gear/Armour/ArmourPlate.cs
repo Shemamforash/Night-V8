@@ -9,13 +9,10 @@ namespace Game.Gear.Armour
     {
         public const float PlateHealthUnit = 100;
         private readonly Number _plateHealth = new Number();
-        public readonly bool Inscribable;
-        private bool _broken;
         public  readonly int Protection;
 
         private ArmourPlate(string name, int protection, ItemQuality quality) : base(name, GearSubtype.Armour, quality)
         {
-            if (protection == 5 || protection == 4) Inscribable = true;
             Protection = protection;
             _plateHealth.Max = protection * 100;
             _plateHealth.SetCurrentValue(_plateHealth.Max);
@@ -40,7 +37,6 @@ namespace Game.Gear.Armour
             throw new ArgumentOutOfRangeException("Unknown armour type '" + name + "'");
         }
 
-
         public static ArmourPlate Create(string plateName)
         {
             ItemQuality quality = NameToQuality(plateName);
@@ -53,16 +49,10 @@ namespace Game.Gear.Armour
         public void TakeDamage(float amount)
         {
             _plateHealth.Decrement(amount);
-            _broken = true;
+            if (!_plateHealth.ReachedMin()) return;
+            Unequip();
+            ParentInventory.DestroyItem(this);
         }
-
-        public void Repair(float amount)
-        {
-            _plateHealth.Decrement(amount);
-            _broken = false;
-        }
-
-        public int GetRepairCost() => Mathf.CeilToInt((_plateHealth.Max - _plateHealth.CurrentValue()) / PlateHealthUnit);
 
         public int GetMaxProtection() => Mathf.CeilToInt(_plateHealth.Max / PlateHealthUnit);
 

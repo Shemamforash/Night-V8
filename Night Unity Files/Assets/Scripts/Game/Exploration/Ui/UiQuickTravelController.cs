@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using Game.Characters;
 using Game.Characters.CharacterActions;
+using Game.Combat.Player;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
@@ -11,18 +13,19 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Game.Exploration.Ui
 {
     public class UiQuickTravelController : MonoBehaviour, IInputListener
     {
-        private const int Centre = 6;
+        private const int Centre = 4;
         private readonly List<RegionUi> _regionUiList = new List<RegionUi>();
         private List<Region> _regions;
         private int _selectedRegion;
         public static UiQuickTravelController Instance;
 
-        private TextMeshProUGUI _regionName, _regionType, _regionDescription;
+        private TextMeshProUGUI _regionName, _regionDescription;
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -37,6 +40,9 @@ namespace Game.Exploration.Ui
                     break;
                 case InputAxis.Fire:
                     TravelToRegion();
+                    break;
+                case InputAxis.Cover:
+                    ReturnToGame();
                     break;
             }
         }
@@ -53,42 +59,72 @@ namespace Game.Exploration.Ui
         {
             Instance = this;
             _regionName = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Region Name");
-            _regionType = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Region Type");
             _regionDescription = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Description");
             Transform listObject = Helper.FindChildWithName<Transform>(gameObject, "List");
             List<Transform> regions = Helper.FindAllChildren(listObject).FindAll(r => r.name == "Region");
-            for (int i = 0; i < 13; ++i)
+            for (int i = 0; i < regions.Count; ++i)
             {
                 RegionUi regionUi = new RegionUi(regions[i].gameObject, Math.Abs(i - Centre));
                 _regionUiList.Add(regionUi);
                 regionUi.SetNoRegion();
             }
-            Disable();
-        }
-        
-        private void TravelToRegion()
-        {
-            Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
-            float distance = Vector2.Distance(travelAction.GetCurrentNode().Position, _targetRegion.Position);
-            int duration = MapGenerator.NodeDistanceToTime(distance);
-            travelAction.TravelTo(travelAction.GetCurrentNode(), travelAction.GetCurrentNode().Position, duration);
-            SceneChanger.ChangeScene("Game");
-        }
 
-        public void Enable()
-        {
-            gameObject.SetActive(true);
             InputHandler.SetCurrentListener(this);
             _regions = MapGenerator.DiscoveredNodes();
-            _regions.Remove(CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode());
+            _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
+            int curIndex = _regions.IndexOf(_currentRegion);
+            Helper.Swap(curIndex, 0, _regions);
+
             _selectedRegion = 0;
             SelectRegion();
         }
 
-        public void Disable()
+        private void DrawNeighbors()
         {
-            gameObject.SetActive(false);
+            List<Region> visited = new List<Region>();
+            Queue<Region> unvisited = new Queue<Region>();
+            unvisited.Enqueue(_currentRegion);
+            while (visited.Count != _regions.Count)
+            {
+                Region r = unvisited.Dequeue();
+                visited.Add(r);
+                r.Neighbors().ForEach(n =>
+                {
+                    if (!visited.Contains(n) && !unvisited.Contains(n))
+                    {
+                        unvisited.Enqueue(n);
+                    }
+
+                    Debug.DrawLine(r.Position, n.Position, Color.white, 0.05f);
+                });
+            }
+        }
+
+        private static Region _currentRegion;
+
+        public void Start()
+        {
+            Camera.main.GetComponent<FitScreenToRoute>().Recenter();
+        }
+
+        private void ReturnToGame()
+        {
+            InputHandler.UnregisterInputListener(this);
             InputHandler.SetCurrentListener(null);
+            SceneManager.LoadScene("Game");
+        }
+
+        private void TravelToRegion()
+        {
+            if (CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode() != _targetRegion)
+            {
+                Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
+                float distance = Vector2.Distance(travelAction.GetCurrentNode().Position, _targetRegion.Position);
+                int duration = MapGenerator.NodeDistanceToTime(distance);
+                travelAction.TravelTo(_regions[_selectedRegion], duration);
+            }
+
+            ReturnToGame();
         }
 
         private void TrySelectRegionBelow()
@@ -106,12 +142,9 @@ namespace Game.Exploration.Ui
         }
 
         private Region _targetRegion;
-        
+
         private void SelectRegion()
         {
-            Region currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
-            Assert.NotNull(currentRegion);
-
             for (int i = 0; i < _regionUiList.Count; ++i)
             {
                 int offset = i - Centre;
@@ -126,32 +159,29 @@ namespace Game.Exploration.Ui
 
                 if (i == Centre)
                 {
-                    MapGenerator.SetRoute(currentRegion, region);
+                    MapGenerator.SetRoute(_currentRegion, region);
                     UpdateCurrentRegionInfo(region);
                     _targetRegion = region;
                 }
-                _regionUiList[i].SetRegion(region.Name, RoutePlotter.DistanceBetween(region, currentRegion));
+
+                _regionUiList[i].SetRegion(region);
             }
         }
 
         private void UpdateCurrentRegionInfo(Region region)
         {
             _regionName.text = region.Name;
-            _regionType.text = region.GetRegionType().ToString();
-            string regionDescription = "";
-            //todo region description
-            _regionDescription.text = regionDescription;
+            _regionDescription.text = region.Description();
         }
 
         private class RegionUi
         {
             private readonly Color _activeColour;
-            private readonly EnhancedText _nameText, _typeText, _distanceText;
+            private readonly EnhancedText _nameText, _distanceText;
 
             public RegionUi(GameObject gameObject, int offset)
             {
                 _nameText = Helper.FindChildWithName<EnhancedText>(gameObject, "Name");
-                _typeText = Helper.FindChildWithName<EnhancedText>(gameObject, "Type");
                 _distanceText = Helper.FindChildWithName<EnhancedText>(gameObject, "Distance");
                 _activeColour = new Color(1f, 1f, 1f, 1f / (offset + 1));
             }
@@ -159,7 +189,6 @@ namespace Game.Exploration.Ui
             private void SetColor(Color c)
             {
                 _nameText.SetColor(c);
-                _typeText.SetColor(c);
                 _distanceText.SetColor(c);
             }
 
@@ -168,10 +197,12 @@ namespace Game.Exploration.Ui
                 SetColor(UiAppearanceController.InvisibleColour);
             }
 
-            public void SetRegion(string name, float duration)
+            public void SetRegion(Region region)
             {
-                _nameText.Text(name);
-                _distanceText.Text(WorldState.TimeToHours((int) (duration / MapGenerator.MinRadius * WorldState.MinutesPerHour)));
+                _nameText.Text(region.Name);
+                float duration = RoutePlotter.DistanceBetween(region, _currentRegion);
+                duration /= MapGenerator.MinRadius;
+                _distanceText.Text(WorldState.TimeToHours((int) duration * WorldState.MinutesPerHour));
                 SetColor(_activeColour);
             }
         }

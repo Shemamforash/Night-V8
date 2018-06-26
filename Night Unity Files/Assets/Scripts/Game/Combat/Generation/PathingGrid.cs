@@ -185,7 +185,9 @@ namespace Game.Combat.Generation
         {
             int max = WorldToGridDistance(maxRange);
             int min = WorldToGridDistance(minRange);
+
             Cell playerCell = PlayerCombat.Instance.CurrentCell();
+            Debug.Log(min + " " + max + " " + playerCell.Position);
             List<Cell> cellsNearPlayer = CellsInRange(playerCell, max, min);
             Cell nearestValidCell = FindNearestCell(cellsNearPlayer, false, currentCell);
             if (nearestValidCell == null) return currentCell;

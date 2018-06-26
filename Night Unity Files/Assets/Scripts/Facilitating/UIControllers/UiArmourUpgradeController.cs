@@ -34,14 +34,6 @@ namespace Facilitating.UIControllers
             });
         }
 
-        private void UpdatePlateUi(ArmourPlate plate, ArmourPlateUi plateUi)
-        {
-            if (plate == null)
-                plateUi.SetNoPlateInserted();
-            else
-                plateUi.SetPlateInserted(plate);
-        }
-
         private void SelectPlateUi(ArmourPlateUi plateUi)
         {
             _selectedPlateUi = plateUi;
@@ -107,47 +99,9 @@ namespace Facilitating.UIControllers
             return _selectedPlateUi.Button.Button();
         }
 
-        private static void UpdateNavigation()
-        {
-            bool repairOneActive = _plateOneUi._repairButton.Button().interactable;
-            bool repairTwoActive = _plateTwoUi._repairButton.Button().interactable;
-            bool inscribeOneActive = _plateOneUi._inscribeButton.Button().interactable;
-            bool inscribeTwoActive = _plateTwoUi._inscribeButton.Button().interactable;
-
-            if (repairOneActive)
-                if (repairTwoActive)
-                    _plateOneUi._repairButton.SetRightNavigation(_plateTwoUi._repairButton);
-                else if (inscribeTwoActive)
-                    _plateOneUi._repairButton.SetRightNavigation(_plateTwoUi._inscribeButton, false);
-                else
-                    _plateOneUi._repairButton.SetRightNavigation(_plateTwoUi.Button, false);
-
-            if (inscribeOneActive)
-                if (inscribeTwoActive)
-                    _plateOneUi._inscribeButton.SetRightNavigation(_plateTwoUi._inscribeButton);
-                else
-                    _plateOneUi._inscribeButton.SetRightNavigation(_plateTwoUi.Button, false);
-
-            if (repairTwoActive)
-                if (repairOneActive)
-                    _plateTwoUi._repairButton.SetLeftNavigation(_plateOneUi._repairButton);
-                else if (inscribeOneActive)
-                    _plateTwoUi._repairButton.SetLeftNavigation(_plateOneUi._inscribeButton, false);
-                else
-                    _plateTwoUi._repairButton.SetLeftNavigation(_plateOneUi.Button, false);
-
-            if (inscribeTwoActive)
-                if (inscribeOneActive)
-                    _plateTwoUi._inscribeButton.SetLeftNavigation(_plateOneUi._inscribeButton);
-                else
-                    _plateTwoUi._inscribeButton.SetLeftNavigation(_plateOneUi.Button, false);
-        }
-
         private class ArmourPlateUi
         {
             private readonly EnhancedText _currentArmourText, _armourDetailText;
-            public readonly EnhancedButton _inscribeButton, _repairButton;
-            private readonly EnhancedText _inscriptionText;
             private readonly EnhancedText _nameText;
             private readonly Image _selectedImage;
             public readonly EnhancedButton Button;
@@ -155,77 +109,30 @@ namespace Facilitating.UIControllers
             public ArmourPlateUi(GameObject gameObject)
             {
                 _nameText = Helper.FindChildWithName<EnhancedText>(gameObject, "Name");
-                _inscriptionText = Helper.FindChildWithName<EnhancedText>(gameObject, "Inscription");
                 _currentArmourText = Helper.FindChildWithName<EnhancedText>(gameObject, "Current Armour");
                 _armourDetailText = Helper.FindChildWithName<EnhancedText>(gameObject, "Armour Detail");
-                _inscribeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inscribe");
-                _repairButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Repair");
                 Button = Helper.FindChildWithName<EnhancedButton>(gameObject, "Info");
             }
 
             public void SetPlate(ArmourPlate plate)
             {
+                Button.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
                 if (plate == null)
                 {
                     _nameText.Text("");
                     _currentArmourText.Text("No Plate");
                     _armourDetailText.Text("");
-                    _inscriptionText.Text("");
-                    SetNoPlateInserted();
                     return;
                 }
 
                 _nameText.Text(plate.Name);
                 _currentArmourText.Text(plate.Protection + " Armour");
                 _armourDetailText.Text("TODO");
-                SetPlateInserted(plate);
             }
 
             public void SetSelected(bool selected)
             {
                 if (selected) Button.Select();
-            }
-
-            public void SetNoPlateInserted()
-            {
-                _inscribeButton.Button().interactable = false;
-                _repairButton.Button().interactable = false;
-
-                UpdateNavigation();
-
-                Button.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
-            }
-
-            public void SetPlateInserted(ArmourPlate plate)
-            {
-                if (plate.GetRepairCost() > 0) _repairButton.Button().interactable = true;
-
-                _inscribeButton.Button().interactable = plate.Inscribable;
-
-                UpdateNavigation();
-
-                if (_inscribeButton.Button().interactable)
-                {
-                    Button.SetDownNavigation(_inscribeButton);
-                    if (_repairButton.Button().interactable)
-                    {
-                        _inscribeButton.SetDownNavigation(_repairButton);
-                        _repairButton.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
-                    }
-                    else
-                    {
-                        _inscribeButton.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
-                    }
-                }
-                else if (_repairButton.Button().interactable)
-                {
-                    Button.SetDownNavigation(_repairButton);
-                    _repairButton.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
-                }
-                else
-                {
-                    Button.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
-                }
             }
         }
     }

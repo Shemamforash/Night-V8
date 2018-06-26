@@ -132,6 +132,7 @@
             <e p="Combat" t="Include">
               <e p="Enemies" t="Include">
                 <e p="Animals" t="Include">
+                  <e p="AnimalBehaviour.cs" t="Include" />
                   <e p="Curio.cs" t="Include" />
                   <e p="Grazer.cs" t="Include" />
                   <e p="Slinger.cs" t="Include" />
@@ -159,7 +160,6 @@
                   <e p="IncendiaryGrenade.cs" t="Include" />
                 </e>
                 <e p="Nightmares" t="Include">
-                  <e p="AnimalBehaviour.cs" t="Include" />
                   <e p="BeamController.cs" t="Include" />
                   <e p="Decoy.cs" t="Include" />
                   <e p="EnemyAttackBehaviours" t="Include">
@@ -199,8 +199,13 @@
                 <e p="Barrier.cs" t="Include" />
                 <e p="Cell.cs" t="Include" />
                 <e p="CombatManager.cs" t="Include" />
-                <e p="ContainerBehaviour.cs" t="Include" />
-                <e p="ContainerController.cs" t="Include" />
+                <e p="Containers" t="Include">
+                  <e p="ContainerBehaviour.cs" t="Include" />
+                  <e p="ContainerController.cs" t="Include" />
+                  <e p="FoodSource.cs" t="Include" />
+                  <e p="Loot.cs" t="Include" />
+                  <e p="WaterSource.cs" t="Include" />
+                </e>
                 <e p="PathingGrid.cs" t="Include" />
                 <e p="RegionGenerator.cs" t="Include" />
                 <e p="Regions" t="Include">
@@ -209,6 +214,7 @@
                   <e p="Labyrinth.cs" t="Include" />
                   <e p="Nightmare.cs" t="Include" />
                   <e p="Ruins.cs" t="Include" />
+                  <e p="Temple.cs" t="Include" />
                 </e>
                 <e p="Shrines" t="Include">
                   <e p="BossShrine.cs" t="Include" />
@@ -258,9 +264,6 @@
                 <e p="EnvironmentManager.cs" t="Include" />
                 <e p="FitScreenToRoute.cs" t="Include" />
                 <e p="MapGenerator.cs" t="Include" />
-                <e p="MapRingCreator.cs" t="Include" />
-                <e p="Path.cs" t="Include" />
-                <e p="PathSegment.cs" t="Include" />
                 <e p="RoutePlotter.cs" t="Include" />
               </e>
               <e p="Regions" t="Include">
@@ -270,11 +273,6 @@
               </e>
               <e p="UI" t="Include">
                 <e p="MapNodeController.cs" t="Include" />
-                <e p="PlayerExplorationController.cs" t="Include" />
-                <e p="UiFootprintController.cs" t="Include" />
-                <e p="UIMapController.cs" t="Include" />
-                <e p="UiNodeFocusScript.cs" t="Include" />
-                <e p="UiPathDrawController.cs" t="Include" />
                 <e p="UiQuickTravelController.cs" t="Include" />
               </e>
               <e p="Weather" t="Include">
@@ -365,6 +363,7 @@
             <e p="Direction.cs" t="Include" />
             <e p="Exceptions.cs" t="Include" />
             <e p="FadeAndDie.cs" t="Include" />
+            <e p="FadeAndDieTrailRenderer.cs" t="Include" />
             <e p="Input" t="Include">
               <e p="IInputListener.cs" t="Include" />
               <e p="InputAxis.cs" t="Include" />

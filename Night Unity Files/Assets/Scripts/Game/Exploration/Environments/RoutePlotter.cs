@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Exploration.Environment
 {
-    public class RoutePlotter : MonoBehaviour
+    public static class RoutePlotter
     {
         private static Vertex LeastDistance(Dictionary<Region, Vertex> vertices)
         {

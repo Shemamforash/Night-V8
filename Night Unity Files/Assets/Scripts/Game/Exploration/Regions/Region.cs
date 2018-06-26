@@ -25,12 +25,27 @@ namespace Game.Exploration.Regions
         public List<Barrier> Barriers = new List<Barrier>();
         public List<EnemyCampfire> Fires = new List<EnemyCampfire>();
         public List<ContainerController> Containers = new List<ContainerController>();
-        private readonly Dictionary<Region, Path> _paths = new Dictionary<Region, Path>();
         private readonly HashSet<Region> _neighbors = new HashSet<Region>();
         public Vector2 Position;
         private static GameObject _nodePrefab;
-        public bool Visited;
         public readonly int RegionID;
+        private int _lastVisitDay = -1;
+
+        public bool Visited()
+        {
+            return _lastVisitDay != -1;
+        }
+
+        public string TimeSinceLastVisit()
+        {
+            if (!Visited()) return "Unexplored";
+            return "Visited " + (WorldState.Days - _lastVisitDay) + " days ago.";
+        }
+
+        public void Visit()
+        {
+            _lastVisitDay = WorldState.Days;
+        }
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
@@ -68,30 +83,16 @@ namespace Game.Exploration.Regions
             nodeObject.name = Name;
             nodeObject.transform.position = new Vector3(Position.x, Position.y, 0);
             nodeObject.transform.localScale = Vector3.one;
-            UpdatePaths();
             MapNodeController mapNodeController = nodeObject.transform.GetComponentInChildren<MapNodeController>(true);
             mapNodeController.gameObject.SetActive(true);
+            if (_regionType == RegionType.Temple)
+            {
+                GameObject g = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Map/Map Shadow"));
+                g.transform.position = nodeObject.transform.position;
+            }
             string name = Name + "\n" + _regionType + " d=" + CalculateDanger();
             mapNodeController.SetName(name);
         }
-
-        private void UpdatePaths()
-        {
-            foreach (Region node in Neighbors())
-            {
-                if (node.Discovered() && !_paths.ContainsKey(node))
-                {
-                    UiPathDrawController.CreatePathBetweenNodes(this, node);
-                }
-            }
-        }
-
-        public void AddPathTo(Region node, Path path)
-        {
-            _paths[node] = path;
-        }
-
-        public Path GetPathTo(Region node) => _paths[node];
 
         public void SetPosition(Vector2 position)
         {
@@ -217,40 +218,89 @@ namespace Game.Exploration.Regions
         public void Discover()
         {
             if (_discovered) return;
-            _discovered = true;
             RegionManager.GetRegionType(this);
+            _discovered = true;
+            foreach (Region neighbor in _neighbors)
+            {
+                if (neighbor._discovered) continue;
+                RegionManager.GetRegionType(neighbor);
+                neighbor._discovered = true;
+            }
         }
 
         public bool Discovered() => _discovered;
 
+        private string AmountToDescriptor(int amount)
+        {
+            if (amount == 0) return "No";
+            if (amount == 1) return "Some";
+            if (amount < 3) return "Lots of";
+            return "Plentiful";
+        }
+
+        private string DangerToDescriptor()
+        {
+            int enemies = Enemies().Count;
+            if (enemies == 0) return "No";
+            if (enemies == 1) return "Slight";
+            if (enemies < 5) return "Some";
+            if (enemies < 10) return "Considerable";
+            return "Extreme";
+        }
+        
         public string Description()
         {
+            if (!Visited()) return TimeSinceLastVisit();
             string description = "";
+            description += AmountToDescriptor(GetFoodQuantity()) + " Food\n";
+            description += AmountToDescriptor(GetWaterQuantity()) + " Water\n";
+            description += DangerToDescriptor() + " Danger\n";
+            description += TimeSinceLastVisit();
             return description;
         }
 
-        public float GetResourceQuantity(string resource)
+        public int GetWaterQuantity()
         {
-            float total = 0;
-            Containers.ForEach(c => total += c.Inventory.GetResourceQuantity(resource));
-            return total;
+            int water = 0;
+            Containers.ForEach(c =>
+            {
+                WaterSource waterSource = c as WaterSource;
+                if (waterSource == null) return;
+                water += waterSource.Inventory.GetResourceQuantity("Water");
+            });
+            return water;
         }
 
-        public void AddWater(int ratingPoints)
+        public int GetFoodQuantity()
         {
-//            IncrementResource(InventoryResourceType.Water, 10 * ratingPoints);
+            int food = 0;
+            Containers.ForEach(c =>
+            {
+                FoodSource foodSource = c as FoodSource;
+                if (foodSource == null) return;
+                food += foodSource.Inventory.GetResourceQuantity("Food");
+            });
+            return food;
         }
 
-        public void AddFood(int ratingPoints)
+        public void ChangeWater(int polarity)
         {
-//            IncrementResource(InventoryResourceType.Food, 10 * ratingPoints);
+            Containers.ForEach(c =>
+            {
+                WaterSource waterSource = c as WaterSource;
+                if (waterSource == null) return;
+                waterSource.Change(polarity);
+            });
         }
 
-        private static string GetAmountRemainingDescripter(float amount)
+        public void ChangeFood(int polarity)
         {
-            string amountRemaining = "";
-            for (int i = 0; i < amount; i += 10) amountRemaining += "+";
-            return amountRemaining;
+            Containers.ForEach(c =>
+            {
+                FoodSource foodSource = c as FoodSource;
+                if (foodSource == null) return;
+                foodSource.Change(polarity);
+            });
         }
 
         private static List<int> _availableIds;

@@ -135,7 +135,7 @@ class WeatherImporter(XMLWriter):
         write_tag(self, "WeatherTypes", self.read_weather)
 
     def read_weather(self):
-        for row in range(3, 24):
+        for row in range(3, 19):
             write_tag(self, "Weather", self.read_single_weather, [row])
 
     def read_single_weather(self, row):
@@ -301,13 +301,13 @@ def write_single_value(xml_writer, stat_name, value):
 
 # WeaponImporter()
 # GearImporter()
-# WeatherImporter()
+WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
 # RecipeImporter()
 # ResourceImporter()
-InscriptionImporter()
+# InscriptionImporter()
 # SkillImporter()
 # TraitImporter()
 # EnvironmentImporter()

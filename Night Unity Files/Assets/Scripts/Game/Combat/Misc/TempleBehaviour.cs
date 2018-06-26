@@ -9,7 +9,8 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
-public class TempleBehaviour : MonoBehaviour
+public class 
+    TempleBehaviour : MonoBehaviour
 {
     private bool _lit, _ring1Active, _ring2Active;
     private ColourPulse ringPulse1, ringPulse2;

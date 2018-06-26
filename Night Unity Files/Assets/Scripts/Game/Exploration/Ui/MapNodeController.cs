@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Net.Mime;
 using SamsHelper.Libraries;
 using TMPro;
 using UnityEngine;
@@ -42,10 +41,6 @@ namespace Game.Exploration.Ui
             _ring1.transform.Rotate(new Vector3(0, 0, 1), 5 * Time.deltaTime);
             _ring2.transform.Rotate(new Vector3(0, 0, 1), 3 * Time.deltaTime);
             _ring3.transform.Rotate(new Vector3(0, 0, 1), -4 * Time.deltaTime);
-        }
-
-        public void SetAlpha(float alpha)
-        {
         }
 
         private IEnumerator FadeInLetters()

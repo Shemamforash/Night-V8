@@ -2,6 +2,7 @@
 using Game.Characters;
 using Game.Gear;
 using Game.Gear.Weapons;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
@@ -16,7 +17,7 @@ namespace Facilitating.UIControllers
         private EnhancedText _damageText, _fireRateText, _rangeText;
         private EnhancedText _dpsText, _capacityText;
 
-        private EnhancedButton _inscribeButton, _repairButton;
+        private EnhancedButton _inscribeButton, _infuseButton;
         private EnhancedText _inscriptionText;
         private EnhancedText _reloadSpeedText, _accuracyText, _handlingText;
 
@@ -42,13 +43,24 @@ namespace Facilitating.UIControllers
             _inscriptionText = Helper.FindChildWithName<EnhancedText>(gameObject, "Inscription");
 
             _inscribeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inscribe");
-            _repairButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Repair");
+            _infuseButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Infuse");
+            _infuseButton.AddOnClick(Infuse);
 
             _weaponButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Info");
             _weaponButton.AddOnClick(() =>
             {
                 if (GearIsAvailable()) UiGearMenuController.Instance().EnableInput();
             });
+        }
+
+        private void Infuse()
+        {
+            if (CurrentPlayer.Weapon == null) return;
+            if (CurrentPlayer.Weapon.WeaponAttributes.Durability.ReachedMax()) return;
+            if (WorldState.HomeInventory().GetResourceQuantity("Essence") == 0) return;
+            WorldState.HomeInventory().DecrementResource("Essence", 1);
+            CurrentPlayer.Weapon.WeaponAttributes.Durability.Increment();
+            UpdateDurabilityParticles();
         }
 
         public override void Show(Player player)
@@ -106,13 +118,11 @@ namespace Facilitating.UIControllers
             return "<color=#505050>" + Helper.Round(compareValue, 1) + "</color>" + " vs " + Helper.Round(equippedValue, 1);
         }
 
-        private void SetWeaponInfo(Weapon weapon)
+        private void UpdateDurabilityParticles()
         {
-            WeaponAttributes attr = weapon.WeaponAttributes;
-            _nameText.Text(weapon.Name);
             float absoluteMaxDurability = ((int) ItemQuality.Radiant + 1) * 10;
-            float maxDurability = ((int) weapon.Quality() + 1) * 10;
-            float currentDurability = weapon.WeaponAttributes.Durability.CurrentValue();
+            float maxDurability = ((int) CurrentPlayer.Weapon.Quality() + 1) * 10;
+            float currentDurability = CurrentPlayer.Weapon.WeaponAttributes.Durability.CurrentValue();
             float rectAnchorOffset = maxDurability / absoluteMaxDurability / 2;
             float particleOffset = 5.6f * (currentDurability / absoluteMaxDurability);
             _durabilityTransform.anchorMin = new Vector2(0.5f - rectAnchorOffset, 0.5f);
@@ -122,6 +132,13 @@ namespace Facilitating.UIControllers
             ParticleSystem.EmissionModule emission = _durabilityParticles.emission;
             emission.rateOverTime = 300 * particleOffset / 5.6f;
             _durabilityParticles.Play();
+        }
+        
+        private void SetWeaponInfo(Weapon weapon)
+        {
+            WeaponAttributes attr = weapon.WeaponAttributes;
+            _nameText.Text(weapon.Name);
+            UpdateDurabilityParticles();
             _damageText.Text(Helper.Round(attr.Damage.CurrentValue(), 1) + " Dam");
             _fireRateText.Text(Helper.Round(attr.FireRate.CurrentValue(), 1) + " RoF");
             _reloadSpeedText.Text(Helper.Round(attr.ReloadSpeed.CurrentValue(), 1) + "s Reload");
@@ -139,11 +156,11 @@ namespace Facilitating.UIControllers
         private void SetNavigation()
         {
             bool inscribeActive = _inscribeButton.Button().interactable;
-            bool repairActive = _repairButton.Button().interactable;
+            bool infuseActive = _infuseButton.Button().interactable;
 
-            if (repairActive)
+            if (infuseActive)
             {
-                SetTopToBottomNavigation(_repairButton);
+                SetTopToBottomNavigation(_infuseButton);
             }
             else if (inscribeActive)
             {
@@ -174,7 +191,7 @@ namespace Facilitating.UIControllers
             SetWeaponInfo(weapon);
             _inscribeButton.Button().interactable = weapon.Inscribable();
             _inscriptionText.Text(weapon.Inscribable() ? "-- Insert Inscription --" : "-- Not Inscribable --");
-            _repairButton.Button().interactable = !attr.Durability.ReachedMax();
+            _infuseButton.Button().interactable = !attr.Durability.ReachedMax();
 
             SetNavigation();
         }
@@ -201,7 +218,7 @@ namespace Facilitating.UIControllers
         {
             SetNoWeaponInfo();
             _inscribeButton.Button().interactable = false;
-            _repairButton.Button().interactable = false;
+            _infuseButton.Button().interactable = false;
             SetNavigation();
         }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Game.Exploration.Regions;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
@@ -412,6 +413,13 @@ namespace SamsHelper.Libraries
             }
 
             return hierarchy;
+        }
+
+        public static void Swap<T>(int from, int to, List<T> list)
+        {
+            T temp = list[to];
+            list[to] = list[from];
+            list[from] = temp;
         }
     }
 }

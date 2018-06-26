@@ -3,8 +3,8 @@
         <Name>Drizzle</Name>
         <Type>Phenomena</Type>
         <Temperature>-5</Temperature>
-        <Visibility>-1</Visibility>
-        <Water>1</Water>
+        <Visibility>1</Visibility>
+        <Water>0.1</Water>
         <Food>0</Food>
         <Duration>2</Duration>
         <Particles>
@@ -19,8 +19,8 @@
         <Name>Rain</Name>
         <Type>Phenomena</Type>
         <Temperature>-5</Temperature>
-        <Visibility>-2</Visibility>
-        <Water>2</Water>
+        <Visibility>0.9</Visibility>
+        <Water>0.2</Water>
         <Food>0</Food>
         <Duration>2</Duration>
         <Particles>
@@ -35,8 +35,8 @@
         <Name>Downpour</Name>
         <Type>Phenomena</Type>
         <Temperature>-5</Temperature>
-        <Visibility>-3</Visibility>
-        <Water>3</Water>
+        <Visibility>0.8</Visibility>
+        <Water>0.3</Water>
         <Food>0</Food>
         <Duration>2</Duration>
         <Particles>
@@ -51,7 +51,7 @@
         <Name>Haze</Name>
         <Type>Phenomena</Type>
         <Temperature>0</Temperature>
-        <Visibility>-2</Visibility>
+        <Visibility>0.6</Visibility>
         <Water>0</Water>
         <Food>0</Food>
         <Duration>2</Duration>
@@ -67,7 +67,7 @@
         <Name>Mist</Name>
         <Type>Phenomena</Type>
         <Temperature>-5</Temperature>
-        <Visibility>-3</Visibility>
+        <Visibility>0.4</Visibility>
         <Water>0</Water>
         <Food>0</Food>
         <Duration>2</Duration>
@@ -83,8 +83,8 @@
         <Name>Fog</Name>
         <Type>Phenomena</Type>
         <Temperature>-5</Temperature>
-        <Visibility>-4</Visibility>
-        <Water>1</Water>
+        <Visibility>0.2</Visibility>
+        <Water>0.1</Water>
         <Food>0</Food>
         <Duration>2</Duration>
         <Particles>
@@ -99,9 +99,9 @@
         <Name>Clear</Name>
         <Type>Phenomena</Type>
         <Temperature>5</Temperature>
-        <Visibility>0</Visibility>
+        <Visibility>1</Visibility>
         <Water>0</Water>
-        <Food>1</Food>
+        <Food>0.3</Food>
         <Duration>2</Duration>
         <Particles>
             <Rain>0</Rain>
@@ -115,9 +115,9 @@
         <Name>Cloudy</Name>
         <Type>Phenomena</Type>
         <Temperature>0</Temperature>
-        <Visibility>0</Visibility>
+        <Visibility>1</Visibility>
         <Water>0</Water>
-        <Food>1</Food>
+        <Food>0.2</Food>
         <Duration>2</Duration>
         <Particles>
             <Rain>0</Rain>
@@ -131,9 +131,9 @@
         <Name>Overcast</Name>
         <Type>Phenomena</Type>
         <Temperature>0</Temperature>
-        <Visibility>0</Visibility>
+        <Visibility>1</Visibility>
         <Water>0</Water>
-        <Food>1</Food>
+        <Food>0.1</Food>
         <Duration>2</Duration>
         <Particles>
             <Rain>0</Rain>
@@ -147,8 +147,8 @@
         <Name>Hail</Name>
         <Type>Phenomena</Type>
         <Temperature>-10</Temperature>
-        <Visibility>-1</Visibility>
-        <Water>1</Water>
+        <Visibility>0.8</Visibility>
+        <Water>0.1</Water>
         <Food>0</Food>
         <Duration>1</Duration>
         <Particles>
@@ -160,28 +160,12 @@
         </Particles>
     </Weather>
     <Weather>
-        <Name>Acid Rain</Name>
-        <Type>Event</Type>
-        <Temperature>-5</Temperature>
-        <Visibility>-1</Visibility>
-        <Water>-1</Water>
-        <Food>0</Food>
-        <Duration>2</Duration>
-        <Particles>
-            <Rain>0.5</Rain>
-            <Fog>0</Fog>
-            <Dust>0</Dust>
-            <Hail>0</Hail>
-            <Sun>1</Sun>
-        </Particles>
-    </Weather>
-    <Weather>
         <Name>Dust Storm</Name>
         <Type>Event</Type>
         <Temperature>5</Temperature>
-        <Visibility>-4</Visibility>
+        <Visibility>0.2</Visibility>
         <Water>0</Water>
-        <Food>-1</Food>
+        <Food>-0.1</Food>
         <Duration>6</Duration>
         <Particles>
             <Rain>0</Rain>
@@ -195,7 +179,7 @@
         <Name>Lightning</Name>
         <Type>Event</Type>
         <Temperature>0</Temperature>
-        <Visibility>0</Visibility>
+        <Visibility>1</Visibility>
         <Water>0</Water>
         <Food>0</Food>
         <Duration>1</Duration>
@@ -208,27 +192,11 @@
         </Particles>
     </Weather>
     <Weather>
-        <Name>Shock storm</Name>
-        <Type>Event</Type>
-        <Temperature>0</Temperature>
-        <Visibility>0</Visibility>
-        <Water>0</Water>
-        <Food>0</Food>
-        <Duration>1</Duration>
-        <Particles>
-            <Rain>0.7</Rain>
-            <Fog>0</Fog>
-            <Dust>0</Dust>
-            <Hail>0.4</Hail>
-            <Sun>0.4</Sun>
-        </Particles>
-    </Weather>
-    <Weather>
         <Name>Heat Wave</Name>
         <Type>Event</Type>
         <Temperature>10</Temperature>
-        <Visibility>0</Visibility>
-        <Water>-2</Water>
+        <Visibility>1</Visibility>
+        <Water>-0.2</Water>
         <Food>0</Food>
         <Duration>3</Duration>
         <Particles>
@@ -243,9 +211,9 @@
         <Name>Fire storm</Name>
         <Type>Event</Type>
         <Temperature>20</Temperature>
-        <Visibility>0</Visibility>
-        <Water>-3</Water>
-        <Food>-2</Food>
+        <Visibility>1</Visibility>
+        <Water>-0.3</Water>
+        <Food>-0.2</Food>
         <Duration>3</Duration>
         <Particles>
             <Rain>0</Rain>
@@ -256,28 +224,12 @@
         </Particles>
     </Weather>
     <Weather>
-        <Name>Flood</Name>
-        <Type>Event</Type>
-        <Temperature>0</Temperature>
-        <Visibility>0</Visibility>
-        <Water>3</Water>
-        <Food>-2</Food>
-        <Duration>1</Duration>
-        <Particles>
-            <Rain>1</Rain>
-            <Fog>0</Fog>
-            <Dust>0</Dust>
-            <Hail>0.1</Hail>
-            <Sun>0.6</Sun>
-        </Particles>
-    </Weather>
-    <Weather>
         <Name>Ice storm</Name>
         <Type>Event</Type>
         <Temperature>-20</Temperature>
-        <Visibility>-1</Visibility>
+        <Visibility>0.8</Visibility>
         <Water>0</Water>
-        <Food>-2</Food>
+        <Food>-0.2</Food>
         <Duration>3</Duration>
         <Particles>
             <Rain>0</Rain>
@@ -291,9 +243,9 @@
         <Name>Hurricane</Name>
         <Type>Event</Type>
         <Temperature>-5</Temperature>
-        <Visibility>-2</Visibility>
-        <Water>2</Water>
-        <Food>-3</Food>
+        <Visibility>0.6</Visibility>
+        <Water>-0.2</Water>
+        <Food>-0.3</Food>
         <Duration>2</Duration>
         <Particles>
             <Rain>0.5</Rain>
@@ -301,38 +253,6 @@
             <Dust>0</Dust>
             <Hail>0.2</Hail>
             <Sun>0.4</Sun>
-        </Particles>
-    </Weather>
-    <Weather>
-        <Name>Ether Storm</Name>
-        <Type>Event</Type>
-        <Temperature>15</Temperature>
-        <Visibility>-4</Visibility>
-        <Water>-2</Water>
-        <Food>-2</Food>
-        <Duration>1</Duration>
-        <Particles>
-            <Rain>0</Rain>
-            <Fog>0.3</Fog>
-            <Dust>0</Dust>
-            <Hail>0</Hail>
-            <Sun>0.2</Sun>
-        </Particles>
-    </Weather>
-    <Weather>
-        <Name>Miasma</Name>
-        <Type>Event</Type>
-        <Temperature>10</Temperature>
-        <Visibility>-3</Visibility>
-        <Water>-1</Water>
-        <Food>-1</Food>
-        <Duration>1</Duration>
-        <Particles>
-            <Rain>0</Rain>
-            <Fog>0.5</Fog>
-            <Dust>0</Dust>
-            <Hail>0</Hail>
-            <Sun>0.2</Sun>
         </Particles>
     </Weather>
 </WeatherTypes>

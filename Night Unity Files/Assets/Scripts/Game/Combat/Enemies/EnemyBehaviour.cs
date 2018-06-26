@@ -25,6 +25,7 @@ namespace Game.Combat.Enemies
         public Action CurrentAction;
         public Enemy Enemy;
         protected bool FacePlayer;
+        public bool IsHuman;
 
         private event Action<EnemyBehaviour> OnKill;
 
@@ -147,10 +148,13 @@ namespace Game.Combat.Enemies
         {
             base.Kill();
             OnKill?.Invoke(this);
-//            for (int i = 0; i < Random.Range(2, 10); ++i) SaltBehaviour.Create(transform.position);
 
-            ContainerController controller = ContainerController.CreateEnemyLoot(transform.position, Enemy);
-            if (controller != null)
+            if (IsHuman)
+                for (int i = 0; i < Enemy.Template.Value; ++i)
+                    SaltBehaviour.Create(transform.position);
+
+            Loot controller = new Loot(transform.position, Enemy);
+            if (controller.IsValid)
             {
                 controller.CreateObject();
                 CombatManager.Region().Containers.Add(controller);

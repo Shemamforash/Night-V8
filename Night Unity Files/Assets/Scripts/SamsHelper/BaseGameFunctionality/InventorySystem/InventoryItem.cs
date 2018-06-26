@@ -17,9 +17,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             Template = template;
         }
 
-        public InventoryItem(string name, GameObjectType type, Inventory parentInventory = null) : base(name, type, parentInventory)
+        protected InventoryItem(string name, GameObjectType type, Inventory parentInventory = null) : base(name, type, parentInventory)
         {
             _isResource = false;
+            _quantity.Increment();
         }
 
         public int Quantity()

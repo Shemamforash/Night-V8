@@ -8,7 +8,7 @@ namespace Game.Combat.Ui
 {
     public class CharacterUi : MonoBehaviour
     {
-        protected UIArmourController _armourController;
+        public UIArmourController _armourController;
         protected UIHealthBarController _healthBarController;
         protected CanvasGroup CanvasGroup;
 

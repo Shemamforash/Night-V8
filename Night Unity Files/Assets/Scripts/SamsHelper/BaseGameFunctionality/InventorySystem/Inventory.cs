@@ -96,6 +96,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             IncrementResource("Fuel", resourceCount);
             IncrementResource("Scrap", resourceCount);
             IncrementResource("Water", resourceCount);
+            IncrementResource("Essence", resourceCount);
             for (int i = 0; i < noItems; ++i)
             {
                 AddItem(WeaponGenerator.GenerateWeapon(ItemQuality.Shining));
@@ -160,7 +161,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return !_isWeightLimited;
         }
 
-        protected List<InventoryItem> InventoryResources()
+        private List<InventoryItem> InventoryResources()
         {
             return _resources;
         }
@@ -170,7 +171,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return _items;
         }
 
-        protected List<InventoryItem> GetItemsOfType(Func<InventoryItem, bool> typeCheck)
+        public List<InventoryItem> GetItemsOfType(Func<InventoryItem, bool> typeCheck)
         {
             return _items.Where(typeCheck).ToList();
         }
@@ -182,9 +183,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return found;
         }
 
-        private bool InventoryHasSpace(float weight)
+        private bool InventoryHasSpace(int weight)
         {
-            return !(Weight + weight > MaxWeight + 0.0001f) || !_isWeightLimited;
+            int newWeight = Weight + weight;
+            return newWeight <= MaxWeight || !_isWeightLimited;
         }
 
         public bool ContainsItem(InventoryItem item)
@@ -242,7 +244,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             UpdateContents();
         }
 
-        public float GetResourceQuantity(string type)
+        public int GetResourceQuantity(string type)
         {
             return GetResource(type).Quantity();
         }
@@ -266,8 +268,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         //Returns item in target inventory if the item was successfully moved
         private void Move(InventoryItem item)
         {
-            if (InventoryHasSpace(1)) return;
+            if (!InventoryHasSpace(1)) return;
             Inventory parent = item.ParentInventory;
+            if (ParentInventory != null) Debug.Log(item.Name + " " + item.ParentInventory.Name);
             InventoryItem movedItem = parent == null ? item : parent.RemoveItem(item);
             AddItem(movedItem);
         }
@@ -319,9 +322,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return sortedItems;
         }
 
-        public void DestroyItem(Inscription inscription)
+        public void DestroyItem(InventoryItem item)
         {
-            _items.Remove(inscription);
+            _items.Remove(item);
         }
     }
 }

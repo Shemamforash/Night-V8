@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Characters;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -165,6 +166,7 @@ namespace Facilitating.UIControllers
             DisableInput();
             _currentGearMenu.Equip(gearIndex);
             _currentGearMenu.GetGearButton().Select();
+            WorldState.HomeInventory().Print();
             _selectedGear = 0;
         }
 
@@ -220,7 +222,7 @@ namespace Facilitating.UIControllers
                 GearItem gearItem = null;
                 if (targetGear >= 0 && targetGear < _currentGearMenu.GetAvailableGear().Count) gearItem = _currentGearMenu.GetAvailableGear()[targetGear];
 
-                if (i == centre) _currentGearMenu.CompareTo(gearItem);
+                if (i == centre && gearItem != null) _currentGearMenu.CompareTo(gearItem);
 
                 _gearUis[i].SetGear(gearItem);
             }

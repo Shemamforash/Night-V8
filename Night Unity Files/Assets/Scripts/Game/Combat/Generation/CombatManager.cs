@@ -5,6 +5,7 @@ using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Global;
@@ -77,27 +78,34 @@ namespace Game.Combat.Generation
             _visibilityRange = 10f * (currentWeather?.GetVisibility() ?? 0.5f);
             _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
 
-            switch (_currentRegion.GetRegionType())
+            GameObject worldObject = GameObject.Find("World");
+            if (_currentRegion.GetRegionType() == RegionType.Temple)
             {
-                case RegionType.Shelter:
+                worldObject.AddComponent<Temple>().Initialise(_currentRegion);
+            }
+            else if (_currentRegion.GetRegionType() == RegionType.Nightmare)
+            {
+                worldObject.AddComponent<Nightmare>().Initialise(_currentRegion);
+            }
+
+            switch (EnvironmentManager.CurrentEnvironment.Name)
+            {
+                case "Oasis":
+                    worldObject.AddComponent<Forest>().Initialise(_currentRegion);
                     break;
-                case RegionType.Gate:
+                case "Steppe":
+                    //todo
+                    worldObject.AddComponent<Forest>().Initialise(_currentRegion);
                     break;
-                case RegionType.Temple:
+                case "Ruins":
+                    worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
                     break;
-                case RegionType.Resource:
+                case "Defiles":
+                    worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
                     break;
-                case RegionType.Danger:
-                    GameObject.Find("World").AddComponent<Ruins>().Initialise(_currentRegion);
+                case "Wastelands":
+                    worldObject.AddComponent<Canyon>().Initialise(_currentRegion);
                     break;
-                case RegionType.Nightmare:
-                    GameObject.Find("World").AddComponent<Nightmare>().Initialise(_currentRegion);
-                    break;
-                case RegionType.Animal:
-                    GameObject.Find("World").AddComponent<Canyon>().Initialise(_currentRegion);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
 
             PlayerCombat.Instance.Initialise();

@@ -30,9 +30,7 @@ namespace Game.Gear.Armour
 
         public void TakeDamage(float amount)
         {
-            Action<float> takeDamage = null;
-            if (_plateOne != null) takeDamage = _plateOne.TakeDamage;
-            DivideDamageOrHeal(amount, takeDamage);
+            DivideDamageOrHeal(amount);
             GetUiArmourController()?.TakeDamage(this);
         }
 
@@ -41,23 +39,23 @@ namespace Game.Gear.Armour
             return _character is Player ? PlayerUi.Instance().GetArmourController(_character) : EnemyUi.Instance().GetArmourController(_character);
         }
 
-        private void DivideDamageOrHeal(float amount, Action<float> armourAction)
+        private bool TakePlateDamage(ArmourPlate plate, float damage)
         {
-            float plateOneHealth = _plateOne?.GetRemainingHealth() ?? 0;
-            float plateTwoHealth = _plateTwo?.GetRemainingHealth() ?? 0;
+            if (plate == null) return false;
+            float armour = plate.GetCurrentProtection();
             float totalHealth = GetCurrentArmour();
-            float plateOneProportion = plateOneHealth / totalHealth;
-            float plateTwoPropotion = plateTwoHealth / totalHealth;
-            armourAction?.Invoke(amount * plateOneProportion);
-            armourAction?.Invoke(amount * plateTwoPropotion);
+            float proportion = armour / totalHealth;
+            plate.TakeDamage(proportion * damage);
+            return plate.GetCurrentProtection() == 0;
         }
-
-        public void Repair(float amount)
+        
+        private void DivideDamageOrHeal(float amount)
         {
-            Action<float> repair = null;
-            if (_plateOne != null) repair = _plateOne.Repair;
-            DivideDamageOrHeal(amount, repair);
-            GetUiArmourController()?.RepairArmour(this);
+            if (TakePlateDamage(_plateOne, amount))
+                _plateOne = null;
+
+            if (TakePlateDamage(_plateTwo, amount))
+                _plateTwo = null;
         }
 
         public void SetPlateOne(ArmourPlate plate)

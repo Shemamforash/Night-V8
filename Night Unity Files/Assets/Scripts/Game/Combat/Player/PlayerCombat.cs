@@ -308,6 +308,7 @@ namespace Game.Combat.Player
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
             _initialArmour = Player.ArmourController.GetProtectionLevel();
 
+            PlayerUi.Instance()._armourController.TakeDamage(ArmourController);
             Speed = Player.Attributes.CalculateSpeed();
 
             _adrenalineGain = Player.Attributes.CalculateAdrenalineRecoveryRate();
@@ -341,7 +342,8 @@ namespace Game.Combat.Player
             SkillBar.BindSkills(Player, _skillCooldownModifier);
             UIMagazineController.SetWeapon(_weaponBehaviour);
             SetInCombat(false);
-            transform.position = PathingGrid.FindCellToAttackPlayer(CurrentCell(), PathingGrid.CombatAreaWidth, PathingGrid.CombatAreaWidth - 4).Position;
+            float width = PathingGrid.CombatAreaWidth / 2f;
+            transform.position = PathingGrid.FindCellToAttackPlayer(CurrentCell(), width, width - 4).Position;
         }
 
         public override float GetAccuracyModifier()

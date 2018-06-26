@@ -21,9 +21,9 @@ namespace Game.Combat.Misc
 
         public void Start()
         {
-            new CharacterManager();
-            _instance = this;
-            RestartCombat();
+//            new CharacterManager();
+//            _instance = this;
+//            RestartCombat();
         }
 
         private static void RestartCombat()
