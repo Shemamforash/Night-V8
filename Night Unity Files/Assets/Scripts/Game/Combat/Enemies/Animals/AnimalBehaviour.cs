@@ -12,7 +12,6 @@ namespace Game.Combat.Enemies.Nightmares
         public override void Initialise(Enemy e)
         {
             base.Initialise(e);
-            IsHuman = false;
             AlertAll = false;
         }
         

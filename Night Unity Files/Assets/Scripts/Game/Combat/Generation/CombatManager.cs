@@ -87,25 +87,27 @@ namespace Game.Combat.Generation
             {
                 worldObject.AddComponent<Nightmare>().Initialise(_currentRegion);
             }
-
-            switch (EnvironmentManager.CurrentEnvironment.Name)
+            else
             {
-                case "Oasis":
-                    worldObject.AddComponent<Forest>().Initialise(_currentRegion);
-                    break;
-                case "Steppe":
-                    //todo
-                    worldObject.AddComponent<Forest>().Initialise(_currentRegion);
-                    break;
-                case "Ruins":
-                    worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
-                    break;
-                case "Defiles":
-                    worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
-                    break;
-                case "Wastelands":
-                    worldObject.AddComponent<Canyon>().Initialise(_currentRegion);
-                    break;
+                switch (EnvironmentManager.CurrentEnvironment.Name)
+                {
+                    case "Oasis":
+                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
+                        break;
+                    case "Steppe":
+                        //todo
+                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
+                        break;
+                    case "Ruins":
+                        worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
+                        break;
+                    case "Defiles":
+                        worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
+                        break;
+                    case "Wastelands":
+                        worldObject.AddComponent<Canyon>().Initialise(_currentRegion);
+                        break;
+                }
             }
 
             PlayerCombat.Instance.Initialise();

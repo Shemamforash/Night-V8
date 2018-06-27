@@ -19,7 +19,7 @@ public class EssenceCloudBehaviour : MonoBehaviour
         Initialise(20, transform.position);
     }
 
-    public static void Create(int essenceCount, Vector2 position)
+    public static void Create(Vector2 position, int essenceCount)
     {
         EssenceCloudBehaviour essence = _essenceCloudPool.Create();
         essence.Initialise(essenceCount, position);

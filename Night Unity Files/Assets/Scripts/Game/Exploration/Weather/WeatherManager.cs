@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Exploration.Weather
@@ -31,10 +32,7 @@ namespace Game.Exploration.Weather
         private static void LoadWeather()
         {
             if (_loaded) return;
-            TextAsset weatherFile = Resources.Load<TextAsset>("XML/Weather");
-            XmlDocument weatherXml = new XmlDocument();
-            weatherXml.LoadXml(weatherFile.text);
-            XmlNode root = weatherXml.SelectSingleNode("WeatherTypes");
+            XmlNode root = Helper.OpenRootNode("Weather", "WeatherTypes");
             foreach (XmlNode weatherNode in root.SelectNodes("Weather"))
             {
                 string name = weatherNode.SelectSingleNode("Name").InnerText;

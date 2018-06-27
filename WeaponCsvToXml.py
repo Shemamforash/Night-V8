@@ -192,7 +192,7 @@ class RegionImporter(XMLWriter):
 
     def read_region_names(self, column_letter, name_type):
         prefix_string = ""
-        for row in range(11, 38):
+        for row in range(3, 40):
             prefix = get_value(self, column_letter, row)
             if prefix == "1":
                 break
@@ -230,7 +230,7 @@ class EnemyImporter(XMLWriter):
         write_tag(self, "Enemies", self.read_enemies)
 
     def read_enemies(self):
-        for row in range(3, 25):
+        for row in range(3, 24):
             write_tag(self, "Enemy", self.read_enemy, [row])
 
     def read_enemy(self, row):
@@ -238,7 +238,7 @@ class EnemyImporter(XMLWriter):
         write_single_value(self, "Health", get_value(self, "B", row))
         write_single_value(self, "Speed", get_value(self, "D", row))
         write_single_value(self, "Value", get_value(self, "E", row))
-        write_single_value(self, "WeaponTypes", get_value(self, "F", row))
+        write_single_value(self, "Drops", get_value(self, "J", row, ""))
 
 
 class SkillImporter(XMLWriter):
@@ -301,10 +301,10 @@ def write_single_value(xml_writer, stat_name, value):
 
 # WeaponImporter()
 # GearImporter()
-WeatherImporter()
+# WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
-# EnemyImporter()
+EnemyImporter()
 # RecipeImporter()
 # ResourceImporter()
 # InscriptionImporter()

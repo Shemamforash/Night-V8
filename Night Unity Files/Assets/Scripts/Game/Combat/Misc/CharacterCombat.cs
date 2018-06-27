@@ -135,6 +135,7 @@ namespace Game.Combat.Misc
                 if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StopBleeding();
             }
 
+            if(this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).SetSicknessLevel((float)_sicknessTicks / SicknessTargetTicks);
             if (_sicknessTicks > 0)
             {
                 if (_sicknessDuration > SicknessDurationMax)

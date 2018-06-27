@@ -1,1 +1,24 @@
-<RegionType><Danger><Prefixes>Hatred,Abhorrent,Betrayer,Maverick,Failure,Deceiver,Downfall,Hell,Vandal,Juggernaut,Leviathan,Carcass,Behemoth,Glutton,Hellion,Demon,Beast,Satan,Devil,Monstrosity,Titan,Carrion,Gargantua</Prefixes><Suffixes>Dusk,Pit,Root,Curse,Woe,Grief,Affliction,Damnation,Agony,Anguish,Carcass,Remains,Ruin,Loss,Decay,Hulk,Shell,Wreck,Waste,Failure,End,Collapse,Downfall</Suffixes></Danger><Resource><Prefixes>Prowler,Predator,Bounty,Drifter,Vagrant</Prefixes><Suffixes>Wild,Dell,Dale,Vale,Hoard,Remission,Restitution,Relief,Succour,Comfort,Triumph,Success,Temptation,Jewel,Advantage,Reward,Boon</Suffixes></Resource><Temple><Prefixes>Faith,Heaven,Guardian</Prefixes><Suffixes>Promise,Escape,Rapture,Elation,Dream</Suffixes></Temple><Shelter><Prefixes>Beauty</Prefixes><Suffixes>Sleep,Slumber,Solace,Sunset,Rest,Torpor,Repose,Resolution</Suffixes></Shelter></RegionType>
+<RegionType>
+    <Danger>
+        <Prefixes>
+            Scavenger,Savage,Execrator,Mortal,Cripple,Civilisation,Torment,Anger,Hatred,Abhorrent,Betrayer,Maverick,Failure,Deceiver,Downfall,Hell,Vandal,Juggernaut,Leviathan,Carcass,Behemoth,Glutton,Hellion,Demon,Beast,Satan,Devil,Monstrosity,Titan,Carrion,Gargantua,Fiend,Demagogue,Dissident,Apostate
+        </Prefixes>
+        <Suffixes>
+            Burden,Cessation,Blight,Agony,Anguish,Bane,Abode,Terminus,Dusk,Pit,Root,Curse,Woe,Grief,Affliction,Damnation,Agony,Anguish,Carcass,Remains,Ruin,Loss,Decay,Hulk,Shell,Wreck,Waste,Failure,End,Collapse,Downfall,Sorrow,Waste,Heartache,Pity,Foment,Heresy
+        </Suffixes>
+    </Danger>
+    <Animal>
+        <Prefixes>Pursuit,Chaser,Stalker,Huntress,Hunter,Pursuer,Trapper,Tracker,Prowler,Predator,Bounty,Drifter,Vagrant,Haunt,Strider,Seeker,Suppliant,Beggar,Destitute</Prefixes>
+        <Suffixes>
+            Sustenance,Promise,Fruit,Bounty,Bloom,Prosperity,Blessing,Range,Wild,Dell,Dale,Vale,Hoard,Remission,Restitution,Relief,Succour,Comfort,Triumph,Success,Temptation,Jewel,Advantage,Reward,Boon,Caritas,Rescue
+        </Suffixes>
+    </Animal>
+    <Temple>
+        <Prefixes>God,Angel,Seraph,Paragon,Zealot,Adherant,Saviour,Deliverer,Faith,Heaven,Guardian,Defender,Protector,Salvation</Prefixes>
+        <Suffixes>Ache,Escape,Rapture,Dream,Sleep,Slumber,Solace,Sunset,Rest,Torpor,Repose,Stupor,Coma,Languor,Lethargy,Latancy</Suffixes>
+    </Temple>
+    <Shelter>
+        <Prefixes>Prosperity,Victory,Triumph,Endurance,Devotion,Hope,Piety,Love,Beauty,Duty,Faith,Passion</Prefixes>
+        <Suffixes>Grace,Virtue,Appeal,Exaltation,Devotion,Promise,Elation,Balm,Resolution,Dignity,Ease,Kindness,Clemency,Pardon,Lenience,Quarter,Reprieve,Amity,Benevolence,Reverence</Suffixes>
+    </Shelter>
+</RegionType>

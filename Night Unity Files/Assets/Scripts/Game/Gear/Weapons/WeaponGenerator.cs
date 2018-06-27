@@ -57,8 +57,9 @@ namespace Game.Gear.Weapons
             WeaponType weaponType;
             if (_weaponTypes.Count == 0)
             {
-                foreach(WeaponType w in Enum.GetValues(typeof(WeaponType))) _weaponTypes.Add(w);
+                foreach (WeaponType w in Enum.GetValues(typeof(WeaponType))) _weaponTypes.Add(w);
             }
+
             if (weaponsWanted != null)
             {
                 weaponType = weaponsWanted.Count != 0 ? weaponsWanted[Random.Range(0, weaponsWanted.Count)] : weaponsWanted[0];
@@ -78,10 +79,7 @@ namespace Game.Gear.Weapons
         private static void LoadBaseWeapons()
         {
             if (_readWeapons) return;
-            TextAsset weaponFile = Resources.Load<TextAsset>("XML/WeaponClasses");
-            XmlDocument weaponXml = new XmlDocument();
-            weaponXml.LoadXml(weaponFile.text);
-            XmlNode classesNode = weaponXml.SelectSingleNode("//Weapons");
+            XmlNode classesNode = Helper.OpenRootNode("WeaponClasses", "Weapons");
             foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
             {
                 WeaponClasses[type] = new List<WeaponClass>();

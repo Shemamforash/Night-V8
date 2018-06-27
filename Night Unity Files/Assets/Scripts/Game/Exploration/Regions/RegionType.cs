@@ -5,9 +5,8 @@
         Shelter,
         Gate,
         Temple,
-        Resource,
+        Animal,
         Danger,
-        Nightmare,
-        Animal
+        Nightmare
     }
 }

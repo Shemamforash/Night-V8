@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using TMPro;
@@ -16,6 +17,7 @@ namespace Game.Combat.Ui
         private TextMeshProUGUI _healthText;
         private Slider _slider;
         private RectTransform _sliderRect;
+        private Image _sicknessImage;
         private bool _cached;
 
         public void Awake()
@@ -26,6 +28,7 @@ namespace Game.Combat.Ui
             _burnEffect = Helper.FindChildWithName<ParticleSystem>(healthBar, "Burning");
             _bleedEffect = Helper.FindChildWithName<ParticleSystem>(healthBar, "Bleeding");
             _healthText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Health Text");
+            _sicknessImage = Helper.FindChildWithName<Image>(gameObject, "Sickness");
         }
 
         public void FadeNewHealth()
@@ -78,6 +81,11 @@ namespace Game.Combat.Ui
         {
             if (_burnEffect.isPlaying) return;
             _burnEffect.Play();
+        }
+
+        public void SetSicknessLevel(float normalisedValue)
+        {
+            _sicknessImage.DOFillAmount(normalisedValue, 0.1f);
         }
 
         public void StopBurning()

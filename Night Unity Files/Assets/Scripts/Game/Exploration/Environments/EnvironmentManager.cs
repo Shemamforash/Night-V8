@@ -2,6 +2,7 @@
 using System.Xml;
 using Game.Exploration.Weather;
 using Game.Global;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Exploration.Environment
@@ -43,10 +44,7 @@ namespace Game.Exploration.Environment
         private static void LoadEnvironments()
         {
             if (_loaded) return;
-            string regionText = Resources.Load<TextAsset>("XML/Environments").text;
-            XmlDocument regionXml = new XmlDocument();
-            regionXml.LoadXml(regionText);
-            XmlNode root = regionXml.SelectSingleNode("EnvironmentTypes");
+            XmlNode root = Helper.OpenRootNode("Environments", "EnvironmentTypes");
             foreach (XmlNode environmentNode in root.ChildNodes)
             {
                 string name = environmentNode.Name;

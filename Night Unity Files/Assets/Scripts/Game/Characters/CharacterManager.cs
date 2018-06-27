@@ -148,10 +148,7 @@ namespace Game.Characters
         private static void LoadTemplates()
         {
             if (_loaded) return;
-            string traitText = Resources.Load<TextAsset>("XML/Classes").text;
-            XmlDocument traitXml = new XmlDocument();
-            traitXml.LoadXml(traitText);
-            XmlNode root = traitXml.SelectSingleNode("Classes");
+            XmlNode root = Helper.OpenRootNode("Classes");
             foreach (XmlNode classNode in root.SelectNodes("Class"))
             {
                 string name = classNode.SelectSingleNode("Name").InnerText;

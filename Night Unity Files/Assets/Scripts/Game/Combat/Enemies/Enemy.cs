@@ -18,9 +18,8 @@ namespace Game.Combat.Enemies
 
         public void GenerateWeapon(float difficulty)
         {
-            if (Template.AllowedWeaponTypes.Count == 0) return;
             ItemQuality targetQuality = (ItemQuality) Enum.Parse(typeof(ItemQuality), Mathf.FloorToInt(difficulty * 5).ToString());
-            Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality, Template.AllowedWeaponTypes);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality);
             EquipWeapon(weapon);
         }
 

@@ -18,26 +18,12 @@ namespace Game.Combat.Enemies
 {
     public class EnemyBehaviour : CharacterCombat
     {
-        //        private readonly Cooldown _firingCooldown;
-        //        private const float KnockdownDuration = 5f;
-
         public string ActionText;
         public Action CurrentAction;
         public Enemy Enemy;
         protected bool FacePlayer;
-        public bool IsHuman;
-
-        private event Action<EnemyBehaviour> OnKill;
 
         protected readonly Queue<Cell> route = new Queue<Cell>();
-        //        private const float AlphaCutoff = 0.2f;
-//        private const float FadeVisibilityDistance = 5f;
-//        private float _currentAlpha;
-
-        public void AddOnKill(Action<EnemyBehaviour> a)
-        {
-            OnKill += a;
-        }
 
         public bool OnScreen() => Helper.IsObjectInCameraView(gameObject);
 
@@ -60,7 +46,7 @@ namespace Game.Combat.Enemies
             }
         }
 
-        private SpriteRenderer _sprite;
+        protected SpriteRenderer Sprite;
 
         private void UpdateAlpha()
         {
@@ -68,9 +54,9 @@ namespace Game.Combat.Enemies
             float alpha;
             if (distanceToPlayer > 3) alpha = 0;
             else alpha = 1 - distanceToPlayer / 3f;
-            Color c = _sprite.color;
+            Color c = Sprite.color;
             c.a = alpha;
-            _sprite.color = c;
+            Sprite.color = c;
         }
 
         private void PushAwayFromNeighbors()
@@ -107,11 +93,6 @@ namespace Game.Combat.Enemies
             if (route.Count == 0) return;
             Cell[] routeArr = route.ToArray();
             for (int i = 1; i < routeArr.Length; ++i) Gizmos.DrawLine(routeArr[i - 1].Position, routeArr[i].Position);
-
-//            Gizmos.color = new Color(0, 1, 0, 0.2f);
-//            Gizmos.DrawSphere(transform.position, (int)(IdealWeaponDistance * 1.5f / PathingGrid.CellResolution));
-//            Gizmos.color = new Color(0, 1, 0, 0.3f);
-//            Gizmos.DrawSphere(transform.position, (int)(IdealWeaponDistance * 0.5f / PathingGrid.CellResolution));
         }
 
         public override CharacterCombat GetTarget() => PlayerCombat.Instance;
@@ -122,14 +103,13 @@ namespace Game.Combat.Enemies
             Enemy = enemy;
             SetOwnedByEnemy(Enemy.Template.Speed);
             HealthController.SetInitialHealth(Enemy.Template.Health, this);
-//            if (!(this is Medic || this is Martyr)) SetHealBehaviour();
             transform.SetParent(GameObject.Find("World").transform);
             transform.position = PathingGrid.GetCellNearMe(Vector2.zero, 8f, 4f).Position;
 
-            Sprite sprite = Resources.Load<Sprite>("Images/Enemy Symbols/" + GetEnemyName());
-            _sprite = GetComponent<SpriteRenderer>();
-            if (sprite == null) return;
-            _sprite.sprite = sprite;
+            Sprite spriteImage = Resources.Load<Sprite>("Images/Enemy Symbols/" + GetEnemyName());
+            Sprite = GetComponent<SpriteRenderer>();
+            if (spriteImage == null) return;
+            Sprite.sprite = spriteImage;
         }
 
         protected void SetActionText(string actionText)
@@ -147,11 +127,18 @@ namespace Game.Combat.Enemies
         public override void Kill()
         {
             base.Kill();
-            OnKill?.Invoke(this);
 
-            if (IsHuman)
-                for (int i = 0; i < Enemy.Template.Value; ++i)
-                    SaltBehaviour.Create(transform.position);
+            switch (Enemy.Template.DropResource)
+            {
+                case "Salt":
+                    SaltBehaviour.Create(transform.position, Enemy.Template.DropCount);
+                    break;
+                case "Essence":
+                    EssenceCloudBehaviour.Create(transform.position, Enemy.Template.DropCount);
+                    break;
+                case "Meat":
+                    break;
+            }
 
             Loot controller = new Loot(transform.position, Enemy);
             if (controller.IsValid)
@@ -180,8 +167,6 @@ namespace Game.Combat.Enemies
             };
         }
 
-        //Firing
-
         public bool MoveToCover(Action reachCoverAction)
         {
             if (PathingGrid.IsCellHidden(CurrentCell())) return false;
@@ -193,11 +178,6 @@ namespace Game.Combat.Enemies
             WaitForRoute(safeRoute, reachCoverAction);
             return true;
         }
-
-        //Wander
-
-
-        //Movement
 
         protected void Reposition(Cell c, Action reachTargetAction = null)
         {
@@ -226,12 +206,6 @@ namespace Game.Combat.Enemies
         private void MoveToTargetPosition(Action ReachTargetAction)
         {
             Queue<Cell> newRoute = new Queue<Cell>(route);
-            List<Cell> r = route.ToList();
-            for (int i = 1; i < r.Count; ++i)
-            {
-                Debug.DrawLine(r[i - 1].Position, r[i].Position, Color.cyan, 5f);
-            }
-
             Assert.IsTrue(newRoute.Count > 0);
             _targetCell = newRoute.Dequeue();
             CurrentAction = () =>

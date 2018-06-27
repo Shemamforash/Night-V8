@@ -34,7 +34,6 @@ namespace Game.Exploration.Environment
             float yCentre = (highestNode + lowestNode) / 2f;
             float height = (highestNode - lowestNode) / 2f;
             float width = (rightmostNode - leftmostNode) / 2f;
-            Debug.Log(height + " " + width);
             Vector3 centre = new Vector3(xCentre, yCentre, -10f);
             MoveToCentre(centre, height * 1.5f);
         }

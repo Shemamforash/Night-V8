@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Threading;
-using Game.Combat.Enemies.Nightmares;
+﻿using System.Threading;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
-using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 namespace Game.Combat.Enemies
@@ -20,7 +16,6 @@ namespace Game.Combat.Enemies
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            IsHuman = true;
             _originPosition = transform.position;
             if (Random.Range(0, 3) == 1) SetActionText("Resting");
             else CurrentAction = Wander;

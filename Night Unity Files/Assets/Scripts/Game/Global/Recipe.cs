@@ -4,6 +4,7 @@ using System.Xml;
 using Facilitating;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Global
@@ -56,7 +57,6 @@ namespace Game.Global
             return true;
         }
 
-
         private bool _unlocked;
 
         private bool Available()
@@ -81,10 +81,7 @@ namespace Game.Global
         private static void LoadRecipes()
         {
             if (_loaded) return;
-            TextAsset recipeFile = Resources.Load<TextAsset>("XML/Recipes");
-            XmlDocument recipeXml = new XmlDocument();
-            recipeXml.LoadXml(recipeFile.text);
-            XmlNode root = recipeXml.SelectSingleNode("Recipes");
+            XmlNode root = Helper.OpenRootNode("Recipes");
             foreach (XmlNode recipeNode in root.SelectNodes("Recipe"))
             {
                 string ingredient1Name = recipeNode.SelectSingleNode("Ingredient1Name").InnerText;

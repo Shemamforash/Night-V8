@@ -7,6 +7,7 @@ using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -58,10 +59,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static void LoadResources()
         {
             if (_loaded) return;
-            TextAsset resourceFile = Resources.Load<TextAsset>("XML/Resources");
-            XmlDocument resourceXml = new XmlDocument();
-            resourceXml.LoadXml(resourceFile.text);
-            XmlNode root = resourceXml.SelectSingleNode("Resources");
+            XmlNode root = Helper.OpenRootNode("Resources");
             foreach (XmlNode resourceNode in root.SelectNodes("Resource"))
             {
                 ResourceTemplate resourceTemplate;

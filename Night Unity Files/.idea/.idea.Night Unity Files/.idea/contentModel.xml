@@ -134,9 +134,8 @@
                 <e p="Animals" t="Include">
                   <e p="AnimalBehaviour.cs" t="Include" />
                   <e p="Curio.cs" t="Include" />
+                  <e p="Flit.cs" t="Include" />
                   <e p="Grazer.cs" t="Include" />
-                  <e p="Slinger.cs" t="Include" />
-                  <e p="Snapper.cs" t="Include" />
                   <e p="Watcher.cs" t="Include" />
                 </e>
                 <e p="ArmedBehaviour.cs" t="Include" />

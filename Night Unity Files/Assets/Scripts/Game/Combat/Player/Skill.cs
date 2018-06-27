@@ -4,6 +4,7 @@ using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
 using SamsHelper;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Player
@@ -49,10 +50,7 @@ namespace Game.Combat.Player
         private static void LoadTemplates()
         {
             if (_loaded) return;
-            TextAsset enemyFile = Resources.Load<TextAsset>("XML/Skills");
-            XmlDocument enemyXml = new XmlDocument();
-            enemyXml.LoadXml(enemyFile.text);
-            XmlNode root = enemyXml.SelectSingleNode("Skills");
+            XmlNode root = Helper.OpenRootNode("Skills");
             foreach (XmlNode skillNode in root.SelectNodes("Skill"))
             {
                 string name = skillNode.SelectSingleNode("Name").InnerText;

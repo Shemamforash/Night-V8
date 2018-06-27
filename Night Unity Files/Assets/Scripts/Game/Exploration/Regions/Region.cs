@@ -112,14 +112,14 @@ namespace Game.Exploration.Regions
             return newEnemy;
         }
 
-        private void GenerateSimpleEncounter()
+        private void GenerateHumanEncounter()
         {
             AddEnemy(EnemyType.Sentinel, 10);
             AddEnemy(EnemyType.Witch, 10);
             AddEnemy(EnemyType.Brawler, 10);
         }
 
-        private void GenerateNightmare()
+        private void GenerateNightmareEncounter()
         {
 //            AddEnemy(EnemyType.GhoulMother, 10);
 //            AddEnemy(EnemyType.Maelstrom, 10);
@@ -172,30 +172,36 @@ namespace Game.Exploration.Regions
 
         public void SetRegionType(RegionType regionType)
         {
-            //TODO different combat scenarios for region tier and animal/human enemies
             _regionType = regionType;
             switch (regionType)
             {
                 case RegionType.Danger:
-                    GenerateSimpleEncounter();
+                    GenerateHumanEncounter();
                     break;
                 case RegionType.Nightmare:
-                    GenerateNightmare();
+                    GenerateNightmareEncounter();
                     break;
                 case RegionType.Shelter:
                     GenerateShelter();
                     break;
                 case RegionType.Animal:
-                    GenerateAnimals();
+                    GenerateAnimalEncounter();
                     break;
             }
         }
 
-        private void GenerateAnimals()
+        private void GenerateAnimalEncounter()
         {
-            for (int i = 0; i < Random.Range(5, 15); ++i)
+            for (int i = 0; i < 10; ++i)
             {
                 AddEnemy(EnemyType.Grazer, 10);
+            }
+
+            for (int i = 0; i < Random.Range(0, 3); ++i)
+            {
+                AddEnemy(EnemyType.Watcher, 10);
+                AddEnemy(EnemyType.Curio, 10);
+                AddEnemy(EnemyType.Flit, 10);
             }
         }
 

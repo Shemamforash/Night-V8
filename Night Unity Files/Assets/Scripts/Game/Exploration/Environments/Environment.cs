@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Global;
-using SamsHelper.BaseGameFunctionality.StateMachines;
 using UnityEngine;
 
 namespace Game.Exploration.Environment

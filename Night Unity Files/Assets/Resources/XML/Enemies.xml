@@ -4,153 +4,146 @@
         <Health>200</Health>
         <Speed>5</Speed>
         <Value>2</Value>
-        <WeaponTypes>Rifle</WeaponTypes>
+        <Drops>2 Salt</Drops>
     </Enemy>
     <Enemy>
         <Name>Brawler</Name>
         <Health>100</Health>
         <Speed>8</Speed>
         <Value>2</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>2 Salt</Drops>
     </Enemy>
     <Enemy>
         <Name>Medic</Name>
         <Health>200</Health>
         <Speed>5</Speed>
         <Value>3</Value>
-        <WeaponTypes>SMG, Pistol</WeaponTypes>
+        <Drops>3 Salt</Drops>
     </Enemy>
     <Enemy>
         <Name>Sentinel</Name>
         <Health>200</Health>
         <Speed>4</Speed>
         <Value>1</Value>
-        <WeaponTypes>SMG, Shotgun, Pistol</WeaponTypes>
+        <Drops>1 Salt</Drops>
     </Enemy>
     <Enemy>
         <Name>Warlord</Name>
         <Health>400</Health>
         <Speed>4</Speed>
         <Value>4</Value>
-        <WeaponTypes>LMG, Rifle</WeaponTypes>
+        <Drops>4 Salt</Drops>
     </Enemy>
     <Enemy>
         <Name>Mountain</Name>
         <Health>600</Health>
         <Speed>1</Speed>
         <Value>3</Value>
-        <WeaponTypes>LMG, Shotgun</WeaponTypes>
+        <Drops>3 Salt</Drops>
     </Enemy>
     <Enemy>
         <Name>Martyr</Name>
         <Health>50</Health>
         <Speed>10</Speed>
         <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>1 Salt</Drops>
     </Enemy>
     <Enemy>
         <Name>Witch</Name>
         <Health>150</Health>
         <Speed>5</Speed>
         <Value>3</Value>
-        <WeaponTypes>SMG, Pistol</WeaponTypes>
+        <Drops>3 Salt</Drops>
     </Enemy>
     <Enemy>
         <Name>Ghoul</Name>
         <Health>25</Health>
         <Speed>6</Speed>
         <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>1 essence</Drops>
     </Enemy>
     <Enemy>
         <Name>GhoulMother</Name>
         <Health>150</Health>
         <Speed>3</Speed>
         <Value>3</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>5 essence</Drops>
     </Enemy>
     <Enemy>
         <Name>Maelstrom</Name>
         <Health>150</Health>
         <Speed>5</Speed>
         <Value>2</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>5 essence</Drops>
     </Enemy>
     <Enemy>
         <Name>Ghast</Name>
         <Health>100</Health>
         <Speed>5</Speed>
         <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>10 essence</Drops>
     </Enemy>
     <Enemy>
         <Name>Revenant</Name>
         <Health>60</Health>
         <Speed>5</Speed>
         <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>2 essence</Drops>
     </Enemy>
     <Enemy>
         <Name>Nightmare</Name>
         <Health>400</Health>
         <Speed>5</Speed>
         <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>20 essence</Drops>
     </Enemy>
     <Enemy>
         <Name>Shadow</Name>
         <Health>100</Health>
         <Speed>5</Speed>
         <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>10 essence</Drops>
     </Enemy>
     <Enemy>
         <Name>Decoy</Name>
         <Health>1</Health>
         <Speed>0</Speed>
         <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops></Drops>
     </Enemy>
     <Enemy>
         <Name>Drone</Name>
         <Health>20</Health>
         <Speed>0</Speed>
         <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops></Drops>
     </Enemy>
     <Enemy>
         <Name>Grazer</Name>
         <Health>150</Health>
-        <Speed>9</Speed>
+        <Speed>3</Speed>
         <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>5 Meat</Drops>
     </Enemy>
     <Enemy>
         <Name>Watcher</Name>
         <Health>50</Health>
         <Speed>7</Speed>
         <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>3 Meat</Drops>
     </Enemy>
     <Enemy>
         <Name>Curio</Name>
         <Health>10</Health>
+        <Speed>6</Speed>
+        <Value>1</Value>
+        <Drops>2 Meat</Drops>
+    </Enemy>
+    <Enemy>
+        <Name>Flit</Name>
+        <Health>100</Health>
         <Speed>10</Speed>
         <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
-    </Enemy>
-    <Enemy>
-        <Name>Slinger</Name>
-        <Health>100</Health>
-        <Speed>5</Speed>
-        <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
-    </Enemy>
-    <Enemy>
-        <Name>Snapper</Name>
-        <Health>200</Health>
-        <Speed>3</Speed>
-        <Value>1</Value>
-        <WeaponTypes>1</WeaponTypes>
+        <Drops>1 Meat</Drops>
     </Enemy>
 </Enemies>

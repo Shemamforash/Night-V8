@@ -1,6 +1,4 @@
-﻿using Game.Combat.Generation;
-using Game.Combat.Player;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
+﻿using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -16,12 +14,15 @@ public class SaltBehaviour : MonoBehaviour
         _rigidBody = GetComponent<Rigidbody2D>();
     }
 
-    public static void Create(Vector2 position)
+    public static void Create(Vector2 position, int count)
     {
         if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Salt");
-        GameObject salt = Instantiate(_prefab);
-        salt.transform.position = AdvancedMaths.RandomVectorWithinRange(position, 0.5f);
-        salt.GetComponent<Rigidbody2D>().AddForce(AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized);
+        for (int i = 0; i < count; ++i)
+        {
+            GameObject salt = Instantiate(_prefab);
+            salt.transform.position = AdvancedMaths.RandomVectorWithinRange(position, 0.5f);
+            salt.GetComponent<Rigidbody2D>().AddForce(AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized);
+        }
     }
 
     public void Update()

@@ -219,10 +219,7 @@ namespace Game.Gear
                 foreach (AttributeType attributeType in Enum.GetValues(typeof(AttributeType))) _attributeTypes.Add(attributeType);
             }
 
-            TextAsset inscriptionFile = Resources.Load<TextAsset>("XML/Inscriptions");
-            XmlDocument inscriptionXml = new XmlDocument();
-            inscriptionXml.LoadXml(inscriptionFile.text);
-            XmlNode inscriptions = inscriptionXml.SelectSingleNode("//Inscriptions");
+            XmlNode inscriptions = Helper.OpenRootNode("Inscriptions");
             foreach (XmlNode inscriptionNode in inscriptions.SelectNodes("Inscription"))
             {
                 string inscriptionName = inscriptionNode.SelectSingleNode("Name").InnerText;

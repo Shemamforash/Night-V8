@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml;
 using Game.Gear.Weapons;
 using SamsHelper;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies
@@ -12,27 +13,22 @@ namespace Game.Combat.Enemies
     {
         private static bool _loaded;
         private static readonly Dictionary<EnemyType, EnemyTemplate> EnemyTemplates = new Dictionary<EnemyType, EnemyTemplate>();
-        public readonly List<WeaponType> AllowedWeaponTypes = new List<WeaponType>();
         public readonly EnemyType EnemyType;
         public readonly int Health;
         public readonly int Speed;
         public readonly int Value;
-        private static readonly List<WeaponType> _weaponTypes = new List<WeaponType>();
+        public readonly string DropResource;
+        public readonly int DropCount;
         private static readonly List<EnemyType> _enemyTypes = new List<EnemyType>();
 
-        private EnemyTemplate(EnemyType type, int health, int speed, int value, string[] allowedWeaponTypes)
+        private EnemyTemplate(EnemyType type, int health, int speed, int value, string dropResource, int dropCount)
         {
             EnemyType = type;
             Health = health;
             Speed = speed;
             Value = value;
-            if (_weaponTypes.Count == 0)
-            {
-                foreach (WeaponType weaponType in Enum.GetValues(typeof(WeaponType))) _weaponTypes.Add(weaponType);    
-            }
-            foreach (WeaponType weaponType in _weaponTypes)
-                if (allowedWeaponTypes.Contains(weaponType.ToString()))
-                    AllowedWeaponTypes.Add(weaponType);
+            DropResource = dropResource;
+            DropCount = dropCount;
         }
 
         public static List<EnemyTemplate> GetEnemyTypes()
@@ -56,19 +52,25 @@ namespace Game.Combat.Enemies
         private static void LoadTemplates()
         {
             if (_loaded) return;
-            TextAsset enemyFile = Resources.Load<TextAsset>("XML/Enemies");
-            XmlDocument enemyXml = new XmlDocument();
-            enemyXml.LoadXml(enemyFile.text);
-            XmlNode root = enemyXml.SelectSingleNode("Enemies");
-            foreach (XmlNode accessoryNode in root.SelectNodes("Enemy"))
+            XmlNode root = Helper.OpenRootNode("Enemies", "Enemies");
+            foreach (XmlNode enemyNode in root.SelectNodes("Enemy"))
             {
-                string name = accessoryNode.SelectSingleNode("Name").InnerText;
+                string name = enemyNode.SelectSingleNode("Name").InnerText;
                 EnemyType type = NameToType(name);
-                int health = int.Parse(accessoryNode.SelectSingleNode("Health").InnerText);
-                int speed = int.Parse(accessoryNode.SelectSingleNode("Speed").InnerText);
-                int value = int.Parse(accessoryNode.SelectSingleNode("Value").InnerText);
-                string[] allowedWeaponTypes = accessoryNode.SelectSingleNode("WeaponTypes").InnerText.Replace(" ", "").Split(',');
-                EnemyTemplate t = new EnemyTemplate(type, health, speed, value, allowedWeaponTypes);
+                int health = int.Parse(enemyNode.SelectSingleNode("Health").InnerText);
+                int speed = int.Parse(enemyNode.SelectSingleNode("Speed").InnerText);
+                int value = int.Parse(enemyNode.SelectSingleNode("Value").InnerText);
+                string dropString = enemyNode.SelectSingleNode("Drops").InnerText;
+                int dropCount = 0;
+                string dropResource = "";
+                if (dropString != "")
+                {
+                    string[] drops = dropString.Split(' ');
+                    dropCount = int.Parse(drops[0]);
+                    dropResource = drops[1];
+                }
+
+                EnemyTemplate t = new EnemyTemplate(type, health, speed, value, dropResource, dropCount);
                 EnemyTemplates[type] = t;
             }
 

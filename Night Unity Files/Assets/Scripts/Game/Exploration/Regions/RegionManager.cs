@@ -49,7 +49,7 @@ namespace Game.Exploration.Regions
             _regions.Add(new Region());
             Environment.Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
             for (int i = 0; i < currentEnvironment.Shelters; ++i) _regionTypes.Add(RegionType.Shelter);
-            for (int i = 0; i < currentEnvironment.Resources; ++i) _regionTypes.Add(RegionType.Resource);
+            for (int i = 0; i < currentEnvironment.Resources; ++i) _regionTypes.Add(RegionType.Animal);
             for (int i = 0; i < currentEnvironment.Dangers; ++i) _regionTypes.Add(RegionType.Danger);
             _regionTypes.Add(RegionType.Shelter);
             _noTemples = currentEnvironment.Temples;
@@ -122,10 +122,7 @@ namespace Game.Exploration.Regions
         private static void LoadRegionTemplates()
         {
             if (_loaded) return;
-            string regionText = Resources.Load<TextAsset>("XML/Regions").text;
-            XmlDocument regionXml = new XmlDocument();
-            regionXml.LoadXml(regionText);
-            XmlNode root = regionXml.SelectSingleNode("RegionType");
+            XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
             foreach (XmlNode regionTypeNode in root.ChildNodes)
             {
                 string[] prefixes = regionTypeNode.SelectSingleNode("Prefixes").InnerText.Split(',');

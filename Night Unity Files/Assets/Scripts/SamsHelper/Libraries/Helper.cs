@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml;
 using Game.Exploration.Regions;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -420,6 +421,15 @@ namespace SamsHelper.Libraries
             T temp = list[to];
             list[to] = list[from];
             list[from] = temp;
+        }
+
+        public static XmlNode OpenRootNode(string xmlName, string rootNodeName = null)
+        {
+            TextAsset xmlFile = Resources.Load<TextAsset>("XML/" + xmlName);
+            XmlDocument xml = new XmlDocument();
+            xml.LoadXml(xmlFile.text);
+            if (rootNodeName == null) rootNodeName = xmlName;
+            return xml.SelectSingleNode("//" + rootNodeName);
         }
     }
 }

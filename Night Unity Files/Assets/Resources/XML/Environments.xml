@@ -7,6 +7,7 @@
         <CompleteKeys>1</CompleteKeys>
         <Resources>6</Resources>
         <Danger>9</Danger>
+        <Animals>3</Animals>
     </Oasis>
     <Steppe>
         <Level>1</Level>
@@ -16,6 +17,7 @@
         <CompleteKeys>1</CompleteKeys>
         <Resources>7</Resources>
         <Danger>10</Danger>
+        <Animals>5</Animals>
     </Steppe>
     <Ruins>
         <Level>2</Level>
@@ -25,6 +27,7 @@
         <CompleteKeys>1</CompleteKeys>
         <Resources>8</Resources>
         <Danger>11</Danger>
+        <Animals>2</Animals>
     </Ruins>
     <Defiles>
         <Level>3</Level>
@@ -34,6 +37,7 @@
         <CompleteKeys>1</CompleteKeys>
         <Resources>9</Resources>
         <Danger>12</Danger>
+        <Animals>2</Animals>
     </Defiles>
     <Wastelands>
         <Level>4</Level>
@@ -43,5 +47,6 @@
         <CompleteKeys>0</CompleteKeys>
         <Resources>10</Resources>
         <Danger>13</Danger>
+        <Animals>0</Animals>
     </Wastelands>
 </EnvironmentTypes>

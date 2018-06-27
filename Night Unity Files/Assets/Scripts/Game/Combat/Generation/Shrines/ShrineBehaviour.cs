@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening.Core.Easing;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
@@ -51,11 +52,13 @@ public abstract class ShrineBehaviour : MonoBehaviour
     protected void AddEnemy(EnemyBehaviour b)
     {
         _enemiesAlive.Add(b);
-        b.AddOnKill(e => _enemiesAlive.Remove(e));
+//        b.AddOnKill(e => _enemiesAlive.Remove(e));
     }
 
     protected bool EnemiesDead()
     {
+        List<EnemyBehaviour> enemies = _enemiesAlive.FindAll(e => e == null);
+        enemies.ForEach(e => _enemiesAlive.Remove(e));
         return _enemiesAlive.Count == 0;
     }
 

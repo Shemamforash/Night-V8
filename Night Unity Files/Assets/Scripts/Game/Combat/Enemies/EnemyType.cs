@@ -21,8 +21,7 @@
         Drone,
         Grazer,
         Watcher,
-        Slinger,
-        Snapper,
-        Curio
+        Curio,
+        Flit
     }
 }

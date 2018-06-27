@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Gear.Armour
@@ -25,10 +26,7 @@ namespace Game.Gear.Armour
         private static void ReadTemplates()
         {
             if (_readTemplates) return;
-            TextAsset accessoryFile = Resources.Load<TextAsset>("XML/Gear");
-            XmlDocument accessoryXml = new XmlDocument();
-            accessoryXml.LoadXml(accessoryFile.text);
-            XmlNode root = accessoryXml.SelectSingleNode("GearList");
+            XmlNode root = Helper.OpenRootNode("Gear", "GearList");
             foreach (XmlNode accessoryNode in root.SelectNodes("Accessory"))
             {
                 string name = accessoryNode.SelectSingleNode("Name").InnerText;
