@@ -1,58 +1,86 @@
 <Inscriptions>
     <Inscription>
         <Name>Murder</Name>
-        <Damage>x0.1</Damage>
+        <Attribute>Damage</Attribute>
+        <Value>0.1</Value>
+        <Type>x</Type>
     </Inscription>
     <Inscription>
         <Name>Fervor</Name>
-        <FireRate>x0.1</FireRate>
+        <Attribute>FireRate</Attribute>
+        <Value>0.1</Value>
+        <Type>x</Type>
     </Inscription>
     <Inscription>
         <Name>Haste</Name>
-        <ReloadSpeed>x0.1</ReloadSpeed>
+        <Attribute>ReloadSpeed</Attribute>
+        <Value>0.1</Value>
+        <Type>x</Type>
     </Inscription>
     <Inscription>
         <Name>Vigilance</Name>
-        <Accuracy>x0.1</Accuracy>
+        <Attribute>Accuracy</Attribute>
+        <Value>0.1</Value>
+        <Type>x</Type>
     </Inscription>
     <Inscription>
         <Name>Swiftness</Name>
-        <Handling>x0.1</Handling>
+        <Attribute>Handling</Attribute>
+        <Value>0.1</Value>
+        <Type>x</Type>
     </Inscription>
     <Inscription>
         <Name>The Depths</Name>
-        <Capacity>x0.1</Capacity>
+        <Attribute>Capacity</Attribute>
+        <Value>0.1</Value>
+        <Type>x</Type>
     </Inscription>
     <Inscription>
         <Name>Oppression</Name>
-        <Pellets>x1</Pellets>
+        <Attribute>Pellets</Attribute>
+        <Value>1.5</Value>
+        <Type>x</Type>
     </Inscription>
     <Inscription>
         <Name>Terror</Name>
-        <DecayChance>+0.1</DecayChance>
+        <Attribute>DecayChance</Attribute>
+        <Value>0.1</Value>
+        <Type>x</Type>
     </Inscription>
     <Inscription>
         <Name>Cinders</Name>
-        <BurnChance>+0.1</BurnChance>
+        <Attribute>BurnChance</Attribute>
+        <Value>0.1</Value>
+        <Type>x</Type>
     </Inscription>
     <Inscription>
         <Name>Pestilence</Name>
-        <SicknessChance>+0.1</SicknessChance>
+        <Attribute>SicknessChance</Attribute>
+        <Value>0.1</Value>
+        <Type>x</Type>
     </Inscription>
     <Inscription>
         <Name>Vigor</Name>
-        <Strength>+1</Strength>
+        <Attribute>Strength</Attribute>
+        <Value>1</Value>
+        <Type>+</Type>
     </Inscription>
     <Inscription>
         <Name>Perpetuance</Name>
-        <Endurance>+1</Endurance>
+        <Attribute>Endurance</Attribute>
+        <Value>1</Value>
+        <Type>+</Type>
     </Inscription>
     <Inscription>
         <Name>Insight</Name>
-        <Perception>+1</Perception>
+        <Attribute>Perception</Attribute>
+        <Value>1</Value>
+        <Type>+</Type>
     </Inscription>
     <Inscription>
         <Name>Resolve</Name>
-        <Willpower>+1</Willpower>
+        <Attribute>Willpower</Attribute>
+        <Value>1</Value>
+        <Type>+</Type>
     </Inscription>
 </Inscriptions>

@@ -42,7 +42,7 @@ namespace Game.Global
             _environmentText.text = _timeString + ". It is " + _temperatureString + " and there is " + _weatherString + " in the " + _environmentString + ".";
         }
 
-        private static readonly string[] resources = {"Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Meat", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
+        private static readonly string[] resources = {"Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
 
         public override void Awake()
         {
@@ -81,12 +81,28 @@ namespace Game.Global
         {
             foreach (string resourceType in resources)
             {
-                int quantity = Mathf.FloorToInt(WorldState.HomeInventory().GetResource(resourceType).Quantity());
+                int quantity;
+                switch (resourceType)
+                {
+                    case "Food":
+                        quantity = 0;
+                        WorldState.HomeInventory().Consumables().ForEach(c => quantity += c.HungerModifier);
+                        _resourceText[resourceType].text = "Food " + quantity;
+                        return;
+                    case "Water":
+                        quantity = 0;
+                        WorldState.HomeInventory().Consumables().ForEach(c => quantity += c.ThirstModifier);
+                        _resourceText[resourceType].text = "Water " + quantity;
+                        return;
+                }
+
+                quantity = Mathf.FloorToInt(WorldState.HomeInventory().GetResource(resourceType).Quantity());
                 if (quantity == 0 && resourceType != "Food" && resourceType != "Water")
                 {
                     _resourceText[resourceType].gameObject.SetActive(false);
                     continue;
                 }
+
 
                 _resourceText[resourceType].gameObject.SetActive(true);
                 _resourceText[resourceType].text = resourceType + " " + quantity;

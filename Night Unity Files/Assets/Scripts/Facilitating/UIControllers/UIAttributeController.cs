@@ -1,4 +1,5 @@
 ﻿using Game.Characters;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -23,10 +24,10 @@ namespace Facilitating.UIControllers
 
         public void UpdateAttributes(Player player)
         {
-            _strengthMarker.SetValue(player.Attributes.Strength);
-            _enduranceMarker.SetValue(player.Attributes.Endurance);
-            _perceptionMarker.SetValue(player.Attributes.Perception);
-            _willpowerMarker.SetValue(player.Attributes.Willpower);
+            _strengthMarker.SetValue(player.Attributes.Get(AttributeType.Strength));
+            _enduranceMarker.SetValue(player.Attributes.Get(AttributeType.Endurance));
+            _perceptionMarker.SetValue(player.Attributes.Get(AttributeType.Perception));
+            _willpowerMarker.SetValue(player.Attributes.Get(AttributeType.Willpower));
         }
     }
 }

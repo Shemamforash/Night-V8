@@ -28,13 +28,13 @@ namespace Game.Gear.Weapons
 
         public void Reload()
         {
-            AmmoInMagazine = (int) WeaponAttributes.Capacity.CurrentValue();
+            AmmoInMagazine = (int) WeaponAttributes.Val(AttributeType.Capacity);
             _fired = false;
         }
 
-        public bool FullyLoaded() => GetRemainingAmmo() == (int) WeaponAttributes.Capacity.CurrentValue();
+        public bool FullyLoaded() => GetRemainingAmmo() == (int) WeaponAttributes.Val(AttributeType.Capacity);
 
-        public int Capacity() => (int) WeaponAttributes.Capacity.CurrentValue();
+        public int Capacity() => (int) WeaponAttributes.Val(AttributeType.Capacity);
 
         public bool Empty() => GetRemainingAmmo() == 0;
 
@@ -72,7 +72,7 @@ namespace Game.Gear.Weapons
             if (Empty()) return;
             TimeToNextFire = Helper.TimeInSeconds() + 1f / Weapon.GetAttributeValue(AttributeType.FireRate);
             //todo play sound GunFire.Fire(_weaponAttributes.WeaponType, distance);
-            for (int i = 0; i < WeaponAttributes.GetCalculatedValue(AttributeType.Pellets); ++i)
+            for (int i = 0; i < WeaponAttributes.Val(AttributeType.Pellets); ++i)
             {
                 Shot shot = Shot.Create(origin);
                 origin.ApplyShotEffects(shot);

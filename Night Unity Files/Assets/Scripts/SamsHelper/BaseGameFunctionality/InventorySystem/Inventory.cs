@@ -23,14 +23,14 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private readonly List<InventoryItem> _contents = new List<InventoryItem>();
         private bool _readonly;
         private static bool _loaded;
-        private static readonly List<ResourceTemplate> resourceTemplates = new List<ResourceTemplate>();
+        protected static readonly List<ResourceTemplate> resourceTemplates = new List<ResourceTemplate>();
         private readonly List<Consumable> _consumables = new List<Consumable>();
         public int Weight;
+        private static List<AttributeType> _attributeTypes;
 
         public Inventory(string name, int maxWeight = 0) : base(name, GameObjectType.Inventory)
         {
             LoadResources();
-            foreach (ResourceTemplate template in resourceTemplates) AddResource(template);
 //            AddTestingResources(10);
             if (maxWeight == 0) return;
             MaxWeight = maxWeight;
@@ -42,7 +42,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return _consumables.Where(c => c.Quantity() != 0).ToList();
         }
 
-        private void AddResource(ResourceTemplate template)
+        protected void AddResource(ResourceTemplate template)
         {
             if (_resources.FirstOrDefault(r => r.Name == template.Name) != null) throw new Exceptions.ResourceAlreadyExistsException(template.Name);
             InventoryItem newResource = template.Create();
@@ -56,32 +56,50 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _resources.Add(newResource);
         }
 
+        public static AttributeType StringToAttributeType(string attributeString)
+        {
+            if (_attributeTypes == null)
+            {
+                _attributeTypes = new List<AttributeType>();
+                foreach (AttributeType attributeType in Enum.GetValues(typeof(AttributeType))) _attributeTypes.Add(attributeType);
+            }
+
+            return _attributeTypes.Find(t => t.ToString() == attributeString);
+        }
+
         private static void LoadResources()
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Resources");
-            foreach (XmlNode resourceNode in root.SelectNodes("Resource"))
+
+            ResourceTemplate resourceTemplate;
+            foreach (XmlNode resourceNode in root.SelectNodes("Consumable"))
             {
-                ResourceTemplate resourceTemplate;
                 string name = resourceNode.SelectSingleNode("Name").InnerText;
-                string environment = resourceNode.SelectSingleNode("Environment").InnerText;
-                string region = resourceNode.SelectSingleNode("Region").InnerText;
-                string droplocation = resourceNode.SelectSingleNode("Drop").InnerText;
-                float weight = float.Parse(resourceNode.SelectSingleNode("Weight").InnerText);
-                bool consumable = resourceNode.SelectSingleNode("Consumable").InnerText == "TRUE";
-                if (consumable)
+                string type = resourceNode.SelectSingleNode("Type").InnerText;
+                string attributeString = resourceNode.SelectSingleNode("Attribute").InnerText;
+                resourceTemplate = new ResourceTemplate(name, type);
+                if (attributeString != "")
                 {
-                    string effect1 = resourceNode.SelectSingleNode("Effect1").InnerText;
-                    string effect2 = resourceNode.SelectSingleNode("Effect2").InnerText;
-                    float duration1 = float.Parse(resourceNode.SelectSingleNode("Duration1").InnerText);
-                    float duration2 = float.Parse(resourceNode.SelectSingleNode("Duration2").InnerText);
-                    resourceTemplate = new ResourceTemplate(name, weight, environment, region, droplocation, effect1, effect2, duration1, duration2);
-                }
-                else
-                {
-                    resourceTemplate = new ResourceTemplate(name, weight, environment, region, droplocation);
+                    AttributeType attribute = StringToAttributeType(attributeString);
+                    float modifierVal = float.Parse(resourceNode.SelectSingleNode("Modifier").InnerText);
+                    bool additive = resourceNode.SelectSingleNode("Type").InnerText == "+";
+                    string durationString = resourceNode.SelectSingleNode("Duration").InnerText;
+                    int duration = 0;
+                    if (durationString != "")
+                    {
+                        duration = int.Parse(durationString);
+                    }
+                    resourceTemplate.SetEffect(attribute, modifierVal, additive, duration);
                 }
 
+                resourceTemplates.Add(resourceTemplate);
+            }
+
+            foreach (XmlNode resourceNode in root.SelectNodes("Resource"))
+            {
+                string name = resourceNode.SelectSingleNode("Name").InnerText;
+                resourceTemplate = new ResourceTemplate(name);
                 resourceTemplates.Add(resourceTemplate);
             }
 
@@ -90,10 +108,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public void AddTestingResources(int resourceCount, int noItems = 0)
         {
-            IncrementResource("Fruit", resourceCount);
             IncrementResource("Fuel", resourceCount);
             IncrementResource("Scrap", resourceCount);
-            IncrementResource("Water", resourceCount);
             IncrementResource("Essence", resourceCount);
             for (int i = 0; i < noItems; ++i)
             {

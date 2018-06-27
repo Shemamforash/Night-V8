@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
+using Game.Characters;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Gear.Armour
 {
@@ -12,6 +15,7 @@ namespace Game.Gear.Armour
 
         private static bool _readTemplates;
         private readonly AccessoryTemplate _template;
+        private AttributeModifier modifier;
 
         public Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, GearSubtype.Accessory, itemQuality)
         {
@@ -20,20 +24,37 @@ namespace Game.Gear.Armour
 
         public override string GetSummary()
         {
-            return _template.Description;
+            return Name;
+        }
+
+        public override void Equip(Character character)
+        {
+            base.Equip(character);
+            Player player = character as Player;
+            if (player == null) return;
+            modifier.AddTargetAttribute(player.Attributes.Get(_template.TargetAttribute));
+        }
+
+        public override void Unequip()
+        {
+            base.Unequip();
+            Player player = EquippedCharacter as Player;
+            if (player == null) return;
+            modifier.RemoveTargetAttribute(player.Attributes.Get(_template.TargetAttribute));
         }
 
         private static void ReadTemplates()
         {
             if (_readTemplates) return;
             XmlNode root = Helper.OpenRootNode("Gear", "GearList");
-            foreach (XmlNode accessoryNode in root.SelectNodes("Accessory"))
+            foreach (XmlNode accessoryNode in root.SelectNodes("Gear"))
             {
                 string name = accessoryNode.SelectSingleNode("Name").InnerText;
-                int weight = int.Parse(accessoryNode.SelectSingleNode("Weight").InnerText);
-                string description = accessoryNode.SelectSingleNode("Description").InnerText;
-                string effect = accessoryNode.SelectSingleNode("Effect").InnerText;
-                new AccessoryTemplate(name, description);
+                string attributeString = accessoryNode.SelectSingleNode("Attribute").InnerText;
+                AttributeType attributeType = Inventory.StringToAttributeType(attributeString);
+                float bonus = float.Parse(accessoryNode.SelectSingleNode("Bonus").InnerText);
+                bool additive = accessoryNode.SelectSingleNode("Type").InnerText == "+";
+                new AccessoryTemplate(name, attributeType, bonus, additive);
             }
 
             _readTemplates = true;
@@ -43,23 +64,39 @@ namespace Game.Gear.Armour
         {
             ReadTemplates();
             AccessoryTemplate randomTemplate = _accessoryTemplates[Random.Range(0, _accessoryTemplates.Count)];
-            return new Accessory(randomTemplate, quality);
-        }
-
-        public bool Inscribable()
-        {
-            return Quality() == ItemQuality.Radiant;
+            Accessory accessory = new Accessory(randomTemplate, quality);
+            AttributeModifier modifier = new AttributeModifier();
+            modifier = randomTemplate.GetModifier();
+            float rawBonus = modifier.RawBonus() * (int) quality;
+            float finalBonus = modifier.FinalBonus() * (int) quality;
+            modifier.SetFinalBonus(finalBonus);
+            modifier.SetRawBonus(rawBonus);
+            accessory.modifier = modifier;
+            return accessory;
         }
 
         public class AccessoryTemplate
         {
-            public readonly string Name, Description;
+            public readonly string Name;
+            public readonly AttributeType TargetAttribute;
+            private readonly float _modifierValue;
+            private readonly bool _additive;
 
-            public AccessoryTemplate(string name, string description)
+            public AccessoryTemplate(string name, AttributeType attributeType, float modifierValue, bool additive)
             {
                 _accessoryTemplates.Add(this);
                 Name = name;
-                Description = description;
+                TargetAttribute = attributeType;
+                _modifierValue = modifierValue;
+                _additive = additive;
+            }
+
+            public AttributeModifier GetModifier()
+            {
+                AttributeModifier modifier = new AttributeModifier();
+                if (_additive) modifier.SetRawBonus(_modifierValue);
+                else modifier.SetFinalBonus(_modifierValue);
+                return modifier;
             }
         }
     }

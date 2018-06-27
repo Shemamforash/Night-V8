@@ -11,8 +11,9 @@ using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
-public class UiConsumableController : Menu , IInputListener{
-	 private static UiConsumableController _instance;
+public class UiConsumableController : Menu, IInputListener
+{
+    private static UiConsumableController _instance;
     private const int centre = 4;
     private int _selectedConsumable;
     private readonly List<ConsumableUi> _consumeableUis = new List<ConsumableUi>();
@@ -63,6 +64,7 @@ public class UiConsumableController : Menu , IInputListener{
                     CharacterManager.SelectedCharacter.Inventory().Consumables()[_selectedConsumable].Consume(CharacterManager.SelectedCharacter);
                     SelectItem();
                 }
+
                 break;
             case InputAxis.Reload:
                 MenuStateMachine.ReturnToDefault();
@@ -106,7 +108,7 @@ public class UiConsumableController : Menu , IInputListener{
 
     private void SelectItem()
     {
-        List<Consumable> consumables = CharacterManager.SelectedCharacter.Inventory().Consumables();
+        List<Consumable> consumables = WorldState.HomeInventory().Consumables();
         if (_selectedConsumable >= consumables.Count) _selectedConsumable = consumables.Count - 1;
         for (int i = 0; i < _consumeableUis.Count; ++i)
         {
@@ -158,21 +160,18 @@ public class UiConsumableController : Menu , IInputListener{
     {
         private readonly Color _activeColour;
         private readonly EnhancedText _nameText;
-        private readonly EnhancedText _effect1Text;
-        private readonly EnhancedText _effect2Text;
+        private readonly EnhancedText _effectText;
 
         public ConsumableUi(GameObject uiObject, int offset)
         {
             _nameText = Helper.FindChildWithName<EnhancedText>(uiObject, "Name");
-            _effect1Text = Helper.FindChildWithName<EnhancedText>(uiObject, "Effect 2");
-            _effect2Text = Helper.FindChildWithName<EnhancedText>(uiObject, "Effect 1");
+            _effectText = Helper.FindChildWithName<EnhancedText>(uiObject, "Effect");
             _activeColour = new Color(1f, 1f, 1f, 1f / (offset + 1));
         }
 
         private void SetColour(Color c)
         {
-            _effect1Text.SetColor(c);
-            _effect2Text.SetColor(c);
+            _effectText.SetColor(c);
             _nameText.SetColor(c);
         }
 
@@ -183,16 +182,10 @@ public class UiConsumableController : Menu , IInputListener{
             _nameText.Text(text);
         }
 
-        private void SetEffect1Text(string type)
+        private void SetEffectText(string type)
         {
-            _effect1Text.SetColor(type == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-            _effect1Text.Text(type);
-        }
-
-        private void SetEffect2Text(string type)
-        {
-            _effect2Text.SetColor(type == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-            _effect2Text.Text(type);
+            _effectText.SetColor(type == "" ? UiAppearanceController.InvisibleColour : _activeColour);
+            _effectText.Text(type);
         }
 
         public void SetConsumable(Consumable consumable)
@@ -204,8 +197,7 @@ public class UiConsumableController : Menu , IInputListener{
             }
 
             SetName(consumable.Name, consumable.Quantity());
-            SetEffect1Text(consumable.Effect1());
-            SetEffect2Text(consumable.Effect2());
+            SetEffectText(consumable.Effect());
         }
     }
 }

@@ -90,6 +90,7 @@ namespace Game.Exploration.Regions
                 GameObject g = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Map/Map Shadow"));
                 g.transform.position = nodeObject.transform.position;
             }
+
             string name = Name + "\n" + _regionType + " d=" + CalculateDanger();
             mapNodeController.SetName(name);
         }
@@ -253,7 +254,7 @@ namespace Game.Exploration.Regions
             if (enemies < 10) return "Considerable";
             return "Extreme";
         }
-        
+
         public string Description()
         {
             if (!Visited()) return TimeSinceLastVisit();
@@ -272,7 +273,10 @@ namespace Game.Exploration.Regions
             {
                 WaterSource waterSource = c as WaterSource;
                 if (waterSource == null) return;
-                water += waterSource.Inventory.GetResourceQuantity("Water");
+                waterSource.Inventory.Consumables().ForEach(i =>
+                {
+                    if (i.IsWater) ++water;
+                });
             });
             return water;
         }
@@ -284,7 +288,10 @@ namespace Game.Exploration.Regions
             {
                 FoodSource foodSource = c as FoodSource;
                 if (foodSource == null) return;
-                food += foodSource.Inventory.GetResourceQuantity("Food");
+                foodSource.Inventory.Consumables().ForEach(i =>
+                {
+                    if (i.IsFood) ++food;
+                });
             });
             return food;
         }

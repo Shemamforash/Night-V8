@@ -5,6 +5,7 @@ using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
@@ -60,6 +61,7 @@ namespace Game.Characters
             SaveController.AddPersistenceListener(this);
             if (Characters.Count == 0) AddCharacter(GenerateDriver());
             InitialiseCharacterUI();
+            foreach (ResourceTemplate template in resourceTemplates) AddResource(template);
         }
 
         private void InitialiseCharacterUI()
@@ -230,19 +232,19 @@ namespace Game.Characters
 
         private static void CalculateAttributes(Player playerCharacter)
         {
-            DesolationAttributes attributes = playerCharacter.Attributes;
+            CharacterAttributes attributes = playerCharacter.Attributes;
 
-            attributes.Endurance.Max = playerCharacter.CharacterTemplate.Endurance;
-            attributes.Endurance.SetToMax();
+            attributes.SetMax(AttributeType.Endurance, playerCharacter.CharacterTemplate.Endurance);
+            attributes.Get(AttributeType.Endurance).SetToMax();
 
-            attributes.Strength.Max = playerCharacter.CharacterTemplate.Strength;
-            attributes.Strength.SetToMax();
+            attributes.SetMax(AttributeType.Strength, playerCharacter.CharacterTemplate.Strength);
+            attributes.Get(AttributeType.Strength).SetToMax();
 
-            attributes.Perception.Max = playerCharacter.CharacterTemplate.Perception;
-            attributes.Perception.SetToMax();
+            attributes.SetMax(AttributeType.Perception, playerCharacter.CharacterTemplate.Perception);
+            attributes.Get(AttributeType.Perception).SetToMax();
 
-            attributes.Willpower.Max = playerCharacter.CharacterTemplate.Willpower;
-            attributes.Willpower.SetToMax();
+            attributes.SetMax(AttributeType.Willpower, playerCharacter.CharacterTemplate.Willpower);
+            attributes.Get(AttributeType.Willpower).SetToMax();
         }
     }
 }

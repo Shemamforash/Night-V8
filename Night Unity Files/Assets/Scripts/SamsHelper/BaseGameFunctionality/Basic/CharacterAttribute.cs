@@ -14,11 +14,9 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         private readonly List<AttributeModifier> _modifiers = new List<AttributeModifier>();
         private float _calculatedValue;
 
-        public CharacterAttribute(AttributeContainer attributeContainer, AttributeType attributeType, float value, float min = 0, float max = float.MaxValue) : base(value, min, max)
+        public CharacterAttribute(AttributeType attributeType)
         {
             AttributeType = attributeType;
-            attributeContainer.AddAttribute(this);
-            Recalculate();
         }
 
         public override float CurrentValue()

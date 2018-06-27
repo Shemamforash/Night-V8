@@ -10,19 +10,29 @@
         Thirst,
         Hunger,
 
-        ScrapFindBonus,
+        ResourceFindBonus,
         FoodFindBonus,
         WaterFindBonus,
-        EssenceFindBonus,
-        HealthBonus,
+        
+        HealthRecoveryBonus,
+        HealthLossBonus,
+        
         EssenceLossBonus,
-        DamageBonus,
+        EssenceRecoveryBonus,
+
+        MentalBreakBonus,
         WillpowerLossBonus,
+        
+        ReloadFailChance,
+        
+        FreeSkillChance,
+        InactiveSkillChance,
+        
+        CapacityBonus,
+        
         SkillRechargeBonus,
         AdrenalineRechargeBonus,
-        BurnChanceBonus,
-        DecayChanceBonus,
-        SicknessChanceBonus,
+        KnockbackBonus,
 
         Damage,
         Accuracy,

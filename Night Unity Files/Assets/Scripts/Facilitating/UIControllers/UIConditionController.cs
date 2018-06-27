@@ -32,7 +32,7 @@ namespace Facilitating.UIControllers
         {
             ConditionText.Text(player.Attributes.GetThirstStatus());
             if (ConditionSlider == null) return;
-            ConditionSlider.value = 1 - player.Attributes.Thirst.Normalised();
+            ConditionSlider.value = 1 - player.Attributes.Get(AttributeType.Thirst).Normalised();
             switch (EnvironmentManager.GetTemperature())
             {
                 case TemperatureCategory.Freezing:
@@ -59,7 +59,7 @@ namespace Facilitating.UIControllers
         {
             ConditionText.Text(player.Attributes.GetHungerStatus());
             if (ConditionSlider == null) return;
-            ConditionSlider.value = 1 - player.Attributes.Hunger.Normalised();
+            ConditionSlider.value = 1 - player.Attributes.Get(AttributeType.Hunger).Normalised();
             switch (EnvironmentManager.GetTemperature())
             {
                 case TemperatureCategory.Freezing:

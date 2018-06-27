@@ -139,12 +139,12 @@ namespace Facilitating.UIControllers
             WeaponAttributes attr = weapon.WeaponAttributes;
             _nameText.Text(weapon.Name);
             UpdateDurabilityParticles();
-            _damageText.Text(Helper.Round(attr.Damage.CurrentValue(), 1) + " Dam");
-            _fireRateText.Text(Helper.Round(attr.FireRate.CurrentValue(), 1) + " RoF");
-            _reloadSpeedText.Text(Helper.Round(attr.ReloadSpeed.CurrentValue(), 1) + "s Reload");
-            _handlingText.Text(Helper.Round(attr.Handling.CurrentValue(), 1) + "% Handling");
+            _damageText.Text(Helper.Round(attr.Val(AttributeType.Damage), 1) + " Dam");
+            _fireRateText.Text(Helper.Round(attr.Val(AttributeType.FireRate), 1) + " RoF");
+            _reloadSpeedText.Text(Helper.Round(attr.Val(AttributeType.ReloadSpeed), 1) + "s Reload");
+            _handlingText.Text(Helper.Round(attr.Val(AttributeType.Handling), 1) + "% Handling");
             _dpsText.Text(Helper.Round(attr.DPS(), 1) + " DPS");
-            _capacityText.Text(Helper.Round(attr.Capacity.CurrentValue(), 1) + " Capacity");
+            _capacityText.Text(Helper.Round(attr.Val(AttributeType.Capacity), 1) + " Capacity");
         }
 
         private void SetTopToBottomNavigation(EnhancedButton button)

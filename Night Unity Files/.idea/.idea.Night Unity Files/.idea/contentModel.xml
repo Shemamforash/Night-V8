@@ -120,12 +120,12 @@
                 <e p="Rest.cs" t="Include" />
                 <e p="Travel.cs" t="Include" />
               </e>
+              <e p="CharacterAttributes.cs" t="Include" />
               <e p="CharacterClass.cs" t="Include" />
               <e p="CharacterManager.cs" t="Include" />
               <e p="CharacterTemplate.cs" t="Include" />
               <e p="CharacterView.cs" t="Include" />
               <e p="ConditionType.cs" t="Include" />
-              <e p="DesolationAttributes.cs" t="Include" />
               <e p="Effect.cs" t="Include" />
               <e p="Player.cs" t="Include" />
             </e>
@@ -316,6 +316,7 @@
               </e>
             </e>
             <e p="Global" t="Include">
+              <e p="DesolationAttributes.cs" t="Include" />
               <e p="DesolationInventory.cs" t="Include" />
               <e p="Recipe.cs" t="Include" />
               <e p="SceneChanger.cs" t="Include" />
@@ -327,7 +328,6 @@
           <e p="SamsHelper" t="Include">
             <e p="BaseGameFunctionality" t="Include">
               <e p="Basic" t="Include">
-                <e p="AttributeContainer.cs" t="Include" />
                 <e p="AttributesModifier.cs" t="Include" />
                 <e p="AttributeType.cs" t="Include" />
                 <e p="CharacterAttribute.cs" t="Include" />

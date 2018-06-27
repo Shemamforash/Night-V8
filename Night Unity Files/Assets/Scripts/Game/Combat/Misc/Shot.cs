@@ -119,11 +119,11 @@ namespace Game.Combat.Misc
         private void CacheWeaponAttributes()
         {
             WeaponAttributes attributes = _weapon.WeaponAttributes;
-            _damage = (int) attributes.GetCalculatedValue(AttributeType.Damage);
+            _damage = (int) attributes.Val(AttributeType.Damage);
             _accuracy = _weapon.CalculateBaseAccuracy();
-            _decayChange = attributes.GetCalculatedValue(AttributeType.DecayChance);
-            _burnChance = attributes.GetCalculatedValue(AttributeType.BurnChance);
-            _sicknessChance = attributes.GetCalculatedValue(AttributeType.SicknessChance);
+            _decayChange = attributes.Val(AttributeType.DecayChance);
+            _burnChance = attributes.Val(AttributeType.BurnChance);
+            _sicknessChance = attributes.Val(AttributeType.SicknessChance);
         }
 
         public void SetDamageModifier(float modifier)

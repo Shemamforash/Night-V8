@@ -1,104 +1,62 @@
 <GearList>
-    <Accessory>
-        <Name>1</Name>
-        <Weight>+2</Weight>
-        <Description>Less reloading, more shooting</Description>
-        <Effect>CarryAmmo - 50% weight, Reload +50%</Effect>
-    </Accessory>
-    <Accessory>
-        <Name>1</Name>
-        <Weight>+2</Weight>
-        <Description>Quick now, slow later</Description>
-        <Effect>ReloadReload +100% on odd reloads, -50% on even</Effect>
-    </Accessory>
-    <Accessory>
-        <Name>1</Name>
-        <Weight>+2</Weight>
-        <Description>Crunch, smash, punch</Description>
-        <Effect>Melee AttackBleed</Effect>
-    </Accessory>
-    <Accessory>
-        <Name>Empty Flask</Name>
-        <Weight>+2</Weight>
-        <Description>For those long, dry journeys</Description>
-        <Effect>CarryWater -50% Weight</Effect>
-    </Accessory>
-    <Accessory>
-        <Name>Mending Instruments</Name>
-        <Weight>+2</Weight>
-        <Description>A bit of care goes a long way</Description>
-        <Effect>End of Battle50% no weapon degredation</Effect>
-    </Accessory>
-    <Accessory>
-        <Name>Vision Edge</Name>
-        <Weight>+2</Weight>
-        <Description>Helpful... if your aim is true</Description>
-        <Effect>Carry+25% Range</Effect>
-    </Accessory>
-    <Accessory>
-        <Name>Hunter's Sheath</Name>
-        <Weight>+2</Weight>
-        <Description>Double the fun</Description>
-        <Effect>CarryCarry an extra weapon</Effect>
-    </Accessory>
-    <Accessory>
+    <Gear>
+        <Name>Bandolier</Name>
+        <Attribute>ReloadSpeed</Attribute>
+        <Bonus>-0.1</Bonus>
+        <Type>x</Type>
+    </Gear>
+    <Gear>
+        <Name>Belt feed</Name>
+        <Attribute>Capacity</Attribute>
+        <Bonus>0.1</Bonus>
+        <Type>x</Type>
+    </Gear>
+    <Gear>
+        <Name>Rusty Rounds</Name>
+        <Attribute>Damage</Attribute>
+        <Bonus>0.1</Bonus>
+        <Type>x</Type>
+    </Gear>
+    <Gear>
+        <Name>Eyepiece</Name>
+        <Attribute>Accuracy</Attribute>
+        <Bonus>0.1</Bonus>
+        <Type>x</Type>
+    </Gear>
+    <Gear>
+        <Name>Slick</Name>
+        <Attribute>FireRate</Attribute>
+        <Bonus>0.1</Bonus>
+        <Type>x</Type>
+    </Gear>
+    <Gear>
+        <Name>Heavy metal</Name>
+        <Attribute>KnockbackBonus</Attribute>
+        <Bonus>0.5</Bonus>
+        <Type>x</Type>
+    </Gear>
+    <Gear>
+        <Name>Satchel</Name>
+        <Attribute>CapacityBonus</Attribute>
+        <Bonus>2</Bonus>
+        <Type>+</Type>
+    </Gear>
+    <Gear>
+        <Name>Hell's fire</Name>
+        <Attribute>BurnChance</Attribute>
+        <Bonus>0.05</Bonus>
+        <Type>x</Type>
+    </Gear>
+    <Gear>
+        <Name>Abyssal taint</Name>
+        <Attribute>DecayChance</Attribute>
+        <Bonus>0.05</Bonus>
+        <Type>x</Type>
+    </Gear>
+    <Gear>
         <Name>Blighted Marrow</Name>
-        <Weight>+2</Weight>
-        <Description>Bring death to your enemies</Description>
-        <Effect>CriticalPoison</Effect>
-    </Accessory>
-    <Accessory>
-        <Name>Obscuring Aura</Name>
-        <Weight>+2</Weight>
-        <Description>A bit of the ol' razzle dazzle</Description>
-        <Effect>Melee DefenceBlind</Effect>
-    </Accessory>
-    <Accessory>
-        <Name>Enkindling Flask</Name>
-        <Weight>+2</Weight>
-        <Description>Born from Hellfire itself</Description>
-        <Effect>CriticalFire</Effect>
-    </Accessory>
-    <Accessory>
-        <Name>Staggering Barb</Name>
-        <Weight>+2</Weight>
-        <Description>Keep your enemies down</Description>
-        <Effect>CriticalKnock-down</Effect>
-    </Accessory>
-    <Accessory>
-        <Name>Stinging Edges</Name>
-        <Weight>+2</Weight>
-        <Description>Like nasty little knives buzzing through the air</Description>
-        <Effect>CriticalBleed</Effect>
-    </Accessory>
-    <Armour>
-        <Name>Forerunner's Garb</Name>
-        <Weight>+7</Weight>
-        <Description>Swift, strong, and simple</Description>
-        <Armour>+0</Armour>
-        <Perception>+0</Perception>
-        <Willpower>+0</Willpower>
-        <Strength>+0</Strength>
-        <Endurance>+0</Endurance>
-    </Armour>
-    <Armour>
-        <Name>Pugilist's Gauntlets</Name>
-        <Weight>+5</Weight>
-        <Description>For when you need to have a 'private word' with someone</Description>
-        <Armour>+0</Armour>
-        <Perception>+0</Perception>
-        <Willpower>+0</Willpower>
-        <Strength>+0</Strength>
-        <Endurance>+0</Endurance>
-    </Armour>
-    <Armour>
-        <Name>Afflictor's Resistance</Name>
-        <Weight>+10</Weight>
-        <Description>Keeps most things at bay... except bullets</Description>
-        <Armour>+0</Armour>
-        <Perception>+0</Perception>
-        <Willpower>+0</Willpower>
-        <Strength>+0</Strength>
-        <Endurance>+0</Endurance>
-    </Armour>
+        <Attribute>SicknessChance</Attribute>
+        <Bonus>0.05</Bonus>
+        <Type>x</Type>
+    </Gear>
 </GearList>

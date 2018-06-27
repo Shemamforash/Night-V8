@@ -1,73 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Game.Characters;
+﻿using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
-using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class Consumable : InventoryItem
     {
-        private readonly Tuple<AttributeType, AttributeModifier, float> _effect1, _effect2;
-        private static readonly List<AttributeType> _attributeTypes = new List<AttributeType>();
+        private bool _hasEffect;
+        private readonly ResourceTemplate _template;
+        public readonly bool IsFood;
+        public readonly bool IsWater;
+        public int ThirstModifier;
+        public int HungerModifier;
 
-        public Consumable(ResourceTemplate template, GameObjectType type, Inventory parentInventory = null) : base(template, type, parentInventory)
+        public Consumable(ResourceTemplate template, Inventory parentInventory = null) : base(template, GameObjectType.Resource, parentInventory)
         {
-            GenerateEffect(template.Effect1, ref _effect1, template.Duration1);
-            GenerateEffect(template.Effect2, ref _effect2, template.Duration2);
+            _template = template;
+            IsFood = _template.ResourceType == "Food";
+            IsWater = _template.ResourceType == "Water";
+            AttributeModifier modifier = template.CreateModifier();
+            _hasEffect = modifier != null;
+            CalculateThirstOffset();
+            CalculateHungerOffset();
         }
 
-        private void GenerateEffect(string effectString, ref Tuple<AttributeType, AttributeModifier, float> effect, float duration)
+        private void CalculateThirstOffset()
         {
-            if (effectString == "") return;
-            string[] splitModifier = effectString.Split(' ');
-            float amount = float.Parse(splitModifier[0]);
-            AttributeType target = StringToAttribute(splitModifier[1]);
-            AttributeModifier modifier = new AttributeModifier();
-            modifier.SetRawBonus(amount);
-            effect = Tuple.Create(target, modifier, duration);
+            if (IsWater) ThirstModifier = 1;
+            if (!_hasEffect) return;
+            if (_template.AttributeType == AttributeType.Thirst) ThirstModifier += (int) _template.ModifierVal;
         }
 
-        public string Effect1()
+        private void CalculateHungerOffset()
         {
-            return _effect1 == null ? "" : _effect1.Item2.RawBonusToString() + " " + _effect1.Item1;
+            if (IsFood) HungerModifier = 1;
+            if (!_hasEffect) return;
+            if (_template.AttributeType == AttributeType.Hunger) HungerModifier += (int) _template.ModifierVal;
         }
 
-        public string Effect2()
+        public string Effect()
         {
-            return _effect2 == null ? "" : _effect2.Item2.RawBonusToString() + " " + _effect2.Item1;
+            return !_hasEffect ? "" : _template.ModifierVal + " " + _template.AttributeType;
         }
 
-        private static AttributeType StringToAttribute(string attributeString)
+        private void ApplyEffect(Player selectedCharacter)
         {
-            if (_attributeTypes.Count == 0)
+            switch (_template.ResourceType)
             {
-                foreach (AttributeType attributeType in Enum.GetValues(typeof(AttributeType))) _attributeTypes.Add(attributeType);
+                case "Food":
+                    selectedCharacter.Attributes.Eat();
+                    break;
+                case "Water":
+                    selectedCharacter.Attributes.Drink();
+                    break;
             }
 
-            foreach (AttributeType attribute in _attributeTypes)
-            {
-                if (attribute.ToString() == attributeString)
-                {
-                    return attribute;
-                }
-            }
-
-            throw new Exceptions.AttributeNotRecognisedException(attributeString);
-        }
-
-        private void ApplyEffect(Tuple<AttributeType, AttributeModifier, float> effect, Player selectedCharacter)
-        {
-            if (effect == null) return;
-            CharacterAttribute attribute = selectedCharacter.Attributes.Get(effect.Item1);
-            new Effect(selectedCharacter, effect.Item2, attribute, effect.Item3);
+            if (!_hasEffect) return;
+            CharacterAttribute attribute = selectedCharacter.Attributes.Get(_template.AttributeType);
+            new Effect(selectedCharacter, _template.CreateModifier(), attribute, _template.Duration);
         }
 
         public void Consume(Player selectedCharacter)
         {
-            ApplyEffect(_effect1, selectedCharacter);
-            ApplyEffect(_effect2, selectedCharacter);
+            ApplyEffect(selectedCharacter);
             Decrement(1);
         }
     }

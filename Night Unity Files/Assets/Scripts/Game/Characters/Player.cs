@@ -7,6 +7,7 @@ using Game.Combat.Player;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
@@ -18,7 +19,7 @@ namespace Game.Characters
     public sealed class Player : Character
     {
         private const int HighWeightThreshold = 15, LowWeightThreshold = 5;
-        public readonly DesolationAttributes Attributes;
+        public readonly CharacterAttributes Attributes;
         public readonly Skill CharacterSkillOne, CharacterSkillTwo;
         public readonly CharacterTemplate CharacterTemplate;
         public readonly StateMachine States = new StateMachine();
@@ -37,7 +38,7 @@ namespace Game.Characters
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
         {
-            Attributes = new DesolationAttributes(this);
+            Attributes = new CharacterAttributes(this);
             CharacterTemplate = characterTemplate;
             CharacterSkillOne = CharacterSkills.GetCharacterSkillOne(this);
             CharacterSkillTwo = CharacterSkills.GetCharacterSkillTwo(this);
@@ -45,7 +46,7 @@ namespace Game.Characters
 
             _brandManager = new BrandManager(this);
             AddStates();
-            Attributes.Endurance.OnMin(RestAction.Enter);
+            Attributes.Get(AttributeType.Endurance).OnMin(RestAction.Enter);
         }
 
 //        public bool ConsumeResource(InventoryResourceType type, int amount)
@@ -123,17 +124,17 @@ namespace Game.Characters
         {
             int amount = 1;
             if (IsOverburdened()) amount *= 2;
-            Attributes.Endurance.Decrement(amount);
+            Attributes.Get(AttributeType.Endurance).Decrement(amount);
         }
 
         public void Rest(int amount)
         {
-            if (Attributes.Endurance.ReachedMax())
+            if (Attributes.Get(AttributeType.Endurance).ReachedMax())
             {
                 _brandManager.IncreaseIdleTime();
                 return;
             }
-            Attributes.Endurance.Increment(amount);
+            Attributes.Get(AttributeType.Endurance).Increment(amount);
         }
 
         public void Travel()
