@@ -1,27 +1,31 @@
 ﻿using System.Collections;
+using DG.Tweening;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 namespace Game.Combat.Generation
 {
-    public class ContainerBehaviour : MonoBehaviour
+    public sealed class ContainerBehaviour : MonoBehaviour
     {
-        private const int MinDistanceToReveal = 1;
+        private const float MinDistanceToReveal = 0.5f;
         private float _currentFlashIntensity;
         public ContainerController ContainerController;
         private bool _revealed;
         private const float MaxRevealTime = 1f;
-        private ColourPulse _iconColour, _ringColour, _glowColour;
+        private ColourPulse _iconColour, _ringColour;
+        private SpriteRenderer _glowSprite;
 
-        public virtual void Awake()
+        public void Awake()
         {
+            _glowSprite = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Glow");
+            _glowSprite.color = UiAppearanceController.InvisibleColour;
             _iconColour = Helper.FindChildWithName<ColourPulse>(gameObject, "Icon");
             _ringColour = Helper.FindChildWithName<ColourPulse>(gameObject, "Ring");
-            _glowColour = Helper.FindChildWithName<ColourPulse>(gameObject, "Glow");
             _iconColour.SetAlphaMultiplier(0);
             _ringColour.SetAlphaMultiplier(0);
-            _glowColour.SetAlphaMultiplier(0);
+            StartCoroutine(TryReveal());
         }
 
         public void SetContainerController(ContainerController containerController)
@@ -30,17 +34,12 @@ namespace Game.Combat.Generation
             ContainerController = containerController;
         }
 
-        public void Update()
+        public void Pulse()
         {
-            float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
-            if (distanceToPlayer > 10f)
-            {
-                _glowColour.SetAlphaMultiplier(0);
-                return;
-            }
-            _glowColour.SetAlphaMultiplier(1f - distanceToPlayer / 10f);
+            _glowSprite.color = new Color(1, 1, 1, 0.3f);
+            _glowSprite.DOFade(0f, 2f);
         }
-        
+
         private void OnDestroy()
         {
             ContainerController.Containers.Remove(this);
@@ -48,6 +47,7 @@ namespace Game.Combat.Generation
 
         private IEnumerator Reveal()
         {
+            _revealed = true;
             float timePassed = 0f;
             _iconColour.enabled = true;
             _ringColour.enabled = true;
@@ -65,13 +65,19 @@ namespace Game.Combat.Generation
             _ringColour.SetAlphaMultiplier(1);
         }
 
-        public void TryReveal()
+        private IEnumerator TryReveal()
         {
-            if (_revealed) return;
-            float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
-            if (distanceToPlayer > MinDistanceToReveal) return;
-            _revealed = true;
-            StartCoroutine(Reveal());
+            while (true)
+            {
+                float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
+                if (distanceToPlayer <= MinDistanceToReveal)
+                {
+                    yield return StartCoroutine(Reveal());
+                    break;
+                }
+
+                yield return null;
+            }
         }
 
         public bool Revealed()

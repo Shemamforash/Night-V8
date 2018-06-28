@@ -55,9 +55,7 @@ namespace Game.Exploration.Environment
         public static int NodeDistanceToTime(float distance)
         {
             //minradius = 30 minutes = 6 ticks
-            float ticksPerUnit = (MinRadius * 2f) / WorldState.MinutesPerHour;
-            int ticks = Mathf.CeilToInt(distance / ticksPerUnit);
-            return ticks;
+            return Mathf.CeilToInt(distance / 6f * (WorldState.MinutesPerHour / 2f));
         }
 
         public static void Generate()
@@ -76,7 +74,7 @@ namespace Game.Exploration.Environment
             ConnectNodes();
 
             initialNode.Discover();
-            regions.ForEach(r => r.Discover());
+//            regions.ForEach(r => r.Discover());
         }
 
         private static void CreateMinimumSpanningTree()
@@ -111,7 +109,7 @@ namespace Game.Exploration.Environment
                 {
                     if (node == r) continue;
                     if (node.Neighbors().Count == 0) continue;
-                    r.AddNeighbor(storedNodes[0]);
+                    r.AddNeighbor(node);
                     break;
                 }
             });

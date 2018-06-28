@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Game.Global;
 using UnityEngine;
 
@@ -9,11 +11,12 @@ namespace Game.Exploration.Environment
         private readonly float minTemp, maxTemp;
         private readonly List<float> _temperatureArray = new List<float>();
         public readonly int LevelNo, Shelters, Temples, CompleteKeys, Resources, Dangers;
-        public readonly string Name;
+        public readonly EnvironmentType EnvironmentType;
+        private static List<EnvironmentType> _environmentTypes;
 
         public Environment(string name, int level, int temperature, int shelterCount, int templeCount, int completeKeyCount, int resourceCount, int dangerCount)
         {
-            Name = name;
+            EnvironmentType = StringToEnvironmentType(name);
             maxTemp = temperature * 10;
             minTemp = maxTemp - 20;
             CalculateTemperatures();
@@ -23,6 +26,17 @@ namespace Game.Exploration.Environment
             CompleteKeys = completeKeyCount;
             Resources = resourceCount;
             Dangers = dangerCount;
+        }
+
+        private EnvironmentType StringToEnvironmentType(string environmentString)
+        {
+            if (_environmentTypes == null)
+            {
+                _environmentTypes = new List<EnvironmentType>();
+                foreach(EnvironmentType environmentType in Enum.GetValues(typeof(EnvironmentType))) _environmentTypes.Add(environmentType);
+            }
+
+            return _environmentTypes.FirstOrDefault(e => e.ToString() == environmentString);
         }
 
         private void CalculateTemperatures()

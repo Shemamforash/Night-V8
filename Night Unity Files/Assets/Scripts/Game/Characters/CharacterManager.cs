@@ -61,7 +61,6 @@ namespace Game.Characters
             SaveController.AddPersistenceListener(this);
             if (Characters.Count == 0) AddCharacter(GenerateDriver());
             InitialiseCharacterUI();
-            foreach (ResourceTemplate template in resourceTemplates) AddResource(template);
         }
 
         private void InitialiseCharacterUI()

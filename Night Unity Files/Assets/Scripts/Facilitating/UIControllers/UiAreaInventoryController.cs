@@ -13,18 +13,18 @@ using UnityEngine;
 
 public class UiAreaInventoryController : Menu, IInputListener
 {
-    private static ContainerController _lastNearestContainer;
     private static UiAreaInventoryController _instance;
     private readonly AreaInventory _playerInventory = new AreaInventory();
     private readonly AreaInventory _worldInventory = new AreaInventory();
     private const int centre = 3;
     private AreaInventory _selectedInventory;
+    private bool _showPlayerInventoryOnly;
+    public const float MaxShowInventoryDistance = 0.5f;
 
     public override void Awake()
     {
         base.Awake();
         _instance = this;
-        _lastNearestContainer = null;
         _playerInventory.Initialise(Helper.FindChildWithName(gameObject, "Player"));
         _worldInventory.Initialise(Helper.FindChildWithName(gameObject, "World"));
     }
@@ -38,28 +38,52 @@ public class UiAreaInventoryController : Menu, IInputListener
     {
         base.Enter();
         _selectedInventory = _playerInventory;
-        _selectedInventory.SetActive(_worldInventory);
+        _selectedInventory.SetActive(_showPlayerInventoryOnly ? null : _worldInventory);
         InputHandler.SetCurrentListener(this);
     }
 
-    public static void SetNearestContainer(ContainerController nearestContainer)
+    public override void Exit()
     {
+        base.Exit();
+        _showPlayerInventoryOnly = false;
+    }
+
+    private ContainerController NearestContainer()
+    {
+        ContainerController nearestContainer = null;
+        float nearestContainerDistance = MaxShowInventoryDistance;
+        ContainerController.Containers.ForEach(c =>
+        {
+            float distance = Vector2.Distance(c.transform.position, PlayerCombat.Instance.transform.position);
+            if (distance > nearestContainerDistance) return;
+            nearestContainerDistance = distance;
+            nearestContainer = c.ContainerController;
+        });
+        return nearestContainer;
+    }
+
+    public void OpenInventory()
+    {
+        ContainerController nearestContainer = NearestContainer();
+
         if (nearestContainer != null)
         {
-            if (nearestContainer != _lastNearestContainer)
-            {
-                _instance._playerInventory.SetInventory(CharacterManager.SelectedCharacter.Inventory());
-                _instance._worldInventory.SetInventory(nearestContainer.Inventory);
-                MenuStateMachine.ShowMenu("Inventory");
-            }
+            _showPlayerInventoryOnly = false;
+            _instance._playerInventory.SetInventory(CharacterManager.SelectedCharacter.Inventory());
+            _instance._worldInventory.SetInventory(nearestContainer.Inventory);
+            MenuStateMachine.ShowMenu("Inventory");
         }
-
-        else if (_lastNearestContainer != null)
+        else
         {
-            MenuStateMachine.ShowMenu("HUD");
+            _instance.ShowPlayerInventory();
         }
+    }
 
-        _lastNearestContainer = nearestContainer;
+    private void ShowPlayerInventory()
+    {
+        _playerInventory.SetInventory(CharacterManager.SelectedCharacter.Inventory());
+        _showPlayerInventoryOnly = true;
+        MenuStateMachine.ShowMenu("Inventory");
     }
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -87,13 +111,24 @@ public class UiAreaInventoryController : Menu, IInputListener
 
                 break;
             case InputAxis.Fire:
-                AreaInventory otherInventory = _selectedInventory == _playerInventory ? _worldInventory : _playerInventory;
-                _selectedInventory.TransferItem(otherInventory);
+                PressItem();
                 break;
-            case InputAxis.Reload:
-                SetNearestContainer(null);
-                InputHandler.SetCurrentListener(PlayerCombat.Instance);
+            case InputAxis.Inventory:
+                MenuStateMachine.ShowMenu("HUD");
                 break;
+        }
+    }
+
+    private void PressItem()
+    {
+        if (_showPlayerInventoryOnly)
+        {
+            _selectedInventory.UseItem();
+        }
+        else
+        {
+            AreaInventory otherInventory = _selectedInventory == _playerInventory ? _worldInventory : _playerInventory;
+            _selectedInventory.TransferItem(otherInventory);
         }
     }
 
@@ -129,11 +164,18 @@ public class UiAreaInventoryController : Menu, IInputListener
         public void SetActive(AreaInventory inventory)
         {
             _canvasGroup.alpha = 1f;
+            if (inventory == null) return;
             inventory._canvasGroup.alpha = 0.4f;
         }
 
         public void SetInventory(Inventory inventory)
         {
+            if (inventory == null)
+            {
+                _canvasGroup.alpha = 0f;
+                return;
+            }
+
             _inventory = inventory;
             _selectedItem = 0;
             SelectItem();
@@ -225,5 +267,18 @@ public class UiAreaInventoryController : Menu, IInputListener
             SelectItem();
             otherInventory.SelectItem();
         }
+
+        public void UseItem()
+        {
+            Consumable item = _inventory.Contents()[_selectedItem] as Consumable;
+            if (item == null) return;
+            item.Consume(PlayerCombat.Instance.Player);
+            SelectItem();
+        }
+    }
+
+    public static UiAreaInventoryController Instance()
+    {
+        return _instance;
     }
 }

@@ -10,50 +10,40 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class Inventory : MyGameObject, IPersistenceTemplate
     {
+        private readonly Dictionary<string, InventoryItem> _resources = new Dictionary<string, InventoryItem>();
         private readonly List<InventoryItem> _items = new List<InventoryItem>();
-        private readonly List<InventoryItem> _resources = new List<InventoryItem>();
-        private bool _isWeightLimited;
-        private int _maxWeight;
         private readonly List<InventoryItem> _contents = new List<InventoryItem>();
+        private readonly List<Consumable> _consumables = new List<Consumable>();
+        private readonly bool _isWeightLimited;
+        private int _maxWeight;
         private bool _readonly;
         private static bool _loaded;
-        protected static readonly List<ResourceTemplate> resourceTemplates = new List<ResourceTemplate>();
-        private readonly List<Consumable> _consumables = new List<Consumable>();
-        public int Weight;
+        private int _currentWeight;
         private static List<AttributeType> _attributeTypes;
 
         public Inventory(string name, int maxWeight = 0) : base(name, GameObjectType.Inventory)
         {
             LoadResources();
-//            AddTestingResources(10);
             if (maxWeight == 0) return;
-            MaxWeight = maxWeight;
-            _isWeightLimited = true;
+            _maxWeight = maxWeight;
+            if (maxWeight != 0) _isWeightLimited = true;
+        }
+
+        public void IncreaseMaxWeight(int amount)
+        {
+            _maxWeight += amount;
         }
 
         public List<Consumable> Consumables()
         {
             return _consumables.Where(c => c.Quantity() != 0).ToList();
-        }
-
-        protected void AddResource(ResourceTemplate template)
-        {
-            if (_resources.FirstOrDefault(r => r.Name == template.Name) != null) throw new Exceptions.ResourceAlreadyExistsException(template.Name);
-            InventoryItem newResource = template.Create();
-            newResource.ParentInventory = this;
-            if (newResource is Consumable)
-            {
-                _consumables.Add((Consumable) newResource);
-                newResource.Increment(Random.Range(1, 5));
-            }
-
-            _resources.Add(newResource);
         }
 
         public static AttributeType StringToAttributeType(string attributeString)
@@ -77,30 +67,34 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             {
                 string name = resourceNode.SelectSingleNode("Name").InnerText;
                 string type = resourceNode.SelectSingleNode("Type").InnerText;
+                float oasisDR = float.Parse(resourceNode.SelectSingleNode("OasisDropRate").InnerText);
+                float steppeDr = float.Parse(resourceNode.SelectSingleNode("SteppeDropRate").InnerText);
+                float ruinsDr = float.Parse(resourceNode.SelectSingleNode("RuinsDropRate").InnerText);
+                float defilesDr = float.Parse(resourceNode.SelectSingleNode("DefilesDropRate").InnerText);
+                float wastelandDr = float.Parse(resourceNode.SelectSingleNode("WastelandDropRate").InnerText);
                 string attributeString = resourceNode.SelectSingleNode("Attribute").InnerText;
-                resourceTemplate = new ResourceTemplate(name, type);
+                resourceTemplate = new ResourceTemplate(name, type, oasisDR, steppeDr, ruinsDr, defilesDr, wastelandDr);
                 if (attributeString != "")
                 {
                     AttributeType attribute = StringToAttributeType(attributeString);
                     float modifierVal = float.Parse(resourceNode.SelectSingleNode("Modifier").InnerText);
-                    bool additive = resourceNode.SelectSingleNode("Type").InnerText == "+";
+                    bool additive = resourceNode.SelectSingleNode("Bonus").InnerText == "+";
                     string durationString = resourceNode.SelectSingleNode("Duration").InnerText;
                     int duration = 0;
                     if (durationString != "")
                     {
                         duration = int.Parse(durationString);
                     }
+
                     resourceTemplate.SetEffect(attribute, modifierVal, additive, duration);
                 }
-
-                resourceTemplates.Add(resourceTemplate);
             }
 
             foreach (XmlNode resourceNode in root.SelectNodes("Resource"))
             {
                 string name = resourceNode.SelectSingleNode("Name").InnerText;
-                resourceTemplate = new ResourceTemplate(name);
-                resourceTemplates.Add(resourceTemplate);
+                string type = resourceNode.SelectSingleNode("Type").InnerText;
+                new ResourceTemplate(name, type);
             }
 
             _loaded = true;
@@ -137,16 +131,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             Debug.Log(contents);
         }
 
-        public int MaxWeight
-        {
-            get { return _maxWeight; }
-            set
-            {
-                _maxWeight = value;
-                _isWeightLimited = true;
-            }
-        }
-
         public virtual void Load(XmlNode root, PersistenceType saveType)
         {
             if (saveType != PersistenceType.Game) return;
@@ -170,14 +154,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _readonly = readOnly;
         }
 
-        public bool IsBottomless()
-        {
-            return !_isWeightLimited;
-        }
-
         private List<InventoryItem> InventoryResources()
         {
-            return _resources;
+            return _resources.Values.ToList();
         }
 
         protected List<InventoryItem> Items()
@@ -185,33 +164,43 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return _items;
         }
 
-        public List<InventoryItem> GetItemsOfType(Func<InventoryItem, bool> typeCheck)
+        private InventoryItem AddResource(string name)
         {
-            return _items.Where(typeCheck).ToList();
+            ResourceTemplate template = ResourceTemplate.AllResources.FirstOrDefault(t => t.Name == name);
+            if (template == null) throw new Exceptions.ResourceDoesNotExistException(template.Name);
+            InventoryItem newResource = template.Create();
+            newResource.ParentInventory = this;
+            if (newResource is Consumable)
+            {
+                _consumables.Add((Consumable) newResource);
+            }
+
+            _resources.Add(name, newResource);
+            return newResource;
         }
 
-        public InventoryItem GetResource(string resourceName)
+        private InventoryItem GetResource(string resourceName)
         {
-            InventoryItem found = _resources.FirstOrDefault(item => item.Name == resourceName);
-            if (found == null) throw new Exceptions.ResourceDoesNotExistException(resourceName);
-            return found;
+            InventoryItem item;
+            _resources.TryGetValue(resourceName, out item);
+            return item;
         }
 
         private bool InventoryHasSpace(int weight)
         {
-            int newWeight = Weight + weight;
-            return newWeight <= MaxWeight || !_isWeightLimited;
+            int newWeight = _currentWeight + weight;
+            return newWeight <= _maxWeight || !_isWeightLimited;
         }
 
         public bool ContainsItem(InventoryItem item)
         {
             if (!item.IsStackable()) return _items.Contains(item);
-            return _resources.Contains(item) && item.Quantity() != 0;
+            return _resources.ContainsKey(item.Name) && item.Quantity() != 0;
         }
 
         protected virtual void AddItem(InventoryItem item)
         {
-            ++Weight;
+            ++_currentWeight;
             item.ParentInventory = this;
             _items.Add(item);
             if (item is Consumable)
@@ -227,51 +216,51 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         //Throws an error if the item was not in the inventory
         protected virtual InventoryItem RemoveItem(InventoryItem item)
         {
-            if (!_items.Contains(item)) throw new Exceptions.ItemNotInInventoryException(item.Name);
+            if (!_contents.Contains(item)) throw new Exceptions.ItemNotInInventoryException(item.Name);
             _items.Remove(item);
-            --Weight;
+            --_currentWeight;
+            if (item is Consumable) _consumables.Remove((Consumable) item);
+            _resources.Remove(item.Name);
             UpdateContents();
-            if (item is Consumable)
-            {
-                _consumables.Remove((Consumable) item);
-            }
-
             return item;
         }
 
-        public void IncrementResource(string type, int amount)
+        public void IncrementResource(string name, int amount)
         {
-            InventoryItem resource = GetResource(type);
-            if (amount < 0) throw new Exceptions.ResourceValueChangeInvalid(resource.Name, "increment", amount);
-            Weight += amount;
+            if (amount < 0) throw new Exceptions.ResourceValueChangeInvalid(name, "increment", amount);
+            InventoryItem resource = GetResource(name);
+            _currentWeight += amount;
+            if (resource == null) resource = AddResource(name);
             resource.Increment(amount);
             UpdateContents();
         }
 
-        public void DecrementResource(string type, int amount)
+        public void DecrementResource(string name, int amount)
         {
-            InventoryItem resource = GetResource(type);
-            if (amount < 0) throw new Exceptions.ResourceValueChangeInvalid(resource.Name, "decrement", amount);
+            if (amount < 0) throw new Exceptions.ResourceValueChangeInvalid(name, "decrement", amount);
+            InventoryItem resource = GetResource(name);
+            if (resource == null) throw new Exceptions.ResourceDoesNotExistException(name);
             if (resource.Quantity() < amount) return;
-            Weight -= amount;
+            _currentWeight -= amount;
             resource.Decrement(amount);
+            if (resource.Quantity() == 0) RemoveItem(resource);
             UpdateContents();
         }
 
         public int GetResourceQuantity(string type)
         {
-            return GetResource(type).Quantity();
+            return GetResource(type)?.Quantity() ?? 0;
         }
 
         private void UpdateContents()
         {
             _contents.Clear();
             _items.ForEach(i => _contents.Add(i));
-            _resources.ForEach(r =>
+            foreach (InventoryItem r in _resources.Values)
             {
-                if (r.Quantity() == 0) return;
+                Assert.IsTrue(r.Quantity() > 0);
                 _contents.Add(r);
-            });
+            }
         }
 
         public List<InventoryItem> Contents()
@@ -292,7 +281,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public void Move(InventoryItem item, int quantity)
         {
             if (_readonly) return;
-
             if (!item.IsStackable())
             {
                 Move(item);
@@ -302,7 +290,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (quantity > item.Quantity()) quantity = Mathf.FloorToInt(item.Quantity());
             if (!InventoryHasSpace(quantity))
             {
-                int remainingSpace = MaxWeight - Weight;
+                int remainingSpace = _maxWeight - _currentWeight;
                 quantity = remainingSpace;
             }
 
@@ -313,7 +301,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public void MoveAllResources(Inventory target)
         {
-            foreach (InventoryItem resource in _resources) target.Move(resource, Mathf.FloorToInt(resource.Quantity()));
+            foreach (InventoryItem resource in _resources.Values) target.Move(resource, Mathf.FloorToInt(resource.Quantity()));
         }
 
         private void LoadResource(string type, XmlNode root)
@@ -324,16 +312,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private void SaveResource(string type, XmlNode root)
         {
             SaveController.CreateNodeAndAppend(type, root, GetResourceQuantity(type));
-        }
-
-        public List<InventoryItem> SortByType()
-        {
-            List<InventoryItem> sortedItems = new List<InventoryItem>();
-            sortedItems.AddRange(InventoryResources());
-            sortedItems.AddRange(GetItemsOfType(item => item is Weapon));
-            sortedItems.AddRange(GetItemsOfType(item => item is ArmourPlate));
-            sortedItems.AddRange(GetItemsOfType(item => item is Accessory));
-            return sortedItems;
         }
 
         public void DestroyItem(InventoryItem item)

@@ -5,6 +5,7 @@ using Game.Characters;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
 namespace Game.Global
@@ -28,7 +29,7 @@ namespace Game.Global
 
         public void Awake()
         {
-            if(_homeInventory == null) _homeInventory = new CharacterManager();
+            if (_homeInventory == null) _homeInventory = new CharacterManager();
             SaveController.AddPersistenceListener(_regionManager);
         }
 
@@ -36,6 +37,7 @@ namespace Game.Global
         {
             _homeInventory.Start();
             if (_started) return;
+            foreach (ResourceTemplate template in ResourceTemplate.AllResources) _homeInventory.IncrementResource(template.Name, 1);
             _started = true;
             EnvironmentManager.Start();
             WeatherManager.Start();
@@ -103,10 +105,6 @@ namespace Game.Global
 
         private void IncrementWorldTime()
         {
-            int minutesPassed = Hours * MinutesPerHour + Minutes / MinuteInterval;
-            float timePassed = minutesPassed * MinuteInSeconds + _currentTime;
-            float normalisedTime = timePassed / DayLengthInSeconds;
-            SceneryController.SetTime(normalisedTime);
             _currentTime += Time.deltaTime;
             if (_currentTime < MinuteInSeconds) return;
             _currentTime = _currentTime - MinuteInSeconds;
@@ -166,6 +164,15 @@ namespace Game.Global
         {
 //            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
             if (!_isPaused) IncrementWorldTime();
+            UpdateScenery();
+        }
+
+        private void UpdateScenery()
+        {
+            int minutesPassed = Hours * MinutesPerHour + Minutes / MinuteInterval;
+            float timePassed = minutesPassed * MinuteInSeconds + _currentTime;
+            float normalisedTime = timePassed / DayLengthInSeconds;
+            SceneryController.SetTime(normalisedTime);
         }
     }
 }

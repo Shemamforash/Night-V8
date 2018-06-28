@@ -17,7 +17,6 @@ public class SceneryController : MonoBehaviour
         _light = Helper.FindChildWithName<Image>(gameObject, "Light");
         _gate = Helper.FindChildWithName<Image>(gameObject, "Gate");
         _shadow = Helper.FindChildWithName<Image>(gameObject, "Shadow");
-        
     }
 
     public static void SetTime(float normalisedTime) //6am = 0 6pm = 0.5

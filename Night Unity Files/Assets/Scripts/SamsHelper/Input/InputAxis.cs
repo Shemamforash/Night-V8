@@ -15,5 +15,7 @@
         SkillThree,
         SkillFour,
         Enrage,
+        Inventory,
+        Compass
     }
 }

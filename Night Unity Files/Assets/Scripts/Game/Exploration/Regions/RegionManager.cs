@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
@@ -87,7 +88,7 @@ namespace Game.Exploration.Regions
                 RegionType randomRegionType = _regionTypes[randomRegionIndex];
                 _regionTypes.RemoveAt(randomRegionIndex);
                 region.SetRegionType(randomRegionType);
-                region.Name = GenerateName(randomRegionType) + " " + _regionsDiscovered;
+                region.Name = GenerateName(randomRegionType);
             }
 
             ++_regionsDiscovered;
@@ -120,14 +121,19 @@ namespace Game.Exploration.Regions
             currentCharacter.Inventory().IncrementResource("Water", waterRequired);
         }
 
+        private static string StripBlanks(string text)
+        {
+            return Regex.Replace(text, @"\s+", "");
+        }
+
         private static void LoadRegionTemplates()
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
             foreach (XmlNode regionTypeNode in root.ChildNodes)
             {
-                string[] prefixes = regionTypeNode.SelectSingleNode("Prefixes").InnerText.Split(',');
-                string[] suffixes = regionTypeNode.SelectSingleNode("Suffixes").InnerText.Split(',');
+                string[] prefixes = StripBlanks(regionTypeNode.SelectSingleNode("Prefixes").InnerText).Split(',');
+                string[] suffixes = StripBlanks(regionTypeNode.SelectSingleNode("Suffixes").InnerText).Split(',');
                 string regionName = regionTypeNode.Name;
                 foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
                 {

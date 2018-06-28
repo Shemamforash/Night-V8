@@ -22,7 +22,7 @@ namespace SamsHelper.ReactiveUI.Elements
         }
 
         private TextMeshProUGUI _text;
-        public int CustomFontSize;
+        public float CustomFontSize;
 
         public FontSizes FontSize;
 

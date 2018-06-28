@@ -16,7 +16,7 @@ public class UiCompassController : MonoBehaviour
     private const float ShowItemTimeMax = 5f;
     private static UiCompassController _instance;
     private const float MaxDetectDistance = 10f;
-    
+
     public void Awake()
     {
         _indicatorPrefab = Resources.Load<GameObject>("Prefabs/Combat/Indicator");
@@ -29,7 +29,29 @@ public class UiCompassController : MonoBehaviour
         if (_instance._compassPulse.particleCount != 0) return;
         _instance._compassPulse.Play();
         _instance.StartCoroutine(_instance.ShowItems());
-        ContainerController.Containers.ForEach(c => c.TryReveal());
+        _instance.StartCoroutine(_instance.HighlightContainers());
+    }
+
+    private IEnumerator HighlightContainers()
+    {
+        float currentTime = 0f;
+        float endTime = _compassPulse.main.startLifetime.constant;
+        float speed = _compassPulse.main.startSpeed.constant;
+        HashSet<ContainerBehaviour> pulsedContainers = new HashSet<ContainerBehaviour>();
+        while (currentTime < endTime)
+        {
+            currentTime += Time.deltaTime;
+            float distance = speed * currentTime;
+            ContainerController.Containers.ForEach(c =>
+            {
+                if (pulsedContainers.Contains(c)) return;
+                float containerDistance = Vector2.Distance(transform.position, c.transform.position);
+                if (containerDistance > distance) return;
+                c.Pulse();
+                pulsedContainers.Add(c);
+            });
+            yield return null;
+        }
     }
 
     private IEnumerator ShowItems()
@@ -52,17 +74,18 @@ public class UiCompassController : MonoBehaviour
             _indicators.ForEach(i =>
             {
                 float distance = Vector2.Distance(transform.position, i.Item1.transform.position);
-                float modifiedLerpVal = 1- lerpVal;
+                float modifiedLerpVal = 1 - lerpVal;
                 if (distance > MaxDetectDistance) modifiedLerpVal = 0;
                 else distance /= MaxDetectDistance;
                 distance = 1 - distance;
                 modifiedLerpVal *= distance;
                 i.Item2.transform.rotation = Quaternion.Euler(new Vector3(0, 0, AdvancedMaths.AngleFromUp(transform.position, i.Item1.transform.position)));
                 if (i.Item1.Revealed()) modifiedLerpVal = Mathf.Pow(modifiedLerpVal, 3f);
-                i.Item2.color = new Color(1,1,1, modifiedLerpVal);
+                i.Item2.color = new Color(1, 1, 1, modifiedLerpVal);
             });
             yield return null;
         }
+
         _indicators.ForEach(i => Destroy(i.Item2.gameObject));
         _indicators.Clear();
     }

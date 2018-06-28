@@ -3,6 +3,7 @@ using System.Xml;
 using Facilitating.Persistence;
 using Game.Exploration.Environment;
 using Game.Exploration.Weather;
+using Game.Exploration.WorldEvents;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
@@ -17,8 +18,6 @@ namespace Game.Characters
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
         private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
         public const int PlayerHealthChunkSize = 50;
-        private readonly AttributeModifier _hungerModifier = new AttributeModifier();
-        private readonly AttributeModifier _thirstModifier = new AttributeModifier();
         private readonly Player _player;
 
 
@@ -31,10 +30,6 @@ namespace Game.Characters
         public CharacterAttributes(Player player)
         {
             _player = player;
-            Get(AttributeType.Strength).AddModifier(_hungerModifier);
-            Get(AttributeType.Endurance).AddModifier(_hungerModifier);
-            Get(AttributeType.Willpower).AddModifier(_thirstModifier);
-            Get(AttributeType.Perception).AddModifier(_thirstModifier);
 
             Set(AttributeType.EssenceLossBonus, 1);
             Set(AttributeType.SkillRechargeBonus, 1);
@@ -59,6 +54,7 @@ namespace Game.Characters
             int newEnduranceMax = (int) (Max(AttributeType.Endurance) + amount);
             newEnduranceMax = Mathf.Clamp(newEnduranceMax, 0, _player.CharacterTemplate.EnduranceCap);
             SetMax(AttributeType.Endurance, newEnduranceMax);
+            WorldEventManager.GenerateEvent(new CharacterMessage("My body will endure", _player));
         }
 
         public void IncreaseStrengthMax(int amount)
@@ -66,6 +62,7 @@ namespace Game.Characters
             int newStrengthMax = (int) (Max(AttributeType.Strength) + amount);
             newStrengthMax = Mathf.Clamp(newStrengthMax, 0, _player.CharacterTemplate.StrengthCap);
             SetMax(AttributeType.Strength, newStrengthMax);
+            WorldEventManager.GenerateEvent(new CharacterMessage("My strength grows", _player));
         }
 
         public void IncreasePerceptionMax(int amount)
@@ -73,6 +70,7 @@ namespace Game.Characters
             int newPerceptionMax = (int) (Max(AttributeType.Perception) + amount);
             newPerceptionMax = Mathf.Clamp(newPerceptionMax, 0, _player.CharacterTemplate.PerceptionCap);
             SetMax(AttributeType.Perception, newPerceptionMax);
+            WorldEventManager.GenerateEvent(new CharacterMessage("My eyes become keener", _player));
         }
 
         public void IncreaseWillpowerMax(int amount)
@@ -80,6 +78,7 @@ namespace Game.Characters
             int newWillpowerMax = (int) (Max(AttributeType.Willpower) + amount);
             newWillpowerMax = Mathf.Clamp(newWillpowerMax, 0, _player.CharacterTemplate.WillpowerCap);
             SetMax(AttributeType.Willpower, newWillpowerMax);
+            WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clearer now", _player));
         }
 
         public float CalculateAdrenalineRecoveryRate()
@@ -139,12 +138,10 @@ namespace Game.Characters
 
             CharacterAttribute hunger = Get(AttributeType.Hunger);
             hunger.Increment(hungerIncrementAmount);
-            _hungerModifier.SetFinalBonus(-hunger.Normalised());
             if (hunger.ReachedMax()) _player.Kill();
 
             CharacterAttribute thirst = Get(AttributeType.Thirst);
             thirst.Increment(thirstIncrementAmount);
-            _thirstModifier.SetFinalBonus(-thirst.Normalised());
             if (thirst.ReachedMax()) _player.Kill();
         }
 
@@ -162,11 +159,21 @@ namespace Game.Characters
 
         public string GetHungerStatus()
         {
+            if (Val(AttributeType.Hunger) == 8)
+            {
+                WorldEventManager.GenerateEvent(new CharacterMessage("I might starve", _player));
+            }
+
             return GetAttributeStatus(Get(AttributeType.Hunger), _starvationLevels);
         }
 
         public string GetThirstStatus()
         {
+            if (Val(AttributeType.Thirst) == 8)
+            {
+                WorldEventManager.GenerateEvent(new CharacterMessage("I feel parched", _player));
+            }
+
             return GetAttributeStatus(Get(AttributeType.Thirst), _dehydrationLevels);
         }
 
@@ -201,10 +208,12 @@ namespace Game.Characters
             int majorBreakThreshold = Mathf.FloorToInt(willpower.Max / 4f);
             if (willpower.CurrentValue() <= majorBreakThreshold)
             {
+                WorldEventManager.GenerateEvent(new CharacterMessage("I can't take any more", _player));
                 //todo major break;                
             }
             else if (willpower.CurrentValue() <= minorBreakThreshold)
             {
+                WorldEventManager.GenerateEvent(new CharacterMessage("I can see the light beyond the veil, and it speaks to me!", _player));
                 //todo minor break;
             }
         }
@@ -217,11 +226,13 @@ namespace Game.Characters
         public void Drink()
         {
             Get(AttributeType.Thirst).Decrement();
+            WorldEventManager.GenerateEvent(new CharacterMessage("I needed that", _player));
         }
 
         public void Eat()
         {
             Get(AttributeType.Hunger).Decrement();
+            WorldEventManager.GenerateEvent(new CharacterMessage("That should stave off starvation, at least for a while", _player));
         }
     }
 }

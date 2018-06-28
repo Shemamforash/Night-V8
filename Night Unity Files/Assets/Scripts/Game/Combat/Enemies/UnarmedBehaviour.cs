@@ -8,7 +8,7 @@ namespace Game.Combat.Enemies
     public class UnarmedBehaviour : EnemyBehaviour
     {
         protected bool Alerted;
-        private const float DetectionRange = 2f;
+        private const float DetectionRange = 3f;
         private const float VisionRange = 5f;
         private Vector2 _originPosition;
         protected bool AlertAll;
@@ -76,6 +76,7 @@ namespace Game.Combat.Enemies
 
         protected virtual void CheckForPlayer()
         {
+            if (Alerted) return;
             if (DistanceToTarget() > VisionRange) return;
             CurrentAction = Suspicious;
         }

@@ -1,11 +1,7 @@
 <RegionType>
     <Danger>
-        <Prefixes>
-            Scavenger,Savage,Execrator,Mortal,Cripple,Civilisation,Torment,Anger,Hatred,Abhorrent,Betrayer,Maverick,Failure,Deceiver,Downfall,Hell,Vandal,Juggernaut,Leviathan,Carcass,Behemoth,Glutton,Hellion,Demon,Beast,Satan,Devil,Monstrosity,Titan,Carrion,Gargantua,Fiend,Demagogue,Dissident,Apostate
-        </Prefixes>
-        <Suffixes>
-            Burden,Cessation,Blight,Agony,Anguish,Bane,Abode,Terminus,Dusk,Pit,Root,Curse,Woe,Grief,Affliction,Damnation,Agony,Anguish,Carcass,Remains,Ruin,Loss,Decay,Hulk,Shell,Wreck,Waste,Failure,End,Collapse,Downfall,Sorrow,Waste,Heartache,Pity,Foment,Heresy
-        </Suffixes>
+        <Prefixes>Scavenger,Savage,Execrator,Mortal,Cripple,Civilisation,Torment,Anger,Hatred,Abhorrent,Betrayer,Maverick,Failure,Deceiver,Downfall,Hell,Vandal,Juggernaut,Leviathan,Carcass,Behemoth,Glutton,Hellion,Demon,Beast,Satan,Devil,Monstrosity,Titan,Carrion,Gargantua,Fiend,Demagogue,Dissident,Apostate</Prefixes>
+        <Suffixes>Burden,Cessation,Blight,Agony,Anguish,Bane,Abode,Terminus,Dusk,Pit,Root,Curse,Woe,Grief,Affliction,Damnation,Agony,Anguish,Carcass,Remains,Ruin,Loss,Decay,Hulk,Shell,Wreck,Waste,Failure,End,Collapse,Downfall,Sorrow,Waste,Heartache,Pity,Foment,Heresy</Suffixes>
     </Danger>
     <Animal>
         <Prefixes>Pursuit,Chaser,Stalker,Huntress,Hunter,Pursuer,Trapper,Tracker,Prowler,Predator,Bounty,Drifter,Vagrant,Haunt,Strider,Seeker,Suppliant,Beggar,Destitute</Prefixes>

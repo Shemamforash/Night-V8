@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using Game.Exploration.Weather;
+using Game.Exploration.WorldEvents;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -13,7 +14,8 @@ namespace Game.Exploration.Environment
         private static readonly Dictionary<int, Environment> _environments = new Dictionary<int, Environment>();
         private static Environment _currentEnvironment;
         private static TemperatureCategory _temperatureCategory;
-        
+        private static TemperatureCategory _lastTemperatureCategory;
+
         public static void Start()
         {
             LoadEnvironments();
@@ -38,7 +40,7 @@ namespace Game.Exploration.Environment
             }
 
             MapGenerator.Generate();
-            WorldView.SetEnvironmentText(_currentEnvironment.Name);
+            WorldView.SetEnvironmentText(_currentEnvironment.EnvironmentType.ToString());
         }
 
         private static void LoadEnvironments()
@@ -58,12 +60,14 @@ namespace Game.Exploration.Environment
                 Environment environment = new Environment(name, level, temperature, shelter, temples, keys, resources, danger);
                 _environments.Add(level, environment);
             }
+
             _loaded = true;
         }
 
         public static void UpdateTemperature()
         {
             int temperature = CalculateTemperature();
+            _lastTemperatureCategory = _temperatureCategory;
             if (temperature < -20)
                 _temperatureCategory = TemperatureCategory.Freezing;
             else if (temperature < 0)
@@ -74,6 +78,11 @@ namespace Game.Exploration.Environment
                 _temperatureCategory = TemperatureCategory.Hot;
             else
                 _temperatureCategory = TemperatureCategory.Boiling;
+            if (_lastTemperatureCategory != _temperatureCategory)
+            {
+                WorldEventManager.GenerateEvent(new WorldEvent("It's " + _temperatureCategory));
+            }
+
             int targetLength = 6;
             string currentTemperature = CalculateTemperature() + "\u00B0" + "C";
             int lengthDifference = targetLength - currentTemperature.Length;

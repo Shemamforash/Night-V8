@@ -14,13 +14,14 @@ using UnityEngine;
 public class UiConsumableController : Menu, IInputListener
 {
     private static UiConsumableController _instance;
-    private const int centre = 4;
+    private static int centre = 4;
     private int _selectedConsumable;
     private readonly List<ConsumableUi> _consumeableUis = new List<ConsumableUi>();
     private Player _player;
     private EnhancedButton _closeButton;
     private EnhancedButton _consumableButton;
     private bool _focussed;
+    private List<Consumable> _consumables;
 
     public override void Awake()
     {
@@ -61,7 +62,7 @@ public class UiConsumableController : Menu, IInputListener
 
                 if (_focussed)
                 {
-                    CharacterManager.SelectedCharacter.Inventory().Consumables()[_selectedConsumable].Consume(CharacterManager.SelectedCharacter);
+                    _consumables[_selectedConsumable].Consume(CharacterManager.SelectedCharacter);
                     SelectItem();
                 }
 
@@ -82,7 +83,7 @@ public class UiConsumableController : Menu, IInputListener
 
     private void TrySelectItemBelow()
     {
-        if (_selectedConsumable == CharacterManager.SelectedCharacter.Inventory().Consumables().Count - 1)
+        if (_selectedConsumable == _consumables.Count - 1)
         {
             _focussed = false;
             _closeButton.Select();
@@ -108,14 +109,20 @@ public class UiConsumableController : Menu, IInputListener
 
     private void SelectItem()
     {
-        List<Consumable> consumables = WorldState.HomeInventory().Consumables();
-        if (_selectedConsumable >= consumables.Count) _selectedConsumable = consumables.Count - 1;
+        _consumables = WorldState.HomeInventory().Consumables();
+        if (_consumables.Count == 0)
+        {
+            _closeButton.Select();
+            return;
+        }
+
+        if (_selectedConsumable >= _consumables.Count) _selectedConsumable = _consumables.Count - 1;
         for (int i = 0; i < _consumeableUis.Count; ++i)
         {
             int offset = i - centre;
             int targetConsumableIndex = _selectedConsumable + offset;
             Consumable consumable = null;
-            if (targetConsumableIndex >= 0 && targetConsumableIndex < consumables.Count) consumable = consumables[targetConsumableIndex];
+            if (targetConsumableIndex >= 0 && targetConsumableIndex < _consumables.Count) consumable = _consumables[targetConsumableIndex];
             _consumeableUis[i].SetConsumable(consumable);
         }
 
@@ -125,17 +132,20 @@ public class UiConsumableController : Menu, IInputListener
 
     private void Initialise()
     {
-        for (int i = 0; i < 9; ++i)
+        GameObject listObject = Helper.FindChildWithName(gameObject, "Consumable List");
+        int count = 0;
+        centre = listObject.transform.childCount / 2;
+        foreach (Transform child in listObject.transform)
         {
-            GameObject uiObject = Helper.FindChildWithName(gameObject, "Consumable " + i);
-            ConsumableUi consumableUi = new ConsumableUi(uiObject, Math.Abs(i - centre));
-            if (i == centre)
+            ConsumableUi consumableUi = new ConsumableUi(child.gameObject, Math.Abs(count - centre));
+            if (count == centre)
             {
-                _consumableButton = uiObject.GetComponent<EnhancedButton>();
+                _consumableButton = child.transform.GetComponent<EnhancedButton>();
             }
 
             _consumeableUis.Add(consumableUi);
             consumableUi.SetConsumable(null);
+            ++count;
         }
 
         _closeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Close");
@@ -146,12 +156,14 @@ public class UiConsumableController : Menu, IInputListener
 
     private void SelectLast()
     {
-        _selectedConsumable = CharacterManager.SelectedCharacter.Inventory().Consumables().Count - 1;
+        if (_consumables.Count == 0) return;
+        _selectedConsumable = _consumables.Count - 1;
         SelectItem();
     }
 
     private void SelectFirst()
     {
+        if (_consumables.Count == 0) return;
         _selectedConsumable = 0;
         SelectItem();
     }

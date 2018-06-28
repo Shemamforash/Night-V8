@@ -8,7 +8,7 @@ public abstract class ContainerController //: DesolationInventory
     public static readonly List<ContainerBehaviour> Containers = new List<ContainerBehaviour>();
     private readonly Vector2 _position;
     public readonly Inventory Inventory;
-    protected string PrefabLocation;
+    protected string PrefabLocation = "Container";
 
     protected ContainerController(Vector2 position, string name)
     {
@@ -16,7 +16,7 @@ public abstract class ContainerController //: DesolationInventory
         Inventory = new Inventory(name);
     }
 
-    public void CreateObject() //InventoryResourceType type)
+    public void CreateObject()
     {
         GameObject prefab = Resources.Load<GameObject>("Prefabs/Combat/" + PrefabLocation);
         GameObject container = GameObject.Instantiate(prefab);

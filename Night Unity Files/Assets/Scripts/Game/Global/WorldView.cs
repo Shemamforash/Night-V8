@@ -88,15 +88,15 @@ namespace Game.Global
                         quantity = 0;
                         WorldState.HomeInventory().Consumables().ForEach(c => quantity += c.HungerModifier);
                         _resourceText[resourceType].text = "Food " + quantity;
-                        return;
+                        continue;
                     case "Water":
                         quantity = 0;
                         WorldState.HomeInventory().Consumables().ForEach(c => quantity += c.ThirstModifier);
                         _resourceText[resourceType].text = "Water " + quantity;
-                        return;
+                        continue;
                 }
 
-                quantity = Mathf.FloorToInt(WorldState.HomeInventory().GetResource(resourceType).Quantity());
+                quantity = Mathf.FloorToInt(WorldState.HomeInventory().GetResourceQuantity(resourceType));
                 if (quantity == 0 && resourceType != "Food" && resourceType != "Water")
                 {
                     _resourceText[resourceType].gameObject.SetActive(false);

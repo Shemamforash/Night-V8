@@ -91,7 +91,7 @@ namespace Game.Combat.Generation
             return Helper.RandomInList(sharedCells);
         }
 
-        public static Cell WorldToCellPosition(Vector2 position)
+        public static Cell WorldToCellPosition(Vector2 position, bool print = true)
         {
             Vector2Int gridPosition = WorldToGridPosition(position);
             int x = gridPosition.x;
@@ -102,7 +102,7 @@ namespace Game.Combat.Generation
             }
             catch (IndexOutOfRangeException)
             {
-                Debug.Log("Invalid cell position: (" + x + " ," + y + ")");
+                if (print) Debug.Log("Invalid cell position: (" + x + " ," + y + ")");
                 return null;
             }
         }
@@ -117,7 +117,7 @@ namespace Game.Combat.Generation
                 float lerpVal = j / interval;
                 Vector2 currentPosition = Vector2.Lerp(start, end, lerpVal);
                 Vector2Int pos = WorldToGridPosition(currentPosition);
-                if (pos.x < 0 || pos.x > GridWidth || pos.y < 0 || pos.y > GridWidth) continue;
+                if (pos.x < 0 || pos.x >= GridWidth || pos.y < 0 || pos.y >= GridWidth) continue;
                 Cell cellHere = Grid[pos.x][pos.y];
                 if (cellHere.Blocked) return true;
                 if (!cellHere.Reachable && includeReachable) return true;
@@ -187,7 +187,6 @@ namespace Game.Combat.Generation
             int min = WorldToGridDistance(minRange);
 
             Cell playerCell = PlayerCombat.Instance.CurrentCell();
-            Debug.Log(min + " " + max + " " + playerCell.Position);
             List<Cell> cellsNearPlayer = CellsInRange(playerCell, max, min);
             Cell nearestValidCell = FindNearestCell(cellsNearPlayer, false, currentCell);
             if (nearestValidCell == null) return currentCell;

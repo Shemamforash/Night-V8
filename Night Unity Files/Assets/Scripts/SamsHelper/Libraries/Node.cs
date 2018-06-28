@@ -10,7 +10,7 @@ namespace SamsHelper.Libraries
         private readonly List<Tuple<float, Node>> _neighbors = new List<Tuple<float, Node>>();
         private readonly List<Node> _rawNeighbors = new List<Node>();
         private readonly List<Edge> _edges = new List<Edge>();
-        public readonly Vector3 Position;
+        public Vector3 Position;
         private bool _generatedEdges;
 
         public Node(Vector3 position)

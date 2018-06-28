@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml;
 using Game.Characters.CharacterActions;
 using Game.Combat.Player;
+using Game.Exploration.WorldEvents;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
@@ -42,7 +43,6 @@ namespace Game.Characters
             CharacterTemplate = characterTemplate;
             CharacterSkillOne = CharacterSkills.GetCharacterSkillOne(this);
             CharacterSkillTwo = CharacterSkills.GetCharacterSkillTwo(this);
-            CharacterInventory.MaxWeight = 50;
 
             _brandManager = new BrandManager(this);
             AddStates();
@@ -57,14 +57,16 @@ namespace Game.Characters
 
         public void AddEffect(Effect effect)
         {
+            WorldEventManager.GenerateEvent(new CharacterMessage("I feel... different", this));
             _effects.Add(effect);
         }
 
         public void RemoveEffect(Effect effect)
         {
+            WorldEventManager.GenerateEvent(new CharacterMessage("Back to normal", this));
             _effects.Remove(effect);
         }
-        
+
         public string GetCurrentStoryProgress()
         {
             if (_storyProgress == CharacterTemplate.StoryLines.Count) return null;
@@ -115,16 +117,14 @@ namespace Game.Characters
             }
         }
 
-        private bool IsOverburdened()
-        {
-            return CharacterInventory.Weight >= CharacterInventory.MaxWeight;
-        }
-
         private void Tire()
         {
             int amount = 1;
-            if (IsOverburdened()) amount *= 2;
             Attributes.Get(AttributeType.Endurance).Decrement(amount);
+            if (Attributes.Val(AttributeType.Endurance) <= 1)
+            {
+                WorldEventManager.GenerateEvent(new CharacterMessage("I really need some rest", this));
+            }
         }
 
         public void Rest(int amount)
@@ -134,16 +134,16 @@ namespace Game.Characters
                 _brandManager.IncreaseIdleTime();
                 return;
             }
+
             Attributes.Get(AttributeType.Endurance).Increment(amount);
+            if (Attributes.Get(AttributeType.Endurance).ReachedMax())
+            {
+                WorldEventManager.GenerateEvent(new CharacterMessage("I ache, but I am ready", this));
+            }
         }
 
         public void Travel()
         {
-            if (Inventory().Weight >= HighWeightThreshold)
-                _brandManager.IncreaseTimeSpentHighCapacity();
-            else if (Inventory().Weight < LowWeightThreshold)
-                _brandManager.IncreaseTimeSpentLowCapacity();
-
             _brandManager.IncreaseTravelTime();
             Tire();
         }
@@ -151,19 +151,22 @@ namespace Game.Characters
         public override void EquipWeapon(Weapon weapon)
         {
             base.EquipWeapon(weapon);
-            if(CharacterView != null) CharacterView.WeaponController.SetWeapon(weapon);
+            if (CharacterView != null) CharacterView.WeaponController.SetWeapon(weapon);
+            WorldEventManager.GenerateEvent(new CharacterMessage("Yes, this'll do", this));
         }
 
         public void EquipArmourSlotOne(ArmourPlate plate)
         {
             ArmourController.SetPlateOne(plate);
             CharacterView.ArmourController.SetArmour(ArmourController);
+            WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
         }
 
         public void EquipArmourSlotTwo(ArmourPlate plate)
         {
             ArmourController.SetPlateTwo(plate);
             CharacterView.ArmourController.SetArmour(ArmourController);
+            WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
         }
 
         public override void EquipAccessory(Accessory accessory)

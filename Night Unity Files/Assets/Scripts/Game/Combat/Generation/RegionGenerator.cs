@@ -123,7 +123,7 @@ namespace Game.Combat.Generation
             for (int i = _availablePositions.Count - 1; i >= 0; --i)
             {
                 if (_availablePositions[i].magnitude > PathingGrid.CombatAreaWidth) continue;
-                Cell c = PathingGrid.WorldToCellPosition(_availablePositions[i]);
+                Cell c = PathingGrid.WorldToCellPosition(_availablePositions[i], false);
                 if (c == null) continue;
                 if (!c.Reachable) continue;
                 _availablePositions.RemoveAt(i);

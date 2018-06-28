@@ -7,7 +7,7 @@ namespace Game.Characters
     public class AttributeModifier
     {
         private float _finalBonus, _rawBonus;
-        private List<CharacterAttribute> _targetAttributes = new List<CharacterAttribute>();
+        public readonly List<CharacterAttribute> TargetAttributes = new List<CharacterAttribute>();
 
         public void SetFinalBonus(float finalBonus)
         {
@@ -23,17 +23,7 @@ namespace Game.Characters
 
         private void UpdateTargetAttributes()
         {
-            _targetAttributes.ForEach(t => t.Recalculate());
-        }
-
-        public void AddTargetAttribute(CharacterAttribute c)
-        {
-            _targetAttributes.Add(c);
-        }
-
-        public void RemoveTargetAttribute(CharacterAttribute c)
-        {
-            _targetAttributes.Remove(c);
+            TargetAttributes.ForEach(t => t.Recalculate());
         }
 
         private string ModifierToString(float modifier)

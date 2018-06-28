@@ -1,8 +1,11 @@
 ﻿using System;
 using Game.Characters;
+using Game.Combat.Generation;
 using Game.Gear;
 using Game.Gear.Weapons;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
@@ -47,6 +50,27 @@ namespace Game.Combat.Enemies
         {
             IsDead = true;
             //todo register kill
+        }
+
+        public Loot DropLoot(Vector2 position)
+        {
+            Loot controller = new Loot(position, Name);
+            switch (Template.DropResource)
+            {
+                case "Salt":
+                    SaltBehaviour.Create(position, Template.DropCount);
+                    break;
+                case "Essence":
+                    EssenceCloudBehaviour.Create(position, Template.DropCount);
+                    break;
+                case "Meat":
+                    controller.AddToInventory(ResourceTemplate.GetMeat().Create());
+                    break;
+            }
+
+            if (Weapon != null && Random.Range(0, 10) == 0) controller.AddToInventory(Weapon);
+
+            return controller;
         }
     }
 }

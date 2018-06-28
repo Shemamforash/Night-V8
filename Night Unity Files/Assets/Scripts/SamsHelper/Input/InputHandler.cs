@@ -101,6 +101,7 @@ namespace SamsHelper.Input
         private class InputPress
         {
             private readonly InputAxis _axis;
+            private readonly string _axisString;
             private float _directionAtLastPress;
             private float _lastInputValue, _currentInputValue;
             private bool _pressed;
@@ -109,6 +110,7 @@ namespace SamsHelper.Input
             public InputPress(InputAxis axis)
             {
                 _axis = axis;
+                _axisString = _axis.ToString();
             }
 
             private void CheckDoubleTap()
@@ -127,14 +129,14 @@ namespace SamsHelper.Input
 
             public void CheckPress()
             {
-                _currentInputValue = UnityEngine.Input.GetAxis(_axis.ToString());
+                _currentInputValue = UnityEngine.Input.GetAxis(_axisString);
                 if (Math.Abs(_currentInputValue) > 0f)
                 {
                     _pressed = Helper.ValuesHaveSameSign(_currentInputValue, _lastInputValue);
                     BroadcastInputDown(_axis, _pressed, Helper.Polarity(_currentInputValue));
                     if (!_pressed) CheckDoubleTap();
                 }
-                else
+                else if(_lastInputValue != 0f)
                 {
                     _pressed = false;
                     BroadcastInputUp(_axis);

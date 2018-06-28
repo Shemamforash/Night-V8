@@ -1,5 +1,7 @@
-﻿using Game.Exploration.Environment;
+﻿using System;
+using Game.Exploration.Environment;
 using Game.Exploration.Regions;
+using Game.Exploration.WorldEvents;
 using Game.Global;
 using UnityEngine;
 
@@ -47,9 +49,11 @@ namespace Game.Characters.CharacterActions
             _inTransit = false;
             if (AtHome())
             {
+                PlayerCharacter.Attributes.DecreaseWillpower();
                 TimeSpentTravelling = 0;
                 PlayerCharacter.Inventory().MoveAllResources(WorldState.HomeInventory());
                 PlayerCharacter.RestAction.Enter();
+                WorldEventManager.GenerateEvent(new CharacterMessage("I'm back, but the journey has taken it's toll", PlayerCharacter));
             }
             else
             {
@@ -76,6 +80,28 @@ namespace Game.Characters.CharacterActions
         public void TravelTo(Region target, int duration)
         {
             Enter();
+            switch (target.GetRegionType())
+            {
+                case RegionType.Shelter:
+                    WorldEventManager.GenerateEvent(new CharacterMessage("Perhaps I will find others", PlayerCharacter));
+                    break;
+                case RegionType.Gate:
+                    WorldEventManager.GenerateEvent(new CharacterMessage("I'm going back to camp", PlayerCharacter));
+                    break;
+                case RegionType.Temple:
+                    WorldEventManager.GenerateEvent(new CharacterMessage("I hope I will see you again", PlayerCharacter));
+                    break;
+                case RegionType.Animal:
+                    WorldEventManager.GenerateEvent(new CharacterMessage("Perhaps I will find something to hunt", PlayerCharacter));
+                    break;
+                case RegionType.Danger:
+                    WorldEventManager.GenerateEvent(new CharacterMessage("I pray I won't find trouble, but I will be ready if I do", PlayerCharacter));
+                    break;
+                case RegionType.Nightmare:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             _inTransit = true;
             _target = target;
             Duration = duration;

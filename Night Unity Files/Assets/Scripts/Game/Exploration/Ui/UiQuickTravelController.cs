@@ -119,8 +119,7 @@ namespace Game.Exploration.Ui
             if (CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode() != _targetRegion)
             {
                 Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
-                float distance = Vector2.Distance(travelAction.GetCurrentNode().Position, _targetRegion.Position);
-                int duration = MapGenerator.NodeDistanceToTime(distance);
+                int duration = RoutePlotter.TimeBetween(_currentRegion, _targetRegion);
                 travelAction.TravelTo(_regions[_selectedRegion], duration);
             }
 
@@ -200,9 +199,8 @@ namespace Game.Exploration.Ui
             public void SetRegion(Region region)
             {
                 _nameText.Text(region.Name);
-                float duration = RoutePlotter.DistanceBetween(region, _currentRegion);
-                duration /= MapGenerator.MinRadius;
-                _distanceText.Text(WorldState.TimeToHours((int) duration * WorldState.MinutesPerHour));
+                int duration = RoutePlotter.TimeBetween(region, _currentRegion);
+                _distanceText.Text(WorldState.TimeToHours(duration));
                 SetColor(_activeColour);
             }
         }

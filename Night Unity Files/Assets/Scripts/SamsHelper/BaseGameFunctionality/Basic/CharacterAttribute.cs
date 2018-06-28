@@ -64,14 +64,14 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         {
             Assert.IsFalse(_modifiers.Contains(modifier));
             _modifiers.Add(modifier);
-            modifier.AddTargetAttribute(this);
+            modifier.TargetAttributes.Add(this);
             Recalculate();
         }
 
         public void RemoveModifier(AttributeModifier modifier)
         {
             _modifiers.Remove(modifier);
-            modifier.RemoveTargetAttribute(this);
+            modifier.TargetAttributes.Remove(this);
             Recalculate();
         }
 

@@ -17,7 +17,7 @@ namespace Game.Gear.Armour
         private readonly AccessoryTemplate _template;
         private AttributeModifier modifier;
 
-        public Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, GearSubtype.Accessory, itemQuality)
+        private Accessory(AccessoryTemplate template, ItemQuality itemQuality) : base(template.Name, GearSubtype.Accessory, itemQuality)
         {
             _template = template;
         }
@@ -31,16 +31,14 @@ namespace Game.Gear.Armour
         {
             base.Equip(character);
             Player player = character as Player;
-            if (player == null) return;
-            modifier.AddTargetAttribute(player.Attributes.Get(_template.TargetAttribute));
+            player?.Attributes.Get(_template.TargetAttribute).AddModifier(modifier);
         }
 
         public override void Unequip()
         {
             base.Unequip();
             Player player = EquippedCharacter as Player;
-            if (player == null) return;
-            modifier.RemoveTargetAttribute(player.Attributes.Get(_template.TargetAttribute));
+            player?.Attributes.Get(_template.TargetAttribute).RemoveModifier(modifier);
         }
 
         private static void ReadTemplates()

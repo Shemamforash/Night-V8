@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using Game.Exploration.WorldEvents;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -22,6 +23,7 @@ namespace Game.Exploration.Weather
         public static void GoToWeather()
         {
             _weatherStates.GetState(_weatherStates.CalculateNextState()).Enter();
+            WorldEventManager.GenerateEvent(new WorldEvent("It's " + _weatherStates.GetCurrentState().Name));
         }
 
         public static Weather CurrentWeather()

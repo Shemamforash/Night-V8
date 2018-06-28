@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
@@ -12,6 +13,7 @@ using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Regions
 {
@@ -26,10 +28,10 @@ namespace Game.Exploration.Regions
         public List<EnemyCampfire> Fires = new List<EnemyCampfire>();
         public List<ContainerController> Containers = new List<ContainerController>();
         private readonly HashSet<Region> _neighbors = new HashSet<Region>();
-        public Vector2 Position;
         private static GameObject _nodePrefab;
         public readonly int RegionID;
         private int _lastVisitDay = -1;
+        private static Sprite _animalSprite, _dangerSprite;
 
         public bool Visited()
         {
@@ -74,25 +76,50 @@ namespace Game.Exploration.Regions
 
         public List<Region> Neighbors() => _neighbors.ToList();
 
+        private void AssignSprite(GameObject nodeObject)
+        {
+            if (_animalSprite == null) _animalSprite = Resources.Load<Sprite>("Images/Regions/Animal");
+            if (_dangerSprite == null) _dangerSprite = Resources.Load<Sprite>("Images/Regions/Danger");
+            SpriteRenderer image = Helper.FindChildWithName<SpriteRenderer>(nodeObject, "Icon");
+            switch (_regionType)
+            {
+                case RegionType.Shelter:
+                    break;
+                case RegionType.Gate:
+                    break;
+                case RegionType.Temple:
+                    break;
+                case RegionType.Animal:
+                    image.sprite = _animalSprite;
+                    break;
+                case RegionType.Danger:
+                    break;
+                case RegionType.Nightmare:
+                    break;
+                default:
+                    image.sprite = _dangerSprite;
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         public void CreateObject()
         {
             if (!Discovered() && MapGenerator.DontShowHiddenNodes) return;
             if (_nodePrefab == null) _nodePrefab = Resources.Load<GameObject>("Prefabs/Map/Node");
             GameObject nodeObject = GameObject.Instantiate(_nodePrefab);
+            AssignSprite(nodeObject);
             nodeObject.transform.SetParent(MapGenerator.MapTransform);
             nodeObject.name = Name;
             nodeObject.transform.position = new Vector3(Position.x, Position.y, 0);
             nodeObject.transform.localScale = Vector3.one;
             MapNodeController mapNodeController = nodeObject.transform.GetComponentInChildren<MapNodeController>(true);
-            mapNodeController.gameObject.SetActive(true);
             if (_regionType == RegionType.Temple)
             {
                 GameObject g = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Map/Map Shadow"));
                 g.transform.position = nodeObject.transform.position;
             }
 
-            string name = Name + "\n" + _regionType + " d=" + CalculateDanger();
-            mapNodeController.SetName(name);
+            mapNodeController.SetName(Name);
         }
 
         public void SetPosition(Vector2 position)

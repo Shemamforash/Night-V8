@@ -89,22 +89,22 @@ namespace Game.Combat.Generation
             }
             else
             {
-                switch (EnvironmentManager.CurrentEnvironment.Name)
+                switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
                 {
-                    case "Oasis":
+                    case EnvironmentType.Oasis:
                         worldObject.AddComponent<Forest>().Initialise(_currentRegion);
                         break;
-                    case "Steppe":
+                    case EnvironmentType.Steppe:
                         //todo
                         worldObject.AddComponent<Forest>().Initialise(_currentRegion);
                         break;
-                    case "Ruins":
+                    case EnvironmentType.Ruins:
                         worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
                         break;
-                    case "Defiles":
+                    case EnvironmentType.Defiles:
                         worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
                         break;
-                    case "Wastelands":
+                    case EnvironmentType.Wasteland:
                         worldObject.AddComponent<Canyon>().Initialise(_currentRegion);
                         break;
                 }

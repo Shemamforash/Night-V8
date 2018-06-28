@@ -41,9 +41,7 @@ namespace Game.Combat.Player
         public Characters.Player Player;
         private FastLight _playerLight;
 
-        private float _reloadPressedTime;
         private const float MaxReloadPressedTime = 1f;
-        private bool _inCombat;
         public static PlayerCombat Instance;
         public float MuzzleFlashOpacity;
 
@@ -68,19 +66,6 @@ namespace Game.Combat.Player
             }
         }
 
-        private void SetInCombat(bool inCombat)
-        {
-            _inCombat = inCombat;
-            if (_inCombat)
-            {
-                PlayerUi.Instance().Show();
-            }
-            else
-            {
-                PlayerUi.Instance().Hide();
-            }
-        }
-
         public override void Awake()
         {
             base.Awake();
@@ -96,8 +81,7 @@ namespace Game.Combat.Player
                 switch (axis)
                 {
                     case InputAxis.Fire:
-                        if (CombatManager.EnemiesOnScreen().Count == 0) UiAreaInventoryController.SetNearestContainer(_lastNearestContainer);
-                        if (_inCombat) FireWeapon();
+                        FireWeapon();
                         break;
                     case InputAxis.Horizontal:
                         Move(direction * transform.right);
@@ -108,44 +92,38 @@ namespace Game.Combat.Player
                     case InputAxis.SwitchTab:
                         Rotate(direction);
                         break;
-                    case InputAxis.Reload:
-                        float _lastPressedTime = _reloadPressedTime;
-                        _reloadPressedTime += Time.deltaTime;
-                        if (_reloadPressedTime >= MaxReloadPressedTime && _lastPressedTime < MaxReloadPressedTime)
-                        {
-                            SetInCombat(!_inCombat);
-                        }
-
-                        break;
                 }
             }
             else
             {
                 switch (axis)
                 {
-                    case InputAxis.Fire:
-                        if (!_inCombat) TryEmitPulse();
-                        break;
                     case InputAxis.Enrage:
-                        if (_inCombat) LockTarget();
+                        LockTarget();
                         break;
                     case InputAxis.Reload:
-                        if (_inCombat) Reload();
+                        Reload();
                         break;
                     case InputAxis.SkillOne:
-                        if (_inCombat) SkillBar.ActivateSkill(0);
+                        SkillBar.ActivateSkill(0);
                         break;
                     case InputAxis.SkillTwo:
-                        if (_inCombat) SkillBar.ActivateSkill(1);
+                        SkillBar.ActivateSkill(1);
                         break;
                     case InputAxis.SkillThree:
-                        if (_inCombat) SkillBar.ActivateSkill(2);
+                        SkillBar.ActivateSkill(2);
                         break;
                     case InputAxis.SkillFour:
-                        if (_inCombat) SkillBar.ActivateSkill(3);
+                        SkillBar.ActivateSkill(3);
                         break;
                     case InputAxis.Sprint:
                         _dashPressed = true;
+                        break;
+                    case InputAxis.Inventory:
+                        UiAreaInventoryController.Instance().OpenInventory();
+                        break;
+                    case InputAxis.Compass:
+                        TryEmitPulse();
                         break;
                 }
             }
@@ -170,9 +148,6 @@ namespace Game.Combat.Player
                     break;
                 case InputAxis.Sprint:
                     _dashPressed = false;
-                    break;
-                case InputAxis.Reload:
-                    _reloadPressedTime = 0f;
                     break;
             }
         }
@@ -259,10 +234,10 @@ namespace Game.Combat.Player
 
         public override void Update()
         {
+            if (!CombatManager.InCombat()) return;
             base.Update();
             FollowTarget();
             TransitionOffScreen();
-            CheckForContainersNearby();
             CheckForEnemiesOnScreen();
             _adrenalineLevel.Increment(_adrenalineGain);
             UpdateMuzzleFlash();
@@ -278,23 +253,6 @@ namespace Game.Combat.Player
             if (c.a == 0 && MuzzleFlashOpacity == 0) return;
             c.a = MuzzleFlashOpacity;
             _muzzleFlash.Colour = c;
-        }
-
-        private const float MaxShowInventoryDistance = 0.5f;
-        private ContainerController _lastNearestContainer;
-
-        private void CheckForContainersNearby()
-        {
-            ContainerController nearestContainer = null;
-            float nearestContainerDistance = MaxShowInventoryDistance;
-            ContainerController.Containers.ForEach(c =>
-            {
-                float distance = Vector2.Distance(c.transform.position, PlayerCombat.Instance.transform.position);
-                if (distance > nearestContainerDistance) return;
-                nearestContainerDistance = distance;
-                nearestContainer = c.ContainerController;
-            });
-            _lastNearestContainer = nearestContainer;
         }
 
         public void Initialise()
@@ -341,7 +299,6 @@ namespace Game.Combat.Player
 
             SkillBar.BindSkills(Player, _skillCooldownModifier);
             UIMagazineController.SetWeapon(_weaponBehaviour);
-            SetInCombat(false);
             float width = PathingGrid.CombatAreaWidth / 2f;
             transform.position = PathingGrid.FindCellToAttackPlayer(CurrentCell(), width, width - 4).Position;
         }
@@ -385,7 +342,6 @@ namespace Game.Combat.Player
         public void ExitCombat()
         {
             StopReloading();
-            Player.Attributes.DecreaseWillpower();
         }
 
         //RELOADING

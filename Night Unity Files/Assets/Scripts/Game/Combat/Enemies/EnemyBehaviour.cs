@@ -140,11 +140,11 @@ namespace Game.Combat.Enemies
                     break;
             }
 
-            Loot controller = new Loot(transform.position, Enemy);
-            if (controller.IsValid)
+            Loot loot = Enemy.DropLoot(transform.position);
+            if (loot.IsValid)
             {
-                controller.CreateObject();
-                CombatManager.Region().Containers.Add(controller);
+                loot.CreateObject();
+                CombatManager.Region().Containers.Add(loot);
             }
 
             CombatManager.Remove(this);

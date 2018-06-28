@@ -27,6 +27,7 @@ namespace SamsHelper.ReactiveUI.Elements
         private event Action OnSelectActions;
         private event Action OnDeselectActions;
         public bool UseAdvancedBorder;
+        private bool _isSelected;
 
         public void OnDeselect(BaseEventData eventData)
         {
@@ -63,7 +64,7 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void OnInputUp(InputAxis axis)
         {
-            if (IsSelected() && axis == InputAxis.Vertical) _justEntered = false;
+            if (axis == InputAxis.Vertical && IsSelected()) _justEntered = false;
         }
 
         public void OnDoubleTap(InputAxis axis, float direction)
@@ -122,12 +123,14 @@ namespace SamsHelper.ReactiveUI.Elements
             OnSelectActions?.Invoke();
             _justEntered = true;
             _fadeIn = StartCoroutine(FadeIn());
+            _isSelected = true;
         }
 
         private void Exit()
         {
             OnDeselectActions?.Invoke();
             _fadeOut = StartCoroutine(FadeOut());
+            _isSelected = false;
         }
 
         public void AddOnClick(UnityAction a)
@@ -182,7 +185,8 @@ namespace SamsHelper.ReactiveUI.Elements
 
         private bool IsSelected()
         {
-            return EventSystem.current.currentSelectedGameObject == gameObject;
+//            return EventSystem.current.currentSelectedGameObject == gameObject;
+            return _isSelected;
         }
 
         private void OnDestroy()
