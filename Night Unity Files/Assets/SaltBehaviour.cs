@@ -27,6 +27,7 @@ public class SaltBehaviour : MonoBehaviour
 
     public void Update()
     {
+        if (!PlayerCombat.Instance.Player.Inventory().InventoryHasSpace()) return;
         Vector2 directionToPlayer = PlayerCombat.Instance.transform.position - transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
         if (distanceToPlayer > PickupRadius) return;

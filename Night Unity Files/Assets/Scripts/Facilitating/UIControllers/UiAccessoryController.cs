@@ -55,7 +55,7 @@ namespace Facilitating.UIControllers
             return CharacterManager.Accessories.Count != 0;
         }
 
-        public override void SelectGearItem(GearItem item, UiGearMenuController.GearUi gearUi)
+        public override void SelectGearItem(InventoryItem item, UiGearMenuController.GearUi gearUi)
         {
             Accessory accessory = item as Accessory;
             gearUi.SetTypeText("");
@@ -69,9 +69,9 @@ namespace Facilitating.UIControllers
             ShowAccessoryInfo();
         }
 
-        public override void CompareTo(GearItem comparisonItem)
+        public override void CompareTo(InventoryItem comparisonItem)
         {
-            _compareText.Text(CurrentPlayer.Accessory != null ? comparisonItem.GetSummary() : "");
+            _compareText.Text(CurrentPlayer.Accessory != null ? ((Accessory)comparisonItem).GetSummary() : "");
         }
 
         public override void StopComparing()
@@ -79,9 +79,9 @@ namespace Facilitating.UIControllers
             _compareText.Text("");
         }
 
-        public override List<GearItem> GetAvailableGear()
+        public override List<InventoryItem> GetAvailableGear()
         {
-            return new List<GearItem>(CharacterManager.Accessories);
+            return new List<InventoryItem>(CharacterManager.Accessories);
         }
 
         public override void Equip(int selectedGear)

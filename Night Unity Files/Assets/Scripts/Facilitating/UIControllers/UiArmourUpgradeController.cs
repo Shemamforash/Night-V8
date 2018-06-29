@@ -54,7 +54,7 @@ namespace Facilitating.UIControllers
             return CharacterManager.Armour.Count != 0;
         }
 
-        public override void SelectGearItem(GearItem item, UiGearMenuController.GearUi gearUi)
+        public override void SelectGearItem(InventoryItem item, UiGearMenuController.GearUi gearUi)
         {
             ArmourPlate plate = item as ArmourPlate;
             gearUi.SetTypeText(plate.Protection + " Armour");
@@ -69,7 +69,7 @@ namespace Facilitating.UIControllers
             UpdatePlates();
         }
 
-        public override void CompareTo(GearItem comparisonItem)
+        public override void CompareTo(InventoryItem comparisonItem)
         {
         }
 
@@ -77,9 +77,9 @@ namespace Facilitating.UIControllers
         {
         }
 
-        public override List<GearItem> GetAvailableGear()
+        public override List<InventoryItem> GetAvailableGear()
         {
-            return new List<GearItem>(CharacterManager.Armour);
+            return new List<InventoryItem>(CharacterManager.Armour);
         }
 
         public override void Equip(int selectedGear)

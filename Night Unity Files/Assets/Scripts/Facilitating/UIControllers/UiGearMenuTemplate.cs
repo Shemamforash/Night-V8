@@ -11,7 +11,7 @@ namespace Facilitating.UIControllers
         protected Player CurrentPlayer;
 
         public abstract bool GearIsAvailable();
-        public abstract void SelectGearItem(GearItem item, UiGearMenuController.GearUi gearUi);
+        public abstract void SelectGearItem(InventoryItem item, UiGearMenuController.GearUi gearUi);
 
         public virtual void Show(Player player)
         {
@@ -25,9 +25,9 @@ namespace Facilitating.UIControllers
             gameObject.SetActive(false);
         }
 
-        public abstract void CompareTo(GearItem comparisonItem);
+        public abstract void CompareTo(InventoryItem comparisonItem);
         public abstract void StopComparing();
-        public abstract List<GearItem> GetAvailableGear();
+        public abstract List<InventoryItem> GetAvailableGear();
         public abstract void Equip(int selectedGear);
         public abstract Button GetGearButton();
     }

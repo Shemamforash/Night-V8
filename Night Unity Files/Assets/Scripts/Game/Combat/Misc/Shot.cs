@@ -188,7 +188,7 @@ namespace Game.Combat.Misc
 
                 if (Random.Range(0f, 1f) < _burnChance) FireBehaviour.Create(transform.position, 1f);
                 OnHitAction?.Invoke();
-                EnemyBehaviour b = other.GetComponent<EnemyBehaviour>();
+                CharacterCombat b = other.GetComponent<CharacterCombat>();
                 if (b != null) ApplyDamage(b);
             }
 

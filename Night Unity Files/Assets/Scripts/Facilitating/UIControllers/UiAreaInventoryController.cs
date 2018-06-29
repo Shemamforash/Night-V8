@@ -25,8 +25,8 @@ public class UiAreaInventoryController : Menu, IInputListener
     {
         base.Awake();
         _instance = this;
-        _playerInventory.Initialise(Helper.FindChildWithName(gameObject, "Player"));
-        _worldInventory.Initialise(Helper.FindChildWithName(gameObject, "World"));
+        _playerInventory.Initialise(Helper.FindChildWithName(gameObject, "Player"), _worldInventory);
+        _worldInventory.Initialise(Helper.FindChildWithName(gameObject, "World"), _playerInventory);
     }
 
     private void OnDestroy()
@@ -38,7 +38,10 @@ public class UiAreaInventoryController : Menu, IInputListener
     {
         base.Enter();
         _selectedInventory = _playerInventory;
-        _selectedInventory.SetActive(_showPlayerInventoryOnly ? null : _worldInventory);
+        if (_showPlayerInventoryOnly)
+            _selectedInventory.SetActiveAlone();
+        else
+            _selectedInventory.SetActive();
         InputHandler.SetCurrentListener(this);
     }
 
@@ -70,7 +73,7 @@ public class UiAreaInventoryController : Menu, IInputListener
         {
             _showPlayerInventoryOnly = false;
             _instance._playerInventory.SetInventory(CharacterManager.SelectedCharacter.Inventory());
-            _instance._worldInventory.SetInventory(nearestContainer.Inventory);
+            _instance._worldInventory.SetInventory(nearestContainer.Inventory());
             MenuStateMachine.ShowMenu("Inventory");
         }
         else
@@ -101,12 +104,12 @@ public class UiAreaInventoryController : Menu, IInputListener
                 if (direction > 0 && _selectedInventory == _worldInventory)
                 {
                     _selectedInventory = _playerInventory;
-                    _selectedInventory.SetActive(_worldInventory);
+                    _selectedInventory.SetActive();
                 }
                 else if (direction < 0 && _selectedInventory == _playerInventory)
                 {
                     _selectedInventory = _worldInventory;
-                    _selectedInventory.SetActive(_playerInventory);
+                    _selectedInventory.SetActive();
                 }
 
                 break;
@@ -146,6 +149,7 @@ public class UiAreaInventoryController : Menu, IInputListener
         private Inventory _inventory;
         private readonly List<ItemUi> _gearUis = new List<ItemUi>();
         private CanvasGroup _canvasGroup;
+        private AreaInventory _otherInventory;
 
         public void TrySelectItemBelow()
         {
@@ -161,11 +165,16 @@ public class UiAreaInventoryController : Menu, IInputListener
             SelectItem();
         }
 
-        public void SetActive(AreaInventory inventory)
+        public void SetActive()
         {
             _canvasGroup.alpha = 1f;
-            if (inventory == null) return;
-            inventory._canvasGroup.alpha = 0.4f;
+            _otherInventory._canvasGroup.alpha = 0.4f;
+        }
+
+        public void SetActiveAlone()
+        {
+            _canvasGroup.alpha = 1f;
+            _otherInventory._canvasGroup.alpha = 0f;
         }
 
         public void SetInventory(Inventory inventory)
@@ -249,8 +258,9 @@ public class UiAreaInventoryController : Menu, IInputListener
             }
         }
 
-        public void Initialise(GameObject listObject)
+        public void Initialise(GameObject listObject, AreaInventory other)
         {
+            _otherInventory = other;
             _canvasGroup = listObject.GetComponent<CanvasGroup>();
             for (int i = 0; i < 7; ++i)
             {

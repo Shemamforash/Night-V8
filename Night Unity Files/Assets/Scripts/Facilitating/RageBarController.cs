@@ -10,7 +10,6 @@ namespace Facilitating
     public class RageBarController : MonoBehaviour
     {
         private static float _barFillAmount;
-        private static ParticleSystem _rageFire;
         private static List<Image> RoseProngs;
         private static Image _dashFlash;
         private static RageBarController _instance;
@@ -23,7 +22,6 @@ namespace Facilitating
             RoseProngs = new List<Image>();
             _instance = this;
             _dashFlash = Helper.FindChildWithName<Image>(gameObject, "Ready");
-            _rageFire = Helper.FindChildWithName<ParticleSystem>(gameObject, "Rage Fire");
             _dashRing = Helper.FindChildWithName<Image>(gameObject, "Ring");
         }
 

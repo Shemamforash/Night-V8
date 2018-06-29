@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using DG.Tweening;
 using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
 {
@@ -20,6 +23,9 @@ namespace Game.Exploration.Environment
         public static bool DontShowHiddenNodes = true;
         private float nextRouteTime = 0.3f;
         private static readonly List<GameObject> _routeTrails = new List<GameObject>();
+        private List<Tuple<Region, Region>> _allRoutes = new List<Tuple<Region, Region>>();
+        private readonly Queue<Tuple<Region, Region>> _undrawnRoutes = new Queue<Tuple<Region, Region>>();
+        private float currentTime;
 
         public void Awake()
         {
@@ -28,6 +34,59 @@ namespace Game.Exploration.Environment
             storedNodes.ForEach(n => n.CreateObject());
             CreateMapRings();
             UpdateNodeColor();
+            CreateRouteLinks();
+        }
+
+        private void CreateRouteLinks()
+        {
+            List<Region> _discovered = DiscoveredNodes();
+            foreach (Region from in _discovered)
+            {
+                foreach (Region to in _discovered)
+                {
+                    if (!from.Neighbors().Contains(to)) continue;
+                    _allRoutes.Add(Tuple.Create(from, to));
+                }
+            }
+        }
+
+        private void DrawBasicRoutes()
+        {
+            if (_undrawnRoutes.Count == 0)
+            {
+                Helper.Shuffle(ref _allRoutes);
+                _allRoutes.ForEach(a => _undrawnRoutes.Enqueue(a));
+            }
+
+            currentTime += Time.deltaTime;
+            if (currentTime < 1f / _allRoutes.Count) return;
+            Tuple<Region, Region> link = _undrawnRoutes.Dequeue();
+            Region from = link.Item1;
+            Region to = link.Item2;
+            GameObject g = Instantiate(Resources.Load<GameObject>("Prefabs/Borders/Path Trail Faded"));
+            Vector3[] rArr = new Vector3[Random.Range(2, 6)];
+            for (int j = 0; j < rArr.Length; ++j)
+            {
+                if (j == 0)
+                {
+                    rArr[j] = from.Position;
+                    continue;
+                }
+
+                if (j == rArr.Length - 1)
+                {
+                    rArr[j] = to.Position;
+                    continue;
+                }
+
+                float normalisedDistance = (float) j / rArr.Length;
+                Vector2 pos = AdvancedMaths.PointAlongLine(from.Position, to.Position, normalisedDistance);
+                pos = AdvancedMaths.RandomVectorWithinRange(pos, Random.Range(0.1f, 0.1f));
+                rArr[j] = pos;
+            }
+            g.transform.position = from.Position;
+            g.transform.DOPath(rArr, Random.Range(2, 5), PathType.CatmullRom, PathMode.TopDown2D);
+            currentTime = 0f;
         }
 
         private void CreateMapRings()
@@ -35,7 +94,7 @@ namespace Game.Exploration.Environment
             GameObject ringPrefab = Resources.Load<GameObject>("Prefabs/Map/Map Ring");
             for (int i = 1; i <= 10; ++i)
             {
-                int ringRadius = i * MapGenerator.MinRadius;
+                int ringRadius = i * MinRadius;
                 GameObject ring = Instantiate(ringPrefab, transform.position, ringPrefab.transform.rotation);
                 ring.transform.SetParent(transform);
                 ring.name = "Ring: distance " + i + " hours";
@@ -73,6 +132,7 @@ namespace Game.Exploration.Environment
 
             ConnectNodes();
 
+            RegionManager.GetRegionType(initialNode);
             initialNode.Discover();
 //            regions.ForEach(r => r.Discover());
         }
@@ -128,7 +188,7 @@ namespace Game.Exploration.Environment
             Camera.main.GetComponent<FitScreenToRoute>().FitRoute(route);
         }
 
-        private void DrawRoute()
+        private void DrawTargetRoute()
         {
             if (route.Count <= 1) return;
             nextRouteTime -= Time.deltaTime;
@@ -160,8 +220,9 @@ namespace Game.Exploration.Environment
 
         public void Update()
         {
+            DrawBasicRoutes();
             if (route == null || route.Count == 1) return;
-            DrawRoute();
+            DrawTargetRoute();
         }
 
         public static List<Region> GetVisibleNodes(Region origin)
@@ -175,7 +236,7 @@ namespace Game.Exploration.Environment
 
         public static List<Region> DiscoveredNodes()
         {
-            return storedNodes.FindAll(n => n.Discovered());
+            return storedNodes.FindAll(n => n.Seen());
         }
 
         public static void UpdateNodeColor()

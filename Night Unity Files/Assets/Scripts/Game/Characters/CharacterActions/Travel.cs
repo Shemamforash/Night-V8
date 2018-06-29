@@ -3,6 +3,7 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.WorldEvents;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
 namespace Game.Characters.CharacterActions
@@ -28,7 +29,7 @@ namespace Game.Characters.CharacterActions
                 ++TimeSpentTravelling;
                 if (TimeSpentTravelling == WorldState.MinutesPerHour)
                 {
-                    PlayerCharacter.Travel();
+                    PlayerCharacter.Tire();
                     TimeSpentTravelling = 0;
                 }
 
@@ -60,6 +61,13 @@ namespace Game.Characters.CharacterActions
                 CurrentNode.Discover();
                 CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Enter();
             }
+        }
+
+        public int GetTimeRemaining()
+        {
+            int remainingEndurance = (int) PlayerCharacter.Attributes.Val(AttributeType.Endurance);
+            int remainingTime = remainingEndurance * WorldState.MinutesPerHour - TimeSpentTravelling % WorldState.MinutesPerHour;
+            return remainingTime;
         }
 
         protected override void OnClick()
@@ -102,6 +110,7 @@ namespace Game.Characters.CharacterActions
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             _inTransit = true;
             _target = target;
             Duration = duration;

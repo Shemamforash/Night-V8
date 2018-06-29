@@ -9,13 +9,18 @@ namespace Game.Combat.Generation
 
         public Loot(Vector2 position, string name) : base(position, name)
         {
-            Inventory.SetReadonly(true);
+            _inventory.SetReadonly(true);
         }
 
         public void AddToInventory(InventoryItem item)
         {
             IsValid = true;
-            Inventory.Move(item, 1);
+            _inventory.Move(item, 1);
+        }
+
+        public void IncrementResource(string name, int amount)
+        {
+            _inventory.IncrementResource(name, amount);
         }
     }
 }

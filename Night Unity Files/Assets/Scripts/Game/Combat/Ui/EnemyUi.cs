@@ -61,13 +61,13 @@ namespace Game.Combat.Ui
 
         public override UIHealthBarController GetHealthController(CharacterCombat enemy)
         {
-            return enemy != _selectedEnemy ? null : _healthBarController;
+            return enemy != _selectedEnemy ? null : base.GetHealthController(enemy);
         }
 
         public override UIArmourController GetArmourController(Character character)
         {
             if (_selectedEnemy == null) return null;
-            return character != _selectedEnemy.Enemy ? null : _armourController;
+            return character != _selectedEnemy.Enemy ? null : base.GetArmourController(character);
         }
     }
 }

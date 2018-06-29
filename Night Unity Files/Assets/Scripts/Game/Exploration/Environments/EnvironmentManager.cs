@@ -102,5 +102,10 @@ namespace Game.Exploration.Environment
             Weather.Weather currentWeather = WeatherManager.CurrentWeather();
             return currentEnvironment.GetTemperature() + currentWeather.Temperature();
         }
+
+        public static bool BelowFreezing()
+        {
+            return _temperatureCategory == TemperatureCategory.Cold || _temperatureCategory == TemperatureCategory.Freezing;
+        }
     }
 }

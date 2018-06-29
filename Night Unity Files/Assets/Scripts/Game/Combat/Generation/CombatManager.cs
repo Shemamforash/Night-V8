@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies;
+using Game.Combat.Enemies.Animals;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -11,8 +11,10 @@ using Game.Exploration.Weather;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Generation
 {
@@ -75,7 +77,7 @@ namespace Game.Combat.Generation
             _inCombat = true;
             WorldState.Pause();
             Weather currentWeather = WeatherManager.CurrentWeather();
-            _visibilityRange = 10f * (currentWeather?.GetVisibility() ?? 0.5f);
+            _visibilityRange = 7f * (currentWeather?.GetVisibility() ?? 0.5f);
             _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
 
             GameObject worldObject = GameObject.Find("World");
@@ -112,7 +114,66 @@ namespace Game.Combat.Generation
 
             PlayerCombat.Instance.Initialise();
             _cooldowns.Clear();
-            _currentRegion.Enemies().ForEach(e => { AddEnemy(e.GetEnemyBehaviour()); });
+
+            List<List<EnemyBehaviour>> GrazerHerds = new List<List<EnemyBehaviour>>();
+            List<EnemyBehaviour> currentGrazerHerd = new List<EnemyBehaviour>();
+            List<List<EnemyBehaviour>> FlitHerds = new List<List<EnemyBehaviour>>();
+            List<EnemyBehaviour> currentFlitHerd = new List<EnemyBehaviour>();
+            Queue<EnemyBehaviour> watchers = new Queue<EnemyBehaviour>();
+
+            _currentRegion.Enemies().ForEach(e =>
+            {
+                EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
+                AddEnemy(enemyBehaviour);
+                switch (e.Template.EnemyType)
+                {
+                    case EnemyType.Grazer:
+                        if (currentGrazerHerd.Count == 0)
+                            GrazerHerds.Add(currentGrazerHerd);
+                        currentGrazerHerd.Add(enemyBehaviour);
+                        if (Random.Range(3, 6) >= currentGrazerHerd.Count)
+                            currentGrazerHerd = new List<EnemyBehaviour>();
+                        break;
+                    case EnemyType.Flit:
+                        if (currentFlitHerd.Count == 0)
+                            FlitHerds.Add(currentFlitHerd);
+                        currentFlitHerd.Add(enemyBehaviour);
+                        if (Random.Range(5, 12) >= currentFlitHerd.Count)
+                            currentFlitHerd = new List<EnemyBehaviour>();
+                        break;
+                    case EnemyType.Watcher:
+                        watchers.Enqueue(enemyBehaviour);
+                        break;
+                }
+            });
+            while (watchers.Count > 0)
+            {
+                foreach (List<EnemyBehaviour> herd in GrazerHerds)
+                {
+                    herd.Add(watchers.Dequeue());
+                    if (watchers.Count == 0) break;
+                }
+            }
+
+            PositionHerds(GrazerHerds, 2);
+            PositionHerds(FlitHerds, 1);
+        }
+
+        private static void PositionHerds(List<List<EnemyBehaviour>> herds, float range)
+        {
+            herds.ForEach(herd =>
+            {
+                List<EnemyBehaviour> leaders = herd.FindAll(enemyBehaviour => enemyBehaviour is Watcher);
+                leaders.ForEach(l => herd.Remove(l));
+                Vector3 animalSpawnPosition = PathingGrid.GetCellNearMe(Vector2.zero, 8f, 4f).Position;
+                List<Cell> cells = PathingGrid.GetCellsNearMe(PathingGrid.WorldToCellPosition(animalSpawnPosition), herd.Count, range);
+                for (int i = 0; i < cells.Count; ++i)
+                {
+                    herd[i].transform.position = cells[i].Position;
+                    if (leaders.Count == 0) return;
+                    ((Grazer) herd[i]).SetLeader(Helper.RandomInList(leaders));
+                }
+            });
         }
 
         public static void ExitCombat()

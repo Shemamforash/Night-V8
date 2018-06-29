@@ -5,6 +5,7 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
+using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
@@ -33,7 +34,7 @@ namespace Game.Gear.Weapons
             AddMod(AttributeType.Accuracy, _durabilityModifier);
             MaxDurability = ((int) weapon.Quality() + 1) * 10;
             Durability = new Number(MaxDurability, 0, MaxDurability);
-            Set(AttributeType.Accuracy, 0, 0, 100);
+            SetMax(AttributeType.Accuracy, 100);
         }
 
         public XmlNode Save(XmlNode root, PersistenceType saveType)
@@ -45,33 +46,19 @@ namespace Game.Gear.Weapons
             return root;
         }
 
-        public void SetDurability(int value)
-        {
-            Durability.SetCurrentValue(value);
-            RecalculateAttributeValues();
-        }
-
         public void SetClass(WeaponClass weaponClass)
         {
-            Set(AttributeType.FireRate, weaponClass.FireRate);
-            Set(AttributeType.ReloadSpeed, weaponClass.ReloadSpeed);
-            Set(AttributeType.Damage, weaponClass.Damage);
-            Set(AttributeType.Handling, weaponClass.Handling);
-            Set(AttributeType.Capacity, weaponClass.Capacity);
-            Set(AttributeType.Pellets, weaponClass.Pellets);
-            Set(AttributeType.Accuracy, weaponClass.Accuracy);
+            SetVal(AttributeType.FireRate, weaponClass.FireRate);
+            SetVal(AttributeType.ReloadSpeed, weaponClass.ReloadSpeed);
+            SetVal(AttributeType.Damage, weaponClass.Damage);
+            SetVal(AttributeType.Handling, weaponClass.Handling);
+            SetVal(AttributeType.Capacity, weaponClass.Capacity);
+            SetVal(AttributeType.Pellets, weaponClass.Pellets);
+            SetVal(AttributeType.Accuracy, weaponClass.Accuracy);
             WeaponType = weaponClass.Type;
             Automatic = weaponClass.Automatic;
             WeaponClassName = weaponClass.Name;
             RecalculateAttributeValues();
-        }
-
-        public void SetInscription(Inscription inscription)
-        {
-//            inscription.ApplyToGear(this);
-//            ModifierName = inscription.Name;
-//            ModifierDescription = inscription.GetDescription();
-//            RecalculateAttributeValues();
         }
 
         public WeaponClassType GetWeaponClass() => WeaponClassName;

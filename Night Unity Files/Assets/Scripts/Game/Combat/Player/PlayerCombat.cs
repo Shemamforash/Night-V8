@@ -8,6 +8,7 @@ using Facilitating.UIControllers;
 using Fastlights;
 using Game.Characters;
 using Game.Combat.Enemies;
+using Game.Combat.Enemies.Animals;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
@@ -227,18 +228,12 @@ namespace Game.Combat.Player
             CombatManager.ExitCombat();
         }
 
-        private void CheckForEnemiesOnScreen()
-        {
-//            PlayerUi.Instance().SetAlpha(CombatManager.AllEnemiesDead() ? 0 : 1);
-        }
-
         public override void Update()
         {
             if (!CombatManager.InCombat()) return;
             base.Update();
             FollowTarget();
             TransitionOffScreen();
-            CheckForEnemiesOnScreen();
             _adrenalineLevel.Increment(_adrenalineGain);
             UpdateMuzzleFlash();
         }
@@ -266,7 +261,7 @@ namespace Game.Combat.Player
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
             _initialArmour = Player.ArmourController.GetProtectionLevel();
 
-            PlayerUi.Instance()._armourController.TakeDamage(ArmourController);
+            CharacterUi.GetArmourController(Player).TakeDamage(ArmourController);
             Speed = Player.Attributes.CalculateSpeed();
 
             _adrenalineGain = Player.Attributes.CalculateAdrenalineRecoveryRate();
@@ -332,6 +327,8 @@ namespace Game.Combat.Player
         {
             if (_lockedTarget != null) return;
             if (e != null && !Helper.IsObjectInCameraView(e.gameObject)) return;
+            Flit flit = e as Flit;
+            if (flit != null && !flit.Discovered()) return;
             TargetBehaviour.SetTarget(e == null ? null : e.transform);
             _currentTarget = e;
             EnemyUi.Instance().SetSelectedEnemy(e);

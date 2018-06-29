@@ -10,16 +10,16 @@ namespace Game.Combat.Generation
         public FoodSource(Vector2 position) : base(position, "")
         {
             _foodType = ResourceTemplate.GetPlant().Name;
-            Inventory.Name = _foodType;
-            Inventory.IncrementResource(_foodType, 1);
-            Inventory.SetReadonly(true);
+            _inventory.Name = _foodType;
+            _inventory.IncrementResource(_foodType, 1);
+            _inventory.SetReadonly(true);
         }
 
         public void Change(int polarity)
         {
-            int quantity = Inventory.GetResourceQuantity(_foodType); 
-            if (polarity < 0 && quantity == 1) Inventory.DecrementResource(_foodType, 1);
-            else if(polarity > 0 && quantity == 0) Inventory.IncrementResource(_foodType, 1);
+            int quantity = _inventory.GetResourceQuantity(_foodType); 
+            if (polarity < 0 && quantity == 1) _inventory.DecrementResource(_foodType, 1);
+            else if(polarity > 0 && quantity == 0) _inventory.IncrementResource(_foodType, 1);
         }
     }
 }

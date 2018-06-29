@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
 using Game.Gear.Weapons;
 using Game.Global;
-using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
@@ -22,7 +20,7 @@ namespace Game.Gear
         private readonly InscriptionTemplate _template;
         private readonly InscriptionTier _tier;
 
-        private Inscription(InscriptionTemplate template, InscriptionTier tier) : base(template.Name, GameObjectType.Gear)
+        private Inscription(InscriptionTemplate template, InscriptionTier tier) : base("A " + tier + " of " + template.Name, GameObjectType.Gear)
         {
             _template = template;
             _modifier = _template.GetModifier();
@@ -34,7 +32,6 @@ namespace Game.Gear
             rawBonus *= tierModifier;
             _modifier.SetFinalBonus(finalBonus);
             _modifier.SetRawBonus(rawBonus);
-            Debug.Log(GetSummary());
         }
 
         public void ApplyModifier(Character character)
@@ -139,11 +136,6 @@ namespace Game.Gear
             Bellow
         }
 
-        public string GetSummary()
-        {
-            return "A " + _tier + " of " + _template.Name;
-        }
-
         private class InscriptionTemplate
         {
             public readonly string Name;
@@ -167,6 +159,21 @@ namespace Game.Gear
                 else modifier.SetFinalBonus(_modifierValue);
                 return modifier;
             }
+
+            public string GetSummary()
+            {
+                if (_additive)
+                {
+                    return "+" + _modifierValue + " " + AttributeTarget;
+                }
+
+                return "+" + (int) (_modifierValue * 100) + "% " + AttributeTarget;
+            }
+        }
+
+        public string GetSummary()
+        {
+            return Name + "\n" + _template.GetSummary();
         }
     }
 }

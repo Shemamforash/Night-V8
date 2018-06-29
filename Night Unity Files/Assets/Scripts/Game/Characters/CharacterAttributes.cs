@@ -31,22 +31,12 @@ namespace Game.Characters
         {
             _player = player;
 
-            Set(AttributeType.EssenceLossBonus, 1);
-            Set(AttributeType.SkillRechargeBonus, 1);
-            Set(AttributeType.AdrenalineRechargeBonus, 1);
+            SetVal(AttributeType.EssenceLossBonus, 1);
+            SetVal(AttributeType.SkillRechargeBonus, 1);
+            SetVal(AttributeType.AdrenalineRechargeBonus, 1);
 
-            Set(AttributeType.Hunger, 0, 0, 10);
-            Set(AttributeType.Thirst, 0, 0, 10);
-        }
-
-        public float GetSkillRechargeModifier()
-        {
-            return Mathf.Pow(0.95f, Val(AttributeType.Willpower));
-        }
-
-        public float GetGunDamageModifier()
-        {
-            return Mathf.Pow(1.05f, Val(AttributeType.Perception));
+            SetMax(AttributeType.Hunger, 10);
+            SetMax(AttributeType.Thirst, 10);
         }
 
         public void IncreaseEnduranceMax(int amount)
@@ -131,7 +121,6 @@ namespace Game.Characters
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
 
             float thirstIncrementAmount = thirstTemperatureModifier / 12f;
             float hungerIncrementAmount = hungerTemperatureModifier / 24f;

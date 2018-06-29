@@ -7,12 +7,7 @@
             DisplayName = "Resting";
             ShowTime = false;
             IsVisible = false;
-            HourCallback = () =>
-            {
-                playerCharacter.Rest(1);
-                string storyProgress = playerCharacter.GetCurrentStoryProgress();
-//            todo    if (storyProgress != null) WorldEventManager.GenerateEvent(new WorldEvent(storyProgress));
-            };
+            HourCallback = playerCharacter.Rest;
         }
     }
 }

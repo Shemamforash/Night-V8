@@ -28,6 +28,7 @@
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
         <e p="EssenceCloudBehaviour.cs" t="Include" />
+        <e p="GameOverUiController.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
         <e p="HealShrineBehaviour.cs" t="Include" />
         <e p="Mine.cs" t="Include" />
@@ -76,7 +77,6 @@
               <e p="DayChangeSequence.cs" t="Include" />
               <e p="Highlight.cs" t="Include" />
               <e p="ManualScrollbar.cs" t="Include" />
-              <e p="PermadeathToggler.cs" t="Include" />
               <e p="RefocusKeyboardInput.cs" t="Include" />
               <e p="Toggler.cs" t="Include" />
               <e p="WindowSizer.cs" t="Include" />
@@ -118,7 +118,9 @@
                 <e p="Consume.cs" t="Include" />
                 <e p="Craft.cs" t="Include" />
                 <e p="LightFire.cs" t="Include" />
+                <e p="Meditate.cs" t="Include" />
                 <e p="Rest.cs" t="Include" />
+                <e p="Sleep.cs" t="Include" />
                 <e p="Travel.cs" t="Include" />
               </e>
               <e p="CharacterAttributes.cs" t="Include" />

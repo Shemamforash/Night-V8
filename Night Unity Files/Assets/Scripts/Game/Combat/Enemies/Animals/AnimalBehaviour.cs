@@ -15,7 +15,7 @@ namespace Game.Combat.Enemies.Nightmares
             AlertAll = false;
         }
         
-        protected void Flee()
+        protected virtual void Flee()
         {
             Cell target = PathingGrid.GetCellOutOfRange();
             Reposition(target, () => StartCoroutine(FleeArea()));

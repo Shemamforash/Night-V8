@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -7,7 +6,6 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
-using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
@@ -24,7 +22,6 @@ namespace Game.Gear.Weapons
         public Weapon(string name, float weight, ItemQuality _itemQuality) : base(name, GearSubtype.Weapon, _itemQuality)
         {
             WeaponAttributes = new WeaponAttributes(this);
-//            Durability.OnMin(() => { _canEquip = false; });
         }
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
@@ -39,6 +36,14 @@ namespace Game.Gear.Weapons
             float range = WeaponAttributes.Val(AttributeType.Accuracy) / 100f;
             float idealDistance = (RangeMax - RangeMin) * range + RangeMin;
             return idealDistance;
+        }
+
+        public void SetInscription(Inscription inscription)
+        {
+            _inscription?.RemoveModifier(this);
+            _inscription = inscription;
+            _inscription.ParentInventory.DestroyItem(inscription);
+            inscription.ApplyModifier(this);
         }
 
         public float CalculateBaseAccuracy()
@@ -97,6 +102,7 @@ namespace Game.Gear.Weapons
                     weaponBehaviour = player.gameObject.AddComponent<DefaultBehaviour>();
                     break;
             }
+
             weaponBehaviour.Initialise(player.Weapon());
             return weaponBehaviour;
         }
@@ -126,8 +132,8 @@ namespace Game.Gear.Weapons
             base.Unequip();
             UnapplyInscription();
         }
-        
-        private  void ApplyInscription()
+
+        private void ApplyInscription()
         {
             if (_inscription == null) return;
             _inscription.ApplyModifier(this);
@@ -139,6 +145,11 @@ namespace Game.Gear.Weapons
             if (_inscription == null) return;
             _inscription.RemoveModifier(this);
             _inscription.RemoveModifier(_character);
+        }
+
+        public Inscription GetInscription()
+        {
+            return _inscription;
         }
     }
 }

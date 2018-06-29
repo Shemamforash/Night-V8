@@ -30,7 +30,7 @@ namespace Game.Combat.Misc
             _playerCharacter = CharacterManager.GenerateRandomCharacter();
             _playerCharacter.Inventory().AddTestingResources(5);
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Radiant, _instance.WeaponClass);
-            weapon.WeaponAttributes.SetDurability(_instance.Durability);
+//            weapon.WeaponAttributes.SetDurability(_instance.Durability);
             _playerCharacter.EquipWeapon(weapon);
             CharacterManager.SelectedCharacter = _playerCharacter;
             Region node = new Region();

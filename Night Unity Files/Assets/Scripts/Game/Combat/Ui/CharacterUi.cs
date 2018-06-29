@@ -8,14 +8,12 @@ namespace Game.Combat.Ui
 {
     public class CharacterUi : MonoBehaviour
     {
-        public UIArmourController _armourController;
+        protected UIArmourController _armourController;
         protected UIHealthBarController _healthBarController;
         protected CanvasGroup CanvasGroup;
 
         public virtual void Awake()
         {
-            _armourController = Helper.FindChildWithName<UIArmourController>(gameObject, "Armour");
-            _healthBarController = Helper.FindChildWithName<UIHealthBarController>(gameObject, "Health");
             CanvasGroup = GetComponent<CanvasGroup>();
         }
 
@@ -23,14 +21,16 @@ namespace Game.Combat.Ui
         {
             CanvasGroup.alpha = a;
         }
-        
+
         public virtual UIHealthBarController GetHealthController(CharacterCombat enemy)
         {
+            if (_healthBarController == null) _healthBarController = Helper.FindChildWithName<UIHealthBarController>(gameObject, "Health");
             return _healthBarController;
         }
 
         public virtual UIArmourController GetArmourController(Character character)
         {
+            if (_armourController == null) _armourController = Helper.FindChildWithName<UIArmourController>(gameObject, "Armour");
             return _armourController;
         }
     }

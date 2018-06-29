@@ -15,11 +15,9 @@ namespace Game.Global
             _attributes.Add(attributeType, new CharacterAttribute(attributeType));
         }
 
-        public void Set(AttributeType type, float value, float min = 0, float max = float.MaxValue)
+        public void SetVal(AttributeType type, float value)
         {
             CharacterAttribute attribute = Get(type);
-            attribute.Min = 0;
-            attribute.Max = max;
             attribute.SetCurrentValue(value);
         }
         

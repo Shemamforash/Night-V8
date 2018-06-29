@@ -1,5 +1,6 @@
 ﻿using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SamsHelper
 {
@@ -19,10 +20,7 @@ namespace SamsHelper
             _lineRenderer.positionCount = Segments + Overlap;
             _lineRenderer.useWorldSpace = false;
             _angleDelta = 2 * Mathf.PI / Segments;
-            if (_lineRenderer.material == null)
-            {
-                _lineRenderer.material= new Material(Shader.Find("Unlit/Texture"));
-            }
+            Assert.IsNotNull(_lineRenderer.material);
         }
 
         public void SetLineWidth(float lineWidth)

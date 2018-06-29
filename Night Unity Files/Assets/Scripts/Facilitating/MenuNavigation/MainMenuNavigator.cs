@@ -35,11 +35,6 @@ namespace Facilitating.MenuNavigation
             SceneManager.LoadScene("Game");
         }
 
-        public void GoToNewGameMenu()
-        {
-            MenuStateMachine.ShowMenu("Difficulty Menu");
-        }
-
         public void ContinueGame()
         {
             if (SaveController.SaveExists())
@@ -54,10 +49,10 @@ namespace Facilitating.MenuNavigation
             }
         }
 
-        public void SetDifficulty(GameObject btn)
+        public void ShowMenu(Menu menu)
         {
-            string btnDifficulty = btn.transform.Find("Text").GetComponent<TextMeshProUGUI>().text.ToLower();
-            GameData.SetDifficultyFromString(btnDifficulty);
+            MenuStateMachine.ShowMenu(menu.name);
         }
+
     }
 }

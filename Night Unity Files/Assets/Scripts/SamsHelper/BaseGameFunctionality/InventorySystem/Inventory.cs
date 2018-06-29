@@ -130,7 +130,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             Debug.Log(contents);
         }
-
+        
         public virtual void Load(XmlNode root, PersistenceType saveType)
         {
             if (saveType != PersistenceType.Game) return;
@@ -186,9 +186,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return item;
         }
 
-        private bool InventoryHasSpace(int weight)
+        public bool InventoryHasSpace(int quantity = 1)
         {
-            int newWeight = _currentWeight + weight;
+            int newWeight = _currentWeight + quantity;
             return newWeight <= _maxWeight || !_isWeightLimited;
         }
 
@@ -271,7 +271,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         //Returns item in target inventory if the item was successfully moved
         private void Move(InventoryItem item)
         {
-            if (!InventoryHasSpace(1)) return;
+            if (!InventoryHasSpace()) return;
             Inventory parent = item.ParentInventory;
             if (ParentInventory != null) Debug.Log(item.Name + " " + item.ParentInventory.Name);
             InventoryItem movedItem = parent == null ? item : parent.RemoveItem(item);
@@ -301,7 +301,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public void MoveAllResources(Inventory target)
         {
-            foreach (InventoryItem resource in _resources.Values) target.Move(resource, Mathf.FloorToInt(resource.Quantity()));
+            List<InventoryItem> resources = _resources.Values.ToList();
+            for (int i = resources.Count - 1; i >= 0; --i)
+            {
+                target.Move(resources[i], Mathf.FloorToInt(resources[i].Quantity()));
+            }
         }
 
         private void LoadResource(string type, XmlNode root)
@@ -314,7 +318,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             SaveController.CreateNodeAndAppend(type, root, GetResourceQuantity(type));
         }
 
-        public void DestroyItem(InventoryItem item)
+        public virtual void DestroyItem(InventoryItem item)
         {
             _items.Remove(item);
         }

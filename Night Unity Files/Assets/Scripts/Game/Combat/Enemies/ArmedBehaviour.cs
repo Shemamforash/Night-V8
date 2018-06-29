@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Game.Combat.Enemies.Humans;
+﻿using Game.Combat.Enemies.Humans;
 using Game.Combat.Generation;
-using Game.Combat.Misc;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;

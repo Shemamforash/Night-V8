@@ -23,25 +23,6 @@ namespace Game.Characters
             unlockAction();
         }
 
-        public void IncreaseTimeSpentHighCapacity()
-        {
-            ++_hoursAtHighWeight;
-        }
-
-        public void IncreaseTimeSpentLowCapacity()
-        {
-            ++_hoursAtLowWeight;
-        }
-
-        public void IncreaseIdleTime()
-        {
-            ++_hoursIdling;
-        }
-
-        public void IncreaseTravelTime()
-        {
-            ++_hoursTravelling;
-        }
     }
 
     public enum BrandType

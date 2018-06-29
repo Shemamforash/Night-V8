@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Combat.Ui;
@@ -30,7 +31,7 @@ namespace Game.Combat.Misc
 
         public bool IsDead;
         protected bool IsImmobilised;
-        protected bool KnockedBack;
+        protected CharacterUi CharacterUi;
 
         protected bool FireImmune, SicknessImmune, DecayImmune;
 
@@ -49,7 +50,7 @@ namespace Game.Combat.Misc
             if (FireImmune) return;
             if (_burnTicks == 0) _burnDuration = 1;
             _burnTicks = ConditionTicksMax;
-            if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StartBurning();
+            CharacterUi.GetHealthController(this).StartBurning();
         }
 
         public bool IsBurning() => _burnTicks > 0;
@@ -59,7 +60,7 @@ namespace Game.Combat.Misc
             if (DecayImmune) return;
             if (_decayTicks == 0) _decayDuration = 1;
             _decayTicks = ConditionTicksMax;
-            if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StartBleeding();
+            CharacterUi.GetHealthController(this).StartBleeding();
         }
 
         public bool IsDecaying() => _decayTicks > 0;
@@ -114,7 +115,7 @@ namespace Game.Combat.Misc
             }
             else
             {
-                if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StopBurning();
+                CharacterUi.GetHealthController(this)?.StopBurning();
             }
 
             if (_decayTicks > 0)
@@ -132,10 +133,10 @@ namespace Game.Combat.Misc
             }
             else
             {
-                if (this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).StopBleeding();
+                CharacterUi.GetHealthController(this)?.StopBleeding();
             }
 
-            if(this is PlayerCombat) PlayerUi.Instance().GetHealthController(this).SetSicknessLevel((float)_sicknessTicks / SicknessTargetTicks);
+            CharacterUi.GetHealthController(this)?.SetSicknessLevel((float) _sicknessTicks / SicknessTargetTicks);
             if (_sicknessTicks > 0)
             {
                 if (_sicknessDuration > SicknessDurationMax)
@@ -180,28 +181,13 @@ namespace Game.Combat.Misc
 
         public virtual void Knockback(Vector3 source, float force = 10f)
         {
-            StartCoroutine(RecoverFromKnockback());
             Vector3 direction = (transform.position - source).normalized;
             _forceToadd = direction * force;
-        }
-
-        private IEnumerator RecoverFromKnockback()
-        {
-            KnockedBack = true;
-            float age = 0;
-            while (age < KnockbackTime)
-            {
-                age += Time.deltaTime;
-                yield return null;
-            }
-
-            KnockedBack = false;
         }
 
         public virtual void ApplyShotEffects(Shot s)
         {
         }
-
 
         public abstract Weapon Weapon();
 
@@ -217,6 +203,8 @@ namespace Game.Combat.Misc
         public virtual void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
+            if (this is EnemyBehaviour) CharacterUi = EnemyUi.Instance();
+            else CharacterUi = PlayerUi.Instance();
         }
 
         public virtual void Update()

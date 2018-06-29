@@ -65,6 +65,11 @@ namespace Game.Combat.Generation
             _ringColour.SetAlphaMultiplier(1);
         }
 
+        public void StartReveal()
+        {
+            StartCoroutine(Reveal());
+        }
+        
         private IEnumerator TryReveal()
         {
             while (true)

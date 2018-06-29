@@ -49,6 +49,9 @@ namespace Game.Characters
             Attributes.Get(AttributeType.Endurance).OnMin(RestAction.Enter);
         }
 
+        public Meditate MeditateAction;
+        public Sleep SleepAction;
+
 //        public bool ConsumeResource(InventoryResourceType type, int amount)
 //        {
 //            DesolationInventory inventory = TravelAction.AtHome() ? WorldState.HomeInventory() : Inventory();
@@ -77,9 +80,10 @@ namespace Game.Characters
 
         public void Kill()
         {
-            if (SceneManager.GetActiveScene().name != "Game") return;
-            WorldState.HomeInventory().RemoveCharacter(this);
+            IsDead = true;
         }
+
+        public bool IsDead;
 
         ~Player()
         {
@@ -102,6 +106,8 @@ namespace Game.Characters
         {
             RestAction = new Rest(this);
             TravelAction = new Travel(this);
+            MeditateAction = new Meditate(this);
+            SleepAction = new Sleep(this);
             LightFireAction = new LightFire(this);
             CraftAction = new Craft(this);
             ConsumeAction = new Consume(this);
@@ -117,35 +123,48 @@ namespace Game.Characters
             }
         }
 
-        private void Tire()
+        public void Tire()
         {
-            int amount = 1;
-            Attributes.Get(AttributeType.Endurance).Decrement(amount);
+            Attributes.Get(AttributeType.Endurance).Decrement();
             if (Attributes.Val(AttributeType.Endurance) <= 1)
             {
                 WorldEventManager.GenerateEvent(new CharacterMessage("I really need some rest", this));
             }
         }
 
-        public void Rest(int amount)
+        public void Rest()
         {
-            if (Attributes.Get(AttributeType.Endurance).ReachedMax())
-            {
-                _brandManager.IncreaseIdleTime();
-                return;
-            }
-
-            Attributes.Get(AttributeType.Endurance).Increment(amount);
-            if (Attributes.Get(AttributeType.Endurance).ReachedMax())
+            CharacterAttribute endurance = Attributes.Get(AttributeType.Endurance);
+            CharacterAttribute perception = Attributes.Get(AttributeType.Perception);
+            bool alreadyMaxEndurance = endurance.ReachedMax();
+            bool alreadyMaxPerception = perception.ReachedMax();
+            endurance.Increment();
+            perception.Increment();
+            if (!alreadyMaxEndurance && endurance.ReachedMax())
             {
                 WorldEventManager.GenerateEvent(new CharacterMessage("I ache, but I am ready", this));
             }
+
+            if (!alreadyMaxPerception && perception.ReachedMax())
+            {
+                WorldEventManager.GenerateEvent(new CharacterMessage("My mind is sharp, and my eyes keen", this));
+            }
         }
 
-        public void Travel()
+        public void Meditate()
         {
-            _brandManager.IncreaseTravelTime();
-            Tire();
+            Attributes.Get(AttributeType.Willpower).Increment();
+            if (!Attributes.Get(AttributeType.Willpower).ReachedMax()) return;
+            WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clear, I can focus now", this));
+            RestAction.Enter();
+        }
+
+        public void Sleep()
+        {
+            Attributes.Get(AttributeType.Strength).Increment();
+            if (!Attributes.Get(AttributeType.Strength).ReachedMax()) return;
+            WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clear, I can focus now", this));
+            RestAction.Enter();
         }
 
         public override void EquipWeapon(Weapon weapon)

@@ -1,5 +1,4 @@
-﻿using System;
-using Game.Characters;
+﻿using Game.Characters;
 using Game.Combat.Generation;
 using Game.Gear;
 using Game.Gear.Weapons;
@@ -21,7 +20,7 @@ namespace Game.Combat.Enemies
 
         public void GenerateWeapon(float difficulty)
         {
-            ItemQuality targetQuality = (ItemQuality) Enum.Parse(typeof(ItemQuality), Mathf.FloorToInt(difficulty * 5).ToString());
+            ItemQuality targetQuality = ItemQuality.Rusted;
             Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality);
             EquipWeapon(weapon);
         }

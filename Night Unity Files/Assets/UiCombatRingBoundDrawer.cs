@@ -4,8 +4,6 @@ using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 public class UiCombatRingBoundDrawer : MonoBehaviour {
-
-
 	public void Awake()
 	{
 		CreateRing(PathingGrid.CombatMovementDistance / 2f, 0.02f, Color.white);

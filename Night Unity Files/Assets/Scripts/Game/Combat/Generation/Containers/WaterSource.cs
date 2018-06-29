@@ -12,17 +12,17 @@ namespace Game.Combat.Generation
         {
             _capacity = Random.Range(0, 3) + 1;
             _waterType = ResourceTemplate.GetWater().Name;
-            Inventory.Name = _waterType;
-            Inventory.IncrementResource(_waterType, 1);
-            Inventory.SetReadonly(true);
+            _inventory.Name = _waterType;
+            _inventory.IncrementResource(_waterType, 1);
+            _inventory.SetReadonly(true);
             PrefabLocation = "Puddle";
         }
 
         public void Change(int polarity)
         {
-            int quantity = Inventory.GetResourceQuantity(_waterType);
-            if (polarity < 0 && quantity > 0) Inventory.DecrementResource(_waterType, 1);
-            else if (polarity > 0 && quantity < _capacity) Inventory.IncrementResource(_waterType, 1);
+            int quantity = _inventory.GetResourceQuantity(_waterType);
+            if (polarity < 0 && quantity > 0) _inventory.DecrementResource(_waterType, 1);
+            else if (polarity > 0 && quantity < _capacity) _inventory.IncrementResource(_waterType, 1);
         }
     }
 }

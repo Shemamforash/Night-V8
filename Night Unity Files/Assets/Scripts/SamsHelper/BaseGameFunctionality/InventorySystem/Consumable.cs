@@ -6,7 +6,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class Consumable : InventoryItem
     {
-        private bool _hasEffect;
+        private readonly bool _hasEffect;
         private readonly ResourceTemplate _template;
         public readonly bool IsFood;
         public readonly bool IsWater;
@@ -63,7 +63,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public void Consume(Player selectedCharacter)
         {
             ApplyEffect(selectedCharacter);
-            Decrement(1);
+            ParentInventory.DecrementResource(_template.Name, 1);
         }
     }
 }

@@ -101,6 +101,7 @@ namespace SamsHelper.ReactiveUI.Elements
                 _borderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border");
                 _basicBorderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border Basic");
             }
+
             _border = Instantiate(UseAdvancedBorder ? _borderPrefab : _basicBorderPrefab);
             _border.transform.SetParent(transform, false);
             RectTransform rect = _border.GetComponent<RectTransform>();
@@ -157,7 +158,6 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             _buttonImages.ForEach(b => b.color = new Color(1, 1, 1, _borderAlpha));
         }
-
 
         private IEnumerator FadeIn()
         {

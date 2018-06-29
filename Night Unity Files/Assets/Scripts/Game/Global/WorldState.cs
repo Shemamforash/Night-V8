@@ -7,6 +7,7 @@ using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Game.Global
 {
@@ -37,7 +38,7 @@ namespace Game.Global
         {
             _homeInventory.Start();
             if (_started) return;
-            foreach (ResourceTemplate template in ResourceTemplate.AllResources) _homeInventory.IncrementResource(template.Name, 1);
+//            foreach (ResourceTemplate template in ResourceTemplate.AllResources) _homeInventory.IncrementResource(template.Name, 1);
             _started = true;
             EnvironmentManager.Start();
             WeatherManager.Start();
@@ -46,7 +47,7 @@ namespace Game.Global
 //todo            SaveController.LoadGame();
 
 #if UNITY_EDITOR
-            _homeInventory.AddTestingResources(3, 1);
+//            _homeInventory.AddTestingResources(3, 3);
 #endif
         }
 
@@ -125,11 +126,7 @@ namespace Game.Global
         {
             WeatherManager.CurrentWeather().Update();
             EnvironmentManager.UpdateTemperature();
-            CharacterManager.Characters.ForEach(c =>
-            {
-                c.Update();
-                c.Attributes.UpdateThirstAndHunger();
-            });
+            CharacterManager.Update();
         }
 
         private void HourPasses()

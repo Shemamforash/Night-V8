@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Generation;
 using Game.Global;
@@ -17,11 +18,11 @@ public class UiConsumableController : Menu, IInputListener
     private static int centre = 4;
     private int _selectedConsumable;
     private readonly List<ConsumableUi> _consumeableUis = new List<ConsumableUi>();
-    private Player _player;
     private EnhancedButton _closeButton;
     private EnhancedButton _consumableButton;
     private bool _focussed;
     private List<Consumable> _consumables;
+    private UIConditionController _thirstController, _hungerController;
 
     public override void Awake()
     {
@@ -47,6 +48,12 @@ public class UiConsumableController : Menu, IInputListener
         InputHandler.SetCurrentListener(this);
     }
 
+    private void UpdateCondition()
+    {
+        _hungerController.UpdateHunger(CharacterManager.SelectedCharacter);
+        _thirstController.UpdateThirst(CharacterManager.SelectedCharacter);
+    }
+
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
         if (isHeld) return;
@@ -59,7 +66,6 @@ public class UiConsumableController : Menu, IInputListener
                     TrySelectItemAbove();
                 break;
             case InputAxis.Fire:
-
                 if (_focussed)
                 {
                     _consumables[_selectedConsumable].Consume(CharacterManager.SelectedCharacter);
@@ -81,40 +87,10 @@ public class UiConsumableController : Menu, IInputListener
     {
     }
 
-    private void TrySelectItemBelow()
-    {
-        if (_selectedConsumable == _consumables.Count - 1)
-        {
-            _focussed = false;
-            _closeButton.Select();
-            return;
-        }
-
-        ++_selectedConsumable;
-        SelectItem();
-    }
-
-    private void TrySelectItemAbove()
-    {
-        if (_selectedConsumable == 0)
-        {
-            _focussed = false;
-            _closeButton.Select();
-            return;
-        }
-
-        --_selectedConsumable;
-        SelectItem();
-    }
-
     private void SelectItem()
     {
+        UpdateCondition();
         _consumables = WorldState.HomeInventory().Consumables();
-        if (_consumables.Count == 0)
-        {
-            _closeButton.Select();
-            return;
-        }
 
         if (_selectedConsumable >= _consumables.Count) _selectedConsumable = _consumables.Count - 1;
         for (int i = 0; i < _consumeableUis.Count; ++i)
@@ -124,6 +100,13 @@ public class UiConsumableController : Menu, IInputListener
             Consumable consumable = null;
             if (targetConsumableIndex >= 0 && targetConsumableIndex < _consumables.Count) consumable = _consumables[targetConsumableIndex];
             _consumeableUis[i].SetConsumable(consumable);
+        }
+
+        if (_consumables.Count == 0)
+        {
+            _focussed = false;
+            _closeButton.Select();
+            return;
         }
 
         _consumableButton.Select();
@@ -150,21 +133,55 @@ public class UiConsumableController : Menu, IInputListener
 
         _closeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Close");
         _closeButton.AddOnClick(MenuStateMachine.ReturnToDefault);
-        _closeButton.SetOnUpAction(SelectLast);
-        _closeButton.SetOnDownAction(SelectFirst);
+
+        _thirstController = Helper.FindChildWithName<UIConditionController>(gameObject, "Thirst");
+        _hungerController = Helper.FindChildWithName<UIConditionController>(gameObject, "Hunger");
     }
 
-    private void SelectLast()
+    private void TrySelectItemBelow()
     {
-        if (_consumables.Count == 0) return;
-        _selectedConsumable = _consumables.Count - 1;
+        if (!_focussed)
+        {
+            SelectAtPosition(0);
+            return;
+        }
+        if (_selectedConsumable == _consumables.Count - 1)
+        {
+            _focussed = false;
+            _closeButton.Select();
+            return;
+        }
+        ++_selectedConsumable;
         SelectItem();
     }
 
-    private void SelectFirst()
+    private void TrySelectItemAbove()
     {
-        if (_consumables.Count == 0) return;
-        _selectedConsumable = 0;
+        if (!_focussed)
+        {
+            SelectAtPosition(_consumables.Count - 1);
+            return;
+        }
+        if (_selectedConsumable == 0)
+        {
+            _focussed = false;
+            _closeButton.Select();
+            return;
+        }
+
+        --_selectedConsumable;
+        SelectItem();
+    }
+
+    private void SelectAtPosition(int position)
+    {
+        if (_consumables.Count == 0)
+        {
+            _closeButton.Select();
+            return;
+        }
+
+        _selectedConsumable = position;
         SelectItem();
     }
 

@@ -8,6 +8,7 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
 using NUnit.Framework;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -116,6 +117,7 @@ namespace Game.Exploration.Ui
 
         private void TravelToRegion()
         {
+            if (!_canTravel) return;
             if (CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode() != _targetRegion)
             {
                 Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
@@ -167,10 +169,28 @@ namespace Game.Exploration.Ui
             }
         }
 
+        private bool _canTravel;
+
         private void UpdateCurrentRegionInfo(Region region)
         {
             _regionName.text = region.Name;
             _regionDescription.text = region.Description();
+            int durationTo = RoutePlotter.TimeBetween(region, _currentRegion);
+            int durationFrom = RoutePlotter.TimeBetween(region, MapGenerator.GetInitialNode());
+            int totalDuration = durationTo + durationFrom;
+            int timeRemaining = CharacterManager.SelectedCharacter.TravelAction.GetTimeRemaining();
+            int timeDifference = timeRemaining - totalDuration;
+
+            if (timeDifference < 0)
+            {
+                string enduranceCostString = "Not enough endurance to reach area";
+                _regionDescription.text = _regionDescription.text + "\n" + enduranceCostString;
+                _canTravel = false;
+            }
+            else
+            {
+                _canTravel = true;
+            }
         }
 
         private class RegionUi

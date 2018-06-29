@@ -114,6 +114,12 @@ namespace Facilitating.UIControllers
             _tabs[_currentTab].Select();
         }
 
+        public override void Enter()
+        {
+            base.Enter();
+            InputHandler.SetCurrentListener(_instance);
+        }
+
         private void OpenGearMenu(Player player, int tabNumber, UiGearMenuTemplate gearMenu)
         {
             _gearSelectAllowed = false;
@@ -123,7 +129,6 @@ namespace Facilitating.UIControllers
             {
                 MenuStateMachine.ShowMenu("Gear Menus");
                 _open = true;
-                InputHandler.SetCurrentListener(_instance);
             }
 
             _currentGearMenu = gearMenu;
@@ -166,8 +171,6 @@ namespace Facilitating.UIControllers
             DisableInput();
             _currentGearMenu.Equip(gearIndex);
             _currentGearMenu.GetGearButton().Select();
-            WorldState.HomeInventory().Print();
-            _selectedGear = 0;
         }
 
         private void InitialiseGearList()
@@ -197,6 +200,7 @@ namespace Facilitating.UIControllers
         {
             _gearSelectAllowed = false;
             _currentGearMenu.StopComparing();
+            _selectedGear = 0;
         }
 
         private void TrySelectGearBelow()
@@ -219,7 +223,7 @@ namespace Facilitating.UIControllers
             {
                 int offset = i - centre;
                 int targetGear = _selectedGear + offset;
-                GearItem gearItem = null;
+                InventoryItem gearItem = null;
                 if (targetGear >= 0 && targetGear < _currentGearMenu.GetAvailableGear().Count) gearItem = _currentGearMenu.GetAvailableGear()[targetGear];
 
                 if (i == centre && gearItem != null) _currentGearMenu.CompareTo(gearItem);
@@ -268,7 +272,7 @@ namespace Facilitating.UIControllers
                 _typeText.Text(text);
             }
 
-            public void SetGear(GearItem gearItem)
+            public void SetGear(InventoryItem gearItem)
             {
                 if (gearItem == null)
                 {

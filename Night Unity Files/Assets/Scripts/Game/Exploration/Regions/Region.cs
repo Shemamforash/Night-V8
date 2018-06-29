@@ -24,6 +24,7 @@ namespace Game.Exploration.Regions
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private RegionType _regionType;
         private bool _discovered;
+        private bool _seen;
         public List<Barrier> Barriers = new List<Barrier>();
         public List<EnemyCampfire> Fires = new List<EnemyCampfire>();
         public List<ContainerController> Containers = new List<ContainerController>();
@@ -104,7 +105,7 @@ namespace Game.Exploration.Regions
 
         public void CreateObject()
         {
-            if (!Discovered() && MapGenerator.DontShowHiddenNodes) return;
+            if (!_seen && MapGenerator.DontShowHiddenNodes) return;
             if (_nodePrefab == null) _nodePrefab = Resources.Load<GameObject>("Prefabs/Map/Node");
             GameObject nodeObject = GameObject.Instantiate(_nodePrefab);
             AssignSprite(nodeObject);
@@ -220,16 +221,34 @@ namespace Game.Exploration.Regions
 
         private void GenerateAnimalEncounter()
         {
-            for (int i = 0; i < 10; ++i)
+            switch (Random.Range(0, 3))
             {
-                AddEnemy(EnemyType.Grazer, 10);
-            }
+                case 0:
+                    for (int i = 0; i < 10; ++i)
+                    {
+                        AddEnemy(EnemyType.Grazer, 10);
+                    }
 
-            for (int i = 0; i < Random.Range(0, 3); ++i)
-            {
-                AddEnemy(EnemyType.Watcher, 10);
-                AddEnemy(EnemyType.Curio, 10);
-                AddEnemy(EnemyType.Flit, 10);
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        AddEnemy(EnemyType.Watcher, 10);
+                    }
+
+                    break;
+                case 1:
+                    for (int i = 0; i < Random.Range(1, 4); ++i)
+                    {
+                        AddEnemy(EnemyType.Curio, 10);
+                    }
+
+                    break;
+                case 2:
+                    for (int i = 0; i < 20; ++i)
+                    {
+                        AddEnemy(EnemyType.Flit, 10);
+                    }
+
+                    break;
             }
         }
 
@@ -252,13 +271,13 @@ namespace Game.Exploration.Regions
         public void Discover()
         {
             if (_discovered) return;
-            RegionManager.GetRegionType(this);
             _discovered = true;
+            _seen = true;
             foreach (Region neighbor in _neighbors)
             {
-                if (neighbor._discovered) continue;
+                if (neighbor._seen) continue;
                 RegionManager.GetRegionType(neighbor);
-                neighbor._discovered = true;
+                neighbor._seen = true;
             }
         }
 
@@ -300,7 +319,7 @@ namespace Game.Exploration.Regions
             {
                 WaterSource waterSource = c as WaterSource;
                 if (waterSource == null) return;
-                waterSource.Inventory.Consumables().ForEach(i =>
+                waterSource.Inventory().Consumables().ForEach(i =>
                 {
                     if (i.IsWater) ++water;
                 });
@@ -315,7 +334,7 @@ namespace Game.Exploration.Regions
             {
                 FoodSource foodSource = c as FoodSource;
                 if (foodSource == null) return;
-                foodSource.Inventory.Consumables().ForEach(i =>
+                foodSource.Inventory().Consumables().ForEach(i =>
                 {
                     if (i.IsFood) ++food;
                 });
@@ -364,6 +383,11 @@ namespace Game.Exploration.Regions
         public Region() : base(Vector2.zero)
         {
             RegionID = GetId();
+        }
+
+        public bool Seen()
+        {
+            return _seen;
         }
     }
 }

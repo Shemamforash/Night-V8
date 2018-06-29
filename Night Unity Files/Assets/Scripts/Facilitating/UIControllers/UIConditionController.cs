@@ -28,7 +28,7 @@ namespace Facilitating.UIControllers
             ModifierIndicator = Helper.FindChildWithName<EnhancedText>(gameObject, "Modifier Indicator");
         }
         
-        public void UpdateDehydration(Player player)
+        public void UpdateThirst(Player player)
         {
             ConditionText.Text(player.Attributes.GetThirstStatus());
             if (ConditionSlider == null) return;

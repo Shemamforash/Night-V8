@@ -4,6 +4,7 @@ using Facilitating.Persistence;
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
+using Game.Global;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -21,6 +22,7 @@ namespace Game.Characters
         public static readonly List<ArmourPlate> Armour = new List<ArmourPlate>();
         public static readonly List<Accessory> Accessories = new List<Accessory>();
         public static readonly List<Player> Characters = new List<Player>();
+        public static readonly List<Inscription> Inscriptions = new List<Inscription>();
         private static readonly List<CharacterTemplate> Templates = new List<CharacterTemplate>();
         private static bool _loaded;
 
@@ -91,13 +93,20 @@ namespace Game.Characters
             if (item is Weapon) Weapons.Add((Weapon) item);
             if (item is ArmourPlate) Armour.Add((ArmourPlate) item);
             if (item is Accessory) Accessories.Add((Accessory) item);
+            if (item is Inscription) Inscriptions.Add((Inscription) item);
         }
 
-        public void RemoveCharacter(Player playerCharacter)
+        public static void RemoveCharacter(Player playerCharacter)
         {
-            Characters.Remove(playerCharacter);
-            Characters.ForEach(c => c.CharacterView.RefreshNavigation());
-            if (playerCharacter.Name == "Driver") MenuStateMachine.ShowMenu("Game Over Menu");
+            if (playerCharacter.CharacterTemplate.CharacterClass == CharacterClass.Wanderer)
+            {
+                SceneChanger.ChangeScene("Game Over");
+            }
+            else
+            {
+                Characters.Remove(playerCharacter);
+                Characters.ForEach(c => c.CharacterView.RefreshNavigation());
+            }
         }
 
         protected override InventoryItem RemoveItem(InventoryItem item)
@@ -106,7 +115,17 @@ namespace Game.Characters
             Weapons.Remove(item as Weapon);
             Armour.Remove(item as ArmourPlate);
             Accessories.Remove(item as Accessory);
+            Inscriptions.Remove(item as Inscription);
             return item;
+        }
+
+        public override void DestroyItem(InventoryItem item)
+        {
+            base.DestroyItem(item);
+            Weapons.Remove(item as Weapon);
+            Armour.Remove(item as ArmourPlate);
+            Accessories.Remove(item as Accessory);
+            Inscriptions.Remove(item as Inscription);
         }
 
         public static void ExitCharacter(Player character)
@@ -244,6 +263,18 @@ namespace Game.Characters
 
             attributes.SetMax(AttributeType.Willpower, playerCharacter.CharacterTemplate.Willpower);
             attributes.Get(AttributeType.Willpower).SetToMax();
+        }
+
+        public static void Update()
+        {
+            for (int i = Characters.Count - 1; i >= 0; --i)
+            {
+                Player c = Characters[i];
+                c.Update();
+                c.Attributes.UpdateThirstAndHunger();
+                if (c.IsDead)
+                    RemoveCharacter(c);
+            }
         }
     }
 }

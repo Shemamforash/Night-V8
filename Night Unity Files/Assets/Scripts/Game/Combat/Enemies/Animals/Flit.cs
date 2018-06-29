@@ -25,5 +25,10 @@ namespace Game.Combat.Enemies.Animals
             if (!_discovered) return;
             base.Update();
         }
+
+        public bool Discovered()
+        {
+            return _discovered;
+        }
     }
 }

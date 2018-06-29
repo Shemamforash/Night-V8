@@ -12,6 +12,7 @@ namespace Game.Combat.Enemies
         private const float VisionRange = 5f;
         private Vector2 _originPosition;
         protected bool AlertAll;
+        protected float WanderDistance = 3;
 
         public override void Initialise(Enemy enemy)
         {
@@ -68,7 +69,7 @@ namespace Game.Combat.Enemies
         private void Wander()
         {
             Cell targetCell = PathingGrid.WorldToCellPosition(_originPosition);
-            targetCell = PathingGrid.GetCellNearMe(targetCell, 3);
+            targetCell = PathingGrid.GetCellNearMe(targetCell, WanderDistance);
             Thread routingThread = PathingGrid.RouteToCell(CurrentCell(), targetCell, route);
             WaitForRoute(routingThread, WaitThenWander);
             SetActionText("Wandering");

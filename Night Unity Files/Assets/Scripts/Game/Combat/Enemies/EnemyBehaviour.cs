@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -10,13 +11,15 @@ using Game.Exploration.Regions;
 using Game.Gear.Weapons;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
-    public class EnemyBehaviour : CharacterCombat
+    public class
+        EnemyBehaviour : CharacterCombat
     {
         public string ActionText;
         public Action CurrentAction;
@@ -52,8 +55,9 @@ namespace Game.Combat.Enemies
         {
             float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
             float alpha;
-            if (distanceToPlayer > 3) alpha = 0;
-            else alpha = 1 - distanceToPlayer / 3f;
+            float visibility = CombatManager.VisibilityRange();
+            if (distanceToPlayer > visibility) alpha = 0;
+            else alpha = 1 - distanceToPlayer / visibility;
             Color c = Sprite.color;
             c.a = alpha;
             Sprite.color = c;
@@ -105,7 +109,6 @@ namespace Game.Combat.Enemies
             HealthController.SetInitialHealth(Enemy.Template.Health, this);
             transform.SetParent(GameObject.Find("World").transform);
             transform.position = PathingGrid.GetCellNearMe(Vector2.zero, 8f, 4f).Position;
-
             Sprite spriteImage = Resources.Load<Sprite>("Images/Enemy Symbols/" + GetEnemyName());
             Sprite = GetComponent<SpriteRenderer>();
             if (spriteImage == null) return;
@@ -128,6 +131,8 @@ namespace Game.Combat.Enemies
         {
             base.Kill();
 
+            Loot loot = Enemy.DropLoot(transform.position);
+
             switch (Enemy.Template.DropResource)
             {
                 case "Salt":
@@ -137,13 +142,13 @@ namespace Game.Combat.Enemies
                     EssenceCloudBehaviour.Create(transform.position, Enemy.Template.DropCount);
                     break;
                 case "Meat":
+                    loot.IncrementResource(ResourceTemplate.GetMeat().Name, Random.Range(0, 3));
                     break;
             }
 
-            Loot loot = Enemy.DropLoot(transform.position);
             if (loot.IsValid)
             {
-                loot.CreateObject();
+                loot.CreateObject(true);
                 CombatManager.Region().Containers.Add(loot);
             }
 
