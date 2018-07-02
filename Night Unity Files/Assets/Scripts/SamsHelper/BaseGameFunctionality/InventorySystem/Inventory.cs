@@ -110,7 +110,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 AddItem(WeaponGenerator.GenerateWeapon(ItemQuality.Shining));
                 AddItem(Accessory.GenerateAccessory(ItemQuality.Shining));
                 AddItem(Inscription.Generate());
-                AddItem(ArmourPlate.Create("Living Metal Plate"));
+                AddItem(ArmourPlate.Create(ItemQuality.Shining));
             }
         }
 

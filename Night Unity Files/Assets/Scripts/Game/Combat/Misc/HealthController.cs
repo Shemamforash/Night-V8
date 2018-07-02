@@ -58,7 +58,6 @@ namespace Game.Combat.Misc
             OnTakeDamage += a;
         }
 
-
         public void AddOnHeal(Action<float> a)
         {
             OnHeal += a;

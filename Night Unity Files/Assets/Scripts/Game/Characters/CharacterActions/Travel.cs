@@ -4,6 +4,7 @@ using Game.Exploration.Regions;
 using Game.Exploration.WorldEvents;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
 namespace Game.Characters.CharacterActions
@@ -52,6 +53,25 @@ namespace Game.Characters.CharacterActions
             {
                 PlayerCharacter.Attributes.DecreaseWillpower();
                 TimeSpentTravelling = 0;
+                foreach (InventoryItem item in PlayerCharacter.Inventory().Contents())
+                {
+                    switch (item.Template.ResourceType)
+                    {
+                        case "Water":
+                            PlayerCharacter.BrandManager.IncreaseWaterFound();
+                            break;
+                        case "Plant":
+                            PlayerCharacter.BrandManager.IncreaseFoodFound();
+                            break;
+                        case "Meat":
+                            PlayerCharacter.BrandManager.IncreaseFoodFound();
+                            break;
+                        case "Resource":
+                            PlayerCharacter.BrandManager.IncreaseResourceFound();
+                            break;
+                    }
+                }
+
                 PlayerCharacter.Inventory().MoveAllResources(WorldState.HomeInventory());
                 PlayerCharacter.RestAction.Enter();
                 WorldEventManager.GenerateEvent(new CharacterMessage("I'm back, but the journey has taken it's toll", PlayerCharacter));

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Exploration.Environment;
 using Game.Exploration.Weather;
 using Game.Exploration.WorldEvents;
+using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
@@ -14,18 +16,24 @@ namespace Game.Characters
 {
     public class CharacterAttributes : DesolationAttributes, IPersistenceTemplate
     {
+        public const int PlayerHealthChunkSize = 100;
         private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
+        private readonly Player _player;
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
         private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
-        public const int PlayerHealthChunkSize = 50;
-        private readonly Player _player;
 
+        //todo make me do stuff
+        public readonly Dictionary<WeaponType, bool> WeaponSkillOneUnlocks = new Dictionary<WeaponType, bool>();
+        public readonly Dictionary<WeaponType, bool> WeaponSkillTwoUnlocks = new Dictionary<WeaponType, bool>();
+        public bool BurnWeakness;
+        public bool DecayRetaliate;
+        public bool DecayWeakness;
+        public bool LeaveFireTrail;
 
-        /*instead of consuming x food or water every minutes, consume 1 food or water every x minutes
-        use the max value of the hunger and thirst to keep track of the interval at which eating or drinking should occur
-        consume 1 food or water whenever the current value reaches the max value, then reset
-        this allows the duration to easily change depending on temperature, modifiers, etc.
-        */
+        public bool ReloadOnEmptyMag, ReloadOnLastRound;
+        public bool SicknessWeakness;
+        public bool SkillOneUnlocked, SkillTwoUnlocked;
+        public bool SpreadSickness;
 
         public CharacterAttributes(Player player)
         {
@@ -39,57 +47,56 @@ namespace Game.Characters
             SetMax(AttributeType.Thirst, 10);
         }
 
-        public void IncreaseEnduranceMax(int amount)
+        public void Load(XmlNode doc, PersistenceType saveType)
         {
-            int newEnduranceMax = (int) (Max(AttributeType.Endurance) + amount);
-            newEnduranceMax = Mathf.Clamp(newEnduranceMax, 0, _player.CharacterTemplate.EnduranceCap);
-            SetMax(AttributeType.Endurance, newEnduranceMax);
-            WorldEventManager.GenerateEvent(new CharacterMessage("My body will endure", _player));
         }
 
-        public void IncreaseStrengthMax(int amount)
+        public XmlNode Save(XmlNode doc, PersistenceType saveType) => doc;
+
+        public void ChangeEnduranceMax(int polarity)
         {
-            int newStrengthMax = (int) (Max(AttributeType.Strength) + amount);
-            newStrengthMax = Mathf.Clamp(newStrengthMax, 0, _player.CharacterTemplate.StrengthCap);
-            SetMax(AttributeType.Strength, newStrengthMax);
-            WorldEventManager.GenerateEvent(new CharacterMessage("My strength grows", _player));
+            if (!IncreaseAttribute(AttributeType.Endurance, _player.CharacterTemplate.EnduranceCap, polarity)) return;
+            string message = polarity > 0 ? "My body will endure" : "My body weakens";
+            WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
 
-        public void IncreasePerceptionMax(int amount)
+        private bool IncreaseAttribute(AttributeType attributeType, float attributeCap, int polarity)
         {
-            int newPerceptionMax = (int) (Max(AttributeType.Perception) + amount);
-            newPerceptionMax = Mathf.Clamp(newPerceptionMax, 0, _player.CharacterTemplate.PerceptionCap);
-            SetMax(AttributeType.Perception, newPerceptionMax);
-            WorldEventManager.GenerateEvent(new CharacterMessage("My eyes become keener", _player));
+            int newMax = (int) (Max(attributeType) + polarity);
+            if (newMax > attributeCap) return false;
+            if (newMax < 0) newMax = 0;
+            SetMax(attributeType, newMax);
+            return true;
         }
 
-        public void IncreaseWillpowerMax(int amount)
+        public void ChangeStrengthMax(int polarity)
         {
-            int newWillpowerMax = (int) (Max(AttributeType.Willpower) + amount);
-            newWillpowerMax = Mathf.Clamp(newWillpowerMax, 0, _player.CharacterTemplate.WillpowerCap);
-            SetMax(AttributeType.Willpower, newWillpowerMax);
-            WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clearer now", _player));
+            if (!IncreaseAttribute(AttributeType.Strength, _player.CharacterTemplate.StrengthCap, polarity)) return;
+            string message = polarity > 0 ? "My strength grows" : "My strength wains";
+            WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
 
-        public float CalculateAdrenalineRecoveryRate()
+        public void ChangePerceptionMax(int polarity)
         {
-            return Mathf.Pow(1.05f, Val(AttributeType.Perception) + Val(AttributeType.AdrenalineRechargeBonus));
+            if (!IncreaseAttribute(AttributeType.Perception, _player.CharacterTemplate.PerceptionCap, polarity)) return;
+            string message = polarity > 0 ? "My eyes become keener" : "My vision blurs";
+            WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
 
-        public float CalculateSpeed()
+        public void ChangeWillpowerMax(int polarity)
         {
-            return 3f + (Val(AttributeType.Endurance) - 1f) * 0.3f;
+            if (!IncreaseAttribute(AttributeType.Willpower, _player.CharacterTemplate.WillpowerCap, polarity)) return;
+            string message = polarity > 0 ? "My mind is clearer now" : "My mind is clouded";
+            WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
 
-        public float CalculateSkillCooldownModifier()
-        {
-            return (float) Math.Pow(0.95f, Val(AttributeType.Willpower)) + Val(AttributeType.SkillRechargeBonus);
-        }
+        public float CalculateAdrenalineRecoveryRate() => Mathf.Pow(1.05f, Val(AttributeType.Perception) + Val(AttributeType.AdrenalineRechargeBonus));
 
-        public int CalculateCombatHealth()
-        {
-            return (int) (Val(AttributeType.Strength) * PlayerHealthChunkSize);
-        }
+        public float CalculateSpeed() => 3f + (Val(AttributeType.Endurance) - 1f) * 0.3f;
+
+        public float CalculateSkillCooldownModifier() => (float) Math.Pow(0.95f, Val(AttributeType.Willpower)) + Val(AttributeType.SkillRechargeBonus);
+
+        public int CalculateCombatHealth() => (int) (Val(AttributeType.Strength) * PlayerHealthChunkSize);
 
         public void UpdateThirstAndHunger()
         {
@@ -166,15 +173,6 @@ namespace Game.Characters
             return GetAttributeStatus(Get(AttributeType.Thirst), _dehydrationLevels);
         }
 
-        public void Load(XmlNode doc, PersistenceType saveType)
-        {
-        }
-
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
-        {
-            return doc;
-        }
-
         private void LoadAttribute(XmlNode root, string attributeName, CharacterAttribute characterAttribute)
         {
             XmlNode attributeNode = root.SelectSingleNode(attributeName);
@@ -207,10 +205,7 @@ namespace Game.Characters
             }
         }
 
-        public int CalculateCompassPulses()
-        {
-            return (int) (Val(AttributeType.Perception) + Val(AttributeType.CompassBonus));
-        }
+        public int CalculateCompassPulses() => (int) (Val(AttributeType.Perception) + Val(AttributeType.CompassBonus));
 
         public void Drink()
         {

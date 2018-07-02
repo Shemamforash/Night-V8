@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening.Core.Easing;
+using Game.Characters;
 using Game.Combat.Enemies;
-using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
-using Game.Combat.Generation;
+using Game.Combat.Generation.Shrines;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -18,10 +19,14 @@ public abstract class ShrineBehaviour : MonoBehaviour
     private SpriteRenderer _flash;
     protected SpriteRenderer DangerIndicator;
     private SpriteRenderer _glow;
-    protected SpriteMask _countdownMask;
-    protected SpriteRenderer _countdown;
-    protected readonly List<EnemyBehaviour> _enemiesAlive = new List<EnemyBehaviour>();
+    private SpriteMask _countdownMask;
+    private SpriteRenderer _countdown;
+    private readonly List<EnemyBehaviour> _enemiesAlive = new List<EnemyBehaviour>();
+    private BrandManager.Brand _brand;
+
     private static GameObject _disappearPrefab;
+
+    private static GameObject _bossPrefab, _firePrefab, _wavePrefab, _chasePrefab;
 
     public void Awake()
     {
@@ -39,13 +44,47 @@ public abstract class ShrineBehaviour : MonoBehaviour
         if (_disappearPrefab == null) _disappearPrefab = Resources.Load<GameObject>("Prefabs/Combat/Disappear");
     }
 
+    public static void Generate(Vector2 position, ShrineType shrineType, BrandManager.Brand brand)
+    {
+        if (_bossPrefab == null)
+        {
+            _bossPrefab = Resources.Load<GameObject>("Prefabs/Combat/Shrines/Boss Shrine");
+            _firePrefab = Resources.Load<GameObject>("Prefabs/Combat/Shrines/Fire Shrine");
+            _wavePrefab = Resources.Load<GameObject>("Prefabs/Combat/Shrines/Wave Shrine");
+            _chasePrefab = Resources.Load<GameObject>("Prefabs/Combat/Shrines/Chase Shrine");
+        }
+
+        GameObject shrine = null;
+        switch (shrineType)
+        {
+            case ShrineType.Wave:
+                shrine = Instantiate(_wavePrefab);
+                break;
+            case ShrineType.Fire:
+                shrine = Instantiate(_firePrefab);
+                break;
+            case ShrineType.Chase:
+                shrine = Instantiate(_chasePrefab);
+                break;
+            case ShrineType.Boss:
+                shrine = Instantiate(_bossPrefab);
+                break;
+        }
+
+        shrine.transform.position = position;
+        shrine.transform.localScale = Vector2.one;
+        shrine.GetComponent<ShrineBehaviour>()._brand = brand;
+    }
+
     protected void Succeed()
     {
+        _brand.Succeed();
         StartCoroutine(SucceedGlow());
     }
 
     protected void Fail()
     {
+        _brand.Fail();
         StartCoroutine(FailGlow());
     }
 

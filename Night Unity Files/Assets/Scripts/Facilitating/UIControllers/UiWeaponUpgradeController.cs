@@ -69,10 +69,11 @@ namespace Facilitating.UIControllers
         private void Infuse()
         {
             if (CurrentPlayer.Weapon == null) return;
-            if (CurrentPlayer.Weapon.WeaponAttributes.Durability.ReachedMax()) return;
+            if (CurrentPlayer.Weapon.WeaponAttributes.GetDurability().ReachedMax()) return;
             if (WorldState.HomeInventory().GetResourceQuantity("Essence") == 0) return;
             WorldState.HomeInventory().DecrementResource("Essence", 1);
-            CurrentPlayer.Weapon.WeaponAttributes.Durability.Increment();
+            CurrentPlayer.BrandManager.IncreaseEssenceInfused();
+            CurrentPlayer.Weapon.WeaponAttributes.IncreaseDurability();
             UpdateDurabilityParticles();
         }
 
@@ -159,7 +160,7 @@ namespace Facilitating.UIControllers
         {
             float absoluteMaxDurability = ((int) ItemQuality.Radiant + 1) * 10;
             float maxDurability = ((int) CurrentPlayer.Weapon.Quality() + 1) * 10;
-            float currentDurability = CurrentPlayer.Weapon.WeaponAttributes.Durability.CurrentValue();
+            float currentDurability = CurrentPlayer.Weapon.WeaponAttributes.GetDurability().CurrentValue();
             float rectAnchorOffset = maxDurability / absoluteMaxDurability / 2;
             float particleOffset = 5.6f * (currentDurability / absoluteMaxDurability);
             _durabilityTransform.anchorMin = new Vector2(0.5f - rectAnchorOffset, 0.5f);
@@ -192,27 +193,10 @@ namespace Facilitating.UIControllers
 
         private void SetNavigation()
         {
-            bool inscribeActive = _inscribeButton.Button().interactable;
             bool infuseActive = _infuseButton.Button().interactable;
-
-            if (infuseActive)
-            {
-                SetTopToBottomNavigation(_infuseButton);
-            }
-            else if (inscribeActive)
-            {
-                SetTopToBottomNavigation(_inscribeButton);
-            }
-            else
-            {
-                _weaponButton.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
-            }
-
-            if (inscribeActive)
-            {
-                _inscribeButton.SetUpNavigation(_weaponButton, false);
-                _inscribeButton.SetDownNavigation(UiGearMenuController.Instance()._closeButton, false);
-            }
+            SetTopToBottomNavigation(infuseActive ? _infuseButton : _inscribeButton);
+            _inscribeButton.SetUpNavigation(_weaponButton, false);
+            _inscribeButton.SetDownNavigation(UiGearMenuController.Instance()._closeButton, false);
         }
 
         private void SetWeapon()
@@ -226,16 +210,10 @@ namespace Facilitating.UIControllers
 
             WeaponAttributes attr = weapon.WeaponAttributes;
             SetWeaponInfo(weapon);
-            _inscribeButton.Button().interactable = weapon.Inscribable();
-            string inscriptionText = "Not Inscribable";
-            if (weapon.Inscribable())
-            {
-                Inscription inscription = weapon.GetInscription();
-                inscriptionText = inscription != null ? inscription.GetSummary() : "No inscription";
-            }
-
+            Inscription inscription = weapon.GetInscription();
+            string inscriptionText = inscription != null ? inscription.GetSummary() : "No inscription";
             _inscriptionText.Text(inscriptionText);
-            _infuseButton.Button().interactable = !attr.Durability.ReachedMax();
+            _infuseButton.Button().interactable = !attr.GetDurability().ReachedMax();
 
             SetNavigation();
         }

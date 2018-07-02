@@ -2,8 +2,10 @@
 using Game.Combat.Generation;
 using Game.Gear;
 using Game.Gear.Weapons;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
@@ -18,21 +20,38 @@ namespace Game.Combat.Enemies
             Template = EnemyTemplate.GetEnemyTemplate(type);
         }
 
-        public void GenerateWeapon(float difficulty)
+        public void GenerateWeapon()
         {
-            ItemQuality targetQuality = ItemQuality.Rusted;
+            int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 10f);
+            int difficultyMin = difficulty - 1;
+            if (difficultyMin < 0) difficultyMin = 0;
+            else if (difficultyMin > 4) difficultyMin = 4;
+            int difficultyMax = difficulty + 1;
+            if (difficultyMax > 4) difficultyMax = 4;
+            
+            ItemQuality targetQuality = (ItemQuality)Random.Range(difficultyMin, difficultyMax);
+            Assert.IsTrue((int)targetQuality < 5);
             Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality);
+
             EquipWeapon(weapon);
+            
+            bool hasInscription = Random.Range(0, 4) == 0;
+            if (hasInscription)
+            {
+                weapon.SetInscription(Inscription.Generate());
+            }
         }
 
-        public void GenerateArmour(float difficulty)
+        public void GenerateArmour()
         {
-            int armourPivot = (int) (difficulty / 2);
-            int minArmour = armourPivot - 1;
-            if (minArmour < 0) minArmour = 0;
-            int maxArmour = armourPivot + 1;
-            if (maxArmour > 10) maxArmour = 10;
-            ArmourController.AutoFillSlots();
+            int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 5f);
+            int armourMin = difficulty - 2;
+            if (armourMin < 0) armourMin = 0;
+            else if (armourMin > 10) armourMin = 10;
+            int armourMax = difficulty + 2;
+            if (armourMax < 0) armourMax = 0;
+            else if (armourMax > 10) armourMax = 10;
+            ArmourController.AutoFillSlots(Random.Range(armourMin, armourMax));
         }
 
         public EnemyBehaviour GetEnemyBehaviour()

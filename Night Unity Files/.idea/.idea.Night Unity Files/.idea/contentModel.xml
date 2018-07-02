@@ -223,6 +223,7 @@
                   <e p="FireShrine.cs" t="Include" />
                   <e p="ShrineBehaviour.cs" t="Include" />
                   <e p="ShrinePickup.cs" t="Include" />
+                  <e p="ShrineType.cs" t="Include" />
                   <e p="WaveShrine.cs" t="Include" />
                 </e>
                 <e p="Triangulator.cs" t="Include" />
@@ -231,7 +232,6 @@
                 <e p="BulletImpactBehaviour.cs" t="Include" />
                 <e p="BulletTrailFade.cs" t="Include" />
                 <e p="CharacterCombat.cs" t="Include" />
-                <e p="CombatTester.cs" t="Include" />
                 <e p="EnemyCampfire.cs" t="Include" />
                 <e p="Explosion.cs" t="Include" />
                 <e p="FireBehaviour.cs" t="Include" />

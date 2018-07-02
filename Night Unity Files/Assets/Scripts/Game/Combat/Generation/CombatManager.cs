@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Animals;
@@ -14,6 +15,7 @@ using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Generation
@@ -27,6 +29,13 @@ namespace Game.Combat.Generation
         private bool _inCombat;
         private readonly List<EnemyBehaviour> _enemies = new List<EnemyBehaviour>();
         private static CombatManager _instance;
+        private bool _shotFired;
+        private int _enemiesKilled;
+        private int _humansKilled;
+        private int _damageTaken;
+        private int _damageDealt;
+        private int _skillsUsed;
+        private int _itemsFound;
 
         public static bool AllEnemiesDead() => Instance()._enemies.Count == 0;
 
@@ -179,6 +188,24 @@ namespace Game.Combat.Generation
         public static void ExitCombat()
         {
             if (!Instance()._inCombat) Debug.Log("Don't try and exit combat twice!");
+            BrandManager brandManager = PlayerCombat.Instance.Player.BrandManager;
+            if (Enemies().Count == 0)
+            {
+                if (Instance()._skillsUsed == 0)
+                {
+                    brandManager.IncreaseBattlesNoSkills();
+                }
+                else if (!Instance()._shotFired)
+                {
+                    brandManager.IncreaseOnlySkillBattles();
+                }
+            }
+            brandManager.IncreaseDamageDealt(Instance()._damageDealt);
+            brandManager.IncreaseDamageTaken(Instance()._damageTaken);
+            brandManager.IncreaseItemsFound(Instance()._itemsFound);
+            brandManager.IncreaseSkillsUsed(Instance()._skillsUsed);
+            brandManager.IncreaseHumansKilled(Instance()._humansKilled);
+
             Instance()._inCombat = false;
             SceneChanger.ChangeScene("Map", false);
             PlayerCombat.Instance.ExitCombat();
@@ -207,7 +234,7 @@ namespace Game.Combat.Generation
 
         public static EnemyBehaviour QueueEnemyToAdd(EnemyType type)
         {
-            Enemy e = Instance()._currentRegion.AddEnemy(type, 10);
+            Enemy e = Instance()._currentRegion.AddEnemy(type);
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
             (enemyBehaviour as UnarmedBehaviour)?.Alert();
             Instance().AddEnemy(enemyBehaviour);
@@ -248,5 +275,35 @@ namespace Game.Combat.Generation
         }
 
         public static List<EnemyBehaviour> Enemies() => Instance()._enemies;
+
+        public static void IncreaseSkillsUsed()
+        {
+            ++Instance()._skillsUsed;
+        }
+
+        public static void IncreaseDamageDealt(int damageDealt)
+        {
+            Instance()._damageDealt += damageDealt;
+        }
+
+        public static void IncreaseDamageTaken(int damageTaken)
+        {
+            Instance()._damageTaken += damageTaken;
+        }
+
+        public static void IncreaseItemsFound()
+        {
+            ++Instance()._itemsFound;
+        }
+
+        public static void IncreaseHumansKilled()
+        {
+            ++Instance()._humansKilled;
+        }
+
+        public static void MarkShotFired()
+        {
+            Instance()._shotFired = true;
+        }
     }
 }

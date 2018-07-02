@@ -59,56 +59,17 @@ namespace Game.Gear
         public static Inscription Generate(int diff = -1)
         {
             ReadTemplates();
-            int difficulty = diff == -1 ? WorldState.Difficulty() : diff;
-            float maxRange = 7 * 5;
-            float range = difficulty / maxRange * 2 + 1.5f;
-            float rand = Random.Range(0, range);
-            InscriptionTier tier = InscriptionTier.Bellow;
-            if (rand < 1)
-            {
-                tier = InscriptionTier.Whisper;
-            }
-            else if (rand < 2)
-            {
-                tier = InscriptionTier.Wail;
-            }
 
+            int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 10f);
+            int difficultyMin = difficulty - 1;
+            if (difficultyMin < 0) difficultyMin = 0;
+            else if (difficultyMin > 4) difficultyMin = 4;
+            int difficultyMax = difficulty + 1;
+            if (difficultyMax > 4) difficultyMax = 4;
+            
+            InscriptionTier tier = (InscriptionTier) difficulty;
             InscriptionTemplate randomTemplate = Helper.RandomInList(_inscriptionTemplates);
             return new Inscription(randomTemplate, tier);
-        }
-
-        public static void Test()
-        {
-            string results = "";
-            for (int i = 0; i <= 10; ++i)
-            {
-                int diff = i * 10;
-                int cnt = 1000;
-                int whisperCount = 0;
-                int wailCount = 0;
-                int bellowCount = 0;
-                for (int j = 0; j < cnt; ++j)
-                {
-                    Inscription inscription = Generate(diff);
-                    switch (inscription._tier)
-                    {
-                        case InscriptionTier.Whisper:
-                            ++whisperCount;
-                            break;
-                        case InscriptionTier.Wail:
-                            ++wailCount;
-                            break;
-                        case InscriptionTier.Bellow:
-                            ++bellowCount;
-                            break;
-                    }
-                }
-
-                results += "difficulty" + diff + "---   whisper: " + Mathf.Round((float) whisperCount / cnt * 100) + "%   wail: " + Mathf.Round((float) wailCount / cnt * 100) + "%   bellow:" + Mathf
-                               .Round((float) bellowCount / cnt * 100) + "%\n";
-            }
-
-            Debug.Log(results);
         }
 
         private static void ReadTemplates()
@@ -129,9 +90,11 @@ namespace Game.Gear
             _readTemplates = true;
         }
 
-        public enum InscriptionTier
+        private enum InscriptionTier
         {
+            Murmur,
             Whisper,
+            Cry,
             Wail,
             Bellow
         }

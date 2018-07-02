@@ -1,6 +1,6 @@
 ﻿using System;
-using Boo.Lang;
-using Game.Combat.Player;
+using System.Collections.Generic;
+using SamsHelper.Libraries;
 
 namespace Game.Gear.Weapons
 {
@@ -12,6 +12,7 @@ namespace Game.Gear.Weapons
         public readonly int Pellets, Capacity, Handling, Accuracy, Damage;
         public readonly float ReloadSpeed, FireRate;
         private static readonly List<WeaponClassType> _weaponClassTypes = new List<WeaponClassType>();
+        private static readonly List<WeaponClass> _weaponClasses = new List<WeaponClass>();
 
         public WeaponClass(WeaponType type, string name, bool automatic, int damage, float fireRate, float reloadSpeed, int accuracy, int handling, int capacity)
         {
@@ -25,9 +26,10 @@ namespace Game.Gear.Weapons
             Handling = handling;
             Capacity = capacity;
             Pellets = type == WeaponType.Shotgun ? 10 : 1;
+            _weaponClasses.Add(this);
         }
 
-        private WeaponClassType NameToClassType(string name)
+        private static WeaponClassType NameToClassType(string name)
         {
             if (_weaponClassTypes.Count == 0)
             {
@@ -44,14 +46,9 @@ namespace Game.Gear.Weapons
             throw new ArgumentOutOfRangeException("Unknown class type: '" + name + "'");
         }
 
-        public Weapon CreateWeapon(ItemQuality quality)
+        public static WeaponClass GetRandomClass()
         {
-            Weapon w = new Weapon(Type.ToString(), 10, quality);
-            WeaponAttributes weaponAttributes = w.WeaponAttributes;
-            weaponAttributes.SetClass(this);
-            w.WeaponSkillOne = WeaponSkills.GetWeaponSkillOne(w);
-            w.WeaponSkillTwo = WeaponSkills.GetWeaponSkillTwo(w);
-            return w;
+            return Helper.RandomInList(_weaponClasses);
         }
     }
 }

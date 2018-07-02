@@ -47,6 +47,7 @@ namespace Game.Combat.Generation
 
         private IEnumerator Reveal()
         {
+            CombatManager.IncreaseItemsFound();
             _revealed = true;
             float timePassed = 0f;
             _iconColour.enabled = true;

@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
+using Game.Combat.Player;
 using UnityEngine;
 
 namespace Game.Combat.Enemies
@@ -88,6 +89,12 @@ namespace Game.Combat.Enemies
             if (DistanceToTarget() >= DetectionRange) return;
             if (DistanceToTarget() >= VisionRange) CurrentAction = Wander;
             Alert();
+        }
+
+        public override void Kill()
+        {
+            base.Kill();
+            CombatManager.IncreaseHumansKilled();
         }
     }
 }

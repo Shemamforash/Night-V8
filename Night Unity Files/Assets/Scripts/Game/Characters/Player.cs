@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Game.Characters.CharacterActions;
@@ -9,22 +8,18 @@ using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Persistence;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Game.Characters
 {
     public sealed class Player : Character
     {
-        private const int HighWeightThreshold = 15, LowWeightThreshold = 5;
         public readonly CharacterAttributes Attributes;
         public readonly Skill CharacterSkillOne, CharacterSkillTwo;
         public readonly CharacterTemplate CharacterTemplate;
         public readonly StateMachine States = new StateMachine();
-        private readonly BrandManager _brandManager;
+        public readonly BrandManager BrandManager = new BrandManager();
         private readonly List<Effect> _effects = new List<Effect>();
 
         public Craft CraftAction;
@@ -35,6 +30,9 @@ namespace Game.Characters
         public CharacterView CharacterView;
         public Rest RestAction;
         public Travel TravelAction;
+        public Meditate MeditateAction;
+        public Sleep SleepAction;
+        private int _timeAlive;
 
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
@@ -44,19 +42,10 @@ namespace Game.Characters
             CharacterSkillOne = CharacterSkills.GetCharacterSkillOne(this);
             CharacterSkillTwo = CharacterSkills.GetCharacterSkillTwo(this);
 
-            _brandManager = new BrandManager(this);
             AddStates();
             Attributes.Get(AttributeType.Endurance).OnMin(RestAction.Enter);
+            BrandManager.Initialise(this);
         }
-
-        public Meditate MeditateAction;
-        public Sleep SleepAction;
-
-//        public bool ConsumeResource(InventoryResourceType type, int amount)
-//        {
-//            DesolationInventory inventory = TravelAction.AtHome() ? WorldState.HomeInventory() : Inventory();
-//            return inventory.DecrementResource(type, amount);
-//        }
 
         public void AddEffect(Effect effect)
         {
@@ -84,11 +73,6 @@ namespace Game.Characters
         }
 
         public bool IsDead;
-
-        ~Player()
-        {
-//            Debug.Log("Destroyed " + Name);
-        }
 
         public override XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
@@ -121,6 +105,16 @@ namespace Game.Characters
             {
                 _effects[i].UpdateEffect();
             }
+
+            UpdateTimeAlive();
+        }
+
+        private void UpdateTimeAlive()
+        {
+            ++_timeAlive;
+            if (_timeAlive != WorldState.MinutesPerHour * 24) return;
+            BrandManager.IncreaseTimeSurvived();
+            _timeAlive = 0;
         }
 
         public void Tire()
@@ -191,7 +185,7 @@ namespace Game.Characters
         public override void EquipAccessory(Accessory accessory)
         {
             base.EquipAccessory(accessory);
-            CharacterView?.AccessoryController.SetAccessory(accessory);
+            if (CharacterView != null) CharacterView.AccessoryController.SetAccessory(accessory);
         }
     }
 }

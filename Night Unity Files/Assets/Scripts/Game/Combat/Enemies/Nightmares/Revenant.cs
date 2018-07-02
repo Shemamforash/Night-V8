@@ -16,7 +16,6 @@ namespace Game.Combat.Enemies.Nightmares
             _fireTrail = gameObject.AddComponent<LeaveFireTrail>();
             _fireTrail.Initialise();
             _split.Initialise(3, 200, EnemyType.Revenant, 1000, -1, true);
-            FireImmune = true;
         }
 
         public override void ChooseNextAction()

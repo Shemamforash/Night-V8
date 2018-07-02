@@ -132,66 +132,105 @@ namespace Game.Exploration.Regions
 
         public float DistanceToPoint(Vector3 point) => Vector3.Distance(point, Position);
 
-        public Enemy AddEnemy(EnemyType enemyType, int difficulty)
+        public Enemy AddEnemy(EnemyType enemyType)
         {
             Enemy newEnemy = new Enemy(enemyType);
-            newEnemy.GenerateArmour(difficulty);
-            newEnemy.GenerateWeapon(difficulty);
+            newEnemy.GenerateArmour();
+            newEnemy.GenerateWeapon();
             _enemies.Add(newEnemy);
             return newEnemy;
         }
 
         private void GenerateHumanEncounter()
         {
-            AddEnemy(EnemyType.Sentinel, 10);
-            AddEnemy(EnemyType.Witch, 10);
-            AddEnemy(EnemyType.Brawler, 10);
+            int daysSpent = WorldState.GetDaysSpentHere();
+            int size = Random.Range(5 + daysSpent, 10 + daysSpent);
+            int difficulty = WorldState.Difficulty();
+            List<EnemyType> allowedTypes = new List<EnemyType>();
+            if (difficulty < 5)
+            {
+                allowedTypes.Add(EnemyType.Sentinel);
+                allowedTypes.Add(EnemyType.Brawler);
+            }
+
+            if (difficulty < 10)
+            {
+                allowedTypes.Add(EnemyType.Sniper);
+                allowedTypes.Add(EnemyType.Martyr);
+            }
+
+            if (difficulty < 15)
+            {
+                allowedTypes.Add(EnemyType.Witch);
+                allowedTypes.Add(EnemyType.Medic);
+            }
+
+            if (difficulty < 20)
+            {
+                allowedTypes.Add(EnemyType.Warlord);
+                allowedTypes.Add(EnemyType.Mountain);
+            }
+
+            if (difficulty >= 20)
+            {
+                difficulty -= 20;
+                size += Mathf.FloorToInt(difficulty / 5f);
+            }
+
+            while (size > 0)
+            {
+                EnemyType type = Helper.RandomInList(allowedTypes);
+                AddEnemy(type);
+                if (type == EnemyType.Sentinel || type == EnemyType.Brawler) --size;
+                if (type == EnemyType.Sniper || type == EnemyType.Martyr) size -= 2;
+                if (type == EnemyType.Witch || type == EnemyType.Medic) size -= 3;
+                if (type == EnemyType.Warlord || type == EnemyType.Mountain) size -= 4;
+            }
         }
 
         private void GenerateNightmareEncounter()
         {
-//            AddEnemy(EnemyType.GhoulMother, 10);
-//            AddEnemy(EnemyType.Maelstrom, 10);
-//            AddEnemy(EnemyType.Ghast, 10);
-//            AddEnemy(EnemyType.Nightmare, 10);
-//            AddEnemy(EnemyType.Revenant, 10);
-//            AddEnemy(EnemyType.Shadow, 10);
-        }
-
-        private int CalculateDanger() => WorldState.Difficulty() + (int) (Vector2.Distance(Position, Vector2.zero) / 5f);
-
-        public void Generate(int size)
-        {
-            int difficulty = CalculateDanger();
-            AddEnemy(EnemyType.Medic, difficulty);
-            AddEnemy(EnemyType.Sentinel, difficulty);
-            AddEnemy(EnemyType.Sniper, difficulty);
-
-//            if (size > MaxEncounterSize) size = MaxEncounterSize;
-//            for (int i = 0; i < size; ++i)
-//            {
-//                Helper.Shuffle(ref _enemyTypes);
-//                foreach (EnemyTemplate t in _enemyTypes)
-//                {
-//                    if (size < t.Value) continue;
-//                    AddEnemy(t.EnemyType, scenario, difficulty);
-//                    break;
-//                }
-//            }
-        }
-
-        public void Generate()
-        {
-            int difficulty = CalculateDanger();
-            while (difficulty > 0)
+            int daysSpent = WorldState.GetDaysSpentHere();
+            int size = Random.Range(5 + daysSpent, 10 + daysSpent);
+            int difficulty = WorldState.Difficulty();
+            List<EnemyType> allowedTypes = new List<EnemyType>();
+            if (difficulty < 5)
             {
-                Helper.Shuffle(ref _enemyTypes);
-                foreach (EnemyTemplate t in _enemyTypes)
-                {
-                    if (difficulty < t.Value) continue;
-                    AddEnemy(t.EnemyType, difficulty);
-                    difficulty -= t.Value;
-                }
+                allowedTypes.Add(EnemyType.Ghoul);
+                allowedTypes.Add(EnemyType.Ghast);
+            }
+
+            if (difficulty < 10)
+            {
+                allowedTypes.Add(EnemyType.GhoulMother);
+                allowedTypes.Add(EnemyType.Shadow);
+            }
+
+            if (difficulty < 15)
+            {
+                allowedTypes.Add(EnemyType.Revenant);
+                allowedTypes.Add(EnemyType.Maelstrom);
+            }
+
+            if (difficulty < 20)
+            {
+                allowedTypes.Add(EnemyType.Nightmare);
+            }
+
+            if (difficulty >= 20)
+            {
+                difficulty -= 20;
+                size += Mathf.FloorToInt(difficulty / 5f);
+            }
+
+            while (size > 0)
+            {
+                EnemyType type = Helper.RandomInList(allowedTypes);
+                AddEnemy(type);
+                if (type == EnemyType.Ghoul || type == EnemyType.Ghast) --size;
+                if (type == EnemyType.GhoulMother || type == EnemyType.Shadow) size -= 2;
+                if (type == EnemyType.Revenant || type == EnemyType.Maelstrom) size -= 3;
+                if (type == EnemyType.Nightmare) size -= 4;
             }
         }
 
@@ -226,26 +265,26 @@ namespace Game.Exploration.Regions
                 case 0:
                     for (int i = 0; i < 10; ++i)
                     {
-                        AddEnemy(EnemyType.Grazer, 10);
+                        AddEnemy(EnemyType.Grazer);
                     }
 
                     for (int i = 0; i < 3; ++i)
                     {
-                        AddEnemy(EnemyType.Watcher, 10);
+                        AddEnemy(EnemyType.Watcher);
                     }
 
                     break;
                 case 1:
                     for (int i = 0; i < Random.Range(1, 4); ++i)
                     {
-                        AddEnemy(EnemyType.Curio, 10);
+                        AddEnemy(EnemyType.Curio);
                     }
 
                     break;
                 case 2:
                     for (int i = 0; i < 20; ++i)
                     {
-                        AddEnemy(EnemyType.Flit, 10);
+                        AddEnemy(EnemyType.Flit);
                     }
 
                     break;
@@ -271,6 +310,7 @@ namespace Game.Exploration.Regions
         public void Discover()
         {
             if (_discovered) return;
+            CharacterManager.SelectedCharacter.BrandManager.IncreaseRegionsExplored();
             _discovered = true;
             _seen = true;
             foreach (Region neighbor in _neighbors)

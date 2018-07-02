@@ -60,6 +60,7 @@ namespace Game.Combat.Misc
         public static void ActivateSkill(int skillNo)
         {
             if (_skillsCooldown.Running()) return;
+            CombatManager.IncreaseSkillsUsed();
             _skills[skillNo].Activate();
             _skillsCooldown.Duration = _skills[skillNo].Cooldown() * _cooldownModifier;
             _skillsCooldown.Start();

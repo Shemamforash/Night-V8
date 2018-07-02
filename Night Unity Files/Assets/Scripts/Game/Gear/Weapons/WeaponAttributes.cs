@@ -13,19 +13,15 @@ namespace Game.Gear.Weapons
     {
         private readonly int MaxDurability;
         private const float MinDurabilityMod = 0.75f;
-        public readonly Number Durability;
+        private readonly Number _durability;
         private float _dps;
         private readonly AttributeModifier _durabilityModifier;
         private readonly Weapon _weapon;
         public bool Automatic = true;
-        public float DurabilityModifier;
-        public string ModifierName, ModifierDescription;
-
-        public WeaponClassType WeaponClassName;
-        public string WeaponClassDescription;
+        private WeaponClassType WeaponClassType;
         public WeaponType WeaponType;
 
-        public WeaponAttributes(Weapon weapon)
+        public WeaponAttributes(Weapon weapon, WeaponClass weaponClass)
         {
             _weapon = weapon;
             _durabilityModifier = new AttributeModifier();
@@ -33,20 +29,21 @@ namespace Game.Gear.Weapons
             AddMod(AttributeType.FireRate, _durabilityModifier);
             AddMod(AttributeType.Accuracy, _durabilityModifier);
             MaxDurability = ((int) weapon.Quality() + 1) * 10;
-            Durability = new Number(MaxDurability, 0, MaxDurability);
+            _durability = new Number(MaxDurability, 0, MaxDurability);
             SetMax(AttributeType.Accuracy, 100);
+            SetClass(weaponClass);
         }
 
         public XmlNode Save(XmlNode root, PersistenceType saveType)
         {
             SaveController.CreateNodeAndAppend("WeaponType", root, WeaponType);
-            SaveController.CreateNodeAndAppend("Class", root, WeaponClassName);
-            SaveController.CreateNodeAndAppend("Durability", root, Durability.CurrentValue());
+            SaveController.CreateNodeAndAppend("Class", root, WeaponClassType);
+            SaveController.CreateNodeAndAppend("Durability", root, _durability.CurrentValue());
             SaveController.CreateNodeAndAppend("Quality", root, _weapon.Quality());
             return root;
         }
 
-        public void SetClass(WeaponClass weaponClass)
+        private void SetClass(WeaponClass weaponClass)
         {
             SetVal(AttributeType.FireRate, weaponClass.FireRate);
             SetVal(AttributeType.ReloadSpeed, weaponClass.ReloadSpeed);
@@ -57,19 +54,19 @@ namespace Game.Gear.Weapons
             SetVal(AttributeType.Accuracy, weaponClass.Accuracy);
             WeaponType = weaponClass.Type;
             Automatic = weaponClass.Automatic;
-            WeaponClassName = weaponClass.Name;
+            WeaponClassType = weaponClass.Name;
             RecalculateAttributeValues();
         }
 
-        public WeaponClassType GetWeaponClass() => WeaponClassName;
+        public WeaponClassType GetWeaponClass() => WeaponClassType;
 
-        public void RecalculateAttributeValues()
+        private void RecalculateAttributeValues()
         {
-            float normalisedDurability = Durability.CurrentValue() / MaxDurability;
+            float normalisedDurability = _durability.CurrentValue() / MaxDurability;
             float qualityModifier = (int) _weapon.Quality() + 1 / 2f;
-            DurabilityModifier = MinDurabilityMod + (1 - MinDurabilityMod) * normalisedDurability * qualityModifier;
-            --DurabilityModifier;
-            _durabilityModifier.SetFinalBonus(DurabilityModifier);
+            float durabilityModifierValue = MinDurabilityMod + (1 - MinDurabilityMod) * normalisedDurability * qualityModifier;
+            --durabilityModifierValue;
+            _durabilityModifier.SetFinalBonus(durabilityModifierValue);
             CalculateDPS();
         }
 
@@ -83,8 +80,8 @@ namespace Game.Gear.Weapons
 
         public float DPS() => _dps;
 
-        public string Print() => WeaponType + " " + WeaponClassName + " " + ModifierName
-                                 + "\nDurability: " + Durability.CurrentValue() + " (" + DurabilityModifier + ")"
+        public string GetPrintMessage() => WeaponType + " " + WeaponClassType + " " + _weapon.Quality()
+                                 + "\nDurability: " + _durability.CurrentValue() + " (" + _durability.Max + ")"
                                  + "\nDPS: " + DPS()
                                  + "\nAutomatic: " + Automatic
                                  + "\nCapacity:   " + Val(AttributeType.Capacity)
@@ -92,20 +89,25 @@ namespace Game.Gear.Weapons
                                  + "\nDamage:     " + Val(AttributeType.Damage)
                                  + "\nFire Rate:  " + Val(AttributeType.FireRate)
                                  + "\nReload:     " + Val(AttributeType.ReloadSpeed)
-                                 + "\nAccuracy: " + Val(AttributeType.Accuracy)
-                                 + "\n" + WeaponClassDescription?.Replace("\n", " ")
-                                 + "\n" + ModifierDescription?.Replace("\n", " ") + "\n\n";
+                                 + "\nAccuracy: " + Val(AttributeType.Accuracy);
 
         public void DecreaseDurability()
         {
             float durabilityLoss = Val(AttributeType.Damage) * Val(AttributeType.Pellets) / Val(AttributeType.ReloadSpeed);
             durabilityLoss /= 200f;
-            Durability.Decrement(durabilityLoss);
+            _durability.Decrement(durabilityLoss);
             RecalculateAttributeValues();
         }
 
         public void IncreaseDurability()
         {
+            _durability.Increment();
+            RecalculateAttributeValues();
+        }
+
+        public Number GetDurability()
+        {
+            return _durability;
         }
     }
 }

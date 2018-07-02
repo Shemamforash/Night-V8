@@ -93,10 +93,22 @@ namespace Game.Gear.Armour
             _onArmourChange?.Invoke();
         }
 
-        public void AutoFillSlots()
+        public void AutoFillSlots(int range)
         {
-            SetPlateOne(ArmourPlate.Create("Living Metal Plate"));
-//            SetPlateTwo(ArmourPlate.Create("Living Metal Plate"));
+            int plateOne, plateTwo;
+            if (range > 5)
+            {
+                plateOne = 5;
+                plateTwo = range - 5;
+            }
+            else
+            {
+                plateOne = range;
+                plateTwo = 1;
+            }
+
+            if(plateOne != 0) SetPlateOne(ArmourPlate.Create((ItemQuality)plateOne - 1));
+            if(plateTwo != 0) SetPlateTwo(ArmourPlate.Create((ItemQuality) plateTwo - 1));
         }
 
         public int GetProtectionLevel()

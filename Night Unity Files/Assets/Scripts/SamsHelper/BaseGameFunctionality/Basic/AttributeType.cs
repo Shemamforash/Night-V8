@@ -11,8 +11,6 @@
         Hunger,
 
         ResourceFindBonus,
-        FoodFindBonus,
-        WaterFindBonus,
         
         HealthRecoveryBonus,
         HealthLossBonus,
@@ -44,6 +42,11 @@
         SicknessChance,
         DecayChance,
         BurnChance,
-        CompassBonus
+        CompassBonus,
+        
+        HungerBonus,
+        ThirstBonus,
+        DehydratingFoodBonus,
+        StarvingWaterBonus
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Game.Characters;
+using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Exploration.Regions;
 using NUnit.Framework;
@@ -49,15 +51,17 @@ namespace Game.Combat.Generation
             }
 
             _region.Barriers = barriers;
-            PlaceShrines();
+            PlaceShrine();
             PlaceItems();
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
             PathingGrid.FinaliseGrid();
         }
 
-        private void PlaceShrines()
+        private void PlaceShrine()
         {
+            BrandManager.Brand brand = CharacterManager.SelectedCharacter.BrandManager.NextBrand() ;
+            if (brand == null) return;
             for (int i = 0; i < _availablePositions.Count; ++i)
             {
                 Vector2 topLeft = new Vector2(_availablePositions[i].x - 3f, _availablePositions[i].y - 3f);
@@ -65,7 +69,10 @@ namespace Game.Combat.Generation
                 if (_availablePositions[i].magnitude > 20) continue;
                 if (PathingGrid.WorldToCellPosition(_availablePositions[i]) == null) continue;
                 if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
+                Vector2 position = _availablePositions[i];
                 _availablePositions.RemoveAt(i);
+                int randomShrine = Random.Range(0, 4);
+                ShrineBehaviour.Generate(position, (ShrineType)randomShrine, brand);
                 return;
             }
         }

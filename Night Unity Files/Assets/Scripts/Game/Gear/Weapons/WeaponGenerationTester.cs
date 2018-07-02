@@ -68,8 +68,8 @@ namespace Game.Gear.Weapons
             _testResultString += indent + "DPS: " + Helper.Round(averageDps, 1) + " (min: " + Helper.Round(minDps, 1) + " /max: " + Helper.Round(maxDps, 1) + " )\n";
             DesiredStats.ForEach(stat => _testResultString += indent + _attributeStats[stat].GetString() + "\n");
             _testResultString += "\n";
-            _testResultString += maxWeapon.WeaponAttributes.Print() + "\n";
-            _testResultString += minWeapon.WeaponAttributes.Print() + "\n";
+            _testResultString += maxWeapon.WeaponAttributes.GetPrintMessage() + "\n";
+            _testResultString += minWeapon.WeaponAttributes.GetPrintMessage() + "\n";
         }
 
         private class MinMaxAverage

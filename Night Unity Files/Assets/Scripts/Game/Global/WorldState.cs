@@ -22,6 +22,7 @@ namespace Game.Global
 
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
+        private static int _difficulty;
         private static bool _isNight, _isPaused;
 
         public const float MinuteInSeconds = 0.2f;
@@ -53,11 +54,8 @@ namespace Game.Global
 
         private void IncrementDaysSpentHere()
         {
+            ++_difficulty;
             ++DaysSpentHere;
-            if (DaysSpentHere == 7)
-            {
-                //TODO gameover
-            }
         }
 
         public static string TimeToHours(int duration)
@@ -81,11 +79,17 @@ namespace Game.Global
 
         public static int Difficulty()
         {
-            return DaysSpentHere + (Days - DaysSpentHere) * EnvironmentManager.CurrentEnvironment.LevelNo;
+            return _difficulty;
         }
 
+        public static int GetDaysSpentHere()
+        {
+            return DaysSpentHere;
+        }
+        
         private void FindNewLocation()
         {
+            DaysSpentHere = 0;
             EnvironmentManager.NextLevel();
         }
 

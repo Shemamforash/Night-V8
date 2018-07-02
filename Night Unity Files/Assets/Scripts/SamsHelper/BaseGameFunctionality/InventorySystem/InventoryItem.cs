@@ -9,7 +9,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     {
         private readonly Number _quantity = new Number();
         private bool _stackable;
-        protected ResourceTemplate Template;
+        public readonly ResourceTemplate Template;
         private bool _isResource;
 
         public InventoryItem(ResourceTemplate template, GameObjectType type, Inventory parentInventory = null) : base(template.Name, type, parentInventory)

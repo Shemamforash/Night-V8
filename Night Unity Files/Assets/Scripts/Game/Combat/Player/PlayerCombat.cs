@@ -250,6 +250,12 @@ namespace Game.Combat.Player
             _muzzleFlash.Colour = c;
         }
 
+        public override void TakeDamage(Shot shot)
+        {
+            base.TakeDamage(shot);
+            CombatManager.IncreaseDamageTaken(shot.DamageDealt());
+        }
+
         public void Initialise()
         {
             InputHandler.SetCurrentListener(this);
@@ -404,6 +410,7 @@ namespace Game.Combat.Player
             if (_reloading) return;
             if (!_weaponBehaviour.CanFire()) return;
             _weaponBehaviour.StartFiring(this);
+            CombatManager.MarkShotFired();
         }
 
         //MISC

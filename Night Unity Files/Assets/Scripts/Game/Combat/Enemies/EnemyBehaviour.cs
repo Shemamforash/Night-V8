@@ -124,13 +124,15 @@ namespace Game.Combat.Enemies
         public override void TakeDamage(Shot shot)
         {
             base.TakeDamage(shot);
+            //todo remove friendly fire
+            CombatManager.IncreaseDamageDealt(shot.DamageDealt());
             EnemyUi.Instance().RegisterHit(this);
         }
 
         public override void Kill()
         {
             base.Kill();
-
+            PlayerCombat.Instance.Player.BrandManager.IncreaseWeaponKills(PlayerCombat.Instance.Player.Weapon.WeaponType());
             Loot loot = Enemy.DropLoot(transform.position);
 
             switch (Enemy.Template.DropResource)

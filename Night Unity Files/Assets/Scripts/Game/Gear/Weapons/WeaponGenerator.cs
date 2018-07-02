@@ -14,65 +14,19 @@ namespace Game.Gear.Weapons
     {
         private static readonly Dictionary<WeaponType, List<WeaponClass>> WeaponClasses = new Dictionary<WeaponType, List<WeaponClass>>();
         private static bool _readWeapons;
-        private static readonly List<WeaponType> _weaponTypes = new List<WeaponType>();
+        public static readonly List<WeaponType> WeaponTypes = new List<WeaponType>();
 
-
-        public static WeaponClass GetWeaponClassWithType(WeaponType type)
-        {
-            LoadBaseWeapons();
-            List<WeaponClass> validTypes = WeaponClasses[type];
-            return validTypes[Random.Range(0, validTypes.Count)];
-        }
 
         public static Weapon GenerateWeapon(ItemQuality quality, WeaponType type)
         {
-            return GenerateWeapon(quality, new List<WeaponType> {type});
+            LoadBaseWeapons();
+            return Weapon.Generate(quality, Helper.RandomInList(WeaponClasses[type]));
         }
-
-        public static Weapon GenerateWeapon(ItemQuality quality, WeaponClassType type)
+        
+        public static Weapon GenerateWeapon(ItemQuality quality)
         {
             LoadBaseWeapons();
-            WeaponClass weaponClass = null;
-
-            foreach (KeyValuePair<WeaponType, List<WeaponClass>> keyValuePair in WeaponClasses)
-            {
-                foreach (WeaponClass w in keyValuePair.Value)
-                {
-                    if (w.Name == type)
-                    {
-                        weaponClass = w;
-                    }
-                }
-            }
-
-            Weapon weapon = weaponClass.CreateWeapon(quality);
-            WorldEventManager.GenerateEvent(new WeaponFindEvent(weapon.Name));
-            weapon.SetName();
-            return weapon;
-        }
-
-        public static Weapon GenerateWeapon(ItemQuality quality, List<WeaponType> weaponsWanted = null)
-        {
-            LoadBaseWeapons();
-            WeaponType weaponType;
-            if (_weaponTypes.Count == 0)
-            {
-                foreach (WeaponType w in Enum.GetValues(typeof(WeaponType))) _weaponTypes.Add(w);
-            }
-
-            if (weaponsWanted != null)
-            {
-                weaponType = weaponsWanted.Count != 0 ? weaponsWanted[Random.Range(0, weaponsWanted.Count)] : weaponsWanted[0];
-            }
-            else
-            {
-                weaponType = Helper.RandomInList(_weaponTypes);
-            }
-
-            WeaponClass weaponClass = GetWeaponClassWithType(weaponType);
-            Weapon weapon = weaponClass.CreateWeapon(quality);
-            WorldEventManager.GenerateEvent(new WeaponFindEvent(weapon.Name));
-            weapon.SetName();
+            Weapon weapon = Weapon.Generate(quality);
             return weapon;
         }
 
@@ -82,6 +36,7 @@ namespace Game.Gear.Weapons
             XmlNode classesNode = Helper.OpenRootNode("WeaponClasses", "Weapons");
             foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
             {
+                WeaponTypes.Add(type);
                 WeaponClasses[type] = new List<WeaponClass>();
                 XmlNode classNode = classesNode.SelectSingleNode("Class[@name='" + type + "']");
                 foreach (XmlNode subtypeNode in classNode.SelectNodes("Subtype"))

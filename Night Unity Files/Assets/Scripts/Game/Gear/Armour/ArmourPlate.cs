@@ -9,39 +9,38 @@ namespace Game.Gear.Armour
     {
         public const float PlateHealthUnit = 100;
         private readonly Number _plateHealth = new Number();
-        public  readonly int Protection;
+        public readonly int Protection;
 
-        private ArmourPlate(string name, int protection, ItemQuality quality) : base(name, GearSubtype.Armour, quality)
+        private ArmourPlate(string name, ItemQuality quality) : base(name, GearSubtype.Armour, quality)
         {
-            Protection = protection;
-            _plateHealth.Max = protection * 100;
+            Protection = (int) quality + 1;
+            _plateHealth.Max = Protection * PlateHealthUnit;
             _plateHealth.SetCurrentValue(_plateHealth.Max);
         }
 
-        private static ItemQuality NameToQuality(string name)
+        private static string QualityToName(ItemQuality quality)
         {
-            switch (name)
+            switch (quality)
             {
-                case "Leather Plate":
-                    return ItemQuality.Rusted;
-                case "Reinforced Leather Plate":
-                    return ItemQuality.Worn;
-                case "Metal Plate":
-                    return ItemQuality.Shining;
-                case "Alloy Plate":
-                    return ItemQuality.Faultless;
-                case "Living Metal Plate":
-                    return ItemQuality.Radiant;
+                case ItemQuality.Rusted:
+                    return "Leather Plate";
+                case ItemQuality.Worn:
+                    return "Reinforced Leather Plate";
+                case ItemQuality.Shining:
+                    return "Metal Plate";
+                case ItemQuality.Faultless:
+                    return "Alloy Plate";
+                case ItemQuality.Radiant:
+                    return "Living Metal Plate";
             }
 
-            throw new ArgumentOutOfRangeException("Unknown armour type '" + name + "'");
+            throw new ArgumentOutOfRangeException("Unknown armour type '" + quality + "'");
         }
 
-        public static ArmourPlate Create(string plateName)
+        public static ArmourPlate Create(ItemQuality quality)
         {
-            ItemQuality quality = NameToQuality(plateName);
-            int weight = (int) quality + 1;
-            return new ArmourPlate(plateName, weight, quality);
+            string name = QualityToName(quality);
+            return new ArmourPlate(name, quality);
         }
 
         public override string GetSummary() => "+" + Protection + " Armour";
@@ -57,9 +56,5 @@ namespace Game.Gear.Armour
         public int GetMaxProtection() => Mathf.CeilToInt(_plateHealth.Max / PlateHealthUnit);
 
         public int GetCurrentProtection() => Mathf.CeilToInt(_plateHealth.CurrentValue() / PlateHealthUnit);
-
-        public float GetMaxHealth() => _plateHealth.Max;
-
-        public float GetRemainingHealth() => _plateHealth.CurrentValue();
     }
 }

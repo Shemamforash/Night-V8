@@ -11,17 +11,22 @@ namespace Game.Gear.Weapons
 {
     public class Weapon : GearItem
     {
-        public readonly WeaponAttributes WeaponAttributes;
-        public Skill WeaponSkillOne, WeaponSkillTwo;
         private const float MaxAccuracyOffsetInDegrees = 25f;
         private const float RangeMin = 1f;
         private const float RangeMax = 4.5f;
-        private Inscription _inscription;
+        public readonly WeaponAttributes WeaponAttributes;
+        public readonly Skill WeaponSkillOne, WeaponSkillTwo;
         private Character _character;
+        private Inscription _inscription;
+        private bool _inscriptionApplied;
 
-        public Weapon(string name, float weight, ItemQuality _itemQuality) : base(name, GearSubtype.Weapon, _itemQuality)
+        private Weapon(WeaponClass weaponClass, ItemQuality _itemQuality) : base(weaponClass.Type.ToString(), GearSubtype.Weapon, _itemQuality)
         {
-            WeaponAttributes = new WeaponAttributes(this);
+            WeaponAttributes = new WeaponAttributes(this, weaponClass);
+            WeaponSkillOne = WeaponSkills.GetWeaponSkillOne(this);
+            WeaponSkillTwo = WeaponSkills.GetWeaponSkillTwo(this);
+            string quality = Quality().ToString();
+            Name = quality + " " + WeaponAttributes.GetWeaponClass();
         }
 
         public override XmlNode Save(XmlNode root, PersistenceType saveType)
@@ -30,6 +35,10 @@ namespace Game.Gear.Weapons
             WeaponAttributes.Save(root, saveType);
             return root;
         }
+
+        public static Weapon Generate(ItemQuality quality) => new Weapon(WeaponClass.GetRandomClass(), quality);
+
+        public static Weapon Generate(ItemQuality quality, WeaponClass weaponClass) => new Weapon(weaponClass, quality);
 
         public float CalculateIdealDistance()
         {
@@ -42,8 +51,8 @@ namespace Game.Gear.Weapons
         {
             _inscription?.RemoveModifier(this);
             _inscription = inscription;
-            _inscription.ParentInventory.DestroyItem(inscription);
-            inscription.ApplyModifier(this);
+            _inscription.ParentInventory?.DestroyItem(inscription);
+            _inscription.ApplyModifier(this);
         }
 
         public float CalculateBaseAccuracy()
@@ -59,19 +68,9 @@ namespace Game.Gear.Weapons
 
         public float GetAttributeValue(AttributeType attributeType) => WeaponAttributes.Get(attributeType).CurrentValue();
 
-        public void SetName()
-        {
-            string quality = Quality().ToString();
-            Name = quality + " " + WeaponAttributes.GetWeaponClass();
-        }
-
         public string GetWeaponType() => WeaponAttributes.WeaponType.ToString();
 
         public override string GetSummary() => Helper.Round(WeaponAttributes.DPS(), 1) + "DPS";
-
-        public int GetUpgradeCost() => (int) (WeaponAttributes.Durability.CurrentValue() * 10 + 100);
-
-        public bool Inscribable() => Quality() == ItemQuality.Shining;
 
         public BaseWeaponBehaviour InstantiateWeaponBehaviour(CharacterCombat player)
         {
@@ -107,19 +106,6 @@ namespace Game.Gear.Weapons
             return weaponBehaviour;
         }
 
-        private void AddInscription(Inscription i)
-        {
-            if (_inscription != null)
-            {
-                _inscription.RemoveModifier(this);
-                UnapplyInscription();
-            }
-
-            _inscription = i;
-            ParentInventory.DestroyItem(i);
-            ApplyInscription();
-        }
-
         public override void Equip(Character character)
         {
             base.Equip(character);
@@ -135,21 +121,18 @@ namespace Game.Gear.Weapons
 
         private void ApplyInscription()
         {
-            if (_inscription == null) return;
-            _inscription.ApplyModifier(this);
-            _inscription.ApplyModifier(_character);
+            if (_inscriptionApplied) return;
+            _inscription?.ApplyModifier(_character);
+            _inscriptionApplied = true;
         }
 
         private void UnapplyInscription()
         {
-            if (_inscription == null) return;
-            _inscription.RemoveModifier(this);
-            _inscription.RemoveModifier(_character);
+            if (!_inscriptionApplied) return;
+            _inscription?.RemoveModifier(_character);
+            _inscriptionApplied = false;
         }
 
-        public Inscription GetInscription()
-        {
-            return _inscription;
-        }
+        public Inscription GetInscription() => _inscription;
     }
 }

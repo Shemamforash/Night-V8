@@ -33,8 +33,6 @@ namespace Game.Combat.Misc
         protected bool IsImmobilised;
         protected CharacterUi CharacterUi;
 
-        protected bool FireImmune, SicknessImmune, DecayImmune;
-
         public float Speed;
 
         public float DistanceToTarget()
@@ -47,31 +45,39 @@ namespace Game.Combat.Misc
 
         public void Burn()
         {
-            if (FireImmune) return;
-            if (_burnTicks == 0) _burnDuration = 1;
+            if (_burnTicks == 0)
+            {
+                CharacterUi.GetHealthController(this).StartBurning();
+                if (this is EnemyBehaviour) PlayerCombat.Instance.Player.BrandManager.IncreaseBurnCount();
+            }
+
+            _burnDuration = 1;
             _burnTicks = ConditionTicksMax;
-            CharacterUi.GetHealthController(this).StartBurning();
         }
 
         public bool IsBurning() => _burnTicks > 0;
 
         public void Decay()
         {
-            if (DecayImmune) return;
-            if (_decayTicks == 0) _decayDuration = 1;
+            if (_decayTicks == 0)
+            {
+                CharacterUi.GetHealthController(this).StartDecay();
+                if (this is EnemyBehaviour) PlayerCombat.Instance.Player.BrandManager.IncreaseDecayCount();
+            }
+
+            _decayDuration = 1;
             _decayTicks = ConditionTicksMax;
-            CharacterUi.GetHealthController(this).StartBleeding();
         }
 
         public bool IsDecaying() => _decayTicks > 0;
 
         public void Sicken(int stacks = 1)
         {
-            if (SicknessImmune) return;
             _sicknessTicks += stacks;
             if (_sicknessTicks >= SicknessTargetTicks)
             {
                 HealthController.TakeDamage(HealthController.GetMaxHealth() / 4f);
+                if (this is EnemyBehaviour) PlayerCombat.Instance.Player.BrandManager.IncreaseSickenCount();
                 _sicknessTicks = 0;
             }
 

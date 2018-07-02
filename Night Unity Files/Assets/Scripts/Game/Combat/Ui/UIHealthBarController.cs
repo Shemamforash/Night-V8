@@ -66,7 +66,7 @@ namespace Game.Combat.Ui
             _slider.value = health.Normalised();
         }
 
-        public void StartBleeding()
+        public void StartDecay()
         {
             if (_bleedEffect.isPlaying) return;
             _bleedEffect.Play();
