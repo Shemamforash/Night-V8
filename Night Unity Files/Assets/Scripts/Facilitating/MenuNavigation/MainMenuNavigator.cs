@@ -1,7 +1,6 @@
 ﻿using Facilitating.Persistence;
 using Game.Global;
 using SamsHelper.ReactiveUI.MenuSystem;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

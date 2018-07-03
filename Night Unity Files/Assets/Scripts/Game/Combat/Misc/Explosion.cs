@@ -21,7 +21,6 @@ namespace Game.Combat.Misc
         private readonly float _explosionWarmupTime = 1f;
         private readonly float _fadeTime = 0.5f;
 
-        private float _knockbackDistance;
         private FastLight _light;
         private float _originalExplosionWidth, _originalWarningWidth;
         private ParticleSystem _particles;
@@ -172,11 +171,6 @@ namespace Game.Combat.Misc
             _light.Colour = UiAppearanceController.InvisibleColour;
             gameObject.SetActive(false);
             _explosionPool.Add(this);
-        }
-
-        public void SetKnockbackDistance(float distance)
-        {
-            _knockbackDistance = distance;
         }
     }
 }

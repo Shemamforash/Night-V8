@@ -1,5 +1,4 @@
-﻿using System;
-using SamsHelper.Libraries;
+﻿using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.UI;
 

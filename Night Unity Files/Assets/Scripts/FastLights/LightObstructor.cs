@@ -213,6 +213,6 @@ namespace FastLights
 
     public class UnnassignedMeshException : Exception
     {
-        public string Message() => "No mesh assigned, a mesh is required for FastLight to work";
+        public new string Message() => "No mesh assigned, a mesh is required for FastLight to work";
     }
 }

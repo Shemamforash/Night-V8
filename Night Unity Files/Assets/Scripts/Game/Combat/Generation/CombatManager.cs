@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Animals;
@@ -36,6 +35,7 @@ namespace Game.Combat.Generation
         private int _damageDealt;
         private int _skillsUsed;
         private int _itemsFound;
+        private Characters.Player _characterEcho;
 
         public static bool AllEnemiesDead() => Instance()._enemies.Count == 0;
 
@@ -103,7 +103,8 @@ namespace Game.Combat.Generation
                 switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
                 {
                     case EnvironmentType.Oasis:
-                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
+//                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
+                        worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
                         break;
                     case EnvironmentType.Steppe:
                         //todo
@@ -207,7 +208,15 @@ namespace Game.Combat.Generation
             brandManager.IncreaseHumansKilled(Instance()._humansKilled);
 
             Instance()._inCombat = false;
-            SceneChanger.ChangeScene("Map", false);
+            if (Instance()._characterEcho != null)
+            {
+                StoryController.ShowText(Instance()._characterEcho.GetStoryLine(), "Map");
+            }
+            else
+            {
+                SceneChanger.ChangeScene("Map", false);
+            }
+
             PlayerCombat.Instance.ExitCombat();
         }
 
@@ -304,6 +313,11 @@ namespace Game.Combat.Generation
         public static void MarkShotFired()
         {
             Instance()._shotFired = true;
+        }
+
+        public static void SetCharacterEcho(Characters.Player player)
+        {
+            Instance()._characterEcho = player;
         }
     }
 }

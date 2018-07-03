@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using Game.Combat.Enemies;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;

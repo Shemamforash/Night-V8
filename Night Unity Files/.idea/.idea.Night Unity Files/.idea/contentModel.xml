@@ -27,6 +27,7 @@
           </e>
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
+        <e p="EchoBehaviour.cs" t="Include" />
         <e p="EssenceCloudBehaviour.cs" t="Include" />
         <e p="GameOverUiController.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
@@ -84,7 +85,6 @@
             <e p="UIControllers" t="Include">
               <e p="HeartBeatController.cs" t="Include" />
               <e p="UiAccessoryController.cs" t="Include" />
-              <e p="UIAmmoDisplayController.cs" t="Include" />
               <e p="UiAreaInventoryController.cs" t="Include" />
               <e p="UIArmourController.cs" t="Include" />
               <e p="UiArmourUpgradeController.cs" t="Include" />
@@ -215,6 +215,7 @@
                   <e p="Labyrinth.cs" t="Include" />
                   <e p="Nightmare.cs" t="Include" />
                   <e p="Ruins.cs" t="Include" />
+                  <e p="Steppe.cs" t="Include" />
                   <e p="Temple.cs" t="Include" />
                 </e>
                 <e p="Shrines" t="Include">
@@ -522,6 +523,7 @@
           <e p="CombatShader.shader" t="Include" />
           <e p="RadialLight.shader" t="Include" />
         </e>
+        <e p="StoryController.cs" t="Include" />
         <e p="TargetBehaviour.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
@@ -545,6 +547,7 @@
           </e>
         </e>
         <e p="UiCombatRingBoundDrawer.cs" t="Include" />
+        <e p="UiCompassPulseController.cs" t="Include" />
         <e p="UiConsumableController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />

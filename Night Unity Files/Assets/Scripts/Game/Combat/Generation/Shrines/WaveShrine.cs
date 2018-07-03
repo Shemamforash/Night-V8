@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using Game.Combat.Enemies;
-using Game.Combat.Enemies.Humans;
 using SamsHelper.Libraries;
 using UnityEngine;
 

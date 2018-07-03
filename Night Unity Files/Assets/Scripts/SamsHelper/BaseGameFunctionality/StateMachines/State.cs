@@ -1,5 +1,4 @@
-﻿using System;
-using SamsHelper.BaseGameFunctionality.Basic;
+﻿using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 

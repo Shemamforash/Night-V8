@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
-using Game.Combat.Player;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares

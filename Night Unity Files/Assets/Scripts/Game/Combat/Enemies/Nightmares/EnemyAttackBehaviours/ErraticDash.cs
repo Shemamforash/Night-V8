@@ -6,8 +6,6 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 {
     public class ErraticDash : TimedAttackBehaviour
     {
-        private float pauseTime = 0.5f;
-
         public void Start()
         {
             Initialise(0.4f, 0.6f);

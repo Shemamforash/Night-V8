@@ -2,7 +2,6 @@
 using Game.Characters;
 using Game.Exploration.Environment;
 using Game.Exploration.Weather;
-using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;

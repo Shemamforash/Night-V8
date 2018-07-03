@@ -19,7 +19,7 @@ namespace Game.Characters
             _player = player;
             CreateBrands();
         }
-        
+
         private void CreateBrands()
         {
             CreateAttributeBrands();
@@ -29,225 +29,242 @@ namespace Game.Characters
             CreateOtherBrands();
         }
 
+        private void CreateAttributeBrands()
+        {
+            new StrengthBrand(_player, "Powerful", "Weak", 10000);
+            new StrengthBrand(_player, "Powerful", "Weak", 20000);
+            new StrengthBrand(_player, "Powerful", "Weak", 30000);
+            new StrengthBrand(_player, "Powerful", "Weak", 40000);
+            new StrengthBrand(_player, "Powerful", "Weak", 50000);
+
+            new PerceptionBrand(_player, "Powerful", "Weak", 20);
+            new PerceptionBrand(_player, "Powerful", "Weak", 40);
+            new PerceptionBrand(_player, "Powerful", "Weak", 60);
+            new PerceptionBrand(_player, "Powerful", "Weak", 80);
+            new PerceptionBrand(_player, "Powerful", "Weak", 100);
+
+            new WillpowerBrand(_player, "Powerful", "Weak", 10);
+            new WillpowerBrand(_player, "Powerful", "Weak", 200);
+            new WillpowerBrand(_player, "Powerful", "Weak", 300);
+            new WillpowerBrand(_player, "Powerful", "Weak", 400);
+            new WillpowerBrand(_player, "Powerful", "Weak", 500);
+
+            new EnduranceBrand(_player, "Powerful", "Weak", 10);
+            new EnduranceBrand(_player, "Powerful", "Weak", 20);
+            new EnduranceBrand(_player, "Powerful", "Weak", 30);
+            new EnduranceBrand(_player, "Powerful", "Weak", 40);
+            new EnduranceBrand(_player, "Powerful", "Weak", 50);
+        }
+
         private void CreateOtherBrands()
         {
-            _lockedBrands.Add(new EssenceChangeBrand(_player, "Tinkerer", "Clumsy", 250));
-            _lockedBrands.Add(new EssenceChangeBrand(_player, "Machinist", "Clumsy", 500));
-            _lockedBrands.Add(new HealthRecoveryBrand(_player, "Reviving", "Clumsy", 10000));
-            _lockedBrands.Add(new HealthRecoveryBrand(_player, "Rallying", "Clumsy", 20000));
-            _lockedBrands.Add(new WillpowerRecoveryBrand(_player, "Murderous", "Clumsy", 100));
-            _lockedBrands.Add(new WillpowerRecoveryBrand(_player, "Pyschopathic", "Clumsy", 200));
-            _lockedBrands.Add(new ReloadBrand(_player, "Direct", "Clumsy", 25));
-            _lockedBrands.Add(new ReloadBrand(_player, "Blunt", "Clumsy", 50));
-            _lockedBrands.Add(new OnlySkillBrand(_player, "Direct", "Clumsy", 25));
-            _lockedBrands.Add(new OnlySkillBrand(_player, "Blunt", "Clumsy", 50));
+            new EssenceChangeBrand(_player, "Tinkerer", "Clumsy", 250);
+            new EssenceChangeBrand(_player, "Machinist", "Clumsy", 500);
+            new HealthRecoveryBrand(_player, "Reviving", "Clumsy", 10000);
+            new HealthRecoveryBrand(_player, "Rallying", "Clumsy", 20000);
+            new WillpowerRecoveryBrand(_player, "Murderous", "Clumsy", 100);
+            new WillpowerRecoveryBrand(_player, "Pyschopathic", "Clumsy", 200);
+            new ReloadBrand(_player, "Direct", "Clumsy", 25);
+            new ReloadBrand(_player, "Blunt", "Clumsy", 50);
+            new OnlySkillBrand(_player, "Direct", "Clumsy", 25);
+            new OnlySkillBrand(_player, "Blunt", "Clumsy", 50);
         }
 
         private void CreateResourceFindBrands()
         {
-            _lockedBrands.Add(new ResourceBrand(_player, "Scavenger", "", 100));
-            _lockedBrands.Add(new FoodBrand(_player, "Gatherer", "", 100));
-            _lockedBrands.Add(new WaterBrand(_player, "Diviner", "", 100));
+            new ResourceBrand(_player, "Scavenger", "", 100);
+            new FoodBrand(_player, "Gatherer", "", 100);
+            new WaterBrand(_player, "Diviner", "", 100);
         }
 
         private void CreateConditionBrands()
         {
-            _lockedBrands.Add(new IgniteBrand(_player, "Firestarter", "Flammable", 500));
-            _lockedBrands.Add(new IgniteBrand(_player, "Decayer", "Decayed", 500));
-            _lockedBrands.Add(new IgniteBrand(_player, "Plaguebearer", "Sickly", 500));
+            new IgniteBrand(_player, "Firestarter", "Flammable", 500);
+            new IgniteBrand(_player, "Decayer", "Decayed", 500);
+            new IgniteBrand(_player, "Plaguebearer", "Sickly", 500);
         }
 
         private void CreateSkillBrands()
         {
             foreach (WeaponType weaponType in WeaponGenerator.WeaponTypes)
             {
-                _lockedBrands.Add(new WeaponSkillBrand(weaponType, _player, "Trained", "", 50));
-                _lockedBrands.Add(new WeaponSkillBrand(weaponType, _player, "Gifted", "", 100));
+                new WeaponSkillBrand(weaponType, _player, "Trained", "", 50);
+                new WeaponSkillBrand(weaponType, _player, "Gifted", "", 100);
             }
 
-            _lockedBrands.Add(new CharacterSkillBrand(_player, "Enlighted", "", 7));
-            _lockedBrands.Add(new CharacterSkillBrand(_player, "Clarified", "", 7));
+            new CharacterSkillBrand(_player, "Enlighted", "", 7);
+            new CharacterSkillBrand(_player, "Clarified", "", 7);
         }
 
         public void IncreaseDamageDealt(int damage)
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is StrengthBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is StrengthBrand)) continue;
                 b.UpdateValue(damage);
-            });
+            }
         }
 
         public void IncreaseItemsFound(int count)
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is PerceptionBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is PerceptionBrand)) continue;
                 b.UpdateValue(count);
-            });
+            }
         }
 
         public void IncreaseSkillsUsed(int count)
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is WillpowerBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is WillpowerBrand)) continue;
                 b.UpdateValue(count);
-            });
+            }
         }
 
         public void IncreaseRegionsExplored()
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is EnduranceBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is EnduranceBrand)) continue;
                 b.UpdateValue(1);
-            });
+            }
         }
 
         public void IncreaseEssenceInfused()
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is EssenceChangeBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is EssenceChangeBrand)) continue;
                 b.UpdateValue(1);
-            });
+            }
         }
 
         public void IncreaseDamageTaken(int damage)
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is HealthRecoveryBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is HealthRecoveryBrand)) continue;
                 b.UpdateValue(damage);
-            });
+            }
         }
 
         public void IncreaseHumansKilled(int count)
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is WillpowerRecoveryBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is WillpowerRecoveryBrand)) continue;
                 b.UpdateValue(count);
-            });
+            }
         }
 
         public void IncreaseBattlesNoSkills()
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is ReloadBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is ReloadBrand)) continue;
                 b.UpdateValue(1);
-            });
+            }
         }
 
         public void IncreaseWeaponKills(WeaponType weaponType)
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is WeaponSkillBrand)) return;
-                if (((WeaponSkillBrand) b).WeaponType != weaponType) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is WeaponSkillBrand)) continue;
+                if (((WeaponSkillBrand) b).WeaponType != weaponType) continue;
                 b.UpdateValue(1);
-            });
+            }
         }
 
         public void IncreaseTimeSurvived()
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is CharacterSkillBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is CharacterSkillBrand)) continue;
                 b.UpdateValue(1);
-            });
+            }
         }
 
         public void IncreaseResourceFound()
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is ResourceBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is ResourceBrand)) continue;
                 b.UpdateValue(1);
-            });
+            }
         }
 
         public void IncreaseFoodFound()
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is FoodBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is FoodBrand)) continue;
                 b.UpdateValue(1);
-            });
+            }
         }
 
         public void IncreaseWaterFound()
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is WaterBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is WaterBrand)) continue;
                 b.UpdateValue(1);
-            });
+            }
         }
 
         public void IncreaseOnlySkillBattles()
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is OnlySkillBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is OnlySkillBrand)) continue;
                 b.UpdateValue(1);
-            });
+            }
         }
 
         public void IncreaseBurnCount()
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is IgniteBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is IgniteBrand)) continue;
                 b.UpdateValue(1);
-            });
+            }
         }
 
         public void IncreaseDecayCount()
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is DecayBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is DecayBrand)) continue;
                 b.UpdateValue(1);
-            });
+            }
         }
 
         public void IncreaseSickenCount()
         {
-            _lockedBrands.ForEach(b =>
+            for (int i = _lockedBrands.Count - 1; i >= 0; --i)
             {
-                if (!(b is SicknessBrand)) return;
+                Brand b = _lockedBrands[i];
+                if (!(b is SicknessBrand)) continue;
                 b.UpdateValue(1);
-            });
-        }
-
-        private void CreateAttributeBrands()
-        {
-            _lockedBrands.Add(new StrengthBrand(_player, "Powerful", "Weak", 10000));
-            _lockedBrands.Add(new StrengthBrand(_player, "Powerful", "Weak", 20000));
-            _lockedBrands.Add(new StrengthBrand(_player, "Powerful", "Weak", 30000));
-            _lockedBrands.Add(new StrengthBrand(_player, "Powerful", "Weak", 40000));
-            _lockedBrands.Add(new StrengthBrand(_player, "Powerful", "Weak", 50000));
-
-            _lockedBrands.Add(new PerceptionBrand(_player, "Powerful", "Weak", 20));
-            _lockedBrands.Add(new PerceptionBrand(_player, "Powerful", "Weak", 40));
-            _lockedBrands.Add(new PerceptionBrand(_player, "Powerful", "Weak", 60));
-            _lockedBrands.Add(new PerceptionBrand(_player, "Powerful", "Weak", 80));
-            _lockedBrands.Add(new PerceptionBrand(_player, "Powerful", "Weak", 100));
-
-            _lockedBrands.Add(new WillpowerBrand(_player, "Powerful", "Weak", 10));
-            _lockedBrands.Add(new WillpowerBrand(_player, "Powerful", "Weak", 200));
-            _lockedBrands.Add(new WillpowerBrand(_player, "Powerful", "Weak", 300));
-            _lockedBrands.Add(new WillpowerBrand(_player, "Powerful", "Weak", 400));
-            _lockedBrands.Add(new WillpowerBrand(_player, "Powerful", "Weak", 500));
-
-            _lockedBrands.Add(new EnduranceBrand(_player, "Powerful", "Weak", 10));
-            _lockedBrands.Add(new EnduranceBrand(_player, "Powerful", "Weak", 20));
-            _lockedBrands.Add(new EnduranceBrand(_player, "Powerful", "Weak", 30));
-            _lockedBrands.Add(new EnduranceBrand(_player, "Powerful", "Weak", 40));
-            _lockedBrands.Add(new EnduranceBrand(_player, "Powerful", "Weak", 50));
+            }
         }
 
         public abstract class Brand
@@ -289,7 +306,6 @@ namespace Game.Characters
                 if (_counter >= _counterTarget) SetStatus(BrandStatus.Pending);
             }
 
-
             public void Succeed()
             {
                 Debug.Log("unlocked " + _successName);
@@ -306,6 +322,11 @@ namespace Game.Characters
 
             protected abstract void OnSucceed();
             protected abstract void OnFail();
+
+            public void PrintStatus()
+            {
+                Debug.Log(this + " " + Status + " " + _counter + "/" + _counterTarget);
+            }
         }
 
         private void UpdateBrandStatus(Brand brand)
@@ -313,18 +334,21 @@ namespace Game.Characters
             switch (brand.Status)
             {
                 case BrandStatus.Locked:
+                    if (_lockedBrands.Contains(brand)) return;
+                    _lockedBrands.Add(brand);
                     _readyBrands.Remove(brand);
                     _unlockedBrands.Remove(brand);
-                    _lockedBrands.Add(brand);
                     break;
                 case BrandStatus.Pending:
+                    if (!_readyBrands.Contains(brand)) return;
                     _readyBrands.Add(brand);
                     _unlockedBrands.Remove(brand);
                     _lockedBrands.Remove(brand);
                     break;
                 default:
-                    _readyBrands.Remove(brand);
+                    if (_unlockedBrands.Contains(brand)) return;
                     _unlockedBrands.Add(brand);
+                    _readyBrands.Remove(brand);
                     _lockedBrands.Remove(brand);
                     break;
             }

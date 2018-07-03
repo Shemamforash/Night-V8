@@ -116,7 +116,7 @@ namespace Facilitating.Persistence
 
                 return false;
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 return false;
             }
@@ -132,7 +132,7 @@ namespace Facilitating.Persistence
                 _saveDoc.Save(fileLocation);
                 return true;
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 return false;
             }

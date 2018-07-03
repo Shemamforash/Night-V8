@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using DG.Tweening.Core.Easing;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Generation.Shrines;

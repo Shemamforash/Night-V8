@@ -4,7 +4,6 @@ using Game.Gear.Armour;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace Facilitating.UIControllers

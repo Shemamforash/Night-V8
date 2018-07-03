@@ -5,7 +5,6 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
-using UnityEngine;
 
 namespace Game.Gear.Weapons
 {

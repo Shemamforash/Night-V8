@@ -1,6 +1,4 @@
 ﻿using Facilitating;
-using Game.Global;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 
 namespace Game.Characters.CharacterActions
 {

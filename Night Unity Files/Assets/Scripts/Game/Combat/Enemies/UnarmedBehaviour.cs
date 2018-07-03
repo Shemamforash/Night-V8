@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
-using Game.Combat.Player;
 using UnityEngine;
 
 namespace Game.Combat.Enemies

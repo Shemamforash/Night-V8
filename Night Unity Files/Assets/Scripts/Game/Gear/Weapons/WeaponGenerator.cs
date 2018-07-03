@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
-using Game.Characters;
-using Game.Exploration.WorldEvents;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
-using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Gear.Weapons
 {

@@ -6,7 +6,6 @@ using NUnit.Framework;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Combat.Generation
 {

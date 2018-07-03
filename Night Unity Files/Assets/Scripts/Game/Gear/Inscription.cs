@@ -7,7 +7,6 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Gear
 {

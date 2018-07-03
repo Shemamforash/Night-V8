@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using Facilitating.UIControllers;
 using Game.Characters;
-using Game.Combat.Generation;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;

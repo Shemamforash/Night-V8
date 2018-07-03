@@ -1,6 +1,5 @@
 ﻿using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
-using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {

@@ -13,7 +13,6 @@ namespace Game.Combat.Generation
     {
         private const float MinPolyWidth = 0.1f, SmallPolyWidth = 0.2f, MediumPolyWidth = 2f, LargePolyWidth = 3f, HugePolyWidth = 4f;
         private Region _region;
-        private List<Vector2> __availablePositions;
         private List<Vector2> _availablePositions;
         private int _barrierNumber;
         protected readonly List<Barrier> barriers = new List<Barrier>();
@@ -22,46 +21,65 @@ namespace Game.Combat.Generation
         {
             _region = region;
             Random.InitState(region.RegionID);
+
+            PathingGrid.InitialiseGrid();
             if (!_region.Visited())
-            {
                 GenerateFreshEnvironment();
-                _region.Visit();
-                return;
-            }
 
             _region.Visit();
-            PathingGrid.InitialiseGrid();
+            GenerateShrine();
+            GenerateEchoes();
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
             PathingGrid.FinaliseGrid();
         }
 
+        private void GenerateEchoes()
+        {
+            List<Characters.Player> characters = CharacterManager.Characters;
+            Helper.Shuffle(ref characters);
+            foreach (Characters.Player c in characters)
+            {
+                if (!c.HasAvailableStoryLine()) continue;
+                EchoBehaviour.Create(Helper.RandomInList(_region.EchoPositions), c);
+                break;
+            }
+        }
+
         private void GenerateFreshEnvironment()
         {
-            __availablePositions = AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f);
-            _availablePositions = new List<Vector2>(__availablePositions);
+            _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f));
             PathingGrid.InitialiseGrid();
+            for (int i = 0; i < 10; ++i)
+            {
+                Vector2? position = FindAndRemoveValidPosition();
+                Assert.IsNotNull(position);
+                _region.EchoPositions.Add(FindAndRemoveValidPosition().Value);
+            }
             Generate();
             foreach (Barrier barrier in barriers)
             {
                 if (!barrier.Valid) continue;
-                barrier.CreateObject();
                 _region.Barriers.Add(barrier);
             }
 
             _region.Barriers = barriers;
             PlaceShrine();
             PlaceItems();
-            _region.Fires.ForEach(f => f.CreateObject());
-            _region.Containers.ForEach(c => c.CreateObject());
-            PathingGrid.FinaliseGrid();
+            _region.Visit();
+        }
+
+        private void GenerateShrine()
+        {
+            BrandManager.Brand brand = CharacterManager.SelectedCharacter.BrandManager.NextBrand();
+            if (brand == null) return;
+            int randomShrine = Random.Range(0, 4);
+            ShrineBehaviour.Generate(_region.ShrinePosition, (ShrineType) randomShrine, brand);
         }
 
         private void PlaceShrine()
         {
-            BrandManager.Brand brand = CharacterManager.SelectedCharacter.BrandManager.NextBrand() ;
-            if (brand == null) return;
             for (int i = 0; i < _availablePositions.Count; ++i)
             {
                 Vector2 topLeft = new Vector2(_availablePositions[i].x - 3f, _availablePositions[i].y - 3f);
@@ -69,10 +87,8 @@ namespace Game.Combat.Generation
                 if (_availablePositions[i].magnitude > 20) continue;
                 if (PathingGrid.WorldToCellPosition(_availablePositions[i]) == null) continue;
                 if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
-                Vector2 position = _availablePositions[i];
+                _region.ShrinePosition = _availablePositions[i];
                 _availablePositions.RemoveAt(i);
-                int randomShrine = Random.Range(0, 4);
-                ShrineBehaviour.Generate(position, (ShrineType)randomShrine, brand);
                 return;
             }
         }
@@ -87,11 +103,6 @@ namespace Game.Combat.Generation
 
             float definition = smoothness * 150f;
             radiusVariation *= scale;
-            float minX = Random.Range(0, radiusVariation);
-            float minY = Random.Range(0, radiusVariation);
-            float maxX = Random.Range(minX, scale);
-            float maxY = Random.Range(minY, scale);
-//            Ellipse e = new Ellipse(minX, minY, maxX, maxY);
             Ellipse e = new Ellipse(radiusVariation, scale);
             float angleIncrement;
             List<Vector2> barrierVertices = new List<Vector2>();
@@ -159,7 +170,7 @@ namespace Game.Combat.Generation
             return new EnemyCampfire(position);
         }
 
-        private void AssignRockPosition(List<Vector2> barrierVertices, Vector2? position)
+        protected void AssignRockPosition(List<Vector2> barrierVertices, Vector2? position)
         {
             if (position == null) position = FindAndRemoveValidPosition();
             if (position == null) return;

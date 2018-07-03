@@ -1,8 +1,6 @@
 ﻿
 namespace TriangleNet.Tools
 {
-    using TriangleNet.Geometry;
-
     public static class Interpolation
     {
 #if USE_ATTRIBS

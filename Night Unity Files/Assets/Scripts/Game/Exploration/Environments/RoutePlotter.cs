@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Game.Exploration.Regions;
-using UnityEngine;
 
 namespace Game.Exploration.Environment
 {

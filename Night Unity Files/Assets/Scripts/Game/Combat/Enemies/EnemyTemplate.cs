@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Game.Gear.Weapons;
 using SamsHelper;
 using SamsHelper.Libraries;
-using UnityEngine;
 
 namespace Game.Combat.Enemies
 {

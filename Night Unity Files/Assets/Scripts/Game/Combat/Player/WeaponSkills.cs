@@ -2,7 +2,6 @@
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
-using Game.Combat.Ui;
 using Game.Gear.Weapons;
 
 namespace Game.Combat.Player

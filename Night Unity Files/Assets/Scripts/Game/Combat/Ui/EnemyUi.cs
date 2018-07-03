@@ -4,7 +4,6 @@ using Game.Combat.Enemies;
 using Game.Combat.Misc;
 using SamsHelper.Libraries;
 using TMPro;
-using UnityEngine;
 
 namespace Game.Combat.Ui
 {

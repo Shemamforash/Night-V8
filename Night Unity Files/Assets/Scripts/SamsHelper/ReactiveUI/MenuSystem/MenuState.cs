@@ -1,8 +1,5 @@
 ﻿using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
 {

@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Game.Combat.Misc;
+﻿using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
-using NUnit.Framework;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;

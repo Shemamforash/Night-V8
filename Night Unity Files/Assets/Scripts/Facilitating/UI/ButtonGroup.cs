@@ -21,7 +21,7 @@ namespace Facilitating.UI
 
         private void RevertActiveButton()
         {
-            if (activeButton != null) activeButton = null;
+            activeButton = null;
         }
 
         public void OnDisable()

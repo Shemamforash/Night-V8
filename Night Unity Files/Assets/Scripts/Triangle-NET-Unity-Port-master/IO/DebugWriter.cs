@@ -119,7 +119,6 @@ namespace TriangleNet.IO
                         byte[] bytes = Encoding.UTF8.GetBytes(header);
                         gzStream.Write(bytes, 0, bytes.Length);
 
-                        // TODO: read with stream
                         bytes = File.ReadAllBytes(tmpFile);
                         gzStream.Write(bytes, 0, bytes.Length);
                     }

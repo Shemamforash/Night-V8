@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Net;
 using DG.Tweening;
 using Facilitating;
 using Facilitating.UIControllers;
@@ -18,10 +16,8 @@ using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
-using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace Game.Combat.Player
 {
@@ -133,7 +129,8 @@ namespace Game.Combat.Player
         private void TryEmitPulse()
         {
             if (_compassPulses == 0) return;
-            UiCompassController.EmitPulse();
+            if (!UiCompassController.EmitPulse()) return;
+            UiCompassPulseController.UpdateCompassPulses();
             --_compassPulses;
         }
 
@@ -273,6 +270,7 @@ namespace Game.Combat.Player
             _adrenalineGain = Player.Attributes.CalculateAdrenalineRecoveryRate();
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
             _compassPulses = Player.Attributes.CalculateCompassPulses();
+            UiCompassPulseController.InitialisePulses(_compassPulses);
 
             _dashCooldown = CombatManager.CreateCooldown();
             _dashCooldown.Duration = 1;

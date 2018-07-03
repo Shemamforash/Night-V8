@@ -10,7 +10,6 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
-using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
 namespace Game.Characters

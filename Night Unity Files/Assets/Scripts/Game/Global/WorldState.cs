@@ -5,9 +5,7 @@ using Game.Characters;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Game.Global
 {

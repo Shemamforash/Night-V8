@@ -11,18 +11,12 @@ namespace Facilitating
 
         [Range(0, 1)] public float MinBrightness, MaxBrightness;
 
-        private Vector2 origin;
         private readonly float radius = 10;
-        public GameObject Sun, Stars, Moon;
+        public GameObject Sun, Stars;
 
         public static void SetWeatherModifier(float weatherModifier)
         {
             _weatherModifier = weatherModifier;
-        }
-
-        public void Awake()
-        {
-            origin = new Vector2(0, -radius);
         }
 
         public void Update()

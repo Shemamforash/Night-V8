@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
-using Game.Exploration.Regions;
 using Game.Gear.Weapons;
-using JetBrains.Annotations;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;

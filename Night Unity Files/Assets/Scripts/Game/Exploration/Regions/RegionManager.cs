@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
-using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
-using TMPro;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Regions

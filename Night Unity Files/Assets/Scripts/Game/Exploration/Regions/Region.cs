@@ -20,19 +20,20 @@ namespace Game.Exploration.Regions
     public class Region : Node, IPersistenceTemplate
     {
         public string Name;
-        private static List<EnemyTemplate> _enemyTypes = EnemyTemplate.GetEnemyTypes();
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private RegionType _regionType;
         private bool _discovered;
         private bool _seen;
         public List<Barrier> Barriers = new List<Barrier>();
-        public List<EnemyCampfire> Fires = new List<EnemyCampfire>();
-        public List<ContainerController> Containers = new List<ContainerController>();
+        public readonly List<EnemyCampfire> Fires = new List<EnemyCampfire>();
+        public readonly List<ContainerController> Containers = new List<ContainerController>();
         private readonly HashSet<Region> _neighbors = new HashSet<Region>();
         private static GameObject _nodePrefab;
         public readonly int RegionID;
         private int _lastVisitDay = -1;
         private static Sprite _animalSprite, _dangerSprite;
+        public Vector2 ShrinePosition;
+        public readonly List<Vector2> EchoPositions = new List<Vector2>();
 
         public bool Visited()
         {
@@ -147,25 +148,22 @@ namespace Game.Exploration.Regions
             int size = Random.Range(5 + daysSpent, 10 + daysSpent);
             int difficulty = WorldState.Difficulty();
             List<EnemyType> allowedTypes = new List<EnemyType>();
-            if (difficulty < 5)
-            {
-                allowedTypes.Add(EnemyType.Sentinel);
-                allowedTypes.Add(EnemyType.Brawler);
-            }
+            allowedTypes.Add(EnemyType.Sentinel);
+            allowedTypes.Add(EnemyType.Brawler);
 
-            if (difficulty < 10)
+            if (difficulty >= 5)
             {
                 allowedTypes.Add(EnemyType.Sniper);
                 allowedTypes.Add(EnemyType.Martyr);
             }
 
-            if (difficulty < 15)
+            if (difficulty >= 10)
             {
                 allowedTypes.Add(EnemyType.Witch);
                 allowedTypes.Add(EnemyType.Medic);
             }
 
-            if (difficulty < 20)
+            if (difficulty >= 15)
             {
                 allowedTypes.Add(EnemyType.Warlord);
                 allowedTypes.Add(EnemyType.Mountain);
@@ -194,25 +192,21 @@ namespace Game.Exploration.Regions
             int size = Random.Range(5 + daysSpent, 10 + daysSpent);
             int difficulty = WorldState.Difficulty();
             List<EnemyType> allowedTypes = new List<EnemyType>();
-            if (difficulty < 5)
-            {
-                allowedTypes.Add(EnemyType.Ghoul);
-                allowedTypes.Add(EnemyType.Ghast);
-            }
-
-            if (difficulty < 10)
+            allowedTypes.Add(EnemyType.Ghoul);
+            allowedTypes.Add(EnemyType.Ghast);
+            if (difficulty >= 5)
             {
                 allowedTypes.Add(EnemyType.GhoulMother);
                 allowedTypes.Add(EnemyType.Shadow);
             }
 
-            if (difficulty < 15)
+            if (difficulty >= 10)
             {
                 allowedTypes.Add(EnemyType.Revenant);
                 allowedTypes.Add(EnemyType.Maelstrom);
             }
 
-            if (difficulty < 20)
+            if (difficulty >= 15)
             {
                 allowedTypes.Add(EnemyType.Nightmare);
             }

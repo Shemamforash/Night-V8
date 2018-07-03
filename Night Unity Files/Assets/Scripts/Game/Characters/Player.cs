@@ -33,6 +33,8 @@ namespace Game.Characters
         public Meditate MeditateAction;
         public Sleep SleepAction;
         private int _timeAlive;
+        private bool _storyUnlocked;
+        private string _currentStoryLine;
 
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
@@ -45,6 +47,7 @@ namespace Game.Characters
             AddStates();
             Attributes.Get(AttributeType.Endurance).OnMin(RestAction.Enter);
             BrandManager.Initialise(this);
+            UnlockStoryLine();
         }
 
         public void AddEffect(Effect effect)
@@ -59,12 +62,23 @@ namespace Game.Characters
             _effects.Remove(effect);
         }
 
-        public string GetCurrentStoryProgress()
+        public string GetStoryLine()
         {
-            if (_storyProgress == CharacterTemplate.StoryLines.Count) return null;
-            string currentLine = CharacterTemplate.StoryLines[_storyProgress];
+            string storyLine = _currentStoryLine;
+            _currentStoryLine = null;
+            return storyLine;
+        }
+
+        public bool HasAvailableStoryLine()
+        {
+            return _currentStoryLine != null;
+        }
+
+        private void UnlockStoryLine()
+        {
+            if (_storyProgress == CharacterTemplate.StoryLines.Count) return;
+            _currentStoryLine = CharacterTemplate.StoryLines[_storyProgress];
             ++_storyProgress;
-            return currentLine;
         }
 
         public void Kill()
@@ -113,6 +127,7 @@ namespace Game.Characters
         {
             ++_timeAlive;
             if (_timeAlive != WorldState.MinutesPerHour * 24) return;
+            UnlockStoryLine();
             BrandManager.IncreaseTimeSurvived();
             _timeAlive = 0;
         }

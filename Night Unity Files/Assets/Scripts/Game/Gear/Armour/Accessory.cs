@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;

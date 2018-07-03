@@ -72,7 +72,7 @@ public class
         _altar.Clear();
         _altar.Stop();
         _explosion.Emit(200);
-
+        
         StartCoroutine(StartSpawningEnemies());
 
         float glowTimeMax = 1f;

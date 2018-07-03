@@ -5,7 +5,6 @@ using Game.Exploration.WorldEvents;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {

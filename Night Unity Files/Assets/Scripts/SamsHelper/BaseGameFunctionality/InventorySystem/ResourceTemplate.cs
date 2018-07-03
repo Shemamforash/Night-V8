@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Game.Characters;
 using Game.Exploration.Environment;
 using SamsHelper.BaseGameFunctionality.Basic;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem

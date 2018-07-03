@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using Game.Characters;
-using Game.Combat.Enemies;
 using Game.Combat.Enemies.Misc;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
-using Game.Combat.Ui;
 using Game.Gear.Armour;
-using UnityEngine;
 
 namespace Game.Combat.Player
 {

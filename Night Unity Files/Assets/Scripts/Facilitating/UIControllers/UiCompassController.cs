@@ -2,10 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Game.Combat.Generation;
-using Game.Combat.Player;
-using NUnit.Framework;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 public class UiCompassController : MonoBehaviour
@@ -24,12 +21,13 @@ public class UiCompassController : MonoBehaviour
         _instance = this;
     }
 
-    public static void EmitPulse()
+    public static bool EmitPulse()
     {
-        if (_instance._compassPulse.particleCount != 0) return;
+        if (_instance._compassPulse.particleCount != 0) return false;
         _instance._compassPulse.Play();
         _instance.StartCoroutine(_instance.ShowItems());
         _instance.StartCoroutine(_instance.HighlightContainers());
+        return true;
     }
 
     private IEnumerator HighlightContainers()
