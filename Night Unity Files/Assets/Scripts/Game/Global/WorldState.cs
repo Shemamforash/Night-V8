@@ -13,6 +13,10 @@ namespace Game.Global
     {
         public const int MinutesPerHour = 12;
         private const int IntervalSize = 60 / MinutesPerHour;
+
+        public const float MinuteInSeconds = 0.2f;
+        private const float DayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
+        private const int MinuteInterval = 60 / MinutesPerHour;
         private static int DaysSpentHere;
         private static bool _started;
         private static CharacterManager _homeInventory;
@@ -22,10 +26,6 @@ namespace Game.Global
         public static int Days, Hours = 6, Minutes;
         private static int _difficulty;
         private static bool _isNight, _isPaused;
-
-        public const float MinuteInSeconds = 0.2f;
-        private const float DayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
-        private const int MinuteInterval = 60 / MinutesPerHour;
 
         public void Awake()
         {
@@ -63,8 +63,14 @@ namespace Game.Global
             string timeString = "";
             if (hours != 0)
             {
-                if (hours == 1) timeString += hours + "hr";
-                else timeString += hours + "hrs ";
+                if (hours == 1)
+                {
+                    timeString += hours + "hr";
+                }
+                else
+                {
+                    timeString += hours + "hrs ";
+                }
             }
 
             if (minutes != 0)
@@ -75,26 +81,17 @@ namespace Game.Global
             return timeString;
         }
 
-        public static int Difficulty()
-        {
-            return _difficulty;
-        }
+        public static int Difficulty() => _difficulty;
 
-        public static int GetDaysSpentHere()
-        {
-            return DaysSpentHere;
-        }
-        
+        public static int GetDaysSpentHere() => DaysSpentHere;
+
         private void FindNewLocation()
         {
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel();
         }
 
-        public static CharacterManager HomeInventory()
-        {
-            return _homeInventory;
-        }
+        public static CharacterManager HomeInventory() => _homeInventory;
 
         public static void Pause()
         {
@@ -147,9 +144,13 @@ namespace Game.Global
             }
 
             if (Hours >= 6 && Hours < 20 && _isNight)
+            {
                 _isNight = false;
+            }
             else if ((Hours < 6 || Hours >= 20) && !_isNight)
+            {
                 _isNight = true;
+            }
         }
 
         private void IncrementDays()

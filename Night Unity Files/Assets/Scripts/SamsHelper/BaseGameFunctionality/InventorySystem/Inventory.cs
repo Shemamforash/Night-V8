@@ -61,7 +61,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Resources");
 
-            ResourceTemplate resourceTemplate;
             foreach (XmlNode resourceNode in root.SelectNodes("Consumable"))
             {
                 string name = resourceNode.SelectSingleNode("Name").InnerText;
@@ -72,21 +71,19 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 float defilesDr = float.Parse(resourceNode.SelectSingleNode("DefilesDropRate").InnerText);
                 float wastelandDr = float.Parse(resourceNode.SelectSingleNode("WastelandDropRate").InnerText);
                 string attributeString = resourceNode.SelectSingleNode("Attribute").InnerText;
-                resourceTemplate = new ResourceTemplate(name, type, oasisDR, steppeDr, ruinsDr, defilesDr, wastelandDr);
-                if (attributeString != "")
+                ResourceTemplate resourceTemplate = new ResourceTemplate(name, type, oasisDR, steppeDr, ruinsDr, defilesDr, wastelandDr);
+                if (attributeString == "") continue;
+                AttributeType attribute = StringToAttributeType(attributeString);
+                float modifierVal = float.Parse(resourceNode.SelectSingleNode("Modifier").InnerText);
+                bool additive = resourceNode.SelectSingleNode("Bonus").InnerText == "+";
+                string durationString = resourceNode.SelectSingleNode("Duration").InnerText;
+                int duration = 0;
+                if (durationString != "")
                 {
-                    AttributeType attribute = StringToAttributeType(attributeString);
-                    float modifierVal = float.Parse(resourceNode.SelectSingleNode("Modifier").InnerText);
-                    bool additive = resourceNode.SelectSingleNode("Bonus").InnerText == "+";
-                    string durationString = resourceNode.SelectSingleNode("Duration").InnerText;
-                    int duration = 0;
-                    if (durationString != "")
-                    {
-                        duration = int.Parse(durationString);
-                    }
-
-                    resourceTemplate.SetEffect(attribute, modifierVal, additive, duration);
+                    duration = int.Parse(durationString);
                 }
+
+                resourceTemplate.SetEffect(attribute, modifierVal, additive, duration);
             }
 
             foreach (XmlNode resourceNode in root.SelectNodes("Resource"))
@@ -129,7 +126,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             Debug.Log(contents);
         }
-        
+
         public virtual void Load(XmlNode root, PersistenceType saveType)
         {
             if (saveType != PersistenceType.Game) return;
