@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FastLights;
+using NUnit.Framework.Constraints;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -118,7 +119,7 @@ namespace Fastlights
         private bool _intersectionExists;
         private Vector2 _intersectionPoint;
 
-        public void DrawLight()
+        private void DrawLight()
         {
             meshVertices.Clear();
             List<List<FLEdge>> edgeSegments = new List<List<FLEdge>>();
@@ -129,7 +130,7 @@ namespace Fastlights
             {
                 LightObstructor o = _allObstructors[i];
                 float sqrDistanceToMesh = Vector2.SqrMagnitude((Vector2) o.transform.position - _position);
-                if (sqrDistanceToMesh - o.MaxRadius() * o.MaxRadius() > sqrRadius) continue;
+                if (sqrDistanceToMesh - o.MaxRadius() * o.MaxRadius() > sqrRadius + 50) continue;
                 _visibleEdges = o.GetVisibleVertices(_position, sqrRadius, Radius);
                 edgeSegments.AddRange(_visibleEdges);
             }

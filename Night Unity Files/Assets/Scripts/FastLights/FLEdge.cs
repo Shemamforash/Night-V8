@@ -36,7 +36,7 @@ namespace FastLights
         public void Draw(Color a, Color b)
         {
             Vector3 mid = (From.Position + To.Position) / 2f;
-            Debug.DrawLine(From.Position, mid, a, 10f);
+            Debug.DrawLine(From.Position, mid, a, 2f);
             Debug.DrawLine(mid, To.Position, b, 2f);
         }
     }

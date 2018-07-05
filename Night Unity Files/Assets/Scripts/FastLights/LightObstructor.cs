@@ -130,7 +130,8 @@ namespace FastLights
             for (int i = 0; i < edgeCount; i++)
             {
                 FLEdge e = _edges[i];
-                if (e.From.OutOfRange && e.To.OutOfRange) continue;
+                if (e.From.OutOfRange && e.To.OutOfRange)
+                    continue;
                 if (e.From.OutOfRange)
                 {
                     Vector2 newVertexPos = AdvancedMaths.FindLineSegmentCircleIntersections(e.From.Position, e.To.Position, _origin, _radius)[0];
@@ -145,9 +146,7 @@ namespace FastLights
 
                 if (!e.CalculateVisibility(_origin)) continue;
                 visibleEdges.Add(e);
-//                e.Draw(Color.yellow, Color.blue);
             }
-
             return visibleEdges;
         }
 
@@ -206,7 +205,6 @@ namespace FastLights
             List<FLEdge> endSegment = Helper.RemoveEnd(edgeSegments);
             endSegment.AddRange(edgeSegments[0]);
             edgeSegments[0] = endSegment;
-
             return edgeSegments;
         }
     }

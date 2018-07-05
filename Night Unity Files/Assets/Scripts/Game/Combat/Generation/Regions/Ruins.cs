@@ -326,38 +326,34 @@ namespace Game.Combat.Generation
 
             _finalShape.Reverse();
 
-//            List<Vector2> shape = new List<Vector2>();
-//            for (int i = 0; i < _finalShape.Count; ++i)
-//            {
-//                Vector2 current = _finalShape[i];
-//                Vector2 next = Helper.NextElement(i, _finalShape);
-//                shape.Add(current);
-//                float distance = Vector2.Distance(current, next);
-//                int numIntervals = Mathf.FloorToInt(distance / 5f);
-//                List<float> intervals = new List<float>();
-//                while (numIntervals > 0)
-//                {
-//                    intervals.Add(Random.Range(0f, 1f));
-//                    --numIntervals;
-//                }
-//
-//                intervals.Sort();
-//                intervals.ForEach(interval =>
-//                {
-//                    Vector2 point = AdvancedMaths.PointAlongLine(current, next, interval);
-//                    shape.Add(point);
-//                });
-//                shape.Add(next);
-//            }
-            //todo perturb me!
+            List<Vector2> _tempFinal = new List<Vector2>();
+            for (int i = 0; i < _finalShape.Count; ++i)
+            {
+                Vector2 current = _finalShape[i];
+                Vector2 next = Helper.NextElement(i, _finalShape);
+                //2 points per unit
+                float distance = Vector2.Distance(current, next);
+                int noPoints = Mathf.CeilToInt(distance * 2);
+                List<float> points = new List<float>();
+                while (noPoints > 0)
+                {
+                    points.Add(Random.Range(0.02f, 0.98f));
+                    --noPoints;
+                }
+                points.Sort((p1,p2) => p1.CompareTo(p2));
+                _tempFinal.Add(current);
+                points.ForEach(p =>
+                {
+                    _tempFinal.Add(AdvancedMaths.PointAlongLine(current, next, p));
+                });
+            }
 
-//            for (int i = 0; i < shape.Count; i++)
-//            {
-//                Vector2 s = shape[i];
-//                s.x += 0.1f * Mathf.PerlinNoise(s.x, s.y);
-//                s.y += 0.1f * Mathf.PerlinNoise(s.x, s.y);
-//                shape[i] = s;
-//            }
+            _finalShape = _tempFinal;
+            
+            for (int i = 0; i < _finalShape.Count; i++)
+            {
+                _finalShape[i] += Mathf.PerlinNoise(_finalShape[i].x, _finalShape[i].y) * 0.25f * Vector2.one;
+            }
 
             Vector2 centre = Vector2.zero;
             _finalShape.ForEach(v => centre += v);

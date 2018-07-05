@@ -104,11 +104,10 @@ namespace Game.Combat.Generation
                 {
                     case EnvironmentType.Oasis:
 //                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
-                        worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
+                        worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
                         break;
                     case EnvironmentType.Steppe:
-                        //todo
-                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
+                        worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
                         break;
                     case EnvironmentType.Ruins:
                         worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
