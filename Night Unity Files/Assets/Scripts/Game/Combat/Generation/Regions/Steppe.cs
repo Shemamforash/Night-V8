@@ -8,13 +8,12 @@ namespace Game.Combat.Generation
 {
     public class Steppe : RegionGenerator
     {
-        private const float scale = 0.25f;
+        private const float Scale = 0.25f;
         private const int Width = 200;
-        public int Seed = 1;
         private const int RegionAreaThreshold = 100;
-        private static CavePoint[,] map;
+        private static CavePoint[,] _map;
         private readonly List<Region> _regions = new List<Region>();
-        [Range(0, 100)] public int randomFillPercent = 50;
+        private const int RandomFillPercent = 48;
 
         protected override void Generate()
         {
@@ -23,7 +22,7 @@ namespace Game.Combat.Generation
 
         private void GenerateMap()
         {
-            map = new CavePoint[Width, Width];
+            _map = new CavePoint[Width, Width];
             RandomFillMap();
 
             for (int i = 0; i < 5; i++) SmoothMap();
@@ -52,7 +51,7 @@ namespace Game.Combat.Generation
                 foreach (Vector2Int p in positions)
                 {
                     if (p.x < 0 || p.y < 0 || p.x >= Width || p.y >= Width) continue;
-                    CavePoint neighbor = map[p.x, p.y];
+                    CavePoint neighbor = _map[p.x, p.y];
                     if (!neighbor.accessible) continue;
                     invalidEdge = false;
                     break;
@@ -117,7 +116,7 @@ namespace Game.Combat.Generation
                 bool returnedToStart = false;
                 while (!returnedToStart)
                 {
-                    Vector2 currentPos = new Vector2(current.X, current.Y) * scale;
+                    Vector2 currentPos = new Vector2(current.X, current.Y) * Scale;
                     currentPos += Vector2.one * Mathf.PerlinNoise(currentPos.x, currentPos.y) * 0.5f;
                     centre += currentPos;
                     verts.Add(currentPos);
@@ -135,7 +134,7 @@ namespace Game.Combat.Generation
                 }
 
                 verts.Reverse();
-                centre -= Vector2.one * Width / 2f * scale;
+                centre -= Vector2.one * Width / 2f * Scale;
                 AssignRockPosition(verts, centre);
             });
         }
@@ -250,8 +249,8 @@ namespace Game.Combat.Generation
             {
                 for (int y = 0; y < Width; y++)
                 {
-                    if (map[x, y].accessible != accessible) continue;
-                    emptyCells.Add(map[x, y]);
+                    if (_map[x, y].accessible != accessible) continue;
+                    emptyCells.Add(_map[x, y]);
                 }
             }
 
@@ -264,14 +263,14 @@ namespace Game.Combat.Generation
             {
                 for (int y = 0; y < Width; y++)
                 {
-                    map[x, y] = new CavePoint(x, y);
-                    if (map[x, y].IsOnScreenEdge)
+                    _map[x, y] = new CavePoint(x, y);
+                    if (_map[x, y].IsOnScreenEdge)
                     {
-                        map[x, y].accessible = false;
+                        _map[x, y].accessible = false;
                     }
                     else
                     {
-                        map[x, y].accessible = Random.Range(0, 100) >= randomFillPercent;
+                        _map[x, y].accessible = Random.Range(0, 100) >= RandomFillPercent;
                     }
                 }
             }
@@ -283,16 +282,16 @@ namespace Game.Combat.Generation
             {
                 for (int y = 0; y < Width; y++)
                 {
-                    int neighbourWallTiles = GetSurroundingWallCount(map[x, y]);
+                    int neighbourWallTiles = GetSurroundingWallCount(_map[x, y]);
 
                     if (neighbourWallTiles > 4)
                     {
-                        map[x, y].accessible = false;
+                        _map[x, y].accessible = false;
                     }
                     else if (neighbourWallTiles <
                              4)
                     {
-                        map[x, y].accessible = true;
+                        _map[x, y].accessible = true;
                     }
                 }
             }
@@ -349,7 +348,7 @@ namespace Game.Combat.Generation
                         int drawY = point.Y + y;
                         if (drawX < 0 || drawX >= Width) continue;
                         if (drawY < 0 || drawY >= Width) continue;
-                        map[drawX, drawY].accessible = true;
+                        _map[drawX, drawY].accessible = true;
                     }
                 }
             }
@@ -385,7 +384,7 @@ namespace Game.Combat.Generation
                 int gradientAccumulation = longest / 2;
                 for (int i = 0; i < longest; i++)
                 {
-                    line.Add(map[x, y]);
+                    line.Add(_map[x, y]);
                     if (inverted)
                     {
                         y += step;
@@ -450,7 +449,7 @@ namespace Game.Combat.Generation
             {
                 if (x < 0 || x >= Width || y < 0 || y >= Width) return;
                 if (x == X && y == Y) return;
-                _neighbors.Add(map[x, y]);
+                _neighbors.Add(_map[x, y]);
             }
 
             public List<CavePoint> Neighbors()

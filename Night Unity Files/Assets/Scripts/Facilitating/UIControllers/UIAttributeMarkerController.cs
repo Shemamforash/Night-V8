@@ -7,7 +7,7 @@ namespace Facilitating.UIControllers
 {
     public class UIAttributeMarkerController : MonoBehaviour
     {
-        private Image _active, _inactive;
+        private Image _active, _inactive, _overCharged;
 
         public void Awake()
         {
