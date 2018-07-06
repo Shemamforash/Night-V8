@@ -15,7 +15,7 @@ namespace Game.Combat.Generation
     {
         public const int CombatAreaWidth = 40;
         public const int CombatMovementDistance = CombatAreaWidth - 3;
-        public const int CellResolution = 8;
+        public const int CellResolution = 4;
         public const float CellWidth = 1f / CellResolution;
         public const int GridWidth = CombatAreaWidth * CellResolution;
 
@@ -107,6 +107,8 @@ namespace Game.Combat.Generation
             }
         }
 
+
+        //todo slow
         public static bool IsLineObstructed(Vector2 start, Vector2 end, bool includeReachable = false)
         {
             float distance = Vector2.Distance(start, end);
@@ -126,22 +128,22 @@ namespace Game.Combat.Generation
             return false;
         }
 
-        public static Thread RouteToCell(Cell from, Cell to, Queue<Cell> path)
+        public static Thread ThreadRouteToCell(Cell from, Cell to, List<Cell> route)
         {
             Thread thread = new Thread(() =>
             {
                 List<Node> nodePath = Pathfinding.AStar(from.Node, to.Node);
-                List<Cell> newPath = new List<Cell>();
-                nodePath.ForEach(n => newPath.Add(WorldToCellPosition(n.Position)));
+                route.Clear();
+                nodePath.ForEach(n => route.Add(WorldToCellPosition(n.Position)));
                 int currentIndex = 0;
-                while (currentIndex < newPath.Count)
+                while (currentIndex < route.Count)
                 {
-                    Cell current = newPath[currentIndex];
+                    Cell current = route[currentIndex];
                     List<Cell> cellsToRemove = new List<Cell>();
                     bool noneHit = false;
-                    for (int i = newPath.Count - 1; i > currentIndex; --i)
+                    for (int i = route.Count - 1; i > currentIndex; --i)
                     {
-                        Cell next = newPath[i];
+                        Cell next = route[i];
                         if (noneHit)
                         {
                             cellsToRemove.Add(next);
@@ -152,16 +154,14 @@ namespace Game.Combat.Generation
                         }
                     }
 
-                    cellsToRemove.ForEach(cell => newPath.Remove(cell));
+                    cellsToRemove.ForEach(cell => route.Remove(cell));
                     ++currentIndex;
                 }
-
-                path.Clear();
-                newPath.ForEach(path.Enqueue);
             });
             thread.Start();
             return thread;
         }
+
 
         public static Cell GetCellNearMe(Vector2 position, float distanceMax, float distanceMin = 0)
         {
@@ -181,25 +181,6 @@ namespace Game.Combat.Generation
             return cells.Take(noCells).ToList();
         }
 
-        public static Cell FindCellToAttackPlayer(Cell currentCell, float maxRange, float minRange = 0)
-        {
-            int max = WorldToGridDistance(maxRange);
-            int min = WorldToGridDistance(minRange);
-
-            Cell playerCell = PlayerCombat.Instance.CurrentCell();
-            List<Cell> cellsNearPlayer = CellsInRange(playerCell, max, min);
-            Cell nearestValidCell = FindNearestCell(cellsNearPlayer, false, currentCell);
-            if (nearestValidCell == null) return currentCell;
-            List<Cell> cellsNearTarget = CellsInRange(nearestValidCell, 3).FindAll(c =>
-            {
-                float distance = c.Distance(playerCell);
-                bool outOfRange = distance < min || distance > max;
-                if (outOfRange) return false;
-                return !IsCellHidden(c);
-            });
-            return Helper.RandomInList(cellsNearTarget);
-        }
-
         public static Cell FindCoverNearMe(Cell currentCell)
         {
             List<Cell> cellsNearby = CellsInRange(currentCell, 10);
@@ -214,7 +195,9 @@ namespace Game.Combat.Generation
             _lastPlayerPosition = currentPlayerPosition;
 
             if (_hiddenCells.Contains(c)) return true;
-            bool hidden = IsLineObstructed(c.Position, currentPlayerPosition);
+//            bool hidden = IsLineObstructed(c.Position, currentPlayerPosition);
+            List<Vector2> vertices = PlayerCombat.Instance._playerLight.Vertices();
+            bool hidden = AdvancedMaths.IsPointInPolygon(c.Position, vertices);
             if (hidden) _hiddenCells.Add(c);
             return hidden;
         }
@@ -235,12 +218,14 @@ namespace Game.Combat.Generation
             int endY = origin.YIndex + maxRange;
             if (endY > GridWidth) endY = GridWidth;
 
+            minRange *= minRange;
+            maxRange *= maxRange;
             for (int x = startX; x < endX; ++x)
             for (int y = startY; y < endY; ++y)
             {
                 Cell current = Grid[x][y];
                 if (!current.Reachable) continue;
-                float distance = current.Distance(origin);
+                float distance = current.SqrDistance(origin);
                 if (distance < minRange || distance > maxRange) continue;
                 _cellsInRange.Add(current);
             }
@@ -345,10 +330,10 @@ namespace Game.Combat.Generation
             while (iteratorStart < cells.Count)
             {
                 int minIndex = -1;
-                float minDistance = 1000;
+                float minDistance = float.PositiveInfinity;
                 for (int i = iteratorStart; i < cells.Count; ++i)
                 {
-                    float distance = currentCell.Distance(cells[i]);
+                    float distance = currentCell.SqrDistance(cells[i]);
                     if (distance >= minDistance) continue;
                     minIndex = i;
                     minDistance = distance;

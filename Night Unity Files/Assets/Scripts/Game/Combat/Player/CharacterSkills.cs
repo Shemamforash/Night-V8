@@ -169,7 +169,7 @@ namespace Game.Combat.Player
         }
     }
 
-    //Wanderer
+    //Survivor
 
     public class Shatter : Skill
     {
@@ -283,7 +283,7 @@ namespace Game.Combat.Player
         }
     }
 
-    //Driver
+    //Wanderer
 
     public class Defile : Skill
     {
@@ -293,7 +293,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            PlayerCombat.Instance.GetTarget().Decay();
+            PlayerCombat.Instance.GetTarget()?.Decay();
         }
     }
 

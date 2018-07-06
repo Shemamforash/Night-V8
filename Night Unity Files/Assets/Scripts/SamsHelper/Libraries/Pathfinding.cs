@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SamsHelper.Libraries
@@ -17,14 +18,15 @@ namespace SamsHelper.Libraries
             Dictionary<Node, float> gScore = new Dictionary<Node, float>();
             Dictionary<Node, float> fScore = new Dictionary<Node, float>();
             gScore[from] = 0;
-            fScore[from] = from.Distance(to);
+            fScore[from] = Vector2.SqrMagnitude(from.Position - to.Position);
 
             while (unvisited.Count != 0)
             {
                 float minScore = float.MaxValue;
                 Node minNode = null;
-                foreach (Node n in unvisited)
+                for (int i = 0; i < unvisited.ToList().Count; i++)
                 {
+                    Node n = unvisited.ToList()[i];
                     if (fScore[n] >= minScore) continue;
                     minScore = fScore[n];
                     minNode = n;
@@ -43,16 +45,16 @@ namespace SamsHelper.Libraries
                 foreach (Node neighbor in current.Neighbors())
                 {
                     if (visited.Contains(neighbor)) continue;
-                    if (!unvisited.Contains(neighbor)) unvisited.Add(neighbor);
+                    unvisited.Add(neighbor);
 
-                    float currentGScore = gScore.ContainsKey(current) ? gScore[current] : float.MaxValue;
+                    float currentGScore = gScore[current];
                     float neighborGScore = gScore.ContainsKey(neighbor) ? gScore[neighbor] : float.MaxValue;
-                    float tentativeGScore = currentGScore + current.Distance(neighbor);
+                    float tentativeGScore = currentGScore + 1;
                     if (tentativeGScore >= neighborGScore) continue;
 
                     _fromDict[neighbor] = current;
                     gScore[neighbor] = tentativeGScore;
-                    fScore[neighbor] = tentativeGScore + neighbor.Distance(to);
+                    fScore[neighbor] = tentativeGScore + Vector2.SqrMagnitude(neighbor.Position - to.Position);
                 }
             }
 
@@ -95,7 +97,7 @@ namespace SamsHelper.Libraries
                         float candidateDistance = uncheckedNode.Distance(treeNode);
                         float edgeWeightMultiplier = 1;
                         if (edgeWeightFunction != null) edgeWeightMultiplier = edgeWeightFunction(treeNode, uncheckedNode);
-                        if(candidateDistance * edgeWeightMultiplier >= nearestNodeDistance) continue;
+                        if (candidateDistance * edgeWeightMultiplier >= nearestNodeDistance) continue;
                         nearestNode = uncheckedNode;
                         origin = treeNode;
                         nearestNodeDistance = candidateDistance;

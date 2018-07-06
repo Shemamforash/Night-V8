@@ -10,7 +10,7 @@ namespace SamsHelper.Libraries
         private readonly List<Tuple<float, Node>> _neighbors = new List<Tuple<float, Node>>();
         private readonly List<Node> _rawNeighbors = new List<Node>();
         private readonly List<Edge> _edges = new List<Edge>();
-        public Vector3 Position;
+        public Vector2 Position;
         private bool _generatedEdges;
 
         public Node(Vector3 position)
@@ -35,7 +35,7 @@ namespace SamsHelper.Libraries
         }
 
         public float Distance(Node other) => Vector3.Distance(Position, other.Position);
-
+        
         public List<Node> Neighbors() => _rawNeighbors;
 
         public Node NavigateClockwise(Node from)
@@ -89,6 +89,11 @@ namespace SamsHelper.Libraries
         {
             _generatedEdges = false;
             _edges.Clear();
+        }
+
+        public float ManhattanDistance(Node other)
+        {
+            return Mathf.Abs(Position.x - other.Position.x) + Mathf.Abs(Position.y - other.Position.y);
         }
     }
 }

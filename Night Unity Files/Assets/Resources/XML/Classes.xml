@@ -2,13 +2,9 @@
     <Class>
         <Name>Villain</Name>
         <Endurance>1</Endurance>
-        <Strength>3</Strength>
-        <Willpower>3</Willpower>
+        <Strength>4</Strength>
+        <Willpower>4</Willpower>
         <Perception>3</Perception>
-        <EnduranceCap></EnduranceCap>
-        <StrengthCap>+</StrengthCap>
-        <WillpowerCap>+</WillpowerCap>
-        <PerceptionCap></PerceptionCap>
         <Story>Atop the highest pinnacle of an ancient rig a man sat upon his throne. He made sure he was above all others, able to see for miles and miles around. Many worked for him, some dug at the
             ground beneath their feet, others were there for his pleasure. Every month, in an attempt to show his humanity, he would gather his people, and select one to bestow a great gift upon. He
             would take them out of the settlement in his great vehicle, far beyond the horizon, to a place no-one saw or knew about. The people of the settlement lived for this great gift, they would
@@ -29,26 +25,18 @@
     </Class>
     <Class>
         <Name>Deserter</Name>
-        <Endurance>3</Endurance>
+        <Endurance>4</Endurance>
         <Strength>3</Strength>
-        <Willpower>2</Willpower>
-        <Perception>1</Perception>
-        <EnduranceCap>+</EnduranceCap>
-        <StrengthCap></StrengthCap>
-        <WillpowerCap></WillpowerCap>
-        <PerceptionCap>+</PerceptionCap>
+        <Willpower>3</Willpower>
+        <Perception>2</Perception>
         <Story>1</Story>
     </Class>
     <Class>
         <Name>Beast</Name>
         <Endurance>2</Endurance>
-        <Strength>4</Strength>
-        <Willpower>2</Willpower>
+        <Strength>6</Strength>
+        <Willpower>3</Willpower>
         <Perception>1</Perception>
-        <EnduranceCap></EnduranceCap>
-        <StrengthCap>++</StrengthCap>
-        <WillpowerCap></WillpowerCap>
-        <PerceptionCap></PerceptionCap>
         <Story>Eternally I rage on, through red dust and dark fire. Enemies I have none, yet mercilessly I cut down those before me. You however, you I will spare. There is a dark shadow I see on your
             soul, a side you cannot see, that blinds you in your most passionate moments. A beast that howls and screams, taunting you to let it free. It is in all of us, a monster lurking beneath
             your civil self. Only I have controlled it. You see it is not a demon that takes over us, it is not some foreign horror that overpowers, or a contagion that clouds your thoughts. The beast
@@ -64,35 +52,23 @@
         <Endurance>1</Endurance>
         <Strength>1</Strength>
         <Willpower>4</Willpower>
-        <Perception>4</Perception>
-        <EnduranceCap></EnduranceCap>
-        <StrengthCap></StrengthCap>
-        <WillpowerCap></WillpowerCap>
-        <PerceptionCap>++</PerceptionCap>
+        <Perception>6</Perception>
         <Story>1</Story>
     </Class>
     <Class>
         <Name>Survivor</Name>
         <Endurance>4</Endurance>
         <Strength>1</Strength>
-        <Willpower>1</Willpower>
+        <Willpower>3</Willpower>
         <Perception>4</Perception>
-        <EnduranceCap></EnduranceCap>
-        <StrengthCap></StrengthCap>
-        <WillpowerCap>++</WillpowerCap>
-        <PerceptionCap></PerceptionCap>
         <Story>1</Story>
     </Class>
     <Class>
         <Name>Protector</Name>
-        <Endurance>2</Endurance>
-        <Strength>4</Strength>
+        <Endurance>3</Endurance>
+        <Strength>5</Strength>
         <Willpower>2</Willpower>
         <Perception>2</Perception>
-        <EnduranceCap>+</EnduranceCap>
-        <StrengthCap>+</StrengthCap>
-        <WillpowerCap></WillpowerCap>
-        <PerceptionCap></PerceptionCap>
         <Story>I used to have a family like you. I remember them well, my wife, Mary, and my daughter, Anna. We lived in a safe place, one of the last safe places in the world. We had fields of crops,
             running water, and miles of woodland. We did our best to get along, some of us had been born there, others were wanderers we took in from the wastes. There were those of us, myself
             included, who felt that letting outsiders in was dangerous. There were terrible stories that made their way to us. Stories of barbarism, murder, men killing each other over water. We
@@ -108,38 +84,26 @@
     </Class>
     <Class>
         <Name>Hunter</Name>
-        <Endurance>4</Endurance>
+        <Endurance>6</Endurance>
         <Strength>2</Strength>
         <Willpower>1</Willpower>
         <Perception>3</Perception>
-        <EnduranceCap>++</EnduranceCap>
-        <StrengthCap></StrengthCap>
-        <WillpowerCap></WillpowerCap>
-        <PerceptionCap></PerceptionCap>
         <Story>1</Story>
     </Class>
     <Class>
         <Name>Ghost</Name>
         <Endurance>3</Endurance>
         <Strength>2</Strength>
-        <Willpower>3</Willpower>
-        <Perception>2</Perception>
-        <EnduranceCap></EnduranceCap>
-        <StrengthCap></StrengthCap>
-        <WillpowerCap>+</WillpowerCap>
-        <PerceptionCap>+</PerceptionCap>
+        <Willpower>4</Willpower>
+        <Perception>3</Perception>
         <Story>1</Story>
     </Class>
     <Class>
         <Name>Wanderer</Name>
-        <Endurance>3</Endurance>
-        <Strength>3</Strength>
-        <Willpower>3</Willpower>
-        <Perception>3</Perception>
-        <EnduranceCap>+</EnduranceCap>
-        <StrengthCap>+</StrengthCap>
-        <WillpowerCap>+</WillpowerCap>
-        <PerceptionCap>+</PerceptionCap>
+        <Endurance>4</Endurance>
+        <Strength>4</Strength>
+        <Willpower>4</Willpower>
+        <Perception>4</Perception>
         <Story>Things weren�t always this way. I recall I time before the winds were dry and laden with ash, a time when we would welcome the sight of another, rather then recoil at the fear of
             danger. Sometimes it�s hard to say if it was all a dream, a misrememberance of my childhood. I prefer to think we are in a dream now, because even then we would one day wake up, even if
             now we have to live in this nightmare. I don�t know if I had a family, I must have done, though they are long dead by now I assume. Wandering is all I know, going from place to place,

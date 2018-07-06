@@ -24,8 +24,8 @@ namespace Game.Combat.Enemies.Animals
                 base.Flee();
                 return;
             }
-
-            MoveToCharacter(_leader, Flee);
+//todo fix me
+//            MoveToCharacter(_leader, Flee);
         }
 
         protected override void CheckForPlayer()

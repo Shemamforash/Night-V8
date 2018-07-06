@@ -23,8 +23,8 @@ namespace Game.Characters
         private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
 
         //todo make me do stuff
-        public readonly Dictionary<WeaponType, bool> WeaponSkillOneUnlocks = new Dictionary<WeaponType, bool>();
-        public readonly Dictionary<WeaponType, bool> WeaponSkillTwoUnlocks = new Dictionary<WeaponType, bool>();
+        public readonly HashSet<WeaponType> WeaponSkillOneUnlocks = new HashSet<WeaponType>();
+        public readonly HashSet<WeaponType> WeaponSkillTwoUnlocks = new HashSet<WeaponType>();
         public bool BurnWeakness;
         public bool DecayRetaliate;
         public bool DecayWeakness;
@@ -55,15 +55,15 @@ namespace Game.Characters
 
         public void ChangeEnduranceMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Endurance, _player.CharacterTemplate.EnduranceCap, polarity)) return;
+            if (!IncreaseAttribute(AttributeType.Endurance, polarity)) return;
             string message = polarity > 0 ? "My body will endure" : "My body weakens";
             WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
 
-        private bool IncreaseAttribute(AttributeType attributeType, float attributeCap, int polarity)
+        private bool IncreaseAttribute(AttributeType attributeType, int polarity)
         {
             int newMax = (int) (Max(attributeType) + polarity);
-            if (newMax > attributeCap) return false;
+            if (newMax > 20) return false;
             if (newMax < 0) newMax = 0;
             SetMax(attributeType, newMax);
             return true;
@@ -71,21 +71,21 @@ namespace Game.Characters
 
         public void ChangeStrengthMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Strength, _player.CharacterTemplate.StrengthCap, polarity)) return;
+            if (!IncreaseAttribute(AttributeType.Strength, polarity)) return;
             string message = polarity > 0 ? "My strength grows" : "My strength wains";
             WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
 
         public void ChangePerceptionMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Perception, _player.CharacterTemplate.PerceptionCap, polarity)) return;
+            if (!IncreaseAttribute(AttributeType.Perception, polarity)) return;
             string message = polarity > 0 ? "My eyes become keener" : "My vision blurs";
             WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
 
         public void ChangeWillpowerMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Willpower, _player.CharacterTemplate.WillpowerCap, polarity)) return;
+            if (!IncreaseAttribute(AttributeType.Willpower, polarity)) return;
             string message = polarity > 0 ? "My mind is clearer now" : "My mind is clouded";
             WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
@@ -96,7 +96,14 @@ namespace Game.Characters
 
         public float CalculateSkillCooldownModifier() => (float) Math.Pow(0.95f, Val(AttributeType.Willpower)) + Val(AttributeType.SkillRechargeBonus);
 
-        public int CalculateCombatHealth() => (int) (Val(AttributeType.Strength) * PlayerHealthChunkSize);
+        public int CalculateCombatHealth()
+        {
+            int startingHealth = (int) (Val(AttributeType.Strength) * PlayerHealthChunkSize);
+            float healthLossModifier = Val(AttributeType.HealthLossBonus);
+            int startHealthModifier = Mathf.FloorToInt(startingHealth * healthLossModifier);
+            startingHealth -= startHealthModifier;
+            return startingHealth;
+        }
 
         public void UpdateThirstAndHunger()
         {

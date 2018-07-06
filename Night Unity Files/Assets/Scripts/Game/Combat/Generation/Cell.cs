@@ -43,11 +43,11 @@ namespace Game.Combat.Generation
             if (YIndex + 1 < PathingGrid.GridWidth) AddNeighbor(PathingGrid.Grid[XIndex][YIndex + 1]);
         }
 
-        public float Distance(Cell other)
+        public float SqrDistance(Cell other)
         {
             int xDiff = other.XIndex - XIndex;
             int yDiff = other.YIndex - YIndex;
-            return Mathf.Sqrt(xDiff * xDiff + yDiff * yDiff);
+            return xDiff * xDiff + yDiff * yDiff;
         }
 
         private Cell(List<Vector2> vertices, Vector2 position, int xIndex, int yIndex) : base(vertices, position)

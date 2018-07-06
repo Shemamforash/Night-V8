@@ -29,17 +29,15 @@ namespace Game.Combat.Misc
         private int _knockbackForce = 10;
 
         private bool _moving, _fired;
-        private CharacterCombat _origin;
+        public CharacterCombat _origin;
         private Vector3 _originPosition;
         private float _pierceChance, _burnChance, _decayChange, _sicknessChance;
         private Rigidbody2D _rigidBody;
 
         private static Transform _shotParent;
         private Weapon _weapon;
-        public bool DidHit;
         private const float MaxAge = 3f;
         private event Action OnHitAction;
-
 
         private void OnDestroy()
         {
@@ -55,7 +53,6 @@ namespace Game.Combat.Misc
             _damageDealt = 0;
             _moving = false;
             _fired = false;
-            DidHit = false;
             OnHitAction = null;
         }
 
@@ -177,20 +174,17 @@ namespace Game.Combat.Misc
         private void OnCollisionEnter2D(Collision2D collision)
         {
             GameObject other = collision.gameObject;
-            if (other.gameObject != null)
+            if (collision.contacts.Length > 0)
             {
-                if (collision.contacts.Length > 0)
-                {
-                    float angle = AdvancedMaths.AngleFromUp(Vector2.zero, _direction) + 180 + Random.Range(-10f, 10f);
-                    BulletImpactBehaviour.Create(collision.contacts[0].point, angle);
-                }
-
-                if (Random.Range(0f, 1f) < _burnChance) FireBehaviour.Create(transform.position, 1f);
-                OnHitAction?.Invoke();
-                CharacterCombat b = other.GetComponent<CharacterCombat>();
-                if (b != null) ApplyDamage(b);
+                float angle = AdvancedMaths.AngleFromUp(Vector2.zero, _direction) + 180 + Random.Range(-10f, 10f);
+                BulletImpactBehaviour.Create(collision.contacts[0].point, angle);
             }
 
+            if (Random.Range(0f, 1f) < _burnChance) FireBehaviour.Create(transform.position, 1f);
+            OnHitAction?.Invoke();
+            CharacterCombat hit = other.GetComponent<CharacterCombat>();
+            (_origin as PlayerCombat)?.OnShotConnects(hit);
+            if (hit != null) ApplyDamage(hit);
             DeactivateShot();
             _bulletTrail.StartFade(0.2f);
         }

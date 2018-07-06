@@ -337,7 +337,7 @@ namespace Game.Combat.Generation
                 List<float> points = new List<float>();
                 while (noPoints > 0)
                 {
-                    points.Add(Random.Range(0.02f, 0.98f));
+                    points.Add(Random.Range(0.1f, 0.9f));
                     --noPoints;
                 }
                 points.Sort((p1,p2) => p1.CompareTo(p2));

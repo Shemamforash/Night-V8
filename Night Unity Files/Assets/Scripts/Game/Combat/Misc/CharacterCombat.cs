@@ -72,18 +72,18 @@ namespace Game.Combat.Misc
 
         public void Sicken(int stacks = 1)
         {
-            _sicknessTicks += stacks;
-            if (_sicknessTicks >= SicknessTargetTicks)
+            SicknessStacks += stacks;
+            if (SicknessStacks >= GetSicknessTargetTicks())
             {
                 HealthController.TakeDamage(HealthController.GetMaxHealth() / 4f);
                 if (this is EnemyBehaviour) PlayerCombat.Instance.Player.BrandManager.IncreaseSickenCount();
-                _sicknessTicks = 0;
+                SicknessStacks = 0;
             }
 
             _sicknessDuration = 0;
         }
 
-        public bool IsSick() => _sicknessTicks > 0;
+        public bool IsSick() => SicknessStacks > 0;
 
         public void Ram(CharacterCombat target, float ramForce)
         {
@@ -100,9 +100,28 @@ namespace Game.Combat.Misc
         {
             _decayTicks = 0;
             _burnTicks = 0;
-            _sicknessTicks = 0;
+            SicknessStacks = 0;
         }
 
+        protected virtual int GetBurnDamage()
+        {
+            int burnDamage = Mathf.FloorToInt(HealthController.GetMaxHealth() * 0.01f);
+            if (burnDamage < 1) burnDamage = 1;
+            return burnDamage;
+        }
+
+        protected virtual int GetDecayDamage()
+        {
+            int decayDamage = Mathf.FloorToInt(ArmourPlate.PlateHealthUnit * 0.05f);
+            if (decayDamage < 1) decayDamage = 1;
+            return decayDamage;
+        }
+
+        protected virtual int GetSicknessTargetTicks()
+        {
+            return SicknessTargetTicks;
+        }
+        
         private void UpdateConditions()
         {
             if (_burnTicks > 0)
@@ -110,7 +129,7 @@ namespace Game.Combat.Misc
                 if (_burnDuration <= 0)
                 {
                     _burnDuration = 1 - _burnDuration;
-                    HealthController.TakeDamage(1);
+                    HealthController.TakeDamage(GetBurnDamage());
                     --_burnTicks;
                 }
                 else
@@ -128,7 +147,7 @@ namespace Game.Combat.Misc
                 if (_burnDuration <= 0)
                 {
                     _decayDuration = 1 - _decayDuration;
-                    ArmourController.TakeDamage(1);
+                    ArmourController.TakeDamage(GetDecayDamage());
                     --_decayTicks;
                 }
                 else
@@ -138,28 +157,27 @@ namespace Game.Combat.Misc
             }
             else
             {
-                CharacterUi.GetHealthController(this)?.StopBleeding();
+                CharacterUi.GetHealthController(this)?.StopDecaying();
             }
 
-            CharacterUi.GetHealthController(this)?.SetSicknessLevel((float) _sicknessTicks / SicknessTargetTicks);
-            if (_sicknessTicks > 0)
+            CharacterUi.GetHealthController(this)?.SetSicknessLevel((float) SicknessStacks / GetSicknessTargetTicks());
+            if (SicknessStacks <= 0) return;
+            if (_sicknessDuration > SicknessDurationMax)
             {
-                if (_sicknessDuration > SicknessDurationMax)
-                {
-                    _sicknessDuration = 0;
-                    --_sicknessTicks;
-                }
-                else
-                {
-                    _sicknessDuration += Time.deltaTime;
-                }
+                _sicknessDuration = 0;
+                --SicknessStacks;
+            }
+            else
+            {
+                _sicknessDuration += Time.deltaTime;
             }
         }
 
         private const int ConditionTicksMax = 5;
         private const float SicknessDurationMax = 5f;
         private const int SicknessTargetTicks = 10;
-        private int _burnTicks, _decayTicks, _sicknessTicks;
+        private int _burnTicks, _decayTicks;
+        protected int SicknessStacks;
         private float _burnDuration, _decayDuration, _sicknessDuration;
 
         public Cell CurrentCell() => PathingGrid.WorldToCellPosition(transform.position);
@@ -181,7 +199,6 @@ namespace Game.Combat.Misc
         public virtual void Kill()
         {
             IsDead = true;
-//            Destroy(CharacterController.gameObject);
         }
 
         public virtual void Knockback(Vector3 source, float force = 10f)

@@ -7,7 +7,6 @@ namespace Game.Combat.Enemies.Animals
         public override void Initialise(Enemy e)
         {
             base.Initialise(e);
-            AlertAll = true;
         }
     }
 }

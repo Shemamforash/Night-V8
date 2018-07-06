@@ -156,7 +156,9 @@ namespace SamsHelper.Libraries
 
         public static bool IsPointInPolygon(Vector2 point, List<Vector2> polygon)
         {
-            int polygonLength = polygon.Count, i = 0;
+            int polygonLength = polygon.Count;
+            if (polygonLength == 0) return false;
+            int i = 0;
             bool inside = false;
             // x, y for tested point.
             float pointX = point.x, pointY = point.y;

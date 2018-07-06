@@ -72,7 +72,7 @@ namespace Game.Combat.Ui
             _bleedEffect.Play();
         }
 
-        public void StopBleeding()
+        public void StopDecaying()
         {
             _bleedEffect.Stop();
         }

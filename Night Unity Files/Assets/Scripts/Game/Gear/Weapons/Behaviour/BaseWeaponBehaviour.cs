@@ -11,11 +11,11 @@ namespace Game.Gear.Weapons
     public class BaseWeaponBehaviour : MonoBehaviour
     {
         protected Weapon Weapon;
-        protected WeaponAttributes WeaponAttributes;
-        protected int AmmoInMagazine;
+        private WeaponAttributes WeaponAttributes;
+        public int AmmoInMagazine;
         protected float TimeToNextFire;
         protected CharacterCombat Origin;
-        protected bool _fired;
+        private bool _fired;
 
         public void Initialise(Weapon weapon)
         {
@@ -86,7 +86,13 @@ namespace Game.Gear.Weapons
 
         private void ConsumeAmmo(int amount = 0)
         {
-            WeaponAttributes.DecreaseDurability();
+            float durabilityModifier = 0;
+            PlayerCombat player = Origin as PlayerCombat;
+            if (player != null)
+            {
+                durabilityModifier = player.Player.Attributes.Val(AttributeType.EssenceLossBonus);
+            }
+            WeaponAttributes.DecreaseDurability(durabilityModifier);
             AmmoInMagazine -= amount;
             if (AmmoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();
         }

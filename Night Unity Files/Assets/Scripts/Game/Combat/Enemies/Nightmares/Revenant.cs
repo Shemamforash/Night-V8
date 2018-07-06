@@ -1,4 +1,5 @@
-﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+﻿using System.Collections.Generic;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using UnityEngine;
 
@@ -20,8 +21,8 @@ namespace Game.Combat.Enemies.Nightmares
 
         public override void ChooseNextAction()
         {
-            Cell c = PathingGrid.GetCellOrbitingTarget(CurrentCell(), GetTarget().CurrentCell(), GetComponent<Rigidbody2D>().velocity, 4f, 0.5f);
-            Reposition(c);
+            Cell target = PathingGrid.GetCellOrbitingTarget(CurrentCell(), GetTarget().CurrentCell(), GetComponent<Rigidbody2D>().velocity, 4f, 0.5f);
+            GetRouteToCell(target);
         }
 
         public override void Kill()

@@ -542,13 +542,13 @@ namespace Game.Characters
 
             protected override void OnSucceed()
             {
-                if (Player.Attributes.WeaponSkillOneUnlocks[WeaponType])
+                if (Player.Attributes.WeaponSkillOneUnlocks.Contains(WeaponType))
                 {
-                    Player.Attributes.WeaponSkillTwoUnlocks[WeaponType] = true;
+                    Player.Attributes.WeaponSkillTwoUnlocks.Add(WeaponType);
                     return;
                 }
 
-                Player.Attributes.WeaponSkillOneUnlocks[WeaponType] = true;
+                Player.Attributes.WeaponSkillOneUnlocks.Add(WeaponType);
             }
 
             protected override void OnFail()

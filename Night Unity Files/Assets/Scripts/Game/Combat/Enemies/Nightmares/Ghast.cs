@@ -15,7 +15,7 @@ namespace Game.Combat.Enemies.Nightmares
 
         public override void ChooseNextAction()
         {
-            Reposition(PathingGrid.FindCellToAttackPlayer(CurrentCell(), 5f, 2f));
+            FindCellToAttackPlayer(5f, 2f);
         }
     }
 }

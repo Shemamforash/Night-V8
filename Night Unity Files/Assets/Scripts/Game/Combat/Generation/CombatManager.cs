@@ -103,8 +103,7 @@ namespace Game.Combat.Generation
                 switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
                 {
                     case EnvironmentType.Oasis:
-//                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
-                        worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
+                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
                         break;
                     case EnvironmentType.Steppe:
                         worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
@@ -244,7 +243,7 @@ namespace Game.Combat.Generation
         {
             Enemy e = Instance()._currentRegion.AddEnemy(type);
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
-            (enemyBehaviour as UnarmedBehaviour)?.Alert();
+            (enemyBehaviour as UnarmedBehaviour)?.Alert(true);
             Instance().AddEnemy(enemyBehaviour);
             return enemyBehaviour;
         }
@@ -309,7 +308,7 @@ namespace Game.Combat.Generation
             ++Instance()._humansKilled;
         }
 
-        public static void MarkShotFired()
+        public static void SetHasFiredShot()
         {
             Instance()._shotFired = true;
         }

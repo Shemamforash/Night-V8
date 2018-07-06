@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
 using DG.Tweening;
 using Facilitating;
 using Facilitating.UIControllers;
@@ -18,6 +20,7 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Player
 {
@@ -36,16 +39,16 @@ namespace Game.Combat.Player
         private Number _strengthText;
 
         public Characters.Player Player;
-        private FastLight _playerLight;
+        public FastLight _playerLight;
 
         private const float MaxReloadPressedTime = 1f;
         public static PlayerCombat Instance;
         public float MuzzleFlashOpacity;
 
-        private bool ConsumeAdrenaline(int amount)
+        public bool ConsumeAdrenaline(int amount)
         {
             if (amount > _adrenalineLevel.CurrentValue()) return false;
-            _adrenalineLevel.Decrement(amount);
+            _adrenalineLevel.SetCurrentValue(0);
             RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
             return true;
         }
@@ -67,6 +70,27 @@ namespace Game.Combat.Player
         {
             base.Awake();
             Instance = this;
+        }
+
+        protected override int GetBurnDamage()
+        {
+            int burnDamage = base.GetBurnDamage();
+            if (Player.Attributes.BurnWeakness) burnDamage *= 2;
+            return burnDamage;
+        }
+
+        protected override int GetDecayDamage()
+        {
+            int decayDamage = base.GetDecayDamage();
+            if (Player.Attributes.DecayWeakness) decayDamage *= 2;
+            return decayDamage;
+        }
+
+        protected override int GetSicknessTargetTicks()
+        {
+            int sicknessTargetTicks = base.GetSicknessTargetTicks();
+            if (Player.Attributes.SicknessWeakness) sicknessTargetTicks /= 2;
+            return sicknessTargetTicks;
         }
 
         //input
@@ -181,6 +205,7 @@ namespace Game.Combat.Player
         private const float RotateSpeedMax = 100f;
         private float _rotateSpeedCurrent;
         private const float RotateAcceleration = 400f;
+        private bool _recovered;
 
         private void Rotate(float direction)
         {
@@ -220,6 +245,18 @@ namespace Game.Combat.Player
 
         public override void Kill()
         {
+            if (!_recovered)
+            {
+                float recoverAmount = Player.Attributes.Val(AttributeType.HealthRecoveryBonus);
+                int healAmount = Mathf.FloorToInt(HealthController.GetMaxHealth() * recoverAmount);
+                if (healAmount != 0)
+                {
+                    HealthController.Heal(healAmount);
+                    _recovered = true;
+                    return;
+                }
+            }
+
             base.Kill();
             Player.Kill();
             CombatManager.ExitCombat();
@@ -231,7 +268,8 @@ namespace Game.Combat.Player
             base.Update();
             FollowTarget();
             TransitionOffScreen();
-            _adrenalineLevel.Increment(_adrenalineGain);
+            _adrenalineLevel.Increment(_adrenalineGain * Time.deltaTime);
+            RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
             UpdateMuzzleFlash();
         }
 
@@ -251,6 +289,10 @@ namespace Game.Combat.Player
         {
             base.TakeDamage(shot);
             CombatManager.IncreaseDamageTaken(shot.DamageDealt());
+            if (!Player.Attributes.DecayRetaliate) return;
+            EnemyBehaviour b = shot._origin as EnemyBehaviour;
+            if (b == null) return;
+            b.Decay();
         }
 
         public void Initialise()
@@ -298,8 +340,8 @@ namespace Game.Combat.Player
 
             SkillBar.BindSkills(Player, _skillCooldownModifier);
             UIMagazineController.SetWeapon(_weaponBehaviour);
-            float width = PathingGrid.CombatAreaWidth / 2f;
-            transform.position = PathingGrid.FindCellToAttackPlayer(CurrentCell(), width, width - 4).Position;
+            //todo give the player a position;
+            transform.position = Vector2.zero;
         }
 
         public override float GetAccuracyModifier()
@@ -318,7 +360,7 @@ namespace Game.Combat.Player
 
         private bool CanDash()
         {
-            return _dashCooldown.Finished() && _dashPressed && ConsumeAdrenaline(2);
+            return _dashCooldown.Finished() && _dashPressed;
         }
 
         public override void Knockback(Vector3 source, float force = 10f)
@@ -366,6 +408,13 @@ namespace Game.Combat.Player
 
         //COOLDOWNS
 
+        private void InstantReload()
+        {
+            _weaponBehaviour.Reload();
+            OnReloadAction?.Invoke();
+            StopReloading();
+        }
+
         private IEnumerator StartReloading()
         {
             float duration = Player.Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
@@ -391,7 +440,12 @@ namespace Game.Combat.Player
                 yield return null;
             }
 
-            _weaponBehaviour.Reload();
+            float reloadFailChance = Player.Attributes.Val(AttributeType.ReloadFailChance);
+            if (Random.Range(0f, 1f) > reloadFailChance)
+            {
+                _weaponBehaviour.Reload();
+            }
+
             OnReloadAction?.Invoke();
             StopReloading();
         }
@@ -406,9 +460,21 @@ namespace Game.Combat.Player
         public void FireWeapon()
         {
             if (_reloading) return;
+            if (_weaponBehaviour.Empty() && Player.Attributes.ReloadOnEmptyMag)
+            {
+                Reload();
+                return;
+            }
+
             if (!_weaponBehaviour.CanFire()) return;
             _weaponBehaviour.StartFiring(this);
-            CombatManager.MarkShotFired();
+            CombatManager.SetHasFiredShot();
+        }
+
+        public void OnShotConnects(CharacterCombat hit)
+        {
+            if (!Player.Attributes.ReloadOnLastRound || !_weaponBehaviour.Empty() || !hit.IsDead) return;
+            InstantReload();
         }
 
         //MISC

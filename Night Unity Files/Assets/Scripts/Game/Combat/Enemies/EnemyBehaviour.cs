@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -14,15 +17,13 @@ using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
-    public class
-        EnemyBehaviour : CharacterCombat
+    public class EnemyBehaviour : CharacterCombat
     {
         public string ActionText;
         public Action CurrentAction;
         public Enemy Enemy;
         protected bool FacePlayer;
-
-        protected readonly Queue<Cell> route = new Queue<Cell>();
+        private bool _pathingAllowed = false;
 
         public bool OnScreen() => Helper.IsObjectInCameraView(gameObject);
 
@@ -43,6 +44,12 @@ namespace Game.Combat.Enemies
             {
                 CurrentAction.Invoke();
             }
+        }
+
+        private IEnumerator WaitForNextPathFind()
+        {
+            yield return new WaitForSeconds(1);
+            _pathingAllowed = true;
         }
 
         protected SpriteRenderer Sprite;
@@ -88,13 +95,6 @@ namespace Game.Combat.Enemies
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         }
 
-        public void OnDrawGizmos()
-        {
-            if (route.Count == 0) return;
-            Cell[] routeArr = route.ToArray();
-            for (int i = 1; i < routeArr.Length; ++i) Gizmos.DrawLine(routeArr[i - 1].Position, routeArr[i].Position);
-        }
-
         public override CharacterCombat GetTarget() => PlayerCombat.Instance;
 
         public virtual void Initialise(Enemy enemy)
@@ -128,6 +128,17 @@ namespace Game.Combat.Enemies
         public override void Kill()
         {
             base.Kill();
+            if (PlayerCombat.Instance.Player.Attributes.SpreadSickness && IsSick())
+            {
+                int sicknessStacks = SicknessStacks;
+                if (sicknessStacks > 5) sicknessStacks = 5;
+                CombatManager.GetCharactersInRange(transform.position, 3).ForEach(c =>
+                {
+                    EnemyBehaviour b = c as EnemyBehaviour;
+                    if (b == null) return;
+                    b.Sicken(sicknessStacks);
+                });
+            }
             PlayerCombat.Instance.Player.BrandManager.IncreaseWeaponKills(PlayerCombat.Instance.Player.Weapon.WeaponType());
             Loot loot = Enemy.DropLoot(transform.position);
 
@@ -160,13 +171,41 @@ namespace Game.Combat.Enemies
             Immobilised(false);
         }
 
-        protected void WaitForRoute(Thread routingThread, Action reachTargetAction = null)
+        private readonly List<Cell> route = new List<Cell>();
+        private bool _waitingForRoute;
+
+        protected void GetRouteToCell(Cell target, Action reachTargetAction = null)
         {
+            if (_waitingForRoute) return;
+            Thread routeThread = PathingGrid.ThreadRouteToCell(CurrentCell(), target, route);
+            _waitingForRoute = true;
             CurrentAction = () =>
             {
-                if (routingThread.IsAlive) return;
+                while (routeThread.IsAlive) return;
+                _waitingForRoute = false;
                 if (reachTargetAction == null) reachTargetAction = ChooseNextAction;
-                MoveToTargetPosition(reachTargetAction);
+                Reposition(reachTargetAction);
+            };
+        }
+
+        protected void FindCellToAttackPlayer(float maxRange, float minRange = 0)
+        {
+            if (_waitingForRoute) return;
+            Thread routeThread = PathingGrid.ThreadRouteToCell(CurrentCell(), GetTarget().CurrentCell(), route);
+            _waitingForRoute = true;
+            CurrentAction = () =>
+            {
+                while (routeThread.IsAlive) return;
+                _waitingForRoute = false;
+                float targetDistance = (maxRange + minRange) / 2f;
+                for (int i = route.Count - 1; i >= 0; --i)
+                {
+                    Cell c = route[i];
+                    float distance = Vector2.Distance(c.Position, GetTarget().CurrentCell().Position);
+                    if (distance < targetDistance) route.RemoveAt(i);
+                    else break;
+                }
+                Reposition(ChooseNextAction);
             };
         }
 
@@ -177,17 +216,8 @@ namespace Game.Combat.Enemies
             if (safeCell == null) return false;
             Immobilised(false);
             SetActionText("Seeking Cover");
-            Thread safeRoute = PathingGrid.RouteToCell(CurrentCell(), safeCell, route);
-            WaitForRoute(safeRoute, reachCoverAction);
+            GetRouteToCell(safeCell, reachCoverAction);
             return true;
-        }
-
-        protected void Reposition(Cell c, Action reachTargetAction = null)
-        {
-            SetActionText("Moving");
-            Debug.DrawLine(CurrentCell().Position, c.Position, Color.red, 5f);
-            Thread pathThread = PathingGrid.RouteToCell(CurrentCell(), c, route);
-            WaitForRoute(pathThread, reachTargetAction);
         }
 
         private void MoveToCell(Cell target)
@@ -206,10 +236,12 @@ namespace Game.Combat.Enemies
         private Cell _targetCell;
         private bool _reachedTarget;
 
-        private void MoveToTargetPosition(Action ReachTargetAction)
+        private void Reposition(Action reachTargetAction)
         {
+            SetActionText("Moving");
             Queue<Cell> newRoute = new Queue<Cell>(route);
             Assert.IsTrue(newRoute.Count > 0);
+            Debug.DrawLine(CurrentCell().Position, route[route.Count - 1].Position, Color.red, 5f);
             _targetCell = newRoute.Dequeue();
             CurrentAction = () =>
             {
@@ -218,7 +250,7 @@ namespace Game.Combat.Enemies
                     if (newRoute.Count == 0)
                     {
                         _targetCell = null;
-                        ReachTargetAction();
+                        reachTargetAction();
                         return;
                     }
 
@@ -226,41 +258,6 @@ namespace Game.Combat.Enemies
                 }
 
                 MoveToCell(_targetCell);
-            };
-        }
-
-        protected void MoveToPlayer()
-        {
-            MoveToCharacter(GetTarget(), ReachPlayer);
-        }
-
-        protected void MoveToCharacter(CharacterCombat character, Action reachCharacterAction)
-        {
-            Cell targetCell = null;
-            SetActionText("Moving to " + character.name);
-            Thread pathThread = PathingGrid.RouteToCell(CurrentCell(), character.CurrentCell(), route);
-            CurrentAction = () =>
-            {
-                Cell currentCharacterCell = character.CurrentCell();
-                if (currentCharacterCell != targetCell)
-                {
-                    pathThread = PathingGrid.RouteToCell(CurrentCell(), currentCharacterCell, route);
-                    targetCell = currentCharacterCell;
-                }
-
-                if (pathThread.IsAlive) return;
-                if (character.IsDead)
-                {
-                    ChooseNextAction();
-                    return;
-                }
-
-                if (CurrentCell() == targetCell || targetCell == null) targetCell = route.Count == 0 ? null : route.Dequeue();
-
-                if (targetCell != null) MoveToCell(targetCell);
-
-                if (Vector2.Distance(character.transform.position, transform.position) > 0.25f) return;
-                reachCharacterAction();
             };
         }
 

@@ -1,6 +1,6 @@
-﻿using System.Threading;
-using Game.Combat.Generation;
+﻿using Game.Combat.Generation;
 using Game.Combat.Misc;
+using Game.Combat.Player;
 using UnityEngine;
 
 namespace Game.Combat.Enemies
@@ -8,11 +8,10 @@ namespace Game.Combat.Enemies
     public class UnarmedBehaviour : EnemyBehaviour
     {
         protected bool Alerted;
-        private const float DetectionRange = 3f;
-        private const float VisionRange = 5f;
+        private const float DetectionRange = 4f;
         private Vector2 _originPosition;
-        protected bool AlertAll;
         protected float WanderDistance = 3;
+        private Cell _targetLastCell;
 
         public override void Initialise(Enemy enemy)
         {
@@ -22,26 +21,26 @@ namespace Game.Combat.Enemies
             else CurrentAction = Wander;
         }
 
-        public void Alert()
+        public void Alert(bool alertOthers)
         {
             if (Alerted) return;
             Alerted = true;
             OnAlert();
-            if (!AlertAll) return;
+            if (!alertOthers) return;
             CombatManager.Enemies().ForEach(e =>
             {
                 if (e == this) return;
                 UnarmedBehaviour enemy = e as UnarmedBehaviour;
                 if (enemy == null) return;
-                enemy.AlertAll = false;
-                enemy.Alert();
+                if (Vector2.Distance(e.CurrentCell().Position, CurrentCell().Position) > 10) return;
+                enemy.Alert(false);
             });
         }
 
         public override void TakeDamage(Shot shot)
         {
             base.TakeDamage(shot);
-            Alert();
+            Alert(true);
         }
 
         private void WaitThenWander()
@@ -60,6 +59,26 @@ namespace Game.Combat.Enemies
             MoveToPlayer();
         }
 
+        protected void MoveToPlayer()
+        {
+            if (PlayerCombat.Instance.IsDead) 
+            {
+                _targetLastCell = null;
+                ChooseNextAction();
+                return;
+            }
+
+            if (Vector2.Distance(GetTarget().CurrentCell().Position, CurrentCell().Position) <= 0.25f)
+            {
+                ReachPlayer();
+            }
+            else if (GetTarget().CurrentCell() != _targetLastCell)
+            {
+                GetRouteToCell(GetTarget().CurrentCell());
+                _targetLastCell = GetTarget().CurrentCell();
+            }
+        }
+        
         public override void Update()
         {
             base.Update();
@@ -70,24 +89,15 @@ namespace Game.Combat.Enemies
         {
             Cell targetCell = PathingGrid.WorldToCellPosition(_originPosition);
             targetCell = PathingGrid.GetCellNearMe(targetCell, WanderDistance);
-            Thread routingThread = PathingGrid.RouteToCell(CurrentCell(), targetCell, route);
-            WaitForRoute(routingThread, WaitThenWander);
+            GetRouteToCell(targetCell, WaitThenWander);
             SetActionText("Wandering");
         }
 
         protected virtual void CheckForPlayer()
         {
             if (Alerted) return;
-            if (DistanceToTarget() > VisionRange) return;
-            CurrentAction = Suspicious;
-        }
-
-        private void Suspicious()
-        {
-            SetActionText("Suspicious");
-            if (DistanceToTarget() >= DetectionRange) return;
-            if (DistanceToTarget() >= VisionRange) CurrentAction = Wander;
-            Alert();
+            if (DistanceToTarget() > DetectionRange) return;
+            Alert(true);
         }
 
         public override void Kill()

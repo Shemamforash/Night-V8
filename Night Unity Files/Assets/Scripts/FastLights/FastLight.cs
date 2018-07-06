@@ -130,7 +130,7 @@ namespace Fastlights
             {
                 LightObstructor o = _allObstructors[i];
                 float sqrDistanceToMesh = Vector2.SqrMagnitude((Vector2) o.transform.position - _position);
-                if (sqrDistanceToMesh - o.MaxRadius() * o.MaxRadius() > sqrRadius + 50) continue;
+                if (sqrDistanceToMesh - o.MaxRadius() * o.MaxRadius() > sqrRadius + 25) continue;
                 _visibleEdges = o.GetVisibleVertices(_position, sqrRadius, Radius);
                 edgeSegments.AddRange(_visibleEdges);
             }
@@ -329,6 +329,11 @@ namespace Fastlights
         {
             if (Target == null) return;
             transform.position = Target.transform.position;
+        }
+
+        public List<Vector2> Vertices()
+        {
+            return meshVertices;
         }
     }
 }

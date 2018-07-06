@@ -175,12 +175,8 @@ namespace Game.Characters
                 int willpower = int.Parse(classNode.SelectSingleNode("Willpower").InnerText);
                 int strength = int.Parse(classNode.SelectSingleNode("Strength").InnerText);
                 int perception = int.Parse(classNode.SelectSingleNode("Perception").InnerText);
-                int enduranceCap = AttributeCapStringToValue("EnduranceCap", classNode);
-                int willpowerCap = AttributeCapStringToValue("WillpowerCap", classNode);
-                int strengthCap = AttributeCapStringToValue("StrengthCap", classNode);
-                int perceptionCap = AttributeCapStringToValue("PerceptionCap", classNode);
                 List<string> storyLines = new List<string>(classNode.SelectSingleNode("Story").InnerText.Split('.'));
-                CharacterTemplate newTemplate = new CharacterTemplate(storyLines, name, strength, endurance, willpower, perception, strengthCap, enduranceCap, willpowerCap, perceptionCap);
+                CharacterTemplate newTemplate = new CharacterTemplate(storyLines, name, strength, endurance, willpower, perception);
                 Templates.Add(newTemplate);
             }
 

@@ -1,4 +1,5 @@
-﻿using Game.Combat.Enemies.Humans;
+﻿using System.Collections.Generic;
+using Game.Combat.Enemies.Humans;
 using Game.Combat.Generation;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -9,18 +10,16 @@ namespace Game.Combat.Enemies
 {
     public class ArmedBehaviour : UnarmedBehaviour
     {
-        protected float IdealWeaponDistance;
+        private float IdealWeaponDistance;
         private const int EnemyReloadMultiplier = 4;
         protected bool CouldHitTarget;
         private bool _waitingForHeal;
-        private const float MaxAimTime = 2f;
         private BaseWeaponBehaviour _weaponBehaviour;
 
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
             SetHealBehaviour();
-            Assert.IsTrue(enemy.Weapon != null);
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             IdealWeaponDistance = Weapon().CalculateIdealDistance();
         }
@@ -34,45 +33,30 @@ namespace Game.Combat.Enemies
 
         protected override void OnAlert()
         {
-            if (NeedsRepositioning()) return;
-            if (Weapon() == null)
-            {
-                MoveToPlayer();
-                return;
-            }
-
-            Aim();
+            ChooseNextAction();
         }
 
         private bool OutOfRange() => DistanceToTarget() < IdealWeaponDistance * 0.5f || DistanceToTarget() > IdealWeaponDistance * 1.5f;
 
         private bool TargetVisible()
         {
-            bool _obstructed = PathingGrid.IsLineObstructed(transform.position, GetTarget().transform.position);
-            return !_obstructed;
+            return !PathingGrid.IsCellHidden(CurrentCell());
         }
 
         public override void ChooseNextAction()
         {
             base.ChooseNextAction();
             FacePlayer = false;
-            if (NeedsRepositioning()) return;
-            if (_weaponBehaviour.Empty())
+            if (!CouldHitTarget)
             {
-                Reload();
+                FindCellToAttackPlayer((int) (IdealWeaponDistance * 1.25f), (int) (IdealWeaponDistance * 0.75f));
+                return;
             }
-            else
-            {
-                Aim();
-            }
-        }
 
-        private bool NeedsRepositioning()
-        {
-            if (CouldHitTarget || Weapon() == null) return false;
-            Cell targetCell = PathingGrid.FindCellToAttackPlayer(CurrentCell(), (int) (IdealWeaponDistance * 1.25f), (int) (IdealWeaponDistance * 0.75f));
-            Reposition(targetCell);
-            return true;
+            if (_weaponBehaviour.Empty())
+                Reload();
+            else
+                Aim();
         }
 
         public override Weapon Weapon() => Enemy.Weapon;
@@ -143,7 +127,6 @@ namespace Game.Combat.Enemies
         {
             FacePlayer = true;
             Immobilised(true);
-            Assert.IsNotNull(Weapon());
             Assert.IsFalse(_weaponBehaviour.Empty());
             SetActionText("Aiming");
             CurrentAction = () =>
@@ -168,7 +151,6 @@ namespace Game.Combat.Enemies
                 }
 
                 _weaponBehaviour.StartFiring(this);
-//                if (shots.Any(s => s.DidHit)) PlayerCombat.Instance.TryRetaliate(this);
                 if (_weaponBehaviour.Empty())
                 {
                     Reload();

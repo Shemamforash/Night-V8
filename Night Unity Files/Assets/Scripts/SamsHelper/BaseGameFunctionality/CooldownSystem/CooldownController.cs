@@ -10,12 +10,13 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         private readonly Color _cooldownNotReadyColor = UiAppearanceController.FadedColour;
         private Image _cooldownFill;
         private EnhancedText _cooldownText;
+        private CanvasGroup _canvasGroup;
 
-        // Use this for initialization
         private void Awake()
         {
             _cooldownFill = Helper.FindChildWithName<Image>(gameObject, "Fill");
             _cooldownText = Helper.FindChildWithName<EnhancedText>(gameObject, "Text");
+            _canvasGroup = GetComponent<CanvasGroup>();
             _cooldownFill.fillAmount = 1;
             UpdateCooldownFill(1);
         }
@@ -36,6 +37,11 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
         public void Reset()
         {
             UpdateCooldownFill(1);
+        }
+
+        public void SetVisible(bool visible)
+        {
+            _canvasGroup.alpha = visible ? 1 : 0;
         }
     }
 }

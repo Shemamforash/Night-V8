@@ -12,13 +12,12 @@ namespace Game.Combat.Enemies.Nightmares
         public override void Initialise(Enemy e)
         {
             base.Initialise(e);
-            AlertAll = false;
         }
-        
+
         protected virtual void Flee()
         {
             Cell target = PathingGrid.GetCellOutOfRange();
-            Reposition(target, () => StartCoroutine(FleeArea()));
+            GetRouteToCell(target, () => StartCoroutine(FleeArea()));
             SetActionText("Fleeing");
             _fleeing = true;
         }

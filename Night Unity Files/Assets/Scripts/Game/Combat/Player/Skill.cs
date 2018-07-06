@@ -35,7 +35,7 @@ namespace Game.Combat.Player
             s._skillValue = value;
         }
 
-        public float Cooldown()
+        public int Cooldown()
         {
             return _skillValue.Cooldown;
         }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Game.Combat.Generation;
+using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Game.Combat.Enemies.Humans
 {
@@ -10,6 +12,7 @@ namespace Game.Combat.Enemies.Humans
         private const float HealInterval = HealDuration / HealTicks;
         private static GameObject _healPrefab;
         private EnemyBehaviour _healTarget;
+        private Cell _targetLastCell;
 
         public override void Initialise(Enemy enemy)
         {
@@ -18,10 +21,41 @@ namespace Game.Combat.Enemies.Humans
 //            MinimumFindCoverDistance = 20f;
         }
 
+        public override void Update()
+        {
+            base.Update();
+            CheckHealTarget();
+        }
+
+        private void CheckHealTarget()
+        {
+            if (_healTarget == null) return;
+            if (_healTarget.IsDead)
+            {
+                _healTarget = null;
+                _targetLastCell = null;
+                ChooseNextAction();
+                return;
+            }
+
+            if (Vector2.Distance(_healTarget.CurrentCell().Position, CurrentCell().Position) <= 0.25f)
+            {
+                Heal();
+            }
+            else if (_healTarget.CurrentCell() != _targetLastCell)
+            {
+                GetRouteToCell(_healTarget.CurrentCell());
+                _targetLastCell = _healTarget.CurrentCell();
+            }
+        }
+
         public void RequestHeal(EnemyBehaviour healTarget)
         {
+            Assert.IsNull(_healTarget);
             _healTarget = healTarget;
-            MoveToCharacter(healTarget, Heal);
+            _targetLastCell = healTarget.CurrentCell();
+            GetRouteToCell(_healTarget.CurrentCell());
+            SetActionText("Healing " + healTarget.Enemy.Template.EnemyType);
         }
 
         private void Heal()

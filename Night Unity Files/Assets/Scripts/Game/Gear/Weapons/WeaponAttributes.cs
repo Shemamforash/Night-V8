@@ -90,17 +90,18 @@ namespace Game.Gear.Weapons
                                  + "\nReload:     " + Val(AttributeType.ReloadSpeed)
                                  + "\nAccuracy: " + Val(AttributeType.Accuracy);
 
-        public void DecreaseDurability()
+        public void DecreaseDurability(float modifier)
         {
             float durabilityLoss = Val(AttributeType.Damage) * Val(AttributeType.Pellets) / Val(AttributeType.ReloadSpeed);
             durabilityLoss /= 200f;
+            durabilityLoss += durabilityLoss * modifier;
             _durability.Decrement(durabilityLoss);
             RecalculateAttributeValues();
         }
 
-        public void IncreaseDurability()
+        public void IncreaseDurability(int durabilityGain)
         {
-            _durability.Increment();
+            _durability.Increment(durabilityGain);
             RecalculateAttributeValues();
         }
 
