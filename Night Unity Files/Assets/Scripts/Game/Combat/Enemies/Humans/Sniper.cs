@@ -16,6 +16,7 @@ namespace Game.Combat.Enemies.Humans
         private void FirePowerShot()
         {
             _firing = true;
+            FacePlayer = true;
             CurrentAction = () =>
             {
                 Shot powerShot = Shot.Create(this);
@@ -23,7 +24,7 @@ namespace Game.Combat.Enemies.Humans
                 powerShot.SetBurnChance(1);
                 powerShot.Fire();
                 ResetCooldown();
-                ChooseNextAction();
+                TryFire();
                 _firing = false;
             };
         }

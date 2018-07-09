@@ -114,7 +114,7 @@ namespace SamsHelper.Libraries
             }
         }
 
-        public static void Shuffle<T>(ref List<T> list)
+        public static void Shuffle<T>(List<T> list)
         {
             List<T> randomList = new List<T>();
             while (list.Count > 0)
@@ -125,7 +125,8 @@ namespace SamsHelper.Libraries
                 list.RemoveAt(removePosition);
             }
 
-            list = randomList;
+            list.Clear();
+            list.AddRange(randomList);
         }
 
         public static void Log<T>(List<T> aList)

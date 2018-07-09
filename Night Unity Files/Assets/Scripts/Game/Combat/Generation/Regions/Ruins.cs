@@ -118,7 +118,7 @@ namespace Game.Combat.Generation
             RuinNode n = nodes[x, y];
             n.Visited = true;
             List<Direction> directions = new List<Direction> {Direction.Left, Direction.Down, Direction.Right, Direction.Up};
-            Helper.Shuffle(ref directions);
+            Helper.Shuffle(directions);
             directions.ForEach(direction =>
             {
                 RuinNode neighbor = n.GetNeighbor(direction);

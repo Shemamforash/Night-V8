@@ -17,7 +17,7 @@ namespace Game.Combat.Enemies.Nightmares
         protected virtual void Flee()
         {
             Cell target = PathingGrid.GetCellOutOfRange();
-            GetRouteToCell(target, () => StartCoroutine(FleeArea()));
+            GoToCell(target, () => StartCoroutine(FleeArea()));
             SetActionText("Fleeing");
             _fleeing = true;
         }

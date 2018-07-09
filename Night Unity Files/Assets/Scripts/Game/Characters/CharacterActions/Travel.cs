@@ -54,6 +54,7 @@ namespace Game.Characters.CharacterActions
                 TimeSpentTravelling = 0;
                 foreach (InventoryItem item in PlayerCharacter.Inventory().Contents())
                 {
+                    if (item.Template == null) continue;
                     switch (item.Template.ResourceType)
                     {
                         case "Water":

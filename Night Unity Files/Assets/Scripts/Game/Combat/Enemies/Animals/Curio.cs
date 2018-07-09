@@ -8,22 +8,23 @@ namespace Game.Combat.Enemies.Animals
 {
     public class Curio : AnimalBehaviour
     {
-        protected override void OnAlert()
+        public override void Initialise(Enemy enemy)
         {
-            ChooseNextAction();
+            base.Initialise(enemy);
+            CurrentAction = WaitForPlayer;
         }
-
-        public override void ChooseNextAction()
+        
+        private void RunAway()
         {
             Vector2 dir = (transform.position - PlayerCombat.Instance.transform.position).normalized;
             Cell target = Helper.RandomInList(PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, 1));
-            GetRouteToCell(target, WaitForPlayer);
+            GoToCell(target, WaitForPlayer);
         }
 
         private void WaitForPlayer()
         {
             if (Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position) > 2) return;
-            ChooseNextAction();
+            RunAway();
         }
     }
 }

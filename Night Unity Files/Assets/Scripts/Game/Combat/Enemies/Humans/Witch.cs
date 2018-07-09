@@ -38,7 +38,7 @@ namespace Game.Combat.Enemies.Humans
 
                 ResetCooldown();
                 _throwing = false;
-                ChooseNextAction();
+                TryFire();
             };
         }
 

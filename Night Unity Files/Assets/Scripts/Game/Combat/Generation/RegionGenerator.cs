@@ -3,7 +3,9 @@ using Game.Characters;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Exploration.Regions;
+using Game.Global;
 using NUnit.Framework;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -11,7 +13,7 @@ namespace Game.Combat.Generation
 {
     public abstract class RegionGenerator : MonoBehaviour
     {
-        private const float MinPolyWidth = 0.1f, SmallPolyWidth = 0.2f, MediumPolyWidth = 2f, LargePolyWidth = 3f, HugePolyWidth = 4f;
+        private const float MinPolyWidth = 0.1f, SmallPolyWidth = 0.2f, MediumPolyWidth = 2f, LargePolyWidth = 3f;
         private Region _region;
         private List<Vector2> _availablePositions;
         private int _barrierNumber;
@@ -38,7 +40,7 @@ namespace Game.Combat.Generation
         private void GenerateEchoes()
         {
             List<Characters.Player> characters = CharacterManager.Characters;
-            Helper.Shuffle(ref characters);
+            Helper.Shuffle(characters);
             foreach (Characters.Player c in characters)
             {
                 if (!c.HasAvailableStoryLine()) continue;
@@ -50,13 +52,13 @@ namespace Game.Combat.Generation
         private void GenerateFreshEnvironment()
         {
             _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f));
-            PathingGrid.InitialiseGrid();
             for (int i = 0; i < 10; ++i)
             {
                 Vector2? position = FindAndRemoveValidPosition();
                 Assert.IsNotNull(position);
                 _region.EchoPositions.Add(FindAndRemoveValidPosition().Value);
             }
+
             Generate();
             foreach (Barrier barrier in barriers)
             {
@@ -93,7 +95,7 @@ namespace Game.Combat.Generation
             }
         }
 
-        private void GenerateGenericRock(float scale, float radiusVariation, float smoothness, Vector2? position = null)
+        private void GenerateGenericRock(float radius, float radiusVariation, float smoothness, Vector2? position = null)
         {
             smoothness = Mathf.Clamp(1 - smoothness, 0.01f, 1f);
             radiusVariation = 1 - Mathf.Clamp(radiusVariation, 0f, 1f);
@@ -102,13 +104,17 @@ namespace Game.Combat.Generation
             Assert.IsTrue(smoothness <= 1);
 
             float definition = smoothness * 150f;
-            radiusVariation *= scale;
-            Ellipse e = new Ellipse(radiusVariation, scale);
             float angleIncrement;
             List<Vector2> barrierVertices = new List<Vector2>();
+            int offset = Random.Range(-500, 500);
             for (float i = 0; i < 360; i += angleIncrement)
             {
-                Vector2 vertex = RandomPointBetweenRadii(i, e);
+                float angle = i * Mathf.Deg2Rad;
+                Vector2 vertex = new Vector2();
+                vertex.x = radius * Mathf.Cos(angle);
+                vertex.y = radius * Mathf.Sin(angle);
+                float noise = Mathf.PerlinNoise(vertex.x + offset, vertex.y + offset);
+                vertex += Vector2.one * (radius / 4f) * noise * radiusVariation;
                 barrierVertices.Add(vertex);
                 angleIncrement = Random.Range(definition / 2f, definition);
             }
@@ -178,32 +184,6 @@ namespace Game.Combat.Generation
             barriers.Add(barrier);
         }
 
-        private static Vector2 RandomPointBetweenRadii(float angle, Ellipse e)
-        {
-            Vector2 randomPoint;
-            angle *= Mathf.Deg2Rad;
-            if (e.IsCircle)
-            {
-                randomPoint = new Vector2();
-                float pointRadius = Random.Range(e.InnerRingWidth, e.OuterRingWidth);
-                randomPoint.x = pointRadius * Mathf.Cos(angle);
-                randomPoint.y = pointRadius * Mathf.Sin(angle);
-                return randomPoint;
-            }
-
-            Vector2 innerRadiusPoint = new Vector2();
-            innerRadiusPoint.x = e.InnerRingWidth * Mathf.Cos(angle);
-            innerRadiusPoint.y = e.InnerRingHeight * Mathf.Sin(angle);
-            Vector2 outerRadiusPoint = new Vector2();
-            outerRadiusPoint.x = e.OuterRingWidth * Mathf.Cos(angle);
-            outerRadiusPoint.y = e.OuterRingHeight * Mathf.Sin(angle);
-
-            randomPoint = outerRadiusPoint - innerRadiusPoint;
-            randomPoint *= Random.Range(0f, 1f);
-            randomPoint += innerRadiusPoint;
-            return randomPoint;
-        }
-
         private void GenerateRocks(int number, float minPolyWidth, float maxPolyWidth, float radiusVariation, float smoothness)
         {
             while (number > 0)
@@ -211,11 +191,6 @@ namespace Game.Combat.Generation
                 GenerateGenericRock(Random.Range(minPolyWidth, maxPolyWidth), radiusVariation, smoothness);
                 --number;
             }
-        }
-
-        protected void GenerateHugeRocks(int number = 1)
-        {
-            GenerateRocks(number, LargePolyWidth, HugePolyWidth, 0.25f, 0.75f);
         }
 
         protected void GenerateMediumRocks(int number = 1)
@@ -242,37 +217,33 @@ namespace Game.Combat.Generation
 
         protected virtual void PlaceItems()
         {
-            Helper.Shuffle(ref _availablePositions);
-            for (int i = 0; i < 4; ++i)
+            Helper.Shuffle(_availablePositions);
+            for (int i = 0; i < _region.WaterSourceCount; ++i)
             {
                 Vector2? position = FindAndRemoveValidPosition();
-                if (position == null) return;
-                _region.Containers.Add(new FoodSource(position.Value));
-                position = FindAndRemoveValidPosition();
-                if (position == null) return;
+                Assert.IsNotNull(position);
                 _region.Containers.Add(new WaterSource(position.Value));
+            }
+
+            for (int i = 0; i < _region.FoodSourceCount; ++i)
+            {
+                Vector2? position = FindAndRemoveValidPosition();
+                Assert.IsNotNull(position);
+                _region.Containers.Add(new FoodSource(position.Value));
+            }
+
+            for (int i = 0; i < _region.ResourceSourceCount; ++i)
+            {
+                Vector2? position = FindAndRemoveValidPosition();
+                Assert.IsNotNull(position);
+                InventoryItem resource = ResourceTemplate.GetResource().Create();
+                Loot loot = new Loot(position.Value, "Resource");
+                loot.AddToInventory(resource);
+                _region.Containers.Add(loot);
+                
             }
         }
 
         protected abstract void Generate();
-
-        private class Ellipse
-        {
-            public readonly float InnerRingWidth, InnerRingHeight, OuterRingWidth, OuterRingHeight;
-            public readonly bool IsCircle;
-
-            public Ellipse(float innerRingWidth, float innerRingHeight, float outerRingWidth, float outerRingHeight)
-            {
-                InnerRingWidth = innerRingWidth;
-                InnerRingHeight = innerRingHeight;
-                OuterRingWidth = outerRingWidth;
-                OuterRingHeight = outerRingHeight;
-            }
-
-            public Ellipse(float innerRadius, float outerRadius) : this(innerRadius, innerRadius, outerRadius, outerRadius)
-            {
-                IsCircle = true;
-            }
-        }
     }
 }

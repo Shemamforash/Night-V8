@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 4363158438395858}
   - component: {fileID: 198816675401881986}
   - component: {fileID: 199829503614555838}
+  - component: {fileID: 58103087465667430}
+  - component: {fileID: 114155236954069746}
   m_Layer: 0
   m_Name: Decay Area
   m_TagString: Untagged
@@ -35,12 +37,38 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1894966673124636}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.3263284, y: -1.5708394, z: -9.020508}
+  m_LocalPosition: {x: -3.3468547, y: 0.003802985, z: -9.020508}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &58103087465667430
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1894966673124636}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.8
+--- !u!114 &114155236954069746
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1894966673124636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f5b2a1b0cdc4d048d9ef3e6fd507c09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!198 &198816675401881986
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -51,9 +79,9 @@ ParticleSystem:
   lengthInSec: 1
   simulationSpeed: 1
   stopAction: 0
-  looping: 1
+  looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1

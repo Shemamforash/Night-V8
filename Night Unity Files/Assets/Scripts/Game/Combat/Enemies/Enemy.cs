@@ -83,10 +83,11 @@ namespace Game.Combat.Enemies
                     break;
                 case "Meat":
                     controller.AddToInventory(ResourceTemplate.GetMeat().Create());
+                    controller.AddToInventory(ResourceTemplate.AllResources.Find(r => r.Name == "Skin").Create());
                     break;
             }
 
-            if (Weapon != null && Random.Range(0, 10) == 0) controller.AddToInventory(Weapon);
+            if (Weapon != null && Random.Range(0, 20) == 0) controller.AddToInventory(Weapon);
 
             return controller;
         }

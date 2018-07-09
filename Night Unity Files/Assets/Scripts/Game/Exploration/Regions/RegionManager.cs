@@ -9,6 +9,7 @@ using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Regions
@@ -36,6 +37,10 @@ namespace Game.Exploration.Regions
         {
         }
 
+        private const int WaterSourcesPerEnvironment = 30;
+        private const int FoodSourcesPerEnvironment = 20;
+        private const int ResourcesPerEnvironment = 30;
+
         public static List<Region> GenerateRegions()
         {
             LoadRegionTemplates();
@@ -43,7 +48,6 @@ namespace Game.Exploration.Regions
             _regionsDiscovered = 0;
             _regions.Clear();
             _regionTypes.Clear();
-            _regions.Add(new Region());
             Environment.Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
             for (int i = 0; i < currentEnvironment.Shelters; ++i) _regionTypes.Add(RegionType.Shelter);
             for (int i = 0; i < currentEnvironment.Resources; ++i) _regionTypes.Add(RegionType.Animal);
@@ -59,7 +63,72 @@ namespace Game.Exploration.Regions
                 --numberOfRegions;
             }
 
+            SetWaterQuantities();
+            SetFoodQuantities();
+            SetResourceQuantities();
+
+            _regions.Insert(0, new Region());
             return _regions;
+        }
+
+        private static void SetWaterQuantities()
+        {
+            int waterSources = WaterSourcesPerEnvironment;
+            while (waterSources > 0)
+            {
+                Helper.Shuffle(_regions);
+                bool added = false;
+                foreach (Region r in _regions)
+                {
+                    if (waterSources == 0) break;
+                    if (r.WaterSourceCount > 2) continue;
+                    added = true;
+                    ++r.WaterSourceCount;
+                    --waterSources;
+                }
+
+                if (!added) Debug.Log("Decrease water sources per environment");
+            }
+        }
+
+        private static void SetFoodQuantities()
+        {
+            int foodSource = FoodSourcesPerEnvironment;
+            while (foodSource > 0)
+            {
+                Helper.Shuffle(_regions);
+                bool added = false;
+                foreach (Region r in _regions)
+                {
+                    if (foodSource == 0) break;
+                    if (r.FoodSourceCount > 2) continue;
+                    added = true;
+                    ++r.FoodSourceCount;
+                    --foodSource;
+                }
+
+                if (!added) Debug.Log("Decrease food sources per environment");
+            }
+        }
+
+        private static void SetResourceQuantities()
+        {
+            int resourceCount = ResourcesPerEnvironment;
+            while (resourceCount > 0)
+            {
+                Helper.Shuffle(_regions);
+                bool added = false;
+                foreach (Region r in _regions)
+                {
+                    if (resourceCount == 0) break;
+                    if (r.ResourceSourceCount > 2) continue;
+                    added = true;
+                    ++r.ResourceSourceCount;
+                    --resourceCount;
+                }
+
+                if (!added) Debug.Log("Decrease resource sources per environment");
+            }
         }
 
         public static void GetRegionType(Region region)
@@ -104,7 +173,7 @@ namespace Game.Exploration.Regions
             foreach (string suffix in suffixes)
                 if (prefix != suffix)
                     combinations.Add(prefix + "'s " + suffix);
-            Helper.Shuffle(ref combinations);
+            Helper.Shuffle(combinations);
             _regionNames.Add(type, combinations);
         }
 

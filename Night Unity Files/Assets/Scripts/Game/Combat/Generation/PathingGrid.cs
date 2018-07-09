@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using Game.Combat.Enemies;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -26,7 +27,7 @@ namespace Game.Combat.Generation
         private static Vector2 _lastPlayerPosition;
         private static readonly HashSet<Cell> _hiddenCells = new HashSet<Cell>(new CellComparer());
 
-        public static readonly List<Cell> _cellsInRange = new List<Cell>();
+        private static readonly List<Cell> _cellsInRange = new List<Cell>();
         private static Stopwatch _stopwatch;
 
         public static void InitialiseGrid()
@@ -109,7 +110,7 @@ namespace Game.Combat.Generation
 
 
         //todo slow
-        public static bool IsLineObstructed(Vector2 start, Vector2 end, bool includeReachable = false)
+        private static bool IsLineObstructed(Vector2 start, Vector2 end, bool includeReachable = false)
         {
             float distance = Vector2.Distance(start, end);
             float obstructionInterval = 1f / (CellResolution * 2);
@@ -128,35 +129,40 @@ namespace Game.Combat.Generation
             return false;
         }
 
-        public static Thread ThreadRouteToCell(Cell from, Cell to, List<Cell> route)
+        public static void SmoothRoute(List<Cell> route)
+        {
+            int currentIndex = 0;
+            while (currentIndex < route.Count)
+            {
+                Cell current = route[currentIndex];
+                List<Cell> cellsToRemove = new List<Cell>();
+                bool noneHit = false;
+                for (int i = route.Count - 1; i > currentIndex; --i)
+                {
+                    Cell next = route[i];
+                    if (noneHit)
+                    {
+                        cellsToRemove.Add(next);
+                    }
+                    else if (!IsLineObstructed(current.Position, next.Position, true))
+                    {
+                        noneHit = true;
+                    }
+                }
+
+                cellsToRemove.ForEach(cell => route.Remove(cell));
+                ++currentIndex;
+            }
+        }
+
+        public static Thread ThreadRouteToCell(Cell from, Cell to, EnemyBehaviour enemy, float timeStarted)
         {
             Thread thread = new Thread(() =>
             {
+                List<Cell> route = new List<Cell>();
                 List<Node> nodePath = Pathfinding.AStar(from.Node, to.Node);
-                route.Clear();
                 nodePath.ForEach(n => route.Add(WorldToCellPosition(n.Position)));
-                int currentIndex = 0;
-                while (currentIndex < route.Count)
-                {
-                    Cell current = route[currentIndex];
-                    List<Cell> cellsToRemove = new List<Cell>();
-                    bool noneHit = false;
-                    for (int i = route.Count - 1; i > currentIndex; --i)
-                    {
-                        Cell next = route[i];
-                        if (noneHit)
-                        {
-                            cellsToRemove.Add(next);
-                        }
-                        else if (!IsLineObstructed(current.Position, next.Position, true))
-                        {
-                            noneHit = true;
-                        }
-                    }
-
-                    cellsToRemove.ForEach(cell => route.Remove(cell));
-                    ++currentIndex;
-                }
+                enemy.SetRoute(route, timeStarted);
             });
             thread.Start();
             return thread;
@@ -177,7 +183,7 @@ namespace Game.Combat.Generation
         public static List<Cell> GetCellsNearMe(Cell current, int noCells, float distanceMax, float distanceMin = 0)
         {
             List<Cell> cells = CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin));
-            Helper.Shuffle(ref cells);
+            Helper.Shuffle(cells);
             return cells.Take(noCells).ToList();
         }
 

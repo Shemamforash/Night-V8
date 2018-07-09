@@ -12,7 +12,6 @@ namespace Game.Combat.Enemies.Humans
         private const float HealInterval = HealDuration / HealTicks;
         private static GameObject _healPrefab;
         private EnemyBehaviour _healTarget;
-        private Cell _targetLastCell;
 
         public override void Initialise(Enemy enemy)
         {
@@ -30,31 +29,21 @@ namespace Game.Combat.Enemies.Humans
         private void CheckHealTarget()
         {
             if (_healTarget == null) return;
-            if (_healTarget.IsDead)
-            {
-                _healTarget = null;
-                _targetLastCell = null;
-                ChooseNextAction();
-                return;
-            }
+            if (!_healTarget.IsDead) return;
+            _healTarget = null;
+            TryFire();
+        }
 
-            if (Vector2.Distance(_healTarget.CurrentCell().Position, CurrentCell().Position) <= 0.25f)
-            {
-                Heal();
-            }
-            else if (_healTarget.CurrentCell() != _targetLastCell)
-            {
-                GetRouteToCell(_healTarget.CurrentCell());
-                _targetLastCell = _healTarget.CurrentCell();
-            }
+        protected override void ReachTarget()
+        {
+            Heal();
         }
 
         public void RequestHeal(EnemyBehaviour healTarget)
         {
             Assert.IsNull(_healTarget);
             _healTarget = healTarget;
-            _targetLastCell = healTarget.CurrentCell();
-            GetRouteToCell(_healTarget.CurrentCell());
+            FollowTarget(_healTarget);
             SetActionText("Healing " + healTarget.Enemy.Template.EnemyType);
         }
 
@@ -68,8 +57,7 @@ namespace Game.Combat.Enemies.Humans
                 age += Time.deltaTime;
                 if (_healTarget == null || currentTick == HealTicks)
                 {
-                    _healTarget?.ChooseNextAction();
-                    ChooseNextAction();
+                    TryFire();
                     return;
                 }
 

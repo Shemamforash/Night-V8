@@ -212,7 +212,10 @@ namespace Game.Characters
             }
         }
 
-        public int CalculateCompassPulses() => (int) (Val(AttributeType.Perception) + Val(AttributeType.CompassBonus));
+        public int CalculateCompassPulses()
+        {
+            return (int) (Mathf.CeilToInt(Val(AttributeType.Perception) / 3f) + Val(AttributeType.CompassBonus));
+        }
 
         public void Drink()
         {

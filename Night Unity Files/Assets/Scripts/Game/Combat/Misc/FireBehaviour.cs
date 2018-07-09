@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Fastlights;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -11,8 +12,7 @@ namespace Game.Combat.Misc
         private const int MaxEmissionRate = 400;
         private const float LightMaxRadius = 5f;
         private const float LifeTime = 4f;
-        private static readonly List<FireBehaviour> _firePool = new List<FireBehaviour>();
-        private static GameObject _firePrefab;
+        private static readonly ObjectPool<FireBehaviour> _firePool = new ObjectPool<FireBehaviour>("Prefabs/Combat/Fire Area");
         private float _age;
         private FastLight _light;
         private ParticleSystem _particles;
@@ -26,11 +26,13 @@ namespace Game.Combat.Misc
             _particles = GetComponent<ParticleSystem>();
             _light = Helper.FindChildWithName<FastLight>(gameObject, "Light");
             _collider = GetComponent<CircleCollider2D>();
+            if (_fireParent == null) _fireParent = GameObject.Find("Fires").transform;
         }
 
         public static FireBehaviour Create(Vector3 position, float size, bool keepAlive = false, bool lightOn = true)
         {
-            FireBehaviour fire = GetNewFire();
+            FireBehaviour fire = _firePool.Create(_fireParent);
+            fire.transform.position = position;
             fire._keepAlive = keepAlive;
             fire.StartCoroutine(fire.Burn(position, size, lightOn));
             return fire;
@@ -72,32 +74,12 @@ namespace Game.Combat.Misc
                 yield return null;
             }
 
-            gameObject.SetActive(false);
-            _firePool.Add(this);
+            _firePool.Return(this);
         }
 
         private void OnDestroy()
         {
-            _firePool.Remove(this);
-            if (_firePool.Count == 0) _fireParent = null;
-        }
-
-        private static FireBehaviour GetNewFire()
-        {
-            if (_firePool.Count == 0)
-            {
-                if (_firePrefab == null) _firePrefab = Resources.Load<GameObject>("Prefabs/Combat/Fire Area");
-                GameObject fireObject = Instantiate(_firePrefab);
-                if (_fireParent == null) _fireParent = GameObject.Find("Fires").transform;
-                fireObject.transform.SetParent(_fireParent, false);
-                fireObject.transform.localScale = Vector3.one;
-                return fireObject.GetComponent<FireBehaviour>();
-            }
-
-            FireBehaviour fire = _firePool[0];
-            _firePool.RemoveAt(0);
-            fire.gameObject.SetActive(true);
-            return fire;
+            _firePool.Dispose(this);
         }
     }
 }

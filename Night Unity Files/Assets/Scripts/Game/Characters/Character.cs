@@ -17,7 +17,7 @@ namespace Game.Characters
 
         protected Character(string name) : base(name, GameObjectType.Character)
         {
-            CharacterInventory = new Inventory(name, 10);
+            CharacterInventory = new Inventory(name);
             ArmourController = new ArmourController(this);
         }
 

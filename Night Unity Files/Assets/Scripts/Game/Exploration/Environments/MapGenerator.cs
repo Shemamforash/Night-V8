@@ -52,7 +52,7 @@ namespace Game.Exploration.Environment
         {
             if (_undrawnRoutes.Count == 0)
             {
-                Helper.Shuffle(ref _allRoutes);
+                Helper.Shuffle(_allRoutes);
                 _allRoutes.ForEach(a => _undrawnRoutes.Enqueue(a));
             }
 
@@ -132,7 +132,6 @@ namespace Game.Exploration.Environment
 
             RegionManager.GetRegionType(initialNode);
             initialNode.Discover();
-//            regions.ForEach(r => r.Discover());
         }
 
         private static void CreateMinimumSpanningTree()
@@ -153,7 +152,7 @@ namespace Game.Exploration.Environment
                 storedNodes.ForEach(n =>
                 {
                     if (n == current) return;
-                    if (current.Neighbors().Count >= 4) return;
+                    if (current.Neighbors().Count >= 2) return;
                     if (Vector2.Distance(current.Position, n.Position) > MaxRadius) return;
                     current.AddNeighbor(n);
                 });

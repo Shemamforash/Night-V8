@@ -27,7 +27,6 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         private IEnumerator DrawLife(Feed target)
         {
             _target = target;
-           _enemy.Immobilised(true);
             _drawingLife = true;
             _particles.Play();
             float timePassed = 0f;
@@ -57,10 +56,6 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             if (target != null)
             {
                 _enemy.Kill();
-            }
-            else
-            {
-                _enemy.Immobilised(false);
             }
         }
 

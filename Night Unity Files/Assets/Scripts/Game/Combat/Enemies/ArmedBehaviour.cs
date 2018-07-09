@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Combat.Enemies.Humans;
 using Game.Combat.Generation;
+using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
@@ -11,7 +12,6 @@ namespace Game.Combat.Enemies
     public class ArmedBehaviour : UnarmedBehaviour
     {
         private float IdealWeaponDistance;
-        private const int EnemyReloadMultiplier = 4;
         protected bool CouldHitTarget;
         private bool _waitingForHeal;
         private BaseWeaponBehaviour _weaponBehaviour;
@@ -33,30 +33,28 @@ namespace Game.Combat.Enemies
 
         protected override void OnAlert()
         {
-            ChooseNextAction();
+            TryFire();
         }
 
         private bool OutOfRange() => DistanceToTarget() < IdealWeaponDistance * 0.5f || DistanceToTarget() > IdealWeaponDistance * 1.5f;
 
         private bool TargetVisible()
         {
-            return !PathingGrid.IsCellHidden(CurrentCell());
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, PlayerCombat.Instance.transform.position, 1 << 8);
+            return hit.collider == null;
         }
 
-        public override void ChooseNextAction()
+        protected void TryFire()
         {
-            base.ChooseNextAction();
             FacePlayer = false;
+
             if (!CouldHitTarget)
             {
-                FindCellToAttackPlayer((int) (IdealWeaponDistance * 1.25f), (int) (IdealWeaponDistance * 0.75f));
+                FindCellToAttackPlayer(TryFire, IdealWeaponDistance);
                 return;
             }
 
-            if (_weaponBehaviour.Empty())
-                Reload();
-            else
-                Aim();
+            Aim();
         }
 
         public override Weapon Weapon() => Enemy.Weapon;
@@ -76,15 +74,14 @@ namespace Game.Combat.Enemies
         private void Reload()
         {
             if (MoveToCover(Reload)) return;
-//                Flee();
             SetActionText("Reloading");
-            float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed) * EnemyReloadMultiplier;
+            float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
             CurrentAction = () =>
             {
                 duration -= Time.deltaTime;
                 if (duration > 0) return;
                 _weaponBehaviour.Reload();
-                ChooseNextAction();
+                TryFire();
             };
         }
 
@@ -114,7 +111,7 @@ namespace Game.Combat.Enemies
                 medic = FindMedic();
                 if (medic == null)
                 {
-                    ChooseNextAction();
+                    TryFire();
                 }
                 else
                 {
@@ -125,13 +122,17 @@ namespace Game.Combat.Enemies
 
         private void Aim()
         {
+            if (_weaponBehaviour.Empty())
+            {
+                Reload();
+                return;
+            }
+
             FacePlayer = true;
-            Immobilised(true);
-            Assert.IsFalse(_weaponBehaviour.Empty());
             SetActionText("Aiming");
             CurrentAction = () =>
             {
-                if (!CouldHitTarget) ChooseNextAction();
+                if (!CouldHitTarget) TryFire();
                 if (GetAccuracyModifier() > 0.25f) return;
                 Fire();
             };
@@ -141,12 +142,11 @@ namespace Game.Combat.Enemies
         {
             bool automatic = Weapon().WeaponAttributes.Automatic;
             SetActionText("Firing");
-            Immobilised(true);
             CurrentAction = () =>
             {
                 if (!CouldHitTarget)
                 {
-                    ChooseNextAction();
+                    TryFire();
                     return;
                 }
 

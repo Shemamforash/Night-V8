@@ -43,30 +43,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         private static string _lastType = "";
 
-        public ResourceTemplate(string name, string type, float oasisDr, float steppeDr, float ruinsDr, float defilesDr, float wastelandDr) : this(name, type)
-        {
-            if (_lastType != type)
-            {
-                OasisDRCur = 0f;
-                SteppeDRCur = 0f;
-                RuinsDRCur = 0f;
-                DefilesDRCur = 0f;
-                WastelandDRCur = 0f;
-            }
-
-            _lastType = type;
-            Consumable = true;
-            _dropRates.Add(EnvironmentType.Oasis, new DropRate(ref OasisDRCur, oasisDr));
-            _dropRates.Add(EnvironmentType.Steppe, new DropRate(ref SteppeDRCur, steppeDr));
-            _dropRates.Add(EnvironmentType.Ruins, new DropRate(ref RuinsDRCur, ruinsDr));
-            _dropRates.Add(EnvironmentType.Defiles, new DropRate(ref DefilesDRCur, defilesDr));
-            _dropRates.Add(EnvironmentType.Wasteland, new DropRate(ref WastelandDRCur, wastelandDr));
-        }
-
-        public ResourceTemplate(string name, string type)
+        public ResourceTemplate(string name, string type, float oasisDr, float steppeDr, float ruinsDr, float defilesDr, float wastelandDr)
         {
             Name = name;
             ResourceType = type;
+            Consumable = true;
             switch (type)
             {
                 case "Water":
@@ -80,10 +61,27 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                     break;
                 case "Resource":
                     Resources.Add(this);
+                    Consumable = false;
                     break;
             }
 
             AllResources.Add(this);
+
+            if (_lastType != type)
+            {
+                OasisDRCur = 0f;
+                SteppeDRCur = 0f;
+                RuinsDRCur = 0f;
+                DefilesDRCur = 0f;
+                WastelandDRCur = 0f;
+            }
+
+            _lastType = type;
+            _dropRates.Add(EnvironmentType.Oasis, new DropRate(ref OasisDRCur, oasisDr));
+            _dropRates.Add(EnvironmentType.Steppe, new DropRate(ref SteppeDRCur, steppeDr));
+            _dropRates.Add(EnvironmentType.Ruins, new DropRate(ref RuinsDRCur, ruinsDr));
+            _dropRates.Add(EnvironmentType.Defiles, new DropRate(ref DefilesDRCur, defilesDr));
+            _dropRates.Add(EnvironmentType.Wasteland, new DropRate(ref WastelandDRCur, wastelandDr));
         }
 
         public static ResourceTemplate GetMeat()
@@ -97,6 +95,19 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
 
             throw new Exception("Can't have invalid meat!");
+        }
+
+        public static ResourceTemplate GetResource()
+        {
+            float rand = Random.Range(0f, 1f);
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironment.EnvironmentType;
+            foreach (ResourceTemplate resourceTemplate in Resources)
+            {
+                if (!resourceTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;
+                return resourceTemplate;
+            }
+
+            throw new Exception("Can't have invalid Resource!");
         }
 
         public static ResourceTemplate GetWater()

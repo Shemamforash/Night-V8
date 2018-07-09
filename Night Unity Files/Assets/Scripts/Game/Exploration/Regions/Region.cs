@@ -34,6 +34,7 @@ namespace Game.Exploration.Regions
         private static Sprite _animalSprite, _dangerSprite;
         public Vector2 ShrinePosition;
         public readonly List<Vector2> EchoPositions = new List<Vector2>();
+        public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
 
         public bool Visited()
         {
@@ -145,7 +146,7 @@ namespace Game.Exploration.Regions
         private void GenerateHumanEncounter()
         {
             int daysSpent = WorldState.GetDaysSpentHere();
-            int size = Random.Range(5 + daysSpent, 10 + daysSpent);
+            int size = Random.Range(1 + daysSpent, 5 + daysSpent);
             int difficulty = WorldState.Difficulty();
             List<EnemyType> allowedTypes = new List<EnemyType>();
             allowedTypes.Add(EnemyType.Sentinel);

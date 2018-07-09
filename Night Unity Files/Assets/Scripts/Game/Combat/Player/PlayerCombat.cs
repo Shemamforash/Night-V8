@@ -13,6 +13,7 @@ using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
 using Game.Gear.Weapons;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
@@ -96,7 +97,6 @@ namespace Game.Combat.Player
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
-            if (IsImmobilised) return;
             if (isHeld)
             {
                 switch (axis)
@@ -154,6 +154,7 @@ namespace Game.Combat.Player
         {
             if (_compassPulses == 0) return;
             if (!UiCompassController.EmitPulse()) return;
+            Player.Attributes.Get(AttributeType.Perception).Decrement();
             UiCompassPulseController.UpdateCompassPulses();
             --_compassPulses;
         }
@@ -259,6 +260,12 @@ namespace Game.Combat.Player
 
             base.Kill();
             Player.Kill();
+            if (Player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer)
+            {
+                SceneChanger.ChangeScene("Game Over");
+                return;
+            }
+
             CombatManager.ExitCombat();
         }
 

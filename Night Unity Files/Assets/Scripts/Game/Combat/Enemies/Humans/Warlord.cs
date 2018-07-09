@@ -32,7 +32,7 @@ namespace Game.Combat.Enemies.Humans
             if (!(_reinforceCallTime <= 0)) return;
 
             CombatManager.QueueEnemyToAdd(EnemyType.Sentinel);
-            ChooseNextAction();
+            TryFire();
             switch (Random.Range(0, 4))
             {
                 case 0:

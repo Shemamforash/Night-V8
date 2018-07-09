@@ -1,4 +1,5 @@
 ﻿using Game.Combat.Misc;
+using Game.Combat.Player;
 
 namespace Game.Combat.Enemies.Humans
 {
@@ -19,15 +20,10 @@ namespace Game.Combat.Enemies.Humans
 
         protected override void OnAlert()
         {
-            MoveToPlayer();
+            FollowTarget(PlayerCombat.Instance);
         }
 
-        public override void ChooseNextAction()
-        {
-            CurrentAction = null;
-        }
-
-        protected override void ReachPlayer()
+        protected override void ReachTarget()
         {
             if (!_detonated) Detonate();
         }

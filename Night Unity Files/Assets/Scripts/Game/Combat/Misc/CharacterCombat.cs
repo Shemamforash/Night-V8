@@ -16,8 +16,6 @@ namespace Game.Combat.Misc
         private const float RecoilRecoveryRate = 2f;
         private const float TimeToStartRecovery = 0.5f;
 
-        private const float KnockbackTime = 2f;
-
         private readonly Number Recoil = new Number(0, 0, 1f);
         private float _distanceToTarget = -1;
 
@@ -29,7 +27,6 @@ namespace Game.Combat.Misc
         public HealthController HealthController = new HealthController();
 
         public bool IsDead;
-        protected bool IsImmobilised;
         protected CharacterUi CharacterUi;
 
         public float Speed;
@@ -217,11 +214,6 @@ namespace Game.Combat.Misc
 
         //CONDITIONS
 
-        public void Immobilised(bool immobilised)
-        {
-            IsImmobilised = immobilised;
-        }
-
         public virtual void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
@@ -271,13 +263,11 @@ namespace Game.Combat.Misc
 
         protected virtual void Dash(Vector2 direction)
         {
-            if (IsImmobilised) return;
             _forceToadd += direction * DashForce;
         }
 
         protected virtual void Move(Vector2 direction)
         {
-            if (IsImmobilised) return;
             float speed = Speed;
             _forceToadd += direction * speed * Time.deltaTime / 0.016f;
         }

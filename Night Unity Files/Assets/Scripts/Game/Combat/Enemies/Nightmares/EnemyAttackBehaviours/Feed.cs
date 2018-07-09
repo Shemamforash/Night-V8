@@ -13,8 +13,6 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             Enemy.HealthController.Heal(health);
             --_feedingCount;
-            if (_feedingCount > 0) return;
-            Enemy.Immobilised(false);
         }
         
         protected override void Attack()
@@ -28,7 +26,6 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 if (drain == null) continue;
                 --maxDraw;
                 drain.StartDrawLife(this);
-                Enemy.Immobilised(true);
                 ++_feedingCount;
             }
         }

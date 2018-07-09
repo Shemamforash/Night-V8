@@ -13,17 +13,17 @@ namespace Game.Combat.Enemies.Humans
         private bool _meleeing;
         private const float MeleeForce = 200;
 
-        public override void ChooseNextAction()
-        {
-            CurrentAction = MoveToPlayer;
-        }
-
         public override void Update()
         {
             base.Update();
             if (!Alerted) return;
             if (_meleeing) return;
             if (DistanceToTarget() > MinMeleeDistance) return;
+            StrikePlayer();
+        }
+
+        protected override void ReachTarget()
+        {
             StrikePlayer();
         }
 
@@ -55,7 +55,7 @@ namespace Game.Combat.Enemies.Humans
                     }
 
                     Cell target =  PathingGrid.GetCellNearMe(CurrentCell(), 2f);
-                    GetRouteToCell(target);
+                    GoToCell(target, () => FollowTarget(PlayerCombat.Instance));
                     _meleeing = false;
                 }
             };

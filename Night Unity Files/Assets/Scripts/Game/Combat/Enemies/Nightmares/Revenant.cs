@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using UnityEngine;
 
@@ -17,12 +16,13 @@ namespace Game.Combat.Enemies.Nightmares
             _fireTrail = gameObject.AddComponent<LeaveFireTrail>();
             _fireTrail.Initialise();
             _split.Initialise(3, 200, EnemyType.Revenant, 1000, -1, true);
+            CurrentAction = Orbit;
         }
 
-        public override void ChooseNextAction()
+        private void Orbit()
         {
             Cell target = PathingGrid.GetCellOrbitingTarget(CurrentCell(), GetTarget().CurrentCell(), GetComponent<Rigidbody2D>().velocity, 4f, 0.5f);
-            GetRouteToCell(target);
+            GoToCell(target, Orbit);
         }
 
         public override void Kill()

@@ -1,5 +1,5 @@
 ﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
-using Game.Combat.Generation;
+using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
 {
@@ -8,14 +8,14 @@ namespace Game.Combat.Enemies.Nightmares
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            ChooseNextAction();
             gameObject.AddComponent<Teleport>().Initialise(5);
             gameObject.AddComponent<Bombardment>().Initialise(7, 3, 4);
+            CurrentAction = Attack;
         }
 
-        public override void ChooseNextAction()
+        private void Attack()
         {
-            FindCellToAttackPlayer(5f, 2f);
+            FindCellToAttackPlayer(Attack, Random.Range(2f, 5f));
         }
     }
 }

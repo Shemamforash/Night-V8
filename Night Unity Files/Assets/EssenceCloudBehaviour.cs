@@ -42,7 +42,6 @@ public class EssenceCloudBehaviour : MonoBehaviour
         Inventory inventory = PlayerCombat.Instance.Player.Inventory();
         while (_essenceCount > 0)
         {
-            if (!inventory.InventoryHasSpace()) return;
             --_essenceCount;
             inventory.IncrementResource("Essence", 1);
         }

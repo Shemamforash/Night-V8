@@ -12,6 +12,7 @@ namespace Game.Combat.Enemies
         private Vector2 _originPosition;
         protected float WanderDistance = 3;
         private Cell _targetLastCell;
+        private CharacterCombat _target;
 
         public override void Initialise(Enemy enemy)
         {
@@ -56,27 +57,26 @@ namespace Game.Combat.Enemies
 
         protected virtual void OnAlert()
         {
-            MoveToPlayer();
+            FollowTarget(PlayerCombat.Instance);
         }
 
-        protected void MoveToPlayer()
+        protected void FollowTarget(CharacterCombat target)
         {
-            if (PlayerCombat.Instance.IsDead) 
+            _target = target;
+            if (_target.IsDead) 
             {
                 _targetLastCell = null;
-                ChooseNextAction();
                 return;
             }
 
-            if (Vector2.Distance(GetTarget().CurrentCell().Position, CurrentCell().Position) <= 0.25f)
+            if (_target.CurrentCell() == _targetLastCell)
             {
-                ReachPlayer();
+                ReachTarget();
+                return;
             }
-            else if (GetTarget().CurrentCell() != _targetLastCell)
-            {
-                GetRouteToCell(GetTarget().CurrentCell());
-                _targetLastCell = GetTarget().CurrentCell();
-            }
+
+            GoToCell(_target.CurrentCell(), ReachTarget);
+            _targetLastCell = _target.CurrentCell();
         }
         
         public override void Update()
@@ -89,7 +89,7 @@ namespace Game.Combat.Enemies
         {
             Cell targetCell = PathingGrid.WorldToCellPosition(_originPosition);
             targetCell = PathingGrid.GetCellNearMe(targetCell, WanderDistance);
-            GetRouteToCell(targetCell, WaitThenWander);
+            GoToCell(targetCell, WaitThenWander);
             SetActionText("Wandering");
         }
 

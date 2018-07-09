@@ -24,6 +24,7 @@ namespace Game.Combat.Enemies
         public Enemy Enemy;
         protected bool FacePlayer;
         private bool _pathingAllowed = false;
+        private Thread _routeThread;
 
         public bool OnScreen() => Helper.IsObjectInCameraView(gameObject);
 
@@ -36,14 +37,7 @@ namespace Game.Combat.Enemies
             UpdateAlpha();
             if (!CombatManager.InCombat()) return;
             UpdateRotation();
-            if (CurrentAction == null)
-            {
-                ChooseNextAction();
-            }
-            else
-            {
-                CurrentAction.Invoke();
-            }
+            CurrentAction?.Invoke();
         }
 
         private IEnumerator WaitForNextPathFind()
@@ -139,6 +133,7 @@ namespace Game.Combat.Enemies
                     b.Sicken(sicknessStacks);
                 });
             }
+
             PlayerCombat.Instance.Player.BrandManager.IncreaseWeaponKills(PlayerCombat.Instance.Player.Weapon.WeaponType());
             Loot loot = Enemy.DropLoot(transform.position);
 
@@ -166,47 +161,59 @@ namespace Game.Combat.Enemies
             Destroy(gameObject);
         }
 
-        public virtual void ChooseNextAction()
+        private List<Cell> _route = new List<Cell>();
+
+//        protected void GetRouteToCell(Cell target, Action reachTargetAction)
+//        {
+//            if (_waitingForRoute) return;
+//            _routeThread.Interrupt();
+//            _routeThread = PathingGrid.ThreadRouteToCell(CurrentCell(), target, route);
+//            _waitingForRoute = true;
+//            CurrentAction = () =>
+//            {
+//                while (routeThread.IsAlive) return;
+//                _waitingForRoute = false;
+//                Reposition(reachTargetAction);
+//            };
+//        }
+
+        private float _lastRouteStartTime;
+        
+        public void SetRoute(List<Cell> route, float timeStarted)
         {
-            Immobilised(false);
+            if (timeStarted != _lastRouteStartTime) return;
+            _route = route;
         }
-
-        private readonly List<Cell> route = new List<Cell>();
-        private bool _waitingForRoute;
-
-        protected void GetRouteToCell(Cell target, Action reachTargetAction = null)
+        
+        protected void GoToCell(Cell targetCell, Action reachTargetAction, float distanceFromTarget = 0)
         {
-            if (_waitingForRoute) return;
-            Thread routeThread = PathingGrid.ThreadRouteToCell(CurrentCell(), target, route);
-            _waitingForRoute = true;
+            _lastRouteStartTime = Time.timeSinceLevelLoad;
+            _routeThread = PathingGrid.ThreadRouteToCell(CurrentCell(), targetCell, this, _lastRouteStartTime);
+            Debug.DrawLine(CurrentCell().Position, targetCell.Position, Color.cyan, 2f);
             CurrentAction = () =>
             {
-                while (routeThread.IsAlive) return;
-                _waitingForRoute = false;
-                if (reachTargetAction == null) reachTargetAction = ChooseNextAction;
+                while (_routeThread.IsAlive) return;
+                if (distanceFromTarget != 0)
+                {
+                    for (int i = _route.Count - 1; i >= 0; --i)
+                    {
+                        Cell c = _route[i];
+                        float distance = Vector2.Distance(c.Position, GetTarget().CurrentCell().Position);
+                        if (distance < distanceFromTarget)
+                        {
+                            _route.RemoveAt(i);
+                        }
+                        else break;
+                    }
+                }
+                PathingGrid.SmoothRoute(_route);
                 Reposition(reachTargetAction);
             };
         }
 
-        protected void FindCellToAttackPlayer(float maxRange, float minRange = 0)
+        protected void FindCellToAttackPlayer(Action reachCellAction, float range)
         {
-            if (_waitingForRoute) return;
-            Thread routeThread = PathingGrid.ThreadRouteToCell(CurrentCell(), GetTarget().CurrentCell(), route);
-            _waitingForRoute = true;
-            CurrentAction = () =>
-            {
-                while (routeThread.IsAlive) return;
-                _waitingForRoute = false;
-                float targetDistance = (maxRange + minRange) / 2f;
-                for (int i = route.Count - 1; i >= 0; --i)
-                {
-                    Cell c = route[i];
-                    float distance = Vector2.Distance(c.Position, GetTarget().CurrentCell().Position);
-                    if (distance < targetDistance) route.RemoveAt(i);
-                    else break;
-                }
-                Reposition(ChooseNextAction);
-            };
+            GoToCell(PlayerCombat.Instance.CurrentCell(), reachCellAction, range);
         }
 
         public bool MoveToCover(Action reachCoverAction)
@@ -214,9 +221,8 @@ namespace Game.Combat.Enemies
             if (PathingGrid.IsCellHidden(CurrentCell())) return false;
             Cell safeCell = PathingGrid.FindCoverNearMe(CurrentCell());
             if (safeCell == null) return false;
-            Immobilised(false);
             SetActionText("Seeking Cover");
-            GetRouteToCell(safeCell, reachCoverAction);
+            GoToCell(safeCell, reachCoverAction);
             return true;
         }
 
@@ -239,9 +245,13 @@ namespace Game.Combat.Enemies
         private void Reposition(Action reachTargetAction)
         {
             SetActionText("Moving");
-            Queue<Cell> newRoute = new Queue<Cell>(route);
-            Assert.IsTrue(newRoute.Count > 0);
-            Debug.DrawLine(CurrentCell().Position, route[route.Count - 1].Position, Color.red, 5f);
+            Queue<Cell> newRoute = new Queue<Cell>(_route);
+            if (newRoute.Count == 0)
+            {
+                Debug.Log(name + " has no route");
+                return;
+            }
+//            Debug.DrawLine(CurrentCell().Position, _route[_route.Count - 1].Position, Color.red, 5f);
             _targetCell = newRoute.Dequeue();
             CurrentAction = () =>
             {
@@ -261,7 +271,7 @@ namespace Game.Combat.Enemies
             };
         }
 
-        protected virtual void ReachPlayer()
+        protected virtual void ReachTarget()
         {
         }
 
