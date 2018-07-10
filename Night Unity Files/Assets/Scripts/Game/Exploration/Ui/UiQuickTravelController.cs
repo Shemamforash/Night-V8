@@ -54,6 +54,7 @@ namespace Game.Exploration.Ui
 
         public void Awake()
         {
+            Cursor.visible = false;
             Instance = this;
             _regionName = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Region Name");
             _regionDescription = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Description");

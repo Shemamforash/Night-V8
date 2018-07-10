@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using DG.Tweening;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,47 +11,31 @@ namespace Game.Global
     {
         private static Image _fader;
         private static SceneChanger _instance;
+        private static readonly Color InvisibleBlack = new Color(0, 0, 0, 0);
 
         public void Awake()
         {
             _instance = this;
             _fader = GameObject.Find("Screen Fader").GetComponent<Image>();
-            StartCoroutine(FadeIn());
-        }
-
-        private IEnumerator FadeIn(float duration = 1f)
-        {
-            float age = 0f;
-            while (age < duration)
-            {
-                age += Time.deltaTime;
-                _fader.color = new Color(0, 0, 0, 1 - age / duration);
-                yield return null;
-            }
-
-            _fader.color = UiAppearanceController.InvisibleColour;
-            if(SceneManager.GetActiveScene().name == "Game") WorldState.UnPause();
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(_fader.DOColor(InvisibleBlack, 1f));
+            if (SceneManager.GetActiveScene().name != "Game") return;
+            sequence.AppendCallback(WorldState.UnPause);
         }
 
         private IEnumerator FadeOut(string sceneName, bool fade)
         {
             AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync(sceneName);
+            sceneLoaded.allowSceneActivation = false;
             if (fade)
             {
-                sceneLoaded.allowSceneActivation = false;
-                float age = 0f;
-                while (age < 1)
-                {
-                    age += Time.deltaTime;
-                    _fader.color = new Color(0, 0, 0, age);
-                    yield return null;
-                }
+                yield return _fader.DOColor(Color.black, 1f).WaitForCompletion();
             }
-            _fader.color = Color.black;
+
             while (sceneLoaded.progress != 0.9f) yield return null;
             sceneLoaded.allowSceneActivation = true;
         }
-        
+
         public static void ChangeScene(string sceneName, bool fade = true)
         {
             WorldState.Pause();

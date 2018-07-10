@@ -360,8 +360,7 @@ namespace Game.Combat.Generation
             centre /= _finalShape.Count;
             for (int i = 0; i < _finalShape.Count; ++i) _finalShape[i] -= centre;
 
-            Barrier b = new Barrier(_finalShape, "Wall " + GetObjectNumber(), centre);
-            barriers.Add(b);
+            Barrier b = new Barrier(_finalShape, "Wall " + GetObjectNumber(), centre, barriers);
         }
 
         private void DrawShape()

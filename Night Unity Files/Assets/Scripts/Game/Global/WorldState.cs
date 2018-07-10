@@ -1,4 +1,5 @@
-﻿using Facilitating;
+﻿using System;
+using Facilitating;
 using Facilitating.Persistence;
 using Facilitating.UI;
 using Game.Characters;
@@ -6,6 +7,7 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Global
 {
@@ -26,9 +28,12 @@ namespace Game.Global
         public static int Days, Hours = 6, Minutes;
         private static int _difficulty;
         private static bool _isNight, _isPaused;
+        public static int Seed = -1;
 
         public void Awake()
         {
+            if (Seed == -1) Seed = Random.Range(0, int.MaxValue);
+            Cursor.visible = false;
             if (_homeInventory == null) _homeInventory = new CharacterManager();
             SaveController.AddPersistenceListener(_regionManager);
         }
@@ -126,6 +131,7 @@ namespace Game.Global
             WeatherManager.CurrentWeather().Update();
             EnvironmentManager.UpdateTemperature();
             CharacterManager.Update();
+            Campfire.Die();
         }
 
         private void HourPasses()
@@ -173,6 +179,17 @@ namespace Game.Global
             float timePassed = minutesPassed * MinuteInSeconds + _currentTime;
             float normalisedTime = timePassed / DayLengthInSeconds;
             SceneryController.SetTime(normalisedTime);
+        }
+
+        public static int GenerateGearLevel()
+        {
+            int difficulty = Mathf.FloorToInt(Difficulty() / 10f);
+            int difficultyMin = difficulty - 1;
+            if (difficultyMin < 0) difficultyMin = 0;
+            else if (difficultyMin > 4) difficultyMin = 4;
+            int difficultyMax = difficulty + 1;
+            if (difficultyMax > 4) difficultyMax = 4;
+            return Random.Range(difficultyMin, difficultyMax);
         }
     }
 }

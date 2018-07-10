@@ -26,8 +26,6 @@
         FreeSkillChance,
         InactiveSkillChance,
         
-        CapacityBonus,
-        
         SkillRechargeBonus,
         AdrenalineRechargeBonus,
         KnockbackBonus,

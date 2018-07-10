@@ -8,6 +8,11 @@ namespace Facilitating.MenuNavigation
 {
     public class MainMenuNavigator : MonoBehaviour
     {
+        public void Awake()
+        {
+            Cursor.visible = false;
+        }
+
         public void CloseGame()
         {
             Application.Quit();
@@ -52,6 +57,5 @@ namespace Facilitating.MenuNavigation
         {
             MenuStateMachine.ShowMenu(menu.name);
         }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Facilitating;
+using Game.Global;
 
 namespace Game.Characters.CharacterActions
 {
@@ -6,11 +7,11 @@ namespace Game.Characters.CharacterActions
     {
         public LightFire(Player playerCharacter) : base("Tend Fire", playerCharacter)
         {
-            HourCallback = () =>
+            MinuteCallback = () =>
             {
                 --Duration;
-                if (Duration != 0) return;
                 Campfire.Tend();
+                if (Duration != 0) return;
                 Exit();
             };
         }
@@ -18,7 +19,7 @@ namespace Game.Characters.CharacterActions
         public override void Enter()
         {
             base.Enter();
-            Duration = 1;
+            Duration = WorldState.MinutesPerHour;
         }
     }
 }

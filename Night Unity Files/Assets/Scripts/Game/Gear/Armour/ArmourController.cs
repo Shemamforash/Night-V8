@@ -48,7 +48,7 @@ namespace Game.Gear.Armour
             plate.TakeDamage(proportion * damage);
             return plate.GetCurrentProtection() == 0;
         }
-        
+
         private void DivideDamageOrHeal(float amount)
         {
             if (TakePlateDamage(_plateOne, amount))
@@ -107,8 +107,8 @@ namespace Game.Gear.Armour
                 plateTwo = 1;
             }
 
-            if(plateOne != 0) SetPlateOne(ArmourPlate.Create((ItemQuality)plateOne - 1));
-            if(plateTwo != 0) SetPlateTwo(ArmourPlate.Create((ItemQuality) plateTwo - 1));
+            if (plateOne != 0) SetPlateOne(ArmourPlate.Create((ItemQuality) plateOne));
+            if (plateTwo != 0) SetPlateTwo(ArmourPlate.Create((ItemQuality) plateTwo));
         }
 
         public int GetProtectionLevel()

@@ -105,6 +105,9 @@ namespace Game.Characters
             return startingHealth;
         }
 
+        private const int DehydrateDeathTime = 18;
+        private const int StarvationDeathTime = 36;
+        
         public void UpdateThirstAndHunger()
         {
             TemperatureCategory temperature = EnvironmentManager.GetTemperature();
@@ -136,8 +139,8 @@ namespace Game.Characters
                     throw new ArgumentOutOfRangeException();
             }
 
-            float thirstIncrementAmount = thirstTemperatureModifier / 12f;
-            float hungerIncrementAmount = hungerTemperatureModifier / 24f;
+            float thirstIncrementAmount = thirstTemperatureModifier / DehydrateDeathTime;
+            float hungerIncrementAmount = hungerTemperatureModifier / StarvationDeathTime;
 
             CharacterAttribute hunger = Get(AttributeType.Hunger);
             hunger.Increment(hungerIncrementAmount);
@@ -214,7 +217,6 @@ namespace Game.Characters
 
         public int CalculateCompassPulses()
         {
-            return (int) (Mathf.CeilToInt(Val(AttributeType.Perception) / 3f) + Val(AttributeType.CompassBonus));
         }
 
         public void Drink()
@@ -227,6 +229,12 @@ namespace Game.Characters
         {
             Get(AttributeType.Hunger).Decrement();
             WorldEventManager.GenerateEvent(new CharacterMessage("That should stave off starvation, at least for a while", _player));
+        }
+
+        public void CalculateNewStrength(float health)
+        {
+            float newStrength = Mathf.CeilToInt(health / PlayerHealthChunkSize);
+            SetVal(AttributeType.Strength, newStrength);
         }
     }
 }

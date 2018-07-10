@@ -7,19 +7,22 @@ namespace Game.Combat.Enemies.Nightmares
 {
     public class AnimalBehaviour : UnarmedBehaviour
     {
-        private bool _fleeing;
+        protected bool Fleeing;
+
+        protected override void OnAlert()
+        {
+        }
 
         public override void Initialise(Enemy e)
         {
             base.Initialise(e);
         }
 
-        protected virtual void Flee()
+        protected void Flee(Cell target)
         {
-            Cell target = PathingGrid.GetCellOutOfRange();
             GoToCell(target, () => StartCoroutine(FleeArea()));
             SetActionText("Fleeing");
-            _fleeing = true;
+            Fleeing = true;
         }
 
         private IEnumerator FleeArea()
@@ -39,7 +42,7 @@ namespace Game.Combat.Enemies.Nightmares
 
         protected override void CheckForPlayer()
         {
-            if (_fleeing) return;
+            if (Fleeing) return;
             base.CheckForPlayer();
         }
     }

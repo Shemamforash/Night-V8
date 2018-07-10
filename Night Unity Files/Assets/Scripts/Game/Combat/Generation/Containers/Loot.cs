@@ -16,6 +16,7 @@ namespace Game.Combat.Generation
         {
             IsValid = true;
             _inventory.Move(item, 1);
+            Debug.Log("moved " + item.Name + " to " + Inventory().Name + "  " + Inventory().Contents().Count);
         }
 
         public void IncrementResource(string name, int amount)

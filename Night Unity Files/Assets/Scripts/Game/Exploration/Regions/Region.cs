@@ -137,8 +137,6 @@ namespace Game.Exploration.Regions
         public Enemy AddEnemy(EnemyType enemyType)
         {
             Enemy newEnemy = new Enemy(enemyType);
-            newEnemy.GenerateArmour();
-            newEnemy.GenerateWeapon();
             _enemies.Add(newEnemy);
             return newEnemy;
         }

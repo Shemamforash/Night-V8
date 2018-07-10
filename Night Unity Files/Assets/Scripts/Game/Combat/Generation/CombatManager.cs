@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Animals;
@@ -49,6 +50,7 @@ namespace Game.Combat.Generation
 
         public override void Awake()
         {
+            Cursor.visible = false;
             base.Awake();
             _instance = this;
         }
@@ -85,8 +87,7 @@ namespace Game.Combat.Generation
         {
             _inCombat = true;
             WorldState.Pause();
-            Weather currentWeather = WeatherManager.CurrentWeather();
-            _visibilityRange = 7f * (currentWeather?.GetVisibility() ?? 0.5f);
+            _visibilityRange = 5f * WeatherManager.CurrentWeather().GetVisibility() + 2f;
             _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
 
             GameObject worldObject = GameObject.Find("World");
@@ -163,7 +164,7 @@ namespace Game.Combat.Generation
                 }
             }
 
-            PositionHerds(GrazerHerds, 2);
+            PositionHerds(GrazerHerds, 1.5f);
             PositionHerds(FlitHerds, 1);
         }
 
@@ -171,17 +172,28 @@ namespace Game.Combat.Generation
         {
             herds.ForEach(herd =>
             {
-                List<EnemyBehaviour> leaders = herd.FindAll(enemyBehaviour => enemyBehaviour is Watcher);
-                leaders.ForEach(l => herd.Remove(l));
                 Vector3 animalSpawnPosition = PathingGrid.GetCellNearMe(Vector2.zero, 8f, 4f).Position;
                 List<Cell> cells = PathingGrid.GetCellsNearMe(PathingGrid.WorldToCellPosition(animalSpawnPosition), herd.Count, range);
                 for (int i = 0; i < cells.Count; ++i)
                 {
                     herd[i].transform.position = cells[i].Position;
-                    if (leaders.Count == 0) return;
-                    ((Grazer) herd[i]).SetLeader(Helper.RandomInList(leaders));
+                    Grazer g = herd[i] as Grazer;
+                    if (g == null) continue;
+                    g.AddHerdMembers(herd);
                 }
             });
+        }
+
+        private void OnDrawGizmos()
+        {
+            Vector3 cubeSize = 1f / PathingGrid.CellResolution * Vector3.one;
+            Gizmos.color = Color.red;
+            List<Cell> invalid = PathingGrid._invalidCells.ToList();
+            invalid.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
+            Gizmos.color = Color.yellow;
+            PathingGrid._outOfRangeList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
+            Gizmos.color = Color.green;
+            PathingGrid._edgePositionList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
         }
 
         public static void ExitCombat()
@@ -199,6 +211,7 @@ namespace Game.Combat.Generation
                     brandManager.IncreaseOnlySkillBattles();
                 }
             }
+
             brandManager.IncreaseDamageDealt(Instance()._damageDealt);
             brandManager.IncreaseDamageTaken(Instance()._damageTaken);
             brandManager.IncreaseItemsFound(Instance()._itemsFound);

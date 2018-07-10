@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
+using TMPro;
 using UnityEngine;
 
 namespace Game.Combat.Ui
@@ -12,11 +15,14 @@ namespace Game.Combat.Ui
     {
         private static PlayerUi _instance;
         private Coroutine _fadeInCoroutine, _fadeOutCoroutine;
+        private static TextMeshProUGUI _eventText;
 
         public override void Awake()
         {
             base.Awake();
             _instance = this;
+            _eventText = GameObject.Find("Event Text").GetComponent<TextMeshProUGUI>();
+            _eventText.color = UiAppearanceController.InvisibleColour;
         }
 
         public static PlayerUi Instance()
@@ -45,6 +51,22 @@ namespace Game.Combat.Ui
             });
 
             PlayerCombat.Instance.SetTarget(nearestCharacter as EnemyBehaviour);
+        }
+
+        public static void SetEventText(string text)
+        {
+            _eventText.text = text;
+            FadeTextIn();
+        }
+
+        public static void FadeTextIn()
+        {
+            _eventText.DOColor(UiAppearanceController.FadedColour, 1f);
+        }
+        
+        public static void FadeTextOut()
+        {
+            _eventText.DOColor(UiAppearanceController.InvisibleColour, 1f);   
         }
     }
 }

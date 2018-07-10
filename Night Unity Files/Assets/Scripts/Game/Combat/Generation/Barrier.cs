@@ -1,4 +1,4 @@
-﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
 using FastLights;
@@ -38,21 +38,20 @@ namespace Game.Combat.Generation
             return barrierNode;
         }
 
-        public Barrier(List<Vector2> vertices, string barrierName, Vector2 position, bool forcePlace = false) : base(vertices, position)
+        public Barrier(List<Vector2> vertices, string barrierName, Vector2 position, List<Barrier> barriers) : base(vertices, position)
         {
             if (position == Vector2.negativeInfinity) Debug.Log("wat!?");
             _barrierName = barrierName;
-            Valid = PathingGrid.AddBarrier(this, forcePlace);
+            if (!PathingGrid.AddBarrier(this)) return;
+            barriers.Add(this);
         }
-
-        public readonly bool Valid;
 
         public void CreateObject()
         {
             Assert.IsNull(_barrierObject);
             if (_barrierPrefab == null) _barrierPrefab = Resources.Load<GameObject>("Prefabs/Combat/Basic Barrier");
             if (_barrierParent == null) _barrierParent = GameObject.Find("Barriers").transform;
-            PathingGrid.AddBarrier(this, true);
+            PathingGrid.AddBarrier(this);
             _barrierObject = GameObject.Instantiate(_barrierPrefab);
             _barrierObject.AddComponent<BarrierBehaviour>().SetBarrier(this);
             _barrierObject.transform.SetParent(_barrierParent);
@@ -105,6 +104,7 @@ namespace Game.Combat.Generation
                 Vector2 point = meshVerts[i];
                 colliderPath[i] = point;
             }
+
             Collider.SetPath(0, colliderPath);
         }
     }

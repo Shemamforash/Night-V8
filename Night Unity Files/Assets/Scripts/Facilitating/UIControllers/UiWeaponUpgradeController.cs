@@ -68,13 +68,13 @@ namespace Facilitating.UIControllers
 
         private void Infuse()
         {
-            if (CurrentPlayer.Weapon == null) return;
-            if (CurrentPlayer.Weapon.WeaponAttributes.GetDurability().ReachedMax()) return;
+            if (CurrentPlayer.EquippedWeapon == null) return;
+            if (CurrentPlayer.EquippedWeapon.WeaponAttributes.GetDurability().ReachedMax()) return;
             if (WorldState.HomeInventory().GetResourceQuantity("Essence") == 0) return;
             WorldState.HomeInventory().DecrementResource("Essence", 1);
             CurrentPlayer.BrandManager.IncreaseEssenceInfused();
             int durabilityGain = 1 + (int)CurrentPlayer.Attributes.Val(AttributeType.EssenceRecoveryBonus);
-            CurrentPlayer.Weapon.WeaponAttributes.IncreaseDurability(durabilityGain);
+            CurrentPlayer.EquippedWeapon.WeaponAttributes.IncreaseDurability(durabilityGain);
             UpdateDurabilityParticles();
         }
 
@@ -103,7 +103,7 @@ namespace Facilitating.UIControllers
             }
             else
             {
-                CurrentPlayer.Weapon.SetInscription(CharacterManager.Inscriptions[selectedGear]);
+                CurrentPlayer.EquippedWeapon.SetInscription(CharacterManager.Inscriptions[selectedGear]);
             }
 
             Show(CurrentPlayer);
@@ -115,7 +115,7 @@ namespace Facilitating.UIControllers
         {
             if (comparisonItem == null) return;
             Weapon compareWeapon = comparisonItem as Weapon;
-            if (CurrentPlayer.Weapon == null)
+            if (CurrentPlayer.EquippedWeapon == null)
             {
                 SetWeaponInfo(compareWeapon);
             }
@@ -138,7 +138,7 @@ namespace Facilitating.UIControllers
 
         private string GetAttributePrefix(Weapon compare, AttributeType attribute)
         {
-            Weapon equipped = CurrentPlayer.Weapon;
+            Weapon equipped = CurrentPlayer.EquippedWeapon;
             float equippedValue = equipped.GetAttributeValue(attribute);
             if (attribute == AttributeType.Capacity)
             {
@@ -160,8 +160,8 @@ namespace Facilitating.UIControllers
         private void UpdateDurabilityParticles()
         {
             float absoluteMaxDurability = ((int) ItemQuality.Radiant + 1) * 10;
-            float maxDurability = ((int) CurrentPlayer.Weapon.Quality() + 1) * 10;
-            float currentDurability = CurrentPlayer.Weapon.WeaponAttributes.GetDurability().CurrentValue();
+            float maxDurability = ((int) CurrentPlayer.EquippedWeapon.Quality() + 1) * 10;
+            float currentDurability = CurrentPlayer.EquippedWeapon.WeaponAttributes.GetDurability().CurrentValue();
             float rectAnchorOffset = maxDurability / absoluteMaxDurability / 2;
             float particleOffset = 5.6f * (currentDurability / absoluteMaxDurability);
             _durabilityTransform.anchorMin = new Vector2(0.5f - rectAnchorOffset, 0.5f);
@@ -202,7 +202,7 @@ namespace Facilitating.UIControllers
 
         private void SetWeapon()
         {
-            Weapon weapon = CurrentPlayer.Weapon;
+            Weapon weapon = CurrentPlayer.EquippedWeapon;
             if (weapon == null)
             {
                 SetNoWeapon();

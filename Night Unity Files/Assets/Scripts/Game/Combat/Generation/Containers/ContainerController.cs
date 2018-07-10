@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -10,6 +11,7 @@ public abstract class ContainerController //: DesolationInventory
     private readonly Vector2 _position;
     protected readonly Inventory _inventory;
     protected string PrefabLocation = "Container";
+    private ContainerBehaviour _containerBehaviour;
 
     protected ContainerController(Vector2 position, string name)
     {
@@ -24,8 +26,9 @@ public abstract class ContainerController //: DesolationInventory
         container.transform.position = _position;
         container.transform.localScale = Vector3.one;
         ContainerBehaviour cb = container.GetComponent<ContainerBehaviour>();
+        _containerBehaviour = cb;
         cb.SetContainerController(this);
-        if (autoReveal) cb.StartReveal();
+        if (autoReveal) cb.Reveal();
     }
 
     public Inventory Inventory()
@@ -36,5 +39,17 @@ public abstract class ContainerController //: DesolationInventory
         _inventory.DecrementResource("Water", waterQuantity);
         _inventory.IncrementResource("Ice", waterQuantity);
         return _inventory;
+    }
+
+    public void Take()
+    {
+        Inventory().MoveAllResources(CharacterManager.SelectedCharacter.Inventory());
+        _containerBehaviour.StartCoroutine(_containerBehaviour.Fade());
+    }
+
+    public string GetContents()
+    {
+        Debug.Log(Inventory().Name + "  " + Inventory().Contents().Count);
+        return _inventory.Contents()[0].Name;
     }
 }

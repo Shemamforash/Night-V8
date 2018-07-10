@@ -12,8 +12,8 @@ namespace Game.Characters
     {
         public readonly ArmourController ArmourController;
         protected readonly Inventory CharacterInventory;
-        public Accessory Accessory;
-        public Weapon Weapon;
+        public Accessory EquippedAccessory;
+        public Weapon EquippedWeapon;
 
         protected Character(string name) : base(name, GameObjectType.Character)
         {
@@ -25,9 +25,9 @@ namespace Game.Characters
         {
             doc = base.Save(doc, saveType);
             SaveController.CreateNodeAndAppend("Name", doc, Name);
-            Weapon?.Save(doc, saveType);
+            EquippedWeapon?.Save(doc, saveType);
             ArmourController?.Save(doc, saveType);
-            Accessory?.Save(doc, saveType);
+            EquippedAccessory?.Save(doc, saveType);
             Inventory().Save(doc, saveType);
             return doc;
         }
@@ -40,16 +40,16 @@ namespace Game.Characters
 
         public virtual void EquipWeapon(Weapon weapon)
         {
-            Weapon?.Unequip();
+            EquippedWeapon?.Unequip();
             weapon.Equip(this);
-            Weapon = weapon;
+            EquippedWeapon = weapon;
         }
 
         public virtual void EquipAccessory(Accessory accessory)
         {
-            Accessory?.Unequip();
+            EquippedAccessory?.Unequip();
             accessory.Equip(this);
-            Accessory = accessory;
+            EquippedAccessory = accessory;
         }
 
         public Inventory Inventory() => CharacterInventory;

@@ -11,20 +11,59 @@ using UnityEngine;
 
 public class UiAreaInventoryController : Menu, IInputListener
 {
-    private static UiAreaInventoryController _instance;
-    private readonly AreaInventory _playerInventory = new AreaInventory();
-    private readonly AreaInventory _worldInventory = new AreaInventory();
     private const int centre = 3;
-    private AreaInventory _selectedInventory;
-    private bool _showPlayerInventoryOnly;
     public const float MaxShowInventoryDistance = 0.5f;
+    private static UiAreaInventoryController _instance;
+    private readonly List<ItemUi> _gearUis = new List<ItemUi>();
+    private Inventory _inventory;
+
+    private int _selectedItem;
+
+    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+    {
+        if (isHeld) return;
+        switch (axis)
+        {
+            case InputAxis.Vertical:
+                if (direction < 0)
+                {
+                    TrySelectItemBelow();
+                }
+                else
+                {
+                    TrySelectItemAbove();
+                }
+
+                break;
+            case InputAxis.Fire:
+                UseItem();
+                break;
+            case InputAxis.Inventory:
+                MenuStateMachine.ShowMenu("HUD");
+                break;
+        }
+    }
+
+    public void OnInputUp(InputAxis axis)
+    {
+    }
+
+    public void OnDoubleTap(InputAxis axis, float direction)
+    {
+    }
 
     public override void Awake()
     {
         base.Awake();
         _instance = this;
-        _playerInventory.Initialise(Helper.FindChildWithName(gameObject, "Player"), _worldInventory);
-        _worldInventory.Initialise(Helper.FindChildWithName(gameObject, "World"), _playerInventory);
+        GameObject listObject = Helper.FindChildWithName(gameObject, "Player");
+        for (int i = 0; i < 7; ++i)
+        {
+            GameObject uiObject = Helper.FindChildWithName(listObject, "Item " + i);
+            ItemUi gearUi = new ItemUi(uiObject, Math.Abs(i - centre));
+            _gearUis.Add(gearUi);
+            gearUi.SetItem(null);
+        }
     }
 
     private void OnDestroy()
@@ -32,21 +71,12 @@ public class UiAreaInventoryController : Menu, IInputListener
         _instance = null;
     }
 
+    public static UiAreaInventoryController Instance() => _instance;
+
     public override void Enter()
     {
         base.Enter();
-        _selectedInventory = _playerInventory;
-        if (_showPlayerInventoryOnly)
-            _selectedInventory.SetActiveAlone();
-        else
-            _selectedInventory.SetActive();
         InputHandler.SetCurrentListener(this);
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-        _showPlayerInventoryOnly = false;
     }
 
     private ContainerController NearestContainer()
@@ -65,228 +95,104 @@ public class UiAreaInventoryController : Menu, IInputListener
 
     public void OpenInventory()
     {
-        ContainerController nearestContainer = NearestContainer();
-
-        if (nearestContainer != null)
-        {
-            _showPlayerInventoryOnly = false;
-            _instance._playerInventory.SetInventory(CharacterManager.SelectedCharacter.Inventory());
-            _instance._worldInventory.SetInventory(nearestContainer.Inventory());
-            MenuStateMachine.ShowMenu("Inventory");
-        }
-        else
-        {
-            _instance.ShowPlayerInventory();
-        }
-    }
-
-    private void ShowPlayerInventory()
-    {
-        _playerInventory.SetInventory(CharacterManager.SelectedCharacter.Inventory());
-        _showPlayerInventoryOnly = true;
+        _inventory = CharacterManager.SelectedCharacter.Inventory();
+        _selectedItem = 0;
+        SelectItem();
         MenuStateMachine.ShowMenu("Inventory");
     }
 
-    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+    private void TrySelectItemBelow()
     {
-        if (isHeld) return;
-        switch (axis)
-        {
-            case InputAxis.Vertical:
-                if (direction < 0)
-                    _selectedInventory.TrySelectItemBelow();
-                else
-                    _selectedInventory.TrySelectItemAbove();
-                break;
-            case InputAxis.Horizontal:
-                if (direction > 0 && _selectedInventory == _worldInventory)
-                {
-                    _selectedInventory = _playerInventory;
-                    _selectedInventory.SetActive();
-                }
-                else if (direction < 0 && _selectedInventory == _playerInventory)
-                {
-                    _selectedInventory = _worldInventory;
-                    _selectedInventory.SetActive();
-                }
+        if (_selectedItem == _inventory.Contents().Count - 1) return;
+        ++_selectedItem;
+        SelectItem();
+    }
 
-                break;
-            case InputAxis.Fire:
-                PressItem();
-                break;
-            case InputAxis.Inventory:
-                MenuStateMachine.ShowMenu("HUD");
-                break;
+    private void TrySelectItemAbove()
+    {
+        if (_selectedItem == 0) return;
+        --_selectedItem;
+        SelectItem();
+    }
+
+    private void SelectItem()
+    {
+        List<InventoryItem> inventoryContents = _inventory.Contents();
+        if (_selectedItem >= inventoryContents.Count) _selectedItem = inventoryContents.Count - 1;
+        for (int i = 0; i < _gearUis.Count; ++i)
+        {
+            int offset = i - centre;
+            int targetGear = _selectedItem + offset;
+            InventoryItem gearItem = null;
+            if (targetGear >= 0 && targetGear < inventoryContents.Count) gearItem = inventoryContents[targetGear];
+            _gearUis[i].SetItem(gearItem);
         }
     }
 
-    private void PressItem()
+    private void UseItem()
     {
-        if (_showPlayerInventoryOnly)
-        {
-            _selectedInventory.UseItem();
-        }
-        else
-        {
-            AreaInventory otherInventory = _selectedInventory == _playerInventory ? _worldInventory : _playerInventory;
-            _selectedInventory.TransferItem(otherInventory);
-        }
+        Consumable item = _inventory.Contents()[_selectedItem] as Consumable;
+        if (item == null) return;
+        item.Consume(PlayerCombat.Instance.Player);
+        SelectItem();
     }
 
-    public void OnInputUp(InputAxis axis)
+    public void TakeItem()
     {
+        NearestContainer()?.Take();
     }
 
-    public void OnDoubleTap(InputAxis axis, float direction)
+    private class ItemUi
     {
-    }
+        private readonly Color _activeColour;
+        private readonly EnhancedText _nameText;
+        private readonly EnhancedText _quantityText;
+        private readonly EnhancedText _weightText;
 
-    private class AreaInventory
-    {
-        private int _selectedItem;
-        private Inventory _inventory;
-        private readonly List<ItemUi> _gearUis = new List<ItemUi>();
-        private CanvasGroup _canvasGroup;
-        private AreaInventory _otherInventory;
-
-        public void TrySelectItemBelow()
+        public ItemUi(GameObject uiObject, int offset)
         {
-            if (_selectedItem == _inventory.Contents().Count - 1) return;
-            ++_selectedItem;
-            SelectItem();
+            _nameText = Helper.FindChildWithName<EnhancedText>(uiObject, "Name");
+            _quantityText = Helper.FindChildWithName<EnhancedText>(uiObject, "Quantity");
+            _weightText = Helper.FindChildWithName<EnhancedText>(uiObject, "Weight");
+            _activeColour = new Color(1f, 1f, 1f, 1f / (offset + 1));
         }
 
-        public void TrySelectItemAbove()
+        private void SetColour(Color c)
         {
-            if (_selectedItem == 0) return;
-            --_selectedItem;
-            SelectItem();
+            _nameText.SetColor(c);
+            _quantityText.SetColor(c);
+            _weightText.SetColor(c);
         }
 
-        public void SetActive()
+        private void SetWeightText(string text)
         {
-            _canvasGroup.alpha = 1f;
-            _otherInventory._canvasGroup.alpha = 0.4f;
+            _weightText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
+            _weightText.Text(text);
         }
 
-        public void SetActiveAlone()
+        private void SetQuantityText(string text)
         {
-            _canvasGroup.alpha = 1f;
-            _otherInventory._canvasGroup.alpha = 0f;
+            _quantityText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
+            _quantityText.Text(text);
         }
 
-        public void SetInventory(Inventory inventory)
+        private void SetNameText(string text)
         {
-            if (inventory == null)
+            _nameText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
+            _nameText.Text(text);
+        }
+
+        public void SetItem(InventoryItem inventoryItem)
+        {
+            if (inventoryItem == null)
             {
-                _canvasGroup.alpha = 0f;
+                SetColour(UiAppearanceController.InvisibleColour);
                 return;
             }
 
-            _inventory = inventory;
-            _selectedItem = 0;
-            SelectItem();
+            SetWeightText("Remove me");
+            SetQuantityText("x" + inventoryItem.Quantity());
+            SetNameText(inventoryItem.Name);
         }
-
-        private void SelectItem()
-        {
-            List<InventoryItem> inventoryContents = _inventory.Contents();
-            if (_selectedItem >= inventoryContents.Count) _selectedItem = inventoryContents.Count - 1;
-            for (int i = 0; i < _gearUis.Count; ++i)
-            {
-                int offset = i - centre;
-                int targetGear = _selectedItem + offset;
-                InventoryItem gearItem = null;
-                if (targetGear >= 0 && targetGear < inventoryContents.Count) gearItem = inventoryContents[targetGear];
-                _gearUis[i].SetItem(gearItem);
-            }
-        }
-
-        private class ItemUi
-        {
-            private readonly Color _activeColour;
-            private readonly EnhancedText _weightText;
-            private readonly EnhancedText _quantityText;
-            private readonly EnhancedText _nameText;
-
-            public ItemUi(GameObject uiObject, int offset)
-            {
-                _nameText = Helper.FindChildWithName<EnhancedText>(uiObject, "Name");
-                _quantityText = Helper.FindChildWithName<EnhancedText>(uiObject, "Quantity");
-                _weightText = Helper.FindChildWithName<EnhancedText>(uiObject, "Weight");
-                _activeColour = new Color(1f, 1f, 1f, 1f / (offset + 1));
-            }
-
-            private void SetColour(Color c)
-            {
-                _nameText.SetColor(c);
-                _quantityText.SetColor(c);
-                _weightText.SetColor(c);
-            }
-
-            private void SetWeightText(string text)
-            {
-                _weightText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-                _weightText.Text(text);
-            }
-
-            private void SetQuantityText(string text)
-            {
-                _quantityText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-                _quantityText.Text(text);
-            }
-
-            private void SetNameText(string text)
-            {
-                _nameText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-                _nameText.Text(text);
-            }
-
-            public void SetItem(InventoryItem inventoryItem)
-            {
-                if (inventoryItem == null)
-                {
-                    SetColour(UiAppearanceController.InvisibleColour);
-                    return;
-                }
-
-                SetWeightText("Remove me");
-                SetQuantityText("x" + inventoryItem.Quantity());
-                SetNameText(inventoryItem.Name);
-            }
-        }
-
-        public void Initialise(GameObject listObject, AreaInventory other)
-        {
-            _otherInventory = other;
-            _canvasGroup = listObject.GetComponent<CanvasGroup>();
-            for (int i = 0; i < 7; ++i)
-            {
-                GameObject uiObject = Helper.FindChildWithName(listObject, "Item " + i);
-                ItemUi gearUi = new ItemUi(uiObject, Math.Abs(i - centre));
-                _gearUis.Add(gearUi);
-                gearUi.SetItem(null);
-            }
-        }
-
-        public void TransferItem(AreaInventory otherInventory)
-        {
-            otherInventory._inventory.Move(_inventory.Contents()[_selectedItem], 1);
-            SelectItem();
-            otherInventory.SelectItem();
-        }
-
-        public void UseItem()
-        {
-            Consumable item = _inventory.Contents()[_selectedItem] as Consumable;
-            if (item == null) return;
-            item.Consume(PlayerCombat.Instance.Player);
-            SelectItem();
-        }
-    }
-
-    public static UiAreaInventoryController Instance()
-    {
-        return _instance;
     }
 }

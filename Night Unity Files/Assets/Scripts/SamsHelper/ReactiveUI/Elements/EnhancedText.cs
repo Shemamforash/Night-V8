@@ -3,12 +3,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-#if UNITY_EDITOR
-#endif
-
 namespace SamsHelper.ReactiveUI.Elements
 {
-//    [ExecuteInEditMode]
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class EnhancedText : MonoBehaviour
     {

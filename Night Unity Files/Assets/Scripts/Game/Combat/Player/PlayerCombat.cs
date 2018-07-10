@@ -119,7 +119,7 @@ namespace Game.Combat.Player
             {
                 switch (axis)
                 {
-                    case InputAxis.Enrage:
+                    case InputAxis.Lock:
                         LockTarget();
                         break;
                     case InputAxis.Reload:
@@ -142,6 +142,9 @@ namespace Game.Combat.Player
                         break;
                     case InputAxis.Inventory:
                         UiAreaInventoryController.Instance().OpenInventory();
+                        break;
+                    case InputAxis.TakeItem:
+                        UiAreaInventoryController.Instance().TakeItem();
                         break;
                     case InputAxis.Compass:
                         TryEmitPulse();
@@ -193,14 +196,9 @@ namespace Game.Combat.Player
 
         private void LockTarget()
         {
-            if (_lockedTarget == null)
-            {
-                _lockedTarget = GetTarget();
-            }
-            else
-            {
-                _lockedTarget = null;
-            }
+            if (_currentTarget == null) return;
+            _lockedTarget = _lockedTarget == null ? _currentTarget : null;
+            TargetBehaviour.SetLocked(_lockedTarget != null);
         }
 
         private const float RotateSpeedMax = 100f;
@@ -347,8 +345,9 @@ namespace Game.Combat.Player
 
             SkillBar.BindSkills(Player, _skillCooldownModifier);
             UIMagazineController.SetWeapon(_weaponBehaviour);
-            //todo give the player a position;
-            transform.position = Vector2.zero;
+            transform.position = PathingGrid.GetEdgeCell().Position;
+            float zRot = AdvancedMaths.AngleFromUp(transform.position, Vector2.zero);
+            transform.rotation = Quaternion.Euler(0f, 0f, zRot);
         }
 
         public override float GetAccuracyModifier()
@@ -387,11 +386,12 @@ namespace Game.Combat.Player
             EnemyUi.Instance().SetSelectedEnemy(e);
         }
 
-        public override Weapon Weapon() => Player.Weapon;
+        public override Weapon Weapon() => Player.EquippedWeapon;
 
         public void ExitCombat()
         {
             StopReloading();
+            Player.Attributes.CalculateNewStrength(HealthController.GetCurrentHealth());
         }
 
         //RELOADING
@@ -424,7 +424,7 @@ namespace Game.Combat.Player
 
         private IEnumerator StartReloading()
         {
-            float duration = Player.Weapon.GetAttributeValue(AttributeType.ReloadSpeed);
+            float duration = Player.EquippedWeapon.GetAttributeValue(AttributeType.ReloadSpeed);
             UIMagazineController.EmptyMagazine();
             OnFireAction = null;
             _reloading = true;

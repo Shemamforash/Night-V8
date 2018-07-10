@@ -79,7 +79,7 @@ namespace Game.Characters
 
             WeaponController = FindInDetailedView<UIPlayerWeaponController>("Weapon");
             WeaponController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowWeaponMenu(_player));
-            WeaponController.SetWeapon(_player.Weapon);
+            WeaponController.SetWeapon(_player.EquippedWeapon);
 
             ArmourController = FindInDetailedView<UIPlayerArmourController>("Armour");
             ArmourController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowArmourMenu(_player));
@@ -87,7 +87,7 @@ namespace Game.Characters
             _player.ArmourController.AddOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));
 
             AccessoryController = FindInDetailedView<UIPlayerAccessoryController>("Accessory");
-            AccessoryController.SetAccessory(_player.Accessory);
+            AccessoryController.SetAccessory(_player.EquippedAccessory);
             AccessoryController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowAccessoryMenu(_player));
         }
 

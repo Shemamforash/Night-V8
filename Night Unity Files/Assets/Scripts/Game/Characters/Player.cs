@@ -162,6 +162,7 @@ namespace Game.Characters
 
         public void Meditate()
         {
+            Rest();
             Attributes.Get(AttributeType.Willpower).Increment();
             if (!Attributes.Get(AttributeType.Willpower).ReachedMax()) return;
             WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clear, I can focus now", this));
@@ -170,6 +171,7 @@ namespace Game.Characters
 
         public void Sleep()
         {
+            Rest();
             Attributes.Get(AttributeType.Strength).Increment();
             if (!Attributes.Get(AttributeType.Strength).ReachedMax()) return;
             WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clear, I can focus now", this));

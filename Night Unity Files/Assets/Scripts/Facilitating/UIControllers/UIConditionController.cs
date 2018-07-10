@@ -35,19 +35,19 @@ namespace Facilitating.UIControllers
             switch (EnvironmentManager.GetTemperature())
             {
                 case TemperatureCategory.Freezing:
-                    ModifierIndicator.Text("++");
+                    ModifierIndicator.Text("Retaining lots of water");
                     break;
                 case TemperatureCategory.Cold:
-                    ModifierIndicator.Text("+");
+                    ModifierIndicator.Text("Retaining some water");
                     break;
                 case TemperatureCategory.Warm:
-                    ModifierIndicator.Text("");
+                    ModifierIndicator.Text("Feeling normal");
                     break;
                 case TemperatureCategory.Hot:
-                    ModifierIndicator.Text("-");
+                    ModifierIndicator.Text("Sweating slightly");
                     break;
                 case TemperatureCategory.Boiling:
-                    ModifierIndicator.Text("--");
+                    ModifierIndicator.Text("Sweating heavily");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -62,19 +62,19 @@ namespace Facilitating.UIControllers
             switch (EnvironmentManager.GetTemperature())
             {
                 case TemperatureCategory.Freezing:
-                    ModifierIndicator.Text("--");
+                    ModifierIndicator.Text("Losing lots of heat");
                     break;
                 case TemperatureCategory.Cold:
-                    ModifierIndicator.Text("-");
+                    ModifierIndicator.Text("Losing some heat");
                     break;
                 case TemperatureCategory.Warm:
-                    ModifierIndicator.Text("");
+                    ModifierIndicator.Text("Feeling normal");
                     break;
                 case TemperatureCategory.Hot:
-                    ModifierIndicator.Text("+");
+                    ModifierIndicator.Text("Barely losing any heat");
                     break;
                 case TemperatureCategory.Boiling:
-                    ModifierIndicator.Text("++");
+                    ModifierIndicator.Text("Losing no heat");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

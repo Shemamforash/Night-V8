@@ -50,13 +50,13 @@ namespace Game.Combat.Misc
             if (player.Attributes.SkillTwoUnlocked)
                 characterSkillTwo = player.CharacterSkillTwo;
 
-            if (player.Weapon != null)
+            if (player.EquippedWeapon != null)
             {
-                if (player.Attributes.WeaponSkillOneUnlocks.Contains(player.Weapon.WeaponType()))
-                    weaponSkillOne = player.Weapon.WeaponSkillOne;
+                if (player.Attributes.WeaponSkillOneUnlocks.Contains(player.EquippedWeapon.WeaponType()))
+                    weaponSkillOne = player.EquippedWeapon.WeaponSkillOne;
 
-                if (player.Attributes.WeaponSkillTwoUnlocks.Contains(player.Weapon.WeaponType()))
-                    weaponSkillTwo = player.Weapon.WeaponSkillTwo;
+                if (player.Attributes.WeaponSkillTwoUnlocks.Contains(player.EquippedWeapon.WeaponType()))
+                    weaponSkillTwo = player.EquippedWeapon.WeaponSkillTwo;
             }
 
             BindSkill(0, characterSkillOne);

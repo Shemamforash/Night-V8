@@ -58,15 +58,7 @@ namespace Game.Gear
         public static Inscription Generate(int diff = -1)
         {
             ReadTemplates();
-
-            int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 10f);
-            int difficultyMin = difficulty - 1;
-            if (difficultyMin < 0) difficultyMin = 0;
-            else if (difficultyMin > 4) difficultyMin = 4;
-            int difficultyMax = difficulty + 1;
-            if (difficultyMax > 4) difficultyMax = 4;
-            
-            InscriptionTier tier = (InscriptionTier) difficulty;
+            InscriptionTier tier = (InscriptionTier) WorldState.GenerateGearLevel();
             InscriptionTemplate randomTemplate = Helper.RandomInList(_inscriptionTemplates);
             return new Inscription(randomTemplate, tier);
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using DG.Tweening;
 using Game.Combat.Player;
+using Game.Combat.Ui;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -14,18 +15,16 @@ namespace Game.Combat.Generation
         public ContainerController ContainerController;
         private bool _revealed;
         private const float MaxRevealTime = 1f;
-        private ColourPulse _iconColour, _ringColour;
-        private SpriteRenderer _glowSprite;
+        private SpriteRenderer _glowSprite, _iconColour, _ringColour;
 
         public void Awake()
         {
             _glowSprite = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Glow");
             _glowSprite.color = UiAppearanceController.InvisibleColour;
-            _iconColour = Helper.FindChildWithName<ColourPulse>(gameObject, "Icon");
-            _ringColour = Helper.FindChildWithName<ColourPulse>(gameObject, "Ring");
-            _iconColour.SetAlphaMultiplier(0);
-            _ringColour.SetAlphaMultiplier(0);
-            StartCoroutine(TryReveal());
+            _iconColour = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Icon");
+            _iconColour.color = UiAppearanceController.InvisibleColour;
+            _ringColour = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring");
+            _ringColour.color = UiAppearanceController.InvisibleColour;
         }
 
         public void SetContainerController(ContainerController containerController)
@@ -45,45 +44,44 @@ namespace Game.Combat.Generation
             ContainerController.Containers.Remove(this);
         }
 
-        private IEnumerator Reveal()
+        public IEnumerator Fade()
         {
+            _fading = true;
+            PlayerUi.FadeTextOut();
+            _glowSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
+            _ringColour.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
+            Tween t = _iconColour.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
+            yield return t.WaitForCompletion();
+            Destroy(this);
+        }
+
+        public void Reveal()
+        {
+            if (_revealed) return;
             CombatManager.IncreaseItemsFound();
             _revealed = true;
-            float timePassed = 0f;
-            _iconColour.enabled = true;
-            _ringColour.enabled = true;
-            while (timePassed < MaxRevealTime)
-            {
-                timePassed += Time.deltaTime;
-                float alpha = timePassed / MaxRevealTime;
-                if (alpha > 1) alpha = 1;
-                _iconColour.SetAlphaMultiplier(alpha);
-                _ringColour.SetAlphaMultiplier(alpha);
-                yield return null;
-            }
-
-            _iconColour.SetAlphaMultiplier(1);
-            _ringColour.SetAlphaMultiplier(1);
+            _iconColour.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
+            _ringColour.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
         }
 
-        public void StartReveal()
-        {
-            StartCoroutine(Reveal());
-        }
-        
-        private IEnumerator TryReveal()
-        {
-            while (true)
-            {
-                float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
-                if (distanceToPlayer <= MinDistanceToReveal)
-                {
-                    yield return StartCoroutine(Reveal());
-                    break;
-                }
+        private float _lastDistance = -1;
+        private bool _fading;
 
-                yield return null;
+        public void Update()
+        {
+            if (_fading) return;
+            float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
+            if (distanceToPlayer <= MinDistanceToReveal && _lastDistance > MinDistanceToReveal)
+            {
+                Reveal();
+                PlayerUi.SetEventText("Take " + ContainerController.GetContents() + " [T]");
             }
+            else if (distanceToPlayer > MinDistanceToReveal && _lastDistance <= MinDistanceToReveal && _revealed)
+            {
+                PlayerUi.FadeTextOut();
+            }
+
+            _lastDistance = distanceToPlayer;
         }
 
         public bool Revealed()

@@ -22,7 +22,7 @@ namespace Game.Combat.Generation
         public void Initialise(Region region)
         {
             _region = region;
-            Random.InitState(region.RegionID);
+            Random.InitState((int) (region.RegionID + WorldState.Seed));
 
             PathingGrid.InitialiseGrid();
             if (!_region.Visited())
@@ -62,7 +62,6 @@ namespace Game.Combat.Generation
             Generate();
             foreach (Barrier barrier in barriers)
             {
-                if (!barrier.Valid) continue;
                 _region.Barriers.Add(barrier);
             }
 
@@ -180,8 +179,7 @@ namespace Game.Combat.Generation
         {
             if (position == null) position = FindAndRemoveValidPosition();
             if (position == null) return;
-            Barrier barrier = new Barrier(barrierVertices, "Barrier " + GetObjectNumber(), (Vector2) position);
-            barriers.Add(barrier);
+            Barrier barrier = new Barrier(barrierVertices, "Barrier " + GetObjectNumber(), (Vector2) position, barriers);
         }
 
         private void GenerateRocks(int number, float minPolyWidth, float maxPolyWidth, float radiusVariation, float smoothness)
@@ -236,11 +234,9 @@ namespace Game.Combat.Generation
             {
                 Vector2? position = FindAndRemoveValidPosition();
                 Assert.IsNotNull(position);
-                InventoryItem resource = ResourceTemplate.GetResource().Create();
                 Loot loot = new Loot(position.Value, "Resource");
-                loot.AddToInventory(resource);
+                loot.IncrementResource(ResourceTemplate.GetResource().Name, 1);
                 _region.Containers.Add(loot);
-                
             }
         }
 

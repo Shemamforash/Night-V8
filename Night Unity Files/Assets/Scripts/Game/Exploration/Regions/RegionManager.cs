@@ -78,8 +78,9 @@ namespace Game.Exploration.Regions
             {
                 Helper.Shuffle(_regions);
                 bool added = false;
-                foreach (Region r in _regions)
+                for (int index = 0; index < _regions.Count * 0.6f; index++)
                 {
+                    Region r = _regions[index];
                     if (waterSources == 0) break;
                     if (r.WaterSourceCount > 2) continue;
                     added = true;
@@ -98,8 +99,9 @@ namespace Game.Exploration.Regions
             {
                 Helper.Shuffle(_regions);
                 bool added = false;
-                foreach (Region r in _regions)
+                for (int index = 0; index < _regions.Count * 0.6f; index++)
                 {
+                    Region r = _regions[index];
                     if (foodSource == 0) break;
                     if (r.FoodSourceCount > 2) continue;
                     added = true;
@@ -118,8 +120,9 @@ namespace Game.Exploration.Regions
             {
                 Helper.Shuffle(_regions);
                 bool added = false;
-                foreach (Region r in _regions)
+                for (int i = 0; i < _regions.Count * 0.6f; i++)
                 {
+                    Region r = _regions[i];
                     if (resourceCount == 0) break;
                     if (r.ResourceSourceCount > 2) continue;
                     added = true;

@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4119331653083324}
   - component: {fileID: 212339608856646464}
   - component: {fileID: 114810795230019282}
-  - component: {fileID: 114236230897552806}
   m_Layer: 0
   m_Name: Ring
   m_TagString: Untagged
@@ -89,7 +88,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4443670335142294}
   - component: {fileID: 212895467530116760}
-  - component: {fileID: 114826233122250436}
   m_Layer: 0
   m_Name: Icon
   m_TagString: Untagged
@@ -177,21 +175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25af3fc275f0462eaf2000281be84bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114236230897552806
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1044842530620344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fed92055a6c7b04ebb1aa3211727862, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  From: {r: 1, g: 1, b: 1, a: 0.4745098}
-  To: {r: 1, g: 1, b: 1, a: 0.3137255}
-  Duration: 1
-  _alphaMultiplier: 1
 --- !u!114 &114810795230019282
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -204,21 +187,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RotateSpeed: 5
---- !u!114 &114826233122250436
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1989753687239822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fed92055a6c7b04ebb1aa3211727862, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  From: {r: 1, g: 1, b: 1, a: 0.4745098}
-  To: {r: 1, g: 1, b: 1, a: 0.3137255}
-  Duration: 1
-  _alphaMultiplier: 1
 --- !u!198 &198656486125665530
 ParticleSystem:
   m_ObjectHideFlags: 1

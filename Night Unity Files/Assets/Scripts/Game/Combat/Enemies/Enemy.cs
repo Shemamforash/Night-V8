@@ -1,9 +1,11 @@
 ﻿using Game.Characters;
 using Game.Combat.Generation;
 using Game.Gear;
+using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
@@ -18,23 +20,23 @@ namespace Game.Combat.Enemies
         public Enemy(EnemyType type) : base(type.ToString())
         {
             Template = EnemyTemplate.GetEnemyTemplate(type);
+            if (!Template.GearAllowed) return;
+            GenerateArmour();
+            if (Template.EnemyType != EnemyType.Brawler && Template.EnemyType != EnemyType.Martyr)
+            {
+                GenerateWeapon();
+            }
         }
 
-        public void GenerateWeapon()
+        private void GenerateWeapon()
         {
-            int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 10f);
-            int difficultyMin = difficulty - 1;
-            if (difficultyMin < 0) difficultyMin = 0;
-            else if (difficultyMin > 4) difficultyMin = 4;
-            int difficultyMax = difficulty + 1;
-            if (difficultyMax > 4) difficultyMax = 4;
-            
-            ItemQuality targetQuality = (ItemQuality)Random.Range(difficultyMin, difficultyMax);
-            Assert.IsTrue((int)targetQuality < 5);
+            int difficulty = WorldState.GenerateGearLevel();
+            ItemQuality targetQuality = (ItemQuality) difficulty;
+            Assert.IsTrue((int) targetQuality < 5);
             Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality);
 
             EquipWeapon(weapon);
-            
+
             bool hasInscription = Random.Range(0, 4) == 0;
             if (hasInscription)
             {
@@ -42,7 +44,7 @@ namespace Game.Combat.Enemies
             }
         }
 
-        public void GenerateArmour()
+        private void GenerateArmour()
         {
             int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 5f);
             int armourMin = difficulty - 2;
@@ -77,18 +79,23 @@ namespace Game.Combat.Enemies
             {
                 case "Salt":
                     SaltBehaviour.Create(position, Template.DropCount);
+                    if (EquippedWeapon != null && Random.Range(0, 20) == 0) controller.AddToInventory(EquippedWeapon);
+                    else if(Random.Range(0, 20) == 0) controller.AddToInventory(Accessory.Generate());
                     break;
                 case "Essence":
                     EssenceCloudBehaviour.Create(position, Template.DropCount);
+                    if(Random.Range(0, 20) == 0) controller.AddToInventory(Inscription.Generate());
                     break;
                 case "Meat":
+                    if (Template.EnemyType == EnemyType.Grazer || Template.EnemyType == EnemyType.Watcher && Random.Range(0, 2) == 1)
+                    {
+                        controller.AddToInventory(ResourceTemplate.AllResources.Find(r => r.Name == "Skin").Create());
+                        break;
+                    }
+
                     controller.AddToInventory(ResourceTemplate.GetMeat().Create());
-                    controller.AddToInventory(ResourceTemplate.AllResources.Find(r => r.Name == "Skin").Create());
                     break;
             }
-
-            if (Weapon != null && Random.Range(0, 20) == 0) controller.AddToInventory(Weapon);
-
             return controller;
         }
     }

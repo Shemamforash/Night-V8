@@ -57,7 +57,7 @@ namespace Game.Combat.Enemies
             Aim();
         }
 
-        public override Weapon Weapon() => Enemy.Weapon;
+        public override Weapon Weapon() => Enemy.EquippedWeapon;
 
         private static Medic FindMedic()
         {

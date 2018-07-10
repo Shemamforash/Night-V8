@@ -1,4 +1,5 @@
 ﻿using Game.Combat.Enemies.Nightmares;
+using Game.Combat.Generation;
 using SamsHelper.ReactiveUI.Elements;
 
 namespace Game.Combat.Enemies.Animals
@@ -17,7 +18,7 @@ namespace Game.Combat.Enemies.Animals
         {
             base.OnAlert();
             _discovered = true;
-            Flee();
+            Flee(PathingGrid.GetCellOutOfRange());
         }
 
         public override void Update()

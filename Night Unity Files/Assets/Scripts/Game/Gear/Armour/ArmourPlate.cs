@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI;
 using UnityEngine;

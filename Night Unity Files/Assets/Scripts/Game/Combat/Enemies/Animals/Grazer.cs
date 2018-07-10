@@ -1,40 +1,42 @@
-﻿using Game.Combat.Enemies.Nightmares;
+﻿using System.Collections.Generic;
+using Game.Combat.Enemies.Nightmares;
+using Game.Combat.Generation;
+using Game.Combat.Misc;
 
 namespace Game.Combat.Enemies.Animals
 {
     public class Grazer : AnimalBehaviour
     {
-        private EnemyBehaviour _leader;
+        private readonly List<Grazer> _herd = new List<Grazer>();
 
-        public void Initialise(Enemy e)
+        public override void Initialise(Enemy e)
         {
             base.Initialise(e);
             WanderDistance = 1f;
         }
-
-        protected override void OnAlert()
+        
+        public override void TakeDamage(Shot shot)
         {
-            Flee();
-        }
-
-        protected override void Flee()
-        {
-            if (_leader == null)
-            {
-                base.Flee();
-                return;
-            }
-//todo fix me
-//            MoveToCharacter(_leader, Flee);
+            base.TakeDamage(shot);
+            if (Fleeing) return;
+            Cell target = PathingGrid.GetCellOutOfRange();
+            Flee(target);
+            Alert(true);
+            _herd.ForEach(g => g.Flee(target));
         }
 
         protected override void CheckForPlayer()
         {
         }
 
-        public void SetLeader(EnemyBehaviour leader)
+        public void AddHerdMembers(List<EnemyBehaviour> herd)
         {
-            _leader = leader;
+            herd.ForEach(e =>
+            {
+                Grazer g = e as Grazer;
+                if (g == null || g == this) return;
+                _herd.Add(g);
+            });
         }
     }
 }

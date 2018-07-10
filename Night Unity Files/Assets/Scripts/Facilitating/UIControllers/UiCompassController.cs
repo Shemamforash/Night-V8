@@ -71,14 +71,18 @@ public class UiCompassController : MonoBehaviour
             float lerpVal = _showItemTimeCurrent / ShowItemTimeMax;
             _indicators.ForEach(i =>
             {
-                float distance = Vector2.Distance(transform.position, i.Item1.transform.position);
                 float modifiedLerpVal = 1 - lerpVal;
-                if (distance > MaxDetectDistance) modifiedLerpVal = 0;
-                else distance /= MaxDetectDistance;
-                distance = 1 - distance;
-                modifiedLerpVal *= distance;
-                i.Item2.transform.rotation = Quaternion.Euler(new Vector3(0, 0, AdvancedMaths.AngleFromUp(transform.position, i.Item1.transform.position)));
-                if (i.Item1.Revealed()) modifiedLerpVal = Mathf.Pow(modifiedLerpVal, 3f);
+                if (i.Item1 != null)
+                {
+                    float distance = Vector2.Distance(transform.position, i.Item1.transform.position);
+                    if (distance > MaxDetectDistance) modifiedLerpVal = 0;
+                    else distance /= MaxDetectDistance;
+                    distance = 1 - distance;
+                    modifiedLerpVal *= distance;
+                    i.Item2.transform.rotation = Quaternion.Euler(new Vector3(0, 0, AdvancedMaths.AngleFromUp(transform.position, i.Item1.transform.position)));
+                    if (i.Item1.Revealed()) modifiedLerpVal = Mathf.Pow(modifiedLerpVal, 3f);
+                }
+
                 i.Item2.color = new Color(1, 1, 1, modifiedLerpVal);
             });
             yield return null;

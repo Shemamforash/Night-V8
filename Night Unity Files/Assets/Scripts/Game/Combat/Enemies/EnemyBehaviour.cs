@@ -23,8 +23,6 @@ namespace Game.Combat.Enemies
         public Action CurrentAction;
         public Enemy Enemy;
         protected bool FacePlayer;
-        private bool _pathingAllowed = false;
-        private Thread _routeThread;
 
         public bool OnScreen() => Helper.IsObjectInCameraView(gameObject);
 
@@ -35,15 +33,10 @@ namespace Game.Combat.Enemies
             base.Update();
             PushAwayFromNeighbors();
             UpdateAlpha();
+            CheckForRequiredPathfind();
             if (!CombatManager.InCombat()) return;
             UpdateRotation();
             CurrentAction?.Invoke();
-        }
-
-        private IEnumerator WaitForNextPathFind()
-        {
-            yield return new WaitForSeconds(1);
-            _pathingAllowed = true;
         }
 
         protected SpriteRenderer Sprite;
@@ -114,7 +107,6 @@ namespace Game.Combat.Enemies
         public override void TakeDamage(Shot shot)
         {
             base.TakeDamage(shot);
-            //todo remove friendly fire
             CombatManager.IncreaseDamageDealt(shot.DamageDealt());
             EnemyUi.Instance().RegisterHit(this);
         }
@@ -134,21 +126,8 @@ namespace Game.Combat.Enemies
                 });
             }
 
-            PlayerCombat.Instance.Player.BrandManager.IncreaseWeaponKills(PlayerCombat.Instance.Player.Weapon.WeaponType());
+            PlayerCombat.Instance.Player.BrandManager.IncreaseWeaponKills(PlayerCombat.Instance.Player.EquippedWeapon.WeaponType());
             Loot loot = Enemy.DropLoot(transform.position);
-
-            switch (Enemy.Template.DropResource)
-            {
-                case "Salt":
-                    SaltBehaviour.Create(transform.position, Enemy.Template.DropCount);
-                    break;
-                case "Essence":
-                    EssenceCloudBehaviour.Create(transform.position, Enemy.Template.DropCount);
-                    break;
-                case "Meat":
-                    loot.IncrementResource(ResourceTemplate.GetMeat().Name, Random.Range(0, 3));
-                    break;
-            }
 
             if (loot.IsValid)
             {
@@ -159,61 +138,6 @@ namespace Game.Combat.Enemies
             CombatManager.Remove(this);
             Enemy.Kill();
             Destroy(gameObject);
-        }
-
-        private List<Cell> _route = new List<Cell>();
-
-//        protected void GetRouteToCell(Cell target, Action reachTargetAction)
-//        {
-//            if (_waitingForRoute) return;
-//            _routeThread.Interrupt();
-//            _routeThread = PathingGrid.ThreadRouteToCell(CurrentCell(), target, route);
-//            _waitingForRoute = true;
-//            CurrentAction = () =>
-//            {
-//                while (routeThread.IsAlive) return;
-//                _waitingForRoute = false;
-//                Reposition(reachTargetAction);
-//            };
-//        }
-
-        private float _lastRouteStartTime;
-        
-        public void SetRoute(List<Cell> route, float timeStarted)
-        {
-            if (timeStarted != _lastRouteStartTime) return;
-            _route = route;
-        }
-        
-        protected void GoToCell(Cell targetCell, Action reachTargetAction, float distanceFromTarget = 0)
-        {
-            _lastRouteStartTime = Time.timeSinceLevelLoad;
-            _routeThread = PathingGrid.ThreadRouteToCell(CurrentCell(), targetCell, this, _lastRouteStartTime);
-            Debug.DrawLine(CurrentCell().Position, targetCell.Position, Color.cyan, 2f);
-            CurrentAction = () =>
-            {
-                while (_routeThread.IsAlive) return;
-                if (distanceFromTarget != 0)
-                {
-                    for (int i = _route.Count - 1; i >= 0; --i)
-                    {
-                        Cell c = _route[i];
-                        float distance = Vector2.Distance(c.Position, GetTarget().CurrentCell().Position);
-                        if (distance < distanceFromTarget)
-                        {
-                            _route.RemoveAt(i);
-                        }
-                        else break;
-                    }
-                }
-                PathingGrid.SmoothRoute(_route);
-                Reposition(reachTargetAction);
-            };
-        }
-
-        protected void FindCellToAttackPlayer(Action reachCellAction, float range)
-        {
-            GoToCell(PlayerCombat.Instance.CurrentCell(), reachCellAction, range);
         }
 
         public bool MoveToCover(Action reachCoverAction)
@@ -240,7 +164,10 @@ namespace Game.Combat.Enemies
         }
 
         private Cell _targetCell;
+        private float _targetDistance;
         private bool _reachedTarget;
+        private float _currentTime;
+        private Action _reachTargetAction;
 
         private void Reposition(Action reachTargetAction)
         {
@@ -251,8 +178,9 @@ namespace Game.Combat.Enemies
                 Debug.Log(name + " has no route");
                 return;
             }
-//            Debug.DrawLine(CurrentCell().Position, _route[_route.Count - 1].Position, Color.red, 5f);
-            _targetCell = newRoute.Dequeue();
+
+            Debug.DrawLine(CurrentCell().Position, _route[_route.Count - 1].Position, Color.red, 5f);
+            Cell nextCell = newRoute.Dequeue();
             CurrentAction = () =>
             {
                 if (_reachedTarget)
@@ -264,10 +192,10 @@ namespace Game.Combat.Enemies
                         return;
                     }
 
-                    _targetCell = newRoute.Dequeue();
+                    nextCell = newRoute.Dequeue();
                 }
 
-                MoveToCell(_targetCell);
+                MoveToCell(nextCell);
             };
         }
 
@@ -276,5 +204,74 @@ namespace Game.Combat.Enemies
         }
 
         public virtual string GetEnemyName() => Enemy.Name;
+
+        //pathfind
+
+        private List<Cell> _route = new List<Cell>();
+        private float _lastRouteStartTime;
+        private Thread _routeThread;
+
+        public void SetRoute(List<Cell> route, float timeStarted)
+        {
+            if (timeStarted != _lastRouteStartTime) return;
+            _route = route;
+        }
+
+        private Cell _lastTargetCell;
+        
+        private void CheckForRequiredPathfind()
+        {
+            if (_currentTime > 0f)
+            {
+                _currentTime -= Time.deltaTime;
+                return;
+            }
+
+            _currentTime = 1f;
+            if (_targetCell == null) return;
+            if (_targetCell == _lastTargetCell) return;
+            _lastTargetCell = _targetCell;
+            _lastRouteStartTime = Time.timeSinceLevelLoad;
+            _routeThread = PathingGrid.ThreadRouteToCell(CurrentCell(), _targetCell, this, _lastRouteStartTime);
+            if (RouteWaitCoroutine != null) StopCoroutine(RouteWaitCoroutine);
+            RouteWaitCoroutine = StartCoroutine(WaitForRoute(_reachTargetAction, _targetDistance));
+        }
+
+        private Coroutine RouteWaitCoroutine;
+
+        private IEnumerator WaitForRoute(Action reachTargetAction, float distanceFromTarget)
+        {
+            while (_routeThread.IsAlive) yield return null;
+            if (distanceFromTarget != 0)
+            {
+                for (int i = _route.Count - 1; i >= 0; --i)
+                {
+                    Cell c = _route[i];
+                    float distance = Vector2.Distance(c.Position, GetTarget().CurrentCell().Position);
+                    if (distance < distanceFromTarget)
+                    {
+                        _route.RemoveAt(i);
+                    }
+                    else break;
+                }
+            }
+
+            PathingGrid.SmoothRoute(_route);
+            Reposition(reachTargetAction);
+        }
+
+        protected void GoToCell(Cell targetCell, Action reachTargetAction, float distanceFromTarget = 0)
+        {
+            _targetCell = targetCell;
+            _targetDistance = distanceFromTarget;
+            _reachTargetAction = reachTargetAction;
+        }
+
+        protected void FindCellToAttackPlayer(Action reachCellAction, float range)
+        {
+            _reachTargetAction = reachCellAction;
+            _targetCell = PlayerCombat.Instance.CurrentCell();
+            _targetDistance = range;
+        }
     }
 }

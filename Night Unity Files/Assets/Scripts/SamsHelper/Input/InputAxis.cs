@@ -14,8 +14,9 @@
         SkillTwo,
         SkillThree,
         SkillFour,
-        Enrage,
+        Lock,
         Inventory,
-        Compass
+        Compass,
+        TakeItem
     }
 }

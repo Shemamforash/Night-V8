@@ -22,7 +22,7 @@ namespace Game.Combat.Generation
 
         public static Cell[][] Grid;
         private static readonly List<Cell> _gridNodes = new List<Cell>();
-        private static readonly HashSet<Cell> _invalidCells = new HashSet<Cell>();
+        public static readonly HashSet<Cell> _invalidCells = new HashSet<Cell>();
 
         private static Vector2 _lastPlayerPosition;
         private static readonly HashSet<Cell> _hiddenCells = new HashSet<Cell>(new CellComparer());
@@ -40,14 +40,15 @@ namespace Game.Combat.Generation
             _stopwatch = Stopwatch.StartNew();
         }
 
-        public static bool AddBarrier(Barrier barrier, bool forcePlace)
+        public static bool AddBarrier(Barrier barrier)
         {
             HashSet<Cell> intersectingCells = GetIntersectingGridCells(barrier);
-            if (intersectingCells.Intersect(_invalidCells).Count() != 0 && !forcePlace) return false;
+            if (intersectingCells.Intersect(_invalidCells).Count() != 0) return false;
             foreach (Cell cell in intersectingCells)
             {
                 _invalidCells.Add(cell);
                 _outOfRangeSet.Remove(cell);
+                _edgePositionSet.Remove(cell);
             }
 
             return true;
@@ -63,8 +64,14 @@ namespace Game.Combat.Generation
             Debug.Log("neighbors: " + _stopwatch.Elapsed.ToString("mm\\:ss\\.ff"));
 
             _outOfRangeList = _outOfRangeSet.ToList();
+            _edgePositionList = _edgePositionSet.ToList();
         }
 
+        public static Cell GetEdgeCell()
+        {
+            return Helper.RandomInList(_edgePositionList);
+        }
+        
         public static List<Cell> GetCellsInFrontOfMe(Cell current, Vector2 direction, float distance)
         {
             Vector2 positionInFront = current.Position + direction.normalized * distance;
@@ -371,11 +378,15 @@ namespace Game.Combat.Generation
         private static readonly HashSet<Cell> _outOfRangeSet = new HashSet<Cell>();
         public static List<Cell> _outOfRangeList = new List<Cell>();
 
+        private static readonly HashSet<Cell> _edgePositionSet = new HashSet<Cell>();
+        public static List<Cell> _edgePositionList = new List<Cell>();
+
         private static void GenerateBaseGrid()
         {
             _gridNodes.Clear();
             if (Grid == null) Grid = new Cell[GridWidth][];
             int outOfRangeDistanceSqrd = (int) Mathf.Pow(CombatMovementDistance * CellResolution * 0.5f, 2f);
+            int edgeDistanceSquared = (int) Mathf.Pow((CombatMovementDistance - 1) * CellResolution * 0.5f, 2f);
             for (int x = 0; x < GridWidth; ++x)
             {
                 if (Grid[x] == null) Grid[x] = new Cell[GridWidth];
@@ -389,6 +400,10 @@ namespace Game.Combat.Generation
                     if (distanceSqrd > outOfRangeDistanceSqrd)
                     {
                         _outOfRangeSet.Add(Grid[x][y]);
+                    }
+                    else if (distanceSqrd > edgeDistanceSquared)
+                    {
+                        _edgePositionSet.Add(Grid[x][y]);
                     }
 
                     _gridNodes.Add(Grid[x][y]);

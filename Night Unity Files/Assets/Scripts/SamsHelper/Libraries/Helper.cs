@@ -431,5 +431,19 @@ namespace SamsHelper.Libraries
             if (rootNodeName == null) rootNodeName = xmlName;
             return xml.SelectSingleNode("//" + rootNodeName);
         }
+
+        public static void ChangeImageAlpha(Image image, float newAlpha)
+        {
+            Color c = image.color;
+            c.a = newAlpha;
+            image.color = c;
+        }
+
+        public static void ChangeSpriteAlpha(SpriteRenderer sprite, float newAlpha)
+        {
+            Color c = sprite.color;
+            c.a = newAlpha;
+            sprite.color = c;
+        }
     }
 }

@@ -18,6 +18,7 @@ namespace Game.Combat.Enemies
         public readonly string DropResource;
         public readonly int DropCount;
         private static readonly List<EnemyType> _enemyTypes = new List<EnemyType>();
+        public readonly bool GearAllowed;
 
         private EnemyTemplate(EnemyType type, int health, int speed, int value, string dropResource, int dropCount)
         {
@@ -27,6 +28,7 @@ namespace Game.Combat.Enemies
             Value = value;
             DropResource = dropResource;
             DropCount = dropCount;
+            GearAllowed = dropResource == "Salt";
         }
 
         public static List<EnemyTemplate> GetEnemyTypes()
@@ -74,7 +76,7 @@ namespace Game.Combat.Enemies
 
             _loaded = true;
         }
-
+        
         public static EnemyTemplate GetEnemyTemplate(EnemyType enemyType)
         {
             LoadTemplates();

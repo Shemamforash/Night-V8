@@ -54,9 +54,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             float ruinsDr = float.Parse(resourceNode.SelectSingleNode("RuinsDropRate").InnerText);
             float defilesDr = float.Parse(resourceNode.SelectSingleNode("DefilesDropRate").InnerText);
             float wastelandDr = float.Parse(resourceNode.SelectSingleNode("WastelandDropRate").InnerText);
-           return new ResourceTemplate(name, type, oasisDR, steppeDr, ruinsDr, defilesDr, wastelandDr);
+            return new ResourceTemplate(name, type, oasisDR, steppeDr, ruinsDr, defilesDr, wastelandDr);
         }
-        
+
         private static void LoadResources()
         {
             if (_loaded) return;
@@ -86,20 +86,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
 
             _loaded = true;
-        }
-
-        public void AddTestingResources(int resourceCount, int noItems = 0)
-        {
-            IncrementResource("Fuel", resourceCount);
-            IncrementResource("Scrap", resourceCount);
-            IncrementResource("Essence", resourceCount);
-            for (int i = 0; i < noItems; ++i)
-            {
-                AddItem(WeaponGenerator.GenerateWeapon(ItemQuality.Shining));
-                AddItem(Accessory.GenerateAccessory(ItemQuality.Shining));
-                AddItem(Inscription.Generate());
-                AddItem(ArmourPlate.Create(ItemQuality.Shining));
-            }
         }
 
         public void Print()
@@ -182,13 +168,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         protected virtual void AddItem(InventoryItem item)
         {
+            Debug.Log("added " + item.Name);
             item.ParentInventory = this;
             _items.Add(item);
-            if (item is Consumable)
-            {
-                _consumables.Add((Consumable) item);
-            }
-
+            Assert.IsFalse(item is Consumable);
             UpdateContents();
         }
 

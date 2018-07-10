@@ -58,8 +58,7 @@ namespace Game.Combat.Generation
 
             position = AdvancedMaths.RotatePoint(position, rotateAmount, Vector2.zero);
 
-            Barrier wall = new Barrier(wallVertices, "Wall " + GetObjectNumber(), position);
-            barriers.Add(wall);
+            Barrier wall = new Barrier(wallVertices, "Wall " + GetObjectNumber(), position, barriers);
         }
 
         protected override void PlaceItems()

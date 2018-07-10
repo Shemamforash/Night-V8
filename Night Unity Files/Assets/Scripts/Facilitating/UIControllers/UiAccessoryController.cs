@@ -34,10 +34,10 @@ namespace Facilitating.UIControllers
 
         private void ShowAccessoryInfo()
         {
-            if (CurrentPlayer.Accessory != null)
+            if (CurrentPlayer.EquippedAccessory != null)
             {
-                _nameText.Text(CurrentPlayer.Accessory.Name);
-                _descriptionText.Text(CurrentPlayer.Accessory.GetSummary());
+                _nameText.Text(CurrentPlayer.EquippedAccessory.Name);
+                _descriptionText.Text(CurrentPlayer.EquippedAccessory.GetSummary());
             }
             else
             {
@@ -70,7 +70,7 @@ namespace Facilitating.UIControllers
 
         public override void CompareTo(InventoryItem comparisonItem)
         {
-            _compareText.Text(CurrentPlayer.Accessory != null ? ((Accessory)comparisonItem).GetSummary() : "");
+            _compareText.Text(CurrentPlayer.EquippedAccessory != null ? ((Accessory)comparisonItem).GetSummary() : "");
         }
 
         public override void StopComparing()

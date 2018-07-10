@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using Game.Characters;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Gear.Armour
@@ -57,10 +59,13 @@ namespace Game.Gear.Armour
             _readTemplates = true;
         }
 
-        public static Accessory GenerateAccessory(ItemQuality quality)
+        public static Accessory Generate()
         {
             ReadTemplates();
             AccessoryTemplate randomTemplate = _accessoryTemplates[Random.Range(0, _accessoryTemplates.Count)];
+
+            ItemQuality quality = (ItemQuality) WorldState.GenerateGearLevel();
+
             Accessory accessory = new Accessory(randomTemplate, quality);
             AttributeModifier modifier = new AttributeModifier();
             modifier = randomTemplate.GetModifier();

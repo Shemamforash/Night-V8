@@ -61,7 +61,6 @@ namespace SamsHelper.Libraries
             if (path == null)
             {
                 Debug.Log("No path exists between " + from.Position + " and " + to.Position);
-                Debug.DrawLine(from.Position, to.Position, Color.cyan, 5f);
             }
 
             return path;
