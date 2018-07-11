@@ -525,6 +525,7 @@
           <e p="RadialLight.shader" t="Include" />
         </e>
         <e p="StoryController.cs" t="Include" />
+        <e p="SunBehaviour.cs" t="Include" />
         <e p="TargetBehaviour.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
@@ -547,6 +548,7 @@
             </e>
           </e>
         </e>
+        <e p="TileLayer.cs" t="Include" />
         <e p="UiCombatRingBoundDrawer.cs" t="Include" />
         <e p="UiCompassPulseController.cs" t="Include" />
         <e p="UiConsumableController.cs" t="Include" />

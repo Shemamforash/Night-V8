@@ -217,6 +217,7 @@ namespace Game.Characters
 
         public int CalculateCompassPulses()
         {
+            return Mathf.CeilToInt(Val(AttributeType.Perception) + Val(AttributeType.CompassBonus));
         }
 
         public void Drink()

@@ -1,43 +1,49 @@
 ﻿using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SceneryController : MonoBehaviour
 {
-    private static Image _sky, _sun, _light, _gate, _shadow;
+    private static Image _environment, _sunGlow, _gateShadow;
+    private static RectTransform _sun, _sky;
     private static Color _lightMinColour = new Color(0.3f, 0f, 0f, 1f);
-    private const float SunYMax = -265, SunYMin = -1500;
-    private const float SkyYMax = -1080, SkyYMin = 1080;
+    private const float SunYMax = 450;
+    private const float SkyYMax = 800;
+
+    private static Color _environmentDarkColor = new Color(0.05f, 0.05f, 0.05f);
+    private static Color _glowMaxColor = new Color(1, 0, 0, 0.5f);
 
     public void Awake()
     {
-        _sky = Helper.FindChildWithName<Image>(gameObject, "Sky");
-        _sun = Helper.FindChildWithName<Image>(gameObject, "Sun");
-        _light = Helper.FindChildWithName<Image>(gameObject, "Light");
-        _gate = Helper.FindChildWithName<Image>(gameObject, "Gate");
-        _shadow = Helper.FindChildWithName<Image>(gameObject, "Shadow");
+        _sky = Helper.FindChildWithName<RectTransform>(gameObject, "Sky");
+        _sun = Helper.FindChildWithName<RectTransform>(gameObject, "Sun");
+        _environment = Helper.FindChildWithName<Image>(gameObject, "Environment");
+        _gateShadow = Helper.FindChildWithName<Image>(gameObject, "Gate Shadow");
+        _sunGlow = Helper.FindChildWithName<Image>(gameObject, "Sun Glow");
     }
 
     public static void SetTime(float normalisedTime) //6am = 0 6pm = 0.5
     {
         normalisedTime -= 0.25f;
-        if (normalisedTime < 0) normalisedTime += 1;
-        float sinTime = Mathf.Sin(normalisedTime * 2 * Mathf.PI);
-        bool isNegative = sinTime < 0;
-        sinTime *= sinTime;
-        if (isNegative) sinTime = -sinTime;
-        float sunHeight = Mathf.Lerp(SunYMin, SunYMax, sinTime);
-//        _sun.rectTransform.offsetMin = new Vector2(0, sunHeight);
-//        _sun.rectTransform.offsetMax = new Vector2(0, sunHeight);
-        _sun.rectTransform.anchoredPosition = new Vector2(0, sunHeight);
-        float skyPos = Mathf.Lerp(SkyYMax, SkyYMin, sinTime);
-        _sky.rectTransform.offsetMin = new Vector2(0, skyPos);
-        _sky.rectTransform.offsetMax = new Vector2(0, skyPos);
+        float sinTime = Mathf.Sin(normalisedTime / 0.5f * Mathf.PI);
+        float sunPos = SunYMax * sinTime;
+        _sun.anchoredPosition = new Vector2(0, sunPos);
+        
+        float skyPos = SkyYMax * sinTime;
+        _sky.anchoredPosition = new Vector2(0, skyPos);
 
-        sinTime /= 2f;
-        sinTime += 0.5f;
-        _light.color = Color.Lerp(_lightMinColour, Color.red, sinTime);
-        _shadow.color = Color.Lerp(new Color(100, 0, 100), Color.red, sinTime);
-        _gate.color = Color.Lerp(Color.red / 2f, Color.red, sinTime);
+        if (sinTime < 0f)
+        {
+            _sunGlow.color = UiAppearanceController.InvisibleColour;
+            _environment.color = _environmentDarkColor;
+            _gateShadow.color = UiAppearanceController.InvisibleColour;
+        }
+        else
+        {
+            _sunGlow.color = Color.Lerp(UiAppearanceController.InvisibleColour, _glowMaxColor, sinTime);
+            _environment.color = Color.Lerp(new Color(0.05f, 0.05f, 0.05f), Color.white, sinTime);
+            _gateShadow.color = Color.Lerp(UiAppearanceController.InvisibleColour, Color.white, sinTime);
+        }
     }
 }
