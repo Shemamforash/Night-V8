@@ -82,8 +82,11 @@ namespace Game.Exploration.Environment
                 pos = AdvancedMaths.RandomVectorWithinRange(pos, Random.Range(0.1f, 0.1f));
                 rArr[j] = pos;
             }
+
             g.transform.position = from.Position;
-            g.transform.DOPath(rArr, Random.Range(2, 5), PathType.CatmullRom, PathMode.TopDown2D);
+            Sequence s = DOTween.Sequence();
+            s.Append(g.transform.DOPath(rArr, Random.Range(1f, 3f), PathType.CatmullRom, PathMode.TopDown2D));
+            s.AppendCallback(() => g.GetComponent<FadeAndDieTrailRenderer>().StartFade(1f));
             currentTime = 0f;
         }
 
@@ -211,7 +214,7 @@ namespace Game.Exploration.Environment
             }
 
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(g.transform.DOPath(rArr, Random.Range(2, 5), PathType.CatmullRom, PathMode.TopDown2D));
+            sequence.Append(g.transform.DOPath(rArr, Random.Range(1f, 3f), PathType.CatmullRom, PathMode.TopDown2D));
             sequence.AppendCallback(() => _routeTrails.Remove(g));
         }
 

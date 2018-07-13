@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Game.Characters.CharacterActions;
@@ -128,13 +129,13 @@ namespace Game.Characters
             ++_timeAlive;
             if (_timeAlive != WorldState.MinutesPerHour * 24) return;
             UnlockStoryLine();
-            BrandManager.IncreaseTimeSurvived();
+            IncreaseTimeSurvived();
             _timeAlive = 0;
         }
 
-        public void Tire()
+        public void Tire(int enduranceCost)
         {
-            Attributes.Get(AttributeType.Endurance).Decrement();
+            Attributes.Get(AttributeType.Endurance).Decrement(enduranceCost);
             if (Attributes.Val(AttributeType.Endurance) <= 1)
             {
                 WorldEventManager.GenerateEvent(new CharacterMessage("I really need some rest", this));
@@ -203,6 +204,44 @@ namespace Game.Characters
         {
             base.EquipAccessory(accessory);
             if (CharacterView != null) CharacterView.AccessoryController.SetAccessory(accessory);
+        }
+
+        private readonly Dictionary<WeaponType, int> _weaponKills = new Dictionary<WeaponType, int>();
+        private int _timeSurvived;
+
+        public void IncreaseWeaponKills()
+        {
+            WeaponType weaponType = EquippedWeapon.WeaponType();
+            if (!_weaponKills.ContainsKey(weaponType))
+            {
+                _weaponKills.Add(weaponType, 0);
+            }
+
+            int kills = _weaponKills[weaponType] + 1;
+            _weaponKills[weaponType] = kills;
+            switch (kills)
+            {
+                case 50:
+                    Attributes.WeaponSkillOneUnlocks.Add(weaponType);
+                    break;
+                case 100:
+                    Attributes.WeaponSkillTwoUnlocks.Add(weaponType);
+                    break;
+            }
+        }
+
+        private void IncreaseTimeSurvived()
+        {
+            ++_timeSurvived;
+            switch (_timeSurvived)
+            {
+                case 7:
+                    Attributes.SkillOneUnlocked = true;
+                    break;
+                case 14:
+                    Attributes.SkillTwoUnlocked = true;
+                    break;
+            }
         }
     }
 }

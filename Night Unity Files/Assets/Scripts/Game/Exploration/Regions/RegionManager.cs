@@ -52,6 +52,9 @@ namespace Game.Exploration.Regions
             for (int i = 0; i < currentEnvironment.Shelters; ++i) _regionTypes.Add(RegionType.Shelter);
             for (int i = 0; i < currentEnvironment.Resources; ++i) _regionTypes.Add(RegionType.Animal);
             for (int i = 0; i < currentEnvironment.Dangers; ++i) _regionTypes.Add(RegionType.Danger);
+            for(int i = 0; i < 4; ++i) _regionTypes.Add(RegionType.Shrine);
+            for (int i = 0; i < 4; ++i) _regionTypes.Add(RegionType.Monument);
+            for (int i = 0; i < 3; ++i) _regionTypes.Add(RegionType.Fountain);
             _regionTypes.Add(RegionType.Shelter);
             _noTemples = currentEnvironment.Temples;
             _regionsBeforeTemple = _regionTypes.Count / 2;
@@ -175,7 +178,18 @@ namespace Game.Exploration.Regions
             foreach (string prefix in prefixes)
             foreach (string suffix in suffixes)
                 if (prefix != suffix)
-                    combinations.Add(prefix + "'s " + suffix);
+                    switch (type)
+                    {
+                        case RegionType.Monument:
+                            combinations.Add(prefix + " of " + suffix);
+                            break;
+                        case RegionType.Fountain:
+                            combinations.Add(prefix + " " + suffix);
+                            break;
+                        default:
+                            combinations.Add(prefix + "'s " + suffix);
+                            break;
+                    }
             Helper.Shuffle(combinations);
             _regionNames.Add(type, combinations);
         }

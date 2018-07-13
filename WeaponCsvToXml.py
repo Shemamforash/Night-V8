@@ -167,13 +167,35 @@ class EnvironmentImporter(XMLWriter):
 class RegionImporter(XMLWriter):
     def __init__(self):
         super(RegionImporter, self).__init__("Regions", "Regions")
+        write_tag(self, "Names", self.read_names)
+
+    def read_names(self):
         write_tag(self, "RegionType", self.read_regions)
+        write_tag(self, "EnvironmentSuffixes", self.read_environment_suffixes)
 
     def read_regions(self):
-        for offset in range(0, 4):
+        for offset in range(0, 7):
             column = offset * 2 + 1
             column_letter = num2alpha[column]
             write_tag(self, get_value(self, column_letter, 1), self.read_region_type, [column])
+
+    def read_environment_suffixes(self):
+        self.read_environment_suffix("P")
+        self.read_environment_suffix("Q")
+        self.read_environment_suffix("R")
+        self.read_environment_suffix("S")
+        self.read_environment_suffix("T")
+
+    def read_environment_suffix(self, column_letter):
+        prefix_string = ""
+        for row in range(3, 16):
+            prefix = get_value(self, column_letter, row)
+            if prefix == "1":
+                break
+            if prefix_string != "":
+                prefix_string += ","
+            prefix_string += prefix
+        write_single_value(self, get_value(self, column_letter, 2), prefix_string)
 
     def read_region_type(self, column):
         self.read_region_names(num2alpha[column], "Prefixes")
@@ -287,11 +309,11 @@ def write_single_value(xml_writer, stat_name, value):
 # WeaponImporter()
 # GearImporter()
 # WeatherImporter()
-# RegionImporter()
+RegionImporter()
 # CharacterImporter()
-EnemyImporter()
+# EnemyImporter()
 # RecipeImporter()
-ResourceImporter()
+# ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
 # TraitImporter()

@@ -43,6 +43,13 @@ public class StoryController : MonoBehaviour
 		_nextMenu = nextMenu;
 		SceneChanger.ChangeScene("Story");
 	}
+
+	public static float GetTimeToRead(string paragraph)
+	{
+		int wordCount = paragraph.Split(' ').Length;
+		float timeToRead = _timePerWord * wordCount;
+		return timeToRead;
+	}
 	
 	private IEnumerator DisplayParagraph()
 	{
@@ -52,8 +59,7 @@ public class StoryController : MonoBehaviour
 			yield break;
 		}
 		string currentParagraph = _paragraphs.Dequeue();
-		int wordCount = currentParagraph.Split(' ').Length;
-		float timeToRead = _timePerWord * wordCount;
+		float timeToRead = GetTimeToRead(currentParagraph);
 		_storyText.text = currentParagraph;
 		_storyText.color = UiAppearanceController.InvisibleColour;
 		Tween fade = _storyText.DOColor(Color.white, 3f);

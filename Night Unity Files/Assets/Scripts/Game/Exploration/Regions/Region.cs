@@ -31,7 +31,7 @@ namespace Game.Exploration.Regions
         private static GameObject _nodePrefab;
         public readonly int RegionID;
         private int _lastVisitDay = -1;
-        private static Sprite _animalSprite, _dangerSprite;
+        private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite;
         public Vector2 ShrinePosition;
         public readonly List<Vector2> EchoPositions = new List<Vector2>();
         public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
@@ -83,24 +83,42 @@ namespace Game.Exploration.Regions
         {
             if (_animalSprite == null) _animalSprite = Resources.Load<Sprite>("Images/Regions/Animal");
             if (_dangerSprite == null) _dangerSprite = Resources.Load<Sprite>("Images/Regions/Danger");
+            if (_gateSprite == null) _gateSprite = Resources.Load<Sprite>("Images/Regions/Gate");
+            if (_fountainSprite == null) _fountainSprite = Resources.Load<Sprite>("Images/Regions/Fountain");
+            if (_monumentSprite == null) _monumentSprite = Resources.Load<Sprite>("Images/Regions/Monument");
+            if (_shelterSprite == null) _shelterSprite = Resources.Load<Sprite>("Images/Regions/Shelter");
+            if (_shrineSprite == null) _shrineSprite = Resources.Load<Sprite>("Images/Regions/Shrine");
+            if (_templeSprite == null) _templeSprite = Resources.Load<Sprite>("Images/Regions/Temple");
             SpriteRenderer image = Helper.FindChildWithName<SpriteRenderer>(nodeObject, "Icon");
             switch (_regionType)
             {
                 case RegionType.Shelter:
+                    image.sprite = _shelterSprite;
                     break;
                 case RegionType.Gate:
+                    image.sprite = _gateSprite;
                     break;
                 case RegionType.Temple:
+                    image.sprite = _templeSprite;
                     break;
                 case RegionType.Animal:
                     image.sprite = _animalSprite;
                     break;
                 case RegionType.Danger:
+                    image.sprite = _dangerSprite;
                     break;
                 case RegionType.Nightmare:
                     break;
+                case RegionType.Fountain:
+                    image.sprite = _fountainSprite;
+                    break;
+                case RegionType.Monument:
+                    image.sprite = _monumentSprite;
+                    break;
+                case RegionType.Shrine:
+                    image.sprite = _shrineSprite;
+                    break;
                 default:
-                    image.sprite = _dangerSprite;
                     throw new ArgumentOutOfRangeException();
             }
         }
@@ -236,9 +254,6 @@ namespace Game.Exploration.Regions
             _regionType = regionType;
             switch (regionType)
             {
-                case RegionType.Danger:
-                    GenerateHumanEncounter();
-                    break;
                 case RegionType.Nightmare:
                     GenerateNightmareEncounter();
                     break;
@@ -247,6 +262,9 @@ namespace Game.Exploration.Regions
                     break;
                 case RegionType.Animal:
                     GenerateAnimalEncounter();
+                    break;
+                default:
+                    GenerateHumanEncounter();
                     break;
             }
         }

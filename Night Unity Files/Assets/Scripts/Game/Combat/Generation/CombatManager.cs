@@ -36,7 +36,6 @@ namespace Game.Combat.Generation
         private int _damageDealt;
         private int _skillsUsed;
         private int _itemsFound;
-        private Characters.Player _characterEcho;
 
         public static bool AllEnemiesDead() => Instance()._enemies.Count == 0;
 
@@ -219,15 +218,7 @@ namespace Game.Combat.Generation
             brandManager.IncreaseHumansKilled(Instance()._humansKilled);
 
             Instance()._inCombat = false;
-            if (Instance()._characterEcho != null)
-            {
-                StoryController.ShowText(Instance()._characterEcho.GetStoryLine(), "Map");
-            }
-            else
-            {
                 SceneChanger.ChangeScene("Map", false);
-            }
-
             PlayerCombat.Instance.ExitCombat();
         }
 
@@ -324,11 +315,6 @@ namespace Game.Combat.Generation
         public static void SetHasFiredShot()
         {
             Instance()._shotFired = true;
-        }
-
-        public static void SetCharacterEcho(Characters.Player player)
-        {
-            Instance()._characterEcho = player;
         }
     }
 }

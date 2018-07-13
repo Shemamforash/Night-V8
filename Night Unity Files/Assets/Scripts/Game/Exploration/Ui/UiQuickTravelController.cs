@@ -5,6 +5,7 @@ using Game.Characters.CharacterActions;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -118,8 +119,7 @@ namespace Game.Exploration.Ui
             if (CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode() != _targetRegion)
             {
                 Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
-                int duration = RoutePlotter.TimeBetween(_currentRegion, _targetRegion);
-                travelAction.TravelTo(_regions[_selectedRegion], duration);
+                travelAction.TravelTo(_regions[_selectedRegion], _enduranceCost);
             }
 
             ReturnToGame();
@@ -167,21 +167,16 @@ namespace Game.Exploration.Ui
         }
 
         private bool _canTravel;
+        private int _enduranceCost;
 
         private void UpdateCurrentRegionInfo(Region region)
         {
             _regionName.text = region.Name;
             _regionDescription.text = region.Description();
-            int durationTo = RoutePlotter.TimeBetween(region, _currentRegion);
-            int durationFrom = RoutePlotter.TimeBetween(region, MapGenerator.GetInitialNode());
-            int totalDuration = durationTo + durationFrom;
-            int timeRemaining = CharacterManager.SelectedCharacter.TravelAction.GetTimeRemaining();
-            int timeDifference = timeRemaining - totalDuration;
-
-            if (timeDifference < 0)
+            _enduranceCost = RoutePlotter.RouteBetween(region, _currentRegion).Count - 1;
+            if (_enduranceCost > CharacterManager.SelectedCharacter.Attributes.Val(AttributeType.Endurance))
             {
-                string enduranceCostString = "Not enough endurance to reach area";
-                _regionDescription.text = _regionDescription.text + "\n" + enduranceCostString;
+                _regionDescription.text = _regionDescription.text + "\n" + "Not enough endurance to reach area";
                 _canTravel = false;
             }
             else
@@ -216,8 +211,8 @@ namespace Game.Exploration.Ui
             public void SetRegion(Region region)
             {
                 _nameText.Text(region.Name);
-                int duration = RoutePlotter.TimeBetween(region, _currentRegion);
-                _distanceText.Text(WorldState.TimeToHours(duration));
+                int duration = RoutePlotter.RouteBetween(region, _currentRegion).Count - 1;
+                _distanceText.Text(duration + " End");
                 SetColor(_activeColour);
             }
         }

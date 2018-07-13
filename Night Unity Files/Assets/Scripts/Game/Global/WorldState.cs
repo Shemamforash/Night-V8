@@ -114,7 +114,7 @@ namespace Game.Global
             if (_currentTime < MinuteInSeconds) return;
             _currentTime = _currentTime - MinuteInSeconds;
             IncrementMinutes();
-            WorldView.SetTime(Days, Hours, Minutes);
+            WorldView.SetTime(Hours);
         }
 
         private void IncrementMinutes()

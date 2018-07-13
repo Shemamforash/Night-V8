@@ -221,7 +221,6 @@
         <e p="EssenceCloudBehaviour.cs" t="Include" />
         <e p="GameOverUiController.cs" t="Include" />
         <e p="GameSettings.xml" t="Include" />
-        <e p="HealShrineBehaviour.cs" t="Include" />
         <e p="Mine.cs" t="Include" />
         <e p="NightSave.xml" t="Include" />
         <e p="Resources" t="Include">
@@ -412,7 +411,11 @@
                   <e p="BossShrine.cs" t="Include" />
                   <e p="ChaseShrine.cs" t="Include" />
                   <e p="FireShrine.cs" t="Include" />
+                  <e p="HealShrineBehaviour.cs" t="Include" />
+                  <e p="RiteColliderBehaviour.cs" t="Include" />
+                  <e p="RiteShrineBehaviour.cs" t="Include" />
                   <e p="ShrineBehaviour.cs" t="Include" />
+                  <e p="ShrineEdgeFollowBehaviour.cs" t="Include" />
                   <e p="ShrinePickup.cs" t="Include" />
                   <e p="ShrineType.cs" t="Include" />
                   <e p="WaveShrine.cs" t="Include" />
@@ -714,9 +717,9 @@
           <e p="CombatShader.shader" t="Include" />
           <e p="MapBackgroundShader.shader" t="Include" />
           <e p="MapBackgroundShader2.shader" t="Include" />
+          <e p="MenuGradientShader.shader" t="Include" />
           <e p="RadialLight.shader" t="Include" />
         </e>
-        <e p="ShrineEdgeFollowBehaviour.cs" t="Include" />
         <e p="StoryController.cs" t="Include" />
         <e p="SunBehaviour.cs" t="Include" />
         <e p="TargetBehaviour.cs" t="Include" />

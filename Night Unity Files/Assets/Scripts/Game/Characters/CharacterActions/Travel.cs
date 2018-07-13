@@ -10,10 +10,11 @@ namespace Game.Characters.CharacterActions
 {
     public class Travel : BaseCharacterAction
     {
-        private int TimeSpentTravelling;
+//        private int TimeSpentTravelling;
         private Region _target;
         private Region CurrentNode;
         private bool _inTransit;
+        private int _enduranceCost;
 
         public Travel(Player playerCharacter) : base("Travel", playerCharacter)
         {
@@ -26,12 +27,11 @@ namespace Game.Characters.CharacterActions
                     return;
                 }
 
-                ++TimeSpentTravelling;
-                if (TimeSpentTravelling == WorldState.MinutesPerHour)
-                {
-                    PlayerCharacter.Tire();
-                    TimeSpentTravelling = 0;
-                }
+//                ++TimeSpentTravelling;
+//                if (TimeSpentTravelling == WorldState.MinutesPerHour)
+//                {
+//                    TimeSpentTravelling = 0;
+//                }
 
                 --Duration;
             };
@@ -46,12 +46,13 @@ namespace Game.Characters.CharacterActions
 
         private void ReachTarget()
         {
+            PlayerCharacter.Tire(_enduranceCost);
             CurrentNode = _target;
             _inTransit = false;
             if (AtHome())
             {
                 PlayerCharacter.Attributes.DecreaseWillpower();
-                TimeSpentTravelling = 0;
+//                TimeSpentTravelling = 0;
                 foreach (InventoryItem item in PlayerCharacter.Inventory().Contents())
                 {
                     if (item.Template == null) continue;
@@ -83,12 +84,12 @@ namespace Game.Characters.CharacterActions
             }
         }
 
-        public int GetTimeRemaining()
-        {
-            int remainingEndurance = (int) PlayerCharacter.Attributes.Val(AttributeType.Endurance);
-            int remainingTime = remainingEndurance * WorldState.MinutesPerHour - TimeSpentTravelling % WorldState.MinutesPerHour;
-            return remainingTime;
-        }
+//        public int GetTimeRemaining()
+//        {
+//            int remainingEndurance = (int) PlayerCharacter.Attributes.Val(AttributeType.Endurance);
+//            int remainingTime = remainingEndurance * WorldState.MinutesPerHour - TimeSpentTravelling % WorldState.MinutesPerHour;
+//            return remainingTime;
+//        }
 
         protected override void OnClick()
         {
@@ -105,35 +106,42 @@ namespace Game.Characters.CharacterActions
             return _inTransit;
         }
 
-        public void TravelTo(Region target, int duration)
+        public void TravelTo(Region target, int enduranceCost)
         {
             Enter();
-            switch (target.GetRegionType())
-            {
-                case RegionType.Shelter:
-                    WorldEventManager.GenerateEvent(new CharacterMessage("Perhaps I will find others", PlayerCharacter));
-                    break;
-                case RegionType.Gate:
-                    WorldEventManager.GenerateEvent(new CharacterMessage("I'm going back to camp", PlayerCharacter));
-                    break;
-                case RegionType.Temple:
-                    WorldEventManager.GenerateEvent(new CharacterMessage("I hope I will see you again", PlayerCharacter));
-                    break;
-                case RegionType.Animal:
-                    WorldEventManager.GenerateEvent(new CharacterMessage("Perhaps I will find something to hunt", PlayerCharacter));
-                    break;
-                case RegionType.Danger:
-                    WorldEventManager.GenerateEvent(new CharacterMessage("I pray I won't find trouble, but I will be ready if I do", PlayerCharacter));
-                    break;
-                case RegionType.Nightmare:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            //todo decide if i want this
+//            switch (target.GetRegionType())
+//            {
+//                case RegionType.Shelter:
+//                    WorldEventManager.GenerateEvent(new CharacterMessage("Perhaps I will find others", PlayerCharacter));
+//                    break;
+//                case RegionType.Gate:
+//                    WorldEventManager.GenerateEvent(new CharacterMessage("I'm going back to camp", PlayerCharacter));
+//                    break;
+//                case RegionType.Temple:
+//                    WorldEventManager.GenerateEvent(new CharacterMessage("I hope I will see you again", PlayerCharacter));
+//                    break;
+//                case RegionType.Animal:
+//                    WorldEventManager.GenerateEvent(new CharacterMessage("Perhaps I will find something to hunt", PlayerCharacter));
+//                    break;
+//                case RegionType.Danger:
+//                    WorldEventManager.GenerateEvent(new CharacterMessage("I pray I won't find trouble, but I will be ready if I do", PlayerCharacter));
+//                    break;
+//                case RegionType.Nightmare:
+//                    break;
+//                case RegionType.Fountain:
+//                    break;
+//                case RegionType.Shrine:
+//                    break;
+//                case 
+//                default:
+//                    throw new ArgumentOutOfRangeException();
+//            }
 
             _inTransit = true;
             _target = target;
-            Duration = duration;
+            _enduranceCost = enduranceCost;
+            Duration = enduranceCost * WorldState.MinutesPerHour;
         }
 
         public void SetCurrentNode(Region node)

@@ -30,10 +30,9 @@ namespace Game.Global
             UpdateDescription();
         }
 
-        public static void SetTime(int days, int hours, int minutes)
+        public static void SetTime(int hours)
         {
             _timeString = TimeToName(hours);
-//            dayTime += "   Day " + days;
             UpdateDescription();
         }
 
@@ -48,7 +47,7 @@ namespace Game.Global
         {
             base.Awake();
             PauseOnOpen = false;
-            _environmentText = GameObject.Find("Environment").GetComponent<TextMeshProUGUI>();
+            _environmentText = Helper.FindChildWithName< TextMeshProUGUI > (gameObject, "Environment");
 
             GameObject resourcesObject = GameObject.Find("Resources");
             foreach (string resourceType in resources)

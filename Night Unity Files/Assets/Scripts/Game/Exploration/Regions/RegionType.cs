@@ -7,6 +7,9 @@
         Temple,
         Animal,
         Danger,
+        Fountain,
+        Shrine,
+        Monument,
         Nightmare
     }
 }

@@ -168,7 +168,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         protected virtual void AddItem(InventoryItem item)
         {
-            Debug.Log("added " + item.Name);
             item.ParentInventory = this;
             _items.Add(item);
             Assert.IsFalse(item is Consumable);

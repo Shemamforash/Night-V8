@@ -534,7 +534,7 @@ PlayerSettings:
   webGLCompressionFormat: 1
   webGLLinkerTarget: 0
   scriptingDefineSymbols:
-    1: DEBUG;DOTWEEN_TMP
+    1: DEBUG;DOTWEEN_TMP;AMPLIFY_SHADER_EDITOR
     4: DOTWEEN_TMP
     7: DOTWEEN_TMP
     13: DOTWEEN_TMP

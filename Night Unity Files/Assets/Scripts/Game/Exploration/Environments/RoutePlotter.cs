@@ -70,17 +70,6 @@ namespace Game.Exploration.Environment
             return targetVertex;
         }
 
-        public static float DistanceBetween(Region origin, Region target)
-        {
-            Vertex targetVertex = GetEndVertex(origin, target);
-            return targetVertex.distance;
-        }
-
-        public static int TimeBetween(Region origin, Region target)
-        {
-            return MapGenerator.NodeDistanceToTime(DistanceBetween(origin, target));
-        }
-
         public static List<Region> RouteBetween(Region origin, Region target)
         {
             Vertex targetVertex = GetEndVertex(origin, target);

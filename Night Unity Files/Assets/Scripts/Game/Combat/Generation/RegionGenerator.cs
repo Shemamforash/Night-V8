@@ -59,6 +59,7 @@ namespace Game.Combat.Generation
                 _region.EchoPositions.Add(FindAndRemoveValidPosition().Value);
             }
 
+            PlaceShrine();
             Generate();
             foreach (Barrier barrier in barriers)
             {
@@ -66,25 +67,26 @@ namespace Game.Combat.Generation
             }
 
             _region.Barriers = barriers;
-            PlaceShrine();
             PlaceItems();
             _region.Visit();
         }
 
         private void GenerateShrine()
         {
-            BrandManager.Brand brand = CharacterManager.SelectedCharacter.BrandManager.NextBrand();
-            if (brand == null) return;
-            int randomShrine = Random.Range(0, 4);
-            ShrineBehaviour.Generate(_region.ShrinePosition, (ShrineType) randomShrine, brand);
+            if (_region.GetRegionType() == RegionType.Shrine)
+            {
+                RiteShrineBehaviour.Generate(_region.ShrinePosition);
+            }
         }
 
         private void PlaceShrine()
         {
+            if (_region.GetRegionType() != RegionType.Shrine) return;
             for (int i = 0; i < _availablePositions.Count; ++i)
             {
-                Vector2 topLeft = new Vector2(_availablePositions[i].x - 3f, _availablePositions[i].y - 3f);
-                Vector2 bottomRight = new Vector2(_availablePositions[i].x + 3f, _availablePositions[i].y + 3f);
+                float shrineRadius = RiteShrineBehaviour.Width / 2f;
+                Vector2 topLeft = new Vector2(_availablePositions[i].x - shrineRadius, _availablePositions[i].y - shrineRadius);
+                Vector2 bottomRight = new Vector2(_availablePositions[i].x + shrineRadius, _availablePositions[i].y + shrineRadius);
                 if (_availablePositions[i].magnitude > 20) continue;
                 if (PathingGrid.WorldToCellPosition(_availablePositions[i]) == null) continue;
                 if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
