@@ -20,7 +20,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private readonly List<InventoryItem> _items = new List<InventoryItem>();
         private readonly List<InventoryItem> _contents = new List<InventoryItem>();
         private readonly List<Consumable> _consumables = new List<Consumable>();
-        private bool _readonly;
         private static bool _loaded;
         private static List<AttributeType> _attributeTypes;
 
@@ -121,11 +120,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             InventoryResources().ForEach(r => SaveResource(r.Name, inventoryNode));
             Items().ForEach(i => { i.Save(inventoryNode, saveType); });
             return inventoryNode;
-        }
-
-        public void SetReadonly(bool readOnly)
-        {
-            _readonly = readOnly;
         }
 
         private List<InventoryItem> InventoryResources()
@@ -231,6 +225,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         //Returns item in target inventory if the item was successfully moved
         private void Move(InventoryItem item)
         {
+            Debug.Log(item.Name);
             Inventory parent = item.ParentInventory;
             if (ParentInventory != null) Debug.Log(item.Name + " " + item.ParentInventory.Name);
             InventoryItem movedItem = parent == null ? item : parent.RemoveItem(item);
@@ -239,7 +234,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public void Move(InventoryItem item, int quantity)
         {
-            if (_readonly) return;
+            Debug.Log(item.IsStackable() + " " + item.Name + " " + item.Quantity());
             if (!item.IsStackable())
             {
                 Move(item);

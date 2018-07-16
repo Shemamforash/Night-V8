@@ -14,7 +14,6 @@ namespace Game.Combat.Generation
             _waterType = ResourceTemplate.GetWater().Name;
             _inventory.Name = _waterType;
             _inventory.IncrementResource(_waterType, 1);
-            _inventory.SetReadonly(true);
             PrefabLocation = "Puddle";
         }
 

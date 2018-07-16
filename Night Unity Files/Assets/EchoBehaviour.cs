@@ -33,6 +33,7 @@ public class EchoBehaviour : MonoBehaviour
         if (_burstPrefab == null) _burstPrefab = Resources.Load<GameObject>("Prefabs/Combat/Burst");
         ParticleSystem p = Instantiate(_burstPrefab).GetComponent<ParticleSystem>();
         p.Emit(150);
+        Debug.Log(p.particleCount);
         p.transform.position = transform.position;
         s = DOTween.Sequence();
         s.AppendInterval(p.main.duration);

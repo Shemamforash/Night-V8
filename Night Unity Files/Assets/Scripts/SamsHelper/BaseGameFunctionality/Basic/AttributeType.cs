@@ -45,6 +45,7 @@
         HungerBonus,
         ThirstBonus,
         DehydratingFoodBonus,
-        StarvingWaterBonus
+        StarvingWaterBonus,
+        InstantSkillRechargeChance
     }
 }

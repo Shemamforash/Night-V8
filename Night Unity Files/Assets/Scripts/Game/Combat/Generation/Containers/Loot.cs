@@ -9,7 +9,6 @@ namespace Game.Combat.Generation
 
         public Loot(Vector2 position, string name) : base(position, name)
         {
-            _inventory.SetReadonly(true);
         }
 
         public void AddToInventory(InventoryItem item)

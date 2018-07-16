@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
 using SamsHelper;
@@ -17,6 +18,7 @@ namespace Game.Characters
         private TextMeshProUGUI _detailedCurrentActionText;
         private GameObject _detailedView;
         private GameObject SimpleView;
+        private EnhancedText _brandText;
         [HideInInspector] public UIPlayerAccessoryController AccessoryController;
         [HideInInspector] public UIPlayerArmourController ArmourController;
         [HideInInspector] public UIPlayerWeaponController WeaponController;
@@ -56,6 +58,7 @@ namespace Game.Characters
             _hungerControllerDetailed.UpdateHunger(_player);
             _thirstControllerSimple.UpdateThirst(_player);
             _hungerControllerSimple.UpdateHunger(_player);
+            UpdateBrands();
         }
 
         private void CacheSimpleViewElements()
@@ -89,6 +92,22 @@ namespace Game.Characters
             AccessoryController = FindInDetailedView<UIPlayerAccessoryController>("Accessory");
             AccessoryController.SetAccessory(_player.EquippedAccessory);
             AccessoryController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowAccessoryMenu(_player));
+
+            _brandText = Helper.FindChildWithName<EnhancedText>(_detailedView, "Brands");
+        }
+
+        private void UpdateBrands()
+        {
+            string brandString = "";
+            List<BrandManager.Brand> brands = _player.BrandManager.GetActiveBrands();
+            for (int i = 0; i < brands.Count; i++)
+            {
+                BrandManager.Brand brand = brands[i];
+                brandString += brand.GetProgressString();
+                if (i < brands.Count - 1) brandString += "\n";
+            }
+
+            _brandText.Text(brandString);
         }
 
         private EnhancedButton _exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton;

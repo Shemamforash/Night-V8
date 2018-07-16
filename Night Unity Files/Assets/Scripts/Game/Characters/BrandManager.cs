@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -47,57 +46,57 @@ namespace Game.Characters
 
         private void CreateAttributeBrands()
         {
-            new StrengthBrand(_player, "Powerful", "Weak", 10000);
-            new StrengthBrand(_player, "Powerful", "Weak", 10000);
-            new StrengthBrand(_player, "Powerful", "Weak", 10000);
-            new StrengthBrand(_player, "Powerful", "Weak", 10000);
-            new StrengthBrand(_player, "Powerful", "Weak", 10000);
+            new StrengthBrand(_player, 10000);
+            new StrengthBrand(_player, 10000);
+            new StrengthBrand(_player, 10000);
+            new StrengthBrand(_player, 10000);
+            new StrengthBrand(_player, 10000);
 
-            new PerceptionBrand(_player, "Powerful", "Weak", 20);
-            new PerceptionBrand(_player, "Powerful", "Weak", 20);
-            new PerceptionBrand(_player, "Powerful", "Weak", 20);
-            new PerceptionBrand(_player, "Powerful", "Weak", 20);
-            new PerceptionBrand(_player, "Powerful", "Weak", 20);
+            new PerceptionBrand(_player, 20);
+            new PerceptionBrand(_player, 20);
+            new PerceptionBrand(_player, 20);
+            new PerceptionBrand(_player, 20);
+            new PerceptionBrand(_player, 20);
 
-            new WillpowerBrand(_player, "Powerful", "Weak", 10);
-            new WillpowerBrand(_player, "Powerful", "Weak", 10);
-            new WillpowerBrand(_player, "Powerful", "Weak", 10);
-            new WillpowerBrand(_player, "Powerful", "Weak", 10);
-            new WillpowerBrand(_player, "Powerful", "Weak", 10);
+            new WillpowerBrand(_player, 10);
+            new WillpowerBrand(_player, 10);
+            new WillpowerBrand(_player, 10);
+            new WillpowerBrand(_player, 10);
+            new WillpowerBrand(_player, 10);
 
-            new EnduranceBrand(_player, "Powerful", "Weak", 10);
-            new EnduranceBrand(_player, "Powerful", "Weak", 10);
-            new EnduranceBrand(_player, "Powerful", "Weak", 10);
-            new EnduranceBrand(_player, "Powerful", "Weak", 10);
-            new EnduranceBrand(_player, "Powerful", "Weak", 10);
+            new EnduranceBrand(_player, 10);
+            new EnduranceBrand(_player, 10);
+            new EnduranceBrand(_player, 10);
+            new EnduranceBrand(_player, 10);
+            new EnduranceBrand(_player, 10);
         }
 
         private void CreateOtherBrands()
         {
-            new EssenceChangeBrand(_player, "Tinkerer", "Clumsy", 10);
-            new EssenceChangeBrand(_player, "Machinist", "Clumsy", 10);
-            new HealthRecoveryBrand(_player, "Reviving", "Clumsy", 10000);
-            new HealthRecoveryBrand(_player, "Rallying", "Clumsy", 10000);
-            new WillpowerRecoveryBrand(_player, "Murderous", "Clumsy", 100);
-            new WillpowerRecoveryBrand(_player, "Pyschopathic", "Clumsy", 100);
-            new ReloadBrand(_player, "Direct", "Clumsy", 25);
-            new ReloadBrand(_player, "Blunt", "Clumsy", 25);
-            new OnlySkillBrand(_player, "Direct", "Clumsy", 25);
-            new OnlySkillBrand(_player, "Blunt", "Clumsy", 25);
+            new EssenceChangeBrand(_player, 10);
+            new EssenceChangeBrand(_player, 10);
+            new HealthRecoveryBrand(_player, 10000);
+            new HealthRecoveryBrand(_player, 10000);
+            new WillpowerRecoveryBrand(_player, 100);
+            new WillpowerRecoveryBrand(_player, 100);
+            new AutomaticReloadBrand(_player, 25);
+            new InstantReloadBrand(_player, 25);
+            new OnlySkillBrand(_player, 25);
+            new SkillKillBrand(_player, 25);
         }
 
         private void CreateResourceFindBrands()
         {
-            new ResourceBrand(_player, "Scavenger", "", 100);
-            new FoodBrand(_player, "Gatherer", "", 100);
-            new WaterBrand(_player, "Diviner", "", 100);
+            new ResourceBrand(_player, 100);
+            new FoodBrand(_player, 100);
+            new WaterBrand(_player, 100);
         }
 
         private void CreateConditionBrands()
         {
-            new IgniteBrand(_player, "Firestarter", "Flammable", 500);
-            new IgniteBrand(_player, "Decayer", "Decayed", 500);
-            new IgniteBrand(_player, "Plaguebearer", "Sickly", 500);
+            new IgniteBrand(_player,  500);
+            new DecayBrand(_player,  500);
+            new SicknessBrand(_player, 500);
         }
 
         public void IncreaseDamageDealt(int damage)
@@ -175,7 +174,7 @@ namespace Game.Characters
             for (int i = _activeBrands.Count - 1; i >= 0; --i)
             {
                 Brand b = _activeBrands[i];
-                if (!(b is ReloadBrand)) continue;
+                if (!(b is AutomaticReloadBrand)) continue;
                 b.UpdateValue(1);
             }
         }
@@ -253,21 +252,27 @@ namespace Game.Characters
         public abstract class Brand
         {
             private readonly int _counterTarget;
-            private readonly string _successName, _failName;
+            private readonly string _riteName, _successName, _failName;
             protected readonly Player Player;
             private int _counter;
             private bool _succeeded;
             public BrandStatus Status = BrandStatus.Locked;
 
-            protected Brand(Player player, string successName, string failName, int counterTarget)
+            protected Brand(Player player, string riteName, string successName, string failName, int counterTarget)
             {
                 Player = player;
+                _riteName = riteName;
                 _successName = successName;
                 _failName = failName;
                 _counterTarget = counterTarget;
                 SetStatus(BrandStatus.Locked);
             }
 
+            protected string Progress()
+            {
+                return _counter + "/" + _counterTarget;
+            }
+            
             private void SetStatus(BrandStatus status)
             {
                 Status = status;
@@ -276,10 +281,13 @@ namespace Game.Characters
 
             public string GetName() => _succeeded ? _successName : _failName;
 
-            public bool UpdateValue(int amount)
+            public void UpdateValue(int amount)
             {
                 _counter += amount;
-                return _counter >= _counterTarget;
+                if (_counter >= _counterTarget)
+                {
+                    //todo start trial
+                }
             }
 
             public void Succeed()
@@ -303,6 +311,13 @@ namespace Game.Characters
             {
                 Debug.Log(this + " " + Status + " " + _counter + "/" + _counterTarget);
             }
+
+            public string GetProgressString()
+            {
+                return "Rite of " + _riteName + ": " + GetProgressSubstring();
+            }
+
+            protected abstract string GetProgressSubstring();
         }
 
         private void UpdateBrandStatus(Brand brand)
@@ -340,7 +355,7 @@ namespace Game.Characters
 
         private class StrengthBrand : Brand
         {
-            public StrengthBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public StrengthBrand(Player player, int counterTarget) : base(player, "Power", "Powerful", "Weak", counterTarget)
             {
             }
 
@@ -352,12 +367,17 @@ namespace Game.Characters
             protected override void OnFail()
             {
                 Player.Attributes.ChangeStrengthMax(1);
+            }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Dealt " + Progress() + " damage";
             }
         }
 
         private class EnduranceBrand : Brand
         {
-            public EnduranceBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public EnduranceBrand(Player player, int counterTarget) : base(player, "Stamina", "Nomadic", "Sloth", counterTarget)
             {
             }
 
@@ -369,12 +389,17 @@ namespace Game.Characters
             protected override void OnFail()
             {
                 Player.Attributes.ChangeEnduranceMax(1);
+            }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Explored " + Progress() + " regions";
             }
         }
 
         private class PerceptionBrand : Brand
         {
-            public PerceptionBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public PerceptionBrand(Player player, int counterTarget) : base(player, "Vigilance", "Keen", "Oblivious", counterTarget)
             {
             }
 
@@ -386,12 +411,17 @@ namespace Game.Characters
             protected override void OnFail()
             {
                 Player.Attributes.ChangePerceptionMax(1);
+            }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Found " + Progress() + " items";
             }
         }
 
         private class WillpowerBrand : Brand
         {
-            public WillpowerBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public WillpowerBrand(Player player, int counterTarget) : base(player, "Resolution", "Hardy", "Fearful", counterTarget)
             {
             }
 
@@ -404,11 +434,16 @@ namespace Game.Characters
             {
                 Player.Attributes.ChangeWillpowerMax(1);
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Used " + Progress() + " skills";
+            }
         }
 
         private class EssenceChangeBrand : Brand
         {
-            public EssenceChangeBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public EssenceChangeBrand(Player player, int counterTarget) : base(player, "Insight", "Learned", "Ignorant", counterTarget)
             {
             }
 
@@ -421,11 +456,16 @@ namespace Game.Characters
             {
                 Player.Attributes.Get(AttributeType.EssenceRecoveryBonus).Increment(0.25f);
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Infused " + Progress() + " essence";
+            }
         }
 
         private class HealthRecoveryBrand : Brand
         {
-            public HealthRecoveryBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public HealthRecoveryBrand(Player player, int counterTarget) : base(player, "Revival", "Immortal", "Pathetic", counterTarget)
             {
             }
 
@@ -438,11 +478,16 @@ namespace Game.Characters
             {
                 Player.Attributes.Get(AttributeType.HealthLossBonus).Increment(0.1f);
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Taken " + Progress() + " damage";
+            }
         }
 
         private class WillpowerRecoveryBrand : Brand
         {
-            public WillpowerRecoveryBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public WillpowerRecoveryBrand(Player player, int counterTarget) : base(player, "Apathy", "Murderous", "Timid", counterTarget)
             {
             }
 
@@ -455,11 +500,16 @@ namespace Game.Characters
             {
                 Player.Attributes.Get(AttributeType.MentalBreakBonus).Increment(0.05f);
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Killed " + Progress() + " enemies";
+            }
         }
 
         private class OnlySkillBrand : Brand
         {
-            public OnlySkillBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public OnlySkillBrand(Player player, int counterTarget) : base(player, "Mastery", "Masterful", "Distracted", counterTarget)
             {
             }
 
@@ -472,44 +522,82 @@ namespace Game.Characters
             {
                 Player.Attributes.Get(AttributeType.InactiveSkillChance).Increment(0.05f);
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Used only skills in " + Progress() + " battles";
+            }
         }
 
-
-        private class ReloadBrand : Brand
+        private class SkillKillBrand : Brand
         {
-            public ReloadBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public SkillKillBrand(Player player, int counterTarget) : base(player, "Prowes", "Alert", "Absent", counterTarget)
             {
             }
 
             protected override void OnSucceed()
             {
-                if (Player.Attributes.ReloadOnLastRound)
-                {
-                    Player.Attributes.ReloadOnEmptyMag = true;
-                }
-                else if (Player.Attributes.ReloadOnEmptyMag)
-                {
-                    Player.Attributes.ReloadOnLastRound = true;
-                }
-                else if (Random.Range(0, 2) == 0)
-                {
-                    Player.Attributes.ReloadOnEmptyMag = true;
-                }
-                else
-                {
-                    Player.Attributes.ReloadOnLastRound = true;
-                }
+                Player.Attributes.Get(AttributeType.InstantSkillRechargeChance).Increment(0.1f);
+            }
+
+            protected override void OnFail()
+            {
+                Player.Attributes.Get(AttributeType.InactiveSkillChance).Increment(0.05f);
+            }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Killed " + Progress() + " enemies with skills";
+            }
+        }
+
+        private class InstantReloadBrand : Brand
+        {
+            public InstantReloadBrand(Player player, int counterTarget) : base(player, "Ingenuity", "Devious", "Inept", counterTarget)
+            {
+            }
+
+            protected override void OnSucceed()
+            {
+                Player.Attributes.ReloadOnEmptyMag = true;
             }
 
             protected override void OnFail()
             {
                 Player.Attributes.Get(AttributeType.ReloadFailChance).Increment(0.05f);
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Killed " + Progress() + " enemies with last round";
+            }
+        }
+
+        private class AutomaticReloadBrand : Brand
+        {
+            public AutomaticReloadBrand(Player player, int counterTarget) : base(player, "Finesse", "Perpetual", "Clumsy", counterTarget)
+            {
+            }
+
+            protected override void OnSucceed()
+            {
+                Player.Attributes.ReloadOnLastRound = true;
+            }
+
+            protected override void OnFail()
+            {
+                Player.Attributes.Get(AttributeType.ReloadFailChance).Increment(0.05f);
+            }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Used only bullets in " + Progress() + " battles";
+            }
         }
 
         private class IgniteBrand : Brand
         {
-            public IgniteBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public IgniteBrand(Player player, int counterTarget) : base(player, "The Inferno", "Infernal", "Combustible", counterTarget)
             {
             }
 
@@ -522,11 +610,16 @@ namespace Game.Characters
             {
                 Player.Attributes.BurnWeakness = true;
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Ignited " + Progress() + " enemies";
+            }
         }
 
         private class DecayBrand : Brand
         {
-            public DecayBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public DecayBrand(Player player, int counterTarget) : base(player, "The Voidwalker", "Void Born", "Crumbling", counterTarget)
             {
             }
 
@@ -539,11 +632,16 @@ namespace Game.Characters
             {
                 Player.Attributes.DecayWeakness = true;
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Decayed " + Progress() + " enemies";
+            }
         }
 
         private class SicknessBrand : Brand
         {
-            public SicknessBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public SicknessBrand(Player player, int counterTarget) : base(player, "The Plaguebearer", "Diseased", "Sickly", counterTarget)
             {
             }
 
@@ -556,11 +654,16 @@ namespace Game.Characters
             {
                 Player.Attributes.SicknessWeakness = true;
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Sickened " + Progress() + " enemies";
+            }
         }
 
         private class ResourceBrand : Brand
         {
-            public ResourceBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public ResourceBrand(Player player, int counterTarget) : base(player, "Scavenging", "Keen", "Blind", counterTarget)
             {
             }
 
@@ -573,11 +676,16 @@ namespace Game.Characters
             {
                 Player.Attributes.Get(AttributeType.ResourceFindBonus).Decrement();
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Found " + Progress() + " resources";
+            }
         }
 
         private class FoodBrand : Brand
         {
-            public FoodBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public FoodBrand(Player player, int counterTarget) : base(player, "Gathering", "Sated", "Greedy", counterTarget)
             {
             }
 
@@ -590,11 +698,16 @@ namespace Game.Characters
             {
                 Player.Attributes.Get(AttributeType.StarvingWaterBonus).Decrement();
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Found " + Progress() + " food";
+            }
         }
 
         private class WaterBrand : Brand
         {
-            public WaterBrand(Player player, string successName, string failName, int counterTarget) : base(player, successName, failName, counterTarget)
+            public WaterBrand(Player player, int counterTarget) : base(player, "Divining", "Slaked", "Parched", counterTarget)
             {
             }
 
@@ -607,6 +720,16 @@ namespace Game.Characters
             {
                 Player.Attributes.Get(AttributeType.DehydratingFoodBonus).Decrement();
             }
+
+            protected override string GetProgressSubstring()
+            {
+                return "Found " + Progress() + " water";
+            }
+        }
+
+        public List<Brand> GetActiveBrands()
+        {
+            return _activeBrands;
         }
     }
 }

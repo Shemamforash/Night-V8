@@ -12,7 +12,6 @@ namespace Game.Combat.Generation
             _foodType = ResourceTemplate.GetPlant().Name;
             _inventory.Name = _foodType;
             _inventory.IncrementResource(_foodType, 1);
-            _inventory.SetReadonly(true);
         }
 
         public void Change(int polarity)

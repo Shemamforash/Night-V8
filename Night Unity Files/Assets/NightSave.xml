@@ -42,12 +42,12 @@
           <Name>Sentinel</Name>
           <Gear>
             <Id>27</Id>
-            <Name>Rusted Deepdriver</Name>
+            <Name>Rusted Spewer</Name>
             <ParentInventory>24</ParentInventory>
             <Type>Gear</Type>
             <GearType>Weapon</GearType>
-            <WeaponType>Pistol</WeaponType>
-            <Class>Deepdriver</Class>
+            <WeaponType>SMG</WeaponType>
+            <Class>Spewer</Class>
             <Durability>10</Durability>
             <Quality>Rusted</Quality>
           </Gear>
@@ -74,86 +74,12 @@
               </Gear>
               <Gear>
                 <Id>27</Id>
-                <Name>Rusted Deepdriver</Name>
+                <Name>Rusted Spewer</Name>
                 <ParentInventory>24</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Weapon</GearType>
-                <WeaponType>Pistol</WeaponType>
-                <Class>Deepdriver</Class>
-                <Durability>10</Durability>
-                <Quality>Rusted</Quality>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-      </Enemies>
-    </Region>
-    <Region>
-      <Name>Record of Legend</Name>
-      <Discovered>False</Discovered>
-      <Enemies>
-        <Character>
-          <Id>59</Id>
-          <Name>Brawler</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Brawler</Name>
-          <Inventory>
-            <Id>60</Id>
-            <Name>Brawler</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Brawler</Name>
-              <Gear>
-                <Id>61</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>60</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>62</Id>
-          <Name>Sentinel</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Sentinel</Name>
-          <Gear>
-            <Id>65</Id>
-            <Name>Rusted Skullcrusher</Name>
-            <ParentInventory>63</ParentInventory>
-            <Type>Gear</Type>
-            <GearType>Weapon</GearType>
-            <WeaponType>Shotgun</WeaponType>
-            <Class>Skullcrusher</Class>
-            <Durability>10</Durability>
-            <Quality>Rusted</Quality>
-          </Gear>
-          <Inventory>
-            <Id>63</Id>
-            <Name>Sentinel</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Sentinel</Name>
-              <Gear>
-                <Id>64</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>63</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>65</Id>
-                <Name>Rusted Skullcrusher</Name>
-                <ParentInventory>63</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Weapon</GearType>
-                <WeaponType>Shotgun</WeaponType>
-                <Class>Skullcrusher</Class>
+                <WeaponType>SMG</WeaponType>
+                <Class>Spewer</Class>
                 <Durability>10</Durability>
                 <Quality>Rusted</Quality>
               </Gear>
@@ -169,333 +95,89 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Pursuit's Blessing</Name>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Strider's Reprieve</Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Cripple's Pit</Name>
       <Discovered>False</Discovered>
       <Enemies>
         <Character>
-          <Id>66</Id>
-          <Name>Grazer</Name>
+          <Id>71</Id>
+          <Name>Brawler</Name>
           <ParentInventory>-1</ParentInventory>
           <Type>Character</Type>
-          <Name>Grazer</Name>
+          <Name>Brawler</Name>
           <Inventory>
-            <Id>67</Id>
-            <Name>Grazer</Name>
+            <Id>72</Id>
+            <Name>Brawler</Name>
             <ParentInventory>-1</ParentInventory>
             <Type>Inventory</Type>
             <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>68</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>69</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>70</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>71</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>72</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>73</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>73</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>72</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
             </Inventory>
           </Inventory>
         </Character>
         <Character>
           <Id>74</Id>
-          <Name>Grazer</Name>
+          <Name>Brawler</Name>
           <ParentInventory>-1</ParentInventory>
           <Type>Character</Type>
-          <Name>Grazer</Name>
+          <Name>Brawler</Name>
           <Inventory>
             <Id>75</Id>
-            <Name>Grazer</Name>
+            <Name>Brawler</Name>
             <ParentInventory>-1</ParentInventory>
             <Type>Inventory</Type>
             <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>76</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>77</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>76</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>75</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>77</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>75</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
             </Inventory>
           </Inventory>
         </Character>
         <Character>
           <Id>78</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>79</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>80</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>81</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>82</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>83</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>84</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>85</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>86</Id>
-          <Name>Watcher</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Watcher</Name>
-          <Inventory>
-            <Id>87</Id>
-            <Name>Watcher</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Watcher</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>88</Id>
-          <Name>Watcher</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Watcher</Name>
-          <Inventory>
-            <Id>89</Id>
-            <Name>Watcher</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Watcher</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>90</Id>
-          <Name>Watcher</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Watcher</Name>
-          <Inventory>
-            <Id>91</Id>
-            <Name>Watcher</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Watcher</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-      </Enemies>
-    </Region>
-    <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Salving Pardon</Name>
-      <Discovered>False</Discovered>
-      <Enemies>
-        <Character>
-          <Id>116</Id>
-          <Name>Brawler</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Brawler</Name>
-          <Inventory>
-            <Id>117</Id>
-            <Name>Brawler</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Brawler</Name>
-              <Gear>
-                <Id>118</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>117</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>119</Id>
-          <Name>Brawler</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Brawler</Name>
-          <Inventory>
-            <Id>120</Id>
-            <Name>Brawler</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Brawler</Name>
-              <Gear>
-                <Id>121</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>120</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>122</Id>
-          <Name>Brawler</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Brawler</Name>
-          <Inventory>
-            <Id>123</Id>
-            <Name>Brawler</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Brawler</Name>
-              <Gear>
-                <Id>124</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>123</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>125</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>123</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>126</Id>
           <Name>Sentinel</Name>
           <ParentInventory>-1</ParentInventory>
           <Type>Character</Type>
           <Name>Sentinel</Name>
           <Gear>
-            <Id>129</Id>
+            <Id>82</Id>
             <Name>Rusted Deepdriver</Name>
-            <ParentInventory>127</ParentInventory>
+            <ParentInventory>79</ParentInventory>
             <Type>Gear</Type>
             <GearType>Weapon</GearType>
             <WeaponType>Pistol</WeaponType>
@@ -504,23 +186,30 @@
             <Quality>Rusted</Quality>
           </Gear>
           <Inventory>
-            <Id>127</Id>
+            <Id>79</Id>
             <Name>Sentinel</Name>
             <ParentInventory>-1</ParentInventory>
             <Type>Inventory</Type>
             <Inventory>
               <Name>Sentinel</Name>
               <Gear>
-                <Id>128</Id>
+                <Id>80</Id>
                 <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>127</ParentInventory>
+                <ParentInventory>79</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Armour</GearType>
               </Gear>
               <Gear>
-                <Id>129</Id>
+                <Id>81</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>79</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>82</Id>
                 <Name>Rusted Deepdriver</Name>
-                <ParentInventory>127</ParentInventory>
+                <ParentInventory>79</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Weapon</GearType>
                 <WeaponType>Pistol</WeaponType>
@@ -531,16 +220,165 @@
             </Inventory>
           </Inventory>
         </Character>
+        <Character>
+          <Id>83</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>87</Id>
+            <Name>Rusted Breacher</Name>
+            <ParentInventory>84</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>LMG</WeaponType>
+            <Class>Breacher</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>84</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>85</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>86</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>87</Id>
+                <Name>Rusted Breacher</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>LMG</WeaponType>
+                <Class>Breacher</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
       </Enemies>
     </Region>
     <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
+      <Name>Behemoth's Woe</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>37</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>40</Id>
+            <Name>Rusted Leadspreader</Name>
+            <ParentInventory>38</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>Shotgun</WeaponType>
+            <Class>Leadspreader</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>38</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>39</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>38</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>40</Id>
+                <Name>Rusted Leadspreader</Name>
+                <ParentInventory>38</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>Shotgun</WeaponType>
+                <Class>Leadspreader</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>42</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>46</Id>
+            <Name>Rusted Gripshaker</Name>
+            <ParentInventory>43</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>SMG</WeaponType>
+            <Class>Gripshaker</Class>
+            <Durability>8.339672</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>43</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>44</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>43</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>45</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>43</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>46</Id>
+                <Name>Rusted Gripshaker</Name>
+                <ParentInventory>43</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>SMG</WeaponType>
+                <Class>Gripshaker</Class>
+                <Durability>8.339672</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
     </Region>
     <Region>
-      <Name>Struggle's Boon</Name>
+      <Name>Marker of Legend</Name>
       <Discovered>False</Discovered>
       <Enemies>
         <Character>
@@ -581,12 +419,12 @@
           <Name>Sentinel</Name>
           <Gear>
             <Id>36</Id>
-            <Name>Rusted Deepdriver</Name>
+            <Name>Rusted Annihilator</Name>
             <ParentInventory>33</ParentInventory>
             <Type>Gear</Type>
             <GearType>Weapon</GearType>
-            <WeaponType>Pistol</WeaponType>
-            <Class>Deepdriver</Class>
+            <WeaponType>LMG</WeaponType>
+            <Class>Annihilator</Class>
             <Durability>10</Durability>
             <Quality>Rusted</Quality>
           </Gear>
@@ -613,64 +451,12 @@
               </Gear>
               <Gear>
                 <Id>36</Id>
-                <Name>Rusted Deepdriver</Name>
+                <Name>Rusted Annihilator</Name>
                 <ParentInventory>33</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Weapon</GearType>
-                <WeaponType>Pistol</WeaponType>
-                <Class>Deepdriver</Class>
-                <Durability>10</Durability>
-                <Quality>Rusted</Quality>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>37</Id>
-          <Name>Sentinel</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Sentinel</Name>
-          <Gear>
-            <Id>41</Id>
-            <Name>Rusted Groundrider</Name>
-            <ParentInventory>38</ParentInventory>
-            <Type>Gear</Type>
-            <GearType>Weapon</GearType>
-            <WeaponType>Rifle</WeaponType>
-            <Class>Groundrider</Class>
-            <Durability>10</Durability>
-            <Quality>Rusted</Quality>
-          </Gear>
-          <Inventory>
-            <Id>38</Id>
-            <Name>Sentinel</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Sentinel</Name>
-              <Gear>
-                <Id>39</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>38</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>40</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>38</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>41</Id>
-                <Name>Rusted Groundrider</Name>
-                <ParentInventory>38</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Weapon</GearType>
-                <WeaponType>Rifle</WeaponType>
-                <Class>Groundrider</Class>
+                <WeaponType>LMG</WeaponType>
+                <Class>Annihilator</Class>
                 <Durability>10</Durability>
                 <Quality>Rusted</Quality>
               </Gear>
@@ -680,155 +466,372 @@
       </Enemies>
     </Region>
     <Region>
-      <Name>Behemoth's Pity</Name>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Chaser's Bloom</Name>
       <Discovered>True</Discovered>
       <Enemies>
         <Character>
-          <Id>42</Id>
-          <Name>Sentinel</Name>
+          <Id>88</Id>
+          <Name>Flit</Name>
           <ParentInventory>-1</ParentInventory>
           <Type>Character</Type>
-          <Name>Sentinel</Name>
-          <Gear>
-            <Id>46</Id>
-            <Name>Rusted Voidwalker</Name>
-            <ParentInventory>43</ParentInventory>
-            <Type>Gear</Type>
-            <GearType>Weapon</GearType>
-            <WeaponType>Rifle</WeaponType>
-            <Class>Voidwalker</Class>
-            <Durability>8.983133</Durability>
-            <Quality>Rusted</Quality>
-          </Gear>
+          <Name>Flit</Name>
           <Inventory>
-            <Id>43</Id>
-            <Name>Sentinel</Name>
+            <Id>89</Id>
+            <Name>Flit</Name>
             <ParentInventory>-1</ParentInventory>
             <Type>Inventory</Type>
             <Inventory>
-              <Name>Sentinel</Name>
-              <Gear>
-                <Id>44</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>43</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>45</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>43</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>46</Id>
-                <Name>Rusted Voidwalker</Name>
-                <ParentInventory>43</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Weapon</GearType>
-                <WeaponType>Rifle</WeaponType>
-                <Class>Voidwalker</Class>
-                <Durability>8.983133</Durability>
-                <Quality>Rusted</Quality>
-              </Gear>
+              <Name>Flit</Name>
             </Inventory>
           </Inventory>
         </Character>
         <Character>
-          <Id>48</Id>
+          <Id>90</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>91</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>92</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>93</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>94</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>95</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>96</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>97</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>98</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>99</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>100</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>101</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>102</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>103</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>104</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>105</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>106</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>107</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>108</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>109</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>110</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>111</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>112</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>113</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>114</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>115</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>116</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>117</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>118</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>119</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>120</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>121</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>122</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>123</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>124</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>125</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>126</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>127</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Hell's Ruin</Name>
+      <Discovered>False</Discovered>
+      <Enemies>
+        <Character>
+          <Id>148</Id>
           <Name>Brawler</Name>
           <ParentInventory>-1</ParentInventory>
           <Type>Character</Type>
           <Name>Brawler</Name>
           <Inventory>
-            <Id>49</Id>
+            <Id>149</Id>
             <Name>Brawler</Name>
             <ParentInventory>-1</ParentInventory>
             <Type>Inventory</Type>
             <Inventory>
               <Name>Brawler</Name>
               <Gear>
-                <Id>50</Id>
+                <Id>150</Id>
                 <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>49</ParentInventory>
+                <ParentInventory>149</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Armour</GearType>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>51</Id>
-          <Name>Brawler</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Brawler</Name>
-          <Inventory>
-            <Id>52</Id>
-            <Name>Brawler</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Brawler</Name>
-              <Gear>
-                <Id>53</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>52</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>54</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>52</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>55</Id>
-          <Name>Sentinel</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Sentinel</Name>
-          <Gear>
-            <Id>58</Id>
-            <Name>Rusted Skullcrusher</Name>
-            <ParentInventory>56</ParentInventory>
-            <Type>Gear</Type>
-            <GearType>Weapon</GearType>
-            <WeaponType>Shotgun</WeaponType>
-            <Class>Skullcrusher</Class>
-            <Durability>9.72028</Durability>
-            <Quality>Rusted</Quality>
-          </Gear>
-          <Inventory>
-            <Id>56</Id>
-            <Name>Sentinel</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Sentinel</Name>
-              <Gear>
-                <Id>57</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>56</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>58</Id>
-                <Name>Rusted Skullcrusher</Name>
-                <ParentInventory>56</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Weapon</GearType>
-                <WeaponType>Shotgun</WeaponType>
-                <Class>Skullcrusher</Class>
-                <Durability>9.72028</Durability>
-                <Quality>Rusted</Quality>
               </Gear>
             </Inventory>
           </Inventory>
@@ -908,16 +911,58 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
+      <Name>Tracker's Wild</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>151</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>152</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>153</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>154</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>155</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>156</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
     </Region>
     <Region>
       <Name>
@@ -990,12 +1035,12 @@
           <Name>Sentinel</Name>
           <Gear>
             <Id>27</Id>
-            <Name>Rusted Deepdriver</Name>
+            <Name>Rusted Spewer</Name>
             <ParentInventory>24</ParentInventory>
             <Type>Gear</Type>
             <GearType>Weapon</GearType>
-            <WeaponType>Pistol</WeaponType>
-            <Class>Deepdriver</Class>
+            <WeaponType>SMG</WeaponType>
+            <Class>Spewer</Class>
             <Durability>10</Durability>
             <Quality>Rusted</Quality>
           </Gear>
@@ -1022,86 +1067,12 @@
               </Gear>
               <Gear>
                 <Id>27</Id>
-                <Name>Rusted Deepdriver</Name>
+                <Name>Rusted Spewer</Name>
                 <ParentInventory>24</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Weapon</GearType>
-                <WeaponType>Pistol</WeaponType>
-                <Class>Deepdriver</Class>
-                <Durability>10</Durability>
-                <Quality>Rusted</Quality>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-      </Enemies>
-    </Region>
-    <Region>
-      <Name>Record of Legend</Name>
-      <Discovered>False</Discovered>
-      <Enemies>
-        <Character>
-          <Id>59</Id>
-          <Name>Brawler</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Brawler</Name>
-          <Inventory>
-            <Id>60</Id>
-            <Name>Brawler</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Brawler</Name>
-              <Gear>
-                <Id>61</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>60</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>62</Id>
-          <Name>Sentinel</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Sentinel</Name>
-          <Gear>
-            <Id>65</Id>
-            <Name>Rusted Skullcrusher</Name>
-            <ParentInventory>63</ParentInventory>
-            <Type>Gear</Type>
-            <GearType>Weapon</GearType>
-            <WeaponType>Shotgun</WeaponType>
-            <Class>Skullcrusher</Class>
-            <Durability>10</Durability>
-            <Quality>Rusted</Quality>
-          </Gear>
-          <Inventory>
-            <Id>63</Id>
-            <Name>Sentinel</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Sentinel</Name>
-              <Gear>
-                <Id>64</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>63</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>65</Id>
-                <Name>Rusted Skullcrusher</Name>
-                <ParentInventory>63</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Weapon</GearType>
-                <WeaponType>Shotgun</WeaponType>
-                <Class>Skullcrusher</Class>
+                <WeaponType>SMG</WeaponType>
+                <Class>Spewer</Class>
                 <Durability>10</Durability>
                 <Quality>Rusted</Quality>
               </Gear>
@@ -1117,333 +1088,89 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Pursuit's Blessing</Name>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Strider's Reprieve</Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Cripple's Pit</Name>
       <Discovered>False</Discovered>
       <Enemies>
         <Character>
-          <Id>66</Id>
-          <Name>Grazer</Name>
+          <Id>71</Id>
+          <Name>Brawler</Name>
           <ParentInventory>-1</ParentInventory>
           <Type>Character</Type>
-          <Name>Grazer</Name>
+          <Name>Brawler</Name>
           <Inventory>
-            <Id>67</Id>
-            <Name>Grazer</Name>
+            <Id>72</Id>
+            <Name>Brawler</Name>
             <ParentInventory>-1</ParentInventory>
             <Type>Inventory</Type>
             <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>68</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>69</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>70</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>71</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>72</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>73</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>73</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>72</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
             </Inventory>
           </Inventory>
         </Character>
         <Character>
           <Id>74</Id>
-          <Name>Grazer</Name>
+          <Name>Brawler</Name>
           <ParentInventory>-1</ParentInventory>
           <Type>Character</Type>
-          <Name>Grazer</Name>
+          <Name>Brawler</Name>
           <Inventory>
             <Id>75</Id>
-            <Name>Grazer</Name>
+            <Name>Brawler</Name>
             <ParentInventory>-1</ParentInventory>
             <Type>Inventory</Type>
             <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>76</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>77</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>76</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>75</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>77</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>75</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
             </Inventory>
           </Inventory>
         </Character>
         <Character>
           <Id>78</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>79</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>80</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>81</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>82</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>83</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>84</Id>
-          <Name>Grazer</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Grazer</Name>
-          <Inventory>
-            <Id>85</Id>
-            <Name>Grazer</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Grazer</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>86</Id>
-          <Name>Watcher</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Watcher</Name>
-          <Inventory>
-            <Id>87</Id>
-            <Name>Watcher</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Watcher</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>88</Id>
-          <Name>Watcher</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Watcher</Name>
-          <Inventory>
-            <Id>89</Id>
-            <Name>Watcher</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Watcher</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>90</Id>
-          <Name>Watcher</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Watcher</Name>
-          <Inventory>
-            <Id>91</Id>
-            <Name>Watcher</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Watcher</Name>
-            </Inventory>
-          </Inventory>
-        </Character>
-      </Enemies>
-    </Region>
-    <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Salving Pardon</Name>
-      <Discovered>False</Discovered>
-      <Enemies>
-        <Character>
-          <Id>116</Id>
-          <Name>Brawler</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Brawler</Name>
-          <Inventory>
-            <Id>117</Id>
-            <Name>Brawler</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Brawler</Name>
-              <Gear>
-                <Id>118</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>117</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>119</Id>
-          <Name>Brawler</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Brawler</Name>
-          <Inventory>
-            <Id>120</Id>
-            <Name>Brawler</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Brawler</Name>
-              <Gear>
-                <Id>121</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>120</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>122</Id>
-          <Name>Brawler</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Brawler</Name>
-          <Inventory>
-            <Id>123</Id>
-            <Name>Brawler</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Brawler</Name>
-              <Gear>
-                <Id>124</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>123</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>125</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>123</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>126</Id>
           <Name>Sentinel</Name>
           <ParentInventory>-1</ParentInventory>
           <Type>Character</Type>
           <Name>Sentinel</Name>
           <Gear>
-            <Id>129</Id>
+            <Id>82</Id>
             <Name>Rusted Deepdriver</Name>
-            <ParentInventory>127</ParentInventory>
+            <ParentInventory>79</ParentInventory>
             <Type>Gear</Type>
             <GearType>Weapon</GearType>
             <WeaponType>Pistol</WeaponType>
@@ -1452,23 +1179,30 @@
             <Quality>Rusted</Quality>
           </Gear>
           <Inventory>
-            <Id>127</Id>
+            <Id>79</Id>
             <Name>Sentinel</Name>
             <ParentInventory>-1</ParentInventory>
             <Type>Inventory</Type>
             <Inventory>
               <Name>Sentinel</Name>
               <Gear>
-                <Id>128</Id>
+                <Id>80</Id>
                 <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>127</ParentInventory>
+                <ParentInventory>79</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Armour</GearType>
               </Gear>
               <Gear>
-                <Id>129</Id>
+                <Id>81</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>79</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>82</Id>
                 <Name>Rusted Deepdriver</Name>
-                <ParentInventory>127</ParentInventory>
+                <ParentInventory>79</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Weapon</GearType>
                 <WeaponType>Pistol</WeaponType>
@@ -1479,16 +1213,165 @@
             </Inventory>
           </Inventory>
         </Character>
+        <Character>
+          <Id>83</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>87</Id>
+            <Name>Rusted Breacher</Name>
+            <ParentInventory>84</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>LMG</WeaponType>
+            <Class>Breacher</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>84</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>85</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>86</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>87</Id>
+                <Name>Rusted Breacher</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>LMG</WeaponType>
+                <Class>Breacher</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
       </Enemies>
     </Region>
     <Region>
-      <Name>
-      </Name>
-      <Discovered>False</Discovered>
-      <Enemies />
+      <Name>Behemoth's Woe</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>37</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>40</Id>
+            <Name>Rusted Leadspreader</Name>
+            <ParentInventory>38</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>Shotgun</WeaponType>
+            <Class>Leadspreader</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>38</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>39</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>38</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>40</Id>
+                <Name>Rusted Leadspreader</Name>
+                <ParentInventory>38</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>Shotgun</WeaponType>
+                <Class>Leadspreader</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>42</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>46</Id>
+            <Name>Rusted Gripshaker</Name>
+            <ParentInventory>43</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>SMG</WeaponType>
+            <Class>Gripshaker</Class>
+            <Durability>8.339672</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>43</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>44</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>43</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>45</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>43</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>46</Id>
+                <Name>Rusted Gripshaker</Name>
+                <ParentInventory>43</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>SMG</WeaponType>
+                <Class>Gripshaker</Class>
+                <Durability>8.339672</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
     </Region>
     <Region>
-      <Name>Struggle's Boon</Name>
+      <Name>Marker of Legend</Name>
       <Discovered>False</Discovered>
       <Enemies>
         <Character>
@@ -1529,12 +1412,12 @@
           <Name>Sentinel</Name>
           <Gear>
             <Id>36</Id>
-            <Name>Rusted Deepdriver</Name>
+            <Name>Rusted Annihilator</Name>
             <ParentInventory>33</ParentInventory>
             <Type>Gear</Type>
             <GearType>Weapon</GearType>
-            <WeaponType>Pistol</WeaponType>
-            <Class>Deepdriver</Class>
+            <WeaponType>LMG</WeaponType>
+            <Class>Annihilator</Class>
             <Durability>10</Durability>
             <Quality>Rusted</Quality>
           </Gear>
@@ -1561,8 +1444,758 @@
               </Gear>
               <Gear>
                 <Id>36</Id>
-                <Name>Rusted Deepdriver</Name>
+                <Name>Rusted Annihilator</Name>
                 <ParentInventory>33</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>LMG</WeaponType>
+                <Class>Annihilator</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Chaser's Bloom</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>88</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>89</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>90</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>91</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>92</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>93</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>94</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>95</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>96</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>97</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>98</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>99</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>100</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>101</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>102</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>103</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>104</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>105</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>106</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>107</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>108</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>109</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>110</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>111</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>112</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>113</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>114</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>115</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>116</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>117</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>118</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>119</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>120</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>121</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>122</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>123</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>124</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>125</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>126</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>127</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Hell's Ruin</Name>
+      <Discovered>False</Discovered>
+      <Enemies>
+        <Character>
+          <Id>148</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Brawler</Name>
+          <Inventory>
+            <Id>149</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>150</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>149</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Tracker's Wild</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>151</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>152</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>153</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>154</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>155</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>156</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+  </Regions>
+  <Inventory>
+    <Id>0</Id>
+    <Name>Vehicle</Name>
+    <ParentInventory>-1</ParentInventory>
+    <Type>Inventory</Type>
+    <Inventory>
+      <Name>Vehicle</Name>
+    </Inventory>
+  </Inventory>
+  <Regions>
+    <Region>
+      <Name>Gate</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>19</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Brawler</Name>
+          <Inventory>
+            <Id>20</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>21</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>20</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>22</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>20</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>23</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>27</Id>
+            <Name>Rusted Spewer</Name>
+            <ParentInventory>24</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>SMG</WeaponType>
+            <Class>Spewer</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>24</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>25</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>24</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>26</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>24</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>27</Id>
+                <Name>Rusted Spewer</Name>
+                <ParentInventory>24</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>SMG</WeaponType>
+                <Class>Spewer</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Strider's Reprieve</Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Cripple's Pit</Name>
+      <Discovered>False</Discovered>
+      <Enemies>
+        <Character>
+          <Id>71</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Brawler</Name>
+          <Inventory>
+            <Id>72</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>73</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>72</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>74</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Brawler</Name>
+          <Inventory>
+            <Id>75</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>76</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>75</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>77</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>75</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>78</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>82</Id>
+            <Name>Rusted Deepdriver</Name>
+            <ParentInventory>79</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>Pistol</WeaponType>
+            <Class>Deepdriver</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>79</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>80</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>79</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>81</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>79</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>82</Id>
+                <Name>Rusted Deepdriver</Name>
+                <ParentInventory>79</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Weapon</GearType>
                 <WeaponType>Pistol</WeaponType>
@@ -1574,19 +2207,77 @@
           </Inventory>
         </Character>
         <Character>
+          <Id>83</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>87</Id>
+            <Name>Rusted Breacher</Name>
+            <ParentInventory>84</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>LMG</WeaponType>
+            <Class>Breacher</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>84</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>85</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>86</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>87</Id>
+                <Name>Rusted Breacher</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>LMG</WeaponType>
+                <Class>Breacher</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>Behemoth's Woe</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
           <Id>37</Id>
           <Name>Sentinel</Name>
           <ParentInventory>-1</ParentInventory>
           <Type>Character</Type>
           <Name>Sentinel</Name>
           <Gear>
-            <Id>41</Id>
-            <Name>Rusted Groundrider</Name>
+            <Id>40</Id>
+            <Name>Rusted Leadspreader</Name>
             <ParentInventory>38</ParentInventory>
             <Type>Gear</Type>
             <GearType>Weapon</GearType>
-            <WeaponType>Rifle</WeaponType>
-            <Class>Groundrider</Class>
+            <WeaponType>Shotgun</WeaponType>
+            <Class>Leadspreader</Class>
             <Durability>10</Durability>
             <Quality>Rusted</Quality>
           </Gear>
@@ -1606,31 +2297,18 @@
               </Gear>
               <Gear>
                 <Id>40</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>38</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>41</Id>
-                <Name>Rusted Groundrider</Name>
+                <Name>Rusted Leadspreader</Name>
                 <ParentInventory>38</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Weapon</GearType>
-                <WeaponType>Rifle</WeaponType>
-                <Class>Groundrider</Class>
+                <WeaponType>Shotgun</WeaponType>
+                <Class>Leadspreader</Class>
                 <Durability>10</Durability>
                 <Quality>Rusted</Quality>
               </Gear>
             </Inventory>
           </Inventory>
         </Character>
-      </Enemies>
-    </Region>
-    <Region>
-      <Name>Behemoth's Pity</Name>
-      <Discovered>True</Discovered>
-      <Enemies>
         <Character>
           <Id>42</Id>
           <Name>Sentinel</Name>
@@ -1639,13 +2317,13 @@
           <Name>Sentinel</Name>
           <Gear>
             <Id>46</Id>
-            <Name>Rusted Voidwalker</Name>
+            <Name>Rusted Gripshaker</Name>
             <ParentInventory>43</ParentInventory>
             <Type>Gear</Type>
             <GearType>Weapon</GearType>
-            <WeaponType>Rifle</WeaponType>
-            <Class>Voidwalker</Class>
-            <Durability>8.983133</Durability>
+            <WeaponType>SMG</WeaponType>
+            <Class>Gripshaker</Class>
+            <Durability>8.339672</Durability>
             <Quality>Rusted</Quality>
           </Gear>
           <Inventory>
@@ -1671,35 +2349,48 @@
               </Gear>
               <Gear>
                 <Id>46</Id>
-                <Name>Rusted Voidwalker</Name>
+                <Name>Rusted Gripshaker</Name>
                 <ParentInventory>43</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Weapon</GearType>
-                <WeaponType>Rifle</WeaponType>
-                <Class>Voidwalker</Class>
-                <Durability>8.983133</Durability>
+                <WeaponType>SMG</WeaponType>
+                <Class>Gripshaker</Class>
+                <Durability>8.339672</Durability>
                 <Quality>Rusted</Quality>
               </Gear>
             </Inventory>
           </Inventory>
         </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>Marker of Legend</Name>
+      <Discovered>False</Discovered>
+      <Enemies>
         <Character>
-          <Id>48</Id>
+          <Id>28</Id>
           <Name>Brawler</Name>
           <ParentInventory>-1</ParentInventory>
           <Type>Character</Type>
           <Name>Brawler</Name>
           <Inventory>
-            <Id>49</Id>
+            <Id>29</Id>
             <Name>Brawler</Name>
             <ParentInventory>-1</ParentInventory>
             <Type>Inventory</Type>
             <Inventory>
               <Name>Brawler</Name>
               <Gear>
-                <Id>50</Id>
+                <Id>30</Id>
                 <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>49</ParentInventory>
+                <ParentInventory>29</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>31</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>29</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Armour</GearType>
               </Gear>
@@ -1707,76 +2398,426 @@
           </Inventory>
         </Character>
         <Character>
-          <Id>51</Id>
-          <Name>Brawler</Name>
-          <ParentInventory>-1</ParentInventory>
-          <Type>Character</Type>
-          <Name>Brawler</Name>
-          <Inventory>
-            <Id>52</Id>
-            <Name>Brawler</Name>
-            <ParentInventory>-1</ParentInventory>
-            <Type>Inventory</Type>
-            <Inventory>
-              <Name>Brawler</Name>
-              <Gear>
-                <Id>53</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>52</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-              <Gear>
-                <Id>54</Id>
-                <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>52</ParentInventory>
-                <Type>Gear</Type>
-                <GearType>Armour</GearType>
-              </Gear>
-            </Inventory>
-          </Inventory>
-        </Character>
-        <Character>
-          <Id>55</Id>
+          <Id>32</Id>
           <Name>Sentinel</Name>
           <ParentInventory>-1</ParentInventory>
           <Type>Character</Type>
           <Name>Sentinel</Name>
           <Gear>
-            <Id>58</Id>
-            <Name>Rusted Skullcrusher</Name>
-            <ParentInventory>56</ParentInventory>
+            <Id>36</Id>
+            <Name>Rusted Annihilator</Name>
+            <ParentInventory>33</ParentInventory>
             <Type>Gear</Type>
             <GearType>Weapon</GearType>
-            <WeaponType>Shotgun</WeaponType>
-            <Class>Skullcrusher</Class>
-            <Durability>9.72028</Durability>
+            <WeaponType>LMG</WeaponType>
+            <Class>Annihilator</Class>
+            <Durability>10</Durability>
             <Quality>Rusted</Quality>
           </Gear>
           <Inventory>
-            <Id>56</Id>
+            <Id>33</Id>
             <Name>Sentinel</Name>
             <ParentInventory>-1</ParentInventory>
             <Type>Inventory</Type>
             <Inventory>
               <Name>Sentinel</Name>
               <Gear>
-                <Id>57</Id>
+                <Id>34</Id>
                 <Name>Reinforced Leather Plate</Name>
-                <ParentInventory>56</ParentInventory>
+                <ParentInventory>33</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Armour</GearType>
               </Gear>
               <Gear>
-                <Id>58</Id>
-                <Name>Rusted Skullcrusher</Name>
-                <ParentInventory>56</ParentInventory>
+                <Id>35</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>33</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>36</Id>
+                <Name>Rusted Annihilator</Name>
+                <ParentInventory>33</ParentInventory>
                 <Type>Gear</Type>
                 <GearType>Weapon</GearType>
-                <WeaponType>Shotgun</WeaponType>
-                <Class>Skullcrusher</Class>
-                <Durability>9.72028</Durability>
+                <WeaponType>LMG</WeaponType>
+                <Class>Annihilator</Class>
+                <Durability>10</Durability>
                 <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Chaser's Bloom</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>88</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>89</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>90</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>91</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>92</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>93</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>94</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>95</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>96</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>97</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>98</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>99</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>100</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>101</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>102</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>103</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>104</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>105</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>106</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>107</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>108</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>109</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>110</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>111</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>112</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>113</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>114</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>115</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>116</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>117</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>118</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>119</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>120</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>121</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>122</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>123</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>124</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>125</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>126</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>127</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Hell's Ruin</Name>
+      <Discovered>False</Discovered>
+      <Enemies>
+        <Character>
+          <Id>148</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Brawler</Name>
+          <Inventory>
+            <Id>149</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>150</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>149</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
               </Gear>
             </Inventory>
           </Inventory>
@@ -1856,6 +2897,60 @@
       <Enemies />
     </Region>
     <Region>
+      <Name>Tracker's Wild</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>151</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>152</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>153</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>154</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>155</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>156</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
       <Name>
       </Name>
       <Discovered>False</Discovered>
@@ -1866,6 +2961,987 @@
       </Name>
       <Discovered>False</Discovered>
       <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+  </Regions>
+  <Inventory>
+    <Id>0</Id>
+    <Name>Vehicle</Name>
+    <ParentInventory>-1</ParentInventory>
+    <Type>Inventory</Type>
+    <Inventory>
+      <Name>Vehicle</Name>
+    </Inventory>
+  </Inventory>
+  <Regions>
+    <Region>
+      <Name>Gate</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>19</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Brawler</Name>
+          <Inventory>
+            <Id>20</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>21</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>20</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>22</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>20</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>23</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>27</Id>
+            <Name>Rusted Spewer</Name>
+            <ParentInventory>24</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>SMG</WeaponType>
+            <Class>Spewer</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>24</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>25</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>24</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>26</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>24</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>27</Id>
+                <Name>Rusted Spewer</Name>
+                <ParentInventory>24</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>SMG</WeaponType>
+                <Class>Spewer</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Strider's Reprieve</Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Cripple's Pit</Name>
+      <Discovered>False</Discovered>
+      <Enemies>
+        <Character>
+          <Id>71</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Brawler</Name>
+          <Inventory>
+            <Id>72</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>73</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>72</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>74</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Brawler</Name>
+          <Inventory>
+            <Id>75</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>76</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>75</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>77</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>75</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>78</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>82</Id>
+            <Name>Rusted Deepdriver</Name>
+            <ParentInventory>79</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>Pistol</WeaponType>
+            <Class>Deepdriver</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>79</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>80</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>79</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>81</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>79</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>82</Id>
+                <Name>Rusted Deepdriver</Name>
+                <ParentInventory>79</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>Pistol</WeaponType>
+                <Class>Deepdriver</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>83</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>87</Id>
+            <Name>Rusted Breacher</Name>
+            <ParentInventory>84</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>LMG</WeaponType>
+            <Class>Breacher</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>84</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>85</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>86</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>87</Id>
+                <Name>Rusted Breacher</Name>
+                <ParentInventory>84</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>LMG</WeaponType>
+                <Class>Breacher</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>Behemoth's Woe</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>37</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>40</Id>
+            <Name>Rusted Leadspreader</Name>
+            <ParentInventory>38</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>Shotgun</WeaponType>
+            <Class>Leadspreader</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>38</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>39</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>38</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>40</Id>
+                <Name>Rusted Leadspreader</Name>
+                <ParentInventory>38</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>Shotgun</WeaponType>
+                <Class>Leadspreader</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>42</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>46</Id>
+            <Name>Rusted Gripshaker</Name>
+            <ParentInventory>43</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>SMG</WeaponType>
+            <Class>Gripshaker</Class>
+            <Durability>8.339672</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>43</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>44</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>43</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>45</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>43</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>46</Id>
+                <Name>Rusted Gripshaker</Name>
+                <ParentInventory>43</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>SMG</WeaponType>
+                <Class>Gripshaker</Class>
+                <Durability>8.339672</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>Marker of Legend</Name>
+      <Discovered>False</Discovered>
+      <Enemies>
+        <Character>
+          <Id>28</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Brawler</Name>
+          <Inventory>
+            <Id>29</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>30</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>29</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>31</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>29</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>32</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Sentinel</Name>
+          <Gear>
+            <Id>36</Id>
+            <Name>Rusted Annihilator</Name>
+            <ParentInventory>33</ParentInventory>
+            <Type>Gear</Type>
+            <GearType>Weapon</GearType>
+            <WeaponType>LMG</WeaponType>
+            <Class>Annihilator</Class>
+            <Durability>10</Durability>
+            <Quality>Rusted</Quality>
+          </Gear>
+          <Inventory>
+            <Id>33</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Sentinel</Name>
+              <Gear>
+                <Id>34</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>33</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>35</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>33</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+              <Gear>
+                <Id>36</Id>
+                <Name>Rusted Annihilator</Name>
+                <ParentInventory>33</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Weapon</GearType>
+                <WeaponType>LMG</WeaponType>
+                <Class>Annihilator</Class>
+                <Durability>10</Durability>
+                <Quality>Rusted</Quality>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Chaser's Bloom</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>88</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>89</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>90</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>91</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>92</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>93</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>94</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>95</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>96</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>97</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>98</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>99</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>100</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>101</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>102</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>103</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>104</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>105</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>106</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>107</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>108</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>109</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>110</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>111</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>112</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>113</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>114</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>115</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>116</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>117</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>118</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>119</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>120</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>121</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>122</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>123</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>124</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>125</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>126</Id>
+          <Name>Flit</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Flit</Name>
+          <Inventory>
+            <Id>127</Id>
+            <Name>Flit</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Flit</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Hell's Ruin</Name>
+      <Discovered>False</Discovered>
+      <Enemies>
+        <Character>
+          <Id>148</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Brawler</Name>
+          <Inventory>
+            <Id>149</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Brawler</Name>
+              <Gear>
+                <Id>150</Id>
+                <Name>Reinforced Leather Plate</Name>
+                <ParentInventory>149</ParentInventory>
+                <Type>Gear</Type>
+                <GearType>Armour</GearType>
+              </Gear>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>
+      </Name>
+      <Discovered>False</Discovered>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Tracker's Wild</Name>
+      <Discovered>True</Discovered>
+      <Enemies>
+        <Character>
+          <Id>151</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>152</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>153</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>154</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+        <Character>
+          <Id>155</Id>
+          <Name>Curio</Name>
+          <ParentInventory>-1</ParentInventory>
+          <Type>Character</Type>
+          <Name>Curio</Name>
+          <Inventory>
+            <Id>156</Id>
+            <Name>Curio</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Type>Inventory</Type>
+            <Inventory>
+              <Name>Curio</Name>
+            </Inventory>
+          </Inventory>
+        </Character>
+      </Enemies>
     </Region>
     <Region>
       <Name>

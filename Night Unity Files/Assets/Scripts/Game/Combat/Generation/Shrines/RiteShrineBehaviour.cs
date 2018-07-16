@@ -69,10 +69,9 @@ namespace Game.Combat.Generation.Shrines
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
-            if (axis == InputAxis.TakeItem)
-            {
-                PlayerCombat.Instance.Player.BrandManager.SetActiveBrand(_targetBrand);
-            }
+            if (axis != InputAxis.TakeItem) return;
+            PlayerCombat.Instance.Player.BrandManager.SetActiveBrand(_targetBrand);
+            Debug.Log("brand active");
         }
 
         public void OnInputUp(InputAxis axis)
