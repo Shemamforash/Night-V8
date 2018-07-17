@@ -16,7 +16,7 @@ namespace Game.Combat.Enemies.Humans
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            if (_healPrefab == null) _healPrefab = Resources.Load<GameObject>("Prefabs/Combat/Heal Indicator");
+            if (_healPrefab == null) _healPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Heal Indicator");
 //            MinimumFindCoverDistance = 20f;
         }
 

@@ -7,7 +7,7 @@ namespace Game.Combat.Misc
 {
     public class FireGenerator : MonoBehaviour
     {
-        private static readonly ObjectPool<FireGenerator> _firePool = new ObjectPool<FireGenerator>("Prefabs/Combat/Fire");
+        private static readonly ObjectPool<FireGenerator> _firePool = new ObjectPool<FireGenerator>("Prefabs/Combat/Effects/Fire");
         private static Transform _fireParent;
         private FastLight _light;
         private float _randomSeed;

@@ -23,7 +23,12 @@ namespace Game.Combat.Generation.Shrines
             _pickupDropMarkerB = Helper.FindChildWithName<ParticleSystem>(gameObject, "Ring B");
         }
 
-        protected override IEnumerator StartShrine()
+        protected override void StartShrine()
+        {
+            StartCoroutine(SpawnChasers());
+        }
+        
+        private IEnumerator SpawnChasers()
         {
             float shrineTimeMax = 20f;
             float currentTime = shrineTimeMax;

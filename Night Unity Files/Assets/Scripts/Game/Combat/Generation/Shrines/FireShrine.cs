@@ -11,7 +11,12 @@ namespace Game.Combat.Generation.Shrines
     {
         private readonly List<FireBehaviour> _fires = new List<FireBehaviour>();
 
-        protected override IEnumerator StartShrine()
+        protected override void StartShrine()
+        {
+            StartCoroutine(SpawnFire());
+        }
+        
+        private IEnumerator SpawnFire()
         {
             int numberOfEnemies = 1;
             float angleSize = 360f / numberOfEnemies;

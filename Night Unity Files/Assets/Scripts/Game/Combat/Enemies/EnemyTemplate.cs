@@ -20,15 +20,19 @@ namespace Game.Combat.Enemies
         private static readonly List<EnemyType> _enemyTypes = new List<EnemyType>();
         public readonly bool GearAllowed;
 
-        private EnemyTemplate(EnemyType type, int health, int speed, int value, string dropResource, int dropCount)
+        private EnemyTemplate(XmlNode enemyNode)
         {
-            EnemyType = type;
-            Health = health;
-            Speed = speed;
-            Value = value;
-            DropResource = dropResource;
-            DropCount = dropCount;
-            GearAllowed = dropResource == "Salt";
+            EnemyType = NameToType(enemyNode.SelectSingleNode("Name").InnerText);
+            Health = int.Parse(enemyNode.SelectSingleNode("Health").InnerText);
+            Speed = int.Parse(enemyNode.SelectSingleNode("Speed").InnerText);
+            Value = int.Parse(enemyNode.SelectSingleNode("Value").InnerText);
+            string dropString = enemyNode.SelectSingleNode("Drops").InnerText;
+            EnemyTemplates[EnemyType] = this;
+            if (dropString == "") return;
+            string[] drops = dropString.Split(' ');
+            DropCount = int.Parse(drops[0]);
+            DropResource = drops[1];
+            GearAllowed = DropResource == "Salt";
         }
 
         public static List<EnemyTemplate> GetEnemyTypes()
@@ -41,8 +45,9 @@ namespace Game.Combat.Enemies
         {
             if (_enemyTypes.Count == 0)
             {
-                foreach (EnemyType enemyType in Enum.GetValues(typeof(EnemyType))) _enemyTypes.Add(enemyType);    
+                foreach (EnemyType enemyType in Enum.GetValues(typeof(EnemyType))) _enemyTypes.Add(enemyType);
             }
+
             foreach (EnemyType enemyType in _enemyTypes)
                 if (enemyType.ToString() == typeName)
                     return enemyType;
@@ -54,29 +59,10 @@ namespace Game.Combat.Enemies
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Enemies", "Enemies");
             foreach (XmlNode enemyNode in root.SelectNodes("Enemy"))
-            {
-                string name = enemyNode.SelectSingleNode("Name").InnerText;
-                EnemyType type = NameToType(name);
-                int health = int.Parse(enemyNode.SelectSingleNode("Health").InnerText);
-                int speed = int.Parse(enemyNode.SelectSingleNode("Speed").InnerText);
-                int value = int.Parse(enemyNode.SelectSingleNode("Value").InnerText);
-                string dropString = enemyNode.SelectSingleNode("Drops").InnerText;
-                int dropCount = 0;
-                string dropResource = "";
-                if (dropString != "")
-                {
-                    string[] drops = dropString.Split(' ');
-                    dropCount = int.Parse(drops[0]);
-                    dropResource = drops[1];
-                }
-
-                EnemyTemplate t = new EnemyTemplate(type, health, speed, value, dropResource, dropCount);
-                EnemyTemplates[type] = t;
-            }
-
+                new EnemyTemplate(enemyNode);
             _loaded = true;
         }
-        
+
         public static EnemyTemplate GetEnemyTemplate(EnemyType enemyType)
         {
             LoadTemplates();

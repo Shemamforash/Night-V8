@@ -13,7 +13,6 @@ namespace Game.Exploration.Environment
         private static readonly Dictionary<int, Environment> _environments = new Dictionary<int, Environment>();
         private static Environment _currentEnvironment;
         private static TemperatureCategory _temperatureCategory;
-        private static TemperatureCategory _lastTemperatureCategory;
 
         public static void Start()
         {
@@ -40,6 +39,7 @@ namespace Game.Exploration.Environment
 
             MapGenerator.Generate();
             WorldView.SetEnvironmentText(_currentEnvironment.EnvironmentType.ToString());
+            SceneryController.UpdateEnvironment();
         }
 
         private static void LoadEnvironments()
@@ -48,16 +48,8 @@ namespace Game.Exploration.Environment
             XmlNode root = Helper.OpenRootNode("Environments", "EnvironmentTypes");
             foreach (XmlNode environmentNode in root.ChildNodes)
             {
-                string name = environmentNode.Name;
-                int level = int.Parse(environmentNode.SelectSingleNode("Level").InnerText);
-                int temperature = int.Parse(environmentNode.SelectSingleNode("Temperature").InnerText);
-                int shelter = int.Parse(environmentNode.SelectSingleNode("Shelter").InnerText);
-                int temples = int.Parse(environmentNode.SelectSingleNode("Temples").InnerText);
-                int keys = int.Parse(environmentNode.SelectSingleNode("CompleteKeys").InnerText);
-                int resources = int.Parse(environmentNode.SelectSingleNode("Resources").InnerText);
-                int danger = int.Parse(environmentNode.SelectSingleNode("Danger").InnerText);
-                Environment environment = new Environment(name, level, temperature, shelter, temples, keys, resources, danger);
-                _environments.Add(level, environment);
+                Environment environment = new Environment(environmentNode);
+                _environments.Add(environment.LevelNo, environment);
             }
 
             _loaded = true;
@@ -66,7 +58,6 @@ namespace Game.Exploration.Environment
         public static void UpdateTemperature()
         {
             int temperature = CalculateTemperature();
-            _lastTemperatureCategory = _temperatureCategory;
             if (temperature < -20)
                 _temperatureCategory = TemperatureCategory.Freezing;
             else if (temperature < 0)
@@ -77,10 +68,6 @@ namespace Game.Exploration.Environment
                 _temperatureCategory = TemperatureCategory.Hot;
             else
                 _temperatureCategory = TemperatureCategory.Boiling;
-            if (_lastTemperatureCategory != _temperatureCategory)
-            {
-                WorldEventManager.GenerateEvent(new WorldEvent("It's " + _temperatureCategory));
-            }
 
             int targetLength = 6;
             string currentTemperature = CalculateTemperature() + "\u00B0" + "C";

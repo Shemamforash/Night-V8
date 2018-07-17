@@ -1,4 +1,5 @@
-﻿using SamsHelper.Libraries;
+﻿using Game.Exploration.Environment;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,9 +19,14 @@ public class SceneryController : MonoBehaviour
     {
         _sky = Helper.FindChildWithName<RectTransform>(gameObject, "Sky");
         _sun = Helper.FindChildWithName<RectTransform>(gameObject, "Sun");
-        _environment = Helper.FindChildWithName<Image>(gameObject, "Environment");
+        _environment = Helper.FindChildWithName<Image>(gameObject, "Landscape");
         _gateShadow = Helper.FindChildWithName<Image>(gameObject, "Gate Shadow");
         _sunGlow = Helper.FindChildWithName<Image>(gameObject, "Sun Glow");
+    }
+
+    public static void UpdateEnvironment()
+    {
+        _environment.sprite = Resources.Load<Sprite>("Images/Backgrounds/" + EnvironmentManager.CurrentEnvironment.EnvironmentType + "/Environment");
     }
 
     public static void SetTime(float normalisedTime) //6am = 0 6pm = 0.5

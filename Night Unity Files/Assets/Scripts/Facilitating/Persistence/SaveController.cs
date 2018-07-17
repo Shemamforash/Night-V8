@@ -9,8 +9,8 @@ namespace Facilitating.Persistence
 {
     public static class SaveController
     {
-        private static readonly string GameSaveLocation = Application.dataPath + "/NightSave.xml";
-        private static readonly string SettingsSaveLocation = Application.dataPath + "/GameSettings.xml";
+        private static readonly string GameSaveLocation = Application.dataPath + "Saves/NightSave.xml";
+        private static readonly string SettingsSaveLocation = Application.dataPath + "Saves/GameSettings.xml";
         private static XmlDocument _saveDoc;
         private static readonly List<Action<XmlNode, PersistenceType>> OnLoad = new List<Action<XmlNode, PersistenceType>>();
         private static readonly List<Action<XmlNode, PersistenceType>> OnSave = new List<Action<XmlNode, PersistenceType>>();

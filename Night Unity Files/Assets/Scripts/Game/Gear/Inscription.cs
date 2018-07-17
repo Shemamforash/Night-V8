@@ -68,15 +68,7 @@ namespace Game.Gear
             if (_readTemplates) return;
             XmlNode inscriptions = Helper.OpenRootNode("Inscriptions");
             foreach (XmlNode inscriptionNode in inscriptions.SelectNodes("Inscription"))
-            {
-                string inscriptionName = inscriptionNode.SelectSingleNode("Name").InnerText;
-                string attributeString = inscriptionNode.SelectSingleNode("Attribute").InnerText;
-                AttributeType attributeType = Inventory.StringToAttributeType(attributeString);
-                float value = float.Parse(inscriptionNode.SelectSingleNode("Value").InnerText);
-                bool additive = inscriptionNode.SelectSingleNode("Type").InnerText == "+";
-                InscriptionTemplate inscriptionTemplate = new InscriptionTemplate(inscriptionName, attributeType, additive, value);
-                _inscriptionTemplates.Add(inscriptionTemplate);
-            }
+                new InscriptionTemplate(inscriptionNode);
 
             _readTemplates = true;
         }
@@ -97,13 +89,14 @@ namespace Game.Gear
             private readonly bool _additive;
             private readonly float _modifierValue;
 
-            public InscriptionTemplate(string name, AttributeType attributeType, bool additive, float modifierValue)
+            public InscriptionTemplate(XmlNode inscriptionNode)
             {
-                Name = name;
-                AttributeTarget = attributeType;
+                Name = inscriptionNode.SelectSingleNode("Name").InnerText;
+                string attributeString = inscriptionNode.SelectSingleNode("Attribute").InnerText;
+                AttributeTarget = Inventory.StringToAttributeType(attributeString);
+                _modifierValue = float.Parse(inscriptionNode.SelectSingleNode("Value").InnerText);
+                _additive = inscriptionNode.SelectSingleNode("Type").InnerText == "+";
                 _inscriptionTemplates.Add(this);
-                _additive = additive;
-                _modifierValue = modifierValue;
             }
 
             public AttributeModifier GetModifier()

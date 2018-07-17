@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Player;
 using Game.Combat.Ui;
@@ -36,7 +37,7 @@ namespace Game.Combat.Generation.Shrines
 
         public static void Generate(Vector2 position)
         {
-            if (_riteShrinePrefab == null) _riteShrinePrefab = Resources.Load<GameObject>("Prefabs/Combat/Rite Shrine");
+            if (_riteShrinePrefab == null) _riteShrinePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Rite Shrine");
             GameObject riteShrineObject = Instantiate(_riteShrinePrefab);
             riteShrineObject.transform.position = position;
         }
@@ -57,7 +58,7 @@ namespace Game.Combat.Generation.Shrines
                 _targetBrand = _brandChoice[2];
             }
 
-            PlayerUi.SetEventText(_targetBrand.GetName());
+            PlayerUi.SetEventText("Accept the " + _targetBrand.GetName() + " [T]");
         }
 
         public void ExitShrineCollider()
@@ -71,7 +72,36 @@ namespace Game.Combat.Generation.Shrines
         {
             if (axis != InputAxis.TakeItem) return;
             PlayerCombat.Instance.Player.BrandManager.SetActiveBrand(_targetBrand);
-            Debug.Log("brand active");
+            PlayerUi.SetEventText("The Rite begins...");
+            PlayerUi.FadeTextOut();
+            FadeCandles();
+            Destroy(_collider1);
+            Destroy(_collider2);
+            Destroy(_collider3);
+        }
+
+        private void FadeCandles()
+        {
+            foreach (ParticleSystem candle in transform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
+            {
+                StartCoroutine(FadeCandle(candle));
+            }
+        }
+
+        private IEnumerator FadeCandle(ParticleSystem candle)
+        {
+            ParticleSystem.EmissionModule emission = candle.emission;
+            float startEmission = emission.rateOverTime.constant;
+            float currentTime = 2f;
+            while (currentTime > 0f)
+            {
+                currentTime -= Time.deltaTime;
+                float newEmission = startEmission * currentTime / 2f;
+                emission.rateOverTime = newEmission;
+                yield return null;
+            }
+
+            emission.rateOverTime = 0f;
         }
 
         public void OnInputUp(InputAxis axis)

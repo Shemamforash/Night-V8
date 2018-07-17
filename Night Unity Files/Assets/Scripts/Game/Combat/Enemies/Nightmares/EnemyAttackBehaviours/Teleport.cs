@@ -18,8 +18,8 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             if (_teleportInPrefab == null)
             {
-                _teleportInPrefab = Resources.Load<GameObject>("Prefabs/Combat/Teleport In");
-                _teleportOutPrefab = Resources.Load<GameObject>("Prefabs/Combat/Teleport Out");
+                _teleportInPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Teleport In");
+                _teleportOutPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Teleport Out");
             }
 
             GameObject teleportIn = Instantiate(_teleportInPrefab);

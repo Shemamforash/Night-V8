@@ -256,6 +256,8 @@ namespace Game.Combat.Player
                 }
             }
 
+            InputHandler.SetCurrentListener(null);
+            InputHandler.UnregisterInputListener(this);
             base.Kill();
             Player.Kill();
             if (Player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer)

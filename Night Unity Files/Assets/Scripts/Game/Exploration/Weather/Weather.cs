@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
@@ -13,15 +14,19 @@ namespace Game.Exploration.Weather
         private readonly int _temperature, _duration;
         private readonly float _visibility, _water, _food;
         private int _timeRemaining;
-        public WeatherAttributes Attributes;
+        private readonly string _displayName;
+        public readonly WeatherAttributes Attributes;
 
-        public Weather(StateMachine stateMachine, string name, int temperature, float visibility, float water, float food, int duration) : base(stateMachine, name, StateSubtype.Weather)
+        public Weather(ProbabalisticStateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, weatherNode.SelectSingleNode("Name").InnerText)
         {
-            _temperature = temperature;
-            _visibility = visibility;
-            _water = water;
-            _food = food;
-            _duration = duration;
+            Name = weatherNode.SelectSingleNode("Name").InnerText;
+            _displayName = weatherNode.SelectSingleNode("DisplayName").InnerText;
+            _temperature = int.Parse(weatherNode.SelectSingleNode("Temperature").InnerText);
+            _visibility = float.Parse(weatherNode.SelectSingleNode("Visibility").InnerText);
+            _water = float.Parse(weatherNode.SelectSingleNode("Water").InnerText);
+            _food = float.Parse(weatherNode.SelectSingleNode("Food").InnerText);
+            _duration = int.Parse(weatherNode.SelectSingleNode("Duration").InnerText);
+            Attributes = new WeatherAttributes(weatherNode);
         }
 
         public float GetVisibility()
@@ -32,7 +37,7 @@ namespace Game.Exploration.Weather
        public override void Enter()
         {
             base.Enter();
-            WorldView.SetWeatherText(Name);
+            WorldView.SetWeatherText(_displayName);
             _timeRemaining = _duration * WorldState.MinutesPerHour;
             WeatherSystemController.Instance().ChangeWeather(this, _timeRemaining);
         }

@@ -129,6 +129,7 @@ class WeatherImporter(XMLWriter):
 
     def read_single_weather(self, row):
         write_single_value(self, "Name", get_value(self, "A", row, "0"))
+        write_single_value(self, "DisplayName", get_value(self, "B", row, "0"))
         write_single_value(self, "Type", get_value(self, "C", row, "0"))
         write_single_value(self, "Temperature", get_value(self, "D", row, "0"))
         write_single_value(self, "Visibility", get_value(self, "E", row, "0"))
@@ -308,8 +309,8 @@ def write_single_value(xml_writer, stat_name, value):
 
 # WeaponImporter()
 # GearImporter()
-# WeatherImporter()
-RegionImporter()
+WeatherImporter()
+# RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
 # RecipeImporter()

@@ -27,6 +27,7 @@ namespace Game.Characters
 
         public void SetActiveBrand(Brand brand)
         {
+            Debug.Log("brand is active");
             _activeBrands.Add(brand);
         }
 
@@ -279,7 +280,10 @@ namespace Game.Characters
                 Player.BrandManager.UpdateBrandStatus(this);
             }
 
-            public string GetName() => _succeeded ? _successName : _failName;
+            public string GetName()
+            {
+                return "Rite of " + _riteName;
+            }
 
             public void UpdateValue(int amount)
             {

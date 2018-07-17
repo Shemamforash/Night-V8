@@ -5,19 +5,18 @@ using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
-public class 
-    TempleBehaviour : MonoBehaviour
+public class TempleBehaviour : BasicShrineBehaviour
 {
     private bool _lit, _ring1Active, _ring2Active;
     private ColourPulse ringPulse1, ringPulse2;
-    private bool _activated;
     private ParticleSystem _vortex, _explosion, _altar;
     private SpriteRenderer _glow;
-
+    private EnemyBehaviour _boss;
 
     public void Awake()
     {
@@ -46,21 +45,18 @@ public class
             _ring1Active = true;
         }
 
-        if (!_ring2Active && distance < 5)
-        {
-            StartCoroutine(FadeInRing(ringPulse2, 3f));
-            _ring2Active = true;
-        }
-
-        if (!_activated && distance < 3f)
-        {
-            StartCoroutine(Activate());
-        }
+        if (_ring2Active || !(distance < 5)) return;
+        StartCoroutine(FadeInRing(ringPulse2, 3f));
+        _ring2Active = true;
     }
 
+    protected override void StartShrine()
+    {
+        StartCoroutine(Activate());
+    }
+    
     private IEnumerator Activate()
     {
-        _activated = true;
         _vortex.Play();
         float vortexTime = _vortex.main.duration + 0.5f;
         while (vortexTime > 0f)
@@ -114,7 +110,16 @@ public class
             yield return null;
         }
 
-        BossShrine.GenerateBoss(transform.position);
+        _boss = BossShrine.GenerateBoss(transform.position);
+        StartCoroutine(WaitForBossToDie());
+    }
+
+    private IEnumerator WaitForBossToDie()
+    {
+        while (!_boss.IsDead) yield return null;
+        End();
+        WorldState.TravelToNextEnvironment();
+        CombatManager.ExitCombat();
     }
 
     private void StartLights()

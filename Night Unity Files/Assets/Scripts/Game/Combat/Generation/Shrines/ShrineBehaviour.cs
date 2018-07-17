@@ -8,20 +8,15 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
-public abstract class ShrineBehaviour : MonoBehaviour
+public abstract class ShrineBehaviour : BasicShrineBehaviour
 {
-    private const float DistanceToTrigger = 0.2f;
-    private bool _triggered;
     private ParticleSystem _essence, _void, _burst, _ring;
     private SpriteRenderer _flash;
     protected SpriteRenderer DangerIndicator;
     private SpriteRenderer _glow;
     private SpriteMask _countdownMask;
     private SpriteRenderer _countdown;
-    private readonly List<EnemyBehaviour> _enemiesAlive = new List<EnemyBehaviour>();
     private BrandManager.Brand _brand;
-
-    private static GameObject _disappearPrefab;
 
     private static GameObject _bossPrefab, _firePrefab, _wavePrefab, _chasePrefab;
 
@@ -38,17 +33,16 @@ public abstract class ShrineBehaviour : MonoBehaviour
         _countdownMask = Helper.FindChildWithName<SpriteMask>(gameObject, "Countdown Mask");
         _flash.color = UiAppearanceController.InvisibleColour;
         _countdownMask.alphaCutoff = 1f;
-        if (_disappearPrefab == null) _disappearPrefab = Resources.Load<GameObject>("Prefabs/Combat/Disappear");
     }
 
-    public static void Generate(Vector2 position, ShrineType shrineType, BrandManager.Brand brand)
+    public static void Generate(ShrineType shrineType, BrandManager.Brand brand)
     {
         if (_bossPrefab == null)
         {
-            _bossPrefab = Resources.Load<GameObject>("Prefabs/Combat/Shrines/Boss Shrine");
-            _firePrefab = Resources.Load<GameObject>("Prefabs/Combat/Shrines/Fire Shrine");
-            _wavePrefab = Resources.Load<GameObject>("Prefabs/Combat/Shrines/Wave Shrine");
-            _chasePrefab = Resources.Load<GameObject>("Prefabs/Combat/Shrines/Chase Shrine");
+            _bossPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Boss Shrine");
+            _firePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Fire Shrine");
+            _wavePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Wave Shrine");
+            _chasePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Chase Shrine");
         }
 
         GameObject shrine = null;
@@ -68,34 +62,23 @@ public abstract class ShrineBehaviour : MonoBehaviour
                 break;
         }
 
-        shrine.transform.position = position;
+        shrine.transform.position = Vector2.zero;
         shrine.transform.localScale = Vector2.one;
         shrine.GetComponent<ShrineBehaviour>()._brand = brand;
     }
 
-    protected void Succeed()
+    protected override void Succeed()
     {
+        base.Succeed();
         _brand.Succeed();
         StartCoroutine(SucceedGlow());
     }
 
-    protected void Fail()
+    protected override void Fail()
     {
+        base.Fail();
         _brand.Fail();
         StartCoroutine(FailGlow());
-    }
-
-    protected void AddEnemy(EnemyBehaviour b)
-    {
-        _enemiesAlive.Add(b);
-//        b.AddOnKill(e => _enemiesAlive.Remove(e));
-    }
-
-    protected bool EnemiesDead()
-    {
-        List<EnemyBehaviour> enemies = _enemiesAlive.FindAll(e => e == null);
-        enemies.ForEach(e => _enemiesAlive.Remove(e));
-        return _enemiesAlive.Count == 0;
     }
 
     private IEnumerator FailGlow()
@@ -155,16 +138,6 @@ public abstract class ShrineBehaviour : MonoBehaviour
         _countdown.color = new Color(1, normalisedTime, normalisedTime, _countdown.color.a);
     }
 
-    public void Update()
-    {
-        if (_triggered) return;
-        float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
-        if (distanceToPlayer > DistanceToTrigger) return;
-        _triggered = true;
-        StartCoroutine(StartShrine());
-        StartCoroutine(Flash());
-    }
-
     private IEnumerator Flash()
     {
         float time = 0.2f;
@@ -184,14 +157,13 @@ public abstract class ShrineBehaviour : MonoBehaviour
         _flash.color = UiAppearanceController.InvisibleColour;
     }
 
-    protected abstract IEnumerator StartShrine();
+    protected override void StartShrine()
+    {
+        StartCoroutine(Flash());
+    }
 
     protected virtual void EndChallenge()
     {
-        for (int i = _enemiesAlive.Count - 1; i >= 0; --i)
-        {
-            Instantiate(_disappearPrefab).transform.position = _enemiesAlive[i].transform.position;
-            _enemiesAlive[i].Kill();
-        }
+        End();
     }
 }

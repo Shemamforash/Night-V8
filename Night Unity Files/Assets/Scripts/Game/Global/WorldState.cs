@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using Facilitating;
 using Facilitating.Persistence;
 using Facilitating.UI;
 using Game.Characters;
+using Game.Combat.Enemies;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
@@ -90,7 +92,7 @@ namespace Game.Global
 
         public static int GetDaysSpentHere() => DaysSpentHere;
 
-        private void FindNewLocation()
+        public static void TravelToNextEnvironment()
         {
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel();
@@ -190,6 +192,34 @@ namespace Game.Global
             int difficultyMax = difficulty + 1;
             if (difficultyMax > 4) difficultyMax = 4;
             return Random.Range(difficultyMin, difficultyMax);
+        }
+
+        public static List<EnemyType> GetAllowedHumanEnemyTypes()
+        {
+            int difficulty = Difficulty();
+            List<EnemyType> allowedTypes = new List<EnemyType>();
+            allowedTypes.Add(EnemyType.Sentinel);
+            allowedTypes.Add(EnemyType.Brawler);
+
+            if (difficulty >= 5)
+            {
+                allowedTypes.Add(EnemyType.Sniper);
+                allowedTypes.Add(EnemyType.Martyr);
+            }
+
+            if (difficulty >= 10)
+            {
+                allowedTypes.Add(EnemyType.Witch);
+                allowedTypes.Add(EnemyType.Medic);
+            }
+
+            if (difficulty >= 15)
+            {
+                allowedTypes.Add(EnemyType.Warlord);
+                allowedTypes.Add(EnemyType.Mountain);
+            }
+
+            return allowedTypes;
         }
     }
 }

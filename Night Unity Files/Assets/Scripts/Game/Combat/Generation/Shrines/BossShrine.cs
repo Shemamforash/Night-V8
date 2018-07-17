@@ -9,7 +9,12 @@ namespace Game.Combat.Generation.Shrines
 {
     public class BossShrine : ShrineBehaviour
     {
-        protected override IEnumerator StartShrine()
+        protected override void StartShrine()
+        {
+            StartCoroutine(SpawnBoss());
+        }
+
+        private IEnumerator SpawnBoss()
         {
             float roundTime = 60;
             float currentTime = roundTime;

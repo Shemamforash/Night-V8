@@ -47,15 +47,7 @@ namespace Game.Gear.Armour
             if (_readTemplates) return;
             XmlNode root = Helper.OpenRootNode("Gear", "GearList");
             foreach (XmlNode accessoryNode in root.SelectNodes("Gear"))
-            {
-                string name = accessoryNode.SelectSingleNode("Name").InnerText;
-                string attributeString = accessoryNode.SelectSingleNode("Attribute").InnerText;
-                AttributeType attributeType = Inventory.StringToAttributeType(attributeString);
-                float bonus = float.Parse(accessoryNode.SelectSingleNode("Bonus").InnerText);
-                bool additive = accessoryNode.SelectSingleNode("Type").InnerText == "+";
-                new AccessoryTemplate(name, attributeType, bonus, additive);
-            }
-
+                new AccessoryTemplate(accessoryNode);
             _readTemplates = true;
         }
 
@@ -77,20 +69,21 @@ namespace Game.Gear.Armour
             return accessory;
         }
 
-        public class AccessoryTemplate
+        private class AccessoryTemplate
         {
             public readonly string Name;
             public readonly AttributeType TargetAttribute;
             private readonly float _modifierValue;
             private readonly bool _additive;
 
-            public AccessoryTemplate(string name, AttributeType attributeType, float modifierValue, bool additive)
+            public AccessoryTemplate(XmlNode accessoryNode)
             {
+                Name = accessoryNode.SelectSingleNode("Name").InnerText;
+                string attributeString = accessoryNode.SelectSingleNode("Attribute").InnerText;
+                TargetAttribute = Inventory.StringToAttributeType(attributeString);
+                _modifierValue = float.Parse(accessoryNode.SelectSingleNode("Bonus").InnerText);
+                _additive = accessoryNode.SelectSingleNode("Type").InnerText == "+";
                 _accessoryTemplates.Add(this);
-                Name = name;
-                TargetAttribute = attributeType;
-                _modifierValue = modifierValue;
-                _additive = additive;
             }
 
             public AttributeModifier GetModifier()

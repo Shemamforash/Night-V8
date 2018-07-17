@@ -14,7 +14,7 @@ namespace Game.Combat.Generation
 {
     public static class PathingGrid
     {
-        public const int CombatAreaWidth = 40;
+        public const int CombatAreaWidth = 30;
         public const int CombatMovementDistance = CombatAreaWidth - 3;
         public const int CellResolution = 4;
         public const float CellWidth = 1f / CellResolution;

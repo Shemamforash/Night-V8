@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Game.Global;
 using UnityEngine;
 
@@ -14,18 +15,19 @@ namespace Game.Exploration.Environment
         public readonly EnvironmentType EnvironmentType;
         private static List<EnvironmentType> _environmentTypes;
 
-        public Environment(string name, int level, int temperature, int shelterCount, int templeCount, int completeKeyCount, int resourceCount, int dangerCount)
+        public Environment(XmlNode environmentNode)
         {
-            EnvironmentType = StringToEnvironmentType(name);
+            EnvironmentType = StringToEnvironmentType(environmentNode.Name);
+            LevelNo = int.Parse(environmentNode.SelectSingleNode("Level").InnerText);
+            int temperature = int.Parse(environmentNode.SelectSingleNode("Temperature").InnerText);
             maxTemp = temperature * 10;
             minTemp = maxTemp - 20;
             CalculateTemperatures();
-            LevelNo = level;
-            Shelters = shelterCount;
-            Temples = templeCount;
-            CompleteKeys = completeKeyCount;
-            Resources = resourceCount;
-            Dangers = dangerCount;
+            Shelters = int.Parse(environmentNode.SelectSingleNode("Shelter").InnerText);
+            Temples = int.Parse(environmentNode.SelectSingleNode("Temples").InnerText);
+            CompleteKeys = int.Parse(environmentNode.SelectSingleNode("CompleteKeys").InnerText);
+            Resources = int.Parse(environmentNode.SelectSingleNode("Resources").InnerText);
+            Dangers = int.Parse(environmentNode.SelectSingleNode("Danger").InnerText);
         }
 
         private EnvironmentType StringToEnvironmentType(string environmentString)

@@ -6,7 +6,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
     {
         public readonly Dictionary<string, float> TransitionProbabilities = new Dictionary<string, float>();
 
-        protected ProbabalisticState(StateMachine stateMachine, string name, StateSubtype subType) : base(stateMachine, name)
+        protected ProbabalisticState(StateMachine stateMachine, string name) : base(stateMachine, name)
         {
         }
 

@@ -33,7 +33,12 @@ namespace Game.Combat.Generation.Shrines
             filledIndicator.transform.localRotation = Quaternion.Euler(0, 0, _currentShrineLevel * (360f / _shrineLevelMax));
         }
 
-        protected override IEnumerator StartShrine()
+        protected override void StartShrine()
+        {
+            StartCoroutine(SpawnWaves());
+        }
+
+        private IEnumerator SpawnWaves()
         {
             int spawnCount = _currentShrineLevel * 10;
             float angleInterval = 360f / spawnCount;
@@ -84,7 +89,7 @@ namespace Game.Combat.Generation.Shrines
                 }
 
                 ++_currentShrineLevel;
-                StartCoroutine(StartShrine());
+                StartCoroutine(SpawnWaves());
             }
             else
             {

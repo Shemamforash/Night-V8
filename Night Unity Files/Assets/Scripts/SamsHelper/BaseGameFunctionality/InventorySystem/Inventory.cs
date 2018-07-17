@@ -23,16 +23,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static bool _loaded;
         private static List<AttributeType> _attributeTypes;
 
-        public Inventory(string name) : base(name, GameObjectType.Inventory)
-        {
-            LoadResources();
-        }
-
-        public List<Consumable> Consumables()
-        {
-            return _consumables.Where(c => c.Quantity() != 0).ToList();
-        }
-
         public static AttributeType StringToAttributeType(string attributeString)
         {
             if (_attributeTypes == null)
@@ -43,17 +33,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             return _attributeTypes.Find(t => t.ToString() == attributeString);
         }
-
-        private static ResourceTemplate CreateBaseTemplate(XmlNode resourceNode)
+        
+        public Inventory(string name) : base(name, GameObjectType.Inventory)
         {
-            string name = resourceNode.SelectSingleNode("Name").InnerText;
-            string type = resourceNode.SelectSingleNode("Type").InnerText;
-            float oasisDR = float.Parse(resourceNode.SelectSingleNode("OasisDropRate").InnerText);
-            float steppeDr = float.Parse(resourceNode.SelectSingleNode("SteppeDropRate").InnerText);
-            float ruinsDr = float.Parse(resourceNode.SelectSingleNode("RuinsDropRate").InnerText);
-            float defilesDr = float.Parse(resourceNode.SelectSingleNode("DefilesDropRate").InnerText);
-            float wastelandDr = float.Parse(resourceNode.SelectSingleNode("WastelandDropRate").InnerText);
-            return new ResourceTemplate(name, type, oasisDR, steppeDr, ruinsDr, defilesDr, wastelandDr);
+            LoadResources();
+        }
+
+        public List<Consumable> Consumables()
+        {
+            return _consumables.Where(c => c.Quantity() != 0).ToList();
         }
 
         private static void LoadResources()
@@ -62,27 +50,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             XmlNode root = Helper.OpenRootNode("Resources");
 
             foreach (XmlNode resourceNode in root.SelectNodes("Consumable"))
-            {
-                string attributeString = resourceNode.SelectSingleNode("Attribute").InnerText;
-                ResourceTemplate resourceTemplate = CreateBaseTemplate(resourceNode);
-                if (attributeString == "") continue;
-                AttributeType attribute = StringToAttributeType(attributeString);
-                float modifierVal = float.Parse(resourceNode.SelectSingleNode("Modifier").InnerText);
-                bool additive = resourceNode.SelectSingleNode("Bonus").InnerText == "+";
-                string durationString = resourceNode.SelectSingleNode("Duration").InnerText;
-                int duration = 0;
-                if (durationString != "")
-                {
-                    duration = int.Parse(durationString);
-                }
-
-                resourceTemplate.SetEffect(attribute, modifierVal, additive, duration);
-            }
+                new ResourceTemplate(resourceNode);
 
             foreach (XmlNode resourceNode in root.SelectNodes("Resource"))
-            {
-                CreateBaseTemplate(resourceNode);
-            }
+                new ResourceTemplate(resourceNode);
 
             _loaded = true;
         }
@@ -234,7 +205,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public void Move(InventoryItem item, int quantity)
         {
-            Debug.Log(item.IsStackable() + " " + item.Name + " " + item.Quantity());
             if (!item.IsStackable())
             {
                 Move(item);

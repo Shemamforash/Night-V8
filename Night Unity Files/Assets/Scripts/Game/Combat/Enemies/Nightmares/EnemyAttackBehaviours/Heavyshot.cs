@@ -11,7 +11,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         public override void Awake()
         {
             base.Awake();
-            if (_particlesPrefab == null) _particlesPrefab = Resources.Load<GameObject>("Prefabs/Combat/Shot Charge Particles");
+            if (_particlesPrefab == null) _particlesPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Shot Charge Particles");
             GameObject shotParticles = Instantiate(_particlesPrefab);
             shotParticles.transform.SetParent(transform);
             shotParticles.transform.localPosition = Vector3.zero;

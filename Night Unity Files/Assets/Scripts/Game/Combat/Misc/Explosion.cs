@@ -64,7 +64,7 @@ namespace Game.Combat.Misc
         {
             if (_explosionPool.Count == 0)
             {
-                if (_explosionPrefab == null) _explosionPrefab = Resources.Load<GameObject>("Prefabs/Combat/Explosion");
+                if (_explosionPrefab == null) _explosionPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Explosion");
                 GameObject explosionObject = Instantiate(_explosionPrefab);
                 explosionObject.transform.localScale = Vector3.one;
                 return explosionObject.GetComponent<Explosion>();

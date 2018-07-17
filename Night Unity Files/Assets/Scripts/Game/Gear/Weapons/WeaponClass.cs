@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
 using SamsHelper.Libraries;
 
 namespace Game.Gear.Weapons
@@ -14,17 +15,17 @@ namespace Game.Gear.Weapons
         private static readonly List<WeaponClassType> _weaponClassTypes = new List<WeaponClassType>();
         private static readonly List<WeaponClass> _weaponClasses = new List<WeaponClass>();
 
-        public WeaponClass(WeaponType type, string name, bool automatic, int damage, float fireRate, float reloadSpeed, int accuracy, int handling, int capacity)
+        public WeaponClass(XmlNode subtypeNode, WeaponType type)
         {
             Type = type;
-            Automatic = automatic;
-            Name = NameToClassType(name);
-            Damage = damage;
-            FireRate = fireRate;
-            ReloadSpeed = reloadSpeed;
-            Accuracy = accuracy;
-            Handling = handling;
-            Capacity = capacity;
+            Automatic = subtypeNode.Attributes["automatic"].Value == "True";
+            Name = NameToClassType(subtypeNode.Attributes["name"].Value);
+            Damage = int.Parse(subtypeNode.SelectSingleNode("Damage").InnerText);
+            FireRate = float.Parse(subtypeNode.SelectSingleNode("FireRate").InnerText);
+            ReloadSpeed = float.Parse(subtypeNode.SelectSingleNode("ReloadSpeed").InnerText);
+            Accuracy = int.Parse(subtypeNode.SelectSingleNode("Accuracy").InnerText);
+            Handling = int.Parse(subtypeNode.SelectSingleNode("Handling").InnerText);
+            Capacity = int.Parse(subtypeNode.SelectSingleNode("Capacity").InnerText);
             Pellets = type == WeaponType.Shotgun ? 10 : 1;
             _weaponClasses.Add(this);
         }
@@ -35,6 +36,7 @@ namespace Game.Gear.Weapons
             {
                 foreach (WeaponClassType classType in Enum.GetValues(typeof(WeaponClassType))) _weaponClassTypes.Add(classType);
             }
+
             foreach (WeaponClassType classType in _weaponClassTypes)
             {
                 if (classType.ToString() == name)

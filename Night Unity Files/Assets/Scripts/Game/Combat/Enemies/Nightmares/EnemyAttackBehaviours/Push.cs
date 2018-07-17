@@ -13,7 +13,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         public void Start()
         {
             Initialise(2f);
-            if (_pushPrefab == null) _pushPrefab = Resources.Load<GameObject>("Prefabs/Combat/Push Burst");
+            if (_pushPrefab == null) _pushPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Push Burst");
             GameObject pushObject = Instantiate(_pushPrefab);
             pushObject.transform.SetParent(transform, false);
             _pushParticles = pushObject.GetComponent<ParticleSystem>();

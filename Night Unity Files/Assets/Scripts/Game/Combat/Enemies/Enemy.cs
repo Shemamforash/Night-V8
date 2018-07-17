@@ -20,7 +20,6 @@ namespace Game.Combat.Enemies
         public Enemy(EnemyType type) : base(type.ToString())
         {
             Template = EnemyTemplate.GetEnemyTemplate(type);
-            if (!Template.GearAllowed) return;
             GenerateArmour();
             if (Template.EnemyType != EnemyType.Brawler && Template.EnemyType != EnemyType.Martyr)
             {
@@ -35,6 +34,7 @@ namespace Game.Combat.Enemies
             Assert.IsTrue((int) targetQuality < 5);
             Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality);
 
+            Debug.Log(weapon + " " + Name);
             EquipWeapon(weapon);
 
             bool hasInscription = Random.Range(0, 4) == 0;

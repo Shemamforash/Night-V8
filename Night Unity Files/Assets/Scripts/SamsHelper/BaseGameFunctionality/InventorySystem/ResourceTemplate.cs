@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
 using Game.Characters;
 using Game.Exploration.Environment;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -42,13 +43,14 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         }
 
         private static string _lastType = "";
-
-        public ResourceTemplate(string name, string type, float oasisDr, float steppeDr, float ruinsDr, float defilesDr, float wastelandDr)
+        
+        public ResourceTemplate(XmlNode resourceNode)
         {
-            Name = name;
-            ResourceType = type;
+            Name = resourceNode.SelectSingleNode("Name").InnerText;
             Consumable = true;
-            switch (type)
+            ResourceType = resourceNode.SelectSingleNode("Type").InnerText;
+            AllResources.Add(this);
+            switch (ResourceType)
             {
                 case "Water":
                     Water.Add(this);
@@ -65,9 +67,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                     break;
             }
 
-            AllResources.Add(this);
-
-            if (_lastType != type)
+            if (_lastType != ResourceType)
             {
                 OasisDRCur = 0f;
                 SteppeDRCur = 0f;
@@ -76,12 +76,19 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 WastelandDRCur = 0f;
             }
 
-            _lastType = type;
+            _lastType = ResourceType;
+
+            float oasisDr = float.Parse(resourceNode.SelectSingleNode("OasisDropRate").InnerText);
+            float steppeDr = float.Parse(resourceNode.SelectSingleNode("SteppeDropRate").InnerText);
+            float ruinsDr = float.Parse(resourceNode.SelectSingleNode("RuinsDropRate").InnerText);
+            float defilesDr = float.Parse(resourceNode.SelectSingleNode("DefilesDropRate").InnerText);
+            float wastelandDr = float.Parse(resourceNode.SelectSingleNode("WastelandDropRate").InnerText);
             _dropRates.Add(EnvironmentType.Oasis, new DropRate(ref OasisDRCur, oasisDr));
             _dropRates.Add(EnvironmentType.Steppe, new DropRate(ref SteppeDRCur, steppeDr));
             _dropRates.Add(EnvironmentType.Ruins, new DropRate(ref RuinsDRCur, ruinsDr));
             _dropRates.Add(EnvironmentType.Defiles, new DropRate(ref DefilesDRCur, defilesDr));
             _dropRates.Add(EnvironmentType.Wasteland, new DropRate(ref WastelandDRCur, wastelandDr));
+            SetEffect(resourceNode);
         }
 
         public static ResourceTemplate GetMeat()
@@ -143,13 +150,21 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return item;
         }
 
-        public void SetEffect(AttributeType attribute, float modifierVal, bool additive, int duration)
+        private void SetEffect(XmlNode resourceNode)
         {
-            AttributeType = attribute;
-            ModifierVal = modifierVal;
-            _additive = additive;
-            Duration = duration;
-            _hasEffect = true;
+            XmlNode attributeNode = resourceNode.SelectSingleNode("Attribute");
+            if (attributeNode == null) return;
+            string attributeString = attributeNode.InnerText;
+            if (attributeString == "") return;
+            AttributeType = Inventory.StringToAttributeType(attributeString);
+            ModifierVal = float.Parse(resourceNode.SelectSingleNode("Modifier").InnerText);
+            _additive = resourceNode.SelectSingleNode("Bonus").InnerText == "+";
+            string durationString = resourceNode.SelectSingleNode("Duration").InnerText;
+            Duration = 0;
+            if (durationString != "")
+            {
+                Duration = int.Parse(durationString);
+            }
         }
 
         public AttributeModifier CreateModifier()

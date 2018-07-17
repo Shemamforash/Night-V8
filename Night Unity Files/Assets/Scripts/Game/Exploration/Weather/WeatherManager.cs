@@ -9,7 +9,7 @@ namespace Game.Exploration.Weather
 {
     public static class WeatherManager
     {
-        private static ProbabalisticStateMachine _weatherStates = new ProbabalisticStateMachine();
+        private static readonly ProbabalisticStateMachine _weatherStates = new ProbabalisticStateMachine();
         private static bool _loaded;
 
         public static void Start()
@@ -23,7 +23,6 @@ namespace Game.Exploration.Weather
         public static void GoToWeather()
         {
             _weatherStates.GetState(_weatherStates.CalculateNextState()).Enter();
-            WorldEventManager.GenerateEvent(new WorldEvent("It's " + _weatherStates.GetCurrentState().Name));
         }
 
         public static Weather CurrentWeather()
@@ -36,25 +35,7 @@ namespace Game.Exploration.Weather
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Weather", "WeatherTypes");
             foreach (XmlNode weatherNode in root.SelectNodes("Weather"))
-            {
-                string name = weatherNode.SelectSingleNode("Name").InnerText;
-                string type = weatherNode.SelectSingleNode("Type").InnerText;
-                int temperature = int.Parse(weatherNode.SelectSingleNode("Temperature").InnerText);
-                float visibility = float.Parse(weatherNode.SelectSingleNode("Visibility").InnerText);
-                float water = float.Parse(weatherNode.SelectSingleNode("Water").InnerText);
-                float food = float.Parse(weatherNode.SelectSingleNode("Food").InnerText);
-                int duration = int.Parse(weatherNode.SelectSingleNode("Duration").InnerText);
-                XmlNode particleNode = weatherNode.SelectSingleNode("Particles");
-                float rain = float.Parse(particleNode.SelectSingleNode("Rain").InnerText);
-                float fog = float.Parse(particleNode.SelectSingleNode("Fog").InnerText);
-                float dust = float.Parse(particleNode.SelectSingleNode("Dust").InnerText);
-                float hail = float.Parse(particleNode.SelectSingleNode("Hail").InnerText);
-                float sun = float.Parse(particleNode.SelectSingleNode("Sun").InnerText);
-                Weather weather = new Weather(_weatherStates, name, temperature, visibility, water, food, duration);
-                if (type == "Phenomena") _weatherStates.AddState(weather);
-                weather.Attributes = new WeatherAttributes(rain, fog, dust, hail, sun);
-            }
-
+                new Weather(_weatherStates, weatherNode);
             _loaded = true;
         }
 

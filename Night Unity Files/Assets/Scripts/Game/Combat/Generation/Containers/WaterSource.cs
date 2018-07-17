@@ -15,6 +15,7 @@ namespace Game.Combat.Generation
             _inventory.Name = _waterType;
             _inventory.IncrementResource(_waterType, 1);
             PrefabLocation = "Puddle";
+            ImageLocation = "Water";
         }
 
         public void Change(int polarity)

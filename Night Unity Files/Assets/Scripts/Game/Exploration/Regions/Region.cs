@@ -159,32 +159,13 @@ namespace Game.Exploration.Regions
             return newEnemy;
         }
 
+
         private void GenerateHumanEncounter()
         {
             int daysSpent = WorldState.GetDaysSpentHere();
             int size = Random.Range(1 + daysSpent, 5 + daysSpent);
             int difficulty = WorldState.Difficulty();
-            List<EnemyType> allowedTypes = new List<EnemyType>();
-            allowedTypes.Add(EnemyType.Sentinel);
-            allowedTypes.Add(EnemyType.Brawler);
-
-            if (difficulty >= 5)
-            {
-                allowedTypes.Add(EnemyType.Sniper);
-                allowedTypes.Add(EnemyType.Martyr);
-            }
-
-            if (difficulty >= 10)
-            {
-                allowedTypes.Add(EnemyType.Witch);
-                allowedTypes.Add(EnemyType.Medic);
-            }
-
-            if (difficulty >= 15)
-            {
-                allowedTypes.Add(EnemyType.Warlord);
-                allowedTypes.Add(EnemyType.Mountain);
-            }
+            List<EnemyType> allowedTypes = WorldState.GetAllowedHumanEnemyTypes();
 
             if (difficulty >= 20)
             {

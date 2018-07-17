@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using Game.Combat.Enemies.Humans;
+﻿using Game.Combat.Enemies.Humans;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Game.Combat.Enemies
 {

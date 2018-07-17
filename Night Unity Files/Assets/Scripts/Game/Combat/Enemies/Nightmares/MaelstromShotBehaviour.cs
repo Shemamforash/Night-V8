@@ -9,7 +9,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
     
     public static void Create(Vector3 direction, Vector3 position)
     {
-        GameObject shot = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Maelstrom Shot"));
+        GameObject shot = Instantiate(Resources.Load<GameObject>("Prefabs/Combat/Visuals/Maelstrom Shot"));
         shot.transform.position = position + direction * 0.2f;
         shot.GetComponent<MaelstromShotBehaviour>()._direction = direction;
     }

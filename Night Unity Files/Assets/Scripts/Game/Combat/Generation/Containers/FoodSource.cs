@@ -7,11 +7,12 @@ namespace Game.Combat.Generation
     {
         private readonly string _foodType;
         
-        public FoodSource(Vector2 position) : base(position, "")
+        public FoodSource(Vector2 position) : base(position, "Plant")
         {
             _foodType = ResourceTemplate.GetPlant().Name;
             _inventory.Name = _foodType;
             _inventory.IncrementResource(_foodType, 1);
+            ImageLocation = "Plants/" + _foodType;
         }
 
         public void Change(int polarity)

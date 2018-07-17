@@ -10,7 +10,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         public override void Awake()
         {
             base.Awake();
-            if (_shieldPrefab == null) _shieldPrefab = Resources.Load<GameObject>("Prefabs/Combat/Shield");
+            if (_shieldPrefab == null) _shieldPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Shield");
             _shieldObject = Instantiate(_shieldPrefab);
             _shieldObject.transform.SetParent(transform, false);
             _shieldObject.transform.localScale = Vector3.one;

@@ -22,7 +22,7 @@ namespace Game.Combat.Generation
         public void Initialise(Region region)
         {
             _region = region;
-            Random.InitState((int) (region.RegionID + WorldState.Seed));
+            Random.InitState(region.RegionID + WorldState.Seed);
 
             PathingGrid.InitialiseGrid();
             if (!_region.Visited())
@@ -77,23 +77,20 @@ namespace Game.Combat.Generation
             {
                 RiteShrineBehaviour.Generate(_region.ShrinePosition);
             }
+
+            if (_region.GetRegionType() == RegionType.Fountain)
+            {
+                FountainBehaviour.Generate(_region.ShrinePosition);
+            }
         }
 
         private void PlaceShrine()
         {
             if (_region.GetRegionType() != RegionType.Shrine) return;
-            for (int i = 0; i < _availablePositions.Count; ++i)
-            {
-                float shrineRadius = RiteShrineBehaviour.Width / 2f;
-                Vector2 topLeft = new Vector2(_availablePositions[i].x - shrineRadius, _availablePositions[i].y - shrineRadius);
-                Vector2 bottomRight = new Vector2(_availablePositions[i].x + shrineRadius, _availablePositions[i].y + shrineRadius);
-                if (_availablePositions[i].magnitude > 20) continue;
-                if (PathingGrid.WorldToCellPosition(_availablePositions[i]) == null) continue;
-                if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
-                _region.ShrinePosition = _availablePositions[i];
-                _availablePositions.RemoveAt(i);
-                return;
-            }
+            float shrineRadius = RiteShrineBehaviour.Width / 2f;
+            Vector2? position = FindAndRemoveValidPosition(shrineRadius);
+            Assert.IsNotNull(position);
+            _region.ShrinePosition = position.Value;
         }
 
         private void GenerateGenericRock(float radius, float radiusVariation, float smoothness, Vector2? position = null)
@@ -125,32 +122,31 @@ namespace Game.Combat.Generation
 
         protected void PlaceFire()
         {
-            for (int i = 0; i < _availablePositions.Count; ++i)
-            {
-                Vector2 topLeft = new Vector2(_availablePositions[i].x - 0.5f, _availablePositions[i].y - 0.5f);
-                Vector2 bottomRight = new Vector2(_availablePositions[i].x + 0.5f, _availablePositions[i].y + 0.5f);
-                if (_availablePositions[i].magnitude > 10) continue;
-                if (PathingGrid.WorldToCellPosition(_availablePositions[i]) == null) continue;
-                if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
-                _region.Fires.Add(GenerateFire(_availablePositions[i]));
-                _availablePositions.RemoveAt(i);
-                return;
-            }
+            Vector2? position = FindAndRemoveValidPosition(0.5f);
+            Assert.IsNotNull(position);
+            _region.Fires.Add(GenerateFire(position.Value));
 
-            int randomIndex = Random.Range(0, barriers.Count);
-            Barrier b = barriers[randomIndex];
-            barriers.RemoveAt(randomIndex);
-            _region.Fires.Add(GenerateFire(b.Position));
+//            int randomIndex = Random.Range(0, barriers.Count);
+//            Barrier b = barriers[randomIndex];
+//            barriers.RemoveAt(randomIndex);
+//            _region.Fires.Add(GenerateFire(b.Position));
         }
 
-        protected Vector2? FindAndRemoveValidPosition()
+        protected Vector2? FindAndRemoveValidPosition(float radius = 0)
         {
             for (int i = _availablePositions.Count - 1; i >= 0; --i)
             {
-                if (_availablePositions[i].magnitude > PathingGrid.CombatAreaWidth) continue;
+                if (_availablePositions[i].magnitude > PathingGrid.CombatAreaWidth / 2f - radius) continue;
                 Cell c = PathingGrid.WorldToCellPosition(_availablePositions[i], false);
                 if (c == null) continue;
                 if (!c.Reachable) continue;
+                if (radius != 0)
+                {
+                    Vector2 topLeft = new Vector2(_availablePositions[i].x - radius, _availablePositions[i].y - radius);
+                    Vector2 bottomRight = new Vector2(_availablePositions[i].x + radius, _availablePositions[i].y + radius);
+                    if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
+                }
+
                 _availablePositions.RemoveAt(i);
                 return c.Position;
             }

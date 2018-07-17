@@ -1,4 +1,6 @@
-﻿namespace Game.Exploration.Weather
+﻿using System.Xml;
+
+namespace Game.Exploration.Weather
 {
     public class WeatherAttributes
     {
@@ -11,6 +13,16 @@
             DustAmount = dust;
             HailAmount = hail;
             SunAmount = sun;
+        }
+
+        public WeatherAttributes(XmlNode weatherNode)
+        {
+            XmlNode particleNode = weatherNode.SelectSingleNode("Particles");
+            RainAmount = float.Parse(particleNode.SelectSingleNode("Rain").InnerText);
+            FogAmount = float.Parse(particleNode.SelectSingleNode("Fog").InnerText);
+            DustAmount = float.Parse(particleNode.SelectSingleNode("Dust").InnerText);
+            HailAmount = float.Parse(particleNode.SelectSingleNode("Hail").InnerText);
+            SunAmount = float.Parse(particleNode.SelectSingleNode("Sun").InnerText);
         }
     }
 }

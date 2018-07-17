@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿﻿using System.Collections;
 using DG.Tweening;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Combat.Generation
 {
@@ -15,22 +16,21 @@ namespace Game.Combat.Generation
         public ContainerController ContainerController;
         private bool _revealed;
         private const float MaxRevealTime = 1f;
-        private SpriteRenderer _glowSprite, _iconColour, _ringColour;
+        private SpriteRenderer _glowSprite, _iconSprite;
 
         public void Awake()
         {
             _glowSprite = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Glow");
             _glowSprite.color = UiAppearanceController.InvisibleColour;
-            _iconColour = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Icon");
-            _iconColour.color = UiAppearanceController.InvisibleColour;
-            _ringColour = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring");
-            _ringColour.color = UiAppearanceController.InvisibleColour;
+            _iconSprite = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Icon");
+            _iconSprite.color = UiAppearanceController.InvisibleColour;
         }
 
         public void SetContainerController(ContainerController containerController)
         {
             ContainerController.Containers.Add(this);
             ContainerController = containerController;
+            _iconSprite.sprite = Resources.Load<Sprite>("Images/Container Symbols/" + containerController.GetImageLocation());
         }
 
         public void Pulse()
@@ -49,8 +49,8 @@ namespace Game.Combat.Generation
             _fading = true;
             PlayerUi.FadeTextOut();
             _glowSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
-            _ringColour.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
-            Tween t = _iconColour.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
+            _iconSprite.DOColor(UiAppearanceController.FadedColour, MaxRevealTime);
+            Tween t = _iconSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
             yield return t.WaitForCompletion();
             Destroy(this);
         }
@@ -60,8 +60,7 @@ namespace Game.Combat.Generation
             if (_revealed) return;
             CombatManager.IncreaseItemsFound();
             _revealed = true;
-            _iconColour.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
-            _ringColour.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
+            _iconSprite.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
         }
 
         private float _lastDistance = -1;

@@ -15,7 +15,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             base.Awake();
             _collider = GetComponent<Collider2D>();
-            if (_sliceTrailPrefab == null) _sliceTrailPrefab = Resources.Load<GameObject>("Prefabs/Combat/Slice Trail");
+            if (_sliceTrailPrefab == null) _sliceTrailPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Slice Trail");
             GameObject sliceTrail = Instantiate(_sliceTrailPrefab);
             sliceTrail.transform.SetParent(transform, false);
             _sliceParticles = sliceTrail.GetComponent<ParticleSystem>();

@@ -169,17 +169,7 @@ namespace Game.Characters
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Classes");
             foreach (XmlNode classNode in root.SelectNodes("Class"))
-            {
-                string name = classNode.SelectSingleNode("Name").InnerText;
-                int endurance = int.Parse(classNode.SelectSingleNode("Endurance").InnerText);
-                int willpower = int.Parse(classNode.SelectSingleNode("Willpower").InnerText);
-                int strength = int.Parse(classNode.SelectSingleNode("Strength").InnerText);
-                int perception = int.Parse(classNode.SelectSingleNode("Perception").InnerText);
-                List<string> storyLines = new List<string>(classNode.SelectSingleNode("Story").InnerText.Split('.'));
-                CharacterTemplate newTemplate = new CharacterTemplate(storyLines, name, strength, endurance, willpower, perception);
-                Templates.Add(newTemplate);
-            }
-
+                new CharacterTemplate(classNode, Templates);
             _loaded = true;
         }
 

@@ -5,23 +5,25 @@ using Game.Exploration.Environment;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
-public abstract class ContainerController //: DesolationInventory 
+public abstract class ContainerController
 {
     public static readonly List<ContainerBehaviour> Containers = new List<ContainerBehaviour>();
     private readonly Vector2 _position;
     protected readonly Inventory _inventory;
     protected string PrefabLocation = "Container";
     private ContainerBehaviour _containerBehaviour;
+    protected string ImageLocation;
 
     protected ContainerController(Vector2 position, string name)
     {
         _position = position;
         _inventory = new Inventory(name);
+        ImageLocation = "Loot";
     }
 
     public void CreateObject(bool autoReveal = false)
     {
-        GameObject prefab = Resources.Load<GameObject>("Prefabs/Combat/" + PrefabLocation);
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/Combat/Containers/" + PrefabLocation);
         GameObject container = GameObject.Instantiate(prefab);
         container.transform.position = _position;
         container.transform.localScale = Vector3.one;
@@ -51,5 +53,10 @@ public abstract class ContainerController //: DesolationInventory
     {
         Debug.Log(Inventory().Name + "  " + Inventory().Contents().Count);
         return _inventory.Contents()[0].Name;
+    }
+
+    public string GetImageLocation()
+    {
+        return ImageLocation;
     }
 }

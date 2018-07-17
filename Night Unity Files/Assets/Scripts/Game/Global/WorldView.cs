@@ -38,7 +38,7 @@ namespace Game.Global
 
         private static void UpdateDescription()
         {
-            _environmentText.text = _timeString + ". It is " + _temperatureString + " and there is " + _weatherString + " in the " + _environmentString + ".";
+            _environmentText.text = _timeString + ". It is " + _temperatureString + " and " + _weatherString + " in the " + _environmentString + ".";
         }
 
         private static readonly string[] resources = {"Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
@@ -47,7 +47,7 @@ namespace Game.Global
         {
             base.Awake();
             PauseOnOpen = false;
-            _environmentText = Helper.FindChildWithName< TextMeshProUGUI > (gameObject, "Environment");
+            _environmentText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Environment");
 
             GameObject resourcesObject = GameObject.Find("Resources");
             foreach (string resourceType in resources)

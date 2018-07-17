@@ -59,14 +59,22 @@ namespace Game.Combat.Ui
             FadeTextIn();
         }
 
+        public static void SetEventText(string text, float duration)
+        {
+            SetEventText(text);
+            FadeTextOut(1, 1);
+        }
+
         public static void FadeTextIn()
         {
             _eventText.DOColor(UiAppearanceController.FadedColour, 1f);
         }
         
-        public static void FadeTextOut()
+        public static void FadeTextOut(float duration = 1f, float pause = 0f)
         {
-            _eventText.DOColor(UiAppearanceController.InvisibleColour, 1f);   
+            Sequence s = DOTween.Sequence();
+            s.AppendInterval(pause);
+            s.Append(_eventText.DOColor(UiAppearanceController.InvisibleColour, duration));   
         }
     }
 }

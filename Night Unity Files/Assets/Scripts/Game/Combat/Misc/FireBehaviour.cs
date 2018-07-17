@@ -12,7 +12,7 @@ namespace Game.Combat.Misc
         private const int MaxEmissionRate = 400;
         private const float LightMaxRadius = 5f;
         private const float LifeTime = 4f;
-        private static readonly ObjectPool<FireBehaviour> _firePool = new ObjectPool<FireBehaviour>("Prefabs/Combat/Fire Area");
+        private static readonly ObjectPool<FireBehaviour> _firePool = new ObjectPool<FireBehaviour>("Prefabs/Combat/Effects/Fire Area");
         private float _age;
         private FastLight _light;
         private ParticleSystem _particles;

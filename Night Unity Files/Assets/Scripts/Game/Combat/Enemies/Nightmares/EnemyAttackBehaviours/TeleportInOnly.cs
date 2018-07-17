@@ -10,7 +10,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         public void Awake()
         {
-            if (_teleportInPrefab == null) _teleportInPrefab = Resources.Load<GameObject>("Prefabs/Combat/Teleport In");
+            if (_teleportInPrefab == null) _teleportInPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Teleport In");
 
             GameObject teleportIn = Instantiate(_teleportInPrefab);
             teleportIn.transform.SetParent(transform, false);

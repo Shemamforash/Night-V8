@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
 using SamsHelper;
 
 namespace Game.Characters
@@ -11,14 +12,15 @@ namespace Game.Characters
         public readonly int Strength, Endurance, Willpower, Perception;
         private static readonly List<CharacterClass> _characterClasses = new List<CharacterClass>();
 
-        public CharacterTemplate(List<string> storyLines, string name, int strength, int endurance, int willpower, int perception)
+        public CharacterTemplate(XmlNode classNode, List<CharacterTemplate> templates)
         {
-            StoryLines = storyLines;
-            CharacterClass = StringToClass(name);
-            Strength = strength;
-            Endurance = endurance;
-            Willpower = willpower;
-            Perception = perception;
+            CharacterClass = StringToClass(classNode.SelectSingleNode("Name").InnerText);
+            Endurance = int.Parse(classNode.SelectSingleNode("Endurance").InnerText);
+            Willpower = int.Parse(classNode.SelectSingleNode("Willpower").InnerText);
+            Strength = int.Parse(classNode.SelectSingleNode("Strength").InnerText);
+            Perception = int.Parse(classNode.SelectSingleNode("Perception").InnerText);
+            StoryLines = new List<string>(classNode.SelectSingleNode("Story").InnerText.Split('.'));
+            templates.Add(this);
         }
 
         private static CharacterClass StringToClass(string className)
