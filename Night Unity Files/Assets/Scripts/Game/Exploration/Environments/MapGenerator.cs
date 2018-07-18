@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using Game.Characters;
 using Game.Exploration.Regions;
-using Game.Global;
 using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -12,16 +12,15 @@ namespace Game.Exploration.Environment
 {
     public class MapGenerator : MonoBehaviour
     {
-        public const int MapWidth = 120;
-        public const int MinRadius = 6, MaxRadius = 9;
+        private const int MapWidth = 120;
+        private const int MinRadius = 6, MaxRadius = 9;
         private static readonly List<Region> storedNodes = new List<Region>();
         private static Region initialNode;
         private static List<Region> route;
         public static Transform MapTransform;
-        public static bool DontShowHiddenNodes = true;
         private float nextRouteTime = 0.3f;
         private static readonly List<GameObject> _routeTrails = new List<GameObject>();
-        private List<Tuple<Region, Region>> _allRoutes = new List<Tuple<Region, Region>>();
+        private readonly List<Tuple<Region, Region>> _allRoutes = new List<Tuple<Region, Region>>();
         private readonly Queue<Tuple<Region, Region>> _undrawnRoutes = new Queue<Tuple<Region, Region>>();
         private float currentTime;
 
@@ -112,12 +111,6 @@ namespace Game.Exploration.Environment
             return initialNode;
         }
 
-        public static int NodeDistanceToTime(float distance)
-        {
-            //minradius = 30 minutes = 6 ticks
-            return Mathf.CeilToInt(distance / 6f * (WorldState.MinutesPerHour / 2f));
-        }
-
         public static void Generate()
         {
             List<Region> regions = RegionManager.GenerateRegions();
@@ -133,8 +126,8 @@ namespace Game.Exploration.Environment
 
             ConnectNodes();
 
-            RegionManager.GetRegionType(initialNode);
             initialNode.Discover();
+            regions.ForEach(r => r.Discover());
         }
 
         private static void CreateMinimumSpanningTree()
@@ -175,7 +168,7 @@ namespace Game.Exploration.Environment
             });
         }
 
-        public static void SetRoute(Region from, Region to)
+        public static void SetRoute(Region to)
         {
             _routeTrails.ForEach(g =>
             {
@@ -184,8 +177,8 @@ namespace Game.Exploration.Environment
                 fad.StartFade(1);
             });
             _routeTrails.Clear();
-            route = RoutePlotter.RouteBetween(from, to);
-            Camera.main.GetComponent<FitScreenToRoute>().FitRoute(route);
+            route = RoutePlotter.RouteBetween(CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode(), to);
+//            Camera.main.GetComponent<FitScreenToRoute>().FitRoute(route);
         }
 
         private void DrawTargetRoute()
@@ -223,15 +216,6 @@ namespace Game.Exploration.Environment
             DrawBasicRoutes();
             if (route == null || route.Count == 1) return;
             DrawTargetRoute();
-        }
-
-        public static List<Region> GetVisibleNodes(Region origin)
-        {
-            return storedNodes.FindAll(n =>
-            {
-                if (n.Discovered()) return false;
-                return Vector2.Distance(n.Position, origin.Position) <= MaxRadius;
-            });
         }
 
         public static List<Region> DiscoveredNodes()

@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4624502307938532}
   - component: {fileID: 331332453836343392}
+  - component: {fileID: 58199738266889374}
   m_Layer: 0
   m_Name: Save Stone
   m_TagString: Untagged
@@ -271,7 +272,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1009510706405720}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.366357, y: -0.08253974, z: 0}
+  m_LocalPosition: {x: 23.785542, y: 0.20430112, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4423504035183862}
@@ -325,6 +326,21 @@ Transform:
   m_Father: {fileID: 4624502307938532}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!58 &58199738266889374
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1009510706405720}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.6
 --- !u!60 &60104230262790334
 PolygonCollider2D:
   m_ObjectHideFlags: 1

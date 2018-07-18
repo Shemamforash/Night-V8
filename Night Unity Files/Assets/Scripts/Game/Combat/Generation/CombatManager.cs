@@ -103,7 +103,11 @@ namespace Game.Combat.Generation
                 switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
                 {
                     case EnvironmentType.Oasis:
-                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
+//                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
+//                        worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
+//                        worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
+//                        worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
+                        worldObject.AddComponent<Canyon>().Initialise(_currentRegion);
                         break;
                     case EnvironmentType.Steppe:
                         worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
@@ -217,6 +221,7 @@ namespace Game.Combat.Generation
             brandManager.IncreaseSkillsUsed(Instance()._skillsUsed);
             brandManager.IncreaseHumansKilled(Instance()._humansKilled);
 
+            Shot.EmptyPool();
             Instance()._inCombat = false;
                 SceneChanger.ChangeScene("Map", false);
             PlayerCombat.Instance.ExitCombat();

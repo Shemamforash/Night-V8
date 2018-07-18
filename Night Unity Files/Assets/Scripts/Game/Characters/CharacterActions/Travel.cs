@@ -80,7 +80,7 @@ namespace Game.Characters.CharacterActions
             else
             {
                 CurrentNode.Discover();
-                CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Enter();
+                SceneChanger.ChangeScene("Combat");
             }
         }
 
@@ -141,7 +141,7 @@ namespace Game.Characters.CharacterActions
             _inTransit = true;
             _target = target;
             _enduranceCost = enduranceCost;
-            Duration = enduranceCost * WorldState.MinutesPerHour;
+            Duration = enduranceCost * WorldState.MinutesPerHour / 2;
         }
 
         public void SetCurrentNode(Region node)

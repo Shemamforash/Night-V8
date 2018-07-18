@@ -45,6 +45,12 @@ namespace Game.Combat.Misc
             if (_shotPool.Empty()) _shotParent = null;
         }
 
+        public static void EmptyPool()
+        {
+            _shotPool.Clear();
+            _shotParent = null;
+        }
+
         private void ResetValues()
         {
             _finalDamageModifier = 1f;

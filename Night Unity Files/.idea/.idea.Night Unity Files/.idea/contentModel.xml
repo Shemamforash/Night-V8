@@ -215,6 +215,7 @@
           </e>
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
+        <e p="MapMovementController.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
             <e p="Classes.xml" t="Include" />
@@ -413,6 +414,7 @@
                   <e p="HealShrineBehaviour.cs" t="Include" />
                   <e p="RiteColliderBehaviour.cs" t="Include" />
                   <e p="RiteShrineBehaviour.cs" t="Include" />
+                  <e p="SaveStoneBehaviour.cs" t="Include" />
                   <e p="ShrineBehaviour.cs" t="Include" />
                   <e p="ShrineEdgeFollowBehaviour.cs" t="Include" />
                   <e p="ShrinePickup.cs" t="Include" />
@@ -457,7 +459,6 @@
                 <e p="Environment.cs" t="Include" />
                 <e p="EnvironmentManager.cs" t="Include" />
                 <e p="EnvironmentType.cs" t="Include" />
-                <e p="FitScreenToRoute.cs" t="Include" />
                 <e p="MapGenerator.cs" t="Include" />
                 <e p="RoutePlotter.cs" t="Include" />
               </e>
@@ -468,7 +469,6 @@
               </e>
               <e p="UI" t="Include">
                 <e p="MapNodeController.cs" t="Include" />
-                <e p="UiQuickTravelController.cs" t="Include" />
               </e>
               <e p="Weather" t="Include">
                 <e p="TemperatureCategory.cs" t="Include" />

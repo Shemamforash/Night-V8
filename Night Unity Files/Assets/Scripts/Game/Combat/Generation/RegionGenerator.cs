@@ -2,6 +2,7 @@
 using Game.Characters;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
+using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
 using NUnit.Framework;
@@ -31,22 +32,15 @@ namespace Game.Combat.Generation
             _region.Visit();
             GenerateShrine();
             GenerateEchoes();
+            if (_region.HealShrinePosition != null)
+            {
+                HealShrineBehaviour.CreateObject(_region.HealShrinePosition.Value);
+            }
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
+            
             PathingGrid.FinaliseGrid();
-        }
-
-        private void GenerateEchoes()
-        {
-            List<Characters.Player> characters = CharacterManager.Characters;
-            Helper.Shuffle(characters);
-            foreach (Characters.Player c in characters)
-            {
-                if (!c.HasAvailableStoryLine()) continue;
-                EchoBehaviour.Create(Helper.RandomInList(_region.EchoPositions), c);
-                break;
-            }
         }
 
         private void GenerateFreshEnvironment()
@@ -71,6 +65,26 @@ namespace Game.Combat.Generation
             _region.Visit();
         }
 
+        private void GenerateEchoes()
+        {
+            List<Characters.Player> characters = CharacterManager.Characters;
+            Helper.Shuffle(characters);
+            foreach (Characters.Player c in characters)
+            {
+                if (!c.HasAvailableStoryLine()) continue;
+                Vector2 echoPosition = Helper.RandomInList(_region.EchoPositions);
+                EchoBehaviour.Create(echoPosition, c);
+                List<Vector2> verts = new List<Vector2>();
+                verts.Add(new Vector2(echoPosition.x - 0.5f, echoPosition.y - 0.5f));
+                verts.Add(new Vector2(echoPosition.x - 0.5f, echoPosition.y + 0.5f));
+                verts.Add(new Vector2(echoPosition.x + 0.5f, echoPosition.y + 0.5f));
+                verts.Add(new Vector2(echoPosition.x + 0.5f, echoPosition.y - 0.5f));
+                Polygon polygon = new Polygon(verts, echoPosition);
+                PathingGrid.AddBarrier(polygon);
+                break;
+            }
+        }
+
         private void GenerateShrine()
         {
             if (_region.GetRegionType() == RegionType.Shrine)
@@ -86,11 +100,22 @@ namespace Game.Combat.Generation
 
         private void PlaceShrine()
         {
-            if (_region.GetRegionType() != RegionType.Shrine) return;
-            float shrineRadius = RiteShrineBehaviour.Width / 2f;
-            Vector2? position = FindAndRemoveValidPosition(shrineRadius);
+            RegionType regionType = _region.GetRegionType();
+            bool valid = regionType == RegionType.Monument || regionType == RegionType.Fountain || regionType == RegionType.Shrine;
+            if (!valid) return;
+            Vector2? position = FindAndRemoveValidPosition(3f);
             Assert.IsNotNull(position);
             _region.ShrinePosition = position.Value;
+            List<Vector2> verts = new List<Vector2>();
+            for (int angle = 0; angle < 360; angle += 20)
+            {
+                Vector2 vert = AdvancedMaths.CalculatePointOnCircle(angle, 3.5f, position.Value);
+                verts.Add(vert);
+            }
+
+            Polygon polygon = new Polygon(verts, position.Value);
+
+            PathingGrid.AddBarrier(polygon);
         }
 
         private void GenerateGenericRock(float radius, float radiusVariation, float smoothness, Vector2? position = null)
@@ -132,11 +157,11 @@ namespace Game.Combat.Generation
 //            _region.Fires.Add(GenerateFire(b.Position));
         }
 
-        protected Vector2? FindAndRemoveValidPosition(float radius = 0)
+        protected Vector2? FindAndRemoveValidPosition(float radius = 0, bool ignoreBounds = false)
         {
             for (int i = _availablePositions.Count - 1; i >= 0; --i)
             {
-                if (_availablePositions[i].magnitude > PathingGrid.CombatAreaWidth / 2f - radius) continue;
+                if (!ignoreBounds && _availablePositions[i].magnitude > PathingGrid.CombatAreaWidth / 2f - radius) continue;
                 Cell c = PathingGrid.WorldToCellPosition(_availablePositions[i], false);
                 if (c == null) continue;
                 if (!c.Reachable) continue;
@@ -175,9 +200,9 @@ namespace Game.Combat.Generation
 
         protected void AssignRockPosition(List<Vector2> barrierVertices, Vector2? position)
         {
-            if (position == null) position = FindAndRemoveValidPosition();
+            if (position == null) position = FindAndRemoveValidPosition(0, true);
             if (position == null) return;
-            Barrier barrier = new Barrier(barrierVertices, "Barrier " + GetObjectNumber(), (Vector2) position, barriers);
+            new Barrier(barrierVertices, "Barrier " + GetObjectNumber(), (Vector2) position, barriers);
         }
 
         private void GenerateRocks(int number, float minPolyWidth, float maxPolyWidth, float radiusVariation, float smoothness)
@@ -211,8 +236,33 @@ namespace Game.Combat.Generation
             return num;
         }
 
+        private static int _healthShrineCounter;
+        private const int HealShrineTarget = 6;
+        private static int _essenceShrineCounter;
+        private const int EssenceShrineTarget = 30;
+
         protected virtual void PlaceItems()
         {
+            //todo tidy me
+            if (_healthShrineCounter > HealShrineTarget)
+            {
+                Vector2? position = FindAndRemoveValidPosition();
+                Assert.IsNotNull(position);
+                _region.HealShrinePosition = position.Value;
+                _healthShrineCounter = 0;
+            }
+
+            if (_essenceShrineCounter > EssenceShrineTarget / EnvironmentManager.CurrentEnvironment.LevelNo)
+            {
+                Vector2? position = FindAndRemoveValidPosition();
+                Assert.IsNotNull(position);
+                _region.EssenceShrinePosition = position.Value;
+                _essenceShrineCounter = 0;
+            }
+
+            _healthShrineCounter += Random.Range(1, 3);
+            _essenceShrineCounter += Random.Range(1, 3);
+
             Helper.Shuffle(_availablePositions);
             for (int i = 0; i < _region.WaterSourceCount; ++i)
             {

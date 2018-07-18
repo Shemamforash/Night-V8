@@ -147,10 +147,10 @@ MonoBehaviour:
     y: 0
     width: 100
     height: 100
-    xOffset: -50
-    yOffset: 50
+    xOffset: -15.2
+    yOffset: 83
     xAdvance: 100
-    scale: 2
+    scale: 1
     name: Endurance
     hashCode: -491197087
     unicode: 0

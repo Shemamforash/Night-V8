@@ -15,7 +15,12 @@ namespace SamsHelper.Libraries
     {
         public static bool IsObjectInCameraView(GameObject gameObject)
         {
-            Vector3 screenPosition = Camera.main.WorldToViewportPoint(gameObject.transform.position);
+            return IsPositionInCameraView(gameObject.transform.position);
+        }
+
+        public static bool IsPositionInCameraView(Vector3 position)
+        {
+            Vector3 screenPosition = Camera.main.WorldToViewportPoint(position);
             return screenPosition.z > 0 &&
                    screenPosition.x > 0 &&
                    screenPosition.y > 0 &&
@@ -44,6 +49,14 @@ namespace SamsHelper.Libraries
             vect.x = float.Parse(arr[0]);
             vect.y = float.Parse(arr[1]);
             return vect;
+        }
+
+        public static T RemoveRandomInList<T>(List<T> list)
+        {
+            int randomIndex = Random.Range(0, list.Count);
+            T element = list[randomIndex];
+            list.RemoveAt(randomIndex);
+            return element;
         }
 
         private class MinSearchList<T>

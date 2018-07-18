@@ -1,6 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
+using Game.Characters;
+using Game.Exploration.Environment;
+using Game.Exploration.Regions;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
 
@@ -14,16 +20,28 @@ namespace Game.Exploration.Ui
         private int _currentLetter;
         private float _currentTime;
         private bool _doneFading;
-        private TextMeshProUGUI _fadeText;
+        private TextMeshProUGUI _fadeText, _costText;
 
-        private SpriteRenderer _ring1, _ring2, _ring3, _icon;
+        private SpriteRenderer _ring1, _ring2, _ring3, _icon, _shadow;
+        private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite;
+        private int _enduranceCost;
+        private Region _region;
 
-        public void SetName(string nodeName)
+        private readonly Color _ring1Colour = new Color(1, 1, 1, 0.1f);
+        private readonly Color _ring2Colour = new Color(1, 1, 1, 0.1f);
+        private readonly Color _ring3Colour = new Color(1, 1, 1, 0.25f);
+        private readonly Color _iconColor = new Color(1, 1, 1, 0.8f);
+
+        public void SetRegion(Region region)
         {
+            _region = region;
+            _enduranceCost = RoutePlotter.RouteBetween(region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode()).Count - 1;
+            if (region.GetRegionType() == RegionType.Gate) _enduranceCost = 0;
             _fadeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Fade");
-            for (int i = 0; i < nodeName.Length; ++i)
+            _costText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Cost");
+            for (int i = 0; i < region.Name.Length; ++i)
             {
-                _letters.Add(new Letter(nodeName[i].ToString()));
+                _letters.Add(new Letter(region.Name[i].ToString()));
                 if (i > 0) _letters[i - 1].SetNextLetter(_letters[i]);
             }
 
@@ -31,9 +49,55 @@ namespace Game.Exploration.Ui
             _ring2 = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring 2");
             _ring3 = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring 3");
             _icon = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Icon");
+            _shadow = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Shadow");
+            LoseFocus(0f);
 
             _letters[0]?.StartFade();
             if (gameObject.activeInHierarchy) StartCoroutine(FadeInLetters());
+            AssignSprite(region.GetRegionType());
+        }
+
+        private void AssignSprite(RegionType regionType)
+        {
+            if (_animalSprite == null) _animalSprite = Resources.Load<Sprite>("Images/Regions/Animal");
+            if (_dangerSprite == null) _dangerSprite = Resources.Load<Sprite>("Images/Regions/Danger");
+            if (_gateSprite == null) _gateSprite = Resources.Load<Sprite>("Images/Regions/Gate");
+            if (_fountainSprite == null) _fountainSprite = Resources.Load<Sprite>("Images/Regions/Fountain");
+            if (_monumentSprite == null) _monumentSprite = Resources.Load<Sprite>("Images/Regions/Monument");
+            if (_shelterSprite == null) _shelterSprite = Resources.Load<Sprite>("Images/Regions/Shelter");
+            if (_shrineSprite == null) _shrineSprite = Resources.Load<Sprite>("Images/Regions/Shrine");
+            if (_templeSprite == null) _templeSprite = Resources.Load<Sprite>("Images/Regions/Temple");
+            switch (regionType)
+            {
+                case RegionType.Shelter:
+                    _icon.sprite = _shelterSprite;
+                    break;
+                case RegionType.Gate:
+                    _icon.sprite = _gateSprite;
+                    break;
+                case RegionType.Temple:
+                    _icon.sprite = _templeSprite;
+                    break;
+                case RegionType.Animal:
+                    _icon.sprite = _animalSprite;
+                    break;
+                case RegionType.Danger:
+                    _icon.sprite = _dangerSprite;
+                    break;
+                case RegionType.Nightmare:
+                    break;
+                case RegionType.Fountain:
+                    _icon.sprite = _fountainSprite;
+                    break;
+                case RegionType.Monument:
+                    _icon.sprite = _monumentSprite;
+                    break;
+                case RegionType.Shrine:
+                    _icon.sprite = _shrineSprite;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void Update()
@@ -41,12 +105,13 @@ namespace Game.Exploration.Ui
             _ring1.transform.Rotate(new Vector3(0, 0, 1), 5 * Time.deltaTime);
             _ring2.transform.Rotate(new Vector3(0, 0, 1), 3 * Time.deltaTime);
             _ring3.transform.Rotate(new Vector3(0, 0, 1), -4 * Time.deltaTime);
-            float scale = Camera.main.orthographicSize / 5f;
-            transform.localScale = Vector2.one * scale;
         }
 
         private IEnumerator FadeInLetters()
         {
+            _costText.text = _enduranceCost + " <sprite name=\"Endurance\">";
+            _costText.color = UiAppearanceController.InvisibleColour;
+            _costText.DOColor(Color.white, 1f);
             while (_doneFading == false)
             {
                 _doneFading = true;
@@ -55,6 +120,31 @@ namespace Game.Exploration.Ui
                 _fadeText.text = _completeWord;
                 yield return null;
             }
+        }
+
+        public void GainFocus()
+        {
+            _shadow.DOColor(new Color(0.1f, 0.1f, 0.1f, 1f), 1f);
+            _icon.DOColor(_iconColor, 1f);
+            _ring1.DOColor(_ring1Colour, 1f);
+            _ring2.DOColor(_ring2Colour, 1f);
+            _ring3.DOColor(_ring3Colour, 1f);
+            _fadeText.DOColor(Color.white, 1f);
+            _costText.DOColor(Color.white, 1f);
+            transform.DOScale(Vector2.one * 1.25f, 1f);
+            MapGenerator.SetRoute(_region);
+        }
+
+        public void LoseFocus(float time = 1f)
+        {
+            _shadow.DOColor(new Color(0f, 0f, 0f, 1f), time);
+            _icon.DOColor(UiAppearanceController.FadedColour, time);
+            _ring1.DOColor(UiAppearanceController.InvisibleColour, time);
+            _ring2.DOColor(UiAppearanceController.InvisibleColour, time);
+            _ring3.DOColor(UiAppearanceController.FadedColour, time);
+            _fadeText.DOColor(UiAppearanceController.FadedColour, time);
+            _costText.DOColor(UiAppearanceController.FadedColour, time);
+            transform.DOScale(Vector2.one, time);
         }
 
         private class Letter
@@ -108,7 +198,7 @@ namespace Game.Exploration.Ui
 
             private string LetterToHex(float alpha)
             {
-                string hexString = "<color=#FFFFFF" + ((int)(alpha * 255)).ToString("X2") + ">" + _letter + "</color>";
+                string hexString = "<color=#FFFFFF" + ((int) (alpha * 255)).ToString("X2") + ">" + _letter + "</color>";
                 return hexString;
             }
         }

@@ -33,10 +33,7 @@ namespace Game.Combat.Enemies
             ItemQuality targetQuality = (ItemQuality) difficulty;
             Assert.IsTrue((int) targetQuality < 5);
             Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality);
-
-            Debug.Log(weapon + " " + Name);
             EquipWeapon(weapon);
-
             bool hasInscription = Random.Range(0, 4) == 0;
             if (hasInscription)
             {

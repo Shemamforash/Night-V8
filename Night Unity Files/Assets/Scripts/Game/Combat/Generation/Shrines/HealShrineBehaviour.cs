@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class HealShrineBehaviour : MonoBehaviour
 {
-    public void Update()
+    private static GameObject _prefab;
+    
+    public void OnTriggerEnter2D(Collider2D other)
     {
-        float distanceToPlayer = Vector2.Distance(PlayerCombat.Instance.transform.position, transform.position);
-        if (distanceToPlayer > 0.2f) return;
+        if (!other.CompareTag("Player")) return;
         HealPlayer();
     }
 
@@ -18,5 +19,12 @@ public class HealShrineBehaviour : MonoBehaviour
         PlayerCombat.Instance.HealthController.Heal(100);
         Helper.FindChildWithName<ColourPulse>(gameObject, "Health Shrine Glow").PulseAndEnd();
         Destroy(this);
+    }
+
+    public static void CreateObject(Vector2 position)
+    {
+        if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Health Shrine");
+        GameObject healShrine = Instantiate(_prefab);
+        healShrine.transform.position = position;
     }
 }

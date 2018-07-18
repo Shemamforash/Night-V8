@@ -2,6 +2,7 @@
 {
     public enum RegionType
     {
+        None,
         Shelter,
         Gate,
         Temple,

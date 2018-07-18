@@ -11,7 +11,7 @@ namespace Game.Exploration.Environment
     {
         private readonly float minTemp, maxTemp;
         private readonly List<float> _temperatureArray = new List<float>();
-        public readonly int LevelNo, Shelters, Temples, CompleteKeys, Resources, Dangers;
+        public readonly int LevelNo, Temples, CompleteKeys, Resources, Dangers;
         public readonly EnvironmentType EnvironmentType;
         private static List<EnvironmentType> _environmentTypes;
 
@@ -23,7 +23,6 @@ namespace Game.Exploration.Environment
             maxTemp = temperature * 10;
             minTemp = maxTemp - 20;
             CalculateTemperatures();
-            Shelters = int.Parse(environmentNode.SelectSingleNode("Shelter").InnerText);
             Temples = int.Parse(environmentNode.SelectSingleNode("Temples").InnerText);
             CompleteKeys = int.Parse(environmentNode.SelectSingleNode("CompleteKeys").InnerText);
             Resources = int.Parse(environmentNode.SelectSingleNode("Resources").InnerText);

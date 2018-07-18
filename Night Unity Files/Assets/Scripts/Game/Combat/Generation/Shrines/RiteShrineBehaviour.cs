@@ -74,6 +74,7 @@ namespace Game.Combat.Generation.Shrines
             PlayerCombat.Instance.Player.BrandManager.SetActiveBrand(_targetBrand);
             PlayerUi.SetEventText("The Rite begins...");
             PlayerUi.FadeTextOut();
+            InputHandler.UnregisterInputListener(this);
             FadeCandles();
             Destroy(_collider1);
             Destroy(_collider2);

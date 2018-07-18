@@ -44,7 +44,7 @@ namespace Game.Combat.Generation.Shrines
             Destroy(gameObject.GetComponent<Collider2D>());
             Triggered = true;
             PlayerUi.SetEventText("Earn your blessing", 2f);
-            int daysSpent = WorldState.GetDaysSpentHere();
+            int daysSpent = WorldState.GetDaysSpentHere() + 5;
             List<EnemyType> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
             for (int i = 0; i < Random.Range(daysSpent / 2f, daysSpent); ++i)
             {

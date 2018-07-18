@@ -33,7 +33,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             return _attributeTypes.Find(t => t.ToString() == attributeString);
         }
-        
+
         public Inventory(string name) : base(name, GameObjectType.Inventory)
         {
             LoadResources();
@@ -196,7 +196,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         //Returns item in target inventory if the item was successfully moved
         private void Move(InventoryItem item)
         {
-            Debug.Log(item.Name);
             Inventory parent = item.ParentInventory;
             if (ParentInventory != null) Debug.Log(item.Name + " " + item.ParentInventory.Name);
             InventoryItem movedItem = parent == null ? item : parent.RemoveItem(item);

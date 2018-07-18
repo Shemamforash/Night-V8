@@ -49,10 +49,9 @@ namespace Game.Exploration.Regions
             _regions.Clear();
             _regionTypes.Clear();
             Environment.Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
-            for (int i = 0; i < currentEnvironment.Shelters; ++i) _regionTypes.Add(RegionType.Shelter);
             for (int i = 0; i < currentEnvironment.Resources; ++i) _regionTypes.Add(RegionType.Animal);
             for (int i = 0; i < currentEnvironment.Dangers; ++i) _regionTypes.Add(RegionType.Danger);
-            for(int i = 0; i < 4; ++i) _regionTypes.Add(RegionType.Shrine);
+            for (int i = 0; i < 4; ++i) _regionTypes.Add(RegionType.Shrine);
             for (int i = 0; i < 4; ++i) _regionTypes.Add(RegionType.Monument);
             for (int i = 0; i < 3; ++i) _regionTypes.Add(RegionType.Fountain);
             _regionTypes.Add(RegionType.Shelter);
@@ -137,39 +136,27 @@ namespace Game.Exploration.Regions
             }
         }
 
-        public static void GetRegionType(Region region)
+        public static RegionType GetRegionType()
         {
-//            Debug.Log(_regionsDiscovered + "/" + _regions.Count + "  --- " + _regionsBeforeTemple + " " + _regionTypes.Count + " " + _noTemples);
-
-            Assert.IsFalse(region.Discovered());
+            RegionType newRegionType;
             if (_regionsDiscovered == 0)
-            {
-                region.SetRegionType(RegionType.Gate);
-                region.Name = "Gate";
-            }
+                newRegionType = RegionType.Gate;
             else
             {
                 if (_regionsDiscovered - 1 == _regionsBeforeTemple)
-                {
-                    for (int i = 0; i < _noTemples; ++i) _regionTypes.Add(RegionType.Temple);
-                }
+                    for (int i = 0; i < _noTemples; ++i)
+                        _regionTypes.Add(RegionType.Temple);
 
-                int randomRegionIndex = Random.Range(0, _regionTypes.Count);
-                RegionType randomRegionType = _regionTypes[randomRegionIndex];
-                _regionTypes.RemoveAt(randomRegionIndex);
-                region.SetRegionType(randomRegionType);
-                region.Name = GenerateName(randomRegionType);
+                newRegionType = Helper.RemoveRandomInList(_regionTypes);
             }
 
             ++_regionsDiscovered;
+            return newRegionType;
         }
 
-        private static string GenerateName(RegionType type)
+        public static string GenerateName(RegionType type)
         {
-            int pos = Random.Range(0, _regionNames.Count);
-            string chosenName = _regionNames[type][pos];
-            _regionNames[type].RemoveAt(pos);
-            return chosenName;
+            return type == RegionType.Gate ? "Gate" : Helper.RemoveRandomInList(_regionNames[type]);
         }
 
         private static void LoadNames(RegionType type, string[] prefixes, string[] suffixes)
@@ -192,14 +179,6 @@ namespace Game.Exploration.Regions
                     }
             Helper.Shuffle(combinations);
             _regionNames.Add(type, combinations);
-        }
-
-        private static void AllocateTravelResources(Player currentCharacter, int duration)
-        {
-            int foodRequired = (int) (currentCharacter.Attributes.Max(AttributeType.Hunger) / 12f * duration);
-            int waterRequired = (int) (currentCharacter.Attributes.Max(AttributeType.Thirst) / 12f * duration);
-            currentCharacter.Inventory().IncrementResource("Fruit", foodRequired);
-            currentCharacter.Inventory().IncrementResource("Water", waterRequired);
         }
 
         private static string StripBlanks(string text)

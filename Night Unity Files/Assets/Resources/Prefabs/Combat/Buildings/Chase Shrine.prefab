@@ -203,6 +203,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4055879384478496}
   - component: {fileID: 114459682934153692}
+  - component: {fileID: 58770473247875410}
   m_Layer: 0
   m_Name: Chase Shrine
   m_TagString: Untagged
@@ -297,7 +298,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1553293684364524}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5, y: 5, z: 0}
+  m_LocalPosition: {x: 27.463526, y: -6.0354567, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4705686324770300}
@@ -527,6 +528,21 @@ Transform:
   m_Father: {fileID: 4055879384478496}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &58770473247875410
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1553293684364524}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.2
 --- !u!114 &114321988912742090
 MonoBehaviour:
   m_ObjectHideFlags: 1

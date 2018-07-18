@@ -49,5 +49,15 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         {
             return _pool.Count == 0;
         }
+
+        public void Clear()
+        {
+            int poolSize = _pool.Count - 1;
+            for (int i = poolSize; i >= 0; --i)
+            {
+                T pooledObject = _pool[i];
+                Dispose(pooledObject);
+            }
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace Game.Combat.Generation
             _stopwatch = Stopwatch.StartNew();
         }
 
-        public static bool AddBarrier(Barrier barrier)
+        public static bool AddBarrier(Polygon barrier)
         {
             HashSet<Cell> intersectingCells = GetIntersectingGridCells(barrier);
             if (intersectingCells.Intersect(_invalidCells).Count() != 0) return false;

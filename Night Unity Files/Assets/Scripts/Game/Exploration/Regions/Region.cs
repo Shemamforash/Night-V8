@@ -31,10 +31,11 @@ namespace Game.Exploration.Regions
         private static GameObject _nodePrefab;
         public readonly int RegionID;
         private int _lastVisitDay = -1;
-        private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite;
         public Vector2 ShrinePosition;
         public readonly List<Vector2> EchoPositions = new List<Vector2>();
         public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
+        public Vector2? HealShrinePosition = null;
+        public Vector2? EssenceShrinePosition = null;
 
         public bool Visited()
         {
@@ -79,68 +80,30 @@ namespace Game.Exploration.Regions
 
         public List<Region> Neighbors() => _neighbors.ToList();
 
-        private void AssignSprite(GameObject nodeObject)
-        {
-            if (_animalSprite == null) _animalSprite = Resources.Load<Sprite>("Images/Regions/Animal");
-            if (_dangerSprite == null) _dangerSprite = Resources.Load<Sprite>("Images/Regions/Danger");
-            if (_gateSprite == null) _gateSprite = Resources.Load<Sprite>("Images/Regions/Gate");
-            if (_fountainSprite == null) _fountainSprite = Resources.Load<Sprite>("Images/Regions/Fountain");
-            if (_monumentSprite == null) _monumentSprite = Resources.Load<Sprite>("Images/Regions/Monument");
-            if (_shelterSprite == null) _shelterSprite = Resources.Load<Sprite>("Images/Regions/Shelter");
-            if (_shrineSprite == null) _shrineSprite = Resources.Load<Sprite>("Images/Regions/Shrine");
-            if (_templeSprite == null) _templeSprite = Resources.Load<Sprite>("Images/Regions/Temple");
-            SpriteRenderer image = Helper.FindChildWithName<SpriteRenderer>(nodeObject, "Icon");
-            switch (_regionType)
-            {
-                case RegionType.Shelter:
-                    image.sprite = _shelterSprite;
-                    break;
-                case RegionType.Gate:
-                    image.sprite = _gateSprite;
-                    break;
-                case RegionType.Temple:
-                    image.sprite = _templeSprite;
-                    break;
-                case RegionType.Animal:
-                    image.sprite = _animalSprite;
-                    break;
-                case RegionType.Danger:
-                    image.sprite = _dangerSprite;
-                    break;
-                case RegionType.Nightmare:
-                    break;
-                case RegionType.Fountain:
-                    image.sprite = _fountainSprite;
-                    break;
-                case RegionType.Monument:
-                    image.sprite = _monumentSprite;
-                    break;
-                case RegionType.Shrine:
-                    image.sprite = _shrineSprite;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+        private MapNodeController _mapNode;
 
+        public MapNodeController MapNode()
+        {
+            return _mapNode;
+        }
+        
         public void CreateObject()
         {
-            if (!_seen && MapGenerator.DontShowHiddenNodes) return;
-            if (_nodePrefab == null) _nodePrefab = Resources.Load<GameObject>("Prefabs/Map/Node");
+            if (!_seen) return;
+            if (_nodePrefab == null) _nodePrefab = Resources.Load<GameObject>("Prefabs/Map/Map Node");
             GameObject nodeObject = GameObject.Instantiate(_nodePrefab);
-            AssignSprite(nodeObject);
             nodeObject.transform.SetParent(MapGenerator.MapTransform);
             nodeObject.name = Name;
             nodeObject.transform.position = new Vector3(Position.x, Position.y, 0);
             nodeObject.transform.localScale = Vector3.one;
-            MapNodeController mapNodeController = nodeObject.transform.GetComponentInChildren<MapNodeController>(true);
+            _mapNode = nodeObject.transform.GetComponentInChildren<MapNodeController>(true);
             if (_regionType == RegionType.Temple)
             {
                 GameObject g = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Map/Map Shadow"));
+                g.transform.SetParent(nodeObject.transform, false);
                 g.transform.position = nodeObject.transform.position;
             }
-
-            mapNodeController.SetName(Name);
+            _mapNode.SetRegion(this);
         }
 
         public void SetPosition(Vector2 position)
@@ -150,7 +113,7 @@ namespace Game.Exploration.Regions
 
         public float DistanceToPoint(Region node) => DistanceToPoint(node.Position);
 
-        public float DistanceToPoint(Vector3 point) => Vector3.Distance(point, Position);
+        private float DistanceToPoint(Vector3 point) => Vector3.Distance(point, Position);
 
         public Enemy AddEnemy(EnemyType enemyType)
         {
@@ -158,7 +121,6 @@ namespace Game.Exploration.Regions
             _enemies.Add(newEnemy);
             return newEnemy;
         }
-
 
         private void GenerateHumanEncounter()
         {
@@ -230,26 +192,6 @@ namespace Game.Exploration.Regions
 
         public RegionType GetRegionType() => _regionType;
 
-        public void SetRegionType(RegionType regionType)
-        {
-            _regionType = regionType;
-            switch (regionType)
-            {
-                case RegionType.Nightmare:
-                    GenerateNightmareEncounter();
-                    break;
-                case RegionType.Shelter:
-                    GenerateShelter();
-                    break;
-                case RegionType.Animal:
-                    GenerateAnimalEncounter();
-                    break;
-                default:
-                    GenerateHumanEncounter();
-                    break;
-            }
-        }
-
         private void GenerateAnimalEncounter()
         {
             switch (Random.Range(0, 3))
@@ -294,9 +236,29 @@ namespace Game.Exploration.Regions
             //todo add resources
         }
 
-        public void Enter()
+        private void SetSeen()
         {
-            SceneChanger.ChangeScene("Combat");
+            if (_seen) return;
+            _regionType = RegionManager.GetRegionType();
+            if (_regionType == RegionType.Shelter) Debug.Log("assigned");
+            switch (_regionType)
+            {
+                case RegionType.Nightmare:
+                    GenerateNightmareEncounter();
+                    break;
+                case RegionType.Shelter:
+                    GenerateShelter();
+                    break;
+                case RegionType.Animal:
+                    GenerateAnimalEncounter();
+                    break;
+                default:
+                    GenerateHumanEncounter();
+                    break;
+            }
+
+            Name = RegionManager.GenerateName(_regionType);
+            _seen = true;
         }
 
         public void Discover()
@@ -304,13 +266,10 @@ namespace Game.Exploration.Regions
             if (_discovered) return;
             CharacterManager.SelectedCharacter.BrandManager.IncreaseRegionsExplored();
             _discovered = true;
-            _seen = true;
+            SetSeen();
             foreach (Region neighbor in _neighbors)
-            {
-                if (neighbor._seen) continue;
-                RegionManager.GetRegionType(neighbor);
-                neighbor._seen = true;
-            }
+                if (!neighbor._seen)
+                    neighbor.SetSeen();
         }
 
         public bool Discovered() => _discovered;
@@ -394,27 +353,12 @@ namespace Game.Exploration.Regions
             });
         }
 
-        private static List<int> _availableIds;
-        private const int _totalIds = 1000;
-
-        private static int GetId()
-        {
-            if (_availableIds == null)
-            {
-                _availableIds = new List<int>();
-                int anchor = Random.Range(0, 10000);
-                for (int i = 0; i < _totalIds; ++i) _availableIds.Add(anchor + i);
-            }
-
-            int randomIndex = Random.Range(0, _availableIds.Count);
-            int id = _availableIds[randomIndex];
-            _availableIds.RemoveAt(randomIndex);
-            return id;
-        }
+        private static int _currentId;
 
         public Region() : base(Vector2.zero)
         {
-            RegionID = GetId();
+            RegionID = _currentId;
+            ++_currentId;
         }
 
         public bool Seen()

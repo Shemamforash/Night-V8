@@ -71,6 +71,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4090526276265146}
   - component: {fileID: 212556373812495224}
+  - component: {fileID: 58790180114034206}
   m_Layer: 0
   m_Name: Essence Shrine
   m_TagString: Untagged
@@ -85,7 +86,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1997190490395570}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.041, y: 1.8974936, z: 0}
+  m_LocalPosition: {x: 26.457106, y: -0.14336872, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children:
   - {fileID: 4256566748114890}
@@ -148,6 +149,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.17030537
+--- !u!58 &58790180114034206
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1997190490395570}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.4
 --- !u!114 &114864070389551888
 MonoBehaviour:
   m_ObjectHideFlags: 1

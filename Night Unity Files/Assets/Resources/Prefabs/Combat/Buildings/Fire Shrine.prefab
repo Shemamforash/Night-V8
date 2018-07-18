@@ -168,6 +168,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4641922435447968}
   - component: {fileID: 114878649856384642}
+  - component: {fileID: 58406982348612862}
   m_Layer: 0
   m_Name: Fire Shrine
   m_TagString: Untagged
@@ -337,7 +338,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1744615423695550}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5, y: -5, z: 0}
+  m_LocalPosition: {x: 29.40316, y: -2.4672642, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4112622678420528}
@@ -406,6 +407,21 @@ Transform:
   m_Father: {fileID: 4641922435447968}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &58406982348612862
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1744615423695550}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.2
 --- !u!114 &114663024487469020
 MonoBehaviour:
   m_ObjectHideFlags: 1
