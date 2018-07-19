@@ -8,6 +8,7 @@ using Game.Exploration.WorldEvents;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
@@ -185,11 +186,9 @@ namespace Game.Characters
 
         private void LoadAttribute(XmlNode root, string attributeName, CharacterAttribute characterAttribute)
         {
-            XmlNode attributeNode = root.SelectSingleNode(attributeName);
-            XmlNode maxNode = attributeNode.SelectSingleNode("Max");
-            characterAttribute.Max = SaveController.ParseIntFromSubNode(maxNode);
-            XmlNode valNode = attributeNode.SelectSingleNode("Val");
-            characterAttribute.SetCurrentValue(SaveController.ParseIntFromSubNode(valNode));
+            XmlNode attributeNode = Helper.GetNode(root, attributeName);
+            characterAttribute.Max = Helper.IntFromNode(attributeNode, "Max");
+            characterAttribute.SetCurrentValue(Helper.IntFromNode(attributeNode, "Val"));
         }
 
         private void SaveAttribute(XmlNode root, string attributeName, CharacterAttribute characterAttribute)

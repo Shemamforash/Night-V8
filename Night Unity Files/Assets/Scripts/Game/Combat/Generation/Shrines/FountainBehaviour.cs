@@ -45,7 +45,7 @@ namespace Game.Combat.Generation.Shrines
             Triggered = true;
             PlayerUi.SetEventText("Earn your blessing", 2f);
             int daysSpent = WorldState.GetDaysSpentHere() + 5;
-            List<EnemyType> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
+            List<EnemyTemplate> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
             for (int i = 0; i < Random.Range(daysSpent / 2f, daysSpent); ++i)
             {
                 AddEnemy(CombatManager.QueueEnemyToAdd(Helper.RandomInList(allowedEnemies)));

@@ -18,6 +18,39 @@ namespace SamsHelper.Libraries
             return IsPositionInCameraView(gameObject.transform.position);
         }
 
+        public static int IntFromNode(XmlNode root, string nodeName)
+        {
+            return int.Parse(GetNodeText(root, nodeName));
+        }
+
+        public static float FloatFromNode(XmlNode root, string nodeName)
+        {
+            return float.Parse(GetNodeText(root, nodeName));
+        }
+
+        public static XmlNode GetNode(XmlNode root, string nodeName)
+        {
+            XmlNode node = root.SelectSingleNode(nodeName);
+            if (node == null) throw new Exceptions.XmlNodeDoesNotExistException(nodeName);
+            return node;
+        }
+
+        public static string GetNodeText(XmlNode root, string name)
+        {
+            return GetNode(root, name).InnerText;
+        }
+
+        public static string NodeAttributeValue(XmlNode root, string attributeName)
+        {
+            if (root.Attributes == null) throw new Exceptions.NodeHasNoAttributesException(root.Name);
+            return root.Attributes[attributeName].Value;
+        }
+        
+        public static bool BoolFromNode(XmlNode root, string nodeName)
+        {
+            return GetNodeText(root, nodeName).ToLower() == "true";
+        }
+
         public static bool IsPositionInCameraView(Vector3 position)
         {
             Vector3 screenPosition = Camera.main.WorldToViewportPoint(position);
@@ -457,6 +490,13 @@ namespace SamsHelper.Libraries
             Color c = sprite.color;
             c.a = newAlpha;
             sprite.color = c;
+        }
+
+        public static XmlNodeList GetNodesWithName(XmlNode root, string subNodeName)
+        {
+            XmlNodeList nodes = root.SelectNodes(subNodeName);
+            if (nodes == null) throw new Exceptions.NoNodesWithNameException(subNodeName);
+            return nodes;
         }
     }
 }

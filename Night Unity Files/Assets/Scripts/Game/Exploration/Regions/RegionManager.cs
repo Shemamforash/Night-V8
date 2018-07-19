@@ -192,8 +192,8 @@ namespace Game.Exploration.Regions
             XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
             foreach (XmlNode regionTypeNode in root.ChildNodes)
             {
-                string[] prefixes = StripBlanks(regionTypeNode.SelectSingleNode("Prefixes").InnerText).Split(',');
-                string[] suffixes = StripBlanks(regionTypeNode.SelectSingleNode("Suffixes").InnerText).Split(',');
+                string[] prefixes = StripBlanks(Helper.GetNodeText(regionTypeNode, "Prefixes")).Split(',');
+                string[] suffixes = StripBlanks(Helper.GetNodeText(regionTypeNode, "Suffixes")).Split(',');
                 string regionName = regionTypeNode.Name;
                 foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
                 {

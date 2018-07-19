@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Game.Global;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Exploration.Environment
@@ -18,15 +19,15 @@ namespace Game.Exploration.Environment
         public Environment(XmlNode environmentNode)
         {
             EnvironmentType = StringToEnvironmentType(environmentNode.Name);
-            LevelNo = int.Parse(environmentNode.SelectSingleNode("Level").InnerText);
-            int temperature = int.Parse(environmentNode.SelectSingleNode("Temperature").InnerText);
+            LevelNo = Helper.IntFromNode(environmentNode, "Level");
+            int temperature = Helper.IntFromNode(environmentNode, "Temperature");
             maxTemp = temperature * 10;
             minTemp = maxTemp - 20;
             CalculateTemperatures();
-            Temples = int.Parse(environmentNode.SelectSingleNode("Temples").InnerText);
-            CompleteKeys = int.Parse(environmentNode.SelectSingleNode("CompleteKeys").InnerText);
-            Resources = int.Parse(environmentNode.SelectSingleNode("Resources").InnerText);
-            Dangers = int.Parse(environmentNode.SelectSingleNode("Danger").InnerText);
+            Temples = Helper.IntFromNode(environmentNode, "Temples");
+            CompleteKeys = Helper.IntFromNode(environmentNode, "CompleteKeys");
+            Resources = Helper.IntFromNode(environmentNode, "Resources");
+            Dangers = Helper.IntFromNode(environmentNode, "Danger");
         }
 
         private EnvironmentType StringToEnvironmentType(string environmentString)

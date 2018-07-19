@@ -4,6 +4,7 @@ using System.Xml;
 using Game.Characters;
 using Game.Exploration.Environment;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using Random = UnityEngine.Random;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
@@ -46,9 +47,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         
         public ResourceTemplate(XmlNode resourceNode)
         {
-            Name = resourceNode.SelectSingleNode("Name").InnerText;
+            Name = Helper.GetNodeText(resourceNode, "Name");
             Consumable = true;
-            ResourceType = resourceNode.SelectSingleNode("Type").InnerText;
+            ResourceType = Helper.GetNodeText(resourceNode, "Type");
             AllResources.Add(this);
             switch (ResourceType)
             {
@@ -78,11 +79,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             _lastType = ResourceType;
 
-            float oasisDr = float.Parse(resourceNode.SelectSingleNode("OasisDropRate").InnerText);
-            float steppeDr = float.Parse(resourceNode.SelectSingleNode("SteppeDropRate").InnerText);
-            float ruinsDr = float.Parse(resourceNode.SelectSingleNode("RuinsDropRate").InnerText);
-            float defilesDr = float.Parse(resourceNode.SelectSingleNode("DefilesDropRate").InnerText);
-            float wastelandDr = float.Parse(resourceNode.SelectSingleNode("WastelandDropRate").InnerText);
+            float oasisDr = Helper.FloatFromNode(resourceNode, "OasisDropRate");
+            float steppeDr = Helper.FloatFromNode(resourceNode, "SteppeDropRate");
+            float ruinsDr = Helper.FloatFromNode(resourceNode, "RuinsDropRate");
+            float defilesDr = Helper.FloatFromNode(resourceNode, "DefilesDropRate");
+            float wastelandDr = Helper.FloatFromNode(resourceNode, "WastelandDropRate");
             _dropRates.Add(EnvironmentType.Oasis, new DropRate(ref OasisDRCur, oasisDr));
             _dropRates.Add(EnvironmentType.Steppe, new DropRate(ref SteppeDRCur, steppeDr));
             _dropRates.Add(EnvironmentType.Ruins, new DropRate(ref RuinsDRCur, ruinsDr));
@@ -157,9 +158,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             string attributeString = attributeNode.InnerText;
             if (attributeString == "") return;
             AttributeType = Inventory.StringToAttributeType(attributeString);
-            ModifierVal = float.Parse(resourceNode.SelectSingleNode("Modifier").InnerText);
-            _additive = resourceNode.SelectSingleNode("Bonus").InnerText == "+";
-            string durationString = resourceNode.SelectSingleNode("Duration").InnerText;
+            ModifierVal = Helper.FloatFromNode(resourceNode, "Modifier");
+            _additive = Helper.GetNodeText(resourceNode, "Bonus") == "+";
+            string durationString = Helper.GetNodeText(resourceNode, "Duration");
             Duration = 0;
             if (durationString != "")
             {

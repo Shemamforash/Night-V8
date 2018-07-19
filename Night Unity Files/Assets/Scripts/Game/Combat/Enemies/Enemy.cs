@@ -17,11 +17,15 @@ namespace Game.Combat.Enemies
         public readonly EnemyTemplate Template;
         private bool IsDead;
 
-        public Enemy(EnemyType type) : base(type.ToString())
+        public Enemy(EnemyTemplate template) : base(template.EnemyType.ToString())
         {
-            Template = EnemyTemplate.GetEnemyTemplate(type);
-            GenerateArmour();
-            if (Template.EnemyType != EnemyType.Brawler && Template.EnemyType != EnemyType.Martyr)
+            Template = template;
+            if (Template.HasGear)
+            {
+                GenerateArmour();
+            }
+
+            if (Template.HasWeapon)
             {
                 GenerateWeapon();
             }
@@ -77,11 +81,11 @@ namespace Game.Combat.Enemies
                 case "Salt":
                     SaltBehaviour.Create(position, Template.DropCount);
                     if (EquippedWeapon != null && Random.Range(0, 20) == 0) controller.AddToInventory(EquippedWeapon);
-                    else if(Random.Range(0, 20) == 0) controller.AddToInventory(Accessory.Generate());
+                    else if (Random.Range(0, 20) == 0) controller.AddToInventory(Accessory.Generate());
                     break;
                 case "Essence":
                     EssenceCloudBehaviour.Create(position, Template.DropCount);
-                    if(Random.Range(0, 20) == 0) controller.AddToInventory(Inscription.Generate());
+                    if (Random.Range(0, 20) == 0) controller.AddToInventory(Inscription.Generate());
                     break;
                 case "Meat":
                     if (Template.EnemyType == EnemyType.Grazer || Template.EnemyType == EnemyType.Watcher && Random.Range(0, 2) == 1)
@@ -93,6 +97,7 @@ namespace Game.Combat.Enemies
                     controller.AddToInventory(ResourceTemplate.GetMeat().Create());
                     break;
             }
+
             return controller;
         }
     }

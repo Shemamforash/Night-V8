@@ -34,7 +34,7 @@ namespace Game.Exploration.Weather
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Weather", "WeatherTypes");
-            foreach (XmlNode weatherNode in root.SelectNodes("Weather"))
+            foreach (XmlNode weatherNode in Helper.GetNodesWithName(root, "Weather"))
                 new Weather(_weatherStates, weatherNode);
             _loaded = true;
         }

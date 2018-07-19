@@ -6,6 +6,7 @@ using Game.Exploration.Regions;
 using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
@@ -153,19 +154,6 @@ namespace Game.Exploration.Environment
                     current.AddNeighbor(n);
                 });
             }
-
-            Regions.ForEach(r =>
-            {
-                if (r.Neighbors().Count != 0) return;
-                storedNodes.Sort((a, b) => Vector2.Distance(r.Position, a.Position).CompareTo(Vector2.Distance(r.Position, b.Position)));
-                foreach (Region node in storedNodes)
-                {
-                    if (node == r) continue;
-                    if (node.Neighbors().Count == 0) continue;
-                    r.AddNeighbor(node);
-                    break;
-                }
-            });
         }
 
         public static void SetRoute(Region to)

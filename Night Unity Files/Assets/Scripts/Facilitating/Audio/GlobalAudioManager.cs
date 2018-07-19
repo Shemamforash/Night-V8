@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,14 +17,12 @@ namespace Facilitating.Audio
 
         public void Load(XmlNode root, PersistenceType saveType)
         {
-            if (saveType == PersistenceType.Settings)
-            {
-                XmlNode node = root.SelectSingleNode("SoundSettings");
-                _musicVolume = SaveController.ParseFloatFromNodeAndString(node, nameof(_musicVolume));
-                _effectsVolume = SaveController.ParseFloatFromNodeAndString(node, nameof(_musicVolume));
-                _masterVolume = SaveController.ParseFloatFromNodeAndString(node, nameof(_musicVolume));
-                Initialise();
-            }
+            if (saveType != PersistenceType.Settings) return;
+            XmlNode node = Helper.GetNode(root, "SoundSettings");
+            _musicVolume = Helper.FloatFromNode(node, nameof(_musicVolume));
+            _effectsVolume = Helper.FloatFromNode(node, nameof(_effectsVolume));
+            _masterVolume = Helper.FloatFromNode(node, nameof(_masterVolume));
+            Initialise();
         }
 
         public XmlNode Save(XmlNode root, PersistenceType saveType)

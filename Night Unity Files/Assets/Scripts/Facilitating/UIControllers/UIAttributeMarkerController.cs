@@ -1,5 +1,10 @@
-﻿using SamsHelper.BaseGameFunctionality.Basic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,43 +12,99 @@ namespace Facilitating.UIControllers
 {
     public class UIAttributeMarkerController : MonoBehaviour
     {
-        private Image _active, _inactive, _overchargedActive, _overchargedInactive;
+        private readonly List<Marker> _markers = new List<Marker>();
 
         public void Awake()
         {
-            _active = Helper.FindChildWithName<Image>(gameObject, "Active");
-            _inactive = Helper.FindChildWithName<Image>(gameObject, "Inactive");
-            _overchargedActive = Helper.FindChildWithName<Image>(gameObject, "Active Second");
-            _overchargedInactive = Helper.FindChildWithName<Image>(gameObject, "Inactive Second");
+            GameObject primaryMarkerParent = Helper.FindChildWithName(gameObject, "Primary");
+            GameObject secondaryMarkerParent = Helper.FindChildWithName(gameObject, "Secondary");
+            for (int i = 0; i < 10; ++i)
+            {
+                string markerName = "Marker";
+                if (i != 0) markerName += " (" + i + ")";
+                Image primaryMarker = Helper.FindChildWithName<Image>(primaryMarkerParent, markerName);
+                _markers.Add(new Marker(primaryMarker));
+            }
+
+            for (int i = 0; i < 10; ++i)
+            {
+                string markerName = "Marker";
+                if (i != 0) markerName += " (" + i + ")";
+                Image secondaryMarker = Helper.FindChildWithName<Image>(secondaryMarkerParent, markerName);
+                _markers.Add(new Marker(secondaryMarker));
+            }
+        }
+
+        private enum MarkerState
+        {
+            Inactive,
+            Faded,
+            Active
+        }
+
+        private class Marker
+        {
+            private MarkerState _state;
+            private readonly Image _image;
+            private bool _stateChanged;
+
+            public Marker(Image image)
+            {
+                _image = image;
+                _state = MarkerState.Inactive;
+                _image.color = UiAppearanceController.InvisibleColour;
+            }
+
+            public void SetState(MarkerState state)
+            {
+                if (state == _state)
+                {
+                    _stateChanged = false;
+                    return;
+                }
+
+                _stateChanged = true;
+                _state = state;
+            }
+
+            public void UpdateColor()
+            {
+                if (!_stateChanged) return;
+                Color c = Color.white;
+                switch (_state)
+                {
+                    case MarkerState.Inactive:
+                        c = UiAppearanceController.InvisibleColour;
+                        break;
+                    case MarkerState.Faded:
+                        c = UiAppearanceController.FadedColour;
+                        break;
+                    case MarkerState.Active:
+                        c = Color.white;
+                        break;
+                }
+
+                _image.DOColor(c, 1f);
+            }
         }
 
         public void SetValue(CharacterAttribute attribute)
         {
-            int currentValue = Mathf.CeilToInt(attribute.CurrentValue());
             int max = (int) attribute.Max;
-            if (max > 10)
+            int currentValue = Mathf.CeilToInt(attribute.CurrentValue());
+            for (int i = 0; i < 20; ++i)
             {
-                int overchargeMax = max - 10;
-                _overchargedInactive.fillAmount = overchargeMax / 10f;
-                _inactive.fillAmount = 1;
-            }
-            else
-            {
-                _overchargedInactive.fillAmount = 0f;
-                _inactive.fillAmount = max / 10f;
+                MarkerState newState;
+                if (i < currentValue)
+                    newState = MarkerState.Active;
+                else if (i < max)
+                    newState = MarkerState.Faded;
+                else
+                    newState = MarkerState.Inactive;
+                _markers[i].SetState(newState);
             }
 
-            if (currentValue > 10)
-            {
-                int overchargeCurrent = currentValue - 10;
-                _overchargedActive.fillAmount = overchargeCurrent / 10f;
-                _active.fillAmount = 1f;
-            }
-            else
-            {
-                _overchargedActive.fillAmount = 0f;
-                _active.fillAmount = currentValue / 10f;
-            }
+            _markers.ForEach(m => m.UpdateColor());
         }
     }
 }

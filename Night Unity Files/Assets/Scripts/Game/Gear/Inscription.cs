@@ -67,7 +67,7 @@ namespace Game.Gear
         {
             if (_readTemplates) return;
             XmlNode inscriptions = Helper.OpenRootNode("Inscriptions");
-            foreach (XmlNode inscriptionNode in inscriptions.SelectNodes("Inscription"))
+            foreach (XmlNode inscriptionNode in Helper.GetNodesWithName(inscriptions, "Inscription"))
                 new InscriptionTemplate(inscriptionNode);
 
             _readTemplates = true;
@@ -91,11 +91,10 @@ namespace Game.Gear
 
             public InscriptionTemplate(XmlNode inscriptionNode)
             {
-                Name = inscriptionNode.SelectSingleNode("Name").InnerText;
-                string attributeString = inscriptionNode.SelectSingleNode("Attribute").InnerText;
-                AttributeTarget = Inventory.StringToAttributeType(attributeString);
-                _modifierValue = float.Parse(inscriptionNode.SelectSingleNode("Value").InnerText);
-                _additive = inscriptionNode.SelectSingleNode("Type").InnerText == "+";
+                Name = Helper.GetNodeText(inscriptionNode, "Name");
+                AttributeTarget = Inventory.StringToAttributeType(Helper.GetNodeText(inscriptionNode, "Attribute"));
+                _modifierValue = Helper.FloatFromNode(inscriptionNode, "Value");
+                _additive = Helper.BoolFromNode(inscriptionNode, "Additive");
                 _inscriptionTemplates.Add(this);
             }
 

@@ -31,9 +31,8 @@ namespace Game.Characters
 
         public override void Load(XmlNode doc, PersistenceType saveType)
         {
-            XmlNode characterManagerNode = doc.SelectSingleNode("CharacterManager");
-            XmlNodeList characterNodes = characterManagerNode.SelectNodes("Character");
-            foreach (XmlNode characterNode in characterNodes)
+            XmlNode characterManagerNode = Helper.GetNode(doc, "CharacterManager");
+            foreach (XmlNode characterNode in Helper.GetNodesWithName(characterManagerNode, "Character"))
             {
 //                Character c = new Character();
 //                c.Load(characterNode, saveType);
@@ -41,18 +40,15 @@ namespace Game.Characters
             }
         }
 
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public override XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             if (saveType != PersistenceType.Game) return null;
             doc = base.Save(doc, saveType);
-            Debug.Log(doc + " doc");
-
-//            foreach (Player c in Characters)
-//            {
-//                XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", doc);
-//                c.Save(characterNode, saveType);
-//            }
-
+            foreach (Player c in Characters)
+            {
+                XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", doc);
+                c.Save(characterNode, saveType);
+            }
             return doc;
         }
 
@@ -168,14 +164,14 @@ namespace Game.Characters
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Classes");
-            foreach (XmlNode classNode in root.SelectNodes("Class"))
+            foreach (XmlNode classNode in Helper.GetNodesWithName(root, "Class"))
                 new CharacterTemplate(classNode, Templates);
             _loaded = true;
         }
 
         private static int AttributeCapStringToValue(string nodeName, XmlNode node)
         {
-            string capString = node.SelectSingleNode(nodeName).InnerText;
+            string capString = Helper.GetNodeText(node, nodeName);
             switch (capString)
             {
                 case "+":

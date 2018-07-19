@@ -80,14 +80,14 @@ namespace Game.Global
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Recipes");
-            foreach (XmlNode recipeNode in root.SelectNodes("Recipe"))
+            foreach (XmlNode recipeNode in Helper.GetNodesWithName(root, "Recipe"))
             {
-                string ingredient1Name = recipeNode.SelectSingleNode("Ingredient1Name").InnerText;
-                int ingredient1Quantity = int.Parse(recipeNode.SelectSingleNode("Ingredient1Quantity").InnerText);
-                string ingredient2Name = recipeNode.SelectSingleNode("Ingredient2Name").InnerText;
-                int ingredient2Quantity = int.Parse(recipeNode.SelectSingleNode("Ingredient1Quantity").InnerText);
-                string productName = recipeNode.SelectSingleNode("ProductName").InnerText;
-                int productQuantity = int.Parse(recipeNode.SelectSingleNode("ProductQuantity").InnerText);
+                string ingredient1Name = Helper.GetNodeText(recipeNode, "Ingredient1Name");
+                int ingredient1Quantity = Helper.IntFromNode(recipeNode, "Ingredient1Quantity");
+                string ingredient2Name = Helper.GetNodeText(recipeNode, "Ingredient2Name");
+                int ingredient2Quantity = Helper.IntFromNode(recipeNode, "Ingredient1Quantity");
+                string productName = Helper.GetNodeText(recipeNode, "ProductName");
+                int productQuantity = Helper.IntFromNode(recipeNode, "ProductQuantity");
 
                 Recipe recipe = new Recipe(ingredient1Name, ingredient2Name, ingredient1Quantity, ingredient2Quantity, productName, productQuantity, 1);
                 _recipes.Add(recipe);

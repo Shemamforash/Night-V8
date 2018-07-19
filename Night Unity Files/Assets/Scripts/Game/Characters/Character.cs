@@ -4,6 +4,7 @@ using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 
 namespace Game.Characters
@@ -35,7 +36,7 @@ namespace Game.Characters
         public override void Load(XmlNode doc, PersistenceType saveType)
         {
             base.Load(doc, saveType);
-            Name = doc.SelectSingleNode("Name").InnerText;
+            Name = Helper.GetNodeText(doc, "Name");
         }
 
         public virtual void EquipWeapon(Weapon weapon)

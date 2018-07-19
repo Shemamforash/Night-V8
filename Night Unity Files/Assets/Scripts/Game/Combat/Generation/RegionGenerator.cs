@@ -96,6 +96,11 @@ namespace Game.Combat.Generation
             {
                 FountainBehaviour.Generate(_region.ShrinePosition);
             }
+
+            if (_region.GetRegionType() == RegionType.Monument)
+            {
+                SaveStoneBehaviour.Generate(_region.ShrinePosition);
+            }
         }
 
         private void PlaceShrine()

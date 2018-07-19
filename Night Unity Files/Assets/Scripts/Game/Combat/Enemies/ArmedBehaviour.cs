@@ -18,6 +18,7 @@ namespace Game.Combat.Enemies
         {
             base.Initialise(enemy);
             SetHealBehaviour();
+            if(Weapon() == null) Debug.Log(enemy.Template.EnemyType + " " + enemy.Template.HasWeapon);
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             IdealWeaponDistance = Weapon().CalculateIdealDistance();
         }

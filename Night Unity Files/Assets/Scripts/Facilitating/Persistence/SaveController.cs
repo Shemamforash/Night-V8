@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
 
@@ -66,40 +67,6 @@ namespace Facilitating.Persistence
             return newNode;
         }
 
-        //Float parsing
-        public static float ParseFloatFromNodeAndString(XmlNode root, string str)
-        {
-            XmlNode node = root.SelectSingleNode(str);
-            return ParseFloatFromNode(node);
-        }
-
-        public static float ParseFloatFromNode(XmlNode node)
-        {
-            if (node != null) return float.Parse(node.InnerText);
-            throw new Exception("Could not parse float from node");
-        }
-
-        //Int Parsing
-        public static int ParseIntFromNodeAndString(XmlNode root, string str)
-        {
-            XmlNode node = root.SelectSingleNode(str);
-            return ParseIntFromSubNode(node);
-        }
-
-        public static int ParseIntFromSubNode(XmlNode node)
-        {
-            if (node != null) return int.Parse(node.InnerText);
-            throw new Exception("Could not parse int from node");
-        }
-
-        //Bool parsing
-        public static bool ParseBoolFromSubNode(XmlNode n, string boolName)
-        {
-            XmlNode selectSingleNode = n.SelectSingleNode(boolName);
-            if (selectSingleNode != null) return selectSingleNode.InnerText == "True";
-            throw new Exception("Could not parse float from node");
-        }
-
         //Basic Load/Save Functions
         private static bool Load(string fileLocation, PersistenceType saveType)
         {
@@ -109,7 +76,7 @@ namespace Facilitating.Persistence
                 {
                     _saveDoc = new XmlDocument();
                     _saveDoc.Load(fileLocation);
-                    XmlNode root = _saveDoc.SelectSingleNode(saveType.ToString());
+                    XmlNode root = Helper.GetNode(_saveDoc, saveType.ToString());
                     BroadcastLoad(root, saveType);
                     return true;
                 }

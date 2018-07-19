@@ -46,7 +46,7 @@ namespace Game.Gear.Armour
         {
             if (_readTemplates) return;
             XmlNode root = Helper.OpenRootNode("Gear", "GearList");
-            foreach (XmlNode accessoryNode in root.SelectNodes("Gear"))
+            foreach (XmlNode accessoryNode in Helper.GetNodesWithName(root, "Gear"))
                 new AccessoryTemplate(accessoryNode);
             _readTemplates = true;
         }
@@ -74,23 +74,19 @@ namespace Game.Gear.Armour
             public readonly string Name;
             public readonly AttributeType TargetAttribute;
             private readonly float _modifierValue;
-            private readonly bool _additive;
 
             public AccessoryTemplate(XmlNode accessoryNode)
             {
-                Name = accessoryNode.SelectSingleNode("Name").InnerText;
-                string attributeString = accessoryNode.SelectSingleNode("Attribute").InnerText;
-                TargetAttribute = Inventory.StringToAttributeType(attributeString);
-                _modifierValue = float.Parse(accessoryNode.SelectSingleNode("Bonus").InnerText);
-                _additive = accessoryNode.SelectSingleNode("Type").InnerText == "+";
+                Name = Helper.GetNodeText(accessoryNode, "Name");
+                TargetAttribute = Inventory.StringToAttributeType(Helper.GetNodeText(accessoryNode, "Attribute"));
+                _modifierValue = Helper.FloatFromNode(accessoryNode, "Bonus");
                 _accessoryTemplates.Add(this);
             }
 
             public AttributeModifier GetModifier()
             {
                 AttributeModifier modifier = new AttributeModifier();
-                if (_additive) modifier.SetRawBonus(_modifierValue);
-                else modifier.SetFinalBonus(_modifierValue);
+                modifier.SetFinalBonus(_modifierValue);
                 return modifier;
             }
         }

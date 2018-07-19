@@ -189,6 +189,7 @@ namespace Game.Combat.Generation
 
         private void OnDrawGizmos()
         {
+            return;
             Vector3 cubeSize = 1f / PathingGrid.CellResolution * Vector3.one;
             Gizmos.color = Color.red;
             List<Cell> invalid = PathingGrid._invalidCells.ToList();
@@ -221,7 +222,6 @@ namespace Game.Combat.Generation
             brandManager.IncreaseSkillsUsed(Instance()._skillsUsed);
             brandManager.IncreaseHumansKilled(Instance()._humansKilled);
 
-            Shot.EmptyPool();
             Instance()._inCombat = false;
                 SceneChanger.ChangeScene("Map", false);
             PlayerCombat.Instance.ExitCombat();
@@ -248,7 +248,7 @@ namespace Game.Combat.Generation
             return Instance()._enemies.FindAll(e => e.OnScreen());
         }
 
-        public static EnemyBehaviour QueueEnemyToAdd(EnemyType type)
+        public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate type)
         {
             Enemy e = Instance()._currentRegion.AddEnemy(type);
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
@@ -257,9 +257,15 @@ namespace Game.Combat.Generation
             return enemyBehaviour;
         }
 
+        public static EnemyBehaviour QueueEnemyToAdd(EnemyType type)
+        {
+            return QueueEnemyToAdd(EnemyTemplate.GetEnemyTemplate(type));
+        }
+
         public static EnemyBehaviour SpawnEnemy(EnemyType enemyType, Vector2 position)
         {
-            EnemyBehaviour enemy = QueueEnemyToAdd(enemyType);
+            EnemyTemplate template = EnemyTemplate.GetEnemyTemplate(enemyType);
+            EnemyBehaviour enemy = QueueEnemyToAdd(template);
             enemy.transform.position = position;
             TeleportInOnly.TeleportObjectIn(enemy.gameObject);
             return enemy;

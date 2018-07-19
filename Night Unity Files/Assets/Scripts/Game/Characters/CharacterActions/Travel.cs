@@ -5,16 +5,17 @@ using Game.Exploration.WorldEvents;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
     public class Travel : BaseCharacterAction
     {
-//        private int TimeSpentTravelling;
         private Region _target;
         private Region CurrentNode;
         private bool _inTransit;
-        private int _enduranceCost;
+        private int _travelTime;
+        private const int MinutesPerEndurancePoint = WorldState.MinutesPerHour / 2;
 
         public Travel(Player playerCharacter) : base("Travel", playerCharacter)
         {
@@ -27,32 +28,28 @@ namespace Game.Characters.CharacterActions
                     return;
                 }
 
-//                ++TimeSpentTravelling;
-//                if (TimeSpentTravelling == WorldState.MinutesPerHour)
-//                {
-//                    TimeSpentTravelling = 0;
-//                }
-
                 --Duration;
+                ++_travelTime;
+                if (_travelTime != MinutesPerEndurancePoint) return;
+                _travelTime = 0;
+                playerCharacter.Tire();
             };
         }
 
-        public bool AtHome()
+        private bool AtHome()
         {
-            //todo fix me
             if (CurrentNode == null) return true;
             return CurrentNode.GetRegionType() == RegionType.Gate;
         }
 
         private void ReachTarget()
         {
-            PlayerCharacter.Tire(_enduranceCost);
             CurrentNode = _target;
             _inTransit = false;
+            Debug.Log(AtHome());
             if (AtHome())
             {
                 PlayerCharacter.Attributes.DecreaseWillpower();
-//                TimeSpentTravelling = 0;
                 foreach (InventoryItem item in PlayerCharacter.Inventory().Contents())
                 {
                     if (item.Template == null) continue;
@@ -84,13 +81,6 @@ namespace Game.Characters.CharacterActions
             }
         }
 
-//        public int GetTimeRemaining()
-//        {
-//            int remainingEndurance = (int) PlayerCharacter.Attributes.Val(AttributeType.Endurance);
-//            int remainingTime = remainingEndurance * WorldState.MinutesPerHour - TimeSpentTravelling % WorldState.MinutesPerHour;
-//            return remainingTime;
-//        }
-
         protected override void OnClick()
         {
             SceneChanger.ChangeScene("Map");
@@ -99,11 +89,6 @@ namespace Game.Characters.CharacterActions
         public Region GetCurrentNode()
         {
             return CurrentNode ?? (CurrentNode = MapGenerator.GetInitialNode());
-        }
-
-        public bool InTransit()
-        {
-            return _inTransit;
         }
 
         public void TravelTo(Region target, int enduranceCost)
@@ -138,15 +123,10 @@ namespace Game.Characters.CharacterActions
 //                    throw new ArgumentOutOfRangeException();
 //            }
 
+            _travelTime = 0;
             _inTransit = true;
             _target = target;
-            _enduranceCost = enduranceCost;
-            Duration = enduranceCost * WorldState.MinutesPerHour / 2;
-        }
-
-        public void SetCurrentNode(Region node)
-        {
-            CurrentNode = node;
+            Duration = enduranceCost * MinutesPerEndurancePoint;
         }
     }
 }

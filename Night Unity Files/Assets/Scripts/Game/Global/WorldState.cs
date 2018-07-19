@@ -194,32 +194,43 @@ namespace Game.Global
             return Random.Range(difficultyMin, difficultyMax);
         }
 
-        public static List<EnemyType> GetAllowedHumanEnemyTypes()
+        private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
+        private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
+
+        private static void CheckEnemyUnlock()
         {
-            int difficulty = Difficulty();
-            List<EnemyType> allowedTypes = new List<EnemyType>();
-            allowedTypes.Add(EnemyType.Sentinel);
-            allowedTypes.Add(EnemyType.Brawler);
-
-            if (difficulty >= 5)
+            int difficulty = Mathf.FloorToInt(Difficulty() / 5f) + 1;
+            List<EnemyTemplate> enemyTypes = EnemyTemplate.GetEnemyTypes();
+            enemyTypes.ForEach(e =>
             {
-                allowedTypes.Add(EnemyType.Sniper);
-                allowedTypes.Add(EnemyType.Martyr);
-            }
+                if (e.Value == 0) return;
+                if (e.Value > difficulty) return;
+                switch (e.Species)
+                {
+                    case "Animal":
+                        return;
+                    case "Human":
+                        if (_allowedHumanEnemies.Contains(e)) return;
+                        _allowedHumanEnemies.Add(e);
+                        return;
+                    case "Nightmare":
+                        if (_allowedNightmareEnemies.Contains(e)) return;
+                        _allowedNightmareEnemies.Add(e);
+                        return;
+                }
+            });
+        }
 
-            if (difficulty >= 10)
-            {
-                allowedTypes.Add(EnemyType.Witch);
-                allowedTypes.Add(EnemyType.Medic);
-            }
+        public static List<EnemyTemplate> GetAllowedHumanEnemyTypes()
+        {
+            CheckEnemyUnlock();
+            return _allowedHumanEnemies;
+        }
 
-            if (difficulty >= 15)
-            {
-                allowedTypes.Add(EnemyType.Warlord);
-                allowedTypes.Add(EnemyType.Mountain);
-            }
-
-            return allowedTypes;
+        public static List<EnemyTemplate> GetAllowedNightmareEnemyTypes()
+        {
+            CheckEnemyUnlock();
+            return _allowedNightmareEnemies;
         }
     }
 }

@@ -17,15 +17,15 @@ namespace Game.Exploration.Weather
         private readonly string _displayName;
         public readonly WeatherAttributes Attributes;
 
-        public Weather(ProbabalisticStateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, weatherNode.SelectSingleNode("Name").InnerText)
+        public Weather(ProbabalisticStateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, Helper.GetNodeText(weatherNode, "Name"))
         {
-            Name = weatherNode.SelectSingleNode("Name").InnerText;
-            _displayName = weatherNode.SelectSingleNode("DisplayName").InnerText;
-            _temperature = int.Parse(weatherNode.SelectSingleNode("Temperature").InnerText);
-            _visibility = float.Parse(weatherNode.SelectSingleNode("Visibility").InnerText);
-            _water = float.Parse(weatherNode.SelectSingleNode("Water").InnerText);
-            _food = float.Parse(weatherNode.SelectSingleNode("Food").InnerText);
-            _duration = int.Parse(weatherNode.SelectSingleNode("Duration").InnerText);
+            Name = Helper.GetNodeText(weatherNode, "Name");
+            _displayName = Helper.GetNodeText(weatherNode, "DisplayName");
+            _temperature = Helper.IntFromNode(weatherNode, "Temperature");
+            _visibility = Helper.FloatFromNode(weatherNode, "Visibility");
+            _water = Helper.FloatFromNode(weatherNode, "Water");
+            _food = Helper.FloatFromNode(weatherNode, "Food");
+            _duration = Helper.IntFromNode(weatherNode, "Duration");
             Attributes = new WeatherAttributes(weatherNode);
         }
 

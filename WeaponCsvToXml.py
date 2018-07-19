@@ -99,7 +99,7 @@ class InscriptionImporter(XMLWriter):
         write_single_value(self, "Name", get_value(self, "A", row))
         write_single_value(self, "Attribute", get_value(self, "B", row))
         write_single_value(self, "Value", get_value(self, "C", row))
-        write_single_value(self, "Type", get_value(self, "D", row))
+        write_single_value(self, "Additive", get_value(self, "D", row))
 
 
 class GearImporter(XMLWriter):
@@ -115,7 +115,6 @@ class GearImporter(XMLWriter):
         write_single_value(self, "Name", get_value(self, "A", row))
         write_single_value(self, "Attribute", get_value(self, "B", row))
         write_single_value(self, "Bonus", get_value(self, "C", row))
-        write_single_value(self, "Type", get_value(self, "D", row))
 
 
 class WeatherImporter(XMLWriter):
@@ -246,7 +245,10 @@ class EnemyImporter(XMLWriter):
         write_single_value(self, "Health", get_value(self, "B", row))
         write_single_value(self, "Speed", get_value(self, "D", row))
         write_single_value(self, "Value", get_value(self, "E", row))
-        write_single_value(self, "Drops", get_value(self, "J", row, ""))
+        write_single_value(self, "Drops", get_value(self, "F", row, ""))
+        write_single_value(self, "HasWeapon", get_value(self, "G", row))
+        write_single_value(self, "HasGear", get_value(self, "H", row))
+        write_single_value(self, "Species", get_value(self, "I", row))
 
 
 class SkillImporter(XMLWriter):
@@ -309,13 +311,13 @@ def write_single_value(xml_writer, stat_name, value):
 
 # WeaponImporter()
 # GearImporter()
-WeatherImporter()
+# WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
 # RecipeImporter()
 # ResourceImporter()
-# InscriptionImporter()
+InscriptionImporter()
 # SkillImporter()
 # TraitImporter()
 # EnvironmentImporter()

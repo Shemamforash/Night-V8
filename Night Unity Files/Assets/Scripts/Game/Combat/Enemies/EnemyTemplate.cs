@@ -11,28 +11,28 @@ namespace Game.Combat.Enemies
     {
         private static bool _loaded;
         private static readonly Dictionary<EnemyType, EnemyTemplate> EnemyTemplates = new Dictionary<EnemyType, EnemyTemplate>();
-        public readonly EnemyType EnemyType;
-        public readonly int Health;
-        public readonly int Speed;
-        public readonly int Value;
-        public readonly string DropResource;
-        public readonly int DropCount;
         private static readonly List<EnemyType> _enemyTypes = new List<EnemyType>();
-        public readonly bool GearAllowed;
+        
+        public readonly EnemyType EnemyType;
+        public readonly int Health, Speed, Value, DropCount;
+        public readonly string DropResource, Species;
+        public readonly bool HasWeapon, HasGear;
 
         private EnemyTemplate(XmlNode enemyNode)
         {
-            EnemyType = NameToType(enemyNode.SelectSingleNode("Name").InnerText);
-            Health = int.Parse(enemyNode.SelectSingleNode("Health").InnerText);
-            Speed = int.Parse(enemyNode.SelectSingleNode("Speed").InnerText);
-            Value = int.Parse(enemyNode.SelectSingleNode("Value").InnerText);
-            string dropString = enemyNode.SelectSingleNode("Drops").InnerText;
+            EnemyType = NameToType(Helper.GetNodeText(enemyNode, "Name"));
+            Health = Helper.IntFromNode(enemyNode, "Health");
+            Speed = Helper.IntFromNode(enemyNode, "Speed");
+            Value = Helper.IntFromNode(enemyNode, "Value");
+            HasWeapon = Helper.BoolFromNode(enemyNode, "HasWeapon");
+            Species = Helper.GetNodeText(enemyNode, "Species");
+            HasGear = Helper.BoolFromNode(enemyNode, "HasGear");
+            string dropString = Helper.GetNodeText(enemyNode, "Drops");
             EnemyTemplates[EnemyType] = this;
             if (dropString == "") return;
             string[] drops = dropString.Split(' ');
             DropCount = int.Parse(drops[0]);
             DropResource = drops[1];
-            GearAllowed = DropResource == "Salt";
         }
 
         public static List<EnemyTemplate> GetEnemyTypes()
@@ -58,7 +58,7 @@ namespace Game.Combat.Enemies
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Enemies", "Enemies");
-            foreach (XmlNode enemyNode in root.SelectNodes("Enemy"))
+            foreach (XmlNode enemyNode in Helper.GetNodesWithName(root,"Enemy"))
                 new EnemyTemplate(enemyNode);
             _loaded = true;
         }

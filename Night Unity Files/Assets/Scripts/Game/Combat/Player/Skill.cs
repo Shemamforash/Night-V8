@@ -49,7 +49,7 @@ namespace Game.Combat.Player
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Skills");
-            foreach (XmlNode skillNode in root.SelectNodes("Skill"))
+            foreach (XmlNode skillNode in Helper.GetNodesWithName(root, "Skill"))
                 new SkillValue(skillNode);
 
             _loaded = true;
@@ -87,9 +87,9 @@ namespace Game.Combat.Player
 
             public SkillValue(XmlNode skillNode)
             {
-                string name = skillNode.SelectSingleNode("Name").InnerText;
-                Cooldown = int.Parse(skillNode.SelectSingleNode("Cooldown").InnerText);
-                Description = skillNode.SelectSingleNode("Description").InnerText;
+                string name = Helper.GetNodeText(skillNode, "Name");
+                Cooldown = Helper.IntFromNode(skillNode, "Cooldown");
+                Description = Helper.GetNodeText(skillNode, "Description");
                 _skillValues[name] = this;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using SamsHelper.Libraries;
 
 namespace Game.Exploration.Weather
 {
@@ -6,23 +7,14 @@ namespace Game.Exploration.Weather
     {
         public readonly float FogAmount, RainAmount, HailAmount, DustAmount, SunAmount;
 
-        public WeatherAttributes(float rain, float fog, float dust, float hail, float sun)
-        {
-            RainAmount = rain;
-            FogAmount = fog;
-            DustAmount = dust;
-            HailAmount = hail;
-            SunAmount = sun;
-        }
-
         public WeatherAttributes(XmlNode weatherNode)
         {
-            XmlNode particleNode = weatherNode.SelectSingleNode("Particles");
-            RainAmount = float.Parse(particleNode.SelectSingleNode("Rain").InnerText);
-            FogAmount = float.Parse(particleNode.SelectSingleNode("Fog").InnerText);
-            DustAmount = float.Parse(particleNode.SelectSingleNode("Dust").InnerText);
-            HailAmount = float.Parse(particleNode.SelectSingleNode("Hail").InnerText);
-            SunAmount = float.Parse(particleNode.SelectSingleNode("Sun").InnerText);
+            XmlNode particleNode = Helper.GetNode(weatherNode, "Particles");
+            RainAmount = Helper.FloatFromNode(particleNode, "Rain");
+            FogAmount = Helper.FloatFromNode(particleNode, "Fog");
+            DustAmount = Helper.FloatFromNode(particleNode, "Dust");
+            HailAmount = Helper.FloatFromNode(particleNode, "Hail");
+            SunAmount = Helper.FloatFromNode(particleNode, "Sun");
         }
     }
 }

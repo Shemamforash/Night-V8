@@ -133,9 +133,9 @@ namespace Game.Characters
             _timeAlive = 0;
         }
 
-        public void Tire(int enduranceCost)
+        public void Tire()
         {
-            Attributes.Get(AttributeType.Endurance).Decrement(enduranceCost);
+            Attributes.Get(AttributeType.Endurance).Decrement();
             if (Attributes.Val(AttributeType.Endurance) <= 1)
             {
                 WorldEventManager.GenerateEvent(new CharacterMessage("I really need some rest", this));

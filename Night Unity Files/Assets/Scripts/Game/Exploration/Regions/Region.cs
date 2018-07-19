@@ -27,7 +27,6 @@ namespace Game.Exploration.Regions
         public List<Barrier> Barriers = new List<Barrier>();
         public readonly List<EnemyCampfire> Fires = new List<EnemyCampfire>();
         public readonly List<ContainerController> Containers = new List<ContainerController>();
-        private readonly HashSet<Region> _neighbors = new HashSet<Region>();
         private static GameObject _nodePrefab;
         public readonly int RegionID;
         private int _lastVisitDay = -1;
@@ -72,21 +71,13 @@ namespace Game.Exploration.Regions
             return regionNode;
         }
 
-        public void AddNeighbor(Region neighbor)
-        {
-            _neighbors.Add(neighbor);
-            neighbor._neighbors.Add(this);
-        }
-
-        public List<Region> Neighbors() => _neighbors.ToList();
-
         private MapNodeController _mapNode;
 
         public MapNodeController MapNode()
         {
             return _mapNode;
         }
-        
+
         public void CreateObject()
         {
             if (!_seen) return;
@@ -103,6 +94,7 @@ namespace Game.Exploration.Regions
                 g.transform.SetParent(nodeObject.transform, false);
                 g.transform.position = nodeObject.transform.position;
             }
+
             _mapNode.SetRegion(this);
         }
 
@@ -115,19 +107,18 @@ namespace Game.Exploration.Regions
 
         private float DistanceToPoint(Vector3 point) => Vector3.Distance(point, Position);
 
-        public Enemy AddEnemy(EnemyType enemyType)
+        public Enemy AddEnemy(EnemyTemplate template)
         {
-            Enemy newEnemy = new Enemy(enemyType);
+            Enemy newEnemy = new Enemy(template);
             _enemies.Add(newEnemy);
             return newEnemy;
         }
 
-        private void GenerateHumanEncounter()
+        private void GenerateEncounter(List<EnemyTemplate> allowedTypes, int minSize, int maxSize)
         {
             int daysSpent = WorldState.GetDaysSpentHere();
-            int size = Random.Range(1 + daysSpent, 5 + daysSpent);
+            int size = Random.Range(minSize + daysSpent, maxSize + daysSpent);
             int difficulty = WorldState.Difficulty();
-            List<EnemyType> allowedTypes = WorldState.GetAllowedHumanEnemyTypes();
 
             if (difficulty >= 20)
             {
@@ -137,54 +128,9 @@ namespace Game.Exploration.Regions
 
             while (size > 0)
             {
-                EnemyType type = Helper.RandomInList(allowedTypes);
-                AddEnemy(type);
-                if (type == EnemyType.Sentinel || type == EnemyType.Brawler) --size;
-                if (type == EnemyType.Sniper || type == EnemyType.Martyr) size -= 2;
-                if (type == EnemyType.Witch || type == EnemyType.Medic) size -= 3;
-                if (type == EnemyType.Warlord || type == EnemyType.Mountain) size -= 4;
-            }
-        }
-
-        private void GenerateNightmareEncounter()
-        {
-            int daysSpent = WorldState.GetDaysSpentHere();
-            int size = Random.Range(5 + daysSpent, 10 + daysSpent);
-            int difficulty = WorldState.Difficulty();
-            List<EnemyType> allowedTypes = new List<EnemyType>();
-            allowedTypes.Add(EnemyType.Ghoul);
-            allowedTypes.Add(EnemyType.Ghast);
-            if (difficulty >= 5)
-            {
-                allowedTypes.Add(EnemyType.GhoulMother);
-                allowedTypes.Add(EnemyType.Shadow);
-            }
-
-            if (difficulty >= 10)
-            {
-                allowedTypes.Add(EnemyType.Revenant);
-                allowedTypes.Add(EnemyType.Maelstrom);
-            }
-
-            if (difficulty >= 15)
-            {
-                allowedTypes.Add(EnemyType.Nightmare);
-            }
-
-            if (difficulty >= 20)
-            {
-                difficulty -= 20;
-                size += Mathf.FloorToInt(difficulty / 5f);
-            }
-
-            while (size > 0)
-            {
-                EnemyType type = Helper.RandomInList(allowedTypes);
-                AddEnemy(type);
-                if (type == EnemyType.Ghoul || type == EnemyType.Ghast) --size;
-                if (type == EnemyType.GhoulMother || type == EnemyType.Shadow) size -= 2;
-                if (type == EnemyType.Revenant || type == EnemyType.Maelstrom) size -= 3;
-                if (type == EnemyType.Nightmare) size -= 4;
+                EnemyTemplate template = Helper.RandomInList(allowedTypes);
+                AddEnemy(template);
+                size -= template.Value;
             }
         }
 
@@ -199,26 +145,26 @@ namespace Game.Exploration.Regions
                 case 0:
                     for (int i = 0; i < 10; ++i)
                     {
-                        AddEnemy(EnemyType.Grazer);
+                        AddEnemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Grazer));
                     }
 
                     for (int i = 0; i < 3; ++i)
                     {
-                        AddEnemy(EnemyType.Watcher);
+                        AddEnemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Watcher));
                     }
 
                     break;
                 case 1:
                     for (int i = 0; i < Random.Range(1, 4); ++i)
                     {
-                        AddEnemy(EnemyType.Curio);
+                        AddEnemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Curio));
                     }
 
                     break;
                 case 2:
                     for (int i = 0; i < 20; ++i)
                     {
-                        AddEnemy(EnemyType.Flit);
+                        AddEnemy(EnemyTemplate.GetEnemyTemplate(EnemyType.Flit));
                     }
 
                     break;
@@ -244,7 +190,7 @@ namespace Game.Exploration.Regions
             switch (_regionType)
             {
                 case RegionType.Nightmare:
-                    GenerateNightmareEncounter();
+                    GenerateEncounter(WorldState.GetAllowedNightmareEnemyTypes(), 5, 10);
                     break;
                 case RegionType.Shelter:
                     GenerateShelter();
@@ -253,7 +199,7 @@ namespace Game.Exploration.Regions
                     GenerateAnimalEncounter();
                     break;
                 default:
-                    GenerateHumanEncounter();
+                    GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes(), 1, 5);
                     break;
             }
 
@@ -267,9 +213,12 @@ namespace Game.Exploration.Regions
             CharacterManager.SelectedCharacter.BrandManager.IncreaseRegionsExplored();
             _discovered = true;
             SetSeen();
-            foreach (Region neighbor in _neighbors)
-                if (!neighbor._seen)
-                    neighbor.SetSeen();
+            foreach (Node neighbor in Neighbors())
+            {
+                Region region = neighbor as Region;
+                if (!region._seen)
+                    region.SetSeen();
+            }
         }
 
         public bool Discovered() => _discovered;

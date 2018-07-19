@@ -16,7 +16,7 @@ public class SunBehaviour : MonoBehaviour
         Sequence sunSequence = DOTween.Sequence();
         sunSequence.Append(sunTransform.DOAnchorPos(new Vector2(-radius, -height), time).SetEase(Ease.InOutSine));
         sunTransform.DOAnchorPos(new Vector2(-radius, -height), time).SetEase(Ease.InOutSine);
-        sunSequence.InsertCallback(time, () => sunCanvas.sortingOrder = sunCanvas.sortingOrder == 1 ? 0 : 1);
+        sunSequence.InsertCallback(time, () => sunCanvas.sortingOrder = sunCanvas.sortingOrder == -8 ? -10 : -8);
         sunSequence.SetLoops(-1, LoopType.Yoyo);
     }
 

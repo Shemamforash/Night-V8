@@ -388,5 +388,41 @@ namespace SamsHelper
 
             public override string Message => "State '" + _stateName + "' does not exist.";
         }
+
+        public class XmlNodeDoesNotExistException : Exception
+        {
+            private readonly string _nodeName;
+
+            public XmlNodeDoesNotExistException(string nodeName)
+            {
+                _nodeName = nodeName;
+            }
+
+            public override string Message => "Node " + _nodeName + " does not exist";
+        }
+
+        public class NodeHasNoAttributesException : Exception
+        {
+            private readonly string _nodeName;
+
+            public NodeHasNoAttributesException(string nodeName)
+            {
+                _nodeName = nodeName;
+            }
+
+            public override string Message => "Node " + _nodeName + " has no attributes";
+        }
+
+        public class NoNodesWithNameException : Exception
+        {
+            private readonly string _nodeName;
+
+            public NoNodesWithNameException(string nodeName)
+            {
+                _nodeName = nodeName;
+            }
+
+            public override string Message => "No nodes with name " + _nodeName + " found";
+        }
     }
 }

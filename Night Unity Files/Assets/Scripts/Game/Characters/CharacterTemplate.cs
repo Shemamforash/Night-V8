@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using SamsHelper;
+using SamsHelper.Libraries;
 
 namespace Game.Characters
 {
@@ -14,12 +15,12 @@ namespace Game.Characters
 
         public CharacterTemplate(XmlNode classNode, List<CharacterTemplate> templates)
         {
-            CharacterClass = StringToClass(classNode.SelectSingleNode("Name").InnerText);
-            Endurance = int.Parse(classNode.SelectSingleNode("Endurance").InnerText);
-            Willpower = int.Parse(classNode.SelectSingleNode("Willpower").InnerText);
-            Strength = int.Parse(classNode.SelectSingleNode("Strength").InnerText);
-            Perception = int.Parse(classNode.SelectSingleNode("Perception").InnerText);
-            StoryLines = new List<string>(classNode.SelectSingleNode("Story").InnerText.Split('.'));
+            CharacterClass = StringToClass(Helper.GetNodeText(classNode, "Name"));
+            Endurance = Helper.IntFromNode(classNode, "Endurance");
+            Willpower = Helper.IntFromNode(classNode, "Willpower");
+            Strength = Helper.IntFromNode(classNode, "Strength");
+            Perception = Helper.IntFromNode(classNode, "Perception");
+            StoryLines = new List<string>(Helper.GetNodeText(classNode, "Story").Split('.'));
             templates.Add(this);
         }
 

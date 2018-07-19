@@ -49,10 +49,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Resources");
 
-            foreach (XmlNode resourceNode in root.SelectNodes("Consumable"))
+            foreach (XmlNode resourceNode in Helper.GetNodesWithName(root, "Consumable"))
                 new ResourceTemplate(resourceNode);
 
-            foreach (XmlNode resourceNode in root.SelectNodes("Resource"))
+            foreach (XmlNode resourceNode in Helper.GetNodesWithName(root, "Resource"))
                 new ResourceTemplate(resourceNode);
 
             _loaded = true;
@@ -78,7 +78,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public virtual void Load(XmlNode root, PersistenceType saveType)
         {
             if (saveType != PersistenceType.Game) return;
-            XmlNode inventoryNode = root.SelectSingleNode(Name);
+            XmlNode inventoryNode = Helper.GetNode(root, Name);
             InventoryResources().ForEach(r => LoadResource(r.Name, inventoryNode));
         }
 
@@ -227,7 +227,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         private void LoadResource(string type, XmlNode root)
         {
-            IncrementResource(type, SaveController.ParseIntFromNodeAndString(root, type));
+            IncrementResource(type, Helper.IntFromNode(root, type));
         }
 
         private void SaveResource(string type, XmlNode root)

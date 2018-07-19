@@ -16,7 +16,7 @@ namespace Game.Exploration.WorldEvents
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
-            string events = doc.SelectSingleNode("WorldEvents").InnerText;
+            string events = Helper.GetNodeText(doc, "WorldEvents");
             _eventLog = new List<string>(events.Split(','));
             PrintFirstFourEvents();
         }
