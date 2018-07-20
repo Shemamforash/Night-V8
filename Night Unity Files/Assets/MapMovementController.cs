@@ -53,10 +53,11 @@ public class MapMovementController : MonoBehaviour, IInputListener
 			nearestDistance = distance;
 			newNearestRegion = region;
 		});
+		if (nearestDistance > 1.5f) newNearestRegion = null;
 		if (_nearestRegion == newNearestRegion) return;
 		_nearestRegion?.MapNode().LoseFocus();
 		_nearestRegion = newNearestRegion;
-		_nearestRegion.MapNode().GainFocus();
+		_nearestRegion?.MapNode().GainFocus();
 	}
 	
 	public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -100,6 +101,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
 			travelAction.TravelTo(_nearestRegion, _enduranceCost);
 		}
 
+		_nearestRegion?.MapNode().Enter();
 		ReturnToGame();
 	}
 

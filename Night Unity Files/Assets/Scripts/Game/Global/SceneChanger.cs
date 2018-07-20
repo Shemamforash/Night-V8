@@ -12,13 +12,16 @@ namespace Game.Global
         private static Image _fader;
         private static SceneChanger _instance;
         private static readonly Color InvisibleBlack = new Color(0, 0, 0, 0);
+        private AudioSource _audioSource;
 
         public void Awake()
         {
             _instance = this;
+            _audioSource = GetComponent<AudioSource>();
             _fader = GameObject.Find("Screen Fader").GetComponent<Image>();
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_fader.DOColor(InvisibleBlack, 1f));
+            if(_audioSource != null) sequence.Append(_audioSource.DOFade(1, 1));
             if (SceneManager.GetActiveScene().name != "Game") return;
             sequence.AppendCallback(WorldState.UnPause);
         }
@@ -27,6 +30,7 @@ namespace Game.Global
         {
             AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync(sceneName);
             sceneLoaded.allowSceneActivation = false;
+            if (_audioSource != null) _audioSource.DOFade(1, 1);
             if (fade)
             {
                 yield return _fader.DOColor(Color.black, 1f).WaitForCompletion();

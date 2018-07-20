@@ -430,6 +430,7 @@ namespace Game.Combat.Player
             UIMagazineController.EmptyMagazine();
             OnFireAction = null;
             _reloading = true;
+            WeaponAudio.StartReload(Weapon().WeaponType());
 
             float age = 0;
             while (age < duration)
@@ -453,6 +454,7 @@ namespace Game.Combat.Player
             if (Random.Range(0f, 1f) > reloadFailChance)
             {
                 _weaponBehaviour.Reload();
+                WeaponAudio.StopReload(Weapon().WeaponType());
             }
 
             OnReloadAction?.Invoke();

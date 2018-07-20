@@ -9,6 +9,7 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Ui
 {
@@ -32,26 +33,32 @@ namespace Game.Exploration.Ui
         private readonly Color _ring3Colour = new Color(1, 1, 1, 0.25f);
         private readonly Color _iconColor = new Color(1, 1, 1, 0.8f);
 
-        public void SetRegion(Region region)
+        private AudioSource _audioSource;
+        public AudioClip _enterClip;
+
+        public void Awake()
         {
-            _region = region;
-            _enduranceCost = RoutePlotter.RouteBetween(region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode()).Count - 1;
-            if (region.GetRegionType() == RegionType.Gate) _enduranceCost = 0;
             _fadeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Fade");
             _costText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Cost");
-            for (int i = 0; i < region.Name.Length; ++i)
-            {
-                _letters.Add(new Letter(region.Name[i].ToString()));
-                if (i > 0) _letters[i - 1].SetNextLetter(_letters[i]);
-            }
-
+            _audioSource = GetComponent<AudioSource>();
             _ring1 = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring 1");
             _ring2 = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring 2");
             _ring3 = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring 3");
             _icon = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Icon");
             _shadow = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Shadow");
+        }
+        
+        public void SetRegion(Region region)
+        {
+            _region = region;
+            _enduranceCost = RoutePlotter.RouteBetween(region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode()).Count - 1;
+            if (region.GetRegionType() == RegionType.Gate) _enduranceCost = 0;
+            for (int i = 0; i < region.Name.Length; ++i)
+            {
+                _letters.Add(new Letter(region.Name[i].ToString()));
+                if (i > 0) _letters[i - 1].SetNextLetter(_letters[i]);
+            }
             LoseFocus(0f);
-
             _letters[0]?.StartFade();
             if (gameObject.activeInHierarchy) StartCoroutine(FadeInLetters());
             AssignSprite(region.GetRegionType());
@@ -100,6 +107,12 @@ namespace Game.Exploration.Ui
             }
         }
 
+        public void Enter()
+        {
+            Camera.main.DOOrthoSize(1, 1f);
+            _audioSource.PlayOneShot(_enterClip);
+        }
+        
         public void Update()
         {
             _ring1.transform.Rotate(new Vector3(0, 0, 1), 5 * Time.deltaTime);
@@ -124,6 +137,8 @@ namespace Game.Exploration.Ui
 
         public void GainFocus()
         {
+            _audioSource.pitch = Random.Range(0.75f, 1.25f);
+            _audioSource.DOFade(1, 1);
             _shadow.DOColor(new Color(0.1f, 0.1f, 0.1f, 1f), 1f);
             _icon.DOColor(_iconColor, 1f);
             _ring1.DOColor(_ring1Colour, 1f);
@@ -137,6 +152,7 @@ namespace Game.Exploration.Ui
 
         public void LoseFocus(float time = 1f)
         {
+            _audioSource.DOFade(0, 1);
             _shadow.DOColor(new Color(0f, 0f, 0f, 1f), time);
             _icon.DOColor(UiAppearanceController.FadedColour, time);
             _ring1.DOColor(UiAppearanceController.InvisibleColour, time);

@@ -244,7 +244,6 @@
           <e p="Facilitating" t="Include">
             <e p="Audio" t="Include">
               <e p="GlobalAudioManager.cs" t="Include" />
-              <e p="GunFire.cs" t="Include" />
               <e p="ThunderClick.cs" t="Include" />
             </e>
             <e p="Campfire.cs" t="Include" />
@@ -748,6 +747,7 @@
             </e>
           </e>
         </e>
+        <e p="WeaponAudioController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

@@ -10,7 +10,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             Speed = Random.Range(3f, 7f);
             float rotateSpeed = Random.Range(10f, 20f);
             if (Random.Range(0, 2) == 0) rotateSpeed = -rotateSpeed;
-            GetComponent<Rotate>().RotateSpeed = rotateSpeed;
+            gameObject.AddComponent<Rotate>().RotateSpeed = rotateSpeed;
         }
         
         public void SetTarget(Transform targetTransform)

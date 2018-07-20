@@ -424,5 +424,10 @@ namespace SamsHelper
 
             public override string Message => "No nodes with name " + _nodeName + " found";
         }
+
+        public class RegionPositionNotFoundException : Exception
+        {
+            public override string Message => "No valid position found to place object";
+        }
     }
 }

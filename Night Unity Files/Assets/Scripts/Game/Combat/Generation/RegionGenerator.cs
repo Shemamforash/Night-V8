@@ -6,6 +6,7 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
 using NUnit.Framework;
+using SamsHelper;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -24,45 +25,53 @@ namespace Game.Combat.Generation
         {
             _region = region;
             Random.InitState(region.RegionID + WorldState.Seed);
-
             PathingGrid.InitialiseGrid();
-            if (!_region.Visited())
-                GenerateFreshEnvironment();
-
+            GenerateFreshEnvironment();
+            GenerateObjects();
             _region.Visit();
+            PathingGrid.FinaliseGrid();
+        }
+
+        private void GenerateObjects()
+        {
             GenerateShrine();
             GenerateEchoes();
             if (_region.HealShrinePosition != null)
             {
                 HealShrineBehaviour.CreateObject(_region.HealShrinePosition.Value);
             }
+
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
-            
-            PathingGrid.FinaliseGrid();
         }
 
         private void GenerateFreshEnvironment()
         {
+            if (_region.Visited()) return;
             _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f));
+            Generate();
+            _region.Barriers = barriers;
+        }
+
+        protected void PlaceEchoes()
+        {
             for (int i = 0; i < 10; ++i)
             {
-                Vector2? position = FindAndRemoveValidPosition();
-                Assert.IsNotNull(position);
-                _region.EchoPositions.Add(FindAndRemoveValidPosition().Value);
+                Vector2 position = FindAndRemoveValidPosition();
+                _region.EchoPositions.Add(FindAndRemoveValidPosition());
+                CreateImpassablePoint(position);
             }
+        }
 
-            PlaceShrine();
-            Generate();
-            foreach (Barrier barrier in barriers)
+        protected void RemoveInvalidPoints()
+        {
+            _availablePositions.RemoveAll(p =>
             {
-                _region.Barriers.Add(barrier);
-            }
-
-            _region.Barriers = barriers;
-            PlaceItems();
-            _region.Visit();
+                Cell c = PathingGrid.WorldToCellPosition(p);
+                if (c == null) return false;
+                return !PathingGrid.WorldToCellPosition(p).Reachable;
+            });
         }
 
         private void GenerateEchoes()
@@ -74,15 +83,19 @@ namespace Game.Combat.Generation
                 if (!c.HasAvailableStoryLine()) continue;
                 Vector2 echoPosition = Helper.RandomInList(_region.EchoPositions);
                 EchoBehaviour.Create(echoPosition, c);
-                List<Vector2> verts = new List<Vector2>();
-                verts.Add(new Vector2(echoPosition.x - 0.5f, echoPosition.y - 0.5f));
-                verts.Add(new Vector2(echoPosition.x - 0.5f, echoPosition.y + 0.5f));
-                verts.Add(new Vector2(echoPosition.x + 0.5f, echoPosition.y + 0.5f));
-                verts.Add(new Vector2(echoPosition.x + 0.5f, echoPosition.y - 0.5f));
-                Polygon polygon = new Polygon(verts, echoPosition);
-                PathingGrid.AddBarrier(polygon);
                 break;
             }
+        }
+
+        private void CreateImpassablePoint(Vector2 position)
+        {
+            List<Vector2> verts = new List<Vector2>();
+            verts.Add(new Vector2(position.x - 0.5f, position.y - 0.5f));
+            verts.Add(new Vector2(position.x - 0.5f, position.y + 0.5f));
+            verts.Add(new Vector2(position.x + 0.5f, position.y + 0.5f));
+            verts.Add(new Vector2(position.x + 0.5f, position.y - 0.5f));
+            Polygon polygon = new Polygon(verts, position);
+            PathingGrid.AddBarrier(polygon);
         }
 
         private void GenerateShrine()
@@ -103,27 +116,32 @@ namespace Game.Combat.Generation
             }
         }
 
-        private void PlaceShrine()
+        protected bool ShouldPlaceShrine()
         {
             RegionType regionType = _region.GetRegionType();
-            bool valid = regionType == RegionType.Monument || regionType == RegionType.Fountain || regionType == RegionType.Shrine;
-            if (!valid) return;
-            Vector2? position = FindAndRemoveValidPosition(3f);
-            Assert.IsNotNull(position);
-            _region.ShrinePosition = position.Value;
+            bool validRegion = regionType == RegionType.Monument || regionType == RegionType.Fountain || regionType == RegionType.Shrine;
+            return validRegion;
+        }
+
+        protected void PlaceShrine()
+        {
+            if (!ShouldPlaceShrine()) return;
+            Vector2 position = FindAndRemoveValidPosition(3f);
+            _region.ShrinePosition = position;
             List<Vector2> verts = new List<Vector2>();
             for (int angle = 0; angle < 360; angle += 20)
             {
-                Vector2 vert = AdvancedMaths.CalculatePointOnCircle(angle, 3.5f, position.Value);
+                Vector2 vert = AdvancedMaths.CalculatePointOnCircle(angle, 3.5f, position);
                 verts.Add(vert);
             }
 
-            Polygon polygon = new Polygon(verts, position.Value);
+            Polygon polygon = new Polygon(verts, position);
 
-            PathingGrid.AddBarrier(polygon);
+            Debug.Log(PathingGrid.AddBarrier(polygon));
+            RemoveInvalidPoints();
         }
 
-        private void GenerateGenericRock(float radius, float radiusVariation, float smoothness, Vector2? position = null)
+        private void GenerateGenericRock(float radius, float radiusVariation, float smoothness, Vector2 position)
         {
             smoothness = Mathf.Clamp(1 - smoothness, 0.01f, 1f);
             radiusVariation = 1 - Mathf.Clamp(radiusVariation, 0f, 1f);
@@ -147,22 +165,17 @@ namespace Game.Combat.Generation
                 angleIncrement = Random.Range(definition / 2f, definition);
             }
 
-            AssignRockPosition(barrierVertices, position);
+            new Barrier(barrierVertices, "Barrier " + GetObjectNumber(), position, barriers);
         }
 
         protected void PlaceFire()
         {
-            Vector2? position = FindAndRemoveValidPosition(0.5f);
-            Assert.IsNotNull(position);
-            _region.Fires.Add(GenerateFire(position.Value));
-
-//            int randomIndex = Random.Range(0, barriers.Count);
-//            Barrier b = barriers[randomIndex];
-//            barriers.RemoveAt(randomIndex);
-//            _region.Fires.Add(GenerateFire(b.Position));
+            Vector2 position = FindAndRemoveValidPosition(0.5f);
+            _region.Fires.Add(GenerateFire(position));
+            CreateImpassablePoint(position);
         }
 
-        protected Vector2? FindAndRemoveValidPosition(float radius = 0, bool ignoreBounds = false)
+        protected Vector2 FindAndRemoveValidPosition(float radius = 0, bool ignoreBounds = false)
         {
             for (int i = _availablePositions.Count - 1; i >= 0; --i)
             {
@@ -181,7 +194,7 @@ namespace Game.Combat.Generation
                 return c.Position;
             }
 
-            return null;
+            throw new Exceptions.RegionPositionNotFoundException();
         }
 
         private EnemyCampfire GenerateFire(Vector2 position)
@@ -203,18 +216,11 @@ namespace Game.Combat.Generation
             return new EnemyCampfire(position);
         }
 
-        protected void AssignRockPosition(List<Vector2> barrierVertices, Vector2? position)
-        {
-            if (position == null) position = FindAndRemoveValidPosition(0, true);
-            if (position == null) return;
-            new Barrier(barrierVertices, "Barrier " + GetObjectNumber(), (Vector2) position, barriers);
-        }
-
         private void GenerateRocks(int number, float minPolyWidth, float maxPolyWidth, float radiusVariation, float smoothness)
         {
             while (number > 0)
             {
-                GenerateGenericRock(Random.Range(minPolyWidth, maxPolyWidth), radiusVariation, smoothness);
+                GenerateGenericRock(Random.Range(minPolyWidth, maxPolyWidth), radiusVariation, smoothness, FindAndRemoveValidPosition());
                 --number;
             }
         }
@@ -251,18 +257,16 @@ namespace Game.Combat.Generation
             //todo tidy me
             if (_healthShrineCounter > HealShrineTarget)
             {
-                Vector2? position = FindAndRemoveValidPosition();
-                Assert.IsNotNull(position);
-                _region.HealShrinePosition = position.Value;
+                _region.HealShrinePosition = FindAndRemoveValidPosition();
                 _healthShrineCounter = 0;
+                RemoveInvalidPoints();
             }
 
             if (_essenceShrineCounter > EssenceShrineTarget / EnvironmentManager.CurrentEnvironment.LevelNo)
             {
-                Vector2? position = FindAndRemoveValidPosition();
-                Assert.IsNotNull(position);
-                _region.EssenceShrinePosition = position.Value;
+                _region.EssenceShrinePosition = FindAndRemoveValidPosition();
                 _essenceShrineCounter = 0;
+                RemoveInvalidPoints();
             }
 
             _healthShrineCounter += Random.Range(1, 3);
@@ -271,25 +275,22 @@ namespace Game.Combat.Generation
             Helper.Shuffle(_availablePositions);
             for (int i = 0; i < _region.WaterSourceCount; ++i)
             {
-                Vector2? position = FindAndRemoveValidPosition();
-                Assert.IsNotNull(position);
-                _region.Containers.Add(new WaterSource(position.Value));
+                _region.Containers.Add(new WaterSource(FindAndRemoveValidPosition()));
+                RemoveInvalidPoints();
             }
 
             for (int i = 0; i < _region.FoodSourceCount; ++i)
             {
-                Vector2? position = FindAndRemoveValidPosition();
-                Assert.IsNotNull(position);
-                _region.Containers.Add(new FoodSource(position.Value));
+                _region.Containers.Add(new FoodSource(FindAndRemoveValidPosition()));
+                RemoveInvalidPoints();
             }
 
             for (int i = 0; i < _region.ResourceSourceCount; ++i)
             {
-                Vector2? position = FindAndRemoveValidPosition();
-                Assert.IsNotNull(position);
-                Loot loot = new Loot(position.Value, "Resource");
+                Loot loot = new Loot(FindAndRemoveValidPosition(), "Resource");
                 loot.IncrementResource(ResourceTemplate.GetResource().Name, 1);
                 _region.Containers.Add(loot);
+                RemoveInvalidPoints();
             }
         }
 

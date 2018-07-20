@@ -7,6 +7,16 @@ using Random = UnityEngine.Random;
 
 namespace Game.Combat.Generation
 {
+    //place shrine
+    //generate walls
+    //create island around shrine
+    //create islands
+    //place health shrine
+    //place fires
+    //place items
+    //place echo
+    //place obstacles
+    
     public class Ruins : RegionGenerator
     {
         private RuinNode[,] nodes;
@@ -495,7 +505,7 @@ namespace Game.Combat.Generation
             while (i > 0)
             {
                 Vector2 randomPosition = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, PathingGrid.CombatAreaWidth / 3f);
-                randomPosition = FindAndRemoveValidPosition().Value;
+                randomPosition = FindAndRemoveValidPosition();
                 float range = Random.Range(5, 10);
                 for (int x = 0; x < WidthInCells; ++x)
                 {

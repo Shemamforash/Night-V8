@@ -7,6 +7,14 @@ namespace Game.Combat.Generation
 {
     public class Labyrinth : RegionGenerator
     {
+        //place walls
+        //remove walls to place shrine
+        //remove wall to place health shrine
+        //place fires
+        //place items
+        //place echo
+        //place obstacles
+        
         protected override void PlaceItems()
         {
         }

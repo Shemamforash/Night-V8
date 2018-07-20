@@ -5,6 +5,7 @@ using Game.Combat.Ui;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace Game.Combat.Misc
 {
     public abstract class CharacterCombat : MonoBehaviour
     {
+        public WeaponAudioController WeaponAudio;
         private const float DashForce = 300;
         private const float RecoilRecoveryRate = 2f;
         private const float TimeToStartRecovery = 0.5f;
@@ -219,6 +221,7 @@ namespace Game.Combat.Misc
             _rigidbody = GetComponent<Rigidbody2D>();
             if (this is EnemyBehaviour) CharacterUi = EnemyUi.Instance();
             else CharacterUi = PlayerUi.Instance();
+            WeaponAudio = Helper.FindChildWithName<WeaponAudioController>(gameObject, "Weapon Audio");
         }
 
         public virtual void Update()

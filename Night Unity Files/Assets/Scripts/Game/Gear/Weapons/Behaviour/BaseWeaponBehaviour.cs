@@ -69,12 +69,12 @@ namespace Game.Gear.Weapons
         {
             if (Empty()) return;
             TimeToNextFire = Helper.TimeInSeconds() + 1f / Weapon.GetAttributeValue(AttributeType.FireRate);
-            //todo play sound GunFire.Fire(_weaponAttributes.WeaponType, distance);
             for (int i = 0; i < WeaponAttributes.Val(AttributeType.Pellets); ++i)
             {
                 Shot shot = Shot.Create(origin);
                 origin.ApplyShotEffects(shot);
                 shot.Fire();
+                origin.WeaponAudio.Fire(Weapon.WeaponType());
             }
             ConsumeAmmo(1);
             if (origin is PlayerCombat)

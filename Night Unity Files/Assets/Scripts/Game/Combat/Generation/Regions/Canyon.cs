@@ -4,6 +4,14 @@ using UnityEngine;
 
 namespace Game.Combat.Generation
 {
+    //place walls
+    //place shrine
+    //place health shrine
+    //place fires
+    //place items
+    //place echo
+    //place obstacles
+    
     public class Canyon : RegionGenerator
     {
         protected override void Generate()
@@ -11,8 +19,12 @@ namespace Game.Combat.Generation
             Vector2 leftPosition = new Vector2(Random.Range(-7f, -4f), 0);
             Vector2 rightPosition = new Vector2(Random.Range(4f, 7f), 0);
             int rotateAmount = Random.Range(0, 360);
-            GenerateRockWall(leftPosition, 10, true, rotateAmount);
-            GenerateRockWall(rightPosition, 10, false, rotateAmount);
+            GenerateRockWall(leftPosition, true, rotateAmount);
+            GenerateRockWall(rightPosition, false, rotateAmount);
+            RemoveInvalidPoints();
+            PlaceShrine();
+            PlaceItems();
+            PlaceEchoes();
             GenerateSmallRocks(Random.Range(5, 15));
             GenerateTinyRocks(Random.Range(20, 40));
         }
@@ -51,14 +63,12 @@ namespace Game.Combat.Generation
             return points;
         }
 
-        private void GenerateRockWall(Vector2 position, float width, bool left, int rotateAmount)
+        private void GenerateRockWall(Vector2 position, bool left, int rotateAmount)
         {
             List<Vector2> wallVertices = RockWall(left);
             for (int i = 0; i < wallVertices.Count; i++) wallVertices[i] = AdvancedMaths.RotatePoint(wallVertices[i], rotateAmount, Vector2.zero);
-
             position = AdvancedMaths.RotatePoint(position, rotateAmount, Vector2.zero);
-
-            Barrier wall = new Barrier(wallVertices, "Wall " + GetObjectNumber(), position, barriers);
+            new Barrier(wallVertices, "Wall " + GetObjectNumber(), position, barriers);
         }
 
         protected override void PlaceItems()

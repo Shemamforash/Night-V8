@@ -17,11 +17,14 @@ namespace Game.Combat.Misc
         private bool _leftLast;
         private Rigidbody2D _rigidBody;
         public bool UseHoofprint;
+        [SerializeField]
+        private AudioClip[] _audioClips;
+        private AudioSource _audioSource;
 
         public void Awake()
         {
             if (_footstepParent == null) _footstepParent = GameObject.Find("World").transform.Find("Footsteps");
-            _rigidBody = GetComponent<Rigidbody2D>();
+            _audioSource = GetComponent<AudioSource>();
         }
 
         private void SetTransformAndRotation(GameObject footprintObject)
@@ -63,6 +66,7 @@ namespace Game.Combat.Misc
 
         private Quaternion GetRotation()
         {
+            if(_rigidBody == null) _rigidBody = transform.parent.GetComponent<Rigidbody2D>();
             float zRotation = AdvancedMaths.AngleFromUp(Vector3.zero, _rigidBody.velocity);
             return Quaternion.Euler(new Vector3(0, 0, zRotation));
         }
@@ -81,7 +85,7 @@ namespace Game.Combat.Misc
                 GetNewFootprint().transform.Translate(Vector3.right * 0.03f);
                 _leftLast = true;
             }
-
+            if(_audioClips.Length != 0) _audioSource.PlayOneShot(Helper.RandomInList(_audioClips));
             _distanceTravelled = 0;
             _lastPosition = transform.position;
         }

@@ -8,6 +8,14 @@ namespace Game.Combat.Generation
 {
     public class Steppe : RegionGenerator
     {
+        //place shrine
+        //place walls, remove cells if they intersect with shrine
+        //place health shrine
+        //place fires
+        //place items
+        //place echo
+        //place obstacles
+
         private const float Scale = 0.25f;
         private const int Width = 200;
         private const int RegionAreaThreshold = 100;
@@ -135,7 +143,7 @@ namespace Game.Combat.Generation
 
                 verts.Reverse();
                 centre -= Vector2.one * Width / 2f * Scale;
-                AssignRockPosition(verts, centre);
+                new Barrier(verts, "Wall " + GetObjectNumber(), centre, barriers);
             });
         }
 
