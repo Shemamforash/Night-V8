@@ -49,7 +49,8 @@ namespace Game.Combat.Enemies
 
             if (!CouldHitTarget)
             {
-                MoveBehaviour.GoToCell(GetTarget().CurrentCell(), TryFire, IdealWeaponDistance);
+                MoveBehaviour.GoToCell(GetTarget().CurrentCell(), IdealWeaponDistance);
+                CurrentAction = TryFire;
                 return;
             }
 
@@ -135,7 +136,6 @@ namespace Game.Combat.Enemies
             CurrentAction = () =>
             {
                 if (!CouldHitTarget) TryFire();
-                if (GetAccuracyModifier() > 0.25f) return;
                 Fire();
             };
         }

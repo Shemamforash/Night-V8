@@ -20,7 +20,8 @@ namespace Game.Combat.Enemies.Nightmares
 
         protected void Flee(Cell target)
         {
-            MoveBehaviour.GoToCell(target, () => StartCoroutine(FleeArea()));
+            MoveBehaviour.GoToCell(target);
+            CurrentAction = () => StartCoroutine(FleeArea());
             SetActionText("Fleeing");
             Fleeing = true;
         }

@@ -43,7 +43,8 @@ namespace Game.Combat.Enemies.Humans
         {
             Assert.IsNull(_healTarget);
             _healTarget = healTarget;
-            FollowTarget(_healTarget);
+            SetTarget(_healTarget);
+            FollowTarget();
             SetActionText("Healing " + healTarget.Enemy.Template.EnemyType);
         }
 

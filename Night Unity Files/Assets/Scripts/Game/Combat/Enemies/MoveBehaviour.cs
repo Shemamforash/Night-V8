@@ -10,33 +10,67 @@ namespace Game.Combat.Enemies
     [RequireComponent(typeof(MovementController))]
     public class MoveBehaviour : MonoBehaviour
     {
-        private Cell _destinationCell;
-        private float _targetDistance;
-        private bool _reachedTarget;
-        private float _currentTime;
-        private Action _reachTargetAction;
-        private Cell _nextCell;
         private Cell _currentCell;
-        private List<Cell> _route = new List<Cell>();
+        private float _currentTime;
+        private Cell _destinationCell;
         private float _lastRouteStartTime;
-        private Thread _routeThread;
         private Cell _lastTargetCell;
-        private Coroutine RouteWaitCoroutine;
         private MovementController _movementController;
+        private Cell _nextCell;
+        private bool _reachedTarget;
+        private List<Cell> _route = new List<Cell>();
+        private Thread _routeThread;
+        private float _targetDistance;
+
+        private Action MoveAction;
+        private Coroutine RouteWaitCoroutine;
 
         public void Awake()
         {
-            _currentCell = PathingGrid.WorldToCellPosition(transform.position);
             _movementController = GetComponent<MovementController>();
         }
-        
-        public bool MoveToCover(Action reachCoverAction)
+
+        public bool MoveToCover()
         {
+            UpdateCurrentCell();
             if (PathingGrid.IsCellHidden(_currentCell)) return false;
             Cell safeCell = PathingGrid.FindCoverNearMe(_currentCell);
             if (safeCell == null) return false;
-            GoToCell(safeCell, reachCoverAction);
+            GoToCell(safeCell);
             return true;
+        }
+
+        private void UpdateCurrentCell()
+        {
+            _currentCell = PathingGrid.WorldToCellPosition(transform.position);
+        }
+        
+        public void SetRoute(List<Cell> route, float timeStarted)
+        {
+            if (timeStarted != _lastRouteStartTime) return;
+            _route = route;
+        }
+
+        public bool Moving() => _destinationCell != null;
+
+        public void GoToCell(Cell targetCell, float distanceFromTarget = 0)
+        {
+            if (targetCell == null) return;
+            _destinationCell = targetCell;
+            _targetDistance = distanceFromTarget;
+        }
+
+        private void FixedUpdate()
+        {
+            UpdateCurrentCell();
+            if (_nextCell == null) return;
+            _reachedTarget = Vector2.Distance(_currentCell.Position, _nextCell.Position) < 0.5f;
+        }
+
+        private void Update()
+        {
+            CheckForRequiredPathfind();
+            MoveAction?.Invoke();
         }
 
         private void MoveToNextCell()
@@ -45,17 +79,10 @@ namespace Game.Combat.Enemies
             _movementController.Move(direction);
         }
 
-        //pathfind
-
-        public void SetRoute(List<Cell> route, float timeStarted)
-        {
-            if (timeStarted != _lastRouteStartTime) return;
-            _route = route;
-        }
-
-        private IEnumerator WaitForRoute(Action reachTargetAction, float distanceFromTarget)
+        private IEnumerator WaitForRoute(float distanceFromTarget)
         {
             while (_routeThread.IsAlive) yield return null;
+            if (_destinationCell == null) yield break;
             if (distanceFromTarget != 0)
             {
                 for (int i = _route.Count - 1; i >= 0; --i)
@@ -66,51 +93,28 @@ namespace Game.Combat.Enemies
                     {
                         _route.RemoveAt(i);
                     }
-                    else break;
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 
             PathingGrid.SmoothRoute(_route);
-            Reposition(reachTargetAction);
+            Reposition();
         }
 
-        public bool Moving()
-        {
-            return _destinationCell != null;
-        }
 
-        public void GoToCell(Cell targetCell, Action reachTargetAction, float distanceFromTarget = 0)
-        {
-            _destinationCell = targetCell;
-            _targetDistance = distanceFromTarget;
-            _reachTargetAction = reachTargetAction;
-        }
-
-        public void FixedUpdate()
-        {
-            _currentCell = PathingGrid.WorldToCellPosition(transform.position);
-            if (_nextCell == null) return;
-            _reachedTarget = _currentCell == _nextCell;
-        }
-
-        public void Update()
-        {
-            CheckForRequiredPathfind();
-            MoveAction?.Invoke();
-        }
-
-        private Action MoveAction;
-        
-        private void Reposition(Action reachTargetAction)
+        private void Reposition()
         {
             Queue<Cell> newRoute = new Queue<Cell>(_route);
             if (newRoute.Count == 0)
             {
                 Debug.Log(name + " has no route");
+                _destinationCell = null;
                 return;
             }
-
-            Debug.DrawLine(_currentCell.Position, _route[_route.Count - 1].Position, Color.red, 5f);
+            
             _nextCell = newRoute.Dequeue();
             MoveAction = () =>
             {
@@ -119,7 +123,6 @@ namespace Game.Combat.Enemies
                     if (newRoute.Count == 0)
                     {
                         _destinationCell = null;
-                        reachTargetAction();
                         return;
                     }
 
@@ -143,9 +146,10 @@ namespace Game.Combat.Enemies
             if (_destinationCell == _lastTargetCell) return;
             _lastTargetCell = _destinationCell;
             _lastRouteStartTime = Time.timeSinceLevelLoad;
+            UpdateCurrentCell();
             _routeThread = PathingGrid.ThreadRouteToCell(_currentCell, _destinationCell, this, _lastRouteStartTime);
             if (RouteWaitCoroutine != null) StopCoroutine(RouteWaitCoroutine);
-            RouteWaitCoroutine = StartCoroutine(WaitForRoute(_reachTargetAction, _targetDistance));
+            RouteWaitCoroutine = StartCoroutine(WaitForRoute(_targetDistance));
         }
     }
 }

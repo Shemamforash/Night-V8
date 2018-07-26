@@ -19,7 +19,7 @@ namespace Game.Combat.Enemies.Animals
         {
             base.TakeDamage(shot);
             if (Fleeing) return;
-            Cell target = PathingGrid.GetCellOutOfRange();
+            Cell target = PathingGrid.GetCellOutOfRange(transform.position);
             Flee(target);
             Alert(true);
             _herd.ForEach(g => g.Flee(target));

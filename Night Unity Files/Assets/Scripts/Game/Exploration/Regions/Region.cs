@@ -35,7 +35,7 @@ namespace Game.Exploration.Regions
         public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
         public Vector2? HealShrinePosition = null;
         public Vector2? EssenceShrinePosition = null;
-        public Character _characterHere;
+        public Player _characterHere;
         public Vector2 CharacterPosition;
 
         public bool Visited()

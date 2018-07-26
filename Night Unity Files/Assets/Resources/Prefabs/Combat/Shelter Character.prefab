@@ -24,7 +24,8 @@ GameObject:
   - component: {fileID: 58779182952329936}
   - component: {fileID: 114241283597779144}
   - component: {fileID: 114998298054844052}
-  m_Layer: 10
+  - component: {fileID: 114171840121560152}
+  m_Layer: 17
   m_Name: Shelter Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +42,7 @@ GameObject:
   - component: {fileID: 224287953456420668}
   - component: {fileID: 222293003993633966}
   - component: {fileID: 114306002519056946}
-  m_Layer: 10
+  m_Layer: 17
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +60,7 @@ GameObject:
   - component: {fileID: 223520802356943290}
   - component: {fileID: 114532467692700098}
   - component: {fileID: 114573977730622710}
-  m_Layer: 10
+  m_Layer: 17
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +77,7 @@ GameObject:
   - component: {fileID: 4744466100689732}
   - component: {fileID: 114625530952364248}
   - component: {fileID: 82840860684829308}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Footstep Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +94,7 @@ GameObject:
   - component: {fileID: 4592039044092502}
   - component: {fileID: 82659348444162576}
   - component: {fileID: 114633912880868014}
-  m_Layer: 10
+  m_Layer: 17
   m_Name: Weapon Audio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +111,7 @@ GameObject:
   - component: {fileID: 4142950771824704}
   - component: {fileID: 58671432144910032}
   - component: {fileID: 114321919672586792}
-  m_Layer: 10
+  m_Layer: 17
   m_Name: Text Collider
   m_TagString: UiCollider
   m_Icon: {fileID: 0}
@@ -137,7 +138,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1221892287103406}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.59709454, y: -6.7306423, z: 0}
+  m_LocalPosition: {x: -19.936539, y: -5.5863037, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4142950771824704}
@@ -154,7 +155,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1835350457923946}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.59709454, y: 6.7306423, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4549264640827470}
@@ -167,7 +168,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1648805182030356}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.59709454, y: 6.7306423, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4549264640827470}
@@ -413,6 +414,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &114171840121560152
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1221892287103406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d39cf5efc6349b392bfb3cece24fca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114241283597779144
 MonoBehaviour:
   m_ObjectHideFlags: 1

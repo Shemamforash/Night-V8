@@ -201,7 +201,6 @@ namespace Game.Combat.Generation
         {
             PlaceShrine();
             PlaceWalls();
-            RemoveInvalidPoints();
             PlaceItems();
             PlaceEchoes();
             GenerateTinyRocks(Random.Range(100, 300));

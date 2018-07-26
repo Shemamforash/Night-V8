@@ -55,7 +55,8 @@ namespace Game.Combat.Enemies.Humans
                     }
 
                     Cell target =  PathingGrid.GetCellNearMe(CurrentCell(), 2f);
-                    MoveBehaviour.GoToCell(target, () => FollowTarget(GetTarget()));
+                    MoveBehaviour.GoToCell(target);
+                    CurrentAction = FollowTarget;
                     _meleeing = false;
                 }
             };

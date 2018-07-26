@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using Game.Combat.Enemies;
 using Game.Combat.Player;
@@ -75,8 +76,9 @@ namespace Game.Combat.Generation
             _gridNodes.ForEach(n => n.SetNeighbors());
             _stopwatch.Stop();
             Helper.PrintTime("Neighbors: ", _stopwatch);
-            _outOfRangeList = _outOfRangeSet.ToList();
-            _edgePositionList = _edgePositionSet.ToList();
+            _outOfRangeList.AddRange(_outOfRangeSet.ToList().Where(c => !c.Blocked));
+            _edgePositionList.AddRange(_edgePositionSet.ToList().Where(c => !c.Blocked));
+            _edgePositionList.ForEach(c => c.EdgeCell = true);
         }
 
         public static Cell GetEdgeCell()
@@ -227,7 +229,19 @@ namespace Game.Combat.Generation
             return hidden;
         }
 
-        public static Cell GetCellOutOfRange() => Helper.RandomInList(_outOfRangeList);
+        public static Cell GetCellOutOfRange(Vector2 position)
+        {
+            Cell nearest = null;
+            float nearestDistance = 1000000f;
+            _outOfRangeList.ForEach(c =>
+            {
+                float distance = Vector2.SqrMagnitude(position - c.Position);
+                if (distance > nearestDistance) return;
+                nearestDistance = distance;
+                nearest = c;
+            });
+            return nearest;
+        }
 
         private static List<Cell> CellsInRange(Cell origin, int maxRange, int minRange = 0)
         {

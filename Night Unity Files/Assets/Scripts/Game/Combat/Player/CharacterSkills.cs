@@ -153,7 +153,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.EnemiesOnScreen().ForEach(e => e.MoveBehaviour.MoveToCover(null));
+            CombatManager.EnemiesOnScreen().ForEach(e => e.MoveBehaviour.MoveToCover());
         }
     }
 

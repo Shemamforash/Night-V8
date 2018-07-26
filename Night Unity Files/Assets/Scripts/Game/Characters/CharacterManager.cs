@@ -76,10 +76,9 @@ namespace Game.Characters
             Characters.ForEach(c => c.CharacterView.RefreshNavigation());
         }
 
-        private void AddCharacter(Player playerCharacter)
+        public static void AddCharacter(Player playerCharacter)
         {
             Characters.Add(playerCharacter);
-            InitialiseCharacterUI();
         }
 
         protected override void AddItem(InventoryItem item)

@@ -13,6 +13,7 @@ namespace Game.Combat.Generation
 
         public bool Reachable = true;
         public bool Blocked;
+        public bool EdgeCell;
 
         public static Cell Generate(int xIndex, int yIndex)
         {
@@ -31,7 +32,7 @@ namespace Game.Combat.Generation
         private void AddNeighbor(Cell c)
         {
             if (c == null) return;
-            if (!c.Reachable) return;
+            if (c.Blocked) return;
             Node.AddNeighborSimple(c.Node);
         }
 

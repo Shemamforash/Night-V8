@@ -71,16 +71,6 @@ namespace Game.Combat.Generation
             }
         }
 
-        protected void RemoveInvalidPoints()
-        {
-            _availablePositions.RemoveAll(p =>
-            {
-                Cell c = PathingGrid.WorldToCellPosition(p, false);
-                if (c == null) return false;
-                return !PathingGrid.WorldToCellPosition(p).Reachable;
-            });
-        }
-
         private void GenerateEchoes()
         {
             List<Characters.Player> characters = CharacterManager.Characters;
@@ -131,7 +121,6 @@ namespace Game.Combat.Generation
             Vector2 position = FindAndRemoveValidPosition(3f);
             _region.ShrinePosition = position;
             PathingGrid.AddBlockingArea(position, 3.5f);
-            RemoveInvalidPoints();
         }
 
         private void GenerateGenericRock(float radius, float radiusVariation, float smoothness, Vector2 position)
@@ -161,21 +150,18 @@ namespace Game.Combat.Generation
             new Barrier(barrierVertices, "Barrier " + GetObjectNumber(), position, barriers);
         }
 
-        protected void PlaceFire()
-        {
-            Vector2 position = FindAndRemoveValidPosition(0.5f);
-            _region.Fires.Add(GenerateFire(position));
-            CreateImpassablePoint(position);
-        }
-
         protected Vector2 FindAndRemoveValidPosition(float radius = 0, bool ignoreBounds = false)
         {
             for (int i = _availablePositions.Count - 1; i >= 0; --i)
             {
-                if (!ignoreBounds && _availablePositions[i].magnitude > PathingGrid.CombatAreaWidth / 2f - radius) continue;
+                if (!ignoreBounds && _availablePositions[i].magnitude > PathingGrid.CombatMovementDistance / 2f - radius) continue;
                 Cell c = PathingGrid.WorldToCellPosition(_availablePositions[i], false);
                 if (c == null) continue;
-                if (!c.Reachable) continue;
+                if (!c.Reachable)
+                {
+                    _availablePositions.RemoveAt(i);
+                    continue;
+                }
                 if (radius != 0)
                 {
                     Vector2 topLeft = new Vector2(_availablePositions[i].x - radius, _availablePositions[i].y - radius);
@@ -247,41 +233,46 @@ namespace Game.Combat.Generation
 
         protected virtual void PlaceItems()
         {
+            _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f));
             if (_region._characterHere != null)
             {
-                _region.CharacterPosition = FindAndRemoveValidPosition();
-                RemoveInvalidPoints();
+                _availablePositions.Sort((a, b) => -a.magnitude.CompareTo(b.magnitude));
+                for (int i = _availablePositions.Count - 1; i >= 0; --i)
+                {
+                    if (!PathingGrid.WorldToCellPosition(_availablePositions[i]).Reachable) continue;
+                    _region.CharacterPosition = _availablePositions[i];
+                    _availablePositions.RemoveAt(i);
+                    break;
+                }
+                Helper.Shuffle(_availablePositions);
             }
-            PlaceFire();
+            Vector2 position = FindAndRemoveValidPosition(0.5f);
+            _region.Fires.Add(GenerateFire(position));
+            CreateImpassablePoint(position);
             //todo tidy me
             if (_healthShrineCounter > HealShrineTarget)
             {
                 _region.HealShrinePosition = FindAndRemoveValidPosition();
                 _healthShrineCounter = 0;
-                RemoveInvalidPoints();
             }
 
             if (_essenceShrineCounter > EssenceShrineTarget / (EnvironmentManager.CurrentEnvironment.LevelNo + 1))
             {
                 _region.EssenceShrinePosition = FindAndRemoveValidPosition();
                 _essenceShrineCounter = 0;
-                RemoveInvalidPoints();
             }
 
             _healthShrineCounter += Random.Range(1, 3);
             _essenceShrineCounter += Random.Range(1, 3);
 
-            Helper.Shuffle(_availablePositions);
             for (int i = 0; i < _region.WaterSourceCount; ++i)
             {
                 _region.Containers.Add(new WaterSource(FindAndRemoveValidPosition()));
-                RemoveInvalidPoints();
             }
 
             for (int i = 0; i < _region.FoodSourceCount; ++i)
             {
                 _region.Containers.Add(new FoodSource(FindAndRemoveValidPosition()));
-                RemoveInvalidPoints();
             }
 
             for (int i = 0; i < _region.ResourceSourceCount; ++i)
@@ -289,7 +280,6 @@ namespace Game.Combat.Generation
                 Loot loot = new Loot(FindAndRemoveValidPosition(), "Resource");
                 loot.IncrementResource(ResourceTemplate.GetResource().Name, 1);
                 _region.Containers.Add(loot);
-                RemoveInvalidPoints();
             }
         }
 

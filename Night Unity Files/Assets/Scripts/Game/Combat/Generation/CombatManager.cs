@@ -195,7 +195,7 @@ namespace Game.Combat.Generation
             invalid.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
             Gizmos.color = Color.yellow;
             PathingGrid._outOfRangeList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
-            Gizmos.color = new Color(0, 1, 0, 0.25f);//Color.green;
+            Gizmos.color = new Color(0, 1, 0, 0.25f); //Color.green;
             PathingGrid._edgePositionList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
         }
 
@@ -222,24 +222,20 @@ namespace Game.Combat.Generation
             brandManager.IncreaseHumansKilled(Instance()._humansKilled);
 
             Instance()._inCombat = false;
-                SceneChanger.ChangeScene("Map", false);
+            SceneChanger.ChangeScene("Map", false);
             PlayerCombat.Instance.ExitCombat();
         }
 
         public static List<CharacterCombat> GetCharactersInRange(Vector2 position, float range)
         {
-            List<CharacterCombat> charactersInRange = new List<CharacterCombat>();
+            List<CharacterCombat> charactersInRange = GetEnemiesInRange(position, range);
             if (Vector2.Distance(PlayerCombat.Instance.transform.position, position) <= range) charactersInRange.Add(PlayerCombat.Instance);
-
-            foreach (EnemyBehaviour enemy in Instance()._enemies)
-            {
-                if (Vector2.Distance(enemy.transform.position, position) <= range)
-                {
-                    charactersInRange.Add(enemy);
-                }
-            }
-
             return charactersInRange;
+        }
+
+        public static List<CharacterCombat> GetEnemiesInRange(Vector2 position, float range)
+        {
+            return new List<CharacterCombat>(Instance()._enemies.Where(e => Vector2.Distance(e.transform.position, position) <= range));
         }
 
         public static List<EnemyBehaviour> EnemiesOnScreen()
@@ -247,10 +243,11 @@ namespace Game.Combat.Generation
             return Instance()._enemies.FindAll(e => e.OnScreen());
         }
 
-        public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate type)
+        public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate type, CharacterCombat target = null)
         {
             Enemy e = Instance()._currentRegion.AddEnemy(type);
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
+            if (target != null) enemyBehaviour.SetTarget(target);
             (enemyBehaviour as UnarmedBehaviour)?.Alert(true);
             Instance().AddEnemy(enemyBehaviour);
             return enemyBehaviour;
@@ -273,7 +270,6 @@ namespace Game.Combat.Generation
         public static void Remove(EnemyBehaviour enemy)
         {
             Instance()._enemies.Remove(enemy);
-//            if (Instance()._enemies.Count != 0) Instance().SelectClockwise();
         }
 
         private void AddEnemy(EnemyBehaviour e)

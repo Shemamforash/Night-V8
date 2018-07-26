@@ -16,7 +16,7 @@ namespace Game.Exploration.Environment
     {
         private const int MapWidth = 120;
         private const int MinRadius = 6, MaxRadius = 9;
-        private static readonly List<Region> storedNodes = new List<Region>();
+        private static List<Region> storedNodes = new List<Region>();
         private static Region initialNode;
         private static List<Region> route;
         public static Transform MapTransform;
@@ -115,21 +115,26 @@ namespace Game.Exploration.Environment
 
         public static void Generate()
         {
-            List<Region> regions = RegionManager.GenerateRegions();
+            storedNodes = RegionManager.GenerateRegions();
+            initialNode = storedNodes[0];
 
-            List<Vector2> samples = AdvancedMaths.GetPoissonDiscDistribution(regions.Count, MinRadius, MaxRadius, MapWidth / 2f, true);
-            for (int i = 0; i < samples.Count; ++i)
+            bool succeeded = false;
+            while (!succeeded)
             {
-                Vector2Int point = new Vector2Int((int) samples[i].x, (int) samples[i].y);
-                regions[i].SetPosition(point);
-                storedNodes.Add(regions[i]);
-                if (i == 0)initialNode = regions[0];
+                storedNodes.ForEach(s =>
+                {
+                    s.Reset();
+                });
+                List<Vector2> samples = AdvancedMaths.GetPoissonDiscDistribution(storedNodes.Count, MinRadius, MaxRadius, MapWidth / 2f, true);
+                for (int i = 0; i < samples.Count; ++i)
+                {
+                    Vector2Int point = new Vector2Int((int) samples[i].x, (int) samples[i].y);
+                    storedNodes[i].SetPosition(point);
+                }
+                succeeded = ConnectNodes();
             }
-
-            ConnectNodes();
-
             initialNode.Discover();
-            regions.ForEach(r => r.Discover());
+            storedNodes.ForEach(r => r.Discover());
         }
 
         private static Graph CreateMinimumSpanningTree()
@@ -142,11 +147,19 @@ namespace Game.Exploration.Environment
             return map;
         }
 
-        private static void ConnectNodes()
+        private static bool ConnectNodes()
         {
             Graph map = CreateMinimumSpanningTree();
-            SetMaxNodeDepth(8 + WorldState.Difficulty() * 3, map);
+            try
+            {
+                SetMaxNodeDepth(8 + WorldState.Difficulty() * 3, map);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
             AddRandomLinks();
+            return true;
         }
 
         private static void SetMaxNodeDepth(int maxDepth, Graph map)
@@ -181,7 +194,8 @@ namespace Game.Exploration.Environment
                 map.CalculateNodeDepths();
                 currentMaxNodeDepth = map.MaxDepth();
             }
-            Assert.IsTrue(currentMaxNodeDepth <= maxDepth);
+
+            if (currentMaxNodeDepth > maxDepth) throw new Exception();
         }
         
         private static void AddRandomLinks()

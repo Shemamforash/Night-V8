@@ -95,7 +95,11 @@ public class MapMovementController : MonoBehaviour, IInputListener
     private void TravelToRegion()
     {
         int _enduranceCost = RoutePlotter.RouteBetween(_currentRegion, _nearestRegion).Count - 1;
-        if (_currentRegion.GetRegionType() == RegionType.Gate) Assert.IsTrue(_nearestRegion.Depth == _enduranceCost + 1);
+        if (_currentRegion.GetRegionType() == RegionType.Gate)
+        {
+            if (_nearestRegion.Depth != _enduranceCost) Debug.Log(_nearestRegion.Depth + " " + _enduranceCost);
+        }
+
         if (_enduranceCost > CharacterManager.SelectedCharacter.Attributes.Val(AttributeType.Endurance)) return;
         if (_currentRegion != _nearestRegion)
         {

@@ -1,6 +1,4 @@
-﻿using System;
-using Game.Global;
-using SamsHelper.Libraries;
+﻿using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,8 +14,8 @@ namespace Facilitating
         private const float Smoke4DurationMax = 3;
         private static float _fireLevel;
         private const float FireBurnOutPoint = 0.2f;
-        private Image _fireLightImage;
-
+        private Image _fireLightImage, _gateImage;
+        
         public void Start()
         {
             _fire = Helper.FindChildWithName<ParticleSystem>(gameObject, "Fire");
@@ -25,18 +23,19 @@ namespace Facilitating
             _smoke2 = Helper.FindChildWithName<ParticleSystem>(gameObject, "Smoke 2");
             _smoke3 = Helper.FindChildWithName<ParticleSystem>(gameObject, "Smoke 3");
             _smoke4 = Helper.FindChildWithName<ParticleSystem>(gameObject, "Smoke 4");
-            _fireLightImage = GetComponent<Image>();
+            _fireLightImage = Helper.FindChildWithName<Image>(gameObject, "Logs");
+            _gateImage = Helper.FindChildWithName<Image>(transform.parent.parent.gameObject, "Gate");
             Restart();
         }
 
         private void Restart()
         {
             UpdateRates();
-            _fire.Simulate(_fire.main.duration);
-            _smoke1.Simulate(_smoke1.main.duration);
-            _smoke2.Simulate(_smoke2.main.duration);
-            _smoke3.Simulate(_smoke3.main.duration);
-            _smoke4.Simulate(_smoke4.main.duration);
+            _fire.Clear();
+            _smoke1.Clear();
+            _smoke2.Clear();
+            _smoke3.Clear();
+            _smoke4.Clear();
         }
 
         private void UpdateRates()
@@ -56,8 +55,8 @@ namespace Facilitating
             ParticleSystem.MainModule _smoke4Main = _smoke4.main;
             _smoke4Main.startLifetime = Smoke4DurationMax * _fireLevel;
 
-
-            Helper.ChangeImageAlpha(_fireLightImage, _fireLevel);
+            _fireLightImage.color = Color.Lerp(Color.black, Color.white, _fireLevel);
+            _gateImage.color = Color.Lerp(Color.black, Color.white, _fireLevel);
         }
         
         public void Update()

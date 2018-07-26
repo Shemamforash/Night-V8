@@ -29,7 +29,6 @@ namespace Game.Combat.Generation
         {
             PlaceShrine();
             GenerateMap();
-            RemoveInvalidPoints();
             PlaceItems();
             PlaceEchoes();
         }

@@ -20,7 +20,7 @@ namespace Game.Combat.Enemies.Humans
 
         protected override void OnAlert()
         {
-            FollowTarget(GetTarget());
+            FollowTarget();
         }
 
         protected override void ReachTarget()

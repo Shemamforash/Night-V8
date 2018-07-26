@@ -18,7 +18,7 @@ namespace Game.Combat.Enemies.Animals
         {
             base.OnAlert();
             _discovered = true;
-            Flee(PathingGrid.GetCellOutOfRange());
+            Flee(PathingGrid.GetCellOutOfRange(transform.position));
         }
 
         public override void Update()

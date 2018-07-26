@@ -215,6 +215,7 @@
           </e>
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
+        <e p="InsectBehaviour.cs" t="Include" />
         <e p="MapMovementController.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">

@@ -34,13 +34,12 @@ namespace Game.Combat.Ui
 
         public void Update()
         {
-            List<CharacterCombat> chars = CombatManager.GetCharactersInRange(transform.position, 10f);
+            List<CharacterCombat> chars = CombatManager.GetEnemiesInRange(PlayerCombat.Instance.transform.position, 10f);
             Vector2 playerDir = PlayerCombat.Instance.transform.up;
             float nearestAngle = 360;
             CharacterCombat nearestCharacter = null;
             chars.ForEach(c =>
             {
-                if (c == PlayerCombat.Instance) return;
                 if (!Helper.IsObjectInCameraView(c.gameObject)) return;
                 Vector2 enemyDir = c.transform.position - PlayerCombat.Instance.transform.position;
                 float enemyAngle = Vector2.Angle(playerDir, enemyDir);
@@ -69,12 +68,12 @@ namespace Game.Combat.Ui
         {
             _eventText.DOColor(UiAppearanceController.FadedColour, 1f);
         }
-        
+
         public static void FadeTextOut(float duration = 1f, float pause = 0f)
         {
             Sequence s = DOTween.Sequence();
             s.AppendInterval(pause);
-            s.Append(_eventText.DOColor(UiAppearanceController.InvisibleColour, duration));   
+            s.Append(_eventText.DOColor(UiAppearanceController.InvisibleColour, duration));
         }
     }
 }

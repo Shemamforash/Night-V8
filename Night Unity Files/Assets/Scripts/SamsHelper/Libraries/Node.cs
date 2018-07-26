@@ -52,6 +52,15 @@ namespace SamsHelper.Libraries
             return null;
         }
 
+        public void Reset()
+        {
+            _neighbors.Clear();
+            _rawNeighbors.Clear();
+            _edges.Clear();
+            _generatedEdges = false;
+            Depth = -1;
+        }
+
         public Edge GetEdge(Node n)
         {
             return _edges.Find(e => e.ConnectsTo(n));

@@ -8,7 +8,7 @@ namespace Game.Combat.Enemies
         private const float DashForce = 300;
         private Rigidbody2D _rigidbody;
         private Vector2 _forceToadd = Vector2.zero;
-        private float _speed;
+        public float _speed;
 
         public void Awake()
         {

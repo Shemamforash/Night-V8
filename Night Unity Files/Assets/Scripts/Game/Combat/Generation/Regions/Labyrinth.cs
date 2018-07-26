@@ -19,7 +19,6 @@ namespace Game.Combat.Generation
         {
             PlaceShrine();
             GenerateSplinteredArea(5);
-            RemoveInvalidPoints();
             PlaceItems();
             PlaceEchoes();
         }

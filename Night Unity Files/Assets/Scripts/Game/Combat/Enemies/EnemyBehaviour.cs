@@ -42,8 +42,12 @@ namespace Game.Combat.Enemies
 
         protected bool MoveToCover(Action reachCoverAction)
         {
-            bool moving = MoveBehaviour.MoveToCover(reachCoverAction);
-            if(moving) SetActionText("Seeking Cover");
+            bool moving = MoveBehaviour.MoveToCover();
+            if (moving)
+            {
+                SetActionText("Seeking Cover");
+                CurrentAction = reachCoverAction;
+            }
             return moving;
         }
 
@@ -68,6 +72,7 @@ namespace Game.Combat.Enemies
             chars.ForEach(c =>
             {
                 if (c == this) return;
+                if (Vector2.Distance(transform.position, c.transform.position) > 0.25f) return;
                 Vector2 dir = c.transform.position - transform.position;
                 if (dir == Vector2.zero) dir = AdvancedMaths.RandomVectorWithinRange(transform.position, 1).normalized;
                 float force = 1 / dir.magnitude;
@@ -92,18 +97,33 @@ namespace Game.Combat.Enemies
 
         public virtual void Initialise(Enemy enemy)
         {
-            ArmourController = enemy.ArmourController;
             Enemy = enemy;
+            InitialiseAttributes();
+            SetTarget(PlayerCombat.Instance);
+            SetPosition();
+            AssignSprite();
+        }
+
+        private void InitialiseAttributes()
+        {
+            ArmourController = Enemy.ArmourController;
             MovementController.SetSpeed(Enemy.Template.Speed);
             HealthController.SetInitialHealth(Enemy.Template.Health, this);
+            MoveBehaviour = gameObject.AddComponent<MoveBehaviour>();
+        }
+
+        private void SetPosition()
+        {
             transform.SetParent(GameObject.Find("World").transform);
             transform.position = PathingGrid.GetCellNearMe(Vector2.zero, 8f, 4f).Position;
+        }
+
+        private void AssignSprite()
+        {
             Sprite spriteImage = Resources.Load<Sprite>("Images/Enemy Symbols/" + GetEnemyName());
             Sprite = GetComponent<SpriteRenderer>();
             if (spriteImage == null) return;
             Sprite.sprite = spriteImage;
-            SetTarget(PlayerCombat.Instance);
-            MoveBehaviour = gameObject.AddComponent<MoveBehaviour>();
         }
 
         protected void SetActionText(string actionText)
