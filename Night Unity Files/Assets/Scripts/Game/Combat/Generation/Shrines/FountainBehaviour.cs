@@ -22,6 +22,7 @@ namespace Game.Combat.Generation.Shrines
             if (_fountainPrefab == null) _fountainPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Fountain");
             GameObject riteShrineObject = Instantiate(_fountainPrefab);
             riteShrineObject.transform.position = position;
+            PathingGrid.AddBlockingArea(position, 1.5f);
         }
 
         public void OnTriggerExit2D(Collider2D other)

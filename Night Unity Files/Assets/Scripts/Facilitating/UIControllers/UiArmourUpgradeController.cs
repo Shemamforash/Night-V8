@@ -45,6 +45,7 @@ namespace Facilitating.UIControllers
 
         private void UpdatePlates()
         {
+            Debug.Log(CurrentPlayer);
             _plateOneUi.SetPlate(CurrentPlayer.ArmourController.GetPlateOne());
             _plateTwoUi.SetPlate(CurrentPlayer.ArmourController.GetPlateTwo());
         }
@@ -64,6 +65,7 @@ namespace Facilitating.UIControllers
 
         public override void Show(Player player)
         {
+            Debug.Log(player);
             base.Show(player);
             SelectPlateUi(_plateOneUi);
             UpdatePlates();

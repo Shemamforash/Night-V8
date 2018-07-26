@@ -22,7 +22,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 EnemyBehaviour enemy = _enemyType == EnemyType.Decoy ? Decoy.Create(GetComponent<EnemyBehaviour>()) : CombatManager.QueueEnemyToAdd(_enemyType);
                 Vector2 randomDir = AdvancedMaths.RandomVectorWithinRange(Vector3.zero, 1).normalized;
                 enemy.gameObject.transform.position = transform.position;
-                enemy.AddForce(randomDir * _spawnForce);
+                enemy.MovementController.AddForce(randomDir * _spawnForce);
                 _enemies.Add(enemy);
             }
         }

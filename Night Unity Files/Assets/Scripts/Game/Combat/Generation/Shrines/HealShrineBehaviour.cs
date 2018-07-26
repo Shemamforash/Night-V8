@@ -1,4 +1,5 @@
-﻿using Game.Combat.Player;
+﻿using Game.Combat.Generation;
+using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -26,5 +27,6 @@ public class HealShrineBehaviour : MonoBehaviour
         if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Health Shrine");
         GameObject healShrine = Instantiate(_prefab);
         healShrine.transform.position = position;
+        PathingGrid.AddBlockingArea(position, 0.5f);
     }
 }

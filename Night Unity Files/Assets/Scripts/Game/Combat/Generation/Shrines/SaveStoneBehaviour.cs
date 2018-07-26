@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Facilitating.Persistence;
+using Game.Combat.Generation;
 using Game.Combat.Ui;
 using SamsHelper.Input;
 using UnityEngine;
@@ -28,6 +29,7 @@ public class SaveStoneBehaviour : MonoBehaviour, IInputListener
         if (_saveStonePrefab == null) _saveStonePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Save Stone");
         GameObject saveStoneObject = Instantiate(_saveStonePrefab);
         saveStoneObject.transform.position = position;
+        PathingGrid.AddBlockingArea(position, 0.5f);
     }
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)

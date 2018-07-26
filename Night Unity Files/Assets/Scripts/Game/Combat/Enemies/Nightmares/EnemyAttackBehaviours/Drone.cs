@@ -7,7 +7,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            Speed = Random.Range(3f, 7f);
+            MovementController.SetSpeed(Random.Range(3f, 7f));
             float rotateSpeed = Random.Range(10f, 20f);
             if (Random.Range(0, 2) == 0) rotateSpeed = -rotateSpeed;
             gameObject.AddComponent<Rotate>().RotateSpeed = rotateSpeed;

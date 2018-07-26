@@ -46,7 +46,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
         PlayerCombat player = other.gameObject.GetComponent<PlayerCombat>();
         if (player != null)
         {
-            player.AddForce(_direction.normalized * 30f);
+            player.MovementController.AddForce(_direction.normalized * 30f);
         }
         Destroy(transform.Find("GameObject").gameObject);
         transform.DetachChildren();

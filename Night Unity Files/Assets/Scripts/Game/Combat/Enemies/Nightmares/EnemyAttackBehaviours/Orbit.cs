@@ -43,7 +43,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             if (_oppositeSpin) mult = -mult;
             pos += tangeant * mult;
             Vector2 dirToTangeant = (pos - currentPosition).normalized;
-            _enemy.AddForce(dirToTangeant * 10f);
+            _enemy.MovementController.AddForce(dirToTangeant * 10f);
         }
     }
 }

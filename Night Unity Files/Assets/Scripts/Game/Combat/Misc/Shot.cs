@@ -201,7 +201,7 @@ namespace Game.Combat.Misc
         {
             if (_knockbackForce != 0)
             {
-                hit.Knockback(transform.position, _knockbackForce);
+                hit.MovementController.Knockback(transform.position, _knockbackForce);
             }
 
             if (Random.Range(0f, 1f) < _decayChange) hit.Decay();

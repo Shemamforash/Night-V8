@@ -54,16 +54,17 @@ namespace Game.Combat.Player
             return true;
         }
 
-        protected override void Move(Vector2 direction)
+        private void Move(Vector2 direction)
         {
             if (CanDash())
             {
-                Dash(direction);
+                MovementController.Dash(direction);
+                _dashCooldown.Start();
                 _dashPressed = false;
             }
             else
             {
-                base.Move(direction);
+                MovementController.Move(direction);
             }
         }
 
@@ -314,7 +315,7 @@ namespace Game.Combat.Player
             _initialArmour = Player.ArmourController.GetProtectionLevel();
 
             CharacterUi.GetArmourController(Player).TakeDamage(ArmourController);
-            Speed = Player.Attributes.CalculateSpeed();
+            MovementController.SetSpeed(Player.Attributes.CalculateSpeed());
 
             _adrenalineGain = Player.Attributes.CalculateAdrenalineRecoveryRate();
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
@@ -360,20 +361,14 @@ namespace Game.Combat.Player
 
         private BaseWeaponBehaviour _weaponBehaviour;
 
-        protected override void Dash(Vector2 direction)
-        {
-            base.Dash(direction);
-            _dashCooldown.Start();
-        }
-
         private bool CanDash()
         {
             return _dashCooldown.Finished() && _dashPressed;
         }
 
-        public override void Knockback(Vector3 source, float force = 10f)
+        public void Knockback(Vector3 source, float force = 10f)
         {
-            base.Knockback(source, force);
+            MovementController.Knockback(source, force);
             StopReloading();
         }
 

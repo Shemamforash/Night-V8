@@ -49,7 +49,7 @@ namespace Game.Combat.Enemies
 
             if (!CouldHitTarget)
             {
-                FindCellToAttackPlayer(TryFire, IdealWeaponDistance);
+                MoveBehaviour.GoToCell(GetTarget().CurrentCell(), TryFire, IdealWeaponDistance);
                 return;
             }
 
@@ -72,7 +72,10 @@ namespace Game.Combat.Enemies
 
         private void Reload()
         {
-            if (MoveToCover(Reload)) return;
+            if (MoveToCover(Reload))
+            {
+                return;
+            }
             SetActionText("Reloading");
             float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
             CurrentAction = () =>

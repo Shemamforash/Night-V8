@@ -18,7 +18,7 @@ namespace Game.Combat.Enemies.Animals
         {
             Vector2 dir = (transform.position - PlayerCombat.Instance.transform.position).normalized;
             Cell target = Helper.RandomInList(PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, 1));
-            GoToCell(target, WaitForPlayer);
+            MoveBehaviour.GoToCell(target, WaitForPlayer);
         }
 
         private void WaitForPlayer()

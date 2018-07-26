@@ -141,6 +141,11 @@ namespace Game.Exploration.Regions
             RegionType newRegionType;
             if (_regionsDiscovered == 0)
                 newRegionType = RegionType.Gate;
+            else if (_regionsDiscovered == 5)
+            {
+                newRegionType = RegionType.Shelter;
+                _regionTypes.Remove(RegionType.Shelter);
+            }
             else
             {
                 if (_regionsDiscovered - 1 == _regionsBeforeTemple)

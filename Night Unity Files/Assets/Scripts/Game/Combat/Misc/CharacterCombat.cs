@@ -11,28 +11,33 @@ using UnityEngine;
 
 namespace Game.Combat.Misc
 {
+    [RequireComponent(typeof(MovementController))]
     public abstract class CharacterCombat : MonoBehaviour
     {
         public WeaponAudioController WeaponAudio;
-        private const float DashForce = 300;
+       
         private const float RecoilRecoveryRate = 2f;
         private const float TimeToStartRecovery = 0.5f;
 
         private readonly Number Recoil = new Number(0, 0, 1f);
         private float _distanceToTarget = -1;
 
-        private Vector2 _forceToadd = Vector2.zero;
         private float _recoveryTimer;
 
-        private Rigidbody2D _rigidbody;
         protected ArmourController ArmourController;
         public HealthController HealthController = new HealthController();
-
-        public bool IsDead;
+        private CharacterCombat _target;
+        public MovementController MovementController;
         protected CharacterUi CharacterUi;
 
-        public float Speed;
-
+        public bool IsDead;
+        private const int ConditionTicksMax = 5;
+        private const float SicknessDurationMax = 5f;
+        private const int SicknessTargetTicks = 10;
+        private int _burnTicks, _decayTicks;
+        protected int SicknessStacks;
+        private float _burnDuration, _decayDuration, _sicknessDuration;
+        
         public float DistanceToTarget()
         {
             if (_distanceToTarget == -1) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);
@@ -83,17 +88,6 @@ namespace Game.Combat.Misc
         }
 
         public bool IsSick() => SicknessStacks > 0;
-
-        public void Ram(CharacterCombat target, float ramForce)
-        {
-            Vector2 direction = (target.transform.position - transform.position).normalized;
-            _forceToadd += direction * ramForce;
-        }
-
-        public void AddForce(Vector2 force)
-        {
-            _forceToadd += force;
-        }
 
         public void ClearConditions()
         {
@@ -172,19 +166,7 @@ namespace Game.Combat.Misc
             }
         }
 
-        private const int ConditionTicksMax = 5;
-        private const float SicknessDurationMax = 5f;
-        private const int SicknessTargetTicks = 10;
-        private int _burnTicks, _decayTicks;
-        protected int SicknessStacks;
-        private float _burnDuration, _decayDuration, _sicknessDuration;
-
         public Cell CurrentCell() => PathingGrid.WorldToCellPosition(transform.position);
-
-        protected void SetOwnedByEnemy(float speed)
-        {
-            Speed = speed;
-        }
 
         public virtual void TakeDamage(Shot shot)
         {
@@ -200,25 +182,15 @@ namespace Game.Combat.Misc
             IsDead = true;
         }
 
-        public virtual void Knockback(Vector3 source, float force = 10f)
-        {
-            Vector3 direction = (transform.position - source).normalized;
-            _forceToadd = direction * force;
-        }
-
         public virtual void ApplyShotEffects(Shot s)
         {
         }
 
         public abstract Weapon Weapon();
 
-        //FIRING
-
-        //CONDITIONS
-
         public virtual void Awake()
         {
-            _rigidbody = GetComponent<Rigidbody2D>();
+            MovementController = GetComponent<MovementController>();
             if (this is EnemyBehaviour) CharacterUi = EnemyUi.Instance();
             else CharacterUi = PlayerUi.Instance();
             WeaponAudio = Helper.FindChildWithName<WeaponAudioController>(gameObject, "Weapon Audio");
@@ -237,12 +209,10 @@ namespace Game.Combat.Misc
             float recoilLoss = Weapon().GetAttributeValue(AttributeType.Handling);
             recoilLoss = 100 - recoilLoss;
             recoilLoss /= 100;
-            recoilLoss *= Moving() ? 2 : 1;
+            recoilLoss *= MovementController.Moving() ? 2 : 1;
             Recoil.Increment(recoilLoss);
             _recoveryTimer = TimeToStartRecovery;
         }
-
-        private bool Moving() => _rigidbody.velocity == Vector2.zero;
 
         public virtual float GetAccuracyModifier() => Recoil.CurrentValue();
 
@@ -257,24 +227,14 @@ namespace Game.Combat.Misc
             Recoil.Decrement(RecoilRecoveryRate * Time.deltaTime);
         }
 
-        public virtual void FixedUpdate()
+        public void SetTarget(CharacterCombat character)
         {
-            if (_rigidbody == null) Debug.Log(name);
-            _rigidbody.AddForce(_forceToadd);
-            _forceToadd = Vector2.zero;
+            _target = character;
         }
 
-        protected virtual void Dash(Vector2 direction)
+        public virtual CharacterCombat GetTarget()
         {
-            _forceToadd += direction * DashForce;
+            return _target;
         }
-
-        protected virtual void Move(Vector2 direction)
-        {
-            float speed = Speed;
-            _forceToadd += direction * speed * Time.deltaTime / 0.016f;
-        }
-
-        public abstract CharacterCombat GetTarget();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Game.Exploration.Regions;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,6 +11,7 @@ namespace SamsHelper.Libraries
     {
         private readonly List<Edge> _edges = new List<Edge>();
         private readonly List<Node> _nodes = new List<Node>();
+        private Node _rootNode;
 
         public bool ContainsEdge(Edge edge)
         {
@@ -57,5 +59,55 @@ namespace SamsHelper.Libraries
                 Debug.DrawLine(e.A.Position, e.B.Position, c, 500f);
             });
         }
+
+        public void SetRootNode(Node node)
+        {
+            _rootNode = node;
+        }
+
+        private float _maxNodeDepth = -1;
+        
+        public void CalculateNodeDepths()
+        {
+            _maxNodeDepth = -1;
+            if (_rootNode == null) throw new NoRootNodeException();
+            _rootNode.Depth = 0;
+            HashSet<Node> seen = new HashSet<Node>();
+            Queue<Node> unseen = new Queue<Node>();
+            unseen.Enqueue(_rootNode);
+            while (unseen.Count != 0)
+            {
+                Node node = unseen.Dequeue();
+                seen.Add(node);
+                node.Neighbors().ForEach(n =>
+                {
+                    if (seen.Contains(n))
+                    {
+                        if (n.Depth + 1 < node.Depth)
+                        {
+                            node.Depth = n.Depth + 1;
+                        }
+
+                        return;
+                    }
+                    unseen.Enqueue(n);
+                    n.Depth = node.Depth + 1;
+                });
+            }
+            _nodes.ForEach(n =>
+            {
+                if (n.Depth > _maxNodeDepth) _maxNodeDepth = n.Depth;
+            });
+        }
+
+        public float MaxDepth()
+        {
+            return _maxNodeDepth;
+        }
+    }
+
+    public class NoRootNodeException : Exception
+    {
+        public override string Message => "No root node set";
     }
 }

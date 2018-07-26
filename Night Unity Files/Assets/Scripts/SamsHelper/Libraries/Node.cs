@@ -12,6 +12,7 @@ namespace SamsHelper.Libraries
         private readonly List<Edge> _edges = new List<Edge>();
         public Vector2 Position;
         private bool _generatedEdges;
+        public int Depth;
 
         public Node(Vector3 position)
         {

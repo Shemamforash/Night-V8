@@ -169,7 +169,7 @@ namespace Game.Combat.Generation
 
         private const int WidthInCells = 30;
 
-        protected override void Generate()
+        private void PlaceWalls()
         {
             nodes = new RuinNode[WidthInCells, WidthInCells];
             int startPos = (int) -(WidthInCells / CellWidth);
@@ -190,8 +190,21 @@ namespace Game.Combat.Generation
             }
 
             CarvePassages(0, 0);
-            CreateIslands(10);
+            List<Vector2> islandPositions = new List<Vector2>();
+            if(ShouldPlaceShrine()) islandPositions.Add(_region.ShrinePosition);
+            for(int i = 0; i < 9; ++i) islandPositions.Add(FindAndRemoveValidPosition());
+            CreateIslands(islandPositions);
             while (_nodesWithWalls.Count > 0) CombineWalls();
+        }
+        
+        protected override void Generate()
+        {
+            PlaceShrine();
+            PlaceWalls();
+            RemoveInvalidPoints();
+            PlaceItems();
+            PlaceEchoes();
+            GenerateTinyRocks(Random.Range(100, 300));
         }
 
 //get random cell with a wall
@@ -499,27 +512,24 @@ namespace Game.Combat.Generation
             }
         }
 
-        private void CreateIslands(int i)
+        
+        private void CreateIslands(List<Vector2> positions)
         {
             HashSet<RuinNode> nodesToKeep = new HashSet<RuinNode>();
-            while (i > 0)
+            foreach(Vector2 position in positions)
             {
-                Vector2 randomPosition = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, PathingGrid.CombatAreaWidth / 3f);
-                randomPosition = FindAndRemoveValidPosition();
                 float range = Random.Range(5, 10);
                 for (int x = 0; x < WidthInCells; ++x)
                 {
                     for (int y = 0; y < WidthInCells; ++y)
                     {
-                        float distance = Vector2.Distance(randomPosition, nodes[x, y].Position);
+                        float distance = Vector2.Distance(position, nodes[x, y].Position);
                         if (distance > range) continue;
                         float chanceToRemove = 1f - distance / range;
                         if (Random.Range(0f, 1f) > chanceToRemove) continue;
                         nodesToKeep.Add(nodes[x, y]);
                     }
                 }
-
-                --i;
             }
 
             for (int x = 0; x < WidthInCells; ++x)

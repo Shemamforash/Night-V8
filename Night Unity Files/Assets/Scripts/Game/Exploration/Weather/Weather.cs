@@ -39,7 +39,7 @@ namespace Game.Exploration.Weather
             base.Enter();
             WorldView.SetWeatherText(_displayName);
             _timeRemaining = _duration * WorldState.MinutesPerHour;
-            WeatherSystemController.Instance().ChangeWeather(this, _timeRemaining);
+            WeatherSystemController.Instance().ChangeWeather(this);
         }
 
         public int Temperature()

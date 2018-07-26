@@ -1,116 +1,259 @@
 ﻿using System;
 using System.Collections;
+using DG.Tweening;
 using Facilitating;
 using Game.Global;
+using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Weather
 {
     public class WeatherSystemController : MonoBehaviour
     {
         private static WeatherSystemController _instance;
-        private float _changeTime;
-        private WeatherAttributes _prevAttributes, _targetAttributes;
-        public float DustMax;
-        public ParticleSystem Fog, Rain, Hail, Dust;
-        public float FogMax;
-        public float HailMax;
-        public float RainMax;
+        private FogSystem _fog;
+        private RainSystem _rain;
+        private HailSystem _hail;
+        private DustSystem _dust;
+        private WindSystem _wind;
+        private ParticleSystem _sun;
+        private ParticleSystem _stars;
+        [SerializeField] private float _fogMax;
+        [SerializeField] private float _hailMax;
+        [SerializeField] private float _rainMax;
+        [SerializeField] private float _dustMax;
+        [SerializeField] private float _windMax;
+        [SerializeField] private float _starsMax;
+        [SerializeField] [Range(0, 1)] private float _sunMinBrightness, _sunMaxBrightness;
+
+        [SerializeField] private AudioClip _rainLight, _rainMedium, _rainHeavy, _windHeavy;
+        private AudioSource _nightTimeAudioSource, _dayTimeAudioSource;
+
+        public void Awake()
+        {
+            _fog = new FogSystem(Helper.FindChildWithName(gameObject, "Fog"), _fogMax);
+            _rain = new RainSystem(Helper.FindChildWithName(gameObject, "Rain"), _rainMax);
+            _hail = new HailSystem(Helper.FindChildWithName(gameObject, "Hail"), _hailMax);
+            _dust = new DustSystem(Helper.FindChildWithName(gameObject, "Dust"), _dustMax);
+            _wind = new WindSystem(Helper.FindChildWithName(gameObject, "Wind"), _windMax);
+            _sun = Helper.FindChildWithName<ParticleSystem>(gameObject, "Sun");
+            _stars = Helper.FindChildWithName<ParticleSystem>(gameObject, "Stars");
+            _nightTimeAudioSource = _stars.GetComponent<AudioSource>();
+            _dayTimeAudioSource = _sun.GetComponent<AudioSource>();
+            _instance = this;
+        }
 
         public static WeatherSystemController Instance()
         {
-            if (_instance == null) return FindObjectOfType<WeatherSystemController>();
-            return _instance;
+            return _instance == null ? FindObjectOfType<WeatherSystemController>() : _instance;
         }
 
-        public void ChangeWeather(Weather w, int minutes)
+        private float _time;
+
+        public void Update()
         {
-            float time = minutes * WorldState.MinuteInSeconds;
-            _changeTime = time / 10;
-            _prevAttributes = _targetAttributes;
-            _targetAttributes = w.Attributes;
-            if (_prevAttributes == null)
+            UpdateTime();
+            UpdateSun();
+            UpdateStars();
+        }
+
+        private void UpdateStars()
+        {
+            ParticleSystem.EmissionModule starEmission = _stars.GetComponent<ParticleSystem>().emission;
+            float time = WorldState.Hours;
+            if (time > 6) time = Mathf.Abs(time - 24);
+            float starEmissionRate = 1f - time / 6f;
+            if (_time >= 6 && _time <= 18) starEmissionRate = 0f;
+            _nightTimeAudioSource.volume = starEmissionRate;
+            starEmission.rateOverTime = _starsMax * starEmissionRate;
+            UpdateMoon();
+        }
+
+        private void UpdateTime()
+        {
+            float time = WorldState.Hours;
+            float minutes = (float) WorldState.Minutes / WorldState.MinutesPerHour;
+            minutes /= 5f;
+            time += minutes;
+            _time = time;
+        }
+
+        private void UpdateMoon()
+        {
+        }
+
+        private void UpdateSun()
+        {
+            float timeOfDayModifier = (float) (-0.02f * Math.Pow(_time - 12, 2) + 1f);
+            if (_time < 6 || _time > 18) timeOfDayModifier = 0f;
+            _dayTimeAudioSource.volume = timeOfDayModifier;
+            float minBrightness = _sunMinBrightness * timeOfDayModifier;
+            float maxBrightness = _sunMaxBrightness * timeOfDayModifier;
+            ParticleSystem.MainModule sunMain = _sun.GetComponent<ParticleSystem>().main;
+            sunMain.startColor = new ParticleSystem.MinMaxGradient(new Color(1, 1, 1, maxBrightness), new Color(1, 1, 1, minBrightness));
+        }
+
+        public void ChangeWeather(Weather w)
+        {
+            WeatherAttributes _targetAttributes = w.Attributes;
+            StartCoroutine(_rain.ChangeWeather(_targetAttributes.RainAmount));
+            StartCoroutine(_dust.ChangeWeather(_targetAttributes.DustAmount));
+            StartCoroutine(_wind.ChangeWeather(_targetAttributes.WindAmount));
+            StartCoroutine(_hail.ChangeWeather(_targetAttributes.HailAmount));
+            StartCoroutine(_fog.ChangeWeather(_targetAttributes.FogAmount));
+        }
+
+        private class RainSystem : WeatherSystem
+        {
+            public RainSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)
             {
-                SetFog(_targetAttributes.FogAmount);
-                SetRain(_targetAttributes.RainAmount);
-                SetDust(_targetAttributes.DustAmount);
-                SetHail(_targetAttributes.HailAmount);
             }
-            else
+
+            protected override AudioClip GetAudioClipForWeather(float amount)
             {
-                StartCoroutine(nameof(UpdateWeather));
+                if (amount > 0.7f) return _instance._rainHeavy;
+                if (amount > 0.4) return _instance._rainMedium;
+                return amount > 0 ? _instance._rainLight : null;
             }
         }
 
-
-        private IEnumerator UpdateWeather()
+        private class WindSystem : WeatherSystem
         {
-            float startTime = Time.time;
-            float targetTime = startTime + _changeTime;
-            float totalTime = targetTime - startTime;
-            while (Time.time < targetTime)
+            public WindSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)
             {
-                float percentComplete = 1 / totalTime * (Time.time - startTime);
-                SunController.SetWeatherModifier(_targetAttributes.SunAmount);
-                SetFog(CalculateWeatherAmount(percentComplete, _prevAttributes.FogAmount, _targetAttributes.FogAmount));
-                SetRain(CalculateWeatherAmount(percentComplete, _prevAttributes.RainAmount, _targetAttributes.RainAmount));
-                SetHail(CalculateWeatherAmount(percentComplete, _prevAttributes.HailAmount, _targetAttributes.HailAmount));
-                SetDust(CalculateWeatherAmount(percentComplete, _prevAttributes.DustAmount, _targetAttributes.DustAmount));
-                yield return null;
+            }
+
+            protected override AudioClip GetAudioClipForWeather(float amount)
+            {
+                return amount > 0 ? _instance._windHeavy : null;
             }
         }
 
-        private float CalculateWeatherAmount(float percent, float prevAmount, float targetAmount)
+        private class HailSystem : WeatherSystem
         {
-            return (targetAmount - prevAmount) * percent + prevAmount;
-        }
-
-        private void SetWeather(float amount, float max, ParticleSystem particleSystem, Action<float> weatherChangeAction)
-        {
-            amount *= max;
-            if (Math.Abs(amount) < 0.001)
-                particleSystem.Stop();
-            else
-                particleSystem.Play();
-            weatherChangeAction(amount);
-        }
-
-        private void SetFog(float amount)
-        {
-            amount /= 255f;
-            SetWeather(amount, FogMax, Fog, f =>
+            public HailSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)
             {
-                ParticleSystem.MainModule mainModule = Fog.main;
-                float value = 0.3f;
-                mainModule.startColor = new ParticleSystem.MinMaxGradient(new Color(value, value, value, 0), new Color(value, value, value, f));
-            });
+            }
+
+            protected override AudioClip GetAudioClipForWeather(float amount)
+            {
+                return null;
+            }
         }
 
-        private void SetRain(float amount)
+        private class SunSystem : WeatherSystem
         {
-            SetWeather(amount, RainMax, Rain, f =>
+            public SunSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)
             {
-                ParticleSystem.EmissionModule emissionModule = Rain.emission;
-                emissionModule.rateOverTime = f;
-            });
+            }
+
+            protected override AudioClip GetAudioClipForWeather(float amount)
+            {
+                return null;
+            }
         }
 
-        private void SetHail(float amount)
+        private class FogSystem : WeatherSystem
         {
-            SetWeather(amount, HailMax, Hail, f =>
+            public FogSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)
             {
-                ParticleSystem.EmissionModule emissionModule = Hail.emission;
-                emissionModule.rateOverTime = f;
-            });
+            }
+
+            protected override AudioClip GetAudioClipForWeather(float amount)
+            {
+                return null;
+            }
         }
 
-        private void SetDust(float amount)
+        private class DustSystem : WeatherSystem
         {
-            SetWeather(amount, DustMax, Dust, f =>
+            public DustSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)
             {
-                ParticleSystem.EmissionModule emissionModule = Dust.emission;
-                emissionModule.rateOverTime = f;
-            });
+            }
+
+            protected override AudioClip GetAudioClipForWeather(float amount)
+            {
+                return null;
+            }
+        }
+
+        private class StarSystem : WeatherSystem
+        {
+            public StarSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)
+            {
+            }
+
+            protected override AudioClip GetAudioClipForWeather(float amount)
+            {
+                return null;
+            }
+        }
+
+        private abstract class WeatherSystem
+        {
+            private readonly ParticleSystem _particles;
+            private readonly float _maxEmission;
+            private readonly AudioSource _audioSourceA, _audioSourceB;
+
+            private AudioSource _currentAudioSource;
+            private AudioClip _currentClip;
+            private float _currentWeatherAmount;
+
+            protected WeatherSystem(GameObject weatherObject, float maxEmission)
+            {
+                _particles = weatherObject.GetComponent<ParticleSystem>();
+                _audioSourceA = Helper.FindChildWithName<AudioSource>(weatherObject, "Audio A");
+                _audioSourceB = Helper.FindChildWithName<AudioSource>(weatherObject, "Audio B");
+                _maxEmission = maxEmission;
+            }
+
+            protected abstract AudioClip GetAudioClipForWeather(float amount);
+
+            public IEnumerator ChangeWeather(float amount)
+            {
+                ParticleSystem.EmissionModule emission = _particles.emission;
+                float startRate = emission.rateOverTime.constant;
+                float finalRate = amount * _maxEmission;
+
+                AudioClip newClip = GetAudioClipForWeather(amount);
+                CrossFade(newClip);
+                float currentTime = 5f;
+                while (currentTime > 0f)
+                {
+                    float normalisedTime = currentTime / 5f;
+                    float newRate = Mathf.Lerp(startRate, finalRate, normalisedTime);
+                    emission.rateOverTime = newRate;
+                    currentTime -= Time.deltaTime;
+                    yield return null;
+                }
+
+                emission.rateOverTime = finalRate;
+            }
+
+            private void CrossFade(AudioClip to)
+            {
+                if (_currentAudioSource != null)
+                {
+                    if (_currentAudioSource.clip == to) return;
+                    Sequence sequence = DOTween.Sequence();
+                    AudioSource fadeOut = _currentAudioSource;
+                    sequence.Append(fadeOut.DOFade(0, 2));
+                    sequence.AppendCallback(() => fadeOut.Stop());
+                }
+
+                _currentAudioSource = _audioSourceA == _currentAudioSource ? _audioSourceB : _audioSourceA;
+                _currentAudioSource.clip = to;
+                if (to != null)
+                {
+                    float randomPosition = Random.Range(0f, to.length);
+                    _currentAudioSource.time = randomPosition;
+                }
+
+                _currentAudioSource.volume = 0;
+                _currentAudioSource.Play();
+                _currentAudioSource.DOFade(1, 2);
+            }
         }
     }
 }

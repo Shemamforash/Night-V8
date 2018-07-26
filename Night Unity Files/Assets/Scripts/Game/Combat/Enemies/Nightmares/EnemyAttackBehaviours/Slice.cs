@@ -28,7 +28,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             float distance = dir.magnitude;
             dir.Normalize();
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            Enemy.AddForce(dir * distance * 500);
+            Enemy.MovementController.AddForce(dir * distance * 500);
             StartCoroutine(DisableCollider());
         }
 

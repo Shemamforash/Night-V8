@@ -43,7 +43,7 @@ namespace Game.Combat.Enemies.Humans
                 }
                 if (!hasMeleed)
                 {
-                    Ram(GetTarget(), MeleeForce);
+                    MovementController.Ram(GetTarget().transform, MeleeForce);
                     hasMeleed = true;
                 }
                 else
@@ -55,7 +55,7 @@ namespace Game.Combat.Enemies.Humans
                     }
 
                     Cell target =  PathingGrid.GetCellNearMe(CurrentCell(), 2f);
-                    GoToCell(target, () => FollowTarget(PlayerCombat.Instance));
+                    MoveBehaviour.GoToCell(target, () => FollowTarget(GetTarget()));
                     _meleeing = false;
                 }
             };

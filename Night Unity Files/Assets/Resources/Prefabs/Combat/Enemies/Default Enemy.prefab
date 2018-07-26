@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 212174444484362546}
   - component: {fileID: 50383107359586988}
   - component: {fileID: 58895421409255322}
+  - component: {fileID: 114994034474461898}
   m_Layer: 10
   m_Name: Default Enemy
   m_TagString: Untagged
@@ -277,6 +278,19 @@ MonoBehaviour:
   _shotgunClips:
   - {fileID: 8300000, guid: 0b581358748c6b144a938626adcd7f3f, type: 3}
   - {fileID: 8300000, guid: be6ca6252976e2a46a0c30bdf84dda0e, type: 3}
+  _pistolClipIn: {fileID: 0}
+  _pistolClipOut: {fileID: 0}
+--- !u!114 &114994034474461898
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1969838416443470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9745b410bbb42a78bca2e92e9556570, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212174444484362546
 SpriteRenderer:
   m_ObjectHideFlags: 1

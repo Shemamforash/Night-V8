@@ -258,7 +258,6 @@
               <e p="StatsTracker.cs" t="Include" />
             </e>
             <e p="RageBarController.cs" t="Include" />
-            <e p="SunController.cs" t="Include" />
             <e p="UI" t="Include">
               <e p="ButtonGroup.cs" t="Include" />
               <e p="DayChangeSequence.cs" t="Include" />
@@ -346,6 +345,8 @@
                   <e p="Grenade.cs" t="Include" />
                   <e p="IncendiaryGrenade.cs" t="Include" />
                 </e>
+                <e p="MoveBehaviour.cs" t="Include" />
+                <e p="MovementController.cs" t="Include" />
                 <e p="Nightmares" t="Include">
                   <e p="BeamController.cs" t="Include" />
                   <e p="Decoy.cs" t="Include" />
@@ -433,6 +434,7 @@
                 <e p="FireGenerator.cs" t="Include" />
                 <e p="FootstepMaker.cs" t="Include" />
                 <e p="HealthController.cs" t="Include" />
+                <e p="ShelterCharacterBehaviour.cs" t="Include" />
                 <e p="Shot.cs" t="Include" />
                 <e p="SkillBar.cs" t="Include" />
                 <e p="TempleBehaviour.cs" t="Include" />
@@ -726,6 +728,7 @@
           <e p="MenuGradientShader.shader" t="Include" />
           <e p="RadialLight.shader" t="Include" />
         </e>
+        <e p="ShelterCharacterColliderBehaviour.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />

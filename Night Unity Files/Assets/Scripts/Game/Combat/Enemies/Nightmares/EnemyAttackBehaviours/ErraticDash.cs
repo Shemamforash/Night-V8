@@ -16,7 +16,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             Cell c = PathingGrid.GetCellOrbitingTarget(Enemy.CurrentCell(), PlayerCombat.Instance.CurrentCell(), transform.forward, 5, 2);
             Vector2 dir = c.Position - (Vector2)transform.position;
             dir.Normalize();
-            Enemy.AddForce(dir * Enemy.Speed * 50);
+            Enemy.MovementController.AddForce(dir * Enemy.Enemy.Template.Speed * 50);
         }
     }
 }

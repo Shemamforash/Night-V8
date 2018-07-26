@@ -216,7 +216,7 @@ namespace Game.Characters
         public static Player GenerateRandomCharacter()
         {
             LoadTemplates();
-            CharacterTemplate newTemplate = Templates[Random.Range(0, Templates.Count)];
+            CharacterTemplate newTemplate = Helper.RemoveRandomInList(Templates);
             Player playerCharacter = GenerateCharacterObject(newTemplate);
             return playerCharacter;
         }

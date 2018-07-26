@@ -104,10 +104,10 @@ namespace Game.Combat.Generation
                 {
                     case EnvironmentType.Oasis:
 //                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
-//                        worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
+                        worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
 //                        worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
 //                        worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
-                        worldObject.AddComponent<Canyon>().Initialise(_currentRegion);
+//                        worldObject.AddComponent<Canyon>().Initialise(_currentRegion);
                         break;
                     case EnvironmentType.Steppe:
                         worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
@@ -189,14 +189,13 @@ namespace Game.Combat.Generation
 
         private void OnDrawGizmos()
         {
-            return;
             Vector3 cubeSize = 1f / PathingGrid.CellResolution * Vector3.one;
             Gizmos.color = Color.red;
             List<Cell> invalid = PathingGrid._invalidCells.ToList();
             invalid.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
             Gizmos.color = Color.yellow;
             PathingGrid._outOfRangeList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
-            Gizmos.color = Color.green;
+            Gizmos.color = new Color(0, 1, 0, 0.25f);//Color.green;
             PathingGrid._edgePositionList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
         }
 

@@ -75,7 +75,7 @@ namespace Game.Combat.Enemies
                 return;
             }
 
-            GoToCell(_target.CurrentCell(), ReachTarget);
+            MoveBehaviour.GoToCell(_target.CurrentCell(), ReachTarget);
             _targetLastCell = _target.CurrentCell();
         }
         
@@ -89,7 +89,7 @@ namespace Game.Combat.Enemies
         {
             Cell targetCell = PathingGrid.WorldToCellPosition(_originPosition);
             targetCell = PathingGrid.GetCellNearMe(targetCell, WanderDistance);
-            GoToCell(targetCell, WaitThenWander);
+            MoveBehaviour.GoToCell(targetCell, WaitThenWander);
             SetActionText("Wandering");
         }
 

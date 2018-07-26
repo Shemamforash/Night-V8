@@ -36,7 +36,7 @@ namespace Game.Combat.Generation
             GenerateBaseGrid();
             _invalidCells.Clear();
             _stopwatch.Stop();
-            Debug.Log("grid: " + _stopwatch.Elapsed.ToString("mm\\:ss\\.ff"));
+            Helper.PrintTime("Grid: ", _stopwatch);
             _stopwatch = Stopwatch.StartNew();
         }
 
@@ -54,15 +54,27 @@ namespace Game.Combat.Generation
             return true;
         }
 
+        public static void AddBlockingArea(Vector2 origin, float radius)
+        {
+            List<Vector2> verts = new List<Vector2>();
+            for (int angle = 0; angle < 360; angle += 20)
+            {
+                Vector2 vert = AdvancedMaths.CalculatePointOnCircle(angle, radius, Vector2.zero);
+                verts.Add(vert);
+            }
+
+            Polygon polygon = new Polygon(verts, origin);
+            AddBarrier(polygon);
+        }
+        
         public static void FinaliseGrid()
         {
             _stopwatch.Stop();
-            Debug.Log("barriers: " + _stopwatch.Elapsed.ToString("mm\\:ss\\.ff"));
+            Helper.PrintTime("Barriers: ", _stopwatch);
             _stopwatch = Stopwatch.StartNew();
             _gridNodes.ForEach(n => n.SetNeighbors());
             _stopwatch.Stop();
-            Debug.Log("neighbors: " + _stopwatch.Elapsed.ToString("mm\\:ss\\.ff"));
-
+            Helper.PrintTime("Neighbors: ", _stopwatch);
             _outOfRangeList = _outOfRangeSet.ToList();
             _edgePositionList = _edgePositionSet.ToList();
         }
@@ -162,14 +174,14 @@ namespace Game.Combat.Generation
             }
         }
 
-        public static Thread ThreadRouteToCell(Cell from, Cell to, EnemyBehaviour enemy, float timeStarted)
+        public static Thread ThreadRouteToCell(Cell from, Cell to, MoveBehaviour moveBehaviour, float timeStarted)
         {
             Thread thread = new Thread(() =>
             {
                 List<Cell> route = new List<Cell>();
                 List<Node> nodePath = Pathfinding.AStar(from.Node, to.Node);
                 nodePath.ForEach(n => route.Add(WorldToCellPosition(n.Position)));
-                enemy.SetRoute(route, timeStarted);
+                moveBehaviour.SetRoute(route, timeStarted);
             });
             thread.Start();
             return thread;

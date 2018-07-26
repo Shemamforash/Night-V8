@@ -46,7 +46,6 @@ namespace Game.Characters
             CharacterSkillTwo = CharacterSkills.GetCharacterSkillTwo(this);
 
             AddStates();
-            Attributes.Get(AttributeType.Endurance).OnMin(RestAction.Enter);
             BrandManager.Initialise(this);
             UnlockStoryLine();
         }

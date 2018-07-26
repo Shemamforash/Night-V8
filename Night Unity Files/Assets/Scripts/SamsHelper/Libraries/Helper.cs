@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
+using Stopwatch = System.Diagnostics.Stopwatch;
 
 namespace SamsHelper.Libraries
 {
@@ -45,7 +46,7 @@ namespace SamsHelper.Libraries
             if (root.Attributes == null) throw new Exceptions.NodeHasNoAttributesException(root.Name);
             return root.Attributes[attributeName].Value;
         }
-        
+
         public static bool BoolFromNode(XmlNode root, string nodeName)
         {
             return GetNodeText(root, nodeName).ToLower() == "true";
@@ -497,6 +498,11 @@ namespace SamsHelper.Libraries
             XmlNodeList nodes = root.SelectNodes(subNodeName);
             if (nodes == null) throw new Exceptions.NoNodesWithNameException(subNodeName);
             return nodes;
+        }
+
+        public static void PrintTime(string message, Stopwatch stopWatch)
+        {
+            Debug.Log(message + stopWatch.Elapsed.ToString("mm\\:ss\\.ff"));
         }
     }
 }

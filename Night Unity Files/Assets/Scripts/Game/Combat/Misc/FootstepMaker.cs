@@ -7,7 +7,7 @@ namespace Game.Combat.Misc
 {
     public class FootstepMaker : MonoBehaviour
     {
-        private const float DistanceToFootPrint = 1f;
+        private const float DistanceToFootPrint = 2f;
         private readonly List<GameObject> _footstepPool = new List<GameObject>();
         private float _distanceTravelled;
         private GameObject _footprintPrefab;

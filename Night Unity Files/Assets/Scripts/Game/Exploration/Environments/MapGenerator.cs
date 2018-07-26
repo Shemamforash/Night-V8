@@ -1,13 +1,14 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using Game.Characters;
 using Game.Exploration.Regions;
-using SamsHelper;
+ using Game.Global;
+ using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Random = UnityEngine.Random;
+ using UnityEngine.Assertions;
+ using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
 {
@@ -122,7 +123,7 @@ namespace Game.Exploration.Environment
                 Vector2Int point = new Vector2Int((int) samples[i].x, (int) samples[i].y);
                 regions[i].SetPosition(point);
                 storedNodes.Add(regions[i]);
-                if (i == 0) initialNode = regions[0];
+                if (i == 0)initialNode = regions[0];
             }
 
             ConnectNodes();
@@ -131,17 +132,60 @@ namespace Game.Exploration.Environment
             regions.ForEach(r => r.Discover());
         }
 
-        private static void CreateMinimumSpanningTree()
+        private static Graph CreateMinimumSpanningTree()
         {
             Graph map = new Graph();
             storedNodes.ForEach(n => map.AddNode(n));
+            map.SetRootNode(initialNode);
             map.ComputeMinimumSpanningTree();
             map.Edges().ForEach(edge => { edge.A.AddNeighbor(edge.B); });
+            return map;
         }
 
         private static void ConnectNodes()
         {
-            CreateMinimumSpanningTree();
+            Graph map = CreateMinimumSpanningTree();
+            SetMaxNodeDepth(8 + WorldState.Difficulty() * 3, map);
+            AddRandomLinks();
+        }
+
+        private static void SetMaxNodeDepth(int maxDepth, Graph map)
+        {
+            List<Tuple<Region, Region>> edges = new List<Tuple<Region, Region>>();
+            for (int i = 0; i < storedNodes.Count; ++i)
+            {
+                for (int j = i + 1; j < storedNodes.Count; ++j)
+                {
+                    Region from = storedNodes[i];
+                    Region to = storedNodes[j];
+                    if (from.Neighbors().Contains(to)) continue;
+                    float distance = Vector2.Distance(from.Position, to.Position);
+                    if (distance > MaxRadius) continue;
+                    edges.Add(Tuple.Create(from, to));
+                }
+            }
+
+            map.CalculateNodeDepths();
+            float currentMaxNodeDepth = map.MaxDepth();
+            while (currentMaxNodeDepth > maxDepth && edges.Count > 0)
+            {
+                edges.Sort((a, b) =>
+                {
+                    float deltaDepthA = Mathf.Abs(a.Item1.Depth - a.Item2.Depth);
+                    float deltaDepthB = Mathf.Abs(b.Item1.Depth - b.Item2.Depth);
+                    return -deltaDepthA.CompareTo(deltaDepthB);
+                });
+                Tuple<Region, Region> edge = edges[0];
+                edges.RemoveAt(0);
+                edge.Item1.AddNeighbor(edge.Item2);
+                map.CalculateNodeDepths();
+                currentMaxNodeDepth = map.MaxDepth();
+            }
+            Assert.IsTrue(currentMaxNodeDepth <= maxDepth);
+        }
+        
+        private static void AddRandomLinks()
+        {
             List<Region> Regions = new List<Region>(storedNodes);
             foreach (Region current in Regions)
             {

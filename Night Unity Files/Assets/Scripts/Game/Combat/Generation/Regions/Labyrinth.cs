@@ -15,13 +15,13 @@ namespace Game.Combat.Generation
         //place echo
         //place obstacles
         
-        protected override void PlaceItems()
-        {
-        }
-
         protected override void Generate()
         {
+            PlaceShrine();
             GenerateSplinteredArea(5);
+            RemoveInvalidPoints();
+            PlaceItems();
+            PlaceEchoes();
         }
 
         private void JoinNeighbors(List<CrackNode> points, List<Edge> existingEdges)

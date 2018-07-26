@@ -22,7 +22,7 @@ namespace Game.Combat.Enemies.Nightmares
         private void Orbit()
         {
             Cell target = PathingGrid.GetCellOrbitingTarget(CurrentCell(), GetTarget().CurrentCell(), GetComponent<Rigidbody2D>().velocity, 4f, 0.5f);
-            GoToCell(target, Orbit);
+            MoveBehaviour.GoToCell(target, Orbit);
         }
 
         public override void Kill()

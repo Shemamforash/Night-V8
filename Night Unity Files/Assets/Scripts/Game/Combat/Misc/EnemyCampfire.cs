@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
+using Game.Combat.Generation;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
@@ -29,6 +30,7 @@ namespace Game.Combat.Misc
         public void CreateObject()
         {
             FireGenerator.Create(FirePosition);
+            PathingGrid.AddBlockingArea(FirePosition, 0.5f);
         }
     }
 }

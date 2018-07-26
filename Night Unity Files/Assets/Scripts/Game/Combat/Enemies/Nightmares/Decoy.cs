@@ -17,7 +17,7 @@ namespace Game.Combat.Enemies.Nightmares
             Decoy decoy = (Decoy)CombatManager.QueueEnemyToAdd(EnemyType.Decoy);
             decoy._decoyName = origin.GetEnemyName();
             decoy.GetComponent<SpriteRenderer>().sprite = origin.GetComponent<SpriteRenderer>().sprite;
-            decoy.Speed = origin.Speed;
+            decoy.MovementController.SetSpeed(origin.Enemy.Template.Speed);
             return decoy;
         }
     }

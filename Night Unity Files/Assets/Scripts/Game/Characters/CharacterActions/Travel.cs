@@ -46,7 +46,6 @@ namespace Game.Characters.CharacterActions
         {
             CurrentNode = _target;
             _inTransit = false;
-            Debug.Log(AtHome());
             if (AtHome())
             {
                 PlayerCharacter.Attributes.DecreaseWillpower();

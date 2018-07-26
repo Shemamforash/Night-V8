@@ -40,6 +40,7 @@ namespace Game.Combat.Generation.Shrines
             if (_riteShrinePrefab == null) _riteShrinePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Rite Shrine");
             GameObject riteShrineObject = Instantiate(_riteShrinePrefab);
             riteShrineObject.transform.position = position;
+            PathingGrid.AddBlockingArea(position, 1.5f);
         }
 
         public void EnterShrineCollider(RiteColliderBehaviour riteColliderBehaviour)

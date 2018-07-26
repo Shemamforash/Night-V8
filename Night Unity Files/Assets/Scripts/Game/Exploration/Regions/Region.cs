@@ -35,6 +35,8 @@ namespace Game.Exploration.Regions
         public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
         public Vector2? HealShrinePosition = null;
         public Vector2? EssenceShrinePosition = null;
+        public Character _characterHere;
+        public Vector2 CharacterPosition;
 
         public bool Visited()
         {
@@ -175,18 +177,14 @@ namespace Game.Exploration.Regions
         {
             if (CharacterManager.Characters.Count < 4)
             {
-                //todo add character;
-                return;
+                _characterHere = CharacterManager.GenerateRandomCharacter();
             }
-
-            //todo add resources
         }
 
         private void SetSeen()
         {
             if (_seen) return;
             _regionType = RegionManager.GetRegionType();
-            if (_regionType == RegionType.Shelter) Debug.Log("assigned");
             switch (_regionType)
             {
                 case RegionType.Nightmare:

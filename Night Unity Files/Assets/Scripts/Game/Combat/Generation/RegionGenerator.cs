@@ -16,7 +16,7 @@ namespace Game.Combat.Generation
     public abstract class RegionGenerator : MonoBehaviour
     {
         private const float MinPolyWidth = 0.1f, SmallPolyWidth = 0.2f, MediumPolyWidth = 2f, LargePolyWidth = 3f;
-        private Region _region;
+        protected Region _region;
         private List<Vector2> _availablePositions;
         private int _barrierNumber;
         protected readonly List<Barrier> barriers = new List<Barrier>();
@@ -31,8 +31,8 @@ namespace Game.Combat.Generation
             _region.Visit();
             PathingGrid.FinaliseGrid();
         }
-
-        private void GenerateObjects()
+        
+        protected virtual void GenerateObjects()
         {
             GenerateShrine();
             GenerateEchoes();
@@ -40,10 +40,16 @@ namespace Game.Combat.Generation
             {
                 HealShrineBehaviour.CreateObject(_region.HealShrinePosition.Value);
             }
-
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
+            GenerateCharacter();
+        }
+
+        private void GenerateCharacter()
+        {
+            if (_region._characterHere == null) return;
+            ShelterCharacterBehaviour.Generate(_region.CharacterPosition);
         }
 
         private void GenerateFreshEnvironment()
@@ -52,6 +58,7 @@ namespace Game.Combat.Generation
             _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f));
             Generate();
             _region.Barriers = barriers;
+            PathingGrid.InitialiseGrid();
         }
 
         protected void PlaceEchoes()
@@ -68,7 +75,7 @@ namespace Game.Combat.Generation
         {
             _availablePositions.RemoveAll(p =>
             {
-                Cell c = PathingGrid.WorldToCellPosition(p);
+                Cell c = PathingGrid.WorldToCellPosition(p, false);
                 if (c == null) return false;
                 return !PathingGrid.WorldToCellPosition(p).Reachable;
             });
@@ -89,13 +96,8 @@ namespace Game.Combat.Generation
 
         private void CreateImpassablePoint(Vector2 position)
         {
-            List<Vector2> verts = new List<Vector2>();
-            verts.Add(new Vector2(position.x - 0.5f, position.y - 0.5f));
-            verts.Add(new Vector2(position.x - 0.5f, position.y + 0.5f));
-            verts.Add(new Vector2(position.x + 0.5f, position.y + 0.5f));
-            verts.Add(new Vector2(position.x + 0.5f, position.y - 0.5f));
-            Polygon polygon = new Polygon(verts, position);
-            PathingGrid.AddBarrier(polygon);
+            //todo ensure i block things!
+            PathingGrid.AddBlockingArea(position, 1);
         }
 
         private void GenerateShrine()
@@ -128,16 +130,7 @@ namespace Game.Combat.Generation
             if (!ShouldPlaceShrine()) return;
             Vector2 position = FindAndRemoveValidPosition(3f);
             _region.ShrinePosition = position;
-            List<Vector2> verts = new List<Vector2>();
-            for (int angle = 0; angle < 360; angle += 20)
-            {
-                Vector2 vert = AdvancedMaths.CalculatePointOnCircle(angle, 3.5f, position);
-                verts.Add(vert);
-            }
-
-            Polygon polygon = new Polygon(verts, position);
-
-            Debug.Log(PathingGrid.AddBarrier(polygon));
+            PathingGrid.AddBlockingArea(position, 3.5f);
             RemoveInvalidPoints();
         }
 
@@ -254,6 +247,12 @@ namespace Game.Combat.Generation
 
         protected virtual void PlaceItems()
         {
+            if (_region._characterHere != null)
+            {
+                _region.CharacterPosition = FindAndRemoveValidPosition();
+                RemoveInvalidPoints();
+            }
+            PlaceFire();
             //todo tidy me
             if (_healthShrineCounter > HealShrineTarget)
             {
@@ -262,7 +261,7 @@ namespace Game.Combat.Generation
                 RemoveInvalidPoints();
             }
 
-            if (_essenceShrineCounter > EssenceShrineTarget / EnvironmentManager.CurrentEnvironment.LevelNo)
+            if (_essenceShrineCounter > EssenceShrineTarget / (EnvironmentManager.CurrentEnvironment.LevelNo + 1))
             {
                 _region.EssenceShrinePosition = FindAndRemoveValidPosition();
                 _essenceShrineCounter = 0;

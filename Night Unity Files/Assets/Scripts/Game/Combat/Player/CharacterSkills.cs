@@ -139,7 +139,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            PlayerCombat.Instance.Ram(PlayerCombat.Instance.GetTarget(), 200);
+            PlayerCombat.Instance.MovementController.Ram(PlayerCombat.Instance.GetTarget().transform, 200);
         }
     }
 
@@ -153,7 +153,7 @@ namespace Game.Combat.Player
 
         protected override void OnFire()
         {
-            CombatManager.EnemiesOnScreen().ForEach(e => e.MoveToCover(null));
+            CombatManager.EnemiesOnScreen().ForEach(e => e.MoveBehaviour.MoveToCover(null));
         }
     }
 

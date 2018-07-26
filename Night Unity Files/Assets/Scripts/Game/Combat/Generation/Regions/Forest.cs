@@ -6,10 +6,13 @@ namespace Game.Combat.Generation
     {
         protected override void Generate()
         {
+            PlaceShrine();
+            RemoveInvalidPoints();
+            PlaceItems();
+            PlaceEchoes();
             GenerateMediumRocks(Random.Range(2, 6));
             GenerateSmallRocks(Random.Range(20, 30));
             GenerateTinyRocks(Random.Range(30, 50));
-            PlaceFire();
         }
     }
 }

@@ -96,7 +96,7 @@ namespace Game.Combat.Misc
                 Vector2 dir = c.transform.position - transform.position;
                 float distance = dir.magnitude;
                 dir.Normalize();
-                c.AddForce(dir * 1f / distance * 10f);
+                c.MovementController.AddForce(dir * 1f / distance * 10f);
             }
         }
 
