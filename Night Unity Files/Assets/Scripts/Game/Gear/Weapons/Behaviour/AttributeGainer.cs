@@ -4,7 +4,7 @@ using SamsHelper.Libraries;
 
 namespace Game.Gear.Weapons
 {
-    public class AttributeGainer : BaseWeaponBehaviour
+    public class AttributeGainer : Spoolup
     {
         private float _timeAtFirstFire;
         private const float TimeToMaxAccuracy = 2f;
@@ -14,6 +14,7 @@ namespace Game.Gear.Weapons
         public override void StartFiring(CharacterCombat origin)
         {
             base.StartFiring(origin);
+            if (!SpooledUp()) return;
             if (_firing == false) _timeAtFirstFire = Helper.TimeInSeconds();
             _firing = true;
             float difference = Helper.TimeInSeconds() - _timeAtFirstFire;
@@ -23,9 +24,9 @@ namespace Game.Gear.Weapons
             TimeToNextFire = Helper.TimeInSeconds() + 1f / (Weapon.GetAttributeValue(AttributeType.FireRate) * _modifier);
         }
 
-        public override void EndFiring()
+        public override void StopFiring()
         {
-            base.EndFiring();
+            base.StopFiring();
             _timeAtFirstFire = 0f;
         }
     }

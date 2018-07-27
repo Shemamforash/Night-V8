@@ -36,7 +36,7 @@ namespace Game.Combat.Generation.Shrines
                 _fires.Add(FireBehaviour.Create(firePosition, 1f, true, false));
             }
 
-            float roundTime = numberOfEnemies * 20;
+            float roundTime = numberOfEnemies * 25;
             float currentTime = roundTime;
             float timeToNextBurst = Random.Range(1f, 3f);
 

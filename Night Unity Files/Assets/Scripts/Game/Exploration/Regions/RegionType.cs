@@ -11,6 +11,7 @@
         Fountain,
         Shrine,
         Monument,
-        Nightmare
+        Nightmare,
+        Rite
     }
 }

@@ -60,6 +60,7 @@ namespace Game.Combat.Generation.Shrines
             }
 
             PlayerUi.SetEventText("Accept the " + _targetBrand.GetName() + " [T]");
+            _targetBrand.UpdateValue(10000);
         }
 
         public void ExitShrineCollider()

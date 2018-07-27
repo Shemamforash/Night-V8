@@ -62,6 +62,7 @@ namespace Game.Combat.Enemies
 
         private void FixedUpdate()
         {
+            if (!CombatManager.InCombat()) return;
             UpdateCurrentCell();
             if (_nextCell == null) return;
             _reachedTarget = Vector2.Distance(_currentCell.Position, _nextCell.Position) < 0.5f;
@@ -69,6 +70,7 @@ namespace Game.Combat.Enemies
 
         private void Update()
         {
+            if (!CombatManager.InCombat()) return;
             CheckForRequiredPathfind();
             MoveAction?.Invoke();
         }

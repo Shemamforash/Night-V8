@@ -18,7 +18,7 @@ namespace Game.Combat.Generation
         protected override void Generate()
         {
             PlaceShrine();
-            GenerateSplinteredArea(5);
+            GenerateSplinteredArea(Random.Range(4, 7));
             PlaceItems();
             PlaceEchoes();
         }
@@ -71,11 +71,9 @@ namespace Game.Combat.Generation
         private void GenerateSplinteredArea(int complexity)
         {
             Graph graph = new Graph();
-
-            Assert.IsTrue(complexity >= 4);
-            float originalRadius = 2;
+            float originalRadius = Random.Range(1.5f, 2.5f);
             float radius = originalRadius;
-            float radiusMultiplier = 1.5f;
+            float radiusMultiplier = Random.Range(1.2f, 1.9f);
             List<CrackNode> paths = new List<CrackNode>();
 
             CrackNode origin = CrackNode.Create(0, 360f / complexity, 0);

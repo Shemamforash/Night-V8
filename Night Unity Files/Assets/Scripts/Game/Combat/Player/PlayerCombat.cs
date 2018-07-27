@@ -45,6 +45,7 @@ namespace Game.Combat.Player
         private const float MaxReloadPressedTime = 1f;
         public static PlayerCombat Instance;
         public float MuzzleFlashOpacity;
+        private Image _vignetteRenderer;
 
         public bool ConsumeAdrenaline(int amount)
         {
@@ -72,6 +73,7 @@ namespace Game.Combat.Player
         {
             base.Awake();
             Instance = this;
+            _vignetteRenderer = GameObject.Find("Vignette").GetComponent<Image>();
         }
 
         protected override int GetBurnDamage()
@@ -168,7 +170,7 @@ namespace Game.Combat.Player
             switch (axis)
             {
                 case InputAxis.Fire:
-                    _weaponBehaviour.EndFiring();
+                    _weaponBehaviour.StopFiring();
                     break;
                 case InputAxis.SwitchTab:
                     _rotateSpeedCurrent = 0f;
@@ -345,6 +347,7 @@ namespace Game.Combat.Player
 
             _playerLight = GameObject.Find("Player Light").GetComponent<FastLight>();
             _playerLight.Radius = CombatManager.VisibilityRange();
+            _vignetteRenderer.material.SetFloat("_ViewDistance", CombatManager.VisibilityRange());
 
             SkillBar.BindSkills(Player, _skillCooldownModifier);
             UIMagazineController.SetWeapon(_weaponBehaviour);

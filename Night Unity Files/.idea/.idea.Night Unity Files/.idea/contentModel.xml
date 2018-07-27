@@ -402,6 +402,7 @@
                   <e p="Forest.cs" t="Include" />
                   <e p="Labyrinth.cs" t="Include" />
                   <e p="Nightmare.cs" t="Include" />
+                  <e p="Rite.cs" t="Include" />
                   <e p="Ruins.cs" t="Include" />
                   <e p="Steppe.cs" t="Include" />
                   <e p="Temple.cs" t="Include" />
@@ -415,6 +416,7 @@
                   <e p="HealShrineBehaviour.cs" t="Include" />
                   <e p="RiteColliderBehaviour.cs" t="Include" />
                   <e p="RiteShrineBehaviour.cs" t="Include" />
+                  <e p="RiteStarter.cs" t="Include" />
                   <e p="SaveStoneBehaviour.cs" t="Include" />
                   <e p="ShrineBehaviour.cs" t="Include" />
                   <e p="ShrineEdgeFollowBehaviour.cs" t="Include" />
@@ -504,6 +506,7 @@
                   <e p="DoubleFireDelay.cs" t="Include" />
                   <e p="DoubleFireInstant.cs" t="Include" />
                   <e p="RandomFire.cs" t="Include" />
+                  <e p="Spoolup.cs" t="Include" />
                 </e>
                 <e p="Weapon.cs" t="Include" />
                 <e p="WeaponAttributes.cs" t="Include" />
@@ -723,6 +726,7 @@
           <e p="UiConsumableController.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">
+          <e p="Combat Vignette Shader.shader" t="Include" />
           <e p="CombatShader.shader" t="Include" />
           <e p="MapBackgroundShader.shader" t="Include" />
           <e p="MapBackgroundShader2.shader" t="Include" />

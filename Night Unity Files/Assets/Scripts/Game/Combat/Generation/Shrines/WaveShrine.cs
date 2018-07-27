@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Game.Combat.Enemies;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -40,7 +41,7 @@ namespace Game.Combat.Generation.Shrines
 
         private IEnumerator SpawnWaves()
         {
-            int spawnCount = _currentShrineLevel * 10;
+            int spawnCount = _currentShrineLevel * (Mathf.FloorToInt(WorldState.Difficulty() / 10f) + 1) * 5;
             float angleInterval = 360f / spawnCount;
             currentAngle = Random.Range(0, 360);
             waveDuration = 0f;

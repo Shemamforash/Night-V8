@@ -4,6 +4,7 @@ using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Animals;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Exploration.Environment;
@@ -23,7 +24,7 @@ namespace Game.Combat.Generation
     public class CombatManager : Menu
     {
         private readonly CooldownManager _cooldowns = new CooldownManager();
-        private Region _currentRegion;
+        private static Region _currentRegion;
         private bool _inMelee;
         private float _visibilityRange;
         private bool _inCombat;
@@ -45,7 +46,7 @@ namespace Game.Combat.Generation
 
         public static bool InCombat() => Instance()._inCombat;
 
-        public static Region Region() => Instance()._currentRegion;
+        public static Region Region() => _currentRegion;
 
         public override void Awake()
         {
@@ -54,7 +55,7 @@ namespace Game.Combat.Generation
             _instance = this;
         }
 
-        private static CombatManager Instance()
+        public static CombatManager Instance()
         {
             if (_instance == null) _instance = FindObjectOfType<CombatManager>();
             return _instance;
@@ -82,12 +83,23 @@ namespace Game.Combat.Generation
             _cooldowns.UpdateCooldowns();
         }
 
+        public static void SetCurrentRegion(Region region)
+        {
+            _currentRegion = region;
+            if (_currentRegion.GetRegionType() == RegionType.Rite)
+            {
+                PathingGrid.SetCombatAreaWidth(15);
+                return;
+            }
+
+            PathingGrid.SetCombatAreaWidth(Random.Range(25, 35));
+        }
+        
         private void EnterCombat()
         {
             _inCombat = true;
             WorldState.Pause();
-            _visibilityRange = 5f * WeatherManager.CurrentWeather().GetVisibility() + 2f;
-            _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
+            _visibilityRange = 10f;
 
             GameObject worldObject = GameObject.Find("World");
             if (_currentRegion.GetRegionType() == RegionType.Temple)
@@ -97,9 +109,13 @@ namespace Game.Combat.Generation
             else if (_currentRegion.GetRegionType() == RegionType.Nightmare)
             {
                 worldObject.AddComponent<Nightmare>().Initialise(_currentRegion);
+            } else if (_currentRegion.GetRegionType() == RegionType.Rite)
+            {
+                worldObject.AddComponent<Rite>().Initialise(_currentRegion);
             }
             else
             {
+                _visibilityRange = 5f * WeatherManager.CurrentWeather().GetVisibility() + 2f;
                 switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
                 {
                     case EnvironmentType.Oasis:
@@ -201,7 +217,11 @@ namespace Game.Combat.Generation
 
         public static void ExitCombat()
         {
-            if (!Instance()._inCombat) Debug.Log("Don't try and exit combat twice!");
+            if (!Instance()._inCombat)
+            {
+                Debug.Log("Don't try and exit combat twice!");
+                return;
+            }
             BrandManager brandManager = PlayerCombat.Instance.Player.BrandManager;
             if (Enemies().Count == 0)
             {
@@ -245,7 +265,7 @@ namespace Game.Combat.Generation
 
         public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate type, CharacterCombat target = null)
         {
-            Enemy e = Instance()._currentRegion.AddEnemy(type);
+            Enemy e = _currentRegion.AddEnemy(type);
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
             if (target != null) enemyBehaviour.SetTarget(target);
             (enemyBehaviour as UnarmedBehaviour)?.Alert(true);

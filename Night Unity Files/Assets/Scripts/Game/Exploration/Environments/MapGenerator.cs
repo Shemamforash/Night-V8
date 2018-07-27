@@ -1,22 +1,26 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using Game.Characters;
 using Game.Exploration.Regions;
- using Game.Global;
- using SamsHelper;
+using Game.Global;
+using SamsHelper;
 using SamsHelper.Libraries;
+using SamsHelper.Persistence;
 using UnityEngine;
- using UnityEngine.Assertions;
- using Random = UnityEngine.Random;
+using System.Text.RegularExpressions;
+using System.Xml;
+using Facilitating.Persistence;
+using Assert = NUnit.Framework.Assert;
+using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
 {
-    public class MapGenerator : MonoBehaviour
+    public class MapGenerator : MonoBehaviour, IPersistenceTemplate
     {
         private const int MapWidth = 120;
         private const int MinRadius = 6, MaxRadius = 9;
-        private static List<Region> storedNodes = new List<Region>();
+        private static readonly List<Region> _regions = new List<Region>();
         private static Region initialNode;
         private static List<Region> route;
         public static Transform MapTransform;
@@ -25,12 +29,30 @@ namespace Game.Exploration.Environment
         private readonly List<Tuple<Region, Region>> _allRoutes = new List<Tuple<Region, Region>>();
         private readonly Queue<Tuple<Region, Region>> _undrawnRoutes = new Queue<Tuple<Region, Region>>();
         private float currentTime;
+        private static bool _loaded;
+        private static readonly Dictionary<RegionType, List<string>> _regionNames = new Dictionary<RegionType, List<string>>();
+        private const int WaterSourcesPerEnvironment = 30;
+        private const int FoodSourcesPerEnvironment = 20;
+        private const int ResourcesPerEnvironment = 30;
+
+        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        {
+            if (saveType != PersistenceType.Game) return null;
+            XmlNode regionNode = SaveController.CreateNodeAndAppend("Regions", doc);
+            foreach (Region region in _regions) region.Save(regionNode, saveType);
+            return regionNode;
+        }
+
+        public void Load(XmlNode doc, PersistenceType saveType)
+        {
+        }
 
         public void Awake()
         {
+            SaveController.AddPersistenceListener(this);
             _routeTrails.Clear();
             MapTransform = transform;
-            storedNodes.ForEach(n => n.CreateObject());
+            _regions.ForEach(n => n.CreateObject());
             CreateMapRings();
             UpdateNodeColor();
             CreateRouteLinks();
@@ -115,32 +137,223 @@ namespace Game.Exploration.Environment
 
         public static void Generate()
         {
-            storedNodes = RegionManager.GenerateRegions();
-            initialNode = storedNodes[0];
+            GenerateRegions();
+            ConnectRegions();
+            SetRegionTypes();
+            initialNode.Discover();
+            _regions.ForEach(r => r.Discover());
+            Debug.Log(_regions.Count);
+        }
 
+        private static void GenerateRegions()
+        {
+            LoadRegionTemplates();
+            _regions.Clear();
+            int numberOfRegions = EnvironmentManager.CurrentEnvironment.RegionCount + 1;
+            while (numberOfRegions > 0)
+            {
+                _regions.Add(new Region());
+                --numberOfRegions;
+            }
+            initialNode = _regions[0];
+            initialNode.SetRegionType(RegionType.Gate);
+        }
+
+        private static void ConnectRegions()
+        {
             bool succeeded = false;
             while (!succeeded)
             {
-                storedNodes.ForEach(s =>
-                {
-                    s.Reset();
-                });
-                List<Vector2> samples = AdvancedMaths.GetPoissonDiscDistribution(storedNodes.Count, MinRadius, MaxRadius, MapWidth / 2f, true);
+                _regions.ForEach(s => { s.Reset(); });
+                List<Vector2> samples = AdvancedMaths.GetPoissonDiscDistribution(_regions.Count, MinRadius, MaxRadius, MapWidth / 2f, true);
                 for (int i = 0; i < samples.Count; ++i)
                 {
                     Vector2Int point = new Vector2Int((int) samples[i].x, (int) samples[i].y);
-                    storedNodes[i].SetPosition(point);
+                    _regions[i].SetPosition(point);
                 }
+
                 succeeded = ConnectNodes();
             }
-            initialNode.Discover();
-            storedNodes.ForEach(r => r.Discover());
+        }
+
+        private static void SetRegionTypes()
+        {
+            Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
+            DistributeNodeTypes(RegionType.Temple, currentEnvironment.Temples, 4);
+            DistributeNodeTypes(RegionType.Monument, currentEnvironment.Monuments, 4);
+            DistributeNodeTypes(RegionType.Shrine, currentEnvironment.Shrines, 1);
+            DistributeNodeTypes(RegionType.Fountain, currentEnvironment.Fountains, 1);
+            DistributeNodeTypes(RegionType.Shelter, currentEnvironment.Shelters, 3);
+            DistributeNodeTypes(RegionType.Animal, currentEnvironment.Animals, -1, false);
+            DistributeNodeTypes(RegionType.Danger, currentEnvironment.Dangers, -1, false); 
+            SetWaterQuantities();
+            SetFoodQuantities();
+            SetResourceQuantities();
+        }
+
+        public static string GenerateName(RegionType type)
+        {
+            if (type == RegionType.Rite) return "";
+            return type == RegionType.Gate ? "Gate" : Helper.RemoveRandomInList(_regionNames[type]);
+        }
+
+        private static void LoadNames(RegionType type, string[] prefixes, string[] suffixes)
+        {
+            List<string> combinations = new List<string>();
+            foreach (string prefix in prefixes)
+            foreach (string suffix in suffixes)
+                if (prefix != suffix)
+                    switch (type)
+                    {
+                        case RegionType.Monument:
+                            combinations.Add(prefix + " of " + suffix);
+                            break;
+                        case RegionType.Fountain:
+                            combinations.Add(prefix + " " + suffix);
+                            break;
+                        default:
+                            combinations.Add(prefix + "'s " + suffix);
+                            break;
+                    }
+            Helper.Shuffle(combinations);
+            _regionNames.Add(type, combinations);
+        }
+
+        private static string StripBlanks(string text)
+        {
+            return Regex.Replace(text, @"\s+", "");
+        }
+
+        private static void LoadRegionTemplates()
+        {
+            if (_loaded) return;
+            XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
+            foreach (XmlNode regionTypeNode in root.ChildNodes)
+            {
+                string[] prefixes = StripBlanks(Helper.GetNodeText(regionTypeNode, "Prefixes")).Split(',');
+                string[] suffixes = StripBlanks(Helper.GetNodeText(regionTypeNode, "Suffixes")).Split(',');
+                string regionName = regionTypeNode.Name;
+                foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
+                {
+                    if (regionName == type.ToString())
+                    {
+                        LoadNames(type, prefixes, suffixes);
+                    }
+                }
+            }
+
+            _loaded = true;
+        }
+
+        private static int assigned;
+        
+        private static void DistributeNodeTypes(RegionType type, int quantity, int minDepth = -1, bool mustNotTouch = true)
+        {
+            if (quantity == 0) return;
+            Helper.Shuffle(_regions);
+            foreach (Region region in _regions)
+            {
+                if (region.GetRegionType() != RegionType.None) continue;
+                if (minDepth != -1 && region.Depth < minDepth) continue;
+                bool valid = true;
+                if (mustNotTouch)
+                {
+                    foreach (Node neighbor in region.Neighbors())
+                    {
+                        if (((Region) neighbor).GetRegionType() != type) continue;
+                        valid = false;
+                        break;
+                    }
+                }
+
+                if (!valid) continue;
+                region.SetRegionType(type);
+                ++assigned;
+                --quantity;
+                if (quantity == 0) break;
+            }
+
+            if (quantity > 0)
+            {
+                Helper.Shuffle(_regions);
+                foreach (Region region in _regions)
+                {
+                    if (region.GetRegionType() != RegionType.None) continue;
+                    region.SetRegionType(type);
+                    ++assigned;
+                    --quantity;
+                    if (quantity == 0) break;
+                }
+
+            }
+            Assert.IsTrue(quantity == 0);
+        }
+
+        private static void SetWaterQuantities()
+        {
+            int waterSources = WaterSourcesPerEnvironment;
+            while (waterSources > 0)
+            {
+                Helper.Shuffle(_regions);
+                bool added = false;
+                for (int index = 0; index < _regions.Count * 0.6f; index++)
+                {
+                    Region r = _regions[index];
+                    if (waterSources == 0) break;
+                    if (r.WaterSourceCount > 2) continue;
+                    added = true;
+                    ++r.WaterSourceCount;
+                    --waterSources;
+                }
+
+                if (!added) Debug.Log("Decrease water sources per environment");
+            }
+        }
+
+        private static void SetFoodQuantities()
+        {
+            int foodSource = FoodSourcesPerEnvironment;
+            while (foodSource > 0)
+            {
+                Helper.Shuffle(_regions);
+                bool added = false;
+                foreach (Region r in _regions)
+                {
+                    if (foodSource == 0) break;
+                    if (r.FoodSourceCount > 2) continue;
+                    added = true;
+                    ++r.FoodSourceCount;
+                    --foodSource;
+                }
+
+                if (!added) Debug.Log("Decrease food sources per environment");
+            }
+        }
+
+        private static void SetResourceQuantities()
+        {
+            int resourceCount = ResourcesPerEnvironment;
+            while (resourceCount > 0)
+            {
+                Helper.Shuffle(_regions);
+                bool added = false;
+                foreach (Region r in _regions)
+                {
+                    if (resourceCount == 0) break;
+                    if (r.ResourceSourceCount > 2) continue;
+                    added = true;
+                    ++r.ResourceSourceCount;
+                    --resourceCount;
+                }
+
+                if (!added) Debug.Log("Decrease resource sources per environment");
+            }
         }
 
         private static Graph CreateMinimumSpanningTree()
         {
             Graph map = new Graph();
-            storedNodes.ForEach(n => map.AddNode(n));
+            _regions.ForEach(n => map.AddNode(n));
             map.SetRootNode(initialNode);
             map.ComputeMinimumSpanningTree();
             map.Edges().ForEach(edge => { edge.A.AddNeighbor(edge.B); });
@@ -158,6 +371,7 @@ namespace Game.Exploration.Environment
             {
                 return false;
             }
+
             AddRandomLinks();
             return true;
         }
@@ -165,12 +379,12 @@ namespace Game.Exploration.Environment
         private static void SetMaxNodeDepth(int maxDepth, Graph map)
         {
             List<Tuple<Region, Region>> edges = new List<Tuple<Region, Region>>();
-            for (int i = 0; i < storedNodes.Count; ++i)
+            for (int i = 0; i < _regions.Count; ++i)
             {
-                for (int j = i + 1; j < storedNodes.Count; ++j)
+                for (int j = i + 1; j < _regions.Count; ++j)
                 {
-                    Region from = storedNodes[i];
-                    Region to = storedNodes[j];
+                    Region from = _regions[i];
+                    Region to = _regions[j];
                     if (from.Neighbors().Contains(to)) continue;
                     float distance = Vector2.Distance(from.Position, to.Position);
                     if (distance > MaxRadius) continue;
@@ -197,14 +411,14 @@ namespace Game.Exploration.Environment
 
             if (currentMaxNodeDepth > maxDepth) throw new Exception();
         }
-        
+
         private static void AddRandomLinks()
         {
-            List<Region> Regions = new List<Region>(storedNodes);
+            List<Region> Regions = new List<Region>(_regions);
             foreach (Region current in Regions)
             {
-                storedNodes.Sort((a, b) => Vector2.Distance(current.Position, a.Position).CompareTo(Vector2.Distance(current.Position, b.Position)));
-                storedNodes.ForEach(n =>
+                _regions.Sort((a, b) => Vector2.Distance(current.Position, a.Position).CompareTo(Vector2.Distance(current.Position, b.Position)));
+                _regions.ForEach(n =>
                 {
                     if (n == current) return;
                     if (current.Neighbors().Count >= 2) return;
@@ -266,7 +480,7 @@ namespace Game.Exploration.Environment
 
         public static List<Region> DiscoveredNodes()
         {
-            return storedNodes.FindAll(n => n.Seen());
+            return _regions.FindAll(n => n.Seen());
         }
 
         public static void UpdateNodeColor()

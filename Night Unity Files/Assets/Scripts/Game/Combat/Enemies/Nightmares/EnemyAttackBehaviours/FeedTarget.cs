@@ -11,19 +11,24 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         private Feed _target;
         private ParticleSystem _particles;
         private EnemyBehaviour _enemy;
+        private GameObject _dissolvePrefab;
 
         public void Awake()
         {
-            _particles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Dissolve Particles");
+            if (_dissolvePrefab == null) _dissolvePrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Disappear");
+            GameObject dissolveObject = Instantiate(_dissolvePrefab);
+            dissolveObject.transform.SetParent(transform);
+            dissolveObject.transform.position = transform.position;
+            _particles = dissolveObject.GetComponent<ParticleSystem>();
             _enemy = GetComponent<EnemyBehaviour>();
         }
-        
+
         public void StartDrawLife(Feed target)
         {
             if (_drawingLife) return;
             StartCoroutine(DrawLife(target));
         }
-        
+
         private IEnumerator DrawLife(Feed target)
         {
             _target = target;

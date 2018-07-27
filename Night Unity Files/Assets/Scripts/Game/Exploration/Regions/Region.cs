@@ -51,6 +51,28 @@ namespace Game.Exploration.Regions
 
         public void Visit()
         {
+            if (!Visited())
+            {
+                switch (_regionType)
+                {
+                    case RegionType.Nightmare:
+                        GenerateEncounter(WorldState.GetAllowedNightmareEnemyTypes(), 5, 10);
+                        break;
+                    case RegionType.Shelter:
+                        GenerateShelter();
+                        break;
+                    case RegionType.Animal:
+                        GenerateAnimalEncounter();
+                        break;
+                    case RegionType.Rite:
+                        break;
+                    case RegionType.Temple:
+                        break;
+                    default:
+                        GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes(), 1, 5);
+                        break;
+                }
+            }
             _lastVisitDay = WorldState.Days;
         }
 
@@ -181,27 +203,15 @@ namespace Game.Exploration.Regions
             }
         }
 
+        public void SetRegionType(RegionType type)
+        {
+            _regionType = type;
+            Name = MapGenerator.GenerateName(_regionType);
+        }
+
         private void SetSeen()
         {
             if (_seen) return;
-            _regionType = RegionManager.GetRegionType();
-            switch (_regionType)
-            {
-                case RegionType.Nightmare:
-                    GenerateEncounter(WorldState.GetAllowedNightmareEnemyTypes(), 5, 10);
-                    break;
-                case RegionType.Shelter:
-                    GenerateShelter();
-                    break;
-                case RegionType.Animal:
-                    GenerateAnimalEncounter();
-                    break;
-                default:
-                    GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes(), 1, 5);
-                    break;
-            }
-
-            Name = RegionManager.GenerateName(_regionType);
             _seen = true;
         }
 

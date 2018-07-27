@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.WorldEvents;
@@ -12,7 +13,7 @@ namespace Game.Characters.CharacterActions
     public class Travel : BaseCharacterAction
     {
         private Region _target;
-        private Region CurrentNode;
+        private Region CurrentRegion;
         private bool _inTransit;
         private int _travelTime;
         private const int MinutesPerEndurancePoint = WorldState.MinutesPerHour / 2;
@@ -38,13 +39,13 @@ namespace Game.Characters.CharacterActions
 
         private bool AtHome()
         {
-            if (CurrentNode == null) return true;
-            return CurrentNode.GetRegionType() == RegionType.Gate;
+            if (CurrentRegion == null) return true;
+            return CurrentRegion.GetRegionType() == RegionType.Gate;
         }
 
         private void ReachTarget()
         {
-            CurrentNode = _target;
+            CurrentRegion = _target;
             _inTransit = false;
             if (AtHome())
             {
@@ -75,7 +76,8 @@ namespace Game.Characters.CharacterActions
             }
             else
             {
-                CurrentNode.Discover();
+                CurrentRegion.Discover();
+                CombatManager.SetCurrentRegion(CurrentRegion);
                 SceneChanger.ChangeScene("Combat");
             }
         }
@@ -87,7 +89,7 @@ namespace Game.Characters.CharacterActions
 
         public Region GetCurrentNode()
         {
-            return CurrentNode ?? (CurrentNode = MapGenerator.GetInitialNode());
+            return CurrentRegion ?? (CurrentRegion = MapGenerator.GetInitialNode());
         }
 
         public void TravelTo(Region target, int enduranceCost)

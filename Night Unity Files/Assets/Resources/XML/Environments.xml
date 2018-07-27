@@ -2,51 +2,56 @@
     <Oasis>
         <Level>0</Level>
         <Temperature>3</Temperature>
-        <Shelter>0</Shelter>
         <Temples>1</Temples>
-        <CompleteKeys>1</CompleteKeys>
-        <Resources>6</Resources>
+        <Monuments>2</Monuments>
+        <Shrines>3</Shrines>
+        <Fountains>2</Fountains>
+        <Shelters>0</Shelters>
+        <Animals>4</Animals>
         <Danger>9</Danger>
-        <Animals>3</Animals>
     </Oasis>
     <Steppe>
         <Level>1</Level>
         <Temperature>1</Temperature>
-        <Shelter>1</Shelter>
         <Temples>2</Temples>
-        <CompleteKeys>1</CompleteKeys>
-        <Resources>7</Resources>
-        <Danger>10</Danger>
+        <Monuments>2</Monuments>
+        <Shrines>5</Shrines>
+        <Fountains>3</Fountains>
+        <Shelters>1</Shelters>
         <Animals>5</Animals>
+        <Danger>10</Danger>
     </Steppe>
     <Ruins>
         <Level>2</Level>
         <Temperature>2</Temperature>
-        <Shelter>1</Shelter>
         <Temples>3</Temples>
-        <CompleteKeys>1</CompleteKeys>
-        <Resources>8</Resources>
+        <Monuments>3</Monuments>
+        <Shrines>7</Shrines>
+        <Fountains>4</Fountains>
+        <Shelters>1</Shelters>
+        <Animals>6</Animals>
         <Danger>11</Danger>
-        <Animals>2</Animals>
     </Ruins>
     <Defiles>
         <Level>3</Level>
         <Temperature>4</Temperature>
-        <Shelter>1</Shelter>
         <Temples>4</Temples>
-        <CompleteKeys>1</CompleteKeys>
-        <Resources>9</Resources>
+        <Monuments>3</Monuments>
+        <Shrines>9</Shrines>
+        <Fountains>5</Fountains>
+        <Shelters>1</Shelters>
+        <Animals>7</Animals>
         <Danger>12</Danger>
-        <Animals>2</Animals>
     </Defiles>
     <Wastelands>
         <Level>4</Level>
         <Temperature>5</Temperature>
-        <Shelter>1</Shelter>
-        <Temples>4</Temples>
-        <CompleteKeys>0</CompleteKeys>
-        <Resources>10</Resources>
+        <Temples>5</Temples>
+        <Monuments>3</Monuments>
+        <Shrines>11</Shrines>
+        <Fountains>6</Fountains>
+        <Shelters>1</Shelters>
+        <Animals>8</Animals>
         <Danger>13</Danger>
-        <Animals>0</Animals>
     </Wastelands>
 </EnvironmentTypes>

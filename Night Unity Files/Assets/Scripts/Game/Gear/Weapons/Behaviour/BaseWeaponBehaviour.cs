@@ -55,7 +55,7 @@ namespace Game.Gear.Weapons
             _fired = true;
         }
 
-        public virtual void EndFiring()
+        public virtual void StopFiring()
         {
             _fired = false;
         }

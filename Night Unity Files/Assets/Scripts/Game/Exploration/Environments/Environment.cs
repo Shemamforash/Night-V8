@@ -12,7 +12,7 @@ namespace Game.Exploration.Environment
     {
         private readonly float minTemp, maxTemp;
         private readonly List<float> _temperatureArray = new List<float>();
-        public readonly int LevelNo, Temples, CompleteKeys, Resources, Dangers;
+        public readonly int LevelNo, Temples, Monuments, Shrines, Fountains, Shelters, Animals, Dangers;
         public readonly EnvironmentType EnvironmentType;
         private static List<EnvironmentType> _environmentTypes;
 
@@ -25,12 +25,18 @@ namespace Game.Exploration.Environment
             minTemp = maxTemp - 20;
             CalculateTemperatures();
             Temples = Helper.IntFromNode(environmentNode, "Temples");
-            CompleteKeys = Helper.IntFromNode(environmentNode, "CompleteKeys");
-            Resources = Helper.IntFromNode(environmentNode, "Resources");
+            Monuments = Helper.IntFromNode(environmentNode, "Monuments");
+            Shrines = Helper.IntFromNode(environmentNode, "Shrines");
+            Fountains = Helper.IntFromNode(environmentNode, "Fountains");
+            Shelters = Helper.IntFromNode(environmentNode, "Shelters");
+            Animals = Helper.IntFromNode(environmentNode, "Animals");
             Dangers = Helper.IntFromNode(environmentNode, "Danger");
+            RegionCount = Temples + Monuments + Shrines + Fountains + Shelters + Animals + Dangers;
         }
 
-        private EnvironmentType StringToEnvironmentType(string environmentString)
+        public readonly int RegionCount;
+
+        private static EnvironmentType StringToEnvironmentType(string environmentString)
         {
             if (_environmentTypes == null)
             {

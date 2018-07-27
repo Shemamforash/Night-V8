@@ -192,7 +192,7 @@ namespace Game.Combat.Generation
             CarvePassages(0, 0);
             List<Vector2> islandPositions = new List<Vector2>();
             if(ShouldPlaceShrine()) islandPositions.Add(_region.ShrinePosition);
-            for(int i = 0; i < 9; ++i) islandPositions.Add(FindAndRemoveValidPosition());
+            for(int i = 0; i < Random.Range(5, 10); ++i) islandPositions.Add(FindAndRemoveValidPosition());
             CreateIslands(islandPositions);
             while (_nodesWithWalls.Count > 0) CombineWalls();
         }

@@ -19,10 +19,10 @@ namespace Game.Combat.Generation
 
         private const float Scale = 0.25f;
         private const int Width = 200;
-        private const int RegionAreaThreshold = 100;
+        private static int RegionAreaThreshold = 100;
         private static CavePoint[,] _map;
         private List<Region> _regions = new List<Region>();
-        private const int RandomFillPercent = 48;
+        private int RandomFillPercent = 48;
         private static bool _includeOnlyInRangeCells;
 
         protected override void Generate()
@@ -37,6 +37,8 @@ namespace Game.Combat.Generation
 
         private void GenerateMap()
         {
+            RandomFillPercent = Random.Range(45, 48);
+            RegionAreaThreshold = Random.Range(40, 140);
             _map = new CavePoint[Width, Width];
             RandomFillMap();
 

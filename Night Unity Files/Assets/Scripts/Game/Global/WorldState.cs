@@ -24,7 +24,6 @@ namespace Game.Global
         private static int DaysSpentHere;
         private static bool _started;
         private static CharacterManager _homeInventory;
-        private static readonly RegionManager _regionManager = new RegionManager();
 
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
@@ -37,7 +36,6 @@ namespace Game.Global
             if (Seed == -1) Seed = Random.Range(0, int.MaxValue);
             Cursor.visible = false;
             if (_homeInventory == null) _homeInventory = new CharacterManager();
-            SaveController.AddPersistenceListener(_regionManager);
         }
 
         public void Start()

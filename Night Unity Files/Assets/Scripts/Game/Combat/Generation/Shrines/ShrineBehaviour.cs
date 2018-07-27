@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies;
@@ -35,7 +36,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
         _countdownMask.alphaCutoff = 1f;
     }
 
-    public static void Generate(ShrineType shrineType, BrandManager.Brand brand)
+    public static void Generate(BrandManager.Brand brand)
     {
         if (_bossPrefab == null)
         {
@@ -45,8 +46,13 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
             _chasePrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Chase Shrine");
         }
 
+        List<ShrineType> shrineTypes = new List<ShrineType>();
+        foreach (ShrineType shrineType in Enum.GetValues(typeof(ShrineType)))
+        {
+            shrineTypes.Add(shrineType);
+        }
         GameObject shrine = null;
-        switch (shrineType)
+        switch (Helper.RandomInList(shrineTypes))
         {
             case ShrineType.Wave:
                 shrine = Instantiate(_wavePrefab);

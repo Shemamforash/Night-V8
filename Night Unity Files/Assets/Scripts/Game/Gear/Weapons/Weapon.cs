@@ -97,6 +97,9 @@ namespace Game.Gear.Weapons
                 case WeaponClassType.Annihilator:
                     weaponBehaviour = player.gameObject.AddComponent<RandomFire>();
                     break;
+                case WeaponClassType.Gouger:
+                    weaponBehaviour = player.gameObject.AddComponent<Spoolup>();
+                    break;
                 default:
                     weaponBehaviour = player.gameObject.AddComponent<DefaultBehaviour>();
                     break;

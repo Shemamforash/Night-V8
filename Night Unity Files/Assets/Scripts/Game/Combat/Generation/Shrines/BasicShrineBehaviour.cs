@@ -10,11 +10,6 @@ namespace Game.Combat.Generation.Shrines
         private readonly List<EnemyBehaviour> _enemiesAlive = new List<EnemyBehaviour>();
         private static GameObject _disappearPrefab;
 
-        public void Awake()
-        {
-            if (_disappearPrefab == null) _disappearPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Disappear");
-        }
-        
         protected void AddEnemy(EnemyBehaviour b)
         {
             _enemiesAlive.Add(b);
@@ -58,6 +53,7 @@ namespace Game.Combat.Generation.Shrines
         {
             for (int i = _enemiesAlive.Count - 1; i >= 0; --i)
             {
+                if (_disappearPrefab == null) _disappearPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Disappear");
                 Instantiate(_disappearPrefab).transform.position = _enemiesAlive[i].transform.position;
                 _enemiesAlive[i].Kill();
             }

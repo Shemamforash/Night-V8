@@ -33,7 +33,6 @@ namespace Game.Combat.Enemies
         {
             base.Update();
             PushAwayFromNeighbors();
-            UpdateAlpha();
             if (!CombatManager.InCombat()) return;
             UpdateRotation();
             if (MoveBehaviour.Moving()) return;
@@ -52,18 +51,6 @@ namespace Game.Combat.Enemies
         }
 
         protected SpriteRenderer Sprite;
-
-        private void UpdateAlpha()
-        {
-            float distanceToPlayer = Vector2.Distance(transform.position, GetTarget().transform.position);
-            float alpha;
-            float visibility = CombatManager.VisibilityRange();
-            if (distanceToPlayer > visibility) alpha = 0;
-            else alpha = 1 - distanceToPlayer / visibility;
-            Color c = Sprite.color;
-            c.a = alpha;
-            Sprite.color = c;
-        }
 
         private void PushAwayFromNeighbors()
         {

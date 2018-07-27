@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Game.Combat.Generation;
+using Game.Combat.Generation.Shrines;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -290,7 +292,7 @@ namespace Game.Characters
                 _counter += amount;
                 if (_counter >= _counterTarget)
                 {
-                    //todo start trial
+                    RiteStarter.Generate(this);
                 }
             }
 

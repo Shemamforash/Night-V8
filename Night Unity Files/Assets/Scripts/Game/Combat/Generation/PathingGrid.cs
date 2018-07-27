@@ -15,11 +15,18 @@ namespace Game.Combat.Generation
 {
     public static class PathingGrid
     {
-        public const int CombatAreaWidth = 30;
-        public const int CombatMovementDistance = CombatAreaWidth - 3;
+        public static int CombatAreaWidth = 30;
+        public static int CombatMovementDistance = CombatAreaWidth - 3;
         public const int CellResolution = 4;
         public const float CellWidth = 1f / CellResolution;
-        public const int GridWidth = CombatAreaWidth * CellResolution;
+        public static int GridWidth;
+
+        public static void SetCombatAreaWidth(int width)
+        {
+            CombatAreaWidth = width;
+            CombatMovementDistance = width - 3;
+            GridWidth = CombatAreaWidth * CellResolution;
+        }
 
         public static Cell[][] Grid;
         private static readonly List<Cell> _gridNodes = new List<Cell>();
@@ -35,7 +42,6 @@ namespace Game.Combat.Generation
         {
             _stopwatch = Stopwatch.StartNew();
             GenerateBaseGrid();
-            _invalidCells.Clear();
             _stopwatch.Stop();
             Helper.PrintTime("Grid: ", _stopwatch);
             _stopwatch = Stopwatch.StartNew();
@@ -402,14 +408,21 @@ namespace Game.Combat.Generation
         private static int WorldToGridDistance(float distance) => Mathf.FloorToInt(distance * CellResolution);
 
         private static readonly HashSet<Cell> _outOfRangeSet = new HashSet<Cell>();
-        public static List<Cell> _outOfRangeList = new List<Cell>();
+        public static readonly List<Cell> _outOfRangeList = new List<Cell>();
 
         private static readonly HashSet<Cell> _edgePositionSet = new HashSet<Cell>();
-        public static List<Cell> _edgePositionList = new List<Cell>();
+        public static readonly List<Cell> _edgePositionList = new List<Cell>();
 
         private static void GenerateBaseGrid()
         {
+            _outOfRangeList.Clear();
+            _outOfRangeSet.Clear();
+            _edgePositionList.Clear();
+            _edgePositionSet.Clear();
+            _invalidCells.Clear();
             _gridNodes.Clear();
+            _hiddenCells.Clear();
+            _cellsInRange.Clear();
             if (Grid == null) Grid = new Cell[GridWidth][];
             int outOfRangeDistanceSqrd = (int) Mathf.Pow(CombatMovementDistance * CellResolution * 0.5f, 2f);
             int edgeDistanceSquared = (int) Mathf.Pow((CombatMovementDistance - 1) * CellResolution * 0.5f, 2f);
