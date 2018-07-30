@@ -141,7 +141,9 @@ namespace Game.Exploration.Environment
             ConnectRegions();
             SetRegionTypes();
             initialNode.Discover();
+#if UNITY_EDITOR
             _regions.ForEach(r => r.Discover());
+#endif
             Debug.Log(_regions.Count);
         }
 
@@ -155,6 +157,7 @@ namespace Game.Exploration.Environment
                 _regions.Add(new Region());
                 --numberOfRegions;
             }
+
             initialNode = _regions[0];
             initialNode.SetRegionType(RegionType.Gate);
         }
@@ -185,7 +188,7 @@ namespace Game.Exploration.Environment
             DistributeNodeTypes(RegionType.Fountain, currentEnvironment.Fountains, 1);
             DistributeNodeTypes(RegionType.Shelter, currentEnvironment.Shelters, 3);
             DistributeNodeTypes(RegionType.Animal, currentEnvironment.Animals, -1, false);
-            DistributeNodeTypes(RegionType.Danger, currentEnvironment.Dangers, -1, false); 
+            DistributeNodeTypes(RegionType.Danger, currentEnvironment.Dangers, -1, false);
             SetWaterQuantities();
             SetFoodQuantities();
             SetResourceQuantities();
@@ -246,7 +249,7 @@ namespace Game.Exploration.Environment
         }
 
         private static int assigned;
-        
+
         private static void DistributeNodeTypes(RegionType type, int quantity, int minDepth = -1, bool mustNotTouch = true)
         {
             if (quantity == 0) return;
@@ -284,8 +287,8 @@ namespace Game.Exploration.Environment
                     --quantity;
                     if (quantity == 0) break;
                 }
-
             }
+
             Assert.IsTrue(quantity == 0);
         }
 

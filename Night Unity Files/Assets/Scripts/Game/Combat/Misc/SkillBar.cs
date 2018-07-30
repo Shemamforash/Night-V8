@@ -39,7 +39,7 @@ namespace Game.Combat.Misc
         public static void BindSkills(Characters.Player player, float skillCooldownModifier)
         {
             _cooldownModifier = skillCooldownModifier;
-            Skill characterSkillOne = player.CharacterSkillOne;
+            Skill characterSkillOne = null;
             Skill characterSkillTwo = null;
             Skill weaponSkillOne = null;
             Skill weaponSkillTwo = null;

@@ -24,6 +24,7 @@ namespace Game.Combat.Generation.Shrines
 
         public void OnTriggerEnter2D(Collider2D other)
         {
+            if (Triggered) return;
             if (!other.gameObject.CompareTag("Player")) return;
             StartShrine();
         }

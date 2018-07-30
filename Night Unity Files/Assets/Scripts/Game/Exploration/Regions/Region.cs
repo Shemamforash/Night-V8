@@ -69,7 +69,7 @@ namespace Game.Exploration.Regions
                     case RegionType.Temple:
                         break;
                     default:
-                        GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes(), 1, 5);
+                        GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes(), 3, 7);
                         break;
                 }
             }

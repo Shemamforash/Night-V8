@@ -1,4 +1,5 @@
-﻿using Game.Combat.Misc;
+﻿using Game.Combat.Enemies;
+using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using SamsHelper;
@@ -74,14 +75,13 @@ namespace Game.Gear.Weapons
                 Shot shot = Shot.Create(origin);
                 origin.ApplyShotEffects(shot);
                 shot.Fire();
-                origin.WeaponAudio.Fire(Weapon.WeaponType());
+                origin.WeaponAudio.Fire(Weapon);
             }
+
             ConsumeAmmo(1);
-            if (origin is PlayerCombat)
-            {
-                PlayerCombat.Instance.MuzzleFlashOpacity = 0.2f;
-                UIMagazineController.UpdateMagazineUi();
-            }
+            if (!(origin is PlayerCombat)) return;
+            PlayerCombat.Instance.MuzzleFlashOpacity = 0.2f;
+            UIMagazineController.UpdateMagazineUi();
         }
 
         private void ConsumeAmmo(int amount = 0)
@@ -92,6 +92,7 @@ namespace Game.Gear.Weapons
             {
                 durabilityModifier = player.Player.Attributes.Val(AttributeType.EssenceLossBonus);
             }
+
             WeaponAttributes.DecreaseDurability(durabilityModifier);
             AmmoInMagazine -= amount;
             if (AmmoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();

@@ -6,7 +6,7 @@ namespace Game.Characters.CharacterActions
     {
         public Meditate(Player playerCharacter) : base(nameof(Meditate), playerCharacter)
         {
-            DisplayName = "Meditating";
+            DisplayName = "Meditating\n+Perception +Willpower";
             ShowTime = false;
             IsVisible = false;
             HourCallback = playerCharacter.Meditate;

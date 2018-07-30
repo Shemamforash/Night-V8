@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Game.Combat.Generation;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class UiCompassController : MonoBehaviour
 {
@@ -13,12 +14,14 @@ public class UiCompassController : MonoBehaviour
     private const float ShowItemTimeMax = 5f;
     private static UiCompassController _instance;
     private const float MaxDetectDistance = 10f;
+    private AudioSource _audioSource;
 
     public void Awake()
     {
         _indicatorPrefab = Resources.Load<GameObject>("Prefabs/Combat/Indicator");
         _compassPulse = Helper.FindChildWithName<ParticleSystem>(gameObject, "Compass Pulse");
         _instance = this;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public static bool EmitPulse()
@@ -27,6 +30,8 @@ public class UiCompassController : MonoBehaviour
         _instance._compassPulse.Play();
         _instance.StartCoroutine(_instance.ShowItems());
         _instance.StartCoroutine(_instance.HighlightContainers());
+        _instance._audioSource.pitch = Random.Range(0.9f, 1.1f);
+        _instance._audioSource.Play();
         return true;
     }
 

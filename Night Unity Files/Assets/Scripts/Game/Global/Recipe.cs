@@ -2,12 +2,13 @@
 using System.Xml;
 using Facilitating;
 using Game.Characters;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 
 namespace Game.Global
 {
-    public class Recipe
+    public class Recipe : MyGameObject
     {
         public readonly string Ingredient1;
         public readonly string Ingredient2;
@@ -21,7 +22,7 @@ namespace Game.Global
         public readonly int ProductQuantity;
         private bool _requiresFire;
 
-        private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string productName, int productQuantity, float duration)
+        private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string productName, int productQuantity, float duration) : base(productName, GameObjectType.Resource)
         {
             Ingredient1 = ingredient1;
             Ingredient2 = ingredient2;

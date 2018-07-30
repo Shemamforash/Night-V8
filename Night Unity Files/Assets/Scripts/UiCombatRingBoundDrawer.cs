@@ -3,7 +3,10 @@ using SamsHelper;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
-public class UiCombatRingBoundDrawer : MonoBehaviour {
+public class UiCombatRingBoundDrawer : MonoBehaviour
+{
+	private static GameObject _ringPrefab;
+	
 	public void Awake()
 	{
 		CreateRing(PathingGrid.CombatMovementDistance / 2f, 0.02f, Color.white);
@@ -12,11 +15,12 @@ public class UiCombatRingBoundDrawer : MonoBehaviour {
 	
 	private void CreateRing(float radius, float width, Color colour)
 	{
-		GameObject ring = new GameObject();
+		if (_ringPrefab == null) _ringPrefab = Resources.Load<GameObject>("Prefabs/Map/Map Ring");
+		GameObject ring = Instantiate(_ringPrefab);
 		ring.transform.SetParent(transform);
 		ring.transform.position = Vector2.zero;
 		ring.transform.localScale = Vector2.one;
-		RingDrawer rd = ring.AddComponent<RingDrawer>();
+		RingDrawer rd = ring.GetComponent<RingDrawer>();
 		rd.SetLineWidth(width);
 		rd.SetColor(colour);
 		rd.DrawCircle(radius);

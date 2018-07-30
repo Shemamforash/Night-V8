@@ -215,7 +215,18 @@
           </e>
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
+        <e p="EZ Camera Shake" t="Include">
+          <e p="Scripts" t="Include">
+            <e p="CameraShakeInstance.cs" t="Include" />
+            <e p="CameraShakePresets.cs" t="Include" />
+            <e p="CameraShaker.cs" t="Include" />
+            <e p="Utilities" t="Include">
+              <e p="CameraUtilities.cs" t="Include" />
+            </e>
+          </e>
+        </e>
         <e p="InsectBehaviour.cs" t="Include" />
+        <e p="LeafBehaviour.cs" t="Include" />
         <e p="MapMovementController.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
@@ -269,23 +280,29 @@
               <e p="WindowSizer.cs" t="Include" />
             </e>
             <e p="UIControllers" t="Include">
-              <e p="HeartBeatController.cs" t="Include" />
-              <e p="UiAccessoryController.cs" t="Include" />
-              <e p="UiAreaInventoryController.cs" t="Include" />
-              <e p="UIArmourController.cs" t="Include" />
-              <e p="UiArmourUpgradeController.cs" t="Include" />
+              <e p="Combat" t="Include">
+                <e p="HeartBeatController.cs" t="Include" />
+                <e p="UiAreaInventoryController.cs" t="Include" />
+                <e p="UIArmourController.cs" t="Include" />
+                <e p="UiCompassController.cs" t="Include" />
+                <e p="UISkillCostController.cs" t="Include" />
+              </e>
+              <e p="DetailedViewGear" t="Include">
+                <e p="UIPlayerAccessoryController.cs" t="Include" />
+                <e p="UIPlayerArmourController.cs" t="Include" />
+                <e p="UIPlayerWeaponController.cs" t="Include" />
+              </e>
+              <e p="Inventories" t="Include">
+                <e p="UiAccessoryController.cs" t="Include" />
+                <e p="UiArmourUpgradeController.cs" t="Include" />
+                <e p="UiGearMenuController.cs" t="Include" />
+                <e p="UiGearMenuTemplate.cs" t="Include" />
+                <e p="UIWeaponUpgradeController.cs" t="Include" />
+              </e>
               <e p="UIAttributeController.cs" t="Include" />
               <e p="UIAttributeMarkerController.cs" t="Include" />
-              <e p="UiCompassController.cs" t="Include" />
               <e p="UIConditionController.cs" t="Include" />
               <e p="UICraftingController.cs" t="Include" />
-              <e p="UiGearMenuController.cs" t="Include" />
-              <e p="UiGearMenuTemplate.cs" t="Include" />
-              <e p="UIPlayerAccessoryController.cs" t="Include" />
-              <e p="UIPlayerArmourController.cs" t="Include" />
-              <e p="UIPlayerWeaponController.cs" t="Include" />
-              <e p="UISkillCostController.cs" t="Include" />
-              <e p="UIWeaponUpgradeController.cs" t="Include" />
             </e>
           </e>
           <e p="FastLights" t="Include">

@@ -13,6 +13,7 @@ namespace SamsHelper
         private float _lastRadius = -1;
         private LineRenderer _lineRenderer;
         [Range(0, 15)] public float radius;
+        public Material _material;
 
         public void Awake()
         {
@@ -20,7 +21,7 @@ namespace SamsHelper
             _lineRenderer.positionCount = Segments + Overlap;
             _lineRenderer.useWorldSpace = false;
             _angleDelta = 2 * Mathf.PI / Segments;
-            Assert.IsNotNull(_lineRenderer.material);
+            _lineRenderer.material = _material;
         }
 
         public void SetLineWidth(float lineWidth)

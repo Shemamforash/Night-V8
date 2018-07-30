@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
 using Game.Gear.Armour;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -55,9 +56,9 @@ namespace Facilitating.UIControllers
             return CharacterManager.Armour.Count != 0;
         }
 
-        public override void SelectGearItem(InventoryItem item, UiGearMenuController.GearUi gearUi)
+        public override void SelectGearItem(MyGameObject item, UiGearMenuController.GearUi gearUi)
         {
-            ArmourPlate plate = item as ArmourPlate;
+            ArmourPlate plate = (ArmourPlate)item;
             gearUi.SetTypeText(plate.Protection + " Armour");
             gearUi.SetNameText(plate.Name);
             gearUi.SetDpsText("");
@@ -71,7 +72,7 @@ namespace Facilitating.UIControllers
             UpdatePlates();
         }
 
-        public override void CompareTo(InventoryItem comparisonItem)
+        public override void CompareTo(MyGameObject comparisonItem)
         {
         }
 
@@ -79,9 +80,9 @@ namespace Facilitating.UIControllers
         {
         }
 
-        public override List<InventoryItem> GetAvailableGear()
+        public override List<MyGameObject> GetAvailableGear()
         {
-            return new List<InventoryItem>(CharacterManager.Armour);
+            return new List<MyGameObject>(CharacterManager.Armour);
         }
 
         public override void Equip(int selectedGear)

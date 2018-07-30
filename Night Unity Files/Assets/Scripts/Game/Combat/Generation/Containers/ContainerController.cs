@@ -21,7 +21,7 @@ public abstract class ContainerController
         ImageLocation = "Loot";
     }
 
-    public virtual GameObject CreateObject(bool autoReveal = false)
+    public virtual ContainerBehaviour CreateObject(bool autoReveal = false)
     {
         GameObject prefab = Resources.Load<GameObject>("Prefabs/Combat/Containers/" + PrefabLocation);
         GameObject container = GameObject.Instantiate(prefab);
@@ -31,7 +31,7 @@ public abstract class ContainerController
         _containerBehaviour = cb;
         cb.SetContainerController(this);
         if (autoReveal) cb.Reveal();
-        return container;
+        return cb;
     }
 
     public Inventory Inventory()

@@ -232,6 +232,7 @@ namespace Game.Characters
             CharacterAttributes attributes = playerCharacter.Attributes;
 
             attributes.SetMax(AttributeType.Endurance, playerCharacter.CharacterTemplate.Endurance);
+//            attributes.SetMax(AttributeType.Endurance, 15);
             attributes.Get(AttributeType.Endurance).SetToMax();
 
             attributes.SetMax(AttributeType.Strength, playerCharacter.CharacterTemplate.Strength);

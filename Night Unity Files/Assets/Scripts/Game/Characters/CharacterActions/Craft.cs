@@ -1,4 +1,6 @@
-﻿namespace Game.Characters.CharacterActions
+﻿using Facilitating.UIControllers;
+
+namespace Game.Characters.CharacterActions
 {
     public class Craft : BaseCharacterAction
     {
@@ -13,7 +15,7 @@
 
         protected override void OnClick()
         {
-            UICraftingController.ShowMenu();
+            UiGearMenuController.Instance().ShowCraftingMenu(PlayerCharacter);
         }
     }
 }

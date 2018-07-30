@@ -423,7 +423,7 @@ namespace Game.Combat.Generation
             _gridNodes.Clear();
             _hiddenCells.Clear();
             _cellsInRange.Clear();
-            if (Grid == null) Grid = new Cell[GridWidth][];
+            Grid = new Cell[GridWidth][];
             int outOfRangeDistanceSqrd = (int) Mathf.Pow(CombatMovementDistance * CellResolution * 0.5f, 2f);
             int edgeDistanceSquared = (int) Mathf.Pow((CombatMovementDistance - 1) * CellResolution * 0.5f, 2f);
             for (int x = 0; x < GridWidth; ++x)

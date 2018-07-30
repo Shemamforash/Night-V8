@@ -9,7 +9,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
     {
         private static int _idCounter;
         public readonly int Id;
-        public readonly GameObjectType Type;
+        private readonly GameObjectType Type;
 
         protected MyGameObject(string name, GameObjectType type, Inventory parentInventory = null)
         {

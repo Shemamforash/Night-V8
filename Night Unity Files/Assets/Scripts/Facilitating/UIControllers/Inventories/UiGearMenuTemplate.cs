@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +12,7 @@ namespace Facilitating.UIControllers
         protected Player CurrentPlayer;
 
         public abstract bool GearIsAvailable();
-        public abstract void SelectGearItem(InventoryItem item, UiGearMenuController.GearUi gearUi);
+        public abstract void SelectGearItem(MyGameObject item, UiGearMenuController.GearUi gearUi);
 
         public virtual void Show(Player player)
         {
@@ -25,9 +26,9 @@ namespace Facilitating.UIControllers
             gameObject.SetActive(false);
         }
 
-        public abstract void CompareTo(InventoryItem comparisonItem);
+        public abstract void CompareTo(MyGameObject comparisonItem);
         public abstract void StopComparing();
-        public abstract List<InventoryItem> GetAvailableGear();
+        public abstract List<MyGameObject> GetAvailableGear();
         public abstract void Equip(int selectedGear);
         public abstract Button GetGearButton();
     }

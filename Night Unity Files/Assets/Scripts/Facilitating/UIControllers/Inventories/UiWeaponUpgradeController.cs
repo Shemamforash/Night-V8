@@ -89,9 +89,9 @@ namespace Facilitating.UIControllers
             SetWeapon();
         }
 
-        public override List<InventoryItem> GetAvailableGear()
+        public override List<MyGameObject> GetAvailableGear()
         {
-            return _showWeapons ? new List<InventoryItem>(CharacterManager.Weapons) : new List<InventoryItem>(CharacterManager.Inscriptions);
+            return _showWeapons ? new List<MyGameObject>(CharacterManager.Weapons) : new List<MyGameObject>(CharacterManager.Inscriptions);
         }
 
         public override void Equip(int selectedGear)
@@ -111,7 +111,7 @@ namespace Facilitating.UIControllers
 
         public override Button GetGearButton() => _weaponButton.Button();
 
-        public override void CompareTo(InventoryItem comparisonItem)
+        public override void CompareTo(MyGameObject comparisonItem)
         {
             if (comparisonItem == null) return;
             Weapon compareWeapon = comparisonItem as Weapon;
@@ -246,7 +246,7 @@ namespace Facilitating.UIControllers
 
         public override bool GearIsAvailable() => CharacterManager.Weapons.Count != 0;
 
-        public override void SelectGearItem(InventoryItem item, UiGearMenuController.GearUi gearUi)
+        public override void SelectGearItem(MyGameObject item, UiGearMenuController.GearUi gearUi)
         {
             Weapon weapon = item as Weapon;
             if (weapon != null)

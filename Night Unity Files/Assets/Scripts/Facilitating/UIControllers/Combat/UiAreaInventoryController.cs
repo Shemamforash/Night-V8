@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Player;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -131,10 +132,18 @@ public class UiAreaInventoryController : Menu, IInputListener
 
     private void UseItem()
     {
-        Consumable item = _inventory.Contents()[_selectedItem] as Consumable;
-        if (item == null) return;
-        item.Consume(PlayerCombat.Instance.Player);
-        SelectItem();
+        Consumable consumable = _inventory.Contents()[_selectedItem] as Consumable;
+        if (consumable != null)
+        {
+            consumable.Consume(PlayerCombat.Instance.Player);
+            SelectItem();
+        }
+
+        Weapon weapon = _inventory.Contents()[_selectedItem] as Weapon;
+        if (weapon != null)
+        {
+            PlayerCombat.Equip(weapon);
+        }
     }
 
     public void TakeItem()

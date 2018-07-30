@@ -1,222 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Global;
-using SamsHelper.Input;
-using SamsHelper.Libraries;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
-using UnityEngine;
+using UnityEngine.UI;
 
-public class UICraftingController : Menu, IInputListener
+public class UICraftingController : UiGearMenuTemplate
 {
-    private static UICraftingController _instance;
-    private const int centre = 4;
-    private int _selectedRecipe;
-    private readonly List<RecipeUi> _recipeUis = new List<RecipeUi>();
     private Player _player;
     private EnhancedButton _closeButton;
     private EnhancedButton _recipeButton;
-    private bool _focussed;
 
-    public override void Awake()
+    public void Awake()
     {
-        base.Awake();
-        _instance = this;
-        Initialise();
+//        base.Awake();
+//        _instance = this;
+//        Initialise();
     }
 
-    public static void ShowMenu()
+    public override bool GearIsAvailable()
     {
-        MenuStateMachine.ShowMenu("Crafting Menu");
-        _instance.SelectItem();
+        return Recipe.Recipes().Count > 0;
     }
 
-    private void OnDestroy()
+    public override void SelectGearItem(MyGameObject item, UiGearMenuController.GearUi gearUi)
     {
-        _instance = null;
-    }
-
-    public override void Enter()
-    {
-        base.Enter();
-        InputHandler.SetCurrentListener(this);
-    }
-
-    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-    {
-        if (isHeld) return;
-        switch (axis)
+        Recipe recipe = (Recipe) item;
+        if (recipe != null)
         {
-            case InputAxis.Vertical:
-                if (direction < 0)
-                    TrySelectItemBelow();
-                else
-                    TrySelectItemAbove();
-                break;
-            case InputAxis.Fire:
-                if (_focussed && Recipe.Recipes()[_selectedRecipe].Craft())
-                {
-                    MenuStateMachine.ReturnToDefault();
-                }
-
-                break;
-            case InputAxis.Reload:
-                MenuStateMachine.ReturnToDefault();
-                break;
-        }
-    }
-
-    public void OnInputUp(InputAxis axis)
-    {
-    }
-
-    public void OnDoubleTap(InputAxis axis, float direction)
-    {
-    }
-
-    private void TrySelectItemBelow()
-    {
-        if (_selectedRecipe == Recipe.Recipes().Count - 1)
-        {
-            _focussed = false;
-            _closeButton.Select();
+            string productString = recipe.ProductQuantity > 1 ? recipe.ProductName + " x" + recipe.ProductQuantity : recipe.ProductName;
+            string durationString = WorldState.TimeToHours((int) (recipe.DurationInHours * WorldState.MinutesPerHour));
+            productString += " (" + durationString + ")";
+            gearUi.SetTypeText(productString);
+            gearUi.SetNameText("");
+            string ingredient1String = recipe.Ingredient1Quantity > 1 ? recipe.Ingredient1 + " x" + recipe.Ingredient1Quantity : recipe.Ingredient1;
+            if (recipe.Ingredient1 == "") ingredient1String = "";
+            string ingredient2String = recipe.Ingredient2Quantity > 1 ? recipe.Ingredient2 + " x" + recipe.Ingredient2Quantity : recipe.Ingredient2;
+            if (recipe.Ingredient2 == "") ingredient2String = "";
+            gearUi.SetDpsText(ingredient1String + " " + ingredient2String);
             return;
         }
 
-        ++_selectedRecipe;
-        SelectItem();
+        gearUi.SetTypeText("");
+        gearUi.SetNameText("");
+        gearUi.SetDpsText("");
     }
 
-    private void TrySelectItemAbove()
+    public override void CompareTo(MyGameObject comparisonItem)
     {
-        if (_selectedRecipe == 0)
-        {
-            _focussed = false;
-            _closeButton.Select();
-            return;
-        }
-
-        --_selectedRecipe;
-        SelectItem();
+        throw new NotImplementedException();
     }
 
-    private void SelectItem()
+    public override void StopComparing()
     {
-        List<Recipe> recipes = Recipe.Recipes();
-        if (_selectedRecipe >= recipes.Count) _selectedRecipe = recipes.Count - 1;
-        for (int i = 0; i < _recipeUis.Count; ++i)
-        {
-            int offset = i - centre;
-            int targetRecipeIndex = _selectedRecipe + offset;
-            Recipe recipe = null;
-            if (targetRecipeIndex >= 0 && targetRecipeIndex < recipes.Count) recipe = recipes[targetRecipeIndex];
-            _recipeUis[i].SetRecipe(recipe);
-        }
-
-        _recipeButton.Select();
-        _focussed = true;
+        throw new NotImplementedException();
     }
 
-    private void Initialise()
+    public override List<MyGameObject> GetAvailableGear()
     {
-        for (int i = 0; i < 9; ++i)
-        {
-            GameObject uiObject = Helper.FindChildWithName(gameObject, "Recipe " + i);
-            RecipeUi recipeUi = new RecipeUi(uiObject, Math.Abs(i - centre));
-            if (i == centre)
-            {
-                _recipeButton = uiObject.GetComponent<EnhancedButton>();
-            }
-
-            _recipeUis.Add(recipeUi);
-            recipeUi.SetRecipe(null);
-        }
-
-        _closeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Close");
-        _closeButton.AddOnClick(MenuStateMachine.ReturnToDefault);
-        _closeButton.SetOnUpAction(SelectLast);
-        _closeButton.SetOnDownAction(SelectFirst);
+        return new List<MyGameObject>(Recipe.Recipes());
     }
 
-    private void SelectLast()
+    public override void Equip(int selectedGear)
     {
-        _selectedRecipe = Recipe.Recipes().Count - 1;
-        SelectItem();
+        if (Recipe.Recipes()[selectedGear].Craft())
+        {
+            MenuStateMachine.ReturnToDefault();
+        }
     }
 
-    private void SelectFirst()
+    public override Button GetGearButton()
     {
-        _selectedRecipe = 0;
-        SelectItem();
-    }
-
-    private class RecipeUi
-    {
-        private readonly Color _activeColour;
-        private readonly EnhancedText _durationText;
-        private readonly EnhancedText _productText;
-        private readonly EnhancedText _ingredient1Text;
-        private readonly EnhancedText _ingredient2Text;
-
-        public RecipeUi(GameObject uiObject, int offset)
-        {
-            _productText = Helper.FindChildWithName<EnhancedText>(uiObject, "Name");
-            _durationText = Helper.FindChildWithName<EnhancedText>(uiObject, "Duration");
-            _ingredient1Text = Helper.FindChildWithName<EnhancedText>(uiObject, "Ingredient 2");
-            _ingredient2Text = Helper.FindChildWithName<EnhancedText>(uiObject, "Ingredient 1");
-            _activeColour = new Color(1f, 1f, 1f, 1f / (offset + 1));
-        }
-
-        private void SetColour(Color c)
-        {
-            _ingredient1Text.SetColor(c);
-            _ingredient2Text.SetColor(c);
-            _productText.SetColor(c);
-            _durationText.SetColor(c);
-        }
-
-        private void SetDurationText(string text)
-        {
-            _durationText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-            _durationText.Text(text);
-        }
-
-        private void SetProductText(string text, int quantity)
-        {
-            _productText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-            if (quantity > 1) text += " x" + quantity;
-            _productText.Text(text);
-        }
-
-        private void SetIngredient1Text(string type, int quantity)
-        {
-            _ingredient1Text.SetColor(type == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-            string text = type;
-            if (quantity > 1) text += " x" + quantity;
-            _ingredient1Text.Text(text);
-        }
-
-        private void SetIngredient2Text(string type, int quantity)
-        {
-            _ingredient2Text.SetColor(type == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-            string text = type;
-            if (quantity > 1) text += " x" + quantity;
-            _ingredient2Text.Text(text);
-        }
-
-        public void SetRecipe(Recipe recipe)
-        {
-            if (recipe == null)
-            {
-                SetColour(UiAppearanceController.InvisibleColour);
-                return;
-            }
-
-            SetDurationText(WorldState.TimeToHours((int) (recipe.DurationInHours * WorldState.MinutesPerHour)));
-            SetProductText(recipe.ProductName, recipe.ProductQuantity);
-            SetIngredient1Text(recipe.Ingredient1, recipe.Ingredient1Quantity);
-            SetIngredient2Text(recipe.Ingredient2, recipe.Ingredient2Quantity);
-        }
+        return null;
     }
 }

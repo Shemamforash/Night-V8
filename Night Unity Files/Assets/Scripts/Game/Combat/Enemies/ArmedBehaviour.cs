@@ -152,6 +152,7 @@ namespace Game.Combat.Enemies
                     return;
                 }
 
+                if (!_weaponBehaviour.CanFire()) return;
                 _weaponBehaviour.StartFiring(this);
                 if (_weaponBehaviour.Empty())
                 {

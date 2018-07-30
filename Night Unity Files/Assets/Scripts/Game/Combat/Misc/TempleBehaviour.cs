@@ -52,6 +52,7 @@ public class TempleBehaviour : BasicShrineBehaviour
 
     protected override void StartShrine()
     {
+        Triggered = true;
         StartCoroutine(Activate());
     }
     

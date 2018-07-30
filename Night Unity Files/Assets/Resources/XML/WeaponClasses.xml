@@ -1,1 +1,132 @@
-<Weapons><Class name="Pistol" ><Subtype name="Slinger"  automatic="True" ><Damage>10</Damage><FireRate>3</FireRate><ReloadSpeed>0.5</ReloadSpeed><Accuracy>50</Accuracy><Handling>70</Handling><Capacity>10</Capacity></Subtype><Subtype name="Shortshooter"  automatic="False" ><Damage>14</Damage><FireRate>2</FireRate><ReloadSpeed>0.5</ReloadSpeed><Accuracy>50</Accuracy><Handling>80</Handling><Capacity>12</Capacity></Subtype><Subtype name="Deepdriver"  automatic="False" ><Damage>25</Damage><FireRate>6</FireRate><ReloadSpeed>2</ReloadSpeed><Accuracy>75</Accuracy><Handling>90</Handling><Capacity>6</Capacity></Subtype></Class><Class name="Rifle" ><Subtype name="Groundrider"  automatic="False" ><Damage>75</Damage><FireRate>1</FireRate><ReloadSpeed>3</ReloadSpeed><Accuracy>90</Accuracy><Handling>20</Handling><Capacity>6</Capacity></Subtype><Subtype name="Shoulderbreaker"  automatic="True" ><Damage>50</Damage><FireRate>2</FireRate><ReloadSpeed>3</ReloadSpeed><Accuracy>90</Accuracy><Handling>0</Handling><Capacity>6</Capacity></Subtype><Subtype name="Voidwalker"  automatic="False" ><Damage>90</Damage><FireRate>1</FireRate><ReloadSpeed>5</ReloadSpeed><Accuracy>90</Accuracy><Handling>20</Handling><Capacity>6</Capacity></Subtype></Class><Class name="Shotgun" ><Subtype name="Leadspreader"  automatic="True" ><Damage>3</Damage><FireRate>6</FireRate><ReloadSpeed>2.5</ReloadSpeed><Accuracy>20</Accuracy><Handling>35</Handling><Capacity>6</Capacity></Subtype><Subtype name="Bonebreaker"  automatic="False" ><Damage>5</Damage><FireRate>1.5</FireRate><ReloadSpeed>3.5</ReloadSpeed><Accuracy>20</Accuracy><Handling>35</Handling><Capacity>10</Capacity></Subtype><Subtype name="Skullcrusher"  automatic="False" ><Damage>8</Damage><FireRate>3</FireRate><ReloadSpeed>2.5</ReloadSpeed><Accuracy>20</Accuracy><Handling>35</Handling><Capacity>2</Capacity></Subtype></Class><Class name="SMG" ><Subtype name="Spitter"  automatic="False" ><Damage>5</Damage><FireRate>15</FireRate><ReloadSpeed>1</ReloadSpeed><Accuracy>30</Accuracy><Handling>98</Handling><Capacity>30</Capacity></Subtype><Subtype name="Gripshaker"  automatic="True" ><Damage>8</Damage><FireRate>10</FireRate><ReloadSpeed>1.25</ReloadSpeed><Accuracy>30</Accuracy><Handling>95</Handling><Capacity>20</Capacity></Subtype><Subtype name="Spewer"  automatic="True" ><Damage>6</Damage><FireRate>12</FireRate><ReloadSpeed>1</ReloadSpeed><Accuracy>30</Accuracy><Handling>98</Handling><Capacity>30</Capacity></Subtype></Class><Class name="LMG" ><Subtype name="Breacher"  automatic="True" ><Damage>6</Damage><FireRate>20</FireRate><ReloadSpeed>5</ReloadSpeed><Accuracy>40</Accuracy><Handling>95</Handling><Capacity>70</Capacity></Subtype><Subtype name="Gouger"  automatic="True" ><Damage>18</Damage><FireRate>5</FireRate><ReloadSpeed>7</ReloadSpeed><Accuracy>40</Accuracy><Handling>90</Handling><Capacity>50</Capacity></Subtype><Subtype name="Annihilator"  automatic="True" ><Damage>12</Damage><FireRate>7</FireRate><ReloadSpeed>5</ReloadSpeed><Accuracy>40</Accuracy><Handling>90</Handling><Capacity>50</Capacity></Subtype></Class></Weapons>
+<Weapons>
+    <Class name="Pistol">
+        <Subtype name="Slinger" automatic="True">
+            <Damage>10</Damage>
+            <FireRate>3</FireRate>
+            <ReloadSpeed>0.5</ReloadSpeed>
+            <Accuracy>50</Accuracy>
+            <Handling>70</Handling>
+            <Capacity>10</Capacity>
+        </Subtype>
+        <Subtype name="Shortshooter" automatic="False">
+            <Damage>14</Damage>
+            <FireRate>2</FireRate>
+            <ReloadSpeed>0.5</ReloadSpeed>
+            <Accuracy>50</Accuracy>
+            <Handling>80</Handling>
+            <Capacity>12</Capacity>
+        </Subtype>
+        <Subtype name="Deepdriver" automatic="False">
+            <Damage>25</Damage>
+            <FireRate>6</FireRate>
+            <ReloadSpeed>2</ReloadSpeed>
+            <Accuracy>75</Accuracy>
+            <Handling>90</Handling>
+            <Capacity>6</Capacity>
+        </Subtype>
+    </Class>
+    <Class name="Rifle">
+        <Subtype name="Groundrider" automatic="False">
+            <Damage>75</Damage>
+            <FireRate>1</FireRate>
+            <ReloadSpeed>3</ReloadSpeed>
+            <Accuracy>90</Accuracy>
+            <Handling>20</Handling>
+            <Capacity>6</Capacity>
+        </Subtype>
+        <Subtype name="Shoulderbreaker" automatic="True">
+            <Damage>50</Damage>
+            <FireRate>2</FireRate>
+            <ReloadSpeed>3</ReloadSpeed>
+            <Accuracy>90</Accuracy>
+            <Handling>0</Handling>
+            <Capacity>6</Capacity>
+        </Subtype>
+        <Subtype name="Voidwalker" automatic="False">
+            <Damage>90</Damage>
+            <FireRate>1</FireRate>
+            <ReloadSpeed>5</ReloadSpeed>
+            <Accuracy>90</Accuracy>
+            <Handling>20</Handling>
+            <Capacity>6</Capacity>
+        </Subtype>
+    </Class>
+    <Class name="Shotgun">
+        <Subtype name="Leadspreader" automatic="True">
+            <Damage>3</Damage>
+            <FireRate>4</FireRate>
+            <ReloadSpeed>2.5</ReloadSpeed>
+            <Accuracy>20</Accuracy>
+            <Handling>35</Handling>
+            <Capacity>6</Capacity>
+        </Subtype>
+        <Subtype name="Bonebreaker" automatic="False">
+            <Damage>5</Damage>
+            <FireRate>1.5</FireRate>
+            <ReloadSpeed>3.5</ReloadSpeed>
+            <Accuracy>20</Accuracy>
+            <Handling>35</Handling>
+            <Capacity>10</Capacity>
+        </Subtype>
+        <Subtype name="Skullcrusher" automatic="False">
+            <Damage>8</Damage>
+            <FireRate>2</FireRate>
+            <ReloadSpeed>2.5</ReloadSpeed>
+            <Accuracy>20</Accuracy>
+            <Handling>35</Handling>
+            <Capacity>2</Capacity>
+        </Subtype>
+    </Class>
+    <Class name="SMG">
+        <Subtype name="Spitter" automatic="False">
+            <Damage>5</Damage>
+            <FireRate>12</FireRate>
+            <ReloadSpeed>1</ReloadSpeed>
+            <Accuracy>30</Accuracy>
+            <Handling>98</Handling>
+            <Capacity>30</Capacity>
+        </Subtype>
+        <Subtype name="Gripshaker" automatic="True">
+            <Damage>8</Damage>
+            <FireRate>8</FireRate>
+            <ReloadSpeed>1.25</ReloadSpeed>
+            <Accuracy>30</Accuracy>
+            <Handling>95</Handling>
+            <Capacity>20</Capacity>
+        </Subtype>
+        <Subtype name="Spewer" automatic="True">
+            <Damage>6</Damage>
+            <FireRate>10</FireRate>
+            <ReloadSpeed>1</ReloadSpeed>
+            <Accuracy>30</Accuracy>
+            <Handling>98</Handling>
+            <Capacity>30</Capacity>
+        </Subtype>
+    </Class>
+    <Class name="LMG">
+        <Subtype name="Breacher" automatic="True">
+            <Damage>10</Damage>
+            <FireRate>5</FireRate>
+            <ReloadSpeed>5</ReloadSpeed>
+            <Accuracy>40</Accuracy>
+            <Handling>95</Handling>
+            <Capacity>70</Capacity>
+        </Subtype>
+        <Subtype name="Gouger" automatic="True">
+            <Damage>18</Damage>
+            <FireRate>5</FireRate>
+            <ReloadSpeed>7</ReloadSpeed>
+            <Accuracy>40</Accuracy>
+            <Handling>90</Handling>
+            <Capacity>50</Capacity>
+        </Subtype>
+        <Subtype name="Annihilator" automatic="True">
+            <Damage>12</Damage>
+            <FireRate>7</FireRate>
+            <ReloadSpeed>5</ReloadSpeed>
+            <Accuracy>40</Accuracy>
+            <Handling>90</Handling>
+            <Capacity>50</Capacity>
+        </Subtype>
+    </Class>
+</Weapons>

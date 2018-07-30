@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using DG.Tweening;
+using EZCameraShake;
 using Facilitating;
 using Facilitating.UIControllers;
 using Fastlights;
@@ -362,6 +363,11 @@ namespace Game.Combat.Player
             return base.GetAccuracyModifier();
         }
 
+        public void Shake()
+        {
+            CameraShaker.Instance.ShakeOnce(0.5f, 10, 0.2f, 0.2f);
+        }
+
         private BaseWeaponBehaviour _weaponBehaviour;
 
         private bool CanDash()
@@ -489,5 +495,10 @@ namespace Game.Combat.Player
         //MISC
 
         public override CharacterCombat GetTarget() => _currentTarget;
+
+        public static void Equip(Weapon weapon)
+        {
+            
+        }
     }
 }

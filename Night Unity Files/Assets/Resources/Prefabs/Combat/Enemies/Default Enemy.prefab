@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4720381408699984}
   - component: {fileID: 82336373128977424}
   - component: {fileID: 114578824218614346}
+  - component: {fileID: 165064785559838818}
   m_Layer: 10
   m_Name: Weapon Audio
   m_TagString: Untagged
@@ -96,7 +97,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1969838416443470}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.9571075, y: -0.6753428, z: 0}
+  m_LocalPosition: {x: -16.588743, y: -4.710896, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4201150100652938}
@@ -164,7 +165,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -291,6 +292,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9745b410bbb42a78bca2e92e9556570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _speed: 0
+--- !u!165 &165064785559838818
+AudioHighPassFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263015819686314}
+  m_Enabled: 1
+  m_CutoffFrequency: 5000
+  m_HighpassResonanceQ: 1
 --- !u!212 &212174444484362546
 SpriteRenderer:
   m_ObjectHideFlags: 1

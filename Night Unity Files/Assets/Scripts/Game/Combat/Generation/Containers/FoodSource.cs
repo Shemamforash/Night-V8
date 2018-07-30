@@ -16,13 +16,14 @@ namespace Game.Combat.Generation
             ImageLocation = "Plants/" + _foodType;
         }
 
-        public override GameObject CreateObject(bool autoreveal = false)
+        public override ContainerBehaviour CreateObject(bool autoreveal = false)
         {
-            GameObject container = base.CreateObject(autoreveal);
+            ContainerBehaviour container = base.CreateObject(autoreveal);
             if (_insectPrefab == null) _insectPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Insect");
             GameObject insect = GameObject.Instantiate(_insectPrefab);
             insect.transform.SetParent(container.transform);
             insect.transform.position = container.transform.position;
+            container.SetInsect(insect.GetComponent<InsectBehaviour>());
             return container;
         }
 

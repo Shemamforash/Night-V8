@@ -6,7 +6,7 @@ namespace Game.Characters.CharacterActions
     {
         public Sleep(Player playerCharacter) : base(nameof(Sleep), playerCharacter)
         {
-            DisplayName = "Sleeping";
+            DisplayName = "Sleeping\n+Endurance +Strength";
             ShowTime = false;
             IsVisible = false;
             HourCallback = playerCharacter.Sleep;

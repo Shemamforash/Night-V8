@@ -1,4 +1,6 @@
-﻿namespace Game.Characters.CharacterActions
+﻿using Facilitating.UIControllers;
+
+namespace Game.Characters.CharacterActions
 {
     public class Consume : BaseCharacterAction
     {
@@ -10,7 +12,7 @@
 
         protected override void OnClick()
         {
-            UiConsumableController.ShowMenu();
+            UiGearMenuController.Instance().ShowConsumableMenu(PlayerCharacter);
         }
     }
 }

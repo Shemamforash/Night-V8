@@ -25,6 +25,10 @@ namespace Game.Combat.Misc
         private float _originalExplosionWidth, _originalWarningWidth;
         private ParticleSystem _particles;
         private SpriteRenderer _warningRing;
+        private AudioSource _audioSource;
+
+        [SerializeField]
+        private AudioClip[] _explosionClips;
 
 
         public void Awake()
@@ -39,6 +43,7 @@ namespace Game.Combat.Misc
 
             _originalExplosionWidth = _explosionSprite.bounds.size.x;
             _originalWarningWidth = _warningRing.bounds.size.x;
+            _audioSource = Helper.FindChildWithName<AudioSource>(gameObject, "Audio");
         }
 
         public void OnDestroy()
@@ -78,6 +83,7 @@ namespace Game.Combat.Misc
         public void Detonate()
         {
             gameObject.SetActive(true);
+            _audioSource.PlayOneShot(Helper.RandomInList(_explosionClips));
             StartCoroutine(Warmup());
         }
 

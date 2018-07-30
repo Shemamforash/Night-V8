@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Characters;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -17,9 +18,11 @@ namespace Facilitating.UIControllers
         private int _currentTab;
         private Player _currentPlayer;
 
-        private UiGearMenuTemplate _accessoryController;
-        private UiGearMenuTemplate _armourUpgradeController;
-        private UiGearMenuTemplate _weaponUpgradeController;
+        private UiAccessoryController _accessoryController;
+        private UiArmourUpgradeController _armourUpgradeController;
+        private UiWeaponUpgradeController _weaponUpgradeController;
+        private UICraftingController _craftingController;
+        private UiConsumableController _consumableController;
         private UiGearMenuTemplate _currentGearMenu;
         public EnhancedButton _closeButton;
         private static UiGearMenuController _instance;
@@ -72,25 +75,30 @@ namespace Facilitating.UIControllers
         {
         }
 
+        private void CreateTab(GameObject tabObject, string name, Action<Player> buttonAction)
+        {
+            EnhancedButton tab = Helper.FindChildWithName<EnhancedButton>(tabObject, name);
+            tab.AddOnSelectEvent(() => buttonAction(_currentPlayer));
+            _tabs.Add(tab);
+        }
+
         public override void Awake()
         {
             base.Awake();
             _instance = this;
             GameObject tabObject = Helper.FindChildWithName(gameObject, "Tabs");
-            EnhancedButton weaponTab = Helper.FindChildWithName<EnhancedButton>(tabObject, "Weapons");
-            weaponTab.AddOnSelectEvent(() => ShowWeaponMenu(_currentPlayer));
-            EnhancedButton armourTab = Helper.FindChildWithName<EnhancedButton>(tabObject, "Armour");
-            armourTab.AddOnSelectEvent(() => ShowArmourMenu(_currentPlayer));
-            EnhancedButton accessoryTab = Helper.FindChildWithName<EnhancedButton>(tabObject, "Accessories");
-            accessoryTab.AddOnSelectEvent(() => ShowAccessoryMenu(_currentPlayer));
-            _tabs.Add(weaponTab);
-            _tabs.Add(armourTab);
-            _tabs.Add(accessoryTab);
+            CreateTab(tabObject, "Weapons", ShowWeaponMenu);
+            CreateTab(tabObject, "Armour", ShowArmourMenu);
+            CreateTab(tabObject, "Accessories", ShowAccessoryMenu);
+            CreateTab(tabObject, "Crafting", ShowCraftingMenu);
+            CreateTab(tabObject, "Consumables", ShowConsumableMenu);
 
             GameObject gearObject = Helper.FindChildWithName(gameObject, "Gear");
             _accessoryController = Helper.FindChildWithName<UiAccessoryController>(gearObject, "Accessory");
             _armourUpgradeController = Helper.FindChildWithName<UiArmourUpgradeController>(gearObject, "Armour");
             _weaponUpgradeController = Helper.FindChildWithName<UiWeaponUpgradeController>(gearObject, "Weapon");
+            _craftingController = Helper.FindChildWithName<UICraftingController>(gearObject, "Crafting");
+            _consumableController = Helper.FindChildWithName<UiConsumableController>(gearObject, "Consumables");
 
             _closeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Close");
             _closeButton.AddOnClick(Close);
@@ -119,14 +127,14 @@ namespace Facilitating.UIControllers
             InputHandler.SetCurrentListener(_instance);
         }
 
-        private void OpenGearMenu(Player player, int tabNumber, UiGearMenuTemplate gearMenu)
+        private void OpenInventoryMenu(Player player, int tabNumber, UiGearMenuTemplate gearMenu)
         {
             _gearSelectAllowed = false;
             _selectedGear = 0;
             _currentPlayer = player;
             if (!_open)
             {
-                MenuStateMachine.ShowMenu("Gear Menus");
+                MenuStateMachine.ShowMenu("Inventories");
                 _open = true;
             }
 
@@ -151,17 +159,27 @@ namespace Facilitating.UIControllers
 
         public void ShowArmourMenu(Player player)
         {
-            OpenGearMenu(player, 1, _armourUpgradeController);
+            OpenInventoryMenu(player, 1, _armourUpgradeController);
         }
 
         public void ShowWeaponMenu(Player player)
         {
-            OpenGearMenu(player, 0, _weaponUpgradeController);
+            OpenInventoryMenu(player, 0, _weaponUpgradeController);
         }
 
         public void ShowAccessoryMenu(Player player)
         {
-            OpenGearMenu(player, 2, _accessoryController);
+            OpenInventoryMenu(player, 2, _accessoryController);
+        }
+
+        public void ShowCraftingMenu(Player player)
+        {
+            OpenInventoryMenu(player, 3, _craftingController);
+        }
+
+        public void ShowConsumableMenu(Player player)
+        {
+            OpenInventoryMenu(player, 4, _consumableController);
         }
 
         private void Equip(int gearIndex)
@@ -222,8 +240,11 @@ namespace Facilitating.UIControllers
             {
                 int offset = i - centre;
                 int targetGear = _selectedGear + offset;
-                InventoryItem gearItem = null;
-                if (targetGear >= 0 && targetGear < _currentGearMenu.GetAvailableGear().Count) gearItem = _currentGearMenu.GetAvailableGear()[targetGear];
+                MyGameObject gearItem = null;
+                if (targetGear >= 0 && targetGear < _currentGearMenu.GetAvailableGear().Count)
+                {
+                    gearItem = _currentGearMenu.GetAvailableGear()[targetGear];
+                }
 
                 if (i == centre && gearItem != null) _currentGearMenu.CompareTo(gearItem);
 
@@ -271,7 +292,7 @@ namespace Facilitating.UIControllers
                 _typeText.Text(text);
             }
 
-            public void SetGear(InventoryItem gearItem)
+            public void SetGear(MyGameObject gearItem)
             {
                 if (gearItem == null)
                 {

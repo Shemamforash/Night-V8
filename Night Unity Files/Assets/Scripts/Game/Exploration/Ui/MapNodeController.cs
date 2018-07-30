@@ -110,6 +110,7 @@ namespace Game.Exploration.Ui
         public void Enter()
         {
             Camera.main.DOOrthoSize(1, 1f);
+            _audioSource = GetComponent<AudioSource>();
             _audioSource.PlayOneShot(_enterClip);
         }
         

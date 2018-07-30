@@ -17,6 +17,7 @@ namespace Game.Combat.Generation
         private bool _revealed;
         private const float MaxRevealTime = 1f;
         private SpriteRenderer _glowSprite, _iconSprite;
+        private InsectBehaviour _insectBehaviour;
 
         public void Awake()
         {
@@ -44,9 +45,15 @@ namespace Game.Combat.Generation
             ContainerController.Containers.Remove(this);
         }
 
+        public void SetInsect(InsectBehaviour insectBehaviour)
+        {
+            _insectBehaviour = insectBehaviour;
+        }
+
         public IEnumerator Fade()
         {
             _fading = true;
+            _insectBehaviour.Fade();
             PlayerUi.FadeTextOut();
             _glowSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
             _iconSprite.DOColor(UiAppearanceController.FadedColour, MaxRevealTime);

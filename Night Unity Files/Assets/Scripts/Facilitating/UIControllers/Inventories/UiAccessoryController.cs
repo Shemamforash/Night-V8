@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
 using Game.Gear.Armour;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -54,9 +55,8 @@ namespace Facilitating.UIControllers
             return CharacterManager.Accessories.Count != 0;
         }
 
-        public override void SelectGearItem(InventoryItem item, UiGearMenuController.GearUi gearUi)
+        public override void SelectGearItem(MyGameObject accessory, UiGearMenuController.GearUi gearUi)
         {
-            Accessory accessory = item as Accessory;
             gearUi.SetTypeText("");
             gearUi.SetNameText(accessory.Name);
             gearUi.SetDpsText("");
@@ -68,7 +68,7 @@ namespace Facilitating.UIControllers
             ShowAccessoryInfo();
         }
 
-        public override void CompareTo(InventoryItem comparisonItem)
+        public override void CompareTo(MyGameObject comparisonItem)
         {
             _compareText.Text(CurrentPlayer.EquippedAccessory != null ? ((Accessory)comparisonItem).GetSummary() : "");
         }
@@ -78,9 +78,9 @@ namespace Facilitating.UIControllers
             _compareText.Text("");
         }
 
-        public override List<InventoryItem> GetAvailableGear()
+        public override List<MyGameObject> GetAvailableGear()
         {
-            return new List<InventoryItem>(CharacterManager.Accessories);
+            return new List<MyGameObject>(CharacterManager.Accessories);
         }
 
         public override void Equip(int selectedGear)

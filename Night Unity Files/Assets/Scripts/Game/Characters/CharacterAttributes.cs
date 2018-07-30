@@ -23,9 +23,10 @@ namespace Game.Characters
         private readonly string[] _starvationLevels = {"Full", "Sated", "Hungry", "Ravenous", "Starving"};
         private readonly float[] _toleranceThresholds = {0, 0.1f, 0.25f, 0.5f, 0.75f};
 
-        //todo make me do stuff
         public readonly HashSet<WeaponType> WeaponSkillOneUnlocks = new HashSet<WeaponType>();
         public readonly HashSet<WeaponType> WeaponSkillTwoUnlocks = new HashSet<WeaponType>();
+        private const int DehydrateDeathTime = 18;
+        private const int StarvationDeathTime = 36;
         public bool BurnWeakness;
         public bool DecayRetaliate;
         public bool DecayWeakness;
@@ -106,9 +107,6 @@ namespace Game.Characters
             return startingHealth;
         }
 
-        private const int DehydrateDeathTime = 18;
-        private const int StarvationDeathTime = 36;
-        
         public void UpdateThirstAndHunger()
         {
             TemperatureCategory temperature = EnvironmentManager.GetTemperature();

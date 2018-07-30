@@ -1,4 +1,6 @@
-﻿using Game.Gear.Weapons;
+﻿using EZCameraShake;
+using Game.Combat.Player;
+using Game.Gear.Weapons;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -10,10 +12,12 @@ public class WeaponAudioController : MonoBehaviour
 	[SerializeField]
 	private AudioClip _pistolClipIn, _pistolClipOut;
 	private AudioSource _audioSource;
+	private AudioHighPassFilter _highPassFilter;
 
 	public void Awake()
 	{
 		_audioSource = GetComponent<AudioSource>();
+		_highPassFilter = GetComponent<AudioHighPassFilter>();
 	}
 
 	public void StartReload(WeaponType weaponType)
@@ -60,9 +64,10 @@ public class WeaponAudioController : MonoBehaviour
 		_audioSource.PlayOneShot(clip);
 	}
 	
-	public void Fire(WeaponType weaponType)
+	public void Fire(Weapon weapon)
 	{
 		AudioClip[] clips = null;
+		WeaponType weaponType = weapon.WeaponAttributes.WeaponType;
 		switch (weaponType)
 		{
 			case WeaponType.Pistol:
@@ -84,6 +89,12 @@ public class WeaponAudioController : MonoBehaviour
 
 		if (clips == null) return;
 		if (clips.Length == 0) return;
+		float durability = weapon.WeaponAttributes.GetDurability().CurrentValue();
+		float hpfValue = -15f * durability + 750;
+		hpfValue = Mathf.Clamp(hpfValue, 0, 750);
+		_highPassFilter.cutoffFrequency = hpfValue;
 		_audioSource.PlayOneShot(Helper.RandomInList(clips));
+		if (!transform.parent.CompareTag("Player")) return;
+		PlayerCombat.Instance.Shake();
 	}
 }

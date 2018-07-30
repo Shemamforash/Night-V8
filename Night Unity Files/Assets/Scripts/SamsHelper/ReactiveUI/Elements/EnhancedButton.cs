@@ -86,7 +86,6 @@ namespace SamsHelper.ReactiveUI.Elements
             Enter();
         }
 
-
         public Button Button()
         {
             return _button == null ? GetComponent<Button>() : _button;
@@ -130,8 +129,9 @@ namespace SamsHelper.ReactiveUI.Elements
         private void Exit()
         {
             OnDeselectActions?.Invoke();
-            _fadeOut = StartCoroutine(FadeOut());
             _isSelected = false;
+            if (!gameObject.activeInHierarchy) return;
+            _fadeOut = StartCoroutine(FadeOut());
         }
 
         public void AddOnClick(UnityAction a)

@@ -4,7 +4,7 @@
     {
         public Rest(Player playerCharacter) : base(nameof(Rest), playerCharacter)
         {
-            DisplayName = "Resting";
+            DisplayName = "Resting\n+Endurance +Perception";
             ShowTime = false;
             IsVisible = false;
             HourCallback = playerCharacter.Rest;
