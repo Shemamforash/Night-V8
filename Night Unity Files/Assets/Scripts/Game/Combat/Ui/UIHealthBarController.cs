@@ -22,13 +22,13 @@ namespace Game.Combat.Ui
 
         public void Awake()
         {
-            GameObject healthBar = Helper.FindChildWithName(gameObject, "Health Bar");
-            _fill = Helper.FindChildWithName<RectTransform>(healthBar, "Fill");
+            GameObject healthBar = gameObject.FindChildWithName("Health Bar");
+            _fill = healthBar.FindChildWithName<RectTransform>("Fill");
             _slider = healthBar.GetComponent<Slider>();
-            _burnEffect = Helper.FindChildWithName<ParticleSystem>(healthBar, "Burning");
-            _bleedEffect = Helper.FindChildWithName<ParticleSystem>(healthBar, "Bleeding");
-            _healthText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Health Text");
-            _sicknessImage = Helper.FindChildWithName<Image>(gameObject, "Sickness");
+            _burnEffect = healthBar.FindChildWithName<ParticleSystem>("Burning");
+            _bleedEffect = healthBar.FindChildWithName<ParticleSystem>("Bleeding");
+            _healthText = gameObject.FindChildWithName<TextMeshProUGUI>("Health Text");
+            _sicknessImage = gameObject.FindChildWithName<Image>("Sickness");
         }
 
         public void FadeNewHealth()

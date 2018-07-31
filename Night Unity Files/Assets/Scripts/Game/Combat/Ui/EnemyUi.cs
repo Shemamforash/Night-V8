@@ -25,9 +25,9 @@ namespace Game.Combat.Ui
         {
             base.Awake();
             _instance = this;
-            NameText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Name");
-            UiHitController = Helper.FindChildWithName<UIHitController>(gameObject, "Cover");
-            ActionText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Action");
+            NameText = gameObject.FindChildWithName<TextMeshProUGUI>("Name");
+            UiHitController = gameObject.FindChildWithName<UIHitController>("Cover");
+            ActionText = gameObject.FindChildWithName<TextMeshProUGUI>("Action");
             SetSelectedEnemy(null);
         }
 

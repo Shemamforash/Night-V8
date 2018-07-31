@@ -202,7 +202,7 @@ namespace FastLights
             }
 
             if (completedSegment) return edgeSegments;
-            List<FLEdge> endSegment = Helper.RemoveEnd(edgeSegments);
+            List<FLEdge> endSegment = edgeSegments.RemoveEnd();
             endSegment.AddRange(edgeSegments[0]);
             edgeSegments[0] = endSegment;
             return edgeSegments;

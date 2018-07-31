@@ -38,14 +38,14 @@ namespace Game.Exploration.Ui
 
         public void Awake()
         {
-            _fadeText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Fade");
-            _costText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Cost");
+            _fadeText = gameObject.FindChildWithName<TextMeshProUGUI>("Fade");
+            _costText = gameObject.FindChildWithName<TextMeshProUGUI>("Cost");
             _audioSource = GetComponent<AudioSource>();
-            _ring1 = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring 1");
-            _ring2 = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring 2");
-            _ring3 = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Ring 3");
-            _icon = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Icon");
-            _shadow = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Shadow");
+            _ring1 = gameObject.FindChildWithName<SpriteRenderer>("Ring 1");
+            _ring2 = gameObject.FindChildWithName<SpriteRenderer>("Ring 2");
+            _ring3 = gameObject.FindChildWithName<SpriteRenderer>("Ring 3");
+            _icon = gameObject.FindChildWithName<SpriteRenderer>("Icon");
+            _shadow = gameObject.FindChildWithName<SpriteRenderer>("Shadow");
         }
         
         public void SetRegion(Region region)

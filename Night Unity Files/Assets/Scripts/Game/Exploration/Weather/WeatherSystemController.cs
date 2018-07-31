@@ -32,13 +32,13 @@ namespace Game.Exploration.Weather
 
         public void Awake()
         {
-            _fog = new FogSystem(Helper.FindChildWithName(gameObject, "Fog"), _fogMax);
-            _rain = new RainSystem(Helper.FindChildWithName(gameObject, "Rain"), _rainMax);
-            _hail = new HailSystem(Helper.FindChildWithName(gameObject, "Hail"), _hailMax);
-            _dust = new DustSystem(Helper.FindChildWithName(gameObject, "Dust"), _dustMax);
-            _wind = new WindSystem(Helper.FindChildWithName(gameObject, "Wind"), _windMax);
-            _sun = Helper.FindChildWithName<ParticleSystem>(gameObject, "Sun");
-            _stars = Helper.FindChildWithName<ParticleSystem>(gameObject, "Stars");
+            _fog = new FogSystem(gameObject.FindChildWithName("Fog"), _fogMax);
+            _rain = new RainSystem(gameObject.FindChildWithName("Rain"), _rainMax);
+            _hail = new HailSystem(gameObject.FindChildWithName("Hail"), _hailMax);
+            _dust = new DustSystem(gameObject.FindChildWithName("Dust"), _dustMax);
+            _wind = new WindSystem(gameObject.FindChildWithName("Wind"), _windMax);
+            _sun = gameObject.FindChildWithName<ParticleSystem>("Sun");
+            _stars = gameObject.FindChildWithName<ParticleSystem>("Stars");
             _nightTimeAudioSource = _stars.GetComponent<AudioSource>();
             _dayTimeAudioSource = _sun.GetComponent<AudioSource>();
             _instance = this;
@@ -203,8 +203,8 @@ namespace Game.Exploration.Weather
             protected WeatherSystem(GameObject weatherObject, float maxEmission)
             {
                 _particles = weatherObject.GetComponent<ParticleSystem>();
-                _audioSourceA = Helper.FindChildWithName<AudioSource>(weatherObject, "Audio A");
-                _audioSourceB = Helper.FindChildWithName<AudioSource>(weatherObject, "Audio B");
+                _audioSourceA = weatherObject.FindChildWithName<AudioSource>("Audio A");
+                _audioSourceB = weatherObject.FindChildWithName<AudioSource>("Audio B");
                 _maxEmission = maxEmission;
             }
 

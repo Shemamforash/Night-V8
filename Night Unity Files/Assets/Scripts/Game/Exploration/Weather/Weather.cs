@@ -17,15 +17,15 @@ namespace Game.Exploration.Weather
         private readonly string _displayName;
         public readonly WeatherAttributes Attributes;
 
-        public Weather(ProbabalisticStateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, Helper.GetNodeText(weatherNode, "Name"))
+        public Weather(ProbabalisticStateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, weatherNode.GetNodeText("Name"))
         {
-            Name = Helper.GetNodeText(weatherNode, "Name");
-            _displayName = Helper.GetNodeText(weatherNode, "DisplayName");
-            _temperature = Helper.IntFromNode(weatherNode, "Temperature");
-            _visibility = Helper.FloatFromNode(weatherNode, "Visibility");
-            _water = Helper.FloatFromNode(weatherNode, "Water");
-            _food = Helper.FloatFromNode(weatherNode, "Food");
-            _duration = Helper.IntFromNode(weatherNode, "Duration");
+            Name = weatherNode.GetNodeText("Name");
+            _displayName = weatherNode.GetNodeText("DisplayName");
+            _temperature = weatherNode.IntFromNode("Temperature");
+            _visibility = weatherNode.FloatFromNode("Visibility");
+            _water = weatherNode.FloatFromNode("Water");
+            _food = weatherNode.FloatFromNode("Food");
+            _duration = weatherNode.IntFromNode("Duration");
             Attributes = new WeatherAttributes(weatherNode);
         }
 
@@ -63,8 +63,8 @@ namespace Game.Exploration.Weather
             float foodChance = Mathf.Abs(_food);
             discoveredRegions.ForEach(r =>
             {
-                if(Random.Range(0f, 1f) < waterChance) r.ChangeWater((int)Helper.Polarity(_water));
-                if(Random.Range(0f, 1f) < foodChance) r.ChangeFood((int)Helper.Polarity(_food));
+                if(Random.Range(0f, 1f) < waterChance) r.ChangeWater((int)_water.Polarity());
+                if(Random.Range(0f, 1f) < foodChance) r.ChangeFood((int)_food.Polarity());
             });
         }
     }

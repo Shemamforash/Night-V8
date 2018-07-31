@@ -15,12 +15,12 @@ namespace Game.Characters
 
         public CharacterTemplate(XmlNode classNode, List<CharacterTemplate> templates)
         {
-            CharacterClass = StringToClass(Helper.GetNodeText(classNode, "Name"));
-            Endurance = Helper.IntFromNode(classNode, "Endurance");
-            Willpower = Helper.IntFromNode(classNode, "Willpower");
-            Strength = Helper.IntFromNode(classNode, "Strength");
-            Perception = Helper.IntFromNode(classNode, "Perception");
-            StoryLines = new List<string>(Helper.GetNodeText(classNode, "Story").Split('.'));
+            CharacterClass = StringToClass(classNode.GetNodeText("Name"));
+            Endurance = classNode.IntFromNode("Endurance");
+            Willpower = classNode.IntFromNode("Willpower");
+            Strength = classNode.IntFromNode("Strength");
+            Perception = classNode.IntFromNode("Perception");
+            StoryLines = new List<string>(classNode.GetNodeText("Story").Split('.'));
             templates.Add(this);
         }
 

@@ -48,6 +48,19 @@ namespace Game.Combat.Player
         public float MuzzleFlashOpacity;
         private Image _vignetteRenderer;
 
+        private bool _dashPressed;
+
+        private CharacterCombat _lockedTarget;
+        private const float RotateSpeedMax = 100f;
+        private float _rotateSpeedCurrent;
+        private const float RotateAcceleration = 400f;
+        private bool _recovered;
+        public List<Action<Shot>> OnFireActions = new List<Action<Shot>>();
+        public List<Action> UpdateSkillActions = new List<Action>();
+        private BaseWeaponBehaviour _weaponBehaviour;
+        private FastLight _muzzleFlash;
+
+
         public bool ConsumeAdrenaline(int amount)
         {
             if (amount > _adrenalineLevel.CurrentValue()) return false;
@@ -145,10 +158,10 @@ namespace Game.Combat.Player
                         _dashPressed = true;
                         break;
                     case InputAxis.Inventory:
-                        UiAreaInventoryController.Instance().OpenInventory();
+                        UiAreaInventoryController.OpenInventory();
                         break;
                     case InputAxis.TakeItem:
-                        UiAreaInventoryController.Instance().TakeItem();
+                        UiAreaInventoryController.TakeItem();
                         break;
                     case InputAxis.Compass:
                         TryEmitPulse();
@@ -186,10 +199,6 @@ namespace Game.Combat.Player
         {
         }
 
-        private bool _dashPressed;
-
-        private CharacterCombat _lockedTarget;
-
         private void FollowTarget()
         {
             if (_lockedTarget != null && !Helper.IsObjectInCameraView(_lockedTarget.gameObject)) _lockedTarget = null;
@@ -205,11 +214,6 @@ namespace Game.Combat.Player
             TargetBehaviour.SetLocked(_lockedTarget != null);
         }
 
-        private const float RotateSpeedMax = 100f;
-        private float _rotateSpeedCurrent;
-        private const float RotateAcceleration = 400f;
-        private bool _recovered;
-
         private void Rotate(float direction)
         {
             if (CanDash())
@@ -222,7 +226,7 @@ namespace Game.Combat.Player
             if (_lockedTarget != null) return;
             _rotateSpeedCurrent += RotateAcceleration * Time.deltaTime;
             if (_rotateSpeedCurrent > RotateSpeedMax) _rotateSpeedCurrent = RotateSpeedMax;
-            transform.Rotate(Vector3.forward, _rotateSpeedCurrent * Time.deltaTime * Helper.Polarity(-direction));
+            transform.Rotate(Vector3.forward, _rotateSpeedCurrent * Time.deltaTime * (-direction).Polarity());
         }
 
         private void TransitionOffScreen()
@@ -242,9 +246,6 @@ namespace Game.Combat.Player
         {
             transform.DORotate(new Vector3(0, 0, 180f * -direction), 0.5f, RotateMode.FastBeyond360).SetRelative();
         }
-
-        public event Action<Shot> OnFireAction;
-        public event Action OnReloadAction;
 
         public override void Kill()
         {
@@ -277,14 +278,13 @@ namespace Game.Combat.Player
         {
             if (!CombatManager.InCombat()) return;
             base.Update();
+            UpdateSkillActions.ForEach(a => a());
             FollowTarget();
             TransitionOffScreen();
             _adrenalineLevel.Increment(_adrenalineGain * Time.deltaTime);
             RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
             UpdateMuzzleFlash();
         }
-
-        private FastLight _muzzleFlash;
 
         private void UpdateMuzzleFlash()
         {
@@ -299,6 +299,8 @@ namespace Game.Combat.Player
         public override void TakeDamage(Shot shot)
         {
             base.TakeDamage(shot);
+            UpdateSkillActions.Clear();
+            _damageTakenSinceMarkStarted = true;
             CombatManager.IncreaseDamageTaken(shot.DamageDealt());
             if (!Player.Attributes.DecayRetaliate) return;
             EnemyBehaviour b = shot._origin as EnemyBehaviour;
@@ -368,7 +370,6 @@ namespace Game.Combat.Player
             CameraShaker.Instance.ShakeOnce(0.5f, 10, 0.2f, 0.2f);
         }
 
-        private BaseWeaponBehaviour _weaponBehaviour;
 
         private bool CanDash()
         {
@@ -418,13 +419,14 @@ namespace Game.Combat.Player
         }
 
         private bool _reloading;
+        public int DamageDealtSinceMarkStarted;
+        private bool _damageTakenSinceMarkStarted;
 
         //COOLDOWNS
 
         private void InstantReload()
         {
             _weaponBehaviour.Reload();
-            OnReloadAction?.Invoke();
             StopReloading();
         }
 
@@ -432,7 +434,6 @@ namespace Game.Combat.Player
         {
             float duration = Player.EquippedWeapon.GetAttributeValue(AttributeType.ReloadSpeed);
             UIMagazineController.EmptyMagazine();
-            OnFireAction = null;
             _reloading = true;
             WeaponAudio.StartReload(Weapon().WeaponType());
 
@@ -458,17 +459,17 @@ namespace Game.Combat.Player
             if (Random.Range(0f, 1f) > reloadFailChance)
             {
                 _weaponBehaviour.Reload();
+                OnFireActions.Clear();
                 WeaponAudio.StopReload(Weapon().WeaponType());
             }
 
-            OnReloadAction?.Invoke();
             StopReloading();
         }
 
 
         public override void ApplyShotEffects(Shot s)
         {
-            OnFireAction?.Invoke(s);
+            OnFireActions.ForEach(a => a.Invoke(s));
         }
 
         //FIRING
@@ -498,7 +499,24 @@ namespace Game.Combat.Player
 
         public static void Equip(Weapon weapon)
         {
-            
+        }
+
+        public void ConsumeAmmo(int amount = -1)
+        {
+            _weaponBehaviour.ConsumeAmmo(amount);
+        }
+
+        public void StartMark(EnemyBehaviour target)
+        {
+            target.Mark();
+            DamageDealtSinceMarkStarted = 0;
+            _damageTakenSinceMarkStarted = false;
+        }
+
+        public void EndMark(EnemyBehaviour target)
+        {
+            if (_damageTakenSinceMarkStarted) return;
+            target.HealthController.TakeDamage(DamageDealtSinceMarkStarted);
         }
     }
 }

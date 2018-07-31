@@ -55,7 +55,7 @@ class RecipeImporter(XMLWriter):
         write_single_value(self, "ProductQuantity", get_value(self, "F", row, "0"))
 
     def read_recipes(self):
-        for row_no in range(2, 17):
+        for row_no in range(2, 19):
             write_tag(self, "Recipe", self.read_recipe, [row_no])
 
 
@@ -256,15 +256,17 @@ class SkillImporter(XMLWriter):
         write_tag(self, "Skills", self.read_skills)
 
     def read_skills(self):
-        for row in range(2, 46):
+        for row in range(2, 43):
             if (row - 1 % 3) == 0:
                 continue
             write_tag(self, "Skill", self.read_skill, [row])
 
     def read_skill(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "Cooldown", get_value(self, "C", row))
-        write_single_value(self, "Description", get_value(self, "D", row))
+        write_single_value(self, "RequiresTarget", get_value(self, "D", row))
+        write_single_value(self, "AppliesToMagazine", get_value(self, "E", row))
+        write_single_value(self, "Cooldown", get_value(self, "F", row))
+        write_single_value(self, "Description", get_value(self, "G", row))
 
 
 class TraitImporter(XMLWriter):
@@ -308,15 +310,15 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-WeaponImporter()
-GearImporter()
-WeatherImporter()
-RegionImporter()
-CharacterImporter()
-EnemyImporter()
-RecipeImporter()
-ResourceImporter()
-InscriptionImporter()
+# WeaponImporter()
+# GearImporter()
+# WeatherImporter()
+# RegionImporter()
+# CharacterImporter()
+# EnemyImporter()
+# RecipeImporter()
+# ResourceImporter()
+# InscriptionImporter()
 SkillImporter()
 # TraitImporter()
-EnvironmentImporter()
+# EnvironmentImporter()

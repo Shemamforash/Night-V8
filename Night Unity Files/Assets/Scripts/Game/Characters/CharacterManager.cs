@@ -17,13 +17,10 @@ namespace Game.Characters
     public class CharacterManager : Inventory
     {
         public static Player SelectedCharacter;
-        public static readonly List<Weapon> Weapons = new List<Weapon>();
-        public static readonly List<ArmourPlate> Armour = new List<ArmourPlate>();
-        public static readonly List<Accessory> Accessories = new List<Accessory>();
         public static readonly List<Player> Characters = new List<Player>();
-        public static readonly List<Inscription> Inscriptions = new List<Inscription>();
         private static readonly List<CharacterTemplate> Templates = new List<CharacterTemplate>();
         private static bool _loaded;
+        private List<Building> _buildings = new List<Building>();
 
         public CharacterManager() : base("Vehicle")
         {
@@ -31,7 +28,7 @@ namespace Game.Characters
 
         public override void Load(XmlNode doc, PersistenceType saveType)
         {
-            XmlNode characterManagerNode = Helper.GetNode(doc, "CharacterManager");
+            XmlNode characterManagerNode = doc.GetNode("CharacterManager");
             foreach (XmlNode characterNode in Helper.GetNodesWithName(characterManagerNode, "Character"))
             {
 //                Character c = new Character();
@@ -81,15 +78,6 @@ namespace Game.Characters
             Characters.Add(playerCharacter);
         }
 
-        protected override void AddItem(InventoryItem item)
-        {
-            base.AddItem(item);
-            if (item is Weapon) Weapons.Add((Weapon) item);
-            if (item is ArmourPlate) Armour.Add((ArmourPlate) item);
-            if (item is Accessory) Accessories.Add((Accessory) item);
-            if (item is Inscription) Inscriptions.Add((Inscription) item);
-        }
-
         public static void RemoveCharacter(Player playerCharacter)
         {
             if (playerCharacter.CharacterTemplate.CharacterClass == CharacterClass.Wanderer)
@@ -103,25 +91,11 @@ namespace Game.Characters
             }
         }
 
-        protected override InventoryItem RemoveItem(InventoryItem item)
+        public void UpdateBuildings()
         {
-            base.RemoveItem(item);
-            Weapons.Remove(item as Weapon);
-            Armour.Remove(item as ArmourPlate);
-            Accessories.Remove(item as Accessory);
-            Inscriptions.Remove(item as Inscription);
-            return item;
+            _buildings.ForEach(b => b.Update());
         }
-
-        public override void DestroyItem(InventoryItem item)
-        {
-            base.DestroyItem(item);
-            Weapons.Remove(item as Weapon);
-            Armour.Remove(item as ArmourPlate);
-            Accessories.Remove(item as Accessory);
-            Inscriptions.Remove(item as Inscription);
-        }
-
+        
         public static void ExitCharacter(Player character)
         {
             character.CharacterView.SwitchToSimpleView();
@@ -170,7 +144,7 @@ namespace Game.Characters
 
         private static int AttributeCapStringToValue(string nodeName, XmlNode node)
         {
-            string capString = Helper.GetNodeText(node, nodeName);
+            string capString = node.GetNodeText(nodeName);
             switch (capString)
             {
                 case "+":
@@ -215,7 +189,7 @@ namespace Game.Characters
         public static Player GenerateRandomCharacter()
         {
             LoadTemplates();
-            CharacterTemplate newTemplate = Helper.RemoveRandomInList(Templates);
+            CharacterTemplate newTemplate = Templates.RemoveRandom();
             Player playerCharacter = GenerateCharacterObject(newTemplate);
             return playerCharacter;
         }
@@ -232,7 +206,6 @@ namespace Game.Characters
             CharacterAttributes attributes = playerCharacter.Attributes;
 
             attributes.SetMax(AttributeType.Endurance, playerCharacter.CharacterTemplate.Endurance);
-//            attributes.SetMax(AttributeType.Endurance, 15);
             attributes.Get(AttributeType.Endurance).SetToMax();
 
             attributes.SetMax(AttributeType.Strength, playerCharacter.CharacterTemplate.Strength);
@@ -255,6 +228,16 @@ namespace Game.Characters
                 if (c.IsDead)
                     RemoveCharacter(c);
             }
+        }
+
+        public void AddBuilding(Building building)
+        {
+            _buildings.Add(building);
+        }
+
+        public List<Building> Buildings()
+        {
+            return _buildings;
         }
     }
 }

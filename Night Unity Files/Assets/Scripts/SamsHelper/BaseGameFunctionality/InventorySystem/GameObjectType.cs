@@ -6,6 +6,7 @@
         Gear,
         Inventory,
         Resource,
-        State
+        State,
+        Building
     }
 }

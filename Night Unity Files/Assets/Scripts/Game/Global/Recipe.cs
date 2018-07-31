@@ -2,6 +2,8 @@
 using System.Xml;
 using Facilitating;
 using Game.Characters;
+using Game.Gear;
+using Game.Gear.Armour;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
@@ -20,7 +22,7 @@ namespace Game.Global
         private static bool _loaded;
         public readonly string ProductName;
         public readonly int ProductQuantity;
-        private bool _requiresFire;
+        private readonly bool _requiresFire;
 
         private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string productName, int productQuantity, float duration) : base(productName, GameObjectType.Resource)
         {
@@ -31,9 +33,10 @@ namespace Game.Global
             ProductQuantity = productQuantity;
             ProductName = productName;
             DurationInHours = duration;
+            _requiresFire = ingredient1 == "Fire" || ingredient2 == "Fire";
         }
 
-        public bool CanCraft()
+        private bool CanCraft()
         {
             if (_requiresFire && !Campfire.IsLit())
             {
@@ -52,8 +55,53 @@ namespace Game.Global
             if (!CanCraft()) return false;
             WorldState.HomeInventory().DecrementResource(Ingredient1, Ingredient1Quantity);
             if (Ingredient2 != "") WorldState.HomeInventory().DecrementResource(Ingredient2, Ingredient2Quantity);
-            if (ProductName == "Fire") CharacterManager.SelectedCharacter.LightFireAction.Enter();
+            CreateProduct();
             return true;
+        }
+
+        private void CreateProduct()
+        {
+            switch (ProductName)
+            {
+                case "Fire": 
+                    CharacterManager.SelectedCharacter.LightFireAction.Enter();
+                    break;
+                case "Shelter":
+                    WorldState.HomeInventory().AddBuilding(new Shelter());
+                    break;
+                case "Trap":
+                    WorldState.HomeInventory().AddBuilding(new Trap());
+                    break;
+                case "Water Collector":
+                    WorldState.HomeInventory().AddBuilding(new WaterCollector());
+                    break;
+                case "Condenser":
+                    WorldState.HomeInventory().AddBuilding(new Condenser());
+                    break;
+                case "Essence Filter":
+                    WorldState.HomeInventory().AddBuilding(new EssenceFilter());
+                    break;
+                case "Leather Plate":
+                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Rusted), 1);
+                    break;
+                case "Reinforced Leather Plate":
+                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Worn), 1);
+                    break;
+                case "Metal Plate":
+                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Shining), 1);
+                    break;
+                case "Alloy Plate":
+                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Radiant), 1);
+                    break;
+                case "Living Metal Plate":
+                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Faultless), 1);
+                    break;
+                case "Ice":
+                    WorldState.HomeInventory().IncrementResource(ProductName, ProductQuantity);
+                    break;
+            }
+            
+            
         }
 
         private bool _unlocked;
@@ -83,12 +131,12 @@ namespace Game.Global
             XmlNode root = Helper.OpenRootNode("Recipes");
             foreach (XmlNode recipeNode in Helper.GetNodesWithName(root, "Recipe"))
             {
-                string ingredient1Name = Helper.GetNodeText(recipeNode, "Ingredient1Name");
-                int ingredient1Quantity = Helper.IntFromNode(recipeNode, "Ingredient1Quantity");
-                string ingredient2Name = Helper.GetNodeText(recipeNode, "Ingredient2Name");
-                int ingredient2Quantity = Helper.IntFromNode(recipeNode, "Ingredient1Quantity");
-                string productName = Helper.GetNodeText(recipeNode, "ProductName");
-                int productQuantity = Helper.IntFromNode(recipeNode, "ProductQuantity");
+                string ingredient1Name = recipeNode.GetNodeText("Ingredient1Name");
+                int ingredient1Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
+                string ingredient2Name = recipeNode.GetNodeText("Ingredient2Name");
+                int ingredient2Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
+                string productName = recipeNode.GetNodeText("ProductName");
+                int productQuantity = recipeNode.IntFromNode("ProductQuantity");
 
                 Recipe recipe = new Recipe(ingredient1Name, ingredient2Name, ingredient1Quantity, ingredient2Quantity, productName, productQuantity, 1);
                 _recipes.Add(recipe);

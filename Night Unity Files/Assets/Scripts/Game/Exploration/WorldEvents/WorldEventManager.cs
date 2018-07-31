@@ -16,7 +16,7 @@ namespace Game.Exploration.WorldEvents
 
         public void Load(XmlNode doc, PersistenceType saveType)
         {
-            string events = Helper.GetNodeText(doc, "WorldEvents");
+            string events = doc.GetNodeText("WorldEvents");
             _eventLog = new List<string>(events.Split(','));
             PrintFirstFourEvents();
         }
@@ -36,7 +36,7 @@ namespace Game.Exploration.WorldEvents
 
         public void Awake()
         {
-            if (SceneManager.GetActiveScene().name == "Game") _eventLogText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Event Log");
+            if (SceneManager.GetActiveScene().name == "Game") _eventLogText = gameObject.FindChildWithName<TextMeshProUGUI>("Event Log");
             PrintFirstFourEvents();
         }
 

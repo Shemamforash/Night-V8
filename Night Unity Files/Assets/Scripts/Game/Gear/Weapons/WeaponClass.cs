@@ -18,14 +18,14 @@ namespace Game.Gear.Weapons
         public WeaponClass(XmlNode subtypeNode, WeaponType type)
         {
             Type = type;
-            Automatic = Helper.NodeAttributeValue(subtypeNode, "automatic") == "True";
+            Automatic = subtypeNode.NodeAttributeValue("automatic") == "True";
             Name = NameToClassType(subtypeNode.Attributes["name"].Value);
-            Damage = Helper.IntFromNode(subtypeNode, "Damage");
-            FireRate = Helper.FloatFromNode(subtypeNode, "FireRate");
-            ReloadSpeed = Helper.FloatFromNode(subtypeNode, "ReloadSpeed");
-            Accuracy = Helper.IntFromNode(subtypeNode, "Accuracy");
-            Handling = Helper.IntFromNode(subtypeNode, "Handling");
-            Capacity = Helper.IntFromNode(subtypeNode, "Capacity");
+            Damage = subtypeNode.IntFromNode("Damage");
+            FireRate = subtypeNode.FloatFromNode("FireRate");
+            ReloadSpeed = subtypeNode.FloatFromNode("ReloadSpeed");
+            Accuracy = subtypeNode.IntFromNode("Accuracy");
+            Handling = subtypeNode.IntFromNode("Handling");
+            Capacity = subtypeNode.IntFromNode("Capacity");
             Pellets = type == WeaponType.Shotgun ? 10 : 1;
             _weaponClasses.Add(this);
         }

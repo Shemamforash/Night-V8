@@ -20,18 +20,18 @@ public class TempleBehaviour : BasicShrineBehaviour
 
     public void Awake()
     {
-        Rotate ring1 = Helper.FindChildWithName<Rotate>(gameObject, "Ring 1");
-        Rotate ring2 = Helper.FindChildWithName<Rotate>(gameObject, "Ring 2");
+        Rotate ring1 = gameObject.FindChildWithName<Rotate>("Ring 1");
+        Rotate ring2 = gameObject.FindChildWithName<Rotate>("Ring 2");
         ring1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
         ring2.transform.rotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
         ringPulse1 = ring1.GetComponent<ColourPulse>();
         ringPulse1.SetAlphaMultiplier(0);
         ringPulse2 = ring2.GetComponent<ColourPulse>();
         ringPulse2.SetAlphaMultiplier(0);
-        _vortex = Helper.FindChildWithName<ParticleSystem>(gameObject, "Vortex");
-        _explosion = Helper.FindChildWithName<ParticleSystem>(gameObject, "Explosion");
-        _altar = Helper.FindChildWithName<ParticleSystem>(gameObject, "Altar");
-        _glow = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Glow");
+        _vortex = gameObject.FindChildWithName<ParticleSystem>("Vortex");
+        _explosion = gameObject.FindChildWithName<ParticleSystem>("Explosion");
+        _altar = gameObject.FindChildWithName<ParticleSystem>("Altar");
+        _glow = gameObject.FindChildWithName<SpriteRenderer>("Glow");
         _glow.color = UiAppearanceController.InvisibleColour;
     }
 

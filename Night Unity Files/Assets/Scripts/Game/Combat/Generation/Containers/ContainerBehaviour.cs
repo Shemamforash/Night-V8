@@ -21,9 +21,9 @@ namespace Game.Combat.Generation
 
         public void Awake()
         {
-            _glowSprite = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Glow");
+            _glowSprite = gameObject.FindChildWithName<SpriteRenderer>("Glow");
             _glowSprite.color = UiAppearanceController.InvisibleColour;
-            _iconSprite = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Icon");
+            _iconSprite = gameObject.FindChildWithName<SpriteRenderer>("Icon");
             _iconSprite.color = UiAppearanceController.InvisibleColour;
         }
 
@@ -53,7 +53,7 @@ namespace Game.Combat.Generation
         public IEnumerator Fade()
         {
             _fading = true;
-            _insectBehaviour.Fade();
+            if(_insectBehaviour != null) _insectBehaviour.Fade();
             PlayerUi.FadeTextOut();
             _glowSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
             _iconSprite.DOColor(UiAppearanceController.FadedColour, MaxRevealTime);

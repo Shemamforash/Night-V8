@@ -18,13 +18,13 @@ namespace Facilitating
         
         public void Start()
         {
-            _fire = Helper.FindChildWithName<ParticleSystem>(gameObject, "Fire");
-            _smoke1 = Helper.FindChildWithName<ParticleSystem>(gameObject, "Smoke 1");
-            _smoke2 = Helper.FindChildWithName<ParticleSystem>(gameObject, "Smoke 2");
-            _smoke3 = Helper.FindChildWithName<ParticleSystem>(gameObject, "Smoke 3");
-            _smoke4 = Helper.FindChildWithName<ParticleSystem>(gameObject, "Smoke 4");
-            _fireLightImage = Helper.FindChildWithName<Image>(gameObject, "Logs");
-            _gateImage = Helper.FindChildWithName<Image>(transform.parent.parent.gameObject, "Gate");
+            _fire = gameObject.FindChildWithName<ParticleSystem>("Fire");
+            _smoke1 = gameObject.FindChildWithName<ParticleSystem>("Smoke 1");
+            _smoke2 = gameObject.FindChildWithName<ParticleSystem>("Smoke 2");
+            _smoke3 = gameObject.FindChildWithName<ParticleSystem>("Smoke 3");
+            _smoke4 = gameObject.FindChildWithName<ParticleSystem>("Smoke 4");
+            _fireLightImage = gameObject.FindChildWithName<Image>("Logs");
+            _gateImage = transform.parent.parent.gameObject.FindChildWithName<Image>("Gate");
             Restart();
         }
 

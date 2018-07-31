@@ -17,12 +17,12 @@ public class SceneryController : MonoBehaviour
 
     public void Awake()
     {
-        _sky = Helper.FindChildWithName<RectTransform>(gameObject, "Sky");
-        _sun = Helper.FindChildWithName<RectTransform>(gameObject, "Sun");
-        _environment = Helper.FindChildWithName<Image>(gameObject, "Landscape");
-        _gateShadow = Helper.FindChildWithName<Image>(gameObject, "Gate Shadow");
-        _fireShadow = Helper.FindChildWithName<Image>(gameObject, "Fire Shadow");
-        _sunGlow = Helper.FindChildWithName<Image>(gameObject, "Sun Glow");
+        _sky = gameObject.FindChildWithName<RectTransform>("Sky");
+        _sun = gameObject.FindChildWithName<RectTransform>("Sun");
+        _environment = gameObject.FindChildWithName<Image>("Landscape");
+        _gateShadow = gameObject.FindChildWithName<Image>("Gate Shadow");
+        _fireShadow = gameObject.FindChildWithName<Image>("Fire Shadow");
+        _sunGlow = gameObject.FindChildWithName<Image>("Sun Glow");
     }
 
     public static void UpdateEnvironment()

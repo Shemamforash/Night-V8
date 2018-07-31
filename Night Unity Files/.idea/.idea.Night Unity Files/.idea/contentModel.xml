@@ -359,9 +359,7 @@
                   <e p="Witch.cs" t="Include" />
                 </e>
                 <e p="Misc" t="Include">
-                  <e p="DecayGrenade.cs" t="Include" />
                   <e p="Grenade.cs" t="Include" />
-                  <e p="IncendiaryGrenade.cs" t="Include" />
                 </e>
                 <e p="MoveBehaviour.cs" t="Include" />
                 <e p="MovementController.cs" t="Include" />
@@ -535,6 +533,7 @@
               </e>
             </e>
             <e p="Global" t="Include">
+              <e p="Building.cs" t="Include" />
               <e p="DesolationAttributes.cs" t="Include" />
               <e p="DesolationInventory.cs" t="Include" />
               <e p="Recipe.cs" t="Include" />

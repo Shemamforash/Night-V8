@@ -1,25 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using Game.Characters;
+using Game.Combat.Enemies;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
 using SamsHelper;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Combat.Player
 {
     public abstract class Skill
     {
-//        protected Shot Shot;
         private static readonly Dictionary<string, SkillValue> _skillValues = new Dictionary<string, SkillValue>();
         private static bool _loaded;
-        private readonly bool _waitForReload;
+        
         public readonly string Name;
         private SkillValue _skillValue;
 
-        protected Skill(string name, bool waitForReload = false)
+        protected Skill(string name)
         {
             Name = name;
-            _waitForReload = waitForReload;
             ReadSkillValue(this);
         }
 
@@ -55,25 +57,56 @@ namespace Game.Combat.Player
             _loaded = true;
         }
 
-
         protected static Characters.Player Player()
         {
             return PlayerCombat.Instance.Player;
         }
 
-        public void Activate()
+        protected static EnemyBehaviour Target()
         {
-            OnFire();
+            return (EnemyBehaviour)PlayerCombat.Instance.GetTarget();
+        }
+
+        protected void KnockbackSingleTarget(Vector2 position, CharacterCombat character, float force)
+        {
+            float distance = Vector2.Distance(character.transform.position, position);
+            if (distance < 0f) distance = 1;
+            float scaledForce = force / distance;
+            character.MovementController.Knockback(position, scaledForce);
+        }
+
+        protected List<CharacterCombat> KnockbackInRange(float range, float force)
+        {
+            Vector2 position = PlayerCombat.Instance.transform.position;
+            List<CharacterCombat> enemiesInRange = CombatManager.GetEnemiesInRange(position, range);
+            enemiesInRange.ForEach(e => { KnockbackSingleTarget(position, e, force); });
+            return enemiesInRange;
+        }
+
+        public bool Activate(bool freeSkill)
+        {
+            if (Target() == null && _skillValue.NeedsTarget) return false;
+            if (!freeSkill && !PlayerCombat.Instance.ConsumeAdrenaline(Cooldown())) return false;
+            if (_skillValue.AppliesToMagazine) PlayerCombat.Instance.OnFireActions.Add(MagazineEffect);
+            else InstantEffect();
             UIMagazineController.UpdateMagazineUi();
-            if (_waitForReload) PlayerCombat.Instance.OnReloadAction += StartOnReload;
+            CombatManager.IncreaseSkillsUsed();
+            return true;
         }
 
-        private void StartOnReload()
+        protected void Heal(float percent)
         {
-            PlayerCombat.Instance.OnReloadAction -= StartOnReload;
+            int healAmount = Mathf.FloorToInt(percent * PlayerCombat.Instance.HealthController.GetMaxHealth());
+            PlayerCombat.Instance.HealthController.Heal(healAmount);
         }
 
-        protected abstract void OnFire();
+        protected virtual void MagazineEffect(Shot s)
+        {
+        }
+
+        protected virtual void InstantEffect()
+        {
+        }
 
         protected static Shot CreateShot()
         {
@@ -84,12 +117,16 @@ namespace Game.Combat.Player
         {
             public readonly int Cooldown;
             public readonly string Description;
+            public readonly bool NeedsTarget;
+            public readonly bool AppliesToMagazine;
 
             public SkillValue(XmlNode skillNode)
             {
-                string name = Helper.GetNodeText(skillNode, "Name");
-                Cooldown = Helper.IntFromNode(skillNode, "Cooldown");
-                Description = Helper.GetNodeText(skillNode, "Description");
+                string name = skillNode.GetNodeText("Name");
+                Cooldown = skillNode.IntFromNode("Cooldown");
+                Description = skillNode.GetNodeText("Description");
+                NeedsTarget = skillNode.BoolFromNode("RequiresTarget");
+                AppliesToMagazine = skillNode.BoolFromNode("AppliesToMagazine");
                 _skillValues[name] = this;
             }
         }

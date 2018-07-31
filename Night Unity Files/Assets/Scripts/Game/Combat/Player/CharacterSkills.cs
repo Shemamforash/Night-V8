@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies.Misc;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Gear.Armour;
+using UnityEngine;
 
 namespace Game.Combat.Player
 {
@@ -14,23 +16,23 @@ namespace Game.Combat.Player
             switch (player.CharacterTemplate.CharacterClass)
             {
                 case CharacterClass.Villain:
-                    return new Staunch();
+                    return new Absolve();
                 case CharacterClass.Deserter:
-                    return new Immolate();
+                    return new Lacerate();
                 case CharacterClass.Beast:
-                    return new Taunt();
-                case CharacterClass.Watcher:
                     return new Terrify();
+                case CharacterClass.Watcher:
+                    return new Medicate();
                 case CharacterClass.Survivor:
-                    return new Shatter();
+                    return new Aegis();
                 case CharacterClass.Protector:
-                    return new Sacrifice();
+                    return new Relinquish();
                 case CharacterClass.Hunter:
-                    return new Restock();
+                    return new Nourish();
                 case CharacterClass.Ghost:
-                    return new Blink();
+                    return new Rejuvinate();
                 case CharacterClass.Wanderer:
-                    return new Defile();
+                    return new Staunch();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -41,23 +43,23 @@ namespace Game.Combat.Player
             switch (player.CharacterTemplate.CharacterClass)
             {
                 case CharacterClass.Villain:
-                    return new Rejuvinate();
+                    return new Defile();
                 case CharacterClass.Deserter:
-                    return new Lacerate();
+                    return new Immolate();
                 case CharacterClass.Beast:
-                    return new Crush();
+                    return new Unleash();
                 case CharacterClass.Watcher:
-                    return new Afflict();
+                    return new Impel();
                 case CharacterClass.Survivor:
-                    return new Brace();
+                    return new Erupt();
                 case CharacterClass.Protector:
-                    return new Execute();
+                    return new Shatter();
                 case CharacterClass.Hunter:
-                    return new Fortify();
+                    return new Mark();
                 case CharacterClass.Ghost:
-                    return new Unearth();
+                    return new Sacrifice();
                 case CharacterClass.Wanderer:
-                    return new Absolve();
+                    return new Afflict();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -65,44 +67,39 @@ namespace Game.Combat.Player
     }
     //Villain
 
-    public class Staunch : Skill
+    public class Absolve : Skill
     {
-        public Staunch() : base(nameof(Staunch))
+        public Absolve() : base(nameof(Absolve))
         {
         }
 
-        protected override void OnFire()
+        protected override void InstantEffect()
         {
-            PlayerCombat.Instance.ClearConditions();
-
+            CharacterCombat target = Target();
+            float healPercent = 0;
+            if (target.IsBurning()) healPercent += 0.1f;
+            if (target.IsDecaying()) healPercent += 0.1f;
+            if (target.IsSick()) healPercent += 0.1f;
+            target.ClearConditions();
+            Heal(healPercent);
         }
     }
 
-    public class Rejuvinate : Skill
+    public class Defile : Skill
     {
-        public Rejuvinate() : base(nameof(Rejuvinate))
+        public Defile() : base(nameof(Defile))
         {
         }
 
-        protected override void OnFire()
+        protected override void InstantEffect()
         {
-            PlayerCombat.Instance.HealthController.Heal((int) (CharacterAttributes.PlayerHealthChunkSize / 2f));
+            CharacterCombat target = Target();
+            target.Sicken(10);
+            if (target.HealthController.GetCurrentHealth() == 0) Explosion.CreateExplosion(target.transform.position, 20).InstantDetonate();
         }
     }
 
     //Deserter
-
-    public class Immolate : Skill
-    {
-        public Immolate() : base(nameof(Immolate))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            IncendiaryGrenade.Create(PlayerCombat.Instance.transform.position, PlayerCombat.Instance.GetTarget().transform.position);
-        }
-    }
 
     public class Lacerate : Skill
     {
@@ -110,40 +107,26 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void OnFire()
+        protected override void InstantEffect()
         {
-            Grenade.Create(PlayerCombat.Instance.transform.position, PlayerCombat.Instance.GetTarget().transform.position);
+            Grenade g = Grenade.CreateBasic(PlayerCombat.Instance.transform.position, PlayerCombat.Instance.GetTarget().transform.position);
+            g.AddOnDetonate(enemies => { Heal(enemies.Count * 0.05f); });
+        }
+    }
+
+    public class Immolate : Skill
+    {
+        public Immolate() : base(nameof(Immolate))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            Grenade.CreateIncendiary(PlayerCombat.Instance.transform.position, PlayerCombat.Instance.GetTarget().transform.position);
         }
     }
 
     //Beast
-
-    public class Taunt : Skill
-    {
-        public Taunt() : base(nameof(Taunt))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            //todo
-//            PlayerCombat.Instance.CurrentTarget.CurrentAction = PlayerCombat.Instance.CurrentTarget.MoveToPlayer;
-        }
-    }
-
-    public class Crush : Skill
-    {
-        public Crush() : base(nameof(Crush))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            PlayerCombat.Instance.MovementController.Ram(PlayerCombat.Instance.GetTarget().transform, 200);
-        }
-    }
-
-    //Watcher
 
     public class Terrify : Skill
     {
@@ -151,9 +134,181 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void OnFire()
+        protected override void InstantEffect()
         {
-            CombatManager.EnemiesOnScreen().ForEach(e => e.MoveBehaviour.MoveToCover());
+            int hit = 0;
+            KnockbackInRange(1f, 100f).ForEach(e => ++hit);
+            Heal(hit * 0.05f);
+        }
+    }
+
+    public class Unleash : Skill
+    {
+        public Unleash() : base(nameof(Unleash))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            PlayerCombat.Instance.ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit);
+            KnockbackInRange(2f, 25).ForEach(e => { e.ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit); });
+        }
+    }
+
+    //Watcher
+
+    public class Medicate : Skill
+    {
+        public Medicate() : base(nameof(Medicate))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            Heal(0.25f);
+            PlayerCombat.Instance.ClearConditions();
+        }
+    }
+
+    public class Impel : Skill
+    {
+        public Impel() : base(nameof(Impel))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            PlayerCombat.Instance.ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit);
+            KnockbackInRange(4f, 100f);
+        }
+    }
+
+    //Survivor
+
+    public class Aegis : Skill
+    {
+        public Aegis() : base(nameof(Impel))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            PlayerCombat.Instance.Shield.Activate(5f);
+        }
+    }
+
+    public class Erupt : Skill
+    {
+        public Erupt() : base(nameof(Impel))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            Vector2 position = PlayerCombat.Instance.transform.position;
+            Explosion.CreateExplosion(position, 50, 3f);
+            FireBehaviour.Create(position, 3f);
+            DecayBehaviour.Create(position);
+        }
+    }
+
+    //Protector
+
+    public class Shatter : Skill
+    {
+        public Shatter() : base(nameof(Shatter))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            PlayerCombat.Instance.ArmourController.TakeDamage(-ArmourPlate.PlateHealthUnit);
+            Vector2 position = PlayerCombat.Instance.transform.position;
+            FireBehaviour.Create(position, 2f);
+        }
+    }
+
+    public class Relinquish : Skill
+    {
+        public Relinquish() : base(nameof(Relinquish))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            PlayerCombat.Instance.ConsumeAmmo(1);
+            Heal(0.25f);
+        }
+    }
+
+    //Hunter
+
+    public class Nourish : Skill
+    {
+        public Nourish() : base(nameof(Nourish))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            PlayerCombat.Instance.ArmourController.TakeDamage(ArmourPlate.PlateHealthUnit);
+            Heal(0.5f);
+        }
+    }
+
+    public class Mark : Skill
+    {
+        public Mark() : base(nameof(Mark))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            float duration = 5f;
+            PlayerCombat.Instance.StartMark(Target());
+        }
+    }
+
+    //Ghost
+
+    public class Rejuvinate : Skill
+    {
+        public Rejuvinate() : base(nameof(Rejuvinate))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            PlayerCombat.Instance.UpdateSkillActions.Add(() => { Heal(0.01f); });
+        }
+    }
+
+    public class Sacrifice : Skill
+    {
+        public Sacrifice() : base(nameof(Sacrifice))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            PlayerCombat.Instance.HealthController.TakeDamage(PlayerCombat.Instance.HealthController.GetMaxHealth() * 0.1f);
+            Target().Burn();
+            Target().Sicken(2);
+            Target().Decay();
+        }
+    }
+
+    //Wanderer
+
+    public class Staunch : Skill
+    {
+        public Staunch() : base(nameof(Staunch))
+        {
+        }
+
+        protected override void InstantEffect()
+        {
+            Heal(0.5f);
         }
     }
 
@@ -163,155 +318,9 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void OnFire()
+        protected override void InstantEffect()
         {
-            PlayerCombat.Instance.GetTarget().Sicken(5);
-        }
-    }
-
-    //Survivor
-
-    public class Shatter : Skill
-    {
-        public Shatter() : base(nameof(Shatter))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            DecayGrenade.Create(PlayerCombat.Instance.transform.position, PlayerCombat.Instance.GetTarget().transform.position);
-        }
-    }
-
-    public class Brace : Skill
-    {
-        public Brace() : base(nameof(Brace))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            ArmourController armour = PlayerCombat.Instance.Player.ArmourController;
-            if(armour.GetCurrentArmour() == 0) return;
-            armour.TakeDamage(ArmourPlate.PlateHealthUnit);
-            PlayerCombat.Instance.HealthController.Heal(50);
-        }
-    }
-
-    //Protector
-
-    public class Sacrifice : Skill
-    {
-        public Sacrifice() : base(nameof(Sacrifice))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            PlayerCombat.Instance.HealthController.TakeDamage(CharacterAttributes.PlayerHealthChunkSize);
-            CharacterCombat target = PlayerCombat.Instance.GetTarget();
-            target.Burn();
-            target.Decay();
-        }
-    }
-
-    public class Execute : Skill
-    {
-        public Execute() : base(nameof(Execute))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            CharacterCombat target = PlayerCombat.Instance.GetTarget();
-            if (target.DistanceToTarget() > 0.5f || target.HealthController.GetCurrentHealth() > 100) return;
-            target.HealthController.TakeDamage(101);
-        }
-    }
-
-    //Hunter
-
-    public class Fortify : Skill
-    {
-        public Fortify() : base(nameof(Fortify))
-        {
-        }
-
-        protected override void OnFire()
-        {
-//            PlayerCombat.Instance.Player.ArmourController.GetPlateOne();
-        }
-    }
-
-    public class Restock : Skill
-    {
-        public Restock() : base(nameof(Restock))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            //todo
-//            Player().Inventory().IncrementResource(Player().Weapon.WeaponAttributes.AmmoType, 1);
-        }
-    }
-
-    //Ghost
-
-    public class Blink : Skill
-    {
-        public Blink() : base(nameof(Blink))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            Cell c = PathingGrid.GetCellNearMe(PlayerCombat.Instance.GetTarget().CurrentCell(), 1f);
-            PlayerCombat.Instance.transform.position = c.Position;
-        }
-    }
-
-    public class Unearth : Skill
-    {
-        public Unearth() : base(nameof(Unearth))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            //todo
-        }
-    }
-
-    //Wanderer
-
-    public class Defile : Skill
-    {
-        public Defile() : base(nameof(Defile))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            PlayerCombat.Instance.GetTarget()?.Decay();
-        }
-    }
-
-    public class Absolve : Skill
-    {
-        public Absolve() : base(nameof(Absolve))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            CharacterCombat target = PlayerCombat.Instance.GetTarget();
-            int healAmount = 0;
-            if (target.IsBurning()) healAmount += 10;
-            if (target.IsDecaying()) healAmount += 10;
-            if (target.IsSick()) healAmount += 10;
-            target.ClearConditions();
-            PlayerCombat.Instance.HealthController.Heal(healAmount);
+            Grenade.CreateDecay(PlayerCombat.Instance.transform.position, Target().transform.position);
         }
     }
 }

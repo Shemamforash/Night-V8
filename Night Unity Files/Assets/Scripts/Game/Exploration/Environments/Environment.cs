@@ -19,18 +19,18 @@ namespace Game.Exploration.Environment
         public Environment(XmlNode environmentNode)
         {
             EnvironmentType = StringToEnvironmentType(environmentNode.Name);
-            LevelNo = Helper.IntFromNode(environmentNode, "Level");
-            int temperature = Helper.IntFromNode(environmentNode, "Temperature");
+            LevelNo = environmentNode.IntFromNode("Level");
+            int temperature = environmentNode.IntFromNode("Temperature");
             maxTemp = temperature * 10;
             minTemp = maxTemp - 20;
             CalculateTemperatures();
-            Temples = Helper.IntFromNode(environmentNode, "Temples");
-            Monuments = Helper.IntFromNode(environmentNode, "Monuments");
-            Shrines = Helper.IntFromNode(environmentNode, "Shrines");
-            Fountains = Helper.IntFromNode(environmentNode, "Fountains");
-            Shelters = Helper.IntFromNode(environmentNode, "Shelters");
-            Animals = Helper.IntFromNode(environmentNode, "Animals");
-            Dangers = Helper.IntFromNode(environmentNode, "Danger");
+            Temples = environmentNode.IntFromNode("Temples");
+            Monuments = environmentNode.IntFromNode("Monuments");
+            Shrines = environmentNode.IntFromNode("Shrines");
+            Fountains = environmentNode.IntFromNode("Fountains");
+            Shelters = environmentNode.IntFromNode("Shelters");
+            Animals = environmentNode.IntFromNode("Animals");
+            Dangers = environmentNode.IntFromNode("Danger");
             RegionCount = Temples + Monuments + Shrines + Fountains + Shelters + Animals + Dangers;
         }
 

@@ -210,7 +210,7 @@ namespace Game.Combat.Generation
         public static List<Cell> GetCellsNearMe(Cell current, int noCells, float distanceMax, float distanceMin = 0)
         {
             List<Cell> cells = CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin));
-            Helper.Shuffle(cells);
+            cells.Shuffle();
             return cells.Take(noCells).ToList();
         }
 

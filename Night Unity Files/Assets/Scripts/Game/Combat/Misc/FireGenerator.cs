@@ -24,7 +24,7 @@ namespace Game.Combat.Misc
 
         public void Awake()
         {
-            _light = Helper.FindChildWithName<FastLight>(gameObject, "Light");
+            _light = gameObject.FindChildWithName<FastLight>("Light");
             _randomSeed = Random.Range(0f, 5f);
         }
 

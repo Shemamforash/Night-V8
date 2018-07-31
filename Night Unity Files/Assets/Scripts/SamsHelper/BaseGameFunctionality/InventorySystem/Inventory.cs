@@ -20,6 +20,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private readonly List<InventoryItem> _items = new List<InventoryItem>();
         private readonly List<InventoryItem> _contents = new List<InventoryItem>();
         private readonly List<Consumable> _consumables = new List<Consumable>();
+        public readonly List<Weapon> Weapons = new List<Weapon>();
+        public readonly List<ArmourPlate> Armour = new List<ArmourPlate>();
+        public readonly List<Accessory> Accessories = new List<Accessory>();
+        public readonly List<Inscription> Inscriptions = new List<Inscription>();
         private static bool _loaded;
         private static List<AttributeType> _attributeTypes;
 
@@ -78,7 +82,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public virtual void Load(XmlNode root, PersistenceType saveType)
         {
             if (saveType != PersistenceType.Game) return;
-            XmlNode inventoryNode = Helper.GetNode(root, Name);
+            XmlNode inventoryNode = root.GetNode(Name);
             InventoryResources().ForEach(r => LoadResource(r.Name, inventoryNode));
         }
 
@@ -131,23 +135,31 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return _resources.ContainsKey(item.Name) && item.Quantity() != 0;
         }
 
-        protected virtual void AddItem(InventoryItem item)
+        private void AddItem(InventoryItem item)
         {
             item.ParentInventory = this;
             _items.Add(item);
             Assert.IsFalse(item is Consumable);
+            if (item is Weapon) Weapons.Add((Weapon) item);
+            else if (item is ArmourPlate) Armour.Add((ArmourPlate) item);
+            else if (item is Accessory) Accessories.Add((Accessory) item);
+            else if (item is Inscription) Inscriptions.Add((Inscription) item);
             UpdateContents();
         }
 
         //Returns item if the item was successfully removed
         //Returns null if the item could not be removed (stackable but 0)
         //Throws an error if the item was not in the inventory
-        protected virtual InventoryItem RemoveItem(InventoryItem item)
+        private InventoryItem RemoveItem(InventoryItem item)
         {
             if (!_contents.Contains(item)) throw new Exceptions.ItemNotInInventoryException(item.Name);
             _items.Remove(item);
-            if (item is Consumable) _consumables.Remove((Consumable) item);
+            _consumables.Remove(item as Consumable);
             _resources.Remove(item.Name);
+            Weapons.Remove(item as Weapon);
+            Armour.Remove(item as ArmourPlate);
+            Accessories.Remove(item as Accessory);
+            Inscriptions.Remove(item as Inscription);
             UpdateContents();
             return item;
         }
@@ -227,7 +239,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         private void LoadResource(string type, XmlNode root)
         {
-            IncrementResource(type, Helper.IntFromNode(root, type));
+            IncrementResource(type, root.IntFromNode(type));
         }
 
         private void SaveResource(string type, XmlNode root)
@@ -235,9 +247,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             SaveController.CreateNodeAndAppend(type, root, GetResourceQuantity(type));
         }
 
-        public virtual void DestroyItem(InventoryItem item)
+        public void DestroyItem(InventoryItem item)
         {
             _items.Remove(item);
+            Weapons.Remove(item as Weapon);
+            Armour.Remove(item as ArmourPlate);
+            Accessories.Remove(item as Accessory);
+            Inscriptions.Remove(item as Inscription);
         }
     }
 }

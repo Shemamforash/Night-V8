@@ -128,7 +128,7 @@ namespace Game.Combat.Generation
             RuinNode n = nodes[x, y];
             n.Visited = true;
             List<Direction> directions = new List<Direction> {Direction.Left, Direction.Down, Direction.Right, Direction.Up};
-            Helper.Shuffle(directions);
+            directions.Shuffle();
             directions.ForEach(direction =>
             {
                 RuinNode neighbor = n.GetNeighbor(direction);
@@ -394,7 +394,7 @@ namespace Game.Combat.Generation
                 Debug.DrawLine(_finalShape[i], _finalShape[next], Color.Lerp(Color.green, Color.red, lerpVal), 10f);
             }
 
-            Helper.PrintList(_finalShape);
+            _finalShape.Print();
         }
 
         private void CheckCellsRight(Action fallback = null)

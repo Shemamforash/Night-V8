@@ -14,8 +14,8 @@ namespace Facilitating.UIControllers
         public void Awake()
         {
             EnhancedButton = GetComponent<EnhancedButton>();
-            _accessoryText = Helper.FindChildWithName<EnhancedText>(gameObject, "Equipped");
-            _notEquippedObject = Helper.FindChildWithName(gameObject, "Not Equipped");
+            _accessoryText = gameObject.FindChildWithName<EnhancedText>("Equipped");
+            _notEquippedObject = gameObject.FindChildWithName("Not Equipped");
             SetAccessory(null);
         }
 

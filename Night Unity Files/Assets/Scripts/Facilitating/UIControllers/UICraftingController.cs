@@ -1,29 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
-using UnityEngine.UI;
 
 public class UICraftingController : UiGearMenuTemplate
 {
     private Player _player;
     private EnhancedButton _closeButton;
     private EnhancedButton _recipeButton;
-
-    public void Awake()
-    {
-//        base.Awake();
-//        _instance = this;
-//        Initialise();
-    }
+    private EnhancedText _infoText;
 
     public override bool GearIsAvailable()
     {
         return Recipe.Recipes().Count > 0;
+    }
+
+    public void Awake()
+    {
+        _infoText = gameObject.FindChildWithName<EnhancedText>("Info");
     }
 
     public override void SelectGearItem(MyGameObject item, UiGearMenuController.GearUi gearUi)
@@ -49,14 +47,29 @@ public class UICraftingController : UiGearMenuTemplate
         gearUi.SetDpsText("");
     }
 
-    public override void CompareTo(MyGameObject comparisonItem)
+    public override void Show()
     {
-        throw new NotImplementedException();
+        base.Show();
+        GetGearButton().Select();
+        DisplayBuildings();
     }
 
-    public override void StopComparing()
+    private void DisplayBuildings()
     {
-        throw new NotImplementedException();
+        List<Building> buildings = WorldState.HomeInventory().Buildings();
+        if (buildings.Count == 0)
+        {
+            _infoText.Text("Nothing built");
+            return;
+        }
+
+        string buildingString = "";
+        for (int i = 0; i < buildings.Count; ++i)
+        {
+            buildingString += buildings[i].Name;
+            if (i < buildings.Count - 1) buildingString += "\n";
+        }
+        _infoText.Text(buildingString);
     }
 
     public override List<MyGameObject> GetAvailableGear()
@@ -70,10 +83,5 @@ public class UICraftingController : UiGearMenuTemplate
         {
             MenuStateMachine.ReturnToDefault();
         }
-    }
-
-    public override Button GetGearButton()
-    {
-        return null;
     }
 }

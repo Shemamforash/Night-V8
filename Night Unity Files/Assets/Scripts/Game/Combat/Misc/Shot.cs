@@ -95,7 +95,7 @@ namespace Game.Combat.Misc
         private void SetUpComponents()
         {
             if (_rigidBody == null) _rigidBody = GetComponent<Rigidbody2D>();
-            if (_fireTrail == null) _fireTrail = Helper.FindChildWithName(gameObject, "Fire Trail");
+            if (_fireTrail == null) _fireTrail = gameObject.FindChildWithName("Fire Trail");
             _fireTrail.SetActive(false);
             ResetValues();
             CacheWeaponAttributes();

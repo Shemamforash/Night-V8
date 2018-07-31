@@ -27,7 +27,7 @@ public class BeamController : MonoBehaviour
 
     public void Awake()
     {
-        _particleBurst = Helper.FindChildWithName<ParticleSystem>(gameObject, "Burst");
+        _particleBurst = gameObject.FindChildWithName<ParticleSystem>("Burst");
     }
 
     public void SetBeamWidth(float widthModifier)
@@ -66,9 +66,9 @@ public class BeamController : MonoBehaviour
 
     private void Initialise()
     {
-        _glowLine = Helper.FindChildWithName<LineRenderer>(gameObject, "Glow");
-        _beamLine = Helper.FindChildWithName<LineRenderer>(gameObject, "Beam");
-        _leadLine = Helper.FindChildWithName<LineRenderer>(gameObject, "Lead");
+        _glowLine = gameObject.FindChildWithName<LineRenderer>("Glow");
+        _beamLine = gameObject.FindChildWithName<LineRenderer>("Beam");
+        _leadLine = gameObject.FindChildWithName<LineRenderer>("Lead");
         transform.position = _origin.position;
         UpdatePosition();
         StartCoroutine(ShowLeadLine());

@@ -14,12 +14,12 @@ namespace Facilitating.UIControllers
         public void Awake()
         {
             EnhancedButton = GetComponent<EnhancedButton>();
-            _notEquippedObject = Helper.FindChildWithName(gameObject, "Not Equipped");
-            _equippedObject = Helper.FindChildWithName(gameObject, "Equipped");
-            _nameText = Helper.FindChildWithName<EnhancedText>(gameObject, "Name");
-            _typeText = Helper.FindChildWithName<EnhancedText>(gameObject, "Type");
-            _dpsText = Helper.FindChildWithName<EnhancedText>(gameObject, "Dps");
-            _qualityText = Helper.FindChildWithName<EnhancedText>(gameObject, "Quality");
+            _notEquippedObject = gameObject.FindChildWithName("Not Equipped");
+            _equippedObject = gameObject.FindChildWithName("Equipped");
+            _nameText = gameObject.FindChildWithName<EnhancedText>("Name");
+            _typeText = gameObject.FindChildWithName<EnhancedText>("Type");
+            _dpsText = gameObject.FindChildWithName<EnhancedText>("Dps");
+            _qualityText = gameObject.FindChildWithName<EnhancedText>("Quality");
         }
 
         public void SetWeapon(Weapon weapon)
@@ -35,7 +35,7 @@ namespace Facilitating.UIControllers
                 _equippedObject.SetActive(true);
                 _nameText.Text(weapon.Name);
                 _typeText.Text(weapon.GetWeaponType());
-                _dpsText.Text(Helper.Round(weapon.WeaponAttributes.DPS(), 1) + " DPS");
+                _dpsText.Text(weapon.WeaponAttributes.DPS().Round(1) + " DPS");
                 _qualityText.Text(weapon.Quality().ToString());
             }
         }

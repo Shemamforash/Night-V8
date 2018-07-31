@@ -27,13 +27,13 @@ namespace Game.Combat.Generation
             string vertexString = "";
             for (int i = 0; i < Vertices.Count; ++i)
             {
-                vertexString += Helper.VectorToString(Vertices[i]);
+                vertexString += Vertices[i].ToString();
                 if (i == Vertices.Count - 1) break;
                 vertexString += ",";
             }
 
             SaveController.CreateNodeAndAppend("Name", barrierNode, _barrierName);
-            SaveController.CreateNodeAndAppend("Position", barrierNode, Helper.VectorToString(Position));
+            SaveController.CreateNodeAndAppend("Position", barrierNode, Position.ToString());
             SaveController.CreateNodeAndAppend("Vertices", barrierNode, vertexString);
             return barrierNode;
         }

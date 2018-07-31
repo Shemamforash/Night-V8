@@ -137,6 +137,7 @@ namespace Game.Global
         private void HourPasses()
         {
             Campfire.Die();
+            HomeInventory().UpdateBuildings();
         }
 
         private void IncrementHours()

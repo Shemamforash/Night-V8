@@ -22,9 +22,9 @@ namespace Facilitating.UIControllers
                 ConditionText = GetComponent<EnhancedText>();
                 return;
             }
-            ConditionText = Helper.FindChildWithName<EnhancedText>(gameObject, "Text");
-            ConditionSlider = Helper.FindChildWithName<Slider>(gameObject, "Progress");
-            ModifierIndicator = Helper.FindChildWithName<EnhancedText>(gameObject, "Modifier Indicator");
+            ConditionText = gameObject.FindChildWithName<EnhancedText>("Text");
+            ConditionSlider = gameObject.FindChildWithName<Slider>("Progress");
+            ModifierIndicator = gameObject.FindChildWithName<EnhancedText>("Modifier Indicator");
         }
         
         public void UpdateThirst(Player player)

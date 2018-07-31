@@ -23,7 +23,7 @@ namespace Game.Combat.Misc
         public override void Awake()
         {
             base.Awake();
-            _text = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Text");
+            _text = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
             _text.color = UiAppearanceController.InvisibleColour;
             HealthController.SetInitialHealth(1000, this);
             transform.SetParent(GameObject.Find("World").transform);

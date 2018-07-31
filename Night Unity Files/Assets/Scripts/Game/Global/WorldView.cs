@@ -47,12 +47,12 @@ namespace Game.Global
         {
             base.Awake();
             PauseOnOpen = false;
-            _environmentText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Environment");
+            _environmentText = gameObject.FindChildWithName<TextMeshProUGUI>("Environment");
 
             GameObject resourcesObject = GameObject.Find("Resources");
             foreach (string resourceType in resources)
             {
-                TextMeshProUGUI resourceText = Helper.FindChildWithName<TextMeshProUGUI>(resourcesObject, resourceType);
+                TextMeshProUGUI resourceText = resourcesObject.FindChildWithName<TextMeshProUGUI>(resourceType);
                 _resourceText.Add(resourceType, resourceText);
             }
         }

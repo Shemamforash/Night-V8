@@ -20,14 +20,14 @@ namespace Game.Combat.Enemies
 
         private EnemyTemplate(XmlNode enemyNode)
         {
-            EnemyType = NameToType(Helper.GetNodeText(enemyNode, "Name"));
-            Health = Helper.IntFromNode(enemyNode, "Health");
-            Speed = Helper.IntFromNode(enemyNode, "Speed");
-            Value = Helper.IntFromNode(enemyNode, "Value");
-            HasWeapon = Helper.BoolFromNode(enemyNode, "HasWeapon");
-            Species = Helper.GetNodeText(enemyNode, "Species");
-            HasGear = Helper.BoolFromNode(enemyNode, "HasGear");
-            string dropString = Helper.GetNodeText(enemyNode, "Drops");
+            EnemyType = NameToType(enemyNode.GetNodeText("Name"));
+            Health = enemyNode.IntFromNode("Health");
+            Speed = enemyNode.IntFromNode("Speed");
+            Value = enemyNode.IntFromNode("Value");
+            HasWeapon = enemyNode.BoolFromNode("HasWeapon");
+            Species = enemyNode.GetNodeText("Species");
+            HasGear = enemyNode.BoolFromNode("HasGear");
+            string dropString = enemyNode.GetNodeText("Drops");
             EnemyTemplates[EnemyType] = this;
             if (dropString == "") return;
             string[] drops = dropString.Split(' ');

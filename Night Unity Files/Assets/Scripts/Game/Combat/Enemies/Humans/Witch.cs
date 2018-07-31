@@ -26,13 +26,13 @@ namespace Game.Combat.Enemies.Humans
                 switch (Random.Range(0, 3))
                 {
                     case 0:
-                        Grenade.Create(currentPosition, targetPosition);
+                        Grenade.CreateBasic(currentPosition, targetPosition);
                         break;
                     case 1:
-                        Grenade.Create(currentPosition, targetPosition);
+                        Grenade.CreateBasic(currentPosition, targetPosition);
                         break;
                     case 2:
-                        Grenade.Create(currentPosition, targetPosition);
+                        Grenade.CreateBasic(currentPosition, targetPosition);
                         break;
                 }
 

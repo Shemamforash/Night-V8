@@ -10,7 +10,7 @@ public class ContainerTextBehaviour : MonoBehaviour
 
     public void Awake()
     {
-        _text = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Text");
+        _text = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
     }
 
     public void Update()

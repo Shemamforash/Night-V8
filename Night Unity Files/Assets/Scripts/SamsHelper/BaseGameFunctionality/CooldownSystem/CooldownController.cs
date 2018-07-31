@@ -14,8 +14,8 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 
         private void Awake()
         {
-            _cooldownFill = Helper.FindChildWithName<Image>(gameObject, "Fill");
-            _cooldownText = Helper.FindChildWithName<EnhancedText>(gameObject, "Text");
+            _cooldownFill = gameObject.FindChildWithName<Image>("Fill");
+            _cooldownText = gameObject.FindChildWithName<EnhancedText>("Text");
             _canvasGroup = GetComponent<CanvasGroup>();
             _cooldownFill.fillAmount = 1;
             UpdateCooldownFill(1);

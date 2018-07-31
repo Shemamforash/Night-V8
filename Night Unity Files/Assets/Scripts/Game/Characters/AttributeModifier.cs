@@ -29,7 +29,7 @@ namespace Game.Characters
         private string ModifierToString(float modifier)
         {
             string modifierString = "";
-            if (modifier != 0) modifierString = Helper.AddSignPrefix(modifier);
+            if (modifier != 0) modifierString = modifier.AddSignPrefix();
             return modifierString;
         }
 

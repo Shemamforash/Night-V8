@@ -47,9 +47,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         
         public ResourceTemplate(XmlNode resourceNode)
         {
-            Name = Helper.GetNodeText(resourceNode, "Name");
+            Name = resourceNode.GetNodeText("Name");
             Consumable = true;
-            ResourceType = Helper.GetNodeText(resourceNode, "Type");
+            ResourceType = resourceNode.GetNodeText("Type");
             AllResources.Add(this);
             switch (ResourceType)
             {
@@ -79,11 +79,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             _lastType = ResourceType;
 
-            float oasisDr = Helper.FloatFromNode(resourceNode, "OasisDropRate");
-            float steppeDr = Helper.FloatFromNode(resourceNode, "SteppeDropRate");
-            float ruinsDr = Helper.FloatFromNode(resourceNode, "RuinsDropRate");
-            float defilesDr = Helper.FloatFromNode(resourceNode, "DefilesDropRate");
-            float wastelandDr = Helper.FloatFromNode(resourceNode, "WastelandDropRate");
+            float oasisDr = resourceNode.FloatFromNode("OasisDropRate");
+            float steppeDr = resourceNode.FloatFromNode("SteppeDropRate");
+            float ruinsDr = resourceNode.FloatFromNode("RuinsDropRate");
+            float defilesDr = resourceNode.FloatFromNode("DefilesDropRate");
+            float wastelandDr = resourceNode.FloatFromNode("WastelandDropRate");
             _dropRates.Add(EnvironmentType.Oasis, new DropRate(ref OasisDRCur, oasisDr));
             _dropRates.Add(EnvironmentType.Steppe, new DropRate(ref SteppeDRCur, steppeDr));
             _dropRates.Add(EnvironmentType.Ruins, new DropRate(ref RuinsDRCur, ruinsDr));
@@ -158,9 +158,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             string attributeString = attributeNode.InnerText;
             if (attributeString == "") return;
             AttributeType = Inventory.StringToAttributeType(attributeString);
-            ModifierVal = Helper.FloatFromNode(resourceNode, "Modifier");
-            _additive = Helper.GetNodeText(resourceNode, "Bonus") == "+";
-            string durationString = Helper.GetNodeText(resourceNode, "Duration");
+            ModifierVal = resourceNode.FloatFromNode("Modifier");
+            _additive = resourceNode.GetNodeText("Bonus") == "+";
+            string durationString = resourceNode.GetNodeText("Duration");
             Duration = 0;
             if (durationString != "")
             {

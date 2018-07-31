@@ -48,22 +48,6 @@
         <ProductQuantity>1</ProductQuantity>
     </Recipe>
     <Recipe>
-        <Ingredient1Name>None</Ingredient1Name>
-        <Ingredient1Quantity>0</Ingredient1Quantity>
-        <Ingredient2Name>None</Ingredient2Name>
-        <Ingredient2Quantity>0</Ingredient2Quantity>
-        <ProductName></ProductName>
-        <ProductQuantity>0</ProductQuantity>
-    </Recipe>
-    <Recipe>
-        <Ingredient1Name>None</Ingredient1Name>
-        <Ingredient1Quantity>0</Ingredient1Quantity>
-        <Ingredient2Name>None</Ingredient2Name>
-        <Ingredient2Quantity>0</Ingredient2Quantity>
-        <ProductName></ProductName>
-        <ProductQuantity>0</ProductQuantity>
-    </Recipe>
-    <Recipe>
         <Ingredient1Name>Scrap</Ingredient1Name>
         <Ingredient1Quantity>10</Ingredient1Quantity>
         <Ingredient2Name>Meat</Ingredient2Name>
@@ -96,14 +80,6 @@
         <ProductQuantity>1</ProductQuantity>
     </Recipe>
     <Recipe>
-        <Ingredient1Name>None</Ingredient1Name>
-        <Ingredient1Quantity>0</Ingredient1Quantity>
-        <Ingredient2Name>None</Ingredient2Name>
-        <Ingredient2Quantity>0</Ingredient2Quantity>
-        <ProductName></ProductName>
-        <ProductQuantity>0</ProductQuantity>
-    </Recipe>
-    <Recipe>
         <Ingredient1Name>Scrap</Ingredient1Name>
         <Ingredient1Quantity>10</Ingredient1Quantity>
         <Ingredient2Name>Metal</Ingredient2Name>
@@ -117,6 +93,46 @@
         <Ingredient2Name>Charcoal</Ingredient2Name>
         <Ingredient2Quantity>1</Ingredient2Quantity>
         <ProductName>Metal</ProductName>
+        <ProductQuantity>1</ProductQuantity>
+    </Recipe>
+    <Recipe>
+        <Ingredient1Name>Metal</Ingredient1Name>
+        <Ingredient1Quantity>3</Ingredient1Quantity>
+        <Ingredient2Name>Leather</Ingredient2Name>
+        <Ingredient2Quantity>3</Ingredient2Quantity>
+        <ProductName>Metal Plate</ProductName>
+        <ProductQuantity>1</ProductQuantity>
+    </Recipe>
+    <Recipe>
+        <Ingredient1Name>Metal</Ingredient1Name>
+        <Ingredient1Quantity>2</Ingredient1Quantity>
+        <Ingredient2Name>Meteor</Ingredient2Name>
+        <Ingredient2Quantity>1</Ingredient2Quantity>
+        <ProductName>Alloy</ProductName>
+        <ProductQuantity>1</ProductQuantity>
+    </Recipe>
+    <Recipe>
+        <Ingredient1Name>Alloy</Ingredient1Name>
+        <Ingredient1Quantity>5</Ingredient1Quantity>
+        <Ingredient2Name>Fuel</Ingredient2Name>
+        <Ingredient2Quantity>5</Ingredient2Quantity>
+        <ProductName>Essence Filter</ProductName>
+        <ProductQuantity>1</ProductQuantity>
+    </Recipe>
+    <Recipe>
+        <Ingredient1Name>Alloy</Ingredient1Name>
+        <Ingredient1Quantity>3</Ingredient1Quantity>
+        <Ingredient2Name>Leather</Ingredient2Name>
+        <Ingredient2Quantity>3</Ingredient2Quantity>
+        <ProductName>Alloy Plate</ProductName>
+        <ProductQuantity>1</ProductQuantity>
+    </Recipe>
+    <Recipe>
+        <Ingredient1Name>Alloy Plate</Ingredient1Name>
+        <Ingredient1Quantity>2</Ingredient1Quantity>
+        <Ingredient2Name>Essence</Ingredient2Name>
+        <Ingredient2Quantity>20</Ingredient2Quantity>
+        <ProductName>Living Metal Plate</ProductName>
         <ProductQuantity>1</ProductQuantity>
     </Recipe>
 </Recipes>

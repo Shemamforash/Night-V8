@@ -24,7 +24,7 @@ namespace Game.Combat.Misc
         public void Awake()
         {
             _particles = GetComponent<ParticleSystem>();
-            _light = Helper.FindChildWithName<FastLight>(gameObject, "Light");
+            _light = gameObject.FindChildWithName<FastLight>("Light");
             _collider = GetComponent<CircleCollider2D>();
             if (_fireParent == null) _fireParent = GameObject.Find("Fires").transform;
         }

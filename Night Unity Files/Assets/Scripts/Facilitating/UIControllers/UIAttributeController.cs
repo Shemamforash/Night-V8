@@ -19,7 +19,7 @@ namespace Facilitating.UIControllers
 
         private UIAttributeMarkerController CacheAttributeElement(string elementName)
         {
-            return Helper.FindChildWithName(gameObject, elementName).transform.Find("Bar").GetComponent<UIAttributeMarkerController>();
+            return gameObject.FindChildWithName(elementName).transform.Find("Bar").GetComponent<UIAttributeMarkerController>();
         }
 
         public void UpdateAttributes(Player player)

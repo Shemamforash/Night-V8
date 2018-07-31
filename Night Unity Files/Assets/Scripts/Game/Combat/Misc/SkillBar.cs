@@ -26,8 +26,8 @@ namespace Game.Combat.Misc
 
             for (int i = 0; i < NoSlots; ++i)
             {
-                CooldownControllers.Add(Helper.FindChildWithName<CooldownController>(gameObject, "Skill " + (i + 1)));
-                CostControllers.Add(Helper.FindChildWithName<UISkillCostController>(CooldownControllers[i].gameObject, "Cost"));
+                CooldownControllers.Add(gameObject.FindChildWithName<CooldownController>("Skill " + (i + 1)));
+                CostControllers.Add(CooldownControllers[i].gameObject.FindChildWithName<UISkillCostController>("Cost"));
             }
 
             _skills = new Skill[NoSlots];
@@ -43,7 +43,7 @@ namespace Game.Combat.Misc
             Skill characterSkillTwo = null;
             Skill weaponSkillOne = null;
             Skill weaponSkillTwo = null;
-            
+
             if (player.Attributes.SkillOneUnlocked)
                 characterSkillOne = player.CharacterSkillOne;
 
@@ -58,6 +58,17 @@ namespace Game.Combat.Misc
                 if (player.Attributes.WeaponSkillTwoUnlocks.Contains(player.EquippedWeapon.WeaponType()))
                     weaponSkillTwo = player.EquippedWeapon.WeaponSkillTwo;
             }
+
+#if UNITY_EDITOR
+            characterSkillOne = player.CharacterSkillOne;
+            characterSkillTwo = player.CharacterSkillTwo;
+
+            if (player.EquippedWeapon != null)
+            {
+                weaponSkillOne = player.EquippedWeapon.WeaponSkillOne;
+                weaponSkillTwo = player.EquippedWeapon.WeaponSkillTwo;
+            }
+#endif
 
             BindSkill(0, characterSkillOne);
             BindSkill(1, characterSkillTwo);
@@ -74,29 +85,27 @@ namespace Game.Combat.Misc
             CostControllers[slot].SetCost(skill.Cooldown());
         }
 
+        private static bool TryLockSkill(int skillNo)
+        {
+            float noSkillChance = PlayerCombat.Instance.Player.Attributes.Val(AttributeType.InactiveSkillChance);
+            if (Random.Range(0f, 1f) > noSkillChance) return false;
+            _skillsLocked.Add(skillNo);
+            return true;
+        }
+
+        private static bool IsSkillFree()
+        {
+            float freeSkillChance = PlayerCombat.Instance.Player.Attributes.Val(AttributeType.FreeSkillChance);
+            return Random.Range(0f, 1f) <= freeSkillChance;
+        }
+
         public static void ActivateSkill(int skillNo)
         {
-            if(_skillsLocked.Contains(skillNo)) return;
+            if (_skillsLocked.Contains(skillNo)) return;
             if (_skillsCooldown.Running()) return;
-            bool canActivate = false;
-            float freeSkillChance = PlayerCombat.Instance.Player.Attributes.Val(AttributeType.FreeSkillChance);
-            if (Random.Range(0f, 1f) < freeSkillChance)
-            {
-                canActivate = true;
-            }
-            float noSkillChance = PlayerCombat.Instance.Player.Attributes.Val(AttributeType.InactiveSkillChance);
-            if (Random.Range(0f, 1f) < noSkillChance)
-            {
-                _skillsLocked.Add(skillNo);
-            }
-
-            if (!canActivate)
-            {
-                canActivate = PlayerCombat.Instance.ConsumeAdrenaline(_skills[skillNo].Cooldown());
-                if (!canActivate) return;
-            }
-            CombatManager.IncreaseSkillsUsed();
-            _skills[skillNo].Activate();
+            if (TryLockSkill(skillNo)) return;
+            bool freeSkill = IsSkillFree();
+            if (!_skills[skillNo].Activate(freeSkill)) return;
             _skillsCooldown.Duration = _skills[skillNo].Cooldown() * _cooldownModifier;
             _skillsCooldown.Start();
         }

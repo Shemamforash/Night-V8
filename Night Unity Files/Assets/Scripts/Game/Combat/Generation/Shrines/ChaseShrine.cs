@@ -18,9 +18,9 @@ namespace Game.Combat.Generation.Shrines
         public void Start()
         {
             if (_shrinePickupPrefab == null) _shrinePickupPrefab = Resources.Load<GameObject>("Prefabs/Combat/Shrines/Shrine Pickup");
-            _pickupGlow = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Pickup Glow");
-            _pickupDropMarkerA = Helper.FindChildWithName<ParticleSystem>(gameObject, "Ring A");
-            _pickupDropMarkerB = Helper.FindChildWithName<ParticleSystem>(gameObject, "Ring B");
+            _pickupGlow = gameObject.FindChildWithName<SpriteRenderer>("Pickup Glow");
+            _pickupDropMarkerA = gameObject.FindChildWithName<ParticleSystem>("Ring A");
+            _pickupDropMarkerB = gameObject.FindChildWithName<ParticleSystem>("Ring B");
         }
 
         protected override void StartShrine()

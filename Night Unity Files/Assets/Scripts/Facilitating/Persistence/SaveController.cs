@@ -76,7 +76,7 @@ namespace Facilitating.Persistence
                 {
                     _saveDoc = new XmlDocument();
                     _saveDoc.Load(fileLocation);
-                    XmlNode root = Helper.GetNode(_saveDoc, saveType.ToString());
+                    XmlNode root = _saveDoc.GetNode(saveType.ToString());
                     BroadcastLoad(root, saveType);
                     return true;
                 }

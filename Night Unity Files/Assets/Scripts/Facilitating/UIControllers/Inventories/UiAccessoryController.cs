@@ -11,40 +11,40 @@ namespace Facilitating.UIControllers
 {
     public class UiAccessoryController : UiGearMenuTemplate
     {
-        private EnhancedButton _accessoryButton;
+        private EnhancedButton _swapButton;
         private EnhancedText _nameText, _descriptionText, _compareText;
         private bool _upgradingAllowed;
 
         public void Awake()
         {
-            _nameText = Helper.FindChildWithName<EnhancedText>(gameObject, "Name");
-            _descriptionText = Helper.FindChildWithName<EnhancedText>(gameObject, "Description");
-            _compareText = Helper.FindChildWithName<EnhancedText>(gameObject, "Compare");
+            _nameText = gameObject.FindChildWithName<EnhancedText>("Name");
+            _descriptionText = gameObject.FindChildWithName<EnhancedText>("Description");
+            _compareText = gameObject.FindChildWithName<EnhancedText>("Compare");
 
-            _accessoryButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Info");
-            _accessoryButton.AddOnClick(() =>
+            _swapButton = gameObject.FindChildWithName<EnhancedButton>("Swap");
+            _swapButton.AddOnClick(() =>
             {
-                if (GearIsAvailable()) UiGearMenuController.Instance().EnableInput();
+                if (GearIsAvailable()) UiGearMenuController.EnableInput();
             });
         }
 
         public override Button GetGearButton()
         {
-            return _accessoryButton.Button();
+            return _swapButton.Button();
         }
 
         private void ShowAccessoryInfo()
         {
-            if (CurrentPlayer.EquippedAccessory != null)
+            if (CharacterManager.SelectedCharacter.EquippedAccessory != null)
             {
-                _nameText.Text(CurrentPlayer.EquippedAccessory.Name);
-                _descriptionText.Text(CurrentPlayer.EquippedAccessory.GetSummary());
+                _nameText.Text(CharacterManager.SelectedCharacter.EquippedAccessory.Name);
+                _descriptionText.Text(CharacterManager.SelectedCharacter.EquippedAccessory.GetSummary());
             }
             else
             {
                 _nameText.Text("");
                 _descriptionText.Text("No Accessory Equipped");
-                _accessoryButton.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
+                _swapButton.SetDownNavigation(UiGearMenuController.GetCloseButton());
             }
 
             _compareText.Text("");
@@ -52,7 +52,7 @@ namespace Facilitating.UIControllers
 
         public override bool GearIsAvailable()
         {
-            return CharacterManager.Accessories.Count != 0;
+            return UiGearMenuController.Inventory().Accessories.Count != 0;
         }
 
         public override void SelectGearItem(MyGameObject accessory, UiGearMenuController.GearUi gearUi)
@@ -62,15 +62,16 @@ namespace Facilitating.UIControllers
             gearUi.SetDpsText("");
         }
 
-        public override void Show(Player player)
+        public override void Show()
         {
-            base.Show(player);
+            base.Show();
             ShowAccessoryInfo();
+            _swapButton.Select();
         }
 
         public override void CompareTo(MyGameObject comparisonItem)
         {
-            _compareText.Text(CurrentPlayer.EquippedAccessory != null ? ((Accessory)comparisonItem).GetSummary() : "");
+            _compareText.Text(CharacterManager.SelectedCharacter.EquippedAccessory != null ? ((Accessory)comparisonItem).GetSummary() : "");
         }
 
         public override void StopComparing()
@@ -80,14 +81,14 @@ namespace Facilitating.UIControllers
 
         public override List<MyGameObject> GetAvailableGear()
         {
-            return new List<MyGameObject>(CharacterManager.Accessories);
+            return new List<MyGameObject>(UiGearMenuController.Inventory().Accessories);
         }
 
         public override void Equip(int selectedGear)
         {
             if (selectedGear == -1) return;
-            CurrentPlayer.EquipAccessory(CharacterManager.Accessories[selectedGear]);
-            Show(CurrentPlayer);
+            CharacterManager.SelectedCharacter.EquipAccessory(UiGearMenuController.Inventory().Accessories[selectedGear]);
+            Show();
         }
     }
 }

@@ -134,7 +134,7 @@ namespace SamsHelper.Input
                 if (Math.Abs(_currentInputValue) > 0f)
                 {
                     _pressed = Helper.ValuesHaveSameSign(_currentInputValue, _lastInputValue);
-                    BroadcastInputDown(_axis, _pressed, Helper.Polarity(_currentInputValue));
+                    BroadcastInputDown(_axis, _pressed, _currentInputValue.Polarity());
                     if (!_pressed) CheckDoubleTap();
                 }
                 else if(_lastInputValue != 0f)

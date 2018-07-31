@@ -74,7 +74,7 @@ namespace Game.Combat.Generation
         private void GenerateEchoes()
         {
             List<Characters.Player> characters = CharacterManager.Characters;
-            Helper.Shuffle(characters);
+            characters.Shuffle();
             foreach (Characters.Player c in characters)
             {
                 if (!c.HasAvailableStoryLine()) continue;
@@ -244,7 +244,7 @@ namespace Game.Combat.Generation
                     _availablePositions.RemoveAt(i);
                     break;
                 }
-                Helper.Shuffle(_availablePositions);
+                _availablePositions.Shuffle();
             }
             Vector2 position = FindAndRemoveValidPosition(0.5f);
             _region.Fires.Add(GenerateFire(position));

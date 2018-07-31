@@ -1,4 +1,5 @@
 ﻿using Game.Combat.Enemies;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Combat.Ui;
@@ -24,7 +25,7 @@ namespace Game.Combat.Misc
 
         private float _recoveryTimer;
 
-        protected ArmourController ArmourController;
+        public ArmourController ArmourController;
         public HealthController HealthController = new HealthController();
         private CharacterCombat _target;
         public MovementController MovementController;
@@ -37,6 +38,8 @@ namespace Game.Combat.Misc
         private int _burnTicks, _decayTicks;
         protected int SicknessStacks;
         private float _burnDuration, _decayDuration, _sicknessDuration;
+
+        public Shield Shield;
         
         public float DistanceToTarget()
         {
@@ -193,7 +196,8 @@ namespace Game.Combat.Misc
             MovementController = GetComponent<MovementController>();
             if (this is EnemyBehaviour) CharacterUi = EnemyUi.Instance();
             else CharacterUi = PlayerUi.Instance();
-            WeaponAudio = Helper.FindChildWithName<WeaponAudioController>(gameObject, "Weapon Audio");
+            WeaponAudio = gameObject.FindChildWithName<WeaponAudioController>("Weapon Audio");
+            Shield = gameObject.FindChildWithName<Shield>("Shield");
         }
 
         public virtual void Update()

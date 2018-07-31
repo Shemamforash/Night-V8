@@ -21,8 +21,8 @@ namespace Facilitating.UIControllers
         // Use this for initialization
         public void Awake()
         {
-            _armourBar = Helper.FindChildWithName<Transform>(gameObject, "Armour Bar");
-            _armourText = Helper.FindChildWithName<TextMeshProUGUI>(gameObject, "Armour Text");
+            _armourBar = gameObject.FindChildWithName<Transform>("Armour Bar");
+            _armourText = gameObject.FindChildWithName<TextMeshProUGUI>("Armour Text");
 
             _layoutGroup = _armourBar.GetComponent<HorizontalLayoutGroup>();
             _layoutGroup.spacing = SegmentSpacing;

@@ -70,7 +70,7 @@ namespace Game.Gear.Weapons
 
         public string GetWeaponType() => WeaponAttributes.WeaponType.ToString();
 
-        public override string GetSummary() => Helper.Round(WeaponAttributes.DPS(), 1) + "DPS";
+        public override string GetSummary() => WeaponAttributes.DPS().Round(1) + "DPS";
 
         public BaseWeaponBehaviour InstantiateWeaponBehaviour(CharacterCombat player)
         {

@@ -77,9 +77,9 @@ namespace Game.Gear.Armour
 
             public AccessoryTemplate(XmlNode accessoryNode)
             {
-                Name = Helper.GetNodeText(accessoryNode, "Name");
-                TargetAttribute = Inventory.StringToAttributeType(Helper.GetNodeText(accessoryNode, "Attribute"));
-                _modifierValue = Helper.FloatFromNode(accessoryNode, "Bonus");
+                Name = accessoryNode.GetNodeText("Name");
+                TargetAttribute = Inventory.StringToAttributeType(accessoryNode.GetNodeText("Attribute"));
+                _modifierValue = accessoryNode.FloatFromNode("Bonus");
                 _accessoryTemplates.Add(this);
             }
 

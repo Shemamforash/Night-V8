@@ -37,7 +37,7 @@ namespace Facilitating.MenuNavigation
             _popupObject = Helper.InstantiateUiObject("Prefabs/Popup Menu", GameObject.Find("Canvas").transform);
             _container = _popupObject.transform.Find("Bar");
             _previousSelectable = EventSystem.current.currentSelectedGameObject;
-            Helper.FindChildWithName<TextMeshProUGUI>(_popupObject, "Title").text = title;
+            _popupObject.FindChildWithName<TextMeshProUGUI>("Title").text = title;
             PopupStack.Push(this);
         }
 
@@ -74,7 +74,7 @@ namespace Facilitating.MenuNavigation
                 optionOnClick?.Invoke();
             });
             if (_options.Count == 0) b.Select();
-            Helper.FindChildWithName<TextMeshProUGUI>(newOption, "Text").text = optionText;
+            newOption.FindChildWithName<TextMeshProUGUI>("Text").text = optionText;
             _options.Add(newOption);
             int i = _options.IndexOf(newOption);
             if (i > 0)

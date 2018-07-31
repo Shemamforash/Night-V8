@@ -55,7 +55,22 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void OnFire()
+        protected override void InstantEffect()
+        {
+            Shot s = Shot.Create(PlayerCombat.Instance);
+            s.SetBurnChance(1);
+            s.Fire();
+            PlayerCombat.Instance.ConsumeAmmo(1);
+        }
+    }
+
+    public class Splinter : Skill
+    {
+        public Splinter() : base(nameof(Splinter))
+        {
+        }
+
+        protected override void InstantEffect()
         {
             Shot s = Shot.Create(PlayerCombat.Instance);
             s.AddOnHit(() =>
@@ -68,21 +83,7 @@ namespace Game.Combat.Player
                 }
             });
             s.Fire();
-        }
-    }
-
-    public class Impact : Skill
-    {
-        public Impact() : base(nameof(Impact))
-        {
-        }
-
-        protected override void OnFire()
-        {
-            Shot s = Shot.Create(PlayerCombat.Instance);
-            s.SetBurnChance(1);
-            s.Fire();
-//            PlayerCombat.Instance.Weapon().ConsumeAmmo(PlayerCombat.Instance.Weapon().GetRemainingAmmo());
+            PlayerCombat.Instance.ConsumeAmmo();
         }
     }
 
@@ -94,7 +95,7 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void OnFire()
+        protected override void InstantEffect()
         {
             Shot shot = CreateShot();
             shot.GuaranteeHit();
@@ -109,7 +110,7 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void OnFire()
+        protected override void InstantEffect()
         {
             foreach (EnemyBehaviour e in CombatManager.EnemiesOnScreen())
             {
@@ -127,7 +128,7 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void OnFire()
+        protected override void InstantEffect()
         {
 //            PlayerCombat.Instance.Weapon().Reload(PlayerCombat.Instance.Player.Inventory());
         }
@@ -135,13 +136,13 @@ namespace Game.Combat.Player
 
     public class Compel : Skill
     {
-        public Compel() : base(nameof(Compel), true)
+        public Compel() : base(nameof(Compel))
         {
         }
 
-        protected override void OnFire()
+        protected override void MagazineEffect(Shot s)
         {
-            PlayerCombat.Instance.OnFireAction += s => { s.SetKnockbackForce(50); };
+            s.SetKnockbackForce(50);
         }
     }
 
@@ -149,32 +150,29 @@ namespace Game.Combat.Player
 
     public class Hairpin : Skill
     {
-        public Hairpin() : base(nameof(Hairpin), true)
+        public Hairpin() : base(nameof(Hairpin))
         {
         }
 
-        protected override void OnFire()
+        protected override void MagazineEffect(Shot s)
         {
-            PlayerCombat.Instance.OnFireAction += s => { PlayerCombat.Instance.FireWeapon(); };
+            PlayerCombat.Instance.FireWeapon();
         }
     }
 
-    public class Splinter : Skill
+    public class Impact : Skill
     {
-        public Splinter() : base(nameof(Splinter), true)
+        public Impact() : base(nameof(Impact))
         {
         }
 
-        protected override void OnFire()
+        protected override void MagazineEffect(Shot s)
         {
-            PlayerCombat.Instance.OnFireAction += s =>
+            s.AddOnHit(() =>
             {
-                s.AddOnHit(() =>
-                {
-                    Explosion e = Explosion.CreateExplosion(s.transform.position, s.DamageDealt(), 0.25f);
-                    e.InstantDetonate();
-                });
-            };
+                Explosion e = Explosion.CreateExplosion(s.transform.position, s.DamageDealt(), 0.25f);
+                e.InstantDetonate();
+            });
         }
     }
 
@@ -182,23 +180,23 @@ namespace Game.Combat.Player
 
     public class Passion : Skill
     {
-        public Passion() : base(nameof(Passion), true)
+        public Passion() : base(nameof(Passion))
         {
         }
 
-        protected override void OnFire()
+        protected override void MagazineEffect(Shot s)
         {
-            PlayerCombat.Instance.OnFireAction += s => { s.SetBurnChance(1); };
+            s.SetBurnChance(1);
         }
     }
 
     public class Revenge : Skill
     {
-        public Revenge() : base(nameof(Revenge), true)
+        public Revenge() : base(nameof(Revenge))
         {
         }
 
-        protected override void OnFire()
+        protected override void InstantEffect()
         {
         }
     }

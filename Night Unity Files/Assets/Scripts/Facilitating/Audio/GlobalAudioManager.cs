@@ -18,10 +18,10 @@ namespace Facilitating.Audio
         public void Load(XmlNode root, PersistenceType saveType)
         {
             if (saveType != PersistenceType.Settings) return;
-            XmlNode node = Helper.GetNode(root, "SoundSettings");
-            _musicVolume = Helper.FloatFromNode(node, nameof(_musicVolume));
-            _effectsVolume = Helper.FloatFromNode(node, nameof(_effectsVolume));
-            _masterVolume = Helper.FloatFromNode(node, nameof(_masterVolume));
+            XmlNode node = root.GetNode("SoundSettings");
+            _musicVolume = node.FloatFromNode(nameof(_musicVolume));
+            _effectsVolume = node.FloatFromNode(nameof(_effectsVolume));
+            _masterVolume = node.FloatFromNode(nameof(_masterVolume));
             Initialise();
         }
 

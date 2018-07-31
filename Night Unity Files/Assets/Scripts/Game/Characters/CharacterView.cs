@@ -81,19 +81,19 @@ namespace Game.Characters
             FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _player.Name;
 
             WeaponController = FindInDetailedView<UIPlayerWeaponController>("Weapon");
-            WeaponController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowWeaponMenu(_player));
+            WeaponController.EnhancedButton.AddOnClick(() => UiGearMenuController.ShowWeaponMenu(_player));
             WeaponController.SetWeapon(_player.EquippedWeapon);
 
             ArmourController = FindInDetailedView<UIPlayerArmourController>("Armour");
-            ArmourController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowArmourMenu(_player));
+            ArmourController.EnhancedButton.AddOnClick(() => UiGearMenuController.ShowArmourMenu(_player));
             ArmourController.SetArmour(_player.ArmourController);
             _player.ArmourController.AddOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));
 
             AccessoryController = FindInDetailedView<UIPlayerAccessoryController>("Accessory");
             AccessoryController.SetAccessory(_player.EquippedAccessory);
-            AccessoryController.EnhancedButton.AddOnClick(() => UiGearMenuController.Instance().ShowAccessoryMenu(_player));
+            AccessoryController.EnhancedButton.AddOnClick(() => UiGearMenuController.ShowAccessoryMenu(_player));
 
-            _brandText = Helper.FindChildWithName<EnhancedText>(_detailedView, "Brands");
+            _brandText = _detailedView.FindChildWithName<EnhancedText>("Brands");
         }
 
         private void UpdateBrands()
@@ -114,11 +114,11 @@ namespace Game.Characters
 
         private void FillActionList()
         {
-            _exploreButton = Helper.FindChildWithName<EnhancedButton>(_actionList.gameObject, "Explore");
-            _craftButton = Helper.FindChildWithName<EnhancedButton>(_actionList.gameObject, "Craft");
-            _consumeButton = Helper.FindChildWithName<EnhancedButton>(_actionList.gameObject, "Consume");
-            _meditateButton = Helper.FindChildWithName<EnhancedButton>(_actionList.gameObject, "Meditate");
-            _sleepButton = Helper.FindChildWithName<EnhancedButton>(_actionList.gameObject, "Sleep");
+            _exploreButton = _actionList.gameObject.FindChildWithName<EnhancedButton>("Explore");
+            _craftButton = _actionList.gameObject.FindChildWithName<EnhancedButton>("Craft");
+            _consumeButton = _actionList.gameObject.FindChildWithName<EnhancedButton>("Consume");
+            _meditateButton = _actionList.gameObject.FindChildWithName<EnhancedButton>("Meditate");
+            _sleepButton = _actionList.gameObject.FindChildWithName<EnhancedButton>("Sleep");
             _player.TravelAction.SetButton(_exploreButton);
             _player.CraftAction.SetButton(_craftButton);
             _player.ConsumeAction.SetButton(_consumeButton);
@@ -207,12 +207,12 @@ namespace Game.Characters
 
         private T FindInSimpleView<T>(string elementName) where T : class
         {
-            return Helper.FindChildWithName<T>(SimpleView, elementName);
+            return SimpleView.FindChildWithName<T>(elementName);
         }
 
         private T FindInDetailedView<T>(string elementName) where T : class
         {
-            return Helper.FindChildWithName<T>(_detailedView, elementName);
+            return _detailedView.FindChildWithName<T>(elementName);
         }
 
         public void SwitchToDetailedView()

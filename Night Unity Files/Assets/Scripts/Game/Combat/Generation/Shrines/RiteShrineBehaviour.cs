@@ -20,9 +20,9 @@ namespace Game.Combat.Generation.Shrines
 
         public void Awake()
         {
-            _collider1 = Helper.FindChildWithName<RiteColliderBehaviour>(gameObject, "Collider 1");
-            _collider2 = Helper.FindChildWithName<RiteColliderBehaviour>(gameObject, "Collider 2");
-            _collider3 = Helper.FindChildWithName<RiteColliderBehaviour>(gameObject, "Collider 3");
+            _collider1 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 1");
+            _collider2 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 2");
+            _collider3 = gameObject.FindChildWithName<RiteColliderBehaviour>("Collider 3");
             _brandChoice = CharacterManager.SelectedCharacter.BrandManager.GetBrandChoice();
             if (_brandChoice.Count < 3)
             {

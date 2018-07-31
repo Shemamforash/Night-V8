@@ -19,40 +19,40 @@ namespace SamsHelper.Libraries
             return IsPositionInCameraView(gameObject.transform.position);
         }
 
-        public static int IntFromNode(XmlNode root, string nodeName)
+        public static int IntFromNode(this XmlNode root, string nodeName)
         {
             return int.Parse(GetNodeText(root, nodeName));
         }
 
-        public static float FloatFromNode(XmlNode root, string nodeName)
+        public static float FloatFromNode(this XmlNode root, string nodeName)
         {
             return float.Parse(GetNodeText(root, nodeName));
         }
 
-        public static XmlNode GetNode(XmlNode root, string nodeName)
+        public static XmlNode GetNode(this XmlNode root, string nodeName)
         {
             XmlNode node = root.SelectSingleNode(nodeName);
             if (node == null) throw new Exceptions.XmlNodeDoesNotExistException(nodeName);
             return node;
         }
 
-        public static string GetNodeText(XmlNode root, string name)
+        public static string GetNodeText(this XmlNode root, string name)
         {
             return GetNode(root, name).InnerText;
         }
 
-        public static string NodeAttributeValue(XmlNode root, string attributeName)
+        public static string NodeAttributeValue(this XmlNode root, string attributeName)
         {
             if (root.Attributes == null) throw new Exceptions.NodeHasNoAttributesException(root.Name);
             return root.Attributes[attributeName].Value;
         }
 
-        public static bool BoolFromNode(XmlNode root, string nodeName)
+        public static bool BoolFromNode(this XmlNode root, string nodeName)
         {
             return GetNodeText(root, nodeName).ToLower() == "true";
         }
 
-        public static bool IsPositionInCameraView(Vector3 position)
+        public static bool IsPositionInCameraView(this Vector3 position)
         {
             Vector3 screenPosition = Camera.main.WorldToViewportPoint(position);
             return screenPosition.z > 0 &&
@@ -62,11 +62,16 @@ namespace SamsHelper.Libraries
                    screenPosition.y < 1;
         }
 
-        public static string VectorToString(Vector2 vector) => vector.x + ":" + vector.y;
+        public static bool IsPositionInCameraView(this Vector2 position)
+        {
+            return ((Vector3) position).IsPositionInCameraView();
+        }
 
-        public static string VectorToString(Vector3 vector) => vector.x + ":" + vector.y + ":" + vector.z;
+        public static string ToString(this Vector2 vector) => vector.x + ":" + vector.y;
 
-        public static Vector3 StringToVector3(string vectorString)
+        public static string ToString(this Vector3 vector) => vector.x + ":" + vector.y + ":" + vector.z;
+
+        public static Vector3 ToVector3(this string vectorString)
         {
             string[] arr = vectorString.Split(':');
             Vector3 vect = new Vector3();
@@ -76,7 +81,7 @@ namespace SamsHelper.Libraries
             return vect;
         }
 
-        public static Vector2 StringToVector2(string vectorString)
+        public static Vector2 ToVector2(this string vectorString)
         {
             string[] arr = vectorString.Split(':');
             Vector2 vect = new Vector2();
@@ -85,7 +90,7 @@ namespace SamsHelper.Libraries
             return vect;
         }
 
-        public static T RemoveRandomInList<T>(List<T> list)
+        public static T RemoveRandom<T>(this List<T> list)
         {
             int randomIndex = Random.Range(0, list.Count);
             T element = list[randomIndex];
@@ -161,7 +166,7 @@ namespace SamsHelper.Libraries
             }
         }
 
-        public static void Shuffle<T>(List<T> list)
+        public static void Shuffle<T>(this List<T> list)
         {
             List<T> randomList = new List<T>();
             while (list.Count > 0)
@@ -174,11 +179,6 @@ namespace SamsHelper.Libraries
 
             list.Clear();
             list.AddRange(randomList);
-        }
-
-        public static void Log<T>(List<T> aList)
-        {
-            foreach (T t in aList) Debug.Log(t);
         }
 
         public static List<T> FindAllComponentsInChildren<T>(Transform t)
@@ -200,13 +200,13 @@ namespace SamsHelper.Libraries
             return children;
         }
 
-        public static float Round(float val, int precision = 0)
+        public static float Round(this float val, int precision = 0)
         {
             float precisionDivider = (float) Math.Pow(10f, precision);
             return (float) (Math.Round(val * precisionDivider) / precisionDivider);
         }
 
-        public static T FindChildWithName<T>(GameObject g, string name) where T : class
+        public static T FindChildWithName<T>(this GameObject g, string name) where T : class
         {
             if (typeof(T) == typeof(GameObject)) throw new Exceptions.CannotGetGameObjectComponent();
             Transform t = g.transform;
@@ -217,13 +217,13 @@ namespace SamsHelper.Libraries
             return foundComponent;
         }
 
-        public static GameObject FindChildWithName(GameObject g, string name)
+        public static GameObject FindChildWithName(this GameObject g, string name)
         {
             Transform t = FindChildWithName(g.transform, name);
             return t != null ? t.gameObject : null;
         }
 
-        public static Transform FindChildWithName(Transform t, string name)
+        public static Transform FindChildWithName(this Transform t, string name)
         {
             List<Transform> children = FindAllChildren(t);
             Transform foundChild = null;
@@ -239,7 +239,7 @@ namespace SamsHelper.Libraries
             return foundChild;
         }
 
-        public static void PrintList<T>(List<T> list)
+        public static void Print<T>(this List<T> list)
         {
             string listString = "";
             for (int i = 0; i < list.Count; ++i)
@@ -251,11 +251,10 @@ namespace SamsHelper.Libraries
             Debug.Log(listString);
         }
 
-        public static void PrintList<T>(T[] arr)
+        public static void PrintList<T>(this T[] arr)
         {
-            PrintList(new List<T>(arr));
+            new List<T>(arr).Print();
         }
-
 
         public static GameObject InstantiateUiObject<T>(string prefabLocation, Transform parent) where T : Component
         {
@@ -377,12 +376,12 @@ namespace SamsHelper.Libraries
 
         public static T RandomInList<T>(List<T> arr) => arr[Random.Range(0, arr.Count)];
 
-        public static float Normalise(float value, float maxValue)
+        public static float Normalise(this float value, float maxValue)
         {
             return value /= maxValue;
         }
 
-        public static string AddSignPrefix(float value)
+        public static string AddSignPrefix(this float value)
         {
             if (value <= 0) return value.ToString();
             return "+" + value;
@@ -401,7 +400,7 @@ namespace SamsHelper.Libraries
             delineator.transform.localScale = new Vector3(1, 1, 1);
         }
 
-        public static float Polarity(float direction)
+        public static float Polarity(this float direction)
         {
             if (direction < 0) return -1;
             if (direction > 0) return 1;
@@ -424,7 +423,7 @@ namespace SamsHelper.Libraries
             return iteratorPosition - 1;
         }
 
-        public static T RemoveEnd<T>(List<T> list)
+        public static T RemoveEnd<T>(this List<T> list)
         {
             int endIndex = list.Count - 1;
             T end = list[endIndex];
@@ -463,7 +462,7 @@ namespace SamsHelper.Libraries
             return hierarchy;
         }
 
-        public static void Swap<T>(int from, int to, List<T> list)
+        public static void Swap<T>(this List<T> list, int from, int to)
         {
             T temp = list[to];
             list[to] = list[from];

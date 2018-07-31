@@ -24,13 +24,13 @@ namespace Game.Combat.Ui
 
         public virtual UIHealthBarController GetHealthController(CharacterCombat enemy)
         {
-            if (_healthBarController == null) _healthBarController = Helper.FindChildWithName<UIHealthBarController>(gameObject, "Health");
+            if (_healthBarController == null) _healthBarController = gameObject.FindChildWithName<UIHealthBarController>("Health");
             return _healthBarController;
         }
 
         public virtual UIArmourController GetArmourController(Character character)
         {
-            if (_armourController == null) _armourController = Helper.FindChildWithName<UIArmourController>(gameObject, "Armour");
+            if (_armourController == null) _armourController = gameObject.FindChildWithName<UIArmourController>("Armour");
             return _armourController;
         }
     }

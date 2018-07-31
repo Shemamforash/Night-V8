@@ -36,7 +36,7 @@ public class InsectBehaviour : MonoBehaviour
 
     private IEnumerator FadeParticles()
     {
-        ParticleSystem particles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Particles");
+        ParticleSystem particles = gameObject.FindChildWithName<ParticleSystem>("Particles");
         ParticleSystem.EmissionModule emission = particles.emission;
         float currentTime = 1f;
         float initialRate = emission.rateOverDistance.constant;

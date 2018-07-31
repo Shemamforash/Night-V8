@@ -65,7 +65,7 @@ namespace Game.Gear.Weapons
             averageDps /= TestRuns;
             string indent = "        ";
             _testResultString += "Type: " + type + "  ---  Quality: " + quality + "\n";
-            _testResultString += indent + "DPS: " + Helper.Round(averageDps, 1) + " (min: " + Helper.Round(minDps, 1) + " /max: " + Helper.Round(maxDps, 1) + " )\n";
+            _testResultString += indent + "DPS: " + averageDps.Round(1) + " (min: " + minDps.Round(1) + " /max: " + maxDps.Round(1) + " )\n";
             DesiredStats.ForEach(stat => _testResultString += indent + _attributeStats[stat].GetString() + "\n");
             _testResultString += "\n";
             _testResultString += maxWeapon.WeaponAttributes.GetPrintMessage() + "\n";
@@ -95,8 +95,8 @@ namespace Game.Gear.Weapons
 
             public string GetString()
             {
-                float averageString = Helper.Round(_average / _runs, 1);
-                return _type + ": " + averageString + " (min: " + Helper.Round(_min, 1) + " /max: " + Helper.Round(_max, 1) + ")";
+                float averageString = (_average / _runs).Round(1);
+                return _type + ": " + averageString + " (min: " + _min.Round(1) + " /max: " + _max.Round(1) + ")";
             }
         }
     }

@@ -35,8 +35,16 @@ namespace Game.Combat.Enemies
             PushAwayFromNeighbors();
             if (!CombatManager.InCombat()) return;
             UpdateRotation();
+            UpdateMarkTime();
             if (MoveBehaviour.Moving()) return;
             CurrentAction?.Invoke();
+        }
+
+        private void UpdateMarkTime()
+        {
+            if (_markTime < 0f) return;
+            _markTime -= Time.deltaTime;
+            if (_markTime < 0f) PlayerCombat.Instance.EndMark(this);
         }
 
         protected bool MoveToCover(Action reachCoverAction)
@@ -47,10 +55,12 @@ namespace Game.Combat.Enemies
                 SetActionText("Seeking Cover");
                 CurrentAction = reachCoverAction;
             }
+
             return moving;
         }
 
         protected SpriteRenderer Sprite;
+        private float _markTime;
 
         private void PushAwayFromNeighbors()
         {
@@ -123,6 +133,7 @@ namespace Game.Combat.Enemies
         {
             base.TakeDamage(shot);
             CombatManager.IncreaseDamageDealt(shot.DamageDealt());
+            PlayerCombat.Instance.DamageDealtSinceMarkStarted += shot.DamageDealt();
             EnemyUi.Instance().RegisterHit(this);
         }
 
@@ -165,5 +176,10 @@ namespace Game.Combat.Enemies
         }
 
         public virtual string GetEnemyName() => Enemy.Name;
+
+        public void Mark()
+        {
+            _markTime = 5f;
+        }
     }
 }

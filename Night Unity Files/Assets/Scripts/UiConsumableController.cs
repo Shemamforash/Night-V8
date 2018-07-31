@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Global;
@@ -7,28 +6,30 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
-using UnityEngine.UI;
 
 public class UiConsumableController : UiGearMenuTemplate
 {
     private EnhancedButton _consumableButton;
     private UIConditionController _thirstController, _hungerController;
+    private UIAttributeController _uiAttributeController;
 
     private void UpdateCondition()
     {
         _hungerController.UpdateHunger(CharacterManager.SelectedCharacter);
         _thirstController.UpdateThirst(CharacterManager.SelectedCharacter);
+        _uiAttributeController.UpdateAttributes(CharacterManager.SelectedCharacter);
     }
 
     private void Awake()
     {
-        _thirstController = Helper.FindChildWithName<UIConditionController>(gameObject, "Thirst");
-        _hungerController = Helper.FindChildWithName<UIConditionController>(gameObject, "Hunger");
+        _thirstController = gameObject.FindChildWithName<UIConditionController>("Thirst");
+        _hungerController = gameObject.FindChildWithName<UIConditionController>("Hunger");
+        _uiAttributeController = gameObject.FindChildWithName<UIAttributeController>("Attributes");
     }
 
     public override bool GearIsAvailable()
     {
-        return WorldState.HomeInventory().Consumables().Count > 0;
+        return UiGearMenuController.Inventory().Consumables().Count > 0;
     }
 
     public override void SelectGearItem(MyGameObject item, UiGearMenuController.GearUi gearUi)
@@ -40,29 +41,27 @@ public class UiConsumableController : UiGearMenuTemplate
         gearUi.SetDpsText(effectText);
     }
 
-    public override void CompareTo(MyGameObject comparisonItem)
+    public override void Show()
     {
-        throw new NotImplementedException();
-    }
+        base.Show();
+        GetGearButton().Select();
+        if (GearIsAvailable())
+        {
+            UiGearMenuController.EnableInput();
+            UiGearMenuController.SelectGear();
+        }
 
-    public override void StopComparing()
-    {
-        throw new NotImplementedException();
+        UpdateCondition();
     }
 
     public override List<MyGameObject> GetAvailableGear()
     {
-        return new List<MyGameObject>(WorldState.HomeInventory().Consumables());
+        return new List<MyGameObject>(UiGearMenuController.Inventory().Consumables());
     }
 
     public override void Equip(int selectedGear)
     {
         ((Consumable) GetAvailableGear()[selectedGear]).Consume(CharacterManager.SelectedCharacter);
         UpdateCondition();
-    }
-
-    public override Button GetGearButton()
-    {
-        throw new NotImplementedException();
     }
 }

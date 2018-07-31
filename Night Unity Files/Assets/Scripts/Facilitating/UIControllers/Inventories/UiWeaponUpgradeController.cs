@@ -18,7 +18,7 @@ namespace Facilitating.UIControllers
         private EnhancedText _damageText, _fireRateText;
         private EnhancedText _dpsText, _capacityText;
 
-        private EnhancedButton _inscribeButton, _infuseButton;
+        private EnhancedButton _inscribeButton, _infuseButton, _swapButton;
         private EnhancedText _inscriptionText;
         private EnhancedText _reloadSpeedText, _accuracyText, _handlingText;
 
@@ -26,62 +26,63 @@ namespace Facilitating.UIControllers
         private RectTransform _durabilityTransform;
         private ParticleSystem _durabilityParticles;
         private bool _upgradingAllowed;
-        private EnhancedButton _weaponButton;
         private bool _showWeapons = true;
 
         public void Awake()
         {
-            _durabilityTransform = Helper.FindChildWithName<RectTransform>(gameObject, "Max");
-            _nameText = Helper.FindChildWithName<EnhancedText>(gameObject, "Name");
-            _durabilityParticles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Current");
-            _damageText = Helper.FindChildWithName<EnhancedText>(gameObject, "Damage");
-            _fireRateText = Helper.FindChildWithName<EnhancedText>(gameObject, "Fire Rate");
-            _dpsText = Helper.FindChildWithName<EnhancedText>(gameObject, "DPS");
-            _capacityText = Helper.FindChildWithName<EnhancedText>(gameObject, "Capacity");
-            _reloadSpeedText = Helper.FindChildWithName<EnhancedText>(gameObject, "Reload Speed");
-            _accuracyText = Helper.FindChildWithName<EnhancedText>(gameObject, "Critical Chance");
-            _handlingText = Helper.FindChildWithName<EnhancedText>(gameObject, "Handling");
-            _inscriptionText = Helper.FindChildWithName<EnhancedText>(gameObject, "Inscription");
+            _durabilityTransform = gameObject.FindChildWithName<RectTransform>("Max");
+            _nameText = gameObject.FindChildWithName<EnhancedText>("Name");
+            _durabilityParticles = gameObject.FindChildWithName<ParticleSystem>("Current");
+            _damageText = gameObject.FindChildWithName<EnhancedText>("Damage");
+            _fireRateText = gameObject.FindChildWithName<EnhancedText>("Fire Rate");
+            _dpsText = gameObject.FindChildWithName<EnhancedText>("DPS");
+            _capacityText = gameObject.FindChildWithName<EnhancedText>("Capacity");
+            _reloadSpeedText = gameObject.FindChildWithName<EnhancedText>("Reload Speed");
+            _accuracyText = gameObject.FindChildWithName<EnhancedText>("Critical Chance");
+            _handlingText = gameObject.FindChildWithName<EnhancedText>("Handling");
+            _inscriptionText = gameObject.FindChildWithName<EnhancedText>("Inscription");
 
-            _inscribeButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Inscribe");
-            _infuseButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Infuse");
+            _inscribeButton = gameObject.FindChildWithName<EnhancedButton>("Inscribe");
+            _swapButton = gameObject.FindChildWithName<EnhancedButton>("Swap");
+            _infuseButton = gameObject.FindChildWithName<EnhancedButton>("Infuse");
             _infuseButton.AddOnClick(Infuse);
 
-            _weaponButton = Helper.FindChildWithName<EnhancedButton>(gameObject, "Info");
-            _weaponButton.AddOnClick(() =>
+            _swapButton = gameObject.FindChildWithName<EnhancedButton>("Info");
+            _swapButton.AddOnClick(() =>
             {
                 if (!GearIsAvailable()) return;
-                UiGearMenuController.Instance().EnableInput();
+                UiGearMenuController.EnableInput();
                 _showWeapons = true;
-                UiGearMenuController.Instance().SelectGear();
+                UiGearMenuController.SelectGear();
             });
             _inscribeButton.AddOnClick(() =>
             {
                 if (!InscriptionsAreAvailable()) return;
-                UiGearMenuController.Instance().EnableInput();
+                UiGearMenuController.EnableInput();
                 _showWeapons = false;
-                UiGearMenuController.Instance().SelectGear();
+                UiGearMenuController.SelectGear();
             });
         }
 
-        private bool InscriptionsAreAvailable() => CharacterManager.Inscriptions.Count != 0;
+        private bool InscriptionsAreAvailable() => UiGearMenuController.Inventory().Inscriptions.Count != 0;
 
         private void Infuse()
         {
-            if (CurrentPlayer.EquippedWeapon == null) return;
-            if (CurrentPlayer.EquippedWeapon.WeaponAttributes.GetDurability().ReachedMax()) return;
+            if (CharacterManager.SelectedCharacter.EquippedWeapon == null) return;
+            if (CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.GetDurability().ReachedMax()) return;
             if (WorldState.HomeInventory().GetResourceQuantity("Essence") == 0) return;
             WorldState.HomeInventory().DecrementResource("Essence", 1);
-            CurrentPlayer.BrandManager.IncreaseEssenceInfused();
-            int durabilityGain = 1 + (int)CurrentPlayer.Attributes.Val(AttributeType.EssenceRecoveryBonus);
-            CurrentPlayer.EquippedWeapon.WeaponAttributes.IncreaseDurability(durabilityGain);
+            CharacterManager.SelectedCharacter.BrandManager.IncreaseEssenceInfused();
+            int durabilityGain = 1 + (int)CharacterManager.SelectedCharacter.Attributes.Val(AttributeType.EssenceRecoveryBonus);
+            CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.IncreaseDurability(durabilityGain);
             UpdateDurabilityParticles();
         }
 
-        public override void Show(Player player)
+        public override void Show()
         {
-            base.Show(player);
+            base.Show();
             SetWeapon();
+            _swapButton.Select();
         }
 
         public override void StopComparing()
@@ -91,7 +92,7 @@ namespace Facilitating.UIControllers
 
         public override List<MyGameObject> GetAvailableGear()
         {
-            return _showWeapons ? new List<MyGameObject>(CharacterManager.Weapons) : new List<MyGameObject>(CharacterManager.Inscriptions);
+            return _showWeapons ? new List<MyGameObject>(UiGearMenuController.Inventory().Weapons) : new List<MyGameObject>(UiGearMenuController.Inventory().Inscriptions);
         }
 
         public override void Equip(int selectedGear)
@@ -99,23 +100,23 @@ namespace Facilitating.UIControllers
             if (selectedGear == -1) return;
             if (_showWeapons)
             {
-                CurrentPlayer.EquipWeapon(CharacterManager.Weapons[selectedGear]);
+                CharacterManager.SelectedCharacter.EquipWeapon(UiGearMenuController.Inventory().Weapons[selectedGear]);
             }
             else
             {
-                CurrentPlayer.EquippedWeapon.SetInscription(CharacterManager.Inscriptions[selectedGear]);
+                CharacterManager.SelectedCharacter.EquippedWeapon.SetInscription(UiGearMenuController.Inventory().Inscriptions[selectedGear]);
             }
 
-            Show(CurrentPlayer);
+            Show();
         }
 
-        public override Button GetGearButton() => _weaponButton.Button();
+        public override Button GetGearButton() => _swapButton.Button();
 
         public override void CompareTo(MyGameObject comparisonItem)
         {
             if (comparisonItem == null) return;
             Weapon compareWeapon = comparisonItem as Weapon;
-            if (CurrentPlayer.EquippedWeapon == null)
+            if (CharacterManager.SelectedCharacter.EquippedWeapon == null)
             {
                 SetWeaponInfo(compareWeapon);
             }
@@ -138,14 +139,14 @@ namespace Facilitating.UIControllers
 
         private string GetAttributePrefix(Weapon compare, AttributeType attribute)
         {
-            Weapon equipped = CurrentPlayer.EquippedWeapon;
+            Weapon equipped = CharacterManager.SelectedCharacter.EquippedWeapon;
             float equippedValue = equipped.GetAttributeValue(attribute);
             if (attribute == AttributeType.Capacity)
             {
                 equippedValue = Mathf.FloorToInt(equippedValue);
             }
 
-            string prefixString = Helper.Round(equippedValue, 1).ToString();
+            string prefixString = equippedValue.Round(1).ToString();
             if (compare == null) return prefixString;
             float compareValue = compare.GetAttributeValue(attribute);
             if (attribute == AttributeType.Capacity)
@@ -153,15 +154,15 @@ namespace Facilitating.UIControllers
                 compareValue = Mathf.FloorToInt(compareValue);
             }
 
-            prefixString = "<color=#505050>" + Helper.Round(compareValue, 1) + "</color>" + " vs " + prefixString;
+            prefixString = "<color=#505050>" + compareValue.Round(1) + "</color>" + " vs " + prefixString;
             return prefixString;
         }
 
         private void UpdateDurabilityParticles()
         {
             float absoluteMaxDurability = ((int) ItemQuality.Radiant + 1) * 10;
-            float maxDurability = ((int) CurrentPlayer.EquippedWeapon.Quality() + 1) * 10;
-            float currentDurability = CurrentPlayer.EquippedWeapon.WeaponAttributes.GetDurability().CurrentValue();
+            float maxDurability = ((int) CharacterManager.SelectedCharacter.EquippedWeapon.Quality() + 1) * 10;
+            float currentDurability = CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.GetDurability().CurrentValue();
             float rectAnchorOffset = maxDurability / absoluteMaxDurability / 2;
             float particleOffset = 5.6f * (currentDurability / absoluteMaxDurability);
             _durabilityTransform.anchorMin = new Vector2(0.5f - rectAnchorOffset, 0.5f);
@@ -178,31 +179,29 @@ namespace Facilitating.UIControllers
             WeaponAttributes attr = weapon.WeaponAttributes;
             _nameText.Text(weapon.Name);
             UpdateDurabilityParticles();
-            _damageText.Text(Helper.Round(attr.Val(AttributeType.Damage), 1) + " Dam");
-            _fireRateText.Text(Helper.Round(attr.Val(AttributeType.FireRate), 1) + " RoF");
-            _reloadSpeedText.Text(Helper.Round(attr.Val(AttributeType.ReloadSpeed), 1) + "s Reload");
-            _handlingText.Text(Helper.Round(attr.Val(AttributeType.Handling), 1) + "% Handling");
-            _dpsText.Text(Helper.Round(attr.DPS(), 1) + " DPS");
-            _capacityText.Text(Helper.Round(attr.Val(AttributeType.Capacity), 1) + " Capacity");
+            _damageText.Text(attr.Val(AttributeType.Damage).Round(1) + " Dam");
+            _fireRateText.Text(attr.Val(AttributeType.FireRate).Round(1) + " RoF");
+            _reloadSpeedText.Text(attr.Val(AttributeType.ReloadSpeed).Round(1) + "s Reload");
+            _handlingText.Text(attr.Val(AttributeType.Handling).Round(1) + "% Handling");
+            _dpsText.Text(attr.DPS().Round(1) + " DPS");
+            _capacityText.Text(attr.Val(AttributeType.Capacity).Round(1) + " Capacity");
         }
 
         private void SetTopToBottomNavigation(EnhancedButton button)
         {
-            _weaponButton.SetDownNavigation(button);
-            button.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
+            button.SetDownNavigation(UiGearMenuController.GetCloseButton());
         }
 
         private void SetNavigation()
         {
             bool infuseActive = _infuseButton.Button().interactable;
             SetTopToBottomNavigation(infuseActive ? _infuseButton : _inscribeButton);
-            _inscribeButton.SetUpNavigation(_weaponButton, false);
-            _inscribeButton.SetDownNavigation(UiGearMenuController.Instance()._closeButton, false);
+            _inscribeButton.SetDownNavigation(UiGearMenuController.GetCloseButton(), false);
         }
 
         private void SetWeapon()
         {
-            Weapon weapon = CurrentPlayer.EquippedWeapon;
+            Weapon weapon = CharacterManager.SelectedCharacter.EquippedWeapon;
             if (weapon == null)
             {
                 SetNoWeapon();
@@ -244,7 +243,7 @@ namespace Facilitating.UIControllers
             SetNavigation();
         }
 
-        public override bool GearIsAvailable() => CharacterManager.Weapons.Count != 0;
+        public override bool GearIsAvailable() => UiGearMenuController.Inventory().Weapons.Count != 0;
 
         public override void SelectGearItem(MyGameObject item, UiGearMenuController.GearUi gearUi)
         {
@@ -254,7 +253,7 @@ namespace Facilitating.UIControllers
                 Assert.IsTrue(_showWeapons);
                 gearUi.SetTypeText(weapon.GetWeaponType());
                 gearUi.SetNameText(weapon.Name);
-                gearUi.SetDpsText(Helper.Round(weapon.WeaponAttributes.DPS(), 1) + " DPS");
+                gearUi.SetDpsText(weapon.WeaponAttributes.DPS().Round(1) + " DPS");
                 return;
             }
 

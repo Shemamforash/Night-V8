@@ -9,16 +9,13 @@ namespace Facilitating.UIControllers
 {
     public abstract class UiGearMenuTemplate : MonoBehaviour
     {
-        protected Player CurrentPlayer;
-
         public abstract bool GearIsAvailable();
         public abstract void SelectGearItem(MyGameObject item, UiGearMenuController.GearUi gearUi);
 
-        public virtual void Show(Player player)
+        public virtual void Show()
         {
             gameObject.SetActive(true);
-            CurrentPlayer = player;
-            UiGearMenuController.Instance().SelectGear();
+            UiGearMenuController.SelectGear();
         }
 
         public virtual void Hide()
@@ -26,10 +23,20 @@ namespace Facilitating.UIControllers
             gameObject.SetActive(false);
         }
 
-        public abstract void CompareTo(MyGameObject comparisonItem);
-        public abstract void StopComparing();
+        public virtual void CompareTo(MyGameObject comparisonItem)
+        {
+        }
+
+        public virtual void StopComparing()
+        {
+        }
+
         public abstract List<MyGameObject> GetAvailableGear();
         public abstract void Equip(int selectedGear);
-        public abstract Button GetGearButton();
+
+        public virtual Button GetGearButton()
+        {
+            return GetAvailableGear().Count == 0 ? UiGearMenuController.GetCloseButton().Button() : UiGearMenuController.GetCentreButton().Button();
+        }
     }
 }

@@ -21,13 +21,13 @@ namespace Facilitating
         {
             RoseProngs = new List<Image>();
             _instance = this;
-            _dashFlash = Helper.FindChildWithName<Image>(gameObject, "Ready");
-            _dashRing = Helper.FindChildWithName<Image>(gameObject, "Ring");
+            _dashFlash = gameObject.FindChildWithName<Image>("Ready");
+            _dashRing = gameObject.FindChildWithName<Image>("Ring");
         }
 
         public void Start()
         {
-            for (int i = 1; i < 17; ++i) RoseProngs.Add(Helper.FindChildWithName<Image>(gameObject, i.ToString()));
+            for (int i = 1; i < 17; ++i) RoseProngs.Add(gameObject.FindChildWithName<Image>(i.ToString()));
             SetRageBarFill(0f);
         }
 

@@ -1,25 +1,48 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using DG.Tweening;
+using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
+using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 {
-    public class Shield : TimedAttackBehaviour
+    public class Shield : MonoBehaviour
     {
-        private static GameObject _shieldPrefab;
-        private GameObject _shieldObject;
-        
-        public override void Awake()
+        private ParticleSystem _particles;
+        private SpriteRenderer _sprite;
+        private int duration = 0;
+
+        public void Awake()
         {
-            base.Awake();
-            if (_shieldPrefab == null) _shieldPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Shield");
-            _shieldObject = Instantiate(_shieldPrefab);
-            _shieldObject.transform.SetParent(transform, false);
-            _shieldObject.transform.localScale = Vector3.one;
+            _sprite = gameObject.FindChildWithName<SpriteRenderer>("Hit");
+            _particles = gameObject.FindChildWithName<ParticleSystem>("Particles");
+            _sprite.color = UiAppearanceController.InvisibleColour;
+            SetParticleColour(0f);
         }
-        
-        protected override void Attack()
+
+        private void SetParticleColour(float val)
         {
-            Destroy(_shieldObject);
-            Destroy(this);
+            if (val == 0f) _particles.Stop();
+            else if(!_particles.isPlaying) _particles.Play();
+        }
+
+        public void Activate(float duration)
+        {
+            StartCoroutine(ActivateShield(duration));
+        }
+
+        private IEnumerator ActivateShield(float f)
+        {
+            _sprite.color = Color.white;
+            SetParticleColour(0.1f);
+            while (f > 0f)
+            {
+                f -= Time.deltaTime;
+                yield return null;
+            }
+
+            SetParticleColour(0f);
+            _sprite.DOColor(UiAppearanceController.InvisibleColour, 0.5f);
         }
     }
 }

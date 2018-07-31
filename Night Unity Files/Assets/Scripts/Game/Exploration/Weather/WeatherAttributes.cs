@@ -9,12 +9,12 @@ namespace Game.Exploration.Weather
 
         public WeatherAttributes(XmlNode weatherNode)
         {
-            RainAmount = Helper.FloatFromNode(weatherNode, "Rain");
-            FogAmount = Helper.FloatFromNode(weatherNode, "Fog");
-            DustAmount = Helper.FloatFromNode(weatherNode, "Dust");
-            HailAmount = Helper.FloatFromNode(weatherNode, "Hail");
-            SunAmount = Helper.FloatFromNode(weatherNode, "Sun");
-            WindAmount = Helper.FloatFromNode(weatherNode, "Wind");
+            RainAmount = weatherNode.FloatFromNode("Rain");
+            FogAmount = weatherNode.FloatFromNode("Fog");
+            DustAmount = weatherNode.FloatFromNode("Dust");
+            HailAmount = weatherNode.FloatFromNode("Hail");
+            SunAmount = weatherNode.FloatFromNode("Sun");
+            WindAmount = weatherNode.FloatFromNode("Wind");
         }
     }
 }

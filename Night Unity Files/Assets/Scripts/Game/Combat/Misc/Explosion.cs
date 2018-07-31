@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Fastlights;
+using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -26,6 +28,7 @@ namespace Game.Combat.Misc
         private ParticleSystem _particles;
         private SpriteRenderer _warningRing;
         private AudioSource _audioSource;
+        private Action<List<EnemyBehaviour>> OnExplode;
 
         [SerializeField]
         private AudioClip[] _explosionClips;
@@ -33,17 +36,17 @@ namespace Game.Combat.Misc
 
         public void Awake()
         {
-            _warningRing = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Warning");
-            _explosionSprite = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Explosion");
-            _particles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Fragments");
-            _light = Helper.FindChildWithName<FastLight>(gameObject, "Light");
+            _warningRing = gameObject.FindChildWithName<SpriteRenderer>("Warning");
+            _explosionSprite = gameObject.FindChildWithName<SpriteRenderer>("Explosion");
+            _particles = gameObject.FindChildWithName<ParticleSystem>("Fragments");
+            _light = gameObject.FindChildWithName<FastLight>("Light");
 
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
             _light.Colour = UiAppearanceController.InvisibleColour;
 
             _originalExplosionWidth = _explosionSprite.bounds.size.x;
             _originalWarningWidth = _warningRing.bounds.size.x;
-            _audioSource = Helper.FindChildWithName<AudioSource>(gameObject, "Audio");
+            _audioSource = gameObject.FindChildWithName<AudioSource>("Audio");
         }
 
         public void OnDestroy()
@@ -96,14 +99,18 @@ namespace Game.Combat.Misc
         private void DealDamage()
         {
             List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(transform.position, _explosionRadius);
+            List<EnemyBehaviour> enemiesHit = new List<EnemyBehaviour>();
             foreach (CharacterCombat c in charactersInRange)
             {
+                EnemyBehaviour behaviour = c as EnemyBehaviour;
+                if(behaviour != null) enemiesHit.Add(behaviour);
                 c.HealthController.TakeDamage(_damage);
                 Vector2 dir = c.transform.position - transform.position;
                 float distance = dir.magnitude;
                 dir.Normalize();
                 c.MovementController.AddForce(dir * 1f / distance * 10f);
             }
+            OnExplode?.Invoke(enemiesHit);
         }
 
         private void ScaleSprite(SpriteRenderer sprite, float scalingValue, float originalSize)
@@ -177,6 +184,11 @@ namespace Game.Combat.Misc
             _light.Colour = UiAppearanceController.InvisibleColour;
             gameObject.SetActive(false);
             _explosionPool.Add(this);
+        }
+       
+        public void AddOnDetonate(Action<List<EnemyBehaviour>> action)
+        {
+            OnExplode += action;
         }
     }
 }

@@ -91,10 +91,10 @@ namespace Game.Gear
 
             public InscriptionTemplate(XmlNode inscriptionNode)
             {
-                Name = Helper.GetNodeText(inscriptionNode, "Name");
-                AttributeTarget = Inventory.StringToAttributeType(Helper.GetNodeText(inscriptionNode, "Attribute"));
-                _modifierValue = Helper.FloatFromNode(inscriptionNode, "Value");
-                _additive = Helper.BoolFromNode(inscriptionNode, "Additive");
+                Name = inscriptionNode.GetNodeText("Name");
+                AttributeTarget = Inventory.StringToAttributeType(inscriptionNode.GetNodeText("Attribute"));
+                _modifierValue = inscriptionNode.FloatFromNode("Value");
+                _additive = inscriptionNode.BoolFromNode("Additive");
                 _inscriptionTemplates.Add(this);
             }
 

@@ -21,17 +21,17 @@ namespace Facilitating.UIControllers
 
         public void Awake()
         {
-            _plateOneUi = new ArmourPlateUi(Helper.FindChildWithName(gameObject, "Plate 1"));
+            _plateOneUi = new ArmourPlateUi(gameObject.FindChildWithName("Plate 1"));
             _plateOneUi.Button.AddOnSelectEvent(() => SelectPlateUi(_plateOneUi));
             _plateOneUi.Button.AddOnClick(() =>
             {
-                if (GearIsAvailable()) UiGearMenuController.Instance().EnableInput();
+                if (GearIsAvailable()) UiGearMenuController.EnableInput();
             });
-            _plateTwoUi = new ArmourPlateUi(Helper.FindChildWithName(gameObject, "Plate 2"));
+            _plateTwoUi = new ArmourPlateUi(gameObject.FindChildWithName("Plate 2"));
             _plateTwoUi.Button.AddOnSelectEvent(() => SelectPlateUi(_plateTwoUi));
             _plateTwoUi.Button.AddOnClick(() =>
             {
-                if (GearIsAvailable()) UiGearMenuController.Instance().EnableInput();
+                if (GearIsAvailable()) UiGearMenuController.EnableInput();
             });
         }
 
@@ -46,14 +46,13 @@ namespace Facilitating.UIControllers
 
         private void UpdatePlates()
         {
-            Debug.Log(CurrentPlayer);
-            _plateOneUi.SetPlate(CurrentPlayer.ArmourController.GetPlateOne());
-            _plateTwoUi.SetPlate(CurrentPlayer.ArmourController.GetPlateTwo());
+            _plateOneUi.SetPlate(CharacterManager.SelectedCharacter.ArmourController.GetPlateOne());
+            _plateTwoUi.SetPlate(CharacterManager.SelectedCharacter.ArmourController.GetPlateTwo());
         }
 
         public override bool GearIsAvailable()
         {
-            return CharacterManager.Armour.Count != 0;
+            return UiGearMenuController.Inventory().Armour.Count != 0;
         }
 
         public override void SelectGearItem(MyGameObject item, UiGearMenuController.GearUi gearUi)
@@ -64,10 +63,9 @@ namespace Facilitating.UIControllers
             gearUi.SetDpsText("");
         }
 
-        public override void Show(Player player)
+        public override void Show()
         {
-            Debug.Log(player);
-            base.Show(player);
+            base.Show();
             SelectPlateUi(_plateOneUi);
             UpdatePlates();
         }
@@ -82,19 +80,19 @@ namespace Facilitating.UIControllers
 
         public override List<MyGameObject> GetAvailableGear()
         {
-            return new List<MyGameObject>(CharacterManager.Armour);
+            return new List<MyGameObject>(UiGearMenuController.Inventory().Armour);
         }
 
         public override void Equip(int selectedGear)
         {
             if (selectedGear == -1) return;
-            ArmourPlate plate = CharacterManager.Armour[selectedGear];
+            ArmourPlate plate = UiGearMenuController.Inventory().Armour[selectedGear];
             if (_selectedPlateUi == _plateOneUi)
-                CurrentPlayer.EquipArmourSlotOne(plate);
+                CharacterManager.SelectedCharacter.EquipArmourSlotOne(plate);
             else
-                CurrentPlayer.EquipArmourSlotTwo(plate);
+                CharacterManager.SelectedCharacter.EquipArmourSlotTwo(plate);
 
-            Show(CurrentPlayer);
+            Show();
         }
 
         public override Button GetGearButton()
@@ -111,15 +109,15 @@ namespace Facilitating.UIControllers
 
             public ArmourPlateUi(GameObject gameObject)
             {
-                _nameText = Helper.FindChildWithName<EnhancedText>(gameObject, "Name");
-                _currentArmourText = Helper.FindChildWithName<EnhancedText>(gameObject, "Current Armour");
-                _armourDetailText = Helper.FindChildWithName<EnhancedText>(gameObject, "Armour Detail");
-                Button = Helper.FindChildWithName<EnhancedButton>(gameObject, "Info");
+                _nameText = gameObject.FindChildWithName<EnhancedText>("Name");
+                _currentArmourText = gameObject.FindChildWithName<EnhancedText>("Current Armour");
+                _armourDetailText = gameObject.FindChildWithName<EnhancedText>("Armour Detail");
+                Button = gameObject.FindChildWithName<EnhancedButton>("Swap");
             }
 
             public void SetPlate(ArmourPlate plate)
             {
-                Button.SetDownNavigation(UiGearMenuController.Instance()._closeButton);
+                Button.SetDownNavigation(UiGearMenuController.GetCloseButton());
                 if (plate == null)
                 {
                     _nameText.Text("");

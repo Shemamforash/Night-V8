@@ -23,15 +23,15 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
 
     public void Awake()
     {
-        _essence = Helper.FindChildWithName<ParticleSystem>(gameObject, "Essence Cloud");
-        _void = Helper.FindChildWithName<ParticleSystem>(gameObject, "Void");
-        _burst = Helper.FindChildWithName<ParticleSystem>(gameObject, "Burst");
-        _ring = Helper.FindChildWithName<ParticleSystem>(gameObject, "Ring");
-        _flash = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Flash");
-        DangerIndicator = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Danger Indicator");
-        _countdown = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Countdown");
-        _glow = Helper.FindChildWithName<SpriteRenderer>(gameObject, "Glow");
-        _countdownMask = Helper.FindChildWithName<SpriteMask>(gameObject, "Countdown Mask");
+        _essence = gameObject.FindChildWithName<ParticleSystem>("Essence Cloud");
+        _void = gameObject.FindChildWithName<ParticleSystem>("Void");
+        _burst = gameObject.FindChildWithName<ParticleSystem>("Burst");
+        _ring = gameObject.FindChildWithName<ParticleSystem>("Ring");
+        _flash = gameObject.FindChildWithName<SpriteRenderer>("Flash");
+        DangerIndicator = gameObject.FindChildWithName<SpriteRenderer>("Danger Indicator");
+        _countdown = gameObject.FindChildWithName<SpriteRenderer>("Countdown");
+        _glow = gameObject.FindChildWithName<SpriteRenderer>("Glow");
+        _countdownMask = gameObject.FindChildWithName<SpriteMask>("Countdown Mask");
         _flash.color = UiAppearanceController.InvisibleColour;
         _countdownMask.alphaCutoff = 1f;
     }

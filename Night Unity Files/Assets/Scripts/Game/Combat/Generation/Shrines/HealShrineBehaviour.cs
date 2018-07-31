@@ -15,10 +15,10 @@ public class HealShrineBehaviour : MonoBehaviour
 
     private void HealPlayer()
     {
-        ParticleSystem p = Helper.FindChildWithName<ParticleSystem>(gameObject, "Heal Indicator");
+        ParticleSystem p = gameObject.FindChildWithName<ParticleSystem>("Heal Indicator");
         p.Emit(100);
         PlayerCombat.Instance.HealthController.Heal(100);
-        Helper.FindChildWithName<ColourPulse>(gameObject, "Health Shrine Glow").PulseAndEnd();
+        gameObject.FindChildWithName<ColourPulse>("Health Shrine Glow").PulseAndEnd();
         Destroy(this);
     }
 

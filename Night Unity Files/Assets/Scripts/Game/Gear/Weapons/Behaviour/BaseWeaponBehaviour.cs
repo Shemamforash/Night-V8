@@ -84,16 +84,17 @@ namespace Game.Gear.Weapons
             UIMagazineController.UpdateMagazineUi();
         }
 
-        private void ConsumeAmmo(int amount = 0)
+        public void ConsumeAmmo(int amount = -1)
         {
             float durabilityModifier = 0;
+            if (amount < 0) amount = AmmoInMagazine;
             PlayerCombat player = Origin as PlayerCombat;
             if (player != null)
             {
                 durabilityModifier = player.Player.Attributes.Val(AttributeType.EssenceLossBonus);
             }
 
-            WeaponAttributes.DecreaseDurability(durabilityModifier);
+            WeaponAttributes.DecreaseDurability(durabilityModifier * amount);
             AmmoInMagazine -= amount;
             if (AmmoInMagazine < 0) throw new Exceptions.MoreAmmoConsumedThanAvailableException();
         }

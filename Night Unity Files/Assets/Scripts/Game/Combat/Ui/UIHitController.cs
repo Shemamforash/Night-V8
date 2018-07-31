@@ -15,9 +15,9 @@ namespace Game.Combat.Ui
 
         public void Awake()
         {
-            _innerRect = Helper.FindChildWithName<RectTransform>(gameObject, "Inner");
+            _innerRect = gameObject.FindChildWithName<RectTransform>("Inner");
             _innerImage = _innerRect.GetComponent<Image>();
-            _outerImage = Helper.FindChildWithName<Image>(gameObject, "Outer");
+            _outerImage = gameObject.FindChildWithName<Image>("Outer");
         }
 
         public void Update()

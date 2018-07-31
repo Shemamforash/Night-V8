@@ -16,13 +16,13 @@ namespace Facilitating.UIControllers
 
         public void Awake()
         {
-            GameObject primaryMarkerParent = Helper.FindChildWithName(gameObject, "Primary");
-            GameObject secondaryMarkerParent = Helper.FindChildWithName(gameObject, "Secondary");
+            GameObject primaryMarkerParent = gameObject.FindChildWithName("Primary");
+            GameObject secondaryMarkerParent = gameObject.FindChildWithName("Secondary");
             for (int i = 0; i < 10; ++i)
             {
                 string markerName = "Marker";
                 if (i != 0) markerName += " (" + i + ")";
-                Image primaryMarker = Helper.FindChildWithName<Image>(primaryMarkerParent, markerName);
+                Image primaryMarker = primaryMarkerParent.FindChildWithName<Image>(markerName);
                 _markers.Add(new Marker(primaryMarker));
             }
 
@@ -30,7 +30,7 @@ namespace Facilitating.UIControllers
             {
                 string markerName = "Marker";
                 if (i != 0) markerName += " (" + i + ")";
-                Image secondaryMarker = Helper.FindChildWithName<Image>(secondaryMarkerParent, markerName);
+                Image secondaryMarker = secondaryMarkerParent.FindChildWithName<Image>(markerName);
                 _markers.Add(new Marker(secondaryMarker));
             }
         }

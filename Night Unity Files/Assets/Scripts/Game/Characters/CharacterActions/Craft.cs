@@ -15,7 +15,7 @@ namespace Game.Characters.CharacterActions
 
         protected override void OnClick()
         {
-            UiGearMenuController.Instance().ShowCraftingMenu(PlayerCharacter);
+            UiGearMenuController.ShowCraftingMenu(PlayerCharacter);
         }
     }
 }

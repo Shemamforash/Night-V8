@@ -184,9 +184,9 @@ namespace Game.Characters
 
         private void LoadAttribute(XmlNode root, string attributeName, CharacterAttribute characterAttribute)
         {
-            XmlNode attributeNode = Helper.GetNode(root, attributeName);
-            characterAttribute.Max = Helper.IntFromNode(attributeNode, "Max");
-            characterAttribute.SetCurrentValue(Helper.IntFromNode(attributeNode, "Val"));
+            XmlNode attributeNode = root.GetNode(attributeName);
+            characterAttribute.Max = attributeNode.IntFromNode("Max");
+            characterAttribute.SetCurrentValue(attributeNode.IntFromNode("Val"));
         }
 
         private void SaveAttribute(XmlNode root, string attributeName, CharacterAttribute characterAttribute)

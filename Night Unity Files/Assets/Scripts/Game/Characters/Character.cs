@@ -36,7 +36,7 @@ namespace Game.Characters
         public override void Load(XmlNode doc, PersistenceType saveType)
         {
             base.Load(doc, saveType);
-            Name = Helper.GetNodeText(doc, "Name");
+            Name = doc.GetNodeText("Name");
         }
 
         public virtual void EquipWeapon(Weapon weapon)

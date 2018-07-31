@@ -75,7 +75,7 @@ namespace Game.Exploration.Environment
         {
             if (_undrawnRoutes.Count == 0)
             {
-                Helper.Shuffle(_allRoutes);
+                _allRoutes.Shuffle();
                 _allRoutes.ForEach(a => _undrawnRoutes.Enqueue(a));
             }
 
@@ -197,7 +197,7 @@ namespace Game.Exploration.Environment
         public static string GenerateName(RegionType type)
         {
             if (type == RegionType.Rite) return "";
-            return type == RegionType.Gate ? "Gate" : Helper.RemoveRandomInList(_regionNames[type]);
+            return type == RegionType.Gate ? "Gate" : _regionNames[type].RemoveRandom();
         }
 
         private static void LoadNames(RegionType type, string[] prefixes, string[] suffixes)
@@ -218,7 +218,7 @@ namespace Game.Exploration.Environment
                             combinations.Add(prefix + "'s " + suffix);
                             break;
                     }
-            Helper.Shuffle(combinations);
+            combinations.Shuffle();
             _regionNames.Add(type, combinations);
         }
 
@@ -233,8 +233,8 @@ namespace Game.Exploration.Environment
             XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
             foreach (XmlNode regionTypeNode in root.ChildNodes)
             {
-                string[] prefixes = StripBlanks(Helper.GetNodeText(regionTypeNode, "Prefixes")).Split(',');
-                string[] suffixes = StripBlanks(Helper.GetNodeText(regionTypeNode, "Suffixes")).Split(',');
+                string[] prefixes = StripBlanks(regionTypeNode.GetNodeText("Prefixes")).Split(',');
+                string[] suffixes = StripBlanks(regionTypeNode.GetNodeText("Suffixes")).Split(',');
                 string regionName = regionTypeNode.Name;
                 foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
                 {
@@ -253,7 +253,7 @@ namespace Game.Exploration.Environment
         private static void DistributeNodeTypes(RegionType type, int quantity, int minDepth = -1, bool mustNotTouch = true)
         {
             if (quantity == 0) return;
-            Helper.Shuffle(_regions);
+            _regions.Shuffle();
             foreach (Region region in _regions)
             {
                 if (region.GetRegionType() != RegionType.None) continue;
@@ -278,7 +278,7 @@ namespace Game.Exploration.Environment
 
             if (quantity > 0)
             {
-                Helper.Shuffle(_regions);
+                _regions.Shuffle();
                 foreach (Region region in _regions)
                 {
                     if (region.GetRegionType() != RegionType.None) continue;
@@ -297,7 +297,7 @@ namespace Game.Exploration.Environment
             int waterSources = WaterSourcesPerEnvironment;
             while (waterSources > 0)
             {
-                Helper.Shuffle(_regions);
+                _regions.Shuffle();
                 bool added = false;
                 for (int index = 0; index < _regions.Count * 0.6f; index++)
                 {
@@ -318,7 +318,7 @@ namespace Game.Exploration.Environment
             int foodSource = FoodSourcesPerEnvironment;
             while (foodSource > 0)
             {
-                Helper.Shuffle(_regions);
+                _regions.Shuffle();
                 bool added = false;
                 foreach (Region r in _regions)
                 {
@@ -338,7 +338,7 @@ namespace Game.Exploration.Environment
             int resourceCount = ResourcesPerEnvironment;
             while (resourceCount > 0)
             {
-                Helper.Shuffle(_regions);
+                _regions.Shuffle();
                 bool added = false;
                 foreach (Region r in _regions)
                 {

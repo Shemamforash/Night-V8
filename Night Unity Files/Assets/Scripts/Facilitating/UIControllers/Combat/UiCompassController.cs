@@ -19,7 +19,7 @@ public class UiCompassController : MonoBehaviour
     public void Awake()
     {
         _indicatorPrefab = Resources.Load<GameObject>("Prefabs/Combat/Indicator");
-        _compassPulse = Helper.FindChildWithName<ParticleSystem>(gameObject, "Compass Pulse");
+        _compassPulse = gameObject.FindChildWithName<ParticleSystem>("Compass Pulse");
         _instance = this;
         _audioSource = GetComponent<AudioSource>();
     }

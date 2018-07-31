@@ -23,7 +23,7 @@ namespace Game.Combat.Misc
         public XmlNode Save(XmlNode doc, PersistenceType saveType)
         {
             XmlNode campfireNode = SaveController.CreateNodeAndAppend("Campfire", doc);
-            SaveController.CreateNodeAndAppend("Position", campfireNode, Helper.VectorToString(FirePosition));
+            SaveController.CreateNodeAndAppend("Position", campfireNode, FirePosition.ToString());
             return doc;
         }
 

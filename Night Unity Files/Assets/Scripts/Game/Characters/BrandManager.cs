@@ -18,7 +18,7 @@ namespace Game.Characters
         {
             List<Brand> brandSelection = new List<Brand>();
             if (_lockedBrands.Count == 0) return brandSelection;
-            Helper.Shuffle(_lockedBrands);
+            _lockedBrands.Shuffle();
             for (int i = 0; i < 3 && i < _lockedBrands.Count; ++i)
             {
                 brandSelection.Add(_lockedBrands[i]);

@@ -16,8 +16,8 @@ public class EssenceCloudBehaviour : MonoBehaviour
 
     public void Awake()
     {
-        _essenceParticles = Helper.FindChildWithName<ParticleSystem>(gameObject, "Cloud");
-        _essencePuff = Helper.FindChildWithName<ParticleSystem>(gameObject, "Essence Puff");
+        _essenceParticles = gameObject.FindChildWithName<ParticleSystem>("Cloud");
+        _essencePuff = gameObject.FindChildWithName<ParticleSystem>("Essence Puff");
         Initialise(20, transform.position);
     }
 

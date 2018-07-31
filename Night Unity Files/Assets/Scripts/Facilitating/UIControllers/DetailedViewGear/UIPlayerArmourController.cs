@@ -17,15 +17,15 @@ namespace Facilitating.UIControllers
         public void Awake()
         {
             EnhancedButton = GetComponent<EnhancedButton>();
-            _equippedObject = Helper.FindChildWithName(gameObject, "Equipped");
-            _notEquippedObject = Helper.FindChildWithName(gameObject, "Not Equipped");
+            _equippedObject = gameObject.FindChildWithName("Equipped");
+            _notEquippedObject = gameObject.FindChildWithName("Not Equipped");
             for (int i = 9; i >= 0; --i)
             {
-                _plates.Add(Helper.FindChildWithName<Image>(gameObject, "Plate " + i));
+                _plates.Add(gameObject.FindChildWithName<Image>("Plate " + i));
             }
 
-            _ratingText = Helper.FindChildWithName<EnhancedText>(gameObject, "Rating");
-            _platesText = Helper.FindChildWithName<EnhancedText>(gameObject, "Plates");
+            _ratingText = gameObject.FindChildWithName<EnhancedText>("Rating");
+            _platesText = gameObject.FindChildWithName<EnhancedText>("Plates");
         }
 
         public void SetArmour(ArmourController armour)
