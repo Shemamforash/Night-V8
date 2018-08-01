@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Game.Combat.Player;
+﻿using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -24,17 +23,6 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             float angle = AdvancedMaths.AngleFromUp(transform.position, PlayerCombat.Instance.transform.position);
             _pushParticles.transform.rotation = Quaternion.Euler(0, 0, angle + 80f);
             _pushParticles.Emit(50);
-            StartCoroutine(CheckHit());
-        }
-
-        private IEnumerator CheckHit()
-        {
-            float lifeTime = _pushParticles.main.startLifetime.constant;
-            while (lifeTime > 0)
-            {
-                lifeTime -= Time.deltaTime;
-                yield return null;
-            }
         }
     }
 }

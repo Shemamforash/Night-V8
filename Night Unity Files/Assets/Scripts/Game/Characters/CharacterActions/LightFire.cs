@@ -19,7 +19,7 @@ namespace Game.Characters.CharacterActions
         public override void Enter()
         {
             base.Enter();
-            Duration = WorldState.MinutesPerHour;
+            SetDuration(WorldState.MinutesPerHour);
         }
     }
 }

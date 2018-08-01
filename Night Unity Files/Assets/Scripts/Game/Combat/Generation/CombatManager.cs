@@ -205,6 +205,7 @@ namespace Game.Combat.Generation
 
         private void OnDrawGizmos()
         {
+            return;
             Vector3 cubeSize = 1f / PathingGrid.CellResolution * Vector3.one;
             Gizmos.color = Color.red;
             List<Cell> invalid = PathingGrid._invalidCells.ToList();
@@ -297,18 +298,26 @@ namespace Game.Combat.Generation
             _enemies.Add(e);
         }
 
-        public static EnemyBehaviour NearestEnemy()
+        public static EnemyBehaviour NearestEnemy(Vector2 position)
         {
             EnemyBehaviour nearestEnemy = null;
             float nearestDistance = 10000;
             EnemiesOnScreen().ForEach(e =>
             {
-                float distance = e.DistanceToTarget();
+                float distance = Vector2.Distance(e.transform.position, position);
                 if (distance >= nearestDistance) return;
                 nearestDistance = distance;
                 nearestEnemy = e;
             });
             return nearestEnemy;
+        }
+
+        public static CharacterCombat NearestCharacter(Vector2 position)
+        {
+            EnemyBehaviour nearestEnemy = NearestEnemy(position);
+            float playerDistance = Vector2.Distance(position, PlayerCombat.Instance.transform.position);
+            float enemyDistance = Vector2.Distance(position, nearestEnemy.transform.position);
+            return playerDistance < enemyDistance ? (CharacterCombat) PlayerCombat.Instance : nearestEnemy;
         }
 
         public static List<EnemyBehaviour> Enemies() => Instance()._enemies;

@@ -50,7 +50,7 @@ namespace Game.Gear.Weapons
 
         public static WeaponClass GetRandomClass()
         {
-            return Helper.RandomInList(_weaponClasses);
+            return Helper.RandomElement(_weaponClasses);
         }
     }
 }

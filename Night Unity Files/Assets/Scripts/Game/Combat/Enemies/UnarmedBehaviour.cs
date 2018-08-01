@@ -56,33 +56,20 @@ namespace Game.Combat.Enemies
 
         protected virtual void OnAlert()
         {
-            FollowTarget();
+            MoveBehaviour.FollowTarget(GetTarget().transform, 0f, 0.2f);
         }
 
         protected void FollowTarget()
         {
-            CharacterCombat target = GetTarget();
-            if (target.IsDead) 
-            {
-                _targetLastCell = null;
-                return;
-            }
-
-            if (target.CurrentCell() == _targetLastCell)
-            {
-                ReachTarget();
-                return;
-            }
-
-            MoveBehaviour.GoToCell(target.CurrentCell());
-            CurrentAction = ReachTarget;
-            _targetLastCell = target.CurrentCell();
+            if (DistanceToTarget() > 0.1f) return;
+            ReachTarget();
         }
-        
+
         public override void Update()
         {
             base.Update();
             CheckForPlayer();
+            FollowTarget();
         }
 
         private void Wander()

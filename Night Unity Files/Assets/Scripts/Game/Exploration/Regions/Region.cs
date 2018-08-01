@@ -152,7 +152,7 @@ namespace Game.Exploration.Regions
 
             while (size > 0)
             {
-                EnemyTemplate template = Helper.RandomInList(allowedTypes);
+                EnemyTemplate template = Helper.RandomElement(allowedTypes);
                 AddEnemy(template);
                 size -= template.Value;
             }

@@ -49,7 +49,7 @@ namespace Game.Combat.Generation.Shrines
             List<EnemyTemplate> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
             for (int i = 0; i < Random.Range(daysSpent / 2f, daysSpent); ++i)
             {
-                AddEnemy(CombatManager.QueueEnemyToAdd(Helper.RandomInList(allowedEnemies)));
+                AddEnemy(CombatManager.QueueEnemyToAdd(Helper.RandomElement(allowedEnemies)));
             }
         }
 

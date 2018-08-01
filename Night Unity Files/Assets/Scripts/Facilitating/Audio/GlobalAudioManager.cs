@@ -1,27 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Xml;
+﻿using System.Xml;
 using Facilitating.Persistence;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 namespace Facilitating.Audio
 {
     public class GlobalAudioManager : MonoBehaviour, IPersistenceTemplate
     {
-        private readonly List<AudioSource> _effectsSources = new List<AudioSource>();
-        private readonly List<AudioSource> _musicSources = new List<AudioSource>();
-        private float _musicVolume, _effectsVolume, _masterVolume;
-        public Slider MasterSlider, MusicSlider, EffectsSlider;
+        private static float _volume;
+        public Slider MasterSlider;
+        private static AudioMixer _masterMixer;
 
         public void Load(XmlNode root, PersistenceType saveType)
         {
             if (saveType != PersistenceType.Settings) return;
             XmlNode node = root.GetNode("SoundSettings");
-            _musicVolume = node.FloatFromNode(nameof(_musicVolume));
-            _effectsVolume = node.FloatFromNode(nameof(_effectsVolume));
-            _masterVolume = node.FloatFromNode(nameof(_masterVolume));
+            _volume = node.FloatFromNode(nameof(_volume));
             Initialise();
         }
 
@@ -29,10 +26,13 @@ namespace Facilitating.Audio
         {
             if (saveType != PersistenceType.Settings) return null;
             XmlNode node = SaveController.CreateNodeAndAppend("SoundSettings", root);
-            SaveController.CreateNodeAndAppend(nameof(_musicVolume), node, _musicVolume);
-            SaveController.CreateNodeAndAppend(nameof(_effectsVolume), node, _effectsVolume);
-            SaveController.CreateNodeAndAppend(nameof(_masterVolume), node, _masterVolume);
+            SaveController.CreateNodeAndAppend(nameof(_volume), node, _volume);
             return node;
+        }
+
+        public static float Volume()
+        {
+            return _volume;
         }
 
         public void Awake()
@@ -40,45 +40,23 @@ namespace Facilitating.Audio
             SaveController.AddPersistenceListener(this);
         }
 
-        private void UpdateVolumes()
+        private static float NormalisedVolumeToAttentuation(float volume)
         {
-            foreach (AudioSource a in _musicSources) a.volume = _masterVolume < _musicVolume ? _masterVolume : _musicVolume;
-            foreach (AudioSource e in _effectsSources) e.volume = _masterVolume < _effectsVolume ? _masterVolume : _effectsVolume;
+            return 1 - Mathf.Sqrt(volume) * -80f;
         }
 
-        private void SetMasterVolume(float volume)
+        public static void SetVolume(float volume)
         {
-            _masterVolume = volume;
-            UpdateVolumes();
-        }
-
-        private void SetEffectsVolume(float volume)
-        {
-            _effectsVolume = volume;
-            UpdateVolumes();
-        }
-
-        private void SetMusicVolume(float volume)
-        {
-            _musicVolume = volume;
-            UpdateVolumes();
+            _volume = volume;
+            if(_masterMixer == null) _masterMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
+            _masterMixer.SetFloat("Master", NormalisedVolumeToAttentuation(_volume));
         }
 
         private void Initialise()
         {
-            List<GameObject> musicObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("MusicSource"));
-            List<GameObject> effectsObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("SFXSource"));
-            foreach (GameObject m in musicObjects) _musicSources.Add(m.GetComponent<AudioSource>());
-            foreach (GameObject e in effectsObjects) _effectsSources.Add(e.GetComponent<AudioSource>());
-
-            MasterSlider.onValueChanged.AddListener(SetMasterVolume);
-            MusicSlider.onValueChanged.AddListener(SetMusicVolume);
-            EffectsSlider.onValueChanged.AddListener(SetEffectsVolume);
-
-            MasterSlider.value = _masterVolume;
-            MusicSlider.value = _musicVolume;
-            EffectsSlider.value = _effectsVolume;
-            UpdateVolumes();
+            MasterSlider.onValueChanged.AddListener(SetVolume);
+            MasterSlider.value = _volume;
+            SetVolume(_volume);
         }
     }
 }

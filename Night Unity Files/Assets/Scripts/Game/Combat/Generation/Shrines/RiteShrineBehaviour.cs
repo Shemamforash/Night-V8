@@ -60,7 +60,6 @@ namespace Game.Combat.Generation.Shrines
             }
 
             PlayerUi.SetEventText("Accept the " + _targetBrand.GetName() + " [T]");
-            _targetBrand.UpdateValue(10000);
         }
 
         public void ExitShrineCollider()
@@ -73,6 +72,7 @@ namespace Game.Combat.Generation.Shrines
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
             if (axis != InputAxis.TakeItem) return;
+            _targetBrand.UpdateValue(10000);
             PlayerCombat.Instance.Player.BrandManager.SetActiveBrand(_targetBrand);
             PlayerUi.SetEventText("The Rite begins...");
             PlayerUi.FadeTextOut();

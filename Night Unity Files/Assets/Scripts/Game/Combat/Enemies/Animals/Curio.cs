@@ -17,7 +17,7 @@ namespace Game.Combat.Enemies.Animals
         private void RunAway()
         {
             Vector2 dir = (transform.position - PlayerCombat.Instance.transform.position).normalized;
-            Cell target = Helper.RandomInList(PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, 3));
+            Cell target = Helper.RandomElement(PathingGrid.GetCellsInFrontOfMe(CurrentCell(), dir, 3));
             MoveBehaviour.GoToCell(target);
             CurrentAction = WaitForPlayer;
         }

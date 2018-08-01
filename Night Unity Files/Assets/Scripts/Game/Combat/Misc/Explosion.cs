@@ -86,7 +86,7 @@ namespace Game.Combat.Misc
         public void Detonate()
         {
             gameObject.SetActive(true);
-            _audioSource.PlayOneShot(Helper.RandomInList(_explosionClips));
+            _audioSource.PlayOneShot(Helper.RandomElement(_explosionClips));
             StartCoroutine(Warmup());
         }
 

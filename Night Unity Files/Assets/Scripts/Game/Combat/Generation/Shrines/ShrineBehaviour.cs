@@ -52,7 +52,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
             shrineTypes.Add(shrineType);
         }
         GameObject shrine = null;
-        switch (Helper.RandomInList(shrineTypes))
+        switch (Helper.RandomElement(shrineTypes))
         {
             case ShrineType.Wave:
                 shrine = Instantiate(_wavePrefab);

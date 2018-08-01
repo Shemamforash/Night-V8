@@ -85,7 +85,7 @@ namespace Game.Combat.Misc
                 GetNewFootprint().transform.Translate(Vector3.right * 0.03f);
                 _leftLast = true;
             }
-            if(_audioClips.Length != 0) _audioSource.PlayOneShot(Helper.RandomInList(_audioClips));
+            if(_audioClips.Length != 0) _audioSource.PlayOneShot(Helper.RandomElement(_audioClips));
             _distanceTravelled = 0;
             _lastPosition = transform.position;
         }

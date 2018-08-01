@@ -1,6 +1,5 @@
 ﻿using Game.Combat.Enemies.Humans;
 using Game.Combat.Generation;
-using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
@@ -10,7 +9,6 @@ namespace Game.Combat.Enemies
     public class ArmedBehaviour : UnarmedBehaviour
     {
         private float IdealWeaponDistance;
-        protected bool CouldHitTarget;
         private bool _waitingForHeal;
         private BaseWeaponBehaviour _weaponBehaviour;
 
@@ -23,37 +21,15 @@ namespace Game.Combat.Enemies
             IdealWeaponDistance = Weapon().CalculateIdealDistance();
         }
 
-        public override void Update()
-        {
-            base.Update();
-            if (!CombatManager.InCombat()) return;
-            CouldHitTarget = TargetVisible() && !OutOfRange();
-        }
-
         protected override void OnAlert()
         {
             TryFire();
-        }
-
-        private bool OutOfRange() => DistanceToTarget() < IdealWeaponDistance * 0.5f || DistanceToTarget() > IdealWeaponDistance * 1.5f;
-
-        private bool TargetVisible()
-        {
-            RaycastHit2D hit = Physics2D.Linecast(transform.position, PlayerCombat.Instance.transform.position, 1 << 8);
-            return hit.collider == null;
+            MoveBehaviour.FollowTarget(GetTarget().transform, IdealWeaponDistance * 0.5f, IdealWeaponDistance * 1.5f);
         }
 
         protected void TryFire()
         {
             FacePlayer = false;
-
-            if (!CouldHitTarget)
-            {
-                MoveBehaviour.GoToCell(GetTarget().CurrentCell(), IdealWeaponDistance);
-                CurrentAction = TryFire;
-                return;
-            }
-
             Aim();
         }
 
@@ -133,11 +109,7 @@ namespace Game.Combat.Enemies
 
             FacePlayer = true;
             SetActionText("Aiming");
-            CurrentAction = () =>
-            {
-                if (!CouldHitTarget) TryFire();
-                Fire();
-            };
+            CurrentAction = Fire;
         }
 
         private void Fire()
@@ -146,12 +118,6 @@ namespace Game.Combat.Enemies
             SetActionText("Firing");
             CurrentAction = () =>
             {
-                if (!CouldHitTarget)
-                {
-                    TryFire();
-                    return;
-                }
-
                 if (!_weaponBehaviour.CanFire()) return;
                 _weaponBehaviour.StartFiring(this);
                 if (_weaponBehaviour.Empty())

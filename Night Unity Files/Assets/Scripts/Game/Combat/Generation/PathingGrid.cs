@@ -89,7 +89,7 @@ namespace Game.Combat.Generation
 
         public static Cell GetEdgeCell()
         {
-            return Helper.RandomInList(_edgePositionList);
+            return Helper.RandomElement(_edgePositionList);
         }
         
         public static List<Cell> GetCellsInFrontOfMe(Cell current, Vector2 direction, float distance)
@@ -116,7 +116,7 @@ namespace Game.Combat.Generation
                 return FindNearestCell(cellsAroundTarget, false, current);
             }
 
-            return Helper.RandomInList(sharedCells);
+            return Helper.RandomElement(sharedCells);
         }
 
         public static Cell WorldToCellPosition(Vector2 position, bool print = true)
@@ -202,7 +202,7 @@ namespace Game.Combat.Generation
         }
 
         public static Cell GetCellNearMe(Cell current, float distanceMax, float distanceMin = 0) =>
-            Helper.RandomInList(CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin)));
+            Helper.RandomElement(CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin)));
 
         public static List<Cell> GetCellsNearMe(Vector2 position, int noCells, float distanceMax, float distanceMin = 0) =>
             GetCellsNearMe(WorldToCellPosition(position), noCells, distanceMax, distanceMin);

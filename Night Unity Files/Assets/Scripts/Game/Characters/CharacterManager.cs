@@ -62,7 +62,7 @@ namespace Game.Characters
             foreach (Player player in Characters)
             {
                 if (player.CharacterView != null) continue;
-                Transform characterAreaTransform = GameObject.Find("Character Section").transform.Find("Content").transform;
+                Transform characterAreaTransform = GameObject.Find("Character Section").transform;
                 if (Items().Count > 0) Helper.AddDelineator(characterAreaTransform);
                 GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", characterAreaTransform);
                 characterObject.GetComponent<CharacterView>().SetPlayer(player);
@@ -172,7 +172,7 @@ namespace Game.Characters
         private Player GenerateDriver()
         {
             Player driver = GenerateCharacter(CharacterClass.Wanderer);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Rusted, WeaponType.Pistol);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Rusted, WeaponType.SMG);
 //            WeaponGenerationTester.Test();
 //            Inscription.Test();
             driver.EquipWeapon(weapon);

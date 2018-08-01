@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using DG.Tweening;
+using Facilitating.Audio;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,9 +20,10 @@ namespace Game.Global
             _instance = this;
             _audioSource = GetComponent<AudioSource>();
             _fader = GameObject.Find("Screen Fader").GetComponent<Image>();
+            GlobalAudioManager.SetVolume(0f);
+            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetVolume, 1f, 1f);
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_fader.DOColor(InvisibleBlack, 1f));
-            if(_audioSource != null) sequence.Append(_audioSource.DOFade(1, 1));
             if (SceneManager.GetActiveScene().name != "Game") return;
             sequence.AppendCallback(WorldState.UnPause);
         }
@@ -31,6 +33,8 @@ namespace Game.Global
             AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync(sceneName);
             sceneLoaded.allowSceneActivation = false;
             if (_audioSource != null) _audioSource.DOFade(1, 1);
+            GlobalAudioManager.SetVolume(1f);
+            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetVolume, 0f, 1f);
             if (fade)
             {
                 yield return _fader.DOColor(Color.black, 1f).WaitForCompletion();

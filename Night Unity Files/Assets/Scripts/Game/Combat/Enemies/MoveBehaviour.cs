@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Game.Combat.Generation;
+using Game.Combat.Player;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
@@ -11,19 +13,22 @@ namespace Game.Combat.Enemies
     public class MoveBehaviour : MonoBehaviour
     {
         private Cell _currentCell;
-        private float _currentTime;
         private Cell _destinationCell;
-        private float _lastRouteStartTime;
         private Cell _lastTargetCell;
-        private MovementController _movementController;
         private Cell _nextCell;
+
+        private float _currentTime;
+        private float _lastRouteStartTime;
+        private float _targetDistance;
         private bool _reachedTarget;
+
+        private MovementController _movementController;
         private List<Cell> _route = new List<Cell>();
         private Thread _routeThread;
-        private float _targetDistance;
-
-        private Action MoveAction;
+        private bool _shouldMove;
         private Coroutine RouteWaitCoroutine;
+        private Transform _followTarget;
+        private float _minDistance, _maxDistance;
 
         public void Awake()
         {
@@ -44,7 +49,7 @@ namespace Game.Combat.Enemies
         {
             _currentCell = PathingGrid.WorldToCellPosition(transform.position);
         }
-        
+
         public void SetRoute(List<Cell> route, float timeStarted)
         {
             if (timeStarted != _lastRouteStartTime) return;
@@ -72,7 +77,38 @@ namespace Game.Combat.Enemies
         {
             if (!CombatManager.InCombat()) return;
             CheckForRequiredPathfind();
-            MoveAction?.Invoke();
+            Move();
+        }
+
+        private void UpdateFollowTargetPosition()
+        {
+            if (_followTarget == null) return;
+
+            float distance = Vector2.Distance(transform.position, _followTarget.transform.position);
+            bool outOfRange = distance > _maxDistance || distance < _minDistance;
+            if (outOfRange)
+            {
+                GoToCell(PathingGrid.WorldToCellPosition(_followTarget.position), Random.Range(_minDistance, _maxDistance));
+                return;
+            }
+
+            bool outOfSight = Physics2D.Linecast(transform.position, _followTarget.position, 1 << 8).collider != null;
+            if (outOfSight)
+            {
+                GoToCell(PathingGrid.WorldToCellPosition(_followTarget.position), Random.Range(_minDistance, _maxDistance));
+            }
+        }
+
+        public void FollowTarget(Transform target, float minDistance, float maxDistance)
+        {
+            _followTarget = target;
+            _minDistance = minDistance;
+            _maxDistance = maxDistance;
+        }
+
+        public void StopFollowing()
+        {
+            _followTarget = null;
         }
 
         private void MoveToNextCell()
@@ -106,33 +142,36 @@ namespace Game.Combat.Enemies
             Reposition();
         }
 
+        private Queue<Cell> _routeQueue;
 
+        private void Move()
+        {
+            if (!_shouldMove) return;
+            if (_reachedTarget)
+            {
+                if (_routeQueue.Count == 0)
+                {
+                    _destinationCell = null;
+                    _shouldMove = false;
+                    return;
+                }
+
+                _nextCell = _routeQueue.Dequeue();
+            }
+            MoveToNextCell();
+        }
+        
         private void Reposition()
         {
-            Queue<Cell> newRoute = new Queue<Cell>(_route);
-            if (newRoute.Count == 0)
+            _routeQueue = new Queue<Cell>(_route);
+            if (_routeQueue.Count == 0)
             {
                 Debug.Log(name + " has no route");
                 _destinationCell = null;
                 return;
             }
-            
-            _nextCell = newRoute.Dequeue();
-            MoveAction = () =>
-            {
-                if (_reachedTarget)
-                {
-                    if (newRoute.Count == 0)
-                    {
-                        _destinationCell = null;
-                        return;
-                    }
-
-                    _nextCell = newRoute.Dequeue();
-                }
-
-                MoveToNextCell();
-            };
+            _nextCell = _routeQueue.Dequeue();
+            _shouldMove = true;
         }
 
         private void CheckForRequiredPathfind()
@@ -142,13 +181,15 @@ namespace Game.Combat.Enemies
                 _currentTime -= Time.deltaTime;
                 return;
             }
-
+            
+            UpdateFollowTargetPosition();
             _currentTime = 1f;
             if (_destinationCell == null) return;
             if (_destinationCell == _lastTargetCell) return;
             _lastTargetCell = _destinationCell;
             _lastRouteStartTime = Time.timeSinceLevelLoad;
             UpdateCurrentCell();
+            Debug.DrawLine(_currentCell.Position, _destinationCell.Position, Color.red, 1f);
             _routeThread = PathingGrid.ThreadRouteToCell(_currentCell, _destinationCell, this, _lastRouteStartTime);
             if (RouteWaitCoroutine != null) StopCoroutine(RouteWaitCoroutine);
             RouteWaitCoroutine = StartCoroutine(WaitForRoute(_targetDistance));

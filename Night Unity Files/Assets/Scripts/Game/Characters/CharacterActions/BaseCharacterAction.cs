@@ -10,6 +10,7 @@ namespace Game.Characters.CharacterActions
         protected readonly Player PlayerCharacter;
         private int _timeRemaining;
         protected int Duration;
+        private int InitialDuration;
         protected Action HourCallback;
         protected Action MinuteCallback;
         public bool IsVisible = true;
@@ -51,12 +52,18 @@ namespace Game.Characters.CharacterActions
 
         protected string DisplayName;
         protected bool ShowTime = true;
+
+        protected void SetDuration(int duration)
+        {
+            Duration = duration;
+            InitialDuration = Duration;
+        }
         
         public void UpdateActionText()
         {
-            string actionString = DisplayName;
-            if (ShowTime) actionString += "\n" + WorldState.TimeToHours(Duration);
-            PlayerCharacter.CharacterView.UpdateCurrentActionText(actionString);
+            float normalisedTime = -1;
+            if (ShowTime) normalisedTime = (float)Duration / InitialDuration;
+            PlayerCharacter.CharacterView.UpdateCurrentActionText(DisplayName, normalisedTime);
         }
     }
 }

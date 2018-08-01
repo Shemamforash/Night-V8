@@ -59,7 +59,7 @@ namespace Game.Gear
         {
             ReadTemplates();
             InscriptionTier tier = (InscriptionTier) WorldState.GenerateGearLevel();
-            InscriptionTemplate randomTemplate = Helper.RandomInList(_inscriptionTemplates);
+            InscriptionTemplate randomTemplate = Helper.RandomElement(_inscriptionTemplates);
             return new Inscription(randomTemplate, tier);
         }
 

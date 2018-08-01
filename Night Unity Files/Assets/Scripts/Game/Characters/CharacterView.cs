@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
+using Game.Global;
 using SamsHelper;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -15,6 +17,7 @@ namespace Game.Characters
         private Player _player;
         private Transform _actionList;
         private TextMeshProUGUI _currentActionText;
+        private Slider _currentActionSliderSimple, _currentActionSliderDetailed;
         private TextMeshProUGUI _detailedCurrentActionText;
         private GameObject _detailedView;
         private GameObject SimpleView;
@@ -67,6 +70,7 @@ namespace Game.Characters
             SimpleView.SetActive(true);
             FindInSimpleView<TextMeshProUGUI>("Name").text = _player.Name;
             _currentActionText = FindInSimpleView<TextMeshProUGUI>("Current Action");
+            _currentActionSliderSimple = FindInSimpleView<Slider>("Slider");
         }
 
         private void CacheDetailedViewElements()
@@ -77,6 +81,7 @@ namespace Game.Characters
 
             _actionList = FindInDetailedView<Transform>("Action List");
             _detailedCurrentActionText = FindInDetailedView<TextMeshProUGUI>("Current Action");
+            _currentActionSliderDetailed = FindInDetailedView<Slider>("Slider");
 
             FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _player.Name;
 
@@ -179,11 +184,32 @@ namespace Game.Characters
             });
         }
 
-        public void UpdateCurrentActionText(string currentActionString)
+        public void UpdateCurrentActionText(string currentActionString, float progress)
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
             if (currentState == null) return;
             _currentActionText.text = currentActionString;
+            if (progress < 0)
+            {
+                _currentActionSliderSimple.gameObject.SetActive(false);
+                _currentActionSliderDetailed.gameObject.SetActive(false);
+            }
+            else
+            {
+                _currentActionSliderSimple.gameObject.SetActive(true);
+                _currentActionSliderDetailed.gameObject.SetActive(true);
+                if (progress == 1)
+                {
+                    _currentActionSliderDetailed.value = 1;
+                    _currentActionSliderDetailed.value = 1;
+                }
+                else
+                {
+                    DOTween.To(() => _currentActionSliderSimple.value, f => _currentActionSliderSimple.value = f, progress, WorldState.MinuteInSeconds).SetEase(Ease.Linear);
+                    DOTween.To(() => _currentActionSliderDetailed.value, f => _currentActionSliderDetailed.value = f, progress, WorldState.MinuteInSeconds).SetEase(Ease.Linear);
+                }
+            }
+
             if (_player.States.IsDefaultState(currentState))
             {
                 SetActionListActive(true);

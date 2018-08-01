@@ -10,6 +10,7 @@ using Fastlights;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Animals;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
@@ -57,8 +58,10 @@ namespace Game.Combat.Player
         private bool _recovered;
         public List<Action<Shot>> OnFireActions = new List<Action<Shot>>();
         public List<Action> UpdateSkillActions = new List<Action>();
-        private BaseWeaponBehaviour _weaponBehaviour;
+        public BaseWeaponBehaviour _weaponBehaviour;
         private FastLight _muzzleFlash;
+
+        public bool DamageTakenSinceLastShot;
 
 
         public bool ConsumeAdrenaline(int amount)
@@ -301,6 +304,7 @@ namespace Game.Combat.Player
             base.TakeDamage(shot);
             UpdateSkillActions.Clear();
             _damageTakenSinceMarkStarted = true;
+            DamageTakenSinceLastShot = true;
             CombatManager.IncreaseDamageTaken(shot.DamageDealt());
             if (!Player.Attributes.DecayRetaliate) return;
             EnemyBehaviour b = shot._origin as EnemyBehaviour;
@@ -314,6 +318,7 @@ namespace Game.Combat.Player
 
             _muzzleFlash = GameObject.Find("Muzzle Flash").GetComponent<FastLight>();
             Player = CharacterManager.SelectedCharacter;
+            if (Player.Attributes.LeaveFireTrail) gameObject.AddComponent<LeaveFireTrail>().Initialise();
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             ArmourController = Player.ArmourController;
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
@@ -365,11 +370,12 @@ namespace Game.Combat.Player
             return base.GetAccuracyModifier();
         }
 
-        public void Shake()
+        public void Shake(float dps)
         {
-            CameraShaker.Instance.ShakeOnce(0.5f, 10, 0.2f, 0.2f);
+            float magnitude = dps / 100f;
+            if (magnitude > 1) magnitude = 1f;
+            CameraShaker.Instance.ShakeOnce(magnitude, 10, 0.2f, 0.2f);
         }
-
 
         private bool CanDash()
         {

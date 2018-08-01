@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using Game.Combat.Enemies;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -12,7 +15,7 @@ namespace Game.Combat.Misc
 {
     public class Shot : MonoBehaviour
     {
-        private const float Speed = 25f;
+        private float Speed = 25f;
         private static GameObject _bulletPrefab;
         private BulletTrailFade _bulletTrail;
 
@@ -24,18 +27,18 @@ namespace Game.Combat.Misc
         private int _damageDealt;
         private Vector3 _direction;
         private float _finalDamageModifier = 1f;
-        private GameObject _fireTrail;
         private bool _guaranteeHit;
         private int _knockbackForce = 10;
 
-        private bool _moving, _fired;
+        private bool _fired;
         public CharacterCombat _origin;
         private Vector3 _originPosition;
         private float _pierceChance, _burnChance, _decayChange, _sicknessChance;
         private Rigidbody2D _rigidBody;
-
+        
         private static Transform _shotParent;
         private Weapon _weapon;
+        private bool _seekTarget, _leaveFireTrail;
         private const float MaxAge = 3f;
         private event Action OnHitAction;
 
@@ -51,8 +54,9 @@ namespace Game.Combat.Misc
             _guaranteeHit = false;
             _knockbackForce = 10;
             _damageDealt = 0;
-            _moving = false;
             _fired = false;
+            _seekTarget = false;
+            _leaveFireTrail = false;
             OnHitAction = null;
         }
 
@@ -79,6 +83,26 @@ namespace Game.Combat.Misc
             _origin = origin;
             _direction = direction;
             _weapon = origin.Weapon();
+            switch (_weapon.WeaponType())
+            {
+                case WeaponType.Pistol:
+                    Speed = 20f;
+                    break;
+                case WeaponType.Rifle:
+                    Speed = 25;
+                    break;
+                case WeaponType.Shotgun:
+                    Speed = 15f;
+                    break;
+                case WeaponType.SMG:
+                    Speed = 15f;
+                    break;
+                case WeaponType.LMG:
+                    Speed = 20f;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             _originPosition = origin.transform.position;
             SetUpComponents();
         }
@@ -95,8 +119,6 @@ namespace Game.Combat.Misc
         private void SetUpComponents()
         {
             if (_rigidBody == null) _rigidBody = GetComponent<Rigidbody2D>();
-            if (_fireTrail == null) _fireTrail = gameObject.FindChildWithName("Fire Trail");
-            _fireTrail.SetActive(false);
             ResetValues();
             CacheWeaponAttributes();
             CalculateAccuracy();
@@ -105,11 +127,6 @@ namespace Game.Combat.Misc
         private void CalculateAccuracy()
         {
             if (_guaranteeHit) _accuracy = 0;
-        }
-
-        public void ActivateFireTrail()
-        {
-            _fireTrail.SetActive(true);
         }
 
         private void CacheWeaponAttributes()
@@ -129,9 +146,17 @@ namespace Game.Combat.Misc
 
         private void FixedUpdate()
         {
-            if (!_fired || _moving) return;
-            _rigidBody.velocity = _direction * Speed * Random.Range(0.9f, 1.1f);
-            _moving = true;
+            if (!_fired || !_seekTarget) return;
+            EnemyBehaviour nearestEnemy = CombatManager.NearestEnemy(transform.position);
+            Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
+            float angle = Vector2.Angle(dir, nearestEnemy.transform.position - transform.position);
+            float force = 50;
+            if (angle > 90)
+            {
+                force = -force;
+            }
+            _rigidBody.velocity += force * dir * Time.fixedDeltaTime;
+            _rigidBody.velocity = _rigidBody.velocity.normalized * Speed;
         }
 
         private IEnumerator WaitToDie()
@@ -155,6 +180,7 @@ namespace Game.Combat.Misc
             if (_origin != null) angleOffset *= _origin.GetAccuracyModifier();
             transform.position = _originPosition + _direction * distance;
             _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
+            if (_leaveFireTrail) gameObject.AddComponent<LeaveFireTrail>().Initialise();
             _fired = true;
             if (_origin != null) _origin.IncreaseRecoil();
 
@@ -162,12 +188,13 @@ namespace Game.Combat.Misc
             _bulletTrail.SetAlpha(1);
 
             _bulletTrail.SetPosition(transform);
+            _rigidBody.velocity = _direction * Speed * Random.Range(0.9f, 1.1f);
             StartCoroutine(WaitToDie());
         }
 
         private void DeactivateShot()
         {
-            _fireTrail.SetActive(false);
+            Destroy(gameObject.GetComponent<LeaveFireTrail>());
             _shotPool.Return(this);
         }
 
@@ -249,6 +276,21 @@ namespace Game.Combat.Misc
         {
             Assert.IsTrue(accuracy >= 0 && accuracy <= 180);
             _accuracy = accuracy;
+        }
+
+        public void Seek()
+        {
+            _seekTarget = true;
+        }
+
+        public void LeaveFireTrail()
+        {
+            _leaveFireTrail = true;
+        }
+
+        public Vector2 Direction()
+        {
+            return _direction;
         }
     }
 }

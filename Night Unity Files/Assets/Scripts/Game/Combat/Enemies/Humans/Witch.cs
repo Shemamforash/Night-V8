@@ -59,7 +59,7 @@ namespace Game.Combat.Enemies.Humans
             if (_throwing || !Alerted) return;
             _cooldownTime -= Time.deltaTime;
             if (_cooldownTime > 0) return;
-            if (CouldHitTarget) CurrentAction = ThrowGrenade();
+            CurrentAction = ThrowGrenade();
         }
     }
 }

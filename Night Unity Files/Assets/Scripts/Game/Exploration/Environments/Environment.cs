@@ -15,6 +15,7 @@ namespace Game.Exploration.Environment
         public readonly int LevelNo, Temples, Monuments, Shrines, Fountains, Shelters, Animals, Dangers;
         public readonly EnvironmentType EnvironmentType;
         private static List<EnvironmentType> _environmentTypes;
+        private List<string> _environmentNames = new List<string>();
 
         public Environment(XmlNode environmentNode)
         {
@@ -32,6 +33,17 @@ namespace Game.Exploration.Environment
             Animals = environmentNode.IntFromNode("Animals");
             Dangers = environmentNode.IntFromNode("Danger");
             RegionCount = Temples + Monuments + Shrines + Fountains + Shelters + Animals + Dangers;
+            LoadEnvironmentNames();
+        }
+
+        private void LoadEnvironmentNames()
+        {
+            XmlNode root = Helper.OpenRootNode("Regions", "EnvironmentSuffixes");
+            string[] environmentNames = root.GetNodeText(EnvironmentType.ToString()).Split(',');
+            foreach (string name in environmentNames)
+            {
+                _environmentNames.Add(name);
+            }
         }
 
         public readonly int RegionCount;
@@ -41,7 +53,7 @@ namespace Game.Exploration.Environment
             if (_environmentTypes == null)
             {
                 _environmentTypes = new List<EnvironmentType>();
-                foreach(EnvironmentType environmentType in Enum.GetValues(typeof(EnvironmentType))) _environmentTypes.Add(environmentType);
+                foreach (EnvironmentType environmentType in Enum.GetValues(typeof(EnvironmentType))) _environmentTypes.Add(environmentType);
             }
 
             return _environmentTypes.FirstOrDefault(e => e.ToString() == environmentString);
@@ -72,6 +84,11 @@ namespace Game.Exploration.Environment
             if (hours < 0) hours = 24 + hours;
             int arrayPosition = hours * 12 + minutes / 5 - 1;
             return (int) _temperatureArray[arrayPosition];
+        }
+
+        public List<string> Suffixes()
+        {
+            return _environmentNames;
         }
     }
 }

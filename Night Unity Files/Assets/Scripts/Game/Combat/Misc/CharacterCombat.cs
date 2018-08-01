@@ -30,6 +30,7 @@ namespace Game.Combat.Misc
         private CharacterCombat _target;
         public MovementController MovementController;
         protected CharacterUi CharacterUi;
+        private BloodSpatter _bloodSpatter;
 
         public bool IsDead;
         private const int ConditionTicksMax = 5;
@@ -178,6 +179,8 @@ namespace Game.Combat.Misc
             float healthDamage = shot.DamageDealt() - armourDamage;
             ArmourController.TakeDamage(Mathf.CeilToInt(armourDamage));
             HealthController.TakeDamage(Mathf.CeilToInt(healthDamage));
+            if (_bloodSpatter == null) return;
+            _bloodSpatter.Spray(shot.Direction(), healthDamage);
         }
 
         public virtual void Kill()
@@ -194,6 +197,7 @@ namespace Game.Combat.Misc
         public virtual void Awake()
         {
             MovementController = GetComponent<MovementController>();
+            _bloodSpatter = GetComponent<BloodSpatter>();
             if (this is EnemyBehaviour) CharacterUi = EnemyUi.Instance();
             else CharacterUi = PlayerUi.Instance();
             WeaponAudio = gameObject.FindChildWithName<WeaponAudioController>("Weapon Audio");

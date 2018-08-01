@@ -127,7 +127,7 @@ namespace Game.Characters.CharacterActions
             _travelTime = 0;
             _inTransit = true;
             _target = target;
-            Duration = enduranceCost * MinutesPerEndurancePoint;
+            SetDuration(enduranceCost * MinutesPerEndurancePoint);
         }
     }
 }

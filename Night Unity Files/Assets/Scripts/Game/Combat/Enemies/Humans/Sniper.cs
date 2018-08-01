@@ -20,7 +20,7 @@ namespace Game.Combat.Enemies.Humans
             CurrentAction = () =>
             {
                 Shot powerShot = Shot.Create(this);
-                powerShot.ActivateFireTrail();
+                powerShot.LeaveFireTrail();
                 powerShot.SetBurnChance(1);
                 powerShot.Fire();
                 ResetCooldown();

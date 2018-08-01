@@ -87,7 +87,7 @@ namespace Game.Combat.Misc
             List<EnemyTemplate> allowedTypes = WorldState.GetAllowedHumanEnemyTypes();
             while (size > 0)
             {
-                EnemyTemplate template = Helper.RandomInList(allowedTypes);
+                EnemyTemplate template = Helper.RandomElement(allowedTypes);
                 CombatManager.QueueEnemyToAdd(template, this);
                 size -= template.Value;
             }

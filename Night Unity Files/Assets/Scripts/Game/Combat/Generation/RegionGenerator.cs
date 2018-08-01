@@ -78,7 +78,7 @@ namespace Game.Combat.Generation
             foreach (Characters.Player c in characters)
             {
                 if (!c.HasAvailableStoryLine()) continue;
-                Vector2 echoPosition = Helper.RandomInList(_region.EchoPositions);
+                Vector2 echoPosition = Helper.RandomElement(_region.EchoPositions);
                 EchoBehaviour.Create(echoPosition, c);
                 break;
             }

@@ -98,6 +98,21 @@ namespace SamsHelper.Libraries
             return element;
         }
 
+        public static float Distance(this Transform from, Transform to)
+        {
+            return from.position.Distance(to.position);
+        }
+
+        public static float Distance(this Vector2 from, Vector2 to)
+        {
+            return Vector2.Distance(from, to);
+        }
+
+        public static float Distance(this Vector3 from, Vector2 to)
+        {
+            return Vector3.Distance(from, to);
+        }
+
         private class MinSearchList<T>
         {
             private readonly List<T> _list;
@@ -372,9 +387,9 @@ namespace SamsHelper.Libraries
             return true;
         }
 
-        public static T RandomInList<T>(T[] arr) => arr[Random.Range(0, arr.Length)];
+        public static T RandomElement<T>(this T[] arr) => arr[Random.Range(0, arr.Length)];
 
-        public static T RandomInList<T>(List<T> arr) => arr[Random.Range(0, arr.Count)];
+        public static T RandomElement<T>(this List<T> arr) => arr[Random.Range(0, arr.Count)];
 
         public static float Normalise(this float value, float maxValue)
         {

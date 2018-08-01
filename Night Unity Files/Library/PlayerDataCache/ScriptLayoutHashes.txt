@@ -119,7 +119,7 @@ f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MapMovementController
 1e56e861e373fd6732f475900c9a704e Assembly-CSharp.dll:SamsHelper.ReactiveUI.MenuSystem.MenuStateMachine
 107213f8c52edd4306f84dc4c2071645 Assembly-CSharp.dll:Facilitating.UIControllers.HeartBeatController
-5e26f8f6dab9bec1066af75662eaccc5 Assembly-CSharp.dll:Facilitating.Audio.GlobalAudioManager
+9210a9193d320f502cf0c6225100b513 Assembly-CSharp.dll:Facilitating.Audio.GlobalAudioManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.Push
 604d096b690e5c83d58e1d15214c826f Assembly-CSharp.dll:Game.Combat.Misc.FootstepMaker
 0acd0cc03fa6a66aee2a0c0efce87b8c Assembly-CSharp.dll:Facilitating.UI.ManualScrollbar
@@ -142,7 +142,7 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Generation.Shrines.FountainBehaviour
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Misc.Grenade
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.HealShrineBehaviour
-d801a6c9f607b5d5dbe770659b15bf79 Assembly-CSharp.dll:Game.Combat.Player.PlayerCombat
+aecbb581fb8abcee03610de5e7a6e8df Assembly-CSharp.dll:Game.Combat.Player.PlayerCombat
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SceneryController
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
@@ -365,3 +365,4 @@ be724b83e1cf0d693ffa884540a31e8d Assembly-CSharp.dll:Game.Combat.Enemies.Nightma
 be724b83e1cf0d693ffa884540a31e8d Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.Nightmare
 c727d5d0b81c3630fe97e64e1cb39494 Assembly-CSharp.dll:Facilitating.UIControllers.UIPlayerAccessoryController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.LeaveFireTrail
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.BloodSpatter

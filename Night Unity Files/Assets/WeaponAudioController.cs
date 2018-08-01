@@ -93,8 +93,8 @@ public class WeaponAudioController : MonoBehaviour
 		float hpfValue = -15f * durability + 750;
 		hpfValue = Mathf.Clamp(hpfValue, 0, 750);
 		_highPassFilter.cutoffFrequency = hpfValue;
-		_audioSource.PlayOneShot(Helper.RandomInList(clips));
+		_audioSource.PlayOneShot(Helper.RandomElement(clips));
 		if (!transform.parent.CompareTag("Player")) return;
-		PlayerCombat.Instance.Shake();
+		PlayerCombat.Instance.Shake(weapon.WeaponAttributes.DPS());
 	}
 }

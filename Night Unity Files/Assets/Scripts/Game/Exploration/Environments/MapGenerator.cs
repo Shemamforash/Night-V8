@@ -149,7 +149,7 @@ namespace Game.Exploration.Environment
 
         private static void GenerateRegions()
         {
-            LoadRegionTemplates();
+            GenerateNames();
             _regions.Clear();
             int numberOfRegions = EnvironmentManager.CurrentEnvironment.RegionCount + 1;
             while (numberOfRegions > 0)
@@ -200,26 +200,55 @@ namespace Game.Exploration.Environment
             return type == RegionType.Gate ? "Gate" : _regionNames[type].RemoveRandom();
         }
 
-        private static void LoadNames(RegionType type, string[] prefixes, string[] suffixes)
+        private static readonly List<RegionType> _regionTypes = new List<RegionType>();
+        
+        private static void GenerateNames()
         {
-            List<string> combinations = new List<string>();
-            foreach (string prefix in prefixes)
-            foreach (string suffix in suffixes)
-                if (prefix != suffix)
-                    switch (type)
+            LoadRegionNames();
+            _regionNames.Clear();
+            foreach (RegionType type in _regionTypes)
+            {
+                List<string> combinations = new List<string>();
+                foreach (string prefix in prefixes[type])
+                {
+                    foreach (string suffix in suffixes[type])
                     {
-                        case RegionType.Monument:
-                            combinations.Add(prefix + " of " + suffix);
-                            break;
-                        case RegionType.Fountain:
-                            combinations.Add(prefix + " " + suffix);
-                            break;
-                        default:
-                            combinations.Add(prefix + "'s " + suffix);
-                            break;
+                        if (prefix == suffix) continue;
+                        switch (type)
+                        {
+                            case RegionType.Monument:
+                                combinations.Add(prefix + " of " + suffix);
+                                break;
+                            case RegionType.Fountain:
+                                combinations.Add(prefix + " " + suffix);
+                                break;
+                            default:
+                                combinations.Add(prefix + "'s " + suffix);
+                                break;
+                        }
                     }
-            combinations.Shuffle();
-            _regionNames.Add(type, combinations);
+
+                    if (type == RegionType.Monument) continue;
+                    foreach (string environmentSuffix in EnvironmentManager.CurrentEnvironment.Suffixes())
+                    {
+                        switch (type)
+                        {
+                            case RegionType.Fountain:
+                                combinations.Add(prefix + " " + environmentSuffix);
+                                break;
+                            case RegionType.Shrine:
+                                combinations.Add(prefix + " " + environmentSuffix);
+                                break;
+                            default:
+                                combinations.Add(prefix + "'s " + environmentSuffix);
+                                break;
+                        }
+                    }
+                }
+
+                combinations.Shuffle();
+                _regionNames.Add(type, combinations);
+            }
         }
 
         private static string StripBlanks(string text)
@@ -227,22 +256,23 @@ namespace Game.Exploration.Environment
             return Regex.Replace(text, @"\s+", "");
         }
 
-        private static void LoadRegionTemplates()
+        private static readonly Dictionary<RegionType, string[]> prefixes = new Dictionary<RegionType, string[]>();
+        private static readonly Dictionary<RegionType, string[]> suffixes = new Dictionary<RegionType, string[]>();
+
+        private static void LoadRegionNames()
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
+            foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
+            {
+                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Nightmare || type == RegionType.Rite) continue;
+                _regionTypes.Add(type);
+            }
             foreach (XmlNode regionTypeNode in root.ChildNodes)
             {
-                string[] prefixes = StripBlanks(regionTypeNode.GetNodeText("Prefixes")).Split(',');
-                string[] suffixes = StripBlanks(regionTypeNode.GetNodeText("Suffixes")).Split(',');
-                string regionName = regionTypeNode.Name;
-                foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
-                {
-                    if (regionName == type.ToString())
-                    {
-                        LoadNames(type, prefixes, suffixes);
-                    }
-                }
+                RegionType regionType = _regionTypes.Find(r => r.ToString() == regionTypeNode.Name);
+                prefixes[regionType] = StripBlanks(regionTypeNode.GetNodeText("Prefixes")).Split(',');
+                suffixes[regionType] = StripBlanks(regionTypeNode.GetNodeText("Suffixes")).Split(',');
             }
 
             _loaded = true;

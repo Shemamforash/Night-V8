@@ -1,8 +1,9 @@
 ﻿using System;
-using Game.Combat.Enemies;
-using Game.Combat.Generation;
+using DG.Tweening;
 using Game.Combat.Misc;
 using Game.Gear.Weapons;
+using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Combat.Player
 {
@@ -75,7 +76,7 @@ namespace Game.Combat.Player
             Shot s = Shot.Create(PlayerCombat.Instance);
             s.AddOnHit(() =>
             {
-                for (int i = 0; i < 10; ++i)
+                for (int i = 0; i < PlayerCombat.Instance._weaponBehaviour.AmmoInMagazine; ++i)
                 {
                     Shot fragment = Shot.Create(s);
                     fragment.SetAccuracy(180f);
@@ -91,16 +92,26 @@ namespace Game.Combat.Player
 
     public class Sweep : Skill
     {
+        private ParticleSystem _pushParticles;
+        private GameObject _pushPrefab;
+        
         public Sweep() : base(nameof(Sweep))
         {
         }
 
-        protected override void InstantEffect()
+        protected override void MagazineEffect(Shot s)
         {
-            Shot shot = CreateShot();
-            shot.GuaranteeHit();
-            shot.SetKnockbackForce(5);
-            shot.Fire();
+            if (_pushPrefab == null) _pushPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Push Burst");
+            GameObject pushObject = GameObject.Instantiate(_pushPrefab);
+            pushObject.transform.SetParent(s._origin.transform);
+            pushObject.transform.position = s._origin.transform.position;
+            _pushParticles = pushObject.GetComponent<ParticleSystem>();
+            float angle = AdvancedMaths.AngleFromUp(s._origin.transform.position, PlayerCombat.Instance.transform.position);
+            _pushParticles.transform.rotation = Quaternion.Euler(0, 0, angle + 80f);
+            _pushParticles.Emit(50);
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendInterval(2f);
+            sequence.AppendCallback(() => GameObject.Destroy(pushObject));
         }
     }
 
@@ -112,10 +123,11 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            foreach (EnemyBehaviour e in CombatManager.EnemiesOnScreen())
+            for (int i = 0; i < 20; ++i)
             {
                 Shot s = Shot.Create(PlayerCombat.Instance);
                 s.Fire();
+                s.Seek();
             }
         }
     }
@@ -130,7 +142,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-//            PlayerCombat.Instance.Weapon().Reload(PlayerCombat.Instance.Player.Inventory());
+            PlayerCombat.Instance._weaponBehaviour.Reload();
         }
     }
 
@@ -142,7 +154,7 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            s.SetKnockbackForce(50);
+            s.SetKnockbackForce(100);
         }
     }
 
@@ -186,7 +198,7 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            s.SetBurnChance(1);
+            s.LeaveFireTrail();
         }
     }
 
@@ -196,8 +208,14 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void InstantEffect()
+        protected override void MagazineEffect(Shot s)
         {
+            if (PlayerCombat.Instance.DamageTakenSinceLastShot)
+            {
+                s.SetDamageModifier(2);
+            }
+
+            PlayerCombat.Instance.DamageTakenSinceLastShot = false;
         }
     }
 }
