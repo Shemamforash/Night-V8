@@ -60,7 +60,7 @@ namespace Game.Combat.Enemies
 
         public void GoToCell(Cell targetCell, float distanceFromTarget = 0)
         {
-            if (targetCell == null) return;
+            if (targetCell == null || !targetCell.Reachable) return;
             _destinationCell = targetCell;
             _targetDistance = distanceFromTarget;
         }
@@ -83,19 +83,20 @@ namespace Game.Combat.Enemies
         private void UpdateFollowTargetPosition()
         {
             if (_followTarget == null) return;
-
+            Cell targetCell = PathingGrid.WorldToCellPosition(_followTarget.position);
+            if (!targetCell.Reachable) return;
             float distance = Vector2.Distance(transform.position, _followTarget.transform.position);
             bool outOfRange = distance > _maxDistance || distance < _minDistance;
             if (outOfRange)
             {
-                GoToCell(PathingGrid.WorldToCellPosition(_followTarget.position), Random.Range(_minDistance, _maxDistance));
+                GoToCell(targetCell, Random.Range(_minDistance, _maxDistance));
                 return;
             }
 
             bool outOfSight = Physics2D.Linecast(transform.position, _followTarget.position, 1 << 8).collider != null;
             if (outOfSight)
             {
-                GoToCell(PathingGrid.WorldToCellPosition(_followTarget.position), Random.Range(_minDistance, _maxDistance));
+                GoToCell(targetCell, Random.Range(_minDistance, _maxDistance));
             }
         }
 

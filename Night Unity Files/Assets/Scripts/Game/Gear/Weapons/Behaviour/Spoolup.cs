@@ -1,4 +1,5 @@
 ﻿using Game.Combat.Misc;
+using Game.Combat.Player;
 using UnityEngine;
 
 namespace Game.Gear.Weapons
@@ -7,7 +8,15 @@ namespace Game.Gear.Weapons
     {
         private const float SpoolUpTime = 1f;
         private float _currentTime;
+        private bool SpinningUp, Spinning, SpinningDown;
+        private AudioSource _spinSource;
+        private AudioSource _weaponAudioSource;
 
+        public void Awake()
+        {
+            _spinSource = gameObject.AddComponent<AudioSource>();
+        }
+        
         protected bool SpooledUp()
         {
             return _currentTime > SpoolUpTime;
@@ -15,18 +24,37 @@ namespace Game.Gear.Weapons
         
         public override void StartFiring(CharacterCombat origin)
         {
+            if (!SpinningUp)
+            {
+                _spinSource.clip = origin.WeaponAudio.SpoolUpClip;
+                _spinSource.loop = false;
+                _spinSource.Play();
+                SpinningUp = true;
+            }
             if (_currentTime < SpoolUpTime)
             {
                 _currentTime += Time.deltaTime;
+                if (_currentTime > SpoolUpTime)
+                {
+                    _spinSource.clip = origin.WeaponAudio.SpoolClip;
+                    _spinSource.loop = true;
+                    _spinSource.Play();
+                }
                 return;
             }
             base.StartFiring(origin);
         }
 
+
         public override void StopFiring()
         {
             base.StopFiring();
             _currentTime = 0f;
+            _spinSource.clip = Origin.WeaponAudio.SpoolDownClip;
+            _spinSource.loop = false;
+            _spinSource.time = 1 - _currentTime;
+            _spinSource.Play();
+            SpinningUp = false;
         }
     }
 }

@@ -165,6 +165,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
 
     protected override void StartShrine()
     {
+        Triggered = true;
         StartCoroutine(Flash());
     }
 

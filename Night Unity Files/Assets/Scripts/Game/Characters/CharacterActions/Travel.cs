@@ -33,6 +33,7 @@ namespace Game.Characters.CharacterActions
                 ++_travelTime;
                 if (_travelTime != MinutesPerEndurancePoint) return;
                 _travelTime = 0;
+                if (_target.GetRegionType() == RegionType.Gate) return;
                 playerCharacter.Tire();
             };
         }

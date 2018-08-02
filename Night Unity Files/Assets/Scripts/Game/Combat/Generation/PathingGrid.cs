@@ -42,6 +42,7 @@ namespace Game.Combat.Generation
         {
             _stopwatch = Stopwatch.StartNew();
             GenerateBaseGrid();
+            UiCombatRingBoundDrawer.Draw();
             _stopwatch.Stop();
             Helper.PrintTime("Grid: ", _stopwatch);
             _stopwatch = Stopwatch.StartNew();

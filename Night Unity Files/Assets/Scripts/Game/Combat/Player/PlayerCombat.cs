@@ -312,6 +312,13 @@ namespace Game.Combat.Player
             b.Decay();
         }
 
+        public void EquipWeapon(Weapon weapon)
+        {
+            Player.EquipWeapon(weapon);
+            Destroy(_weaponBehaviour);
+            _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
+        }
+
         public void Initialise()
         {
             InputHandler.SetCurrentListener(this);

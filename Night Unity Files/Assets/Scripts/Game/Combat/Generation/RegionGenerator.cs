@@ -25,6 +25,7 @@ namespace Game.Combat.Generation
         {
             _region = region;
             Random.InitState(region.RegionID + WorldState.Seed);
+            PathingGrid.SetCombatAreaWidth(region.GetRegionType() == RegionType.Rite ? 20 : Random.Range(25, 35));
             PathingGrid.InitialiseGrid();
             GenerateFreshEnvironment();
             GenerateObjects();
@@ -44,6 +45,7 @@ namespace Game.Combat.Generation
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
             GenerateCharacter();
+            LeafBehaviour.CreateLeaves();
         }
 
         private void GenerateCharacter()

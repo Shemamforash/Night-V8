@@ -86,13 +86,6 @@ namespace Game.Combat.Generation
         public static void SetCurrentRegion(Region region)
         {
             _currentRegion = region;
-            if (_currentRegion.GetRegionType() == RegionType.Rite)
-            {
-                PathingGrid.SetCombatAreaWidth(15);
-                return;
-            }
-
-            PathingGrid.SetCombatAreaWidth(Random.Range(25, 35));
         }
         
         private void EnterCombat()
@@ -218,6 +211,7 @@ namespace Game.Combat.Generation
 
         public static void ExitCombat()
         {
+            Debug.Log("exit");
             if (!Instance()._inCombat)
             {
                 Debug.Log("Don't try and exit combat twice!");

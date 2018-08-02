@@ -2,6 +2,8 @@
 using System.Xml;
 using Facilitating.UIControllers;
 using Game.Characters;
+using Game.Combat.Misc;
+using Game.Combat.Player;
 using Game.Combat.Ui;
 using SamsHelper.Persistence;
 
@@ -28,9 +30,9 @@ namespace Game.Gear.Armour
 
         private event Action _onArmourChange;
 
-        public void TakeDamage(float amount)
+        public void TakeDamage(CharacterCombat character, float amount)
         {
-            DivideDamageOrHeal(amount);
+            DivideDamageOrHeal(character, amount);
             GetUiArmourController()?.TakeDamage(this);
         }
 
@@ -39,22 +41,27 @@ namespace Game.Gear.Armour
             return _character is Player ? PlayerUi.Instance().GetArmourController(_character) : EnemyUi.Instance().GetArmourController(_character);
         }
 
-        private bool TakePlateDamage(ArmourPlate plate, float damage)
+        private bool TakePlateDamage(CharacterCombat character, ArmourPlate plate, float damage)
         {
             if (plate == null) return false;
             float armour = plate.GetCurrentProtection();
             float totalHealth = GetCurrentArmour();
             float proportion = armour / totalHealth;
             plate.TakeDamage(proportion * damage);
-            return plate.GetCurrentProtection() == 0;
+            bool plateDestroyed = plate.GetCurrentProtection() == 0;
+            if (plateDestroyed)
+            {
+                character.WeaponAudio.BreakArmour();
+            }
+            return plateDestroyed;
         }
 
-        private void DivideDamageOrHeal(float amount)
+        private void DivideDamageOrHeal(CharacterCombat character, float amount)
         {
-            if (TakePlateDamage(_plateOne, amount))
+            if (TakePlateDamage(character, _plateOne, amount))
                 _plateOne = null;
 
-            if (TakePlateDamage(_plateTwo, amount))
+            if (TakePlateDamage(character, _plateTwo, amount))
                 _plateTwo = null;
         }
 

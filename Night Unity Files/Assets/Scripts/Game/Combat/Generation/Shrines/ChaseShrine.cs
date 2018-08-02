@@ -17,7 +17,6 @@ namespace Game.Combat.Generation.Shrines
 
         public void Start()
         {
-            if (_shrinePickupPrefab == null) _shrinePickupPrefab = Resources.Load<GameObject>("Prefabs/Combat/Shrines/Shrine Pickup");
             _pickupGlow = gameObject.FindChildWithName<SpriteRenderer>("Pickup Glow");
             _pickupDropMarkerA = gameObject.FindChildWithName<ParticleSystem>("Ring A");
             _pickupDropMarkerB = gameObject.FindChildWithName<ParticleSystem>("Ring B");
@@ -25,6 +24,7 @@ namespace Game.Combat.Generation.Shrines
 
         protected override void StartShrine()
         {
+            base.StartShrine();
             StartCoroutine(SpawnChasers());
         }
         
@@ -36,6 +36,7 @@ namespace Game.Combat.Generation.Shrines
             {
                 if (_currentPickup == null)
                 {
+                    if (_shrinePickupPrefab == null) _shrinePickupPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Shrine Pickup");
                     _currentPickup = Instantiate(_shrinePickupPrefab);
                     _currentPickup.transform.position = PathingGrid.GetCellNearMe(PathingGrid.WorldToCellPosition(transform.position), 6f, 4f).Position;
                     _currentPickup.GetComponent<ShrinePickup>().SetShrine(this);

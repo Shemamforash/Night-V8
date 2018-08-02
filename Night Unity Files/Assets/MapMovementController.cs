@@ -30,7 +30,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         InputHandler.SetCurrentListener(this);
     }
 
-    private void Recenter()
+    private static void Recenter()
     {
         Vector3 position = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Position;
         position.z = -10;
@@ -83,9 +83,8 @@ public class MapMovementController : MonoBehaviour, IInputListener
         bool isRegionVisible = false;
         foreach (Region r in _availableRegions)
         {
-            Vector2 potentialPosition = r.Position + _direction;
-            Debug.Log(r.Position.IsPositionInCameraView() + " " + potentialPosition.IsPositionInCameraView());
-            if (potentialPosition.IsPositionInCameraView()) continue;
+            Vector2 potentialPosition = r.Position - _direction * 5;
+            if (!potentialPosition.IsPositionInCameraView()) continue;
             isRegionVisible = true;
             break;
         }
@@ -97,8 +96,9 @@ public class MapMovementController : MonoBehaviour, IInputListener
     {
         if (_nearestRegion == null) return;
         int _enduranceCost = RoutePlotter.RouteBetween(_currentRegion, _nearestRegion).Count - 1;
-        if (_nearestRegion.GetRegionType() == RegionType.Gate) _enduranceCost = 0;
-        if (_enduranceCost > CharacterManager.SelectedCharacter.Attributes.Val(AttributeType.Endurance)) return;
+        bool enoughEndurance = _enduranceCost <= CharacterManager.SelectedCharacter.Attributes.Val(AttributeType.Endurance);
+        bool travellingToGate = _nearestRegion.GetRegionType() == RegionType.Gate;
+        if (!enoughEndurance && !travellingToGate) return;
         if (_currentRegion != _nearestRegion)
         {
             Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;

@@ -1,5 +1,7 @@
 ﻿using Facilitating.UIControllers;
 using Game.Combat.Player;
+using Game.Gear.Weapons;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
@@ -46,22 +48,6 @@ public class UiAreaInventoryController : IInputListener
         UiGearMenuController.ShowConsumableMenu(PlayerCombat.Instance.Player);
         MenuStateMachine.ShowMenu("Inventories");
     }
-
-//    private void UseItem()
-//    {
-//        Consumable consumable = _inventory.Contents()[_selectedItem] as Consumable;
-//        if (consumable != null)
-//        {
-//            consumable.Consume(PlayerCombat.Instance.Player);
-//            SelectItem();
-//        }
-//
-//        Weapon weapon = _inventory.Contents()[_selectedItem] as Weapon;
-//        if (weapon != null)
-//        {
-//            PlayerCombat.Equip(weapon);
-//        }
-//    }
 
     public static void TakeItem()
     {

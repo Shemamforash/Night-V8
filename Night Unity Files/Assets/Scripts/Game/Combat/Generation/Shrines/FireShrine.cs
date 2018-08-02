@@ -13,6 +13,7 @@ namespace Game.Combat.Generation.Shrines
 
         protected override void StartShrine()
         {
+            base.StartShrine();
             StartCoroutine(SpawnFire());
         }
         

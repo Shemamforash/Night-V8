@@ -14,6 +14,7 @@ namespace Game.Global
         private static SceneChanger _instance;
         private static readonly Color InvisibleBlack = new Color(0, 0, 0, 0);
         private AudioSource _audioSource;
+        private const float FadeTime = 0.5f;
 
         public void Awake()
         {
@@ -21,9 +22,9 @@ namespace Game.Global
             _audioSource = GetComponent<AudioSource>();
             _fader = GameObject.Find("Screen Fader").GetComponent<Image>();
             GlobalAudioManager.SetVolume(0f);
-            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetVolume, 1f, 1f);
+            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetVolume, 1f, FadeTime);
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(_fader.DOColor(InvisibleBlack, 1f));
+            sequence.Append(_fader.DOColor(InvisibleBlack, FadeTime));
             if (SceneManager.GetActiveScene().name != "Game") return;
             sequence.AppendCallback(WorldState.UnPause);
         }
@@ -32,12 +33,12 @@ namespace Game.Global
         {
             AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync(sceneName);
             sceneLoaded.allowSceneActivation = false;
-            if (_audioSource != null) _audioSource.DOFade(1, 1);
+            if (_audioSource != null) _audioSource.DOFade(1, FadeTime);
             GlobalAudioManager.SetVolume(1f);
-            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetVolume, 0f, 1f);
+            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetVolume, 0f, FadeTime);
             if (fade)
             {
-                yield return _fader.DOColor(Color.black, 1f).WaitForCompletion();
+                yield return _fader.DOColor(Color.black, FadeTime).WaitForCompletion();
             }
 
             while (sceneLoaded.progress != 0.9f) yield return null;

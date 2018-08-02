@@ -16,7 +16,7 @@ namespace Game.Gear.Weapons
         public int AmmoInMagazine;
         protected float TimeToNextFire;
         protected CharacterCombat Origin;
-        private bool _fired;
+        protected bool _fired;
 
         public void Initialise(Weapon weapon)
         {

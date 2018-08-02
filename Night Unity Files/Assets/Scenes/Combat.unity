@@ -114,48 +114,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &91701397
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &105392074
 GameObject:
   m_ObjectHideFlags: 0
@@ -20747,7 +20705,7 @@ LineRenderer:
 GameObject:
   m_PrefabParentObject: {fileID: 1404617889475876, guid: 904e967d22e3b7e4cac7e27b4a2aba0c,
     type: 2}
-  m_PrefabInternal: {fileID: 91701397}
+  m_PrefabInternal: {fileID: 1238009137}
 --- !u!1 &887444169
 GameObject:
   m_ObjectHideFlags: 0
@@ -26324,6 +26282,48 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1212136060}
+--- !u!1001 &1238009137
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4222461071829304, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 904e967d22e3b7e4cac7e27b4a2aba0c, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1246347522
 GameObject:
   m_ObjectHideFlags: 0

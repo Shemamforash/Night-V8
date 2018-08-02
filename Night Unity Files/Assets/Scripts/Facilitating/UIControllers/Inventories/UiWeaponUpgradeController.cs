@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
+using Game.Combat.Generation;
+using Game.Combat.Player;
 using Game.Gear;
 using Game.Gear.Weapons;
 using Game.Global;
@@ -100,13 +102,19 @@ namespace Facilitating.UIControllers
             if (selectedGear == -1) return;
             if (_showWeapons)
             {
-                CharacterManager.SelectedCharacter.EquipWeapon(UiGearMenuController.Inventory().Weapons[selectedGear]);
+                if (CombatManager.InCombat())
+                {
+                    PlayerCombat.Instance.EquipWeapon(UiGearMenuController.Inventory().Weapons[selectedGear]);
+                }
+                else
+                {
+                    CharacterManager.SelectedCharacter.EquipWeapon(UiGearMenuController.Inventory().Weapons[selectedGear]);
+                }
             }
             else
             {
                 CharacterManager.SelectedCharacter.EquippedWeapon.SetInscription(UiGearMenuController.Inventory().Inscriptions[selectedGear]);
             }
-
             Show();
         }
 

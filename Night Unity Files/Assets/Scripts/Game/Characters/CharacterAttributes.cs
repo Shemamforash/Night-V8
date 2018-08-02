@@ -12,6 +12,7 @@ using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Characters
 {
@@ -203,13 +204,20 @@ namespace Game.Characters
             if (willpower.CurrentValue() <= majorBreakThreshold)
             {
                 WorldEventManager.GenerateEvent(new CharacterMessage("I can't take any more", _player));
-                //todo major break;                
             }
             else if (willpower.CurrentValue() <= minorBreakThreshold)
             {
                 WorldEventManager.GenerateEvent(new CharacterMessage("I can see the light beyond the veil, and it speaks to me!", _player));
-                //todo minor break;
             }
+
+            int perceptionValue = (int) Val(AttributeType.Perception);
+            int strengthValue = (int) Val(AttributeType.Strength);
+            int enduranceValue = (int) Val(AttributeType.Endurance);
+            bool perceptionIsMax = perceptionValue > strengthValue && perceptionValue > enduranceValue;
+            bool strengthIsMax = strengthValue > perceptionValue && strengthValue > enduranceValue;
+            if (perceptionIsMax) Get(AttributeType.Perception).Decrement();
+            else if (strengthIsMax) Get(AttributeType.Strength).Decrement();
+            else Get(AttributeType.Endurance).Decrement();
         }
 
         public int CalculateCompassPulses()

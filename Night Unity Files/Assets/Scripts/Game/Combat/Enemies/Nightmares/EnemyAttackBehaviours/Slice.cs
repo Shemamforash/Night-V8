@@ -19,7 +19,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             GameObject sliceTrail = Instantiate(_sliceTrailPrefab);
             sliceTrail.transform.SetParent(transform, false);
             _sliceParticles = sliceTrail.GetComponent<ParticleSystem>();
-            _pathTrail = GetComponent<TrailRenderer>();
+//            _pathTrail = GetComponent<TrailRenderer>();
         }
 
         protected override void Attack()
@@ -29,6 +29,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             dir.Normalize();
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             Enemy.MovementController.AddForce(dir * distance * 500);
+            PlayerCombat.Instance.SetTarget(null);
             StartCoroutine(DisableCollider());
         }
 
@@ -43,7 +44,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             PauseOthers();
             ParticleSystem.EmissionModule emission = _sliceParticles.emission;
             emission.rateOverTime = 100;
-            _pathTrail.enabled = false;
+//            _pathTrail.enabled = false;
             _collider.isTrigger = true;
             float disableTime = 0.25f;
             while (disableTime > 0f)
@@ -55,7 +56,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             emission = _sliceParticles.emission;
             emission.rateOverTime = 0;
             _pathTrail.Clear();
-            _pathTrail.enabled = true;
+//            _pathTrail.enabled = true;
             _collider.isTrigger = false;
         }
     }

@@ -36,7 +36,7 @@ namespace Facilitating.MenuNavigation
         private void LoadGame()
         {
             WorldState.UnPause();
-            SceneManager.LoadScene("Game");
+            SceneChanger.ChangeScene("Game");
         }
 
         public void ContinueGame()

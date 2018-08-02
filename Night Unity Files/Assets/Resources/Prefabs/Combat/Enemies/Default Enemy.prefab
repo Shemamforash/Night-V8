@@ -11,17 +11,17 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1969838416443470}
   m_IsPrefabParent: 1
---- !u!1 &1263015819686314
+--- !u!1 &1361386719365014
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4720381408699984}
-  - component: {fileID: 82336373128977424}
-  - component: {fileID: 114578824218614346}
-  - component: {fileID: 165064785559838818}
+  - component: {fileID: 4328941477604530}
+  - component: {fileID: 82421444047247978}
+  - component: {fileID: 114231909150183516}
+  - component: {fileID: 165080770772565802}
   m_Layer: 10
   m_Name: Weapon Audio
   m_TagString: Untagged
@@ -171,6 +171,19 @@ Transform:
   m_Father: {fileID: 4439507253439542}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4328941477604530
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1361386719365014}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4906875525235332}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4439507253439542
 Transform:
   m_ObjectHideFlags: 1
@@ -183,19 +196,6 @@ Transform:
   m_Children:
   - {fileID: 4293427656552710}
   - {fileID: 4752926846755490}
-  m_Father: {fileID: 4906875525235332}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4720381408699984
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1263015819686314}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
   m_Father: {fileID: 4906875525235332}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -223,8 +223,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4201150100652938}
-  - {fileID: 4720381408699984}
   - {fileID: 4439507253439542}
+  - {fileID: 4328941477604530}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -293,15 +293,16 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.15
---- !u!82 &82336373128977424
+--- !u!82 &82421444047247978
 AudioSource:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1263015819686314}
+  m_GameObject: {fileID: 1361386719365014}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: c78d3b1de5150c546aa5be91a01211d3,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -410,12 +411,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb39087592544d5baf6e12985a3f01ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114578824218614346
+--- !u!114 &114231909150183516
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1263015819686314}
+  m_GameObject: {fileID: 1361386719365014}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6bada4488ddac4d4bb99626e84df18aa, type: 3}
@@ -430,7 +431,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a9e521efc082a50468034a5b5de516fb, type: 3}
   - {fileID: 8300000, guid: c49cfc6e553c55741908ad84c2ea157d, type: 3}
   _rifleClips:
-  - {fileID: 8300000, guid: 1f72658cbdc23fc4e901ba80d367b8a3, type: 3}
+  - {fileID: 8300000, guid: 9cdae42913341e44890782a6cab725e9, type: 3}
+  - {fileID: 8300000, guid: d688acd7de83d1d4cad729c533ccb084, type: 3}
+  - {fileID: 8300000, guid: 7c0b0dbee6e67574099fa5bad4abc1f0, type: 3}
+  - {fileID: 8300000, guid: 837155eba9a9356489ac76277f22c552, type: 3}
   _pistolClips:
   - {fileID: 8300000, guid: e624fe2b9761c0a4e93acf4587fd9779, type: 3}
   - {fileID: 8300000, guid: 3799399bcfd8c764eb14c868624b3a28, type: 3}
@@ -439,8 +443,16 @@ MonoBehaviour:
   _shotgunClips:
   - {fileID: 8300000, guid: 0b581358748c6b144a938626adcd7f3f, type: 3}
   - {fileID: 8300000, guid: be6ca6252976e2a46a0c30bdf84dda0e, type: 3}
-  _pistolClipIn: {fileID: 0}
-  _pistolClipOut: {fileID: 0}
+  _pistolClipIn: {fileID: 8300000, guid: 1f327117f7bc9524bb5cd8870a94406c, type: 3}
+  _pistolClipOut: {fileID: 8300000, guid: daf5283ee66dca7449f90c36c3a91af0, type: 3}
+  _lmgClipIn: {fileID: 8300000, guid: eccda95838f4b8747ad24375ef8bc4b0, type: 3}
+  _lmgClipOut: {fileID: 8300000, guid: d277e41ce47d816498623d4d9c3342e7, type: 3}
+  _smgClipIn: {fileID: 8300000, guid: abf4a1d145a03c946bd9fa5c91364abf, type: 3}
+  _smgClipOut: {fileID: 8300000, guid: 356064910ee0a6040a7f14513408c140, type: 3}
+  _rifleClipIn: {fileID: 8300000, guid: b0aa93b9f87e97f4f9248a71b367cc35, type: 3}
+  _rifleClipOut: {fileID: 8300000, guid: 035a0091c65cf7243bae713bc94792f1, type: 3}
+  _shotgunClipIn: {fileID: 0}
+  _shotgunClipOut: {fileID: 0}
 --- !u!114 &114994034474461898
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -453,12 +465,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 0
---- !u!165 &165064785559838818
+--- !u!165 &165080770772565802
 AudioHighPassFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1263015819686314}
+  m_GameObject: {fileID: 1361386719365014}
   m_Enabled: 1
   m_CutoffFrequency: 5000
   m_HighpassResonanceQ: 1

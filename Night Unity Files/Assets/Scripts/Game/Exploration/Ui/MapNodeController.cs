@@ -47,7 +47,7 @@ namespace Game.Exploration.Ui
             _icon = gameObject.FindChildWithName<SpriteRenderer>("Icon");
             _shadow = gameObject.FindChildWithName<SpriteRenderer>("Shadow");
         }
-        
+
         public void SetRegion(Region region)
         {
             _region = region;
@@ -58,6 +58,7 @@ namespace Game.Exploration.Ui
                 _letters.Add(new Letter(region.Name[i].ToString()));
                 if (i > 0) _letters[i - 1].SetNextLetter(_letters[i]);
             }
+
             LoseFocus(0f);
             _letters[0]?.StartFade();
             if (gameObject.activeInHierarchy) StartCoroutine(FadeInLetters());
@@ -113,7 +114,7 @@ namespace Game.Exploration.Ui
             _audioSource = GetComponent<AudioSource>();
             _audioSource.PlayOneShot(_enterClip);
         }
-        
+
         public void Update()
         {
             _ring1.transform.Rotate(new Vector3(0, 0, 1), 5 * Time.deltaTime);
@@ -123,7 +124,15 @@ namespace Game.Exploration.Ui
 
         private IEnumerator FadeInLetters()
         {
-            _costText.text = _enduranceCost + " <sprite name=\"Endurance\">";
+            if (_region.GetRegionType() == RegionType.Gate)
+            {
+                _costText.text = "Return home";
+            }
+            else
+            {
+                _costText.text = _enduranceCost + " <sprite name=\"Endurance\">";
+            }
+
             _costText.color = UiAppearanceController.InvisibleColour;
             _costText.DOColor(Color.white, 1f);
             while (_doneFading == false)

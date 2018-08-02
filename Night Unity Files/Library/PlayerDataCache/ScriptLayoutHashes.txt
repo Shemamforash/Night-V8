@@ -255,7 +255,7 @@ d86d2e8675c5a575a64a22ae87c7cf2f Assembly-CSharp.dll:Game.Combat.Misc.Explosion
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.BulletTrailFade
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.TeleportInOnly
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MaelstromShotBehaviour
-31cee7198c5759e236f1b9f1f10bf727 Assembly-CSharp.dll:.WeaponAudioController
+57996b45f1b5bab6184781038db4d95d Assembly-CSharp.dll:.WeaponAudioController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Generation.Shrines.WaveShrine
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Ui.PlayerUi
 be724b83e1cf0d693ffa884540a31e8d Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.Revenant
@@ -366,3 +366,4 @@ be724b83e1cf0d693ffa884540a31e8d Assembly-CSharp.dll:Game.Combat.Enemies.Nightma
 c727d5d0b81c3630fe97e64e1cb39494 Assembly-CSharp.dll:Facilitating.UIControllers.UIPlayerAccessoryController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.LeaveFireTrail
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.BloodSpatter
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.TitleScreenController

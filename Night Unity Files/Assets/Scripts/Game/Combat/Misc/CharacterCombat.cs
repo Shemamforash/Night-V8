@@ -16,7 +16,7 @@ namespace Game.Combat.Misc
     public abstract class CharacterCombat : MonoBehaviour
     {
         public WeaponAudioController WeaponAudio;
-       
+
         private const float RecoilRecoveryRate = 2f;
         private const float TimeToStartRecovery = 0.5f;
 
@@ -41,7 +41,7 @@ namespace Game.Combat.Misc
         private float _burnDuration, _decayDuration, _sicknessDuration;
 
         public Shield Shield;
-        
+
         public float DistanceToTarget()
         {
             if (_distanceToTarget == -1) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);
@@ -118,7 +118,7 @@ namespace Game.Combat.Misc
         {
             return SicknessTargetTicks;
         }
-        
+
         private void UpdateConditions()
         {
             if (_burnTicks > 0)
@@ -144,7 +144,7 @@ namespace Game.Combat.Misc
                 if (_burnDuration <= 0)
                 {
                     _decayDuration = 1 - _decayDuration;
-                    ArmourController.TakeDamage(GetDecayDamage());
+                    TakeArmourDamage(GetDecayDamage());
                     --_decayTicks;
                 }
                 else
@@ -170,6 +170,11 @@ namespace Game.Combat.Misc
             }
         }
 
+        public void TakeArmourDamage(float damage)
+        {
+            ArmourController.TakeDamage(this, Mathf.CeilToInt(damage));
+        }
+
         public Cell CurrentCell() => PathingGrid.WorldToCellPosition(transform.position);
 
         public virtual void TakeDamage(Shot shot)
@@ -177,7 +182,7 @@ namespace Game.Combat.Misc
             float armourProtection = ArmourController.GetCurrentArmour() / 10f;
             float armourDamage = shot.DamageDealt() * armourProtection;
             float healthDamage = shot.DamageDealt() - armourDamage;
-            ArmourController.TakeDamage(Mathf.CeilToInt(armourDamage));
+            TakeArmourDamage(armourDamage);
             HealthController.TakeDamage(Mathf.CeilToInt(healthDamage));
             if (_bloodSpatter == null) return;
             _bloodSpatter.Spray(shot.Direction(), healthDamage);
