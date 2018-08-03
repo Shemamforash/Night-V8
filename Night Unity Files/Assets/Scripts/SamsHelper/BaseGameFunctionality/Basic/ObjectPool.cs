@@ -1,4 +1,5 @@
-﻿using Boo.Lang;
+﻿using System.Collections.Generic;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.Basic
@@ -26,10 +27,9 @@ namespace SamsHelper.BaseGameFunctionality.Basic
                 return newThing;
             }
 
-            int lastElement = _pool.Count - 1;
-            newThing = _pool[lastElement];
+            newThing = _pool.RemoveLast();
+            if (newThing == null) return Create(parent);
             newThing.gameObject.SetActive(true);
-            _pool.RemoveAt(lastElement);
             return newThing;
         }
 

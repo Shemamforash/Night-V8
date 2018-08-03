@@ -5,16 +5,19 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
+using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
     public class WeaponAttributes : DesolationAttributes
     {
-        private readonly int MaxDurability;
-        private const float MinDurabilityMod = 0.25f;
+        private const int MaxDurability = 50;
         private readonly Number _durability;
         private float _dps;
-        private readonly AttributeModifier _durabilityModifier;
+        private readonly AttributeModifier _damageDurabilityModifier;
+        private readonly AttributeModifier _fireRateDurabilityModifier;
+        private readonly AttributeModifier _reloadSpeedDurabilityModifier;
+        private readonly AttributeModifier _accuracyDurabilityModifier;
         private readonly Weapon _weapon;
         public bool Automatic = true;
         private WeaponClassType WeaponClassType;
@@ -23,12 +26,16 @@ namespace Game.Gear.Weapons
         public WeaponAttributes(Weapon weapon, WeaponClass weaponClass)
         {
             _weapon = weapon;
-            _durabilityModifier = new AttributeModifier();
-            AddMod(AttributeType.Damage, _durabilityModifier);
-            AddMod(AttributeType.FireRate, _durabilityModifier);
-            AddMod(AttributeType.Accuracy, _durabilityModifier);
-            MaxDurability = ((int) weapon.Quality() + 1) * 10;
+            _damageDurabilityModifier = new AttributeModifier();
+            _fireRateDurabilityModifier = new AttributeModifier();
+            _reloadSpeedDurabilityModifier = new AttributeModifier();
+            _accuracyDurabilityModifier = new AttributeModifier();
+            AddMod(AttributeType.Damage, _damageDurabilityModifier);
+            AddMod(AttributeType.FireRate, _fireRateDurabilityModifier);
+            AddMod(AttributeType.ReloadSpeed, _reloadSpeedDurabilityModifier);
+            AddMod(AttributeType.Accuracy, _accuracyDurabilityModifier);
             _durability = new Number(MaxDurability, 0, MaxDurability);
+            _durability.SetCurrentValue((float) weapon.Quality() + 1f * 10f);
             SetMax(AttributeType.Accuracy, 100);
             SetClass(weaponClass);
         }
@@ -61,34 +68,37 @@ namespace Game.Gear.Weapons
 
         private void RecalculateAttributeValues()
         {
-            float normalisedDurability = _durability.CurrentValue() / MaxDurability;
-            float qualityModifier = (int) _weapon.Quality() + 1 / 2f;
-            float durabilityModifierValue = MinDurabilityMod + (1 - MinDurabilityMod) * normalisedDurability * qualityModifier;
-            --durabilityModifierValue;
-            _durabilityModifier.SetFinalBonus(durabilityModifierValue);
+            float damageModifier = 0.08f * _durability.CurrentValue();
+            float fireRateModifier = 0.02f * _durability.CurrentValue();
+            float reloadModifier = -0.02f * _durability.CurrentValue() / 2f;
+            float accuracyModifier = 0.01f * _durability.CurrentValue();
+            _damageDurabilityModifier.SetFinalBonus(damageModifier);
+            _fireRateDurabilityModifier.SetFinalBonus(fireRateModifier);
+            _reloadSpeedDurabilityModifier.SetFinalBonus(reloadModifier);
+            _accuracyDurabilityModifier.SetFinalBonus(accuracyModifier);
             CalculateDPS();
         }
 
         private void CalculateDPS()
         {
-            float averageShotDamage = Val(AttributeType.Damage);
-            float magazineDamage = (int) Val(AttributeType.Capacity) * averageShotDamage * (int) Val(AttributeType.Pellets);
-            float magazineDuration = (int) Val(AttributeType.Capacity) / Val(AttributeType.FireRate) + Val(AttributeType.ReloadSpeed);
+            float averageShotDamage = Val(AttributeType.Damage) * (int) Val(AttributeType.Pellets);
+            float magazineDamage = Val(AttributeType.Capacity) * averageShotDamage;
+            float magazineDuration = Val(AttributeType.Capacity) / Val(AttributeType.FireRate) + Val(AttributeType.ReloadSpeed);
             _dps = magazineDamage / magazineDuration;
         }
 
         public float DPS() => _dps;
 
         public string GetPrintMessage() => WeaponType + " " + WeaponClassType + " " + _weapon.Quality()
-                                 + "\nDurability: " + _durability.CurrentValue() + " (" + _durability.Max + ")"
-                                 + "\nDPS: " + DPS()
-                                 + "\nAutomatic: " + Automatic
-                                 + "\nCapacity:   " + Val(AttributeType.Capacity)
-                                 + "\nPellets:    " + Val(AttributeType.Pellets)
-                                 + "\nDamage:     " + Val(AttributeType.Damage)
-                                 + "\nFire Rate:  " + Val(AttributeType.FireRate)
-                                 + "\nReload:     " + Val(AttributeType.ReloadSpeed)
-                                 + "\nAccuracy: " + Val(AttributeType.Accuracy);
+                                           + "\nDurability: " + _durability.CurrentValue() + " (" + _durability.Max + ")"
+                                           + "\nDPS: " + DPS()
+                                           + "\nAutomatic: " + Automatic
+                                           + "\nCapacity:   " + Val(AttributeType.Capacity)
+                                           + "\nPellets:    " + Val(AttributeType.Pellets)
+                                           + "\nDamage:     " + Val(AttributeType.Damage)
+                                           + "\nFire Rate:  " + Val(AttributeType.FireRate)
+                                           + "\nReload:     " + Val(AttributeType.ReloadSpeed)
+                                           + "\nAccuracy: " + Val(AttributeType.Accuracy);
 
         public void DecreaseDurability(float modifier)
         {

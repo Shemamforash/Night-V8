@@ -14,7 +14,7 @@ namespace Game.Combat.Player
             switch (weapon.WeaponType())
             {
                 case WeaponType.Rifle:
-                    return new Gouge();
+                    return new Splinter();
                 case WeaponType.Shotgun:
                     return new Sweep();
                 case WeaponType.LMG:
@@ -33,13 +33,13 @@ namespace Game.Combat.Player
             switch (weapon.WeaponType())
             {
                 case WeaponType.Rifle:
-                    return new Impact();
+                    return new Gouge();
                 case WeaponType.Shotgun:
                     return new Swarm();
                 case WeaponType.LMG:
                     return new Compel();
                 case WeaponType.SMG:
-                    return new Splinter();
+                    return new Impact();
                 case WeaponType.Pistol:
                     return new Revenge();
                 default:

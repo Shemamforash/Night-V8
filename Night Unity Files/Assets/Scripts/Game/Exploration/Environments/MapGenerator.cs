@@ -144,7 +144,6 @@ namespace Game.Exploration.Environment
 #if UNITY_EDITOR
             _regions.ForEach(r => r.Discover());
 #endif
-            Debug.Log(_regions.Count);
         }
 
         private static void GenerateRegions()

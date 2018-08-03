@@ -310,10 +310,10 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-# WeaponImporter()
+WeaponImporter()
 # GearImporter()
 # WeatherImporter()
-RegionImporter()
+# RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
 # RecipeImporter()

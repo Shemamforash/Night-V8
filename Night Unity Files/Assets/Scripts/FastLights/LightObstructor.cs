@@ -18,6 +18,7 @@ namespace FastLights
         private Vector3 position;
         private Vector3 scale;
         private float rotation;
+        private Polygon _polygon;
 
         public void Awake()
         {
@@ -92,13 +93,17 @@ namespace FastLights
             _worldVerts.Clear();
             _edges.Clear();
             List<Vector3> vertices = GetVertices();
+            List<Vector2> verts2d = new List<Vector2>();
             int vertexCount = vertices.Count;
             for (int i = 0; i < vertexCount; i++)
             {
                 Vector3 meshVertex = vertices[i];
                 FLVertex vertex = new FLVertex(transform, meshVertex);
                 _worldVerts.Add(vertex);
+                verts2d.Add(vertices[i]);
             }
+
+            _polygon = new Polygon(verts2d, transform.position);
 
             for (int i = 0; i < vertexCount; ++i)
             {
@@ -147,6 +152,7 @@ namespace FastLights
                 if (!e.CalculateVisibility(_origin)) continue;
                 visibleEdges.Add(e);
             }
+
             return visibleEdges;
         }
 
@@ -202,15 +208,21 @@ namespace FastLights
             }
 
             if (completedSegment) return edgeSegments;
-            List<FLEdge> endSegment = edgeSegments.RemoveEnd();
+            List<FLEdge> endSegment = edgeSegments.RemoveLast();
             endSegment.AddRange(edgeSegments[0]);
             edgeSegments[0] = endSegment;
             return edgeSegments;
+        }
+
+        public bool Visible()
+        {
+//            if(_polygon.IsVisible()) _polygon.DrawBounds(0.01f);
+            return _polygon.IsVisible();
         }
     }
 
     public class UnnassignedMeshException : Exception
     {
-        public new string Message() => "No mesh assigned, a mesh is required for FastLight to work";
+        public override string Message => "No mesh assigned, a mesh is required for FastLight to work";
     }
 }

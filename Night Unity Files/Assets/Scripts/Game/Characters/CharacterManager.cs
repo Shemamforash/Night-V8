@@ -172,7 +172,7 @@ namespace Game.Characters
         private Player GenerateDriver()
         {
             Player driver = GenerateCharacter(CharacterClass.Wanderer);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Rusted, WeaponType.Pistol);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Worn, WeaponType.SMG);
 //            WeaponGenerationTester.Test();
 //            Inscription.Test();
             driver.EquipWeapon(weapon);
@@ -205,7 +205,7 @@ namespace Game.Characters
         {
             CharacterAttributes attributes = playerCharacter.Attributes;
 
-            attributes.SetMax(AttributeType.Endurance, playerCharacter.CharacterTemplate.Endurance);
+            attributes.SetMax(AttributeType.Endurance, 10);//playerCharacter.CharacterTemplate.Endurance);
             attributes.Get(AttributeType.Endurance).SetToMax();
 
             attributes.SetMax(AttributeType.Strength, playerCharacter.CharacterTemplate.Strength);

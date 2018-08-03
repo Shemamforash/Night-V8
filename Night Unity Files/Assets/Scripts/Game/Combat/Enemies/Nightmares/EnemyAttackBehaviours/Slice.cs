@@ -55,7 +55,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             UnpauseOthers();
             emission = _sliceParticles.emission;
             emission.rateOverTime = 0;
-            _pathTrail.Clear();
+//            _pathTrail.Clear();
 //            _pathTrail.enabled = true;
             _collider.isTrigger = false;
         }

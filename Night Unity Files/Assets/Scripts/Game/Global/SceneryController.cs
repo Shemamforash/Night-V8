@@ -23,11 +23,7 @@ public class SceneryController : MonoBehaviour
         _gateShadow = gameObject.FindChildWithName<Image>("Gate Shadow");
         _fireShadow = gameObject.FindChildWithName<Image>("Fire Shadow");
         _sunGlow = gameObject.FindChildWithName<Image>("Sun Glow");
-    }
-
-    public static void UpdateEnvironment()
-    {
-        _environment.sprite = Resources.Load<Sprite>("Images/Backgrounds/" + EnvironmentManager.CurrentEnvironment.EnvironmentType + "/Environment");
+        UpdateEnvironmentBackground();
     }
 
     public static void SetTime(float normalisedTime) //6am = 0 6pm = 0.5
@@ -54,5 +50,14 @@ public class SceneryController : MonoBehaviour
             _gateShadow.color = Color.Lerp(UiAppearanceController.InvisibleColour, Color.white, sinTime);
             _fireShadow.color = Color.Lerp(UiAppearanceController.InvisibleColour, Color.white, sinTime);
         }
+    }
+
+    public static void UpdateEnvironmentBackground()
+    {
+        if (_environment == null) return;
+        Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
+        if (currentEnvironment == null) return;
+        _environment.sprite = Resources.Load<Sprite>("Images/Backgrounds/" + currentEnvironment.EnvironmentType + "/Environment");
+        _environment.sprite = Resources.Load<Sprite>("Images/Backgrounds/" + EnvironmentManager.CurrentEnvironment.EnvironmentType + "/Environment");
     }
 }

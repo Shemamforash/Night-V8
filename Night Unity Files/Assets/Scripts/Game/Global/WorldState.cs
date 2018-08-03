@@ -94,6 +94,11 @@ namespace Game.Global
         {
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel();
+            CharacterManager.Characters.ForEach(c =>
+            {
+                c.TravelAction.ReturnToHomeInstant();
+            });
+            SceneChanger.ChangeScene("Game");
         }
 
         public static CharacterManager HomeInventory() => _homeInventory;

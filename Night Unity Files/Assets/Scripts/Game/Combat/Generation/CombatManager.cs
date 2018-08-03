@@ -211,7 +211,6 @@ namespace Game.Combat.Generation
 
         public static void ExitCombat()
         {
-            Debug.Log("exit");
             if (!Instance()._inCombat)
             {
                 Debug.Log("Don't try and exit combat twice!");

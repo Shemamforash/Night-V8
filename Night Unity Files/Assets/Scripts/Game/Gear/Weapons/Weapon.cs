@@ -78,7 +78,7 @@ namespace Game.Gear.Weapons
             switch (WeaponAttributes.GetWeaponClass())
             {
                 case WeaponClassType.Shortshooter:
-                    weaponBehaviour = player.gameObject.AddComponent<DoubleFireInstant>();
+                    weaponBehaviour = player.gameObject.AddComponent<DoubleFireDelay>();
                     break;
 //                case WeaponClassType.Voidwalker:
 //                    break;

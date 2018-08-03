@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Game.Combat.Misc;
+using SamsHelper.BaseGameFunctionality.Basic;
 
 namespace Game.Gear.Weapons
 {
@@ -22,7 +23,6 @@ namespace Game.Gear.Weapons
             {
                 yield return null;
             }
-
             Fire(Origin);
             _stillFiring = false;
         }

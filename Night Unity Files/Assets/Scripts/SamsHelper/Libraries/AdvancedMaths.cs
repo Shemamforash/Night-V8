@@ -272,6 +272,33 @@ namespace SamsHelper.Libraries
             }
         }
 
+        
+        public static bool IsRectInCameraView(Vector2 topLeft, Vector2 topRight, Vector2 bottomRight, Vector2 bottomLeft)
+        {
+            Camera camera = Camera.main;
+            Vector2 cameraUpperLeft = camera.ScreenToWorldPoint( new Vector3(0, Screen.height));
+            Vector2 cameraUpperRight = camera.ScreenToWorldPoint( new Vector3(Screen.width, Screen.height));
+            Vector2 cameraLowerLeft = camera.ScreenToWorldPoint( new Vector3(0, 0));
+            Vector2 cameraLowerRight = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0));
+            List<Vector2> cameraVerts = new List<Vector2> {cameraUpperLeft, cameraUpperRight, cameraLowerLeft, cameraLowerRight};
+            List<Vector2> rectVerts = new List<Vector2> {topLeft, topRight, bottomRight, bottomLeft};
+            if (cameraVerts.Any(v => IsPointInPolygon(v, rectVerts))) return true;
+            if (rectVerts.Any(v => IsPointInPolygon(v, cameraVerts))) return true;
+            for (int i = 0; i < 4; ++i)
+            {
+                Vector2 fromCamera = cameraVerts[i];
+                Vector2 toCamera = Helper.NextElement(i, cameraVerts);
+                for (int j = 0; j < 4; ++j)
+                {
+                    Vector2 fromRect = rectVerts[j];
+                    Vector2 toRect = Helper.NextElement(j, rectVerts);
+                    if (LineSegmentIntersection(fromCamera, toCamera, fromRect, toRect).Item1) return true;
+                }
+            }
+
+            return false;
+        }
+
         public static List<Vector2> FindLineCircleIntersections(Vector2 a, Vector2 b, Vector2 c, float radius)
         {
             List<Vector2> intersections = new List<Vector2>();

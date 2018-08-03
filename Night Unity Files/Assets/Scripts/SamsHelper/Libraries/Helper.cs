@@ -438,7 +438,7 @@ namespace SamsHelper.Libraries
             return iteratorPosition - 1;
         }
 
-        public static T RemoveEnd<T>(this List<T> list)
+        public static T RemoveLast<T>(this List<T> list)
         {
             int endIndex = list.Count - 1;
             T end = list[endIndex];

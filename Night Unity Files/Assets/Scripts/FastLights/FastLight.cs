@@ -129,8 +129,7 @@ namespace Fastlights
             for (int i = 0; i < obstructorCount; i++)
             {
                 LightObstructor o = _allObstructors[i];
-                float sqrDistanceToMesh = Vector2.SqrMagnitude((Vector2) o.transform.position - _position);
-                if (sqrDistanceToMesh - o.MaxRadius() * o.MaxRadius() > sqrRadius + 25) continue;
+                if (!o.Visible()) continue;
                 _visibleEdges = o.GetVisibleVertices(_position, sqrRadius, Radius);
                 edgeSegments.AddRange(_visibleEdges);
             }

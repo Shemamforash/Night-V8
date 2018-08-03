@@ -44,43 +44,60 @@ namespace Game.Characters.CharacterActions
             return CurrentRegion.GetRegionType() == RegionType.Gate;
         }
 
+        public void ReturnToHomeInstant()
+        {
+            CurrentRegion = MapGenerator.GetInitialNode();
+            _inTransit = false;
+            TransferResources();
+        }
+
+        private void TransferResources()
+        {
+            PlayerCharacter.Attributes.DecreaseWillpower();
+            foreach (InventoryItem item in PlayerCharacter.Inventory().Contents())
+            {
+                if (item.Template == null) continue;
+                switch (item.Template.ResourceType)
+                {
+                    case "Water":
+                        PlayerCharacter.BrandManager.IncreaseWaterFound();
+                        break;
+                    case "Plant":
+                        PlayerCharacter.BrandManager.IncreaseFoodFound();
+                        break;
+                    case "Meat":
+                        PlayerCharacter.BrandManager.IncreaseFoodFound();
+                        break;
+                    case "Resource":
+                        PlayerCharacter.BrandManager.IncreaseResourceFound();
+                        break;
+                }
+            }
+
+            PlayerCharacter.Inventory().MoveAllResources(WorldState.HomeInventory());
+        }
+
         private void ReachTarget()
         {
             CurrentRegion = _target;
             _inTransit = false;
             if (AtHome())
             {
-                PlayerCharacter.Attributes.DecreaseWillpower();
-                foreach (InventoryItem item in PlayerCharacter.Inventory().Contents())
-                {
-                    if (item.Template == null) continue;
-                    switch (item.Template.ResourceType)
-                    {
-                        case "Water":
-                            PlayerCharacter.BrandManager.IncreaseWaterFound();
-                            break;
-                        case "Plant":
-                            PlayerCharacter.BrandManager.IncreaseFoodFound();
-                            break;
-                        case "Meat":
-                            PlayerCharacter.BrandManager.IncreaseFoodFound();
-                            break;
-                        case "Resource":
-                            PlayerCharacter.BrandManager.IncreaseResourceFound();
-                            break;
-                    }
-                }
-
-                PlayerCharacter.Inventory().MoveAllResources(WorldState.HomeInventory());
+                TransferResources();
                 PlayerCharacter.RestAction.Enter();
                 WorldEventManager.GenerateEvent(new CharacterMessage("I'm back, but the journey has taken it's toll", PlayerCharacter));
             }
             else
             {
-                CurrentRegion.Discover();
-                CombatManager.SetCurrentRegion(CurrentRegion);
-                SceneChanger.ChangeScene("Combat");
+               EnterRegion();
             }
+        }
+
+        private void EnterRegion()
+        {
+            CurrentRegion.Discover();
+            CombatManager.SetCurrentRegion(CurrentRegion);
+            SceneChanger.ChangeScene("Combat");
         }
 
         protected override void OnClick()
@@ -96,6 +113,7 @@ namespace Game.Characters.CharacterActions
         public void TravelTo(Region target, int enduranceCost)
         {
             Enter();
+            if(target == CurrentRegion && CurrentRegion.GetRegionType() != RegionType.Gate) EnterRegion();
             //todo decide if i want this
 //            switch (target.GetRegionType())
 //            {

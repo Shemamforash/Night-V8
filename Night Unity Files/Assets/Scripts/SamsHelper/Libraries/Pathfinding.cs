@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace SamsHelper.Libraries
 {
@@ -9,6 +11,7 @@ namespace SamsHelper.Libraries
     {
         public static List<Node> AStar(Node from, Node to)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             List<Node> path = null;
 
             HashSet<Node> visited = new HashSet<Node>();
@@ -22,6 +25,7 @@ namespace SamsHelper.Libraries
 
             while (unvisited.Count != 0)
             {
+                if (stopwatch.Elapsed.Seconds >= 1) return new List<Node>();
                 float minScore = float.MaxValue;
                 Node minNode = null;
                 for (int i = 0; i < unvisited.ToList().Count; i++)

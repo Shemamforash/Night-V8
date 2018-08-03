@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
@@ -56,7 +54,7 @@ namespace Game.Exploration.Regions
                 switch (_regionType)
                 {
                     case RegionType.Nightmare:
-                        GenerateEncounter(WorldState.GetAllowedNightmareEnemyTypes(), 5, 10);
+                        GenerateEncounter(WorldState.GetAllowedNightmareEnemyTypes(), 10, 20);
                         break;
                     case RegionType.Shelter:
                         GenerateShelter();
@@ -69,7 +67,7 @@ namespace Game.Exploration.Regions
                     case RegionType.Temple:
                         break;
                     default:
-                        GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes(), 3, 7);
+                        GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes(), 5, 10);
                         break;
                 }
             }
@@ -152,7 +150,7 @@ namespace Game.Exploration.Regions
 
             while (size > 0)
             {
-                EnemyTemplate template = Helper.RandomElement(allowedTypes);
+                EnemyTemplate template = allowedTypes.RandomElement();
                 AddEnemy(template);
                 size -= template.Value;
             }

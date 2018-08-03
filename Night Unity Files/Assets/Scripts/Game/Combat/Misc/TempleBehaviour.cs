@@ -35,8 +35,9 @@ public class TempleBehaviour : BasicShrineBehaviour
         _glow.color = UiAppearanceController.InvisibleColour;
     }
 
-    public void Update()
+    public override void Update()
     {
+        base.Update();
         float distance = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
         if (!_lit && distance < 8) StartLights();
         if (!_ring1Active && distance < 6)

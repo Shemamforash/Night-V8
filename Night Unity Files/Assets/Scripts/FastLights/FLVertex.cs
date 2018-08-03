@@ -28,6 +28,7 @@ namespace FastLights
             SqrDistanceToOrigin = Vector2.SqrMagnitude(Position - lightPosition);
             OutOfRange = SqrDistanceToOrigin > range;
             InRangePosition = Position;
+            if (OutOfRange) return;
             InRangeAngle = 360 - AdvancedMaths.AngleFromUp(lightPosition, Position);
         }
 
@@ -37,7 +38,7 @@ namespace FastLights
             SqrDistanceToOrigin = Vector2.SqrMagnitude(Position - lightPosition);
             InRangeAngle = 360 - AdvancedMaths.AngleFromUp(lightPosition, InRangePosition);
         }
-        
+
         public void Draw()
         {
             Debug.DrawLine(Position, PreviousFlVertex.Position, Color.red, 5f);

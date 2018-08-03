@@ -18,6 +18,7 @@ namespace Game.Combat.Misc
         private float Speed = 25f;
         private static GameObject _bulletPrefab;
         private BulletTrailFade _bulletTrail;
+        private const float EnemyDamageModifier = 0.5f;
 
         private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Prefabs/Combat/Bullet");
         private float _accuracy;
@@ -35,7 +36,7 @@ namespace Game.Combat.Misc
         private Vector3 _originPosition;
         private float _pierceChance, _burnChance, _decayChange, _sicknessChance;
         private Rigidbody2D _rigidBody;
-        
+
         private static Transform _shotParent;
         private Weapon _weapon;
         private bool _seekTarget, _leaveFireTrail;
@@ -103,6 +104,7 @@ namespace Game.Combat.Misc
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             _originPosition = origin.transform.position;
             SetUpComponents();
         }
@@ -155,6 +157,7 @@ namespace Game.Combat.Misc
             {
                 force = -force;
             }
+
             _rigidBody.velocity += force * dir * Time.fixedDeltaTime;
             _rigidBody.velocity = _rigidBody.velocity.normalized * Speed;
         }
@@ -270,7 +273,12 @@ namespace Game.Combat.Misc
             _sicknessChance = chance;
         }
 
-        public int DamageDealt() => _damageDealt;
+        public int DamageDealt()
+        {
+            if (_origin is EnemyBehaviour) _damageDealt = Mathf.FloorToInt(EnemyDamageModifier * _damageDealt);
+            return _damageDealt;
+        }
+
 
         public void SetAccuracy(float accuracy)
         {

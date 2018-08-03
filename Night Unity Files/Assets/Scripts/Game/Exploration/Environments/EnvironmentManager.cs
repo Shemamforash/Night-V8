@@ -40,7 +40,7 @@ namespace Game.Exploration.Environment
 
             MapGenerator.Generate();
             WorldView.SetEnvironmentText(_currentEnvironment.EnvironmentType.ToString());
-            SceneryController.UpdateEnvironment();
+            SceneryController.UpdateEnvironmentBackground();
         }
 
         private static void LoadEnvironments()

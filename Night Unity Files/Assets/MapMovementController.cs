@@ -99,14 +99,13 @@ public class MapMovementController : MonoBehaviour, IInputListener
         bool enoughEndurance = _enduranceCost <= CharacterManager.SelectedCharacter.Attributes.Val(AttributeType.Endurance);
         bool travellingToGate = _nearestRegion.GetRegionType() == RegionType.Gate;
         if (!enoughEndurance && !travellingToGate) return;
+        Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
+        travelAction.TravelTo(_nearestRegion, _enduranceCost);
         if (_currentRegion != _nearestRegion)
         {
-            Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
-            travelAction.TravelTo(_nearestRegion, _enduranceCost);
+            ReturnToGame();
         }
-
         _nearestRegion?.MapNode().Enter();
-        ReturnToGame();
     }
 
     private static void ReturnToGame()

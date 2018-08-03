@@ -373,7 +373,7 @@ namespace Game.Combat.Player
 
         public override float GetAccuracyModifier()
         {
-            if (_weaponBehaviour is AccuracyGainer) return 1 - base.GetAccuracyModifier();
+            if (_weaponBehaviour is AccuracyGainer) return Mathf.Sqrt(1 - base.GetAccuracyModifier());
             return base.GetAccuracyModifier();
         }
 

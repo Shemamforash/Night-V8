@@ -111,11 +111,11 @@ namespace Game.Gear.Armour
             else
             {
                 plateOne = range;
-                plateTwo = 1;
+                plateTwo = 0;
             }
 
-            if (plateOne != 0) SetPlateOne(ArmourPlate.Create((ItemQuality) plateOne));
-            if (plateTwo != 0) SetPlateTwo(ArmourPlate.Create((ItemQuality) plateTwo));
+            if (plateOne != 0) SetPlateOne(ArmourPlate.Create((ItemQuality) plateOne - 1));
+            if (plateTwo != 0) SetPlateTwo(ArmourPlate.Create((ItemQuality) plateTwo - 1));
         }
 
         public int GetProtectionLevel()

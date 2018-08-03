@@ -42,6 +42,7 @@ namespace Game.Combat.Enemies
 
         private void UpdateMarkTime()
         {
+            if (!_marked) return;
             if (_markTime < 0f) return;
             _markTime -= Time.deltaTime;
             if (_markTime < 0f) PlayerCombat.Instance.EndMark(this);
@@ -61,6 +62,7 @@ namespace Game.Combat.Enemies
 
         protected SpriteRenderer Sprite;
         private float _markTime;
+        private bool _marked;
 
         private void PushAwayFromNeighbors()
         {
@@ -179,6 +181,7 @@ namespace Game.Combat.Enemies
 
         public void Mark()
         {
+            _marked = true;
             _markTime = 5f;
         }
     }

@@ -1,5 +1,4 @@
-﻿using Game.Combat.Enemies;
-using Game.Combat.Misc;
+﻿using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using SamsHelper;
@@ -16,7 +15,7 @@ namespace Game.Gear.Weapons
         public int AmmoInMagazine;
         protected float TimeToNextFire;
         protected CharacterCombat Origin;
-        protected bool _fired;
+        private bool _fired;
 
         public void Initialise(Weapon weapon)
         {

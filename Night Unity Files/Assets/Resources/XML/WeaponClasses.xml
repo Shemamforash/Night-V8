@@ -1,16 +1,16 @@
 <Weapons>
     <Class name="Pistol">
         <Subtype name="Slinger" automatic="True">
-            <Damage>10</Damage>
+            <Damage>19</Damage>
             <FireRate>3</FireRate>
             <ReloadSpeed>0.5</ReloadSpeed>
-            <Accuracy>50</Accuracy>
+            <Accuracy>60</Accuracy>
             <Handling>70</Handling>
             <Capacity>10</Capacity>
         </Subtype>
         <Subtype name="Shortshooter" automatic="False">
-            <Damage>14</Damage>
-            <FireRate>2</FireRate>
+            <Damage>7</Damage>
+            <FireRate>4</FireRate>
             <ReloadSpeed>0.5</ReloadSpeed>
             <Accuracy>50</Accuracy>
             <Handling>80</Handling>
@@ -55,7 +55,7 @@
         <Subtype name="Leadspreader" automatic="True">
             <Damage>3</Damage>
             <FireRate>4</FireRate>
-            <ReloadSpeed>2.5</ReloadSpeed>
+            <ReloadSpeed>2</ReloadSpeed>
             <Accuracy>20</Accuracy>
             <Handling>35</Handling>
             <Capacity>6</Capacity>
@@ -70,7 +70,7 @@
         </Subtype>
         <Subtype name="Skullcrusher" automatic="False">
             <Damage>8</Damage>
-            <FireRate>2</FireRate>
+            <FireRate>6</FireRate>
             <ReloadSpeed>2.5</ReloadSpeed>
             <Accuracy>20</Accuracy>
             <Handling>35</Handling>
@@ -79,7 +79,7 @@
     </Class>
     <Class name="SMG">
         <Subtype name="Spitter" automatic="False">
-            <Damage>5</Damage>
+            <Damage>6</Damage>
             <FireRate>12</FireRate>
             <ReloadSpeed>1</ReloadSpeed>
             <Accuracy>30</Accuracy>
@@ -87,7 +87,7 @@
             <Capacity>30</Capacity>
         </Subtype>
         <Subtype name="Gripshaker" automatic="True">
-            <Damage>8</Damage>
+            <Damage>9</Damage>
             <FireRate>8</FireRate>
             <ReloadSpeed>1.25</ReloadSpeed>
             <Accuracy>30</Accuracy>
@@ -96,7 +96,7 @@
         </Subtype>
         <Subtype name="Spewer" automatic="True">
             <Damage>6</Damage>
-            <FireRate>10</FireRate>
+            <FireRate>11</FireRate>
             <ReloadSpeed>1</ReloadSpeed>
             <Accuracy>30</Accuracy>
             <Handling>98</Handling>
@@ -105,7 +105,7 @@
     </Class>
     <Class name="LMG">
         <Subtype name="Breacher" automatic="True">
-            <Damage>10</Damage>
+            <Damage>14</Damage>
             <FireRate>5</FireRate>
             <ReloadSpeed>5</ReloadSpeed>
             <Accuracy>40</Accuracy>

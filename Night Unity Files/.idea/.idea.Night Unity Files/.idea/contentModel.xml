@@ -520,7 +520,6 @@
                   <e p="Burstfire.cs" t="Include" />
                   <e p="DefaultBehaviour.cs" t="Include" />
                   <e p="DoubleFireDelay.cs" t="Include" />
-                  <e p="DoubleFireInstant.cs" t="Include" />
                   <e p="RandomFire.cs" t="Include" />
                   <e p="Spoolup.cs" t="Include" />
                 </e>

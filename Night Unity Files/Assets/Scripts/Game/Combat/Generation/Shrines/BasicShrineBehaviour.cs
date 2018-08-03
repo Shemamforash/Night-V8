@@ -29,7 +29,7 @@ namespace Game.Combat.Generation.Shrines
             StartShrine();
         }
 
-        public void Update()
+        public virtual void Update()
         {
             if (!Triggered) return;
             if (EnemiesDead()) OnEnemiesDead();
@@ -56,6 +56,7 @@ namespace Game.Combat.Generation.Shrines
             {
                 if (_disappearPrefab == null) _disappearPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Disappear");
                 Instantiate(_disappearPrefab).transform.position = _enemiesAlive[i].transform.position;
+                Debug.Log("banana");
                 _enemiesAlive[i].Kill();
             }
         }
