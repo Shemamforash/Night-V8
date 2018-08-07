@@ -54,7 +54,7 @@ namespace Game.Exploration.Regions
                 switch (_regionType)
                 {
                     case RegionType.Nightmare:
-                        GenerateEncounter(WorldState.GetAllowedNightmareEnemyTypes(), 10, 20);
+                        GenerateEncounter(WorldState.GetAllowedNightmareEnemyTypes());
                         break;
                     case RegionType.Shelter:
                         GenerateShelter();
@@ -67,7 +67,7 @@ namespace Game.Exploration.Regions
                     case RegionType.Temple:
                         break;
                     default:
-                        GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes(), 5, 10);
+                        GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
                         break;
                 }
             }
@@ -136,11 +136,15 @@ namespace Game.Exploration.Regions
             return newEnemy;
         }
 
-        private void GenerateEncounter(List<EnemyTemplate> allowedTypes, int minSize, int maxSize)
+        private void GenerateEncounter(List<EnemyTemplate> allowedTypes)
         {
             int daysSpent = WorldState.GetDaysSpentHere();
-            int size = Random.Range(minSize + daysSpent, maxSize + daysSpent);
             int difficulty = WorldState.Difficulty();
+
+            int size = daysSpent + WorldState.CurrentLevel() * 5;
+            int minSize = Mathf.CeilToInt(size / 2f);
+            int maxSize = Mathf.CeilToInt(size * 1.5f);
+            size = Random.Range(minSize, maxSize);
 
             if (difficulty >= 20)
             {

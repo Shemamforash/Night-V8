@@ -50,13 +50,13 @@ namespace SamsHelper.ReactiveUI.Elements
             if (isHeld || _justEntered || axis != InputAxis.Vertical) return;
             if (direction > 0)
             {
-                if (_button.navigation.selectOnUp == null && _onUpAction == null) return;
+                if (_button.navigation.selectOnUp == null || _onUpAction == null) return;
                 _onUpAction?.Invoke();
                 Exit();
             }
             else if (direction < 0)
             {
-                if (_button.navigation.selectOnDown == null && _onDownAction == null) return;
+                if (_button.navigation.selectOnDown == null || _onDownAction == null) return;
                 _onDownAction?.Invoke();
                 Exit();
             }
@@ -100,7 +100,6 @@ namespace SamsHelper.ReactiveUI.Elements
                 _borderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border");
                 _basicBorderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border Basic");
             }
-
             _border = Instantiate(UseAdvancedBorder ? _borderPrefab : _basicBorderPrefab);
             _border.transform.SetParent(transform, false);
             RectTransform rect = _border.GetComponent<RectTransform>();
@@ -238,13 +237,10 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public void SetDownNavigation(EnhancedButton target, bool reciprocate = true)
         {
-            if (target == null) return;
-
             Navigation navigation = GetNavigation();
-            navigation.selectOnDown = target.Button();
+            navigation.selectOnDown = target == null ? null : target.Button();
             SetNavigation(navigation);
-
-            if (!reciprocate) return;
+            if (target == null || !reciprocate) return;
             navigation = target.GetNavigation();
             navigation.selectOnUp = _button;
             target.SetNavigation(navigation);

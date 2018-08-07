@@ -1,72 +1,64 @@
-﻿using Game.Combat.Generation;
-using Game.Combat.Player;
+﻿using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Humans
 {
     public class Brawler : UnarmedBehaviour
     {
-        private const float MinMeleeDistance = 1;
-        private const float MeleeWarmupDuration = 1f;
+        private const float MinMeleeDistance = 0.5f;
         private const float MeleeDamage = 20;
-        private const float MeleeCooldownDuration = 3f;
-        private bool _meleeing;
-        private const float MeleeForce = 200;
+        private const float MeleeForce = 20;
+        private ParticleSystem _slashParticles;
+        private static GameObject _prefab;
+        private float _meleeTime;
+        private const float MaxMeleeTime = 0.25f;
+
+        public override void Initialise(Enemy enemy)
+        {
+            base.Initialise(enemy);
+            if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Brawler Particles");
+            GameObject slashObject = Instantiate(_prefab);
+            _slashParticles = slashObject.GetComponent<ParticleSystem>();
+            slashObject.transform.SetParent(transform);
+            slashObject.transform.localPosition = Vector2.zero;
+        }
 
         public override void Update()
         {
             base.Update();
             if (!Alerted) return;
-            if (_meleeing) return;
             if (DistanceToTarget() > MinMeleeDistance) return;
             StrikePlayer();
         }
 
-        protected override void ReachTarget()
-        {
-            StrikePlayer();
-        }
 
         private void StrikePlayer()
         {
-            float warmupDuration = MeleeWarmupDuration;
-            float cooldownDuration = MeleeCooldownDuration;
-            bool hasMeleed = false;
-            _meleeing = true;
-            CurrentAction = () =>
+            if (_meleeTime > 0f)
             {
-                if (!_meleeing) return;
-                if (warmupDuration > 0)
-                {
-                    warmupDuration -= Time.deltaTime;
-                    return;
-                }
-                if (!hasMeleed)
-                {
-                    MovementController.Ram(GetTarget().transform, MeleeForce);
-                    hasMeleed = true;
-                }
-                else
-                {
-                    if (cooldownDuration > 0)
-                    {
-                        cooldownDuration -= Time.deltaTime;
-                        return;
-                    }
+                _meleeTime -= Time.deltaTime;
+                return;
+            }
 
-                    Cell target =  PathingGrid.GetCellNearMe(CurrentCell(), 2f);
-                    MoveBehaviour.GoToCell(target);
-                    CurrentAction = FollowTarget;
-                    _meleeing = false;
-                }
-            };
-        }
+            _meleeTime = MaxMeleeTime * Random.Range(0.8f, 1.2f);
+            ParticleSystem.MainModule main = _slashParticles.main;
+            int flip = Random.Range(0, 2);
+            main.flipRotation = flip;
+            main.startRotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
+            Vector2 direction = transform.Direction(GetTarget().transform);
+            float x = -direction.y;
+            float y = direction.x;
+            if (flip == 1)
+            {
+                x = -x;
+                y = -x;
+            }
 
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            if (!other.gameObject.CompareTag("Player")) return;
-            if (GetComponent<Rigidbody2D>().velocity.magnitude < 1f) return;
-            other.gameObject.GetComponent<PlayerCombat>().HealthController.TakeDamage(MeleeDamage);
+            direction.x = x;
+            direction.y = y;
+            _slashParticles.Emit(1);
+            GetTarget().TakeDamage(5, direction);
+            GetTarget().MovementController.Knockback(transform.position, MeleeForce);
         }
     }
 }

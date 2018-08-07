@@ -188,9 +188,21 @@ namespace Game.Combat.Misc
             _bloodSpatter.Spray(shot.Direction(), healthDamage);
         }
 
+        public void TakeDamage(float damage, Vector2 direction)
+        {
+            float armourProtection = ArmourController.GetCurrentArmour() / 10f;
+            float armourDamage = damage * armourProtection;
+            float healthDamage = damage - armourDamage;
+            TakeArmourDamage(armourDamage);
+            HealthController.TakeDamage(Mathf.CeilToInt(healthDamage));
+            if (_bloodSpatter == null) return;
+            _bloodSpatter.Spray(direction, healthDamage);
+        }
+
         public virtual void Kill()
         {
             IsDead = true;
+            WeaponAudio.Destroy();
         }
 
         public virtual void ApplyShotEffects(Shot s)

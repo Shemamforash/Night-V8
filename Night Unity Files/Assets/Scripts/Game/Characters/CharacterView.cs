@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
@@ -8,6 +9,7 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Game.Characters
@@ -15,10 +17,8 @@ namespace Game.Characters
     public class CharacterView : MonoBehaviour
     {
         private Player _player;
-        private Transform _actionList;
         private TextMeshProUGUI _currentActionText;
-        private Slider _currentActionSliderSimple, _currentActionSliderDetailed;
-        private TextMeshProUGUI _detailedCurrentActionText;
+        private Slider _currentActionSliderSimple;
         private GameObject _detailedView;
         private GameObject SimpleView;
         private EnhancedText _brandText;
@@ -29,6 +29,12 @@ namespace Game.Characters
         private UIAttributeController _attributeControllerDetailed;
         private UIConditionController _thirstControllerSimple, _hungerControllerSimple;
         private UIConditionController _thirstControllerDetailed, _hungerControllerDetailed;
+        private EnhancedButton _exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton;
+        private List<EnhancedButton> _buttons;
+        private Transform _actionList;
+        private TextMeshProUGUI _detailedCurrentActionText;
+        private Slider _currentActionSliderDetailed;
+        private bool _actionListActive = true;
 
         public void SetPlayer(Player player)
         {
@@ -38,7 +44,6 @@ namespace Game.Characters
             CacheDetailedViewElements();
             SwitchToSimpleView();
             BindUi();
-            FillActionList();
             ((BaseCharacterAction) _player.States.GetCurrentState()).UpdateActionText();
         }
 
@@ -51,6 +56,12 @@ namespace Game.Characters
             _hungerControllerDetailed = FindInDetailedView<UIConditionController>("Hunger");
             _thirstControllerSimple = FindInSimpleView<UIConditionController>("Thirst");
             _hungerControllerSimple = FindInSimpleView<UIConditionController>("Hunger");
+
+            _player.TravelAction.SetButton(_exploreButton);
+            _player.CraftAction.SetButton(_craftButton);
+            _player.ConsumeAction.SetButton(_consumeButton);
+            _player.MeditateAction.SetButton(_meditateButton);
+            _player.SleepAction.SetButton(_sleepButton);
         }
 
         public void Update()
@@ -79,24 +90,33 @@ namespace Game.Characters
             _detailedView.SetActive(true);
             _detailedView.SetActive(false);
 
-            _actionList = FindInDetailedView<Transform>("Action List");
+            _actionList = gameObject.FindChildWithName<Transform>("Action List");
             _detailedCurrentActionText = FindInDetailedView<TextMeshProUGUI>("Current Action");
             _currentActionSliderDetailed = FindInDetailedView<Slider>("Slider");
+            _exploreButton = FindInDetailedView<EnhancedButton>("Explore");
+            _craftButton = FindInDetailedView<EnhancedButton>("Craft");
+            _consumeButton = FindInDetailedView<EnhancedButton>("Consume");
+            _meditateButton = FindInDetailedView<EnhancedButton>("Meditate");
+            _sleepButton = FindInDetailedView<EnhancedButton>("Sleep");
+            _buttons = new List<EnhancedButton> {_exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton};
+            _exploreButton.SetOnUpAction(() => CharacterManager.SelectPreviousCharacter(!_actionListActive));
 
             FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _player.Name;
 
             WeaponController = FindInDetailedView<UIPlayerWeaponController>("Weapon");
             WeaponController.EnhancedButton.AddOnClick(() => UiGearMenuController.ShowWeaponMenu(_player));
+            WeaponController.EnhancedButton.SetOnUpAction(() => CharacterManager.SelectPreviousCharacter(true));
             WeaponController.SetWeapon(_player.EquippedWeapon);
-
-            ArmourController = FindInDetailedView<UIPlayerArmourController>("Armour");
-            ArmourController.EnhancedButton.AddOnClick(() => UiGearMenuController.ShowArmourMenu(_player));
-            ArmourController.SetArmour(_player.ArmourController);
-            _player.ArmourController.AddOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));
 
             AccessoryController = FindInDetailedView<UIPlayerAccessoryController>("Accessory");
             AccessoryController.SetAccessory(_player.EquippedAccessory);
             AccessoryController.EnhancedButton.AddOnClick(() => UiGearMenuController.ShowAccessoryMenu(_player));
+
+            ArmourController = FindInDetailedView<UIPlayerArmourController>("Armour");
+            ArmourController.EnhancedButton.AddOnClick(() => UiGearMenuController.ShowArmourMenu(_player));
+            ArmourController.EnhancedButton.SetOnDownAction(() => CharacterManager.SelectNextCharacter(true));
+            ArmourController.SetArmour(_player.ArmourController);
+            _player.ArmourController.AddOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));
 
             _brandText = _detailedView.FindChildWithName<EnhancedText>("Brands");
         }
@@ -115,35 +135,18 @@ namespace Game.Characters
             _brandText.Text(brandString);
         }
 
-        private EnhancedButton _exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton;
-
-        private void FillActionList()
-        {
-            _exploreButton = _actionList.gameObject.FindChildWithName<EnhancedButton>("Explore");
-            _craftButton = _actionList.gameObject.FindChildWithName<EnhancedButton>("Craft");
-            _consumeButton = _actionList.gameObject.FindChildWithName<EnhancedButton>("Consume");
-            _meditateButton = _actionList.gameObject.FindChildWithName<EnhancedButton>("Meditate");
-            _sleepButton = _actionList.gameObject.FindChildWithName<EnhancedButton>("Sleep");
-            _player.TravelAction.SetButton(_exploreButton);
-            _player.CraftAction.SetButton(_craftButton);
-            _player.ConsumeAction.SetButton(_consumeButton);
-            _player.MeditateAction.SetButton(_meditateButton);
-            _player.SleepAction.SetButton(_sleepButton);
-            Helper.SetNavigation(_exploreButton, WeaponController.EnhancedButton, Direction.Left);
-            Helper.SetNavigation(_craftButton, WeaponController.EnhancedButton, Direction.Left);
-            Helper.SetNavigation(_consumeButton, AccessoryController.EnhancedButton, Direction.Left);
-            Helper.SetNavigation(_meditateButton, ArmourController.EnhancedButton, Direction.Left);
-            Helper.SetNavigation(_sleepButton, ArmourController.EnhancedButton, Direction.Left);
-            Helper.SetNavigation(WeaponController.EnhancedButton, _exploreButton, Direction.Right);
-            Helper.SetNavigation(ArmourController.EnhancedButton.Button(), _exploreButton, Direction.Right);
-            Helper.SetNavigation(AccessoryController.EnhancedButton.Button(), _exploreButton, Direction.Right);
-        }
-
         public void SelectInitial()
         {
             CharacterManager.SelectCharacter(_player);
-            if (_actionListActive) _exploreButton.Select();
-            else WeaponController.EnhancedButton.Select();
+            if (!_actionListActive) WeaponController.EnhancedButton.Select();
+            else _exploreButton.Select();
+        }
+
+        public void SelectLast()
+        {
+            CharacterManager.SelectCharacter(_player);
+            if (!_actionListActive) ArmourController.EnhancedButton.Select();
+            else _buttons.Last(b => b.enabled).Select();
         }
 
         //actions[0], weaponui, & consumption toggle navigate to actions[last], accessoryui, & consumption buttons respectively
@@ -152,35 +155,34 @@ namespace Game.Characters
         //if no character below do nothing
         public void RefreshNavigation()
         {
-            CharacterView _previousCharacterView = CharacterManager.PreviousCharacter(_player)?.CharacterView;
+            _craftButton.enabled = Recipe.RecipesAvailable();
+            _consumeButton.enabled = WorldState.HomeInventory().Consumables().Count > 0;
+            _meditateButton.enabled = _player.CanMeditate();
+            _sleepButton.enabled = _player.CanSleep();
+            List<EnhancedButton> activeButtons = _buttons.FindAll(b => b.enabled);
+            for (int i = 0; i < activeButtons.Count; ++i)
+            {
+                EnhancedButton activeButton = activeButtons[i];
+                activeButton.SetOnDownAction(null);
+                TextMeshProUGUI textObject = activeButton.gameObject.FindChildWithName<TextMeshProUGUI>("Text");
+                string text = textObject.text;
+                text = text.Replace("<s>", "");
+                text = text.Replace("</s>", "");
+                textObject.text = text;
+                textObject.color = Color.white;
+                activeButton.SetDownNavigation(i + 1 < activeButtons.Count ? activeButtons[i + 1] : null);
+                if (i != activeButtons.Count - 1) continue;
+                activeButton.SetOnDownAction(() => CharacterManager.SelectNextCharacter(!_actionListActive));
+            }
 
-            if (_previousCharacterView == null) return;
-
-            _previousCharacterView._sleepButton.SetOnDownAction(() =>
+            List<EnhancedButton> inactiveButtons = _buttons.FindAll(b => !b.enabled);
+            inactiveButtons.ForEach(b =>
             {
-                CharacterManager.ExitCharacter(_previousCharacterView._player);
-                CharacterManager.SelectCharacter(_player);
-                if (_actionListActive) _exploreButton.Select();
-                else WeaponController.EnhancedButton.Select();
-            });
-            _exploreButton.SetOnUpAction(() =>
-            {
-                CharacterManager.ExitCharacter(_player);
-                CharacterManager.SelectCharacter(_previousCharacterView._player);
-                if (_previousCharacterView._actionListActive) _previousCharacterView._sleepButton.Select();
-                else _previousCharacterView.ArmourController.EnhancedButton.Select();
-            });
-            WeaponController.EnhancedButton.SetOnUpAction(() =>
-            {
-                CharacterManager.ExitCharacter(_player);
-                CharacterManager.SelectCharacter(_previousCharacterView._player);
-                _previousCharacterView.ArmourController.EnhancedButton.Select();
-            });
-            _previousCharacterView.ArmourController.EnhancedButton.SetOnDownAction(() =>
-            {
-                CharacterManager.ExitCharacter(_previousCharacterView._player);
-                CharacterManager.SelectCharacter(_player);
-                WeaponController.EnhancedButton.Select();
+                TextMeshProUGUI textObject = b.gameObject.FindChildWithName<TextMeshProUGUI>("Text");
+                string text = textObject.text;
+                text = "<s>" + text + "</s>";
+                textObject.text = text;
+                textObject.color = UiAppearanceController.FadedColour;
             });
         }
 
@@ -221,7 +223,6 @@ namespace Game.Characters
             }
         }
 
-        private bool _actionListActive = true;
 
         private void SetActionListActive(bool active)
         {

@@ -36,7 +36,7 @@ namespace Game.Gear.Weapons
             AddMod(AttributeType.Accuracy, _accuracyDurabilityModifier);
             _durability = new Number(MaxDurability, 0, MaxDurability);
             _durability.SetCurrentValue((float) weapon.Quality() + 1f * 10f);
-            SetMax(AttributeType.Accuracy, 100);
+            SetMax(AttributeType.Accuracy, 1);
             SetClass(weaponClass);
         }
 

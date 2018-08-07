@@ -219,7 +219,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1969838416443470}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.588743, y: -4.710896, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4201150100652938}
@@ -349,7 +349,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -443,6 +443,7 @@ MonoBehaviour:
   _shotgunClips:
   - {fileID: 8300000, guid: 0b581358748c6b144a938626adcd7f3f, type: 3}
   - {fileID: 8300000, guid: be6ca6252976e2a46a0c30bdf84dda0e, type: 3}
+  _armourBreakClips: []
   _pistolClipIn: {fileID: 8300000, guid: 1f327117f7bc9524bb5cd8870a94406c, type: 3}
   _pistolClipOut: {fileID: 8300000, guid: daf5283ee66dca7449f90c36c3a91af0, type: 3}
   _lmgClipIn: {fileID: 8300000, guid: eccda95838f4b8747ad24375ef8bc4b0, type: 3}
@@ -453,6 +454,9 @@ MonoBehaviour:
   _rifleClipOut: {fileID: 8300000, guid: 035a0091c65cf7243bae713bc94792f1, type: 3}
   _shotgunClipIn: {fileID: 0}
   _shotgunClipOut: {fileID: 0}
+  SpoolUpClip: {fileID: 0}
+  SpoolDownClip: {fileID: 0}
+  SpoolClip: {fileID: 0}
 --- !u!114 &114994034474461898
 MonoBehaviour:
   m_ObjectHideFlags: 1

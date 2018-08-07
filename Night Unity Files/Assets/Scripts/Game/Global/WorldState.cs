@@ -18,12 +18,13 @@ namespace Game.Global
         public const int MinutesPerHour = 12;
         private const int IntervalSize = 60 / MinutesPerHour;
 
-        public const float MinuteInSeconds = 1;//0.2f;
+        public const float MinuteInSeconds = 1f; //0.2f;
         private const float DayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
         private const int MinuteInterval = 60 / MinutesPerHour;
         private static int DaysSpentHere;
         private static bool _started;
         private static CharacterManager _homeInventory;
+        private static int _currentLevel = 1;
 
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
@@ -90,14 +91,14 @@ namespace Game.Global
 
         public static int GetDaysSpentHere() => DaysSpentHere;
 
+        public static int CurrentLevel() => _currentLevel;
+
         public static void TravelToNextEnvironment()
         {
+            ++_currentLevel;
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel();
-            CharacterManager.Characters.ForEach(c =>
-            {
-                c.TravelAction.ReturnToHomeInstant();
-            });
+            CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
             SceneChanger.ChangeScene("Game");
         }
 

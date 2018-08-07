@@ -26,7 +26,7 @@ namespace Game.Global
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_fader.DOColor(InvisibleBlack, FadeTime));
             if (SceneManager.GetActiveScene().name != "Game") return;
-            sequence.AppendCallback(WorldState.UnPause);
+            sequence.InsertCallback(0.1f, WorldState.UnPause);
         }
 
         private IEnumerator FadeOut(string sceneName, bool fade)

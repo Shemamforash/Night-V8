@@ -14,21 +14,21 @@ namespace Game.Combat.Misc
     {
         private static GameObject _explosionPrefab;
         private static readonly List<Explosion> _explosionPool = new List<Explosion>();
-        private float _age;
 
+        private const float ExplodeTime = 0.2f;
+        private const float ExplosionWarmupTime = 1f;
+        private const float FadeTime = 0.5f;
+        
+        private float _age;
         private int _damage;
-        private readonly float _explodeTime = 0.2f;
         private float _explosionRadius = 1f;
         private SpriteRenderer _explosionSprite;
-        private readonly float _explosionWarmupTime = 1f;
-        private readonly float _fadeTime = 0.5f;
 
         private FastLight _light;
-        private float _originalExplosionWidth, _originalWarningWidth;
         private ParticleSystem _particles;
         private SpriteRenderer _warningRing;
-        private AudioSource _audioSource;
         private Action<List<EnemyBehaviour>> OnExplode;
+        private GameObject _spriteObject;
 
         [SerializeField]
         private AudioClip[] _explosionClips;
@@ -40,13 +40,10 @@ namespace Game.Combat.Misc
             _explosionSprite = gameObject.FindChildWithName<SpriteRenderer>("Explosion");
             _particles = gameObject.FindChildWithName<ParticleSystem>("Fragments");
             _light = gameObject.FindChildWithName<FastLight>("Light");
+            _spriteObject = gameObject.FindChildWithName("Sprites");
 
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
             _light.Colour = UiAppearanceController.InvisibleColour;
-
-            _originalExplosionWidth = _explosionSprite.bounds.size.x;
-            _originalWarningWidth = _warningRing.bounds.size.x;
-            _audioSource = gameObject.FindChildWithName<AudioSource>("Audio");
         }
 
         public void OnDestroy()
@@ -64,6 +61,7 @@ namespace Game.Combat.Misc
         private void Initialise(Vector2 position, int damage, float radius = 1)
         {
             transform.position = position;
+            _spriteObject.transform.localScale = Vector2.one * radius;
             _explosionRadius = radius;
             _damage = damage;
         }
@@ -86,7 +84,6 @@ namespace Game.Combat.Misc
         public void Detonate()
         {
             gameObject.SetActive(true);
-            _audioSource.PlayOneShot(Helper.RandomElement(_explosionClips));
             StartCoroutine(Warmup());
         }
 
@@ -113,20 +110,13 @@ namespace Game.Combat.Misc
             OnExplode?.Invoke(enemiesHit);
         }
 
-        private void ScaleSprite(SpriteRenderer sprite, float scalingValue, float originalSize)
-        {
-            float scaledWidth = scalingValue / originalSize;
-            sprite.transform.localScale = Vector3.one * scaledWidth;
-        }
-
         private IEnumerator Warmup()
         {
             _age = 0f;
-            ScaleSprite(_warningRing, _explosionRadius, _originalWarningWidth);
-            while (_age < _explosionWarmupTime)
+            while (_age < ExplosionWarmupTime)
             {
                 _warningRing.transform.Rotate(0, 0, 5 * Time.deltaTime);
-                _warningRing.color = new Color(1, 0, 0, _age / _explosionWarmupTime);
+                _warningRing.color = new Color(1, 0, 0, _age / ExplosionWarmupTime);
                 _age += Time.deltaTime;
                 yield return null;
             }
@@ -141,38 +131,38 @@ namespace Game.Combat.Misc
             bool shownWarning = false;
             bool shownLight = false;
             _warningRing.color = UiAppearanceController.InvisibleColour;
-            while (_age < _explodeTime + _fadeTime)
+            while (_age < ExplodeTime + FadeTime)
             {
-                if (!shownWarning && _age < _explodeTime / 2f)
+                if (!shownWarning && _age < ExplodeTime / 2f)
                 {
                     _light.Colour = UiAppearanceController.FadedColour;
                     _light.Radius = 1;
-                    ScaleSprite(_explosionSprite, _explosionRadius / 8f, _originalExplosionWidth);
+                    _spriteObject.transform.localScale = Vector2.one * _explosionRadius / 8f;
                     _explosionSprite.color = Color.white;
                     shownWarning = true;
                 }
-                else if (!shownLight && _age > _explodeTime / 2f && _age < _explodeTime)
+                else if (!shownLight && _age > ExplodeTime / 2f && _age < ExplodeTime)
                 {
                     _light.Colour = UiAppearanceController.InvisibleColour;
                     _explosionSprite.color = UiAppearanceController.InvisibleColour;
                     shownLight = true;
                 }
-                else if (_age > _explodeTime)
+                else if (_age > ExplodeTime)
                 {
                     if (!emitted)
                     {
+                        AudioSource.PlayClipAtPoint(_explosionClips.RandomElement(), transform.position);
                         DealDamage();
                         ParticleSystem.ShapeModule shape = _particles.shape;
-                        shape.radius = _explosionRadius * 0.1f;
-                        _particles.Emit(100);
+                        shape.radius = _explosionRadius;
+                        _particles.Emit((int) (_explosionRadius * _explosionRadius * 40f));
                         emitted = true;
                         _light.Radius = _explosionRadius * 1.5f;
                     }
-
-                    float normalisedTime = (_age - _explodeTime) / _fadeTime;
+                    float normalisedTime = (_age - ExplodeTime) / FadeTime;
                     float alpha = 1 - normalisedTime;
+                    _spriteObject.transform.localScale = Vector2.one * (_explosionRadius * 0.75f + 0.25f * normalisedTime);
                     _light.Colour = new Color(1, 1, 1, alpha * 0.4f);
-                    ScaleSprite(_explosionSprite, _explosionRadius * 0.2f + 0.25f * normalisedTime, _originalExplosionWidth);
                     _explosionSprite.color = new Color(1, 1, 1, alpha);
                 }
 

@@ -1,4 +1,4 @@
-﻿using EZCameraShake;
+﻿using System.Collections;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
@@ -21,6 +21,23 @@ public class WeaponAudioController : MonoBehaviour
         _highPassFilter = GetComponent<AudioHighPassFilter>();
     }
 
+    public void Destroy()
+    {
+        transform.SetParent(null);
+        StartCoroutine(DestroyWhenDone());
+    }
+
+    private IEnumerator DestroyWhenDone()
+    {
+        float duration = 1f;
+        while (duration > 0f)
+        {
+            duration -= Time.deltaTime;
+            yield return null;
+        }
+        Destroy(gameObject);
+    }
+    
     public void StartReload(WeaponType weaponType)
     {
         AudioClip clip = null;

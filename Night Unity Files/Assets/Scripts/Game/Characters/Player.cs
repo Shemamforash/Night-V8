@@ -95,11 +95,6 @@ namespace Game.Characters
             return doc;
         }
 
-        public List<BaseCharacterAction> StatesAsList(bool includeInactiveStates)
-        {
-            return (from BaseCharacterAction s in States.StatesAsList() where s.IsVisible || includeInactiveStates select s).ToList();
-        }
-
         private void AddStates()
         {
             RestAction = new Rest(this);
@@ -241,6 +236,18 @@ namespace Game.Characters
                     Attributes.SkillTwoUnlocked = true;
                     break;
             }
+        }
+
+        public bool CanMeditate()
+        {
+            return Attributes.Val(AttributeType.Perception) < Attributes.Max(AttributeType.Perception) ||
+                   Attributes.Val(AttributeType.Willpower) < Attributes.Max(AttributeType.Willpower);
+        }
+
+        public bool CanSleep()
+        {
+            return Attributes.Val(AttributeType.Strength) < Attributes.Max(AttributeType.Strength) ||
+                   Attributes.Val(AttributeType.Endurance) < Attributes.Max(AttributeType.Endurance);
         }
     }
 }

@@ -13,7 +13,6 @@ namespace Game.Characters.CharacterActions
         private int InitialDuration;
         protected Action HourCallback;
         protected Action MinuteCallback;
-        public bool IsVisible = true;
 
         protected BaseCharacterAction(string name, Player playerCharacter) : base(playerCharacter.States, name)
         {

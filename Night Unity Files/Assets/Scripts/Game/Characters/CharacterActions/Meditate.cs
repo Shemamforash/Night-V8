@@ -1,4 +1,5 @@
-﻿using SamsHelper.BaseGameFunctionality.Basic;
+﻿using Game.Global;
+using SamsHelper.BaseGameFunctionality.Basic;
 
 namespace Game.Characters.CharacterActions
 {
@@ -7,14 +8,18 @@ namespace Game.Characters.CharacterActions
         public Meditate(Player playerCharacter) : base(nameof(Meditate), playerCharacter)
         {
             DisplayName = "Meditating\n+Perception +Willpower";
-            ShowTime = false;
-            IsVisible = false;
             HourCallback = playerCharacter.Meditate;
+            MinuteCallback = () =>
+            {
+                if (Duration == 0) SetDuration(WorldState.MinutesPerHour);
+                --Duration;
+            };
         }
 
         protected override void OnClick()
         {
             if (PlayerCharacter.Attributes.Get(AttributeType.Willpower).ReachedMax()) return;
+            if (Duration == 0) SetDuration(WorldState.MinutesPerHour);
             Enter();
         }
     }

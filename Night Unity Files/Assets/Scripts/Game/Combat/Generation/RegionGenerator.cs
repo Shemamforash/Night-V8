@@ -258,7 +258,7 @@ namespace Game.Combat.Generation
                 _healthShrineCounter = 0;
             }
 
-            if (_essenceShrineCounter > EssenceShrineTarget / (EnvironmentManager.CurrentEnvironment.LevelNo + 1))
+            if (_essenceShrineCounter > EssenceShrineTarget / WorldState.CurrentLevel())
             {
                 _region.EssenceShrinePosition = FindAndRemoveValidPosition();
                 _essenceShrineCounter = 0;

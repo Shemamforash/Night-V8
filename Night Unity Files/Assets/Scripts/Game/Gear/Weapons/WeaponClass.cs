@@ -10,8 +10,8 @@ namespace Game.Gear.Weapons
         public readonly bool Automatic;
         public readonly WeaponClassType Name;
         public readonly WeaponType Type;
-        public readonly int Pellets, Capacity, Handling, Accuracy, Damage;
-        public readonly float ReloadSpeed, FireRate;
+        public readonly int Pellets, Capacity, Handling, Damage;
+        public readonly float ReloadSpeed, FireRate, Accuracy;
         private static readonly List<WeaponClassType> _weaponClassTypes = new List<WeaponClassType>();
         private static readonly List<WeaponClass> _weaponClasses = new List<WeaponClass>();
 
@@ -23,7 +23,7 @@ namespace Game.Gear.Weapons
             Damage = subtypeNode.IntFromNode("Damage");
             FireRate = subtypeNode.FloatFromNode("FireRate");
             ReloadSpeed = subtypeNode.FloatFromNode("ReloadSpeed");
-            Accuracy = subtypeNode.IntFromNode("Accuracy");
+            Accuracy = subtypeNode.FloatFromNode("Accuracy") / 100f;
             Handling = subtypeNode.IntFromNode("Handling");
             Capacity = subtypeNode.IntFromNode("Capacity");
             Pellets = type == WeaponType.Shotgun ? 10 : 1;

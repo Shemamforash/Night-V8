@@ -129,6 +129,9 @@ namespace Game.Combat.Misc
         private void CalculateAccuracy()
         {
             if (_guaranteeHit) _accuracy = 0;
+            else if (_origin == null) return;
+            float accuracyDifference = Weapon.MaxAccuracyOffsetInDegrees - _accuracy;
+            _accuracy += accuracyDifference * _origin.GetAccuracyModifier();
         }
 
         private void CacheWeaponAttributes()
@@ -180,7 +183,6 @@ namespace Game.Combat.Misc
         public void Fire(float distance = 0.15f)
         {
             float angleOffset = Random.Range(-_accuracy, _accuracy);
-            if (_origin != null) angleOffset *= _origin.GetAccuracyModifier();
             transform.position = _originPosition + _direction * distance;
             _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
             if (_leaveFireTrail) gameObject.AddComponent<LeaveFireTrail>().Initialise();

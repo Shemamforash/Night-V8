@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Animals;

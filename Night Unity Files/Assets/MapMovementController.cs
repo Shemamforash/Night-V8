@@ -4,6 +4,7 @@ using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -72,7 +73,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
                 _direction.y += direction;
                 break;
             case InputAxis.Cover:
-                ReturnToGame();
+                ReturnToGame(_currentRegion);
                 break;
             case InputAxis.Fire:
                 TravelToRegion();
@@ -103,15 +104,15 @@ public class MapMovementController : MonoBehaviour, IInputListener
         travelAction.TravelTo(_nearestRegion, _enduranceCost);
         if (_currentRegion != _nearestRegion)
         {
-            ReturnToGame();
+            ReturnToGame(_nearestRegion);
         }
-        _nearestRegion?.MapNode().Enter();
     }
 
-    private static void ReturnToGame()
+    private static void ReturnToGame(Region region)
     {
+        region.MapNode().Enter();
+        SceneChanger.ChangeScene("Game");
         InputHandler.SetCurrentListener(null);
-        SceneManager.LoadScene("Game");
     }
 
     public void OnInputUp(InputAxis axis)

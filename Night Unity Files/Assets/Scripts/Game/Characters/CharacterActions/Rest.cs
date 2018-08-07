@@ -6,7 +6,6 @@
         {
             DisplayName = "Resting\n+Endurance +Perception";
             ShowTime = false;
-            IsVisible = false;
             HourCallback = playerCharacter.Rest;
         }
     }

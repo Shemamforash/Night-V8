@@ -239,5 +239,37 @@ namespace Game.Characters
         {
             return _buildings;
         }
+
+        public static void SelectPreviousCharacter(bool selectGear)
+        {
+            Player previousPlayer = PreviousCharacter(SelectedCharacter);
+            if (previousPlayer == null) return;
+            ExitCharacter(SelectedCharacter);
+            SelectCharacter(previousPlayer);
+            if (selectGear)
+            {
+                previousPlayer.CharacterView.ArmourController.EnhancedButton.Select();
+            }
+            else
+            {
+                previousPlayer.CharacterView.SelectLast();
+            }
+        }
+
+        public static void SelectNextCharacter(bool selectGear)
+        {
+            Player nextCharacter = NextCharacter(SelectedCharacter);
+            if (nextCharacter == null) return;
+            ExitCharacter(SelectedCharacter);
+            SelectCharacter(nextCharacter);
+            if (selectGear)
+            {
+                nextCharacter.CharacterView.WeaponController.EnhancedButton.Select();
+            }
+            else
+            {
+                nextCharacter.CharacterView.SelectInitial();
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Facilitating;
 using Game.Characters;
@@ -123,6 +124,11 @@ namespace Game.Global
                 availableRecipes.Add(r);
             });
             return availableRecipes;
+        }
+
+        public static bool RecipesAvailable()
+        {
+            return _recipes.Any(r => r.CanCraft());
         }
 
         private static void LoadRecipes()
