@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Characters;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using NUnit.Framework;
@@ -9,19 +10,21 @@ namespace Game.Combat.Misc
     public class HealthController
     {
         private readonly Number _healthRemaining = new Number();
-        private CharacterCombat _character;
+        private ITakeDamageInterface _healthyThing;
         private event Action<float> OnTakeDamage;
         private event Action<float> OnHeal;
 
         private UIHealthBarController GetHealthBarController()
         {
-            if (_character is PlayerCombat) return PlayerUi.Instance().GetHealthController(_character);
-            return EnemyUi.Instance().GetHealthController(_character);
+            CharacterCombat c = _healthyThing as CharacterCombat;
+            if (c == null) return null;
+            if (_healthyThing is PlayerCombat) return PlayerUi.Instance().GetHealthController(c);
+            return EnemyUi.Instance().GetHealthController(c);
         }
 
-        public void SetInitialHealth(int initialHealth, CharacterCombat character)
+        public void SetInitialHealth(int initialHealth, ITakeDamageInterface character)
         {
-            _character = character;
+            _healthyThing = character;
             _healthRemaining.Max = initialHealth;
             _healthRemaining.SetCurrentValue(initialHealth);
             UpdateHealth();
@@ -40,9 +43,8 @@ namespace Game.Combat.Misc
             _healthRemaining.Decrement(amount);
             GetHealthBarController()?.FadeNewHealth();
             OnTakeDamage?.Invoke(amount);
-            if (_healthRemaining.ReachedMin()) _character.Kill();
+            if (_healthRemaining.ReachedMin()) _healthyThing.Kill();
             UpdateHealth();
-//            (_character as DetailedEnemyCombat)?.UiHitController.RegisterShot();
         }
 
         public void Heal(int amount)

@@ -18,7 +18,7 @@ namespace Game.Global
         public const int MinutesPerHour = 12;
         private const int IntervalSize = 60 / MinutesPerHour;
 
-        public const float MinuteInSeconds = 1f; //0.2f;
+        public const float MinuteInSeconds = 0.2f;//= 1f;
         private const float DayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
         private const int MinuteInterval = 60 / MinutesPerHour;
         private static int DaysSpentHere;

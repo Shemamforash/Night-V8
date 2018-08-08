@@ -59,8 +59,8 @@ public class BeamController : MonoBehaviour
         _glowLine.SetPositions(positions);
         _beamLine.SetPositions(positions);
         _leadLine.SetPositions(positions);
-        _particleBurst.transform.position = _target.position;
-        float angle = AdvancedMaths.AngleFromUp(_target.position, _origin.position) + 90f;
+        _particleBurst.transform.position = _origin.position;
+        float angle = AdvancedMaths.AngleFromUp(_origin.position, _target.position) + 90f;
         _particleBurst.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 

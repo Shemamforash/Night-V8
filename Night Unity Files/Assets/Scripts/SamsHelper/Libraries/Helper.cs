@@ -14,6 +14,14 @@ namespace SamsHelper.Libraries
 {
     public static class Helper
     {
+        public static Vector3 MouseToWorldCoordinates(float z = 0f)
+        {
+            Vector3 mousePos = UnityEngine.Input.mousePosition;
+            mousePos.z = z;
+            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+            return mousePos;
+        }
+        
         public static bool IsObjectInCameraView(GameObject gameObject)
         {
             return IsPositionInCameraView(gameObject.transform.position);

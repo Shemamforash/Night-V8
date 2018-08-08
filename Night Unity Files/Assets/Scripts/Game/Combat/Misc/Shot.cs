@@ -40,6 +40,7 @@ namespace Game.Combat.Misc
         private static Transform _shotParent;
         private Weapon _weapon;
         private bool _seekTarget, _leaveFireTrail;
+        public float _knockBackForce;
         private const float MaxAge = 3f;
         private event Action OnHitAction;
 
@@ -206,6 +207,7 @@ namespace Game.Combat.Misc
         private void OnCollisionEnter2D(Collision2D collision)
         {
             GameObject other = collision.gameObject;
+            Debug.Log(other.name);
             if (collision.contacts.Length > 0)
             {
                 float angle = AdvancedMaths.AngleFromUp(Vector2.zero, _direction) + 180 + Random.Range(-10f, 10f);
@@ -214,28 +216,29 @@ namespace Game.Combat.Misc
 
             if (Random.Range(0f, 1f) < _burnChance) FireBehaviour.Create(transform.position, 1f);
             OnHitAction?.Invoke();
-            CharacterCombat hit = other.GetComponent<CharacterCombat>();
-            (_origin as PlayerCombat)?.OnShotConnects(hit);
-            if (hit != null) ApplyDamage(hit);
+
+            ITakeDamageInterface hit = other.GetComponent<ITakeDamageInterface>();
+            if (hit != null)
+            {
+                PlayerCombat player = _origin as PlayerCombat;
+                if (player != null) player.OnShotConnects(hit);
+                ApplyDamage(hit);
+            }
+
             DeactivateShot();
             _bulletTrail.StartFade(0.2f);
         }
 
-        private void ApplyDamage(CharacterCombat hit)
+        private void ApplyDamage(ITakeDamageInterface hit)
         {
             _damageDealt = _damage;
             _damageDealt = (int) (_damageDealt * _finalDamageModifier);
             ApplyConditions(hit);
-            hit.TakeDamage(this);
+            hit.TakeShotDamage(this);
         }
 
-        private void ApplyConditions(CharacterCombat hit)
+        private void ApplyConditions(ITakeDamageInterface hit)
         {
-            if (_knockbackForce != 0)
-            {
-                hit.MovementController.Knockback(transform.position, _knockbackForce);
-            }
-
             if (Random.Range(0f, 1f) < _decayChange) hit.Decay();
             if (Random.Range(0f, 1f) < _sicknessChance) hit.Sicken();
             if (Random.Range(0f, 1f) < _burnChance) hit.Burn();

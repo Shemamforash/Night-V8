@@ -54,7 +54,8 @@ public class TempleBehaviour : BasicShrineBehaviour
     protected override void StartShrine()
     {
         Triggered = true;
-        StartCoroutine(Activate());
+        SerpentBehaviour.Create();
+//        StartCoroutine(Activate());
     }
     
     private IEnumerator Activate()
@@ -118,7 +119,7 @@ public class TempleBehaviour : BasicShrineBehaviour
 
     private IEnumerator WaitForBossToDie()
     {
-        while (!_boss.IsDead) yield return null;
+        while (!_boss.IsDead()) yield return null;
         End();
         WorldState.TravelToNextEnvironment();
         CombatManager.ExitCombat();

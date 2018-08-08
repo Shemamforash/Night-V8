@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Fastlights;
 using Game.Combat.Enemies;
+using Game.Combat.Enemies.Misc;
 using Game.Combat.Generation;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -18,7 +19,7 @@ namespace Game.Combat.Misc
         private const float ExplodeTime = 0.2f;
         private const float ExplosionWarmupTime = 1f;
         private const float FadeTime = 0.5f;
-        
+
         private float _age;
         private int _damage;
         private float _explosionRadius = 1f;
@@ -30,8 +31,7 @@ namespace Game.Combat.Misc
         private Action<List<EnemyBehaviour>> OnExplode;
         private GameObject _spriteObject;
 
-        [SerializeField]
-        private AudioClip[] _explosionClips;
+        [SerializeField] private AudioClip[] _explosionClips;
 
 
         public void Awake()
@@ -81,10 +81,10 @@ namespace Game.Combat.Misc
             return explosion;
         }
 
-        public void Detonate()
+        public void Detonate(Grenade grenade = null)
         {
             gameObject.SetActive(true);
-            StartCoroutine(Warmup());
+            StartCoroutine(Warmup(grenade));
         }
 
         public void InstantDetonate()
@@ -95,22 +95,20 @@ namespace Game.Combat.Misc
 
         private void DealDamage()
         {
-            List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(transform.position, _explosionRadius);
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _explosionRadius);
             List<EnemyBehaviour> enemiesHit = new List<EnemyBehaviour>();
-            foreach (CharacterCombat c in charactersInRange)
+            foreach (Collider2D col in colliders)
             {
-                EnemyBehaviour behaviour = c as EnemyBehaviour;
-                if(behaviour != null) enemiesHit.Add(behaviour);
-                c.HealthController.TakeDamage(_damage);
-                Vector2 dir = c.transform.position - transform.position;
-                float distance = dir.magnitude;
-                dir.Normalize();
-                c.MovementController.AddForce(dir * 1f / distance * 10f);
+                ITakeDamageInterface i = col.GetComponent<ITakeDamageInterface>();
+                if (i == null) continue;
+                i.TakeExplosionDamage(_damage, transform.position);
+                EnemyBehaviour behaviour = i as EnemyBehaviour;
+                if (behaviour != null) enemiesHit.Add(behaviour);
             }
             OnExplode?.Invoke(enemiesHit);
         }
 
-        private IEnumerator Warmup()
+        private IEnumerator Warmup(Grenade grenade)
         {
             _age = 0f;
             while (_age < ExplosionWarmupTime)
@@ -121,6 +119,7 @@ namespace Game.Combat.Misc
                 yield return null;
             }
 
+            if(grenade != null) grenade.Deactivate();
             StartCoroutine(Explode());
         }
 
@@ -159,6 +158,7 @@ namespace Game.Combat.Misc
                         emitted = true;
                         _light.Radius = _explosionRadius * 1.5f;
                     }
+
                     float normalisedTime = (_age - ExplodeTime) / FadeTime;
                     float alpha = 1 - normalisedTime;
                     _spriteObject.transform.localScale = Vector2.one * (_explosionRadius * 0.75f + 0.25f * normalisedTime);
@@ -175,7 +175,7 @@ namespace Game.Combat.Misc
             gameObject.SetActive(false);
             _explosionPool.Add(this);
         }
-       
+
         public void AddOnDetonate(Action<List<EnemyBehaviour>> action)
         {
             OnExplode += action;

@@ -299,9 +299,9 @@ namespace Game.Combat.Player
             _muzzleFlash.Colour = c;
         }
 
-        public override void TakeDamage(Shot shot)
+        public override void TakeShotDamage(Shot shot)
         {
-            base.TakeDamage(shot);
+            base.TakeShotDamage(shot);
             UpdateSkillActions.Clear();
             _damageTakenSinceMarkStarted = true;
             DamageTakenSinceLastShot = true;
@@ -500,9 +500,9 @@ namespace Game.Combat.Player
             CombatManager.SetHasFiredShot();
         }
 
-        public void OnShotConnects(CharacterCombat hit)
+        public void OnShotConnects(ITakeDamageInterface hit)
         {
-            if (!Player.Attributes.ReloadOnLastRound || !_weaponBehaviour.Empty() || !hit.IsDead) return;
+            if (!Player.Attributes.ReloadOnLastRound || !_weaponBehaviour.Empty() || !hit.IsDead()) return;
             InstantReload();
         }
 

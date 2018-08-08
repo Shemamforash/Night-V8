@@ -29,7 +29,7 @@ namespace Game.Combat.Enemies.Humans
         private void CheckHealTarget()
         {
             if (_healTarget == null) return;
-            if (!_healTarget.IsDead) return;
+            if (!_healTarget.IsDead()) return;
             _healTarget = null;
             TryFire();
         }

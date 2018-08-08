@@ -37,9 +37,9 @@ namespace Game.Combat.Enemies
             });
         }
 
-        public override void TakeDamage(Shot shot)
+        public override void TakeShotDamage(Shot shot)
         {
-            base.TakeDamage(shot);
+            base.TakeShotDamage(shot);
             Alert(true);
         }
 

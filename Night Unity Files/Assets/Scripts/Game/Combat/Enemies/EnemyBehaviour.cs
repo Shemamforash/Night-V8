@@ -131,9 +131,9 @@ namespace Game.Combat.Enemies
             EnemyUi.Instance().UpdateActionText(this, actionText);
         }
 
-        public override void TakeDamage(Shot shot)
+        public override void TakeShotDamage(Shot shot)
         {
-            base.TakeDamage(shot);
+            base.TakeShotDamage(shot);
             CombatManager.IncreaseDamageDealt(shot.DamageDealt());
             PlayerCombat.Instance.DamageDealtSinceMarkStarted += shot.DamageDealt();
             EnemyUi.Instance().RegisterHit(this);

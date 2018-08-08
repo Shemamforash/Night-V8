@@ -453,6 +453,7 @@
                 <e p="FireGenerator.cs" t="Include" />
                 <e p="FootstepMaker.cs" t="Include" />
                 <e p="HealthController.cs" t="Include" />
+                <e p="ITakeDamageInterface.cs" t="Include" />
                 <e p="ShelterCharacterBehaviour.cs" t="Include" />
                 <e p="Shot.cs" t="Include" />
                 <e p="SkillBar.cs" t="Include" />
@@ -742,6 +743,10 @@
           <e p="UiCompassPulseController.cs" t="Include" />
           <e p="UiConsumableController.cs" t="Include" />
         </e>
+        <e p="SerpentBehaviour.cs" t="Include" />
+        <e p="SerpentEggBehaviour.cs" t="Include" />
+        <e p="SerpentEggs.cs" t="Include" />
+        <e p="SerpentSegmentBehaviour.cs" t="Include" />
         <e p="Shaders" t="Include">
           <e p="Combat Vignette Shader.shader" t="Include" />
           <e p="CombatShader.shader" t="Include" />
@@ -774,6 +779,7 @@
         </e>
         <e p="TitleScreenController.cs" t="Include" />
         <e p="WeaponAudioController.cs" t="Include" />
+        <e p="WingHealthScript.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

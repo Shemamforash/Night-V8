@@ -31,7 +31,6 @@ namespace Game.Combat.Enemies.Humans
             StrikePlayer();
         }
 
-
         private void StrikePlayer()
         {
             if (_meleeTime > 0f)
@@ -57,7 +56,7 @@ namespace Game.Combat.Enemies.Humans
             direction.x = x;
             direction.y = y;
             _slashParticles.Emit(1);
-            GetTarget().TakeDamage(5, direction);
+            GetTarget().TakeRawDamage(5, direction);
             GetTarget().MovementController.Knockback(transform.position, MeleeForce);
         }
     }

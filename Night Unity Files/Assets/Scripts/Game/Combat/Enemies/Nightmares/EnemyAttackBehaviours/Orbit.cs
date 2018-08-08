@@ -7,8 +7,8 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         private Transform _targetTransform;
         private Vector2 _targetPosition;
         private EnemyBehaviour _enemy;
-        private float _orbitRadiusMin;
-        private float _orbitRadiusMax;
+        private float _orbitRadiusMin = 3f;
+        private float _orbitRadiusMax = 6f;
         private float _changeOrbitTime;
         private float _currentOrbitRadius;
         private bool _oppositeSpin;

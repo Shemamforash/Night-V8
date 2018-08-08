@@ -15,9 +15,9 @@ namespace Game.Combat.Enemies.Animals
             WanderDistance = 1f;
         }
         
-        public override void TakeDamage(Shot shot)
+        public override void TakeShotDamage(Shot shot)
         {
-            base.TakeDamage(shot);
+            base.TakeShotDamage(shot);
             if (Fleeing) return;
             Cell target = PathingGrid.GetCellOutOfRange(transform.position);
             Flee(target);
