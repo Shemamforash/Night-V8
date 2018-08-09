@@ -54,7 +54,8 @@ public class TempleBehaviour : BasicShrineBehaviour
     protected override void StartShrine()
     {
         Triggered = true;
-        SerpentBehaviour.Create();
+//        SerpentBehaviour.Create();
+        StarfishBehaviour.Create();
 //        StartCoroutine(Activate());
     }
     

@@ -229,6 +229,7 @@
         <e p="InsectBehaviour.cs" t="Include" />
         <e p="LeafBehaviour.cs" t="Include" />
         <e p="MapMovementController.cs" t="Include" />
+        <e p="PushController.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
             <e p="Classes.xml" t="Include" />
@@ -756,6 +757,9 @@
           <e p="RadialLight.shader" t="Include" />
         </e>
         <e p="ShelterCharacterColliderBehaviour.cs" t="Include" />
+        <e p="StarFishArmBehaviour.cs" t="Include" />
+        <e p="StarfishBehaviour.cs" t="Include" />
+        <e p="StarFishMainArmBehaviour.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />

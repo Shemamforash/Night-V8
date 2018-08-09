@@ -101,17 +101,8 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            if (_pushPrefab == null) _pushPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Push Burst");
-            GameObject pushObject = GameObject.Instantiate(_pushPrefab);
-            pushObject.transform.SetParent(s._origin.transform);
-            pushObject.transform.position = s._origin.transform.position;
-            _pushParticles = pushObject.GetComponent<ParticleSystem>();
-            float angle = AdvancedMaths.AngleFromUp(s._origin.transform.position, PlayerCombat.Instance.transform.position);
-            _pushParticles.transform.rotation = Quaternion.Euler(0, 0, angle + 80f);
-            _pushParticles.Emit(50);
-            Sequence sequence = DOTween.Sequence();
-            sequence.AppendInterval(2f);
-            sequence.AppendCallback(() => GameObject.Destroy(pushObject));
+            float angle = AdvancedMaths.AngleFromUp(s._origin.transform.position, PlayerCombat.Instance.transform.position) + 80f;
+            PushController.Create(s._origin.transform.position, angle);
         }
     }
 
