@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
 using Game.Combat.Enemies;
+using Game.Combat.Enemies.Bosses;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using SamsHelper.Libraries;
 using UnityEngine;
 
-public class StarFishArmBehaviour : MonoBehaviour, ITakeDamageInterface {
+public class StarFishArmBehaviour : BossSectionHealthController {
 	private StarFishArmBehaviour NextArm;
 	private readonly Queue<Vector3> _parentPositions = new Queue<Vector3>();
 	private readonly Queue<float> _parentRotations = new Queue<float>();
@@ -15,17 +16,18 @@ public class StarFishArmBehaviour : MonoBehaviour, ITakeDamageInterface {
 	private const float DampingModifier = 0.98f;
 	private float Damping;
 	private Transform _prevSegment;
-	private const int InitialHealth = 50;
-	private readonly HealthController _healthController = new HealthController();
-	private SpriteRenderer _sprite;
 
-	public void Awake()
+	public override void Start()
 	{
-		_sprite = GetComponent<SpriteRenderer>();
-		_healthController.SetInitialHealth(InitialHealth, this);
-		StarfishBehaviour.RegisterArm(this);
+		SetBoss(StarfishBehaviour.Instance());
+		base.Start();
 	}
 	
+	protected override int GetInitialHealth()
+	{
+		return 50;
+	}
+
 	public void SetPosition(float angle)
 	{
 		float newAngle = _offset + angle * Damping;
@@ -63,47 +65,9 @@ public class StarFishArmBehaviour : MonoBehaviour, ITakeDamageInterface {
 		NextArm.SetPosition(angle);
 	}
 
-	private void TakeDamage(float damage)
+	public override void Kill()
 	{
-		_sprite.color = Color.red;
-		_sprite.DOColor(Color.white, 0.5f);
-		_healthController.TakeDamage(damage);
-	}
-
-	public void TakeShotDamage(Shot shot)
-	{
-		TakeDamage(shot.DamageDealt());
-	}
-
-	public void TakeRawDamage(float damage, Vector2 direction)
-	{
-		TakeDamage(damage);
-	}
-
-	public void TakeExplosionDamage(float damage, Vector2 origin)
-	{
-		TakeDamage(damage);
-	}
-
-	public void Decay()
-	{
-	}
-
-	public void Burn()
-	{
-	}
-
-	public void Sicken(int stacks = 0)
-	{
-	}
-
-	public bool IsDead()
-	{
-		return _healthController.GetCurrentHealth() == 0;
-	}
-
-	public void Kill()
-	{
+		base.Kill();
 		Detach(false);
 	}
 

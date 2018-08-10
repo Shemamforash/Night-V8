@@ -207,7 +207,6 @@ namespace Game.Combat.Misc
         private void OnCollisionEnter2D(Collision2D collision)
         {
             GameObject other = collision.gameObject;
-            Debug.Log(other.name);
             if (collision.contacts.Length > 0)
             {
                 float angle = AdvancedMaths.AngleFromUp(Vector2.zero, _direction) + 180 + Random.Range(-10f, 10f);

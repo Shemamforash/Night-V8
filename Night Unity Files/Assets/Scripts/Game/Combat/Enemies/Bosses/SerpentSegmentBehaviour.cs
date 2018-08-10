@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SerpentSegmentBehaviour : MonoBehaviour
 {
-    protected SerpentSegmentBehaviour NextSegment;
+    public SerpentSegmentBehaviour NextSegment;
     private Vector3 _lastPosition;
     private float _lastRotation;
     private readonly Queue<Vector3> _parentPositions = new Queue<Vector3>();
@@ -25,7 +25,7 @@ public class SerpentSegmentBehaviour : MonoBehaviour
         SetNextSegmentPosition(newPosition, newRotation);
     }
 
-    protected void SetNextSegment(Transform root, int i)
+    public void SetNextSegment(Transform root, int i)
     {
         transform.position = root.transform.position;
         Transform wingObject = root.Find("Wing Segment (" + i + ")");

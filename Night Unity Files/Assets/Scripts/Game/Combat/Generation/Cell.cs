@@ -6,8 +6,8 @@ namespace Game.Combat.Generation
 {
     public class Cell : Polygon
     {
-        public readonly Node Node;
-        public readonly int XIndex, YIndex;
+        public int x;
+        public int y;
         public readonly int id;
         private static int CellNumber;
 
@@ -29,33 +29,17 @@ namespace Game.Combat.Generation
             return cell;
         }
 
-        private void AddNeighbor(Cell c)
-        {
-            if (c == null) return;
-            if (c.Blocked) return;
-            Node.AddNeighborSimple(c.Node);
-        }
-
-        public void SetNeighbors()
-        {
-            if (XIndex - 1 >= 0) AddNeighbor(PathingGrid.Grid[XIndex - 1][YIndex]);
-            if (YIndex - 1 >= 0) AddNeighbor(PathingGrid.Grid[XIndex][YIndex - 1]);
-            if (XIndex + 1 < PathingGrid.GridWidth) AddNeighbor(PathingGrid.Grid[XIndex + 1][YIndex]);
-            if (YIndex + 1 < PathingGrid.GridWidth) AddNeighbor(PathingGrid.Grid[XIndex][YIndex + 1]);
-        }
-
         public float SqrDistance(Cell other)
         {
-            int xDiff = other.XIndex - XIndex;
-            int yDiff = other.YIndex - YIndex;
+            int xDiff = other.x - x;
+            int yDiff = other.y - y;
             return xDiff * xDiff + yDiff * yDiff;
         }
 
-        private Cell(List<Vector2> vertices, Vector2 position, int xIndex, int yIndex) : base(vertices, position)
+        private Cell(List<Vector2> vertices, Vector2 position, int x, int y) : base(vertices, position)
         {
-            XIndex = xIndex;
-            YIndex = yIndex;
-            Node = new Node(Position);
+            this.x = x;
+            this.y = y;
             id = CellNumber;
             ++CellNumber;
         }

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
+using Game.Combat.Enemies.Bosses;
 using Game.Combat.Enemies.Misc;
 using SamsHelper.Libraries;
 using UnityEngine;
 
-public class StarfishBehaviour : MonoBehaviour
+public class StarfishBehaviour : Boss
 {
     private readonly List<StarFishMainArmBehaviour> _arms = new List<StarFishMainArmBehaviour>();
     private static float _radiusModifier = 1f;
@@ -12,11 +13,19 @@ public class StarfishBehaviour : MonoBehaviour
     private static GameObject _starfishPrefab;
     private static int _bombsToLaunch;
     private static readonly List<StarFishArmBehaviour> _armSegments = new List<StarFishArmBehaviour>();
+    private static StarfishBehaviour _instance;
+
 
     public static void Create()
     {
         if (_starfishPrefab == null) _starfishPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Starfish/Starfish");
         Instantiate(_starfishPrefab).transform.position = new Vector2(0, 0);
+    }
+
+    public override void Awake()
+    {
+        base.Awake();
+        _instance = this;
     }
     
     public void Start()
@@ -28,6 +37,11 @@ public class StarfishBehaviour : MonoBehaviour
         }
 
         PrewarmArms();
+    }
+
+    public static StarfishBehaviour Instance()
+    {
+        return _instance;
     }
 
     private void PrewarmArms()

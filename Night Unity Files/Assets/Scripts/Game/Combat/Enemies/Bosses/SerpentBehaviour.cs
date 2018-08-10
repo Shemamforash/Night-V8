@@ -1,28 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using Game.Combat.Enemies.Bosses;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 
-public class SerpentBehaviour : SerpentSegmentBehaviour
+public class SerpentBehaviour : Boss
 {
     private float _currentAngle, _radius = 4f;
-    private GameObject Head;
+    private SerpentSegmentBehaviour Head;
     private const float Speed = 3f;
-    private Rigidbody2D _rigidbody;
-    private readonly List<WingHealthScript> _wings = new List<WingHealthScript>();
-    private static SerpentBehaviour _instance;
     private float _findNewTargetTime;
     private Vector3 _targetPosition;
     private static GameObject _serpentPrefab;
+    private static SerpentBehaviour _instance;
 
-    public void Awake()
+    public override void Awake()
     {
+        base.Awake();
         _instance = this;
-        Head = transform.Find("Head").gameObject;
-        _rigidbody = GetComponent<Rigidbody2D>();
-        SetNextSegment(transform, 0);
+        Head = transform.Find("Head").GetComponent<SerpentSegmentBehaviour>();
+        Head.SetNextSegment(transform, 0);
         GetComponent<Beam>().Initialise(transform.FindChildWithName("Beam Target"), 5, 2, 2f);
+    }
+
+    public static SerpentBehaviour Instance()
+    {
+        return _instance;
     }
 
     public static void Create()
@@ -31,18 +34,12 @@ public class SerpentBehaviour : SerpentSegmentBehaviour
         Instantiate(_serpentPrefab).transform.position = new Vector2(10, 10);
     }
     
-    public static void RegisterWing(WingHealthScript wing)
+    public override void UnregisterSection(BossSectionHealthController section)
     {
-        _instance._wings.Add(wing);
-    }
-
-    public static void UnregisterWing(WingHealthScript wing)
-    {
-        int prevWingCount = _instance._wings.Count;
-        _instance._wings.Remove(wing);
-        if(prevWingCount == 1) Destroy(_instance.gameObject);
-        if (_instance._wings.Count > 20 || prevWingCount != 20) return;
-        _instance.AddEggAttack();
+        int prevWingCount = SectionCount();
+        base.UnregisterSection(section);
+        if (SectionCount() > 20 || prevWingCount != 20) return;
+        AddEggAttack();
     }
 
     private void AddEggAttack()
@@ -68,9 +65,9 @@ public class SerpentBehaviour : SerpentSegmentBehaviour
     {
         //todo steer
         Vector3 dir = (_targetPosition - transform.position).normalized * Speed;
-        _rigidbody.AddForce(dir);
-        float rot = AdvancedMaths.AngleFromUp(Vector2.zero, _rigidbody.velocity);
+        RigidBody.AddForce(dir);
+        float rot = AdvancedMaths.AngleFromUp(Vector2.zero, RigidBody.velocity);
         Head.transform.rotation = Quaternion.Euler(0, 0, rot);
-        NextSegment.SetPosition(transform.position, rot);
+        Head.NextSegment.SetPosition(transform.position, rot);
     }
 }

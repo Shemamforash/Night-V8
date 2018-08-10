@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using EpPathFinding.cs;
 using Game.Combat.Enemies;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Debug = UnityEngine.Debug;
+using Node = SamsHelper.Libraries.Node;
 
 namespace Game.Combat.Generation
 {
@@ -74,25 +76,31 @@ namespace Game.Combat.Generation
             Polygon polygon = new Polygon(verts, origin);
             AddBarrier(polygon);
         }
-        
+
         public static void FinaliseGrid()
         {
             _stopwatch.Stop();
             Helper.PrintTime("Barriers: ", _stopwatch);
             _stopwatch = Stopwatch.StartNew();
-            _gridNodes.ForEach(n => n.SetNeighbors());
             _stopwatch.Stop();
             Helper.PrintTime("Neighbors: ", _stopwatch);
             _outOfRangeList.AddRange(_outOfRangeSet.ToList().Where(c => !c.Blocked));
             _edgePositionList.AddRange(_edgePositionSet.ToList().Where(c => !c.Blocked));
             _edgePositionList.ForEach(c => c.EdgeCell = true);
+            for (int x = 0; x < GridWidth; ++x)
+            {
+                for (int y = 0; y < GridWidth; ++y)
+                {
+                    _searchGrid.SetWalkableAt(x, y, Grid[x][y].Reachable);
+                }
+            }
         }
 
         public static Cell GetEdgeCell()
         {
             return Helper.RandomElement(_edgePositionList);
         }
-        
+
         public static List<Cell> GetCellsInFrontOfMe(Cell current, Vector2 direction, float distance)
         {
             Vector2 positionInFront = current.Position + direction.normalized * distance;
@@ -135,7 +143,6 @@ namespace Game.Combat.Generation
                 return null;
             }
         }
-
 
         //todo slow
         private static bool IsLineObstructed(Vector2 start, Vector2 end, bool includeReachable = false)
@@ -183,19 +190,22 @@ namespace Game.Combat.Generation
             }
         }
 
-        public static Thread ThreadRouteToCell(Cell from, Cell to, MoveBehaviour moveBehaviour, float timeStarted)
+        public static List<Cell> JPS(Cell start, Cell end)
         {
-            Thread thread = new Thread(() =>
+            _searchGrid.Reset();
+            GridPos startPos = new GridPos(start.x, start.y);
+            GridPos endPos = new GridPos(end.x, end.y);
+            JumpPointParam jpParam = new JumpPointParam(_searchGrid, startPos, endPos);
+            List<GridPos> path = JumpPointFinder.FindPath(jpParam);
+            List<Cell> cellPath = new List<Cell>();
+            path.ForEach(pos =>
             {
-                List<Cell> route = new List<Cell>();
-                List<Node> nodePath = Pathfinding.AStar(from.Node, to.Node);
-                nodePath.ForEach(n => route.Add(WorldToCellPosition(n.Position)));
-                moveBehaviour.SetRoute(route, timeStarted);
+                float x = (pos.x - GridWidth / 2f) / CellResolution;
+                float y = (pos.y - GridWidth / 2f) / CellResolution;
+                cellPath.Add(WorldToCellPosition(new Vector2(x, y)));
             });
-            thread.Start();
-            return thread;
+            return cellPath;
         }
-
 
         public static Cell GetCellNearMe(Vector2 position, float distanceMax, float distanceMin = 0)
         {
@@ -203,7 +213,7 @@ namespace Game.Combat.Generation
         }
 
         public static Cell GetCellNearMe(Cell current, float distanceMax, float distanceMin = 0) =>
-            Helper.RandomElement(CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin)));
+            CellsInRange(current, WorldToGridDistance(distanceMax), WorldToGridDistance(distanceMin)).RandomElement();
 
         public static List<Cell> GetCellsNearMe(Vector2 position, int noCells, float distanceMax, float distanceMin = 0) =>
             GetCellsNearMe(WorldToCellPosition(position), noCells, distanceMax, distanceMin);
@@ -255,13 +265,13 @@ namespace Game.Combat.Generation
             Assert.IsTrue(minRange <= maxRange);
             if (origin == null) Debug.Log("initial node was null");
             _cellsInRange.Clear();
-            int startX = origin.XIndex - maxRange;
+            int startX = origin.x - maxRange;
             if (startX < 0) startX = 0;
-            int startY = origin.YIndex - maxRange;
+            int startY = origin.y - maxRange;
             if (startY < 0) startY = 0;
-            int endX = origin.XIndex + maxRange;
+            int endX = origin.x + maxRange;
             if (endX > GridWidth) endX = GridWidth;
-            int endY = origin.YIndex + maxRange;
+            int endY = origin.y + maxRange;
             if (endY > GridWidth) endY = GridWidth;
 
             minRange *= minRange;
@@ -414,6 +424,8 @@ namespace Game.Combat.Generation
         private static readonly HashSet<Cell> _edgePositionSet = new HashSet<Cell>();
         public static readonly List<Cell> _edgePositionList = new List<Cell>();
 
+        private static StaticGrid _searchGrid;
+
         private static void GenerateBaseGrid()
         {
             _outOfRangeList.Clear();
@@ -425,6 +437,7 @@ namespace Game.Combat.Generation
             _hiddenCells.Clear();
             _cellsInRange.Clear();
             Grid = new Cell[GridWidth][];
+            _searchGrid = new StaticGrid(GridWidth, GridWidth);
             int outOfRangeDistanceSqrd = (int) Mathf.Pow(CombatMovementDistance * CellResolution * 0.5f, 2f);
             int edgeDistanceSquared = (int) Mathf.Pow((CombatMovementDistance - 1) * CellResolution * 0.5f, 2f);
             for (int x = 0; x < GridWidth; ++x)
