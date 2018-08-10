@@ -16,23 +16,25 @@ namespace Game.Combat.Enemies
         private Cell _destinationCell;
         private Cell _lastTargetCell;
         private Cell _nextCell;
+        private float _timeOffset;
+        private static float _timeOffsetCounter;
 
         private float _currentTime;
-        private float _lastRouteStartTime;
         private float _targetDistance;
         private bool _reachedTarget;
 
         private MovementController _movementController;
         private List<Cell> _route = new List<Cell>();
-        private Thread _routeThread;
         private bool _shouldMove;
-        private Coroutine RouteWaitCoroutine;
         private Transform _followTarget;
         private float _minDistance, _maxDistance;
 
         public void Awake()
         {
             _movementController = GetComponent<MovementController>();
+            _timeOffset = _timeOffsetCounter;
+            _timeOffsetCounter += 0.02f;
+            if (_timeOffsetCounter >= 1) _timeOffsetCounter = 0f;
         }
 
         public bool MoveToCover()
@@ -48,12 +50,6 @@ namespace Game.Combat.Enemies
         private void UpdateCurrentCell()
         {
             _currentCell = PathingGrid.WorldToCellPosition(transform.position);
-        }
-
-        public void SetRoute(List<Cell> route, float timeStarted)
-        {
-            if (timeStarted != _lastRouteStartTime) return;
-            _route = route;
         }
 
         public bool Moving() => _destinationCell != null;
@@ -118,31 +114,6 @@ namespace Game.Combat.Enemies
             _movementController.Move(direction);
         }
 
-        private IEnumerator WaitForRoute(float distanceFromTarget)
-        {
-            while (_routeThread.IsAlive) yield return null;
-            if (_destinationCell == null) yield break;
-            if (distanceFromTarget != 0)
-            {
-                for (int i = _route.Count - 1; i >= 0; --i)
-                {
-                    Cell c = _route[i];
-                    float distance = Vector2.Distance(c.Position, _destinationCell.Position);
-                    if (distance < distanceFromTarget)
-                    {
-                        _route.RemoveAt(i);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-
-            PathingGrid.SmoothRoute(_route);
-            Reposition();
-        }
-
         private Queue<Cell> _routeQueue;
 
         private void Move()
@@ -159,41 +130,68 @@ namespace Game.Combat.Enemies
 
                 _nextCell = _routeQueue.Dequeue();
             }
+
             MoveToNextCell();
         }
-        
+
         private void Reposition()
         {
             _routeQueue = new Queue<Cell>(_route);
             if (_routeQueue.Count == 0)
             {
-                Debug.Log(name + " has no route");
                 _destinationCell = null;
                 return;
             }
+
             _nextCell = _routeQueue.Dequeue();
             _shouldMove = true;
         }
 
         private void CheckForRequiredPathfind()
         {
-            if (_currentTime > 0f)
+            if (_currentTime > _timeOffsetCounter)
             {
                 _currentTime -= Time.deltaTime;
                 return;
             }
-            
+
             UpdateFollowTargetPosition();
-            _currentTime = 1f;
+            _currentTime = 0.5f + _timeOffsetCounter;
             if (_destinationCell == null) return;
             if (_destinationCell == _lastTargetCell) return;
             _lastTargetCell = _destinationCell;
-            _lastRouteStartTime = Time.timeSinceLevelLoad;
             UpdateCurrentCell();
             Debug.DrawLine(_currentCell.Position, _destinationCell.Position, Color.red, 1f);
-            _routeThread = PathingGrid.ThreadRouteToCell(_currentCell, _destinationCell, this, _lastRouteStartTime);
-            if (RouteWaitCoroutine != null) StopCoroutine(RouteWaitCoroutine);
-            RouteWaitCoroutine = StartCoroutine(WaitForRoute(_targetDistance));
+            _route = PathingGrid.JPS(_currentCell, _destinationCell);
+
+            if (_route.Count == 0) return;
+            if (_targetDistance != 0)
+            {
+                for (int i = _route.Count - 1; i >= 0; --i)
+                {
+                    Cell c = _route[i];
+                    if (c == null) return;
+                    float distance = Vector2.Distance(c.Position, _destinationCell.Position);
+                    if (distance < _targetDistance)
+                    {
+                        _route.RemoveAt(i);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            PathingGrid.SmoothRoute(_route);
+            for (int i = 1; i < _route.Count; i++)
+            {
+                Vector2 last = new Vector2(_route[i - 1].x, _route[i - 1].y);
+                Vector2 current = new Vector2(_route[i].x, _route[i].y);
+                Debug.DrawLine(last, current, Color.green, 5f);
+            }
+
+            Reposition();
         }
     }
 }
