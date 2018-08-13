@@ -49,6 +49,7 @@ namespace Game.Combat.Enemies
 
         private void Reload()
         {
+            FacePlayer = false;
             if (MoveToCover(Reload))
             {
                 return;
@@ -77,6 +78,7 @@ namespace Game.Combat.Enemies
 
         private void WaitForHeal(Medic medic)
         {
+            FacePlayer = false;
             CurrentAction = () =>
             {
                 if (!_waitingForHeal)
@@ -123,7 +125,6 @@ namespace Game.Combat.Enemies
                 if (_weaponBehaviour.Empty())
                 {
                     Reload();
-                    FacePlayer = false;
                 }
                 else if (!automatic)
                 {

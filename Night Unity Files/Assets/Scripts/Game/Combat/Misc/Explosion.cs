@@ -154,7 +154,7 @@ namespace Game.Combat.Misc
                         DealDamage();
                         ParticleSystem.ShapeModule shape = _particles.shape;
                         shape.radius = _explosionRadius;
-                        _particles.Emit((int) (_explosionRadius * _explosionRadius * 40f));
+                        _particles.Emit((int) (_explosionRadius * _explosionRadius * 400f));
                         emitted = true;
                         _light.Radius = _explosionRadius * 1.5f;
                     }

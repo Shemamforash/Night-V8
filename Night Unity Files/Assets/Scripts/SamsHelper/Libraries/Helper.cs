@@ -14,10 +14,25 @@ namespace SamsHelper.Libraries
 {
     public static class Helper
     {
+        public static void DrawLine(this Transform transform, Vector2 other, Color color, float duration)
+        {
+            transform.position.DrawLine(other, color, duration);
+        }
+
+        public static void DrawLine(this Vector3 point, Vector2 other, Color color, float duration)
+        {
+            Debug.DrawLine(point, other, color, duration);
+        }
+
+        public static void DrawLine(this Vector2 point, Vector2 other, Color color, float duration)
+        {
+            Debug.DrawLine(point, other, color, duration);
+        }
+        
         public static Vector3 MouseToWorldCoordinates(float z = 0f)
         {
             Vector3 mousePos = UnityEngine.Input.mousePosition;
-            mousePos.z = z;
+            mousePos.z = -Camera.main.transform.position.z - z;
             mousePos = Camera.main.ScreenToWorldPoint(mousePos);
             return mousePos;
         }

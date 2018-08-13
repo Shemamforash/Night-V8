@@ -72,6 +72,19 @@ namespace SamsHelper.Libraries
             return CalculatePointOnCircle(angle, Random.Range(0f, range), origin);
         }
 
+        public static float GetSmallestAngleBetweenTwoAngles(float b, float a)
+        {
+            if (a == b) return 0;
+            if (a > b)
+            {
+                if (a - 180f < b) return a - b;
+                return -(360f - (a - b));
+            }
+
+            if (b - 180f < a) return a - b;
+            return 360f - (b - a);
+        }
+
         public static List<Vector2> GetPoissonDiscDistribution(int numberOfPoints, float minRadius, float maxRadius, float maxSampleDistance, bool includeInitialSample = false)
         {
             List<Vector2> samples = new List<Vector2>();
@@ -271,13 +284,13 @@ namespace SamsHelper.Libraries
             }
         }
 
-        
+
         public static bool IsRectInCameraView(Vector2 topLeft, Vector2 topRight, Vector2 bottomRight, Vector2 bottomLeft)
         {
             Camera camera = Camera.main;
-            Vector2 cameraUpperLeft = camera.ScreenToWorldPoint( new Vector3(0, Screen.height));
-            Vector2 cameraUpperRight = camera.ScreenToWorldPoint( new Vector3(Screen.width, Screen.height));
-            Vector2 cameraLowerLeft = camera.ScreenToWorldPoint( new Vector3(0, 0));
+            Vector2 cameraUpperLeft = camera.ScreenToWorldPoint(new Vector3(0, Screen.height));
+            Vector2 cameraUpperRight = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
+            Vector2 cameraLowerLeft = camera.ScreenToWorldPoint(new Vector3(0, 0));
             Vector2 cameraLowerRight = camera.ScreenToWorldPoint(new Vector3(Screen.width, 0));
             List<Vector2> cameraVerts = new List<Vector2> {cameraUpperLeft, cameraUpperRight, cameraLowerLeft, cameraLowerRight};
             List<Vector2> rectVerts = new List<Vector2> {topLeft, topRight, bottomRight, bottomLeft};

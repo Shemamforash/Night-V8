@@ -1,4 +1,5 @@
 ﻿using Game.Combat.Player;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 public class MaelstromShotBehaviour : MonoBehaviour
@@ -6,6 +7,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private Vector3 _direction;
     private Rigidbody2D _rigidBody;
     private float _lifeTime = 1f;
+    private const float MaxSpeed = 3f;
     
     public static void Create(Vector3 direction, Vector3 position)
     {
@@ -17,7 +19,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
     public void Start()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
-        _rigidBody.velocity = _direction.normalized * 15f;
+        _rigidBody.velocity = _direction.normalized * MaxSpeed * 4;
     }
 
     public void FixedUpdate()
@@ -30,6 +32,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
             force = -force;
         }
         _rigidBody.AddForce(force * dir * Time.fixedDeltaTime * _rigidBody.mass);
+        _rigidBody.velocity = Vector3.ClampMagnitude(_rigidBody.velocity, MaxSpeed);
     }
 
     public void Update()
@@ -48,8 +51,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
         {
             player.MovementController.AddForce(_direction.normalized * 30f);
         }
-        Destroy(transform.Find("GameObject").gameObject);
-        transform.DetachChildren();
+        gameObject.FindChildWithName("Trails").transform.SetParent(null);
         Destroy(gameObject);
     }
 }

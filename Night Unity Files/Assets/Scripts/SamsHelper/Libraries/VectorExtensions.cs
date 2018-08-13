@@ -33,6 +33,11 @@ namespace SamsHelper.Libraries
             return from.position.Distance(to.position);
         }
 
+        public static float Distance(this Transform from, Vector2 to)
+        {
+            return from.position.Distance(to);
+        }
+
         public static float Distance(this Vector2 from, Vector2 to)
         {
             return Vector2.Distance(from, to);
@@ -42,5 +47,16 @@ namespace SamsHelper.Libraries
         {
             return Vector3.Distance(from, to);
         }
+
+        public static float SqrDistance(this Transform from, Transform to)
+        {
+            return from.position.SqrDistance(to.position);
+        }
+
+        public static float SqrDistance(this Vector3 from, Vector3 to)
+        {
+            return Vector3.SqrMagnitude(from - to);
+        }
+
     }
 }

@@ -19,8 +19,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4559306437493538}
-  - component: {fileID: 114209105860388368}
-  - component: {fileID: 50149273642972974}
+  - component: {fileID: 50307245302274248}
+  - component: {fileID: 114754134156977784}
   m_Layer: 0
   m_Name: Swarm Boss
   m_TagString: Untagged
@@ -41,7 +41,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &50149273642972974
+--- !u!50 &50307245302274248
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 1
@@ -61,7 +61,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &114209105860388368
+--- !u!114 &114754134156977784
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -72,4 +72,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25170f0070c380d4f8193989d66a6d5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SwarmCount: 100
+  SwarmCount: 500

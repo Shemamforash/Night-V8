@@ -10,7 +10,6 @@ public class StarfishBehaviour : Boss
     private readonly List<StarFishMainArmBehaviour> _arms = new List<StarFishMainArmBehaviour>();
     private static float _radiusModifier = 1f;
     private float _timeToContract;
-    private static GameObject _starfishPrefab;
     private static int _bombsToLaunch;
     private static readonly List<StarFishArmBehaviour> _armSegments = new List<StarFishArmBehaviour>();
     private static StarfishBehaviour _instance;
@@ -18,8 +17,8 @@ public class StarfishBehaviour : Boss
 
     public static void Create()
     {
-        if (_starfishPrefab == null) _starfishPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Starfish/Starfish");
-        Instantiate(_starfishPrefab).transform.position = new Vector2(0, 0);
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Starfish/Starfish");
+        Instantiate(prefab).transform.position = new Vector2(0, 0);
     }
 
     public override void Awake()

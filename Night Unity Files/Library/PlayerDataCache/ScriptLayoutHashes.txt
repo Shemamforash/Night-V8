@@ -367,7 +367,7 @@ feb41be848a2528250dd278d3393f73e Assembly-CSharp.dll:Facilitating.UI.ButtonGroup
 c727d5d0b81c3630fe97e64e1cb39494 Assembly-CSharp.dll:Facilitating.UIControllers.UIPlayerAccessoryController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours.LeaveFireTrail
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SerpentBehaviour
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SerpentSegmentBehaviour
+679694d795e530fde333cd9ac8d92dfa Assembly-CSharp.dll:.SerpentSegmentBehaviour
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SerpentEggs
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SerpentEggBehaviour
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.WingHealthScript
@@ -375,3 +375,5 @@ c727d5d0b81c3630fe97e64e1cb39494 Assembly-CSharp.dll:Facilitating.UIControllers.
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.StarFishArmBehaviour
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.StarFishMainArmBehaviour
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.PushController
+9acdf2c9a0be54751e2a749155ebf559 Assembly-CSharp.dll:.SwarmBehaviour
+99e6bea9b833e9f8afad9cb1a275351d Assembly-CSharp.dll:.SwarmSegmentBehaviour

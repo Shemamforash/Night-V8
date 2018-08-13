@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using DG.Tweening;
 using Game.Combat.Enemies.Bosses;
+using Game.Combat.Misc;
+using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -9,17 +9,24 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
 {
     private Vector2 dir;
     private Rigidbody2D _rigidBody;
+    private float _aOffset, _rOffset;
     private float _force;
-    private readonly List<SwarmSegmentBehaviour> _neighbors = new List<SwarmSegmentBehaviour>();
-
+    private float _followSpeed;
+    [SerializeField] private float _seekSpeed = 3f;
+    private bool _seeking;
+    private float _seekLifeTime = 5f;
 
     public override void Awake()
     {
+        base.Awake();
         _rigidBody = GetComponent<Rigidbody2D>();
-        _force = Random.Range(0.6f, 1.4f);
         dir = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1f);
         _rigidBody.velocity = dir;
         transform.position = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1f);
+        _aOffset = Random.Range(0, 360f);
+        _rOffset = Random.Range(0f, 360f);
+        _force = Random.Range(0.7f, 1.3f);
+        _followSpeed = Random.Range(5f, 10f);
     }
 
     public override void Start()
@@ -35,80 +42,80 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
 
     protected void FixedUpdate()
     {
-        _rigidBody.velocity = dir;
+        if (_seeking) _rigidBody.AddForce(dir);
+        else _rigidBody.velocity = dir;
     }
 
-    public void SetNeighbors(List<BossSectionHealthController> sections)
-    {
-        sections.ForEach(s => _neighbors.Add((SwarmSegmentBehaviour)s));
-        _neighbors.Remove(this);
-    }
-
-    private List<SwarmSegmentBehaviour> SegmentsInRange()
-    {
-        return new List<SwarmSegmentBehaviour>(_neighbors.Where(n => n.transform.Distance(transform) < 1));
-    }
-
-    private Vector2 ComputeAlignment(List<SwarmSegmentBehaviour> neighborsInRange)
-    {
-        Vector2 alignment = new Vector2();
-        int neighborCount = neighborsInRange.Count;
-        if (neighborCount == 0) return alignment;
-        neighborsInRange.ForEach(n =>
-        {
-            alignment += n._rigidBody.velocity;
-            ++neighborCount;
-        });
-        alignment /= neighborCount;
-        return alignment.normalized;
-    }
-
-    private Vector2 ComputeCohesion(List<SwarmSegmentBehaviour> neighborsInRange)
-    {
-        Vector3 cohesion = new Vector2();
-        int neighborCount = neighborsInRange.Count;
-        if (neighborCount == 0) return cohesion;
-        neighborsInRange.ForEach(n =>
-        {
-            cohesion += n.transform.position;
-            ++neighborCount;
-        });
-        cohesion /= neighborCount;
-        cohesion = new Vector2(cohesion.x - transform.position.x, cohesion.y - transform.position.y);
-        return cohesion.normalized;
-    }
-
-    private Vector2 ComputeSeparation(List<SwarmSegmentBehaviour> neighborsInRange)
-    {
-        Vector3 separation = new Vector2();
-        int neighborCount = neighborsInRange.Count;
-        if (neighborCount == 0) return separation;
-        neighborsInRange.ForEach(n =>
-        {
-            separation += n.transform.position - transform.position;
-            ++neighborCount;
-        });
-        separation /= neighborCount;
-        separation *= -1;
-        return separation.normalized;
-    }
-    
     public void UpdateSection(Vector3 parentPosition, float burstForce)
     {
-        List<SwarmSegmentBehaviour> neighborsInRange = SegmentsInRange();
-        Vector2 alignment = ComputeAlignment(neighborsInRange);
-        Vector2 cohesion = ComputeCohesion(neighborsInRange);
-        Vector2 separation = ComputeSeparation(neighborsInRange);
-        dir = alignment + cohesion + separation;
-        dir.Normalize();
-        dir *= _force;
-        return;
-        
-        
+        if (_seeking) return;
+        Follow(parentPosition, burstForce);
+    }
 
-        Vector3 targetPosition = parentPosition;
-        dir = targetPosition - transform.position;
-        dir *= _force;
-        dir += dir * -burstForce;
+    public void Update()
+    {
+        Seek();
+    }
+
+    private void Seek()
+    {
+        if (!_seeking) return;
+        _seekLifeTime -= Time.deltaTime;
+        Vector3 playerPosition = PlayerCombat.Instance.transform.position;
+        Vector2 desiredVelocity = playerPosition - transform.position;
+        desiredVelocity.Normalize();
+        desiredVelocity *= _seekSpeed;
+        dir = desiredVelocity - _rigidBody.velocity;
+        if (_seekLifeTime > 0f && playerPosition.Distance(transform.position) > 0.5f) return;
+        switch (Random.Range(0, 3))
+        {
+            case 0:
+                Explosion.CreateExplosion(transform.position, 3, 0.25f).InstantDetonate();
+                break;
+            case 1:
+                FireBehaviour.Create(transform.position, 1);
+                break;
+            case 2:
+                DecayBehaviour.Create(transform.position);
+                break;
+        }
+
+        Kill();
+    }
+
+    private void Follow(Vector3 parentPosition, float burstForce)
+    {
+        float radius = (Mathf.Sin((Time.timeSinceLevelLoad + _rOffset) * _followSpeed) + 1f) / 2f;
+        Vector2 dirToParent = parentPosition - transform.position;
+        float sqrDistToParent = dirToParent.sqrMagnitude;
+        Vector3 targetPosition;
+        Vector2 burstDir = Vector2.zero;
+        if (sqrDistToParent > 4) targetPosition = parentPosition;
+        else
+        {
+            targetPosition = AdvancedMaths.CalculatePointOnCircle((Time.timeSinceLevelLoad + _aOffset) * 30, radius, parentPosition);
+            burstDir = (transform.position - parentPosition).normalized * burstForce;
+        }
+
+        Vector2 dirToTarget = (targetPosition - transform.position).normalized * _force;
+        dir = dirToTarget + burstDir;
+    }
+
+    public void StartSeeking()
+    {
+        _seeking = true;
+        Vector2 swarmDir = SwarmBehaviour.Instance().GetComponent<Rigidbody2D>().velocity;
+        float x = swarmDir.y;
+        float y = -swarmDir.x;
+        if (Random.Range(0, 2) == 0)
+        {
+            x = -x;
+            y = -y;
+        }
+
+        swarmDir.x = x;
+        swarmDir.y = y;
+        _rigidBody.AddForce(swarmDir.normalized * 100f);
+        transform.DOScale(0.4f, _seekLifeTime).SetEase(Ease.InOutFlash, 10, -1);
     }
 }

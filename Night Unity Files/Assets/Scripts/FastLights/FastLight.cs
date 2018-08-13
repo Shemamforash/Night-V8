@@ -268,13 +268,14 @@ namespace Fastlights
 
         private void ResizeLight()
         {
+            float sqrRadius = Radius * Radius;
             Mesh mesh = _meshFilter.mesh;
             Vector3[] verts = mesh.vertices;
             for (int i = 1; i < verts.Length; ++i)
             {
-                float length = verts[i].magnitude;
-                if (length <= Radius) continue;
-                verts[i] = verts[i].normalized * Radius;
+                float sqrDistance = verts[i].sqrMagnitude;
+                if (sqrDistance <= sqrRadius) continue;
+                verts[i] = verts[i] / Mathf.Sqrt(sqrDistance) * Radius;
             }
 
             mesh.vertices = verts;
@@ -287,7 +288,9 @@ namespace Fastlights
             bool isPositionSame = newPosition == _position;
             _position = newPosition;
             if (!_needsUpdate && _lastRadius == Radius && isPositionSame) return;
-            if (_lastRadius > Radius && isPositionSame)
+            bool radiusSmaller = _lastRadius > Radius;
+            bool noObstructor = _allObstructors.Count == 0;
+            if ((radiusSmaller ||noObstructor) && isPositionSame)
             {
                 ResizeLight();
             }

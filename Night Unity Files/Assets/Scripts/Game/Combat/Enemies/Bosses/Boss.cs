@@ -14,7 +14,7 @@ namespace Game.Combat.Enemies.Bosses
             
         }
 
-        public void RegisterSection(BossSectionHealthController section)
+        public virtual void RegisterSection(BossSectionHealthController section)
         {
             Sections.Add(section);
         }

@@ -5,6 +5,7 @@ using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Exploration.Environment;
 using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -54,8 +55,22 @@ public class TempleBehaviour : BasicShrineBehaviour
     protected override void StartShrine()
     {
         Triggered = true;
-//        SerpentBehaviour.Create();
-        StarfishBehaviour.Create();
+        switch (EnvironmentManager.CurrentEnvironment.LevelNo)
+        {
+            case 0:
+                SerpentBehaviour.Create();
+                break;
+            case 1:
+                StarfishBehaviour.Create();
+                break;
+            case 2:
+                SwarmBehaviour.Create();
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
 //        StartCoroutine(Activate());
     }
     

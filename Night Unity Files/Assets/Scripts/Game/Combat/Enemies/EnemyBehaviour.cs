@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Game.Characters;
+ using DG.Tweening;
+ using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -83,14 +84,11 @@ namespace Game.Combat.Enemies
         private void UpdateRotation()
         {
             float rotation;
-            if (FacePlayer && GetTarget() != null)
-            {
-                rotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
-                return;
-            }
-
-            rotation = AdvancedMaths.AngleFromUp(transform.position, transform.position + (Vector3) GetComponent<Rigidbody2D>().velocity);
+            if (FacePlayer && GetTarget() != null) rotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
+            else rotation = AdvancedMaths.AngleFromUp(transform.position, transform.position + (Vector3) GetComponent<Rigidbody2D>().velocity);
+//            float currentRotation = transform.eulerAngles.z;
+//            float rotateBy = AdvancedMaths.GetSmallestAngleBetweenTwoAngles(currentRotation, rotation);
+//            rotateBy *= Time.deltaTime;
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         }
 
