@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using Facilitating.Persistence;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -17,7 +19,7 @@ namespace Game.Exploration.Weather
         private readonly string _displayName;
         public readonly WeatherAttributes Attributes;
 
-        public Weather(ProbabalisticStateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, weatherNode.GetNodeText("Name"))
+        public Weather(ProbabalisticStateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, weatherNode.GetNodeText("Name"), GameObjectType.Weather)
         {
             Name = weatherNode.GetNodeText("Name");
             _displayName = weatherNode.GetNodeText("DisplayName");
@@ -39,7 +41,7 @@ namespace Game.Exploration.Weather
             base.Enter();
             WorldView.SetWeatherText(_displayName);
             _timeRemaining = _duration * WorldState.MinutesPerHour;
-            WeatherSystemController.Instance().ChangeWeather(this);
+            WeatherSystemController.SetWeather(this);
         }
 
         public int Temperature()
@@ -66,6 +68,13 @@ namespace Game.Exploration.Weather
                 if(Random.Range(0f, 1f) < waterChance) r.ChangeWater((int)_water.Polarity());
                 if(Random.Range(0f, 1f) < foodChance) r.ChangeFood((int)_food.Polarity());
             });
+        }
+
+        public override XmlNode Save(XmlNode doc)
+        {
+            doc = base.Save(doc);
+            doc.CreateChild("TimeRemaining", _timeRemaining);
+            return doc;
         }
     }
 }

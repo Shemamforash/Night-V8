@@ -10,7 +10,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public abstract class GearItem : InventoryItem
     {
         private readonly GearSubtype _gearType;
-        private ItemQuality _itemItemQuality;
+        private ItemQuality _itemQuality;
         protected Character EquippedCharacter;
 
         protected GearItem(string name, GearSubtype gearSubtype, ItemQuality itemQuality) : base(name, GameObjectType.Gear)
@@ -19,22 +19,23 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _gearType = gearSubtype;
         }
 
-        public override void Load(XmlNode doc, PersistenceType saveType)
+        public override void Load(XmlNode doc)
         {
         }
 
-        public override XmlNode Save(XmlNode root, PersistenceType saveType)
+        public override XmlNode Save(XmlNode root)
         {
-            root = base.Save(root, saveType);
-            SaveController.CreateNodeAndAppend("GearType", root, _gearType);
+            root = base.Save(root);
+            root.CreateChild("GearType", _gearType);
+            root.CreateChild("Quality", _itemQuality);
             return root;
         }
 
-        public ItemQuality Quality() => _itemItemQuality;
+        public ItemQuality Quality() => _itemQuality;
 
         public void SetQuality(ItemQuality quality)
         {
-            _itemItemQuality = quality;
+            _itemQuality = quality;
         }
 
         public virtual void Equip(Character character)

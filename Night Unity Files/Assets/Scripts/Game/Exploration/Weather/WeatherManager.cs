@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using Facilitating.Persistence;
 using Game.Exploration.WorldEvents;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
@@ -16,7 +17,6 @@ namespace Game.Exploration.Weather
         {
             LoadWeather();
             _weatherStates.LoadProbabilities("WeatherProbabilityTable");
-            _weatherStates.GetState("Clear").Enter();
 //            GenerateWeatherString(2000);
         }
 
@@ -29,7 +29,7 @@ namespace Game.Exploration.Weather
         {
             return (Weather) _weatherStates.GetCurrentState();
         }
-
+        
         private static void LoadWeather()
         {
             if (_loaded) return;
@@ -57,6 +57,17 @@ namespace Game.Exploration.Weather
 
             foreach (string key in _weatherOccurences.Keys) Debug.Log(key + " occured " + _weatherOccurences[key] + " times.");
             Debug.Log(weatherString);
+        }
+
+        public static void Reset()
+        {
+            LoadWeather();
+            _weatherStates.GetState("Clear").Enter();
+        }
+
+        public static void Save(XmlNode doc)
+        {
+            CurrentWeather().Save(doc);
         }
     }
 }

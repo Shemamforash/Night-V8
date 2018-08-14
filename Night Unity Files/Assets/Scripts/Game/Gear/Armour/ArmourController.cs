@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Misc;
@@ -19,12 +20,14 @@ namespace Game.Gear.Armour
             _character = character;
         }
 
-        public void Load(XmlNode doc, PersistenceType saveType)
+        public void Load(XmlNode doc)
         {
         }
 
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public XmlNode Save(XmlNode doc)
         {
+            _plateOne?.Save(doc.CreateChild("Plate 1"));
+            _plateTwo?.Save(doc.CreateChild("Plate 2"));
             return doc;
         }
 

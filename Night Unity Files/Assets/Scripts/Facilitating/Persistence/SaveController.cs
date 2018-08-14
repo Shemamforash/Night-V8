@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
@@ -10,31 +11,21 @@ namespace Facilitating.Persistence
 {
     public static class SaveController
     {
-        private static readonly string GameSaveLocation = Application.dataPath + "Saves/NightSave.xml";
-        private static readonly string SettingsSaveLocation = Application.dataPath + "Saves/GameSettings.xml";
+        private static readonly string GameSaveLocation = Application.dataPath + "/Saves/NightSave.xml";
+        private static readonly string SettingsSaveLocation = Application.dataPath + "/Saves/GameSettings.xml";
         private static XmlDocument _saveDoc;
-        private static readonly List<Action<XmlNode, PersistenceType>> OnLoad = new List<Action<XmlNode, PersistenceType>>();
-        private static readonly List<Action<XmlNode, PersistenceType>> OnSave = new List<Action<XmlNode, PersistenceType>>();
 
-        public static void AddPersistenceListener(IPersistenceTemplate persistentObject)
-        {
-            OnLoad.Add(persistentObject.Load);
-            OnSave.Add((doc, saveType) => persistentObject.Save(doc, saveType));
-        }
-
-        public static void BroadcastLoad(XmlNode root, PersistenceType persistenceType)
-        {
-            OnLoad.ForEach(a => a(root, persistenceType));
-        }
-
-        public static void BroadcastSave(XmlNode root, PersistenceType persistenceType)
-        {
-            OnSave.ForEach(a => a(root, persistenceType));
-        }
 
         public static void SaveGame()
         {
-            Save(GameSaveLocation, PersistenceType.Game);
+            Save(GameSaveLocation, "Game");
+        }
+
+        public static void ClearSave()
+        {
+            _saveDoc = new XmlDocument();
+            _saveDoc.CreateChild("Game");
+            _saveDoc.Save(GameSaveLocation);
         }
 
 //        public static bool SaveSettings()
@@ -53,56 +44,38 @@ namespace Facilitating.Persistence
         }
 
         //Node creation
-        public static XmlNode CreateNodeAndAppend(string tagName, XmlNode parent)
+        public static XmlNode CreateChild(this XmlNode parent, string tagName)
         {
             XmlNode newNode = _saveDoc.CreateElement(tagName);
             parent.AppendChild(newNode);
             return newNode;
         }
 
-        public static XmlNode CreateNodeAndAppend<T>(string tagName, XmlNode parent, T value)
+        public static XmlNode CreateChild<T>(this XmlNode parent, string tagName, T value)
         {
-            XmlNode newNode = CreateNodeAndAppend(tagName, parent);
+            XmlNode newNode = parent.CreateChild(tagName);
             newNode.InnerText = value == null ? "" : value.ToString();
             return newNode;
         }
 
         //Basic Load/Save Functions
-        private static bool Load(string fileLocation, PersistenceType saveType)
+        private static bool Load(string fileLocation, string saveType)
         {
-            try
-            {
-                if (File.Exists(fileLocation))
-                {
-                    _saveDoc = new XmlDocument();
-                    _saveDoc.Load(fileLocation);
-                    XmlNode root = _saveDoc.GetNode(saveType.ToString());
-                    BroadcastLoad(root, saveType);
-                    return true;
-                }
+            if (!File.Exists(fileLocation)) return false;
+            _saveDoc = new XmlDocument();
+            _saveDoc.Load(fileLocation);
+            XmlNode root = _saveDoc.GetNode(saveType);
+            return true;
 
-                return false;
-            }
-            catch (IOException)
-            {
-                return false;
-            }
         }
 
-        private static bool Save(string fileLocation, PersistenceType saveType)
+        private static bool Save(string fileLocation, string saveType)
         {
-            try
-            {
-                _saveDoc = new XmlDocument();
-                XmlNode root = CreateNodeAndAppend(saveType.ToString(), _saveDoc);
-                BroadcastSave(root, saveType);
-                _saveDoc.Save(fileLocation);
-                return true;
-            }
-            catch (IOException)
-            {
-                return false;
-            }
+            _saveDoc = new XmlDocument();
+            XmlNode root = _saveDoc.CreateChild(saveType);
+            WorldState.Save(root);
+            _saveDoc.Save(fileLocation);
+            return true;
         }
     }
 }

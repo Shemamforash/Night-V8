@@ -7,6 +7,10 @@
         Inventory,
         Resource,
         State,
-        Building
+        Building,
+        Inscription,
+        Weather,
+        PlayerAction,
+        Menu
     }
 }

@@ -14,30 +14,23 @@ namespace Facilitating.Audio
         public Slider MasterSlider;
         private static AudioMixer _masterMixer;
 
-        public void Load(XmlNode root, PersistenceType saveType)
+        public void Load(XmlNode root)
         {
-            if (saveType != PersistenceType.Settings) return;
             XmlNode node = root.GetNode("SoundSettings");
             _volume = node.FloatFromNode(nameof(_volume));
             Initialise();
         }
 
-        public XmlNode Save(XmlNode root, PersistenceType saveType)
+        public XmlNode Save(XmlNode root)
         {
-            if (saveType != PersistenceType.Settings) return null;
-            XmlNode node = SaveController.CreateNodeAndAppend("SoundSettings", root);
-            SaveController.CreateNodeAndAppend(nameof(_volume), node, _volume);
+            XmlNode node = root.CreateChild("SoundSettings");
+            node.CreateChild(nameof(_volume), _volume);
             return node;
         }
 
         public static float Volume()
         {
             return _volume;
-        }
-
-        public void Awake()
-        {
-            SaveController.AddPersistenceListener(this);
         }
 
         private static float NormalisedVolumeToAttentuation(float volume)

@@ -16,7 +16,7 @@ using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
 {
-    public class MapGenerator : MonoBehaviour, IPersistenceTemplate
+    public class MapGenerator : MonoBehaviour
     {
         private const int MapWidth = 120;
         private const int MinRadius = 6, MaxRadius = 9;
@@ -35,21 +35,18 @@ namespace Game.Exploration.Environment
         private const int FoodSourcesPerEnvironment = 20;
         private const int ResourcesPerEnvironment = 30;
 
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public static void Save(XmlNode doc)
         {
-            if (saveType != PersistenceType.Game) return null;
-            XmlNode regionNode = SaveController.CreateNodeAndAppend("Regions", doc);
-            foreach (Region region in _regions) region.Save(regionNode, saveType);
-            return regionNode;
+            XmlNode regionNode = doc.CreateChild("Regions");
+            foreach (Region region in _regions) region.Save(regionNode);
         }
 
-        public void Load(XmlNode doc, PersistenceType saveType)
+        public void Load(XmlNode doc)
         {
         }
 
         public void Awake()
         {
-            SaveController.AddPersistenceListener(this);
             _routeTrails.Clear();
             MapTransform = transform;
             _regions.ForEach(n => n.CreateObject());

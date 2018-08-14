@@ -79,22 +79,18 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             Debug.Log(contents);
         }
 
-        public virtual void Load(XmlNode root, PersistenceType saveType)
+        public virtual void Load(XmlNode root)
         {
-            if (saveType != PersistenceType.Game) return;
             XmlNode inventoryNode = root.GetNode(Name);
             InventoryResources().ForEach(r => LoadResource(r.Name, inventoryNode));
         }
 
-        public virtual XmlNode Save(XmlNode root, PersistenceType saveType)
+        public virtual XmlNode Save(XmlNode root)
         {
-            if (saveType != PersistenceType.Game) return null;
-            root = base.Save(root, saveType);
-            XmlNode inventoryNode = SaveController.CreateNodeAndAppend("Inventory", root);
-            SaveController.CreateNodeAndAppend("Name", inventoryNode, Name);
-            InventoryResources().ForEach(r => SaveResource(r.Name, inventoryNode));
-            Items().ForEach(i => { i.Save(inventoryNode, saveType); });
-            return inventoryNode;
+            root = base.Save(root);
+            InventoryResources().ForEach(r => SaveResource(r.Name, root));
+            Items().ForEach(i => { i.Save(root); });
+            return root;
         }
 
         private List<InventoryItem> InventoryResources()
@@ -244,7 +240,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         private void SaveResource(string type, XmlNode root)
         {
-            SaveController.CreateNodeAndAppend(type, root, GetResourceQuantity(type));
+            root.CreateChild(type, GetResourceQuantity(type));
         }
 
         public void DestroyItem(InventoryItem item)

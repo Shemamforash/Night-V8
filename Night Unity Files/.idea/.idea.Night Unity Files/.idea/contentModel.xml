@@ -559,7 +559,6 @@
             <e p="Global" t="Include">
               <e p="Building.cs" t="Include" />
               <e p="DesolationAttributes.cs" t="Include" />
-              <e p="DesolationInventory.cs" t="Include" />
               <e p="Recipe.cs" t="Include" />
               <e p="SceneChanger.cs" t="Include" />
               <e p="SceneryController.cs" t="Include" />
@@ -637,7 +636,6 @@
             </e>
             <e p="Persistence" t="Include">
               <e p="IPersistenceTemplate.cs" t="Include" />
-              <e p="PersistenceType.cs" t="Include" />
             </e>
             <e p="ReactiveUI" t="Include">
               <e p="Elements" t="Include">

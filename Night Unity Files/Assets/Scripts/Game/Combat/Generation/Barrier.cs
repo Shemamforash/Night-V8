@@ -17,13 +17,13 @@ namespace Game.Combat.Generation
         private readonly string _barrierName;
         private static Transform _barrierParent;
 
-        public void Load(XmlNode doc, PersistenceType saveType)
+        public void Load(XmlNode doc)
         {
         }
 
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public XmlNode Save(XmlNode doc)
         {
-            XmlNode barrierNode = SaveController.CreateNodeAndAppend("Barrier", doc);
+            XmlNode barrierNode = doc.CreateChild("Barrier");
             string vertexString = "";
             for (int i = 0; i < Vertices.Count; ++i)
             {
@@ -32,9 +32,9 @@ namespace Game.Combat.Generation
                 vertexString += ",";
             }
 
-            SaveController.CreateNodeAndAppend("Name", barrierNode, _barrierName);
-            SaveController.CreateNodeAndAppend("Position", barrierNode, Position.ToString());
-            SaveController.CreateNodeAndAppend("Vertices", barrierNode, vertexString);
+            barrierNode.CreateChild("Name", _barrierName);
+            barrierNode.CreateChild("Position", Position.ToString());
+            barrierNode.CreateChild("Vertices", vertexString);
             return barrierNode;
         }
 

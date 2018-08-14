@@ -1,19 +1,35 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using Facilitating.Persistence;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
+using SamsHelper.Persistence;
 using UnityEngine;
 
 namespace Game.Characters
 {
-    public class BrandManager
+    public class BrandManager : IPersistenceTemplate
     {
         private readonly List<Brand> _lockedBrands = new List<Brand>();
         private Player _player;
         private readonly List<Brand> _completedBrands = new List<Brand>();
         private readonly List<Brand> _activeBrands = new List<Brand>();
 
+        public void Load(XmlNode doc)
+        {
+            
+        }
+
+        public XmlNode Save(XmlNode doc)
+        {
+            doc = doc.CreateChild("Brands");
+            _completedBrands.ForEach(b => b.Save(doc));
+            _activeBrands.ForEach(b => b.Save(doc));
+            return doc;
+        }
+        
         public List<Brand> GetBrandChoice()
         {
             List<Brand> brandSelection = new List<Brand>();
@@ -31,6 +47,7 @@ namespace Game.Characters
         {
             Debug.Log("brand is active");
             _activeBrands.Add(brand);
+            brand.SetStatus(BrandStatus.Active);
         }
 
         public void Initialise(Player player)
@@ -252,13 +269,12 @@ namespace Game.Characters
             }
         }
 
-        public abstract class Brand
+        public abstract class Brand : IPersistenceTemplate
         {
             private readonly int _counterTarget;
             private readonly string _riteName, _successName, _failName;
             protected readonly Player Player;
             private int _counter;
-            private bool _succeeded;
             public BrandStatus Status = BrandStatus.Locked;
 
             protected Brand(Player player, string riteName, string successName, string failName, int counterTarget)
@@ -275,8 +291,8 @@ namespace Game.Characters
             {
                 return _counter + "/" + _counterTarget;
             }
-            
-            private void SetStatus(BrandStatus status)
+
+            public void SetStatus(BrandStatus status)
             {
                 Status = status;
                 Player.BrandManager.UpdateBrandStatus(this);
@@ -299,7 +315,6 @@ namespace Game.Characters
             public void Succeed()
             {
                 Debug.Log("unlocked " + _successName);
-                _succeeded = true;
                 SetStatus(BrandStatus.Succeeded);
                 OnSucceed();
             }
@@ -324,6 +339,19 @@ namespace Game.Characters
             }
 
             protected abstract string GetProgressSubstring();
+
+            public void Load(XmlNode doc)
+            {
+            }
+
+            public XmlNode Save(XmlNode doc)
+            {
+                doc = doc.CreateChild("Brand");
+                doc.CreateChild("Name", _riteName);
+                doc.CreateChild("Progress", _counter);
+                doc.CreateChild("Status", Status.ToString());
+                return doc;
+            }
         }
 
         private void UpdateBrandStatus(Brand brand)

@@ -16,14 +16,14 @@ namespace Game.Combat.Misc
             FirePosition = position;
         }
 
-        public void Load(XmlNode doc, PersistenceType saveType)
+        public void Load(XmlNode doc)
         {
         }
 
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public XmlNode Save(XmlNode doc)
         {
-            XmlNode campfireNode = SaveController.CreateNodeAndAppend("Campfire", doc);
-            SaveController.CreateNodeAndAppend("Position", campfireNode, FirePosition.ToString());
+            XmlNode campfireNode = doc.CreateChild("Campfire");
+            campfireNode.CreateChild("Position", FirePosition.ToString());
             return doc;
         }
 

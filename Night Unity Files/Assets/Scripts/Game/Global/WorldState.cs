@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Xml;
 using Facilitating;
 using Facilitating.Persistence;
 using Facilitating.UI;
 using Game.Characters;
 using Game.Combat.Enemies;
+using Game.Combat.Generation;
 using Game.Exploration.Environment;
-using Game.Exploration.Regions;
 using Game.Exploration.Weather;
+using Game.Exploration.WorldEvents;
+using SamsHelper.Libraries;
+using SamsHelper.Persistence;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,13 +20,13 @@ namespace Game.Global
     {
         public const int MinutesPerHour = 12;
         private const int IntervalSize = 60 / MinutesPerHour;
-
-        public const float MinuteInSeconds = 0.2f;//= 1f;
+        public const float MinuteInSeconds = 0.2f; //= 1f;
         private const float DayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
         private const int MinuteInterval = 60 / MinutesPerHour;
+
         private static int DaysSpentHere;
         private static bool _started;
-        private static CharacterManager _homeInventory;
+        private static readonly CharacterManager _homeInventory = new CharacterManager();
         private static int _currentLevel = 1;
 
         private static float _currentTime;
@@ -34,30 +37,70 @@ namespace Game.Global
 
         public void Awake()
         {
-            if (Seed == -1) Seed = Random.Range(0, int.MaxValue);
             Cursor.visible = false;
-            if (_homeInventory == null) _homeInventory = new CharacterManager();
+        }
+
+        public void Load(XmlNode doc)
+        {
+            XmlNode worldStateValues = doc.GetNode("WorldState");
+            Seed = worldStateValues.IntFromNode("Seed");
+            DaysSpentHere = worldStateValues.IntFromNode("DaysSpentHere");
+            _currentLevel = worldStateValues.IntFromNode("CurrentLevel");
+            Days = worldStateValues.IntFromNode("Days");
+            Hours = worldStateValues.IntFromNode("Hours");
+            Minutes = worldStateValues.IntFromNode("Minutes");
+            _difficulty = worldStateValues.IntFromNode("Difficulty");
+        }
+
+        public static XmlNode Save(XmlNode doc)
+        {
+            XmlNode worldStateValues = doc.CreateChild("WorldState");
+            worldStateValues.CreateChild("Seed", Seed);
+            worldStateValues.CreateChild("DaysSpentHere", DaysSpentHere);
+            worldStateValues.CreateChild("CurrentLevel", _currentLevel);
+            worldStateValues.CreateChild("Days", Days);
+            worldStateValues.CreateChild("Hours", Hours);
+            worldStateValues.CreateChild("Minutes", Minutes);
+            worldStateValues.CreateChild("Difficulty", _difficulty);
+            _homeInventory.Save(doc);
+            MapGenerator.Save(doc);
+            WeatherManager.Save(doc);
+            EnvironmentManager.Save(doc);
+            WorldEventManager.Save(doc);
+            return worldStateValues;
+        }
+        
+        public static void ResetWorld()
+        {
+            DaysSpentHere = 0;
+            _homeInventory.Reset();
+            _currentLevel = 1;
+            Days = 0;
+            Hours = 6;
+            Minutes = 0;
+            _difficulty = 0;
+            _isNight = false;
+            _isPaused = false;
+            Seed = Random.Range(0, int.MaxValue);
+            Seed = 0;
+            Random.InitState(Seed);
+            EnvironmentManager.Reset();
+            WeatherManager.Reset();
         }
 
         public void Start()
         {
             _homeInventory.Start();
             if (_started) return;
-//            foreach (ResourceTemplate template in ResourceTemplate.AllResources) _homeInventory.IncrementResource(template.Name, 1);
             _started = true;
             EnvironmentManager.Start();
             WeatherManager.Start();
-
-//            SaveController.LoadSettings();
-//todo            SaveController.LoadGame();
-
-#if UNITY_EDITOR
-//            _homeInventory.AddTestingResources(3, 3);
-#endif
+            SaveController.LoadGame();
         }
 
         private void IncrementDaysSpentHere()
         {
+            SaveController.SaveGame();
             ++_difficulty;
             ++DaysSpentHere;
         }
@@ -120,7 +163,7 @@ namespace Game.Global
             if (_currentTime < MinuteInSeconds) return;
             _currentTime = _currentTime - MinuteInSeconds;
             IncrementMinutes();
-            WorldView.SetTime(Hours);
+            WorldView.Update(Hours);
         }
 
         private void IncrementMinutes()

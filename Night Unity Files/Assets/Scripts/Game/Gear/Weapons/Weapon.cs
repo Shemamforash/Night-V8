@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -29,10 +30,11 @@ namespace Game.Gear.Weapons
             Name = quality + " " + WeaponAttributes.GetWeaponClass();
         }
 
-        public override XmlNode Save(XmlNode root, PersistenceType saveType)
+        public override XmlNode Save(XmlNode root)
         {
-            root = base.Save(root, saveType);
-            WeaponAttributes.Save(root, saveType);
+            root = base.Save(root);
+            WeaponAttributes.Save(root);
+            _inscription?.Save(root);
             return root;
         }
 

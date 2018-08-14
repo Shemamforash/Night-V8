@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Persistence;
@@ -63,12 +64,19 @@ namespace Game.Global
             Get(attributeType).RemoveModifier(modifier);
         }
         
-        public void Load(XmlNode doc, PersistenceType saveType)
+        public void Load(XmlNode doc)
         {
         }
 
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public virtual XmlNode Save(XmlNode doc)
         {
+            doc = doc.CreateChild("Attributes");
+            foreach (KeyValuePair<AttributeType, CharacterAttribute> attribute in _attributes)
+            {
+                doc.CreateChild("AttributeType", attribute.Key.ToString());
+                attribute.Value.Save(doc);
+            }
+
             return doc;
         }
     }

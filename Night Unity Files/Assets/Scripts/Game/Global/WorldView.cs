@@ -15,22 +15,19 @@ namespace Game.Global
         public static void SetEnvironmentText(string text)
         {
             _environmentString = text;
-            UpdateDescription();
         }
 
         public static void SetTemperatureText(string text)
         {
             _temperatureString = text;
-            UpdateDescription();
         }
 
         public static void SetWeatherText(string text)
         {
             _weatherString = text;
-            UpdateDescription();
         }
 
-        public static void SetTime(int hours)
+        public static void Update(int hours)
         {
             _timeString = TimeToName(hours);
             UpdateDescription();

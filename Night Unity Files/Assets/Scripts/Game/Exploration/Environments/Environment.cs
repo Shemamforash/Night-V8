@@ -15,7 +15,7 @@ namespace Game.Exploration.Environment
         public readonly int LevelNo, Temples, Monuments, Shrines, Fountains, Shelters, Animals, Dangers;
         public readonly EnvironmentType EnvironmentType;
         private static List<EnvironmentType> _environmentTypes;
-        private List<string> _environmentNames = new List<string>();
+        private readonly List<string> _environmentNames = new List<string>();
 
         public Environment(XmlNode environmentNode)
         {

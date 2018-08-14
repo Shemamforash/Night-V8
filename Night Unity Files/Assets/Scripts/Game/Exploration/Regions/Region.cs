@@ -15,7 +15,7 @@ using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Regions
 {
-    public class Region : Node, IPersistenceTemplate
+    public class Region : Node
     {
         public string Name;
         private readonly List<Enemy> _enemies = new List<Enemy>();
@@ -71,25 +71,35 @@ namespace Game.Exploration.Regions
                         break;
                 }
             }
+
             _lastVisitDay = WorldState.Days;
         }
 
-        public void Load(XmlNode doc, PersistenceType saveType)
+        public void Load(XmlNode doc)
         {
         }
 
-        public XmlNode Save(XmlNode doc, PersistenceType type)
+        public XmlNode Save(XmlNode doc)
         {
-            if (type != PersistenceType.Game) return doc;
-            XmlNode regionNode = SaveController.CreateNodeAndAppend("Region", doc);
-            SaveController.CreateNodeAndAppend("Name", regionNode, Name);
-            SaveController.CreateNodeAndAppend("Discovered", regionNode, _discovered);
-            XmlNode enemyNode = SaveController.CreateNodeAndAppend("Enemies", regionNode);
-            _enemies.ForEach(e => e.Save(enemyNode, type));
-//            XmlNode barrierNode = SaveController.CreateNodeAndAppend("Barriers", regionNode);
-//            Barriers.ForEach(b => b.Save(barrierNode, type));
-//            XmlNode fireNode = SaveController.CreateNodeAndAppend("Fires", regionNode);
-//            Fires.ForEach(f => f.Save(fireNode, type));
+            XmlNode regionNode = doc.CreateChild("Region");
+            regionNode.CreateChild("Name", Name);
+            regionNode.CreateChild("RegionId", RegionID);
+            regionNode.CreateChild("Position", Position);
+            XmlNode neighborNode = regionNode.CreateChild("Neighbors");
+            foreach (Node n in Neighbors())
+            {
+                neighborNode.CreateChild("ID", ((Region)n).RegionID);
+            }
+            regionNode.CreateChild("Type", _regionType.ToString());
+            regionNode.CreateChild("Discovered", _discovered);
+            regionNode.CreateChild("Seen", _seen);
+            regionNode.CreateChild("LastVisited", _lastVisitDay);
+            regionNode.CreateChild("ShrinePosition", ShrinePosition);
+            regionNode.CreateChild("WaterSourceCount", WaterSourceCount);
+            regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
+            regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);
+            XmlNode enemyNode = regionNode.CreateChild("Enemies");
+            _enemies.ForEach(e => e.Save(enemyNode));
             return regionNode;
         }
 

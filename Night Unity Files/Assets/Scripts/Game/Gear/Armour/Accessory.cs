@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -13,7 +14,6 @@ namespace Game.Gear.Armour
     public class Accessory : GearItem
     {
         private static readonly List<AccessoryTemplate> _accessoryTemplates = new List<AccessoryTemplate>();
-
         private static bool _readTemplates;
         private readonly AccessoryTemplate _template;
         private AttributeModifier modifier;
@@ -67,6 +67,13 @@ namespace Game.Gear.Armour
             modifier.SetRawBonus(rawBonus);
             accessory.modifier = modifier;
             return accessory;
+        }
+
+        public override XmlNode Save(XmlNode doc)
+        {
+            doc = base.Save(doc);
+            doc.CreateChild("Template", _template.Name);
+            return doc;
         }
 
         private class AccessoryTemplate

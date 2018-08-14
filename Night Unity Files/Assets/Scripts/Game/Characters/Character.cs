@@ -22,20 +22,21 @@ namespace Game.Characters
             ArmourController = new ArmourController(this);
         }
 
-        public override XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public override XmlNode Save(XmlNode doc)
         {
-            doc = base.Save(doc, saveType);
-            SaveController.CreateNodeAndAppend("Name", doc, Name);
-            EquippedWeapon?.Save(doc, saveType);
-            ArmourController?.Save(doc, saveType);
-            EquippedAccessory?.Save(doc, saveType);
-            Inventory().Save(doc, saveType);
+            doc = base.Save(doc);
+            XmlNode equipped = doc.CreateChild("EquippedItems");
+            if (EquippedWeapon != null) equipped.CreateChild("Weapon", EquippedWeapon.Id);
+            if(ArmourController?.GetPlateOne() != null) equipped.CreateChild("ArmourPlate1", ArmourController.GetPlateOne().Id);
+            if (ArmourController?.GetPlateTwo() != null) equipped.CreateChild("ArmourPlate2", ArmourController.GetPlateTwo().Id);
+            if (EquippedAccessory != null) equipped.CreateChild("Accessory", EquippedAccessory.Id);
+            CharacterInventory?.Save(doc);
             return doc;
         }
 
-        public override void Load(XmlNode doc, PersistenceType saveType)
+        public override void Load(XmlNode doc)
         {
-            base.Load(doc, saveType);
+            base.Load(doc);
             Name = doc.GetNodeText("Name");
         }
 

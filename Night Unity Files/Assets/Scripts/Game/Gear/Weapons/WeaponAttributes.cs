@@ -40,12 +40,13 @@ namespace Game.Gear.Weapons
             SetClass(weaponClass);
         }
 
-        public XmlNode Save(XmlNode root, PersistenceType saveType)
+        public override XmlNode Save(XmlNode root)
         {
-            SaveController.CreateNodeAndAppend("WeaponType", root, WeaponType);
-            SaveController.CreateNodeAndAppend("Class", root, WeaponClassType);
-            SaveController.CreateNodeAndAppend("Durability", root, _durability.CurrentValue());
-            SaveController.CreateNodeAndAppend("Quality", root, _weapon.Quality());
+            root = base.Save(root);
+            root.CreateChild("WeaponType", WeaponType);
+            root.CreateChild("Class", WeaponClassType);
+            root.CreateChild("Durability", _durability.CurrentValue());
+            root.CreateChild("Quality", _weapon.Quality());
             return root;
         }
 

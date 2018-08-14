@@ -50,11 +50,15 @@ namespace Game.Characters
             SetMax(AttributeType.Thirst, 10);
         }
 
-        public void Load(XmlNode doc, PersistenceType saveType)
+        public void Load(XmlNode doc)
         {
         }
 
-        public XmlNode Save(XmlNode doc, PersistenceType saveType) => doc;
+        public XmlNode Save(XmlNode doc)
+        {
+            doc = base.Save(doc);
+            return doc;
+        } 
 
         public void ChangeEnduranceMax(int polarity)
         {
@@ -192,7 +196,7 @@ namespace Game.Characters
 
         private void SaveAttribute(XmlNode root, string attributeName, CharacterAttribute characterAttribute)
         {
-            SaveController.CreateNodeAndAppend(attributeName, root, characterAttribute.CurrentValue() + "/" + characterAttribute.Max);
+            root.CreateChild(attributeName, characterAttribute.CurrentValue() + "/" + characterAttribute.Max);
         }
 
         public void DecreaseWillpower()

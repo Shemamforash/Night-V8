@@ -4,7 +4,7 @@ namespace SamsHelper.Persistence
 {
     public interface IPersistenceTemplate
     {
-        void Load(XmlNode doc, PersistenceType saveType);
-        XmlNode Save(XmlNode doc, PersistenceType saveType);
+        void Load(XmlNode doc);
+        XmlNode Save(XmlNode doc);
     }
 }

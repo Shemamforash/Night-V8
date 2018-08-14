@@ -20,13 +20,13 @@ namespace Game.Characters
         public static readonly List<Player> Characters = new List<Player>();
         private static readonly List<CharacterTemplate> Templates = new List<CharacterTemplate>();
         private static bool _loaded;
-        private List<Building> _buildings = new List<Building>();
+        private readonly List<Building> _buildings = new List<Building>();
 
         public CharacterManager() : base("Vehicle")
         {
         }
 
-        public override void Load(XmlNode doc, PersistenceType saveType)
+        public override void Load(XmlNode doc)
         {
             XmlNode characterManagerNode = doc.GetNode("CharacterManager");
             foreach (XmlNode characterNode in Helper.GetNodesWithName(characterManagerNode, "Character"))
@@ -37,27 +37,20 @@ namespace Game.Characters
             }
         }
 
-        public override XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public override XmlNode Save(XmlNode doc)
         {
-            if (saveType != PersistenceType.Game) return null;
-            doc = base.Save(doc, saveType);
-            foreach (Player c in Characters)
-            {
-                XmlNode characterNode = SaveController.CreateNodeAndAppend("Character", doc);
-                c.Save(characterNode, saveType);
-            }
+            doc = base.Save(doc);
+            foreach (Player c in Characters) c.Save(doc);
+            _buildings.ForEach(b => b.Save(doc));
             return doc;
         }
 
-        public void Start()
+        public void Reset()
         {
-            LoadTemplates();
-            SaveController.AddPersistenceListener(this);
-            if (Characters.Count == 0) AddCharacter(GenerateDriver());
-            InitialiseCharacterUI();
+            AddCharacter(GenerateDriver());
         }
-
-        private void InitialiseCharacterUI()
+        
+        public void Start()
         {
             foreach (Player player in Characters)
             {
@@ -158,6 +151,7 @@ namespace Game.Characters
 
         private static CharacterTemplate FindClass(CharacterClass characterClass)
         {
+            LoadTemplates();
             foreach (CharacterTemplate t in Templates)
             {
                 if (t.CharacterClass == characterClass)
@@ -181,7 +175,6 @@ namespace Game.Characters
 
         private static Player GenerateCharacter(CharacterClass characterClass)
         {
-            LoadTemplates();
             CharacterTemplate t = FindClass(characterClass);
             return GenerateCharacterObject(t);
         }

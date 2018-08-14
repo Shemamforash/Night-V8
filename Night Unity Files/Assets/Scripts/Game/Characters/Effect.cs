@@ -1,4 +1,6 @@
-﻿using Game.Global;
+﻿using System.Xml;
+using Facilitating.Persistence;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
@@ -32,6 +34,14 @@ namespace Game.Characters
             if (Duration != 0) return;
             _player.RemoveEffect(this);
             _target.RemoveModifier(_modifier);
+        }
+
+        public void Save(XmlNode doc)
+        {
+            doc = doc.CreateChild("Effect");
+            doc.CreateChild("Duration", Duration);
+            doc.CreateChild("Target", _target.AttributeType);
+            _modifier.Save(doc);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using Facilitating.Persistence;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 
@@ -54,6 +56,12 @@ namespace Game.Characters
         public float RawBonus()
         {
             return _rawBonus;
+        }
+
+        public void Save(XmlNode doc)
+        {
+            doc.CreateChild("FinalBonus", _finalBonus);
+            doc.CreateChild("RawBonus", _rawBonus);
         }
     }
 }

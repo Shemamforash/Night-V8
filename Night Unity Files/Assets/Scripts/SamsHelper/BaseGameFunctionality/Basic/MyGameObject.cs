@@ -23,18 +23,17 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public string Name;
         public Inventory ParentInventory;
 
-        public virtual void Load(XmlNode doc, PersistenceType saveType)
+        public virtual void Load(XmlNode doc)
         {
 //            throw new System.NotImplementedException();
         }
 
-        public virtual XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public virtual XmlNode Save(XmlNode doc)
         {
-            XmlNode itemNode = SaveController.CreateNodeAndAppend(Type.ToString(), doc);
-            SaveController.CreateNodeAndAppend("Id", itemNode, Id);
-            SaveController.CreateNodeAndAppend("Name", itemNode, Name);
-            SaveController.CreateNodeAndAppend("ParentInventory", itemNode, ParentInventory?.Id ?? -1);
-            SaveController.CreateNodeAndAppend("Type", itemNode, Type);
+            XmlNode itemNode = doc.CreateChild(Type.ToString());
+            itemNode.CreateChild("Id", Id);
+            itemNode.CreateChild("Name", Name);
+            if(ParentInventory != null) itemNode.CreateChild("ParentInventory", ParentInventory.Id);
             return itemNode;
         }
     }

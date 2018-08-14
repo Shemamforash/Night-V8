@@ -1,8 +1,10 @@
 ﻿using Facilitating.Persistence;
 using Game.Global;
 using SamsHelper.ReactiveUI.MenuSystem;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Menu = SamsHelper.ReactiveUI.MenuSystem.Menu;
 
 namespace Facilitating.MenuNavigation
 {
@@ -11,6 +13,8 @@ namespace Facilitating.MenuNavigation
         public void Awake()
         {
             Cursor.visible = false;
+//            ClearSaveAndLoad();
+//            EditorApplication.isPlaying = false;
         }
 
         public void CloseGame()
@@ -26,14 +30,15 @@ namespace Facilitating.MenuNavigation
                 ClearSaveAndLoad();
         }
 
-        public void ClearSaveAndLoad()
+        private void ClearSaveAndLoad()
         {
-//            SaveController.SaveSettings();
+            SaveController.ClearSave();
+            WorldState.ResetWorld();
             SaveController.SaveGame();
-            LoadGame();
+            StartGame();
         }
 
-        private void LoadGame()
+        private void StartGame()
         {
             WorldState.UnPause();
             SceneChanger.ChangeScene("Game");
@@ -45,7 +50,7 @@ namespace Facilitating.MenuNavigation
             {
 //                SaveController.SaveSettings();
                 SaveController.LoadGame();
-                LoadGame();
+                StartGame();
             }
             else
             {

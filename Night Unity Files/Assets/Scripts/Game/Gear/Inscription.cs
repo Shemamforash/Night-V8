@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using SamsHelper.Persistence;
+using UnityEditor;
 using UnityEngine;
 
 namespace Game.Gear
@@ -19,7 +22,7 @@ namespace Game.Gear
         private readonly InscriptionTemplate _template;
         private readonly InscriptionTier _tier;
 
-        private Inscription(InscriptionTemplate template, InscriptionTier tier) : base("A " + tier + " of " + template.Name, GameObjectType.Gear)
+        private Inscription(InscriptionTemplate template, InscriptionTier tier) : base("A " + tier + " of " + template.Name, GameObjectType.Inscription)
         {
             _template = template;
             _modifier = _template.GetModifier();
@@ -82,6 +85,14 @@ namespace Game.Gear
             Bellow
         }
 
+        public override XmlNode Save(XmlNode root)
+        {
+            root = base.Save(root);
+            root.CreateChild("Template", _template.Name);
+            root.CreateChild("Quality", _quality);
+            return root;
+        }
+        
         private class InscriptionTemplate
         {
             public readonly string Name;

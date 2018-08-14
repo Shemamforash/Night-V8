@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
+using Facilitating.Persistence;
 using Game.Exploration.Weather;
 using Game.Exploration.WorldEvents;
 using Game.Global;
@@ -21,6 +22,11 @@ namespace Game.Exploration.Environment
             NextLevel();
         }
 
+        public static void Reset()
+        {
+            _currentEnvironment = null;
+        }
+        
         public static Environment CurrentEnvironment => _currentEnvironment;
 
         public static void NextLevel()
@@ -93,6 +99,12 @@ namespace Game.Exploration.Environment
         public static bool BelowFreezing()
         {
             return _temperatureCategory == TemperatureCategory.Cold || _temperatureCategory == TemperatureCategory.Freezing;
+        }
+
+        public static void Save(XmlNode doc)
+        {
+            if (_currentEnvironment == null) return;
+            doc.CreateChild("CurrentEnvironment", _currentEnvironment.EnvironmentType.ToString());
         }
     }
 }

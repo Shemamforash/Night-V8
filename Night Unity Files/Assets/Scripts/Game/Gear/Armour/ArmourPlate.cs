@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Xml;
+using Facilitating.Persistence;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.ReactiveUI;
@@ -12,6 +14,12 @@ namespace Game.Gear.Armour
         private readonly Number _plateHealth = new Number();
         public readonly int Protection;
 
+        public override XmlNode Save(XmlNode doc)
+        {
+            doc.CreateChild("Health", _plateHealth.CurrentValue());
+            return doc;
+        }
+        
         private ArmourPlate(string name, ItemQuality quality) : base(name, GearSubtype.Armour, quality)
         {
             Protection = (int) quality + 1;

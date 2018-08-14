@@ -9,19 +9,19 @@ using UnityEngine.SceneManagement;
 
 namespace Game.Exploration.WorldEvents
 {
-    public class WorldEventManager : MonoBehaviour, IPersistenceTemplate
+    public class WorldEventManager : MonoBehaviour
     {
         private static TextMeshProUGUI _eventLogText;
         private static List<string> _eventLog = new List<string>();
 
-        public void Load(XmlNode doc, PersistenceType saveType)
+        public void Load(XmlNode doc)
         {
             string events = doc.GetNodeText("WorldEvents");
             _eventLog = new List<string>(events.Split(','));
             PrintFirstFourEvents();
         }
 
-        public XmlNode Save(XmlNode doc, PersistenceType saveType)
+        public static XmlNode Save(XmlNode doc)
         {
             string commaSeperatedEvents = "";
             for (int i = 0; i < _eventLog.Count; ++i)
@@ -30,7 +30,7 @@ namespace Game.Exploration.WorldEvents
                 if (i < _eventLog.Count - 1) commaSeperatedEvents += ",";
             }
 
-            SaveController.CreateNodeAndAppend("WorldEvents", doc, commaSeperatedEvents);
+            doc.CreateChild("WorldEvents", commaSeperatedEvents);
             return doc;
         }
 

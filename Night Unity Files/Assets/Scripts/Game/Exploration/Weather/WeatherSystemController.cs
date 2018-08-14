@@ -42,6 +42,7 @@ namespace Game.Exploration.Weather
             _nightTimeAudioSource = _stars.GetComponent<AudioSource>();
             _dayTimeAudioSource = _sun.GetComponent<AudioSource>();
             _instance = this;
+            if (_currentWeather != null) ChangeWeatherInstant();
         }
 
         public static WeatherSystemController Instance()
@@ -50,6 +51,7 @@ namespace Game.Exploration.Weather
         }
 
         private float _time;
+        private static Weather _currentWeather;
 
         public void Update()
         {
@@ -94,14 +96,30 @@ namespace Game.Exploration.Weather
             sunMain.startColor = new ParticleSystem.MinMaxGradient(new Color(1, 1, 1, maxBrightness), new Color(1, 1, 1, minBrightness));
         }
 
-        public void ChangeWeather(Weather w)
+        public static void SetWeather(Weather w)
         {
-            WeatherAttributes _targetAttributes = w.Attributes;
+            _currentWeather = w;
+            if (_instance != null) _instance.ChangeWeather();
+        }
+
+        private void ChangeWeather()
+        {
+            WeatherAttributes _targetAttributes = _currentWeather.Attributes;
             StartCoroutine(_rain.ChangeWeather(_targetAttributes.RainAmount));
             StartCoroutine(_dust.ChangeWeather(_targetAttributes.DustAmount));
             StartCoroutine(_wind.ChangeWeather(_targetAttributes.WindAmount));
             StartCoroutine(_hail.ChangeWeather(_targetAttributes.HailAmount));
             StartCoroutine(_fog.ChangeWeather(_targetAttributes.FogAmount));
+        }
+
+        private void ChangeWeatherInstant()
+        {
+            WeatherAttributes _targetAttributes = _currentWeather.Attributes;
+            _rain.ChangeWeatherInstant(_targetAttributes.RainAmount);
+            _dust.ChangeWeatherInstant(_targetAttributes.DustAmount);
+            _wind.ChangeWeatherInstant(_targetAttributes.WindAmount);
+            _hail.ChangeWeatherInstant(_targetAttributes.HailAmount);
+            _fog.ChangeWeatherInstant(_targetAttributes.FogAmount);
         }
 
         private class RainSystem : WeatherSystem
@@ -229,6 +247,15 @@ namespace Game.Exploration.Weather
                 }
 
                 emission.rateOverTime = finalRate;
+            }
+
+            public void ChangeWeatherInstant(float amount)
+            {
+                ParticleSystem.EmissionModule emission = _particles.emission;
+                float finalRate = amount * _maxEmission;
+                emission.rateOverTime = finalRate;
+                AudioClip newClip = GetAudioClipForWeather(amount);
+                CrossFade(newClip);
             }
 
             private void CrossFade(AudioClip to)

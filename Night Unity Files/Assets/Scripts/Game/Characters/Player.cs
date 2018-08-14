@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
 using Game.Combat.Player;
 using Game.Exploration.WorldEvents;
@@ -22,21 +23,34 @@ namespace Game.Characters
         public readonly StateMachine States = new StateMachine();
         public readonly BrandManager BrandManager = new BrandManager();
         private readonly List<Effect> _effects = new List<Effect>();
+        public CharacterView CharacterView;
 
         public Craft CraftAction;
         public LightFire LightFireAction;
         public Consume ConsumeAction;
-
-        private int _storyProgress;
-        public CharacterView CharacterView;
         public Rest RestAction;
         public Travel TravelAction;
         public Meditate MeditateAction;
         public Sleep SleepAction;
+
+        private int _storyProgress;
         private int _timeAlive;
         private bool _storyUnlocked;
         private string _currentStoryLine;
 
+        public override XmlNode Save(XmlNode doc)
+        {
+            doc = base.Save(doc);
+            Attributes.Save(doc);
+            BrandManager.Save(doc);
+            doc.CreateChild("StoryUnlocked", _storyUnlocked);
+            doc.CreateChild("StoryProgress", _storyProgress);
+            doc.CreateChild("TimeAlive", _timeAlive);
+            ((BaseCharacterAction)States.GetCurrentState()).Save(doc);
+            _effects.ForEach(e => e.Save(doc));
+            return doc;
+        }
+        
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
         {
@@ -87,13 +101,6 @@ namespace Game.Characters
         }
 
         public bool IsDead;
-
-        public override XmlNode Save(XmlNode doc, PersistenceType saveType)
-        {
-            doc = base.Save(doc, saveType);
-            Attributes.Save(doc, saveType);
-            return doc;
-        }
 
         private void AddStates()
         {

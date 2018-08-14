@@ -8,7 +8,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
     {
         private readonly StateMachine _stateMachine;
 
-        protected State(StateMachine stateMachine, string name) : base(name, GameObjectType.State)
+        protected State(StateMachine stateMachine, string name, GameObjectType type) : base(name, type)
         {
             _stateMachine = stateMachine;
             _stateMachine.AddState(this);

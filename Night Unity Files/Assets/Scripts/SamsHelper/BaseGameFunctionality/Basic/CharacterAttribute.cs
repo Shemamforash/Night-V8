@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using NUnit.Framework;
 using SamsHelper.ReactiveUI;
@@ -78,6 +80,11 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public void SetToMax()
         {
             SetCurrentValue(Max);
+        }
+
+        public void Save(XmlNode doc)
+        {
+            doc.CreateChild("Value", CurrentValue());
         }
     }
 }
