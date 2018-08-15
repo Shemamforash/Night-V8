@@ -63,5 +63,13 @@ namespace Game.Characters
             doc.CreateChild("FinalBonus", _finalBonus);
             doc.CreateChild("RawBonus", _rawBonus);
         }
+
+        public static AttributeModifier Load(XmlNode modifierNode)
+        {
+            AttributeModifier modifier = new AttributeModifier();
+            modifier.SetFinalBonus(modifierNode.FloatFromNode("FinalBonus"));
+            modifier.SetRawBonus(modifierNode.FloatFromNode("RawBonus"));
+            return modifier;
+        }
     }
 }

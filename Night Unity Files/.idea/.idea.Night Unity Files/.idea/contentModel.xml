@@ -242,6 +242,7 @@
           </e>
         </e>
         <e p="Saves" t="Include">
+          <e p="CleanSave.xml" t="Include" />
           <e p="GameSettings.xml" t="Include" />
           <e p="NightSave.xml" t="Include" />
         </e>
@@ -256,7 +257,6 @@
             <e p="FireBurst.cs" t="Include" />
             <e p="MenuNavigation" t="Include">
               <e p="MainMenuNavigator.cs" t="Include" />
-              <e p="Popup.cs" t="Include" />
             </e>
             <e p="Persistence" t="Include">
               <e p="GameData.cs" t="Include" />
@@ -293,7 +293,6 @@
                 <e p="UiGearMenuTemplate.cs" t="Include" />
                 <e p="UIWeaponUpgradeController.cs" t="Include" />
               </e>
-              <e p="TitleScreenController.cs" t="Include" />
               <e p="UIAttributeController.cs" t="Include" />
               <e p="UIAttributeMarkerController.cs" t="Include" />
               <e p="UIConditionController.cs" t="Include" />

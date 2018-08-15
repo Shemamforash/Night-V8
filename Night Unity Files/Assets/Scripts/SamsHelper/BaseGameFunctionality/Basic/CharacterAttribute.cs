@@ -3,6 +3,7 @@ using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
 using NUnit.Framework;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
@@ -85,6 +86,15 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public void Save(XmlNode doc)
         {
             doc.CreateChild("Value", CurrentValue());
+            doc.CreateChild("Min", Min);
+            doc.CreateChild("Max", Max);
+        }
+
+        public void Load(XmlNode attributeNode)
+        {
+            Min = attributeNode.FloatFromNode("Min");
+            Max = attributeNode.FloatFromNode("Max");
+            SetCurrentValue(attributeNode.FloatFromNode("Value"));
         }
     }
 }

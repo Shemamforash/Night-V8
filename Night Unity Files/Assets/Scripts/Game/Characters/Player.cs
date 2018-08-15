@@ -11,6 +11,7 @@ using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 
 namespace Game.Characters
@@ -46,9 +47,25 @@ namespace Game.Characters
             doc.CreateChild("StoryUnlocked", _storyUnlocked);
             doc.CreateChild("StoryProgress", _storyProgress);
             doc.CreateChild("TimeAlive", _timeAlive);
+            doc.CreateChild("CharacterClass", CharacterTemplate.CharacterClass.ToString());
             ((BaseCharacterAction)States.GetCurrentState()).Save(doc);
             _effects.ForEach(e => e.Save(doc));
             return doc;
+        }
+
+        public override void Load(XmlNode root)
+        {
+            base.Load(root);
+            Attributes.Load(root);
+            BrandManager.Load(root);
+            _storyUnlocked = root.BoolFromNode("StoryUnlocked");
+            _storyProgress = root.IntFromNode("StoryProgress");
+            _timeAlive = root.IntFromNode("TimeAlive");
+            //todo load state
+            foreach (XmlNode effectNode in root.SelectNodes("Effect"))
+            {
+                Effect.Load(this, effectNode);
+            }
         }
         
         //Create Character in code only- no view section, no references to objects in the scene
@@ -98,6 +115,14 @@ namespace Game.Characters
         public void Kill()
         {
             IsDead = true;
+            if (CharacterTemplate.CharacterClass == CharacterClass.Wanderer)
+            {
+                SceneChanger.ChangeScene("Game Over");
+            }
+            else
+            {
+                CharacterManager.RemoveCharacter(this);
+            }
         }
 
         public bool IsDead;

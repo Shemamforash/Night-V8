@@ -1,4 +1,7 @@
-﻿using SamsHelper.BaseGameFunctionality.Basic;
+﻿using System.Xml;
+using Facilitating.Persistence;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
@@ -8,8 +11,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     {
         private readonly Number _quantity = new Number();
         private bool _stackable;
-        public readonly ResourceTemplate Template;
-        private bool _isResource;
+        public ResourceTemplate Template;
 
         public InventoryItem(ResourceTemplate template, GameObjectType type, Inventory parentInventory = null) : base(template.Name, type, parentInventory)
         {
@@ -18,7 +20,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         protected InventoryItem(string name, GameObjectType type, Inventory parentInventory = null) : base(name, type, parentInventory)
         {
-            _isResource = false;
             _quantity.Increment();
         }
 
@@ -35,6 +36,24 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public void Decrement(int amount)
         {
             _quantity.SetCurrentValue(_quantity.CurrentValue() - amount);
+        }
+
+        public override XmlNode Save(XmlNode root)
+        {
+            root = base.Save(root);
+            root.CreateChild("Quantity", _quantity.CurrentValue());
+            root.CreateChild("Stackable", _stackable);
+            root.CreateChild("Template", Template == null ? "" : Template.Name);
+            return root;
+        }
+
+        public override void Load(XmlNode root)
+        {
+            _quantity.SetCurrentValue(root.FloatFromNode("Quantity"));
+            _stackable = root.BoolFromNode("Stackable");
+            string templateString = root.GetNodeText("Template");
+            if (templateString == "") return;
+            Template = ResourceTemplate.StringToTemplate(templateString);
         }
 
         public virtual bool IsStackable()

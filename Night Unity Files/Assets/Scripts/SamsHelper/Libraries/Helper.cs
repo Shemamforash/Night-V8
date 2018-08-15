@@ -54,6 +54,7 @@ namespace SamsHelper.Libraries
 
         public static XmlNode GetNode(this XmlNode root, string nodeName)
         {
+            if (root.Name == nodeName) return root;
             XmlNode node = root.SelectSingleNode(nodeName);
             if (node == null) throw new Exceptions.XmlNodeDoesNotExistException(nodeName);
             return node;
@@ -89,10 +90,6 @@ namespace SamsHelper.Libraries
         {
             return ((Vector3) position).IsPositionInCameraView();
         }
-
-        public static string ToString(this Vector2 vector) => vector.x + ":" + vector.y;
-
-        public static string ToString(this Vector3 vector) => vector.x + ":" + vector.y + ":" + vector.z;
 
         public static T RemoveRandom<T>(this List<T> list)
         {

@@ -18,20 +18,21 @@ namespace Game.Exploration.Environment
 
         public static void Start()
         {
-            LoadEnvironments();
-            NextLevel();
+            WorldView.SetEnvironmentText(_currentEnvironment.EnvironmentType.ToString());
+            SceneryController.UpdateEnvironmentBackground();
         }
 
         public static void Reset()
         {
-            _currentEnvironment = null;
+            NextLevel(true);
         }
-        
+
         public static Environment CurrentEnvironment => _currentEnvironment;
 
-        public static void NextLevel()
+        public static void NextLevel(bool reset)
         {
-            if (_currentEnvironment == null)
+            LoadEnvironments();
+            if (reset)
             {
                 _currentEnvironment = _environments[0];
             }
@@ -45,8 +46,6 @@ namespace Game.Exploration.Environment
             }
 
             MapGenerator.Generate();
-            WorldView.SetEnvironmentText(_currentEnvironment.EnvironmentType.ToString());
-            SceneryController.UpdateEnvironmentBackground();
         }
 
         private static void LoadEnvironments()
@@ -105,6 +104,17 @@ namespace Game.Exploration.Environment
         {
             if (_currentEnvironment == null) return;
             doc.CreateChild("CurrentEnvironment", _currentEnvironment.EnvironmentType.ToString());
+        }
+
+        public static void Load(XmlNode doc)
+        {
+            string currentEnvironmentText = doc.GetNodeText("CurrentEnvironment");
+            foreach (KeyValuePair<int, Environment> environment in _environments)
+            {
+                if (environment.Value.ToString() != currentEnvironmentText) continue;
+                _currentEnvironment = environment.Value;
+                return;
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Game.Exploration.WorldEvents
         private static TextMeshProUGUI _eventLogText;
         private static List<string> _eventLog = new List<string>();
 
-        public void Load(XmlNode doc)
+        public static void Load(XmlNode doc)
         {
             string events = doc.GetNodeText("WorldEvents");
             _eventLog = new List<string>(events.Split(','));
@@ -34,6 +34,11 @@ namespace Game.Exploration.WorldEvents
             return doc;
         }
 
+        public static void Reset()
+        {
+            _eventLog.Clear();
+        }
+        
         public void Awake()
         {
             if (SceneManager.GetActiveScene().name == "Game") _eventLogText = gameObject.FindChildWithName<TextMeshProUGUI>("Event Log");

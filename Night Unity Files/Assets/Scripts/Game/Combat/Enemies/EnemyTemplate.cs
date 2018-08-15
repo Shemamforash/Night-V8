@@ -20,7 +20,7 @@ namespace Game.Combat.Enemies
 
         private EnemyTemplate(XmlNode enemyNode)
         {
-            EnemyType = NameToType(enemyNode.GetNodeText("Name"));
+            EnemyType = StringToType(enemyNode.GetNodeText("Name"));
             Health = enemyNode.IntFromNode("Health");
             Speed = enemyNode.IntFromNode("Speed");
             Value = enemyNode.IntFromNode("Value");
@@ -41,7 +41,7 @@ namespace Game.Combat.Enemies
             return EnemyTemplates.Values.ToList();
         }
 
-        private static EnemyType NameToType(string typeName)
+        public static EnemyType StringToType(string typeName)
         {
             if (_enemyTypes.Count == 0)
             {

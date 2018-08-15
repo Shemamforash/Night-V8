@@ -35,6 +35,7 @@ namespace Facilitating.Persistence
 
         public static void LoadGame()
         {
+            Load(GameSaveLocation, "Game");
 //            return Load(GameSaveLocation, PersistenceType.Game);
         }
 
@@ -65,6 +66,7 @@ namespace Facilitating.Persistence
             _saveDoc = new XmlDocument();
             _saveDoc.Load(fileLocation);
             XmlNode root = _saveDoc.GetNode(saveType);
+            WorldState.Load(root);
             return true;
 
         }

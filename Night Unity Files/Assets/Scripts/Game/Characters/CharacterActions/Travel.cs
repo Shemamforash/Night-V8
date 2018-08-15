@@ -1,12 +1,9 @@
-﻿using System;
-using Game.Combat.Generation;
+﻿using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.WorldEvents;
 using Game.Global;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
@@ -95,7 +92,8 @@ namespace Game.Characters.CharacterActions
 
         private void EnterRegion()
         {
-            CurrentRegion.Discover();
+            bool discovered = CurrentRegion.Discover(PlayerCharacter);
+            if(discovered) PlayerCharacter.BrandManager.IncreaseRegionsExplored();
             CombatManager.SetCurrentRegion(CurrentRegion);
             SceneChanger.ChangeScene("Combat");
         }

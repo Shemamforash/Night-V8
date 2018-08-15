@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Game.Characters;
 using Game.Exploration.Environment;
@@ -43,6 +44,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             }
         }
 
+        public static ResourceTemplate StringToTemplate(string templateString)
+        {
+            return AllResources.FirstOrDefault(t => t.Name == templateString);
+        } 
+        
         private static string _lastType = "";
         
         public ResourceTemplate(XmlNode resourceNode)

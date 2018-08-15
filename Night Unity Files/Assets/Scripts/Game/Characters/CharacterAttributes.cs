@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Exploration.Environment;
@@ -37,6 +38,7 @@ namespace Game.Characters
         public bool SicknessWeakness;
         public bool SkillOneUnlocked, SkillTwoUnlocked;
         public bool SpreadSickness;
+        private static readonly List<AttributeType> _attributeTypes = new List<AttributeType>();
 
         public CharacterAttributes(Player player)
         {
@@ -50,15 +52,25 @@ namespace Game.Characters
             SetMax(AttributeType.Thirst, 10);
         }
 
-        public void Load(XmlNode doc)
+        public static AttributeType StringToAttributeType(string attributeType)
         {
+            LoadAttributeTypes();
+            foreach (AttributeType a in _attributeTypes)
+            {
+                if (a.ToString() != attributeType) continue;
+                return a;
+            }
+            throw new ArgumentOutOfRangeException();
         }
-
-        public XmlNode Save(XmlNode doc)
+        
+        private static void LoadAttributeTypes()
         {
-            doc = base.Save(doc);
-            return doc;
-        } 
+            if (_attributeTypes.Count != 0) return;
+            foreach (AttributeType attributeType in Enum.GetValues(typeof(AttributeType)))
+            {
+                _attributeTypes.Add(attributeType);
+            }
+        }
 
         public void ChangeEnduranceMax(int polarity)
         {

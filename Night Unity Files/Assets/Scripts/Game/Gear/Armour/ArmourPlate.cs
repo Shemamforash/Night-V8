@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Xml;
 using Facilitating.Persistence;
+using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
 
@@ -59,11 +61,20 @@ namespace Game.Gear.Armour
             _plateHealth.Decrement(amount);
             if (!_plateHealth.ReachedMin()) return;
             Unequip();
-            ParentInventory.DestroyItem(this);
+            ParentInventory().DestroyItem(this);
         }
 
         public int GetMaxProtection() => Mathf.CeilToInt(_plateHealth.Max / PlateHealthUnit);
 
         public int GetCurrentProtection() => Mathf.CeilToInt(_plateHealth.CurrentValue() / PlateHealthUnit);
+
+        public static ArmourPlate LoadArmour(XmlNode root)
+        {
+            ItemQuality quality = (ItemQuality) root.IntFromNode("Quality");
+            ArmourPlate plate = Create(quality);
+            plate.Load(root);
+            plate._plateHealth.SetCurrentValue(root.FloatFromNode("Health"));
+            return plate;
+        }
     }
 }

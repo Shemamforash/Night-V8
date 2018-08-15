@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Enemies.Animals;
 using Game.Combat.Enemies.Humans;
@@ -11,6 +13,7 @@ using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
@@ -23,7 +26,7 @@ namespace Game.Combat.Enemies
         private bool IsDead;
         private static GameObject _enemyPrefab;
         private static GameObject _footStepPrefab, _trailPrefab, _hoofprintPrefab;
-        private static Dictionary<EnemyType, Sprite> _enemySprites = new Dictionary<EnemyType, Sprite>();
+        private static readonly Dictionary<EnemyType, Sprite> _enemySprites = new Dictionary<EnemyType, Sprite>();
 
         public Enemy(EnemyTemplate template) : base(template.EnemyType.ToString())
         {
@@ -37,6 +40,13 @@ namespace Game.Combat.Enemies
             {
                 GenerateWeapon();
             }
+        }
+
+        public override XmlNode Save(XmlNode doc)
+        {
+            doc = base.Save(doc);
+            doc.CreateChild("EnemyType", Template.EnemyType);
+            return doc;
         }
 
         private void GenerateWeapon()
@@ -106,7 +116,7 @@ namespace Game.Combat.Enemies
         {
             if (_enemyPrefab == null) _enemyPrefab = Resources.Load<GameObject>("Prefabs/Combat/Enemies/Default Enemy");
             GameObject enemyObject = GameObject.Instantiate(_enemyPrefab);
-            enemyObject.name = Template.EnemyType.ToString() + Id;
+            enemyObject.name = Template.EnemyType.ToString() + ID();
             AssignSprite(enemyObject);
             AssignTrail(enemyObject);
             EnemyBehaviour enemyBehaviour;

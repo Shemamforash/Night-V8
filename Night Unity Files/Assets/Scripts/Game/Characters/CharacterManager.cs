@@ -20,20 +20,41 @@ namespace Game.Characters
         public static readonly List<Player> Characters = new List<Player>();
         private static readonly List<CharacterTemplate> Templates = new List<CharacterTemplate>();
         private static bool _loaded;
-        private readonly List<Building> _buildings = new List<Building>();
+        private static readonly List<Building> _buildings = new List<Building>();
 
         public CharacterManager() : base("Vehicle")
         {
+            Reset();
+        }
+
+        private void Reset(bool addDefault = true)
+        {
+            SelectedCharacter = null;
+            if (Characters.Count > 0)
+            {
+                for (int i = Characters.Count - 1; i >= 0; --i)
+                {
+                    RemoveCharacter(Characters[i]);
+                }
+            }
+
+            _buildings.Clear();
+            if (!addDefault) return;
+            AddCharacter(GenerateDriver());
         }
 
         public override void Load(XmlNode doc)
         {
-            XmlNode characterManagerNode = doc.GetNode("CharacterManager");
+            Reset(false);
+            base.Load(doc);
+            XmlNode characterManagerNode = doc.GetNode("Inventory");
             foreach (XmlNode characterNode in Helper.GetNodesWithName(characterManagerNode, "Character"))
             {
-//                Character c = new Character();
-//                c.Load(characterNode, saveType);
-//                _characters.Add(c);
+                string className = characterNode.GetNodeText("CharacterClass");
+                CharacterTemplate template = FindClass(className);
+                Player player = new Player(template);
+                player.Load(characterNode);
+                AddCharacter(player);
             }
         }
 
@@ -45,11 +66,6 @@ namespace Game.Characters
             return doc;
         }
 
-        public void Reset()
-        {
-            AddCharacter(GenerateDriver());
-        }
-        
         public void Start()
         {
             foreach (Player player in Characters)
@@ -73,23 +89,17 @@ namespace Game.Characters
 
         public static void RemoveCharacter(Player playerCharacter)
         {
-            if (playerCharacter.CharacterTemplate.CharacterClass == CharacterClass.Wanderer)
-            {
-                SceneChanger.ChangeScene("Game Over");
-            }
-            else
-            {
-                Characters.Remove(playerCharacter);
-                Characters.ForEach(c => c.CharacterView.RefreshNavigation());
-            }
+            GameObject.Destroy(playerCharacter.CharacterView);
+            Characters.Remove(playerCharacter);
+            Characters.ForEach(c => c.CharacterView.RefreshNavigation());
         }
 
         public void UpdateBuildings()
         {
             _buildings.ForEach(b => b.Update());
         }
-        
-        public static void ExitCharacter(Player character)
+
+        private static void ExitCharacter(Player character)
         {
             character.CharacterView.SwitchToSimpleView();
         }
@@ -100,7 +110,7 @@ namespace Game.Characters
             player.CharacterView.SwitchToDetailedView();
         }
 
-        public static Player PreviousCharacter(Player character)
+        private static Player PreviousCharacter(Player character)
         {
             for (int i = 0; i < Characters.Count; ++i)
             {
@@ -113,7 +123,7 @@ namespace Game.Characters
             return null;
         }
 
-        public static Player NextCharacter(Player character)
+        private static Player NextCharacter(Player character)
         {
             for (int i = 0; i < Characters.Count; ++i)
             {
@@ -135,20 +145,6 @@ namespace Game.Characters
             _loaded = true;
         }
 
-        private static int AttributeCapStringToValue(string nodeName, XmlNode node)
-        {
-            string capString = node.GetNodeText(nodeName);
-            switch (capString)
-            {
-                case "+":
-                    return 15;
-                case "++":
-                    return 20;
-                default:
-                    return 10;
-            }
-        }
-
         private static CharacterTemplate FindClass(CharacterClass characterClass)
         {
             LoadTemplates();
@@ -161,6 +157,20 @@ namespace Game.Characters
             }
 
             throw new Exceptions.UnknownCharacterClassException(characterClass.ToString());
+        }
+
+        private CharacterTemplate FindClass(string characterClass)
+        {
+            LoadTemplates();
+            foreach (CharacterTemplate t in Templates)
+            {
+                if (t.CharacterClass.ToString() == characterClass)
+                {
+                    return t;
+                }
+            }
+
+            throw new Exceptions.UnknownCharacterClassException(characterClass);
         }
 
         private Player GenerateDriver()
@@ -198,7 +208,7 @@ namespace Game.Characters
         {
             CharacterAttributes attributes = playerCharacter.Attributes;
 
-            attributes.SetMax(AttributeType.Endurance, 10);//playerCharacter.CharacterTemplate.Endurance);
+            attributes.SetMax(AttributeType.Endurance, 10); //playerCharacter.CharacterTemplate.Endurance);
             attributes.Get(AttributeType.Endurance).SetToMax();
 
             attributes.SetMax(AttributeType.Strength, playerCharacter.CharacterTemplate.Strength);

@@ -26,7 +26,18 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public readonly List<Inscription> Inscriptions = new List<Inscription>();
         private static bool _loaded;
         private static List<AttributeType> _attributeTypes;
+        private static readonly List<Inventory> _inventories = new List<Inventory>();
 
+        public static Inventory FindInventory(int inventoryId)
+        {
+            return _inventories.FirstOrDefault(i => i.ID() == inventoryId);
+        }
+
+        public InventoryItem FindItem(int id)
+        {
+            return _contents.FirstOrDefault(i => i.ID() == id);
+        }
+        
         public static AttributeType StringToAttributeType(string attributeString)
         {
             if (_attributeTypes == null)
@@ -41,6 +52,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public Inventory(string name) : base(name, GameObjectType.Inventory)
         {
             LoadResources();
+            _inventories.Add(this);
         }
 
         public List<Consumable> Consumables()
@@ -79,18 +91,44 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             Debug.Log(contents);
         }
 
-        public virtual void Load(XmlNode root)
+        public override void Load(XmlNode root)
         {
-            XmlNode inventoryNode = root.GetNode(Name);
-            InventoryResources().ForEach(r => LoadResource(r.Name, inventoryNode));
+            XmlNode inventoryNode = root.GetNode("Inventory");
+            base.Load(inventoryNode);
+            XmlNode resourceNode = root.SelectSingleNode("Resources");
+            InventoryResources().ForEach(r => LoadResource(r.Name, resourceNode));
+            XmlNode itemNode = root.CreateChild("Items");
+            foreach (XmlNode weaponNode in itemNode.SelectNodes("Weapons"))
+                AddItem(Weapon.LoadWeapon(weaponNode));
+            foreach (XmlNode armourNode in itemNode.SelectNodes("ArmourPlates"))
+                AddItem(ArmourPlate.LoadArmour(armourNode));
+            foreach (XmlNode accessoryNode in itemNode.SelectNodes("Accessories"))
+                AddItem(Accessory.LoadAccessory(accessoryNode));
+            foreach (XmlNode inscriptionNode in itemNode.SelectNodes("Inscriptions"))
+                AddItem(Inscription.LoadInscription(inscriptionNode));
+//            foreach (XmlNode consumableNode in itemNode.SelectNodes("Consumables"))
+//                AddResource(Consumable.LoadConsumable(consumableNode));
         }
+
 
         public virtual XmlNode Save(XmlNode root)
         {
             root = base.Save(root);
-            InventoryResources().ForEach(r => SaveResource(r.Name, root));
-            Items().ForEach(i => { i.Save(root); });
+            XmlNode resourceNode = root.CreateChild("Resources");
+            InventoryResources().ForEach(r => SaveResource(r.Name, resourceNode));
+            XmlNode itemNode = root.CreateChild("Items");
+            SaveItems(itemNode, "Weapons", Weapons);
+            SaveItems(itemNode, "ArmourPlates", Armour);
+            SaveItems(itemNode, "Accessories", Accessories);
+            SaveItems(itemNode, "Inscriptions", Inscriptions);
+            SaveItems(itemNode, "Consumables", _consumables);
             return root;
+        }
+
+        private void SaveItems<T>(XmlNode root, string itemType, List<T> items) where T : MyGameObject
+        {
+            root = root.CreateChild(itemType);
+            items.ForEach(i => i.Save(root));
         }
 
         private List<InventoryItem> InventoryResources()
@@ -108,7 +146,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             ResourceTemplate template = ResourceTemplate.AllResources.FirstOrDefault(t => t.Name == name);
             if (template == null) throw new Exceptions.ResourceDoesNotExistException(template.Name);
             InventoryItem newResource = template.Create();
-            newResource.ParentInventory = this;
+            newResource.SetParentInventory(this);
             if (newResource is Consumable)
             {
                 _consumables.Add((Consumable) newResource);
@@ -133,7 +171,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         private void AddItem(InventoryItem item)
         {
-            item.ParentInventory = this;
+            item.SetParentInventory(this);
             _items.Add(item);
             Assert.IsFalse(item is Consumable);
             if (item is Weapon) Weapons.Add((Weapon) item);
@@ -204,8 +242,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         //Returns item in target inventory if the item was successfully moved
         private void Move(InventoryItem item)
         {
-            Inventory parent = item.ParentInventory;
-            if (ParentInventory != null) Debug.Log(item.Name + " " + item.ParentInventory.Name);
+            Inventory parent = item.ParentInventory();
+            if (ParentInventory() != null) Debug.Log(item.Name + " " + item.ParentInventory().Name);
             InventoryItem movedItem = parent == null ? item : parent.RemoveItem(item);
             AddItem(movedItem);
         }
@@ -220,7 +258,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             if (quantity > item.Quantity()) quantity = Mathf.FloorToInt(item.Quantity());
             if (quantity <= 0) return;
-            item.ParentInventory?.DecrementResource(item.Name, quantity);
+            item.ParentInventory()?.DecrementResource(item.Name, quantity);
             IncrementResource(item.Name, quantity);
         }
 

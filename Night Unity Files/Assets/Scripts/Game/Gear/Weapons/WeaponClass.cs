@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using SamsHelper.Libraries;
 
@@ -48,9 +49,15 @@ namespace Game.Gear.Weapons
             throw new ArgumentOutOfRangeException("Unknown class type: '" + name + "'");
         }
 
+        public static WeaponClass StringToWeaponClass(string weaponClassString)
+        {
+            WeaponClassType weaponClass = NameToClassType(weaponClassString);
+            return _weaponClasses.First(w => w.Name == weaponClass);
+        }
+        
         public static WeaponClass GetRandomClass()
         {
-            return Helper.RandomElement(_weaponClasses);
+            return _weaponClasses.RandomElement();
         }
     }
 }

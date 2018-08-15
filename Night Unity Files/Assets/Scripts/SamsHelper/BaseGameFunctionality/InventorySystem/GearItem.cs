@@ -3,6 +3,7 @@ using Facilitating.Persistence;
 using Game.Characters;
 using Game.Gear;
 using Game.Global;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
@@ -12,23 +13,24 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private readonly GearSubtype _gearType;
         private ItemQuality _itemQuality;
         protected Character EquippedCharacter;
-
+        
         protected GearItem(string name, GearSubtype gearSubtype, ItemQuality itemQuality) : base(name, GameObjectType.Gear)
         {
             SetQuality(itemQuality);
             _gearType = gearSubtype;
         }
 
-        public override void Load(XmlNode doc)
-        {
-        }
-
         public override XmlNode Save(XmlNode root)
         {
             root = base.Save(root);
-            root.CreateChild("GearType", _gearType);
-            root.CreateChild("Quality", _itemQuality);
+            root.CreateChild("Quality", (int)_itemQuality);
             return root;
+        }
+
+        public override void Load(XmlNode root)
+        {
+            base.Load(root);
+            _itemQuality = (ItemQuality) root.IntFromNode("Quality");
         }
 
         public ItemQuality Quality() => _itemQuality;
@@ -57,7 +59,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private void MoveTo(Inventory targetInventory)
         {
             targetInventory.Move(this, 1);
-            ParentInventory = targetInventory;
+            SetParentInventory(targetInventory);
         }
     }
 }

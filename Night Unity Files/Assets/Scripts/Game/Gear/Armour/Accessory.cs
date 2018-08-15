@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -96,6 +98,15 @@ namespace Game.Gear.Armour
                 modifier.SetFinalBonus(_modifierValue);
                 return modifier;
             }
+        }
+
+        public static Accessory LoadAccessory(XmlNode accessoryNode)
+        {
+            string templateString = accessoryNode.GetNodeText("Template");
+            AccessoryTemplate template = _accessoryTemplates.First(t => t.Name == templateString);
+            Accessory accessory = new Accessory(template, ItemQuality.Worn);
+            accessory.Load(accessoryNode);
+            return accessory;
         }
     }
 }

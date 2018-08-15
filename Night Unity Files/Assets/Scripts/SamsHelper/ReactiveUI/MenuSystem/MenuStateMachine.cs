@@ -10,7 +10,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
     public class MenuStateMachine : MonoBehaviour
     {
         private static MenuStateMachine _instance;
-        public static StateMachine States;
+        private static StateMachine States;
         public Menu InitialMenu;
 
         public void Awake()
@@ -23,9 +23,9 @@ namespace SamsHelper.ReactiveUI.MenuSystem
                 if (!t.gameObject.activeInHierarchy)
                 {
                     t.gameObject.SetActive(true);
+                    t.gameObject.SetActive(false);
                     t.GetComponent<CanvasGroup>().alpha = 0;
                 }
-
                 States.AddState(menu);
             }
         }
@@ -59,9 +59,11 @@ namespace SamsHelper.ReactiveUI.MenuSystem
                 }
 
                 currentState.Menu.SetAlpha(0);
+                currentState.SetActive(false);
             }
 
             currentState = (MenuState) States.GetState(menuName);
+            currentState.SetActive(true);
             currentTime = fadeTime;
             
             while (currentTime > 0)
@@ -77,21 +79,11 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             States.GetState(menuName).Enter();
         }
 
-        //TODO move me somewhere more suitable
         public void OnApplicationQuit()
         {
 //            SaveController.SaveSettings();
+            //todo remove me
             SaveController.SaveGame();
-        }
-
-        public static void HideCurrentMenu()
-        {
-            ((MenuState)States.GetCurrentState()).SetActive(false);
-        }
-
-        public static void ShowCurrentMenu()
-        {
-            ((MenuState)States.GetCurrentState()).SetActive(true);
         }
 
         public static void ReturnToDefault()

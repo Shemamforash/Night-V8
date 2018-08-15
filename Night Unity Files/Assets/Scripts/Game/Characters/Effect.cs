@@ -2,16 +2,17 @@
 using Facilitating.Persistence;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Characters
 {
     public class Effect
     {
-        public int Duration;
-        private AttributeModifier _modifier;
-        private CharacterAttribute _target;
-        private Player _player;
+        private int Duration;
+        private readonly AttributeModifier _modifier;
+        private readonly CharacterAttribute _target;
+        private readonly Player _player;
 
         public Effect(Player player, AttributeModifier modifier, CharacterAttribute target, float duration)
         {
@@ -42,6 +43,15 @@ namespace Game.Characters
             doc.CreateChild("Duration", Duration);
             doc.CreateChild("Target", _target.AttributeType);
             _modifier.Save(doc);
+        }
+
+        public static void Load(Player player, XmlNode effectNode)
+        {
+            AttributeType targetAttributeType = CharacterAttributes.StringToAttributeType(effectNode.GetNodeText("Target"));
+            CharacterAttribute target = player.Attributes.Get(targetAttributeType);
+            AttributeModifier modifier = AttributeModifier.Load(effectNode);
+            float duration = effectNode.IntFromNode("Duration");
+            new Effect(player, modifier, target, duration);
         }
     }
 }

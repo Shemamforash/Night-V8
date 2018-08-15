@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using DG.Tweening;
 using Facilitating.Audio;
-using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -29,7 +29,7 @@ namespace Game.Global
             sequence.InsertCallback(0.1f, WorldState.UnPause);
         }
 
-        private IEnumerator FadeOut(string sceneName, bool fade)
+        private IEnumerator FadeOut(string sceneName, bool fade, Action<float> loadProgressAction)
         {
             AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync(sceneName);
             sceneLoaded.allowSceneActivation = false;
@@ -38,17 +38,24 @@ namespace Game.Global
             DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetVolume, 0f, FadeTime);
             if (fade)
             {
+                loadProgressAction?.Invoke(sceneLoaded.progress);
                 yield return _fader.DOColor(Color.black, FadeTime).WaitForCompletion();
             }
 
-            while (sceneLoaded.progress != 0.9f) yield return null;
+            while (sceneLoaded.progress != 0.9f)
+            {
+                yield return null;
+                loadProgressAction?.Invoke(sceneLoaded.progress);
+            }
+
+            loadProgressAction?.Invoke(1);
             sceneLoaded.allowSceneActivation = true;
         }
 
-        public static void ChangeScene(string sceneName, bool fade = true)
+        public static void ChangeScene(string sceneName, bool fade = true, Action<float> loadProgressAction = null)
         {
             WorldState.Pause();
-            _instance.StartCoroutine(_instance.FadeOut(sceneName, fade));
+            _instance.StartCoroutine(_instance.FadeOut(sceneName, fade, loadProgressAction));
         }
     }
 }

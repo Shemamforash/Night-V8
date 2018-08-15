@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
@@ -91,6 +92,16 @@ namespace Game.Gear
             root.CreateChild("Template", _template.Name);
             root.CreateChild("Quality", _quality);
             return root;
+        }
+
+        public static Inscription LoadInscription(XmlNode root)
+        {
+            string templateString = root.GetNodeText("Template");
+            InscriptionTemplate template = _inscriptionTemplates.First(t => t.Name == templateString);
+            InscriptionTier quality = (InscriptionTier) root.IntFromNode("Quality");
+            Inscription inscription = new Inscription(template, quality);
+            inscription.Load(root);
+            return inscription;
         }
         
         private class InscriptionTemplate

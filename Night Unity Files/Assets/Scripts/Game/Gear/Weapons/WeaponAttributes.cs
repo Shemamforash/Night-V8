@@ -3,6 +3,7 @@ using Facilitating.Persistence;
 using Game.Characters;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
@@ -43,11 +44,15 @@ namespace Game.Gear.Weapons
         public override XmlNode Save(XmlNode root)
         {
             root = base.Save(root);
-            root.CreateChild("WeaponType", WeaponType);
-            root.CreateChild("Class", WeaponClassType);
+            root.CreateChild("Class", (int)WeaponClassType);
             root.CreateChild("Durability", _durability.CurrentValue());
-            root.CreateChild("Quality", _weapon.Quality());
             return root;
+        }
+
+        public override void Load(XmlNode root)
+        {
+            base.Load(root);
+            _durability.SetCurrentValue(root.FloatFromNode("Durability"));
         }
 
         private void SetClass(WeaponClass weaponClass)

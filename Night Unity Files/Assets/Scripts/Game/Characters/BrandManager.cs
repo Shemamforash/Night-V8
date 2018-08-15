@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Combat.Generation;
@@ -10,7 +12,7 @@ using UnityEngine;
 
 namespace Game.Characters
 {
-    public class BrandManager : IPersistenceTemplate
+    public class BrandManager
     {
         private readonly List<Brand> _lockedBrands = new List<Brand>();
         private Player _player;
@@ -19,7 +21,27 @@ namespace Game.Characters
 
         public void Load(XmlNode doc)
         {
-            
+            XmlNode brandsNode = doc.SelectSingleNode("Brands");
+            foreach (XmlNode brandNode in brandsNode.SelectNodes("Brand"))
+            {
+                string name = brandNode.GetNodeText("Name");
+                bool found = false;
+                foreach (Brand brand in _completedBrands)
+                {
+                    if (brand.GetName() != name) continue;
+                    brand.Load(brandNode);
+                    found = true;
+                    break;
+                }
+
+                if (found) continue;
+                foreach (Brand brand in _activeBrands)
+                {
+                    if (brand.GetName() != name) continue;
+                    brand.Load(brandNode);
+                    break;
+                }
+            }
         }
 
         public XmlNode Save(XmlNode doc)
@@ -269,13 +291,14 @@ namespace Game.Characters
             }
         }
 
-        public abstract class Brand : IPersistenceTemplate
+        public abstract class Brand
         {
             private readonly int _counterTarget;
             private readonly string _riteName, _successName, _failName;
             protected readonly Player Player;
             private int _counter;
             public BrandStatus Status = BrandStatus.Locked;
+            private static readonly List<BrandStatus> _brandStatuses = new List<BrandStatus>();
 
             protected Brand(Player player, string riteName, string successName, string failName, int counterTarget)
             {
@@ -340,8 +363,28 @@ namespace Game.Characters
 
             protected abstract string GetProgressSubstring();
 
+            private static BrandStatus StringToBrandStatus(string brandStatusString)
+            {
+                if (_brandStatuses.Count == 0)
+                {
+                    foreach (BrandStatus brandStatus in Enum.GetValues(typeof(BrandStatus)))
+                        _brandStatuses.Add(brandStatus);
+                }
+
+                foreach (BrandStatus brandStatus in _brandStatuses)
+                {
+                    if (brandStatus.ToString() == brandStatusString)
+                    {
+                        return brandStatus;
+                    }
+                }
+                throw new ArgumentOutOfRangeException();
+            }
+            
             public void Load(XmlNode doc)
             {
+                _counter = doc.IntFromNode("Progress");
+                Status = StringToBrandStatus(doc.GetNodeText("Status"));
             }
 
             public XmlNode Save(XmlNode doc)

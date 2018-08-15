@@ -41,8 +41,15 @@ namespace Game.Exploration.Environment
             foreach (Region region in _regions) region.Save(regionNode);
         }
 
-        public void Load(XmlNode doc)
+        public static void Load(XmlNode doc)
         {
+            XmlNode regionsNode = doc.SelectSingleNode("Regions");
+            foreach (XmlNode regionNode in regionsNode.SelectNodes("Region"))
+            {
+                Region region = Region.Load(regionNode);
+                if (region.GetRegionType() == RegionType.Gate) initialNode = region;
+                _regions.Add(region);
+            }
         }
 
         public void Awake()
@@ -134,6 +141,7 @@ namespace Game.Exploration.Environment
 
         public static void Generate()
         {
+            Debug.Log("Generated");
             GenerateRegions();
             ConnectRegions();
             SetRegionTypes();

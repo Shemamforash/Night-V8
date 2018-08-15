@@ -6,7 +6,8 @@ namespace SamsHelper.Libraries
     {
         public static Vector3 ToVector3(this string vectorString)
         {
-            string[] arr = vectorString.Split(':');
+            vectorString = CleanupVectorString(vectorString);
+            string[] arr = vectorString.Split(',');
             Vector3 vect = new Vector3();
             vect.x = float.Parse(arr[0]);
             vect.y = float.Parse(arr[1]);
@@ -14,9 +15,18 @@ namespace SamsHelper.Libraries
             return vect;
         }
 
+        private static string CleanupVectorString(string vectorString)
+        {
+            vectorString = vectorString.Replace(" ", "");
+            vectorString = vectorString.Replace("(", "");
+            vectorString = vectorString.Replace(")", "");
+            return vectorString;
+        }
+        
         public static Vector2 ToVector2(this string vectorString)
         {
-            string[] arr = vectorString.Split(':');
+            vectorString = CleanupVectorString(vectorString);
+            string[] arr = vectorString.Split(',');
             Vector2 vect = new Vector2();
             vect.x = float.Parse(arr[0]);
             vect.y = float.Parse(arr[1]);

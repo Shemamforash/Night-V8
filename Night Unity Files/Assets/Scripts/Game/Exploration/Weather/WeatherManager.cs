@@ -16,7 +16,6 @@ namespace Game.Exploration.Weather
         public static void Start()
         {
             LoadWeather();
-            _weatherStates.LoadProbabilities("WeatherProbabilityTable");
 //            GenerateWeatherString(2000);
         }
 
@@ -36,6 +35,7 @@ namespace Game.Exploration.Weather
             XmlNode root = Helper.OpenRootNode("Weather", "WeatherTypes");
             foreach (XmlNode weatherNode in Helper.GetNodesWithName(root, "Weather"))
                 new Weather(_weatherStates, weatherNode);
+            _weatherStates.LoadProbabilities("WeatherProbabilityTable");
             _loaded = true;
         }
 
@@ -68,6 +68,11 @@ namespace Game.Exploration.Weather
         public static void Save(XmlNode doc)
         {
             CurrentWeather().Save(doc);
+        }
+
+        public static void Load(XmlNode doc)
+        {
+            XmlNode weather = doc.SelectSingleNode("Weather");
         }
     }
 }

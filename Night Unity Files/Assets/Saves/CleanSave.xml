@@ -1,0 +1,486 @@
+<Game>
+  <WorldState>
+    <Seed>0</Seed>
+    <DaysSpentHere>0</DaysSpentHere>
+    <CurrentLevel>1</CurrentLevel>
+    <Days>0</Days>
+    <Hours>6</Hours>
+    <Minutes>20</Minutes>
+    <Difficulty>0</Difficulty>
+  </WorldState>
+  <Inventory>
+    <Id>6</Id>
+    <Name>Vehicle</Name>
+    <Character>
+      <Id>7</Id>
+      <Name>The Wanderer</Name>
+      <EquippedItems>
+        <Weapon>16</Weapon>
+      </EquippedItems>
+      <Inventory>
+        <Id>8</Id>
+        <Name>The Wanderer</Name>
+        <Gear>
+          <Id>16</Id>
+          <Name>Worn Spitter</Name>
+          <ParentInventory>8</ParentInventory>
+          <GearType>Weapon</GearType>
+          <Quality>Worn</Quality>
+          <Attributes>
+            <AttributeType>Damage</AttributeType>
+            <Value>11.28</Value>
+            <AttributeType>FireRate</AttributeType>
+            <Value>14.64</Value>
+            <AttributeType>ReloadSpeed</AttributeType>
+            <Value>0.89</Value>
+            <AttributeType>Accuracy</AttributeType>
+            <Value>0.333</Value>
+            <AttributeType>Handling</AttributeType>
+            <Value>98</Value>
+            <AttributeType>Capacity</AttributeType>
+            <Value>30</Value>
+            <AttributeType>Pellets</AttributeType>
+            <Value>1</Value>
+            <WeaponType>SMG</WeaponType>
+            <Class>Spitter</Class>
+            <Durability>11</Durability>
+            <Quality>Worn</Quality>
+          </Attributes>
+        </Gear>
+      </Inventory>
+      <Attributes>
+        <AttributeType>EssenceLossBonus</AttributeType>
+        <Value>1</Value>
+        <AttributeType>SkillRechargeBonus</AttributeType>
+        <Value>1</Value>
+        <AttributeType>AdrenalineRechargeBonus</AttributeType>
+        <Value>1</Value>
+        <AttributeType>Hunger</AttributeType>
+        <Value>0.1111111</Value>
+        <AttributeType>Thirst</AttributeType>
+        <Value>0.2222222</Value>
+        <AttributeType>Endurance</AttributeType>
+        <Value>10</Value>
+        <AttributeType>Strength</AttributeType>
+        <Value>4</Value>
+        <AttributeType>Perception</AttributeType>
+        <Value>4</Value>
+        <AttributeType>Willpower</AttributeType>
+        <Value>4</Value>
+      </Attributes>
+      <Brands />
+      <StoryUnlocked>False</StoryUnlocked>
+      <StoryProgress>1</StoryProgress>
+      <TimeAlive>4</TimeAlive>
+      <PlayerAction>
+        <Id>9</Id>
+        <Name>Rest</Name>
+      </PlayerAction>
+    </Character>
+  </Inventory>
+  <Regions>
+    <Region>
+      <Name>Anger's Edge</Name>
+      <RegionId>8</RegionId>
+      <Position>(12.0, -1.0)</Position>
+      <Neighbors>
+        <ID>19</ID>
+        <ID>2</ID>
+        <ID>3</ID>
+      </Neighbors>
+      <Type>Danger</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>0</FoodSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Endeavour Cenote</Name>
+      <RegionId>21</RegionId>
+      <Position>(-24.0, 19.0)</Position>
+      <Neighbors>
+        <ID>9</ID>
+      </Neighbors>
+      <Type>Shrine</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Marker of Deeds</Name>
+      <RegionId>10</RegionId>
+      <Position>(21.0, 10.0)</Position>
+      <Neighbors>
+        <ID>16</ID>
+        <ID>13</ID>
+        <ID>4</ID>
+      </Neighbors>
+      <Type>Monument</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Elating Marsh</Name>
+      <RegionId>6</RegionId>
+      <Position>(2.0, 10.0)</Position>
+      <Neighbors>
+        <ID>14</ID>
+        <ID>1</ID>
+      </Neighbors>
+      <Type>Fountain</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Gate</Name>
+      <RegionId>0</RegionId>
+      <Position>(0.0, 0.0)</Position>
+      <Neighbors>
+        <ID>2</ID>
+        <ID>11</ID>
+        <ID>1</ID>
+      </Neighbors>
+      <Type>Gate</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Hellion's Dusk</Name>
+      <RegionId>4</RegionId>
+      <Position>(15.0, 13.0)</Position>
+      <Neighbors>
+        <ID>10</ID>
+        <ID>3</ID>
+      </Neighbors>
+      <Type>Danger</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>0</WaterSourceCount>
+      <FoodSourceCount>0</FoodSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Endeavour's Advantage</Name>
+      <RegionId>1</RegionId>
+      <Position>(-2.0, 6.0)</Position>
+      <Neighbors>
+        <ID>6</ID>
+        <ID>0</ID>
+        <ID>5</ID>
+      </Neighbors>
+      <Type>Shrine</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Maverick's Collapse</Name>
+      <RegionId>15</RegionId>
+      <Position>(-12.0, -1.0)</Position>
+      <Neighbors>
+        <ID>5</ID>
+      </Neighbors>
+      <Type>Danger</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Devoted Brook</Name>
+      <RegionId>5</RegionId>
+      <Position>(-8.0, 2.0)</Position>
+      <Neighbors>
+        <ID>1</ID>
+        <ID>15</ID>
+        <ID>7</ID>
+      </Neighbors>
+      <Type>Fountain</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Chaser's Vale</Name>
+      <RegionId>20</RegionId>
+      <Position>(13.0, 22.0)</Position>
+      <Neighbors>
+        <ID>14</ID>
+      </Neighbors>
+      <Type>Animal</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Chaser's Outcrop</Name>
+      <RegionId>18</RegionId>
+      <Position>(-2.0, -11.0)</Position>
+      <Neighbors>
+        <ID>11</ID>
+      </Neighbors>
+      <Type>Animal</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>0</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Piety's Languor</Name>
+      <RegionId>16</RegionId>
+      <Position>(23.0, 19.0)</Position>
+      <Neighbors>
+        <ID>10</ID>
+      </Neighbors>
+      <Type>Temple</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Demon's Failure</Name>
+      <RegionId>11</RegionId>
+      <Position>(3.0, -5.0)</Position>
+      <Neighbors>
+        <ID>18</ID>
+        <ID>0</ID>
+      </Neighbors>
+      <Type>Danger</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Beast's Marsh</Name>
+      <RegionId>19</RegionId>
+      <Position>(16.0, -9.0)</Position>
+      <Neighbors>
+        <ID>17</ID>
+        <ID>8</ID>
+      </Neighbors>
+      <Type>Danger</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Pursuer's Creek</Name>
+      <RegionId>9</RegionId>
+      <Position>(-17.0, 16.0)</Position>
+      <Neighbors>
+        <ID>7</ID>
+        <ID>12</ID>
+        <ID>21</ID>
+      </Neighbors>
+      <Type>Animal</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Prowler's Fruit</Name>
+      <RegionId>3</RegionId>
+      <Position>(11.0, 5.0)</Position>
+      <Neighbors>
+        <ID>4</ID>
+        <ID>8</ID>
+      </Neighbors>
+      <Type>Animal</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Hellion's Shell</Name>
+      <RegionId>17</RegionId>
+      <Position>(21.0, -2.0)</Position>
+      <Neighbors>
+        <ID>19</ID>
+      </Neighbors>
+      <Type>Danger</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Record of Sagas</Name>
+      <RegionId>12</RegionId>
+      <Position>(-21.0, 9.0)</Position>
+      <Neighbors>
+        <ID>9</ID>
+        <ID>7</ID>
+      </Neighbors>
+      <Type>Monument</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>3</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Hell's Remains</Name>
+      <RegionId>2</RegionId>
+      <Position>(6.0, 1.0)</Position>
+      <Neighbors>
+        <ID>8</ID>
+        <ID>0</ID>
+      </Neighbors>
+      <Type>Danger</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Demagogue's Marsh</Name>
+      <RegionId>7</RegionId>
+      <Position>(-13.0, 9.0)</Position>
+      <Neighbors>
+        <ID>5</ID>
+        <ID>12</ID>
+        <ID>9</ID>
+      </Neighbors>
+      <Type>Danger</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>0</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Carcass's Agony</Name>
+      <RegionId>13</RegionId>
+      <Position>(29.0, 10.0)</Position>
+      <Neighbors>
+        <ID>10</ID>
+      </Neighbors>
+      <Type>Danger</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Grind Brook</Name>
+      <RegionId>14</RegionId>
+      <Position>(7.0, 17.0)</Position>
+      <Neighbors>
+        <ID>20</ID>
+        <ID>6</ID>
+      </Neighbors>
+      <Type>Shrine</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <Enemies />
+    </Region>
+  </Regions>
+  <Weather>
+    <Id>23</Id>
+    <Name>Clear</Name>
+    <TimeRemaining>20</TimeRemaining>
+  </Weather>
+  <CurrentEnvironment>Oasis</CurrentEnvironment>
+  <WorldEvents>&lt;i&gt;"Yes, this'll do"- The Wanderer&lt;/i&gt;</WorldEvents>
+</Game>

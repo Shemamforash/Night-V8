@@ -26,7 +26,7 @@ namespace Game.Exploration.Regions
         public readonly List<EnemyCampfire> Fires = new List<EnemyCampfire>();
         public readonly List<ContainerController> Containers = new List<ContainerController>();
         private static GameObject _nodePrefab;
-        public readonly int RegionID;
+        public int RegionID;
         private int _lastVisitDay = -1;
         public Vector2 ShrinePosition;
         public readonly List<Vector2> EchoPositions = new List<Vector2>();
@@ -35,6 +35,13 @@ namespace Game.Exploration.Regions
         public Vector2? EssenceShrinePosition = null;
         public Player _characterHere;
         public Vector2 CharacterPosition;
+        private List<int> _neighborIds = new List<int>();
+
+        public Region() : base(Vector2.zero)
+        {
+            RegionID = _currentId;
+            ++_currentId;
+        }
 
         public bool Visited()
         {
@@ -75,8 +82,33 @@ namespace Game.Exploration.Regions
             _lastVisitDay = WorldState.Days;
         }
 
-        public void Load(XmlNode doc)
+        public static Region Load(XmlNode doc)
         {
+            Region region = new Region();
+            region.Name = doc.GetNodeText("Name");
+            region.RegionID = doc.IntFromNode("RegionId");
+            _currentId = region.RegionID + 1;
+            region.Position = doc.GetNodeText("Position").ToVector2();
+            foreach (XmlNode n in doc.SelectSingleNode("Neighbors").SelectNodes("ID"))
+            {
+                region._neighborIds.Add(n.IntFromNode("ID"));
+            }
+
+            region._discovered = doc.BoolFromNode("Discovered");
+            region._seen = doc.BoolFromNode("Seen");
+            region._lastVisitDay = doc.IntFromNode("LastVisited");
+            region.ShrinePosition = doc.GetNodeText("ShrinePosition").ToVector2();
+            region.WaterSourceCount = doc.IntFromNode("WaterSourceCount");
+            region.FoodSourceCount = doc.IntFromNode("FoodSourceCount");
+            region.ResourceSourceCount = doc.IntFromNode("ResourceSourceCount");
+            foreach (XmlNode enemyNode in doc.SelectSingleNode("Enemies").SelectNodes("Enemy"))
+            {
+                string enemyTypeString = enemyNode.GetNodeText("EnemyType");
+                EnemyType enemyType = EnemyTemplate.StringToType(enemyTypeString);
+                Enemy enemy = new Enemy(EnemyTemplate.GetEnemyTemplate(enemyType));
+                region._enemies.Add(enemy);
+            }
+            return region;
         }
 
         public XmlNode Save(XmlNode doc)
@@ -84,17 +116,18 @@ namespace Game.Exploration.Regions
             XmlNode regionNode = doc.CreateChild("Region");
             regionNode.CreateChild("Name", Name);
             regionNode.CreateChild("RegionId", RegionID);
-            regionNode.CreateChild("Position", Position);
+            regionNode.CreateChild("Position", Position.ToString());
             XmlNode neighborNode = regionNode.CreateChild("Neighbors");
             foreach (Node n in Neighbors())
             {
-                neighborNode.CreateChild("ID", ((Region)n).RegionID);
+                neighborNode.CreateChild("ID", ((Region) n).RegionID);
             }
+
             regionNode.CreateChild("Type", _regionType.ToString());
             regionNode.CreateChild("Discovered", _discovered);
             regionNode.CreateChild("Seen", _seen);
             regionNode.CreateChild("LastVisited", _lastVisitDay);
-            regionNode.CreateChild("ShrinePosition", ShrinePosition);
+            regionNode.CreateChild("ShrinePosition", ShrinePosition.ToString());
             regionNode.CreateChild("WaterSourceCount", WaterSourceCount);
             regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
             regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);
@@ -227,10 +260,9 @@ namespace Game.Exploration.Regions
             _seen = true;
         }
 
-        public void Discover()
+        public bool Discover(Player player = null)
         {
-            if (_discovered) return;
-            CharacterManager.SelectedCharacter.BrandManager.IncreaseRegionsExplored();
+            if (_discovered) return false;
             _discovered = true;
             SetSeen();
             foreach (Node neighbor in Neighbors())
@@ -239,6 +271,8 @@ namespace Game.Exploration.Regions
                 if (!region._seen)
                     region.SetSeen();
             }
+
+            return true;
         }
 
         public bool Discovered() => _discovered;
@@ -323,12 +357,6 @@ namespace Game.Exploration.Regions
         }
 
         private static int _currentId;
-
-        public Region() : base(Vector2.zero)
-        {
-            RegionID = _currentId;
-            ++_currentId;
-        }
 
         public bool Seen()
         {

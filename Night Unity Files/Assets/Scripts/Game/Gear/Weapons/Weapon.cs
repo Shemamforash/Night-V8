@@ -30,6 +30,24 @@ namespace Game.Gear.Weapons
             Name = quality + " " + WeaponAttributes.GetWeaponClass();
         }
 
+        public static Weapon LoadWeapon(XmlNode root)
+        {
+            XmlNode attributeNode = root.SelectSingleNode("Attributes");
+            string weaponClassString = attributeNode.GetNodeText("Class");
+            WeaponClass weaponClass = WeaponClass.StringToWeaponClass(weaponClassString);
+            ItemQuality weaponQuality = (ItemQuality) attributeNode.IntFromNode("Quality");
+            Weapon weapon = new Weapon(weaponClass, weaponQuality);
+            weapon.Load(root);
+            return weapon;
+        }
+
+        public override void Load(XmlNode root)
+        {
+            base.Load(root);
+            WeaponAttributes.Load(root);
+//            _inscription.Load(root);
+        }
+        
         public override XmlNode Save(XmlNode root)
         {
             root = base.Save(root);
@@ -53,7 +71,7 @@ namespace Game.Gear.Weapons
         {
             _inscription?.RemoveModifier(this);
             _inscription = inscription;
-            _inscription.ParentInventory?.DestroyItem(inscription);
+            _inscription.ParentInventory()?.DestroyItem(inscription);
             _inscription.ApplyModifier(this);
         }
 

@@ -25,8 +25,7 @@ namespace Game.Global
         private const int MinuteInterval = 60 / MinutesPerHour;
 
         private static int DaysSpentHere;
-        private static bool _started;
-        private static readonly CharacterManager _homeInventory = new CharacterManager();
+        private static CharacterManager _homeInventory;
         private static int _currentLevel = 1;
 
         private static float _currentTime;
@@ -38,10 +37,12 @@ namespace Game.Global
         public void Awake()
         {
             Cursor.visible = false;
+            UnPause();
         }
 
-        public void Load(XmlNode doc)
+        public static void Load(XmlNode doc)
         {
+            ResetWorld();
             XmlNode worldStateValues = doc.GetNode("WorldState");
             Seed = worldStateValues.IntFromNode("Seed");
             DaysSpentHere = worldStateValues.IntFromNode("DaysSpentHere");
@@ -50,9 +51,14 @@ namespace Game.Global
             Hours = worldStateValues.IntFromNode("Hours");
             Minutes = worldStateValues.IntFromNode("Minutes");
             _difficulty = worldStateValues.IntFromNode("Difficulty");
+            _homeInventory.Load(doc);
+            MapGenerator.Load(doc);
+            WeatherManager.Load(doc);
+            EnvironmentManager.Load(doc);
+            WorldEventManager.Load(doc);
         }
 
-        public static XmlNode Save(XmlNode doc)
+        public static void Save(XmlNode doc)
         {
             XmlNode worldStateValues = doc.CreateChild("WorldState");
             worldStateValues.CreateChild("Seed", Seed);
@@ -67,13 +73,12 @@ namespace Game.Global
             WeatherManager.Save(doc);
             EnvironmentManager.Save(doc);
             WorldEventManager.Save(doc);
-            return worldStateValues;
         }
-        
+
         public static void ResetWorld()
         {
+            _homeInventory = new CharacterManager();
             DaysSpentHere = 0;
-            _homeInventory.Reset();
             _currentLevel = 1;
             Days = 0;
             Hours = 6;
@@ -86,16 +91,14 @@ namespace Game.Global
             Random.InitState(Seed);
             EnvironmentManager.Reset();
             WeatherManager.Reset();
+            WorldEventManager.Reset();
         }
 
         public void Start()
         {
             _homeInventory.Start();
-            if (_started) return;
-            _started = true;
             EnvironmentManager.Start();
             WeatherManager.Start();
-            SaveController.LoadGame();
         }
 
         private void IncrementDaysSpentHere()
@@ -140,7 +143,7 @@ namespace Game.Global
         {
             ++_currentLevel;
             DaysSpentHere = 0;
-            EnvironmentManager.NextLevel();
+            EnvironmentManager.NextLevel(false);
             CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
             SceneChanger.ChangeScene("Game");
         }
