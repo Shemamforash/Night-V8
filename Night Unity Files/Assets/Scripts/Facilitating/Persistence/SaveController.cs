@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Xml;
 using Game.Global;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 using UnityEngine;
 
 namespace Facilitating.Persistence
@@ -52,32 +49,29 @@ namespace Facilitating.Persistence
             return newNode;
         }
 
-        public static XmlNode CreateChild<T>(this XmlNode parent, string tagName, T value)
+        public static void CreateChild<T>(this XmlNode parent, string tagName, T value)
         {
             XmlNode newNode = parent.CreateChild(tagName);
             newNode.InnerText = value == null ? "" : value.ToString();
-            return newNode;
+            return;
         }
 
         //Basic Load/Save Functions
-        private static bool Load(string fileLocation, string saveType)
+        private static void Load(string fileLocation, string saveType)
         {
-            if (!File.Exists(fileLocation)) return false;
+            if (!File.Exists(fileLocation)) return;
             _saveDoc = new XmlDocument();
             _saveDoc.Load(fileLocation);
             XmlNode root = _saveDoc.GetNode(saveType);
             WorldState.Load(root);
-            return true;
-
         }
 
-        private static bool Save(string fileLocation, string saveType)
+        private static void Save(string fileLocation, string saveType)
         {
             _saveDoc = new XmlDocument();
             XmlNode root = _saveDoc.CreateChild(saveType);
             WorldState.Save(root);
             _saveDoc.Save(fileLocation);
-            return true;
         }
     }
 }

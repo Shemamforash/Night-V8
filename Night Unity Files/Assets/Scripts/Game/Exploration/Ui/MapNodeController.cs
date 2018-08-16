@@ -48,9 +48,16 @@ namespace Game.Exploration.Ui
             _shadow = gameObject.FindChildWithName<SpriteRenderer>("Shadow");
         }
 
+        private void SetClaimParticlesActive(bool active)
+        {
+            ParticleSystem claimedParticles = gameObject.FindChildWithName<ParticleSystem>("Claimed");
+            if(active) claimedParticles.Play();
+        }
+        
         public void SetRegion(Region region)
         {
             _region = region;
+            SetClaimParticlesActive(region.ClaimRemaining > 0);
             _enduranceCost = RoutePlotter.RouteBetween(region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode()).Count - 1;
             if (region.GetRegionType() == RegionType.Gate) _enduranceCost = 0;
             for (int i = 0; i < region.Name.Length; ++i)
@@ -104,6 +111,7 @@ namespace Game.Exploration.Ui
                     _icon.sprite = _shrineSprite;
                     break;
                 default:
+                    Debug.Log(regionType);
                     throw new ArgumentOutOfRangeException();
             }
         }

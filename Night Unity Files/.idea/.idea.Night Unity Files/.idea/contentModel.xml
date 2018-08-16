@@ -225,6 +225,7 @@
             </e>
           </e>
         </e>
+        <e p="RadianceController.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
             <e p="Classes.xml" t="Include" />

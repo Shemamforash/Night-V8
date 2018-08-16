@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Game.Characters;
 using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 using UnityEngine;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -18,22 +18,24 @@ namespace Game.Exploration.Environment
 {
     public class MapGenerator : MonoBehaviour
     {
-        private const int MapWidth = 120;
-        private const int MinRadius = 6, MaxRadius = 9;
-        private static readonly List<Region> _regions = new List<Region>();
-        private static Region initialNode;
-        private static List<Region> route;
-        public static Transform MapTransform;
-        private float nextRouteTime = 0.3f;
-        private static readonly List<GameObject> _routeTrails = new List<GameObject>();
-        private readonly List<Tuple<Region, Region>> _allRoutes = new List<Tuple<Region, Region>>();
-        private readonly Queue<Tuple<Region, Region>> _undrawnRoutes = new Queue<Tuple<Region, Region>>();
-        private float currentTime;
-        private static bool _loaded;
-        private static readonly Dictionary<RegionType, List<string>> _regionNames = new Dictionary<RegionType, List<string>>();
+        private const int MapWidth = 120, MinRadius = 6, MaxRadius = 9;
         private const int WaterSourcesPerEnvironment = 30;
         private const int FoodSourcesPerEnvironment = 20;
         private const int ResourcesPerEnvironment = 30;
+
+        private static readonly Dictionary<RegionType, List<string>> _regionNames = new Dictionary<RegionType, List<string>>();
+        private static readonly List<GameObject> _routeTrails = new List<GameObject>();
+        private static readonly List<Region> _regions = new List<Region>();
+        private static List<Region> route;
+        private static Region initialNode;
+        public static Transform MapTransform;
+        private static bool _loaded;
+
+        private readonly List<Tuple<Region, Region>> _allRoutes = new List<Tuple<Region, Region>>();
+        private readonly Queue<Tuple<Region, Region>> _undrawnRoutes = new Queue<Tuple<Region, Region>>();
+        private float nextRouteTime = 0.3f;
+        private float currentTime;
+
 
         public static void Save(XmlNode doc)
         {
@@ -41,8 +43,15 @@ namespace Game.Exploration.Environment
             foreach (Region region in _regions) region.Save(regionNode);
         }
 
+        public static Region GetRegionById(int id)
+        {
+            return _regions.First(r => r.RegionID == id);
+        }
+
         public static void Load(XmlNode doc)
         {
+            Debug.Log(_regions.Count);
+            _regions.Clear();
             XmlNode regionsNode = doc.SelectSingleNode("Regions");
             foreach (XmlNode regionNode in regionsNode.SelectNodes("Region"))
             {
@@ -50,6 +59,8 @@ namespace Game.Exploration.Environment
                 if (region.GetRegionType() == RegionType.Gate) initialNode = region;
                 _regions.Add(region);
             }
+
+            _regions.ForEach(r => r.ConnectNeighbors());
         }
 
         public void Awake()
@@ -64,7 +75,7 @@ namespace Game.Exploration.Environment
 
         private void CreateRouteLinks()
         {
-            List<Region> _discovered = DiscoveredNodes();
+            List<Region> _discovered = DiscoveredRegions();
             foreach (Region from in _discovered)
             {
                 foreach (Region to in _discovered)
@@ -141,7 +152,6 @@ namespace Game.Exploration.Environment
 
         public static void Generate()
         {
-            Debug.Log("Generated");
             GenerateRegions();
             ConnectRegions();
             SetRegionTypes();
@@ -205,7 +215,7 @@ namespace Game.Exploration.Environment
         }
 
         private static readonly List<RegionType> _regionTypes = new List<RegionType>();
-        
+
         private static void GenerateNames()
         {
             LoadRegionNames();
@@ -272,6 +282,7 @@ namespace Game.Exploration.Environment
                 if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Nightmare || type == RegionType.Rite) continue;
                 _regionTypes.Add(type);
             }
+
             foreach (XmlNode regionTypeNode in root.ChildNodes)
             {
                 RegionType regionType = _regionTypes.Find(r => r.ToString() == regionTypeNode.Name);
@@ -515,12 +526,12 @@ namespace Game.Exploration.Environment
             DrawTargetRoute();
         }
 
-        public static List<Region> DiscoveredNodes()
+        public static List<Region> DiscoveredRegions()
         {
             return _regions.FindAll(n => n.Seen());
         }
 
-        public static void UpdateNodeColor()
+        private static void UpdateNodeColor()
         {
 //            foreach (Region n in storedNodes) n.UpdateColor();
         }

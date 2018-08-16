@@ -96,10 +96,12 @@ namespace Game.Exploration.Weather
             sunMain.startColor = new ParticleSystem.MinMaxGradient(new Color(1, 1, 1, maxBrightness), new Color(1, 1, 1, minBrightness));
         }
 
-        public static void SetWeather(Weather w)
+        public static void SetWeather(Weather w, bool instant)
         {
             _currentWeather = w;
-            if (_instance != null) _instance.ChangeWeather();
+            if (_instance == null) return;
+            if (instant) _instance.ChangeWeatherInstant();
+            else _instance.ChangeWeather();
         }
 
         private void ChangeWeather()

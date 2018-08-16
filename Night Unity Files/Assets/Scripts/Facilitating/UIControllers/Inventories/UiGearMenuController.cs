@@ -148,8 +148,7 @@ namespace Facilitating.UIControllers
 
         private static void OpenInventoryMenu(Player player, int tabNumber, UiGearMenuTemplate gearMenu)
         {
-            if (player.TravelAction.GetCurrentNode().GetRegionType() == RegionType.Gate) _currentInventory = WorldState.HomeInventory();
-            else _currentInventory = player.Inventory();
+            _currentInventory = player.TravelAction.AtHome() ? WorldState.HomeInventory() : player.Inventory();
             _menuListInteractable = false;
             _selectedItem = 0;
             _currentPlayer = player;
@@ -171,13 +170,9 @@ namespace Facilitating.UIControllers
         private static void TrySelectMenu(UiGearMenuTemplate gearMenu)
         {
             if (_currentInventoryMenu == gearMenu)
-            {
                 gearMenu.Show();
-            }
             else
-            {
                 gearMenu.Hide();
-            }
         }
 
         public static void ShowArmourMenu(Player player)

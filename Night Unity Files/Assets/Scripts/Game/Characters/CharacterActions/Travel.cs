@@ -35,7 +35,7 @@ namespace Game.Characters.CharacterActions
             };
         }
 
-        private bool AtHome()
+        public bool AtHome()
         {
             if (CurrentRegion == null) return true;
             return CurrentRegion.GetRegionType() == RegionType.Gate;
@@ -145,6 +145,16 @@ namespace Game.Characters.CharacterActions
             _inTransit = true;
             _target = target;
             SetDuration(enduranceCost * MinutesPerEndurancePoint);
+        }
+
+        public void ClaimRegion()
+        {
+            CurrentRegion.ClaimRemaining = 2 * 24 * WorldState.MinutesPerHour;
+        }
+
+        public bool InClaimedRegion()
+        {
+            return CurrentRegion.ClaimRemaining > 0;
         }
     }
 }

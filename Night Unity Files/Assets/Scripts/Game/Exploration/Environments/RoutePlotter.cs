@@ -17,7 +17,7 @@ namespace Game.Exploration.Environment
         private static Dictionary<Region, Vertex> GenerateVertices()
         {
             Dictionary<Region, Vertex> vertices = new Dictionary<Region, Vertex>();
-            foreach (Region node in MapGenerator.DiscoveredNodes())
+            foreach (Region node in MapGenerator.DiscoveredRegions())
             {
                 Vertex v = new Vertex {node = node};
                 vertices[node] = v;

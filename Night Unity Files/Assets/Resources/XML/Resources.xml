@@ -358,4 +358,13 @@
         <DefilesDropRate>0</DefilesDropRate>
         <WastelandDropRate>0</WastelandDropRate>
     </Resource>
+    <Resource>
+        <Name>Radiance</Name>
+        <Type>Resource</Type>
+        <OasisDropRate>0</OasisDropRate>
+        <SteppeDropRate>0</SteppeDropRate>
+        <RuinsDropRate>0</RuinsDropRate>
+        <DefilesDropRate>0</DefilesDropRate>
+        <WastelandDropRate>0</WastelandDropRate>
+    </Resource>
 </Resources>

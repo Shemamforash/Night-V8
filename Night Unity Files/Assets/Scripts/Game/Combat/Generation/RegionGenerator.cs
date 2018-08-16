@@ -56,11 +56,12 @@ namespace Game.Combat.Generation
 
         private void GenerateFreshEnvironment()
         {
-            if (_region.Visited()) return;
+            if (_region.Generated()) return;
             _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f));
             Generate();
             _region.Barriers = barriers;
             PathingGrid.InitialiseGrid();
+            _region.MarkGenerated();
         }
 
         protected void PlaceEchoes()
@@ -80,7 +81,7 @@ namespace Game.Combat.Generation
             foreach (Characters.Player c in characters)
             {
                 if (!c.HasAvailableStoryLine()) continue;
-                Vector2 echoPosition = Helper.RandomElement(_region.EchoPositions);
+                Vector2 echoPosition = _region.EchoPositions.RandomElement();
                 EchoBehaviour.Create(echoPosition, c);
                 break;
             }

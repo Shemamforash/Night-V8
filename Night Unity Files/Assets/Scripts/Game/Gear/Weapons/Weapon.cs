@@ -7,6 +7,7 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
+using UnityEngine;
 
 namespace Game.Gear.Weapons
 {
@@ -32,10 +33,9 @@ namespace Game.Gear.Weapons
 
         public static Weapon LoadWeapon(XmlNode root)
         {
-            XmlNode attributeNode = root.SelectSingleNode("Attributes");
-            string weaponClassString = attributeNode.GetNodeText("Class");
-            WeaponClass weaponClass = WeaponClass.StringToWeaponClass(weaponClassString);
-            ItemQuality weaponQuality = (ItemQuality) attributeNode.IntFromNode("Quality");
+            int weaponClassInt = root.IntFromNode("Class");
+            WeaponClass weaponClass = WeaponClass.IntToWeaponClass(weaponClassInt);
+            ItemQuality weaponQuality = (ItemQuality) root.IntFromNode("Quality");
             Weapon weapon = new Weapon(weaponClass, weaponQuality);
             weapon.Load(root);
             return weapon;

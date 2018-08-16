@@ -37,7 +37,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             return _contents.FirstOrDefault(i => i.ID() == id);
         }
-        
+
         public static AttributeType StringToAttributeType(string attributeString)
         {
             if (_attributeTypes == null)
@@ -95,21 +95,20 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             XmlNode inventoryNode = root.GetNode("Inventory");
             base.Load(inventoryNode);
-            XmlNode resourceNode = root.SelectSingleNode("Resources");
+            XmlNode resourceNode = inventoryNode.SelectSingleNode("Resources");
             InventoryResources().ForEach(r => LoadResource(r.Name, resourceNode));
-            XmlNode itemNode = root.CreateChild("Items");
-            foreach (XmlNode weaponNode in itemNode.SelectNodes("Weapons"))
+            XmlNode itemNode = inventoryNode.SelectSingleNode("Items");
+            foreach (XmlNode weaponNode in itemNode.SelectSingleNode("Weapons").ChildNodes)
                 AddItem(Weapon.LoadWeapon(weaponNode));
-            foreach (XmlNode armourNode in itemNode.SelectNodes("ArmourPlates"))
+            foreach (XmlNode armourNode in itemNode.SelectSingleNode("ArmourPlates").ChildNodes)
                 AddItem(ArmourPlate.LoadArmour(armourNode));
-            foreach (XmlNode accessoryNode in itemNode.SelectNodes("Accessories"))
+            foreach (XmlNode accessoryNode in itemNode.SelectSingleNode("Accessories").ChildNodes)
                 AddItem(Accessory.LoadAccessory(accessoryNode));
-            foreach (XmlNode inscriptionNode in itemNode.SelectNodes("Inscriptions"))
+            foreach (XmlNode inscriptionNode in itemNode.SelectSingleNode("Inscriptions").ChildNodes)
                 AddItem(Inscription.LoadInscription(inscriptionNode));
 //            foreach (XmlNode consumableNode in itemNode.SelectNodes("Consumables"))
 //                AddResource(Consumable.LoadConsumable(consumableNode));
         }
-
 
         public virtual XmlNode Save(XmlNode root)
         {
@@ -125,7 +124,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return root;
         }
 
-        private void SaveItems<T>(XmlNode root, string itemType, List<T> items) where T : MyGameObject
+        private static void SaveItems<T>(XmlNode root, string itemType, List<T> items) where T : MyGameObject
         {
             root = root.CreateChild(itemType);
             items.ForEach(i => i.Save(root));
@@ -273,6 +272,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         private void LoadResource(string type, XmlNode root)
         {
+            Debug.Log(type + " " + root.IntFromNode(type));
             IncrementResource(type, root.IntFromNode(type));
         }
 

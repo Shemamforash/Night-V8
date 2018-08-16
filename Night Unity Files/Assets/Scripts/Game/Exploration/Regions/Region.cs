@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
@@ -7,7 +8,9 @@ using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Exploration.Environment;
 using Game.Exploration.Ui;
+using Game.Exploration.WorldEvents;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
 using UnityEngine;
@@ -20,8 +23,7 @@ namespace Game.Exploration.Regions
         public string Name;
         private readonly List<Enemy> _enemies = new List<Enemy>();
         private RegionType _regionType;
-        private bool _discovered;
-        private bool _seen;
+        private bool _discovered, _seen, _generated;
         public List<Barrier> Barriers = new List<Barrier>();
         public readonly List<EnemyCampfire> Fires = new List<EnemyCampfire>();
         public readonly List<ContainerController> Containers = new List<ContainerController>();
@@ -35,7 +37,8 @@ namespace Game.Exploration.Regions
         public Vector2? EssenceShrinePosition = null;
         public Player _characterHere;
         public Vector2 CharacterPosition;
-        private List<int> _neighborIds = new List<int>();
+        private readonly List<int> _neighborIds = new List<int>();
+        public int ClaimRemaining;
 
         public Region() : base(Vector2.zero)
         {
@@ -43,12 +46,63 @@ namespace Game.Exploration.Regions
             ++_currentId;
         }
 
-        public bool Visited()
+        public void Update()
+        {
+            if (ClaimRemaining == 0) return;
+            --ClaimRemaining;
+            if (ClaimRemaining == 0)
+            {
+                WorldEventManager.GenerateEvent(new WorldEvent(Name + " has been lost to the darkness"));
+                if (_regionType == RegionType.Animal) GenerateAnimalEncounter();
+                else GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
+            }
+
+            if (ClaimRemaining % 24 != 0) return;
+            switch (_regionType)
+            {
+                case RegionType.Shelter:
+                    WorldState.HomeInventory().IncrementResource(ResourceTemplate.GetResource().Name, 1);
+                    break;
+                case RegionType.Temple:
+                    WorldState.HomeInventory().IncrementResource("Essence", 5);
+                    break;
+                case RegionType.Animal:
+                    WorldState.HomeInventory().IncrementResource("Meat", 2);
+                    break;
+                case RegionType.Danger:
+                    WorldState.HomeInventory().IncrementResource("Water", 1);
+                    WorldState.HomeInventory().IncrementResource("Meat", 1);
+                    break;
+                case RegionType.Fountain:
+                    WorldState.HomeInventory().IncrementResource("Water", 2);
+                    break;
+                case RegionType.Monument:
+                    WorldState.HomeInventory().IncrementResource(ResourceTemplate.GetResource().Name, 1);
+                    break;
+                case RegionType.Rite:
+                    WorldState.HomeInventory().IncrementResource(ResourceTemplate.GetResource().Name, 1);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public bool Generated()
+        {
+            return _generated;
+        }
+
+        public void MarkGenerated()
+        {
+            _generated = true;
+        }
+
+        private bool Visited()
         {
             return _lastVisitDay != -1;
         }
 
-        public string TimeSinceLastVisit()
+        private string TimeSinceLastVisit()
         {
             if (!Visited()) return "Unexplored";
             return "Visited " + (WorldState.Days - _lastVisitDay) + " days ago.";
@@ -94,10 +148,10 @@ namespace Game.Exploration.Regions
                 region._neighborIds.Add(n.IntFromNode("ID"));
             }
 
+            region._regionType = (RegionType) doc.IntFromNode("Type");
             region._discovered = doc.BoolFromNode("Discovered");
             region._seen = doc.BoolFromNode("Seen");
             region._lastVisitDay = doc.IntFromNode("LastVisited");
-            region.ShrinePosition = doc.GetNodeText("ShrinePosition").ToVector2();
             region.WaterSourceCount = doc.IntFromNode("WaterSourceCount");
             region.FoodSourceCount = doc.IntFromNode("FoodSourceCount");
             region.ResourceSourceCount = doc.IntFromNode("ResourceSourceCount");
@@ -108,10 +162,11 @@ namespace Game.Exploration.Regions
                 Enemy enemy = new Enemy(EnemyTemplate.GetEnemyTemplate(enemyType));
                 region._enemies.Add(enemy);
             }
+
             return region;
         }
 
-        public XmlNode Save(XmlNode doc)
+        public void Save(XmlNode doc)
         {
             XmlNode regionNode = doc.CreateChild("Region");
             regionNode.CreateChild("Name", Name);
@@ -123,17 +178,15 @@ namespace Game.Exploration.Regions
                 neighborNode.CreateChild("ID", ((Region) n).RegionID);
             }
 
-            regionNode.CreateChild("Type", _regionType.ToString());
+            regionNode.CreateChild("Type", (int) _regionType);
             regionNode.CreateChild("Discovered", _discovered);
             regionNode.CreateChild("Seen", _seen);
             regionNode.CreateChild("LastVisited", _lastVisitDay);
-            regionNode.CreateChild("ShrinePosition", ShrinePosition.ToString());
             regionNode.CreateChild("WaterSourceCount", WaterSourceCount);
             regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
             regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);
             XmlNode enemyNode = regionNode.CreateChild("Enemies");
             _enemies.ForEach(e => e.Save(enemyNode));
-            return regionNode;
         }
 
         private MapNodeController _mapNode;
@@ -361,6 +414,11 @@ namespace Game.Exploration.Regions
         public bool Seen()
         {
             return _seen;
+        }
+
+        public void ConnectNeighbors()
+        {
+            _neighborIds.ForEach(i => AddNeighbor(MapGenerator.GetRegionById(i)));
         }
     }
 }

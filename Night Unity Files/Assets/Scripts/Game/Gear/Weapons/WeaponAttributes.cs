@@ -43,9 +43,9 @@ namespace Game.Gear.Weapons
 
         public override XmlNode Save(XmlNode root)
         {
-            root = base.Save(root);
             root.CreateChild("Class", (int)WeaponClassType);
             root.CreateChild("Durability", _durability.CurrentValue());
+            root = base.Save(root);
             return root;
         }
 
@@ -109,7 +109,7 @@ namespace Game.Gear.Weapons
         public void DecreaseDurability(float modifier)
         {
             float durabilityLoss = Val(AttributeType.Damage) * Val(AttributeType.Pellets) / Val(AttributeType.ReloadSpeed);
-            durabilityLoss /= 200f;
+            durabilityLoss /= 1000f;
             durabilityLoss += durabilityLoss * modifier;
             _durability.Decrement(durabilityLoss);
             RecalculateAttributeValues();

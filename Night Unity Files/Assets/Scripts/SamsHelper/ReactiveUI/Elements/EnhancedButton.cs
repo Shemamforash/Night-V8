@@ -88,7 +88,8 @@ namespace SamsHelper.ReactiveUI.Elements
 
         public Button Button()
         {
-            return _button == null ? GetComponent<Button>() : _button;
+            if (_button == null) _button = GetComponent<Button>();
+            return _button;
         }
 
         public void Awake()

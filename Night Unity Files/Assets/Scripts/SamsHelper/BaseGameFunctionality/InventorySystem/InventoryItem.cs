@@ -49,6 +49,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public override void Load(XmlNode root)
         {
+            base.Load(root);
             _quantity.SetCurrentValue(root.FloatFromNode("Quantity"));
             _stackable = root.BoolFromNode("Stackable");
             string templateString = root.GetNodeText("Template");

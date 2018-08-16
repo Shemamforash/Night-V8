@@ -35,9 +35,9 @@ public class UICraftingController : UiGearMenuTemplate
             gearUi.SetTypeText(productString);
             gearUi.SetNameText("");
             string ingredient1String = recipe.Ingredient1Quantity > 1 ? recipe.Ingredient1 + " x" + recipe.Ingredient1Quantity : recipe.Ingredient1;
-            if (recipe.Ingredient1 == "") ingredient1String = "";
+            if (recipe.Ingredient1 == "None") ingredient1String = "";
             string ingredient2String = recipe.Ingredient2Quantity > 1 ? recipe.Ingredient2 + " x" + recipe.Ingredient2Quantity : recipe.Ingredient2;
-            if (recipe.Ingredient2 == "") ingredient2String = "";
+            if (recipe.Ingredient2 == "None") ingredient2String = "";
             gearUi.SetDpsText(ingredient1String + " " + ingredient2String);
             return;
         }
@@ -50,7 +50,7 @@ public class UICraftingController : UiGearMenuTemplate
     public override void Show()
     {
         base.Show();
-        GetGearButton().Select();
+        MenuStateMachine.SelectInactiveButton(GetGearButton());
         DisplayBuildings();
     }
 

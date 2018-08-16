@@ -11,6 +11,22 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1404617889475876}
   m_IsPrefabParent: 1
+--- !u!1 &1008142233126300
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4909916210080328}
+  - component: {fileID: 114261845215007244}
+  m_Layer: 17
+  m_Name: Radiance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1125094212964784
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,6 +286,7 @@ Transform:
   - {fileID: 4156733745685740}
   - {fileID: 4772645390367984}
   - {fileID: 4599853456509430}
+  - {fileID: 4909916210080328}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -421,6 +438,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4222461071829304}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4909916210080328
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1008142233126300}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4222461071829304}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &20808148812765634
 Camera:
@@ -1016,6 +1046,17 @@ MonoBehaviour:
   SpoolUpClip: {fileID: 8300000, guid: 6b8c889aa01191046853b9d7f9458f5e, type: 3}
   SpoolDownClip: {fileID: 8300000, guid: e4d0163d7218a344b95a79cec4af4335, type: 3}
   SpoolClip: {fileID: 8300000, guid: a03333f2da0f9394d92f668f579ddf27, type: 3}
+--- !u!114 &114261845215007244
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1008142233126300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26d62e684eb0b294ca37a4ad74bddb23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114265035217971404
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1062,7 +1103,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponAudio: {fileID: 0}
   MovementController: {fileID: 0}
-  IsDead: 0
   Shield: {fileID: 0}
   _playerLight: {fileID: 0}
   MuzzleFlashOpacity: 0

@@ -384,7 +384,7 @@ namespace Game.Characters
             public void Load(XmlNode doc)
             {
                 _counter = doc.IntFromNode("Progress");
-                Status = StringToBrandStatus(doc.GetNodeText("Status"));
+                Status = (BrandStatus)doc.IntFromNode("Status");
             }
 
             public XmlNode Save(XmlNode doc)
@@ -392,7 +392,7 @@ namespace Game.Characters
                 doc = doc.CreateChild("Brand");
                 doc.CreateChild("Name", _riteName);
                 doc.CreateChild("Progress", _counter);
-                doc.CreateChild("Status", Status.ToString());
+                doc.CreateChild("Status", (int)Status);
                 return doc;
             }
         }

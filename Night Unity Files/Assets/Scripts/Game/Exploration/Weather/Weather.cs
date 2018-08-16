@@ -41,7 +41,7 @@ namespace Game.Exploration.Weather
             base.Enter();
             WorldView.SetWeatherText(_displayName);
             _timeRemaining = _duration * WorldState.MinutesPerHour;
-            WeatherSystemController.SetWeather(this);
+            WeatherSystemController.SetWeather(this, false);
         }
 
         public int Temperature()
@@ -60,7 +60,7 @@ namespace Game.Exploration.Weather
         private void UpdateEnvironmentResources()
         {
             //todo me
-            List<Region> discoveredRegions = MapGenerator.DiscoveredNodes();
+            List<Region> discoveredRegions = MapGenerator.DiscoveredRegions();
             float waterChance = Mathf.Abs(_water);
             float foodChance = Mathf.Abs(_food);
             discoveredRegions.ForEach(r =>
@@ -75,6 +75,12 @@ namespace Game.Exploration.Weather
             doc = base.Save(doc);
             doc.CreateChild("TimeRemaining", _timeRemaining);
             return doc;
+        }
+
+        public void SetTimeRemaining(int timeRemaining)
+        {
+            _timeRemaining = timeRemaining;
+            WeatherSystemController.SetWeather(this, true);
         }
     }
 }

@@ -8,6 +8,7 @@ using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Combat.Ui;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
@@ -88,7 +89,7 @@ namespace Game.Combat.Generation
         {
             _currentRegion = region;
         }
-        
+
         private void EnterCombat()
         {
             _inCombat = true;
@@ -103,7 +104,8 @@ namespace Game.Combat.Generation
             else if (_currentRegion.GetRegionType() == RegionType.Nightmare)
             {
                 worldObject.AddComponent<Nightmare>().Initialise(_currentRegion);
-            } else if (_currentRegion.GetRegionType() == RegionType.Rite)
+            }
+            else if (_currentRegion.GetRegionType() == RegionType.Rite)
             {
                 worldObject.AddComponent<Rite>().Initialise(_currentRegion);
             }
@@ -217,6 +219,7 @@ namespace Game.Combat.Generation
                 Debug.Log("Don't try and exit combat twice!");
                 return;
             }
+
             BrandManager brandManager = PlayerCombat.Instance.Player.BrandManager;
             if (Enemies().Count == 0)
             {
@@ -285,6 +288,8 @@ namespace Game.Combat.Generation
         public static void Remove(EnemyBehaviour enemy)
         {
             Instance()._enemies.Remove(enemy);
+            if (Instance()._enemies.Count != 0) return;
+            RadianceController.Activate();
         }
 
         private void AddEnemy(EnemyBehaviour e)

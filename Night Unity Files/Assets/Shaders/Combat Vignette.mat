@@ -85,7 +85,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _Val: 2.100364
-    - _ViewDistance: 10
+    - _ViewDistance: 5
     - _Width: 0.25
     - _ZWrite: 1
     - __dirty: 0

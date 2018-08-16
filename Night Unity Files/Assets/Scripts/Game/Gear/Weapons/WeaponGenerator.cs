@@ -14,7 +14,7 @@ namespace Game.Gear.Weapons
         public static Weapon GenerateWeapon(ItemQuality quality, WeaponType type)
         {
             LoadBaseWeapons();
-            return Weapon.Generate(quality, Helper.RandomElement(WeaponClasses[type]));
+            return Weapon.Generate(quality, WeaponClasses[type].RandomElement());
         }
         
         public static Weapon GenerateWeapon(ItemQuality quality)

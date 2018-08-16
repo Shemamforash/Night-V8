@@ -25,9 +25,10 @@ namespace Game.Characters
         public CharacterManager() : base("Vehicle")
         {
             Reset();
+            AddCharacter(GenerateDriver());
         }
 
-        private void Reset(bool addDefault = true)
+        private static void Reset()
         {
             SelectedCharacter = null;
             if (Characters.Count > 0)
@@ -39,13 +40,11 @@ namespace Game.Characters
             }
 
             _buildings.Clear();
-            if (!addDefault) return;
-            AddCharacter(GenerateDriver());
         }
 
         public override void Load(XmlNode doc)
         {
-            Reset(false);
+            Reset();
             base.Load(doc);
             XmlNode characterManagerNode = doc.GetNode("Inventory");
             foreach (XmlNode characterNode in Helper.GetNodesWithName(characterManagerNode, "Character"))
@@ -80,6 +79,8 @@ namespace Game.Characters
 
             Characters[0].CharacterView.SelectInitial();
             Characters.ForEach(c => c.CharacterView.RefreshNavigation());
+            IncrementResource("Salt", 20);
+            Debug.Log(GetResourceQuantity("Salt"));
         }
 
         public static void AddCharacter(Player playerCharacter)

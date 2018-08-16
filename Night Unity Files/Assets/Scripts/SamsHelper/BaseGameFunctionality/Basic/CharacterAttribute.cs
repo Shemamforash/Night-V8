@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
@@ -73,6 +74,11 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
         public void RemoveModifier(AttributeModifier modifier)
         {
+            if (AttributeType == AttributeType.Damage)
+            {
+                Debug.Log(modifier.FinalBonus());
+            }
+
             _modifiers.Remove(modifier);
             modifier.TargetAttributes.Remove(this);
             Recalculate();
@@ -85,7 +91,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
         public void Save(XmlNode doc)
         {
-            doc.CreateChild("Value", CurrentValue());
+            doc.CreateChild("Value", base.CurrentValue());
             doc.CreateChild("Min", Min);
             doc.CreateChild("Max", Max);
         }

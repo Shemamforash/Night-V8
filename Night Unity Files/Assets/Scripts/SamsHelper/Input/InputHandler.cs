@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Facilitating.Persistence;
 using Game.Combat.Generation.Shrines;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -99,6 +100,11 @@ namespace SamsHelper.Input
             ListenersToRemove.Add(inputListener);
         }
 
+        public void OnApplicationQuit()
+        {
+            SaveController.SaveGame();
+        }
+        
         private class InputPress
         {
             private readonly InputAxis _axis;

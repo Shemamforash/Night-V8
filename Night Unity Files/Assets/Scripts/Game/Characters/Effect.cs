@@ -41,13 +41,13 @@ namespace Game.Characters
         {
             doc = doc.CreateChild("Effect");
             doc.CreateChild("Duration", Duration);
-            doc.CreateChild("Target", _target.AttributeType);
+            doc.CreateChild("Target", (int)_target.AttributeType);
             _modifier.Save(doc);
         }
 
         public static void Load(Player player, XmlNode effectNode)
         {
-            AttributeType targetAttributeType = CharacterAttributes.StringToAttributeType(effectNode.GetNodeText("Target"));
+            AttributeType targetAttributeType = (AttributeType)effectNode.IntFromNode("Target");
             CharacterAttribute target = player.Attributes.Get(targetAttributeType);
             AttributeModifier modifier = AttributeModifier.Load(effectNode);
             float duration = effectNode.IntFromNode("Duration");

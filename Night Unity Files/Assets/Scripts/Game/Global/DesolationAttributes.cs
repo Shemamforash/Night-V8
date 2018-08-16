@@ -11,7 +11,7 @@ namespace Game.Global
     public class DesolationAttributes : IPersistenceTemplate
     {
         private readonly Dictionary<AttributeType, CharacterAttribute> _attributes = new Dictionary<AttributeType, CharacterAttribute>();
-        
+
         private void AddAttribute(AttributeType attributeType)
         {
             _attributes.Add(attributeType, new CharacterAttribute(attributeType));
@@ -22,7 +22,7 @@ namespace Game.Global
             CharacterAttribute attribute = Get(type);
             attribute.SetCurrentValue(value);
         }
-        
+
         public CharacterAttribute Get(AttributeType attributeType)
         {
             if (_attributes.ContainsKey(attributeType)) return _attributes[attributeType];
@@ -64,14 +64,13 @@ namespace Game.Global
         {
             Get(attributeType).RemoveModifier(modifier);
         }
-        
+
         public virtual void Load(XmlNode doc)
         {
             XmlNode attributesNode = doc.SelectSingleNode("Attributes");
             foreach (XmlNode attributeNode in attributesNode.SelectNodes("Attribute"))
             {
-                string attributeTypeString = attributeNode.GetNodeText("AttributeType");
-                AttributeType attributeType = CharacterAttributes.StringToAttributeType(attributeTypeString);
+                AttributeType attributeType = (AttributeType) attributeNode.IntFromNode("AttributeType");
                 Get(attributeType).Load(attributeNode);
             }
         }
@@ -82,7 +81,7 @@ namespace Game.Global
             foreach (KeyValuePair<AttributeType, CharacterAttribute> attribute in _attributes)
             {
                 XmlNode attributeNode = doc.CreateChild("Attribute");
-                attributeNode.CreateChild("AttributeType", attribute.Key.ToString());
+                attributeNode.CreateChild("AttributeType", (int) attribute.Key);
                 attribute.Value.Save(attributeNode);
             }
 

@@ -4,15 +4,18 @@
     <DaysSpentHere>0</DaysSpentHere>
     <CurrentLevel>1</CurrentLevel>
     <Days>0</Days>
-    <Hours>7</Hours>
-    <Minutes>10</Minutes>
+    <Hours>16</Hours>
+    <Minutes>50</Minutes>
     <Difficulty>0</Difficulty>
   </WorldState>
   <Inventory>
     <Id>6</Id>
     <Name>Vehicle</Name>
     <ParentInventory>-1</ParentInventory>
-    <Resources />
+    <Resources>
+      <Salt>30</Salt>
+      <Radiance>1</Radiance>
+    </Resources>
     <Items>
       <Weapons />
       <ArmourPlates />
@@ -21,17 +24,96 @@
       <Consumables />
     </Items>
     <Character>
-      <Id>33</Id>
+      <Id>7</Id>
       <Name>The Wanderer</Name>
       <ParentInventory>-1</ParentInventory>
-      <EquippedItems />
+      <EquippedItems>
+        <Weapon>16</Weapon>
+      </EquippedItems>
       <Inventory>
         <Id>8</Id>
         <Name>The Wanderer</Name>
         <ParentInventory>-1</ParentInventory>
-        <Resources />
+        <Resources>
+          <Salt>7</Salt>
+        </Resources>
         <Items>
-          <Weapons />
+          <Weapons>
+            <Gear>
+              <Id>16</Id>
+              <Name>Worn Gripshaker</Name>
+              <ParentInventory>8</ParentInventory>
+              <Quantity>1</Quantity>
+              <Stackable>False</Stackable>
+              <Template>
+              </Template>
+              <Quality>1</Quality>
+              <Class>10</Class>
+              <Durability>8.714881</Durability>
+              <Attributes>
+                <Attribute>
+                  <AttributeType>19</AttributeType>
+                  <Value>9</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>21</AttributeType>
+                  <Value>8</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>22</AttributeType>
+                  <Value>1.25</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>20</AttributeType>
+                  <Value>0.3</Value>
+                  <Min>0</Min>
+                  <Max>1</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>23</AttributeType>
+                  <Value>95</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>25</AttributeType>
+                  <Value>20</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>24</AttributeType>
+                  <Value>1</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>27</AttributeType>
+                  <Value>0</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>28</AttributeType>
+                  <Value>0</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>26</AttributeType>
+                  <Value>0</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+              </Attributes>
+            </Gear>
+          </Weapons>
           <ArmourPlates />
           <Accessories />
           <Inscriptions />
@@ -40,68 +122,86 @@
       </Inventory>
       <Attributes>
         <Attribute>
-          <AttributeType>EssenceLossBonus</AttributeType>
+          <AttributeType>9</AttributeType>
           <Value>1</Value>
           <Min>0</Min>
           <Max>3.402823E+38</Max>
         </Attribute>
         <Attribute>
-          <AttributeType>SkillRechargeBonus</AttributeType>
+          <AttributeType>16</AttributeType>
           <Value>1</Value>
           <Min>0</Min>
           <Max>3.402823E+38</Max>
         </Attribute>
         <Attribute>
-          <AttributeType>AdrenalineRechargeBonus</AttributeType>
+          <AttributeType>17</AttributeType>
           <Value>1</Value>
           <Min>0</Min>
           <Max>3.402823E+38</Max>
         </Attribute>
         <Attribute>
-          <AttributeType>Hunger</AttributeType>
-          <Value>0.3819445</Value>
+          <AttributeType>5</AttributeType>
+          <Value>2.826389</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
-          <AttributeType>Thirst</AttributeType>
-          <Value>0.7916667</Value>
+          <AttributeType>4</AttributeType>
+          <Value>8.79168</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
-          <AttributeType>Endurance</AttributeType>
-          <Value>10</Value>
+          <AttributeType>1</AttributeType>
+          <Value>9</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
-          <AttributeType>Strength</AttributeType>
+          <AttributeType>0</AttributeType>
           <Value>4</Value>
           <Min>0</Min>
           <Max>4</Max>
         </Attribute>
         <Attribute>
-          <AttributeType>Perception</AttributeType>
+          <AttributeType>2</AttributeType>
           <Value>4</Value>
           <Min>0</Min>
           <Max>4</Max>
         </Attribute>
         <Attribute>
-          <AttributeType>Willpower</AttributeType>
+          <AttributeType>3</AttributeType>
           <Value>4</Value>
           <Min>0</Min>
           <Max>4</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>29</AttributeType>
+          <Value>0</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>8</AttributeType>
+          <Value>0</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>13</AttributeType>
+          <Value>0</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
         </Attribute>
       </Attributes>
       <Brands />
       <StoryUnlocked>False</StoryUnlocked>
       <StoryProgress>1</StoryProgress>
-      <TimeAlive>14</TimeAlive>
+      <TimeAlive>130</TimeAlive>
       <CharacterClass>Wanderer</CharacterClass>
       <PlayerAction>
-        <Id>35</Id>
-        <Name>Rest</Name>
+        <Id>10</Id>
+        <Name>Travel</Name>
         <ParentInventory>-1</ParentInventory>
       </PlayerAction>
     </Character>
@@ -116,11 +216,10 @@
         <ID>2</ID>
         <ID>3</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>0</FoodSourceCount>
       <ResourceSourceCount>2</ResourceSourceCount>
@@ -133,11 +232,10 @@
       <Neighbors>
         <ID>9</ID>
       </Neighbors>
-      <Type>Shrine</Type>
+      <Type>7</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>2</ResourceSourceCount>
@@ -152,11 +250,10 @@
         <ID>13</ID>
         <ID>4</ID>
       </Neighbors>
-      <Type>Monument</Type>
+      <Type>8</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>2</ResourceSourceCount>
@@ -170,11 +267,10 @@
         <ID>14</ID>
         <ID>1</ID>
       </Neighbors>
-      <Type>Fountain</Type>
+      <Type>6</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>2</ResourceSourceCount>
@@ -189,11 +285,10 @@
         <ID>11</ID>
         <ID>1</ID>
       </Neighbors>
-      <Type>Gate</Type>
+      <Type>2</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>2</ResourceSourceCount>
@@ -207,11 +302,10 @@
         <ID>10</ID>
         <ID>3</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>0</WaterSourceCount>
       <FoodSourceCount>0</FoodSourceCount>
       <ResourceSourceCount>2</ResourceSourceCount>
@@ -226,11 +320,10 @@
         <ID>0</ID>
         <ID>5</ID>
       </Neighbors>
-      <Type>Shrine</Type>
+      <Type>7</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>2</ResourceSourceCount>
@@ -243,11 +336,10 @@
       <Neighbors>
         <ID>5</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>2</ResourceSourceCount>
@@ -262,11 +354,10 @@
         <ID>15</ID>
         <ID>7</ID>
       </Neighbors>
-      <Type>Fountain</Type>
+      <Type>6</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -279,11 +370,10 @@
       <Neighbors>
         <ID>14</ID>
       </Neighbors>
-      <Type>Animal</Type>
+      <Type>4</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -296,11 +386,10 @@
       <Neighbors>
         <ID>11</ID>
       </Neighbors>
-      <Type>Animal</Type>
+      <Type>4</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>0</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -313,11 +402,10 @@
       <Neighbors>
         <ID>10</ID>
       </Neighbors>
-      <Type>Temple</Type>
+      <Type>3</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -331,15 +419,373 @@
         <ID>18</ID>
         <ID>0</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
+      <LastVisited>0</LastVisited>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
+      <Enemies>
+        <Character>
+          <Id>59</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems>
+            <Weapon>61</Weapon>
+          </EquippedItems>
+          <Inventory>
+            <Id>60</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons>
+                <Gear>
+                  <Id>61</Id>
+                  <Name>Rusted Shortshooter</Name>
+                  <ParentInventory>60</ParentInventory>
+                  <Quantity>1</Quantity>
+                  <Stackable>False</Stackable>
+                  <Template>
+                  </Template>
+                  <Quality>0</Quality>
+                  <Class>1</Class>
+                  <Durability>9.944044</Durability>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeType>19</AttributeType>
+                      <Value>7</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>21</AttributeType>
+                      <Value>4</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>22</AttributeType>
+                      <Value>0.5</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>20</AttributeType>
+                      <Value>0.5</Value>
+                      <Min>0</Min>
+                      <Max>1</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>23</AttributeType>
+                      <Value>80</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>25</AttributeType>
+                      <Value>12</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>24</AttributeType>
+                      <Value>1</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>27</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>28</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>26</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                  </Attributes>
+                </Gear>
+              </Weapons>
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Sentinel</EnemyType>
+        </Character>
+        <Character>
+          <Id>62</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems>
+            <Weapon>65</Weapon>
+            <ArmourPlate1>64</ArmourPlate1>
+          </EquippedItems>
+          <Inventory>
+            <Id>63</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons>
+                <Gear>
+                  <Id>65</Id>
+                  <Name>Rusted Annihilator</Name>
+                  <ParentInventory>63</ParentInventory>
+                  <Quantity>1</Quantity>
+                  <Stackable>False</Stackable>
+                  <Template>
+                  </Template>
+                  <Quality>0</Quality>
+                  <Class>14</Class>
+                  <Durability>9.842277</Durability>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeType>19</AttributeType>
+                      <Value>12</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>21</AttributeType>
+                      <Value>7</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>22</AttributeType>
+                      <Value>5</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>20</AttributeType>
+                      <Value>0.4</Value>
+                      <Min>0</Min>
+                      <Max>1</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>23</AttributeType>
+                      <Value>90</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>25</AttributeType>
+                      <Value>50</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>24</AttributeType>
+                      <Value>1</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>27</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>28</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>26</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                  </Attributes>
+                </Gear>
+              </Weapons>
+              <ArmourPlates>
+                <Health>86</Health>
+              </ArmourPlates>
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Sentinel</EnemyType>
+        </Character>
+        <Character>
+          <Id>66</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems>
+            <Weapon>68</Weapon>
+          </EquippedItems>
+          <Inventory>
+            <Id>67</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons>
+                <Gear>
+                  <Id>68</Id>
+                  <Name>Rusted Deepdriver</Name>
+                  <ParentInventory>67</ParentInventory>
+                  <Quantity>1</Quantity>
+                  <Stackable>False</Stackable>
+                  <Template>
+                  </Template>
+                  <Quality>0</Quality>
+                  <Class>2</Class>
+                  <Durability>9.975</Durability>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeType>19</AttributeType>
+                      <Value>25</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>21</AttributeType>
+                      <Value>6</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>22</AttributeType>
+                      <Value>2</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>20</AttributeType>
+                      <Value>0.75</Value>
+                      <Min>0</Min>
+                      <Max>1</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>23</AttributeType>
+                      <Value>90</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>25</AttributeType>
+                      <Value>6</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>24</AttributeType>
+                      <Value>1</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>27</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>28</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>26</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                  </Attributes>
+                </Gear>
+              </Weapons>
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Sentinel</EnemyType>
+        </Character>
+        <Character>
+          <Id>69</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>70</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Brawler</EnemyType>
+        </Character>
+        <Character>
+          <Id>71</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems>
+            <ArmourPlate1>73</ArmourPlate1>
+          </EquippedItems>
+          <Inventory>
+            <Id>72</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates>
+                <Health>92</Health>
+              </ArmourPlates>
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Brawler</EnemyType>
+        </Character>
+        <Character>
+          <Id>74</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>75</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Brawler</EnemyType>
+        </Character>
+      </Enemies>
     </Region>
     <Region>
       <Name>Beast's Marsh</Name>
@@ -349,11 +795,10 @@
         <ID>17</ID>
         <ID>8</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -368,11 +813,10 @@
         <ID>12</ID>
         <ID>21</ID>
       </Neighbors>
-      <Type>Animal</Type>
+      <Type>4</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -386,11 +830,10 @@
         <ID>4</ID>
         <ID>8</ID>
       </Neighbors>
-      <Type>Animal</Type>
+      <Type>4</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -403,11 +846,10 @@
       <Neighbors>
         <ID>19</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -421,11 +863,10 @@
         <ID>9</ID>
         <ID>7</ID>
       </Neighbors>
-      <Type>Monument</Type>
+      <Type>8</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>3</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -439,11 +880,10 @@
         <ID>8</ID>
         <ID>0</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -458,11 +898,10 @@
         <ID>12</ID>
         <ID>9</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>0</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -475,11 +914,10 @@
       <Neighbors>
         <ID>10</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -493,341 +931,10 @@
         <ID>20</ID>
         <ID>6</ID>
       </Neighbors>
-      <Type>Shrine</Type>
+      <Type>7</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Anger's Edge</Name>
-      <RegionId>8</RegionId>
-      <Position>(12.0, -1.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>0</FoodSourceCount>
-      <ResourceSourceCount>2</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Endeavour Cenote</Name>
-      <RegionId>21</RegionId>
-      <Position>(-24.0, 19.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>2</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Marker of Deeds</Name>
-      <RegionId>10</RegionId>
-      <Position>(21.0, 10.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>2</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Elating Marsh</Name>
-      <RegionId>6</RegionId>
-      <Position>(2.0, 10.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>2</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Gate</Name>
-      <RegionId>0</RegionId>
-      <Position>(0.0, 0.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>2</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Hellion's Dusk</Name>
-      <RegionId>4</RegionId>
-      <Position>(15.0, 13.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>0</WaterSourceCount>
-      <FoodSourceCount>0</FoodSourceCount>
-      <ResourceSourceCount>2</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Endeavour's Advantage</Name>
-      <RegionId>1</RegionId>
-      <Position>(-2.0, 6.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>2</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Maverick's Collapse</Name>
-      <RegionId>15</RegionId>
-      <Position>(-12.0, -1.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>2</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Devoted Brook</Name>
-      <RegionId>5</RegionId>
-      <Position>(-8.0, 2.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Chaser's Vale</Name>
-      <RegionId>20</RegionId>
-      <Position>(13.0, 22.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Chaser's Outcrop</Name>
-      <RegionId>18</RegionId>
-      <Position>(-2.0, -11.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>0</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Piety's Languor</Name>
-      <RegionId>16</RegionId>
-      <Position>(23.0, 19.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Demon's Failure</Name>
-      <RegionId>11</RegionId>
-      <Position>(3.0, -5.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Beast's Marsh</Name>
-      <RegionId>19</RegionId>
-      <Position>(16.0, -9.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Pursuer's Creek</Name>
-      <RegionId>9</RegionId>
-      <Position>(-17.0, 16.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Prowler's Fruit</Name>
-      <RegionId>3</RegionId>
-      <Position>(11.0, 5.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Hellion's Shell</Name>
-      <RegionId>17</RegionId>
-      <Position>(21.0, -2.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Record of Sagas</Name>
-      <RegionId>12</RegionId>
-      <Position>(-21.0, 9.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>3</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Hell's Remains</Name>
-      <RegionId>2</RegionId>
-      <Position>(6.0, 1.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Demagogue's Marsh</Name>
-      <RegionId>7</RegionId>
-      <Position>(-13.0, 9.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>0</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Carcass's Agony</Name>
-      <RegionId>13</RegionId>
-      <Position>(29.0, 10.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Grind Brook</Name>
-      <RegionId>14</RegionId>
-      <Position>(7.0, 17.0)</Position>
-      <Neighbors />
-      <Type>None</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <ShrinePosition>(0.0, 0.0)</ShrinePosition>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -835,10 +942,10 @@
     </Region>
   </Regions>
   <Weather>
-    <Id>23</Id>
-    <Name>Clear</Name>
+    <Id>20</Id>
+    <Name>Haze</Name>
     <ParentInventory>-1</ParentInventory>
-    <TimeRemaining>10</TimeRemaining>
+    <TimeRemaining>14</TimeRemaining>
   </Weather>
   <CurrentEnvironment>Oasis</CurrentEnvironment>
   <WorldEvents>

@@ -5,7 +5,6 @@ using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 
 namespace Game.Characters
 {
@@ -34,8 +33,9 @@ namespace Game.Characters
             return doc;
         }
 
-        public virtual void Load(XmlNode root)
+        public override void Load(XmlNode root)
         {
+            base.Load(root);
             CharacterInventory.Load(root.SelectSingleNode("Inventory"));
             XmlNode equipmentNode = root.SelectSingleNode("EquippedItems");
             XmlNode weaponNode = equipmentNode.SelectSingleNode("Weapon");

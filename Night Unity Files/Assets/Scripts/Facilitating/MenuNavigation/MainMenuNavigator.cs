@@ -5,6 +5,7 @@ using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Menu = SamsHelper.ReactiveUI.MenuSystem.Menu;
@@ -20,6 +21,7 @@ namespace Facilitating.MenuNavigation
         private Sequence _fadeInSequence;
         private bool _starting;
         private static bool _seenIntro;
+        public bool Load;
 
         private void CacheGameobjects()
         {
@@ -64,9 +66,13 @@ namespace Facilitating.MenuNavigation
             ResetAppearance();
             CreateFadeInSequence();
             _starting = false;
-            ContinueGame();
-//            ClearSaveAndLoad();
-//            EditorApplication.isPlaying = false;
+            if (Load)
+            {
+                ContinueGame();
+                return;
+            }
+            ClearSaveAndLoad();
+            EditorApplication.isPlaying = false;
         }
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)

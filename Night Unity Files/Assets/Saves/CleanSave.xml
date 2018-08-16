@@ -5,76 +5,163 @@
     <CurrentLevel>1</CurrentLevel>
     <Days>0</Days>
     <Hours>6</Hours>
-    <Minutes>20</Minutes>
+    <Minutes>5</Minutes>
     <Difficulty>0</Difficulty>
   </WorldState>
   <Inventory>
     <Id>6</Id>
     <Name>Vehicle</Name>
+    <ParentInventory>-1</ParentInventory>
+    <Resources />
+    <Items>
+      <Weapons />
+      <ArmourPlates />
+      <Accessories />
+      <Inscriptions />
+      <Consumables />
+    </Items>
     <Character>
       <Id>7</Id>
       <Name>The Wanderer</Name>
+      <ParentInventory>-1</ParentInventory>
       <EquippedItems>
         <Weapon>16</Weapon>
       </EquippedItems>
       <Inventory>
         <Id>8</Id>
         <Name>The Wanderer</Name>
-        <Gear>
-          <Id>16</Id>
-          <Name>Worn Spitter</Name>
-          <ParentInventory>8</ParentInventory>
-          <GearType>Weapon</GearType>
-          <Quality>Worn</Quality>
-          <Attributes>
-            <AttributeType>Damage</AttributeType>
-            <Value>11.28</Value>
-            <AttributeType>FireRate</AttributeType>
-            <Value>14.64</Value>
-            <AttributeType>ReloadSpeed</AttributeType>
-            <Value>0.89</Value>
-            <AttributeType>Accuracy</AttributeType>
-            <Value>0.333</Value>
-            <AttributeType>Handling</AttributeType>
-            <Value>98</Value>
-            <AttributeType>Capacity</AttributeType>
-            <Value>30</Value>
-            <AttributeType>Pellets</AttributeType>
-            <Value>1</Value>
-            <WeaponType>SMG</WeaponType>
-            <Class>Spitter</Class>
-            <Durability>11</Durability>
-            <Quality>Worn</Quality>
-          </Attributes>
-        </Gear>
+        <ParentInventory>-1</ParentInventory>
+        <Resources />
+        <Items>
+          <Weapons>
+            <Gear>
+              <Id>16</Id>
+              <Name>Worn Spitter</Name>
+              <ParentInventory>8</ParentInventory>
+              <Quantity>1</Quantity>
+              <Stackable>False</Stackable>
+              <Template>
+              </Template>
+              <Quality>1</Quality>
+              <Class>9</Class>
+              <Durability>11</Durability>
+              <Attributes>
+                <Attribute>
+                  <AttributeType>19</AttributeType>
+                  <Value>6</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>21</AttributeType>
+                  <Value>12</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>22</AttributeType>
+                  <Value>1</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>20</AttributeType>
+                  <Value>0.3</Value>
+                  <Min>0</Min>
+                  <Max>1</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>23</AttributeType>
+                  <Value>98</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>25</AttributeType>
+                  <Value>30</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>24</AttributeType>
+                  <Value>1</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+              </Attributes>
+            </Gear>
+          </Weapons>
+          <ArmourPlates />
+          <Accessories />
+          <Inscriptions />
+          <Consumables />
+        </Items>
       </Inventory>
       <Attributes>
-        <AttributeType>EssenceLossBonus</AttributeType>
-        <Value>1</Value>
-        <AttributeType>SkillRechargeBonus</AttributeType>
-        <Value>1</Value>
-        <AttributeType>AdrenalineRechargeBonus</AttributeType>
-        <Value>1</Value>
-        <AttributeType>Hunger</AttributeType>
-        <Value>0.1111111</Value>
-        <AttributeType>Thirst</AttributeType>
-        <Value>0.2222222</Value>
-        <AttributeType>Endurance</AttributeType>
-        <Value>10</Value>
-        <AttributeType>Strength</AttributeType>
-        <Value>4</Value>
-        <AttributeType>Perception</AttributeType>
-        <Value>4</Value>
-        <AttributeType>Willpower</AttributeType>
-        <Value>4</Value>
+        <Attribute>
+          <AttributeType>9</AttributeType>
+          <Value>1</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>16</AttributeType>
+          <Value>1</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>17</AttributeType>
+          <Value>1</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>5</AttributeType>
+          <Value>0.02777778</Value>
+          <Min>0</Min>
+          <Max>10</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>4</AttributeType>
+          <Value>0.05555556</Value>
+          <Min>0</Min>
+          <Max>10</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>1</AttributeType>
+          <Value>10</Value>
+          <Min>0</Min>
+          <Max>10</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>0</AttributeType>
+          <Value>4</Value>
+          <Min>0</Min>
+          <Max>4</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>2</AttributeType>
+          <Value>4</Value>
+          <Min>0</Min>
+          <Max>4</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>3</AttributeType>
+          <Value>4</Value>
+          <Min>0</Min>
+          <Max>4</Max>
+        </Attribute>
       </Attributes>
       <Brands />
       <StoryUnlocked>False</StoryUnlocked>
       <StoryProgress>1</StoryProgress>
-      <TimeAlive>4</TimeAlive>
+      <TimeAlive>1</TimeAlive>
+      <CharacterClass>Wanderer</CharacterClass>
       <PlayerAction>
         <Id>9</Id>
         <Name>Rest</Name>
+        <ParentInventory>-1</ParentInventory>
       </PlayerAction>
     </Character>
   </Inventory>
@@ -88,7 +175,7 @@
         <ID>2</ID>
         <ID>3</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -105,7 +192,7 @@
       <Neighbors>
         <ID>9</ID>
       </Neighbors>
-      <Type>Shrine</Type>
+      <Type>7</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -124,7 +211,7 @@
         <ID>13</ID>
         <ID>4</ID>
       </Neighbors>
-      <Type>Monument</Type>
+      <Type>8</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -142,7 +229,7 @@
         <ID>14</ID>
         <ID>1</ID>
       </Neighbors>
-      <Type>Fountain</Type>
+      <Type>6</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -161,7 +248,7 @@
         <ID>11</ID>
         <ID>1</ID>
       </Neighbors>
-      <Type>Gate</Type>
+      <Type>2</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -179,7 +266,7 @@
         <ID>10</ID>
         <ID>3</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -198,7 +285,7 @@
         <ID>0</ID>
         <ID>5</ID>
       </Neighbors>
-      <Type>Shrine</Type>
+      <Type>7</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -215,7 +302,7 @@
       <Neighbors>
         <ID>5</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -234,7 +321,7 @@
         <ID>15</ID>
         <ID>7</ID>
       </Neighbors>
-      <Type>Fountain</Type>
+      <Type>6</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -251,7 +338,7 @@
       <Neighbors>
         <ID>14</ID>
       </Neighbors>
-      <Type>Animal</Type>
+      <Type>4</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -268,7 +355,7 @@
       <Neighbors>
         <ID>11</ID>
       </Neighbors>
-      <Type>Animal</Type>
+      <Type>4</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -285,7 +372,7 @@
       <Neighbors>
         <ID>10</ID>
       </Neighbors>
-      <Type>Temple</Type>
+      <Type>3</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -303,7 +390,7 @@
         <ID>18</ID>
         <ID>0</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -321,7 +408,7 @@
         <ID>17</ID>
         <ID>8</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -340,7 +427,7 @@
         <ID>12</ID>
         <ID>21</ID>
       </Neighbors>
-      <Type>Animal</Type>
+      <Type>4</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -358,7 +445,7 @@
         <ID>4</ID>
         <ID>8</ID>
       </Neighbors>
-      <Type>Animal</Type>
+      <Type>4</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -375,7 +462,7 @@
       <Neighbors>
         <ID>19</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -393,7 +480,7 @@
         <ID>9</ID>
         <ID>7</ID>
       </Neighbors>
-      <Type>Monument</Type>
+      <Type>8</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -411,7 +498,7 @@
         <ID>8</ID>
         <ID>0</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -430,7 +517,7 @@
         <ID>12</ID>
         <ID>9</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -447,7 +534,7 @@
       <Neighbors>
         <ID>10</ID>
       </Neighbors>
-      <Type>Danger</Type>
+      <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -465,7 +552,7 @@
         <ID>20</ID>
         <ID>6</ID>
       </Neighbors>
-      <Type>Shrine</Type>
+      <Type>7</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -479,8 +566,10 @@
   <Weather>
     <Id>23</Id>
     <Name>Clear</Name>
-    <TimeRemaining>20</TimeRemaining>
+    <ParentInventory>-1</ParentInventory>
+    <TimeRemaining>23</TimeRemaining>
   </Weather>
   <CurrentEnvironment>Oasis</CurrentEnvironment>
-  <WorldEvents>&lt;i&gt;"Yes, this'll do"- The Wanderer&lt;/i&gt;</WorldEvents>
+  <WorldEvents>
+  </WorldEvents>
 </Game>

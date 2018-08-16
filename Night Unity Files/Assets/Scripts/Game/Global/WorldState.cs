@@ -5,12 +5,10 @@ using Facilitating.Persistence;
 using Facilitating.UI;
 using Game.Characters;
 using Game.Combat.Enemies;
-using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using Game.Exploration.Weather;
 using Game.Exploration.WorldEvents;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -178,15 +176,16 @@ namespace Game.Global
             IncrementHours();
         }
 
-        private void MinutePasses()
+        private static void MinutePasses()
         {
             WeatherManager.CurrentWeather().Update();
             EnvironmentManager.UpdateTemperature();
+            MapGenerator.DiscoveredRegions().ForEach(r => r.Update());
             CharacterManager.Update();
             Campfire.Die();
         }
 
-        private void HourPasses()
+        private static void HourPasses()
         {
             Campfire.Die();
             HomeInventory().UpdateBuildings();
@@ -226,7 +225,7 @@ namespace Game.Global
             UpdateScenery();
         }
 
-        private void UpdateScenery()
+        private static void UpdateScenery()
         {
             int minutesPassed = Hours * MinutesPerHour + Minutes / MinuteInterval;
             float timePassed = minutesPassed * MinuteInSeconds + _currentTime;

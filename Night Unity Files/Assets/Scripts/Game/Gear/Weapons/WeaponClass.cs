@@ -49,10 +49,9 @@ namespace Game.Gear.Weapons
             throw new ArgumentOutOfRangeException("Unknown class type: '" + name + "'");
         }
 
-        public static WeaponClass StringToWeaponClass(string weaponClassString)
+        public static WeaponClass IntToWeaponClass(int weaponClassString)
         {
-            WeaponClassType weaponClass = NameToClassType(weaponClassString);
-            return _weaponClasses.First(w => w.Name == weaponClass);
+            return _weaponClasses.First(w => (int)w.Name == weaponClassString);
         }
         
         public static WeaponClass GetRandomClass()

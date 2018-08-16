@@ -4,6 +4,7 @@ using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
 {
@@ -26,6 +27,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
                     t.gameObject.SetActive(false);
                     t.GetComponent<CanvasGroup>().alpha = 0;
                 }
+
                 States.AddState(menu);
             }
         }
@@ -46,7 +48,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             float fadeTime = 0.1f;
             float currentTime = fadeTime;
             EventSystem.current.sendNavigationEvents = false;
-            
+
             MenuState currentState = (MenuState) States.GetCurrentState();
             if (currentState != null)
             {
@@ -65,7 +67,6 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             currentState = (MenuState) States.GetState(menuName);
             currentState.SetActive(true);
             currentTime = fadeTime;
-            
             while (currentTime > 0)
             {
                 currentTime -= Time.deltaTime;
@@ -73,17 +74,22 @@ namespace SamsHelper.ReactiveUI.MenuSystem
                 currentState.Menu.SetAlpha(alpha);
                 yield return null;
             }
+
             currentState.Menu.SetAlpha(1);
 
             EventSystem.current.sendNavigationEvents = true;
             States.GetState(menuName).Enter();
         }
 
-        public void OnApplicationQuit()
+        public static void SelectInactiveButton(Button button)
         {
-//            SaveController.SaveSettings();
-            //todo remove me
-            SaveController.SaveGame();
+            _instance.StartCoroutine(_instance.WaitAndSelect(button));
+        }
+
+        private IEnumerator WaitAndSelect(Button button)
+        {
+            while (!button.gameObject.activeInHierarchy) yield return null;
+            button.Select();
         }
 
         public static void ReturnToDefault()

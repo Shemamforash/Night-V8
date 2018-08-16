@@ -8,6 +8,7 @@ using Game.Gear.Armour;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Global
 {
@@ -17,7 +18,6 @@ namespace Game.Global
         public readonly string Ingredient2;
         public readonly int Ingredient1Quantity;
         public readonly int Ingredient2Quantity;
-        public InventoryItem Product;
         public readonly float DurationInHours;
         private static readonly List<Recipe> _recipes = new List<Recipe>();
         private static bool _loaded;
@@ -25,7 +25,8 @@ namespace Game.Global
         public readonly int ProductQuantity;
         private readonly bool _requiresFire;
 
-        private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string productName, int productQuantity, float duration) : base(productName, GameObjectType.Resource)
+        private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string productName, int productQuantity, float duration) : base(productName,
+            GameObjectType.Resource)
         {
             Ingredient1 = ingredient1;
             Ingredient2 = ingredient2;
@@ -39,14 +40,10 @@ namespace Game.Global
 
         private bool CanCraft()
         {
-            if (_requiresFire && !Campfire.IsLit())
-            {
-                return false;
-            }
-
+            if (_requiresFire && !Campfire.IsLit()) return false;
             float ingredient1OwnedQuantity = WorldState.HomeInventory().GetResourceQuantity(Ingredient1);
             if (ingredient1OwnedQuantity < Ingredient1Quantity) return false;
-            if (Ingredient2 == "") return true;
+            if (Ingredient2 == "None") return true;
             float ingredient2OwnedQuantity = WorldState.HomeInventory().GetResourceQuantity(Ingredient2);
             return ingredient2OwnedQuantity >= Ingredient2Quantity;
         }
@@ -55,7 +52,7 @@ namespace Game.Global
         {
             if (!CanCraft()) return false;
             WorldState.HomeInventory().DecrementResource(Ingredient1, Ingredient1Quantity);
-            if (Ingredient2 != "") WorldState.HomeInventory().DecrementResource(Ingredient2, Ingredient2Quantity);
+            if (Ingredient2 != "None") WorldState.HomeInventory().DecrementResource(Ingredient2, Ingredient2Quantity);
             CreateProduct();
             return true;
         }
@@ -64,7 +61,7 @@ namespace Game.Global
         {
             switch (ProductName)
             {
-                case "Fire": 
+                case "Fire":
                     CharacterManager.SelectedCharacter.LightFireAction.Enter();
                     break;
                 case "Shelter":
@@ -100,9 +97,10 @@ namespace Game.Global
                 case "Ice":
                     WorldState.HomeInventory().IncrementResource(ProductName, ProductQuantity);
                     break;
+                case "Radiance":
+                    WorldState.HomeInventory().IncrementResource(ProductName, 1);
+                    break;
             }
-            
-            
         }
 
         private bool _unlocked;
@@ -128,6 +126,7 @@ namespace Game.Global
 
         public static bool RecipesAvailable()
         {
+            LoadRecipes();
             return _recipes.Any(r => r.CanCraft());
         }
 

@@ -26,7 +26,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         Cursor.visible = false;
         Recenter();
         _rigidBody2D = GetComponent<Rigidbody2D>();
-        _availableRegions = MapGenerator.DiscoveredNodes();
+        _availableRegions = MapGenerator.DiscoveredRegions();
         _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
         InputHandler.SetCurrentListener(this);
     }
