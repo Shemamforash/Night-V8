@@ -52,7 +52,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             base.Load(root);
             _quantity.SetCurrentValue(root.FloatFromNode("Quantity"));
             _stackable = root.BoolFromNode("Stackable");
-            string templateString = root.GetNodeText("Template");
+            string templateString = root.StringFromNode("Template");
             if (templateString == "") return;
             Template = ResourceTemplate.StringToTemplate(templateString);
         }

@@ -286,8 +286,8 @@ namespace Game.Exploration.Environment
             foreach (XmlNode regionTypeNode in root.ChildNodes)
             {
                 RegionType regionType = _regionTypes.Find(r => r.ToString() == regionTypeNode.Name);
-                prefixes[regionType] = StripBlanks(regionTypeNode.GetNodeText("Prefixes")).Split(',');
-                suffixes[regionType] = StripBlanks(regionTypeNode.GetNodeText("Suffixes")).Split(',');
+                prefixes[regionType] = StripBlanks(regionTypeNode.StringFromNode("Prefixes")).Split(',');
+                suffixes[regionType] = StripBlanks(regionTypeNode.StringFromNode("Suffixes")).Split(',');
             }
 
             _loaded = true;

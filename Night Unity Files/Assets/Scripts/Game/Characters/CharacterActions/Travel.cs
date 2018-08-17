@@ -1,4 +1,5 @@
-﻿using Game.Combat.Generation;
+﻿using System.Security.Claims;
+using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.WorldEvents;
@@ -145,11 +146,6 @@ namespace Game.Characters.CharacterActions
             _inTransit = true;
             _target = target;
             SetDuration(enduranceCost * MinutesPerEndurancePoint);
-        }
-
-        public void ClaimRegion()
-        {
-            CurrentRegion.ClaimRemaining = 2 * 24 * WorldState.MinutesPerHour;
         }
 
         public bool InClaimedRegion()

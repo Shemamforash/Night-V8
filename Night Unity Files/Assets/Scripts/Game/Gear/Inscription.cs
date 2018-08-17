@@ -96,7 +96,7 @@ namespace Game.Gear
 
         public static Inscription LoadInscription(XmlNode root)
         {
-            string templateString = root.GetNodeText("Template");
+            string templateString = root.StringFromNode("Template");
             InscriptionTemplate template = _inscriptionTemplates.First(t => t.Name == templateString);
             InscriptionTier quality = (InscriptionTier) root.IntFromNode("Quality");
             Inscription inscription = new Inscription(template, quality);
@@ -113,8 +113,8 @@ namespace Game.Gear
 
             public InscriptionTemplate(XmlNode inscriptionNode)
             {
-                Name = inscriptionNode.GetNodeText("Name");
-                AttributeTarget = Inventory.StringToAttributeType(inscriptionNode.GetNodeText("Attribute"));
+                Name = inscriptionNode.StringFromNode("Name");
+                AttributeTarget = Inventory.StringToAttributeType(inscriptionNode.StringFromNode("Attribute"));
                 _modifierValue = inscriptionNode.FloatFromNode("Value");
                 _additive = inscriptionNode.BoolFromNode("Additive");
                 _inscriptionTemplates.Add(this);

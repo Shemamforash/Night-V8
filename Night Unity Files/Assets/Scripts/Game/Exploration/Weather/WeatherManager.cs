@@ -74,7 +74,7 @@ namespace Game.Exploration.Weather
         public static void Load(XmlNode doc)
         {
             XmlNode weatherNode = doc.SelectSingleNode("Weather");
-            string weatherName = weatherNode.GetNodeText("Name");
+            string weatherName = weatherNode.StringFromNode("Name");
             Weather weather = (Weather) _weatherStates.StatesAsList().First(w => w.Name == weatherName);
             _weatherStates.SetCurrentState(weather);
             weather.SetTimeRemaining(weatherNode.IntFromNode("TimeRemaining"));

@@ -136,11 +136,11 @@ namespace Game.Global
             XmlNode root = Helper.OpenRootNode("Recipes");
             foreach (XmlNode recipeNode in Helper.GetNodesWithName(root, "Recipe"))
             {
-                string ingredient1Name = recipeNode.GetNodeText("Ingredient1Name");
+                string ingredient1Name = recipeNode.StringFromNode("Ingredient1Name");
                 int ingredient1Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
-                string ingredient2Name = recipeNode.GetNodeText("Ingredient2Name");
+                string ingredient2Name = recipeNode.StringFromNode("Ingredient2Name");
                 int ingredient2Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
-                string productName = recipeNode.GetNodeText("ProductName");
+                string productName = recipeNode.StringFromNode("ProductName");
                 int productQuantity = recipeNode.IntFromNode("ProductQuantity");
 
                 Recipe recipe = new Recipe(ingredient1Name, ingredient2Name, ingredient1Quantity, ingredient2Quantity, productName, productQuantity, 1);

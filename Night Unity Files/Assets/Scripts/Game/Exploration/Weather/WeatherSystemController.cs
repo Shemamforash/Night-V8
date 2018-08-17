@@ -27,7 +27,7 @@ namespace Game.Exploration.Weather
         [SerializeField] private float _starsMax;
         [SerializeField] [Range(0, 1)] private float _sunMinBrightness, _sunMaxBrightness;
 
-        [SerializeField] private AudioClip _rainLight, _rainMedium, _rainHeavy, _windHeavy;
+        [SerializeField] private AudioClip _rainLight, _rainMedium, _rainHeavy, _windHeavy, _windMedium, _windLight;
         private AudioSource _nightTimeAudioSource, _dayTimeAudioSource;
 
         public void Awake()
@@ -146,7 +146,9 @@ namespace Game.Exploration.Weather
 
             protected override AudioClip GetAudioClipForWeather(float amount)
             {
-                return amount > 0 ? _instance._windHeavy : null;
+                if (amount > 0.7f) return _instance._windHeavy;
+                if (amount > 0.4) return _instance._windMedium;
+                return amount > 0 ? _instance._windLight : null;
             }
         }
 

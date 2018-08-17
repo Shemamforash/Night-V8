@@ -18,6 +18,9 @@ public class TempleBehaviour : BasicShrineBehaviour
     private ParticleSystem _vortex, _explosion, _altar;
     private SpriteRenderer _glow;
     private EnemyBehaviour _boss;
+    private AudioSource _audioSource;
+    [SerializeField]
+    private AudioClip _fireIgniteAudioClip, _templateActivateAudioClip;
 
     public void Awake()
     {
@@ -34,6 +37,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         _altar = gameObject.FindChildWithName<ParticleSystem>("Altar");
         _glow = gameObject.FindChildWithName<SpriteRenderer>("Glow");
         _glow.color = UiAppearanceController.InvisibleColour;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public override void Update()
@@ -55,29 +59,30 @@ public class TempleBehaviour : BasicShrineBehaviour
     protected override void StartShrine()
     {
         Triggered = true;
-        switch (EnvironmentManager.CurrentEnvironment.LevelNo)
-        {
-            case 0:
-                SerpentBehaviour.Create();
-                break;
-            case 1:
-                StarfishBehaviour.Create();
-                break;
-            case 2:
-                SwarmBehaviour.Create();
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-        }
-//        StartCoroutine(Activate());
+//        switch (EnvironmentManager.CurrentEnvironment.LevelNo)
+//        {
+//            case 0:
+//                SerpentBehaviour.Create();
+//                break;
+//            case 1:
+//                StarfishBehaviour.Create();
+//                break;
+//            case 2:
+//                SwarmBehaviour.Create();
+//                break;
+//            case 3:
+//                break;
+//            case 4:
+//                break;
+//        }
+        StartCoroutine(Activate());
     }
     
     private IEnumerator Activate()
     {
         _vortex.Play();
         float vortexTime = _vortex.main.duration + 0.5f;
+        _audioSource.PlayOneShot(_templateActivateAudioClip);
         while (vortexTime > 0f)
         {
             vortexTime -= Time.deltaTime;

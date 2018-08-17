@@ -31,7 +31,7 @@ public class RadianceController : MonoBehaviour, IInputListener
 	public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
 	{
 		if (axis != InputAxis.TakeItem) return;
-		PlayerCombat.Instance.Player.TravelAction.ClaimRegion();
+		PlayerCombat.Instance.Player.TravelAction.GetCurrentNode().Claim();
 		InputHandler.UnregisterInputListener(this);
 		if (_stonePrefab == null) _stonePrefab = Resources.Load<GameObject>("Prefabs/Combat/Effects/Radiance Stone");
 		GameObject stoneObject = Instantiate(_stonePrefab);

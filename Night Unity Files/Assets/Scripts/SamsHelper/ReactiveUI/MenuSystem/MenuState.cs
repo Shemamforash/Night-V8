@@ -1,5 +1,4 @@
 ﻿using Game.Global;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
@@ -8,7 +7,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
     {
         public readonly Menu Menu;
 
-        public MenuState(StateMachine stateMachine, string name, Menu menu) : base(stateMachine, name, GameObjectType.Menu)
+        public MenuState(StateMachine stateMachine, string name, Menu menu) : base(stateMachine, name)
         {
             Menu = menu;
         }

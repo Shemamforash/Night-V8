@@ -2,7 +2,6 @@
 using Facilitating.Persistence;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 
 namespace SamsHelper.BaseGameFunctionality.Basic
 {
@@ -27,8 +26,8 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public virtual void Load(XmlNode root)
         {
             _id = root.IntFromNode("Id");
-            _idCounter = _id + 1;
-            Name = root.GetNodeText("Name");
+            if (_id > _idCounter) _idCounter = _id + 1;
+            Name = root.StringFromNode("Name");
             _parentInventoryId = root.IntFromNode("ParentInventory");
         }
 

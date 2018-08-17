@@ -12,7 +12,6 @@ using Game.Exploration.WorldEvents;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -39,11 +38,70 @@ namespace Game.Exploration.Regions
         public Vector2 CharacterPosition;
         private readonly List<int> _neighborIds = new List<int>();
         public int ClaimRemaining;
+        private int _claimQuantity;
+        private string _claimBenefit = "";
 
         public Region() : base(Vector2.zero)
         {
             RegionID = _currentId;
             ++_currentId;
+        }
+
+        public string ClaimBenefitString()
+        {
+            if (_claimBenefit == "") return _claimBenefit;
+            int minutesPerDay = 24 * WorldState.MinutesPerHour;
+            int timeRemaining = ClaimRemaining;
+            if (timeRemaining > minutesPerDay) timeRemaining -= minutesPerDay;
+            int timeRemainingInHours = Mathf.CeilToInt(timeRemaining / 24f);
+            Debug.Log(timeRemaining + " " + timeRemainingInHours);
+            string hourString = timeRemainingInHours == 1 ? "hr" : "hrs";
+            return " +" + _claimQuantity + " " + _claimBenefit + " in " + timeRemainingInHours + hourString;
+        }
+
+        public void Claim()
+        {
+            ClaimRemaining = 2 * 24 * WorldState.MinutesPerHour;
+            switch (_regionType)
+            {
+                case RegionType.Shelter:
+                    _claimBenefit = ResourceTemplate.GetResource().Name;
+                    _claimQuantity = 1;
+                    break;
+                case RegionType.Temple:
+                    _claimBenefit = "Essence";
+                    _claimQuantity = 5;
+                    break;
+                case RegionType.Animal:
+                    _claimBenefit = "Meat";
+                    _claimQuantity = 2;
+                    break;
+                case RegionType.Danger:
+                    if (Random.Range(0, 2) == 0)
+                    {
+                        _claimBenefit = "Water";
+                        _claimQuantity = 1;
+                        break;
+                    }
+
+                    _claimBenefit = "Meat";
+                    _claimQuantity = 1;
+                    break;
+                case RegionType.Fountain:
+                    _claimBenefit = "Water";
+                    _claimQuantity = 2;
+                    break;
+                case RegionType.Monument:
+                    _claimBenefit = ResourceTemplate.GetResource().Name;
+                    _claimQuantity = 1;
+                    break;
+                case RegionType.Shrine:
+                    _claimBenefit = ResourceTemplate.GetResource().Name;
+                    _claimQuantity = 1;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void Update()
@@ -52,39 +110,14 @@ namespace Game.Exploration.Regions
             --ClaimRemaining;
             if (ClaimRemaining == 0)
             {
+                _claimBenefit = "";
                 WorldEventManager.GenerateEvent(new WorldEvent(Name + " has been lost to the darkness"));
                 if (_regionType == RegionType.Animal) GenerateAnimalEncounter();
                 else GenerateEncounter(WorldState.GetAllowedHumanEnemyTypes());
             }
 
-            if (ClaimRemaining % 24 != 0) return;
-            switch (_regionType)
-            {
-                case RegionType.Shelter:
-                    WorldState.HomeInventory().IncrementResource(ResourceTemplate.GetResource().Name, 1);
-                    break;
-                case RegionType.Temple:
-                    WorldState.HomeInventory().IncrementResource("Essence", 5);
-                    break;
-                case RegionType.Animal:
-                    WorldState.HomeInventory().IncrementResource("Meat", 2);
-                    break;
-                case RegionType.Danger:
-                    WorldState.HomeInventory().IncrementResource("Water", 1);
-                    WorldState.HomeInventory().IncrementResource("Meat", 1);
-                    break;
-                case RegionType.Fountain:
-                    WorldState.HomeInventory().IncrementResource("Water", 2);
-                    break;
-                case RegionType.Monument:
-                    WorldState.HomeInventory().IncrementResource(ResourceTemplate.GetResource().Name, 1);
-                    break;
-                case RegionType.Rite:
-                    WorldState.HomeInventory().IncrementResource(ResourceTemplate.GetResource().Name, 1);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            if (ClaimRemaining % (24 * WorldState.MinutesPerHour) != 0) return;
+            WorldState.HomeInventory().IncrementResource(_claimBenefit, 1);
         }
 
         public bool Generated()
@@ -139,10 +172,10 @@ namespace Game.Exploration.Regions
         public static Region Load(XmlNode doc)
         {
             Region region = new Region();
-            region.Name = doc.GetNodeText("Name");
+            region.Name = doc.StringFromNode("Name");
             region.RegionID = doc.IntFromNode("RegionId");
-            _currentId = region.RegionID + 1;
-            region.Position = doc.GetNodeText("Position").ToVector2();
+            if (region.RegionID > _currentId) _currentId = region.RegionID + 1;
+            region.Position = doc.StringFromNode("Position").ToVector2();
             foreach (XmlNode n in doc.SelectSingleNode("Neighbors").SelectNodes("ID"))
             {
                 region._neighborIds.Add(n.IntFromNode("ID"));
@@ -155,13 +188,21 @@ namespace Game.Exploration.Regions
             region.WaterSourceCount = doc.IntFromNode("WaterSourceCount");
             region.FoodSourceCount = doc.IntFromNode("FoodSourceCount");
             region.ResourceSourceCount = doc.IntFromNode("ResourceSourceCount");
+            region.ClaimRemaining = doc.IntFromNode("ClaimRemaining");
+            region._claimQuantity = doc.IntFromNode("ClaimQuantity");
+            region._claimBenefit = doc.StringFromNode("ClaimBenefit");
             foreach (XmlNode enemyNode in doc.SelectSingleNode("Enemies").SelectNodes("Enemy"))
             {
-                string enemyTypeString = enemyNode.GetNodeText("EnemyType");
+                string enemyTypeString = enemyNode.StringFromNode("EnemyType");
                 EnemyType enemyType = EnemyTemplate.StringToType(enemyTypeString);
                 Enemy enemy = new Enemy(EnemyTemplate.GetEnemyTemplate(enemyType));
                 region._enemies.Add(enemy);
             }
+
+//        public int ClaimRemaining;
+//        private int _claimQuantity;
+
+//        private string _claimBenefit = "";
 
             return region;
         }
@@ -185,6 +226,9 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("WaterSourceCount", WaterSourceCount);
             regionNode.CreateChild("FoodSourceCount", FoodSourceCount);
             regionNode.CreateChild("ResourceSourceCount", ResourceSourceCount);
+            regionNode.CreateChild("ClaimRemaining", ClaimRemaining);
+            regionNode.CreateChild("ClaimQuantity", _claimQuantity);
+            regionNode.CreateChild("ClaimBenefit", _claimBenefit);
             XmlNode enemyNode = regionNode.CreateChild("Enemies");
             _enemies.ForEach(e => e.Save(enemyNode));
         }

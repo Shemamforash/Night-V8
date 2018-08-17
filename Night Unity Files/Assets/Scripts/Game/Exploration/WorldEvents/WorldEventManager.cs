@@ -16,7 +16,7 @@ namespace Game.Exploration.WorldEvents
 
         public static void Load(XmlNode doc)
         {
-            string events = doc.GetNodeText("WorldEvents");
+            string events = doc.StringFromNode("WorldEvents");
             _eventLog = new List<string>(events.Split(','));
             PrintFirstFourEvents();
         }

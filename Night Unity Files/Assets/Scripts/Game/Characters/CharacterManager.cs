@@ -49,7 +49,7 @@ namespace Game.Characters
             XmlNode characterManagerNode = doc.GetNode("Inventory");
             foreach (XmlNode characterNode in Helper.GetNodesWithName(characterManagerNode, "Character"))
             {
-                string className = characterNode.GetNodeText("CharacterClass");
+                string className = characterNode.StringFromNode("CharacterClass");
                 CharacterTemplate template = FindClass(className);
                 Player player = new Player(template);
                 player.Load(characterNode);
@@ -80,7 +80,6 @@ namespace Game.Characters
             Characters[0].CharacterView.SelectInitial();
             Characters.ForEach(c => c.CharacterView.RefreshNavigation());
             IncrementResource("Salt", 20);
-            Debug.Log(GetResourceQuantity("Salt"));
         }
 
         public static void AddCharacter(Player playerCharacter)

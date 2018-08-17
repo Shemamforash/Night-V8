@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 
 namespace SamsHelper.BaseGameFunctionality.StateMachines
 {
@@ -7,7 +6,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
     {
         public readonly Dictionary<string, float> TransitionProbabilities = new Dictionary<string, float>();
 
-        protected ProbabalisticState(StateMachine stateMachine, string name, GameObjectType type) : base(stateMachine, name, type)
+        protected ProbabalisticState(StateMachine stateMachine, string name) : base(stateMachine, name)
         {
         }
 

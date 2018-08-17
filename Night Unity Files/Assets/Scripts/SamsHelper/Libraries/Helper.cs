@@ -44,12 +44,12 @@ namespace SamsHelper.Libraries
 
         public static int IntFromNode(this XmlNode root, string nodeName)
         {
-            return int.Parse(GetNodeText(root, nodeName));
+            return int.Parse(StringFromNode(root, nodeName));
         }
 
         public static float FloatFromNode(this XmlNode root, string nodeName)
         {
-            return float.Parse(GetNodeText(root, nodeName));
+            return float.Parse(StringFromNode(root, nodeName));
         }
 
         public static XmlNode GetNode(this XmlNode root, string nodeName)
@@ -60,7 +60,7 @@ namespace SamsHelper.Libraries
             return node;
         }
 
-        public static string GetNodeText(this XmlNode root, string name)
+        public static string StringFromNode(this XmlNode root, string name)
         {
             return GetNode(root, name).InnerText;
         }
@@ -73,7 +73,7 @@ namespace SamsHelper.Libraries
 
         public static bool BoolFromNode(this XmlNode root, string nodeName)
         {
-            return GetNodeText(root, nodeName).ToLower() == "true";
+            return StringFromNode(root, nodeName).ToLower() == "true";
         }
 
         public static bool IsPositionInCameraView(this Vector3 position)

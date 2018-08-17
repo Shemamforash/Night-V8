@@ -122,9 +122,9 @@ namespace Game.Combat.Player
 
             public SkillValue(XmlNode skillNode)
             {
-                string name = skillNode.GetNodeText("Name");
+                string name = skillNode.StringFromNode("Name");
                 Cooldown = skillNode.IntFromNode("Cooldown");
-                Description = skillNode.GetNodeText("Description");
+                Description = skillNode.StringFromNode("Description");
                 NeedsTarget = skillNode.BoolFromNode("RequiresTarget");
                 AppliesToMagazine = skillNode.BoolFromNode("AppliesToMagazine");
                 _skillValues[name] = this;

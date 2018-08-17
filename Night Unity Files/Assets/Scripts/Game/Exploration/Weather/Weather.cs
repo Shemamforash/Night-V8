@@ -4,7 +4,6 @@ using Facilitating.Persistence;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -19,10 +18,9 @@ namespace Game.Exploration.Weather
         private readonly string _displayName;
         public readonly WeatherAttributes Attributes;
 
-        public Weather(ProbabalisticStateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, weatherNode.GetNodeText("Name"), GameObjectType.Weather)
+        public Weather(ProbabalisticStateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, weatherNode.StringFromNode("Name"))
         {
-            Name = weatherNode.GetNodeText("Name");
-            _displayName = weatherNode.GetNodeText("DisplayName");
+            _displayName = weatherNode.StringFromNode("DisplayName");
             _temperature = weatherNode.IntFromNode("Temperature");
             _visibility = weatherNode.FloatFromNode("Visibility");
             _water = weatherNode.FloatFromNode("Water");
@@ -70,11 +68,11 @@ namespace Game.Exploration.Weather
             });
         }
 
-        public override XmlNode Save(XmlNode doc)
+        public void Save(XmlNode doc)
         {
-            doc = base.Save(doc);
+            doc = doc.CreateChild("Weather");
+            doc.CreateChild("Name", Name);
             doc.CreateChild("TimeRemaining", _timeRemaining);
-            return doc;
         }
 
         public void SetTimeRemaining(int timeRemaining)

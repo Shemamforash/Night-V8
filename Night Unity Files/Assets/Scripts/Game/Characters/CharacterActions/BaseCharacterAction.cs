@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Xml;
 using Game.Global;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.ReactiveUI.Elements;
 
@@ -15,7 +15,7 @@ namespace Game.Characters.CharacterActions
         protected Action HourCallback;
         protected Action MinuteCallback;
 
-        protected BaseCharacterAction(string name, Player playerCharacter) : base(playerCharacter.States, name, GameObjectType.PlayerAction)
+        protected BaseCharacterAction(string name, Player playerCharacter) : base(playerCharacter.States, name)
         {
             PlayerCharacter = playerCharacter;
         }
@@ -64,6 +64,10 @@ namespace Game.Characters.CharacterActions
             float normalisedTime = -1;
             if (ShowTime) normalisedTime = (float)Duration / InitialDuration;
             PlayerCharacter.CharacterView.UpdateCurrentActionText(DisplayName, normalisedTime);
+        }
+
+        public void Save(XmlNode doc)
+        {
         }
     }
 }

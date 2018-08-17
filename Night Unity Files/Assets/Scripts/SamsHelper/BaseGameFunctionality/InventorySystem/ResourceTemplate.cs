@@ -53,9 +53,9 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         
         public ResourceTemplate(XmlNode resourceNode)
         {
-            Name = resourceNode.GetNodeText("Name");
+            Name = resourceNode.StringFromNode("Name");
             Consumable = true;
-            ResourceType = resourceNode.GetNodeText("Type");
+            ResourceType = resourceNode.StringFromNode("Type");
             AllResources.Add(this);
             switch (ResourceType)
             {
@@ -165,8 +165,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (attributeString == "") return;
             AttributeType = Inventory.StringToAttributeType(attributeString);
             ModifierVal = resourceNode.FloatFromNode("Modifier");
-            _additive = resourceNode.GetNodeText("Bonus") == "+";
-            string durationString = resourceNode.GetNodeText("Duration");
+            _additive = resourceNode.StringFromNode("Bonus") == "+";
+            string durationString = resourceNode.StringFromNode("Duration");
             Duration = 0;
             if (durationString != "")
             {

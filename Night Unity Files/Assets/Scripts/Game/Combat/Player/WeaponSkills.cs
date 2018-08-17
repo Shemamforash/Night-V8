@@ -1,6 +1,7 @@
 ﻿using System;
 using DG.Tweening;
 using Game.Combat.Misc;
+using Game.Combat.Ui;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -94,7 +95,7 @@ namespace Game.Combat.Player
     {
         private ParticleSystem _pushParticles;
         private GameObject _pushPrefab;
-        
+
         public Sweep() : base(nameof(Sweep))
         {
         }
@@ -159,7 +160,12 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            PlayerCombat.Instance.FireWeapon();
+            BaseWeaponBehaviour weaponBehaviour = PlayerCombat.Instance._weaponBehaviour;
+            if (weaponBehaviour.Empty()) return;
+            Shot shot = Shot.Create(s._origin);
+            shot.Fire();
+            weaponBehaviour.ConsumeAmmo(1);
+            UIMagazineController.UpdateMagazineUi();
         }
     }
 

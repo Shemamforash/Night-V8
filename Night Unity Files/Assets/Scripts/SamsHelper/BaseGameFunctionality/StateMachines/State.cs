@@ -1,15 +1,15 @@
-﻿using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.Input;
+﻿using SamsHelper.Input;
 
 namespace SamsHelper.BaseGameFunctionality.StateMachines
 {
-    public abstract class State : MyGameObject, IInputListener
+    public abstract class State : IInputListener
     {
         private readonly StateMachine _stateMachine;
+        public readonly string Name;
 
-        protected State(StateMachine stateMachine, string name, GameObjectType type) : base(name, type)
+        protected State(StateMachine stateMachine, string name)
         {
+            Name = name;
             _stateMachine = stateMachine;
             _stateMachine.AddState(this);
         }

@@ -39,7 +39,7 @@ namespace Game.Exploration.Environment
         private void LoadEnvironmentNames()
         {
             XmlNode root = Helper.OpenRootNode("Regions", "EnvironmentSuffixes");
-            string[] environmentNames = root.GetNodeText(EnvironmentType.ToString()).Split(',');
+            string[] environmentNames = root.StringFromNode(EnvironmentType.ToString()).Split(',');
             foreach (string name in environmentNames)
             {
                 _environmentNames.Add(name);

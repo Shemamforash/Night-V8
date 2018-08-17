@@ -142,6 +142,7 @@ namespace Game.Exploration.Ui
                 _costText.text = _enduranceCost + " <sprite name=\"Endurance\">";
             }
 
+            _costText.text += _region.ClaimBenefitString();
             _costText.color = UiAppearanceController.InvisibleColour;
             _costText.DOColor(Color.white, 1f);
             while (_doneFading == false)

@@ -86,8 +86,8 @@ namespace Game.Gear.Armour
 
             public AccessoryTemplate(XmlNode accessoryNode)
             {
-                Name = accessoryNode.GetNodeText("Name");
-                TargetAttribute = Inventory.StringToAttributeType(accessoryNode.GetNodeText("Attribute"));
+                Name = accessoryNode.StringFromNode("Name");
+                TargetAttribute = Inventory.StringToAttributeType(accessoryNode.StringFromNode("Attribute"));
                 _modifierValue = accessoryNode.FloatFromNode("Bonus");
                 _accessoryTemplates.Add(this);
             }
@@ -102,7 +102,7 @@ namespace Game.Gear.Armour
 
         public static Accessory LoadAccessory(XmlNode accessoryNode)
         {
-            string templateString = accessoryNode.GetNodeText("Template");
+            string templateString = accessoryNode.StringFromNode("Template");
             AccessoryTemplate template = _accessoryTemplates.First(t => t.Name == templateString);
             Accessory accessory = new Accessory(template, ItemQuality.Worn);
             accessory.Load(accessoryNode);

@@ -24,7 +24,7 @@ namespace Game.Characters
             XmlNode brandsNode = doc.SelectSingleNode("Brands");
             foreach (XmlNode brandNode in brandsNode.SelectNodes("Brand"))
             {
-                string name = brandNode.GetNodeText("Name");
+                string name = brandNode.StringFromNode("Name");
                 bool found = false;
                 foreach (Brand brand in _completedBrands)
                 {

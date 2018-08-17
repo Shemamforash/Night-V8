@@ -108,7 +108,7 @@ namespace Game.Exploration.Environment
 
         public static void Load(XmlNode doc)
         {
-            string currentEnvironmentText = doc.GetNodeText("CurrentEnvironment");
+            string currentEnvironmentText = doc.StringFromNode("CurrentEnvironment");
             foreach (KeyValuePair<int, Environment> environment in _environments)
             {
                 if (environment.Value.ToString() != currentEnvironmentText) continue;

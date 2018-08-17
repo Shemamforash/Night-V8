@@ -58913,7 +58913,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 564, y: -123.239845}
+  m_AnchoredPosition: {x: 564, y: -123.23985}
   m_SizeDelta: {x: 1128, y: 107.49077}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1512451719
@@ -93090,7 +93090,9 @@ MonoBehaviour:
   _rainLight: {fileID: 8300000, guid: fbe8f9d046582ba4abf89483f293d7b4, type: 3}
   _rainMedium: {fileID: 8300000, guid: 11e6104379eb8a54a877ea5383526503, type: 3}
   _rainHeavy: {fileID: 8300000, guid: 60187fe0f4de6d94ca91d3ad11de6100, type: 3}
-  _windHeavy: {fileID: 8300000, guid: cf05f4d42d9ae58489bacc512416322e, type: 3}
+  _windHeavy: {fileID: 8300000, guid: d379af98753a9fa4781cdf584afbfcac, type: 3}
+  _windMedium: {fileID: 8300000, guid: d379af98753a9fa4781cdf584afbfcac, type: 3}
+  _windLight: {fileID: 8300000, guid: cf05f4d42d9ae58489bacc512416322e, type: 3}
 --- !u!1 &2131837670
 GameObject:
   m_ObjectHideFlags: 0
