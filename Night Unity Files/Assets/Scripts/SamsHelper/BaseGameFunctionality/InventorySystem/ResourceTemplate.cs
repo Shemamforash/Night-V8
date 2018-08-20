@@ -90,10 +90,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             float ruinsDr = resourceNode.FloatFromNode("RuinsDropRate");
             float defilesDr = resourceNode.FloatFromNode("DefilesDropRate");
             float wastelandDr = resourceNode.FloatFromNode("WastelandDropRate");
-            _dropRates.Add(EnvironmentType.Oasis, new DropRate(ref OasisDRCur, oasisDr));
-            _dropRates.Add(EnvironmentType.Steppe, new DropRate(ref SteppeDRCur, steppeDr));
+            _dropRates.Add(EnvironmentType.Forest, new DropRate(ref OasisDRCur, oasisDr));
+            _dropRates.Add(EnvironmentType.Mountains, new DropRate(ref SteppeDRCur, steppeDr));
             _dropRates.Add(EnvironmentType.Ruins, new DropRate(ref RuinsDRCur, ruinsDr));
-            _dropRates.Add(EnvironmentType.Defiles, new DropRate(ref DefilesDRCur, defilesDr));
+            _dropRates.Add(EnvironmentType.Sea, new DropRate(ref DefilesDRCur, defilesDr));
             _dropRates.Add(EnvironmentType.Wasteland, new DropRate(ref WastelandDRCur, wastelandDr));
             SetEffect(resourceNode);
         }

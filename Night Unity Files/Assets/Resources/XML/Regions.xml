@@ -34,9 +34,9 @@
         </Fountain>
     </RegionType>
     <EnvironmentSuffixes>
-        <Oasis>Dune,Creek,Outcrop,Bank,Marsh,Cenote,Brook,Spring,Edge,Drink,Font,Flow</Oasis>
-        <Steppe>Tor,Hillside,Slope,Ridge,Knoll,Bog,Hoarfrost,Taiga,Crag</Steppe>
-        <Defiles>Cliff,Valley,Crest,Pinnacle,Precipice,Scar,Bluff,Escarpment,Talus,Gorge,Trench</Defiles>
+        <Forest>Dune,Creek,Outcrop,Bank,Marsh,Cenote,Brook,Spring,Edge,Drink,Font,Flow</Forest>
+        <Mountains>Tor,Hillside,Slope,Ridge,Knoll,Bog,Hoarfrost,Taiga,Crag</Mountains>
+        <Sea>Cliff,Valley,Crest,Pinnacle,Precipice,Scar,Bluff,Escarpment,Talus,Gorge,Trench</Sea>
         <Ruins>Vaults,Pillars,Rubble,Tower,Drome,Fragments,Citadel</Ruins>
         <Wasteland>Gulch,Hamada,Erg,Dune,Menhir,Aquifer,Channel,Drift,Crater</Wasteland>
     </EnvironmentSuffixes>

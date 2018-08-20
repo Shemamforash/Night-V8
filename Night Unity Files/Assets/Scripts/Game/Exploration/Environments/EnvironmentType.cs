@@ -2,10 +2,10 @@
 {
     public enum EnvironmentType
     {
-        Oasis,
-        Steppe,
+        Forest,
+        Mountains,
         Ruins,
-        Defiles,
+        Sea,
         Wasteland
     }
 }

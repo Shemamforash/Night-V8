@@ -4,8 +4,8 @@
     <DaysSpentHere>0</DaysSpentHere>
     <CurrentLevel>2</CurrentLevel>
     <Days>0</Days>
-    <Hours>11</Hours>
-    <Minutes>35</Minutes>
+    <Hours>14</Hours>
+    <Minutes>15</Minutes>
     <Difficulty>0</Difficulty>
   </WorldState>
   <Inventory>
@@ -13,8 +13,7 @@
     <Name>Vehicle</Name>
     <ParentInventory>-1</ParentInventory>
     <Resources>
-      <Salt>60</Salt>
-      <Essence>1</Essence>
+      <Salt>20</Salt>
     </Resources>
     <Items>
       <Weapons />
@@ -139,19 +138,19 @@
         </Attribute>
         <Attribute>
           <AttributeType>5</AttributeType>
-          <Value>1.541667</Value>
+          <Value>2.208333</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>4</AttributeType>
-          <Value>4.36111</Value>
+          <Value>6.58334</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>1</AttributeType>
-          <Value>3</Value>
+          <Value>5</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
@@ -207,7 +206,7 @@
       <Brands />
       <StoryUnlocked>False</StoryUnlocked>
       <StoryProgress>1</StoryProgress>
-      <TimeAlive>67</TimeAlive>
+      <TimeAlive>99</TimeAlive>
       <CharacterClass>Wanderer</CharacterClass>
     </Character>
   </Inventory>
@@ -829,10 +828,10 @@
     </Region>
   </Regions>
   <Weather>
-    <Name>Drizzle</Name>
-    <TimeRemaining>5</TimeRemaining>
+    <Name>Overcast</Name>
+    <TimeRemaining>21</TimeRemaining>
   </Weather>
-  <CurrentEnvironment>Steppe</CurrentEnvironment>
+  <CurrentEnvironment>Forest</CurrentEnvironment>
   <WorldEvents>
   </WorldEvents>
 </Game>

@@ -1,5 +1,5 @@
 <EnvironmentTypes>
-    <Oasis>
+    <Forest>
         <Level>0</Level>
         <Temperature>3</Temperature>
         <Temples>1</Temples>
@@ -9,8 +9,8 @@
         <Shelters>0</Shelters>
         <Animals>4</Animals>
         <Danger>9</Danger>
-    </Oasis>
-    <Steppe>
+    </Forest>
+    <Mountains>
         <Level>1</Level>
         <Temperature>1</Temperature>
         <Temples>2</Temples>
@@ -20,7 +20,7 @@
         <Shelters>1</Shelters>
         <Animals>5</Animals>
         <Danger>10</Danger>
-    </Steppe>
+    </Mountains>
     <Ruins>
         <Level>2</Level>
         <Temperature>2</Temperature>
@@ -32,7 +32,7 @@
         <Animals>6</Animals>
         <Danger>11</Danger>
     </Ruins>
-    <Defiles>
+    <Sea>
         <Level>3</Level>
         <Temperature>4</Temperature>
         <Temples>4</Temples>
@@ -42,7 +42,7 @@
         <Shelters>1</Shelters>
         <Animals>7</Animals>
         <Danger>12</Danger>
-    </Defiles>
+    </Sea>
     <Wastelands>
         <Level>4</Level>
         <Temperature>5</Temperature>

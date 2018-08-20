@@ -569,7 +569,7 @@
     <ParentInventory>-1</ParentInventory>
     <TimeRemaining>23</TimeRemaining>
   </Weather>
-  <CurrentEnvironment>Oasis</CurrentEnvironment>
+  <CurrentEnvironment>Forest</CurrentEnvironment>
   <WorldEvents>
   </WorldEvents>
 </Game>

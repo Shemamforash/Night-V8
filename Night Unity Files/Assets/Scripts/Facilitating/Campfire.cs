@@ -14,7 +14,7 @@ namespace Facilitating
         private const float Smoke4DurationMax = 3;
         private static float _fireLevel;
         private const float FireBurnOutPoint = 0.2f;
-        private Image _fireLightImage, _gateImage;
+        private Image _fireLightImage;
         
         public void Start()
         {
@@ -23,8 +23,7 @@ namespace Facilitating
             _smoke2 = gameObject.FindChildWithName<ParticleSystem>("Smoke 2");
             _smoke3 = gameObject.FindChildWithName<ParticleSystem>("Smoke 3");
             _smoke4 = gameObject.FindChildWithName<ParticleSystem>("Smoke 4");
-            _fireLightImage = gameObject.FindChildWithName<Image>("Logs");
-            _gateImage = transform.parent.parent.gameObject.FindChildWithName<Image>("Gate");
+            _fireLightImage = GetComponent<Image>();
             Restart();
         }
 
@@ -56,7 +55,6 @@ namespace Facilitating
             _smoke4Main.startLifetime = Smoke4DurationMax * _fireLevel;
 
             _fireLightImage.color = Color.Lerp(Color.black, Color.white, _fireLevel);
-            _gateImage.color = Color.Lerp(Color.black, Color.white, _fireLevel);
         }
         
         public void Update()

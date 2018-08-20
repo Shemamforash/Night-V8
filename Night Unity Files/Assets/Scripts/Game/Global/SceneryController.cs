@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 public class SceneryController : MonoBehaviour
 {
-    private static Image _environment, _sunGlow, _gateShadow, _fireShadow;
+    private static Image _environment, _sunGlow, _gateShadow;
     private static RectTransform _sun, _sky;
     private static Color _lightMinColour = new Color(0.3f, 0f, 0f, 1f);
     private const float SunYMax = 450;
     private const float SkyYMax = 800;
 
-    private static Color _environmentDarkColor = new Color(0.05f, 0.05f, 0.05f);
-    private static Color _glowMaxColor = new Color(1, 0, 0, 0.5f);
+    private static readonly Color _environmentDarkColor = new Color(0.05f, 0.05f, 0.05f);
+    private static readonly Color _glowMaxColor = new Color(1, 0, 0, 0.5f);
 
     public void Awake()
     {
@@ -21,7 +21,6 @@ public class SceneryController : MonoBehaviour
         _sun = gameObject.FindChildWithName<RectTransform>("Sun");
         _environment = gameObject.FindChildWithName<Image>("Landscape");
         _gateShadow = gameObject.FindChildWithName<Image>("Gate Shadow");
-        _fireShadow = gameObject.FindChildWithName<Image>("Fire Shadow");
         _sunGlow = gameObject.FindChildWithName<Image>("Sun Glow");
         UpdateEnvironmentBackground();
     }
@@ -41,14 +40,12 @@ public class SceneryController : MonoBehaviour
             _sunGlow.color = UiAppearanceController.InvisibleColour;
             _environment.color = _environmentDarkColor;
             _gateShadow.color = UiAppearanceController.InvisibleColour;
-            _fireShadow.color = UiAppearanceController.InvisibleColour;
         }
         else
         {
             _sunGlow.color = Color.Lerp(UiAppearanceController.InvisibleColour, _glowMaxColor, sinTime);
             _environment.color = Color.Lerp(new Color(0.05f, 0.05f, 0.05f), Color.white, sinTime);
             _gateShadow.color = Color.Lerp(UiAppearanceController.InvisibleColour, Color.white, sinTime);
-            _fireShadow.color = Color.Lerp(UiAppearanceController.InvisibleColour, Color.white, sinTime);
         }
     }
 
@@ -58,6 +55,6 @@ public class SceneryController : MonoBehaviour
         Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
         if (currentEnvironment == null) return;
         _environment.sprite = Resources.Load<Sprite>("Images/Backgrounds/" + currentEnvironment.EnvironmentType + "/Environment");
-        _environment.sprite = Resources.Load<Sprite>("Images/Backgrounds/" + EnvironmentManager.CurrentEnvironment.EnvironmentType + "/Environment");
+        _gateShadow.sprite = Resources.Load<Sprite>("Images/Backgrounds/" + EnvironmentManager.CurrentEnvironment.EnvironmentType + "/Shadow");
     }
 }
