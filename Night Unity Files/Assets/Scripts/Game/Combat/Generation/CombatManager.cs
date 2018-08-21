@@ -30,7 +30,7 @@ namespace Game.Combat.Generation
         private bool _inMelee;
         private float _visibilityRange;
         private bool _inCombat;
-        private readonly List<EnemyBehaviour> _enemies = new List<EnemyBehaviour>();
+        private readonly List<ITakeDamageInterface> _enemies = new List<ITakeDamageInterface>();
         private static CombatManager _instance;
         private bool _shotFired;
         private int _enemiesKilled;
@@ -57,7 +57,7 @@ namespace Game.Combat.Generation
             _instance = this;
         }
 
-        public static CombatManager Instance()
+        private static CombatManager Instance()
         {
             if (_instance == null) _instance = FindObjectOfType<CombatManager>();
             return _instance;
@@ -108,6 +108,9 @@ namespace Game.Combat.Generation
             else if (_currentRegion.GetRegionType() == RegionType.Rite)
             {
                 worldObject.AddComponent<Rite>().Initialise(_currentRegion);
+            } else if (_currentRegion.GetRegionType() == RegionType.Tomb)
+            {
+                worldObject.AddComponent<Tomb>().Initialise(_currentRegion);
             }
             else
             {
@@ -212,7 +215,7 @@ namespace Game.Combat.Generation
             PathingGrid._edgePositionList.ForEach(c => { Gizmos.DrawCube(c.Position, cubeSize); });
         }
 
-        public static void ExitCombat()
+        public static void ExitCombat(bool returnToMap = true)
         {
             if (!Instance()._inCombat)
             {
@@ -240,25 +243,26 @@ namespace Game.Combat.Generation
             brandManager.IncreaseHumansKilled(Instance()._humansKilled);
 
             Instance()._inCombat = false;
-            SceneChanger.ChangeScene("Map", false);
             PlayerCombat.Instance.ExitCombat();
+            if (!returnToMap) return;
+            SceneChanger.ChangeScene("Map", false);
         }
 
-        public static List<CharacterCombat> GetCharactersInRange(Vector2 position, float range)
+        public static List<ITakeDamageInterface> GetCharactersInRange(Vector2 position, float range)
         {
-            List<CharacterCombat> charactersInRange = GetEnemiesInRange(position, range);
+            List<ITakeDamageInterface> charactersInRange = GetEnemiesInRange(position, range);
             if (Vector2.Distance(PlayerCombat.Instance.transform.position, position) <= range) charactersInRange.Add(PlayerCombat.Instance);
             return charactersInRange;
         }
 
-        public static List<CharacterCombat> GetEnemiesInRange(Vector2 position, float range)
+        public static List<ITakeDamageInterface> GetEnemiesInRange(Vector2 position, float range)
         {
-            return new List<CharacterCombat>(Instance()._enemies.Where(e => Vector2.Distance(e.transform.position, position) <= range));
+            return new List<ITakeDamageInterface>(Instance()._enemies.Where(e => Vector2.Distance(e.GetGameObject().transform.position, position) <= range));
         }
 
-        public static List<EnemyBehaviour> EnemiesOnScreen()
+        public static List<ITakeDamageInterface> EnemiesOnScreen()
         {
-            return Instance()._enemies.FindAll(e => e.OnScreen());
+            return Instance()._enemies.FindAll(e => e.GetGameObject().gameObject.OnScreen());
         }
 
         public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate type, CharacterCombat target = null)
@@ -285,7 +289,7 @@ namespace Game.Combat.Generation
             return enemy;
         }
 
-        public static void Remove(EnemyBehaviour enemy)
+        public static void Remove(ITakeDamageInterface enemy)
         {
             Instance()._enemies.Remove(enemy);
             if (Instance()._enemies.Count != 0) return;
@@ -297,13 +301,13 @@ namespace Game.Combat.Generation
             _enemies.Add(e);
         }
 
-        public static EnemyBehaviour NearestEnemy(Vector2 position)
+        public static ITakeDamageInterface NearestEnemy(Vector2 position)
         {
-            EnemyBehaviour nearestEnemy = null;
+            ITakeDamageInterface nearestEnemy = null;
             float nearestDistance = 10000;
             EnemiesOnScreen().ForEach(e =>
             {
-                float distance = Vector2.Distance(e.transform.position, position);
+                float distance = Vector2.Distance(e.GetGameObject().transform.position, position);
                 if (distance >= nearestDistance) return;
                 nearestDistance = distance;
                 nearestEnemy = e;
@@ -311,15 +315,15 @@ namespace Game.Combat.Generation
             return nearestEnemy;
         }
 
-        public static CharacterCombat NearestCharacter(Vector2 position)
+        public static ITakeDamageInterface NearestCharacter(Vector2 position)
         {
-            EnemyBehaviour nearestEnemy = NearestEnemy(position);
+            ITakeDamageInterface nearestEnemy = NearestEnemy(position);
             float playerDistance = Vector2.Distance(position, PlayerCombat.Instance.transform.position);
-            float enemyDistance = Vector2.Distance(position, nearestEnemy.transform.position);
-            return playerDistance < enemyDistance ? (CharacterCombat) PlayerCombat.Instance : nearestEnemy;
+            float enemyDistance = Vector2.Distance(position, nearestEnemy.GetGameObject().transform.position);
+            return playerDistance < enemyDistance ? PlayerCombat.Instance : nearestEnemy;
         }
 
-        public static List<EnemyBehaviour> Enemies() => Instance()._enemies;
+        public static List<ITakeDamageInterface> Enemies() => Instance()._enemies;
 
         public static void IncreaseSkillsUsed()
         {

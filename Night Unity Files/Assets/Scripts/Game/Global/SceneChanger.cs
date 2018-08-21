@@ -54,6 +54,7 @@ namespace Game.Global
 
         public static void ChangeScene(string sceneName, bool fade = true, Action<float> loadProgressAction = null)
         {
+            if (sceneName == "Map") Debug.Log("map");
             WorldState.Pause();
             _instance.StartCoroutine(_instance.FadeOut(sceneName, fade, loadProgressAction));
         }

@@ -25,8 +25,8 @@ public class Mine : MonoBehaviour
         }
 
         float blinkTimeModifier = 1f;
-        CharacterCombat nearestCharacter = CombatManager.NearestCharacter(transform.position);
-        float nearestCharacterDistance = nearestCharacter.transform.Distance(transform);
+        ITakeDamageInterface nearestCharacter = CombatManager.NearestCharacter(transform.position);
+        float nearestCharacterDistance = nearestCharacter.GetGameObject().transform.Distance(transform);
         if (nearestCharacterDistance < 2f)
         {
             blinkTimeModifier = nearestCharacterDistance / 2f;

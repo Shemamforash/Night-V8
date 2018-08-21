@@ -42,6 +42,11 @@ namespace Game.Combat.Misc
 
         public Shield Shield;
 
+        public GameObject GetGameObject()
+        {
+            return gameObject;
+        }
+        
         public float DistanceToTarget()
         {
             if (_distanceToTarget == -1) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);

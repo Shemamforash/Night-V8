@@ -1,5 +1,6 @@
 ﻿using Game.Combat.Enemies.Bosses;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -18,9 +19,9 @@ public class SerpentBehaviour : Boss
     {
         base.Awake();
         _instance = this;
-        Head = transform.Find("Head").GetComponent<SerpentSegmentBehaviour>();
+        Head = transform.Find("Wing Segment (0)").GetComponent<SerpentSegmentBehaviour>();
         Head.SetNextSegment(transform, 0);
-        GetComponent<Beam>().Initialise(transform.FindChildWithName("Beam Target"), 5, 2, 2f);
+        GetComponent<Beam>().Initialise(5, 2);
     }
 
     public static SerpentBehaviour Instance()
@@ -33,7 +34,7 @@ public class SerpentBehaviour : Boss
         if (_serpentPrefab == null) _serpentPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Serpent/Serpent");
         Instantiate(_serpentPrefab).transform.position = new Vector2(10, 10);
     }
-    
+
     public override void UnregisterSection(BossSectionHealthController section)
     {
         int prevWingCount = SectionCount();
@@ -52,15 +53,13 @@ public class SerpentBehaviour : Boss
         float distanceToTarget = Vector2.Distance(transform.position, _targetPosition);
         if (_findNewTargetTime <= 0f || distanceToTarget < 0.5f)
         {
-            _findNewTargetTime = Random.Range(5f, 10f);
-//            Vector3 dir = (Helper.MouseToWorldCoordinates() - transform.position).normalized;
+            _findNewTargetTime = Random.Range(3f, 7f);
             Vector3 dir = (PlayerCombat.Instance.transform.position - transform.position).normalized;
-            _targetPosition = AdvancedMaths.RandomVectorWithinRange(Helper.MouseToWorldCoordinates() + dir * 6f, 3f);
+            _targetPosition = AdvancedMaths.RandomVectorWithinRange(PlayerCombat.Instance.transform.position + dir * 5f, 3f);
         }
-
         _findNewTargetTime -= Time.deltaTime;
     }
-    
+
     public void FixedUpdate()
     {
         //todo steer

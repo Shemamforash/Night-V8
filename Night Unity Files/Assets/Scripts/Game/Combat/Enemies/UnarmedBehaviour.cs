@@ -1,6 +1,5 @@
 ﻿using Game.Combat.Generation;
 using Game.Combat.Misc;
-using Game.Combat.Player;
 using UnityEngine;
 
 namespace Game.Combat.Enemies
@@ -29,10 +28,9 @@ namespace Game.Combat.Enemies
             if (!alertOthers) return;
             CombatManager.Enemies().ForEach(e =>
             {
-                if (e == this) return;
                 UnarmedBehaviour enemy = e as UnarmedBehaviour;
-                if (enemy == null) return;
-                if (Vector2.Distance(e.CurrentCell().Position, CurrentCell().Position) > 10) return;
+                if (enemy == this || enemy == null) return;
+                if (Vector2.Distance(enemy.CurrentCell().Position, CurrentCell().Position) > 10) return;
                 enemy.Alert(false);
             });
         }

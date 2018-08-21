@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Game.Combat.Generation;
+using Game.Global;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Bosses
@@ -14,7 +16,7 @@ namespace Game.Combat.Enemies.Bosses
             
         }
 
-        public virtual void RegisterSection(BossSectionHealthController section)
+        public void RegisterSection(BossSectionHealthController section)
         {
             Sections.Add(section);
         }
@@ -22,12 +24,14 @@ namespace Game.Combat.Enemies.Bosses
         public virtual void UnregisterSection(BossSectionHealthController section)
         {
             Sections.Remove(section);
-            if (Sections.Count == 0) Kill();
+            if (Sections.Count == 0) KillBoss();
         }
 
-        protected virtual void Kill()
+        protected void KillBoss()
         {
             Destroy(gameObject);
+            CombatManager.ExitCombat(false);
+            WorldState.TravelToNextEnvironment();
         }
 
         protected int SectionCount()

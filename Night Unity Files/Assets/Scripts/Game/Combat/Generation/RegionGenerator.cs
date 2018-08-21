@@ -76,6 +76,7 @@ namespace Game.Combat.Generation
 
         private void GenerateEchoes()
         {
+            if (_region.EchoPositions.Count == 0) return;
             List<Characters.Player> characters = CharacterManager.Characters;
             characters.Shuffle();
             foreach (Characters.Player c in characters)

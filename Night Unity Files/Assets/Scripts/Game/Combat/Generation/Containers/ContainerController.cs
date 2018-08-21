@@ -52,7 +52,6 @@ public abstract class ContainerController
 
     public string GetContents()
     {
-        Debug.Log(Inventory().Name + "  " + Inventory().Contents().Count);
         return _inventory.Contents()[0].Name;
     }
 

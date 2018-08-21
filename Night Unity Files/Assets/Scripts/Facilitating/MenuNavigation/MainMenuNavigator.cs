@@ -66,13 +66,13 @@ namespace Facilitating.MenuNavigation
             ResetAppearance();
             CreateFadeInSequence();
             _starting = false;
+            return;
             if (Load)
             {
                 ContinueGame();
                 return;
             }
             ClearSaveAndLoad();
-            EditorApplication.isPlaying = false;
         }
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)

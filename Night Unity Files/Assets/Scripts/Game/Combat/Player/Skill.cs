@@ -67,18 +67,20 @@ namespace Game.Combat.Player
             return (EnemyBehaviour)PlayerCombat.Instance.GetTarget();
         }
 
-        protected void KnockbackSingleTarget(Vector2 position, CharacterCombat character, float force)
+        private static void KnockbackSingleTarget(Vector2 position, ITakeDamageInterface c, float force)
         {
+            CharacterCombat character =  c as CharacterCombat;
+            if (character == null) return;
             float distance = Vector2.Distance(character.transform.position, position);
             if (distance < 0f) distance = 1;
             float scaledForce = force / distance;
             character.MovementController.Knockback(position, scaledForce);
         }
 
-        protected List<CharacterCombat> KnockbackInRange(float range, float force)
+        protected List<ITakeDamageInterface> KnockbackInRange(float range, float force)
         {
             Vector2 position = PlayerCombat.Instance.transform.position;
-            List<CharacterCombat> enemiesInRange = CombatManager.GetEnemiesInRange(position, range);
+            List<ITakeDamageInterface> enemiesInRange = CombatManager.GetEnemiesInRange(position, range);
             enemiesInRange.ForEach(e => { KnockbackSingleTarget(position, e, force); });
             return enemiesInRange;
         }

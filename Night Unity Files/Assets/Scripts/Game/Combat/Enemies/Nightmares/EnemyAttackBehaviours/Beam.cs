@@ -1,22 +1,20 @@
-﻿using UnityEngine;
-
-namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
+﻿namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 {
     public class Beam : TimedAttackBehaviour
     {
-        private Transform _target;
-        private float _beamWidth;
-
-        public void Initialise(Transform target, float maxTimer, float minTimer = -1, float beamWidth = 0.5f)
-        {
-            Initialise(maxTimer, minTimer);
-            _target = target;
-            _beamWidth = beamWidth;
-        }
+        private const float BeamWidth = 0.5f;
+        private BeamController _beamController;
         
         protected override void Attack()
         {
-            BeamController.Create(transform, _target).SetBeamWidth(_beamWidth);
+            _beamController = BeamController.Create(transform);
+            _beamController.SetBeamWidth(BeamWidth);
+        }
+
+        private void OnDestroy()
+        {
+            if (_beamController == null) return;
+            Destroy(_beamController.gameObject);
         }
     }
 }

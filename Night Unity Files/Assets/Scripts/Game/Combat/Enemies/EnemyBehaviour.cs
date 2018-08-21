@@ -26,8 +26,6 @@ namespace Game.Combat.Enemies
         protected bool FacePlayer;
         public MoveBehaviour MoveBehaviour;
 
-        public bool OnScreen() => Helper.IsObjectInCameraView(gameObject);
-
         public override Weapon Weapon() => null;
 
         public override void Update()
@@ -67,13 +65,14 @@ namespace Game.Combat.Enemies
 
         private void PushAwayFromNeighbors()
         {
-            List<CharacterCombat> chars = CombatManager.GetCharactersInRange(transform.position, 1f);
+            List<ITakeDamageInterface> chars = CombatManager.GetCharactersInRange(transform.position, 1f);
             Vector2 forceDir = Vector2.zero;
             chars.ForEach(c =>
             {
-                if (c == this) return;
-                if (Vector2.Distance(transform.position, c.transform.position) > 0.25f) return;
-                Vector2 dir = c.transform.position - transform.position;
+                EnemyBehaviour enemy = c as EnemyBehaviour;
+                if (enemy == null || enemy == this) return;
+                if (Vector2.Distance(transform.position, enemy.transform.position) > 0.25f) return;
+                Vector2 dir = enemy.transform.position - transform.position;
                 if (dir == Vector2.zero) dir = AdvancedMaths.RandomVectorWithinRange(transform.position, 1).normalized;
                 float force = 1 / dir.magnitude;
                 forceDir += -dir * force;

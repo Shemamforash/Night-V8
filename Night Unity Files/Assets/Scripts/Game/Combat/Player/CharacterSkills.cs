@@ -151,7 +151,12 @@ namespace Game.Combat.Player
         protected override void InstantEffect()
         {
             PlayerCombat.Instance.TakeArmourDamage(ArmourPlate.PlateHealthUnit);
-            KnockbackInRange(2f, 25).ForEach(e => { e.TakeArmourDamage(ArmourPlate.PlateHealthUnit); });
+            KnockbackInRange(2f, 25).ForEach(e =>
+            {
+                CharacterCombat c = e as CharacterCombat;
+                if (c == null) return;
+                c.TakeArmourDamage(ArmourPlate.PlateHealthUnit);
+            });
         }
     }
 

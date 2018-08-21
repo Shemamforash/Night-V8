@@ -5,6 +5,7 @@
         None,
         Shelter,
         Gate,
+        Tomb,
         Temple,
         Animal,
         Danger,

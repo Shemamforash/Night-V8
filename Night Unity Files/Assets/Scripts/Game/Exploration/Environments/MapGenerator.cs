@@ -210,7 +210,7 @@ namespace Game.Exploration.Environment
 
         public static string GenerateName(RegionType type)
         {
-            if (type == RegionType.Rite) return "";
+            if (type == RegionType.Rite || type == RegionType.Tomb) return "";
             return type == RegionType.Gate ? "Gate" : _regionNames[type].RemoveRandom();
         }
 
@@ -279,7 +279,7 @@ namespace Game.Exploration.Environment
             XmlNode root = Helper.OpenRootNode("Regions", "RegionType");
             foreach (RegionType type in Enum.GetValues(typeof(RegionType)))
             {
-                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Nightmare || type == RegionType.Rite) continue;
+                if (type == RegionType.None || type == RegionType.Gate || type == RegionType.Nightmare || type == RegionType.Rite || type == RegionType.Tomb) continue;
                 _regionTypes.Add(type);
             }
 

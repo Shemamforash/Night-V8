@@ -16,7 +16,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         public void SetTarget(Transform targetTransform)
         {
             gameObject.AddComponent<Orbit>().Initialise(targetTransform, 2f, 4f);
-            gameObject.AddComponent<Beam>().Initialise(targetTransform, 5f, 3f);
+            gameObject.AddComponent<Beam>().Initialise(5f, 3f);
         }
     }
 }

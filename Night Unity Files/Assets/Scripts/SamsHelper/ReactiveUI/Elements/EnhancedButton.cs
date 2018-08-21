@@ -86,6 +86,12 @@ namespace SamsHelper.ReactiveUI.Elements
             Enter();
         }
 
+        public void OnDisable()
+        {
+            _borderAlpha = 0f;
+            UpdateBorderAlpha();
+        }
+
         public Button Button()
         {
             if (_button == null) _button = GetComponent<Button>();

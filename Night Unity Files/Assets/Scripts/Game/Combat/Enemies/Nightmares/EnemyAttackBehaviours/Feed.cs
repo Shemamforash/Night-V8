@@ -17,12 +17,14 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         
         protected override void Attack()
         {
-            List<CharacterCombat> charactersInRange = CombatManager.GetCharactersInRange(transform.position, 5f);
+            List<ITakeDamageInterface> charactersInRange = CombatManager.GetCharactersInRange(transform.position, 5f);
             int maxDraw = Random.Range(2, 5);
-            foreach (CharacterCombat c in charactersInRange)
+            foreach (ITakeDamageInterface c in charactersInRange)
             {
+                CharacterCombat character = c as CharacterCombat;
                 if (maxDraw == 0) return;
-                FeedTarget drain = c.GetComponent<FeedTarget>();
+                if (character == null) continue; 
+                FeedTarget drain = character.GetComponent<FeedTarget>();
                 if (drain == null) continue;
                 --maxDraw;
                 drain.StartDrawLife(this);

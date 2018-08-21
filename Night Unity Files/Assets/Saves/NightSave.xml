@@ -2,19 +2,17 @@
   <WorldState>
     <Seed>0</Seed>
     <DaysSpentHere>0</DaysSpentHere>
-    <CurrentLevel>2</CurrentLevel>
+    <CurrentLevel>1</CurrentLevel>
     <Days>0</Days>
-    <Hours>14</Hours>
-    <Minutes>15</Minutes>
+    <Hours>6</Hours>
+    <Minutes>0</Minutes>
     <Difficulty>0</Difficulty>
   </WorldState>
   <Inventory>
     <Id>0</Id>
     <Name>Vehicle</Name>
     <ParentInventory>-1</ParentInventory>
-    <Resources>
-      <Salt>20</Salt>
-    </Resources>
+    <Resources />
     <Items>
       <Weapons />
       <ArmourPlates />
@@ -38,73 +36,55 @@
           <Weapons>
             <Gear>
               <Id>3</Id>
-              <Name>Worn Spitter</Name>
+              <Name>Worn Skullcrusher</Name>
               <ParentInventory>2</ParentInventory>
               <Quantity>1</Quantity>
               <Stackable>False</Stackable>
               <Template>
               </Template>
               <Quality>1</Quality>
-              <Class>9</Class>
-              <Durability>7.343478</Durability>
+              <Class>8</Class>
+              <Durability>11</Durability>
               <Attributes>
                 <Attribute>
                   <AttributeType>19</AttributeType>
-                  <Value>6</Value>
+                  <Value>8</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
                 <Attribute>
                   <AttributeType>21</AttributeType>
-                  <Value>12</Value>
+                  <Value>6</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
                 <Attribute>
                   <AttributeType>22</AttributeType>
-                  <Value>1</Value>
+                  <Value>2.5</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
                 <Attribute>
                   <AttributeType>20</AttributeType>
-                  <Value>0.3</Value>
+                  <Value>0.2</Value>
                   <Min>0</Min>
                   <Max>1</Max>
                 </Attribute>
                 <Attribute>
                   <AttributeType>23</AttributeType>
-                  <Value>98</Value>
+                  <Value>35</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
                 <Attribute>
                   <AttributeType>25</AttributeType>
-                  <Value>30</Value>
+                  <Value>2</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
                 <Attribute>
                   <AttributeType>24</AttributeType>
-                  <Value>1</Value>
-                  <Min>0</Min>
-                  <Max>3.402823E+38</Max>
-                </Attribute>
-                <Attribute>
-                  <AttributeType>27</AttributeType>
-                  <Value>0</Value>
-                  <Min>0</Min>
-                  <Max>3.402823E+38</Max>
-                </Attribute>
-                <Attribute>
-                  <AttributeType>28</AttributeType>
-                  <Value>0</Value>
-                  <Min>0</Min>
-                  <Max>3.402823E+38</Max>
-                </Attribute>
-                <Attribute>
-                  <AttributeType>26</AttributeType>
-                  <Value>0</Value>
+                  <Value>10</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
@@ -138,19 +118,19 @@
         </Attribute>
         <Attribute>
           <AttributeType>5</AttributeType>
-          <Value>2.208333</Value>
+          <Value>0</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>4</AttributeType>
-          <Value>6.58334</Value>
+          <Value>0</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>1</AttributeType>
-          <Value>5</Value>
+          <Value>10</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
@@ -168,59 +148,49 @@
         </Attribute>
         <Attribute>
           <AttributeType>3</AttributeType>
-          <Value>3</Value>
+          <Value>4</Value>
           <Min>0</Min>
           <Max>4</Max>
-        </Attribute>
-        <Attribute>
-          <AttributeType>29</AttributeType>
-          <Value>0</Value>
-          <Min>0</Min>
-          <Max>3.402823E+38</Max>
-        </Attribute>
-        <Attribute>
-          <AttributeType>8</AttributeType>
-          <Value>0</Value>
-          <Min>0</Min>
-          <Max>3.402823E+38</Max>
-        </Attribute>
-        <Attribute>
-          <AttributeType>13</AttributeType>
-          <Value>0</Value>
-          <Min>0</Min>
-          <Max>3.402823E+38</Max>
-        </Attribute>
-        <Attribute>
-          <AttributeType>15</AttributeType>
-          <Value>0</Value>
-          <Min>0</Min>
-          <Max>3.402823E+38</Max>
-        </Attribute>
-        <Attribute>
-          <AttributeType>14</AttributeType>
-          <Value>0</Value>
-          <Min>0</Min>
-          <Max>3.402823E+38</Max>
         </Attribute>
       </Attributes>
       <Brands />
       <StoryUnlocked>False</StoryUnlocked>
       <StoryProgress>1</StoryProgress>
-      <TimeAlive>99</TimeAlive>
+      <TimeAlive>0</TimeAlive>
       <CharacterClass>Wanderer</CharacterClass>
     </Character>
   </Inventory>
   <Regions>
     <Region>
-      <Name>Savage's Hillside</Name>
-      <RegionId>54</RegionId>
-      <Position>(-17.0, 0.0)</Position>
+      <Name>Anger's Edge</Name>
+      <RegionId>8</RegionId>
+      <Position>(12.0, -1.0)</Position>
       <Neighbors>
-        <ID>72</ID>
-        <ID>48</ID>
-        <ID>63</ID>
+        <ID>19</ID>
+        <ID>2</ID>
+        <ID>3</ID>
       </Neighbors>
-      <Type>5</Type>
+      <Type>6</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>0</FoodSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
+      <ClaimRemaining>0</ClaimRemaining>
+      <ClaimQuantity>0</ClaimQuantity>
+      <ClaimBenefit>
+      </ClaimBenefit>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Endeavour Cenote</Name>
+      <RegionId>21</RegionId>
+      <Position>(-24.0, 19.0)</Position>
+      <Neighbors>
+        <ID>9</ID>
+      </Neighbors>
+      <Type>8</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -234,20 +204,21 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Titan's Remains</Name>
-      <RegionId>46</RegionId>
-      <Position>(0.0, 8.0)</Position>
+      <Name>Marker of Deeds</Name>
+      <RegionId>10</RegionId>
+      <Position>(21.0, 10.0)</Position>
       <Neighbors>
-        <ID>55</ID>
-        <ID>62</ID>
+        <ID>16</ID>
+        <ID>13</ID>
+        <ID>4</ID>
       </Neighbors>
-      <Type>5</Type>
+      <Type>9</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
       <ClaimRemaining>0</ClaimRemaining>
       <ClaimQuantity>0</ClaimQuantity>
       <ClaimBenefit>
@@ -255,21 +226,20 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Tracker's Sustenance</Name>
-      <RegionId>61</RegionId>
-      <Position>(0.0, -21.0)</Position>
+      <Name>Elating Marsh</Name>
+      <RegionId>6</RegionId>
+      <Position>(2.0, 10.0)</Position>
       <Neighbors>
-        <ID>65</ID>
-        <ID>70</ID>
-        <ID>60</ID>
+        <ID>14</ID>
+        <ID>1</ID>
       </Neighbors>
-      <Type>4</Type>
+      <Type>7</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>0</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
       <ClaimRemaining>0</ClaimRemaining>
       <ClaimQuantity>0</ClaimQuantity>
       <ClaimBenefit>
@@ -278,21 +248,20 @@
     </Region>
     <Region>
       <Name>Gate</Name>
-      <RegionId>44</RegionId>
+      <RegionId>0</RegionId>
       <Position>(0.0, 0.0)</Position>
       <Neighbors>
-        <ID>53</ID>
-        <ID>45</ID>
-        <ID>47</ID>
-        <ID>55</ID>
+        <ID>2</ID>
+        <ID>11</ID>
+        <ID>1</ID>
       </Neighbors>
       <Type>2</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
       <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>0</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
       <ClaimRemaining>0</ClaimRemaining>
       <ClaimQuantity>0</ClaimQuantity>
       <ClaimBenefit>
@@ -300,103 +269,20 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Drifter's Quarter</Name>
-      <RegionId>70</RegionId>
-      <Position>(7.0, -26.0)</Position>
+      <Name>Hellion's Dusk</Name>
+      <RegionId>4</RegionId>
+      <Position>(15.0, 13.0)</Position>
       <Neighbors>
-        <ID>71</ID>
-        <ID>61</ID>
+        <ID>10</ID>
+        <ID>3</ID>
       </Neighbors>
-      <Type>1</Type>
+      <Type>6</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
       <WaterSourceCount>0</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Trapper's Remission</Name>
-      <RegionId>49</RegionId>
-      <Position>(5.0, 13.0)</Position>
-      <Neighbors>
-        <ID>51</ID>
-        <ID>62</ID>
-      </Neighbors>
-      <Type>4</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Piety's Hoarfrost</Name>
-      <RegionId>69</RegionId>
-      <Position>(-13.0, -25.0)</Position>
-      <Neighbors>
-        <ID>59</ID>
-      </Neighbors>
-      <Type>3</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Struggle Bog</Name>
-      <RegionId>68</RegionId>
-      <Position>(-7.0, 20.0)</Position>
-      <Neighbors>
-        <ID>52</ID>
-        <ID>66</ID>
-      </Neighbors>
-      <Type>7</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Mortal's Downfall</Name>
-      <RegionId>53</RegionId>
-      <Position>(7.0, 0.0)</Position>
-      <Neighbors>
-        <ID>51</ID>
-        <ID>44</ID>
-      </Neighbors>
-      <Type>5</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>0</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
       <ClaimRemaining>0</ClaimRemaining>
       <ClaimQuantity>0</ClaimQuantity>
       <ClaimBenefit>
@@ -404,32 +290,13 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Anger's Grief</Name>
-      <RegionId>67</RegionId>
-      <Position>(-20.0, 8.0)</Position>
+      <Name>Endeavour's Advantage</Name>
+      <RegionId>1</RegionId>
+      <Position>(-2.0, 6.0)</Position>
       <Neighbors>
-        <ID>58</ID>
-        <ID>63</ID>
-      </Neighbors>
-      <Type>5</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Testimony of Myth</Name>
-      <RegionId>71</RegionId>
-      <Position>(14.0, -25.0)</Position>
-      <Neighbors>
-        <ID>70</ID>
+        <ID>6</ID>
+        <ID>0</ID>
+        <ID>5</ID>
       </Neighbors>
       <Type>8</Type>
       <Discovered>True</Discovered>
@@ -437,7 +304,7 @@
       <LastVisited>-1</LastVisited>
       <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
       <ClaimRemaining>0</ClaimRemaining>
       <ClaimQuantity>0</ClaimQuantity>
       <ClaimBenefit>
@@ -445,97 +312,11 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Struggle's Promise</Name>
-      <RegionId>58</RegionId>
-      <Position>(-14.0, 11.0)</Position>
+      <Name>Maverick's Collapse</Name>
+      <RegionId>15</RegionId>
+      <Position>(-12.0, -1.0)</Position>
       <Neighbors>
-        <ID>57</ID>
-        <ID>67</ID>
-        <ID>64</ID>
-      </Neighbors>
-      <Type>7</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>0</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Ache's Jewel</Name>
-      <RegionId>65</RegionId>
-      <Position>(6.0, -15.0)</Position>
-      <Neighbors>
-        <ID>61</ID>
-        <ID>45</ID>
-      </Neighbors>
-      <Type>7</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Hellion's Affliction</Name>
-      <RegionId>48</RegionId>
-      <Position>(-14.0, -7.0)</Position>
-      <Neighbors>
-        <ID>56</ID>
-        <ID>50</ID>
-        <ID>54</ID>
-      </Neighbors>
-      <Type>5</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>0</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Carcass's Hulk</Name>
-      <RegionId>57</RegionId>
-      <Position>(-7.0, 10.0)</Position>
-      <Neighbors>
-        <ID>62</ID>
-        <ID>58</ID>
-      </Neighbors>
-      <Type>5</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>0</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Delivering Seraph</Name>
-      <RegionId>66</RegionId>
-      <Position>(-12.0, 25.0)</Position>
-      <Neighbors>
-        <ID>68</ID>
+        <ID>5</ID>
       </Neighbors>
       <Type>6</Type>
       <Discovered>True</Discovered>
@@ -543,7 +324,7 @@
       <LastVisited>-1</LastVisited>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
+      <ResourceSourceCount>2</ResourceSourceCount>
       <ClaimRemaining>0</ClaimRemaining>
       <ClaimQuantity>0</ClaimQuantity>
       <ClaimBenefit>
@@ -551,12 +332,13 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Struggle's Caritas</Name>
-      <RegionId>72</RegionId>
-      <Position>(-12.0, 4.0)</Position>
+      <Name>Devoted Brook</Name>
+      <RegionId>5</RegionId>
+      <Position>(-8.0, 2.0)</Position>
       <Neighbors>
-        <ID>55</ID>
-        <ID>54</ID>
+        <ID>1</ID>
+        <ID>15</ID>
+        <ID>7</ID>
       </Neighbors>
       <Type>7</Type>
       <Discovered>True</Discovered>
@@ -572,34 +354,13 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Titan's Collapse</Name>
-      <RegionId>45</RegionId>
-      <Position>(3.0, -7.0)</Position>
+      <Name>Chaser's Vale</Name>
+      <RegionId>20</RegionId>
+      <Position>(13.0, 22.0)</Position>
       <Neighbors>
-        <ID>65</ID>
-        <ID>44</ID>
+        <ID>14</ID>
       </Neighbors>
       <Type>5</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>0</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Appeasing Benevolence</Name>
-      <RegionId>60</RegionId>
-      <Position>(-5.0, -16.0)</Position>
-      <Neighbors>
-        <ID>61</ID>
-      </Neighbors>
-      <Type>6</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -613,39 +374,18 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Victory's Rest</Name>
-      <RegionId>64</RegionId>
-      <Position>(-18.0, 18.0)</Position>
+      <Name>Chaser's Outcrop</Name>
+      <RegionId>18</RegionId>
+      <Position>(-2.0, -11.0)</Position>
       <Neighbors>
-        <ID>58</ID>
-      </Neighbors>
-      <Type>3</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>0</WaterSourceCount>
-      <FoodSourceCount>0</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Cripple's Carcass</Name>
-      <RegionId>50</RegionId>
-      <Position>(-21.0, -10.0)</Position>
-      <Neighbors>
-        <ID>48</ID>
-        <ID>56</ID>
+        <ID>11</ID>
       </Neighbors>
       <Type>5</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
       <WaterSourceCount>0</WaterSourceCount>
-      <FoodSourceCount>0</FoodSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
       <ClaimRemaining>0</ClaimRemaining>
       <ClaimQuantity>0</ClaimQuantity>
@@ -654,34 +394,11 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Titan's Hulk</Name>
-      <RegionId>56</RegionId>
-      <Position>(-14.0, -15.0)</Position>
+      <Name>Piety's Languor</Name>
+      <RegionId>16</RegionId>
+      <Position>(23.0, 19.0)</Position>
       <Neighbors>
-        <ID>48</ID>
-        <ID>59</ID>
-        <ID>50</ID>
-      </Neighbors>
-      <Type>5</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>0</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Huntress's Range</Name>
-      <RegionId>51</RegionId>
-      <Position>(10.0, 8.0)</Position>
-      <Neighbors>
-        <ID>53</ID>
-        <ID>49</ID>
+        <ID>10</ID>
       </Neighbors>
       <Type>4</Type>
       <Discovered>True</Discovered>
@@ -697,123 +414,203 @@
       <Enemies />
     </Region>
     <Region>
-      <Name>Stele of Crusades</Name>
-      <RegionId>63</RegionId>
-      <Position>(-23.0, 0.0)</Position>
+      <Name>Demon's Failure</Name>
+      <RegionId>11</RegionId>
+      <Position>(3.0, -5.0)</Position>
       <Neighbors>
-        <ID>67</ID>
-        <ID>54</ID>
+        <ID>18</ID>
+        <ID>0</ID>
+      </Neighbors>
+      <Type>6</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <ClaimRemaining>0</ClaimRemaining>
+      <ClaimQuantity>0</ClaimQuantity>
+      <ClaimBenefit>
+      </ClaimBenefit>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Beast's Marsh</Name>
+      <RegionId>19</RegionId>
+      <Position>(16.0, -9.0)</Position>
+      <Neighbors>
+        <ID>17</ID>
+        <ID>8</ID>
+      </Neighbors>
+      <Type>6</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <ClaimRemaining>0</ClaimRemaining>
+      <ClaimQuantity>0</ClaimQuantity>
+      <ClaimBenefit>
+      </ClaimBenefit>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Pursuer's Creek</Name>
+      <RegionId>9</RegionId>
+      <Position>(-17.0, 16.0)</Position>
+      <Neighbors>
+        <ID>7</ID>
+        <ID>12</ID>
+        <ID>21</ID>
+      </Neighbors>
+      <Type>5</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <ClaimRemaining>0</ClaimRemaining>
+      <ClaimQuantity>0</ClaimQuantity>
+      <ClaimBenefit>
+      </ClaimBenefit>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Prowler's Fruit</Name>
+      <RegionId>3</RegionId>
+      <Position>(11.0, 5.0)</Position>
+      <Neighbors>
+        <ID>4</ID>
+        <ID>8</ID>
+      </Neighbors>
+      <Type>5</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <ClaimRemaining>0</ClaimRemaining>
+      <ClaimQuantity>0</ClaimQuantity>
+      <ClaimBenefit>
+      </ClaimBenefit>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Hellion's Shell</Name>
+      <RegionId>17</RegionId>
+      <Position>(21.0, -2.0)</Position>
+      <Neighbors>
+        <ID>19</ID>
+      </Neighbors>
+      <Type>6</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <ClaimRemaining>0</ClaimRemaining>
+      <ClaimQuantity>0</ClaimQuantity>
+      <ClaimBenefit>
+      </ClaimBenefit>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Record of Sagas</Name>
+      <RegionId>12</RegionId>
+      <Position>(-21.0, 9.0)</Position>
+      <Neighbors>
+        <ID>9</ID>
+        <ID>7</ID>
+      </Neighbors>
+      <Type>9</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <WaterSourceCount>3</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <ClaimRemaining>0</ClaimRemaining>
+      <ClaimQuantity>0</ClaimQuantity>
+      <ClaimBenefit>
+      </ClaimBenefit>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Hell's Remains</Name>
+      <RegionId>2</RegionId>
+      <Position>(6.0, 1.0)</Position>
+      <Neighbors>
+        <ID>8</ID>
+        <ID>0</ID>
+      </Neighbors>
+      <Type>6</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <WaterSourceCount>2</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <ClaimRemaining>0</ClaimRemaining>
+      <ClaimQuantity>0</ClaimQuantity>
+      <ClaimBenefit>
+      </ClaimBenefit>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Demagogue's Marsh</Name>
+      <RegionId>7</RegionId>
+      <Position>(-13.0, 9.0)</Position>
+      <Neighbors>
+        <ID>5</ID>
+        <ID>12</ID>
+        <ID>9</ID>
+      </Neighbors>
+      <Type>6</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <WaterSourceCount>0</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <ClaimRemaining>0</ClaimRemaining>
+      <ClaimQuantity>0</ClaimQuantity>
+      <ClaimBenefit>
+      </ClaimBenefit>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Carcass's Agony</Name>
+      <RegionId>13</RegionId>
+      <Position>(29.0, 10.0)</Position>
+      <Neighbors>
+        <ID>10</ID>
+      </Neighbors>
+      <Type>6</Type>
+      <Discovered>True</Discovered>
+      <Seen>True</Seen>
+      <LastVisited>-1</LastVisited>
+      <WaterSourceCount>1</WaterSourceCount>
+      <FoodSourceCount>1</FoodSourceCount>
+      <ResourceSourceCount>1</ResourceSourceCount>
+      <ClaimRemaining>0</ClaimRemaining>
+      <ClaimQuantity>0</ClaimQuantity>
+      <ClaimBenefit>
+      </ClaimBenefit>
+      <Enemies />
+    </Region>
+    <Region>
+      <Name>Grind Brook</Name>
+      <RegionId>14</RegionId>
+      <Position>(7.0, 17.0)</Position>
+      <Neighbors>
+        <ID>20</ID>
+        <ID>6</ID>
       </Neighbors>
       <Type>8</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>0</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Trial's Promise</Name>
-      <RegionId>59</RegionId>
-      <Position>(-20.0, -21.0)</Position>
-      <Neighbors>
-        <ID>56</ID>
-        <ID>69</ID>
-      </Neighbors>
-      <Type>7</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Trapper's Bog</Name>
-      <RegionId>47</RegionId>
-      <Position>(-6.0, -5.0)</Position>
-      <Neighbors>
-        <ID>55</ID>
-        <ID>44</ID>
-      </Neighbors>
-      <Type>4</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>0</WaterSourceCount>
-      <FoodSourceCount>0</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Bounty's Fruit</Name>
-      <RegionId>55</RegionId>
-      <Position>(-5.0, 3.0)</Position>
-      <Neighbors>
-        <ID>46</ID>
-        <ID>44</ID>
-        <ID>47</ID>
-        <ID>72</ID>
-      </Neighbors>
-      <Type>4</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>1</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Leviathan's Grief</Name>
-      <RegionId>62</RegionId>
-      <Position>(-2.0, 13.0)</Position>
-      <Neighbors>
-        <ID>52</ID>
-        <ID>49</ID>
-        <ID>46</ID>
-        <ID>57</ID>
-      </Neighbors>
-      <Type>5</Type>
-      <Discovered>True</Discovered>
-      <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
-      <WaterSourceCount>2</WaterSourceCount>
-      <FoodSourceCount>1</FoodSourceCount>
-      <ResourceSourceCount>1</ResourceSourceCount>
-      <ClaimRemaining>0</ClaimRemaining>
-      <ClaimQuantity>0</ClaimQuantity>
-      <ClaimBenefit>
-      </ClaimBenefit>
-      <Enemies />
-    </Region>
-    <Region>
-      <Name>Exalting Balm</Name>
-      <RegionId>52</RegionId>
-      <Position>(0.0, 20.0)</Position>
-      <Neighbors>
-        <ID>62</ID>
-        <ID>68</ID>
-      </Neighbors>
-      <Type>6</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
       <LastVisited>-1</LastVisited>
@@ -828,8 +625,8 @@
     </Region>
   </Regions>
   <Weather>
-    <Name>Overcast</Name>
-    <TimeRemaining>21</TimeRemaining>
+    <Name>Clear</Name>
+    <TimeRemaining>24</TimeRemaining>
   </Weather>
   <CurrentEnvironment>Forest</CurrentEnvironment>
   <WorldEvents>

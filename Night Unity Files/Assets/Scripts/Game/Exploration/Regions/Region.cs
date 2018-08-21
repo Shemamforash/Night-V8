@@ -278,6 +278,7 @@ namespace Game.Exploration.Regions
 
         private void GenerateEncounter(List<EnemyTemplate> allowedTypes)
         {
+            if (!_canHaveEnemies) return;
             int daysSpent = WorldState.GetDaysSpentHere();
             int difficulty = WorldState.Difficulty();
 
@@ -349,6 +350,7 @@ namespace Game.Exploration.Regions
         {
             _regionType = type;
             Name = MapGenerator.GenerateName(_regionType);
+            _canHaveEnemies = type != RegionType.Gate && type != RegionType.Nightmare && type != RegionType.Rite && type != RegionType.Tomb && type != RegionType.Gate;
         }
 
         private void SetSeen()
@@ -454,6 +456,7 @@ namespace Game.Exploration.Regions
         }
 
         private static int _currentId;
+        private bool _canHaveEnemies;
 
         public bool Seen()
         {

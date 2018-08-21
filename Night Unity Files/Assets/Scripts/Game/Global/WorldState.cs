@@ -5,7 +5,9 @@ using Facilitating.Persistence;
 using Facilitating.UI;
 using Game.Characters;
 using Game.Combat.Enemies;
+using Game.Combat.Generation;
 using Game.Exploration.Environment;
+using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Exploration.WorldEvents;
 using SamsHelper.Libraries;
@@ -31,6 +33,7 @@ namespace Game.Global
         private static int _difficulty;
         private static bool _isNight, _isPaused;
         public static int Seed = -1;
+        private static int _templesActivated;
 
         public void Awake()
         {
@@ -99,6 +102,17 @@ namespace Game.Global
             WeatherManager.Start();
         }
 
+        public static bool ActivateTemple()
+        {
+            ++_templesActivated;
+            if (_templesActivated != EnvironmentManager.CurrentEnvironment.Temples) return false;
+            Region r = new Region();
+            r.SetRegionType(RegionType.Tomb);
+            CombatManager.SetCurrentRegion(r);
+            SceneChanger.ChangeScene("Combat");
+            return true;
+        }
+
         private void IncrementDaysSpentHere()
         {
             SaveController.SaveGame();
@@ -140,6 +154,7 @@ namespace Game.Global
         public static void TravelToNextEnvironment()
         {
             ++_currentLevel;
+            _templesActivated = 0;
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false);
             CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });

@@ -47,6 +47,7 @@ namespace Game.Characters.CharacterActions
             CurrentRegion = MapGenerator.GetInitialNode();
             _inTransit = false;
             TransferResources();
+            PlayerCharacter.RestAction.Enter();
         }
 
         private void TransferResources()

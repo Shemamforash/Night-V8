@@ -9,10 +9,10 @@ public class BeamController : MonoBehaviour
     private float LeadDurationMax;
     private float BeamDurationMax;
     private ParticleSystem _particleBurst;
-    private Transform _origin, _target;
+    private Transform _origin;
     private float _initialBeamWidth;
 
-    public static BeamController Create(Transform origin, Transform target, float leadLineDuration = 1f, float beamDuration = 2f)
+    public static BeamController Create(Transform origin, float leadLineDuration = 1f, float beamDuration = 2f)
     {
         if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Enemies/Beam");
         GameObject beam = Instantiate(_prefab);
@@ -20,7 +20,6 @@ public class BeamController : MonoBehaviour
         beamController.LeadDurationMax = leadLineDuration;
         beamController.BeamDurationMax = beamDuration;
         beamController._origin = origin;
-        beamController._target = target;
         beamController.Initialise();
         return beamController;
     }
@@ -55,12 +54,13 @@ public class BeamController : MonoBehaviour
 
     private void UpdatePosition()
     {
-        Vector3[] positions = {_origin.position, _target.position};
+        Vector2 targetPosition = _origin.position + _origin.forward * 20f;
+        Vector3[] positions = {_origin.position, targetPosition};
         _glowLine.SetPositions(positions);
         _beamLine.SetPositions(positions);
         _leadLine.SetPositions(positions);
         _particleBurst.transform.position = _origin.position;
-        float angle = AdvancedMaths.AngleFromUp(_origin.position, _target.position) + 90f;
+        float angle = AdvancedMaths.AngleFromUp(_origin.position, targetPosition) + 90f;
         _particleBurst.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 

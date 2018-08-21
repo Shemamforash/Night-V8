@@ -105,12 +105,9 @@ namespace Game.Combat.Generation.Shrines
                     AddComponentOnce<Push>(boss).Initialise(5, 3);
                     break;
                 case 4:
-                    AddComponentOnce<Slice>(boss).Initialise(5, 3);
-                    break;
-                case 5:
                     AddComponentOnce<Split>(boss).Initialise(1, 6, EnemyType.Ghoul, 50, 2);
                     break;
-                case 6:
+                case 5:
                     AddComponentOnce<Spawn>(boss).Initialise(EnemyType.Ghoul, 5, 2, 10);
                     break;
             }

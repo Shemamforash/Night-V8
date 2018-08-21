@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace Game.Combat.Enemies.Bosses
         {
             Sprite = GetComponent<SpriteRenderer>();
             _healthController.SetInitialHealth(GetInitialHealth(), this);
+            CombatManager.Enemies().Add(this);
         }
 
         protected abstract int GetInitialHealth();
@@ -68,9 +70,15 @@ namespace Game.Combat.Enemies.Bosses
             return _healthController.GetCurrentHealth() == 0;
         }
 
+        public GameObject GetGameObject()
+        {
+            return gameObject;
+        }
+
         public virtual void Kill()
         {
             Destroy(gameObject);
+            CombatManager.Remove(this);
             _boss.UnregisterSection(this);
         }
     }

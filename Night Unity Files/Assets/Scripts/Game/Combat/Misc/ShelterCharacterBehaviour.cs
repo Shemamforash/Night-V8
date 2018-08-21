@@ -66,7 +66,12 @@ namespace Game.Combat.Misc
             sequence.Append(GetComponent<SpriteRenderer>().DOColor(UiAppearanceController.InvisibleColour, 2f));
             sequence.AppendCallback(() =>
             {
-                CombatManager.Enemies().ForEach(e => e.SetTarget(PlayerCombat.Instance));
+                CombatManager.Enemies().ForEach(e =>
+                {
+                    EnemyBehaviour enemy = e as EnemyBehaviour;
+                    if (enemy == null) return;
+                    enemy.SetTarget(PlayerCombat.Instance);
+                });
                 Destroy(gameObject);
                 Characters.Player character = CombatManager.Region()._characterHere;
                 CharacterManager.AddCharacter(character);
@@ -78,7 +83,12 @@ namespace Game.Combat.Misc
         public override void Kill()
         {
             base.Kill();
-            CombatManager.Enemies().ForEach(e => e.SetTarget(PlayerCombat.Instance));
+            CombatManager.Enemies().ForEach(e =>
+            {
+                EnemyBehaviour enemy = e as EnemyBehaviour;
+                if (enemy == null) return;
+                enemy.SetTarget(PlayerCombat.Instance);
+            });
         }
 
         private void GenerateEncounter()

@@ -204,7 +204,7 @@ namespace Game.Combat.Player
 
         private void FollowTarget()
         {
-            if (_lockedTarget != null && !Helper.IsObjectInCameraView(_lockedTarget.gameObject)) _lockedTarget = null;
+            if (_lockedTarget != null && !Helper.OnScreen(_lockedTarget.gameObject)) _lockedTarget = null;
             if (_lockedTarget == null) return;
             float rotation = AdvancedMaths.AngleFromUp(transform.position, _lockedTarget.transform.position);
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
@@ -398,7 +398,7 @@ namespace Game.Combat.Player
         public void SetTarget(EnemyBehaviour e)
         {
             if (_lockedTarget != null) return;
-            if (e != null && !Helper.IsObjectInCameraView(e.gameObject)) return;
+            if (e != null && !Helper.OnScreen(e.gameObject)) return;
             Flit flit = e as Flit;
             if (flit != null && !flit.Discovered()) return;
             TargetBehaviour.SetTarget(e == null ? null : e.transform);

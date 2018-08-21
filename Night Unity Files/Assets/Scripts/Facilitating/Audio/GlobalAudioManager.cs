@@ -42,7 +42,6 @@ namespace Facilitating.Audio
         {
             _volume = volume;
             if(_masterMixer == null) _masterMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
-            Debug.Log(NormalisedVolumeToAttentuation(_volume));
             _masterMixer.SetFloat("Master", NormalisedVolumeToAttentuation(_volume));
         }
 

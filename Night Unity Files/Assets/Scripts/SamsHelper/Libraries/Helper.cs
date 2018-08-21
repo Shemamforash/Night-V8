@@ -37,7 +37,7 @@ namespace SamsHelper.Libraries
             return mousePos;
         }
         
-        public static bool IsObjectInCameraView(GameObject gameObject)
+        public static bool OnScreen(this GameObject gameObject)
         {
             return IsPositionInCameraView(gameObject.transform.position);
         }

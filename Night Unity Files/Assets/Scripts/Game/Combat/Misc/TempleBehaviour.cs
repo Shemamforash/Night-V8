@@ -17,10 +17,11 @@ public class TempleBehaviour : BasicShrineBehaviour
     private ColourPulse ringPulse1, ringPulse2;
     private ParticleSystem _vortex, _explosion, _altar;
     private SpriteRenderer _glow;
-    private EnemyBehaviour _boss;
     private AudioSource _audioSource;
-    [SerializeField]
-    private AudioClip _fireIgniteAudioClip, _templateActivateAudioClip;
+    [SerializeField] private AudioClip _fireIgniteAudioClip, _templateActivateAudioClip;
+
+    private int _bossCount;
+    private List<EnemyBehaviour> _bosses = new List<EnemyBehaviour>();
 
     public void Awake()
     {
@@ -59,25 +60,9 @@ public class TempleBehaviour : BasicShrineBehaviour
     protected override void StartShrine()
     {
         Triggered = true;
-//        switch (EnvironmentManager.CurrentEnvironment.LevelNo)
-//        {
-//            case 0:
-//                SerpentBehaviour.Create();
-//                break;
-//            case 1:
-//                StarfishBehaviour.Create();
-//                break;
-//            case 2:
-//                SwarmBehaviour.Create();
-//                break;
-//            case 3:
-//                break;
-//            case 4:
-//                break;
-//        }
         StartCoroutine(Activate());
     }
-    
+
     private IEnumerator Activate()
     {
         _vortex.Play();
@@ -92,7 +77,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         _altar.Clear();
         _altar.Stop();
         _explosion.Emit(200);
-        
+
         StartCoroutine(StartSpawningEnemies());
 
         float glowTimeMax = 1f;
@@ -116,9 +101,24 @@ public class TempleBehaviour : BasicShrineBehaviour
             CombatManager.SpawnEnemy(EnemyType.Ghoul, cells[i].Position);
         }
 
+        List<EnemyType> enemyTypesToSpawn = new List<EnemyType>();
+        List<EnemyTemplate> allowedTypes = WorldState.GetAllowedNightmareEnemyTypes();
+        int size = WorldState.Difficulty() * 5;
+
+        while (size > 0)
+        {
+            foreach (EnemyTemplate e in allowedTypes)
+            {
+                if (e.Value > size) continue;
+                size -= e.Value;
+                enemyTypesToSpawn.Add(allowedTypes.RandomElement().EnemyType);
+                break;
+            }
+        }
+
         float nextEnemy = 1f;
         float currentTime = nextEnemy;
-        while (nextEnemy > 0.1f)
+        while (nextEnemy > 0.1f && enemyTypesToSpawn.Count > 0)
         {
             while (currentTime > 0f)
             {
@@ -127,23 +127,44 @@ public class TempleBehaviour : BasicShrineBehaviour
             }
 
             Cell cell = PathingGrid.GetCellNearMe(transform.position, 5, 2);
-            CombatManager.SpawnEnemy(EnemyType.Ghoul, cell.Position);
+            CombatManager.SpawnEnemy(enemyTypesToSpawn.RemoveRandom(), cell.Position);
 
             nextEnemy *= 0.95f;
             currentTime = nextEnemy;
             yield return null;
         }
 
-        _boss = BossShrine.GenerateBoss(transform.position);
-        StartCoroutine(WaitForBossToDie());
+        _bossCount = WorldState.CurrentLevel() + 1;
+        int currentBossCount = _bossCount;
+        while (currentBossCount > 0)
+        {
+            float bossTimer = 10f;
+            while (bossTimer > 0f)
+            {
+                bossTimer -= Time.deltaTime;
+                yield return null;
+            }
+
+            EnemyBehaviour newBoss = BossShrine.GenerateBoss(transform.position);
+            _bosses.Add(newBoss);
+            StartCoroutine(WaitForBossToDie(newBoss));
+            --currentBossCount;
+        }
     }
 
-    private IEnumerator WaitForBossToDie()
+    private IEnumerator WaitForBossToDie(EnemyBehaviour boss)
     {
-        while (!_boss.IsDead()) yield return null;
+        while (!boss.IsDead()) yield return null;
+        --_bossCount;
+        CheckAllBossesDead();
+    }
+
+    private void CheckAllBossesDead()
+    {
+        if (_bossCount != 0) return;
         End();
-        WorldState.TravelToNextEnvironment();
-        CombatManager.ExitCombat();
+        bool templeComplete = WorldState.ActivateTemple();
+        CombatManager.ExitCombat(!templeComplete);
     }
 
     private void StartLights()

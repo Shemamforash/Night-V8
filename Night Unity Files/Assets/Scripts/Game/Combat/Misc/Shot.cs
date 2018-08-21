@@ -153,9 +153,10 @@ namespace Game.Combat.Misc
         private void FixedUpdate()
         {
             if (!_fired || !_seekTarget) return;
-            EnemyBehaviour nearestEnemy = CombatManager.NearestEnemy(transform.position);
+            ITakeDamageInterface nearestEnemy = CombatManager.NearestEnemy(transform.position);
+            if (nearestEnemy == null) return;
             Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
-            float angle = Vector2.Angle(dir, nearestEnemy.transform.position - transform.position);
+            float angle = Vector2.Angle(dir, nearestEnemy.GetGameObject().transform.position - transform.position);
             float force = 50;
             if (angle > 90)
             {
@@ -183,7 +184,9 @@ namespace Game.Combat.Misc
 
         public void Fire(float distance = 0.15f)
         {
-            float angleOffset = Random.Range(-_accuracy, _accuracy);
+            float angleModifier = 1 - Mathf.Sqrt(Random.Range(0f, 1f));
+            if (Random.Range(0, 2) == 0) angleModifier = -angleModifier;
+            float angleOffset = angleModifier * _accuracy;
             transform.position = _originPosition + _direction * distance;
             _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
             if (_leaveFireTrail) gameObject.AddComponent<LeaveFireTrail>().Initialise();
