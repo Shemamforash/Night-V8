@@ -4,7 +4,7 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: MapBackgroundMaterial
   m_Shader: {fileID: 4800000, guid: 9b1a1f54ffc1fee40b73bf568a08880d, type: 3}
@@ -70,10 +70,10 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OctavePower: 2.5
+    - _OctavePower: 4
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
-    - _Sparseness: 15
+    - _Sparseness: 5
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _TimeScale: 0.003

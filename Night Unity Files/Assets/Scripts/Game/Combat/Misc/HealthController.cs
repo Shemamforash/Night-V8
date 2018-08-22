@@ -43,7 +43,7 @@ namespace Game.Combat.Misc
             _healthRemaining.Decrement(amount);
             GetHealthBarController()?.FadeNewHealth();
             OnTakeDamage?.Invoke(amount);
-            if (_healthRemaining.ReachedMin()) _healthyThing.Kill();
+            if (_healthRemaining.ReachedMin()) _healthyThing?.Kill();
             UpdateHealth();
         }
 

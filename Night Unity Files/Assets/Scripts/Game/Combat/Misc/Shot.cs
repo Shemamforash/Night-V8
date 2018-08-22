@@ -20,7 +20,7 @@ namespace Game.Combat.Misc
         private BulletTrailFade _bulletTrail;
         private const float EnemyDamageModifier = 0.5f;
 
-        private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Prefabs/Combat/Bullet");
+        private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Shots", "Prefabs/Combat/Bullet");
         private float _accuracy;
         private float _age;
 
@@ -37,7 +37,6 @@ namespace Game.Combat.Misc
         private float _pierceChance, _burnChance, _decayChange, _sicknessChance;
         private Rigidbody2D _rigidBody;
 
-        private static Transform _shotParent;
         private Weapon _weapon;
         private bool _seekTarget, _leaveFireTrail;
         public float _knockBackForce;
@@ -47,7 +46,6 @@ namespace Game.Combat.Misc
         private void OnDestroy()
         {
             _shotPool.Dispose(this);
-            if (_shotPool.Empty()) _shotParent = null;
         }
 
         private void ResetValues()
@@ -64,8 +62,7 @@ namespace Game.Combat.Misc
 
         public static Shot Create(CharacterCombat origin)
         {
-            if (_shotParent == null) _shotParent = GameObject.Find("World").transform.Find("Bullets");
-            Shot shot = _shotPool.Create(_shotParent);
+            Shot shot = _shotPool.Create();
             shot.gameObject.layer = origin is PlayerCombat ? 16 : 15;
             Vector3 direction = origin.Direction();
             shot.Initialise(origin, direction);
@@ -173,12 +170,10 @@ namespace Game.Combat.Misc
             while (_age < MaxAge)
             {
                 _age += Time.deltaTime;
-                _bulletTrail.SetAlpha(1f - _age / MaxAge);
                 yield return null;
             }
 
             _rigidBody.velocity = Vector2.zero;
-            _bulletTrail.StartFade(0f);
             DeactivateShot();
         }
 
@@ -285,7 +280,6 @@ namespace Game.Combat.Misc
             if (_origin is EnemyBehaviour) _damageDealt = Mathf.FloorToInt(EnemyDamageModifier * _damageDealt);
             return _damageDealt;
         }
-
 
         public void SetAccuracy(float accuracy)
         {

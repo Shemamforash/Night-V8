@@ -7,6 +7,7 @@ namespace Game.Combat.Enemies.Nightmares
     public class Ghoul : EnemyBehaviour
     {
         private float _distanceToTouch = 0.5f;
+        private GameObject _ghoulDeathPrefab;
         
         public override void Initialise(Enemy enemy)
         {
@@ -26,6 +27,8 @@ namespace Game.Combat.Enemies.Nightmares
             base.Update();
             if (DistanceToTarget() > _distanceToTouch) return;
             GetTarget().Sicken();
+            if (_ghoulDeathPrefab == null) _ghoulDeathPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Sicken Effect");
+            Instantiate(_ghoulDeathPrefab).transform.position = transform.position;
             Kill();
         }
     }

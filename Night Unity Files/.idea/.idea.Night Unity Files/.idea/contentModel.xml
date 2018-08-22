@@ -196,6 +196,7 @@
           </e>
           <e p="readme.txt" t="Include" />
         </e>
+        <e p="DamageSpriteFlash.cs" t="Include" />
         <e p="Demigiant" t="Include">
           <e p="DemiLib" t="Include">
             <e p="Core" t="Include">
@@ -225,6 +226,10 @@
             </e>
           </e>
         </e>
+        <e p="FaceTarget.cs" t="Include" />
+        <e p="FaceVelocity.cs" t="Include" />
+        <e p="FollowMouse.cs" t="Include" />
+        <e p="MaelstromImpactBehaviour.cs" t="Include" />
         <e p="RadianceController.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
@@ -346,12 +351,12 @@
                   <e p="SerpentBehaviour.cs" t="Include" />
                   <e p="SerpentEggBehaviour.cs" t="Include" />
                   <e p="SerpentEggs.cs" t="Include" />
-                  <e p="SerpentSegmentBehaviour.cs" t="Include" />
                   <e p="StarFishArmBehaviour.cs" t="Include" />
                   <e p="StarfishBehaviour.cs" t="Include" />
                   <e p="StarFishMainArmBehaviour.cs" t="Include" />
                   <e p="SwarmBehaviour.cs" t="Include" />
                   <e p="SwarmSegmentBehaviour.cs" t="Include" />
+                  <e p="TailFollowBehaviour.cs" t="Include" />
                   <e p="WingHealthScript.cs" t="Include" />
                 </e>
                 <e p="Enemy.cs" t="Include" />
@@ -783,11 +788,14 @@
           <e p="MenuGradientShader.shader" t="Include" />
           <e p="RadialLight.shader" t="Include" />
         </e>
+        <e p="SpermBehaviour.cs" t="Include" />
+        <e p="SpermSegmentBehaviour.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />
             <e p="LineBreaking Leading Characters.txt" t="Include" />
             <e p="Shaders" t="Include">
+              <e p="TMP_Bitmap-Custom-Atlas.shader" t="Include" />
               <e p="TMP_Bitmap-Mobile.shader" t="Include" />
               <e p="TMP_Bitmap.shader" t="Include" />
               <e p="TMP_SDF Overlay.shader" t="Include" />
@@ -802,6 +810,9 @@
               <e p="TMPro_Properties.cginc" t="Include" />
               <e p="TMPro_Surface.cginc" t="Include" />
             </e>
+          </e>
+          <e p="Sprites" t="Include">
+            <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
       </e>

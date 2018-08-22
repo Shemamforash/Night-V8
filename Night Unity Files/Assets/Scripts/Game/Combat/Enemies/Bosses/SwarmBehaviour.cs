@@ -65,10 +65,10 @@ public class SwarmBehaviour : Boss
             float angleIntervals = 1f / 20f * SectionCount() + 5;
             for (float angle = 0f; angle < 360f; angle += angleIntervals)
             {
-                Vector2 direction = new Vector2();
+                Vector3 direction = new Vector2();
                 direction.x = Mathf.Cos(angle);
                 direction.y = Mathf.Sin(angle);
-                MaelstromShotBehaviour.Create(direction, transform.position);
+                MaelstromShotBehaviour.Create(direction, transform.position + direction * 0.5f, 3f);
             }
 
             _contracting = false;

@@ -33,7 +33,8 @@ namespace Game.Combat.Enemies.Nightmares
             if (newHealth < 3) return;
             _split.LastSplitEnemies().ForEach(e =>
             {
-                Revenant r = (Revenant) e;
+                Revenant r = e as Revenant;
+                if (r == null) return;
                 r.HealthController.SetInitialHealth(newHealth, r);
                 r._fireTrail.Initialise();
             });

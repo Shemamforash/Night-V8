@@ -7,15 +7,20 @@ namespace Game.Combat.Enemies.Bosses
     public class OvaBehaviour : Boss, ITakeDamageInterface
     {
         private HealthController _healthController;
+        private const float SpermSpawnThreshold = 200f;
+        private float _damageTaken;
+        private float SpawnTimer = 15f;
+        private DamageSpriteFlash _spriteFlash;
 
         public override void Awake()
         {
             base.Awake();
+            _spriteFlash = GetComponent<DamageSpriteFlash>();
             _healthController = new HealthController();
             _healthController.SetInitialHealth(1000, this);
             CombatManager.Enemies().Add(this);
         }
-        
+
         public static void Create()
         {
             GameObject ovaPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Ova/Ova");
@@ -27,19 +32,56 @@ namespace Game.Combat.Enemies.Bosses
             return gameObject;
         }
 
+        private void TakeDamage(float damage)
+        {
+            _spriteFlash.FlashSprite();
+            _healthController.TakeDamage(damage);
+            TrySpawnSperm((int)damage);
+        }
+
         public void TakeShotDamage(Shot shot)
         {
-            _healthController.TakeDamage(shot.DamageDealt());
+            TakeDamage(shot.DamageDealt());
         }
 
         public void TakeRawDamage(float damage, Vector2 direction)
         {
-            _healthController.TakeDamage(damage);
+            TakeDamage(damage);
         }
 
         public void TakeExplosionDamage(float damage, Vector2 origin)
         {
-            _healthController.TakeDamage(damage);
+            TakeDamage(damage);
+        }
+
+        private void TrySpawnSperm(int damage)
+        {
+            _damageTaken += damage;
+            if (!(_damageTaken > SpermSpawnThreshold)) return;
+            _damageTaken -= SpermSpawnThreshold;
+            SpermBehaviour.Create();
+        }
+
+        public void Update()
+        {
+            if (SpawnTimer > 0f)
+            {
+                SpawnTimer -= Time.deltaTime;
+                return;
+            }
+
+            SpawnTimer = Random.Range(20f, 30f);
+            float normalisedHealth = _healthController.GetNormalisedHealthValue();
+            if (normalisedHealth < 0.25f)
+            {
+                CombatManager.SpawnEnemy(EnemyType.Revenant, Vector2.zero);
+            }
+            else if (normalisedHealth < 0.5f)
+            {
+                for (int i = 0; i < Random.Range(1, 4); ++i) CombatManager.SpawnEnemy(EnemyType.Shadow, Vector2.zero);
+            }
+
+            for (int i = 0; i < Random.Range(5, 11); ++i) CombatManager.SpawnEnemy(EnemyType.Ghoul, Vector2.zero);
         }
 
         public void Decay()

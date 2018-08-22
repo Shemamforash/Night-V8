@@ -7,7 +7,17 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
     {
         private static GameObject _particlesPrefab;
         private ParticleSystem _particles;
+        private bool _firing;
+        private float _speed;
+        private float _offset;
 
+        public void Initialise(float maxTimer, float minTimer, float speed, float offset)
+        {
+            Initialise(maxTimer, minTimer);
+            _speed = speed;
+            _offset = offset;
+        }
+        
         public override void Awake()
         {
             base.Awake();
@@ -20,7 +30,13 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         protected override void Attack()
         {
+            if (!_firing) return;
             StartCoroutine(FireMaelstromShot());
+        }
+
+        public void SetFiring(bool firing)
+        {
+            _firing = firing;
         }
 
         private IEnumerator FireMaelstromShot()
@@ -34,7 +50,8 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 yield return null;
             }
 
-            MaelstromShotBehaviour.Create(Enemy.GetTarget().transform.position - transform.position, transform.position);
+            Vector3 direction = GetComponent<Rigidbody2D>().velocity;
+            MaelstromShotBehaviour.Create(direction, transform.position + direction * _offset, _speed);
             UnpauseOthers();
         }
     }

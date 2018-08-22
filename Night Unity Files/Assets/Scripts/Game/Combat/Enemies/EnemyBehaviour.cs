@@ -59,7 +59,6 @@ namespace Game.Combat.Enemies
             return moving;
         }
 
-        protected SpriteRenderer Sprite;
         private float _markTime;
         private bool _marked;
 
@@ -117,7 +116,6 @@ namespace Game.Combat.Enemies
         private void AssignSprite()
         {
             Sprite spriteImage = Resources.Load<Sprite>("Images/Enemy Symbols/" + GetEnemyName());
-            Sprite = GetComponent<SpriteRenderer>();
             if (spriteImage == null) return;
             Sprite.sprite = spriteImage;
         }

@@ -13,7 +13,6 @@ using UnityEngine;
 
 public class TempleBehaviour : BasicShrineBehaviour
 {
-    private bool _lit, _ring1Active, _ring2Active;
     private ColourPulse ringPulse1, ringPulse2;
     private ParticleSystem _vortex, _explosion, _altar;
     private SpriteRenderer _glow;
@@ -41,25 +40,12 @@ public class TempleBehaviour : BasicShrineBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    public override void Update()
-    {
-        base.Update();
-        float distance = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
-        if (!_lit && distance < 8) StartLights();
-        if (!_ring1Active && distance < 6)
-        {
-            StartCoroutine(FadeInRing(ringPulse1, 3f));
-            _ring1Active = true;
-        }
-
-        if (_ring2Active || !(distance < 5)) return;
-        StartCoroutine(FadeInRing(ringPulse2, 3f));
-        _ring2Active = true;
-    }
-
     protected override void StartShrine()
     {
         Triggered = true;
+        StartLights();
+        StartCoroutine(FadeInRing(ringPulse1, 3f));
+        StartCoroutine(FadeInRing(ringPulse2, 3f));
         StartCoroutine(Activate());
     }
 
@@ -169,7 +155,6 @@ public class TempleBehaviour : BasicShrineBehaviour
 
     private void StartLights()
     {
-        _lit = true;
         StartCoroutine(LightFires(0));
         StartCoroutine(LightFires(90));
         StartCoroutine(LightFires(180));

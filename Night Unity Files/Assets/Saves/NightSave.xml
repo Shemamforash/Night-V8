@@ -4,15 +4,17 @@
     <DaysSpentHere>0</DaysSpentHere>
     <CurrentLevel>1</CurrentLevel>
     <Days>0</Days>
-    <Hours>6</Hours>
-    <Minutes>0</Minutes>
+    <Hours>9</Hours>
+    <Minutes>30</Minutes>
     <Difficulty>0</Difficulty>
   </WorldState>
   <Inventory>
     <Id>0</Id>
     <Name>Vehicle</Name>
     <ParentInventory>-1</ParentInventory>
-    <Resources />
+    <Resources>
+      <Salt>40</Salt>
+    </Resources>
     <Items>
       <Weapons />
       <ArmourPlates />
@@ -22,69 +24,89 @@
     </Items>
     <Character>
       <Id>1</Id>
-      <Name>The Wanderer</Name>
+      <Name>The Beast</Name>
       <ParentInventory>-1</ParentInventory>
       <EquippedItems>
         <Weapon>3</Weapon>
       </EquippedItems>
       <Inventory>
         <Id>2</Id>
-        <Name>The Wanderer</Name>
+        <Name>The Beast</Name>
         <ParentInventory>-1</ParentInventory>
-        <Resources />
+        <Resources>
+          <Essence>1</Essence>
+        </Resources>
         <Items>
           <Weapons>
             <Gear>
               <Id>3</Id>
-              <Name>Worn Skullcrusher</Name>
+              <Name>Worn Shoulderbreaker</Name>
               <ParentInventory>2</ParentInventory>
               <Quantity>1</Quantity>
               <Stackable>False</Stackable>
               <Template>
               </Template>
               <Quality>1</Quality>
-              <Class>8</Class>
-              <Durability>11</Durability>
+              <Class>4</Class>
+              <Durability>8.378207</Durability>
               <Attributes>
                 <Attribute>
                   <AttributeType>19</AttributeType>
-                  <Value>8</Value>
+                  <Value>50</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
                 <Attribute>
                   <AttributeType>21</AttributeType>
-                  <Value>6</Value>
-                  <Min>0</Min>
-                  <Max>3.402823E+38</Max>
-                </Attribute>
-                <Attribute>
-                  <AttributeType>22</AttributeType>
-                  <Value>2.5</Value>
-                  <Min>0</Min>
-                  <Max>3.402823E+38</Max>
-                </Attribute>
-                <Attribute>
-                  <AttributeType>20</AttributeType>
-                  <Value>0.2</Value>
-                  <Min>0</Min>
-                  <Max>1</Max>
-                </Attribute>
-                <Attribute>
-                  <AttributeType>23</AttributeType>
-                  <Value>35</Value>
-                  <Min>0</Min>
-                  <Max>3.402823E+38</Max>
-                </Attribute>
-                <Attribute>
-                  <AttributeType>25</AttributeType>
                   <Value>2</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
                 <Attribute>
+                  <AttributeType>22</AttributeType>
+                  <Value>3</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>20</AttributeType>
+                  <Value>0.9</Value>
+                  <Min>0</Min>
+                  <Max>1</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>23</AttributeType>
+                  <Value>0</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>25</AttributeType>
+                  <Value>6</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
                   <AttributeType>24</AttributeType>
-                  <Value>10</Value>
+                  <Value>1</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>27</AttributeType>
+                  <Value>0</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>28</AttributeType>
+                  <Value>0</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>26</AttributeType>
+                  <Value>0</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
@@ -118,46 +140,64 @@
         </Attribute>
         <Attribute>
           <AttributeType>5</AttributeType>
-          <Value>0</Value>
+          <Value>1.097222</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>4</AttributeType>
-          <Value>0</Value>
+          <Value>2.472223</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>1</AttributeType>
-          <Value>10</Value>
+          <Value>4</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>0</AttributeType>
-          <Value>4</Value>
+          <Value>6</Value>
           <Min>0</Min>
-          <Max>4</Max>
+          <Max>6</Max>
         </Attribute>
         <Attribute>
           <AttributeType>2</AttributeType>
-          <Value>4</Value>
+          <Value>1</Value>
           <Min>0</Min>
-          <Max>4</Max>
+          <Max>1</Max>
         </Attribute>
         <Attribute>
           <AttributeType>3</AttributeType>
-          <Value>4</Value>
+          <Value>3</Value>
           <Min>0</Min>
-          <Max>4</Max>
+          <Max>3</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>29</AttributeType>
+          <Value>0</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>8</AttributeType>
+          <Value>0</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>13</AttributeType>
+          <Value>0</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
         </Attribute>
       </Attributes>
       <Brands />
       <StoryUnlocked>False</StoryUnlocked>
       <StoryProgress>1</StoryProgress>
-      <TimeAlive>0</TimeAlive>
-      <CharacterClass>Wanderer</CharacterClass>
+      <TimeAlive>42</TimeAlive>
+      <CharacterClass>Beast</CharacterClass>
     </Character>
   </Inventory>
   <Regions>
@@ -403,7 +443,7 @@
       <Type>4</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
+      <LastVisited>0</LastVisited>
       <WaterSourceCount>1</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -411,7 +451,248 @@
       <ClaimQuantity>0</ClaimQuantity>
       <ClaimBenefit>
       </ClaimBenefit>
-      <Enemies />
+      <Enemies>
+        <Character>
+          <Id>23</Id>
+          <Name>Ghoul</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>24</Id>
+            <Name>Ghoul</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Ghoul</EnemyType>
+        </Character>
+        <Character>
+          <Id>25</Id>
+          <Name>Ghoul</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>26</Id>
+            <Name>Ghoul</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Ghoul</EnemyType>
+        </Character>
+        <Character>
+          <Id>27</Id>
+          <Name>Ghoul</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>28</Id>
+            <Name>Ghoul</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Ghoul</EnemyType>
+        </Character>
+        <Character>
+          <Id>29</Id>
+          <Name>Ghoul</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>30</Id>
+            <Name>Ghoul</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Ghoul</EnemyType>
+        </Character>
+        <Character>
+          <Id>31</Id>
+          <Name>Ghoul</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>32</Id>
+            <Name>Ghoul</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Ghoul</EnemyType>
+        </Character>
+        <Character>
+          <Id>33</Id>
+          <Name>Ghoul</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>34</Id>
+            <Name>Ghoul</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Ghoul</EnemyType>
+        </Character>
+        <Character>
+          <Id>35</Id>
+          <Name>Ghoul</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>36</Id>
+            <Name>Ghoul</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Ghoul</EnemyType>
+        </Character>
+        <Character>
+          <Id>37</Id>
+          <Name>Ghoul</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>38</Id>
+            <Name>Ghoul</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Ghoul</EnemyType>
+        </Character>
+        <Character>
+          <Id>39</Id>
+          <Name>Ghoul</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>40</Id>
+            <Name>Ghoul</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Ghoul</EnemyType>
+        </Character>
+        <Character>
+          <Id>41</Id>
+          <Name>Ghoul</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>42</Id>
+            <Name>Ghoul</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Ghoul</EnemyType>
+        </Character>
+        <Character>
+          <Id>50</Id>
+          <Name>Maelstrom</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>51</Id>
+            <Name>Maelstrom</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Maelstrom</EnemyType>
+        </Character>
+        <Character>
+          <Id>53</Id>
+          <Name>Maelstrom</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems />
+          <Inventory>
+            <Id>54</Id>
+            <Name>Maelstrom</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates />
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Maelstrom</EnemyType>
+        </Character>
+      </Enemies>
     </Region>
     <Region>
       <Name>Demon's Failure</Name>
@@ -625,8 +906,8 @@
     </Region>
   </Regions>
   <Weather>
-    <Name>Clear</Name>
-    <TimeRemaining>24</TimeRemaining>
+    <Name>Rain</Name>
+    <TimeRemaining>6</TimeRemaining>
   </Weather>
   <CurrentEnvironment>Forest</CurrentEnvironment>
   <WorldEvents>

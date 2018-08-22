@@ -7,8 +7,6 @@ using UnityEngine;
 
 public class SerpentBehaviour : Boss
 {
-    private float _currentAngle, _radius = 4f;
-    private SerpentSegmentBehaviour Head;
     private const float Speed = 3f;
     private float _findNewTargetTime;
     private Vector3 _targetPosition;
@@ -19,8 +17,6 @@ public class SerpentBehaviour : Boss
     {
         base.Awake();
         _instance = this;
-        Head = transform.Find("Wing Segment (0)").GetComponent<SerpentSegmentBehaviour>();
-        Head.SetNextSegment(transform, 0);
         GetComponent<Beam>().Initialise(5, 2);
     }
 
@@ -32,7 +28,7 @@ public class SerpentBehaviour : Boss
     public static void Create()
     {
         if (_serpentPrefab == null) _serpentPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Serpent/Serpent");
-        Instantiate(_serpentPrefab).transform.position = new Vector2(10, 10);
+        Instantiate(_serpentPrefab).transform.position = Vector2.zero;
     }
 
     public override void UnregisterSection(BossSectionHealthController section)
@@ -57,16 +53,13 @@ public class SerpentBehaviour : Boss
             Vector3 dir = (PlayerCombat.Instance.transform.position - transform.position).normalized;
             _targetPosition = AdvancedMaths.RandomVectorWithinRange(PlayerCombat.Instance.transform.position + dir * 5f, 3f);
         }
+
         _findNewTargetTime -= Time.deltaTime;
     }
 
     public void FixedUpdate()
     {
-        //todo steer
         Vector3 dir = (_targetPosition - transform.position).normalized * Speed;
         RigidBody.AddForce(dir);
-        float rot = AdvancedMaths.AngleFromUp(Vector2.zero, RigidBody.velocity);
-        Head.transform.rotation = Quaternion.Euler(0, 0, rot);
-        Head.NextSegment.SetPosition(transform.position, rot);
     }
 }

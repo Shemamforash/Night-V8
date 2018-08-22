@@ -12,13 +12,12 @@ namespace Game.Combat.Misc
         private const int MaxEmissionRate = 400;
         private const float LightMaxRadius = 5f;
         private const float LifeTime = 4f;
-        private static readonly ObjectPool<FireBehaviour> _firePool = new ObjectPool<FireBehaviour>("Prefabs/Combat/Effects/Fire Area");
+        private static readonly ObjectPool<FireBehaviour> _firePool = new ObjectPool<FireBehaviour>("Fire Areas", "Prefabs/Combat/Effects/Fire Area");
         private float _age;
         private FastLight _light;
         private ParticleSystem _particles;
         private CircleCollider2D _collider;
         private int EmissionRate;
-        private static Transform _fireParent;
         private bool _keepAlive;
 
         public void Awake()
@@ -26,12 +25,11 @@ namespace Game.Combat.Misc
             _particles = GetComponent<ParticleSystem>();
             _light = gameObject.FindChildWithName<FastLight>("Light");
             _collider = GetComponent<CircleCollider2D>();
-            if (_fireParent == null) _fireParent = GameObject.Find("Fires").transform;
         }
 
         public static FireBehaviour Create(Vector3 position, float size, bool keepAlive = false, bool lightOn = true)
         {
-            FireBehaviour fire = _firePool.Create(_fireParent);
+            FireBehaviour fire = _firePool.Create();
             fire.transform.position = position;
             fire._keepAlive = keepAlive;
             fire.StartCoroutine(fire.Burn(position, size, lightOn));

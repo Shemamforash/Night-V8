@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BulletImpactBehaviour : MonoBehaviour {
 
-	private static readonly ObjectPool<BulletImpactBehaviour> _bulletPool = new ObjectPool<BulletImpactBehaviour>("Prefabs/Combat/Visuals/Bullet Impact");
+	private static readonly ObjectPool<BulletImpactBehaviour> _bulletPool = new ObjectPool<BulletImpactBehaviour>("Bullet Impacts", "Prefabs/Combat/Visuals/Bullet Impact");
 	private ParticleSystem _particles;
 
 	public static void Create(Vector3 position, float rotation)

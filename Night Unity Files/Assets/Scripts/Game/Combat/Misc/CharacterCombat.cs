@@ -1,4 +1,6 @@
-﻿using Game.Combat.Enemies;
+﻿using System.Collections.Generic;
+using DG.Tweening;
+using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Player;
@@ -22,6 +24,7 @@ namespace Game.Combat.Misc
 
         private readonly Number Recoil = new Number(0, 0, 1f);
         private float _distanceToTarget = -1;
+        protected SpriteRenderer Sprite;
 
         private float _recoveryTimer;
 
@@ -36,18 +39,21 @@ namespace Game.Combat.Misc
         private const int ConditionTicksMax = 5;
         private const float SicknessDurationMax = 5f;
         private const int SicknessTargetTicks = 10;
-        private int _burnTicks, _decayTicks;
+        private int _decayTicks;
+        private readonly List<float> _burnTicks = new List<float>();
+        private float _timeSinceLastBurn;
+        private const float BurnTickDuration = 4f;
         protected int SicknessStacks;
-        private float _burnDuration, _decayDuration, _sicknessDuration;
-
+        private float _decayDuration, _sicknessDuration;
         public Shield Shield;
+        private DamageSpriteFlash _spriteFlash;
 
         public GameObject GetGameObject()
         {
             return gameObject;
         }
-        
-        public float DistanceToTarget()
+
+        protected float DistanceToTarget()
         {
             if (_distanceToTarget == -1) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);
             return _distanceToTarget;
@@ -57,17 +63,18 @@ namespace Game.Combat.Misc
 
         public void Burn()
         {
-            if (_burnTicks == 0)
+            if (_timeSinceLastBurn < 1f) return;
+            _timeSinceLastBurn = 0f;
+            if (_burnTicks.Count == 0)
             {
                 CharacterUi.GetHealthController(this).StartBurning();
                 if (this is EnemyBehaviour) PlayerCombat.Instance.Player.BrandManager.IncreaseBurnCount();
             }
 
-            _burnDuration = 1;
-            _burnTicks = ConditionTicksMax;
+            _burnTicks.Add(BurnTickDuration);
         }
 
-        public bool IsBurning() => _burnTicks > 0;
+        public bool IsBurning() => _burnTicks.Count > 0;
 
         public void Decay()
         {
@@ -101,7 +108,7 @@ namespace Game.Combat.Misc
         public void ClearConditions()
         {
             _decayTicks = 0;
-            _burnTicks = 0;
+            _burnTicks.Clear();
             SicknessStacks = 0;
         }
 
@@ -124,29 +131,38 @@ namespace Game.Combat.Misc
             return SicknessTargetTicks;
         }
 
-        private void UpdateConditions()
+        private void UpdateBurn()
         {
-            if (_burnTicks > 0)
+            _timeSinceLastBurn += Time.deltaTime;
+            if (_burnTicks.Count > 0)
             {
-                if (_burnDuration <= 0)
+                for (int i = _burnTicks.Count - 1; i >= 0; --i)
                 {
-                    _burnDuration = 1 - _burnDuration;
-                    HealthController.TakeDamage(GetBurnDamage());
-                    --_burnTicks;
-                }
-                else
-                {
-                    _burnDuration -= Time.deltaTime;
+                    float burnTick = _burnTicks[i];
+                    float newBurnTick = burnTick - Time.deltaTime;
+                    if (burnTick >= 3f && newBurnTick < 3f || burnTick >= 2f && newBurnTick < 2f || burnTick >= 1f && newBurnTick < 1f || burnTick > 0f && newBurnTick < 0f)
+                    {
+                        HealthController.TakeDamage(GetBurnDamage());
+                    }
+
+                    _burnTicks[i] = burnTick;
+                    if (newBurnTick < 0f)
+                    {
+                        _burnTicks.RemoveAt(i);
+                    }
                 }
             }
             else
             {
                 CharacterUi.GetHealthController(this)?.StopBurning();
             }
+        }
 
+        private void UpdateDecay()
+        {
             if (_decayTicks > 0)
             {
-                if (_burnDuration <= 0)
+                if (_decayDuration <= 0)
                 {
                     _decayDuration = 1 - _decayDuration;
                     TakeArmourDamage(GetDecayDamage());
@@ -161,7 +177,10 @@ namespace Game.Combat.Misc
             {
                 CharacterUi.GetHealthController(this)?.StopDecaying();
             }
+        }
 
+        private void UpdateSickness()
+        {
             CharacterUi.GetHealthController(this)?.SetSicknessLevel((float) SicknessStacks / GetSicknessTargetTicks());
             if (SicknessStacks <= 0) return;
             if (_sicknessDuration > SicknessDurationMax)
@@ -175,6 +194,13 @@ namespace Game.Combat.Misc
             }
         }
 
+        private void UpdateConditions()
+        {
+            UpdateBurn();
+            UpdateDecay();
+            UpdateSickness();
+        }
+
         public void TakeArmourDamage(float damage)
         {
             ArmourController.TakeDamage(this, Mathf.CeilToInt(damage));
@@ -184,6 +210,7 @@ namespace Game.Combat.Misc
 
         public virtual void TakeShotDamage(Shot shot)
         {
+            _spriteFlash.FlashSprite();
             MovementController.Knockback(shot.transform.position, shot._knockBackForce);
             float armourProtection = ArmourController.GetCurrentArmour() / 10f;
             float armourDamage = shot.DamageDealt() * armourProtection;
@@ -206,12 +233,14 @@ namespace Game.Combat.Misc
             float healthDamage = damage - armourDamage;
             TakeArmourDamage(armourDamage);
             HealthController.TakeDamage(Mathf.CeilToInt(healthDamage));
+            _spriteFlash.FlashSprite();
             if (_bloodSpatter == null) return;
             _bloodSpatter.Spray(direction, healthDamage);
         }
 
         public void TakeExplosionDamage(float damage, Vector2 origin)
         {
+            _spriteFlash.FlashSprite();
             HealthController.TakeDamage(damage);
             Vector2 dir = (Vector2) transform.position - origin;
             float distance = dir.magnitude;
@@ -233,6 +262,8 @@ namespace Game.Combat.Misc
 
         public virtual void Awake()
         {
+            Sprite = GetComponent<SpriteRenderer>();
+            _spriteFlash = GetComponent<DamageSpriteFlash>();
             MovementController = GetComponent<MovementController>();
             _bloodSpatter = GetComponent<BloodSpatter>();
             if (this is EnemyBehaviour) CharacterUi = EnemyUi.Instance();

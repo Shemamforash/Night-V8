@@ -9,26 +9,30 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         private readonly List<T> _pool = new List<T>();
         private readonly string _prefabLocation;
         private GameObject _prefab;
+        private Transform _poolParent;
+        private readonly string _poolName;
 
-        public ObjectPool(string prefabLocation)
+        public ObjectPool(string poolName, string prefabLocation)
         {
             _prefabLocation = prefabLocation;
+            _poolName = poolName;
         }
 
-        public T Create(Transform parent = null)
+        public T Create()
         {
+            if(_poolParent == null) _poolParent = new GameObject(_poolName).transform;
             T newThing;
             if (_pool.Count == 0)
             {
                 if (_prefab == null) _prefab = Resources.Load<GameObject>(_prefabLocation);
                 GameObject newGameObject = Object.Instantiate(_prefab);
                 newThing = newGameObject.GetComponent<T>();
-                if(parent != null) newThing.transform.SetParent(parent, false);
+                newThing.transform.SetParent(_poolParent, false);
                 return newThing;
             }
 
             newThing = _pool.RemoveLast();
-            if (newThing == null) return Create(parent);
+            if (newThing == null) return Create();
             newThing.gameObject.SetActive(true);
             return newThing;
         }
@@ -43,6 +47,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         {
             _pool.Remove(thing);
             Object.Destroy(thing.gameObject);
+            if (Empty()) GameObject.Destroy(_poolParent);
         }
 
         public bool Empty()

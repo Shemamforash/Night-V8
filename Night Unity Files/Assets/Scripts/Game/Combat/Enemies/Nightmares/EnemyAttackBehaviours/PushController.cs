@@ -5,7 +5,7 @@ using UnityEngine;
 public class PushController : MonoBehaviour
 {
     private ParticleSystem _pushParticles;
-    private static readonly ObjectPool<PushController> _pushPool = new ObjectPool<PushController>("Prefabs/Combat/Visuals/Push Burst");
+    private static readonly ObjectPool<PushController> _pushPool = new ObjectPool<PushController>("Pushes", "Prefabs/Combat/Visuals/Push Burst");
 
     public static void Create(Vector2 position, float rotation, float arcSize = 20f)
     {

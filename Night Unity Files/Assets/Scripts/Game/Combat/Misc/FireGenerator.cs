@@ -7,16 +7,14 @@ namespace Game.Combat.Misc
 {
     public class FireGenerator : MonoBehaviour
     {
-        private static readonly ObjectPool<FireGenerator> _firePool = new ObjectPool<FireGenerator>("Prefabs/Combat/Effects/Fire");
-        private static Transform _fireParent;
+        private static readonly ObjectPool<FireGenerator> _firePool = new ObjectPool<FireGenerator>("Fires", "Prefabs/Combat/Effects/Fire");
         private FastLight _light;
         private float _randomSeed;
         private float _startRadius;
 
         public static void Create(Vector2 position, float radius = 1)
         {
-            if (_fireParent == null) _fireParent = GameObject.Find("Fires").transform;
-            FireGenerator fire = _firePool.Create(_fireParent);
+            FireGenerator fire = _firePool.Create();
             fire.transform.position = position;
             fire._light.Radius = radius;
             fire._startRadius = radius;

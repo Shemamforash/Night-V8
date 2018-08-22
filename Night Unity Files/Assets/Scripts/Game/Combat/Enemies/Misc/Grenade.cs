@@ -10,7 +10,7 @@ namespace Game.Combat.Enemies.Misc
     public class Grenade : MonoBehaviour
     {
         private static readonly float MaxSpeed = 2f;
-        private static readonly ObjectPool<Grenade> _grenadePool = new ObjectPool<Grenade>("Prefabs/Combat/Enemies/Grenade");
+        private static readonly ObjectPool<Grenade> _grenadePool = new ObjectPool<Grenade>("Grenades", "Prefabs/Combat/Enemies/Grenade");
         private readonly int _damage = 20;
         private Action<List<EnemyBehaviour>> OnDetonate;
         private bool _incendiary, _decaying;

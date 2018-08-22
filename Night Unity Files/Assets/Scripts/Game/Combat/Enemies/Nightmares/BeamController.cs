@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ public class BeamController : MonoBehaviour
     private ParticleSystem _particleBurst;
     private Transform _origin;
     private float _initialBeamWidth;
+    private float _takeDamageTimer;
+    private const float BeamDamageTimeMax = 0.25f;
+    private const int BeamDamage = 2;
 
     public static BeamController Create(Transform origin, float leadLineDuration = 1f, float beamDuration = 2f)
     {
@@ -54,8 +58,18 @@ public class BeamController : MonoBehaviour
 
     private void UpdatePosition()
     {
-        Vector2 targetPosition = _origin.position + _origin.forward * 20f;
+        Vector2 targetPosition = _origin.position + _origin.up * 20f;
         Vector3[] positions = {_origin.position, targetPosition};
+        _takeDamageTimer += Time.deltaTime;
+        if (_takeDamageTimer > BeamDamageTimeMax)
+        {
+            _takeDamageTimer -= BeamDamageTimeMax;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, targetPosition, (1 << 17) | (1 << 8) | (1 << 14));
+            if (hit.collider == null || !hit.collider.CompareTag("Player")) return;
+            Vector2 dir = targetPosition - (Vector2)transform.position;
+            dir.Normalize();
+            PlayerCombat.Instance.TakeRawDamage(BeamDamage, dir);
+        }
         _glowLine.SetPositions(positions);
         _beamLine.SetPositions(positions);
         _leadLine.SetPositions(positions);

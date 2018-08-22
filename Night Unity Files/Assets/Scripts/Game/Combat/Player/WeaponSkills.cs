@@ -59,6 +59,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
+            if (PlayerCombat.Instance._weaponBehaviour.Empty()) return;
             Shot s = Shot.Create(PlayerCombat.Instance);
             s.SetBurnChance(1);
             s.Fire();

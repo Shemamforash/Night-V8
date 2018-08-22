@@ -1,5 +1,4 @@
-﻿using DG.Tweening;
-using Game.Combat.Generation;
+﻿using Game.Combat.Generation;
 using Game.Combat.Misc;
 using UnityEngine;
 
@@ -9,12 +8,12 @@ namespace Game.Combat.Enemies.Bosses
     {
         private int InitialHealth;
         private readonly HealthController _healthController = new HealthController();
-        protected SpriteRenderer Sprite;
+        private DamageSpriteFlash _spriteFlash;
         private Boss _boss;
 
         public virtual void Awake()
         {
-            Sprite = GetComponent<SpriteRenderer>();
+            _spriteFlash = GetComponent<DamageSpriteFlash>();
             _healthController.SetInitialHealth(GetInitialHealth(), this);
             CombatManager.Enemies().Add(this);
         }
@@ -33,8 +32,7 @@ namespace Game.Combat.Enemies.Bosses
 
         private void TakeDamage(float damage)
         {
-            Sprite.color = Color.red;
-            Sprite.DOColor(Color.white, 0.5f);
+            _spriteFlash.FlashSprite();
             _healthController.TakeDamage(damage);
         }
 

@@ -13,6 +13,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         private float _teleportTimer;
         private const float TeleportTimerMax = 0.5f;
         private static GameObject _teleportInPrefab, _teleportOutPrefab;
+        private TrailRenderer _trail;
 
         public void Start()
         {
@@ -32,6 +33,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _collider = GetComponent<CircleCollider2D>();
+            _trail = transform.GetComponentInChildren<TrailRenderer>();
         }
 
         private IEnumerator TeleportNow()
@@ -45,6 +47,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
             _teleportTimer = 0f;
             SetVisible(false);
+            PlayerCombat.Instance.SetTarget(null);
             while (_teleportTimer < TeleportTimerMax)
             {
                 _teleportTimer += Time.deltaTime;
@@ -53,6 +56,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
             Cell c = PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 4);
             transform.position = c.Position;
+            
             _teleportInParticles.Play();
             SetVisible(true);
             UnpauseOthers();
@@ -67,6 +71,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             _spriteRenderer.enabled = visible;
             _collider.enabled = visible;
+            if(visible) _trail.Clear();
         }
     }
 }

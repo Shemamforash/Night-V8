@@ -7,7 +7,7 @@ namespace Game.Combat.Misc
     public class DecayBehaviour : MonoBehaviour
     {
         private ParticleSystem _particles;
-        private static readonly ObjectPool<DecayBehaviour> _decayPool = new ObjectPool<DecayBehaviour>("Prefabs/Combat/Effects/Decay Area");
+        private static readonly ObjectPool<DecayBehaviour> _decayPool = new ObjectPool<DecayBehaviour>("Decay Areas", "Prefabs/Combat/Effects/Decay Area");
 
         public static DecayBehaviour Create(Vector3 position)
         {

@@ -6,7 +6,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
     public class LeaveFireTrail : MonoBehaviour
     {
         private Vector2 _lastPosition = Vector2.negativeInfinity;
-        private const float Interval = 1f;
+        private const float Interval = 0.25f;
         private const float FirePauseTime = 0.1f;
         private float _currentTime;
 

@@ -175,8 +175,9 @@ namespace Game.Characters
 
         private Player GenerateDriver()
         {
-            Player driver = GenerateCharacter(CharacterClass.Wanderer);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Worn, WeaponType.Shotgun);
+//            Player driver = GenerateCharacter(CharacterClass.Wanderer);
+            Player driver = GenerateCharacter(CharacterClass.Beast);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Worn, WeaponType.Rifle);
 //            WeaponGenerationTester.Test();
 //            Inscription.Test();
             driver.EquipWeapon(weapon);

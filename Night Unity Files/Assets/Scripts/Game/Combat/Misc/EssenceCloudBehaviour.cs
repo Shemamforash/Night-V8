@@ -11,7 +11,7 @@ public class EssenceCloudBehaviour : MonoBehaviour
     private ParticleSystem _essencePuff;
     private const int DecayRate = 1;
     private float _currentTime;
-    private static readonly ObjectPool<EssenceCloudBehaviour> _essenceCloudPool = new ObjectPool<EssenceCloudBehaviour>("Prefabs/Combat/Visuals/Essence Cloud");
+    private static readonly ObjectPool<EssenceCloudBehaviour> _essenceCloudPool = new ObjectPool<EssenceCloudBehaviour>("Essence Clouds", "Prefabs/Combat/Visuals/Essence Cloud");
     private int _essenceCount;
 
     public void Awake()
