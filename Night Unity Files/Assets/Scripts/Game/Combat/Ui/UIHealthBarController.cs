@@ -12,7 +12,7 @@ namespace Game.Combat.Ui
     public class UIHealthBarController : MonoBehaviour
     {
         private static readonly List<Fader> _faderPool = new List<Fader>();
-        private ParticleSystem _bleedEffect, _burnEffect;
+        private ParticleSystem _burnEffect;
         private RectTransform _fill;
         private TextMeshProUGUI _healthText;
         private Slider _slider;
@@ -26,7 +26,6 @@ namespace Game.Combat.Ui
             _fill = healthBar.FindChildWithName<RectTransform>("Fill");
             _slider = healthBar.GetComponent<Slider>();
             _burnEffect = healthBar.FindChildWithName<ParticleSystem>("Burning");
-            _bleedEffect = healthBar.FindChildWithName<ParticleSystem>("Bleeding");
             _healthText = gameObject.FindChildWithName<TextMeshProUGUI>("Health Text");
             _sicknessImage = gameObject.FindChildWithName<Image>("Sickness");
         }
@@ -64,17 +63,6 @@ namespace Game.Combat.Ui
         {
             _healthText.text = (int) health.CurrentValue() + "/" + (int) health.Max;
             _slider.value = health.Normalised();
-        }
-
-        public void StartDecay()
-        {
-            if (_bleedEffect.isPlaying) return;
-            _bleedEffect.Play();
-        }
-
-        public void StopDecaying()
-        {
-            _bleedEffect.Stop();
         }
 
         public void StartBurning()

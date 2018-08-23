@@ -78,7 +78,6 @@ namespace Game.Combat.Player
             CharacterCombat target = Target();
             float healPercent = 0;
             if (target.IsBurning()) healPercent += 0.1f;
-            if (target.IsDecaying()) healPercent += 0.1f;
             if (target.IsSick()) healPercent += 0.1f;
             target.ClearConditions();
             Heal(healPercent);

@@ -93,6 +93,16 @@ namespace Game.Combat.Player
             _vignetteRenderer = GameObject.Find("Vignette").GetComponent<Image>();
         }
 
+        protected override UIHealthBarController HealthBarController()
+        {
+            return PlayerUi.Instance().GetHealthController(this);
+        }
+
+        protected override UIArmourController ArmourBarController()
+        {
+            return PlayerUi.Instance().GetArmourController(Player);
+        }
+
         protected override int GetBurnDamage()
         {
             int burnDamage = base.GetBurnDamage();
@@ -268,13 +278,10 @@ namespace Game.Combat.Player
             InputHandler.UnregisterInputListener(this);
             base.Kill();
             Player.Kill();
-            if (Player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer)
-            {
-                SceneChanger.ChangeScene("Game Over");
-                return;
-            }
-
-            CombatManager.ExitCombat();
+            bool isWanderer = Player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer;
+            CombatManager.ExitCombat(!isWanderer);
+            if (!isWanderer) return;
+            SceneChanger.ChangeScene("Game Over");
         }
 
         public override void Update()
@@ -331,7 +338,7 @@ namespace Game.Combat.Player
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
             _initialArmour = Player.ArmourController.GetProtectionLevel();
 
-            CharacterUi.GetArmourController(Player).TakeDamage(ArmourController);
+            ArmourBarController().TakeDamage(ArmourController);
             MovementController.SetSpeed(Player.Attributes.CalculateSpeed());
 
             _adrenalineGain = Player.Attributes.CalculateAdrenalineRecoveryRate();

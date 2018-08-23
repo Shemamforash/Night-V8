@@ -45,7 +45,6 @@ namespace Game.Combat.Generation
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
             GenerateCharacter();
-            LeafBehaviour.CreateLeaves();
         }
 
         private void GenerateCharacter()

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
  using DG.Tweening;
+ using Facilitating.UIControllers;
  using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
@@ -124,6 +125,16 @@ namespace Game.Combat.Enemies
         {
             ActionText = actionText;
             EnemyUi.Instance().UpdateActionText(this, actionText);
+        }
+
+        protected override UIHealthBarController HealthBarController()
+        {
+            return EnemyUi.Instance().GetHealthController(this);
+        }
+
+        protected override UIArmourController ArmourBarController()
+        {
+            return EnemyUi.Instance().GetArmourController(Enemy);
         }
 
         public override void TakeShotDamage(Shot shot)

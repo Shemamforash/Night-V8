@@ -14,7 +14,7 @@ using UnityEngine;
 public class TempleBehaviour : BasicShrineBehaviour
 {
     private ColourPulse ringPulse1, ringPulse2;
-    private ParticleSystem _vortex, _explosion, _altar;
+    private ParticleSystem _vortex, _explosion, _altar, _flames, _dust;
     private SpriteRenderer _glow;
     private AudioSource _audioSource;
     [SerializeField] private AudioClip _fireIgniteAudioClip, _templateActivateAudioClip;
@@ -36,6 +36,8 @@ public class TempleBehaviour : BasicShrineBehaviour
         _explosion = gameObject.FindChildWithName<ParticleSystem>("Explosion");
         _altar = gameObject.FindChildWithName<ParticleSystem>("Altar");
         _glow = gameObject.FindChildWithName<SpriteRenderer>("Glow");
+        _flames = gameObject.FindChildWithName<ParticleSystem>("Flames");
+        _dust = gameObject.FindChildWithName<ParticleSystem>("Dust");
         _glow.color = UiAppearanceController.InvisibleColour;
         _audioSource = GetComponent<AudioSource>();
     }
@@ -43,6 +45,8 @@ public class TempleBehaviour : BasicShrineBehaviour
     protected override void StartShrine()
     {
         Triggered = true;
+        _flames.Play();
+        _dust.Play();
         StartLights();
         StartCoroutine(FadeInRing(ringPulse1, 3f));
         StartCoroutine(FadeInRing(ringPulse2, 3f));

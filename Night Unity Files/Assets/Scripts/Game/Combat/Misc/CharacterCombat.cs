@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
+using Facilitating.UIControllers;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
@@ -32,19 +33,16 @@ namespace Game.Combat.Misc
         public HealthController HealthController = new HealthController();
         private CharacterCombat _target;
         public MovementController MovementController;
-        protected CharacterUi CharacterUi;
         private BloodSpatter _bloodSpatter;
 
         private bool _isDead;
-        private const int ConditionTicksMax = 5;
         private const float SicknessDurationMax = 5f;
         private const int SicknessTargetTicks = 10;
-        private int _decayTicks;
         private readonly List<float> _burnTicks = new List<float>();
         private float _timeSinceLastBurn;
         private const float BurnTickDuration = 4f;
         protected int SicknessStacks;
-        private float _decayDuration, _sicknessDuration;
+        private float _sicknessDuration;
         public Shield Shield;
         private DamageSpriteFlash _spriteFlash;
 
@@ -67,28 +65,22 @@ namespace Game.Combat.Misc
             _timeSinceLastBurn = 0f;
             if (_burnTicks.Count == 0)
             {
-                CharacterUi.GetHealthController(this).StartBurning();
+                HealthBarController().StartBurning();
                 if (this is EnemyBehaviour) PlayerCombat.Instance.Player.BrandManager.IncreaseBurnCount();
             }
 
             _burnTicks.Add(BurnTickDuration);
         }
 
+        protected abstract UIHealthBarController HealthBarController();
+        protected abstract UIArmourController ArmourBarController();
+
         public bool IsBurning() => _burnTicks.Count > 0;
 
         public void Decay()
         {
-            if (_decayTicks == 0)
-            {
-                CharacterUi.GetHealthController(this).StartDecay();
-                if (this is EnemyBehaviour) PlayerCombat.Instance.Player.BrandManager.IncreaseDecayCount();
-            }
-
-            _decayDuration = 1;
-            _decayTicks = ConditionTicksMax;
+            TakeArmourDamage(GetDecayDamage());
         }
-
-        public bool IsDecaying() => _decayTicks > 0;
 
         public void Sicken(int stacks = 1)
         {
@@ -107,7 +99,6 @@ namespace Game.Combat.Misc
 
         public void ClearConditions()
         {
-            _decayTicks = 0;
             _burnTicks.Clear();
             SicknessStacks = 0;
         }
@@ -121,7 +112,7 @@ namespace Game.Combat.Misc
 
         protected virtual int GetDecayDamage()
         {
-            int decayDamage = Mathf.FloorToInt(ArmourPlate.PlateHealthUnit * 0.05f);
+            int decayDamage = Mathf.FloorToInt(ArmourPlate.PlateHealthUnit * 0.5f);
             if (decayDamage < 1) decayDamage = 1;
             return decayDamage;
         }
@@ -145,7 +136,7 @@ namespace Game.Combat.Misc
                         HealthController.TakeDamage(GetBurnDamage());
                     }
 
-                    _burnTicks[i] = burnTick;
+                    _burnTicks[i] = newBurnTick;
                     if (newBurnTick < 0f)
                     {
                         _burnTicks.RemoveAt(i);
@@ -154,34 +145,13 @@ namespace Game.Combat.Misc
             }
             else
             {
-                CharacterUi.GetHealthController(this)?.StopBurning();
-            }
-        }
-
-        private void UpdateDecay()
-        {
-            if (_decayTicks > 0)
-            {
-                if (_decayDuration <= 0)
-                {
-                    _decayDuration = 1 - _decayDuration;
-                    TakeArmourDamage(GetDecayDamage());
-                    --_decayTicks;
-                }
-                else
-                {
-                    _decayDuration -= Time.deltaTime;
-                }
-            }
-            else
-            {
-                CharacterUi.GetHealthController(this)?.StopDecaying();
+                HealthBarController()?.StopBurning();
             }
         }
 
         private void UpdateSickness()
         {
-            CharacterUi.GetHealthController(this)?.SetSicknessLevel((float) SicknessStacks / GetSicknessTargetTicks());
+            HealthBarController()?.SetSicknessLevel((float) SicknessStacks / GetSicknessTargetTicks());
             if (SicknessStacks <= 0) return;
             if (_sicknessDuration > SicknessDurationMax)
             {
@@ -197,7 +167,6 @@ namespace Game.Combat.Misc
         private void UpdateConditions()
         {
             UpdateBurn();
-            UpdateDecay();
             UpdateSickness();
         }
 
@@ -211,7 +180,7 @@ namespace Game.Combat.Misc
         public virtual void TakeShotDamage(Shot shot)
         {
             _spriteFlash.FlashSprite();
-            MovementController.Knockback(shot.transform.position, shot._knockBackForce);
+            MovementController.Knockback(shot.Direction(), shot._knockBackForce);
             float armourProtection = ArmourController.GetCurrentArmour() / 10f;
             float armourDamage = shot.DamageDealt() * armourProtection;
             float healthDamage = shot.DamageDealt() - armourDamage;
@@ -219,6 +188,8 @@ namespace Game.Combat.Misc
             HealthController.TakeDamage(Mathf.CeilToInt(healthDamage));
             if (_bloodSpatter == null) return;
             _bloodSpatter.Spray(shot.Direction(), healthDamage);
+            if (HealthController.GetCurrentHealth() != 0) return;
+            LeafBehaviour.CreateLeaves(shot.Direction(), transform.position);
         }
 
         public bool IsDead()
@@ -266,8 +237,6 @@ namespace Game.Combat.Misc
             _spriteFlash = GetComponent<DamageSpriteFlash>();
             MovementController = GetComponent<MovementController>();
             _bloodSpatter = GetComponent<BloodSpatter>();
-            if (this is EnemyBehaviour) CharacterUi = EnemyUi.Instance();
-            else CharacterUi = PlayerUi.Instance();
             WeaponAudio = gameObject.FindChildWithName<WeaponAudioController>("Weapon Audio");
             Shield = gameObject.FindChildWithName<Shield>("Shield");
         }

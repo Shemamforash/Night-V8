@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Game.Combat.Generation;
+﻿using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.WorldEvents;

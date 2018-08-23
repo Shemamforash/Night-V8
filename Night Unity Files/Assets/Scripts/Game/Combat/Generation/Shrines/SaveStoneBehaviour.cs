@@ -45,6 +45,8 @@ public class SaveStoneBehaviour : MonoBehaviour, IInputListener
         {
             componentsInChild.DOTime(0, 1);
         }
+
+        SaveIconController.Save();
         _saved = true;
     }
 

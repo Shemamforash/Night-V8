@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using DG.Tweening;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Player;
+using Game.Combat.Ui;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.Libraries;
@@ -101,6 +103,16 @@ namespace Game.Combat.Misc
                 CombatManager.QueueEnemyToAdd(template, this);
                 size -= template.Value;
             }
+        }
+
+        protected override UIHealthBarController HealthBarController()
+        {
+            return null;
+        }
+
+        protected override UIArmourController ArmourBarController()
+        {
+            return null;
         }
 
         public override void TakeShotDamage(Shot shot)

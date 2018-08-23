@@ -11,7 +11,7 @@ namespace Game.Combat.Misc
     {
         private const int MaxEmissionRate = 400;
         private const float LightMaxRadius = 5f;
-        private const float LifeTime = 4f;
+        private const float LifeTime = 8f;
         private static readonly ObjectPool<FireBehaviour> _firePool = new ObjectPool<FireBehaviour>("Fire Areas", "Prefabs/Combat/Effects/Fire Area");
         private float _age;
         private FastLight _light;
@@ -36,7 +36,7 @@ namespace Game.Combat.Misc
             return fire;
         }
 
-        public void OnTriggerEnter2D(Collider2D other)
+        public void OnTriggerStay2D(Collider2D other)
         {
             CharacterCombat character = other.GetComponent<CharacterCombat>();
             if (character == null) return;
