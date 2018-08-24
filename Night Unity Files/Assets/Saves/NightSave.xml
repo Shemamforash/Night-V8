@@ -4,8 +4,8 @@
     <DaysSpentHere>0</DaysSpentHere>
     <CurrentLevel>1</CurrentLevel>
     <Days>0</Days>
-    <Hours>6</Hours>
-    <Minutes>45</Minutes>
+    <Hours>7</Hours>
+    <Minutes>25</Minutes>
     <Difficulty>0</Difficulty>
   </WorldState>
   <Inventory>
@@ -24,17 +24,16 @@
     </Items>
     <Character>
       <Id>1</Id>
-      <Name>The Beast</Name>
+      <Name>The Wanderer</Name>
       <ParentInventory>-1</ParentInventory>
       <EquippedItems>
         <Weapon>3</Weapon>
       </EquippedItems>
       <Inventory>
         <Id>2</Id>
-        <Name>The Beast</Name>
+        <Name>The Wanderer</Name>
         <ParentInventory>-1</ParentInventory>
         <Resources>
-          <Salt>5</Salt>
           <Fleetfoot>1</Fleetfoot>
         </Resources>
         <Items>
@@ -49,7 +48,7 @@
               </Template>
               <Quality>1</Quality>
               <Class>14</Class>
-              <Durability>10.26923</Durability>
+              <Durability>10.65336</Durability>
               <Attributes>
                 <Attribute>
                   <AttributeType>19</AttributeType>
@@ -119,7 +118,7 @@
           <Inscriptions />
           <Consumables>
             <Resource>
-              <Id>44</Id>
+              <Id>43</Id>
               <Name>Fleetfoot</Name>
               <ParentInventory>2</ParentInventory>
               <Quantity>1</Quantity>
@@ -150,13 +149,13 @@
         </Attribute>
         <Attribute>
           <AttributeType>5</AttributeType>
-          <Value>0.25</Value>
+          <Value>0.4444445</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>4</AttributeType>
-          <Value>0.5</Value>
+          <Value>1</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
@@ -168,21 +167,21 @@
         </Attribute>
         <Attribute>
           <AttributeType>0</AttributeType>
-          <Value>6</Value>
+          <Value>4</Value>
           <Min>0</Min>
-          <Max>6</Max>
+          <Max>4</Max>
         </Attribute>
         <Attribute>
           <AttributeType>2</AttributeType>
-          <Value>1</Value>
+          <Value>4</Value>
           <Min>0</Min>
-          <Max>1</Max>
+          <Max>4</Max>
         </Attribute>
         <Attribute>
           <AttributeType>3</AttributeType>
-          <Value>3</Value>
+          <Value>4</Value>
           <Min>0</Min>
-          <Max>3</Max>
+          <Max>4</Max>
         </Attribute>
         <Attribute>
           <AttributeType>29</AttributeType>
@@ -206,8 +205,8 @@
       <Brands />
       <StoryUnlocked>False</StoryUnlocked>
       <StoryProgress>1</StoryProgress>
-      <TimeAlive>9</TimeAlive>
-      <CharacterClass>Beast</CharacterClass>
+      <TimeAlive>17</TimeAlive>
+      <CharacterClass>Wanderer</CharacterClass>
     </Character>
   </Inventory>
   <Regions>
@@ -647,7 +646,82 @@
             <ParentInventory>-1</ParentInventory>
             <Resources />
             <Items>
-              <Weapons />
+              <Weapons>
+                <Gear>
+                  <Id>37</Id>
+                  <Name>Rusted Gripshaker</Name>
+                  <ParentInventory>35</ParentInventory>
+                  <Quantity>1</Quantity>
+                  <Stackable>False</Stackable>
+                  <Template>
+                  </Template>
+                  <Quality>0</Quality>
+                  <Class>10</Class>
+                  <Durability>9.432862</Durability>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeType>19</AttributeType>
+                      <Value>9</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>21</AttributeType>
+                      <Value>8</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>22</AttributeType>
+                      <Value>1.25</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>20</AttributeType>
+                      <Value>0.3</Value>
+                      <Min>0</Min>
+                      <Max>1</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>23</AttributeType>
+                      <Value>95</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>25</AttributeType>
+                      <Value>20</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>24</AttributeType>
+                      <Value>1</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>27</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>28</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>26</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                  </Attributes>
+                </Gear>
+              </Weapons>
               <ArmourPlates>
                 <Health>85</Health>
               </ArmourPlates>
@@ -746,7 +820,7 @@
   </Regions>
   <Weather>
     <Name>Clear</Name>
-    <TimeRemaining>15</TimeRemaining>
+    <TimeRemaining>7</TimeRemaining>
   </Weather>
   <CurrentEnvironment>Forest</CurrentEnvironment>
   <WorldEvents>

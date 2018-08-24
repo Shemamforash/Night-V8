@@ -4,45 +4,54 @@
         <DisplayName>it is drizzling</DisplayName>
         <Temperature>-5</Temperature>
         <Visibility>1</Visibility>
-        <Water>0.1</Water>
-        <Food>0</Food>
-        <Duration>2</Duration>
-        <Rain>0.3</Rain>
+        <Water>1</Water>
         <Fog>0</Fog>
-        <Dust>0</Dust>
-        <Hail>0</Hail>
-        <Wind>0.1</Wind>
-        <Sun>1</Sun>
+        <Ice>0</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>4</Rain>
+            <Fog>0.3</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
+            <Wind>0</Wind>
+            <Sun>0.1</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Rain</Name>
         <DisplayName>it it raining</DisplayName>
         <Temperature>-5</Temperature>
         <Visibility>0.9</Visibility>
-        <Water>0.2</Water>
-        <Food>0</Food>
-        <Duration>2</Duration>
-        <Rain>0.7</Rain>
+        <Water>2</Water>
         <Fog>0</Fog>
-        <Dust>0</Dust>
-        <Hail>0</Hail>
-        <Wind>0</Wind>
-        <Sun>0.8</Sun>
+        <Ice>0</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>3</Rain>
+            <Fog>0.7</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
+            <Wind>0</Wind>
+            <Sun>0</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Downpour</Name>
         <DisplayName>it is pouring</DisplayName>
         <Temperature>-5</Temperature>
         <Visibility>0.8</Visibility>
-        <Water>0.3</Water>
-        <Food>0</Food>
-        <Duration>2</Duration>
-        <Rain>1</Rain>
+        <Water>3</Water>
         <Fog>0</Fog>
-        <Dust>0</Dust>
-        <Hail>0</Hail>
-        <Wind>0</Wind>
-        <Sun>0.6</Sun>
+        <Ice>0</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>2</Rain>
+            <Fog>1</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
+            <Wind>0</Wind>
+            <Sun>0</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Haze</Name>
@@ -50,14 +59,17 @@
         <Temperature>0</Temperature>
         <Visibility>0.6</Visibility>
         <Water>0</Water>
-        <Food>0</Food>
-        <Duration>2</Duration>
-        <Rain>0</Rain>
-        <Fog>0.3</Fog>
-        <Dust>0</Dust>
-        <Hail>0</Hail>
-        <Wind>0</Wind>
-        <Sun>1</Sun>
+        <Fog>1</Fog>
+        <Ice>1</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>3</Rain>
+            <Fog>0</Fog>
+            <Dust>0.3</Dust>
+            <Hail>0</Hail>
+            <Wind>0</Wind>
+            <Sun>0</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Mist</Name>
@@ -65,14 +77,17 @@
         <Temperature>-5</Temperature>
         <Visibility>0.4</Visibility>
         <Water>0</Water>
-        <Food>0</Food>
-        <Duration>2</Duration>
-        <Rain>0</Rain>
-        <Fog>0.7</Fog>
-        <Dust>0</Dust>
-        <Hail>0</Hail>
-        <Wind>0</Wind>
-        <Sun>1</Sun>
+        <Fog>2</Fog>
+        <Ice>2</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>2</Rain>
+            <Fog>0</Fog>
+            <Dust>0.7</Dust>
+            <Hail>0</Hail>
+            <Wind>0</Wind>
+            <Sun>0</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Fog</Name>
@@ -80,14 +95,17 @@
         <Temperature>-5</Temperature>
         <Visibility>0.2</Visibility>
         <Water>0.1</Water>
-        <Food>0</Food>
-        <Duration>2</Duration>
-        <Rain>0</Rain>
-        <Fog>1</Fog>
-        <Dust>0</Dust>
-        <Hail>0</Hail>
-        <Wind>0</Wind>
-        <Sun>1</Sun>
+        <Fog>3</Fog>
+        <Ice>3</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>1</Rain>
+            <Fog>0</Fog>
+            <Dust>1</Dust>
+            <Hail>0</Hail>
+            <Wind>0</Wind>
+            <Sun>0</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Clear</Name>
@@ -95,14 +113,17 @@
         <Temperature>5</Temperature>
         <Visibility>1</Visibility>
         <Water>0</Water>
-        <Food>0.3</Food>
-        <Duration>2</Duration>
-        <Rain>0</Rain>
-        <Fog>0</Fog>
-        <Dust>0</Dust>
-        <Hail>0</Hail>
-        <Wind>0</Wind>
-        <Sun>1</Sun>
+        <Fog>0.3</Fog>
+        <Ice>0.3</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>4</Rain>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
+            <Wind>0</Wind>
+            <Sun>0</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Cloudy</Name>
@@ -110,14 +131,17 @@
         <Temperature>0</Temperature>
         <Visibility>1</Visibility>
         <Water>0</Water>
-        <Food>0.2</Food>
-        <Duration>2</Duration>
-        <Rain>0</Rain>
-        <Fog>0</Fog>
-        <Dust>0.2</Dust>
-        <Hail>0</Hail>
-        <Wind>0.1</Wind>
-        <Sun>0.65</Sun>
+        <Fog>0.2</Fog>
+        <Ice>0.2</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>3</Rain>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0.2</Hail>
+            <Wind>0</Wind>
+            <Sun>0.1</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Overcast</Name>
@@ -125,14 +149,17 @@
         <Temperature>0</Temperature>
         <Visibility>1</Visibility>
         <Water>0</Water>
-        <Food>0.1</Food>
-        <Duration>2</Duration>
-        <Rain>0</Rain>
-        <Fog>0</Fog>
-        <Dust>0.4</Dust>
-        <Hail>0</Hail>
-        <Wind>0.1</Wind>
-        <Sun>0.4</Sun>
+        <Fog>0.1</Fog>
+        <Ice>0.1</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>2</Rain>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0.4</Hail>
+            <Wind>0</Wind>
+            <Sun>0.1</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Hail</Name>
@@ -140,14 +167,17 @@
         <Temperature>-10</Temperature>
         <Visibility>0.8</Visibility>
         <Water>0.1</Water>
-        <Food>0</Food>
-        <Duration>1</Duration>
-        <Rain>0</Rain>
         <Fog>0</Fog>
-        <Dust>0</Dust>
-        <Hail>1</Hail>
-        <Wind>0</Wind>
-        <Sun>0.6</Sun>
+        <Ice>0</Ice>
+        <Duration>2</Duration>
+        <Particles>
+            <Rain>1</Rain>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
+            <Wind>1</Wind>
+            <Sun>0</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Dust Storm</Name>
@@ -155,14 +185,17 @@
         <Temperature>5</Temperature>
         <Visibility>0.2</Visibility>
         <Water>0</Water>
-        <Food>-0.1</Food>
-        <Duration>6</Duration>
-        <Rain>0</Rain>
-        <Fog>0</Fog>
-        <Dust>1</Dust>
-        <Hail>0</Hail>
-        <Wind>1</Wind>
-        <Sun>0.2</Sun>
+        <Fog>1</Fog>
+        <Ice>1</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>6</Rain>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>1</Hail>
+            <Wind>0</Wind>
+            <Sun>1</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Lightning</Name>
@@ -170,14 +203,17 @@
         <Temperature>0</Temperature>
         <Visibility>1</Visibility>
         <Water>0</Water>
-        <Food>0</Food>
-        <Duration>1</Duration>
-        <Rain>0.5</Rain>
         <Fog>0</Fog>
-        <Dust>0</Dust>
-        <Hail>0.2</Hail>
-        <Wind>0</Wind>
-        <Sun>0.4</Sun>
+        <Ice>0</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>1</Rain>
+            <Fog>0.5</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
+            <Wind>0.2</Wind>
+            <Sun>0</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Heat Wave</Name>
@@ -185,29 +221,17 @@
         <Temperature>10</Temperature>
         <Visibility>1</Visibility>
         <Water>-0.2</Water>
-        <Food>0</Food>
-        <Duration>3</Duration>
-        <Rain>0</Rain>
         <Fog>0</Fog>
-        <Dust>0.5</Dust>
-        <Hail>0</Hail>
-        <Wind>0</Wind>
-        <Sun>1</Sun>
-    </Weather>
-    <Weather>
-        <Name>Fire storm</Name>
-        <DisplayName>wildfires are burning</DisplayName>
-        <Temperature>20</Temperature>
-        <Visibility>1</Visibility>
-        <Water>-0.3</Water>
-        <Food>-0.2</Food>
-        <Duration>3</Duration>
-        <Rain>0</Rain>
-        <Fog>0</Fog>
-        <Dust>0.4</Dust>
-        <Hail>0</Hail>
-        <Wind>0</Wind>
-        <Sun>1</Sun>
+        <Ice>0</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>3</Rain>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0.5</Hail>
+            <Wind>0</Wind>
+            <Sun>0</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Ice storm</Name>
@@ -215,28 +239,52 @@
         <Temperature>-20</Temperature>
         <Visibility>0.8</Visibility>
         <Water>0</Water>
-        <Food>-0.2</Food>
+        <Fog>-0.2</Fog>
+        <Ice>-0.2</Ice>
         <Duration>3</Duration>
-        <Rain>0</Rain>
-        <Fog>0</Fog>
-        <Dust>0</Dust>
-        <Hail>1</Hail>
-        <Wind>0.8</Wind>
-        <Sun>0.6</Sun>
+        <Particles>
+            <Rain>3</Rain>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
+            <Wind>1</Wind>
+            <Sun>0.8</Sun>
+        </Particles>
     </Weather>
     <Weather>
         <Name>Hurricane</Name>
         <DisplayName>hurricane winds blow</DisplayName>
         <Temperature>-5</Temperature>
         <Visibility>0.6</Visibility>
-        <Water>-0.2</Water>
-        <Food>-0.3</Food>
-        <Duration>2</Duration>
-        <Rain>0.5</Rain>
+        <Water>1</Water>
+        <Fog>-0.3</Fog>
+        <Ice>-0.3</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>2</Rain>
+            <Fog>0.5</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
+            <Wind>0.2</Wind>
+            <Sun>1</Sun>
+        </Particles>
+    </Weather>
+    <Weather>
+        <Name>0</Name>
+        <DisplayName>0</DisplayName>
+        <Temperature>0</Temperature>
+        <Visibility>0</Visibility>
+        <Water>0</Water>
         <Fog>0</Fog>
-        <Dust>0</Dust>
-        <Hail>0.2</Hail>
-        <Wind>1</Wind>
-        <Sun>0.4</Sun>
+        <Ice>0</Ice>
+        <Duration>0</Duration>
+        <Particles>
+            <Rain>0</Rain>
+            <Fog>0</Fog>
+            <Dust>0</Dust>
+            <Hail>0</Hail>
+            <Wind>0</Wind>
+            <Sun>0</Sun>
+        </Particles>
     </Weather>
 </WeatherTypes>

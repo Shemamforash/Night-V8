@@ -9,6 +9,7 @@ namespace Game.Exploration.Weather
 
         public WeatherAttributes(XmlNode weatherNode)
         {
+            weatherNode = weatherNode.SelectSingleNode("Particles");
             RainAmount = weatherNode.FloatFromNode("Rain");
             FogAmount = weatherNode.FloatFromNode("Fog");
             DustAmount = weatherNode.FloatFromNode("Dust");

@@ -297,5 +297,27 @@ namespace Game.Global
             CheckEnemyUnlock();
             return _allowedNightmareEnemies;
         }
+
+        public static void UpdateWeather(Weather weather)
+        {
+            int water = weather.Water;
+            int fog = weather.Fog;
+            int ice = weather.Ice;
+            if(water < 1) _homeInventory.DecrementResource("Water", -water);
+            _homeInventory.Buildings().ForEach(b =>
+            {
+                WaterCollector waterCollector = b as WaterCollector;
+                if (waterCollector != null)
+                {
+                    if (water > 0) _homeInventory.IncrementResource("Water", water);
+                    if (ice > 0) _homeInventory.IncrementResource("Ice", ice);
+                    return;
+                }
+
+                Condenser condenser = b as Condenser;
+                if (condenser == null) return;
+                if (fog > 0) _homeInventory.IncrementResource("Water", fog);
+            });
+        }
     }
 }

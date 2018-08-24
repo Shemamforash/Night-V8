@@ -16,7 +16,8 @@ namespace Facilitating.MenuNavigation
     {
         private CanvasGroup _menuCanvasGroup;
         private static bool _shownSplashScreen;
-        private Image _logo, _fireBackground, _loadingIcon;
+        private Image _fireBackground, _loadingIcon;
+        private CanvasGroup _logo;
         private ParticleSystem _fireParticles;
         private Sequence _fadeInSequence;
         private bool _starting;
@@ -26,7 +27,7 @@ namespace Facilitating.MenuNavigation
         private void CacheGameobjects()
         {
             _menuCanvasGroup = gameObject.FindChildWithName<CanvasGroup>("Menu Canvas Group");
-            _logo = gameObject.FindChildWithName<Image>("Logo");
+            _logo = gameObject.FindChildWithName<CanvasGroup>("Logo");
             _fireBackground = gameObject.FindChildWithName<Image>("Fire Image");
             _loadingIcon = gameObject.FindChildWithName<Image>("Loading Icon");
             _fireParticles = GameObject.Find("Fire").GetComponent<ParticleSystem>();
@@ -36,7 +37,7 @@ namespace Facilitating.MenuNavigation
         {
             _loadingIcon.fillAmount = 0;
             _menuCanvasGroup.alpha = 0f;
-            _logo.color = UiAppearanceController.InvisibleColour;
+            _logo.alpha = 0f;
             _fireBackground.color = UiAppearanceController.InvisibleColour;
         }
 
@@ -46,9 +47,9 @@ namespace Facilitating.MenuNavigation
             if (!_seenIntro)
             {
                 _fadeInSequence.AppendInterval(1f);
-                _fadeInSequence.Append(_logo.DOColor(Color.white, 1f));
+                _fadeInSequence.Append(_logo.DOFade(1f, 1f));
                 _fadeInSequence.AppendInterval(2f);
-                _fadeInSequence.Append(_logo.DOColor(UiAppearanceController.InvisibleColour, 1f));
+                _fadeInSequence.Append(_logo.DOFade(0f, 1f));
                 _seenIntro = true;
             }
 

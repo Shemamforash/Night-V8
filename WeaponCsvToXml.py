@@ -132,8 +132,12 @@ class WeatherImporter(XMLWriter):
         write_single_value(self, "Temperature", get_value(self, "C", row, "0"))
         write_single_value(self, "Visibility", get_value(self, "D", row, "0"))
         write_single_value(self, "Water", get_value(self, "E", row, "0"))
-        write_single_value(self, "Food", get_value(self, "F", row, "0"))
+        write_single_value(self, "Fog", get_value(self, "F", row, "0"))
+        write_single_value(self, "Ice", get_value(self, "F", row, "0"))
         write_single_value(self, "Duration", get_value(self, "G", row, "0"))
+        write_tag(self, "Particles", self.read_particles, [row])
+
+    def read_particles(self, row):
         write_single_value(self, "Rain", get_value(self, "H", row, "0"))
         write_single_value(self, "Fog", get_value(self, "I", row, "0"))
         write_single_value(self, "Dust", get_value(self, "J", row, "0"))
@@ -312,11 +316,11 @@ def write_single_value(xml_writer, stat_name, value):
 
 # WeaponImporter()
 # GearImporter()
-# WeatherImporter()
+WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
-RecipeImporter()
+# RecipeImporter()
 # ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()

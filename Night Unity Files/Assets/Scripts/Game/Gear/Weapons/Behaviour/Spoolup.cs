@@ -16,12 +16,12 @@ namespace Game.Gear.Weapons
         {
             _spinSource = gameObject.AddComponent<AudioSource>();
         }
-        
+
         protected bool SpooledUp()
         {
             return _currentTime > SpoolUpTime;
         }
-        
+
         public override void StartFiring(CharacterCombat origin)
         {
             if (!SpinningUp)
@@ -31,20 +31,19 @@ namespace Game.Gear.Weapons
                 _spinSource.Play();
                 SpinningUp = true;
             }
+
             if (_currentTime < SpoolUpTime)
             {
                 _currentTime += Time.deltaTime;
-                if (_currentTime > SpoolUpTime)
-                {
-                    _spinSource.clip = origin.WeaponAudio.SpoolClip;
-                    _spinSource.loop = true;
-                    _spinSource.Play();
-                }
+                if (_currentTime <= SpoolUpTime) return;
+                _spinSource.clip = origin.WeaponAudio.SpoolClip;
+                _spinSource.loop = true;
+                _spinSource.Play();
                 return;
             }
+
             base.StartFiring(origin);
         }
-
 
         public override void StopFiring()
         {
@@ -52,7 +51,8 @@ namespace Game.Gear.Weapons
             _currentTime = 0f;
             _spinSource.clip = Origin.WeaponAudio.SpoolDownClip;
             _spinSource.loop = false;
-            _spinSource.time = 1 - _currentTime;
+            _spinSource.time = Mathf.Min(1f - _currentTime, _spinSource.clip.length - 0.01f);
+            Debug.Log(1 - _currentTime + " " + Origin.WeaponAudio.SpoolClip.length);
             _spinSource.Play();
             SpinningUp = false;
         }

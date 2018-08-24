@@ -1,19 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Xml;
+﻿using System.Xml;
 using Facilitating.Persistence;
-using Game.Exploration.Environment;
-using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
-using UnityEngine;
 
 namespace Game.Exploration.Weather
 {
     public class Weather : ProbabalisticState
     {
         private readonly int _temperature, _duration;
-        private readonly float _visibility, _water, _food;
+        private readonly float _visibility;
+        public readonly int Water, Fog, Ice;
         private int _timeRemaining;
         private readonly string _displayName;
         public readonly WeatherAttributes Attributes;
@@ -23,8 +20,9 @@ namespace Game.Exploration.Weather
             _displayName = weatherNode.StringFromNode("DisplayName");
             _temperature = weatherNode.IntFromNode("Temperature");
             _visibility = weatherNode.FloatFromNode("Visibility");
-            _water = weatherNode.FloatFromNode("Water");
-            _food = weatherNode.FloatFromNode("Food");
+            Water = weatherNode.IntFromNode("Water");
+            Fog = weatherNode.IntFromNode("Fog");
+            Ice = weatherNode.IntFromNode("Ice");
             _duration = weatherNode.IntFromNode("Duration");
             Attributes = new WeatherAttributes(weatherNode);
         }
@@ -34,7 +32,7 @@ namespace Game.Exploration.Weather
             return _visibility;
         }
 
-       public override void Enter()
+        public override void Enter()
         {
             base.Enter();
             WorldView.SetWeatherText(_displayName);
@@ -50,22 +48,14 @@ namespace Game.Exploration.Weather
         public void Update()
         {
             --_timeRemaining;
+            if(_timeRemaining % 12 == 0) UpdateEnvironmentResources();
             if (_timeRemaining != 0) return;
-            UpdateEnvironmentResources();
             WeatherManager.GoToWeather();
         }
 
         private void UpdateEnvironmentResources()
         {
-            //todo me
-            List<Region> discoveredRegions = MapGenerator.DiscoveredRegions();
-            float waterChance = Mathf.Abs(_water);
-            float foodChance = Mathf.Abs(_food);
-            discoveredRegions.ForEach(r =>
-            {
-                if(Random.Range(0f, 1f) < waterChance) r.ChangeWater((int)_water.Polarity());
-                if(Random.Range(0f, 1f) < foodChance) r.ChangeFood((int)_food.Polarity());
-            });
+            WorldState.UpdateWeather(this);
         }
 
         public void Save(XmlNode doc)
