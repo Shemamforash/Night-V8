@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
-using Game.Gear.Armour;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Facilitating.UIControllers
@@ -12,14 +11,14 @@ namespace Facilitating.UIControllers
     public class UiAccessoryController : UiGearMenuTemplate
     {
         private EnhancedButton _swapButton;
-        private EnhancedText _nameText, _descriptionText, _compareText;
+        private EnhancedText _nameText, _descriptionText;
         private bool _upgradingAllowed;
 
         public void Awake()
         {
-            _nameText = gameObject.FindChildWithName<EnhancedText>("Name");
-            _descriptionText = gameObject.FindChildWithName<EnhancedText>("Description");
-            _compareText = gameObject.FindChildWithName<EnhancedText>("Compare");
+            GameObject info = gameObject.FindChildWithName("Info");
+            _nameText = info.FindChildWithName<EnhancedText>("Name");
+            _descriptionText = info.FindChildWithName<EnhancedText>("Description");
 
             _swapButton = gameObject.FindChildWithName<EnhancedButton>("Swap");
             _swapButton.AddOnClick(() =>
@@ -37,17 +36,15 @@ namespace Facilitating.UIControllers
         {
             if (CharacterManager.SelectedCharacter.EquippedAccessory != null)
             {
-                _nameText.Text(CharacterManager.SelectedCharacter.EquippedAccessory.Name);
-                _descriptionText.Text(CharacterManager.SelectedCharacter.EquippedAccessory.GetSummary());
+                _nameText.SetText(CharacterManager.SelectedCharacter.EquippedAccessory.Name);
+                _descriptionText.SetText(CharacterManager.SelectedCharacter.EquippedAccessory.GetSummary());
             }
             else
             {
-                _nameText.Text("");
-                _descriptionText.Text("No Accessory Equipped");
+                _nameText.SetText("");
+                _descriptionText.SetText("No Accessory Equipped");
                 _swapButton.SetDownNavigation(UiGearMenuController.GetCloseButton());
             }
-
-            _compareText.Text("");
         }
 
         public override bool GearIsAvailable()
@@ -71,12 +68,10 @@ namespace Facilitating.UIControllers
 
         public override void CompareTo(MyGameObject comparisonItem)
         {
-            _compareText.Text(CharacterManager.SelectedCharacter.EquippedAccessory != null ? ((Accessory)comparisonItem).GetSummary() : "");
         }
 
         public override void StopComparing()
         {
-            _compareText.Text("");
         }
 
         public override List<MyGameObject> GetAvailableGear()

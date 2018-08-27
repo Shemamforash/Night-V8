@@ -46,7 +46,10 @@ namespace Game.Combat.Generation
 
         public static Cooldown CreateCooldown() => Instance()._cooldowns.CreateCooldown();
 
-        public static bool InCombat() => Instance()._inCombat;
+        public static bool InCombat()
+        {
+            return Instance() != null && Instance()._inCombat;
+        }
 
         public static Region Region() => _currentRegion;
 
@@ -108,7 +111,8 @@ namespace Game.Combat.Generation
             else if (_currentRegion.GetRegionType() == RegionType.Rite)
             {
                 worldObject.AddComponent<Rite>().Initialise(_currentRegion);
-            } else if (_currentRegion.GetRegionType() == RegionType.Tomb)
+            }
+            else if (_currentRegion.GetRegionType() == RegionType.Tomb)
             {
                 worldObject.AddComponent<Tomb>().Initialise(_currentRegion);
             }

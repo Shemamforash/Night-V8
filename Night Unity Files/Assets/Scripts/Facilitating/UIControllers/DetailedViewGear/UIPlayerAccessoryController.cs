@@ -30,7 +30,7 @@ namespace Facilitating.UIControllers
             {
                 _notEquippedObject.SetActive(false);
                 _accessoryText.gameObject.SetActive(true);
-                _accessoryText.Text(accessory.Name);
+                _accessoryText.SetText(accessory.Name);
             }
         }
     }

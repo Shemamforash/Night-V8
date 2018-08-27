@@ -104,14 +104,14 @@ namespace SamsHelper.Input
         {
             SaveController.SaveGame();
         }
-        
+
         private class InputPress
         {
             private readonly InputAxis _axis;
             private readonly string _axisString;
             private float _directionAtLastPress;
             private float _lastInputValue, _currentInputValue;
-            private bool _pressed;
+            private bool _held;
             private float _timeAtLastPress;
 
             public InputPress(InputAxis axis)
@@ -137,15 +137,16 @@ namespace SamsHelper.Input
             public void CheckPress()
             {
                 _currentInputValue = UnityEngine.Input.GetAxis(_axisString);
-                if (Math.Abs(_currentInputValue) > 0f)
+                bool isPressed = _currentInputValue != 0f;
+                if (isPressed)
                 {
-                    _pressed = Helper.ValuesHaveSameSign(_currentInputValue, _lastInputValue);
-                    BroadcastInputDown(_axis, _pressed, _currentInputValue.Polarity());
-                    if (!_pressed) CheckDoubleTap();
+                    _held = Helper.ValuesHaveSameSign(_currentInputValue, _lastInputValue);
+                    BroadcastInputDown(_axis, _held, _currentInputValue.Polarity());
+                    if (!_held) CheckDoubleTap();
                 }
-                else if(_lastInputValue != 0f)
+                else if (_lastInputValue != 0f)
                 {
-                    _pressed = false;
+                    _held = false;
                     BroadcastInputUp(_axis);
                 }
 

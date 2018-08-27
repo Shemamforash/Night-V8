@@ -21,6 +21,7 @@ namespace SamsHelper.ReactiveUI.Elements
         public float CustomFontSize;
 
         public FontSizes FontSize;
+        private bool _strikethroughActive;
 
         public void Awake()
         {
@@ -32,18 +33,34 @@ namespace SamsHelper.ReactiveUI.Elements
             UpdateFontSize();
         }
 
-        public void Text(string text)
+        public void SetText(string text)
         {
             if (_text == null) _text = GetComponent<TextMeshProUGUI>();
             _text.text = text;
+            UpdateStrikeThrough();
         }
 
-        public void SetFont(TMP_FontAsset universalFont)
+        public void SetStrikeThroughActive(bool active)
         {
-            TryReplaceText();
-            _text = gameObject.GetComponent<TextMeshProUGUI>();
-            _text.font = universalFont;
-            UpdateFontSize();
+            _strikethroughActive = active;
+            UpdateStrikeThrough();
+        }
+
+        private void UpdateStrikeThrough()
+        {
+            if (_strikethroughActive)
+            {
+                string text = "<s>" + _text.text + "</s>";
+                _text.color = UiAppearanceController.FadedColour;
+                _text.text = text;
+            }
+            else
+            {
+                string text = _text.text.Replace("<s>", "");
+                text = text.Replace("</s>", "");
+                _text.text = text;
+                _text.color = Color.white;
+            }
         }
 
         private void TryReplaceText()

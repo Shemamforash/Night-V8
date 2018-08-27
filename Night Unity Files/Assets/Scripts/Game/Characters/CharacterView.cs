@@ -132,7 +132,7 @@ namespace Game.Characters
                 if (i < brands.Count - 1) brandString += "\n";
             }
 
-            _brandText.Text(brandString);
+            _brandText.SetText(brandString);
         }
 
         public void SelectInitial()

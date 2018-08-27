@@ -14,27 +14,28 @@ using UnityEngine;
 
 namespace Game.Gear
 {
-    public class Inscription : InventoryItem
+    public class Inscription : GearItem
     {
         private static readonly List<InscriptionTemplate> _inscriptionTemplates = new List<InscriptionTemplate>();
         private static bool _readTemplates;
         private readonly AttributeModifier _modifier;
-        private ItemQuality _quality;
         private readonly InscriptionTemplate _template;
-        private readonly InscriptionTier _tier;
+        private readonly InscriptionTier _inscriptionTier;
+        private readonly int _inscriptionCost;
 
-        private Inscription(InscriptionTemplate template, InscriptionTier tier) : base("A " + tier + " of " + template.Name, GameObjectType.Inscription)
+        private Inscription(InscriptionTemplate template, ItemQuality quality) : base("A " + (InscriptionTier) quality + " of " + template.Name, GearSubtype.Inscription, quality)
         {
             _template = template;
             _modifier = _template.GetModifier();
-            _tier = tier;
+            _inscriptionTier = (InscriptionTier) (int) quality;
             float finalBonus = _modifier.FinalBonus();
             float rawBonus = _modifier.RawBonus();
-            int tierModifier = (int) (_tier + 1);
+            int tierModifier = (int) (_inscriptionTier + 1);
             finalBonus *= tierModifier;
             rawBonus *= tierModifier;
             _modifier.SetFinalBonus(finalBonus);
             _modifier.SetRawBonus(rawBonus);
+            _inscriptionCost = ((int) quality + 1) * 5;
         }
 
         public void ApplyModifier(Character character)
@@ -62,9 +63,9 @@ namespace Game.Gear
         public static Inscription Generate(int diff = -1)
         {
             ReadTemplates();
-            InscriptionTier tier = (InscriptionTier) WorldState.GenerateGearLevel();
-            InscriptionTemplate randomTemplate = Helper.RandomElement(_inscriptionTemplates);
-            return new Inscription(randomTemplate, tier);
+            int tier = WorldState.GenerateGearLevel();
+            InscriptionTemplate randomTemplate = _inscriptionTemplates.RandomElement();
+            return new Inscription(randomTemplate, (ItemQuality) tier);
         }
 
         private static void ReadTemplates()
@@ -90,7 +91,6 @@ namespace Game.Gear
         {
             root = base.Save(root);
             root.CreateChild("Template", _template.Name);
-            root.CreateChild("Quality", _quality);
             return root;
         }
 
@@ -98,12 +98,12 @@ namespace Game.Gear
         {
             string templateString = root.StringFromNode("Template");
             InscriptionTemplate template = _inscriptionTemplates.First(t => t.Name == templateString);
-            InscriptionTier quality = (InscriptionTier) root.IntFromNode("Quality");
+            ItemQuality quality = (ItemQuality) root.IntFromNode("Quality");
             Inscription inscription = new Inscription(template, quality);
             inscription.Load(root);
             return inscription;
         }
-        
+
         private class InscriptionTemplate
         {
             public readonly string Name;
@@ -139,9 +139,19 @@ namespace Game.Gear
             }
         }
 
-        public string GetSummary()
+        public override string GetSummary()
         {
-            return Name + "\n" + _template.GetSummary();
+            return _template.GetSummary();
+        }
+
+        public int InscriptionCost()
+        {
+            return _inscriptionCost;
+        }
+        
+        public bool CanAfford()
+        {
+            return WorldState.HomeInventory().GetResourceQuantity("Essence") >= _inscriptionCost;
         }
     }
 }

@@ -99,6 +99,18 @@ namespace SamsHelper.Libraries
             return element;
         }
 
+        public static List<object> ToObjectList<T>(this List<T> list)
+        {
+            List<object> objectList = new List<object>();
+            int objectListCount = list.Count;
+            for (int i = 0; i < objectListCount; ++i)
+            {
+                objectList.Add(list[i]);
+            }
+
+            return objectList;
+        }
+
         private class MinSearchList<T>
         {
             private readonly List<T> _list;
@@ -214,7 +226,7 @@ namespace SamsHelper.Libraries
             Transform foundChild = FindChildWithName(t, name);
             if (foundChild == null) throw new Exceptions.ChildNotFoundException(g, name);
             T foundComponent = foundChild.GetComponent<T>();
-            if (foundComponent == null) throw new Exceptions.ComponentNotFoundException(foundChild.name, foundComponent.GetType());
+            if (foundComponent == null) throw new Exceptions.ComponentNotFoundException(foundChild.name, typeof(T));
             return foundComponent;
         }
 

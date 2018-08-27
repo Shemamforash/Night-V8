@@ -407,6 +407,8 @@
                 <e p="UIPlayerWeaponController.cs" t="Include" />
               </e>
               <e p="Inventories" t="Include">
+                <e p="ListController.cs" t="Include" />
+                <e p="ListElement.cs" t="Include" />
                 <e p="UiAccessoryController.cs" t="Include" />
                 <e p="UiArmourUpgradeController.cs" t="Include" />
                 <e p="UiGearMenuController.cs" t="Include" />
@@ -935,6 +937,8 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="UiJournalController.cs" t="Include" />
+        <e p="WeaponDetailController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

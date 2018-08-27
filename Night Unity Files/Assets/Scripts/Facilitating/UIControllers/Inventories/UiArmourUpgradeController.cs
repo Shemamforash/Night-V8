@@ -21,18 +21,18 @@ namespace Facilitating.UIControllers
 
         public void Awake()
         {
-            _plateOneUi = new ArmourPlateUi(gameObject.FindChildWithName("Plate 1"));
-            _plateOneUi.Button.AddOnSelectEvent(() => SelectPlateUi(_plateOneUi));
-            _plateOneUi.Button.AddOnClick(() =>
-            {
-                if (GearIsAvailable()) UiGearMenuController.EnableInput();
-            });
-            _plateTwoUi = new ArmourPlateUi(gameObject.FindChildWithName("Plate 2"));
-            _plateTwoUi.Button.AddOnSelectEvent(() => SelectPlateUi(_plateTwoUi));
-            _plateTwoUi.Button.AddOnClick(() =>
-            {
-                if (GearIsAvailable()) UiGearMenuController.EnableInput();
-            });
+            _plateOneUi = new ArmourPlateUi(gameObject.FindChildWithName("Left Plate"));
+//            _plateOneUi.Button.AddOnSelectEvent(() => SelectPlateUi(_plateOneUi));
+//            _plateOneUi.Button.AddOnClick(() =>
+//            {
+//                if (GearIsAvailable()) UiGearMenuController.EnableInput();
+//            });
+            _plateTwoUi = new ArmourPlateUi(gameObject.FindChildWithName("Right Plate"));
+//            _plateTwoUi.Button.AddOnSelectEvent(() => SelectPlateUi(_plateTwoUi));
+//            _plateTwoUi.Button.AddOnClick(() =>
+//            {
+//                if (GearIsAvailable()) UiGearMenuController.EnableInput();
+//            });
         }
 
         private void SelectPlateUi(ArmourPlateUi plateUi)
@@ -109,10 +109,11 @@ namespace Facilitating.UIControllers
 
             public ArmourPlateUi(GameObject gameObject)
             {
-                _nameText = gameObject.FindChildWithName<EnhancedText>("Name");
-                _currentArmourText = gameObject.FindChildWithName<EnhancedText>("Current Armour");
-                _armourDetailText = gameObject.FindChildWithName<EnhancedText>("Armour Detail");
-                Button = gameObject.FindChildWithName<EnhancedButton>("Swap");
+                GameObject plate = gameObject.FindChildWithName("Plate");
+                _nameText = plate.FindChildWithName<EnhancedText>("Name");
+                _currentArmourText = plate.FindChildWithName<EnhancedText>("Current Armour");
+                _armourDetailText = plate.FindChildWithName<EnhancedText>("Armour Detail");
+//                Button = gameObject.FindChildWithName<EnhancedButton>("Swap");
             }
 
             public void SetPlate(ArmourPlate plate)
@@ -120,15 +121,15 @@ namespace Facilitating.UIControllers
                 Button.SetDownNavigation(UiGearMenuController.GetCloseButton());
                 if (plate == null)
                 {
-                    _nameText.Text("");
-                    _currentArmourText.Text("No Plate");
-                    _armourDetailText.Text("");
+                    _nameText.SetText("");
+                    _currentArmourText.SetText("No Plate");
+                    _armourDetailText.SetText("");
                     return;
                 }
 
-                _nameText.Text(plate.Name);
-                _currentArmourText.Text(plate.Protection + " Armour");
-                _armourDetailText.Text("TODO");
+                _nameText.SetText(plate.Name);
+                _currentArmourText.SetText(plate.Protection + " Armour");
+                _armourDetailText.SetText("TODO");
             }
 
             public void SetSelected(bool selected)

@@ -12,7 +12,7 @@ public class UICraftingController : UiGearMenuTemplate
     private Player _player;
     private EnhancedButton _closeButton;
     private EnhancedButton _recipeButton;
-    private EnhancedText _infoText;
+    private EnhancedText _builtText;
 
     public override bool GearIsAvailable()
     {
@@ -21,7 +21,7 @@ public class UICraftingController : UiGearMenuTemplate
 
     public void Awake()
     {
-        _infoText = gameObject.FindChildWithName<EnhancedText>("Info");
+        _builtText = gameObject.FindChildWithName<EnhancedText>("Built");
     }
 
     public override void SelectGearItem(MyGameObject item, UiGearMenuController.GearUi gearUi)
@@ -59,7 +59,7 @@ public class UICraftingController : UiGearMenuTemplate
         List<Building> buildings = WorldState.HomeInventory().Buildings();
         if (buildings.Count == 0)
         {
-            _infoText.Text("Nothing built");
+            _builtText.SetText("Nothing built");
             return;
         }
 
@@ -69,7 +69,7 @@ public class UICraftingController : UiGearMenuTemplate
             buildingString += buildings[i].Name;
             if (i < buildings.Count - 1) buildingString += "\n";
         }
-        _infoText.Text(buildingString);
+        _builtText.SetText(buildingString);
     }
 
     public override List<MyGameObject> GetAvailableGear()

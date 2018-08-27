@@ -35,8 +35,8 @@ namespace Game.Gear.Weapons
             AddMod(AttributeType.FireRate, _fireRateDurabilityModifier);
             AddMod(AttributeType.ReloadSpeed, _reloadSpeedDurabilityModifier);
             AddMod(AttributeType.Accuracy, _accuracyDurabilityModifier);
-            _durability = new Number(MaxDurability, 0, MaxDurability);
-            _durability.SetCurrentValue((float) weapon.Quality() + 1f * 10f);
+            int maxDurability = ((int) weapon.Quality() + 1) * 10;
+            _durability = new Number(maxDurability, 0, maxDurability);
             SetMax(AttributeType.Accuracy, 1);
             SetClass(weaponClass);
         }

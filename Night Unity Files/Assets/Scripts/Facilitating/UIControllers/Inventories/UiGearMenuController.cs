@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Characters;
+using Game.Combat.Misc;
 using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -25,6 +26,7 @@ namespace Facilitating.UIControllers
         private static UiWeaponUpgradeController _weaponUpgradeController;
         private static UICraftingController _craftingController;
         private static UiConsumableController _consumableController;
+        private static UiJournalController _journalController;
         private static UiGearMenuTemplate _currentInventoryMenu;
         private static EnhancedButton _closeButton;
         private static EnhancedButton _centreButton;
@@ -117,6 +119,7 @@ namespace Facilitating.UIControllers
             _weaponUpgradeController = gearObject.FindChildWithName<UiWeaponUpgradeController>("Weapon");
             _craftingController = gearObject.FindChildWithName<UICraftingController>("Crafting");
             _consumableController = gearObject.FindChildWithName<UiConsumableController>("Consumables");
+            _journalController = gearObject.FindChildWithName<UiJournalController>("Journals");
             
             _closeButton = gameObject.FindChildWithName<EnhancedButton>("Close");
             _closeButton.AddOnClick(Close);
@@ -161,9 +164,9 @@ namespace Facilitating.UIControllers
             _currentInventoryMenu = gearMenu;
             TrySelectMenu(_armourUpgradeController);
             TrySelectMenu(_accessoryController);
-            TrySelectMenu(_weaponUpgradeController);
             TrySelectMenu(_consumableController);
             TrySelectMenu(_craftingController);
+            TrySelectMenu(_journalController);
             _currentTab = tabNumber;
         }
 
@@ -182,7 +185,8 @@ namespace Facilitating.UIControllers
 
         public static void ShowWeaponMenu(Player player)
         {
-            OpenInventoryMenu(player, 0, _weaponUpgradeController);
+            OpenInventoryMenu(player, 0, null);
+            _weaponUpgradeController.Show();
         }
 
         public static void ShowAccessoryMenu(Player player)
@@ -216,6 +220,7 @@ namespace Facilitating.UIControllers
             {
                 GameObject uiObject = gearListObject.FindChildWithName("Item " + i);
                 GearUi gearUi = new GearUi(uiObject, Math.Abs(i - centre));
+
                 if (i == centre) _centreButton = uiObject.GetComponent<EnhancedButton>();
 
                 _itemUiList.Add(gearUi);
@@ -296,19 +301,19 @@ namespace Facilitating.UIControllers
             public void SetDpsText(string text)
             {
                 _dpsText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-                _dpsText.Text(text);
+                _dpsText.SetText(text);
             }
 
             public void SetNameText(string text)
             {
                 _nameText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-                _nameText.Text(text);
+                _nameText.SetText(text);
             }
 
             public void SetTypeText(string text)
             {
                 _typeText.SetColor(text == "" ? UiAppearanceController.InvisibleColour : _activeColour);
-                _typeText.Text(text);
+                _typeText.SetText(text);
             }
 
             public void SetGear(MyGameObject gearItem)

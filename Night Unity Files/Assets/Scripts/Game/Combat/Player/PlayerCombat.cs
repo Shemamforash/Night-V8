@@ -339,6 +339,7 @@ namespace Game.Combat.Player
             _initialArmour = Player.ArmourController.GetProtectionLevel();
 
             ArmourBarController().TakeDamage(ArmourController);
+            Debug.Log(Player.Attributes.CalculateSpeed());
             MovementController.SetSpeed(Player.Attributes.CalculateSpeed());
 
             _adrenalineGain = Player.Attributes.CalculateAdrenalineRecoveryRate();

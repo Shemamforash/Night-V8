@@ -210,7 +210,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             if (amount < 0) throw new Exceptions.ResourceValueChangeInvalid(name, "decrement", amount);
             InventoryItem resource = GetResource(name);
-            if (resource == null) throw new Exceptions.ResourceDoesNotExistException(name);
+            if (resource == null) return;
             if (resource.Quantity() < amount) return;
             resource.Decrement(amount);
             if (resource.Quantity() == 0) RemoveItem(resource);

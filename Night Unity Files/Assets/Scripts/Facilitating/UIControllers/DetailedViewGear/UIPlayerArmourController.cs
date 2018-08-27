@@ -41,8 +41,8 @@ namespace Facilitating.UIControllers
             _equippedObject.SetActive(true);
             for (int i = 0; i < _plates.Count; ++i) _plates[i].color = i >= armour.GetProtectionLevel() ? UiAppearanceController.InvisibleColour : Color.white;
 
-            _ratingText.Text("Max Armour: " + armour.GetMaxArmour());
-            _platesText.Text(armour.GetProtectionLevel() + " Armour");
+            _ratingText.SetText("Max Armour: " + armour.GetMaxArmour());
+            _platesText.SetText(armour.GetProtectionLevel() + " Armour");
         }
     }
 }

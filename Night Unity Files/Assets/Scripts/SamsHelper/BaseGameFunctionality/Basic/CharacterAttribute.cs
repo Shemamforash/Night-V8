@@ -74,11 +74,6 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
         public void RemoveModifier(AttributeModifier modifier)
         {
-            if (AttributeType == AttributeType.Damage)
-            {
-                Debug.Log(modifier.FinalBonus());
-            }
-
             _modifiers.Remove(modifier);
             modifier.TargetAttributes.Remove(this);
             Recalculate();

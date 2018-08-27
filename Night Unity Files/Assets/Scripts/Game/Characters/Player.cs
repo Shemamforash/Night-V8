@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
+using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Exploration.WorldEvents;
 using Game.Gear.Armour;
@@ -210,6 +211,8 @@ namespace Game.Characters
             base.EquipWeapon(weapon);
             if (CharacterView != null) CharacterView.WeaponController.SetWeapon(weapon);
             WorldEventManager.GenerateEvent(new CharacterMessage("Yes, this'll do", this));
+            if (!CombatManager.InCombat()) return;
+            PlayerCombat.Instance.EquipWeapon(weapon);
         }
 
         public void EquipArmourSlotOne(ArmourPlate plate)

@@ -23,7 +23,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 
         public void Text(string text)
         {
-            _cooldownText.Text(text);
+            _cooldownText.SetText(text);
         }
 
         public void UpdateCooldownFill(float normalisedValue)
