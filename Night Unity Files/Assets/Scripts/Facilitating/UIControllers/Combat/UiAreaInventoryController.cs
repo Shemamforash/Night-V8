@@ -45,7 +45,7 @@ public class UiAreaInventoryController : IInputListener
 
     public static void OpenInventory()
     {
-        UiGearMenuController.ShowConsumableMenu(PlayerCombat.Instance.Player);
+        UiGearMenuController.ShowConsumableMenu();
         MenuStateMachine.ShowMenu("Inventories");
     }
 

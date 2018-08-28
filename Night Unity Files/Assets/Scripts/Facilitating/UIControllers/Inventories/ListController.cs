@@ -3,49 +3,68 @@ using System.Collections.Generic;
 using DefaultNamespace;
 using NUnit.Framework;
 using SamsHelper.Input;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 public class ListController : MonoBehaviour, IInputListener
 {
     private int _selectedItemIndex;
     private int _centreItemIndex;
-    private Action<object> OnButtonDown;
+    private Action<object> OnItemHover;
+//    private Action<object> OnButtonDown;
     private Action OnReturn;
     private Func<List<object>> GetContentsAction;
     private readonly List<Transform> _listItems = new List<Transform>();
     private List<ListElement> _uiElements = new List<ListElement>();
     private List<object> _listObjects = new List<object>();
     private int _listSize;
+    private EnhancedButton _centreButton;
 
-    public void Awake()
+    private void CacheElements()
     {
+        _listItems.Clear();
         int childCount = transform.childCount;
+        _centreItemIndex = Mathf.FloorToInt(childCount / 2f);
+
         for (int i = 0; i < childCount; ++i)
         {
             _listItems.Add(transform.GetChild(i));
+            if (i != _centreItemIndex) continue;
+            _centreButton = _listItems[i].GetComponent<EnhancedButton>();
         }
+    }
 
-        _centreItemIndex = Mathf.FloorToInt(childCount / 2f);
+    public void SetOnItemHover(Action<object> onItemHover)
+    {
+        OnItemHover = onItemHover;
     }
 
     public void Initialise(Type elementListType, Action<object> onButtonDown, Action onReturn)
     {
+        CacheElements();
         int listSize = _listItems.Count;
         for (int i = 0; i < listSize; ++i)
         {
             ListElement element = (ListElement) Activator.CreateInstance(elementListType);
             _uiElements.Add(element);
             element.SetElementTransform(_listItems[i]);
-            Color elementColour = new Color(1f, 1f, 1f, 1f / (Math.Abs(i - _centreItemIndex) + 1));
+            float opacityDivider = Mathf.Abs(i - _centreItemIndex) + 1f;
+            Color elementColour = new Color(1f, 1f, 1f, 1f / opacityDivider);
             element.SetColour(elementColour);
         }
 
-        OnButtonDown = onButtonDown;
+        _centreButton.AddOnClick(() =>
+        {
+            if (_listObjects.Count == 0) return;
+            onButtonDown?.Invoke(_listObjects[_selectedItemIndex]);
+            UpdateList();
+        });
         OnReturn = onReturn;
     }
 
     public void Initialise(List<ListElement> itemsUi, Action<object> onButtonDown, Action onReturn)
     {
+        CacheElements();
         int itemCount = itemsUi.Count;
         Assert.AreEqual(itemCount, _listItems.Count);
         _uiElements = itemsUi;
@@ -56,17 +75,19 @@ public class ListController : MonoBehaviour, IInputListener
             _uiElements[i].SetColour(elementColour);
         }
 
-        OnButtonDown = onButtonDown;
+        _centreButton.AddOnClick(() =>
+        {
+            onButtonDown?.Invoke(_listObjects[_selectedItemIndex]);
+            UpdateList();
+        });
         OnReturn = onReturn;
     }
 
-    private bool _inputAllowed;
-
     public void Show(Func<List<object>> getContentsAction)
     {
-        _inputAllowed = false;
         GetContentsAction = getContentsAction;
         gameObject.SetActive(true);
+        _centreButton.Select();
         _selectedItemIndex = 0;
         InputHandler.SetCurrentListener(this);
         UpdateList();
@@ -86,7 +107,7 @@ public class ListController : MonoBehaviour, IInputListener
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (isHeld || !_inputAllowed) return;
+        if (isHeld) return;
         switch (axis)
         {
             case InputAxis.Vertical:
@@ -95,10 +116,6 @@ public class ListController : MonoBehaviour, IInputListener
                 else
                     TrySelectAbove();
                 return;
-            case InputAxis.Fire:
-                UpdateList();
-                OnButtonDown?.Invoke(_listObjects[_selectedItemIndex]);
-                break;
             case InputAxis.Cover:
                 OnReturn?.Invoke();
                 break;
@@ -117,7 +134,9 @@ public class ListController : MonoBehaviour, IInputListener
                 o = _listObjects[objectIndex];
             }
 
-            _uiElements[i].Set(o);
+            bool isCentreItem = i == _centreItemIndex;
+            _uiElements[i].Set(o, isCentreItem);
+            if (isCentreItem && _listObjects.Count > 0) OnItemHover?.Invoke(_listObjects[_selectedItemIndex]);
         }
     }
 
@@ -137,10 +156,6 @@ public class ListController : MonoBehaviour, IInputListener
 
     public void OnInputUp(InputAxis axis)
     {
-        if (axis == InputAxis.Fire)
-        {
-            _inputAllowed = true;
-        }
     }
 
     public void OnDoubleTap(InputAxis axis, float direction)

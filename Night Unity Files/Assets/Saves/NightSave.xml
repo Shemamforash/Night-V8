@@ -4,7 +4,7 @@
     <DaysSpentHere>0</DaysSpentHere>
     <CurrentLevel>1</CurrentLevel>
     <Days>0</Days>
-    <Hours>7</Hours>
+    <Hours>8</Hours>
     <Minutes>0</Minutes>
     <Difficulty>0</Difficulty>
   </WorldState>
@@ -74,32 +74,88 @@
           </Attributes>
         </Gear>
         <Gear>
-          <Id>10</Id>
-          <Name>Shining Skullcrusher</Name>
+          <Id>7</Id>
+          <Name>Shining Gouger</Name>
           <ParentInventory>0</ParentInventory>
           <Quantity>1</Quantity>
           <Stackable>False</Stackable>
           <Template>
           </Template>
           <Quality>2</Quality>
-          <Class>8</Class>
+          <Class>13</Class>
           <Durability>30</Durability>
           <Attributes>
             <Attribute>
               <AttributeType>19</AttributeType>
-              <Value>8</Value>
+              <Value>18</Value>
               <Min>0</Min>
               <Max>3.402823E+38</Max>
             </Attribute>
             <Attribute>
               <AttributeType>21</AttributeType>
-              <Value>6</Value>
+              <Value>5</Value>
               <Min>0</Min>
               <Max>3.402823E+38</Max>
             </Attribute>
             <Attribute>
               <AttributeType>22</AttributeType>
-              <Value>2.5</Value>
+              <Value>7</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>20</AttributeType>
+              <Value>0.4</Value>
+              <Min>0</Min>
+              <Max>1</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>23</AttributeType>
+              <Value>90</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>25</AttributeType>
+              <Value>50</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>24</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+          </Attributes>
+        </Gear>
+        <Gear>
+          <Id>10</Id>
+          <Name>Shining Bonebreaker</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>2</Quality>
+          <Class>7</Class>
+          <Durability>30</Durability>
+          <Attributes>
+            <Attribute>
+              <AttributeType>19</AttributeType>
+              <Value>5</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>21</AttributeType>
+              <Value>1.5</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>22</AttributeType>
+              <Value>3.5</Value>
               <Min>0</Min>
               <Max>3.402823E+38</Max>
             </Attribute>
@@ -117,7 +173,7 @@
             </Attribute>
             <Attribute>
               <AttributeType>25</AttributeType>
-              <Value>2</Value>
+              <Value>10</Value>
               <Min>0</Min>
               <Max>3.402823E+38</Max>
             </Attribute>
@@ -130,7 +186,7 @@
           </Attributes>
         </Gear>
         <Gear>
-          <Id>12</Id>
+          <Id>13</Id>
           <Name>Shining Shortshooter</Name>
           <ParentInventory>0</ParentInventory>
           <Quantity>1</Quantity>
@@ -186,106 +242,50 @@
           </Attributes>
         </Gear>
         <Gear>
-          <Id>3</Id>
-          <Name>Worn Gouger</Name>
-          <ParentInventory>0</ParentInventory>
-          <Quantity>1</Quantity>
-          <Stackable>False</Stackable>
-          <Template>
-          </Template>
-          <Quality>1</Quality>
-          <Class>13</Class>
-          <Durability>20</Durability>
-          <Attributes>
-            <Attribute>
-              <AttributeType>19</AttributeType>
-              <Value>18</Value>
-              <Min>0</Min>
-              <Max>3.402823E+38</Max>
-            </Attribute>
-            <Attribute>
-              <AttributeType>21</AttributeType>
-              <Value>5</Value>
-              <Min>0</Min>
-              <Max>3.402823E+38</Max>
-            </Attribute>
-            <Attribute>
-              <AttributeType>22</AttributeType>
-              <Value>7</Value>
-              <Min>0</Min>
-              <Max>3.402823E+38</Max>
-            </Attribute>
-            <Attribute>
-              <AttributeType>20</AttributeType>
-              <Value>0.4</Value>
-              <Min>0</Min>
-              <Max>1</Max>
-            </Attribute>
-            <Attribute>
-              <AttributeType>23</AttributeType>
-              <Value>90</Value>
-              <Min>0</Min>
-              <Max>3.402823E+38</Max>
-            </Attribute>
-            <Attribute>
-              <AttributeType>25</AttributeType>
-              <Value>50</Value>
-              <Min>0</Min>
-              <Max>3.402823E+38</Max>
-            </Attribute>
-            <Attribute>
-              <AttributeType>24</AttributeType>
-              <Value>1</Value>
-              <Min>0</Min>
-              <Max>3.402823E+38</Max>
-            </Attribute>
-          </Attributes>
-        </Gear>
-        <Gear>
-          <Id>8</Id>
-          <Name>Shining Slinger</Name>
+          <Id>16</Id>
+          <Name>Shining Spewer</Name>
           <ParentInventory>0</ParentInventory>
           <Quantity>1</Quantity>
           <Stackable>False</Stackable>
           <Template>
           </Template>
           <Quality>2</Quality>
-          <Class>0</Class>
+          <Class>11</Class>
           <Durability>30</Durability>
           <Attributes>
             <Attribute>
               <AttributeType>19</AttributeType>
-              <Value>19</Value>
+              <Value>6</Value>
               <Min>0</Min>
               <Max>3.402823E+38</Max>
             </Attribute>
             <Attribute>
               <AttributeType>21</AttributeType>
-              <Value>3</Value>
+              <Value>11</Value>
               <Min>0</Min>
               <Max>3.402823E+38</Max>
             </Attribute>
             <Attribute>
               <AttributeType>22</AttributeType>
-              <Value>0.5</Value>
+              <Value>1</Value>
               <Min>0</Min>
               <Max>3.402823E+38</Max>
             </Attribute>
             <Attribute>
               <AttributeType>20</AttributeType>
-              <Value>0.6</Value>
+              <Value>0.3</Value>
               <Min>0</Min>
               <Max>1</Max>
             </Attribute>
             <Attribute>
               <AttributeType>23</AttributeType>
-              <Value>70</Value>
+              <Value>98</Value>
               <Min>0</Min>
               <Max>3.402823E+38</Max>
             </Attribute>
             <Attribute>
               <AttributeType>25</AttributeType>
-              <Value>10</Value>
+              <Value>30</Value>
               <Min>0</Min>
               <Max>3.402823E+38</Max>
             </Attribute>
@@ -298,7 +298,11 @@
           </Attributes>
         </Gear>
       </Weapons>
-      <ArmourPlates />
+      <ArmourPlates>
+        <Health>400</Health>
+        <Health>300</Health>
+        <Health>500</Health>
+      </ArmourPlates>
       <Accessories />
       <Inscriptions>
         <Gear>
@@ -313,40 +317,29 @@
           <Template>Murder</Template>
         </Gear>
         <Gear>
-          <Id>7</Id>
-          <Name>A Murmur of Murder</Name>
+          <Id>8</Id>
+          <Name>A Murmur of Cinders</Name>
           <ParentInventory>0</ParentInventory>
           <Quantity>1</Quantity>
           <Stackable>False</Stackable>
           <Template>
           </Template>
           <Quality>0</Quality>
-          <Template>Murder</Template>
-        </Gear>
-        <Gear>
-          <Id>9</Id>
-          <Name>A Murmur of Haste</Name>
-          <ParentInventory>0</ParentInventory>
-          <Quantity>1</Quantity>
-          <Stackable>False</Stackable>
-          <Template>
-          </Template>
-          <Quality>0</Quality>
-          <Template>Haste</Template>
+          <Template>Cinders</Template>
         </Gear>
         <Gear>
           <Id>11</Id>
-          <Name>A Murmur of Terror</Name>
+          <Name>A Murmur of Resolve</Name>
           <ParentInventory>0</ParentInventory>
           <Quantity>1</Quantity>
           <Stackable>False</Stackable>
           <Template>
           </Template>
           <Quality>0</Quality>
-          <Template>Terror</Template>
+          <Template>Resolve</Template>
         </Gear>
         <Gear>
-          <Id>13</Id>
+          <Id>14</Id>
           <Name>A Murmur of The Depths</Name>
           <ParentInventory>0</ParentInventory>
           <Quantity>1</Quantity>
@@ -356,6 +349,17 @@
           <Quality>0</Quality>
           <Template>The Depths</Template>
         </Gear>
+        <Gear>
+          <Id>17</Id>
+          <Name>A Murmur of Oppression</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>0</Quality>
+          <Template>Oppression</Template>
+        </Gear>
       </Inscriptions>
       <Consumables />
     </Items>
@@ -364,7 +368,9 @@
       <Name>The Wanderer</Name>
       <ParentInventory>-1</ParentInventory>
       <EquippedItems>
-        <Weapon>6</Weapon>
+        <Weapon>3</Weapon>
+        <ArmourPlate1>18</ArmourPlate1>
+        <ArmourPlate2>12</ArmourPlate2>
       </EquippedItems>
       <Inventory>
         <Id>2</Id>
@@ -374,16 +380,16 @@
         <Items>
           <Weapons>
             <Gear>
-              <Id>6</Id>
-              <Name>Shining Gouger</Name>
+              <Id>3</Id>
+              <Name>Worn Gouger</Name>
               <ParentInventory>2</ParentInventory>
               <Quantity>1</Quantity>
               <Stackable>False</Stackable>
               <Template>
               </Template>
-              <Quality>2</Quality>
+              <Quality>1</Quality>
               <Class>13</Class>
-              <Durability>30</Durability>
+              <Durability>20</Durability>
               <Attributes>
                 <Attribute>
                   <AttributeType>19</AttributeType>
@@ -430,7 +436,10 @@
               </Attributes>
             </Gear>
           </Weapons>
-          <ArmourPlates />
+          <ArmourPlates>
+            <Health>500</Health>
+            <Health>400</Health>
+          </ArmourPlates>
           <Accessories />
           <Inscriptions />
           <Consumables />
@@ -457,13 +466,13 @@
         </Attribute>
         <Attribute>
           <AttributeType>5</AttributeType>
-          <Value>0.3333334</Value>
+          <Value>0.5902778</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>4</AttributeType>
-          <Value>0.6666667</Value>
+          <Value>1.486111</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
@@ -495,7 +504,7 @@
       <Brands />
       <StoryUnlocked>False</StoryUnlocked>
       <StoryProgress>1</StoryProgress>
-      <TimeAlive>12</TimeAlive>
+      <TimeAlive>24</TimeAlive>
       <CharacterClass>Wanderer</CharacterClass>
     </Character>
   </Inventory>
@@ -965,8 +974,8 @@
   </Regions>
   <Weather>
     <Name>Clear</Name>
-    <TimeRemaining>36</TimeRemaining>
+    <TimeRemaining>24</TimeRemaining>
   </Weather>
   <CurrentEnvironment>Forest</CurrentEnvironment>
-  <WorldEvents>&lt;i&gt;"Yes, this'll do"- The Wanderer&lt;/i&gt;,&lt;i&gt;"Yes, this'll do"- The Wanderer&lt;/i&gt;</WorldEvents>
+  <WorldEvents>&lt;i&gt;"That might help"- The Wanderer&lt;/i&gt;,&lt;i&gt;"That might help"- The Wanderer&lt;/i&gt;</WorldEvents>
 </Game>

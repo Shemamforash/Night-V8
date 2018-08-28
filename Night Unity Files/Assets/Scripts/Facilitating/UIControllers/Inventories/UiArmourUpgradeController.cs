@@ -1,47 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using DefaultNamespace;
+using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Gear.Armour;
-using SamsHelper.BaseGameFunctionality.Basic;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace Facilitating.UIControllers
 {
-    public class UiArmourUpgradeController : UiGearMenuTemplate
+    public class UiArmourUpgradeController : UiInventoryMenuController, IInputListener
     {
         private static ArmourPlateUi _plateOneUi;
         private static ArmourPlateUi _plateTwoUi;
 
         private ArmourPlate _currentSelectedPlate;
-        private ArmourPlateUi _selectedPlateUi;
         private bool _upgradingAllowed;
 
-        public void Awake()
+        protected override void CacheElements()
         {
             _plateOneUi = new ArmourPlateUi(gameObject.FindChildWithName("Left Plate"));
-//            _plateOneUi.Button.AddOnSelectEvent(() => SelectPlateUi(_plateOneUi));
-//            _plateOneUi.Button.AddOnClick(() =>
-//            {
-//                if (GearIsAvailable()) UiGearMenuController.EnableInput();
-//            });
             _plateTwoUi = new ArmourPlateUi(gameObject.FindChildWithName("Right Plate"));
-//            _plateTwoUi.Button.AddOnSelectEvent(() => SelectPlateUi(_plateTwoUi));
-//            _plateTwoUi.Button.AddOnClick(() =>
-//            {
-//                if (GearIsAvailable()) UiGearMenuController.EnableInput();
-//            });
-        }
-
-        private void SelectPlateUi(ArmourPlateUi plateUi)
-        {
-            _selectedPlateUi = plateUi;
-            bool isPlateOne = plateUi == _plateOneUi;
-            _plateOneUi.SetSelected(isPlateOne);
-            _plateTwoUi.SetSelected(!isPlateOne);
-            UpdatePlates();
         }
 
         private void UpdatePlates()
@@ -50,62 +34,84 @@ namespace Facilitating.UIControllers
             _plateTwoUi.SetPlate(CharacterManager.SelectedCharacter.ArmourController.GetPlateTwo());
         }
 
-        public override bool GearIsAvailable()
+        protected override void OnShow()
         {
-            return UiGearMenuController.Inventory().Armour.Count != 0;
-        }
-
-        public override void SelectGearItem(MyGameObject item, UiGearMenuController.GearUi gearUi)
-        {
-            ArmourPlate plate = (ArmourPlate)item;
-            gearUi.SetTypeText(plate.Protection + " Armour");
-            gearUi.SetNameText(plate.Name);
-            gearUi.SetDpsText("");
-        }
-
-        public override void Show()
-        {
-            base.Show();
-            SelectPlateUi(_plateOneUi);
             UpdatePlates();
+            InputHandler.RegisterInputListener(this);
+            SetPlateListActive(_plateOneUi);
         }
 
-        public override void CompareTo(MyGameObject comparisonItem)
+        protected override void OnHide()
         {
+            InputHandler.UnregisterInputListener(this);
         }
 
-        public override void StopComparing()
+        protected override void Initialise()
         {
+            _plateOneUi.Initialise(EquipPlateOne);
+            _plateTwoUi.Initialise(EquipPlateTwo);
         }
 
-        public override List<MyGameObject> GetAvailableGear()
+        private static List<object> GetAvailableArmour()
         {
-            return new List<MyGameObject>(UiGearMenuController.Inventory().Armour);
+            Player player = CharacterManager.SelectedCharacter;
+            Inventory inventory = player.TravelAction.AtHome() ? WorldState.HomeInventory() : player.Inventory();
+            return inventory.Armour.ToObjectList();
         }
 
-        public override void Equip(int selectedGear)
+        private void EquipPlateOne(object armourObject)
         {
-            if (selectedGear == -1) return;
-            ArmourPlate plate = UiGearMenuController.Inventory().Armour[selectedGear];
-            if (_selectedPlateUi == _plateOneUi)
-                CharacterManager.SelectedCharacter.EquipArmourSlotOne(plate);
-            else
-                CharacterManager.SelectedCharacter.EquipArmourSlotTwo(plate);
-
-            Show();
+            ArmourPlate armour = (ArmourPlate) armourObject;
+            CharacterManager.SelectedCharacter.EquipArmourSlotOne(armour);
+            UpdatePlates();
+            SetPlateListActive(_plateOneUi);
         }
 
-        public override Button GetGearButton()
+        private void EquipPlateTwo(object armourObject)
         {
-            return _selectedPlateUi.Button.Button();
+            ArmourPlate armour = (ArmourPlate) armourObject;
+            CharacterManager.SelectedCharacter.EquipArmourSlotTwo(armour);
+            UpdatePlates();
+            SetPlateListActive(_plateTwoUi);
+        }
+
+        private class ArmourElement : ListElement
+        {
+            private EnhancedText _armourText;
+            
+            protected override void UpdateCentreItemEmpty()
+            {
+                _armourText.SetText("No Plates Available");
+            }
+
+            protected override void SetVisible(bool visible)
+            {
+                _armourText.gameObject.SetActive(visible);
+            }
+
+            protected override void CacheUiElements(Transform transform)
+            {
+                _armourText = transform.GetComponent<EnhancedText>();
+            }
+
+            public override void SetColour(Color c)
+            {
+                _armourText.SetColor(c);
+            }
+            
+            protected override void Update(object o)
+            {
+                ArmourPlate armour = (ArmourPlate) o;
+                int max = armour.GetMaxProtection();
+                int current = armour.GetCurrentProtection();
+                _armourText.SetText(armour.Name + " - " + current + "/" + max + " Armour");
+            }
         }
 
         private class ArmourPlateUi
         {
-            private readonly EnhancedText _currentArmourText, _armourDetailText;
-            private readonly EnhancedText _nameText;
-            private readonly Image _selectedImage;
-            public readonly EnhancedButton Button;
+            private readonly EnhancedText _nameText, _currentArmourText, _armourDetailText;
+            public readonly ListController PlateList;
 
             public ArmourPlateUi(GameObject gameObject)
             {
@@ -113,12 +119,13 @@ namespace Facilitating.UIControllers
                 _nameText = plate.FindChildWithName<EnhancedText>("Name");
                 _currentArmourText = plate.FindChildWithName<EnhancedText>("Current Armour");
                 _armourDetailText = plate.FindChildWithName<EnhancedText>("Armour Detail");
-//                Button = gameObject.FindChildWithName<EnhancedButton>("Swap");
+                PlateList = gameObject.FindChildWithName<ListController>("List");
             }
 
             public void SetPlate(ArmourPlate plate)
             {
-                Button.SetDownNavigation(UiGearMenuController.GetCloseButton());
+                PlateList.Show(GetAvailableArmour);
+                
                 if (plate == null)
                 {
                     _nameText.SetText("");
@@ -132,10 +139,29 @@ namespace Facilitating.UIControllers
                 _armourDetailText.SetText("TODO");
             }
 
-            public void SetSelected(bool selected)
+            public void Initialise(Action<object> equipPlateAction)
             {
-                if (selected) Button.Select();
+                PlateList.Initialise(typeof(ArmourElement), equipPlateAction, () => { });
             }
+        }
+
+        private static void SetPlateListActive(ArmourPlateUi plate)
+        {
+            plate.PlateList.Show(GetAvailableArmour);
+        }
+
+        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+            if (isHeld || axis != InputAxis.Horizontal) return;
+            SetPlateListActive(direction < 0 ? _plateOneUi : _plateTwoUi);
+        }
+
+        public void OnInputUp(InputAxis axis)
+        {
+        }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
         }
     }
 }

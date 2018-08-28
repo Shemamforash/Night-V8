@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Sam\.Rider2018.1\system\resharper-host\Local\Transient\ReSharperHost\v12\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
+    <e p="\app" t="IncludeRecursive" />
+    <e p="\eba581f7" t="IncludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2018.2\config\extensions" t="IncludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2018.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Sam\.Rider2018.2\system\resharper-host\Local\Transient\ReSharperHost\v182\SolutionCaches\_Night Unity Files.-1407196519.00" t="ExcludeRecursive" />
     <e p="C:\Users\Sam\Desktop\Desolation - The Last Road\Night-V8\Night Unity Files" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
@@ -411,14 +415,17 @@
                 <e p="ListElement.cs" t="Include" />
                 <e p="UiAccessoryController.cs" t="Include" />
                 <e p="UiArmourUpgradeController.cs" t="Include" />
+                <e p="UiConsumableController.cs" t="Include" />
+                <e p="UICraftingController.cs" t="Include" />
                 <e p="UiGearMenuController.cs" t="Include" />
-                <e p="UiGearMenuTemplate.cs" t="Include" />
+                <e p="UiInventoryMenuController.cs" t="Include" />
+                <e p="UiJournalController.cs" t="Include" />
                 <e p="UIWeaponUpgradeController.cs" t="Include" />
+                <e p="WeaponDetailController.cs" t="Include" />
               </e>
               <e p="UIAttributeController.cs" t="Include" />
               <e p="UIAttributeMarkerController.cs" t="Include" />
               <e p="UIConditionController.cs" t="Include" />
-              <e p="UICraftingController.cs" t="Include" />
             </e>
           </e>
           <e p="FastLights" t="Include">
@@ -604,7 +611,6 @@
                 <e p="TempleBehaviour.cs" t="Include" />
                 <e p="UiCombatRingBoundDrawer.cs" t="Include" />
                 <e p="UiCompassPulseController.cs" t="Include" />
-                <e p="UiConsumableController.cs" t="Include" />
               </e>
               <e p="Player" t="Include">
                 <e p="CharacterSkills.cs" t="Include" />
@@ -685,6 +691,7 @@
             <e p="Global" t="Include">
               <e p="Building.cs" t="Include" />
               <e p="DesolationAttributes.cs" t="Include" />
+              <e p="JournalEntry.cs" t="Include" />
               <e p="Recipe.cs" t="Include" />
               <e p="SceneChanger.cs" t="Include" />
               <e p="SceneryController.cs" t="Include" />
@@ -937,8 +944,6 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
-        <e p="UiJournalController.cs" t="Include" />
-        <e p="WeaponDetailController.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

@@ -11,16 +11,22 @@ namespace DefaultNamespace
         private int _elementIndex;
         private Transform _elementTransform;
 
-        public void Set(object o)
+        public void Set(object o, bool isCentreItem)
         {
             if (o == null)
             {
-                SetVisible(false);
+                if (isCentreItem)
+                    UpdateCentreItemEmpty();
+                else
+                    SetVisible(false);
+
                 return;
             } 
             SetVisible(true);
             Update(o);
         }
+
+        protected abstract void UpdateCentreItemEmpty();
 
         public abstract void SetColour(Color colour);
 

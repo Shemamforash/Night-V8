@@ -104,16 +104,16 @@ namespace Game.Characters
             FindInDetailedView<TextMeshProUGUI>("Detailed Name").text = _player.Name;
 
             WeaponController = FindInDetailedView<UIPlayerWeaponController>("Weapon");
-            WeaponController.EnhancedButton.AddOnClick(() => UiGearMenuController.ShowWeaponMenu(_player));
+            WeaponController.EnhancedButton.AddOnClick(UiGearMenuController.ShowWeaponMenu);
             WeaponController.EnhancedButton.SetOnUpAction(() => CharacterManager.SelectPreviousCharacter(true));
             WeaponController.SetWeapon(_player.EquippedWeapon);
 
             AccessoryController = FindInDetailedView<UIPlayerAccessoryController>("Accessory");
             AccessoryController.SetAccessory(_player.EquippedAccessory);
-            AccessoryController.EnhancedButton.AddOnClick(() => UiGearMenuController.ShowAccessoryMenu(_player));
+            AccessoryController.EnhancedButton.AddOnClick(UiGearMenuController.ShowAccessoryMenu);
 
             ArmourController = FindInDetailedView<UIPlayerArmourController>("Armour");
-            ArmourController.EnhancedButton.AddOnClick(() => UiGearMenuController.ShowArmourMenu(_player));
+            ArmourController.EnhancedButton.AddOnClick(UiGearMenuController.ShowArmourMenu);
             ArmourController.EnhancedButton.SetOnDownAction(() => CharacterManager.SelectNextCharacter(true));
             ArmourController.SetArmour(_player.ArmourController);
             _player.ArmourController.AddOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));

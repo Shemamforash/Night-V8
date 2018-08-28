@@ -12,7 +12,7 @@ namespace Game.Characters.CharacterActions
 
         protected override void OnClick()
         {
-            UiGearMenuController.ShowConsumableMenu(PlayerCharacter);
+            UiGearMenuController.ShowConsumableMenu();
         }
     }
 }

@@ -21,7 +21,6 @@ namespace SamsHelper.ReactiveUI.Elements
         public float CustomFontSize;
 
         public FontSizes FontSize;
-        private bool _strikethroughActive;
 
         public void Awake()
         {
@@ -37,30 +36,16 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             if (_text == null) _text = GetComponent<TextMeshProUGUI>();
             _text.text = text;
-            UpdateStrikeThrough();
         }
 
         public void SetStrikeThroughActive(bool active)
         {
-            _strikethroughActive = active;
-            UpdateStrikeThrough();
+            _text.fontStyle = active ? FontStyles.Strikethrough : FontStyles.Normal;
         }
 
-        private void UpdateStrikeThrough()
+        public void SetUnderlineActive(bool active)
         {
-            if (_strikethroughActive)
-            {
-                string text = "<s>" + _text.text + "</s>";
-                _text.color = UiAppearanceController.FadedColour;
-                _text.text = text;
-            }
-            else
-            {
-                string text = _text.text.Replace("<s>", "");
-                text = text.Replace("</s>", "");
-                _text.text = text;
-                _text.color = Color.white;
-            }
+            _text.fontStyle = active ? FontStyles.Underline : FontStyles.Normal;
         }
 
         private void TryReplaceText()
@@ -102,6 +87,7 @@ namespace SamsHelper.ReactiveUI.Elements
         {
             TryReplaceText();
             _text.color = color;
+            _text.ForceMeshUpdate(true);
         }
     }
 }

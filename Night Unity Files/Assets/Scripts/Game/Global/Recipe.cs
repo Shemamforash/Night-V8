@@ -38,7 +38,7 @@ namespace Game.Global
             _requiresFire = ingredient1 == "Fire" || ingredient2 == "Fire";
         }
 
-        private bool CanCraft()
+        public bool CanCraft()
         {
             if (_requiresFire && !Campfire.IsLit()) return false;
             float ingredient1OwnedQuantity = WorldState.HomeInventory().GetResourceQuantity(Ingredient1);

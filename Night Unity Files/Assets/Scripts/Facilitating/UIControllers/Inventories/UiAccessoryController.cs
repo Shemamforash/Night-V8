@@ -1,6 +1,13 @@
 ﻿using System.Collections.Generic;
+using DefaultNamespace;
+using Facilitating.UIControllers.Inventories;
 using Game.Characters;
+using Game.Combat.Generation;
+using Game.Gear;
+using Game.Gear.Armour;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -8,82 +15,58 @@ using UnityEngine.UI;
 
 namespace Facilitating.UIControllers
 {
-    public class UiAccessoryController : UiGearMenuTemplate
+    public class UiAccessoryController : UiInventoryMenuController
     {
-        private EnhancedButton _swapButton;
-        private EnhancedText _nameText, _descriptionText;
-        private bool _upgradingAllowed;
+        private ListController _accessoryList;
 
-        public void Awake()
+        protected override void CacheElements()
         {
-            GameObject info = gameObject.FindChildWithName("Info");
-            _nameText = info.FindChildWithName<EnhancedText>("Name");
-            _descriptionText = info.FindChildWithName<EnhancedText>("Description");
-
-            _swapButton = gameObject.FindChildWithName<EnhancedButton>("Swap");
-            _swapButton.AddOnClick(() =>
-            {
-                if (GearIsAvailable()) UiGearMenuController.EnableInput();
-            });
+            _accessoryList = gameObject.FindChildWithName<ListController>("List");
         }
 
-        public override Button GetGearButton()
+        protected override void Initialise()
         {
-            return _swapButton.Button();
+            _accessoryList.Initialise(typeof(AccessoryElement), Equip, () => { });
         }
 
-        private void ShowAccessoryInfo()
+        private void Equip(object accessoryObject)
         {
-            if (CharacterManager.SelectedCharacter.EquippedAccessory != null)
-            {
-                _nameText.SetText(CharacterManager.SelectedCharacter.EquippedAccessory.Name);
-                _descriptionText.SetText(CharacterManager.SelectedCharacter.EquippedAccessory.GetSummary());
-            }
-            else
-            {
-                _nameText.SetText("");
-                _descriptionText.SetText("No Accessory Equipped");
-                _swapButton.SetDownNavigation(UiGearMenuController.GetCloseButton());
-            }
-        }
-
-        public override bool GearIsAvailable()
-        {
-            return UiGearMenuController.Inventory().Accessories.Count != 0;
-        }
-
-        public override void SelectGearItem(MyGameObject accessory, UiGearMenuController.GearUi gearUi)
-        {
-            gearUi.SetTypeText("");
-            gearUi.SetNameText(accessory.Name);
-            gearUi.SetDpsText("");
-        }
-
-        public override void Show()
-        {
-            base.Show();
-            ShowAccessoryInfo();
-            _swapButton.Select();
-        }
-
-        public override void CompareTo(MyGameObject comparisonItem)
-        {
-        }
-
-        public override void StopComparing()
-        {
-        }
-
-        public override List<MyGameObject> GetAvailableGear()
-        {
-            return new List<MyGameObject>(UiGearMenuController.Inventory().Accessories);
-        }
-
-        public override void Equip(int selectedGear)
-        {
-            if (selectedGear == -1) return;
-            CharacterManager.SelectedCharacter.EquipAccessory(UiGearMenuController.Inventory().Accessories[selectedGear]);
+            Accessory accessory = (Accessory) accessoryObject;
+            CharacterManager.SelectedCharacter.EquipAccessory(accessory);
             Show();
+        }
+
+        private class AccessoryElement : BasicListElement
+        {
+            protected override void UpdateCentreItemEmpty()
+            {
+                CentreText.SetText("No Accessories Found");
+                LeftText.SetText("");
+                RightText.SetText("");
+            }
+
+            protected override void Update(object o)
+            {
+                Accessory accessory = (Accessory) o;
+                CentreText.SetText(accessory.Name);
+                bool equipped = CharacterManager.SelectedCharacter.EquippedAccessory == accessory;
+                LeftText.SetText(equipped ? "Equipped" : "Not Equipped");
+                RightText.SetText(accessory.GetSummary());
+            }
+        }
+
+        protected override void OnShow()
+        {
+            _accessoryList.Show(GetAvailableAccessories);
+        }
+
+        private static List<object> GetAvailableAccessories()
+        {
+            Player player = CharacterManager.SelectedCharacter;
+            Inventory inventory = player.TravelAction.AtHome() ? WorldState.HomeInventory() : player.Inventory();
+            List<Accessory> accessories = inventory.Accessories;
+            if (player.EquippedAccessory != null) accessories.Add(player.EquippedAccessory);
+            return inventory.Accessories.ToObjectList();
         }
     }
 }

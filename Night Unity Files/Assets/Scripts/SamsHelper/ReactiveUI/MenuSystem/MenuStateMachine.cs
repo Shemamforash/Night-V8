@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Facilitating.Persistence;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
@@ -13,6 +14,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         private static MenuStateMachine _instance;
         private static StateMachine States;
         public Menu InitialMenu;
+        public static Action OnTransition;
 
         public void Awake()
         {
@@ -37,9 +39,10 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             if (InitialMenu != null) ShowMenu(InitialMenu.name);
         }
 
-        public static void ShowMenu(string menuName)
+        public static void ShowMenu(string menuName, Action onTransition = null)
         {
             if (States.GetCurrentState()?.Name == menuName) return;
+            OnTransition = onTransition;
             _instance.StartCoroutine(_instance.FadeMenu(menuName));
         }
 
@@ -79,6 +82,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
             EventSystem.current.sendNavigationEvents = true;
             States.GetState(menuName).Enter();
+            OnTransition?.Invoke();
         }
 
         public static void SelectInactiveButton(Button button)
