@@ -104,7 +104,7 @@ namespace Game.Gear.Armour
         {
             string templateString = accessoryNode.StringFromNode("Template");
             AccessoryTemplate template = _accessoryTemplates.First(t => t.Name == templateString);
-            Accessory accessory = new Accessory(template, ItemQuality.Worn);
+            Accessory accessory = new Accessory(template, ItemQuality.Dark);
             accessory.Load(accessoryNode);
             return accessory;
         }

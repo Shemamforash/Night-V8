@@ -73,14 +73,9 @@ namespace Game.Exploration.Environment
             else if (temperature < 40)
                 _temperatureCategory = TemperatureCategory.Hot;
             else
-                _temperatureCategory = TemperatureCategory.Boiling;
+                _temperatureCategory = TemperatureCategory.Burning;
 
-            int targetLength = 6;
-            string currentTemperature = CalculateTemperature() + "\u00B0" + "C";
-            int lengthDifference = targetLength - currentTemperature.Length;
-            string seperators = "";
-            for (int i = 0; i < lengthDifference; ++i) seperators += " ";
-            WorldView.SetTemperatureText(_temperatureCategory + seperators + "(" + currentTemperature + ")");
+            WorldView.SetTemperatureText(_temperatureCategory.ToString());
         }
 
         public static TemperatureCategory GetTemperature()

@@ -4,8 +4,8 @@
     <DaysSpentHere>0</DaysSpentHere>
     <CurrentLevel>1</CurrentLevel>
     <Days>0</Days>
-    <Hours>8</Hours>
-    <Minutes>0</Minutes>
+    <Hours>7</Hours>
+    <Minutes>5</Minutes>
     <Difficulty>0</Difficulty>
   </WorldState>
   <Inventory>
@@ -13,13 +13,13 @@
     <Name>Vehicle</Name>
     <ParentInventory>-1</ParentInventory>
     <Resources>
-      <Salt>20</Salt>
+      <Salt>40</Salt>
     </Resources>
     <Items>
       <Weapons>
         <Gear>
           <Id>4</Id>
-          <Name>Shining Breacher</Name>
+          <Name>Glowing Breacher</Name>
           <ParentInventory>0</ParentInventory>
           <Quantity>1</Quantity>
           <Stackable>False</Stackable>
@@ -75,7 +75,7 @@
         </Gear>
         <Gear>
           <Id>7</Id>
-          <Name>Shining Gouger</Name>
+          <Name>Glowing Gouger</Name>
           <ParentInventory>0</ParentInventory>
           <Quantity>1</Quantity>
           <Stackable>False</Stackable>
@@ -131,7 +131,7 @@
         </Gear>
         <Gear>
           <Id>10</Id>
-          <Name>Shining Bonebreaker</Name>
+          <Name>Glowing Bonebreaker</Name>
           <ParentInventory>0</ParentInventory>
           <Quantity>1</Quantity>
           <Stackable>False</Stackable>
@@ -187,7 +187,7 @@
         </Gear>
         <Gear>
           <Id>13</Id>
-          <Name>Shining Shortshooter</Name>
+          <Name>Glowing Shortshooter</Name>
           <ParentInventory>0</ParentInventory>
           <Quantity>1</Quantity>
           <Stackable>False</Stackable>
@@ -243,7 +243,7 @@
         </Gear>
         <Gear>
           <Id>16</Id>
-          <Name>Shining Spewer</Name>
+          <Name>Glowing Spewer</Name>
           <ParentInventory>0</ParentInventory>
           <Quantity>1</Quantity>
           <Stackable>False</Stackable>
@@ -297,11 +297,583 @@
             </Attribute>
           </Attributes>
         </Gear>
+        <Gear>
+          <Id>38</Id>
+          <Name>Glowing Slinger</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>2</Quality>
+          <Class>0</Class>
+          <Durability>30</Durability>
+          <Attributes>
+            <Attribute>
+              <AttributeType>19</AttributeType>
+              <Value>19</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>21</AttributeType>
+              <Value>3</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>22</AttributeType>
+              <Value>0.5</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>20</AttributeType>
+              <Value>0.6</Value>
+              <Min>0</Min>
+              <Max>1</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>23</AttributeType>
+              <Value>70</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>25</AttributeType>
+              <Value>10</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>24</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+          </Attributes>
+        </Gear>
+        <Gear>
+          <Id>41</Id>
+          <Name>Glowing Groundrider</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>2</Quality>
+          <Class>3</Class>
+          <Durability>30</Durability>
+          <Attributes>
+            <Attribute>
+              <AttributeType>19</AttributeType>
+              <Value>75</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>21</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>22</AttributeType>
+              <Value>3</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>20</AttributeType>
+              <Value>0.9</Value>
+              <Min>0</Min>
+              <Max>1</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>23</AttributeType>
+              <Value>20</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>25</AttributeType>
+              <Value>6</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>24</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+          </Attributes>
+        </Gear>
+        <Gear>
+          <Id>44</Id>
+          <Name>Glowing Deepdriver</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>2</Quality>
+          <Class>2</Class>
+          <Durability>30</Durability>
+          <Attributes>
+            <Attribute>
+              <AttributeType>19</AttributeType>
+              <Value>25</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>21</AttributeType>
+              <Value>6</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>22</AttributeType>
+              <Value>2</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>20</AttributeType>
+              <Value>0.75</Value>
+              <Min>0</Min>
+              <Max>1</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>23</AttributeType>
+              <Value>90</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>25</AttributeType>
+              <Value>6</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>24</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+          </Attributes>
+        </Gear>
+        <Gear>
+          <Id>47</Id>
+          <Name>Glowing Spewer</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>2</Quality>
+          <Class>11</Class>
+          <Durability>30</Durability>
+          <Attributes>
+            <Attribute>
+              <AttributeType>19</AttributeType>
+              <Value>6</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>21</AttributeType>
+              <Value>11</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>22</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>20</AttributeType>
+              <Value>0.3</Value>
+              <Min>0</Min>
+              <Max>1</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>23</AttributeType>
+              <Value>98</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>25</AttributeType>
+              <Value>30</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>24</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+          </Attributes>
+        </Gear>
+        <Gear>
+          <Id>50</Id>
+          <Name>Glowing Shortshooter</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>2</Quality>
+          <Class>1</Class>
+          <Durability>30</Durability>
+          <Attributes>
+            <Attribute>
+              <AttributeType>19</AttributeType>
+              <Value>7</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>21</AttributeType>
+              <Value>4</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>22</AttributeType>
+              <Value>0.5</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>20</AttributeType>
+              <Value>0.5</Value>
+              <Min>0</Min>
+              <Max>1</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>23</AttributeType>
+              <Value>80</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>25</AttributeType>
+              <Value>12</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>24</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+          </Attributes>
+        </Gear>
+        <Gear>
+          <Id>53</Id>
+          <Name>Glowing Breacher</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>2</Quality>
+          <Class>12</Class>
+          <Durability>30</Durability>
+          <Attributes>
+            <Attribute>
+              <AttributeType>19</AttributeType>
+              <Value>14</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>21</AttributeType>
+              <Value>5</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>22</AttributeType>
+              <Value>5</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>20</AttributeType>
+              <Value>0.4</Value>
+              <Min>0</Min>
+              <Max>1</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>23</AttributeType>
+              <Value>95</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>25</AttributeType>
+              <Value>70</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>24</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+          </Attributes>
+        </Gear>
+        <Gear>
+          <Id>56</Id>
+          <Name>Glowing Leadspreader</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>2</Quality>
+          <Class>6</Class>
+          <Durability>30</Durability>
+          <Attributes>
+            <Attribute>
+              <AttributeType>19</AttributeType>
+              <Value>3</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>21</AttributeType>
+              <Value>4</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>22</AttributeType>
+              <Value>2</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>20</AttributeType>
+              <Value>0.2</Value>
+              <Min>0</Min>
+              <Max>1</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>23</AttributeType>
+              <Value>35</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>25</AttributeType>
+              <Value>6</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>24</AttributeType>
+              <Value>10</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+          </Attributes>
+        </Gear>
+        <Gear>
+          <Id>59</Id>
+          <Name>Glowing Shoulderbreaker</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>2</Quality>
+          <Class>4</Class>
+          <Durability>30</Durability>
+          <Attributes>
+            <Attribute>
+              <AttributeType>19</AttributeType>
+              <Value>50</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>21</AttributeType>
+              <Value>2</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>22</AttributeType>
+              <Value>3</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>20</AttributeType>
+              <Value>0.9</Value>
+              <Min>0</Min>
+              <Max>1</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>23</AttributeType>
+              <Value>0</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>25</AttributeType>
+              <Value>6</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>24</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+          </Attributes>
+        </Gear>
+        <Gear>
+          <Id>62</Id>
+          <Name>Glowing Shoulderbreaker</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>2</Quality>
+          <Class>4</Class>
+          <Durability>30</Durability>
+          <Attributes>
+            <Attribute>
+              <AttributeType>19</AttributeType>
+              <Value>50</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>21</AttributeType>
+              <Value>2</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>22</AttributeType>
+              <Value>3</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>20</AttributeType>
+              <Value>0.9</Value>
+              <Min>0</Min>
+              <Max>1</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>23</AttributeType>
+              <Value>0</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>25</AttributeType>
+              <Value>6</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>24</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+          </Attributes>
+        </Gear>
+        <Gear>
+          <Id>65</Id>
+          <Name>Glowing Voidwalker</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>2</Quality>
+          <Class>5</Class>
+          <Durability>30</Durability>
+          <Attributes>
+            <Attribute>
+              <AttributeType>19</AttributeType>
+              <Value>90</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>21</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>22</AttributeType>
+              <Value>5</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>20</AttributeType>
+              <Value>0.9</Value>
+              <Min>0</Min>
+              <Max>1</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>23</AttributeType>
+              <Value>20</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>25</AttributeType>
+              <Value>6</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+            <Attribute>
+              <AttributeType>24</AttributeType>
+              <Value>1</Value>
+              <Min>0</Min>
+              <Max>3.402823E+38</Max>
+            </Attribute>
+          </Attributes>
+        </Gear>
       </Weapons>
       <ArmourPlates>
+        <Health>800</Health>
+        <Health>600</Health>
+        <Health>1000</Health>
+        <Health>1000</Health>
+        <Health>800</Health>
+        <Health>1000</Health>
+        <Health>200</Health>
         <Health>400</Health>
-        <Health>300</Health>
-        <Health>500</Health>
+        <Health>400</Health>
+        <Health>1000</Health>
+        <Health>200</Health>
+        <Health>600</Health>
+        <Health>400</Health>
+        <Health>200</Health>
+        <Health>800</Health>
       </ArmourPlates>
       <Accessories />
       <Inscriptions>
@@ -360,6 +932,116 @@
           <Quality>0</Quality>
           <Template>Oppression</Template>
         </Gear>
+        <Gear>
+          <Id>39</Id>
+          <Name>A Murmur of Fervor</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>0</Quality>
+          <Template>Fervor</Template>
+        </Gear>
+        <Gear>
+          <Id>42</Id>
+          <Name>A Murmur of Murder</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>0</Quality>
+          <Template>Murder</Template>
+        </Gear>
+        <Gear>
+          <Id>45</Id>
+          <Name>A Murmur of Murder</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>0</Quality>
+          <Template>Murder</Template>
+        </Gear>
+        <Gear>
+          <Id>48</Id>
+          <Name>A Murmur of Terror</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>0</Quality>
+          <Template>Terror</Template>
+        </Gear>
+        <Gear>
+          <Id>51</Id>
+          <Name>A Murmur of Cinders</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>0</Quality>
+          <Template>Cinders</Template>
+        </Gear>
+        <Gear>
+          <Id>54</Id>
+          <Name>A Murmur of Fervor</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>0</Quality>
+          <Template>Fervor</Template>
+        </Gear>
+        <Gear>
+          <Id>57</Id>
+          <Name>A Murmur of Perpetuance</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>0</Quality>
+          <Template>Perpetuance</Template>
+        </Gear>
+        <Gear>
+          <Id>60</Id>
+          <Name>A Murmur of Vigor</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>0</Quality>
+          <Template>Vigor</Template>
+        </Gear>
+        <Gear>
+          <Id>63</Id>
+          <Name>A Murmur of Murder</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>0</Quality>
+          <Template>Murder</Template>
+        </Gear>
+        <Gear>
+          <Id>66</Id>
+          <Name>A Murmur of Murder</Name>
+          <ParentInventory>0</ParentInventory>
+          <Quantity>1</Quantity>
+          <Stackable>False</Stackable>
+          <Template>
+          </Template>
+          <Quality>0</Quality>
+          <Template>Murder</Template>
+        </Gear>
       </Inscriptions>
       <Consumables />
     </Items>
@@ -369,8 +1051,6 @@
       <ParentInventory>-1</ParentInventory>
       <EquippedItems>
         <Weapon>3</Weapon>
-        <ArmourPlate1>18</ArmourPlate1>
-        <ArmourPlate2>12</ArmourPlate2>
       </EquippedItems>
       <Inventory>
         <Id>2</Id>
@@ -381,31 +1061,31 @@
           <Weapons>
             <Gear>
               <Id>3</Id>
-              <Name>Worn Gouger</Name>
+              <Name>Dark Annihilator</Name>
               <ParentInventory>2</ParentInventory>
               <Quantity>1</Quantity>
               <Stackable>False</Stackable>
               <Template>
               </Template>
-              <Quality>1</Quality>
-              <Class>13</Class>
-              <Durability>20</Durability>
+              <Quality>0</Quality>
+              <Class>14</Class>
+              <Durability>7.288693</Durability>
               <Attributes>
                 <Attribute>
                   <AttributeType>19</AttributeType>
-                  <Value>18</Value>
+                  <Value>12</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
                 <Attribute>
                   <AttributeType>21</AttributeType>
-                  <Value>5</Value>
+                  <Value>7</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
                 <Attribute>
                   <AttributeType>22</AttributeType>
-                  <Value>7</Value>
+                  <Value>5</Value>
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
@@ -433,13 +1113,28 @@
                   <Min>0</Min>
                   <Max>3.402823E+38</Max>
                 </Attribute>
+                <Attribute>
+                  <AttributeType>27</AttributeType>
+                  <Value>0</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>28</AttributeType>
+                  <Value>0</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
+                <Attribute>
+                  <AttributeType>26</AttributeType>
+                  <Value>0</Value>
+                  <Min>0</Min>
+                  <Max>3.402823E+38</Max>
+                </Attribute>
               </Attributes>
             </Gear>
           </Weapons>
-          <ArmourPlates>
-            <Health>500</Health>
-            <Health>400</Health>
-          </ArmourPlates>
+          <ArmourPlates />
           <Accessories />
           <Inscriptions />
           <Consumables />
@@ -466,45 +1161,75 @@
         </Attribute>
         <Attribute>
           <AttributeType>5</AttributeType>
-          <Value>0.5902778</Value>
+          <Value>0.3611112</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>4</AttributeType>
-          <Value>1.486111</Value>
+          <Value>0.7222223</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>1</AttributeType>
-          <Value>10</Value>
+          <Value>19</Value>
           <Min>0</Min>
-          <Max>10</Max>
+          <Max>20</Max>
         </Attribute>
         <Attribute>
           <AttributeType>0</AttributeType>
-          <Value>4</Value>
+          <Value>20</Value>
           <Min>0</Min>
-          <Max>4</Max>
+          <Max>20</Max>
         </Attribute>
         <Attribute>
           <AttributeType>2</AttributeType>
-          <Value>4</Value>
+          <Value>20</Value>
           <Min>0</Min>
-          <Max>4</Max>
+          <Max>20</Max>
         </Attribute>
         <Attribute>
           <AttributeType>3</AttributeType>
-          <Value>4</Value>
+          <Value>20</Value>
           <Min>0</Min>
-          <Max>4</Max>
+          <Max>20</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>29</AttributeType>
+          <Value>0</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>8</AttributeType>
+          <Value>0</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>15</AttributeType>
+          <Value>0</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>14</AttributeType>
+          <Value>0</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
+        </Attribute>
+        <Attribute>
+          <AttributeType>13</AttributeType>
+          <Value>0</Value>
+          <Min>0</Min>
+          <Max>3.402823E+38</Max>
         </Attribute>
       </Attributes>
       <Brands />
       <StoryUnlocked>False</StoryUnlocked>
       <StoryProgress>1</StoryProgress>
-      <TimeAlive>24</TimeAlive>
+      <TimeAlive>13</TimeAlive>
       <CharacterClass>Wanderer</CharacterClass>
     </Character>
   </Inventory>
@@ -898,7 +1623,7 @@
       <Type>6</Type>
       <Discovered>True</Discovered>
       <Seen>True</Seen>
-      <LastVisited>-1</LastVisited>
+      <LastVisited>0</LastVisited>
       <WaterSourceCount>2</WaterSourceCount>
       <FoodSourceCount>1</FoodSourceCount>
       <ResourceSourceCount>1</ResourceSourceCount>
@@ -906,7 +1631,162 @@
       <ClaimQuantity>0</ClaimQuantity>
       <ClaimBenefit>
       </ClaimBenefit>
-      <Enemies />
+      <Enemies>
+        <Character>
+          <Id>76</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems>
+            <ArmourPlate1>78</ArmourPlate1>
+            <ArmourPlate2>79</ArmourPlate2>
+          </EquippedItems>
+          <Inventory>
+            <Id>77</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates>
+                <Health>516.5</Health>
+                <Health>514.246</Health>
+              </ArmourPlates>
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Brawler</EnemyType>
+        </Character>
+        <Character>
+          <Id>80</Id>
+          <Name>Sentinel</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems>
+            <Weapon>84</Weapon>
+            <ArmourPlate1>82</ArmourPlate1>
+            <ArmourPlate2>83</ArmourPlate2>
+          </EquippedItems>
+          <Inventory>
+            <Id>81</Id>
+            <Name>Sentinel</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons>
+                <Gear>
+                  <Id>84</Id>
+                  <Name>Dark Gripshaker</Name>
+                  <ParentInventory>81</ParentInventory>
+                  <Quantity>1</Quantity>
+                  <Stackable>False</Stackable>
+                  <Template>
+                  </Template>
+                  <Quality>0</Quality>
+                  <Class>10</Class>
+                  <Durability>7.125205</Durability>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeType>19</AttributeType>
+                      <Value>9</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>21</AttributeType>
+                      <Value>8</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>22</AttributeType>
+                      <Value>1.25</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>20</AttributeType>
+                      <Value>0.3</Value>
+                      <Min>0</Min>
+                      <Max>1</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>23</AttributeType>
+                      <Value>95</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>25</AttributeType>
+                      <Value>20</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>24</AttributeType>
+                      <Value>1</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>27</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>28</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeType>26</AttributeType>
+                      <Value>0</Value>
+                      <Min>0</Min>
+                      <Max>3.402823E+38</Max>
+                    </Attribute>
+                  </Attributes>
+                </Gear>
+              </Weapons>
+              <ArmourPlates>
+                <Health>384</Health>
+                <Health>382.6904</Health>
+              </ArmourPlates>
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Sentinel</EnemyType>
+        </Character>
+        <Character>
+          <Id>85</Id>
+          <Name>Brawler</Name>
+          <ParentInventory>-1</ParentInventory>
+          <EquippedItems>
+            <ArmourPlate1>87</ArmourPlate1>
+            <ArmourPlate2>88</ArmourPlate2>
+          </EquippedItems>
+          <Inventory>
+            <Id>86</Id>
+            <Name>Brawler</Name>
+            <ParentInventory>-1</ParentInventory>
+            <Resources />
+            <Items>
+              <Weapons />
+              <ArmourPlates>
+                <Health>521.5</Health>
+                <Health>519.3016</Health>
+              </ArmourPlates>
+              <Accessories />
+              <Inscriptions />
+              <Consumables />
+            </Items>
+          </Inventory>
+          <EnemyType>Brawler</EnemyType>
+        </Character>
+      </Enemies>
     </Region>
     <Region>
       <Name>Demagogue's Marsh</Name>
@@ -974,8 +1854,9 @@
   </Regions>
   <Weather>
     <Name>Clear</Name>
-    <TimeRemaining>24</TimeRemaining>
+    <TimeRemaining>35</TimeRemaining>
   </Weather>
   <CurrentEnvironment>Forest</CurrentEnvironment>
-  <WorldEvents>&lt;i&gt;"That might help"- The Wanderer&lt;/i&gt;,&lt;i&gt;"That might help"- The Wanderer&lt;/i&gt;</WorldEvents>
+  <WorldEvents>
+  </WorldEvents>
 </Game>

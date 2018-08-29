@@ -49,7 +49,7 @@ namespace Facilitating.UIControllers
                 case TemperatureCategory.Hot:
                     ModifierIndicator.SetText("Sweating slightly");
                     break;
-                case TemperatureCategory.Boiling:
+                case TemperatureCategory.Burning:
                     ModifierIndicator.SetText("Sweating heavily");
                     break;
                 default:
@@ -77,7 +77,7 @@ namespace Facilitating.UIControllers
                 case TemperatureCategory.Hot:
                     ModifierIndicator.SetText("Barely losing any heat");
                     break;
-                case TemperatureCategory.Boiling:
+                case TemperatureCategory.Burning:
                     ModifierIndicator.SetText("Losing no heat");
                     break;
                 default:

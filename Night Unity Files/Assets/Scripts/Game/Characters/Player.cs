@@ -160,6 +160,21 @@ namespace Game.Characters
             _timeAlive = 0;
         }
 
+        private void IncreaseTimeSurvived()
+        {
+            ++_timeSurvived;
+            switch (_timeSurvived)
+            {
+                case 7:
+                    Attributes.UnlockCharacterSkillOne();
+                    break;
+                case 14:
+                    Attributes.UnlockCharacterSkillTwo();
+                    break;
+            }
+        }
+
+        
         public void Tire()
         {
             Attributes.Get(AttributeType.Endurance).Decrement();
@@ -251,24 +266,10 @@ namespace Game.Characters
             switch (kills)
             {
                 case 50:
-                    Attributes.WeaponSkillOneUnlocks.Add(weaponType);
+                    Attributes.UnlockWeaponSkillOne(weaponType);
                     break;
                 case 100:
-                    Attributes.WeaponSkillTwoUnlocks.Add(weaponType);
-                    break;
-            }
-        }
-
-        private void IncreaseTimeSurvived()
-        {
-            ++_timeSurvived;
-            switch (_timeSurvived)
-            {
-                case 7:
-                    Attributes.SkillOneUnlocked = true;
-                    break;
-                case 14:
-                    Attributes.SkillTwoUnlocked = true;
+                    Attributes.UnlockWeaponSkillTwo(weaponType);
                     break;
             }
         }

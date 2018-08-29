@@ -36,7 +36,7 @@
           <Weapons>
             <Gear>
               <Id>16</Id>
-              <Name>Worn Spitter</Name>
+              <Name>Dull Spitter</Name>
               <ParentInventory>8</ParentInventory>
               <Quantity>1</Quantity>
               <Stackable>False</Stackable>

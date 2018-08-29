@@ -63,7 +63,6 @@ namespace Game.Combat.Player
 
         public bool DamageTakenSinceLastShot;
 
-
         public bool ConsumeAdrenaline(int amount)
         {
             if (amount > _adrenalineLevel.CurrentValue()) return false;
@@ -229,13 +228,6 @@ namespace Game.Combat.Player
 
         private void Rotate(float direction)
         {
-            if (CanDash())
-            {
-                Spin(direction);
-                _dashPressed = false;
-                return;
-            }
-
             if (_lockedTarget != null) return;
             _rotateSpeedCurrent += RotateAcceleration * Time.deltaTime;
             if (_rotateSpeedCurrent > RotateSpeedMax) _rotateSpeedCurrent = RotateSpeedMax;
@@ -253,11 +245,6 @@ namespace Game.Combat.Player
             InputHandler.SetCurrentListener(null);
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             CombatManager.ExitCombat();
-        }
-
-        private void Spin(float direction)
-        {
-            transform.DORotate(new Vector3(0, 0, 180f * -direction), 0.5f, RotateMode.FastBeyond360).SetRelative();
         }
 
         public override void Kill()
@@ -291,9 +278,15 @@ namespace Game.Combat.Player
             UpdateSkillActions.ForEach(a => a());
             FollowTarget();
             TransitionOffScreen();
-            _adrenalineLevel.Increment(_adrenalineGain * Time.deltaTime);
-            RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
             UpdateMuzzleFlash();
+        }
+
+        public void UpdateAdrenaline(int damageDealt)
+        {
+            _adrenalineLevel.Increment(damageDealt / 500f);
+            CombatManager.IncreaseDamageDealt(damageDealt);
+            DamageDealtSinceMarkStarted += damageDealt;
+            RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
         }
 
         private void UpdateMuzzleFlash()
@@ -339,7 +332,6 @@ namespace Game.Combat.Player
             _initialArmour = Player.ArmourController.GetProtectionLevel();
 
             ArmourBarController().TakeDamage(ArmourController);
-            Debug.Log(Player.Attributes.CalculateSpeed());
             MovementController.SetSpeed(Player.Attributes.CalculateSpeed());
 
             _adrenalineGain = Player.Attributes.CalculateAdrenalineRecoveryRate();
@@ -394,7 +386,7 @@ namespace Game.Combat.Player
 
         private bool CanDash()
         {
-            return _dashCooldown.Finished() && _dashPressed;
+            return _dashCooldown.Finished() && _dashPressed && ConsumeAdrenaline(2);
         }
 
         public void Knockback(Vector3 source, float force = 10f)

@@ -29,7 +29,7 @@ namespace Game.Gear.Weapons
             foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
             {
                 ResetAttributeStats();
-                TestWeapon(type, ItemQuality.Rusted);
+                TestWeapon(type, ItemQuality.Dark);
                 TestWeapon(type, ItemQuality.Radiant);
                 _testResultString += "\n\n";
             }

@@ -9,8 +9,6 @@ namespace Facilitating.UI
     public class DayChangeSequence : Menu
     {
         private CanvasGroup _menuScreen, _thisCanvasGroup;
-        private ThunderClick _thunderClick;
-        public float FadeTime = 2f;
         public float TimeBetweenLines = 1f;
         public float TimeToRead = 3f;
         private static DayChangeSequence _instance;
@@ -21,7 +19,6 @@ namespace Facilitating.UI
             _instance = this;
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _menuScreen = GameObject.Find("Game Menu").GetComponent<CanvasGroup>();
-            _thunderClick = GetComponent<ThunderClick>();
         }
 
         public static DayChangeSequence Instance()
@@ -36,7 +33,6 @@ namespace Facilitating.UI
             _menuScreen.alpha = 0;
             _thisCanvasGroup.interactable = true;
             _thisCanvasGroup.alpha = 1;
-            _thunderClick.InitiateThunder();
             StartCoroutine(ShowLines());
         }
 
@@ -54,7 +50,6 @@ namespace Facilitating.UI
 
         private void TransitionEnd()
         {
-            _thunderClick.InitiateThunder();
             _menuScreen.alpha = 1;
             _thisCanvasGroup.alpha = 0;
             WorldState.UnPause();

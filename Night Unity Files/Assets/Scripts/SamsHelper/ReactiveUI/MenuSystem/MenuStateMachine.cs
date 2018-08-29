@@ -100,5 +100,10 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         {
             ShowMenu(_instance.InitialMenu.name);
         }
+
+        public static Menu CurrentMenu()
+        {
+            return ((MenuState)States.GetCurrentState()).Menu;
+        }
     }
 }

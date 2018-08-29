@@ -31,7 +31,7 @@ namespace Game.Gear.Weapons
                 _spinSource.Play();
                 SpinningUp = true;
             }
-
+            
             if (_currentTime < SpoolUpTime)
             {
                 _currentTime += Time.deltaTime;
@@ -52,7 +52,6 @@ namespace Game.Gear.Weapons
             _spinSource.clip = Origin.WeaponAudio.SpoolDownClip;
             _spinSource.loop = false;
             _spinSource.time = Mathf.Min(1f - _currentTime, _spinSource.clip.length - 0.01f);
-            Debug.Log(1 - _currentTime + " " + Origin.WeaponAudio.SpoolClip.length);
             _spinSource.Play();
             SpinningUp = false;
         }

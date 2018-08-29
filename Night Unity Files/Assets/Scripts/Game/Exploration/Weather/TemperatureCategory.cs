@@ -6,6 +6,6 @@
         Cold,
         Warm,
         Hot,
-        Boiling
+        Burning
     }
 }

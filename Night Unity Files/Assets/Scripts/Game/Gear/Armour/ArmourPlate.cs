@@ -12,7 +12,7 @@ namespace Game.Gear.Armour
 {
     public class ArmourPlate : GearItem
     {
-        public const float PlateHealthUnit = 100;
+        public const float PlateHealthUnit = 200;
         private readonly Number _plateHealth = new Number();
         public readonly int Protection;
 
@@ -33,13 +33,13 @@ namespace Game.Gear.Armour
         {
             switch (quality)
             {
-                case ItemQuality.Rusted:
+                case ItemQuality.Dark:
                     return "Leather Plate";
-                case ItemQuality.Worn:
+                case ItemQuality.Dull:
                     return "Reinforced Leather Plate";
-                case ItemQuality.Shining:
+                case ItemQuality.Glowing:
                     return "Metal Plate";
-                case ItemQuality.Faultless:
+                case ItemQuality.Shining:
                     return "Alloy Plate";
                 case ItemQuality.Radiant:
                     return "Living Metal Plate";

@@ -5,6 +5,7 @@ using System.Xml;
 using Facilitating.Persistence;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
+using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.Persistence;
@@ -339,6 +340,7 @@ namespace Game.Characters
             {
                 Debug.Log("unlocked " + _successName);
                 SetStatus(BrandStatus.Succeeded);
+                UiBrandMenu.ShowBrand(this);
                 OnSucceed();
             }
 
@@ -395,6 +397,22 @@ namespace Game.Characters
                 doc.CreateChild("Status", (int)Status);
                 return doc;
             }
+
+            public string GetSuccessName()
+            {
+                return _successName;
+            }
+
+            public string GetFailName()
+            {
+                return _failName;
+            }
+
+            public string GetEffectString()
+            {
+                //todo
+                return "fart";
+            }
         }
 
         private void UpdateBrandStatus(Brand brand)
@@ -432,7 +450,7 @@ namespace Game.Characters
 
         private class StrengthBrand : Brand
         {
-            public StrengthBrand(Player player, int counterTarget) : base(player, "Power", "Powerful", "Weak", counterTarget)
+            public StrengthBrand(Player player, int counterTarget) : base(player, "Power", "power", "weakness", counterTarget)
             {
             }
 
@@ -454,7 +472,7 @@ namespace Game.Characters
 
         private class EnduranceBrand : Brand
         {
-            public EnduranceBrand(Player player, int counterTarget) : base(player, "Stamina", "Nomadic", "Sloth", counterTarget)
+            public EnduranceBrand(Player player, int counterTarget) : base(player, "Stamina", "stamina", "sloth", counterTarget)
             {
             }
 
@@ -476,7 +494,7 @@ namespace Game.Characters
 
         private class PerceptionBrand : Brand
         {
-            public PerceptionBrand(Player player, int counterTarget) : base(player, "Vigilance", "Keen", "Oblivious", counterTarget)
+            public PerceptionBrand(Player player, int counterTarget) : base(player, "Vigilance", "vigilance", "obliviousness", counterTarget)
             {
             }
 
@@ -498,7 +516,7 @@ namespace Game.Characters
 
         private class WillpowerBrand : Brand
         {
-            public WillpowerBrand(Player player, int counterTarget) : base(player, "Resolution", "Hardy", "Fearful", counterTarget)
+            public WillpowerBrand(Player player, int counterTarget) : base(player, "Resolution", "resolution", "fear", counterTarget)
             {
             }
 
@@ -520,7 +538,7 @@ namespace Game.Characters
 
         private class EssenceChangeBrand : Brand
         {
-            public EssenceChangeBrand(Player player, int counterTarget) : base(player, "Insight", "Learned", "Ignorant", counterTarget)
+            public EssenceChangeBrand(Player player, int counterTarget) : base(player, "Insight", "insight", "ignorance", counterTarget)
             {
             }
 
@@ -542,7 +560,7 @@ namespace Game.Characters
 
         private class HealthRecoveryBrand : Brand
         {
-            public HealthRecoveryBrand(Player player, int counterTarget) : base(player, "Revival", "Immortal", "Pathetic", counterTarget)
+            public HealthRecoveryBrand(Player player, int counterTarget) : base(player, "Revival", "immortality", "frailness", counterTarget)
             {
             }
 
@@ -564,7 +582,7 @@ namespace Game.Characters
 
         private class WillpowerRecoveryBrand : Brand
         {
-            public WillpowerRecoveryBrand(Player player, int counterTarget) : base(player, "Apathy", "Murderous", "Timid", counterTarget)
+            public WillpowerRecoveryBrand(Player player, int counterTarget) : base(player, "Apathy", "barbarity", "timidity", counterTarget)
             {
             }
 
@@ -586,7 +604,7 @@ namespace Game.Characters
 
         private class OnlySkillBrand : Brand
         {
-            public OnlySkillBrand(Player player, int counterTarget) : base(player, "Mastery", "Masterful", "Distracted", counterTarget)
+            public OnlySkillBrand(Player player, int counterTarget) : base(player, "Mastery", "mastery", "distraction", counterTarget)
             {
             }
 
@@ -608,7 +626,7 @@ namespace Game.Characters
 
         private class SkillKillBrand : Brand
         {
-            public SkillKillBrand(Player player, int counterTarget) : base(player, "Prowes", "Alert", "Absent", counterTarget)
+            public SkillKillBrand(Player player, int counterTarget) : base(player, "Prowess", "alertness", "absence", counterTarget)
             {
             }
 
@@ -630,7 +648,7 @@ namespace Game.Characters
 
         private class InstantReloadBrand : Brand
         {
-            public InstantReloadBrand(Player player, int counterTarget) : base(player, "Ingenuity", "Devious", "Inept", counterTarget)
+            public InstantReloadBrand(Player player, int counterTarget) : base(player, "Ingenuity", "deviousness", "ineptitude", counterTarget)
             {
             }
 
@@ -652,7 +670,7 @@ namespace Game.Characters
 
         private class AutomaticReloadBrand : Brand
         {
-            public AutomaticReloadBrand(Player player, int counterTarget) : base(player, "Finesse", "Perpetual", "Clumsy", counterTarget)
+            public AutomaticReloadBrand(Player player, int counterTarget) : base(player, "Finesse", "finesse", "clumsiness", counterTarget)
             {
             }
 
@@ -674,7 +692,7 @@ namespace Game.Characters
 
         private class IgniteBrand : Brand
         {
-            public IgniteBrand(Player player, int counterTarget) : base(player, "The Inferno", "Infernal", "Combustible", counterTarget)
+            public IgniteBrand(Player player, int counterTarget) : base(player, "The Inferno", "the inferno", "flammability", counterTarget)
             {
             }
 
@@ -696,7 +714,7 @@ namespace Game.Characters
 
         private class DecayBrand : Brand
         {
-            public DecayBrand(Player player, int counterTarget) : base(player, "The Voidwalker", "Void Born", "Crumbling", counterTarget)
+            public DecayBrand(Player player, int counterTarget) : base(player, "The Voidwalker", "the void", "fragility", counterTarget)
             {
             }
 
@@ -718,7 +736,7 @@ namespace Game.Characters
 
         private class SicknessBrand : Brand
         {
-            public SicknessBrand(Player player, int counterTarget) : base(player, "The Plaguebearer", "Diseased", "Sickly", counterTarget)
+            public SicknessBrand(Player player, int counterTarget) : base(player, "The Plaguebearer", "the pit", "disease", counterTarget)
             {
             }
 
@@ -740,7 +758,7 @@ namespace Game.Characters
 
         private class ResourceBrand : Brand
         {
-            public ResourceBrand(Player player, int counterTarget) : base(player, "Scavenging", "Keen", "Blind", counterTarget)
+            public ResourceBrand(Player player, int counterTarget) : base(player, "Scavenging", "fortitude", "blindness", counterTarget)
             {
             }
 
@@ -762,7 +780,7 @@ namespace Game.Characters
 
         private class FoodBrand : Brand
         {
-            public FoodBrand(Player player, int counterTarget) : base(player, "Gathering", "Sated", "Greedy", counterTarget)
+            public FoodBrand(Player player, int counterTarget) : base(player, "Gathering", "fullness", "emptiness", counterTarget)
             {
             }
 
@@ -784,7 +802,7 @@ namespace Game.Characters
 
         private class WaterBrand : Brand
         {
-            public WaterBrand(Player player, int counterTarget) : base(player, "Divining", "Slaked", "Parched", counterTarget)
+            public WaterBrand(Player player, int counterTarget) : base(player, "Divining", "wellness", "dryness", counterTarget)
             {
             }
 

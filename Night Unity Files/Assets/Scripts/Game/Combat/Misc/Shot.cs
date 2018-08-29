@@ -4,6 +4,7 @@ using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Player;
+using Game.Exploration.Weather;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
@@ -29,7 +30,6 @@ namespace Game.Combat.Misc
         private Vector3 _direction;
         private float _finalDamageModifier = 1f;
         private bool _guaranteeHit;
-        private int _knockbackForce = 10;
 
         private bool _fired;
         public CharacterCombat _origin;
@@ -39,10 +39,16 @@ namespace Game.Combat.Misc
 
         private Weapon _weapon;
         private bool _seekTarget, _leaveFireTrail;
-        public float _knockBackForce;
+        private float _knockBackForce;
+        private float _knockBackModifier;
         private const float MaxAge = 3f;
         private event Action OnHitAction;
 
+        public float GetKnockbackForce()
+        {
+            return _knockBackForce;
+        }
+        
         private void OnDestroy()
         {
             _shotPool.Dispose(this);
@@ -52,7 +58,8 @@ namespace Game.Combat.Misc
         {
             _finalDamageModifier = 1f;
             _guaranteeHit = false;
-            _knockbackForce = 10;
+            _knockBackModifier = 1f;
+            _knockBackForce = 10;
             _damageDealt = 0;
             _fired = false;
             _seekTarget = false;
@@ -231,7 +238,15 @@ namespace Game.Combat.Misc
             _damageDealt = _damage;
             _damageDealt = (int) (_damageDealt * _finalDamageModifier);
             ApplyConditions(hit);
+            CalculateKnockbackForce();
             hit.TakeShotDamage(this);
+        }
+
+        private void CalculateKnockbackForce()
+        {
+            float rainModifier = WeatherManager.CurrentWeather().Attributes.RainAmount;
+            _knockBackModifier += rainModifier;
+            _knockBackForce = 6.5f * Mathf.Pow(_damageDealt, 0.25f);
         }
 
         private void ApplyConditions(ITakeDamageInterface hit)
@@ -251,10 +266,10 @@ namespace Game.Combat.Misc
             OnHitAction += a;
         }
 
-        public void SetKnockbackForce(int force)
+        public void SetKnockbackForce(float forceModifier)
         {
-            Assert.IsTrue(force >= 0);
-            _knockbackForce = force;
+            Assert.IsTrue(forceModifier >= 0f && forceModifier <= 1f);
+            _knockBackModifier = forceModifier;
         }
 
         public void SetBurnChance(float chance)

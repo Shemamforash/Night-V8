@@ -65,7 +65,7 @@ namespace Game.Combat.Misc
             _timeSinceLastBurn = 0f;
             if (_burnTicks.Count == 0)
             {
-                HealthBarController().StartBurning();
+                HealthBarController()?.StartBurning();
                 if (this is EnemyBehaviour) PlayerCombat.Instance.Player.BrandManager.IncreaseBurnCount();
             }
 
@@ -180,7 +180,7 @@ namespace Game.Combat.Misc
         public virtual void TakeShotDamage(Shot shot)
         {
             _spriteFlash.FlashSprite();
-            MovementController.Knockback(shot.Direction(), shot._knockBackForce);
+            MovementController.Knockback(shot.Direction(), shot.GetKnockbackForce());
             float armourProtection = ArmourController.GetCurrentArmour() / 10f;
             float armourDamage = shot.DamageDealt() * armourProtection;
             float healthDamage = shot.DamageDealt() - armourDamage;

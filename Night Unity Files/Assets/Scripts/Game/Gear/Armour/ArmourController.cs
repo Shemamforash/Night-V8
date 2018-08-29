@@ -105,6 +105,7 @@ namespace Game.Gear.Armour
 
         public void AutoFillSlots(int range)
         {
+            range = 10;
             int plateOne, plateTwo;
             if (range > 5)
             {

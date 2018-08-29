@@ -231,6 +231,7 @@
             </e>
           </e>
         </e>
+        <e p="PauseMenuController.cs" t="Include" />
         <e p="PostProcessing" t="Include">
           <e p="Editor Resources" t="Include">
             <e p="Monitors" t="Include">
@@ -375,7 +376,7 @@
           <e p="Facilitating" t="Include">
             <e p="Audio" t="Include">
               <e p="GlobalAudioManager.cs" t="Include" />
-              <e p="ThunderClick.cs" t="Include" />
+              <e p="ThunderController.cs" t="Include" />
             </e>
             <e p="Campfire.cs" t="Include" />
             <e p="FireBurst.cs" t="Include" />
@@ -944,6 +945,7 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="UiBrandMenu.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

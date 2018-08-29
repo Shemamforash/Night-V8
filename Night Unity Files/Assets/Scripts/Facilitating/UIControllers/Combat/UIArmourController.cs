@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using Game.Gear.Armour;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -65,39 +66,24 @@ namespace Facilitating.UIControllers
             SetSlotsFilled(controller, true);
         }
 
-        public void Update()
-        {
-            _armourChunks.ForEach(a => a.Update());
-        }
-
         private class ArmourChunk
         {
-            private const float MaxFadeTime = 1f;
             private readonly GameObject _armourObject;
-            private float _currentFadeTime;
+            private readonly Image _image;
 
             public ArmourChunk(GameObject armourObject)
             {
                 _armourObject = armourObject;
-            }
-
-            public void Update()
-            {
-                if (_currentFadeTime <= 0) return;
-                float rValue = 1 - _currentFadeTime / MaxFadeTime;
-                _currentFadeTime -= Time.deltaTime;
-                if (_currentFadeTime < 0)
-                {
-                    _currentFadeTime = 0;
-                    rValue = 1;
-                }
-
-                _armourObject.GetComponent<Image>().color = new Color(1, rValue, rValue, 1);
+                _image = _armourObject.GetComponent<Image>();
             }
 
             public void Activate(bool damageWasTaken)
             {
-                if (damageWasTaken) _currentFadeTime = MaxFadeTime;
+                if (damageWasTaken)
+                {
+                    _image.color= Color.red;
+                    _image.DOBlendableColor(Color.white, 0.25f);
+                }
                 else _armourObject.GetComponent<Image>().color = Color.white;
             }
 

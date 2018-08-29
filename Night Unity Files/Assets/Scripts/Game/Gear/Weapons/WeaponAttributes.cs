@@ -43,7 +43,7 @@ namespace Game.Gear.Weapons
 
         public override XmlNode Save(XmlNode root)
         {
-            root.CreateChild("Class", (int)WeaponClassType);
+            root.CreateChild("Class", (int) WeaponClassType);
             root.CreateChild("Durability", _durability.CurrentValue());
             root = base.Save(root);
             return root;
@@ -76,7 +76,7 @@ namespace Game.Gear.Weapons
         {
             float damageModifier = 0.08f * _durability.CurrentValue();
             float fireRateModifier = 0.02f * _durability.CurrentValue();
-            float reloadModifier = -0.02f * _durability.CurrentValue() / 2f;
+            float reloadModifier = -0.01f * _durability.CurrentValue();
             float accuracyModifier = 0.01f * _durability.CurrentValue();
             _damageDurabilityModifier.SetFinalBonus(damageModifier);
             _fireRateDurabilityModifier.SetFinalBonus(fireRateModifier);

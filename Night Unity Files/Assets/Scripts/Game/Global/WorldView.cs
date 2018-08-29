@@ -35,7 +35,22 @@ namespace Game.Global
 
         private static void UpdateDescription()
         {
-            _environmentText.text = _timeString + ". It is " + _temperatureString + " and " + _weatherString + " in the " + _environmentString + ".";
+            int remainingTemples = WorldState.GetRemainingTemples();
+            string templeString;
+            switch (remainingTemples)
+            {
+                case 0:
+                    templeString = "No temples remain uncleansed, the gate is open.";
+                    break;
+                case 1:
+                    templeString = "Only one temple remains uncleansed.";
+                    break;
+                default:
+                    templeString = remainingTemples + " temples remain uncleansed";
+                    break;
+            }
+
+            _environmentText.text = _timeString + " in the " + _environmentString + ". It is " + _temperatureString + " and " + _weatherString + ". " + templeString;
         }
 
         private static readonly string[] resources = {"Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};

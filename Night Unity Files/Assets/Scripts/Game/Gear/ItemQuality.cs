@@ -2,10 +2,10 @@
 {
     public enum ItemQuality
     {
-        Rusted,
-        Worn,
+        Dark,
+        Dull,
+        Glowing,
         Shining,
-        Faultless,
         Radiant
     }
 }

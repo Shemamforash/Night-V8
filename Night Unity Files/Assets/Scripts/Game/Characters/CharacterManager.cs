@@ -177,7 +177,7 @@ namespace Game.Characters
         {
             Player driver = GenerateCharacter(CharacterClass.Wanderer);
 //            Player driver = GenerateCharacter(CharacterClass.Beast);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Worn, WeaponType.LMG);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Dark, WeaponType.LMG);
 //            WeaponGenerationTester.Test();
 //            Inscription.Test();
             driver.EquipWeapon(weapon);
@@ -209,16 +209,18 @@ namespace Game.Characters
         {
             CharacterAttributes attributes = playerCharacter.Attributes;
 
-            attributes.SetMax(AttributeType.Endurance, 10); //playerCharacter.CharacterTemplate.Endurance);
+            int max = 20;
+            
+            attributes.SetMax(AttributeType.Endurance, max); //playerCharacter.CharacterTemplate.Endurance);
             attributes.Get(AttributeType.Endurance).SetToMax();
 
-            attributes.SetMax(AttributeType.Strength, playerCharacter.CharacterTemplate.Strength);
+            attributes.SetMax(AttributeType.Strength, max);//playerCharacter.CharacterTemplate.Strength);
             attributes.Get(AttributeType.Strength).SetToMax();
 
-            attributes.SetMax(AttributeType.Perception, playerCharacter.CharacterTemplate.Perception);
+            attributes.SetMax(AttributeType.Perception, max);//playerCharacter.CharacterTemplate.Perception);
             attributes.Get(AttributeType.Perception).SetToMax();
 
-            attributes.SetMax(AttributeType.Willpower, playerCharacter.CharacterTemplate.Willpower);
+            attributes.SetMax(AttributeType.Willpower, max);//playerCharacter.CharacterTemplate.Willpower);
             attributes.Get(AttributeType.Willpower).SetToMax();
         }
 

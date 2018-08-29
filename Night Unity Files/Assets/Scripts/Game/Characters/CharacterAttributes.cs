@@ -60,9 +60,10 @@ namespace Game.Characters
                 if (a.ToString() != attributeType) continue;
                 return a;
             }
+
             throw new ArgumentOutOfRangeException();
         }
-        
+
         private static void LoadAttributeTypes()
         {
             if (_attributeTypes.Count != 0) return;
@@ -111,7 +112,7 @@ namespace Game.Characters
 
         public float CalculateAdrenalineRecoveryRate() => Mathf.Pow(1.05f, Val(AttributeType.Perception) + Val(AttributeType.AdrenalineRechargeBonus));
 
-        public float CalculateSpeed() => 3f + (Val(AttributeType.Endurance) - 1f) * 0.3f;
+        public float CalculateSpeed() => 5f + Val(AttributeType.Endurance) * 0.25f;
 
         public float CalculateSkillCooldownModifier() => (float) Math.Pow(0.95f, Val(AttributeType.Willpower)) + Val(AttributeType.SkillRechargeBonus);
 
@@ -147,7 +148,7 @@ namespace Game.Characters
                     thirstTemperatureModifier = 1.25f;
                     hungerTemperatureModifier = 0.75f;
                     break;
-                case TemperatureCategory.Boiling:
+                case TemperatureCategory.Burning:
                     thirstTemperatureModifier = 1.5f;
                     hungerTemperatureModifier = 0.5f;
                     break;
@@ -257,6 +258,30 @@ namespace Game.Characters
         {
             float newStrength = Mathf.CeilToInt(health / PlayerHealthChunkSize);
             SetVal(AttributeType.Strength, newStrength);
+        }
+
+        public void UnlockWeaponSkillTwo(WeaponType weaponType)
+        {
+            WeaponSkillTwoUnlocks.Add(weaponType);
+            UiBrandMenu.ShowWeaponSkillUnlock(weaponType, _player.EquippedWeapon.WeaponSkillTwo);
+        }
+
+        public void UnlockWeaponSkillOne(WeaponType weaponType)
+        {
+            WeaponSkillOneUnlocks.Add(weaponType);
+            UiBrandMenu.ShowWeaponSkillUnlock(weaponType, _player.EquippedWeapon.WeaponSkillOne);
+        }
+
+        public void UnlockCharacterSkillOne()
+        {
+            SkillOneUnlocked = true;
+            UiBrandMenu.ShowCharacterSkillUnlock(_player.CharacterSkillOne);
+        }
+
+        public void UnlockCharacterSkillTwo()
+        {
+            SkillTwoUnlocked = true;
+            UiBrandMenu.ShowCharacterSkillUnlock(_player.CharacterSkillTwo);
         }
     }
 }

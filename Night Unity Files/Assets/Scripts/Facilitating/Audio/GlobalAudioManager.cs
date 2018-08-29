@@ -10,46 +10,45 @@ namespace Facilitating.Audio
 {
     public class GlobalAudioManager : MonoBehaviour, IPersistenceTemplate
     {
-        private static float _volume;
-        public Slider MasterSlider;
-        private static AudioMixer _masterMixer;
+        private static float _masterVolume, _modifiedVolume;
+        private static AudioMixer _audioMixer;
 
         public void Load(XmlNode root)
         {
             XmlNode node = root.GetNode("SoundSettings");
-            _volume = node.FloatFromNode(nameof(_volume));
-            Initialise();
+            _masterVolume = node.FloatFromNode(nameof(_masterVolume));
         }
 
         public XmlNode Save(XmlNode root)
         {
             XmlNode node = root.CreateChild("SoundSettings");
-            node.CreateChild(nameof(_volume), _volume);
+            node.CreateChild(nameof(_masterVolume), _masterVolume);
             return node;
         }
 
         public static float Volume()
         {
-            return _volume;
+            return _masterVolume;
         }
 
-        private static float NormalisedVolumeToAttentuation(float volume)
+        private static float NormalisedVolumeToAttenuation(float volume)
         {
-            return 1 - Mathf.Sqrt(volume) * -80f;
+            if (volume == 0) volume = 0.001f;
+            return Mathf.Log(volume) * 20f;
         }
 
-        public static void SetVolume(float volume)
+        public static void SetMasterVolume(float volume)
         {
-            _volume = volume;
-            if(_masterMixer == null) _masterMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
-            _masterMixer.SetFloat("Master", NormalisedVolumeToAttentuation(_volume));
+            _masterVolume = volume;
+            if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
+            _audioMixer.SetFloat("Master", NormalisedVolumeToAttenuation(_masterVolume));
         }
 
-        private void Initialise()
+        public static void SetModifiedVolume(float volume)
         {
-            MasterSlider.onValueChanged.AddListener(SetVolume);
-            MasterSlider.value = _volume;
-            SetVolume(_volume);
+            _modifiedVolume = volume;
+            if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
+            _audioMixer.SetFloat("Modified", NormalisedVolumeToAttenuation(_modifiedVolume));
         }
     }
 }

@@ -80,19 +80,19 @@ namespace Game.Global
                     WorldState.HomeInventory().AddBuilding(new EssenceFilter());
                     break;
                 case "Leather Plate":
-                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Rusted), 1);
+                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Dark), 1);
                     break;
                 case "Reinforced Leather Plate":
-                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Worn), 1);
+                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Dull), 1);
                     break;
                 case "Metal Plate":
-                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Shining), 1);
+                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Glowing), 1);
                     break;
                 case "Alloy Plate":
                     WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Radiant), 1);
                     break;
                 case "Living Metal Plate":
-                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Faultless), 1);
+                    WorldState.HomeInventory().Move(ArmourPlate.Create(ItemQuality.Shining), 1);
                     break;
                 case "Ice":
                     WorldState.HomeInventory().IncrementResource(ProductName, ProductQuantity);

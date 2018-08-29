@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
-using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
@@ -37,11 +36,6 @@ namespace Game.Combat.Player
             s._skillValue = value;
         }
 
-        public int Cooldown()
-        {
-            return _skillValue.Cooldown;
-        }
-
         public string Description()
         {
             return _skillValue.Description;
@@ -55,11 +49,6 @@ namespace Game.Combat.Player
                 new SkillValue(skillNode);
 
             _loaded = true;
-        }
-
-        protected static Characters.Player Player()
-        {
-            return PlayerCombat.Instance.Player;
         }
 
         protected static EnemyBehaviour Target()
@@ -88,7 +77,7 @@ namespace Game.Combat.Player
         public bool Activate(bool freeSkill)
         {
             if (Target() == null && _skillValue.NeedsTarget) return false;
-            if (!freeSkill && !PlayerCombat.Instance.ConsumeAdrenaline(Cooldown())) return false;
+            if (!freeSkill && !PlayerCombat.Instance.ConsumeAdrenaline(AdrenalineCost())) return false;
             if (_skillValue.AppliesToMagazine) PlayerCombat.Instance.OnFireActions.Add(MagazineEffect);
             else InstantEffect();
             UIMagazineController.UpdateMagazineUi();
@@ -117,7 +106,7 @@ namespace Game.Combat.Player
 
         private class SkillValue
         {
-            public readonly int Cooldown;
+            public readonly int AdrenalineCost;
             public readonly string Description;
             public readonly bool NeedsTarget;
             public readonly bool AppliesToMagazine;
@@ -125,12 +114,17 @@ namespace Game.Combat.Player
             public SkillValue(XmlNode skillNode)
             {
                 string name = skillNode.StringFromNode("Name");
-                Cooldown = skillNode.IntFromNode("Cooldown");
+                AdrenalineCost = skillNode.IntFromNode("Cooldown");
                 Description = skillNode.StringFromNode("Description");
                 NeedsTarget = skillNode.BoolFromNode("RequiresTarget");
                 AppliesToMagazine = skillNode.BoolFromNode("AppliesToMagazine");
                 _skillValues[name] = this;
             }
+        }
+
+        public int AdrenalineCost()
+        {
+            return _skillValue.AdrenalineCost;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Game.Combat.Misc
 {
     public class SkillBar : MonoBehaviour
     {
+        private const float BaseSkillCooldown = 5f;
         private const int NoSlots = 4;
         private static Skill[] _skills;
         private static List<int> _skillsLocked;
@@ -82,7 +83,7 @@ namespace Game.Combat.Misc
             CooldownControllers[slot].SetVisible(skill != null);
             if (skill == null) return;
             CooldownControllers[slot].Text(skill.Name);
-            CostControllers[slot].SetCost(skill.Cooldown());
+            CostControllers[slot].SetCost(skill.AdrenalineCost());
         }
 
         private static bool TryLockSkill(int skillNo)
@@ -106,7 +107,8 @@ namespace Game.Combat.Misc
             if (TryLockSkill(skillNo)) return;
             bool freeSkill = IsSkillFree();
             if (!_skills[skillNo].Activate(freeSkill)) return;
-            _skillsCooldown.Duration = _skills[skillNo].Cooldown() * _cooldownModifier;
+            Debug.Log(_cooldownModifier);
+            _skillsCooldown.Duration = BaseSkillCooldown * _cooldownModifier;
             _skillsCooldown.Start();
         }
     }

@@ -35,6 +35,11 @@ namespace Game.Global
         public static int Seed = -1;
         private static int _templesActivated;
 
+        public static int GetRemainingTemples()
+        {
+            return EnvironmentManager.CurrentEnvironment.Temples - _templesActivated;
+        }
+        
         public void Awake()
         {
             Cursor.visible = false;

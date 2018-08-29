@@ -1,11 +1,11 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
- using DG.Tweening;
- using Facilitating.UIControllers;
- using Game.Characters;
+using DG.Tweening;
+using Facilitating.UIControllers;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -140,9 +140,7 @@ namespace Game.Combat.Enemies
         public override void TakeShotDamage(Shot shot)
         {
             base.TakeShotDamage(shot);
-            CombatManager.IncreaseDamageDealt(shot.DamageDealt());
-            PlayerCombat.Instance.DamageDealtSinceMarkStarted += shot.DamageDealt();
-            EnemyUi.Instance().RegisterHit(this);
+            PlayerCombat.Instance.UpdateAdrenaline(shot.DamageDealt());
         }
 
         public override void Kill()

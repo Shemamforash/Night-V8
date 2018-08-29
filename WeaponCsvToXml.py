@@ -135,15 +135,16 @@ class WeatherImporter(XMLWriter):
         write_single_value(self, "Fog", get_value(self, "F", row, "0"))
         write_single_value(self, "Ice", get_value(self, "G", row, "0"))
         write_single_value(self, "Duration", get_value(self, "H", row, "0"))
+        write_single_value(self, "Thunder", get_value(self, "I", row, "0"))
         write_tag(self, "Particles", self.read_particles, [row])
 
     def read_particles(self, row):
-        write_single_value(self, "Rain", get_value(self, "I", row, "0"))
-        write_single_value(self, "Fog", get_value(self, "J", row, "0"))
-        write_single_value(self, "Dust", get_value(self, "K", row, "0"))
-        write_single_value(self, "Hail", get_value(self, "L", row, "0"))
-        write_single_value(self, "Wind", get_value(self, "M", row, "0"))
-        write_single_value(self, "Sun", get_value(self, "N", row, "0"))
+        write_single_value(self, "Rain", get_value(self, "J", row, "0"))
+        write_single_value(self, "Fog", get_value(self, "K", row, "0"))
+        write_single_value(self, "Dust", get_value(self, "L", row, "0"))
+        write_single_value(self, "Hail", get_value(self, "M", row, "0"))
+        write_single_value(self, "Wind", get_value(self, "N", row, "0"))
+        write_single_value(self, "Sun", get_value(self, "O", row, "0"))
 
 
 class EnvironmentImporter(XMLWriter):
@@ -273,20 +274,6 @@ class SkillImporter(XMLWriter):
         write_single_value(self, "Description", get_value(self, "G", row))
 
 
-class TraitImporter(XMLWriter):
-    def __init__(self):
-        super(TraitImporter, self).__init__("Traits", "Traits")
-        write_tag(self, "Traits", self.read_traits)
-
-    def read_traits(self):
-        for row in range(2, 47):
-            write_tag(self, "Skill", self.read_trait, [row])
-
-    def read_trait(self, row):
-        write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "Requirement", get_value(self, "C", row))
-
-
 def write_tag(xml_writer, tag_name, nested_method=None, args=None, parameters=[], values=[]):
     tag = "<" + tag_name
     for parameter_value in zip(parameters, values):
@@ -319,10 +306,9 @@ def write_single_value(xml_writer, stat_name, value):
 WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
-# EnemyImporter()
+EnemyImporter()
 # RecipeImporter()
 # ResourceImporter()
 # InscriptionImporter()
-# SkillImporter()
-# TraitImporter()
+SkillImporter()
 # EnvironmentImporter()
