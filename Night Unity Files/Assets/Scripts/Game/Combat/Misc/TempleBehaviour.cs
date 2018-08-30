@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Game.Combat.Enemies;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
@@ -117,8 +118,9 @@ public class TempleBehaviour : BasicShrineBehaviour
             }
 
             Cell cell = PathingGrid.GetCellNearMe(transform.position, 5, 2);
-            CombatManager.SpawnEnemy(enemyTypesToSpawn.RemoveRandom(), cell.Position);
-
+            EnemyBehaviour enemy = CombatManager.SpawnEnemy(enemyTypesToSpawn.RemoveRandom(), cell.Position);
+            enemy.GetComponent<Split>()?.SetShrine(this);
+            AddEnemy(enemy);
             nextEnemy *= 0.95f;
             currentTime = nextEnemy;
             yield return null;
@@ -136,22 +138,19 @@ public class TempleBehaviour : BasicShrineBehaviour
             }
 
             EnemyBehaviour newBoss = BossShrine.GenerateBoss(transform.position);
+            newBoss.GetComponent<Split>()?.SetShrine(this);
+            AddEnemy(newBoss);
             _bosses.Add(newBoss);
-            StartCoroutine(WaitForBossToDie(newBoss));
             --currentBossCount;
         }
+
+        OnEnemiesDead();
+        StartCoroutine(CheckAllEnemiesDead());
     }
 
-    private IEnumerator WaitForBossToDie(EnemyBehaviour boss)
+    private IEnumerator CheckAllEnemiesDead()
     {
-        while (!boss.IsDead()) yield return null;
-        --_bossCount;
-        CheckAllBossesDead();
-    }
-
-    private void CheckAllBossesDead()
-    {
-        if (_bossCount != 0) return;
+        while (!EnemiesDead()) yield return null;
         End();
         bool templeComplete = WorldState.ActivateTemple();
         CombatManager.ExitCombat(!templeComplete);

@@ -13,8 +13,8 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         protected override void Attack()
         {
-            float angle = AdvancedMaths.AngleFromUp(transform.position, PlayerCombat.Instance.transform.position) + 80f;
-            PushController.Create(transform.position, angle + 80f);
+            float angle = AdvancedMaths.AngleFromUp(transform.position, Enemy.GetTarget().transform.position);
+            PushController.Create(transform.position, angle);
         }
     }
 }

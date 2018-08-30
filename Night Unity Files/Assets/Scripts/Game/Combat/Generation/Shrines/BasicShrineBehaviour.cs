@@ -10,7 +10,7 @@ namespace Game.Combat.Generation.Shrines
         private readonly List<EnemyBehaviour> _enemiesAlive = new List<EnemyBehaviour>();
         private static GameObject _disappearPrefab;
 
-        protected void AddEnemy(EnemyBehaviour b)
+        public void AddEnemy(EnemyBehaviour b)
         {
             _enemiesAlive.Add(b);
         }

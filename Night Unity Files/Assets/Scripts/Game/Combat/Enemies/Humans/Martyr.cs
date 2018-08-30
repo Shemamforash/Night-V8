@@ -1,5 +1,4 @@
 ﻿using Game.Combat.Misc;
-using Game.Combat.Player;
 
 namespace Game.Combat.Enemies.Humans
 {
@@ -32,7 +31,10 @@ namespace Game.Combat.Enemies.Humans
         {
             _detonated = true;
             SetActionText("Detonating");
-            Explosion.CreateExplosion(transform.position, 50, 2).Detonate();
+            SkillAnimationController.Create("Martyr", 2f, () =>
+            {
+                Explosion.CreateExplosion(transform.position, 50, 2).InstantDetonate();
+            });
         }
     }
 }

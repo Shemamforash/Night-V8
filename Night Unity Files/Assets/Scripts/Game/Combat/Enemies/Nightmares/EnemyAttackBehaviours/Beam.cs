@@ -4,11 +4,14 @@
     {
         private const float BeamWidth = 0.5f;
         private BeamController _beamController;
-        
+
         protected override void Attack()
         {
-            _beamController = BeamController.Create(transform);
-            _beamController.SetBeamWidth(BeamWidth);
+            SkillAnimationController.Create("Beam", 1f, () =>
+            {
+                _beamController = BeamController.Create(transform);
+                _beamController.SetBeamWidth(BeamWidth);
+            });
         }
 
         private void OnDestroy()

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Generation;
+using Game.Combat.Player;
 using Game.Exploration.Environment;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
@@ -34,7 +36,7 @@ public abstract class ContainerController
         return cb;
     }
 
-    public Inventory Inventory()
+    private Inventory Inventory()
     {
         if (!EnvironmentManager.BelowFreezing()) return _inventory;
         int waterQuantity = _inventory.GetResourceQuantity("Water");
@@ -46,6 +48,24 @@ public abstract class ContainerController
 
     public void Take()
     {
+        int resourceBonus = (int) PlayerCombat.Instance.Player.Attributes.Val(AttributeType.ResourceFindBonus);
+        if (resourceBonus != 0)
+        {
+            Inventory().Contents().ForEach(i =>
+            {
+                ResourceTemplate resourceTemplate = i.Template;
+                if (resourceTemplate == null) return;
+                if (resourceTemplate.ResourceType != "Resource") return;
+                if (resourceBonus > 0) i.Increment(resourceBonus);
+                else
+                {
+                    int quantity = i.Quantity();
+                    if (quantity - resourceBonus <= 0) resourceBonus = quantity - 1;
+                    i.Decrement(resourceBonus);
+                }
+            });
+        }
+
         Inventory().MoveAllResources(CharacterManager.SelectedCharacter.Inventory());
         _containerBehaviour.StartCoroutine(_containerBehaviour.Fade());
     }

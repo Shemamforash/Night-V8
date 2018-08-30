@@ -5,8 +5,7 @@ namespace Game.Combat.Enemies.Humans
 {
     public class Warlord : ArmedBehaviour
     {
-        private float _reinforceCallTime;
-        private float _reinforceDuration = 5f;
+        private const float ReinforceCallTime = 3f;
 
         public override void Initialise(Enemy enemy)
         {
@@ -19,20 +18,16 @@ namespace Game.Combat.Enemies.Humans
                     || normalHealthBefore > 0.5f && currentNormalHealth <= 0.5f
                     || normalHealthBefore > 0.75f && currentNormalHealth <= 0.75f)
                 {
-                    CurrentAction = SummonEnemies;
-                    _reinforceCallTime = _reinforceDuration;
+                    CurrentAction = null;
+                    SetActionText("Reinforcing");
+                    SkillAnimationController.Create("Warlord", ReinforceCallTime, SummonEnemies);
                 }
             });
         }
 
         private void SummonEnemies()
         {
-            SetActionText("Reinforcing");
-            _reinforceCallTime -= Time.deltaTime;
-            if (!(_reinforceCallTime <= 0)) return;
-
             CombatManager.QueueEnemyToAdd(EnemyType.Sentinel);
-            TryFire();
             switch (Random.Range(0, 4))
             {
                 case 0:
@@ -48,6 +43,7 @@ namespace Game.Combat.Enemies.Humans
                     CombatManager.QueueEnemyToAdd(EnemyType.Medic);
                     break;
             }
+            TryFire();
         }
     }
 }

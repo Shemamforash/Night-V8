@@ -1,5 +1,6 @@
 ﻿using Game.Combat.Misc;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.Humans
 {
@@ -17,16 +18,13 @@ namespace Game.Combat.Enemies.Humans
         {
             _firing = true;
             FacePlayer = true;
-            CurrentAction = () =>
-            {
-                Shot powerShot = Shot.Create(this);
-                powerShot.LeaveFireTrail();
-                powerShot.SetBurnChance(1);
-                powerShot.Fire();
-                ResetCooldown();
-                TryFire();
-                _firing = false;
-            };
+            Shot powerShot = Shot.Create(this);
+            powerShot.LeaveFireTrail();
+            powerShot.SetBurnChance(1);
+            powerShot.Fire();
+            ResetCooldown();
+            TryFire();
+            _firing = false;
         }
 
         protected override void OnAlert()
@@ -40,7 +38,10 @@ namespace Game.Combat.Enemies.Humans
             base.Update();
             if (_firing || !Alerted) return;
             _powerShotCooldown -= Time.deltaTime;
-            if (_powerShotCooldown < 0) FirePowerShot();
+            if (_powerShotCooldown > 0) return;
+            SetActionText("Readying powershot");
+            CurrentAction = null;
+            SkillAnimationController.Create("Sniper", 1f, FirePowerShot);
         }
     }
 }

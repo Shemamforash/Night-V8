@@ -244,13 +244,22 @@ namespace Game.Characters
 
         public void Drink()
         {
-            Get(AttributeType.Thirst).Decrement();
+            int thirstLoss = (int) Val(AttributeType.ThirstBonus) + 1;
+            int hungerGain = (int) Val(AttributeType.StarvingWaterBonus);
+            CharacterAttribute thirst = Get(AttributeType.Thirst);
+            thirst.Decrement(thirstLoss);
+            thirst.Increment(hungerGain);
+            Get(AttributeType.Thirst).Decrement(thirstLoss);
             WorldEventManager.GenerateEvent(new CharacterMessage("I needed that", _player));
         }
 
         public void Eat()
         {
-            Get(AttributeType.Hunger).Decrement();
+            int hungerLoss = (int) Val(AttributeType.HungerBonus) + 1;
+            int thirstGain = (int) Val(AttributeType.DehydratingFoodBonus);
+            CharacterAttribute hunger = Get(AttributeType.Hunger);
+            hunger.Decrement(hungerLoss);
+            hunger.Increment(thirstGain);
             WorldEventManager.GenerateEvent(new CharacterMessage("That should stave off starvation, at least for a while", _player));
         }
 

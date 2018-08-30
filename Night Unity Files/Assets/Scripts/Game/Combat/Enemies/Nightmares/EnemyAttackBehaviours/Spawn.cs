@@ -20,14 +20,17 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         protected override void Attack()
         {
-            int enemiesToSpawn = Random.Range(_countMin + 1, _countMax + 1);
-            List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(Enemy.CurrentCell(), enemiesToSpawn, 2f, 0.5f);
-            enemiesToSpawn = cellsNearMe.Count;
-            for (int i = 0; i < enemiesToSpawn; ++i)
+            SkillAnimationController.Create("Spawn", 2f, () =>
             {
-                EnemyBehaviour enemy = CombatManager.SpawnEnemy(_spawnType, cellsNearMe[i].Position);
-                enemy.Shield.Activate(2f);
-            }
+                int enemiesToSpawn = Random.Range(_countMin + 1, _countMax + 1);
+                List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(Enemy.CurrentCell(), enemiesToSpawn, 2f, 0.5f);
+                enemiesToSpawn = cellsNearMe.Count;
+                for (int i = 0; i < enemiesToSpawn; ++i)
+                {
+                    EnemyBehaviour enemy = CombatManager.SpawnEnemy(_spawnType, cellsNearMe[i].Position);
+                    enemy.Shield.Activate(2f);
+                }
+            });
         }
     }
 }

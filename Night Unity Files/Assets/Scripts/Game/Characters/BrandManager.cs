@@ -654,7 +654,7 @@ namespace Game.Characters
 
             protected override void OnSucceed()
             {
-                Player.Attributes.ReloadOnEmptyMag = true;
+                Player.Attributes.ReloadOnLastRound = true;
             }
 
             protected override void OnFail()
@@ -676,7 +676,7 @@ namespace Game.Characters
 
             protected override void OnSucceed()
             {
-                Player.Attributes.ReloadOnLastRound = true;
+                Player.Attributes.ReloadOnEmptyMag = true;
             }
 
             protected override void OnFail()

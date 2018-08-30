@@ -11,17 +11,14 @@ namespace Game.Combat.Enemies.Humans
         private int _damageTaken;
         private bool _throwing;
 
-        private Action ThrowGrenade()
+        private void ThrowGrenade()
         {
             _throwing = true;
-            float throwDuration = 1f;
             SetActionText("Throwing Grenade");
-            return () =>
+            CurrentAction = null;
+            SkillAnimationController.Create("Witch", 1f, () =>
             {
-                throwDuration -= Time.deltaTime;
-                if (throwDuration > 0) return;
                 Vector2 currentPosition = transform.position;
-                //todo get player
                 Vector2 targetPosition = GetTarget().transform.position;
                 switch (Random.Range(0, 3))
                 {
@@ -39,7 +36,7 @@ namespace Game.Combat.Enemies.Humans
                 ResetCooldown();
                 _throwing = false;
                 TryFire();
-            };
+            });
         }
 
         private void ResetCooldown()
@@ -59,7 +56,7 @@ namespace Game.Combat.Enemies.Humans
             if (_throwing || !Alerted) return;
             _cooldownTime -= Time.deltaTime;
             if (_cooldownTime > 0) return;
-            CurrentAction = ThrowGrenade();
+            ThrowGrenade();
         }
     }
 }

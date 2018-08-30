@@ -6,10 +6,6 @@ namespace Game.Combat.Enemies.Humans
 {
     public class Medic : ArmedBehaviour
     {
-        private const int HealAmount = 10;
-        private const int HealTicks = 5;
-        private const float HealDuration = 2f;
-        private const float HealInterval = HealDuration / HealTicks;
         private static GameObject _healPrefab;
         private EnemyBehaviour _healTarget;
 
@@ -50,25 +46,21 @@ namespace Game.Combat.Enemies.Humans
 
         private void Heal()
         {
-            float age = 0f;
-            int currentTick = 1;
             SetActionText("Healing " + _healTarget.Enemy.Name);
-            CurrentAction = () =>
+            SkillAnimationController.Create("Medic", 1.5f, () =>
             {
-                age += Time.deltaTime;
-                if (_healTarget == null || currentTick == HealTicks)
+                CombatManager.GetEnemiesInRange(transform.position, 2f).ForEach(e =>
                 {
-                    TryFire();
-                    return;
-                }
-
-                if (age < currentTick * HealInterval) return;
-                ++currentTick;
-                _healTarget.HealthController.Heal(HealAmount);
-                GameObject healObject = Instantiate(_healPrefab);
-                healObject.transform.position = _healTarget.transform.position;
-                healObject.transform.localScale = Vector3.one;
-            };
+                    EnemyBehaviour enemy = e as EnemyBehaviour;
+                    if (enemy == null) return;
+                    int healAmount = (int) (enemy.HealthController.GetMaxHealth() * 0.2f);
+                    enemy.HealthController.Heal(healAmount);
+                    GameObject healObject = Instantiate(_healPrefab);
+                    healObject.transform.position = _healTarget.transform.position;
+                    healObject.transform.localScale = Vector3.one;
+                });
+                TryFire();
+            });
         }
 
         public bool HasTarget()

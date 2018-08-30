@@ -159,7 +159,7 @@ namespace Game.Exploration.Ui
         {
             _audioSource.pitch = Random.Range(0.75f, 1.25f);
             _audioSource.DOFade(1, 1);
-            _shadow.DOColor(new Color(0.1f, 0.1f, 0.1f, 1f), 1f);
+            _shadow.DOColor(new Color(0.3f, 0.3f, 0.3f, 1f), 1f);
             _icon.DOColor(_iconColor, 1f);
             _ring1.DOColor(_ring1Colour, 1f);
             _ring2.DOColor(_ring2Colour, 1f);

@@ -16,8 +16,11 @@ public class PushController : MonoBehaviour
 
     private void SetArcSize(float rotation, float arcSize)
     {
-        transform.rotation = Quaternion.Euler(0, 0, rotation);
         ParticleSystem.ShapeModule shape = _pushParticles.shape;
+        float offset = arcSize / 2f + 90;
+        rotation = offset - rotation;
+        rotation = 180 - rotation;
+        shape.rotation = new Vector3(0, 0, rotation);
         shape.arc = arcSize;
         int emitCount = (int) (3 * arcSize);
         _pushParticles.Emit(emitCount);
