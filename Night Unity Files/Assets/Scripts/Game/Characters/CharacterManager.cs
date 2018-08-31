@@ -209,18 +209,22 @@ namespace Game.Characters
         {
             CharacterAttributes attributes = playerCharacter.Attributes;
 
+            attributes.SetMax(AttributeType.Endurance, playerCharacter.CharacterTemplate.Endurance);
+            attributes.SetMax(AttributeType.Strength, playerCharacter.CharacterTemplate.Strength);
+            attributes.SetMax(AttributeType.Perception, playerCharacter.CharacterTemplate.Perception);
+            attributes.SetMax(AttributeType.Willpower, playerCharacter.CharacterTemplate.Willpower);
+
+#if UNITY_EDITOR
             int max = 20;
-            
-            attributes.SetMax(AttributeType.Endurance, max); //playerCharacter.CharacterTemplate.Endurance);
+            attributes.SetMax(AttributeType.Endurance, max);
+            attributes.SetMax(AttributeType.Strength, max);
+            attributes.SetMax(AttributeType.Perception, max);
+            attributes.SetMax(AttributeType.Willpower, max);
+#endif
+
             attributes.Get(AttributeType.Endurance).SetToMax();
-
-            attributes.SetMax(AttributeType.Strength, max);//playerCharacter.CharacterTemplate.Strength);
             attributes.Get(AttributeType.Strength).SetToMax();
-
-            attributes.SetMax(AttributeType.Perception, max);//playerCharacter.CharacterTemplate.Perception);
             attributes.Get(AttributeType.Perception).SetToMax();
-
-            attributes.SetMax(AttributeType.Willpower, max);//playerCharacter.CharacterTemplate.Willpower);
             attributes.Get(AttributeType.Willpower).SetToMax();
         }
 

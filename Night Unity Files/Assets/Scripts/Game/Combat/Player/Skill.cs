@@ -24,8 +24,6 @@ namespace Game.Combat.Player
             ReadSkillValue(this);
         }
 
-        //todo read cost and cooldown from file
-
         private static void ReadSkillValue(Skill s)
         {
             LoadTemplates();

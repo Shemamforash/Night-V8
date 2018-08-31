@@ -18,7 +18,6 @@
         EssenceLossBonus,
         EssenceRecoveryBonus,
 
-        MentalBreakBonus,
         WillpowerLossBonus,
         
         ReloadFailChance,

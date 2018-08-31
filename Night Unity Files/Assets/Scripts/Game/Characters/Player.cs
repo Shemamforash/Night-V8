@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
@@ -13,7 +11,6 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 
 namespace Game.Characters
 {
@@ -40,6 +37,15 @@ namespace Game.Characters
         private bool _storyUnlocked;
         private string _currentStoryLine;
 
+        private const int WillPowerGainTarget = 25;
+        private int _totalKills;
+        private bool _countKills = false;
+        
+        public bool CanPerformAction()
+        {
+            return Attributes.Val(AttributeType.Willpower) > 0;
+        }
+        
         public override XmlNode Save(XmlNode doc)
         {
             doc = base.Save(doc);
@@ -49,6 +55,8 @@ namespace Game.Characters
             doc.CreateChild("StoryProgress", _storyProgress);
             doc.CreateChild("TimeAlive", _timeAlive);
             doc.CreateChild("CharacterClass", CharacterTemplate.CharacterClass.ToString());
+            doc.CreateChild("TotalKills", _totalKills);
+            doc.CreateChild("CountKills", _countKills);
             ((BaseCharacterAction)States.GetCurrentState()).Save(doc);
             _effects.ForEach(e => e.Save(doc));
             return doc;
@@ -62,6 +70,8 @@ namespace Game.Characters
             _storyUnlocked = root.BoolFromNode("StoryUnlocked");
             _storyProgress = root.IntFromNode("StoryProgress");
             _timeAlive = root.IntFromNode("TimeAlive");
+            _totalKills = root.IntFromNode("TotalKills");
+            _countKills = root.BoolFromNode("CountKills");
             //todo load state
             foreach (XmlNode effectNode in root.SelectNodes("Effect"))
             {
@@ -253,7 +263,13 @@ namespace Game.Characters
         private readonly Dictionary<WeaponType, int> _weaponKills = new Dictionary<WeaponType, int>();
         private int _timeSurvived;
 
-        public void IncreaseWeaponKills()
+        public void IncreaseKills()
+        {
+            IncreaseTotalKills();
+            IncreaseWeaponKills();
+        }
+
+        private void IncreaseWeaponKills()
         {
             WeaponType weaponType = EquippedWeapon.WeaponType();
             if (!_weaponKills.ContainsKey(weaponType))
@@ -272,6 +288,21 @@ namespace Game.Characters
                     Attributes.UnlockWeaponSkillTwo(weaponType);
                     break;
             }
+        }
+
+        public void StartCountingKills()
+        {
+            _countKills = true;
+        }
+        
+        private void IncreaseTotalKills()
+        {
+
+            if (!_countKills) return;
+            ++_totalKills;
+            if (_totalKills < WillPowerGainTarget) return;
+            _totalKills = 0;
+            Attributes.Get(AttributeType.Willpower).Increment();
         }
 
         public bool CanMeditate()

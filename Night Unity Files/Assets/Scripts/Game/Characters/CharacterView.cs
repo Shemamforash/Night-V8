@@ -30,6 +30,7 @@ namespace Game.Characters
         private UIConditionController _thirstControllerSimple, _hungerControllerSimple;
         private UIConditionController _thirstControllerDetailed, _hungerControllerDetailed;
         private EnhancedButton _exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton;
+        private EnhancedText _exploreText, _craftText;
         private List<EnhancedButton> _buttons;
         private Transform _actionList;
         private TextMeshProUGUI _detailedCurrentActionText;
@@ -66,13 +67,29 @@ namespace Game.Characters
 
         public void Update()
         {
+            UpdateAttributes();
+            UpdateBrands();
+            UpdateActionButtons();
+        }
+
+        private void UpdateAttributes()
+        {
             _attributeControllerSimple.UpdateAttributes(_player);
             _attributeControllerDetailed.UpdateAttributes(_player);
             _thirstControllerDetailed.UpdateThirst(_player);
             _hungerControllerDetailed.UpdateHunger(_player);
             _thirstControllerSimple.UpdateThirst(_player);
             _hungerControllerSimple.UpdateHunger(_player);
-            UpdateBrands();
+        }
+
+        private void UpdateActionButtons()
+        {
+            bool canPerformAction = _player.CanPerformAction();
+            if (canPerformAction == _exploreButton.enabled) return;
+            _exploreButton.enabled = canPerformAction;
+            _craftButton.enabled = canPerformAction;
+            _exploreText.SetStrikeThroughActive(!canPerformAction);
+            _craftText.SetStrikeThroughActive(!canPerformAction);
         }
 
         private void CacheSimpleViewElements()
@@ -94,7 +111,9 @@ namespace Game.Characters
             _detailedCurrentActionText = FindInDetailedView<TextMeshProUGUI>("Current Action");
             _currentActionSliderDetailed = FindInDetailedView<Slider>("Slider");
             _exploreButton = FindInDetailedView<EnhancedButton>("Explore");
+            _exploreText = _exploreButton.GetComponent<EnhancedText>();
             _craftButton = FindInDetailedView<EnhancedButton>("Craft");
+            _craftText = _craftButton.GetComponent<EnhancedText>();
             _consumeButton = FindInDetailedView<EnhancedButton>("Consume");
             _meditateButton = FindInDetailedView<EnhancedButton>("Meditate");
             _sleepButton = FindInDetailedView<EnhancedButton>("Sleep");
@@ -164,7 +183,7 @@ namespace Game.Characters
             {
                 EnhancedButton activeButton = activeButtons[i];
                 activeButton.SetOnDownAction(null);
-                TextMeshProUGUI textObject = activeButton.gameObject.FindChildWithName<TextMeshProUGUI>("Text");
+                TextMeshProUGUI textObject = activeButton.GetComponent<TextMeshProUGUI>();
                 string text = textObject.text;
                 text = text.Replace("<s>", "");
                 text = text.Replace("</s>", "");
@@ -178,7 +197,7 @@ namespace Game.Characters
             List<EnhancedButton> inactiveButtons = _buttons.FindAll(b => !b.enabled);
             inactiveButtons.ForEach(b =>
             {
-                TextMeshProUGUI textObject = b.gameObject.FindChildWithName<TextMeshProUGUI>("Text");
+                TextMeshProUGUI textObject = b.gameObject.GetComponent<TextMeshProUGUI>();
                 string text = textObject.text;
                 text = "<s>" + text + "</s>";
                 textObject.text = text;

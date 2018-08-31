@@ -141,27 +141,24 @@ namespace Game.Combat.Enemies
         {
             base.TakeShotDamage(shot);
             PlayerCombat.Instance.UpdateAdrenaline(shot.DamageDealt());
+            if (HealthController.GetCurrentHealth() != 0) return;
+            PlayerCombat.Instance.Player.IncreaseKills();
         }
 
         public override void Kill()
         {
             base.Kill();
-            Characters.Player player = ((PlayerCombat) GetTarget()).Player;
-            if (player != null)
+            Characters.Player player = PlayerCombat.Instance.Player;
+            if (player.Attributes.SpreadSickness && IsSick())
             {
-                if (player.Attributes.SpreadSickness && IsSick())
+                int sicknessStacks = SicknessStacks;
+                if (sicknessStacks > 5) sicknessStacks = 5;
+                CombatManager.GetCharactersInRange(transform.position, 3).ForEach(c =>
                 {
-                    int sicknessStacks = SicknessStacks;
-                    if (sicknessStacks > 5) sicknessStacks = 5;
-                    CombatManager.GetCharactersInRange(transform.position, 3).ForEach(c =>
-                    {
-                        EnemyBehaviour b = c as EnemyBehaviour;
-                        if (b == null) return;
-                        b.Sicken(sicknessStacks);
-                    });
-                }
-
-                player.IncreaseWeaponKills();
+                    EnemyBehaviour b = c as EnemyBehaviour;
+                    if (b == null) return;
+                    b.Sicken(sicknessStacks);
+                });
             }
 
             Loot loot = Enemy.DropLoot(transform.position);

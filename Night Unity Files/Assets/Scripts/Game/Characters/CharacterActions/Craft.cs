@@ -7,10 +7,7 @@ namespace Game.Characters.CharacterActions
         public Craft(Player playerCharacter) : base("Craft", playerCharacter)
         {
             DisplayName = "Crafting";
-            HourCallback = () =>
-            {
-                Exit();
-            };
+            HourCallback = Exit;
         }
 
         protected override void OnClick()

@@ -196,7 +196,6 @@ namespace Game.Combat.Enemies
         public void Kill()
         {
             IsDead = true;
-            //todo register kill
         }
 
         public Loot DropLoot(Vector2 position)

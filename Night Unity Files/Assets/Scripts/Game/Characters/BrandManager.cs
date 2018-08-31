@@ -588,12 +588,14 @@ namespace Game.Characters
 
             protected override void OnSucceed()
             {
+                Player.StartCountingKills();
                 Player.Attributes.Get(AttributeType.WillpowerLossBonus).Increment();
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.Get(AttributeType.MentalBreakBonus).Increment(0.05f);
+                Player.StartCountingKills();
+                Player.Attributes.Get(AttributeType.WillpowerLossBonus).Decrement();
             }
 
             protected override string GetProgressSubstring()

@@ -216,17 +216,6 @@ namespace Game.Characters
         {
             CharacterAttribute willpower = Get(AttributeType.Willpower);
             willpower.Decrement();
-            int minorBreakThreshold = Mathf.FloorToInt(willpower.Max / 2f);
-            int majorBreakThreshold = Mathf.FloorToInt(willpower.Max / 4f);
-            if (willpower.CurrentValue() <= majorBreakThreshold)
-            {
-                WorldEventManager.GenerateEvent(new CharacterMessage("I can't take any more", _player));
-            }
-            else if (willpower.CurrentValue() <= minorBreakThreshold)
-            {
-                WorldEventManager.GenerateEvent(new CharacterMessage("I can see the light beyond the veil, and it speaks to me!", _player));
-            }
-
             int perceptionValue = (int) Val(AttributeType.Perception);
             int strengthValue = (int) Val(AttributeType.Strength);
             int enduranceValue = (int) Val(AttributeType.Endurance);

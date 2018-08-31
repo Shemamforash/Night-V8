@@ -113,35 +113,6 @@ namespace Game.Characters.CharacterActions
         {
             Enter();
             if(target == CurrentRegion && CurrentRegion.GetRegionType() != RegionType.Gate) EnterRegion();
-            //todo decide if i want this
-//            switch (target.GetRegionType())
-//            {
-//                case RegionType.Shelter:
-//                    WorldEventManager.GenerateEvent(new CharacterMessage("Perhaps I will find others", PlayerCharacter));
-//                    break;
-//                case RegionType.Gate:
-//                    WorldEventManager.GenerateEvent(new CharacterMessage("I'm going back to camp", PlayerCharacter));
-//                    break;
-//                case RegionType.Temple:
-//                    WorldEventManager.GenerateEvent(new CharacterMessage("I hope I will see you again", PlayerCharacter));
-//                    break;
-//                case RegionType.Animal:
-//                    WorldEventManager.GenerateEvent(new CharacterMessage("Perhaps I will find something to hunt", PlayerCharacter));
-//                    break;
-//                case RegionType.Danger:
-//                    WorldEventManager.GenerateEvent(new CharacterMessage("I pray I won't find trouble, but I will be ready if I do", PlayerCharacter));
-//                    break;
-//                case RegionType.Nightmare:
-//                    break;
-//                case RegionType.Fountain:
-//                    break;
-//                case RegionType.Shrine:
-//                    break;
-//                case 
-//                default:
-//                    throw new ArgumentOutOfRangeException();
-//            }
-
             _travelTime = 0;
             _inTransit = true;
             _target = target;
