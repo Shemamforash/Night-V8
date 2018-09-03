@@ -9,13 +9,15 @@ using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
+using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
 namespace Facilitating.UIControllers
 {
-    public class UiWeaponUpgradeController : UiInventoryMenuController
+    public class UiWeaponUpgradeController : UiInventoryMenuController, IInputListener
     {
         private EnhancedButton _inscribeButton, _infuseButton, _swapButton;
         private ListController _weaponList;
@@ -50,12 +52,14 @@ namespace Facilitating.UIControllers
             {
                 if (!WeaponsAreAvailable()) return;
                 _weaponList.Show(GetAvailableWeapons);
+                InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
             _inscribeButton.AddOnClick(() =>
             {
                 if (!InscriptionsAreAvailable()) return;
                 _inscriptionList.Show(GetAvailableInscriptions);
+                InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
             _infuseButton.AddOnClick(Infuse);
@@ -107,9 +111,15 @@ namespace Facilitating.UIControllers
             _weaponList.Hide();
             _inscriptionList.Hide();
             _swapButton.Select();
+            InputHandler.RegisterInputListener(this);
             SetWeapon();
         }
 
+        protected override void OnHide()
+        {
+            InputHandler.UnregisterInputListener(this);
+        }
+        
         private void Equip(object weaponObject)
         {
             Weapon weapon = (Weapon) weaponObject;
@@ -214,6 +224,20 @@ namespace Facilitating.UIControllers
                 if (equippedWeapon == null) return;
                 _detailController.CompareTo(equippedWeapon);
             }
+        }
+
+        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+            if (isHeld || axis != InputAxis.Cover) return;
+            UiGearMenuController.Close();
+        }
+
+        public void OnInputUp(InputAxis axis)
+        {
+        }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
         }
     }
 }

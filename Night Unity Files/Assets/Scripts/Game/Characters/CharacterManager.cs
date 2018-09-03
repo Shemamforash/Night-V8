@@ -177,7 +177,7 @@ namespace Game.Characters
         {
             Player driver = GenerateCharacter(CharacterClass.Wanderer);
 //            Player driver = GenerateCharacter(CharacterClass.Beast);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Dark, WeaponType.LMG);
+            Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Radiant, WeaponType.Shotgun);
 //            WeaponGenerationTester.Test();
 //            Inscription.Test();
             driver.EquipWeapon(weapon);

@@ -78,7 +78,7 @@ namespace Facilitating.UIControllers
         private class ArmourElement : ListElement
         {
             private EnhancedText _armourText;
-            
+
             protected override void UpdateCentreItemEmpty()
             {
                 _armourText.SetText("No Plates Available");
@@ -98,7 +98,7 @@ namespace Facilitating.UIControllers
             {
                 _armourText.SetColor(c);
             }
-            
+
             protected override void Update(object o)
             {
                 ArmourPlate armour = (ArmourPlate) o;
@@ -125,7 +125,7 @@ namespace Facilitating.UIControllers
             public void SetPlate(ArmourPlate plate)
             {
                 PlateList.Show(GetAvailableArmour);
-                
+
                 if (plate == null)
                 {
                     _nameText.SetText("");
@@ -152,8 +152,17 @@ namespace Facilitating.UIControllers
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
-            if (isHeld || axis != InputAxis.Horizontal) return;
-            SetPlateListActive(direction < 0 ? _plateOneUi : _plateTwoUi);
+            if (isHeld) return;
+            switch (axis)
+            {
+                case InputAxis.Horizontal:
+                    Debug.Log("fart");
+                    SetPlateListActive(direction < 0 ? _plateOneUi : _plateTwoUi);
+                    return;
+                case InputAxis.Cover:
+                    UiGearMenuController.Close();
+                    break;
+            }
         }
 
         public void OnInputUp(InputAxis axis)

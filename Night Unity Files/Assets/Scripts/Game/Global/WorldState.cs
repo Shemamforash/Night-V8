@@ -12,6 +12,7 @@ using Game.Exploration.Weather;
 using Game.Exploration.WorldEvents;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
 namespace Game.Global

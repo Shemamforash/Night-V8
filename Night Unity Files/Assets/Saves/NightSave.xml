@@ -5,7 +5,7 @@
     <CurrentLevel>1</CurrentLevel>
     <Days>0</Days>
     <Hours>6</Hours>
-    <Minutes>50</Minutes>
+    <Minutes>0</Minutes>
     <Difficulty>0</Difficulty>
   </WorldState>
   <Inventory>
@@ -463,13 +463,13 @@
         </Attribute>
         <Attribute>
           <AttributeType>5</AttributeType>
-          <Value>0.2777778</Value>
+          <Value>0</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
         <Attribute>
           <AttributeType>4</AttributeType>
-          <Value>0.5555556</Value>
+          <Value>0</Value>
           <Min>0</Min>
           <Max>10</Max>
         </Attribute>
@@ -501,7 +501,7 @@
       <Brands />
       <StoryUnlocked>False</StoryUnlocked>
       <StoryProgress>1</StoryProgress>
-      <TimeAlive>10</TimeAlive>
+      <TimeAlive>0</TimeAlive>
       <CharacterClass>Wanderer</CharacterClass>
       <TotalKills>0</TotalKills>
       <CountKills>False</CountKills>
@@ -973,7 +973,7 @@
   </Regions>
   <Weather>
     <Name>Clear</Name>
-    <TimeRemaining>38</TimeRemaining>
+    <TimeRemaining>48</TimeRemaining>
   </Weather>
   <CurrentEnvironment>Forest</CurrentEnvironment>
   <WorldEvents>

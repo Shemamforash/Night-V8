@@ -122,8 +122,10 @@ namespace Game.Combat.Generation
                 switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
                 {
                     case EnvironmentType.Forest:
+                        worldObject.AddComponent<Tomb>().Initialise(_currentRegion);
+
 //                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
-                        worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
+//                        worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
 //                        worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
 //                        worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
 //                        worldObject.AddComponent<Canyon>().Initialise(_currentRegion);

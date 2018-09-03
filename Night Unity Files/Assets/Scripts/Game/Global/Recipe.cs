@@ -8,7 +8,7 @@ using Game.Gear.Armour;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Game.Global
 {
@@ -48,16 +48,15 @@ namespace Game.Global
             return ingredient2OwnedQuantity >= Ingredient2Quantity;
         }
 
-        public bool Craft()
+        public void ConsumeResources()
         {
-            if (!CanCraft()) return false;
+            Assert.IsTrue(CanCraft());
+            if (!CanCraft()) return;
             WorldState.HomeInventory().DecrementResource(Ingredient1, Ingredient1Quantity);
             if (Ingredient2 != "None") WorldState.HomeInventory().DecrementResource(Ingredient2, Ingredient2Quantity);
-            CreateProduct();
-            return true;
         }
 
-        private void CreateProduct()
+        public void Craft()
         {
             switch (ProductName)
             {

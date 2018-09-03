@@ -2,13 +2,16 @@
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
+using Game.Combat.Generation;
+using Game.Combat.Player;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 
-public class UICraftingController : UiInventoryMenuController
+public class UICraftingController : UiInventoryMenuController, IInputListener
 {
     private EnhancedButton _buildButton;
     private EnhancedText _builtText;
@@ -25,25 +28,49 @@ public class UICraftingController : UiInventoryMenuController
     {
         DisplayBuildings();
         CloseRecipeList();
+        InputHandler.RegisterInputListener(this);
+        if (CombatManager.InCombat())
+        {
+            _buildButton.enabled = false;
+            _buildButton.GetComponent<EnhancedText>().SetStrikeThroughActive(true);    
+        }
+        else
+        {
+            _buildButton.enabled = true;
+            _buildButton.GetComponent<EnhancedText>().SetStrikeThroughActive(false);    
+        }
     }
 
     protected override void Initialise()
     {
         _buildingsList.Initialise(typeof(RecipeElement), CreateRecipe, CloseRecipeList);
-        _buildButton.AddOnClick(() => { _buildingsList.Show(GetAvailableRecipes); });
+        _buildButton.AddOnClick(() =>
+        {
+            InputHandler.UnregisterInputListener(this);
+            _buildingsList.Show(GetAvailableRecipes);
+            _builtText.gameObject.SetActive(false);
+            _buildButton.gameObject.SetActive(false);
+        });
+    }
+
+    protected override void OnHide()
+    {
+        InputHandler.UnregisterInputListener(this);
     }
 
     private void CloseRecipeList()
     {
         _buildingsList.Hide();
+        _builtText.gameObject.SetActive(true);
+        _buildButton.gameObject.SetActive(true);
         _buildButton.Select();
     }
 
     private void CreateRecipe(object obj)
     {
         Recipe recipe = (Recipe) obj;
-        recipe.Craft();
-        _buildingsList.Hide();
+        CharacterManager.SelectedCharacter.CraftAction.StartCrafting(recipe);
+        UiGearMenuController.Close();
     }
 
     private class RecipeElement : BasicListElement
@@ -61,8 +88,8 @@ public class UICraftingController : UiInventoryMenuController
             string productString = recipe.ProductQuantity > 1 ? recipe.ProductName + " x" + recipe.ProductQuantity : recipe.ProductName;
             string durationString = WorldState.TimeToHours((int) (recipe.DurationInHours * WorldState.MinutesPerHour));
             productString += " (" + durationString + ")";
-            LeftText.SetText(productString);
-            CentreText.SetText("");
+            LeftText.SetText("");
+            CentreText.SetText(productString);
             string ingredient1String = recipe.Ingredient1Quantity > 1 ? recipe.Ingredient1 + " x" + recipe.Ingredient1Quantity : recipe.Ingredient1;
             if (recipe.Ingredient1 == "None") ingredient1String = "";
             string ingredient2String = recipe.Ingredient2Quantity > 1 ? recipe.Ingredient2 + " x" + recipe.Ingredient2Quantity : recipe.Ingredient2;
@@ -98,5 +125,19 @@ public class UICraftingController : UiInventoryMenuController
     private static List<object> GetAvailableRecipes()
     {
         return Recipe.Recipes().ToObjectList();
+    }
+
+    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+    {
+        if (isHeld || axis != InputAxis.Cover) return;
+        UiGearMenuController.Close();
+    }
+
+    public void OnInputUp(InputAxis axis)
+    {
+    }
+
+    public void OnDoubleTap(InputAxis axis, float direction)
+    {
     }
 }

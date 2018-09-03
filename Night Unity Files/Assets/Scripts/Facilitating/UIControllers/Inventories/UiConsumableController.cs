@@ -10,7 +10,6 @@ using SamsHelper.ReactiveUI.Elements;
 
 public class UiConsumableController : UiInventoryMenuController
 {
-    private EnhancedButton _consumableButton;
     private UIConditionController _thirstController, _hungerController;
     private UIAttributeController _uiAttributeController;
     private ListController _consumableList;
@@ -38,7 +37,7 @@ public class UiConsumableController : UiInventoryMenuController
 
     protected override void Initialise()
     {
-        _consumableList.Initialise(typeof(ConsumableElement), Consume, () => { });
+        _consumableList.Initialise(typeof(ConsumableElement), Consume, UiGearMenuController.Close);
     }
 
     private class ConsumableElement : BasicListElement

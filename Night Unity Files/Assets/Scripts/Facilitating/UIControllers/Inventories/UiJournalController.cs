@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DefaultNamespace;
+using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Global;
 using SamsHelper.Libraries;
@@ -13,7 +14,7 @@ public class UiJournalController : UiInventoryMenuController
 
     protected override void Initialise()
     {
-        _journalList.Initialise(typeof(JournalElement), o => { }, () => { });
+        _journalList.Initialise(typeof(JournalElement), o => { }, UiGearMenuController.Close);
         _journalList.SetOnItemHover(UpdateJournalDescription);
     }
 

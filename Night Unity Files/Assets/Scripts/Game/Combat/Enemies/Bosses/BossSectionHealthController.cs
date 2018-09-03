@@ -30,7 +30,7 @@ namespace Game.Combat.Enemies.Bosses
             _boss.RegisterSection(this);
         }
 
-        private void TakeDamage(float damage)
+        protected virtual void TakeDamage(float damage)
         {
             _spriteFlash.FlashSprite();
             _healthController.TakeDamage(damage);

@@ -8,8 +8,8 @@ namespace Facilitating.Persistence
 {
     public static class SaveController
     {
-        private static readonly string GameSaveLocation = Application.dataPath + "/Saves/NightSave.xml";
-        private static readonly string SettingsSaveLocation = Application.dataPath + "/Saves/GameSettings.xml";
+        private static readonly string GameSaveLocation = Application.persistentDataPath + "/Saves/NightSave.xml";
+        private static readonly string SettingsSaveLocation = Application.persistentDataPath + "/Saves/GameSettings.xml";
         private static XmlDocument _saveDoc;
 
 
@@ -20,6 +20,7 @@ namespace Facilitating.Persistence
 
         public static void ClearSave()
         {
+            TryCreateDirectory();
             _saveDoc = new XmlDocument();
             _saveDoc.CreateChild("Game");
             _saveDoc.Save(GameSaveLocation);
@@ -66,8 +67,18 @@ namespace Facilitating.Persistence
             WorldState.Load(root);
         }
 
+        private static void TryCreateDirectory()
+        {
+            string saveDirectory = Application.persistentDataPath + "/Saves";
+            if (Directory.Exists(saveDirectory)) return;
+            Directory.CreateDirectory(saveDirectory);
+            File.Create(GameSaveLocation);
+            File.Create(SettingsSaveLocation);
+        }
+        
         private static void Save(string fileLocation, string saveType)
         {
+            TryCreateDirectory();
             _saveDoc = new XmlDocument();
             XmlNode root = _saveDoc.CreateChild(saveType);
             WorldState.Save(root);

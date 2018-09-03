@@ -7,6 +7,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
     public sealed class ObjectPool<T> where T : MonoBehaviour
     {
         private readonly List<T> _pool = new List<T>();
+        private readonly List<T> _active = new List<T>();
         private readonly string _prefabLocation;
         private GameObject _prefab;
         private Transform _poolParent;
@@ -28,11 +29,13 @@ namespace SamsHelper.BaseGameFunctionality.Basic
                 GameObject newGameObject = Object.Instantiate(_prefab);
                 newThing = newGameObject.GetComponent<T>();
                 newThing.transform.SetParent(_poolParent, false);
+                _active.Add(newThing);
                 return newThing;
             }
 
             newThing = _pool.RemoveLast();
             if (newThing == null) return Create();
+            _active.Add(newThing);
             newThing.gameObject.SetActive(true);
             return newThing;
         }
@@ -40,12 +43,14 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         public void Return(T thing)
         {
             _pool.Add(thing);
+            _active.Remove(thing);
             thing.gameObject.SetActive(false);
         }
 
         public void Dispose(T thing)
         {
             _pool.Remove(thing);
+            _active.Remove(thing);
             Object.Destroy(thing.gameObject);
             if (Empty()) GameObject.Destroy(_poolParent);
         }
@@ -63,6 +68,11 @@ namespace SamsHelper.BaseGameFunctionality.Basic
                 T pooledObject = _pool[i];
                 Dispose(pooledObject);
             }
+        }
+
+        public List<T> Active()
+        {
+            return _active;
         }
     }
 }

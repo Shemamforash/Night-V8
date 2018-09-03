@@ -21,6 +21,7 @@ namespace Facilitating.UIControllers
         private static UiConsumableController _consumableController;
         private static UiJournalController _journalController;
         private static UiInventoryMenuController _currentMenuController;
+        private static UiGearMenuController _instance;
 
         private static Inventory _currentInventory;
         private static Tab _currentTab;
@@ -77,6 +78,7 @@ namespace Facilitating.UIControllers
             private void Select()
             {
                 _currentTab = this;
+                Debug.Log("waffle");
                 OnSelectAction();
                 _tabText.SetUnderlineActive(true);
             }
@@ -110,6 +112,7 @@ namespace Facilitating.UIControllers
         public override void Awake()
         {
             base.Awake();
+            _instance = this;
             _tabs.Clear();
             CreateTab("Weapons", ShowWeaponMenu);
             CreateTab("Armour", ShowArmourMenu);
@@ -136,9 +139,10 @@ namespace Facilitating.UIControllers
             _journalController = gearObject.FindChildWithName<UiJournalController>("Journals");
         }
 
-        private void Close()
+        public static void Close()
         {
-            InputHandler.UnregisterInputListener(this);
+            _currentMenuController.Hide();
+            InputHandler.UnregisterInputListener(_instance);
             MenuStateMachine.ReturnToDefault();
             _open = false;
         }

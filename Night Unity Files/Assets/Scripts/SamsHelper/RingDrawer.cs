@@ -22,6 +22,7 @@ namespace SamsHelper
             _lineRenderer.useWorldSpace = false;
             _angleDelta = 2 * Mathf.PI / Segments;
             _lineRenderer.material = _material;
+            DrawCircle(radius);
         }
 
         public void SetLineWidth(float lineWidth)

@@ -8,6 +8,7 @@ using Game.Gear.Armour;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -26,7 +27,7 @@ namespace Facilitating.UIControllers
 
         protected override void Initialise()
         {
-            _accessoryList.Initialise(typeof(AccessoryElement), Equip, () => { });
+            _accessoryList.Initialise(typeof(AccessoryElement), Equip, UiGearMenuController.Close);
         }
 
         private void Equip(object accessoryObject)
