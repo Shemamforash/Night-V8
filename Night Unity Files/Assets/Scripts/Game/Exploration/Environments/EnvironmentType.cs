@@ -2,7 +2,7 @@
 {
     public enum EnvironmentType
     {
-        Forest,
+        Desert,
         Mountains,
         Ruins,
         Sea,

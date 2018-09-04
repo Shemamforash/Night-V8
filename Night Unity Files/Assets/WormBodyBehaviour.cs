@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class WormBodyBehaviour : MonoBehaviour
     private GameObject _teethObject;
 
     private SpriteRenderer _warningGlow;
+    private float _dealDamageTimer;
+    private bool _dealDamage;
 
     public void Awake()
     {
@@ -19,9 +22,22 @@ public class WormBodyBehaviour : MonoBehaviour
         _teethObject = gameObject.FindChildWithName("Teeth");
         _warningGlow = gameObject.FindChildWithName<SpriteRenderer>("Warning");
     }
+
+    public void OnTriggerStay2D(Collider2D other)
+    {
+        if (!_dealDamage) return;
+        if (!other.gameObject.CompareTag("Player")) return;
+        _dealDamageTimer -= Time.deltaTime;
+        if (_dealDamageTimer > 0f) return;
+        _dealDamageTimer = 0.2f;
+        PlayerCombat.Instance.TakeRawDamage(5, AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized);
+        PlayerCombat.Instance.MovementController.Knockback(AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized * Random.Range(20, 40));
+    }
     
     public void Initialise(Vector2 position)
     {
+        _dealDamageTimer = 0f;
+        _dealDamage = false;
         transform.position = position;
         transform.localScale = Vector2.one;
         _teethObject.SetActive(false);
@@ -31,16 +47,20 @@ public class WormBodyBehaviour : MonoBehaviour
         sequence.InsertCallback(1f, () => _cloudParticles.Play());
         sequence.AppendCallback(() =>
         {
+            _dealDamage = true; 
             _teethObject.SetActive(true);
             _explodeParticles.Emit(200);
             _dustParticles.Play();
-            Debug.Log("fart");
         });
         sequence.Append(_warningGlow.DOColor(new Color(1, 1, 1, 0f), 0.5f));
         sequence.AppendInterval(Random.Range(3f, 6f));
         
         Sequence endSequence = DOTween.Sequence();
-        endSequence.AppendCallback(() => { _implodeParticles.Emit(200); });
+        endSequence.AppendCallback(() =>
+        {
+            _dealDamage = false;
+            _implodeParticles.Emit(200);
+        });
         endSequence.Append(transform.DOScale(Vector2.zero, 0.5f));
         endSequence.AppendCallback(() =>
         {

@@ -1,5 +1,4 @@
-﻿using Game.Combat.Misc;
-
+﻿
 namespace Game.Gear.Weapons
 {
     public class DefaultBehaviour : BaseWeaponBehaviour
@@ -7,10 +6,10 @@ namespace Game.Gear.Weapons
         private bool _firing;
         private float _accuracyModifier;
 
-        public override void StartFiring(CharacterCombat origin)
+        public override void StartFiring()
         {
-            base.StartFiring(origin);
-            Fire(origin);
+            base.StartFiring();
+            Fire();
         }
     }
 }

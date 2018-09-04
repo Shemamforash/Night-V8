@@ -1,5 +1,5 @@
 <EnvironmentTypes>
-    <Forest>
+    <Desert>
         <Level>0</Level>
         <Temperature>3</Temperature>
         <Temples>1</Temples>
@@ -9,7 +9,7 @@
         <Shelters>0</Shelters>
         <Animals>4</Animals>
         <Danger>9</Danger>
-    </Forest>
+    </Desert>
     <Mountains>
         <Level>1</Level>
         <Temperature>1</Temperature>

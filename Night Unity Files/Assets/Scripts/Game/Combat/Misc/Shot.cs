@@ -43,7 +43,14 @@ namespace Game.Combat.Misc
         private float _knockBackModifier;
         private const float MaxAge = 3f;
         private event Action OnHitAction;
+        private readonly RaycastHit2D[] _collisions = new RaycastHit2D[50];
+        private Vector2 _lastPosition;
 
+        public void Awake()
+        {
+            _rigidBody = GetComponent<Rigidbody2D>();
+        }
+        
         public float GetKnockbackForce()
         {
             return _knockBackForce;
@@ -64,6 +71,7 @@ namespace Game.Combat.Misc
             _fired = false;
             _seekTarget = false;
             _leaveFireTrail = false;
+            _pierce = false;
             OnHitAction = null;
         }
 
@@ -125,7 +133,6 @@ namespace Game.Combat.Misc
 
         private void SetUpComponents()
         {
-            if (_rigidBody == null) _rigidBody = GetComponent<Rigidbody2D>();
             ResetValues();
             CacheWeaponAttributes();
             CalculateAccuracy();
@@ -154,9 +161,8 @@ namespace Game.Combat.Misc
             _finalDamageModifier = modifier;
         }
 
-        private void FixedUpdate()
+        private void SeekTarget()
         {
-            if (!_fired || !_seekTarget) return;
             ITakeDamageInterface nearestEnemy = CombatManager.NearestEnemy(transform.position);
             if (nearestEnemy == null) return;
             Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
@@ -169,6 +175,29 @@ namespace Game.Combat.Misc
 
             _rigidBody.velocity += force * dir * Time.fixedDeltaTime;
             _rigidBody.velocity = _rigidBody.velocity.normalized * Speed;
+        }
+
+        private void CheckForPierce()
+        {
+            Vector2 newPosition = transform.position;
+            ContactFilter2D cf = new ContactFilter2D();
+            cf.layerMask = 1 << 10;
+            Debug.DrawLine(_lastPosition, newPosition, Color.red, 0.02f);
+            int hits = Physics2D.Linecast(_lastPosition, newPosition, cf, _collisions);
+            for (int i = 0; i < hits; ++i)
+            {
+                RaycastHit2D hit = _collisions[i];
+                DealDamage(hit.collider.gameObject);
+            }
+
+            _lastPosition = newPosition;
+        }
+        
+        private void FixedUpdate()
+        {
+            if (!_fired) return;
+            if (_seekTarget) SeekTarget();
+            if (_pierce) CheckForPierce();
         }
 
         private IEnumerator WaitToDie()
@@ -184,8 +213,16 @@ namespace Game.Combat.Misc
             DeactivateShot();
         }
 
+        private bool _pierce;
+        
+        public void Pierce()
+        {
+            _pierce = true;
+        }
+        
         public void Fire(float distance = 0.15f)
         {
+            if(_pierce) gameObject.layer = 20;
             float angleModifier = 1 - Mathf.Sqrt(Random.Range(0f, 1f));
             if (Random.Range(0, 2) == 0) angleModifier = -angleModifier;
             float angleOffset = angleModifier * _accuracy;
@@ -200,6 +237,7 @@ namespace Game.Combat.Misc
 
             _bulletTrail.SetPosition(transform);
             _rigidBody.velocity = _direction * Speed * Random.Range(0.9f, 1.1f);
+            _lastPosition = transform.position;
             StartCoroutine(WaitToDie());
         }
 
@@ -211,6 +249,21 @@ namespace Game.Combat.Misc
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            Hit(collision);
+        }
+
+        private void DealDamage(GameObject other)
+        {
+            OnHitAction?.Invoke();
+            ITakeDamageInterface hit = other.GetComponent<ITakeDamageInterface>();
+            if (hit == null) return;
+            PlayerCombat player = _origin as PlayerCombat;
+            if (player != null) player.OnShotConnects(hit);
+            ApplyDamage(hit);
+        }
+
+        private void Hit(Collision2D collision)
+        {
             GameObject other = collision.gameObject;
             if (collision.contacts.Length > 0)
             {
@@ -219,16 +272,7 @@ namespace Game.Combat.Misc
             }
 
             if (Random.Range(0f, 1f) < _burnChance) FireBehaviour.Create(transform.position, 1f);
-            OnHitAction?.Invoke();
-
-            ITakeDamageInterface hit = other.GetComponent<ITakeDamageInterface>();
-            if (hit != null)
-            {
-                PlayerCombat player = _origin as PlayerCombat;
-                if (player != null) player.OnShotConnects(hit);
-                ApplyDamage(hit);
-            }
-
+            DealDamage(other);
             DeactivateShot();
             _bulletTrail.StartFade(0.2f);
         }

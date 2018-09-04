@@ -28,6 +28,7 @@ namespace Game.Combat.Misc
         private FastLight _light;
         private ParticleSystem _particles;
         private SpriteRenderer _warningRing;
+        private AudioSource _audioSource;
         private Action<List<EnemyBehaviour>> OnExplode;
         private GameObject _spriteObject;
 
@@ -41,6 +42,7 @@ namespace Game.Combat.Misc
             _particles = gameObject.FindChildWithName<ParticleSystem>("Fragments");
             _light = gameObject.FindChildWithName<FastLight>("Light");
             _spriteObject = gameObject.FindChildWithName("Sprites");
+            _audioSource = gameObject.FindChildWithName<AudioSource>("Audio");
 
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
             _light.Colour = UiAppearanceController.InvisibleColour;
@@ -150,7 +152,8 @@ namespace Game.Combat.Misc
                 {
                     if (!emitted)
                     {
-                        AudioSource.PlayClipAtPoint(_explosionClips.RandomElement(), transform.position);
+                        _audioSource.clip =_explosionClips.RandomElement();
+                        _audioSource.Play();
                         DealDamage();
                         ParticleSystem.ShapeModule shape = _particles.shape;
                         shape.radius = _explosionRadius;
@@ -172,6 +175,7 @@ namespace Game.Combat.Misc
 
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
             _light.Colour = UiAppearanceController.InvisibleColour;
+            while (_audioSource.isPlaying) yield return null;
             gameObject.SetActive(false);
             _explosionPool.Add(this);
         }

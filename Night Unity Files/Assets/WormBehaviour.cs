@@ -14,7 +14,7 @@ public class WormBehaviour : Boss, ITakeDamageInterface
     private static GameObject _prefab;
     private readonly HealthController _healthController = new HealthController();
     private static WormBehaviour _instance;
-    private ObjectPool<WormSacBehaviour> _wormSacs = new ObjectPool<WormSacBehaviour>("Sacs", "Prefabs/Combat/Bosses/Worm/Worm Sac");
+    private readonly ObjectPool<WormSacBehaviour> _wormSacs = new ObjectPool<WormSacBehaviour>("Sacs", "Prefabs/Combat/Bosses/Worm/Worm Sac");
     private bool _spawning;
 
     public override void Awake()
@@ -54,7 +54,7 @@ public class WormBehaviour : Boss, ITakeDamageInterface
         WormBodyBehaviour newWorm = Instantiate(_prefab).GetComponent<WormBodyBehaviour>();
         newWorm.Initialise(wormPosition);
         _worms.Add(newWorm);
-        _timeToNextWorm = Random.Range(5f, 10f);
+        _timeToNextWorm = Random.Range(8f, 12f);
     }
 
     private void TrySpawnSacs()
@@ -169,6 +169,7 @@ public class WormBehaviour : Boss, ITakeDamageInterface
 
     public static void TakeDamage(float damage)
     {
+        if (_instance._healthController.GetCurrentHealth() == 0) return;
         _instance._healthController.TakeDamage(damage);
         if (_instance._healthController.GetCurrentHealth() != 0) return;
         _instance.KillBoss();
@@ -177,5 +178,6 @@ public class WormBehaviour : Boss, ITakeDamageInterface
     public static void ReturnSac(WormSacBehaviour wormSacBehaviour)
     {
         _instance._wormSacs.Return(wormSacBehaviour);
+        _instance.UnregisterSection(wormSacBehaviour);
     }
 }

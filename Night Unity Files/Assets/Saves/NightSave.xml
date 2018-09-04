@@ -975,7 +975,7 @@
     <Name>Clear</Name>
     <TimeRemaining>48</TimeRemaining>
   </Weather>
-  <CurrentEnvironment>Forest</CurrentEnvironment>
+  <CurrentEnvironment>Desert</CurrentEnvironment>
   <WorldEvents>
   </WorldEvents>
 </Game>

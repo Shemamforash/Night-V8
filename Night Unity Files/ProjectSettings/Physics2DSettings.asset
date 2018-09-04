@@ -20,8 +20,9 @@ Physics2DSettings:
   m_AngularSleepTolerance: 2
   m_DefaultContactOffset: 0.01
   m_JobOptions:
-    m_UseMultithreading: 0
-    m_UseConsistencySorting: 0
+    serializedVersion: 2
+    useMultithreading: 0
+    useConsistencySorting: 0
     m_InterpolationPosesPerJob: 100
     m_NewContactsPerJob: 30
     m_CollideContactsPerJob: 100
@@ -51,4 +52,4 @@ Physics2DSettings:
   m_ColliderAsleepColor: {r: 0.5686275, g: 0.95686275, b: 0.54509807, a: 0.36078432}
   m_ColliderContactColor: {r: 1, g: 0, b: 1, a: 0.6862745}
   m_ColliderAABBColor: {r: 1, g: 1, b: 0, a: 0.2509804}
-  m_LayerCollisionMatrix: ff1df2ffcf00f0ffcf00f0ffffffffffc900f0ffe900f0ffffffffffffffffffc99cf7ffc800f0ffc909f1ffc905f2ffc911f2ffc800f3ffc880f0ffc841f2ffc825f2ffc9b9f3ffc801f8ffc800f4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  m_LayerCollisionMatrix: ff1de2ffcf00e0ffcf00e0ffffffffffc900e0ffe900e0ffffffffffffffffffc99cf7ffc800e0ffc909e1ffc905e2ffc911e2ffc800f3ffc880e0ffc841e2ffc825e0ffc9b9e2ffc801e8ffc800e4ffc821e0ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff

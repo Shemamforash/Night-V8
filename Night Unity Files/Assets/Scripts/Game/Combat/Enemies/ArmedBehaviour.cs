@@ -1,5 +1,6 @@
 ﻿using Game.Combat.Enemies.Humans;
 using Game.Combat.Generation;
+using Game.Combat.Misc;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
@@ -37,9 +38,9 @@ namespace Game.Combat.Enemies
 
         private static Medic FindMedic()
         {
-            foreach (EnemyBehaviour enemy in CombatManager.EnemiesOnScreen())
+            foreach (ITakeDamageInterface o in CombatManager.EnemiesOnScreen())
             {
-                Medic medic = enemy as Medic;
+                Medic medic = o as Medic;
                 if (medic == null || medic.HasTarget()) continue;
                 return medic;
             }
@@ -121,7 +122,7 @@ namespace Game.Combat.Enemies
             CurrentAction = () =>
             {
                 if (!_weaponBehaviour.CanFire()) return;
-                _weaponBehaviour.StartFiring(this);
+                _weaponBehaviour.StartFiring();
                 if (_weaponBehaviour.Empty())
                 {
                     Reload();

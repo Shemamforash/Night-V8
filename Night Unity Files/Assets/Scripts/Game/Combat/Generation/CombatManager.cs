@@ -121,14 +121,8 @@ namespace Game.Combat.Generation
                 _visibilityRange = 5f * WeatherManager.CurrentWeather().GetVisibility() + 2f;
                 switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
                 {
-                    case EnvironmentType.Forest:
-                        worldObject.AddComponent<Tomb>().Initialise(_currentRegion);
-
-//                        worldObject.AddComponent<Forest>().Initialise(_currentRegion);
-//                        worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
-//                        worldObject.AddComponent<Ruins>().Initialise(_currentRegion);
-//                        worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
-//                        worldObject.AddComponent<Canyon>().Initialise(_currentRegion);
+                    case EnvironmentType.Desert:
+                        worldObject.AddComponent<Desert>().Initialise(_currentRegion);
                         break;
                     case EnvironmentType.Mountains:
                         worldObject.AddComponent<Steppe>().Initialise(_currentRegion);

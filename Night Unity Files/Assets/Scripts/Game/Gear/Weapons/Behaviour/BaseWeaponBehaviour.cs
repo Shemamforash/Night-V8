@@ -1,4 +1,5 @@
-﻿using Game.Combat.Misc;
+﻿using Game.Characters;
+using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using SamsHelper;
@@ -17,9 +18,10 @@ namespace Game.Gear.Weapons
         protected CharacterCombat Origin;
         private bool _fired;
 
-        public void Initialise(Weapon weapon)
+        public void Initialise(CharacterCombat origin)
         {
-            Weapon = weapon;
+            Origin = origin;
+            Weapon = origin.Weapon();
             WeaponAttributes = Weapon.WeaponAttributes;
             Reload();
         }
@@ -49,9 +51,8 @@ namespace Game.Gear.Weapons
             return !Empty() && FireRateTargetMet() && !needsTriggerPull;
         }
 
-        public virtual void StartFiring(CharacterCombat origin)
+        public virtual void StartFiring()
         {
-            Origin = origin;
             _fired = true;
         }
 
@@ -65,20 +66,25 @@ namespace Game.Gear.Weapons
             return !_fired || Empty();
         }
 
-        protected void Fire(CharacterCombat origin)
+        protected void Fire()
         {
             if (Empty()) return;
             TimeToNextFire = Helper.TimeInSeconds() + 1f / Weapon.GetAttributeValue(AttributeType.FireRate);
             for (int i = 0; i < WeaponAttributes.Val(AttributeType.Pellets); ++i)
             {
-                Shot shot = Shot.Create(origin);
-                origin.ApplyShotEffects(shot);
+                Shot shot = Shot.Create(Origin);
+                Origin.ApplyShotEffects(shot);
+                if (this is HoldAndFire)
+                {
+                    shot.Pierce();
+                    Debug.Log("fired");
+                }
                 shot.Fire();
-                origin.WeaponAudio.Fire(Weapon);
+                Origin.WeaponAudio.Fire(Weapon);
             }
 
             ConsumeAmmo(1);
-            if (!(origin is PlayerCombat)) return;
+            if (!(Origin is PlayerCombat)) return;
             PlayerCombat.Instance.MuzzleFlashOpacity = 0.2f;
             UIMagazineController.UpdateMagazineUi();
         }

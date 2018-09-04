@@ -10,7 +10,7 @@ namespace Facilitating.Audio
 {
     public class GlobalAudioManager : MonoBehaviour, IPersistenceTemplate
     {
-        private static float _masterVolume, _modifiedVolume;
+        private static float _masterVolume = 1, _modifiedVolume;
         private static AudioMixer _audioMixer;
 
         public void Load(XmlNode root)

@@ -125,11 +125,15 @@ namespace FastLights
         {
             List<FLEdge> visibleEdges = new List<FLEdge>();
             int vertCount = _worldVerts.Count;
+            bool outOfRange = true;
             for (int i = 0; i < vertCount; i++)
             {
                 FLVertex v = _worldVerts[i];
+                if (outOfRange && v.Position.InCameraView()) outOfRange = false;
                 v.SetDistanceAndAngle(_origin, _sqrRadius);
             }
+
+            if (outOfRange) return null;
 
             int edgeCount = _edges.Count;
             for (int i = 0; i < edgeCount; i++)
@@ -167,6 +171,7 @@ namespace FastLights
             List<List<FLEdge>> edgeSegments = new List<List<FLEdge>>();
 
             List<FLEdge> edges = GetVisibleEdges();
+            if (edges == null) return null;
             int edgeCount = edges.Count;
 
             if (edgeCount == 1)

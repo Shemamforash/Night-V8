@@ -39,7 +39,7 @@ namespace SamsHelper.Libraries
         
         public static bool OnScreen(this GameObject gameObject)
         {
-            return IsPositionInCameraView(gameObject.transform.position);
+            return InCameraView(gameObject.transform.position);
         }
 
         public static int IntFromNode(this XmlNode root, string nodeName)
@@ -76,9 +76,12 @@ namespace SamsHelper.Libraries
             return StringFromNode(root, nodeName).ToLower() == "true";
         }
 
-        public static bool IsPositionInCameraView(this Vector3 position)
+        private static Camera mainCamera;
+        
+        public static bool InCameraView(this Vector3 position)
         {
-            Vector3 screenPosition = Camera.main.WorldToViewportPoint(position);
+            if (mainCamera == null || mainCamera.gameObject == null) mainCamera = Camera.main;
+            Vector3 screenPosition = mainCamera.WorldToViewportPoint(position);
             return screenPosition.z > 0 &&
                    screenPosition.x > 0 &&
                    screenPosition.y > 0 &&
@@ -86,9 +89,9 @@ namespace SamsHelper.Libraries
                    screenPosition.y < 1;
         }
 
-        public static bool IsPositionInCameraView(this Vector2 position)
+        public static bool InCameraView(this Vector2 position)
         {
-            return ((Vector3) position).IsPositionInCameraView();
+            return ((Vector3) position).InCameraView();
         }
 
         public static T RemoveRandom<T>(this List<T> list)

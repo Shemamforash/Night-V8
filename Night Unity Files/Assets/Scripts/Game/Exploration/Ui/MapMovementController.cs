@@ -85,7 +85,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         foreach (Region r in _availableRegions)
         {
             Vector2 potentialPosition = r.Position - _direction * 5;
-            if (!potentialPosition.IsPositionInCameraView()) continue;
+            if (!potentialPosition.InCameraView()) continue;
             isRegionVisible = true;
             break;
         }

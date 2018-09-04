@@ -7,16 +7,16 @@ namespace Game.Gear.Weapons
     {
         private bool _stillFiring;
         
-        public override void StartFiring(CharacterCombat origin)
+        public override void StartFiring()
         {
-            base.StartFiring(origin);
+            base.StartFiring();
             if (_stillFiring) return;
             StartCoroutine(SecondaryFire());
         }
 
         private IEnumerator SecondaryFire()
         {
-            Fire(Origin);
+            Fire();
             _stillFiring = true;
             for (int i = 0; i < 3; ++i)
             {
@@ -24,7 +24,7 @@ namespace Game.Gear.Weapons
                 {
                     yield return null;
                 }
-                Fire(Origin);
+                Fire();
             }
             _stillFiring = false;
         }

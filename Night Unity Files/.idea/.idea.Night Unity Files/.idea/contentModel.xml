@@ -443,7 +443,7 @@
                 <e p="RegionGenerator.cs" t="Include" />
                 <e p="Regions" t="Include">
                   <e p="Canyon.cs" t="Include" />
-                  <e p="Forest.cs" t="Include" />
+                  <e p="Desert.cs" t="Include" />
                   <e p="Labyrinth.cs" t="Include" />
                   <e p="Nightmare.cs" t="Include" />
                   <e p="Rite.cs" t="Include" />
@@ -561,6 +561,7 @@
                   <e p="Burstfire.cs" t="Include" />
                   <e p="DefaultBehaviour.cs" t="Include" />
                   <e p="DoubleFireDelay.cs" t="Include" />
+                  <e p="HoldAndFire.cs" t="Include" />
                   <e p="RandomFire.cs" t="Include" />
                   <e p="Spoolup.cs" t="Include" />
                 </e>
@@ -803,7 +804,11 @@
           <e p="MapBackgroundShader2.shader" t="Include" />
           <e p="MenuGradientShader.shader" t="Include" />
           <e p="RadialLight.shader" t="Include" />
+          <e p="Shadow.shader" t="Include" />
+          <e p="Shadow2.shader" t="Include" />
+          <e p="Shadow3.shader" t="Include" />
         </e>
+        <e p="ShadowShaderController.cs" t="Include" />
         <e p="SkillAnimationController.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">

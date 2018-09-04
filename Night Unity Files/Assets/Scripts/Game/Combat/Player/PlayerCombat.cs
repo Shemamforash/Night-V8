@@ -47,7 +47,7 @@ namespace Game.Combat.Player
         private const float MaxReloadPressedTime = 1f;
         public static PlayerCombat Instance;
         public float MuzzleFlashOpacity;
-        private Image _vignetteRenderer;
+//        private Image _vignetteRenderer;
 
         private bool _dashPressed;
 
@@ -89,7 +89,7 @@ namespace Game.Combat.Player
         {
             base.Awake();
             Instance = this;
-            _vignetteRenderer = GameObject.Find("Vignette").GetComponent<Image>();
+//            _vignetteRenderer = GameObject.Find("Vignette").GetComponent<Image>();
         }
 
         protected override UIHealthBarController HealthBarController()
@@ -362,7 +362,7 @@ namespace Game.Combat.Player
 
             _playerLight = GameObject.Find("Player Light").GetComponent<FastLight>();
             _playerLight.Radius = CombatManager.VisibilityRange();
-            _vignetteRenderer.material.SetFloat("_ViewDistance", CombatManager.VisibilityRange());
+//            _vignetteRenderer.material.SetFloat("_ViewDistance", CombatManager.VisibilityRange());
 
             SkillBar.BindSkills(Player, _skillCooldownModifier);
             UIMagazineController.SetWeapon(_weaponBehaviour);
@@ -373,8 +373,7 @@ namespace Game.Combat.Player
 
         public override float GetAccuracyModifier()
         {
-            if (_weaponBehaviour is AccuracyGainer) return Mathf.Sqrt(1 - base.GetAccuracyModifier());
-            return base.GetAccuracyModifier();
+            return _weaponBehaviour is AccuracyGainer ? Mathf.Sqrt(1 - base.GetAccuracyModifier()) : base.GetAccuracyModifier();
         }
 
         public void Shake(float dps)
@@ -496,7 +495,7 @@ namespace Game.Combat.Player
             }
 
             if (!_weaponBehaviour.CanFire()) return;
-            _weaponBehaviour.StartFiring(this);
+            _weaponBehaviour.StartFiring();
             CombatManager.SetHasFiredShot();
         }
 

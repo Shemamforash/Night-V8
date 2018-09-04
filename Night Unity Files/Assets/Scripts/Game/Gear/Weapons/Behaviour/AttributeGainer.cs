@@ -1,5 +1,4 @@
-﻿using Game.Combat.Misc;
-using SamsHelper.BaseGameFunctionality.Basic;
+﻿using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 
 namespace Game.Gear.Weapons
@@ -11,16 +10,15 @@ namespace Game.Gear.Weapons
         private bool _firing;
         private float _modifier;
         
-        public override void StartFiring(CharacterCombat origin)
+        public override void StartFiring()
         {
-            base.StartFiring(origin);
-            if (!SpooledUp()) return;
+            base.StartFiring();
+            if (!ReadyToFire()) return;
             if (_firing == false) _timeAtFirstFire = Helper.TimeInSeconds();
             _firing = true;
             float difference = Helper.TimeInSeconds() - _timeAtFirstFire;
             float normalisedDifference = difference > TimeToMaxAccuracy ? 1 : difference / TimeToMaxAccuracy;
             _modifier = 1 + normalisedDifference;
-            Fire(origin);
             TimeToNextFire = Helper.TimeInSeconds() + 1f / (Weapon.GetAttributeValue(AttributeType.FireRate) * _modifier);
         }
 

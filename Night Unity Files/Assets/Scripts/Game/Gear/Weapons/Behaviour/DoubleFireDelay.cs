@@ -8,22 +8,22 @@ namespace Game.Gear.Weapons
     {
         private bool _stillFiring;
         
-        public override void StartFiring(CharacterCombat origin)
+        public override void StartFiring()
         {
-            base.StartFiring(origin);
+            base.StartFiring();
             if (_stillFiring) return;
             StartCoroutine(SecondaryFire());
         }
 
         private IEnumerator SecondaryFire()
         {
-            Fire(Origin);
+            Fire();
             _stillFiring = true;
             while (!FireRateTargetMet())
             {
                 yield return null;
             }
-            Fire(Origin);
+            Fire();
             _stillFiring = false;
         }
     }

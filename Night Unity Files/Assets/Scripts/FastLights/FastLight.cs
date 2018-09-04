@@ -13,6 +13,7 @@ namespace Fastlights
     {
         private static readonly List<FastLight> _lights = new List<FastLight>();
         private static readonly List<LightObstructor> _allObstructors = new List<LightObstructor>();
+        private static readonly List<MeshFilter> _meshFilters = new List<MeshFilter>();
 
         private Vector2 _position = Vector2.negativeInfinity;
         private bool _needsUpdate;
@@ -40,10 +41,12 @@ namespace Fastlights
             _meshRenderer.material = LightMaterial;
             Vector3 position = transform.position;
             transform.position = position;
+            _meshFilters.Add(_meshFilter);
         }
 
         private void OnDestroy()
         {
+            _meshFilters.Remove(_meshFilter);
             _lights.Remove(this);
         }
 
@@ -129,8 +132,9 @@ namespace Fastlights
             for (int i = 0; i < obstructorCount; i++)
             {
                 LightObstructor o = _allObstructors[i];
-                if (!o.Visible()) continue;
+//                if (!o.Visible()) continue;
                 _visibleEdges = o.GetVisibleVertices(_position, sqrRadius, Radius);
+                if (_visibleEdges == null) continue;
                 edgeSegments.AddRange(_visibleEdges);
             }
 
@@ -336,6 +340,11 @@ namespace Fastlights
         public List<Vector2> Vertices()
         {
             return meshVertices;
+        }
+
+        public static List<MeshFilter> GetLightMeshes()
+        {
+            return _meshFilters;
         }
     }
 }

@@ -40,6 +40,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             PauseOthers();
             _teleportOutParticles.Play();
+            _trail.Clear();
             while (_teleportOutParticles.isPlaying)
             {
                 yield return null;
@@ -56,6 +57,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
             Cell c = PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 4);
             transform.position = c.Position;
+            _trail.Clear();
             
             _teleportInParticles.Play();
             SetVisible(true);

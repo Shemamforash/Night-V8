@@ -7,14 +7,14 @@ namespace Game.Combat.Enemies.Bosses
     public abstract class BossSectionHealthController : MonoBehaviour, ITakeDamageInterface
     {
         private int InitialHealth;
-        private readonly HealthController _healthController = new HealthController();
+        protected readonly HealthController HealthController = new HealthController();
         private DamageSpriteFlash _spriteFlash;
         private Boss _boss;
 
         public virtual void Awake()
         {
             _spriteFlash = GetComponent<DamageSpriteFlash>();
-            _healthController.SetInitialHealth(GetInitialHealth(), this);
+            HealthController.SetInitialHealth(GetInitialHealth(), this);
             CombatManager.Enemies().Add(this);
         }
 
@@ -33,7 +33,7 @@ namespace Game.Combat.Enemies.Bosses
         protected virtual void TakeDamage(float damage)
         {
             _spriteFlash.FlashSprite();
-            _healthController.TakeDamage(damage);
+            HealthController.TakeDamage(damage);
         }
 
         public void TakeShotDamage(Shot shot)
@@ -65,7 +65,7 @@ namespace Game.Combat.Enemies.Bosses
 
         public bool IsDead()
         {
-            return _healthController.GetCurrentHealth() == 0;
+            return HealthController.GetCurrentHealth() == 0;
         }
 
         public GameObject GetGameObject()

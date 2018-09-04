@@ -6,54 +6,53 @@ namespace Game.Gear.Weapons
 {
     public class Spoolup : BaseWeaponBehaviour
     {
-        private const float SpoolUpTime = 1f;
-        private float _currentTime;
-        private bool SpinningUp, Spinning, SpinningDown;
         private AudioSource _spinSource;
-        private AudioSource _weaponAudioSource;
+        private float _spoolUpLevel;
+        private bool _spooling;
 
         public void Awake()
         {
             _spinSource = gameObject.AddComponent<AudioSource>();
+            _spinSource.loop = true;
         }
 
-        protected bool SpooledUp()
+        protected bool ReadyToFire()
         {
-            return _currentTime > SpoolUpTime;
+            return _spoolUpLevel == 1;
         }
 
-        public override void StartFiring(CharacterCombat origin)
+        public override void StartFiring()
         {
-            if (!SpinningUp)
+            _spooling = true;
+            if (_spinSource.clip == null) _spinSource.clip = Origin.WeaponAudio.SpoolClip;
+            _spinSource.Play();
+            if (!ReadyToFire()) return;
+            base.StartFiring();
+            Fire();
+        }
+
+        public void Update()
+        {
+            if (!_spooling && _spoolUpLevel > 0)
             {
-                _spinSource.clip = origin.WeaponAudio.SpoolUpClip;
-                _spinSource.loop = false;
-                _spinSource.Play();
-                SpinningUp = true;
-            }
-            
-            if (_currentTime < SpoolUpTime)
-            {
-                _currentTime += Time.deltaTime;
-                if (_currentTime <= SpoolUpTime) return;
-                _spinSource.clip = origin.WeaponAudio.SpoolClip;
-                _spinSource.loop = true;
-                _spinSource.Play();
-                return;
+                _spoolUpLevel -= Time.deltaTime;
+                if (_spoolUpLevel < 0) _spoolUpLevel = 0;
             }
 
-            base.StartFiring(origin);
+            else if (_spooling && _spoolUpLevel < 1)
+            {
+                _spoolUpLevel += Time.deltaTime;
+                if (_spoolUpLevel > 1) _spoolUpLevel = 1;
+            }
+
+            _spinSource.volume = _spoolUpLevel;
+            _spinSource.pitch = _spoolUpLevel / 2f + 0.5f;
         }
 
         public override void StopFiring()
         {
             base.StopFiring();
-            _currentTime = 0f;
-            _spinSource.clip = Origin.WeaponAudio.SpoolDownClip;
-            _spinSource.loop = false;
-            _spinSource.time = Mathf.Min(1f - _currentTime, _spinSource.clip.length - 0.01f);
-            _spinSource.Play();
-            SpinningUp = false;
+            _spooling = false;
         }
     }
 }

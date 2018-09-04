@@ -4,6 +4,8 @@ using DG.Tweening;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Bosses;
 using Game.Combat.Generation;
+using Game.Global;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 public class WormSacBehaviour : BossSectionHealthController
@@ -11,7 +13,8 @@ public class WormSacBehaviour : BossSectionHealthController
     private SpriteRenderer _sacSprite;
     private CircleCollider2D _collider;
     private float _currentScaleFactor;
-    private const float InflateDuration = 5f;
+    private const float InflateDuration = 10f;
+    private const float MaxScaleFactor = 3f;
     private float _noiseOffset;
 
     public override void Awake()
@@ -25,15 +28,24 @@ public class WormSacBehaviour : BossSectionHealthController
 
     protected override int GetInitialHealth()
     {
-        return 20;
+        return 100;
     }
 
     protected override void TakeDamage(float damage)
     {
+        float healthBefore = HealthController.GetCurrentHealth();
         base.TakeDamage(damage);
-        WormBehaviour.TakeDamage(damage);
+        float healthAfter = HealthController.GetCurrentHealth();
+        int difference = (int) (healthBefore - healthAfter);
+        WormBehaviour.TakeDamage(difference);
     }
-    
+
+    public override void Kill()
+    {
+        CombatManager.Remove(this);
+        WormBehaviour.ReturnSac(this);
+    }
+
     public override void Start()
     {
         SetBoss(WormBehaviour.Instance());
@@ -59,9 +71,24 @@ public class WormSacBehaviour : BossSectionHealthController
     {
         Kill();
         WormBehaviour.ReturnSac(this);
-        for (int i = 0; i < Random.Range(4, 7); ++i)
+        List<EnemyTemplate> validEnemies = WorldState.GetAllowedNightmareEnemyTypes();
+        List<EnemyType> typesToAdd = new List<EnemyType>();
+        int size = Random.Range(4, 7);
+        while (size > 0)
         {
-            EnemyBehaviour enemy = CombatManager.SpawnEnemy(EnemyType.Ghast, transform.position);
+            validEnemies.Shuffle();
+            foreach (EnemyTemplate template in validEnemies)
+            {
+                if (template.Value > size) return;
+                size -= template.Value;
+                typesToAdd.Add(template.EnemyType);
+                break;
+            }
+        }
+
+        foreach (EnemyType enemyType in typesToAdd)
+        {
+            EnemyBehaviour enemy = CombatManager.SpawnEnemy(enemyType, transform.position);
             enemy.MovementController.Knockback(transform.position, Random.Range(20f, 30f));
         }
     }
@@ -70,9 +97,12 @@ public class WormSacBehaviour : BossSectionHealthController
     {
         float noisyScaleFactor = Mathf.PerlinNoise(Time.timeSinceLevelLoad, _noiseOffset);
         noisyScaleFactor = noisyScaleFactor / 2f + 0.5f;
-        float scaleFactor = noisyScaleFactor * _currentScaleFactor;
+
+        float normalisedScaleFactor = noisyScaleFactor * _currentScaleFactor;
+        _sacSprite.color = new Color(1, 1, 1, normalisedScaleFactor);
+
+        float scaleFactor = normalisedScaleFactor * MaxScaleFactor;
         _collider.radius = scaleFactor;
-        _sacSprite.color = new Color(1, 1, 1, scaleFactor);
         transform.localScale = Vector2.one * scaleFactor;
     }
 
