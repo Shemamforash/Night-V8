@@ -4,51 +4,150 @@ Shader "Sam/Shadow"
 {
 	Properties
 	{
-		_TextureSample0("Texture Sample 0", 2D) = "white" {}
+		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+		_Color ("Tint", Color) = (1,1,1,1)
+		
+		_StencilComp ("Stencil Comparison", Float) = 8
+		_Stencil ("Stencil ID", Float) = 0
+		_StencilOp ("Stencil Operation", Float) = 0
+		_StencilWriteMask ("Stencil Write Mask", Float) = 255
+		_StencilReadMask ("Stencil Read Mask", Float) = 255
+
+		_ColorMask ("Color Mask", Float) = 15
+
+		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+		_TextureSample0("Texture Sample 0", 2D) = "black" {}
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
-		[HideInInspector] __dirty( "", Int ) = 1
 	}
 
 	SubShader
 	{
-		Tags{ "RenderType" = "Transparent"  "Queue" = "Geometry+0" }
-		Cull Back
-		Blend SrcAlpha OneMinusSrcAlpha
-		CGPROGRAM
-		#pragma target 3.0
-		#pragma surface surf Standard keepalpha noshadow 
-		struct Input
+		Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="True" }
+		
+		Stencil
 		{
-			float2 uv_texcoord;
-		};
-
-		uniform sampler2D _TextureSample0;
-		uniform float4 _TextureSample0_ST;
-
-		void surf( Input i , inout SurfaceOutputStandard o )
-		{
-			o.Albedo = float4(0,0,0,0).rgb;
-			float2 uv_TextureSample0 = i.uv_texcoord * _TextureSample0_ST.xy + _TextureSample0_ST.zw;
-			float4 tex2DNode1 = tex2D( _TextureSample0, uv_TextureSample0 );
-			float4 appendResult30 = (float4(tex2DNode1.r , tex2DNode1.g , tex2DNode1.b , 0.0));
-			o.Alpha = appendResult30.x;
+			Ref [_Stencil]
+			ReadMask [_StencilReadMask]
+			WriteMask [_StencilWriteMask]
+			CompFront [_StencilComp]
+			PassFront [_StencilOp]
+			FailFront Keep
+			ZFailFront Keep
+			CompBack Always
+			PassBack Keep
+			FailBack Keep
+			ZFailBack Keep
 		}
 
+
+		Cull Off
+		Lighting Off
+		ZWrite Off
+		ZTest LEqual
+		Blend SrcAlpha OneMinusSrcAlpha
+		ColorMask [_ColorMask]
+
+		
+		Pass
+		{
+			Name "Default"
+		CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			#pragma target 3.0
+
+			#include "UnityCG.cginc"
+			#include "UnityUI.cginc"
+
+			#pragma multi_compile __ UNITY_UI_ALPHACLIP
+			
+			
+			
+			struct appdata_t
+			{
+				float4 vertex   : POSITION;
+				float4 color    : COLOR;
+				float2 texcoord : TEXCOORD0;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				
+			};
+
+			struct v2f
+			{
+				float4 vertex   : SV_POSITION;
+				fixed4 color    : COLOR;
+				half2 texcoord  : TEXCOORD0;
+				float4 worldPosition : TEXCOORD1;
+				UNITY_VERTEX_OUTPUT_STEREO
+				
+			};
+			
+			uniform fixed4 _Color;
+			uniform fixed4 _TextureSampleAdd;
+			uniform float4 _ClipRect;
+			uniform sampler2D _MainTex;
+			uniform sampler2D _TextureSample0;
+			uniform float4 _TextureSample0_ST;
+			
+			v2f vert( appdata_t IN  )
+			{
+				v2f OUT;
+				UNITY_SETUP_INSTANCE_ID( IN );
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+				OUT.worldPosition = IN.vertex;
+				
+				
+				OUT.worldPosition.xyz +=  float3( 0, 0, 0 ) ;
+				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
+
+				OUT.texcoord = IN.texcoord;
+				
+				OUT.color = IN.color * _Color;
+				return OUT;
+			}
+
+			fixed4 frag(v2f IN  ) : SV_Target
+			{
+				float4 _Color0 = float4(0,0,0,0);
+				float2 uv_TextureSample0 = IN.texcoord.xy * _TextureSample0_ST.xy + _TextureSample0_ST.zw;
+				float4 appendResult40 = (float4(_Color0.r , _Color0.g , _Color0.b , pow( ( 1.0 - tex2D( _TextureSample0, uv_TextureSample0 ).r ) , 20.0 )));
+				
+				half4 color = appendResult40;
+				
+				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
+				
+				#ifdef UNITY_UI_ALPHACLIP
+				clip (color.a - 0.001);
+				#endif
+
+				return color;
+			}
 		ENDCG
+		}
 	}
 	CustomEditor "ASEMaterialInspector"
+	
+	
 }
 /*ASEBEGIN
 Version=15401
-1;23;1918;1026;1073.339;352.1581;1;True;True
-Node;AmplifyShaderEditor.SamplerNode;1;-786.6285,13.4055;Float;True;Property;_TextureSample0;Texture Sample 0;1;0;Create;True;0;0;False;0;ca24fb2031b63eb4db608ed538d98d6a;7ad304db104e7114aa30e9039038e05c;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.DynamicAppendNode;30;-277.3391,149.8419;Float;True;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.ColorNode;31;-314.3391,-160.1581;Float;False;Constant;_Color0;Color 0;3;0;Create;True;0;0;False;0;0,0,0,0;0,0,0,0;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.StandardSurfaceOutputNode;29;249,-107;Float;False;True;2;Float;ASEMaterialInspector;0;0;Standard;Sam/Shadow;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;Back;0;False;-1;0;False;-1;False;0;False;-1;0;False;-1;False;0;Custom;0.5;True;False;0;False;Transparent;;Geometry;All;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;True;0;False;-1;False;0;False;-1;255;False;-1;255;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;0;False;-1;False;2;15;10;25;False;0.5;False;2;5;False;-1;10;False;-1;0;0;False;-1;0;False;-1;-1;False;-1;-1;False;-1;0;False;0;0,0,0,0;VertexOffset;True;False;Cylindrical;False;Relative;0;;-1;-1;-1;-1;0;False;0;0;False;-1;-1;0;False;-1;0;0;16;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT;0;False;9;FLOAT;0;False;10;FLOAT;0;False;13;FLOAT3;0,0,0;False;11;FLOAT3;0,0,0;False;12;FLOAT3;0,0,0;False;14;FLOAT4;0,0,0,0;False;15;FLOAT3;0,0,0;False;0
-WireConnection;30;0;1;1
-WireConnection;30;1;1;2
-WireConnection;30;2;1;3
-WireConnection;29;0;31;0
-WireConnection;29;9;30;0
+7;29;1906;1014;1308.937;443.1838;1.3;True;True
+Node;AmplifyShaderEditor.SamplerNode;1;-862.5284,241.4055;Float;True;Property;_TextureSample0;Texture Sample 0;0;0;Create;True;0;0;False;0;b235455690464cf438452e65c3b0e002;7ad304db104e7114aa30e9039038e05c;True;0;False;black;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;44;-498.339,56.84189;Float;False;Constant;_Float0;Float 0;3;0;Create;True;0;0;False;0;1;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleSubtractOpNode;43;-359.539,182.8419;Float;True;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;48;-276.7371,438.2161;Float;False;Constant;_Float1;Float 1;1;0;Create;True;0;0;False;0;20;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;42;-424.339,-184.1581;Float;False;Constant;_Color0;Color 0;3;0;Create;True;0;0;False;0;0,0,0,0;0,0,0,0;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.PowerNode;47;-50.53698,319.9161;Float;True;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.DynamicAppendNode;40;61.86099,-59.25811;Float;True;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;35;492,-28;Float;False;True;2;Float;ASEMaterialInspector;0;4;Sam/Shadow;5056123faa0c79b47ab6ad7e8bf059a4;0;0;Default;2;True;2;5;False;-1;10;False;-1;0;1;False;-1;0;False;-1;False;True;2;False;-1;True;True;True;True;True;0;True;-9;True;True;0;True;-5;255;True;-8;255;True;-7;0;True;-4;0;True;-6;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;2;False;-1;True;0;False;-1;False;True;5;Queue=Transparent;IgnoreProjector=True;RenderType=Transparent;PreviewType=Plane;CanUseSpriteAtlas=True;False;0;False;False;False;False;False;False;False;False;False;True;2;0;;0;2;0;FLOAT4;0,0,0,0;False;1;FLOAT3;0,0,0;False;0
+WireConnection;43;0;44;0
+WireConnection;43;1;1;1
+WireConnection;47;0;43;0
+WireConnection;47;1;48;0
+WireConnection;40;0;42;1
+WireConnection;40;1;42;2
+WireConnection;40;2;42;3
+WireConnection;40;3;47;0
+WireConnection;35;0;40;0
 ASEEND*/
-//CHKSM=1764678980F420C4A3EA15FF852B0CBC4DC8D69A
+//CHKSM=EAABC0C446B785A0A967B93F39B8B3C33B0DA0C6

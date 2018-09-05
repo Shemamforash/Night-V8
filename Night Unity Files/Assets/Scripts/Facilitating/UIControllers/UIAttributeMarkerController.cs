@@ -67,7 +67,7 @@ namespace Facilitating.UIControllers
                 _state = state;
             }
 
-            public void UpdateColor()
+            public void UpdateColor(bool useRed)
             {
                 if (!_stateChanged) return;
                 Color c = Color.white;
@@ -78,24 +78,23 @@ namespace Facilitating.UIControllers
                         break;
                     case MarkerState.Faded:
                         c = UiAppearanceController.FadedColour;
+                        if (useRed) c = new Color(1, 0, 0, 0.6f);
+
                         break;
                     case MarkerState.Active:
                         c = Color.white;
                         break;
                 }
-
                 _image.DOColor(c, 1f);
             }
         }
 
-        public void SetValue(CharacterAttribute attribute)
+        public void SetValue(int max, int current, bool useRed = false)
         {
-            int max = (int) attribute.Max;
-            int currentValue = Mathf.CeilToInt(attribute.CurrentValue());
             for (int i = 0; i < 20; ++i)
             {
                 MarkerState newState;
-                if (i < currentValue)
+                if (i < current)
                     newState = MarkerState.Active;
                 else if (i < max)
                     newState = MarkerState.Faded;
@@ -104,7 +103,14 @@ namespace Facilitating.UIControllers
                 _markers[i].SetState(newState);
             }
 
-            _markers.ForEach(m => m.UpdateColor());
+            _markers.ForEach(m => m.UpdateColor(useRed));
+        }
+
+        public void SetValue(CharacterAttribute attribute)
+        {
+            int max = (int) attribute.Max;
+            int currentValue = Mathf.CeilToInt(attribute.CurrentValue());
+            SetValue(max, currentValue);
         }
     }
 }

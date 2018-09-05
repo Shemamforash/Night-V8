@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Exploration.Environment;
@@ -20,6 +21,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     private List<Region> _availableRegions;
     private Region _nearestRegion;
     private Region _currentRegion;
+    private static UIAttributeMarkerController _enduranceMarker;
 
     public void Awake()
     {
@@ -28,7 +30,19 @@ public class MapMovementController : MonoBehaviour, IInputListener
         _rigidBody2D = GetComponent<Rigidbody2D>();
         _availableRegions = MapGenerator.DiscoveredRegions();
         _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
+        _enduranceMarker = GameObject.Find("Endurance").FindChildWithName<UIAttributeMarkerController>("Bar");
         InputHandler.SetCurrentListener(this);
+    }
+
+    public void Start()
+    {
+        _enduranceMarker.SetValue(CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Endurance));
+    }
+
+    public static void UpdateEndurance(int enduranceCost)
+    {
+        CharacterAttribute endurance = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Endurance);
+        _enduranceMarker.SetValue((int) endurance.Max, (int) (endurance.CurrentValue() - enduranceCost), true);
     }
 
     private static void Recenter()

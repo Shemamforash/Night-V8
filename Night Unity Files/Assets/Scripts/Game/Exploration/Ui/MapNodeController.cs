@@ -51,9 +51,9 @@ namespace Game.Exploration.Ui
         private void SetClaimParticlesActive(bool active)
         {
             ParticleSystem claimedParticles = gameObject.FindChildWithName<ParticleSystem>("Claimed");
-            if(active) claimedParticles.Play();
+            if (active) claimedParticles.Play();
         }
-        
+
         public void SetRegion(Region region)
         {
             _region = region;
@@ -139,12 +139,12 @@ namespace Game.Exploration.Ui
             }
             else
             {
-                _costText.text = _enduranceCost + " <sprite name=\"Endurance\">";
+                _costText.text = _enduranceCost + " end";
             }
 
             _costText.text += _region.ClaimBenefitString();
             _costText.color = UiAppearanceController.InvisibleColour;
-            _costText.DOColor(Color.white, 1f);
+            _costText.DOColor(UiAppearanceController.FadedColour, 1f);
             while (_doneFading == false)
             {
                 _doneFading = true;
@@ -168,6 +168,7 @@ namespace Game.Exploration.Ui
             _costText.DOColor(Color.white, 1f);
             transform.DOScale(Vector2.one * 1.25f, 1f);
             MapGenerator.SetRoute(_region);
+            MapMovementController.UpdateEndurance(_enduranceCost);
         }
 
         public void LoseFocus(float time = 1f)
@@ -181,6 +182,7 @@ namespace Game.Exploration.Ui
             _fadeText.DOColor(UiAppearanceController.FadedColour, time);
             _costText.DOColor(UiAppearanceController.FadedColour, time);
             transform.DOScale(Vector2.one, time);
+            MapMovementController.UpdateEndurance(0);
         }
 
         private class Letter

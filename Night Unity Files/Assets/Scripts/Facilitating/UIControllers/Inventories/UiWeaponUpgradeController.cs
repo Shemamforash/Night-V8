@@ -131,7 +131,8 @@ namespace Facilitating.UIControllers
         {
             Inscription inscription = (Inscription) inscriptionObject;
             if (!inscription.CanAfford()) return;
-            CharacterManager.SelectedCharacter.EquippedWeapon.SetInscription(inscription);
+            Weapon weapon = CharacterManager.SelectedCharacter.EquippedWeapon;
+            weapon.SetInscription(inscription);
             Show();
         }
 

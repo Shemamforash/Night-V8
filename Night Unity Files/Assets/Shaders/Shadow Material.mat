@@ -18,6 +18,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 8400000, guid: 7ad304db104e7114aa30e9039038e05c, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _TextureSample0:
         m_Texture: {fileID: 8400000, guid: 7ad304db104e7114aa30e9039038e05c, type: 2}
         m_Scale: {x: 1, y: 1}
@@ -27,6 +31,24 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _Amount: 1
+    - _Amplitude: 1
+    - _ColorMask: 15
     - _Cutoff: 0.5
+    - _CutoutThresh: 0
+    - _Distance: 1
+    - _Glossiness: 0.5
+    - _InvFade: 1
+    - _Metallic: 0
+    - _Speed: 1
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _Transparency: 0.25
+    - _UseUIAlphaClip: 0
     - __dirty: 0
-    m_Colors: []
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
