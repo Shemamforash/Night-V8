@@ -46,6 +46,7 @@ namespace Game.Combat.Player
 
         private const float MaxReloadPressedTime = 1f;
         public static PlayerCombat Instance;
+
         public float MuzzleFlashOpacity;
 //        private Image _vignetteRenderer;
 
@@ -420,6 +421,7 @@ namespace Game.Combat.Player
             if (_weaponBehaviour.FullyLoaded()) return;
             if (!_weaponBehaviour.CanReload()) return;
             _reloadingCoroutine = StartCoroutine(StartReloading());
+            _dryFireTimer = 0f;
         }
 
         private void StopReloading()
@@ -433,6 +435,8 @@ namespace Game.Combat.Player
         private bool _reloading;
         public int DamageDealtSinceMarkStarted;
         private bool _damageTakenSinceMarkStarted;
+        private float _dryFireTimer;
+        public const float DryFireTimerMax = 0.3f;
 
         //COOLDOWNS
 
@@ -478,7 +482,6 @@ namespace Game.Combat.Player
             StopReloading();
         }
 
-
         public override void ApplyShotEffects(Shot s)
         {
             OnFireActions.ForEach(a => a.Invoke(s));
@@ -494,9 +497,22 @@ namespace Game.Combat.Player
                 return;
             }
 
+            if (_weaponBehaviour.Empty()) TryDryFire();
             if (!_weaponBehaviour.CanFire()) return;
             _weaponBehaviour.StartFiring();
             CombatManager.SetHasFiredShot();
+        }
+
+        private void TryDryFire()
+        {
+            if (_dryFireTimer < DryFireTimerMax)
+            {
+                _dryFireTimer += Time.deltaTime;
+                return;
+            }
+
+            _dryFireTimer = 0f;
+            WeaponAudio.DryFire();
         }
 
         public void OnShotConnects(ITakeDamageInterface hit)

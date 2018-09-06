@@ -4,25 +4,25 @@ using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class WeaponAudioController : MonoBehaviour
 {
-    private AudioClip[] _lmgShots, _smgShots, _rifleShots, _pistolShots, _shotgunShots;
-    private AudioClip[] _lmgCasings, _smgCasings, _rifleCasings, _pistolCasings, _shotgunCasings;
+    private static AudioClip[] _lmgShots, _smgShots, _rifleShots, _pistolShots, _shotgunShots;
+    private static AudioClip[] _lmgCasings, _smgCasings, _rifleCasings, _pistolCasings, _shotgunCasings;
 
     [SerializeField] private AudioClip[] _armourBreakClips;
     [SerializeField] private AudioClip _pistolClipIn, _pistolClipOut, _lmgClipIn, _lmgClipOut, _smgClipIn, _smgClipOut, _rifleClipIn, _rifleClipOut, _shotgunClipIn, _shotgunClipOut;
     [SerializeField] public AudioClip SpoolClip;
 
-    private AudioSource _audioSource;
-    private AudioHighPassFilter _highPassFilter;
+    private AudioPoolController _audioPool;
     private static bool _loaded;
+    private AudioClip[] _dryFireClips;
 
     public void Awake()
     {
         LoadClips();
-        _audioSource = GetComponent<AudioSource>();
-        _highPassFilter = GetComponent<AudioHighPassFilter>();
+        _audioPool = GetComponent<AudioPoolController>();
     }
 
     private void LoadClips()
@@ -39,6 +39,8 @@ public class WeaponAudioController : MonoBehaviour
         _rifleCasings = Resources.LoadAll<AudioClip>("Sounds/Rifle/Casings");
         _pistolCasings = Resources.LoadAll<AudioClip>("Sounds/Pistol/Casings");
         _shotgunCasings = Resources.LoadAll<AudioClip>("Sounds/Shotgun/Casings");
+
+        _dryFireClips = Resources.LoadAll<AudioClip>("Sounds/Dryfire");
         _loaded = true;
     }
 
@@ -83,8 +85,13 @@ public class WeaponAudioController : MonoBehaviour
         }
 
         if (clip == null) return;
-        _audioSource.pitch = Random.Range(0.9f, 1.1f);
-        _audioSource.PlayOneShot(clip);
+        _audioPool.PlayClip(clip);
+    }
+
+    public void DryFire()
+    {
+        Debug.Log("fart");
+        _audioPool.PlayClip(_dryFireClips.RandomElement());
     }
 
     public void StopReload(WeaponType weaponType)
@@ -110,7 +117,7 @@ public class WeaponAudioController : MonoBehaviour
         }
 
         if (clip == null) return;
-        _audioSource.PlayOneShot(clip);
+        _audioPool.PlayClip(clip);
     }
 
     public void Fire(Weapon weapon)
@@ -142,30 +149,21 @@ public class WeaponAudioController : MonoBehaviour
                 break;
         }
 
-        if (shots == null) return;
+        Assert.IsNotNull(shots);
         if (shots.Length == 0) return;
         float durability = weapon.WeaponAttributes.GetDurability().CurrentValue();
         float hpfValue = -15f * durability + 750;
         hpfValue = Mathf.Clamp(hpfValue, 0, 750);
-        _highPassFilter.cutoffFrequency = hpfValue;
-//        AudioPoolController.PlayClip(shots.RandomElement(), transform.position);
-        PlayOneShot(shots.RandomElement());
+        _audioPool.PlayClip(shots.RandomElement(), 0, hpfValue);
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(0.25f);
-        sequence.AppendCallback(() => { PlayOneShot(casings.RandomElement(), -0.6f); });
+        sequence.AppendCallback(() => { _audioPool.PlayClip(casings.RandomElement(), -0.6f); });
         if (!transform.parent.CompareTag("Player")) return;
         PlayerCombat.Instance.Shake(weapon.WeaponAttributes.DPS());
     }
 
-    private void PlayOneShot(AudioClip clip, float volumeOffset = 0)
-    {
-        _audioSource.pitch = Random.Range(0.9f, 1.1f);
-        _audioSource.volume = Random.Range(0.9f, 1.1f) + volumeOffset;
-        _audioSource.PlayOneShot(clip);
-    }
-
     public void BreakArmour()
     {
-        PlayOneShot(_armourBreakClips.RandomElement());
+        _audioPool.PlayClip(_armourBreakClips.RandomElement());
     }
 }

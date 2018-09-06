@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace SamsHelper.ReactiveUI.Elements
 {
@@ -28,6 +30,9 @@ namespace SamsHelper.ReactiveUI.Elements
         private event Action OnDeselectActions;
         public bool UseAdvancedBorder;
         private bool _isSelected;
+        private AudioClip[] _buttonSelectClip;
+        private AudioSource _audioSource;
+        private AudioMixerGroup _modifiedMixerGroup;
 
         public void OnDeselect(BaseEventData eventData)
         {
@@ -107,6 +112,7 @@ namespace SamsHelper.ReactiveUI.Elements
                 _borderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border");
                 _basicBorderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border Basic");
             }
+
             _border = Instantiate(UseAdvancedBorder ? _borderPrefab : _basicBorderPrefab);
             _border.transform.SetParent(transform, false);
             RectTransform rect = _border.GetComponent<RectTransform>();
@@ -130,6 +136,22 @@ namespace SamsHelper.ReactiveUI.Elements
             _justEntered = true;
             _fadeIn = StartCoroutine(FadeIn());
             _isSelected = true;
+            PlayButtonSelectSound();
+        }
+
+        public void PlayButtonSelectSound()
+        {
+            if (_buttonSelectClip == null) _buttonSelectClip = Resources.LoadAll<AudioClip>("Sounds/Button Clicks");
+            if (_audioSource == null)
+            {
+                _audioSource = Camera.main.gameObject.GetComponent<AudioSource>();
+                if (_audioSource == null) _audioSource = Camera.main.gameObject.AddComponent<AudioSource>();
+                if (_modifiedMixerGroup == null) _modifiedMixerGroup = Resources.Load<AudioMixer>("AudioMixer/Master").FindMatchingGroups("Modified")[0];
+                _audioSource.outputAudioMixerGroup = _modifiedMixerGroup;
+            }
+
+            _audioSource.pitch = Random.Range(0.85f, 1f);
+            _audioSource.PlayOneShot(_buttonSelectClip.RandomElement());
         }
 
         private void Exit()

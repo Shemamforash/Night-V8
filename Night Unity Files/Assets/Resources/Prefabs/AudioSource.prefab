@@ -20,7 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4233713717275874}
   - component: {fileID: 82509710559962228}
-  - component: {fileID: 114962040760847336}
+  - component: {fileID: 165613983076977064}
+  - component: {fileID: 114291745312052684}
   m_Layer: 0
   m_Name: AudioSource
   m_TagString: Untagged
@@ -136,7 +137,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &114962040760847336
+--- !u!114 &114291745312052684
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,6 +145,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1432197861781166}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf397eebf7d5e5c4f8f454afc0eba3a4, type: 3}
+  m_Script: {fileID: 11500000, guid: e4b8d9c7bfb9478db9d90c2234bb8c04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!165 &165613983076977064
+AudioHighPassFilter:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1432197861781166}
+  m_Enabled: 1
+  m_CutoffFrequency: 5000
+  m_HighpassResonanceQ: 1

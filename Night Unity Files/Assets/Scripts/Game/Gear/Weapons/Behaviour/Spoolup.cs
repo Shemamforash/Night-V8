@@ -1,6 +1,5 @@
-﻿using Game.Combat.Misc;
-using Game.Combat.Player;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Game.Gear.Weapons
 {
@@ -9,10 +8,13 @@ namespace Game.Gear.Weapons
         private AudioSource _spinSource;
         private float _spoolUpLevel;
         private bool _spooling;
+        private static AudioMixerGroup _modifiedMixerGroup;
 
         public void Awake()
         {
             _spinSource = gameObject.AddComponent<AudioSource>();
+            if (_modifiedMixerGroup == null) _modifiedMixerGroup = Resources.Load<AudioMixer>("AudioMixer/Master").FindMatchingGroups("Modified")[0];
+            _spinSource.outputAudioMixerGroup = _modifiedMixerGroup;
             _spinSource.loop = true;
         }
 

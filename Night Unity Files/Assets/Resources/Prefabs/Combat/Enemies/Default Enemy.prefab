@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 82421444047247978}
   - component: {fileID: 114231909150183516}
   - component: {fileID: 165080770772565802}
+  - component: {fileID: 114110625479665740}
   m_Layer: 10
   m_Name: Weapon Audio
   m_TagString: Untagged
@@ -159,7 +160,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1969838416443470}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.865931, y: -2.7074194, z: 0}
+  m_LocalPosition: {x: 218.19254, y: -294.2034, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4201150100652938}
@@ -340,6 +341,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5206325c25dbd0441bfbc79439ad1ae8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114110625479665740
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1361386719365014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf397eebf7d5e5c4f8f454afc0eba3a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114230014493043768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -362,27 +374,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bada4488ddac4d4bb99626e84df18aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lmgClips:
-  - {fileID: 8300000, guid: b8b6197c5b2a15a40aac2b46fc852dc3, type: 3}
-  _smgClips:
-  - {fileID: 8300000, guid: ba8ab9de4e454ee4896111fcfd0e412d, type: 3}
-  - {fileID: 8300000, guid: 88c20fbb9b641404bbd396669abc4ee6, type: 3}
-  - {fileID: 8300000, guid: fe32dde7906a8734096edbfea14b2c50, type: 3}
-  - {fileID: 8300000, guid: a9e521efc082a50468034a5b5de516fb, type: 3}
-  - {fileID: 8300000, guid: c49cfc6e553c55741908ad84c2ea157d, type: 3}
-  _rifleClips:
-  - {fileID: 8300000, guid: 9cdae42913341e44890782a6cab725e9, type: 3}
-  - {fileID: 8300000, guid: d688acd7de83d1d4cad729c533ccb084, type: 3}
-  - {fileID: 8300000, guid: 7c0b0dbee6e67574099fa5bad4abc1f0, type: 3}
-  - {fileID: 8300000, guid: 837155eba9a9356489ac76277f22c552, type: 3}
-  _pistolClips:
-  - {fileID: 8300000, guid: e624fe2b9761c0a4e93acf4587fd9779, type: 3}
-  - {fileID: 8300000, guid: 3799399bcfd8c764eb14c868624b3a28, type: 3}
-  - {fileID: 8300000, guid: e702d872b0981c84a9c1a72adb614c4c, type: 3}
-  - {fileID: 8300000, guid: ce971d82fd79d9c4cba37fc6bb9d6d1a, type: 3}
-  _shotgunClips:
-  - {fileID: 8300000, guid: 0b581358748c6b144a938626adcd7f3f, type: 3}
-  - {fileID: 8300000, guid: be6ca6252976e2a46a0c30bdf84dda0e, type: 3}
   _armourBreakClips: []
   _pistolClipIn: {fileID: 8300000, guid: 1f327117f7bc9524bb5cd8870a94406c, type: 3}
   _pistolClipOut: {fileID: 8300000, guid: daf5283ee66dca7449f90c36c3a91af0, type: 3}
@@ -394,8 +385,6 @@ MonoBehaviour:
   _rifleClipOut: {fileID: 8300000, guid: 035a0091c65cf7243bae713bc94792f1, type: 3}
   _shotgunClipIn: {fileID: 0}
   _shotgunClipOut: {fileID: 0}
-  SpoolUpClip: {fileID: 0}
-  SpoolDownClip: {fileID: 0}
   SpoolClip: {fileID: 0}
 --- !u!114 &114661499513471804
 MonoBehaviour:

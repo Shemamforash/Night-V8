@@ -11,7 +11,6 @@ public class ListController : MonoBehaviour, IInputListener
     private int _selectedItemIndex;
     private int _centreItemIndex;
     private Action<object> OnItemHover;
-//    private Action<object> OnButtonDown;
     private Action OnReturn;
     private Func<List<object>> GetContentsAction;
     private readonly List<Transform> _listItems = new List<Transform>();
@@ -90,14 +89,14 @@ public class ListController : MonoBehaviour, IInputListener
         _centreButton.Select();
         _selectedItemIndex = 0;
         InputHandler.SetCurrentListener(this);
-        UpdateList();
+        UpdateList(false);
     }
 
-    private void UpdateList()
+    private void UpdateList(bool playSound = true)
     {
         _listObjects = GetContentsAction?.Invoke();
         _listSize = _listObjects.Count;
-        Select();
+        Select(playSound);
     }
 
     public void Hide()
@@ -122,7 +121,7 @@ public class ListController : MonoBehaviour, IInputListener
         }
     }
 
-    private void Select()
+    private void Select(bool playSound = true)
     {
         for (int i = 0; i < _listItems.Count; ++i)
         {
@@ -138,6 +137,9 @@ public class ListController : MonoBehaviour, IInputListener
             _uiElements[i].Set(o, isCentreItem);
             if (isCentreItem && _listObjects.Count > 0) OnItemHover?.Invoke(_listObjects[_selectedItemIndex]);
         }
+
+        if (!playSound) return;
+        _centreButton.PlayButtonSelectSound();
     }
 
     private void TrySelectBelow()

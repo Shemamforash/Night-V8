@@ -36,7 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4919819283497660}
   - component: {fileID: 82037088127717344}
-  m_Layer: 4
+  m_Layer: 5
   m_Name: Audio A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -346,7 +346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4759509256243854}
   - component: {fileID: 82803010534142974}
-  m_Layer: 4
+  m_Layer: 5
   m_Name: Audio B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -364,6 +364,22 @@ GameObject:
   - component: {fileID: 82946713894255396}
   m_Layer: 4
   m_Name: Audio A
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1537345235432770
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4642768180163258}
+  - component: {fileID: 20565758467896914}
+  m_Layer: 17
+  m_Name: Lighting Camera (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -398,6 +414,7 @@ GameObject:
   - component: {fileID: 82404729731826060}
   - component: {fileID: 114223202621381432}
   - component: {fileID: 165375107121579548}
+  - component: {fileID: 114669619448850030}
   m_Layer: 10
   m_Name: Weapon Audio
   m_TagString: Untagged
@@ -466,7 +483,7 @@ GameObject:
   - component: {fileID: 198073424937564446}
   - component: {fileID: 199482181467776382}
   - component: {fileID: 82592446385269920}
-  m_Layer: 4
+  m_Layer: 5
   m_Name: Sun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -928,6 +945,19 @@ Transform:
   m_Father: {fileID: 4964439404601294}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4642768180163258
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1537345235432770}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4772645390367984}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4690352437387156
 Transform:
   m_ObjectHideFlags: 1
@@ -993,6 +1023,7 @@ Transform:
   - {fileID: 4237466034465602}
   - {fileID: 4230982490490928}
   - {fileID: 4887739923989946}
+  - {fileID: 4642768180163258}
   m_Father: {fileID: 4222461071829304}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1029,7 +1060,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1641826599658802}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4772645390367984}
@@ -1122,7 +1153,7 @@ Camera:
   field of view: 40
   orthographic: 0
   orthographic size: 5
-  m_Depth: 0
+  m_Depth: -2
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 16
@@ -1160,7 +1191,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
@@ -1168,6 +1199,46 @@ Camera:
     m_Bits: 2097152
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!20 &20565758467896914
+Camera:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1537345235432770}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_projectionMatrixMode: 1
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 1
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 2097152
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 8400000, guid: 7ad304db104e7114aa30e9039038e05c, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -1202,7 +1273,7 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 5
-  m_Depth: 1
+  m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 2096935
@@ -2903,27 +2974,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bada4488ddac4d4bb99626e84df18aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lmgClips:
-  - {fileID: 8300000, guid: b8b6197c5b2a15a40aac2b46fc852dc3, type: 3}
-  _smgClips:
-  - {fileID: 8300000, guid: ba8ab9de4e454ee4896111fcfd0e412d, type: 3}
-  - {fileID: 8300000, guid: 88c20fbb9b641404bbd396669abc4ee6, type: 3}
-  - {fileID: 8300000, guid: fe32dde7906a8734096edbfea14b2c50, type: 3}
-  - {fileID: 8300000, guid: a9e521efc082a50468034a5b5de516fb, type: 3}
-  - {fileID: 8300000, guid: c49cfc6e553c55741908ad84c2ea157d, type: 3}
-  _rifleClips:
-  - {fileID: 8300000, guid: 9cdae42913341e44890782a6cab725e9, type: 3}
-  - {fileID: 8300000, guid: d688acd7de83d1d4cad729c533ccb084, type: 3}
-  - {fileID: 8300000, guid: 7c0b0dbee6e67574099fa5bad4abc1f0, type: 3}
-  - {fileID: 8300000, guid: 837155eba9a9356489ac76277f22c552, type: 3}
-  _pistolClips:
-  - {fileID: 8300000, guid: e624fe2b9761c0a4e93acf4587fd9779, type: 3}
-  - {fileID: 8300000, guid: 3799399bcfd8c764eb14c868624b3a28, type: 3}
-  - {fileID: 8300000, guid: e702d872b0981c84a9c1a72adb614c4c, type: 3}
-  - {fileID: 8300000, guid: ce971d82fd79d9c4cba37fc6bb9d6d1a, type: 3}
-  _shotgunClips:
-  - {fileID: 8300000, guid: 0b581358748c6b144a938626adcd7f3f, type: 3}
-  - {fileID: 8300000, guid: be6ca6252976e2a46a0c30bdf84dda0e, type: 3}
   _armourBreakClips: []
   _pistolClipIn: {fileID: 8300000, guid: 1f327117f7bc9524bb5cd8870a94406c, type: 3}
   _pistolClipOut: {fileID: 8300000, guid: daf5283ee66dca7449f90c36c3a91af0, type: 3}
@@ -2935,8 +2985,6 @@ MonoBehaviour:
   _rifleClipOut: {fileID: 8300000, guid: 035a0091c65cf7243bae713bc94792f1, type: 3}
   _shotgunClipIn: {fileID: 0}
   _shotgunClipOut: {fileID: 0}
-  SpoolUpClip: {fileID: 8300000, guid: 6b8c889aa01191046853b9d7f9458f5e, type: 3}
-  SpoolDownClip: {fileID: 8300000, guid: e4d0163d7218a344b95a79cec4af4335, type: 3}
   SpoolClip: {fileID: 8300000, guid: a03333f2da0f9394d92f668f579ddf27, type: 3}
 --- !u!114 &114261845215007244
 MonoBehaviour:
@@ -3034,6 +3082,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 0
+--- !u!114 &114669619448850030
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1607183342533860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf397eebf7d5e5c4f8f454afc0eba3a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114688986846935242
 MonoBehaviour:
   m_ObjectHideFlags: 1

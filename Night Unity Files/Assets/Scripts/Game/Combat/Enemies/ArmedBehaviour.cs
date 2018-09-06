@@ -17,7 +17,7 @@ namespace Game.Combat.Enemies
         {
             base.Initialise(enemy);
             SetHealBehaviour();
-            if(Weapon() == null) Debug.Log(enemy.Template.EnemyType + " " + enemy.Template.HasWeapon);
+            if (Weapon() == null) Debug.Log(enemy.Template.EnemyType + " " + enemy.Template.HasWeapon);
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             IdealWeaponDistance = Weapon().CalculateIdealDistance();
         }
@@ -55,6 +55,7 @@ namespace Game.Combat.Enemies
             {
                 return;
             }
+
             SetActionText("Reloading");
             float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
             CurrentAction = () =>
@@ -111,7 +112,6 @@ namespace Game.Combat.Enemies
             }
 
             FacePlayer = true;
-            SetActionText("Aiming");
             CurrentAction = Fire;
         }
 
@@ -121,16 +121,15 @@ namespace Game.Combat.Enemies
             SetActionText("Firing");
             CurrentAction = () =>
             {
-                if (!_weaponBehaviour.CanFire()) return;
-                _weaponBehaviour.StartFiring();
-                if (_weaponBehaviour.Empty())
+                if (!_weaponBehaviour.CanFire())
                 {
-                    Reload();
-                }
-                else if (!automatic)
-                {
+                    if (!_weaponBehaviour.Empty() && automatic) return;
+                    _weaponBehaviour.StopFiring();
                     Aim();
+                    return;
                 }
+
+                _weaponBehaviour.StartFiring();
             };
         }
     }

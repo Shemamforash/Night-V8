@@ -19,12 +19,19 @@ AudioMixerController:
     name: Master
   - guid: 8f39123fac3a0384192251e1152891c5
     name: Modified
+  - guid: 4626791b3c69e2546af4599caa7a67e0
+    name: WeatherEcho
+  - guid: 3113d0a59dc155c499eeb08d4d5958ea
+    name: WeatherWetMix
+  - guid: 8857047037302124ea7c6bc11241961e
+    name: WeatherCutoffFreq
   m_AudioMixerGroupViews:
   - guids:
     - e1b968ccd17e2ce4c96a4d505c21e4e9
     - 25d5a1a06aea7874ab0228f4d52642e6
     - f04d6b6325a443344ba5701a435802c9
     - a51501af57c27b946b02982803374d5e
+    - 1d9f3b31f99b3e848b31f1fdf50b30e0
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -68,9 +75,12 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 1bd4eba95fb17b84d81acfaffb1dee9e
   m_FloatValues:
+    8857047037302124ea7c6bc11241961e: 22000
     246fb201aeaebad46a28ed9f4f28476c: 10
+    b563ed5280c850a4a9e8c9252e1a302e: 463
     4de9d3433194bd94098c3d8fb776e236: 678
     f92e537387bd7834e8a8f5bb19ba4573: -6175
+    3113d0a59dc155c499eeb08d4d5958ea: 0
     78481eb5dfb4eca4fbca6653dee3a792: 0.8
     87d9e4e5c03cf5b49a0320e83c8bad78: 1.2
     b85c6e36f55a3084690202bc8c5c2ece: 20
@@ -80,6 +90,7 @@ AudioMixerSnapshotController:
     f749912ac458ad545a80f63859164d78: 0.85
     c3f7b63abcbf93d4e8c52a73f858ff72: 0
     2f5e17da65c2ff241ae9beae7e3d3f6f: 22000
+    4626791b3c69e2546af4599caa7a67e0: 0
     936c534bf05083f4ebda68d9784e6816: 0.089
     f623696cb94c65a4d8547ffd637d9429: 9.4
     4938d99c81bae3240a807751e14d4a43: 1.94
@@ -115,6 +126,7 @@ AudioMixerGroupController:
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 25d5a1a06aea7874ab0228f4d52642e6
   m_Children:
+  - {fileID: 243759607309395978}
   - {fileID: 243508677706218106}
   - {fileID: 243324791178901832}
   m_Volume: 8f39123fac3a0384192251e1152891c5
@@ -143,6 +155,25 @@ AudioMixerGroupController:
   m_Mute: 0
   m_Solo: 0
   m_BypassEffects: 0
+--- !u!243 &243759607309395978
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Weather
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 1d9f3b31f99b3e848b31f1fdf50b30e0
+  m_Children: []
+  m_Volume: f135a018225d94a4c854c9fbb460204b
+  m_Pitch: 2b3db6d77e0ac6c45a2dcf6f4529cbba
+  m_Effects:
+  - {fileID: 244262194194902152}
+  - {fileID: 244061683858345016}
+  - {fileID: 244808709016556530}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!244 &244034601101767480
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -152,6 +183,36 @@ AudioMixerEffectController:
   m_EffectID: e3bfb6a3b08a14c429f2195d42f59147
   m_EffectName: Attenuation
   m_MixLevel: 1e4f59cebb040bd498d643271907e2c7
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!244 &244061683858345016
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_EffectID: 454eea1a0a0a0b04eb20ad8fe65513e2
+  m_EffectName: Lowpass
+  m_MixLevel: 330829aeb32d13c49bb04707d29ef209
+  m_Parameters:
+  - m_ParameterName: Cutoff freq
+    m_GUID: 8857047037302124ea7c6bc11241961e
+  - m_ParameterName: Resonance
+    m_GUID: 9f9c779771898824c8d84c1ffb89390d
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!244 &244262194194902152
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_EffectID: 7315a5cfc8f1f8a458db162d060d7705
+  m_EffectName: Attenuation
+  m_MixLevel: 44eb0901bbc025c448238120b743b7f4
   m_Parameters: []
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
@@ -221,6 +282,29 @@ AudioMixerEffectController:
   m_EffectName: Attenuation
   m_MixLevel: e77c3521d3630eb4aa0b09277db9db48
   m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!244 &244808709016556530
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_EffectID: f9252d3ae37155446b44de1174361485
+  m_EffectName: Echo
+  m_MixLevel: 7d0d0c8fa98b8a74a818374e1cc52ecf
+  m_Parameters:
+  - m_ParameterName: Delay
+    m_GUID: b563ed5280c850a4a9e8c9252e1a302e
+  - m_ParameterName: Decay
+    m_GUID: 4626791b3c69e2546af4599caa7a67e0
+  - m_ParameterName: Max channels
+    m_GUID: 267a67002447470439dbd4030dae7a73
+  - m_ParameterName: Drymix
+    m_GUID: 0aaaa000292f8f5438c911eca64839a5
+  - m_ParameterName: Wetmix
+    m_GUID: 3113d0a59dc155c499eeb08d4d5958ea
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0

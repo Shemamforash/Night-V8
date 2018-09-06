@@ -133,24 +133,24 @@ namespace Game.Characters
             switch (temperature)
             {
                 case TemperatureCategory.Freezing:
-                    thirstTemperatureModifier = 0.5f;
-                    hungerTemperatureModifier = 1.5f;
+                    thirstTemperatureModifier = 1f;
+                    hungerTemperatureModifier = 2f;
                     break;
                 case TemperatureCategory.Cold:
-                    thirstTemperatureModifier = 0.75f;
-                    hungerTemperatureModifier = 1.25f;
+                    thirstTemperatureModifier = 1f;
+                    hungerTemperatureModifier = 1.5f;
                     break;
                 case TemperatureCategory.Warm:
                     thirstTemperatureModifier = 1f;
                     hungerTemperatureModifier = 1f;
                     break;
                 case TemperatureCategory.Hot:
-                    thirstTemperatureModifier = 1.25f;
-                    hungerTemperatureModifier = 0.75f;
+                    thirstTemperatureModifier = 1.5f;
+                    hungerTemperatureModifier = 1f;
                     break;
                 case TemperatureCategory.Burning:
-                    thirstTemperatureModifier = 1.5f;
-                    hungerTemperatureModifier = 0.5f;
+                    thirstTemperatureModifier = 2f;
+                    hungerTemperatureModifier = 1f;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

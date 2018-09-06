@@ -6,6 +6,7 @@ using Facilitating.Audio;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.Audio;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Weather
@@ -28,11 +29,26 @@ namespace Game.Exploration.Weather
         [SerializeField] private float _starsMax;
         [SerializeField] [Range(0, 1)] private float _sunMinBrightness, _sunMaxBrightness;
 
-        [SerializeField] private AudioClip _rainLight, _rainMedium, _rainHeavy, _windHeavy, _windMedium, _windLight;
+        private static bool _audioLoaded;
+        private static AudioClip[] _lightRainClips, _mediumRainClips, _heavyRainClips;
+        private static AudioClip[] _lightWindClips, _mediumWindClips, _heavyWindClips;
         private AudioSource _nightTimeAudioSource, _dayTimeAudioSource;
+
+        private static void LoadAudioClips()
+        {
+            if (_audioLoaded) return;
+            _lightRainClips = Resources.LoadAll<AudioClip>("Sounds/Rain/Light");
+            _mediumRainClips = Resources.LoadAll<AudioClip>("Sounds/Rain/Medium");
+            _heavyRainClips = Resources.LoadAll<AudioClip>("Sounds/Rain/Heavy");
+            _lightWindClips = Resources.LoadAll<AudioClip>("Sounds/Wind/Light");
+            _mediumWindClips = Resources.LoadAll<AudioClip>("Sounds/Wind/Medium");
+            _heavyWindClips = Resources.LoadAll<AudioClip>("Sounds/Wind/Heavy");
+            _audioLoaded = true;
+        }
 
         public void Awake()
         {
+            LoadAudioClips();
             _fog = new FogSystem(gameObject.FindChildWithName("Fog"), _fogMax);
             _rain = new RainSystem(gameObject.FindChildWithName("Rain"), _rainMax);
             _hail = new HailSystem(gameObject.FindChildWithName("Hail"), _hailMax);
@@ -112,7 +128,7 @@ namespace Game.Exploration.Weather
             StartCoroutine(_dust.ChangeWeather(_targetAttributes.DustAmount));
             StartCoroutine(_wind.ChangeWeather(_targetAttributes.WindAmount));
             StartCoroutine(_hail.ChangeWeather(_targetAttributes.HailAmount));
-            StartCoroutine(_fog.ChangeWeather(_targetAttributes.FogAmount));
+            StartCoroutine(_fog.ChangeWeather(_targetAttributes.RainAmount));
         }
 
         private void ChangeWeatherInstant()
@@ -133,9 +149,9 @@ namespace Game.Exploration.Weather
 
             protected override AudioClip GetAudioClipForWeather(float amount)
             {
-                if (amount > 0.7f) return _instance._rainHeavy;
-                if (amount > 0.4) return _instance._rainMedium;
-                return amount > 0 ? _instance._rainLight : null;
+                if (amount > 0.7f) return _heavyRainClips.RandomElement();
+                if (amount > 0.4) return _mediumRainClips.RandomElement();
+                return amount > 0 ? _lightRainClips.RandomElement() : null;
             }
         }
 
@@ -147,9 +163,9 @@ namespace Game.Exploration.Weather
 
             protected override AudioClip GetAudioClipForWeather(float amount)
             {
-                if (amount > 0.7f) return _instance._windHeavy;
-                if (amount > 0.4) return _instance._windMedium;
-                return amount > 0 ? _instance._windLight : null;
+                if (amount > 0.7f) return _heavyWindClips.RandomElement();
+                if (amount > 0.4) return _mediumWindClips.RandomElement();
+                return amount > 0 ? _lightWindClips.RandomElement() : null;
             }
         }
 
@@ -165,26 +181,20 @@ namespace Game.Exploration.Weather
             }
         }
 
-        private class SunSystem : WeatherSystem
-        {
-            public SunSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)
-            {
-            }
-
-            protected override AudioClip GetAudioClipForWeather(float amount)
-            {
-                return null;
-            }
-        }
-
         private class FogSystem : WeatherSystem
         {
+            private AudioMixer _audioMixer;
+
             public FogSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)
             {
             }
 
             protected override AudioClip GetAudioClipForWeather(float amount)
             {
+                if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
+                _audioMixer.SetFloat("WeatherEcho", amount * 50f);
+                _audioMixer.SetFloat("WeatherWetMix", amount * 100f);
+                _audioMixer.SetFloat("WeatherCutoffFreq", 22000 - amount * 20000f);
                 return null;
             }
         }
@@ -201,33 +211,20 @@ namespace Game.Exploration.Weather
             }
         }
 
-        private class StarSystem : WeatherSystem
-        {
-            public StarSystem(GameObject weatherObject, float maxEmission) : base(weatherObject, maxEmission)
-            {
-            }
-
-            protected override AudioClip GetAudioClipForWeather(float amount)
-            {
-                return null;
-            }
-        }
-
         private abstract class WeatherSystem
         {
             private readonly ParticleSystem _particles;
             private readonly float _maxEmission;
-            private readonly AudioSource _audioSourceA, _audioSourceB;
-
-            private AudioSource _currentAudioSource;
-            private AudioClip _currentClip;
             private float _currentWeatherAmount;
+            private readonly CrossFader _crossFader;
 
             protected WeatherSystem(GameObject weatherObject, float maxEmission)
             {
                 _particles = weatherObject.GetComponent<ParticleSystem>();
-                _audioSourceA = weatherObject.FindChildWithName<AudioSource>("Audio A");
-                _audioSourceB = weatherObject.FindChildWithName<AudioSource>("Audio B");
+                _crossFader = weatherObject.GetComponent<CrossFader>();
+                _crossFader.SetLooping();
+                _crossFader.StartAtRandomPosition();
+                _crossFader.SetMixerGroup("Weather");
                 _maxEmission = maxEmission;
             }
 
@@ -240,7 +237,7 @@ namespace Game.Exploration.Weather
                 float finalRate = amount * _maxEmission;
 
                 AudioClip newClip = GetAudioClipForWeather(amount);
-                CrossFade(newClip);
+                _crossFader.CrossFade(newClip);
                 float currentTime = 5f;
                 while (currentTime > 0f)
                 {
@@ -260,31 +257,7 @@ namespace Game.Exploration.Weather
                 float finalRate = amount * _maxEmission;
                 emission.rateOverTime = finalRate;
                 AudioClip newClip = GetAudioClipForWeather(amount);
-                CrossFade(newClip);
-            }
-
-            private void CrossFade(AudioClip to)
-            {
-                if (_currentAudioSource != null)
-                {
-                    if (_currentAudioSource.clip == to) return;
-                    Sequence sequence = DOTween.Sequence();
-                    AudioSource fadeOut = _currentAudioSource;
-                    sequence.Append(fadeOut.DOFade(0, 2));
-                    sequence.AppendCallback(() => fadeOut.Stop());
-                }
-
-                _currentAudioSource = _audioSourceA == _currentAudioSource ? _audioSourceB : _audioSourceA;
-                _currentAudioSource.clip = to;
-                if (to != null)
-                {
-                    float randomPosition = Random.Range(0f, to.length);
-                    _currentAudioSource.time = randomPosition;
-                }
-
-                _currentAudioSource.volume = 0;
-                _currentAudioSource.Play();
-                _currentAudioSource.DOFade(1, 2);
+                _crossFader.CrossFade(newClip);
             }
         }
     }

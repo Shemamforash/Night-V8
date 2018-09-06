@@ -37,23 +37,15 @@ namespace Facilitating.UIControllers
             if (Simple) return;
             switch (EnvironmentManager.GetTemperature())
             {
-                case TemperatureCategory.Freezing:
-                    ModifierIndicator.SetText("Retaining lots of water");
-                    break;
-                case TemperatureCategory.Cold:
-                    ModifierIndicator.SetText("Retaining some water");
-                    break;
-                case TemperatureCategory.Warm:
-                    ModifierIndicator.SetText("Feeling normal");
-                    break;
                 case TemperatureCategory.Hot:
-                    ModifierIndicator.SetText("Sweating slightly");
+                    ModifierIndicator.SetText("+Thirst");
                     break;
                 case TemperatureCategory.Burning:
-                    ModifierIndicator.SetText("Sweating heavily");
+                    ModifierIndicator.SetText("++Thirst");
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    ModifierIndicator.SetText("");
+                    break;
             }
         }
 
@@ -66,22 +58,14 @@ namespace Facilitating.UIControllers
             switch (EnvironmentManager.GetTemperature())
             {
                 case TemperatureCategory.Freezing:
-                    ModifierIndicator.SetText("Losing lots of heat");
+                    ModifierIndicator.SetText("++Hunger");
                     break;
                 case TemperatureCategory.Cold:
-                    ModifierIndicator.SetText("Losing some heat");
-                    break;
-                case TemperatureCategory.Warm:
-                    ModifierIndicator.SetText("Feeling normal");
-                    break;
-                case TemperatureCategory.Hot:
-                    ModifierIndicator.SetText("Barely losing any heat");
-                    break;
-                case TemperatureCategory.Burning:
-                    ModifierIndicator.SetText("Losing no heat");
+                    ModifierIndicator.SetText("+Hunger");
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    ModifierIndicator.SetText("");
+                    break;
             }
         }
     }

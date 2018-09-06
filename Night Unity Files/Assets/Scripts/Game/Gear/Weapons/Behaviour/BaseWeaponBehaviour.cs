@@ -74,15 +74,11 @@ namespace Game.Gear.Weapons
             {
                 Shot shot = Shot.Create(Origin);
                 Origin.ApplyShotEffects(shot);
-                if (this is HoldAndFire)
-                {
-                    shot.Pierce();
-                    Debug.Log("fired");
-                }
+                if (this is HoldAndFire) shot.Pierce();
                 shot.Fire();
-                Origin.WeaponAudio.Fire(Weapon);
             }
 
+            Origin.WeaponAudio.Fire(Weapon);
             ConsumeAmmo(1);
             if (!(Origin is PlayerCombat)) return;
             PlayerCombat.Instance.MuzzleFlashOpacity = 0.2f;

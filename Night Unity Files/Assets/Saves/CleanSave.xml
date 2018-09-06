@@ -155,7 +155,7 @@
       </Attributes>
       <Brands />
       <StoryUnlocked>False</StoryUnlocked>
-      <StoryProgress>1</StoryProgress>
+      <StoryTimeRemaining>1</StoryTimeRemaining>
       <TimeAlive>1</TimeAlive>
       <CharacterClass>Wanderer</CharacterClass>
       <PlayerAction>
