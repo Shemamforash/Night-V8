@@ -139,7 +139,7 @@ public class ListController : MonoBehaviour, IInputListener
         }
 
         if (!playSound) return;
-        _centreButton.PlayButtonSelectSound();
+        ButtonClickListener.Click();
     }
 
     private void TrySelectBelow()

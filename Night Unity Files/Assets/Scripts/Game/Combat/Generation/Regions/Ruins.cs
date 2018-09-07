@@ -202,7 +202,6 @@ namespace Game.Combat.Generation
             PlaceShrine();
             PlaceWalls();
             PlaceItems();
-            PlaceEchoes();
             GenerateTinyRocks(Random.Range(100, 300));
         }
 

@@ -201,6 +201,7 @@
           <e p="readme.txt" t="Include" />
         </e>
         <e p="AudioPoolController.cs" t="Include" />
+        <e p="ButtonClickListener.cs" t="Include" />
         <e p="CameraLock.cs" t="Include" />
         <e p="CombatWeatherController.cs" t="Include" />
         <e p="CreditsController.cs" t="Include" />
@@ -482,7 +483,6 @@
                 <e p="BulletTrailFade.cs" t="Include" />
                 <e p="CharacterCombat.cs" t="Include" />
                 <e p="DecayBehaviour.cs" t="Include" />
-                <e p="EchoBehaviour.cs" t="Include" />
                 <e p="EnemyCampfire.cs" t="Include" />
                 <e p="EssenceCloudBehaviour.cs" t="Include" />
                 <e p="Explosion.cs" t="Include" />
@@ -491,6 +491,7 @@
                 <e p="FootstepMaker.cs" t="Include" />
                 <e p="HealthController.cs" t="Include" />
                 <e p="ITakeDamageInterface.cs" t="Include" />
+                <e p="JournalSource.cs" t="Include" />
                 <e p="Mine.cs" t="Include" />
                 <e p="SaltBehaviour.cs" t="Include" />
                 <e p="ShelterCharacterBehaviour.cs" t="Include" />

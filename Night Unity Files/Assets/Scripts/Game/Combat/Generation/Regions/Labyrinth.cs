@@ -20,7 +20,6 @@ namespace Game.Combat.Generation
             PlaceShrine();
             GenerateSplinteredArea(Random.Range(4, 7));
             PlaceItems();
-            PlaceEchoes();
         }
 
         private void JoinNeighbors(List<CrackNode> points, List<Edge> existingEdges)

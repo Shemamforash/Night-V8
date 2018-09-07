@@ -46,7 +46,7 @@ public abstract class ContainerController
         return _inventory;
     }
 
-    public void Take()
+    public virtual void Take()
     {
         int resourceBonus = (int) PlayerCombat.Instance.Player.Attributes.Val(AttributeType.ResourceFindBonus);
         if (resourceBonus != 0)
@@ -67,6 +67,11 @@ public abstract class ContainerController
         }
 
         Inventory().MoveAllResources(CharacterManager.SelectedCharacter.Inventory());
+        Fade();
+    }
+
+    protected void Fade()
+    {
         _containerBehaviour.StartCoroutine(_containerBehaviour.Fade());
     }
 

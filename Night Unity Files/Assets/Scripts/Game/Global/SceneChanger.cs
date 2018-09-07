@@ -50,6 +50,7 @@ namespace Game.Global
 
             loadProgressAction?.Invoke(1);
             sceneLoaded.allowSceneActivation = true;
+            ButtonClickListener.SuppressClick();
         }
 
         public static void ChangeScene(string sceneName, bool fade = true, Action<float> loadProgressAction = null)

@@ -64,6 +64,7 @@ namespace Game.Global
             WeatherManager.Load(doc);
             EnvironmentManager.Load(doc);
             WorldEventManager.Load(doc);
+            JournalEntry.Load(doc);
         }
 
         public static void Save(XmlNode doc)
@@ -81,6 +82,7 @@ namespace Game.Global
             WeatherManager.Save(doc);
             EnvironmentManager.Save(doc);
             WorldEventManager.Save(doc);
+            JournalEntry.Save(doc);
         }
 
         public static void ResetWorld()

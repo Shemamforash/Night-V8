@@ -1,4 +1,4 @@
-﻿﻿using System.Collections;
+﻿using System.Collections;
 using DG.Tweening;
 using Game.Combat.Player;
 using Game.Combat.Ui;
@@ -16,7 +16,7 @@ namespace Game.Combat.Generation
         public ContainerController ContainerController;
         private bool _revealed;
         private const float MaxRevealTime = 1f;
-        private SpriteRenderer _glowSprite, _iconSprite;
+        private SpriteRenderer _glowSprite, _iconSprite, _ringSprite;
         private InsectBehaviour _insectBehaviour;
 
         public void Awake()
@@ -25,6 +25,8 @@ namespace Game.Combat.Generation
             _glowSprite.color = UiAppearanceController.InvisibleColour;
             _iconSprite = gameObject.FindChildWithName<SpriteRenderer>("Icon");
             _iconSprite.color = UiAppearanceController.InvisibleColour;
+            _ringSprite = gameObject.FindChildWithName<SpriteRenderer>("Ring");
+            _ringSprite.color = UiAppearanceController.InvisibleColour;
         }
 
         public void SetContainerController(ContainerController containerController)
@@ -53,10 +55,12 @@ namespace Game.Combat.Generation
         public IEnumerator Fade()
         {
             _fading = true;
-            if(_insectBehaviour != null) _insectBehaviour.Fade();
+            if (_insectBehaviour != null) _insectBehaviour.Fade();
             PlayerUi.FadeTextOut();
             _glowSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
-            _iconSprite.DOColor(UiAppearanceController.FadedColour, MaxRevealTime);
+            _iconSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
+            _ringSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
+
             Tween t = _iconSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
             yield return t.WaitForCompletion();
             Destroy(this);
@@ -68,6 +72,7 @@ namespace Game.Combat.Generation
             CombatManager.IncreaseItemsFound();
             _revealed = true;
             _iconSprite.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
+            _ringSprite.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
         }
 
         private float _lastDistance = -1;

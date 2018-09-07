@@ -30,7 +30,6 @@ namespace Game.Exploration.Regions
         public int RegionID;
         private int _lastVisitDay = -1;
         public Vector2 ShrinePosition;
-        public readonly List<Vector2> EchoPositions = new List<Vector2>();
         public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
         public Vector2? HealShrinePosition = null;
         public Vector2? EssenceShrinePosition = null;

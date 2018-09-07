@@ -42,7 +42,7 @@ public class UiJournalController : UiInventoryMenuController
 
     private List<object> GetAvailableJournalEntries()
     {
-        return JournalEntry.JournalEntries.ToObjectList();
+        return JournalEntry.GetUnlockedEntries().ToObjectList();
     }
 
     private class JournalElement : ListElement

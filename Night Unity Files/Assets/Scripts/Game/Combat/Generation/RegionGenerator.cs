@@ -36,7 +36,6 @@ namespace Game.Combat.Generation
         protected virtual void GenerateObjects()
         {
             GenerateShrine();
-            GenerateEchoes();
             if (_region.HealShrinePosition != null)
             {
                 HealShrineBehaviour.CreateObject(_region.HealShrinePosition.Value);
@@ -61,30 +60,6 @@ namespace Game.Combat.Generation
             _region.Barriers = barriers;
             PathingGrid.InitialiseGrid();
             _region.MarkGenerated();
-        }
-
-        protected void PlaceEchoes()
-        {
-            for (int i = 0; i < 10; ++i)
-            {
-                Vector2 position = FindAndRemoveValidPosition();
-                _region.EchoPositions.Add(FindAndRemoveValidPosition());
-                CreateImpassablePoint(position);
-            }
-        }
-
-        private void GenerateEchoes()
-        {
-            if (_region.EchoPositions.Count == 0) return;
-            List<Characters.Player> characters = CharacterManager.Characters;
-            characters.Shuffle();
-            foreach (Characters.Player c in characters)
-            {
-                if (!c.HasAvailableStoryLine()) continue;
-                Vector2 echoPosition = _region.EchoPositions.RandomElement();
-                EchoBehaviour.Create(echoPosition, c);
-                break;
-            }
         }
 
         private void CreateImpassablePoint(Vector2 position)
@@ -268,6 +243,12 @@ namespace Game.Combat.Generation
             _healthShrineCounter += Random.Range(1, 3);
             _essenceShrineCounter += Random.Range(1, 3);
 
+            JournalEntry journalEntry = JournalEntry.GetEntry();
+            if (journalEntry != null)
+            {
+                _region.Containers.Add(new JournalSource(FindAndRemoveValidPosition(), journalEntry));
+            }
+            
             for (int i = 0; i < _region.WaterSourceCount; ++i)
             {
                 _region.Containers.Add(new WaterSource(FindAndRemoveValidPosition()));

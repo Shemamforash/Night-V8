@@ -23,7 +23,6 @@ namespace Game.Combat.Generation
             GenerateRockWall(rightPosition, false, rotateAmount);
             PlaceShrine();
             PlaceItems();
-            PlaceEchoes();
             GenerateSmallRocks(Random.Range(5, 15));
             GenerateTinyRocks(Random.Range(20, 40));
         }

@@ -30,7 +30,6 @@ namespace Game.Combat.Generation
             PlaceShrine();
             GenerateMap();
             PlaceItems();
-            PlaceEchoes();
         }
 
 //        private List<CavePoint> drawPoints = new List<CavePoint>();
