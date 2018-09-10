@@ -14,6 +14,7 @@ namespace Game.Characters.CharacterActions
         private int InitialDuration;
         protected Action HourCallback;
         protected Action MinuteCallback;
+        private float _startTime, _endTime;
 
         protected BaseCharacterAction(string name, Player playerCharacter) : base(playerCharacter.States, name)
         {
@@ -31,9 +32,9 @@ namespace Game.Characters.CharacterActions
 
         public void UpdateAction()
         {
+            if(Duration == InitialDuration) PlayerCharacter.CharacterView.SetCurrentAction(DisplayName, _startTime, _endTime);
             --_timeRemaining;
             MinuteCallback?.Invoke();
-            UpdateActionText();
             if (_timeRemaining != 0) return;
             HourCallback?.Invoke();
             ResetTimeRemaining();
@@ -42,6 +43,8 @@ namespace Game.Characters.CharacterActions
         private void ResetTimeRemaining()
         {
             _timeRemaining = WorldState.MinutesPerHour;
+            _startTime = WorldState.GetTimeSinceStart();
+            _endTime = WorldState.GetTimeInXMinutes(Duration);
         }
 
         public override void Enter()
@@ -51,20 +54,14 @@ namespace Game.Characters.CharacterActions
         }
 
         protected string DisplayName;
-        protected bool ShowTime = true;
 
-        protected void SetDuration(int duration)
+        protected void SetDuration(int duration = -1)
         {
-            Duration = duration;
+            if (duration == -1) Duration = WorldState.MinutesPerHour / 2;
+            else Duration = duration; 
             InitialDuration = Duration;
         }
         
-        public void UpdateActionText()
-        {
-            float normalisedTime = -1;
-            if (ShowTime) normalisedTime = (float)Duration / InitialDuration;
-            PlayerCharacter.CharacterView.UpdateCurrentActionText(DisplayName, normalisedTime);
-        }
 
         public void Save(XmlNode doc)
         {

@@ -116,7 +116,12 @@ namespace Game.Characters
 
         public float CalculateSkillCooldownModifier() => (float) Math.Pow(0.95f, Val(AttributeType.Willpower)) + Val(AttributeType.SkillRechargeBonus);
 
-        public int CalculateCombatHealth()
+        public int CalculateMaxHealth()
+        {
+            return (int) (Max(AttributeType.Strength) * PlayerHealthChunkSize);
+        }
+
+        public int CalculateInitialHealth()
         {
             int startingHealth = (int) (Val(AttributeType.Strength) * PlayerHealthChunkSize);
             float healthLossModifier = Val(AttributeType.HealthLossBonus);

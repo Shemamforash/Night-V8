@@ -8,6 +8,7 @@ using Game.Gear.Armour;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Game.Global

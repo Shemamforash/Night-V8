@@ -1,5 +1,4 @@
-﻿using Game.Global;
-using SamsHelper.BaseGameFunctionality.Basic;
+﻿using SamsHelper.BaseGameFunctionality.Basic;
 
 namespace Game.Characters.CharacterActions
 {
@@ -7,19 +6,20 @@ namespace Game.Characters.CharacterActions
     {
         public Sleep(Player playerCharacter) : base(nameof(Sleep), playerCharacter)
         {
-            DisplayName = "Sleeping\n+Endurance +Strength";
-            HourCallback = playerCharacter.Sleep;
+            DisplayName = "Sleeping\n+End +Str";
             MinuteCallback = () =>
             {
-                if (Duration == 0) SetDuration(WorldState.MinutesPerHour);
                 --Duration;
+                if (Duration != 0) return;
+                playerCharacter.Sleep();
+                SetDuration();
             };
         }
 
         protected override void OnClick()
         {
             if (PlayerCharacter.Attributes.Get(AttributeType.Strength).ReachedMax()) return;
-            if (Duration == 0) SetDuration(WorldState.MinutesPerHour);
+            if (Duration == 0) SetDuration();
             Enter();
         }
     }

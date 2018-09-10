@@ -7,19 +7,20 @@ namespace Game.Characters.CharacterActions
     {
         public LightFire(Player playerCharacter) : base("Tend Fire", playerCharacter)
         {
+            DisplayName = "Lighting Fire";
             MinuteCallback = () =>
             {
                 --Duration;
                 Campfire.Tend();
                 if (Duration != 0) return;
-                Exit();
+                playerCharacter.RestAction.Enter();
             };
         }
 
         public override void Enter()
         {
+            SetDuration();
             base.Enter();
-            SetDuration(WorldState.MinutesPerHour);
         }
     }
 }

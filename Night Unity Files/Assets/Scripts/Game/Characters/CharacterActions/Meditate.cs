@@ -7,19 +7,20 @@ namespace Game.Characters.CharacterActions
     {
         public Meditate(Player playerCharacter) : base(nameof(Meditate), playerCharacter)
         {
-            DisplayName = "Meditating\n+Perception +Willpower";
-            HourCallback = playerCharacter.Meditate;
+            DisplayName = "Meditating\n+Per +Wil";
             MinuteCallback = () =>
             {
-                if (Duration == 0) SetDuration(WorldState.MinutesPerHour);
                 --Duration;
+                if (Duration != 0) return;
+                playerCharacter.Meditate();
+                SetDuration();
             };
         }
 
         protected override void OnClick()
         {
             if (PlayerCharacter.Attributes.Get(AttributeType.Willpower).ReachedMax()) return;
-            if (Duration == 0) SetDuration(WorldState.MinutesPerHour);
+            if (Duration == 0) SetDuration();
             Enter();
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies;
+using Game.Combat.Player;
 using Game.Combat.Ui;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -62,6 +63,12 @@ namespace Game.Combat.Generation.Shrines
         {
             CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Thirst).Decrement(10);
             CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Hunger).Decrement(10);
+            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Endurance).SetToMax();
+            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Perception).SetToMax();
+            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Strength).SetToMax();
+            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Willpower).SetToMax();
+            PlayerCombat.Instance.HealthController.Heal(1000000);
+            PlayerCombat.Instance.ResetCompass();
         }
 
         public void OnInputUp(InputAxis axis)

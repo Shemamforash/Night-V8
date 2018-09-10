@@ -52,7 +52,6 @@ GameObject:
   - component: {fileID: 4046366271985312}
   - component: {fileID: 212775725680538220}
   - component: {fileID: 58035904241143290}
-  - component: {fileID: 114902307947960350}
   m_Layer: 8
   m_Name: Fountain
   m_TagString: Untagged
@@ -757,18 +756,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 497d6e533d1b4e82a105597eede71f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114902307947960350
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1064249758688992}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b459fc118176454d819d5a39b43d8286, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseCollider: 1
 --- !u!198 &198046849472783024
 ParticleSystem:
   m_ObjectHideFlags: 1

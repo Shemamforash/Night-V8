@@ -10,8 +10,12 @@ namespace Game.Characters.CharacterActions
         public Craft(Player playerCharacter) : base("Craft", playerCharacter)
         {
             DisplayName = "Crafting";
-            HourCallback = CraftRecipe;
-            MinuteCallback = () => --Duration;
+            MinuteCallback = () =>
+            {
+                --Duration;
+                if (Duration != 0) return;
+                CraftRecipe();
+            };
         }
 
         protected override void OnClick()
@@ -27,9 +31,14 @@ namespace Game.Characters.CharacterActions
 
         public void StartCrafting(Recipe recipe)
         {
+            if (recipe.ProductName == "Fire")
+            {
+                recipe.Craft();
+                return;
+            }
             _recipe = recipe;
             _recipe.ConsumeResources();
-            SetDuration(WorldState.MinutesPerHour);
+            SetDuration();
             Enter();
         }
     }

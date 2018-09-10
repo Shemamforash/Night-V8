@@ -320,6 +320,12 @@ namespace Game.Combat.Player
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
         }
 
+        public void ResetCompass()
+        {
+            _compassPulses = Player.Attributes.CalculateCompassPulses();
+            UiCompassPulseController.InitialisePulses(_compassPulses);
+        }
+        
         public void Initialise()
         {
             InputHandler.SetCurrentListener(this);
@@ -337,8 +343,7 @@ namespace Game.Combat.Player
 
             _adrenalineGain = Player.Attributes.CalculateAdrenalineRecoveryRate();
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
-            _compassPulses = Player.Attributes.CalculateCompassPulses();
-            UiCompassPulseController.InitialisePulses(_compassPulses);
+            ResetCompass();
 
             _dashCooldown = CombatManager.CreateCooldown();
             _dashCooldown.Duration = 1;
@@ -355,7 +360,7 @@ namespace Game.Combat.Player
 
             _adrenalineLevel.SetCurrentValue(0f);
 
-            HealthController.SetInitialHealth(Player.Attributes.CalculateCombatHealth(), this);
+            HealthController.SetInitialHealth(Player.Attributes.CalculateInitialHealth(), this, Player.Attributes.CalculateMaxHealth());
             HealthController.AddOnHeal(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
             HealthController.AddOnTakeDamage(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
 

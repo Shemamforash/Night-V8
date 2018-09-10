@@ -36,6 +36,7 @@ namespace Game.Characters
         private TextMeshProUGUI _detailedCurrentActionText;
         private Slider _currentActionSliderDetailed;
         private bool _actionListActive = true;
+        private float _endTime, _startTime;
 
         public void SetPlayer(Player player)
         {
@@ -45,7 +46,6 @@ namespace Game.Characters
             CacheDetailedViewElements();
             SwitchToSimpleView();
             BindUi();
-            ((BaseCharacterAction) _player.States.GetCurrentState()).UpdateActionText();
         }
 
         private void BindUi()
@@ -70,6 +70,7 @@ namespace Game.Characters
             UpdateAttributes();
             UpdateBrands();
             UpdateActionButtons();
+            UpdateCurrentActionText();
         }
 
         private void UpdateAttributes()
@@ -205,11 +206,31 @@ namespace Game.Characters
             });
         }
 
-        public void UpdateCurrentActionText(string currentActionString, float progress)
+        public void SetCurrentAction(string actionString, float startTime, float endTime)
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
             if (currentState == null) return;
-            _currentActionText.text = currentActionString;
+            _currentActionText.text = actionString;
+            _startTime = startTime;
+            _endTime = endTime;
+            if (_player.States.IsDefaultState(currentState))
+            {
+                SetActionListActive(true);
+            }
+            else
+            {
+                SetActionListActive(false);
+                _detailedCurrentActionText.text = actionString;
+            }
+        }
+        
+        private void UpdateCurrentActionText()
+        {
+            BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
+            if (currentState == _player.RestAction) return;
+            float currentTime = WorldState.GetTimeSinceStart() - _startTime;
+            float maxTime = _endTime - _startTime;
+            float progress = 1f - currentTime / maxTime;
             if (progress < 0)
             {
                 _currentActionSliderSimple.gameObject.SetActive(false);
@@ -219,26 +240,8 @@ namespace Game.Characters
             {
                 _currentActionSliderSimple.gameObject.SetActive(true);
                 _currentActionSliderDetailed.gameObject.SetActive(true);
-                if (progress == 1)
-                {
-                    _currentActionSliderDetailed.value = 1;
-                    _currentActionSliderDetailed.value = 1;
-                }
-                else
-                {
-                    DOTween.To(() => _currentActionSliderSimple.value, f => _currentActionSliderSimple.value = f, progress, WorldState.MinuteInSeconds).SetEase(Ease.Linear);
-                    DOTween.To(() => _currentActionSliderDetailed.value, f => _currentActionSliderDetailed.value = f, progress, WorldState.MinuteInSeconds).SetEase(Ease.Linear);
-                }
-            }
-
-            if (_player.States.IsDefaultState(currentState))
-            {
-                SetActionListActive(true);
-            }
-            else
-            {
-                SetActionListActive(false);
-                _detailedCurrentActionText.text = currentActionString;
+                _currentActionSliderDetailed.value = progress;
+                _currentActionSliderDetailed.value = progress;
             }
         }
 

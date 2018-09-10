@@ -57,6 +57,7 @@ namespace Facilitating.UIControllers
 
             public void SetState(MarkerState state)
             {
+                _image.gameObject.SetActive(state != MarkerState.Inactive);
                 if (state == _state)
                 {
                     _stateChanged = false;
@@ -67,24 +68,16 @@ namespace Facilitating.UIControllers
                 _state = state;
             }
 
-            public void UpdateColor(bool useRed)
+            public void UpdateColor(bool isInvisible)
             {
                 if (!_stateChanged) return;
                 Color c = Color.white;
-                switch (_state)
+                if (_state == MarkerState.Faded)
                 {
-                    case MarkerState.Inactive:
-                        c = UiAppearanceController.InvisibleColour;
-                        break;
-                    case MarkerState.Faded:
-                        c = UiAppearanceController.FadedColour;
-                        if (useRed) c = new Color(1, 0, 0, 0.6f);
-
-                        break;
-                    case MarkerState.Active:
-                        c = Color.white;
-                        break;
+                    c = UiAppearanceController.FadedColour;
+                    if (isInvisible) c = UiAppearanceController.InvisibleColour;
                 }
+
                 _image.DOColor(c, 1f);
             }
         }

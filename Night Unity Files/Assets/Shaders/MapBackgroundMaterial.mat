@@ -61,22 +61,23 @@ Material:
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
+    - _Detail: 8
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Float0: 1
+    - _Float0: 4
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OctavePower: 4
+    - _OctavePower: 2
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
-    - _Sparseness: 5
+    - _Sparseness: 10
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _TimeScale: 0.003
+    - _TimeScale: 0.05
     - _UVSec: 0
     - _ZWrite: 1
     - __dirty: 0

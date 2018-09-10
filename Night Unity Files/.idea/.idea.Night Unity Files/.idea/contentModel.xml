@@ -237,6 +237,7 @@
           </e>
         </e>
         <e p="InstancedAudio.cs" t="Include" />
+        <e p="NoiseMovementController.cs" t="Include" />
         <e p="PauseMenuController.cs" t="Include" />
         <e p="RadianceController.cs" t="Include" />
         <e p="Resources" t="Include">

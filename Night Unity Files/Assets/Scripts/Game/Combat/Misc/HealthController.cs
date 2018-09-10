@@ -22,10 +22,10 @@ namespace Game.Combat.Misc
             return EnemyUi.Instance().GetHealthController(c);
         }
 
-        public void SetInitialHealth(int initialHealth, ITakeDamageInterface character)
+        public void SetInitialHealth(int initialHealth, ITakeDamageInterface character, int maxHealth = -1)
         {
             _healthyThing = character;
-            _healthRemaining.Max = initialHealth;
+            _healthRemaining.Max = maxHealth == -1 ? initialHealth : maxHealth;
             _healthRemaining.SetCurrentValue(initialHealth);
             UpdateHealth();
         }
