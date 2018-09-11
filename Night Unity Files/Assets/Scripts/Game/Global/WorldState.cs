@@ -36,7 +36,6 @@ namespace Game.Global
         private static bool _isNight, _isPaused;
         public static int Seed = -1;
         private static int _templesActivated;
-        private static float _timeSinceStart;
 
         public static int GetRemainingTemples()
         {
@@ -110,6 +109,8 @@ namespace Game.Global
             _homeInventory.Start();
             EnvironmentManager.Start();
             WeatherManager.Start();
+            WorldView.Update(Hours);
+            CharacterManager.Update();
         }
 
         public static bool ActivateTemple()
@@ -186,21 +187,10 @@ namespace Game.Global
         private void IncrementWorldTime()
         {
             _currentTime += Time.deltaTime;
-            _timeSinceStart += Time.deltaTime;
             if (_currentTime < MinuteInSeconds) return;
             _currentTime = _currentTime - MinuteInSeconds;
             IncrementMinutes();
             WorldView.Update(Hours);
-        }
-
-        public static float GetTimeSinceStart()
-        {
-            return _timeSinceStart;
-        }
-
-        public static float GetTimeInXMinutes(float minutes)
-        {
-            return _timeSinceStart + MinuteInSeconds * minutes;
         }
 
         private void IncrementMinutes()

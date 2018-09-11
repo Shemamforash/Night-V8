@@ -23,7 +23,7 @@ namespace Fastlights
         private float _lastRadius;
 
         public Color Colour = Color.white;
-        public float Radius;
+        [Range(0.01f, 30f)] public float Radius;
         public Material LightMaterial;
         public GameObject Target;
 
@@ -36,6 +36,7 @@ namespace Fastlights
         {
             _lights.Add(this);
             if (LightMaterial == null) LightMaterial = new Material(Shader.Find("Unlit/Texture"));
+            gameObject.layer = 21;
             _meshRenderer = GetComponent<MeshRenderer>();
             _meshFilter = GetComponent<MeshFilter>();
             _meshRenderer.material = LightMaterial;
@@ -294,7 +295,7 @@ namespace Fastlights
             if (!_needsUpdate && _lastRadius == Radius && isPositionSame) return;
             bool radiusSmaller = _lastRadius > Radius;
             bool noObstructor = _allObstructors.Count == 0;
-            if ((radiusSmaller ||noObstructor) && isPositionSame)
+            if ((radiusSmaller || noObstructor) && isPositionSame)
             {
                 ResizeLight();
             }

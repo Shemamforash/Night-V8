@@ -69,7 +69,7 @@ namespace Game.Characters
         {
             foreach (Player player in Characters)
             {
-                if (player.CharacterView != null) continue;
+                if (player.CharacterView() != null) continue;
                 Transform characterAreaTransform = GameObject.Find("Character Section").transform;
                 if (Items().Count > 0) Helper.AddDelineator(characterAreaTransform);
                 GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", characterAreaTransform);
@@ -77,9 +77,10 @@ namespace Game.Characters
                 characterObject.name = player.Name;
             }
 
-            Characters[0].CharacterView.SelectInitial();
-            Characters.ForEach(c => c.CharacterView.RefreshNavigation());
+            Characters[0].CharacterView().SelectInitial();
+            Characters.ForEach(c => c.CharacterView().RefreshNavigation());
             IncrementResource("Salt", 20);
+            IncrementResource("Radiance", 20);
             IncrementResource("Fuel", 20);
             IncrementResource("Water", 20);
         }
@@ -91,9 +92,9 @@ namespace Game.Characters
 
         public static void RemoveCharacter(Player playerCharacter)
         {
-            GameObject.Destroy(playerCharacter.CharacterView);
+            GameObject.Destroy(playerCharacter.CharacterView());
             Characters.Remove(playerCharacter);
-            Characters.ForEach(c => c.CharacterView.RefreshNavigation());
+            Characters.ForEach(c => c.CharacterView().RefreshNavigation());
         }
 
         public void UpdateBuildings()
@@ -103,13 +104,13 @@ namespace Game.Characters
 
         private static void ExitCharacter(Player character)
         {
-            character.CharacterView.SwitchToSimpleView();
+            character.CharacterView().SwitchToSimpleView();
         }
 
         public static void SelectCharacter(Player player)
         {
             SelectedCharacter = player;
-            player.CharacterView.SwitchToDetailedView();
+            player.CharacterView().SwitchToDetailedView();
         }
 
         private static Player PreviousCharacter(Player character)
@@ -260,11 +261,11 @@ namespace Game.Characters
             SelectCharacter(previousPlayer);
             if (selectGear)
             {
-                previousPlayer.CharacterView.ArmourController.EnhancedButton.Select();
+                previousPlayer.CharacterView().ArmourController.EnhancedButton.Select();
             }
             else
             {
-                previousPlayer.CharacterView.SelectLast();
+                previousPlayer.CharacterView().SelectLast();
             }
         }
 
@@ -276,11 +277,11 @@ namespace Game.Characters
             SelectCharacter(nextCharacter);
             if (selectGear)
             {
-                nextCharacter.CharacterView.WeaponController.EnhancedButton.Select();
+                nextCharacter.CharacterView().WeaponController.EnhancedButton.Select();
             }
             else
             {
-                nextCharacter.CharacterView.SelectInitial();
+                nextCharacter.CharacterView().SelectInitial();
             }
         }
     }

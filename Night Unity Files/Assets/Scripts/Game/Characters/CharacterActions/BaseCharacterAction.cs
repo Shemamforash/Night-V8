@@ -2,7 +2,9 @@
 using System.Xml;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
+using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {
@@ -14,7 +16,6 @@ namespace Game.Characters.CharacterActions
         private int InitialDuration;
         protected Action HourCallback;
         protected Action MinuteCallback;
-        private float _startTime, _endTime;
 
         protected BaseCharacterAction(string name, Player playerCharacter) : base(playerCharacter.States, name)
         {
@@ -32,9 +33,10 @@ namespace Game.Characters.CharacterActions
 
         public void UpdateAction()
         {
-            if(Duration == InitialDuration) PlayerCharacter.CharacterView.SetCurrentAction(DisplayName, _startTime, _endTime);
             --_timeRemaining;
             MinuteCallback?.Invoke();
+            Debug.Log(Duration + " " + InitialDuration);
+//            PlayerCharacter.CharacterView().UpdateCurrentActionText((float) (Duration - 1) / InitialDuration);
             if (_timeRemaining != 0) return;
             HourCallback?.Invoke();
             ResetTimeRemaining();
@@ -43,8 +45,6 @@ namespace Game.Characters.CharacterActions
         private void ResetTimeRemaining()
         {
             _timeRemaining = WorldState.MinutesPerHour;
-            _startTime = WorldState.GetTimeSinceStart();
-            _endTime = WorldState.GetTimeInXMinutes(Duration);
         }
 
         public override void Enter()
@@ -58,13 +58,23 @@ namespace Game.Characters.CharacterActions
         protected void SetDuration(int duration = -1)
         {
             if (duration == -1) Duration = WorldState.MinutesPerHour / 2;
-            else Duration = duration; 
+            else Duration = duration;
             InitialDuration = Duration;
         }
-        
+
 
         public void Save(XmlNode doc)
         {
+        }
+
+        public string GetDisplayName()
+        {
+            return DisplayName;
+        }
+
+        public float GetRemainingTime(int offset = 0)
+        {
+            return (float)(Duration + offset) / InitialDuration;
         }
     }
 }

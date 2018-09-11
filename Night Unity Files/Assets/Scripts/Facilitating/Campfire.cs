@@ -64,7 +64,6 @@ namespace Facilitating
         
         public static void Tend()
         {
-            Debug.Log(_fireLevel);
             _fireLevel += 0.2f;
             if (_fireLevel > 1) _fireLevel = 1;
         }

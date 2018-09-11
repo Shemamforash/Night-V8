@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using DG.Tweening.Core;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using TMPro;
@@ -98,22 +99,13 @@ namespace Game.Combat.Ui
 
             public void Restart()
             {
-                StartCoroutine(Fade());
-            }
-
-            private IEnumerator Fade()
-            {
-                float age = 0f;
-                while (age < Duration)
+                Sequence seq = DOTween.Sequence();
+                seq.Append(_faderImage.DOColor(new Color(0, 0, 0, 0), Duration));
+                seq.AppendCallback(() =>
                 {
-                    float alpha = 1 - age / Duration;
-                    _faderImage.color = new Color(1, 0, 0, alpha);
-                    age += Time.deltaTime;
-                    yield return null;
-                }
-
-                gameObject.SetActive(false);
-                _faderPool.Add(this);
+                    gameObject.SetActive(false);
+                    _faderPool.Add(this);
+                });
             }
         }
     }

@@ -10,6 +10,7 @@ public class WeaponAudioController : MonoBehaviour
 {
     private static AudioClip[] _lmgShots, _smgShots, _rifleShots, _pistolShots, _shotgunShots;
     private static AudioClip[] _lmgCasings, _smgCasings, _rifleCasings, _pistolCasings, _shotgunCasings;
+    private static AudioClip[] _dryFireClips;
 
     [SerializeField] private AudioClip[] _armourBreakClips;
     [SerializeField] private AudioClip _pistolClipIn, _pistolClipOut, _lmgClipIn, _lmgClipOut, _smgClipIn, _smgClipOut, _rifleClipIn, _rifleClipOut, _shotgunClipIn, _shotgunClipOut;
@@ -17,7 +18,6 @@ public class WeaponAudioController : MonoBehaviour
 
     private AudioPoolController _audioPool;
     private static bool _loaded;
-    private AudioClip[] _dryFireClips;
 
     public void Awake()
     {
@@ -90,7 +90,6 @@ public class WeaponAudioController : MonoBehaviour
 
     public void DryFire()
     {
-        Debug.Log("fart");
         _audioPool.PlayClip(_dryFireClips.RandomElement());
     }
 

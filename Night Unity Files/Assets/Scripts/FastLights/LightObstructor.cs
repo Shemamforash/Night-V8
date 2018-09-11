@@ -22,6 +22,8 @@ namespace FastLights
 
         public void Awake()
         {
+            gameObject.layer = 21;
+
             if (UseCollider)
             {
                 _collider = GetComponent<Collider2D>();
@@ -129,7 +131,12 @@ namespace FastLights
             for (int i = 0; i < vertCount; i++)
             {
                 FLVertex v = _worldVerts[i];
-                if (outOfRange && v.Position.InCameraView()) outOfRange = false;
+                if (outOfRange)
+                {
+                    float sqrDistance = (v.Position - _origin).sqrMagnitude;
+                    if (sqrDistance < _sqrRadius) outOfRange = false;
+                }
+
                 v.SetDistanceAndAngle(_origin, _sqrRadius);
             }
 
@@ -161,7 +168,7 @@ namespace FastLights
         }
 
         private float _sqrRadius, _radius;
-        private Vector3 _origin;
+        private Vector2 _origin;
 
         public List<List<FLEdge>> GetVisibleVertices(Vector3 origin, float sqrRadius, float radius)
         {

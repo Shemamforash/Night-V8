@@ -18,7 +18,7 @@ namespace Game.Characters
     {
         private Player _player;
         private TextMeshProUGUI _currentActionText;
-        private Slider _currentActionSliderSimple;
+        private SteppedProgressBar _progressSimple, _progressDetailed;
         private GameObject _detailedView;
         private GameObject SimpleView;
         private EnhancedText _brandText;
@@ -34,18 +34,16 @@ namespace Game.Characters
         private List<EnhancedButton> _buttons;
         private Transform _actionList;
         private TextMeshProUGUI _detailedCurrentActionText;
-        private Slider _currentActionSliderDetailed;
         private bool _actionListActive = true;
-        private float _endTime, _startTime;
 
         public void SetPlayer(Player player)
         {
             _player = player;
-            _player.CharacterView = this;
             CacheSimpleViewElements();
             CacheDetailedViewElements();
             SwitchToSimpleView();
             BindUi();
+            _player.SetCharacterView(this);
         }
 
         private void BindUi()
@@ -70,7 +68,7 @@ namespace Game.Characters
             UpdateAttributes();
             UpdateBrands();
             UpdateActionButtons();
-            UpdateCurrentActionText();
+            UpdateCurrentAction();
         }
 
         private void UpdateAttributes()
@@ -99,7 +97,7 @@ namespace Game.Characters
             SimpleView.SetActive(true);
             FindInSimpleView<TextMeshProUGUI>("Name").text = _player.Name;
             _currentActionText = FindInSimpleView<TextMeshProUGUI>("Current Action");
-            _currentActionSliderSimple = FindInSimpleView<Slider>("Slider");
+            _progressSimple = FindInSimpleView<SteppedProgressBar>("Action Progress");
         }
 
         private void CacheDetailedViewElements()
@@ -110,7 +108,7 @@ namespace Game.Characters
 
             _actionList = gameObject.FindChildWithName<Transform>("Action List");
             _detailedCurrentActionText = FindInDetailedView<TextMeshProUGUI>("Current Action");
-            _currentActionSliderDetailed = FindInDetailedView<Slider>("Slider");
+            _progressDetailed = FindInDetailedView<SteppedProgressBar>("Action Progress");
             _exploreButton = FindInDetailedView<EnhancedButton>("Explore");
             _exploreText = _exploreButton.GetComponent<EnhancedText>();
             _craftButton = FindInDetailedView<EnhancedButton>("Craft");
@@ -206,46 +204,46 @@ namespace Game.Characters
             });
         }
 
-        public void SetCurrentAction(string actionString, float startTime, float endTime)
+        private BaseCharacterAction _lastState;
+        private float _lastRemainingTime;
+        
+        private void UpdateCurrentAction()
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
-            if (currentState == null) return;
+            UpdateCurrentActionText();
+            if (_lastState == currentState) return;
+            string actionString = currentState.GetDisplayName();
             _currentActionText.text = actionString;
-            _startTime = startTime;
-            _endTime = endTime;
-            if (_player.States.IsDefaultState(currentState))
+            _detailedCurrentActionText.text = actionString;
+
+            if (currentState is Rest)
             {
                 SetActionListActive(true);
+                _progressSimple.gameObject.SetActive(false);
+                _progressDetailed.gameObject.SetActive(false);
+                return;
             }
-            else
-            {
-                SetActionListActive(false);
-                _detailedCurrentActionText.text = actionString;
-            }
+
+            SetActionListActive(false);
+            _progressSimple.gameObject.SetActive(true);
+            _progressDetailed.gameObject.SetActive(true);
+            _lastRemainingTime = currentState.GetRemainingTime();
+            _progressSimple.ResetValue(_lastRemainingTime);
+            _progressDetailed.ResetValue(_lastRemainingTime);
+            _lastState = currentState;
         }
         
         private void UpdateCurrentActionText()
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
             if (currentState == _player.RestAction) return;
-            float currentTime = WorldState.GetTimeSinceStart() - _startTime;
-            float maxTime = _endTime - _startTime;
-            float progress = 1f - currentTime / maxTime;
-            if (progress < 0)
-            {
-                _currentActionSliderSimple.gameObject.SetActive(false);
-                _currentActionSliderDetailed.gameObject.SetActive(false);
-            }
-            else
-            {
-                _currentActionSliderSimple.gameObject.SetActive(true);
-                _currentActionSliderDetailed.gameObject.SetActive(true);
-                _currentActionSliderDetailed.value = progress;
-                _currentActionSliderDetailed.value = progress;
-            }
+            float currentTime = currentState.GetRemainingTime();
+            if (currentTime == _lastRemainingTime) return;
+            _lastRemainingTime = currentTime;
+            _progressSimple.SetValue(_lastRemainingTime);
+            _progressDetailed.SetValue(_lastRemainingTime);
         }
-
-
+        
         private void SetActionListActive(bool active)
         {
             RefreshNavigation();

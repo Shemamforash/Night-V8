@@ -11,6 +11,7 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Characters
 {
@@ -22,7 +23,7 @@ namespace Game.Characters
         public readonly StateMachine States = new StateMachine();
         public readonly BrandManager BrandManager = new BrandManager();
         private readonly List<Effect> _effects = new List<Effect>();
-        public CharacterView CharacterView;
+        private CharacterView _characterView;
 
         public Craft CraftAction;
         public LightFire LightFireAction;
@@ -40,12 +41,12 @@ namespace Game.Characters
         private const int WillPowerGainTarget = 25;
         private int _totalKills;
         private bool _countKills = false;
-        
+
         public bool CanPerformAction()
         {
             return Attributes.Val(AttributeType.Willpower) > 0;
         }
-        
+
         public override XmlNode Save(XmlNode doc)
         {
             doc = base.Save(doc);
@@ -57,7 +58,7 @@ namespace Game.Characters
             doc.CreateChild("CharacterClass", CharacterTemplate.CharacterClass.ToString());
             doc.CreateChild("TotalKills", _totalKills);
             doc.CreateChild("CountKills", _countKills);
-            ((BaseCharacterAction)States.GetCurrentState()).Save(doc);
+            ((BaseCharacterAction) States.GetCurrentState()).Save(doc);
             _effects.ForEach(e => e.Save(doc));
             return doc;
         }
@@ -78,7 +79,7 @@ namespace Game.Characters
                 Effect.Load(this, effectNode);
             }
         }
-        
+
         //Create Character in code only- no view section, no references to objects in the scene
         public Player(CharacterTemplate characterTemplate) : base("The " + characterTemplate.CharacterClass)
         {
@@ -184,7 +185,11 @@ namespace Game.Characters
             }
         }
 
-        
+        public void SetCharacterView(CharacterView characterView)
+        {
+            _characterView = characterView;
+        }
+
         public void Tire()
         {
             Attributes.Get(AttributeType.Endurance).Decrement();
@@ -234,7 +239,7 @@ namespace Game.Characters
         public override void EquipWeapon(Weapon weapon)
         {
             base.EquipWeapon(weapon);
-            if (CharacterView != null) CharacterView.WeaponController.SetWeapon(weapon);
+            if (_characterView != null) _characterView.WeaponController.SetWeapon(weapon);
             WorldEventManager.GenerateEvent(new CharacterMessage("Yes, this'll do", this));
             if (!CombatManager.InCombat()) return;
             PlayerCombat.Instance.EquipWeapon(weapon);
@@ -243,21 +248,21 @@ namespace Game.Characters
         public void EquipArmourSlotOne(ArmourPlate plate)
         {
             ArmourController.SetPlateOne(plate);
-            CharacterView.ArmourController.SetArmour(ArmourController);
+            _characterView.ArmourController.SetArmour(ArmourController);
             WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
         }
 
         public void EquipArmourSlotTwo(ArmourPlate plate)
         {
             ArmourController.SetPlateTwo(plate);
-            CharacterView.ArmourController.SetArmour(ArmourController);
+            _characterView.ArmourController.SetArmour(ArmourController);
             WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
         }
 
         public override void EquipAccessory(Accessory accessory)
         {
             base.EquipAccessory(accessory);
-            if (CharacterView != null) CharacterView.AccessoryController.SetAccessory(accessory);
+            if (_characterView != null) _characterView.AccessoryController.SetAccessory(accessory);
         }
 
         private readonly Dictionary<WeaponType, int> _weaponKills = new Dictionary<WeaponType, int>();
@@ -294,10 +299,9 @@ namespace Game.Characters
         {
             _countKills = true;
         }
-        
+
         private void IncreaseTotalKills()
         {
-
             if (!_countKills) return;
             ++_totalKills;
             if (_totalKills < WillPowerGainTarget) return;
@@ -315,6 +319,11 @@ namespace Game.Characters
         {
             return Attributes.Val(AttributeType.Strength) < Attributes.Max(AttributeType.Strength) ||
                    Attributes.Val(AttributeType.Endurance) < Attributes.Max(AttributeType.Endurance);
+        }
+
+        public CharacterView CharacterView()
+        {
+            return _characterView;
         }
     }
 }

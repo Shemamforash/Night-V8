@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Player;
@@ -38,7 +39,7 @@ namespace Game.Combat.Generation.Shrines
             InputHandler.RegisterInputListener(this);
             PlayerUi.SetEventText("Drink from the fountain [T}");
         }
-        
+
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
             if (axis != InputAxis.TakeItem) return;
@@ -46,11 +47,26 @@ namespace Game.Combat.Generation.Shrines
             Destroy(gameObject.GetComponent<Collider2D>());
             Triggered = true;
             PlayerUi.SetEventText("Earn your blessing", 2f);
+            StartCoroutine(SpawnEnemies());
+        }
+
+        private IEnumerator SpawnEnemies()
+        {
             int daysSpent = WorldState.GetDaysSpentHere() + 5;
             List<EnemyTemplate> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
+            float timeToSpawn = 0f;
             for (int i = 0; i < Random.Range(daysSpent / 2f, daysSpent); ++i)
             {
-                AddEnemy(CombatManager.QueueEnemyToAdd(Helper.RandomElement(allowedEnemies)));
+                while (timeToSpawn > 0f)
+                {
+                    timeToSpawn -= Time.deltaTime;
+                    yield return null;
+                }
+
+                Vector2 spawnPosition = PathingGrid.GetCellNearMe(transform.position, 5).Position;
+                SpawnTrailController.Create(transform.position, spawnPosition, allowedEnemies.RandomElement().EnemyType);
+                timeToSpawn = Random.Range(0.5f, 1f);
+                yield return null;
             }
         }
 

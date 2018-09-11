@@ -21,7 +21,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
         public T Create()
         {
-            if(_poolParent == null) _poolParent = new GameObject(_poolName).transform;
+            if (_poolParent == null) _poolParent = new GameObject(_poolName).transform;
             T newThing;
             if (_pool.Count == 0)
             {
@@ -52,7 +52,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             _pool.Remove(thing);
             _active.Remove(thing);
             Object.Destroy(thing.gameObject);
-            if (Empty()) GameObject.Destroy(_poolParent);
+            if (Empty() && _poolParent != null) GameObject.Destroy(_poolParent.gameObject);
         }
 
         public bool Empty()

@@ -237,7 +237,6 @@
           </e>
         </e>
         <e p="InstancedAudio.cs" t="Include" />
-        <e p="NoiseMovementController.cs" t="Include" />
         <e p="PauseMenuController.cs" t="Include" />
         <e p="RadianceController.cs" t="Include" />
         <e p="Resources" t="Include">
@@ -815,6 +814,8 @@
         </e>
         <e p="ShadowShaderController.cs" t="Include" />
         <e p="SkillAnimationController.cs" t="Include" />
+        <e p="SpawnTrailController.cs" t="Include" />
+        <e p="SteppedProgressBar.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />
