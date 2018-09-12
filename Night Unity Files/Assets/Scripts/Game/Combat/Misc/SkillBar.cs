@@ -88,7 +88,7 @@ namespace Game.Combat.Misc
 
         private static bool TryLockSkill(int skillNo)
         {
-            float noSkillChance = PlayerCombat.Instance.Player.Attributes.Val(AttributeType.InactiveSkillChance);
+            float noSkillChance = PlayerCombat.Instance.Player.Attributes.SkillDisableChance;
             if (Random.Range(0f, 1f) > noSkillChance) return false;
             _skillsLocked.Add(skillNo);
             return true;
@@ -96,7 +96,7 @@ namespace Game.Combat.Misc
 
         private static bool IsSkillFree()
         {
-            float freeSkillChance = PlayerCombat.Instance.Player.Attributes.Val(AttributeType.FreeSkillChance);
+            float freeSkillChance = PlayerCombat.Instance.Player.Attributes.FreeSkillChance;
             return Random.Range(0f, 1f) <= freeSkillChance;
         }
 
@@ -110,6 +110,12 @@ namespace Game.Combat.Misc
             Debug.Log(_cooldownModifier);
             _skillsCooldown.Duration = BaseSkillCooldown * _cooldownModifier;
             _skillsCooldown.Start();
+        }
+
+        public static void ResetCooldowns()
+        {
+            //todo fix me
+            _skillsCooldown.Cancel();
         }
     }
 }

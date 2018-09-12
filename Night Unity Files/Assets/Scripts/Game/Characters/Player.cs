@@ -38,10 +38,6 @@ namespace Game.Characters
         private bool _storyUnlocked;
         private string _currentStoryLine;
 
-        private const int WillPowerGainTarget = 25;
-        private int _totalKills;
-        private bool _countKills = false;
-
         public bool CanPerformAction()
         {
             return Attributes.Val(AttributeType.Willpower) > 0;
@@ -56,8 +52,10 @@ namespace Game.Characters
             doc.CreateChild("StoryProgress", _storyProgress);
             doc.CreateChild("TimeAlive", _timeAlive);
             doc.CreateChild("CharacterClass", CharacterTemplate.CharacterClass.ToString());
-            doc.CreateChild("TotalKills", _totalKills);
-            doc.CreateChild("CountKills", _countKills);
+            XmlNode weaponKillNode = doc.CreateChild("WeaponKills");
+            foreach (KeyValuePair<WeaponType, int> weaponKills in _weaponKills)
+                weaponKillNode.CreateChild(weaponKills.Key.ToString(), weaponKills.Value);
+
             ((BaseCharacterAction) States.GetCurrentState()).Save(doc);
             _effects.ForEach(e => e.Save(doc));
             return doc;
@@ -71,13 +69,51 @@ namespace Game.Characters
             _storyUnlocked = root.BoolFromNode("StoryUnlocked");
             _storyProgress = root.IntFromNode("StoryProgress");
             _timeAlive = root.IntFromNode("TimeAlive");
-            _totalKills = root.IntFromNode("TotalKills");
-            _countKills = root.BoolFromNode("CountKills");
-            //todo load state
+
+            XmlNode weaponKillNode = root.SelectSingleNode("WeaponKills");
+            foreach (KeyValuePair<WeaponType, int> weaponKills in _weaponKills)
+            {
+                _weaponKills[weaponKills.Key] = weaponKillNode.IntFromNode(weaponKills.Key.ToString());
+                TryUnlockWeaponSkills(weaponKills.Key, false);
+            }
+
+            TryUnlockCharacterSkill(false);
+            LoadCurrentAction(root);
             foreach (XmlNode effectNode in root.SelectNodes("Effect"))
             {
                 Effect.Load(this, effectNode);
             }
+        }
+
+        private void LoadCurrentAction(XmlNode root)
+        {
+            XmlNode currentActionNode = root.SelectSingleNode("CurrentAction");
+            string currentActionName = currentActionNode.StringFromNode("Name");
+            BaseCharacterAction currentAction = null;
+            switch (currentActionName)
+            {
+                case "Rest":
+                    currentAction = RestAction;
+                    break;
+                case "Sleep":
+                    currentAction = SleepAction;
+                    break;
+                case "Meditate":
+                    currentAction = MeditateAction;
+                    break;
+                case "LightFire":
+                    currentAction = LightFireAction;
+                    break;
+                case "Craft":
+                    currentAction = CraftAction;
+                    break;
+                case "Travel":
+                    currentAction = TravelAction;
+                    break;
+            }
+
+            currentAction.Enter();
+            currentAction.Load(root);
         }
 
         //Create Character in code only- no view section, no references to objects in the scene
@@ -91,6 +127,8 @@ namespace Game.Characters
             AddStates();
             BrandManager.Initialise(this);
             UnlockStoryLine();
+
+            WeaponGenerator.GetWeaponTypes().ForEach(t => { _weaponKills.Add(t, 0); });
         }
 
         public void AddEffect(Effect effect)
@@ -174,15 +212,15 @@ namespace Game.Characters
         private void IncreaseTimeSurvived()
         {
             ++_timeSurvived;
-            switch (_timeSurvived)
-            {
-                case 7:
-                    Attributes.UnlockCharacterSkillOne();
-                    break;
-                case 14:
-                    Attributes.UnlockCharacterSkillTwo();
-                    break;
-            }
+            TryUnlockCharacterSkill(true);
+        }
+
+        private void TryUnlockCharacterSkill(bool showScreen)
+        {
+            if (_timeSurvived >= 7)
+                Attributes.UnlockCharacterSkillOne(showScreen);
+            if (_timeSurvived >= 14)
+                Attributes.UnlockCharacterSkillTwo(showScreen);
         }
 
         public void SetCharacterView(CharacterView characterView)
@@ -270,43 +308,17 @@ namespace Game.Characters
 
         public void IncreaseKills()
         {
-            IncreaseTotalKills();
-            IncreaseWeaponKills();
-        }
-
-        private void IncreaseWeaponKills()
-        {
             WeaponType weaponType = EquippedWeapon.WeaponType();
-            if (!_weaponKills.ContainsKey(weaponType))
-            {
-                _weaponKills.Add(weaponType, 0);
-            }
-
-            int kills = _weaponKills[weaponType] + 1;
-            _weaponKills[weaponType] = kills;
-            switch (kills)
-            {
-                case 50:
-                    Attributes.UnlockWeaponSkillOne(weaponType);
-                    break;
-                case 100:
-                    Attributes.UnlockWeaponSkillTwo(weaponType);
-                    break;
-            }
+            _weaponKills[weaponType] = _weaponKills[weaponType] + 1;
+            TryUnlockWeaponSkills(weaponType, true);
         }
 
-        public void StartCountingKills()
+        private void TryUnlockWeaponSkills(WeaponType weaponType, bool showScreen)
         {
-            _countKills = true;
-        }
-
-        private void IncreaseTotalKills()
-        {
-            if (!_countKills) return;
-            ++_totalKills;
-            if (_totalKills < WillPowerGainTarget) return;
-            _totalKills = 0;
-            Attributes.Get(AttributeType.Willpower).Increment();
+            if (_weaponKills[weaponType] >= 50)
+                Attributes.UnlockWeaponSkillOne(weaponType, showScreen);
+            if (_weaponKills[weaponType] >= 100)
+                Attributes.UnlockWeaponSkillTwo(weaponType, showScreen);
         }
 
         public bool CanMeditate()

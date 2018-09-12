@@ -1,9 +1,12 @@
-﻿using Game.Combat.Generation;
+﻿using System.Xml;
+using Facilitating.Persistence;
+using Game.Combat.Generation;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.WorldEvents;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 
 namespace Game.Characters.CharacterActions
 {
@@ -122,6 +125,26 @@ namespace Game.Characters.CharacterActions
         public bool InClaimedRegion()
         {
             return CurrentRegion.ClaimRemaining > 0;
+        }
+
+        public override XmlNode Load(XmlNode doc)
+        {
+            doc = base.Save(doc);
+            _target = MapGenerator.GetRegionById(doc.IntFromNode("Target"));
+            CurrentRegion = MapGenerator.GetRegionById(doc.IntFromNode("CurrentRegion"));
+            _inTransit = doc.BoolFromNode("InTransit");
+            _travelTime = doc.IntFromNode("TravelTime");
+            return doc;
+        }
+
+        public override XmlNode Save(XmlNode doc)
+        {
+            doc = base.Save(doc);
+            doc.CreateChild("Target", _target.RegionID);
+            doc.CreateChild("CurrentRegion", CurrentRegion.RegionID);
+            doc.CreateChild("InTransit", _inTransit);
+            doc.CreateChild("TravelTime", _travelTime);
+            return doc;
         }
     }
 }

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
-using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
-using Game.Gear.Weapons;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 using UnityEngine;
 
 namespace Game.Characters
@@ -52,17 +47,20 @@ namespace Game.Characters
             _activeBrands.ForEach(b => b.Save(doc));
             return doc;
         }
-        
-        public List<Brand> GetBrandChoice()
+
+        public List<Brand> GetBrandChoice(int ritesRemaining)
         {
             List<Brand> brandSelection = new List<Brand>();
             if (_lockedBrands.Count == 0) return brandSelection;
+            if (_activeBrands.Count(b => b is EnduranceBrand) != 0) brandSelection.RemoveAll(b => b is EnduranceBrand);
+            if (_activeBrands.Count(b => b is PerceptionBrand) != 0) brandSelection.RemoveAll(b => b is PerceptionBrand);
+            if (_activeBrands.Count(b => b is StrengthBrand) != 0) brandSelection.RemoveAll(b => b is StrengthBrand);
+            if (_activeBrands.Count(b => b is WillpowerBrand) != 0) brandSelection.RemoveAll(b => b is WillpowerBrand);
             _lockedBrands.Shuffle();
-            for (int i = 0; i < 3 && i < _lockedBrands.Count; ++i)
+            for (int i = 0; i < ritesRemaining && i < _lockedBrands.Count; ++i)
             {
                 brandSelection.Add(_lockedBrands[i]);
             }
-
             return brandSelection;
         }
 
@@ -77,6 +75,10 @@ namespace Game.Characters
         {
             _player = player;
             CreateBrands();
+            XmlNode node = Helper.OpenRootNode("Brands");
+            _lockedBrands.ForEach(b => b.ReadData(node));
+            _completedBrands.ForEach(b => b.ReadData(node));
+            _activeBrands.ForEach(b => b.ReadData(node));
         }
 
         private void CreateBrands()
@@ -89,57 +91,57 @@ namespace Game.Characters
 
         private void CreateAttributeBrands()
         {
-            new StrengthBrand(_player, 10000);
-            new StrengthBrand(_player, 10000);
-            new StrengthBrand(_player, 10000);
-            new StrengthBrand(_player, 10000);
-            new StrengthBrand(_player, 10000);
+            new StrengthBrand(_player);
+            new StrengthBrand(_player);
+            new StrengthBrand(_player);
+            new StrengthBrand(_player);
+            new StrengthBrand(_player);
 
-            new PerceptionBrand(_player, 20);
-            new PerceptionBrand(_player, 20);
-            new PerceptionBrand(_player, 20);
-            new PerceptionBrand(_player, 20);
-            new PerceptionBrand(_player, 20);
+            new PerceptionBrand(_player);
+            new PerceptionBrand(_player);
+            new PerceptionBrand(_player);
+            new PerceptionBrand(_player);
+            new PerceptionBrand(_player);
 
-            new WillpowerBrand(_player, 10);
-            new WillpowerBrand(_player, 10);
-            new WillpowerBrand(_player, 10);
-            new WillpowerBrand(_player, 10);
-            new WillpowerBrand(_player, 10);
+            new WillpowerBrand(_player);
+            new WillpowerBrand(_player);
+            new WillpowerBrand(_player);
+            new WillpowerBrand(_player);
+            new WillpowerBrand(_player);
 
-            new EnduranceBrand(_player, 10);
-            new EnduranceBrand(_player, 10);
-            new EnduranceBrand(_player, 10);
-            new EnduranceBrand(_player, 10);
-            new EnduranceBrand(_player, 10);
+            new EnduranceBrand(_player);
+            new EnduranceBrand(_player);
+            new EnduranceBrand(_player);
+            new EnduranceBrand(_player);
+            new EnduranceBrand(_player);
         }
 
         private void CreateOtherBrands()
         {
-            new EssenceChangeBrand(_player, 10);
-            new EssenceChangeBrand(_player, 10);
-            new HealthRecoveryBrand(_player, 10000);
-            new HealthRecoveryBrand(_player, 10000);
-            new WillpowerRecoveryBrand(_player, 100);
-            new WillpowerRecoveryBrand(_player, 100);
-            new AutomaticReloadBrand(_player, 25);
-            new InstantReloadBrand(_player, 25);
-            new OnlySkillBrand(_player, 25);
-            new SkillKillBrand(_player, 25);
+            new EssenceChangeBrand(_player);
+            new EssenceChangeBrand(_player);
+            new HealthRecoveryBrand(_player);
+            new HealthRecoveryBrand(_player);
+            new WillpowerRecoveryBrand(_player);
+            new WillpowerRecoveryBrand(_player);
+            new AutomaticReloadBrand(_player);
+            new InstantReloadBrand(_player);
+            new OnlySkillBrand(_player);
+            new SkillKillBrand(_player);
         }
 
         private void CreateResourceFindBrands()
         {
-            new ResourceBrand(_player, 100);
-            new FoodBrand(_player, 100);
-            new WaterBrand(_player, 100);
+            new ResourceBrand(_player);
+            new FoodBrand(_player);
+            new WaterBrand(_player);
         }
 
         private void CreateConditionBrands()
         {
-            new IgniteBrand(_player,  500);
-            new DecayBrand(_player,  500);
-            new SicknessBrand(_player, 500);
+            new IgniteBrand(_player);
+            new DecayBrand(_player);
+            new SicknessBrand(_player);
         }
 
         public void IncreaseDamageDealt(int damage)
@@ -294,21 +296,35 @@ namespace Game.Characters
 
         public abstract class Brand
         {
-            private readonly int _counterTarget;
-            private readonly string _riteName, _successName, _failName;
+            private readonly string _riteName;
             protected readonly Player Player;
+
+            private int _counterTarget;
+            private string _successName, _failName, _successEffect, _failEffect, _requirementString;
+            protected float SuccessModifier, FailModifier;
+
             private int _counter;
             public BrandStatus Status = BrandStatus.Locked;
-            private static readonly List<BrandStatus> _brandStatuses = new List<BrandStatus>();
 
-            protected Brand(Player player, string riteName, string successName, string failName, int counterTarget)
+            protected Brand(Player player, string riteName)
             {
                 Player = player;
                 _riteName = riteName;
-                _successName = successName;
-                _failName = failName;
-                _counterTarget = counterTarget;
                 SetStatus(BrandStatus.Locked);
+            }
+
+            public void ReadData(XmlNode root)
+            {
+                root = root.SelectSingleNode(_riteName);
+                _requirementString = root.StringFromNode("Requirement");
+                _counterTarget = root.IntFromNode("TargetValue");
+                _requirementString = _requirementString.Replace("num", _counterTarget.ToString());
+                _successName = root.StringFromNode("SuccessName");
+                _successEffect = root.StringFromNode("SuccessEffect");
+                SuccessModifier = root.FloatFromNode("SuccessValue");
+                _failName = root.StringFromNode("FailName");
+                _failEffect = root.StringFromNode("FailEffect");
+                FailModifier = root.FloatFromNode("FailValue");
             }
 
             protected string Progress()
@@ -365,28 +381,13 @@ namespace Game.Characters
 
             protected abstract string GetProgressSubstring();
 
-            private static BrandStatus StringToBrandStatus(string brandStatusString)
-            {
-                if (_brandStatuses.Count == 0)
-                {
-                    foreach (BrandStatus brandStatus in Enum.GetValues(typeof(BrandStatus)))
-                        _brandStatuses.Add(brandStatus);
-                }
-
-                foreach (BrandStatus brandStatus in _brandStatuses)
-                {
-                    if (brandStatus.ToString() == brandStatusString)
-                    {
-                        return brandStatus;
-                    }
-                }
-                throw new ArgumentOutOfRangeException();
-            }
-            
             public void Load(XmlNode doc)
             {
                 _counter = doc.IntFromNode("TimeRemaining");
-                Status = (BrandStatus)doc.IntFromNode("Status");
+                Status = (BrandStatus) doc.IntFromNode("Status");
+                if (this is StrengthBrand || this is EnduranceBrand || this is PerceptionBrand || this is WillpowerBrand) return;
+                if (Status == BrandStatus.Succeeded) OnSucceed();
+                else if (Status == BrandStatus.Failed) OnFail();
             }
 
             public XmlNode Save(XmlNode doc)
@@ -394,7 +395,7 @@ namespace Game.Characters
                 doc = doc.CreateChild("Brand");
                 doc.CreateChild("Name", _riteName);
                 doc.CreateChild("TimeRemaining", _counter);
-                doc.CreateChild("Status", (int)Status);
+                doc.CreateChild("Status", (int) Status);
                 return doc;
             }
 
@@ -410,8 +411,7 @@ namespace Game.Characters
 
             public string GetEffectString()
             {
-                //todo
-                return "fart";
+                return Status == BrandStatus.Succeeded ? _successEffect : _failEffect;
             }
         }
 
@@ -426,7 +426,7 @@ namespace Game.Characters
                     _completedBrands.Remove(brand);
                     break;
                 case BrandStatus.Active:
-                    if (!_activeBrands.Contains(brand)) return;
+                    if (_activeBrands.Contains(brand)) return;
                     _activeBrands.Add(brand);
                     _completedBrands.Remove(brand);
                     _lockedBrands.Remove(brand);
@@ -450,18 +450,18 @@ namespace Game.Characters
 
         private class StrengthBrand : Brand
         {
-            public StrengthBrand(Player player, int counterTarget) : base(player, "Power", "power", "weakness", counterTarget)
+            public StrengthBrand(Player player) : base(player, "Power")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.ChangeStrengthMax(1);
+                Player.Attributes.ChangeStrengthMax((int) SuccessModifier);
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.ChangeStrengthMax(1);
+                Player.Attributes.ChangeStrengthMax((int) FailModifier);
             }
 
             protected override string GetProgressSubstring()
@@ -472,18 +472,18 @@ namespace Game.Characters
 
         private class EnduranceBrand : Brand
         {
-            public EnduranceBrand(Player player, int counterTarget) : base(player, "Stamina", "stamina", "sloth", counterTarget)
+            public EnduranceBrand(Player player) : base(player, "Stamina")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.ChangeEnduranceMax(1);
+                Player.Attributes.ChangeEnduranceMax((int) SuccessModifier);
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.ChangeEnduranceMax(1);
+                Player.Attributes.ChangeEnduranceMax((int) FailModifier);
             }
 
             protected override string GetProgressSubstring()
@@ -494,18 +494,18 @@ namespace Game.Characters
 
         private class PerceptionBrand : Brand
         {
-            public PerceptionBrand(Player player, int counterTarget) : base(player, "Vigilance", "vigilance", "obliviousness", counterTarget)
+            public PerceptionBrand(Player player) : base(player, "Vigilance")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.ChangePerceptionMax(1);
+                Player.Attributes.ChangePerceptionMax((int) SuccessModifier);
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.ChangePerceptionMax(1);
+                Player.Attributes.ChangePerceptionMax((int) FailModifier);
             }
 
             protected override string GetProgressSubstring()
@@ -516,18 +516,18 @@ namespace Game.Characters
 
         private class WillpowerBrand : Brand
         {
-            public WillpowerBrand(Player player, int counterTarget) : base(player, "Resolution", "resolution", "fear", counterTarget)
+            public WillpowerBrand(Player player) : base(player, "Resolution")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.ChangeWillpowerMax(1);
+                Player.Attributes.ChangeWillpowerMax((int) SuccessModifier);
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.ChangeWillpowerMax(1);
+                Player.Attributes.ChangeWillpowerMax((int) FailModifier);
             }
 
             protected override string GetProgressSubstring()
@@ -538,18 +538,18 @@ namespace Game.Characters
 
         private class EssenceChangeBrand : Brand
         {
-            public EssenceChangeBrand(Player player, int counterTarget) : base(player, "Insight", "insight", "ignorance", counterTarget)
+            public EssenceChangeBrand(Player player) : base(player, "Insight")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.Get(AttributeType.EssenceRecoveryBonus).Increment();
+                Player.Attributes.EssenceRecoveryModifier += SuccessModifier;
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.Get(AttributeType.EssenceRecoveryBonus).Increment(0.25f);
+                Player.Attributes.DurabilityLossModifier += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -560,18 +560,18 @@ namespace Game.Characters
 
         private class HealthRecoveryBrand : Brand
         {
-            public HealthRecoveryBrand(Player player, int counterTarget) : base(player, "Revival", "immortality", "frailness", counterTarget)
+            public HealthRecoveryBrand(Player player) : base(player, "Revival")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.Get(AttributeType.HealthRecoveryBonus).Increment(0.25f);
+                Player.Attributes.RallyHealthModifier += SuccessModifier;
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.Get(AttributeType.HealthLossBonus).Increment(0.1f);
+                Player.Attributes.StartHealthModifier += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -582,20 +582,18 @@ namespace Game.Characters
 
         private class WillpowerRecoveryBrand : Brand
         {
-            public WillpowerRecoveryBrand(Player player, int counterTarget) : base(player, "Apathy", "barbarity", "timidity", counterTarget)
+            public WillpowerRecoveryBrand(Player player) : base(player, "Apathy")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.StartCountingKills();
-                Player.Attributes.Get(AttributeType.WillpowerLossBonus).Increment();
+                Player.Attributes.ClaimRegionWillpowerGainModifier += SuccessModifier;
             }
 
             protected override void OnFail()
             {
-                Player.StartCountingKills();
-                Player.Attributes.Get(AttributeType.WillpowerLossBonus).Decrement();
+                Player.Attributes.EnemyKillHealthLoss += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -606,18 +604,18 @@ namespace Game.Characters
 
         private class OnlySkillBrand : Brand
         {
-            public OnlySkillBrand(Player player, int counterTarget) : base(player, "Mastery", "mastery", "distraction", counterTarget)
+            public OnlySkillBrand(Player player) : base(player, "Mastery")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.Get(AttributeType.FreeSkillChance).Increment(0.1f);
+                Player.Attributes.FreeSkillChance += SuccessModifier;
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.Get(AttributeType.InactiveSkillChance).Increment(0.05f);
+                Player.Attributes.SkillDisableChance += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -628,18 +626,18 @@ namespace Game.Characters
 
         private class SkillKillBrand : Brand
         {
-            public SkillKillBrand(Player player, int counterTarget) : base(player, "Prowess", "alertness", "absence", counterTarget)
+            public SkillKillBrand(Player player) : base(player, "Prowess")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.Get(AttributeType.InstantSkillRechargeChance).Increment(0.1f);
+                Player.Attributes.InstantCooldownChance += SuccessModifier;
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.Get(AttributeType.InactiveSkillChance).Increment(0.05f);
+                Player.Attributes.SkillDisableChance += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -650,7 +648,7 @@ namespace Game.Characters
 
         private class InstantReloadBrand : Brand
         {
-            public InstantReloadBrand(Player player, int counterTarget) : base(player, "Ingenuity", "deviousness", "ineptitude", counterTarget)
+            public InstantReloadBrand(Player player) : base(player, "Ingenuity")
             {
             }
 
@@ -661,7 +659,7 @@ namespace Game.Characters
 
             protected override void OnFail()
             {
-                Player.Attributes.Get(AttributeType.ReloadFailChance).Increment(0.05f);
+                Player.Attributes.ReloadFailureChance += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -672,7 +670,7 @@ namespace Game.Characters
 
         private class AutomaticReloadBrand : Brand
         {
-            public AutomaticReloadBrand(Player player, int counterTarget) : base(player, "Finesse", "finesse", "clumsiness", counterTarget)
+            public AutomaticReloadBrand(Player player) : base(player, "Finesse")
             {
             }
 
@@ -683,7 +681,7 @@ namespace Game.Characters
 
             protected override void OnFail()
             {
-                Player.Attributes.Get(AttributeType.ReloadFailChance).Increment(0.05f);
+                Player.Attributes.ReloadFailureChance += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -694,18 +692,18 @@ namespace Game.Characters
 
         private class IgniteBrand : Brand
         {
-            public IgniteBrand(Player player, int counterTarget) : base(player, "The Inferno", "the inferno", "flammability", counterTarget)
+            public IgniteBrand(Player player) : base(player, "Fire")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.LeaveFireTrail = true;
+                Player.Attributes.FireExplodeChance += SuccessModifier;
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.BurnWeakness = true;
+                Player.Attributes.FireDamageModifier += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -716,18 +714,18 @@ namespace Game.Characters
 
         private class DecayBrand : Brand
         {
-            public DecayBrand(Player player, int counterTarget) : base(player, "The Voidwalker", "the void", "fragility", counterTarget)
+            public DecayBrand(Player player) : base(player, "Decay")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.DecayRetaliate = true;
+                Player.Attributes.DecayExplodeChance += SuccessModifier;
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.DecayWeakness = true;
+                Player.Attributes.DecayDamageModifier += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -738,7 +736,7 @@ namespace Game.Characters
 
         private class SicknessBrand : Brand
         {
-            public SicknessBrand(Player player, int counterTarget) : base(player, "The Plaguebearer", "the pit", "disease", counterTarget)
+            public SicknessBrand(Player player) : base(player, "Sickness")
             {
             }
 
@@ -749,7 +747,7 @@ namespace Game.Characters
 
             protected override void OnFail()
             {
-                Player.Attributes.SicknessWeakness = true;
+                Player.Attributes.SicknessStackModifier += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -760,18 +758,18 @@ namespace Game.Characters
 
         private class ResourceBrand : Brand
         {
-            public ResourceBrand(Player player, int counterTarget) : base(player, "Scavenging", "fortitude", "blindness", counterTarget)
+            public ResourceBrand(Player player) : base(player, "Scavenging")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.Get(AttributeType.ResourceFindBonus).Increment();
+                Player.Attributes.ResourceFindModifier += SuccessModifier;
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.Get(AttributeType.ResourceFindBonus).Decrement();
+                Player.Attributes.ResourceFindModifier += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -782,18 +780,18 @@ namespace Game.Characters
 
         private class FoodBrand : Brand
         {
-            public FoodBrand(Player player, int counterTarget) : base(player, "Gathering", "fullness", "emptiness", counterTarget)
+            public FoodBrand(Player player) : base(player, "Gathering")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.Get(AttributeType.HungerBonus).Increment();
+                Player.Attributes.HungerModifier += SuccessModifier;
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.Get(AttributeType.StarvingWaterBonus).Decrement();
+                Player.Attributes.WaterHungerModifier += FailModifier;
             }
 
             protected override string GetProgressSubstring()
@@ -804,18 +802,18 @@ namespace Game.Characters
 
         private class WaterBrand : Brand
         {
-            public WaterBrand(Player player, int counterTarget) : base(player, "Divining", "wellness", "dryness", counterTarget)
+            public WaterBrand(Player player) : base(player, "Divining")
             {
             }
 
             protected override void OnSucceed()
             {
-                Player.Attributes.Get(AttributeType.ThirstBonus).Increment();
+                Player.Attributes.ThirstModifier += SuccessModifier;
             }
 
             protected override void OnFail()
             {
-                Player.Attributes.Get(AttributeType.DehydratingFoodBonus).Decrement();
+                Player.Attributes.FoodThirstModifier += FailModifier;
             }
 
             protected override string GetProgressSubstring()

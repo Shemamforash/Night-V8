@@ -106,21 +106,21 @@ namespace Game.Combat.Player
         protected override int GetBurnDamage()
         {
             int burnDamage = base.GetBurnDamage();
-            if (Player.Attributes.BurnWeakness) burnDamage *= 2;
+            burnDamage = (int)(burnDamage * (Player.Attributes.FireDamageModifier + 1f));
             return burnDamage;
         }
 
         protected override int GetDecayDamage()
         {
             int decayDamage = base.GetDecayDamage();
-            if (Player.Attributes.DecayWeakness) decayDamage *= 2;
+            decayDamage = (int) (decayDamage * (Player.Attributes.DecayDamageModifier + 1f));
             return decayDamage;
         }
 
         protected override int GetSicknessTargetTicks()
         {
             int sicknessTargetTicks = base.GetSicknessTargetTicks();
-            if (Player.Attributes.SicknessWeakness) sicknessTargetTicks /= 2;
+            sicknessTargetTicks = (int) (sicknessTargetTicks - Player.Attributes.SicknessStackModifier);
             return sicknessTargetTicks;
         }
 
@@ -252,7 +252,7 @@ namespace Game.Combat.Player
         {
             if (!_recovered)
             {
-                float recoverAmount = Player.Attributes.Val(AttributeType.HealthRecoveryBonus);
+                float recoverAmount = Player.Attributes.RallyHealthModifier;
                 int healAmount = Mathf.FloorToInt(HealthController.GetMaxHealth() * recoverAmount);
                 if (healAmount != 0)
                 {
@@ -307,10 +307,13 @@ namespace Game.Combat.Player
             _damageTakenSinceMarkStarted = true;
             DamageTakenSinceLastShot = true;
             CombatManager.IncreaseDamageTaken(shot.DamageDealt());
-            if (!Player.Attributes.DecayRetaliate) return;
-            EnemyBehaviour b = shot._origin as EnemyBehaviour;
-            if (b == null) return;
-            b.Decay();
+            TryExplode();
+        }
+
+        private void TryExplode()
+        {
+            if (Random.Range(0f, 1f) < Player.Attributes.FireExplodeChance) FireBehaviour.Create(transform.position, 2);
+            if (Random.Range(0f, 1f) < Player.Attributes.DecayExplodeChance) DecayBehaviour.Create(transform.position);
         }
 
         public void EquipWeapon(Weapon weapon)
@@ -332,7 +335,6 @@ namespace Game.Combat.Player
 
             _muzzleFlash = GameObject.Find("Muzzle Flash").GetComponent<FastLight>();
             Player = CharacterManager.SelectedCharacter;
-            if (Player.Attributes.LeaveFireTrail) gameObject.AddComponent<LeaveFireTrail>().Initialise();
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             ArmourController = Player.ArmourController;
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
@@ -476,8 +478,8 @@ namespace Game.Combat.Player
                 yield return null;
             }
 
-            float reloadFailChance = Player.Attributes.Val(AttributeType.ReloadFailChance);
-            if (Random.Range(0f, 1f) > reloadFailChance)
+            float reloadFailChance = Player.Attributes.ReloadFailureChance;
+            if (Random.Range(0f, 1f) >= reloadFailChance)
             {
                 _weaponBehaviour.Reload();
                 OnFireActions.Clear();
@@ -550,6 +552,15 @@ namespace Game.Combat.Player
         {
             if (_damageTakenSinceMarkStarted) return;
             target.HealthController.TakeDamage(DamageDealtSinceMarkStarted);
+        }
+
+        public void TriggerEnemyDeathEffect()
+        {
+            int damage = Mathf.FloorToInt(HealthController.GetMaxHealth() * Player.Attributes.EnemyKillHealthLoss);
+            TakeRawDamage(damage, Vector2.zero);
+            if (Random.Range(0f, 1f) >= Player.Attributes.InstantCooldownChance) return;
+            SkillBar.ResetCooldowns();
+
         }
     }
 }

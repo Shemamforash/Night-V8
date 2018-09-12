@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using Facilitating.Persistence;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
@@ -35,8 +36,6 @@ namespace Game.Characters.CharacterActions
         {
             --_timeRemaining;
             MinuteCallback?.Invoke();
-            Debug.Log(Duration + " " + InitialDuration);
-//            PlayerCharacter.CharacterView().UpdateCurrentActionText((float) (Duration - 1) / InitialDuration);
             if (_timeRemaining != 0) return;
             HourCallback?.Invoke();
             ResetTimeRemaining();
@@ -62,11 +61,25 @@ namespace Game.Characters.CharacterActions
             InitialDuration = Duration;
         }
 
-
-        public void Save(XmlNode doc)
+        public virtual XmlNode Save(XmlNode doc)
         {
+            doc = doc.CreateChild("CurrentAction");
+            doc.CreateChild("Name", GetType().Name);
+            doc.CreateChild("InitialDuration", InitialDuration);
+            doc.CreateChild("Duration", Duration);
+            doc.CreateChild("TimeRemaining", _timeRemaining);
+            return doc;
         }
 
+        public virtual XmlNode Load(XmlNode doc)
+        {
+            doc = doc.SelectSingleNode("CurrentAction");
+            InitialDuration = doc.IntFromNode("InitialDuration");
+            Duration = doc.IntFromNode("Duration");
+            _timeRemaining = doc.IntFromNode("TimeRemaining");
+            return doc;
+        }
+        
         public string GetDisplayName()
         {
             return DisplayName;

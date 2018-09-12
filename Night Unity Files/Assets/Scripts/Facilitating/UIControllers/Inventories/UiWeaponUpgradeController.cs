@@ -100,7 +100,7 @@ namespace Facilitating.UIControllers
             if (WorldState.HomeInventory().GetResourceQuantity("Essence") == 0) return;
             WorldState.HomeInventory().DecrementResource("Essence", 1);
             CharacterManager.SelectedCharacter.BrandManager.IncreaseEssenceInfused();
-            int durabilityGain = 1 + (int) CharacterManager.SelectedCharacter.Attributes.Val(AttributeType.EssenceRecoveryBonus);
+            int durabilityGain = 1 + (int) CharacterManager.SelectedCharacter.Attributes.EssenceRecoveryModifier;
             CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.IncreaseDurability(durabilityGain);
             _weaponDetail.UpdateWeaponInfo();
         }

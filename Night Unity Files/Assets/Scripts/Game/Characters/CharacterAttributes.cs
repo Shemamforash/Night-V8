@@ -17,7 +17,7 @@ using Random = UnityEngine.Random;
 
 namespace Game.Characters
 {
-    public class CharacterAttributes : DesolationAttributes, IPersistenceTemplate
+    public class CharacterAttributes : DesolationAttributes
     {
         public const int PlayerHealthChunkSize = 100;
         private readonly string[] _dehydrationLevels = {"Slaked", "Quenched", "Thirsty", "Aching", "Parched"};
@@ -29,22 +29,38 @@ namespace Game.Characters
         public readonly HashSet<WeaponType> WeaponSkillTwoUnlocks = new HashSet<WeaponType>();
         private const int DehydrateDeathTime = 18;
         private const int StarvationDeathTime = 36;
-        public bool BurnWeakness;
-        public bool DecayRetaliate;
-        public bool DecayWeakness;
-        public bool LeaveFireTrail;
 
-        public bool ReloadOnEmptyMag, ReloadOnLastRound;
-        public bool SicknessWeakness;
         public bool SkillOneUnlocked, SkillTwoUnlocked;
-        public bool SpreadSickness;
         private static readonly List<AttributeType> _attributeTypes = new List<AttributeType>();
+
+        public float EssenceRecoveryModifier;
+        public float DurabilityLossModifier;
+        public float RallyHealthModifier;
+        public float StartHealthModifier;
+        public float ClaimRegionWillpowerGainModifier;
+        public float EnemyKillHealthLoss;
+        public float ReloadFailureChance;
+        public float ResourceFindModifier;
+        public float HungerModifier;
+        public float ThirstModifier;
+        public float FoodThirstModifier;
+        public float WaterHungerModifier;
+        public float FireExplodeChance;
+        public float FireDamageModifier;
+        public float DecayExplodeChance;
+        public float DecayDamageModifier;
+        public float SicknessStackModifier;
+        public float FreeSkillChance;
+        public float InstantCooldownChance;
+        public float SkillDisableChance;
+        public bool ReloadOnEmptyMag;
+        public bool ReloadOnLastRound;
+        public bool SpreadSickness;
 
         public CharacterAttributes(Player player)
         {
             _player = player;
 
-            SetVal(AttributeType.EssenceLossBonus, 1);
             SetVal(AttributeType.SkillRechargeBonus, 1);
             SetVal(AttributeType.AdrenalineRechargeBonus, 1);
 
@@ -124,9 +140,7 @@ namespace Game.Characters
         public int CalculateInitialHealth()
         {
             int startingHealth = (int) (Val(AttributeType.Strength) * PlayerHealthChunkSize);
-            float healthLossModifier = Val(AttributeType.HealthLossBonus);
-            int startHealthModifier = Mathf.FloorToInt(startingHealth * healthLossModifier);
-            startingHealth -= startHealthModifier;
+            startingHealth = Mathf.FloorToInt(startingHealth * (1f - StartHealthModifier));
             return startingHealth;
         }
 
@@ -205,18 +219,6 @@ namespace Game.Characters
             return GetAttributeStatus(Get(AttributeType.Thirst), _dehydrationLevels);
         }
 
-        private void LoadAttribute(XmlNode root, string attributeName, CharacterAttribute characterAttribute)
-        {
-            XmlNode attributeNode = root.GetNode(attributeName);
-            characterAttribute.Max = attributeNode.IntFromNode("Max");
-            characterAttribute.SetCurrentValue(attributeNode.IntFromNode("Val"));
-        }
-
-        private void SaveAttribute(XmlNode root, string attributeName, CharacterAttribute characterAttribute)
-        {
-            root.CreateChild(attributeName, characterAttribute.CurrentValue() + "/" + characterAttribute.Max);
-        }
-
         public void DecreaseWillpower()
         {
             CharacterAttribute willpower = Get(AttributeType.Willpower);
@@ -238,8 +240,8 @@ namespace Game.Characters
 
         public void Drink()
         {
-            int thirstLoss = (int) Val(AttributeType.ThirstBonus) + 1;
-            int hungerGain = (int) Val(AttributeType.StarvingWaterBonus);
+            int thirstLoss = (int) ThirstModifier + 1;
+            int hungerGain = (int) WaterHungerModifier;
             CharacterAttribute thirst = Get(AttributeType.Thirst);
             thirst.Decrement(thirstLoss);
             thirst.Increment(hungerGain);
@@ -249,8 +251,8 @@ namespace Game.Characters
 
         public void Eat()
         {
-            int hungerLoss = (int) Val(AttributeType.HungerBonus) + 1;
-            int thirstGain = (int) Val(AttributeType.DehydratingFoodBonus);
+            int hungerLoss = (int) HungerModifier + 1;
+            int thirstGain = (int) FoodThirstModifier;
             CharacterAttribute hunger = Get(AttributeType.Hunger);
             hunger.Decrement(hungerLoss);
             hunger.Increment(thirstGain);
@@ -263,27 +265,33 @@ namespace Game.Characters
             SetVal(AttributeType.Strength, newStrength);
         }
 
-        public void UnlockWeaponSkillTwo(WeaponType weaponType)
+        public void UnlockWeaponSkillTwo(WeaponType weaponType, bool showScreen)
         {
             WeaponSkillTwoUnlocks.Add(weaponType);
+            if (!showScreen) return;
             UiBrandMenu.ShowWeaponSkillUnlock(weaponType, _player.EquippedWeapon.WeaponSkillTwo);
         }
 
-        public void UnlockWeaponSkillOne(WeaponType weaponType)
+        public void UnlockWeaponSkillOne(WeaponType weaponType, bool showScreen)
         {
             WeaponSkillOneUnlocks.Add(weaponType);
+            if (!showScreen) return;
             UiBrandMenu.ShowWeaponSkillUnlock(weaponType, _player.EquippedWeapon.WeaponSkillOne);
         }
 
-        public void UnlockCharacterSkillOne()
+        public void UnlockCharacterSkillOne(bool showScreen)
         {
+            if (SkillOneUnlocked) return;
             SkillOneUnlocked = true;
+            if (!showScreen) return;
             UiBrandMenu.ShowCharacterSkillUnlock(_player.CharacterSkillOne);
         }
 
-        public void UnlockCharacterSkillTwo()
+        public void UnlockCharacterSkillTwo(bool showScreen)
         {
+            if (SkillOneUnlocked) return;
             SkillTwoUnlocked = true;
+            if (!showScreen) return;
             UiBrandMenu.ShowCharacterSkillUnlock(_player.CharacterSkillTwo);
         }
     }

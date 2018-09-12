@@ -226,6 +226,7 @@
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
         <e p="DroneController.cs" t="Include" />
+        <e p="DurabilityBarController.cs" t="Include" />
         <e p="EZ Camera Shake" t="Include">
           <e p="Scripts" t="Include">
             <e p="CameraShakeInstance.cs" t="Include" />
@@ -241,6 +242,7 @@
         <e p="RadianceController.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
+            <e p="Brands.xml" t="Include" />
             <e p="Classes.xml" t="Include" />
             <e p="Enemies.xml" t="Include" />
             <e p="Environments.xml" t="Include" />

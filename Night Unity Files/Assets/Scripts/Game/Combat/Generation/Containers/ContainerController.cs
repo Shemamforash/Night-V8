@@ -48,7 +48,7 @@ public abstract class ContainerController
 
     public virtual void Take()
     {
-        int resourceBonus = (int) PlayerCombat.Instance.Player.Attributes.Val(AttributeType.ResourceFindBonus);
+        int resourceBonus = (int) PlayerCombat.Instance.Player.Attributes.ResourceFindModifier;
         if (resourceBonus != 0)
         {
             Inventory().Contents().ForEach(i =>

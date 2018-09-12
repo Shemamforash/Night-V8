@@ -149,5 +149,10 @@ namespace Game.Global
 
             _loaded = true;
         }
+
+        public static Recipe FindRecipe(string recipeName)
+        {
+            return _recipes.FirstOrDefault(r => r.Name == recipeName);
+        }
     }
 }

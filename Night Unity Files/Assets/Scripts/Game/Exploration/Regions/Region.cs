@@ -6,10 +6,12 @@ using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
+using Game.Combat.Player;
 using Game.Exploration.Environment;
 using Game.Exploration.Ui;
 using Game.Exploration.WorldEvents;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -39,6 +41,7 @@ namespace Game.Exploration.Regions
         public int ClaimRemaining;
         private int _claimQuantity;
         private string _claimBenefit = "";
+        public int RitesRemaining = 3;
 
         public Region() : base(Vector2.zero)
         {
@@ -101,6 +104,9 @@ namespace Game.Exploration.Regions
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            int willpowerGain = Mathf.FloorToInt(PlayerCombat.Instance.Player.Attributes.ClaimRegionWillpowerGainModifier);
+            PlayerCombat.Instance.Player.Attributes.Get(AttributeType.Willpower).Increment(willpowerGain);
         }
 
         public void Update()
@@ -190,6 +196,8 @@ namespace Game.Exploration.Regions
             region.ClaimRemaining = doc.IntFromNode("ClaimRemaining");
             region._claimQuantity = doc.IntFromNode("ClaimQuantity");
             region._claimBenefit = doc.StringFromNode("ClaimBenefit");
+            region.RitesRemaining = doc.IntFromNode("RitesRemaining");
+
             foreach (XmlNode enemyNode in doc.SelectSingleNode("Enemies").SelectNodes("Enemy"))
             {
                 string enemyTypeString = enemyNode.StringFromNode("EnemyType");
@@ -228,6 +236,7 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("ClaimRemaining", ClaimRemaining);
             regionNode.CreateChild("ClaimQuantity", _claimQuantity);
             regionNode.CreateChild("ClaimBenefit", _claimBenefit);
+            regionNode.CreateChild("RitesRemaining", RitesRemaining);
             XmlNode enemyNode = regionNode.CreateChild("Enemies");
             _enemies.ForEach(e => e.Save(enemyNode));
         }

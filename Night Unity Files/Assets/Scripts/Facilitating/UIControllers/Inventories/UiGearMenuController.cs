@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using Game.Global;
@@ -26,8 +25,7 @@ namespace Facilitating.UIControllers
         private static Inventory _currentInventory;
         private static Tab _currentTab;
         private static bool _open;
-
-        private readonly List<Tab> _tabs = new List<Tab>();
+        private static readonly List<Tab> _tabs = new List<Tab>();
 
         public static Inventory Inventory()
         {
@@ -36,17 +34,9 @@ namespace Facilitating.UIControllers
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
-            if (isHeld) return;
-            switch (axis)
-            {
-                case InputAxis.SwitchTab:
-                    if(direction < 0) _currentTab.SelectPreviousTab();
-                    else _currentTab.SelectNextTab();
-                    break;
-                case InputAxis.Cover:
-//                    Close();
-                    break;
-            }
+            if (isHeld || axis != InputAxis.SwitchTab) return;
+            if (direction < 0) _currentTab.SelectPreviousTab();
+            else _currentTab.SelectNextTab();
         }
 
         public void OnInputUp(InputAxis axis)
@@ -57,30 +47,29 @@ namespace Facilitating.UIControllers
         {
         }
 
-        private void CreateTab(string tabName, Action onSelectAction)
+        private void CreateTab(string tabName, UiInventoryMenuController menu)
         {
-            Tab tab = new Tab(tabName, gameObject.FindChildWithName("Tabs"), onSelectAction);
+            Tab tab = new Tab(tabName, gameObject.FindChildWithName("Tabs"), menu);
             _tabs.Add(tab);
         }
 
         private class Tab
         {
             private readonly EnhancedText _tabText;
-            private readonly Action OnSelectAction;
+            private readonly UiInventoryMenuController _menu;
             private Tab _prevTab, _nextTab;
 
-            public Tab(string name, GameObject parent, Action onSelectAction)
+            public Tab(string name, GameObject parent, UiInventoryMenuController menu)
             {
                 _tabText = parent.FindChildWithName<EnhancedText>(name);
-                OnSelectAction = onSelectAction;
+                _menu = menu;
             }
 
-            private void Select()
+            public void Select()
             {
                 _currentTab = this;
-                Debug.Log("waffle");
-                OnSelectAction();
                 _tabText.SetUnderlineActive(true);
+                OpenInventoryMenu(_menu);
             }
 
             private void Deselect()
@@ -113,23 +102,7 @@ namespace Facilitating.UIControllers
         {
             base.Awake();
             _instance = this;
-            _tabs.Clear();
-            CreateTab("Weapons", ShowWeaponMenu);
-            CreateTab("Armour", ShowArmourMenu);
-            CreateTab("Accessories", ShowAccessoryMenu);
-            CreateTab("Crafting", ShowCraftingMenu);
-            CreateTab("Consumables", ShowConsumableMenu);
-            CreateTab("Journals", ShowJournalMenu);
-            for (int i = 0; i < _tabs.Count; ++i)
-            {
-                int prevIndex = i - 1;
-                Tab prevTab = prevIndex == -1 ? null : _tabs[prevIndex];
-                
-                int nextIndex = i + 1;
-                Tab nextTab = nextIndex == _tabs.Count ? null : _tabs[nextIndex];
-                
-                _tabs[i].SetNeighbors(prevTab, nextTab);
-            }
+
             GameObject gearObject = gameObject.FindChildWithName("Gear");
             _accessoryController = gearObject.FindChildWithName<UiAccessoryController>("Accessory");
             _armourUpgradeController = gearObject.FindChildWithName<UiArmourUpgradeController>("Armour");
@@ -137,6 +110,24 @@ namespace Facilitating.UIControllers
             _craftingController = gearObject.FindChildWithName<UICraftingController>("Crafting");
             _consumableController = gearObject.FindChildWithName<UiConsumableController>("Consumables");
             _journalController = gearObject.FindChildWithName<UiJournalController>("Journals");
+            
+            _tabs.Clear();
+            CreateTab("Armour", _armourUpgradeController);
+            CreateTab("Accessories", _accessoryController);
+            CreateTab("Weapons", _weaponUpgradeController);
+            CreateTab("Crafting", _craftingController);
+            CreateTab("Consumables", _consumableController);
+            CreateTab("Journals", _journalController);
+            for (int i = 0; i < _tabs.Count; ++i)
+            {
+                int prevIndex = i - 1;
+                Tab prevTab = prevIndex == -1 ? null : _tabs[prevIndex];
+
+                int nextIndex = i + 1;
+                Tab nextTab = nextIndex == _tabs.Count ? null : _tabs[nextIndex];
+
+                _tabs[i].SetNeighbors(prevTab, nextTab);
+            }
         }
 
         public static void Close()
@@ -154,33 +145,40 @@ namespace Facilitating.UIControllers
             _currentTab = _tabs[0];
         }
 
-        private static void OpenInventoryMenu(UiInventoryMenuController menuController)
+        private static void OpenInventoryMenu(UiInventoryMenuController menu)
         {
             Player player = CharacterManager.SelectedCharacter;
             _currentInventory = player.TravelAction.AtHome() ? WorldState.HomeInventory() : player.Inventory();
-            if (_currentMenuController != null) _currentMenuController.Hide();
-            _currentMenuController = menuController;
+
             if (!_open)
             {
+                _currentMenuController = menu;
                 MenuStateMachine.ShowMenu("Inventories", _currentMenuController.Show);
                 _open = true;
             }
             else
             {
+                _currentMenuController.Hide();
+                _currentMenuController = menu;
                 _currentMenuController.Show();
             }
         }
 
-        public static void ShowArmourMenu() => OpenInventoryMenu(_armourUpgradeController);
+        private static void SelectTab(int tabNumber)
+        {
+            _tabs[tabNumber].Select();
+        }
 
-        public static void ShowWeaponMenu() => OpenInventoryMenu(_weaponUpgradeController);
+        public static void ShowArmourMenu() => SelectTab(0);
 
-        public static void ShowAccessoryMenu() => OpenInventoryMenu(_accessoryController);
+        public static void ShowAccessoryMenu() => SelectTab(1);
 
-        public static void ShowCraftingMenu() => OpenInventoryMenu(_craftingController);
+        public static void ShowWeaponMenu() => SelectTab(2);
 
-        public static void ShowConsumableMenu() => OpenInventoryMenu(_consumableController);
+        public static void ShowCraftingMenu() => SelectTab(3);
 
-        public static void ShowJournalMenu() => OpenInventoryMenu(_journalController);
+        public static void ShowConsumableMenu() => SelectTab(4);
+
+        public static void ShowJournalMenu() => SelectTab(5);
     }
 }

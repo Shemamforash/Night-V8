@@ -92,7 +92,7 @@ namespace Game.Gear.Weapons
             PlayerCombat player = Origin as PlayerCombat;
             if (player != null)
             {
-                durabilityModifier = player.Player.Attributes.Val(AttributeType.EssenceLossBonus);
+                durabilityModifier = player.Player.Attributes.DurabilityLossModifier + 1;
             }
 
             WeaponAttributes.DecreaseDurability(durabilityModifier * amount);

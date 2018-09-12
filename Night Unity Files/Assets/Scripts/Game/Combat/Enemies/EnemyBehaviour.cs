@@ -169,6 +169,7 @@ namespace Game.Combat.Enemies
                 CombatManager.Region().Containers.Add(loot);
             }
 
+            PlayerCombat.Instance.TriggerEnemyDeathEffect();
             CombatManager.Remove(this);
             Enemy.Kill();
             Destroy(gameObject);

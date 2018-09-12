@@ -1,5 +1,8 @@
-﻿using Facilitating.UIControllers;
+﻿using System.Xml;
+using Facilitating.Persistence;
+using Facilitating.UIControllers;
 using Game.Global;
+using SamsHelper.Libraries;
 
 namespace Game.Characters.CharacterActions
 {
@@ -40,6 +43,20 @@ namespace Game.Characters.CharacterActions
             _recipe.ConsumeResources();
             SetDuration();
             Enter();
+        }
+
+        public override XmlNode Load(XmlNode doc)
+        {
+            doc = base.Save(doc);
+            _recipe = Recipe.FindRecipe(doc.StringFromNode("Recipe"));
+            return doc;
+        }
+        
+        public override XmlNode Save(XmlNode doc)
+        {
+            doc = base.Save(doc);
+            doc.CreateChild("Recipe", _recipe.Name);
+            return doc;
         }
     }
 }

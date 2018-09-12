@@ -22,11 +22,12 @@ public class ShadowShaderController : MonoBehaviour
         TargetCamera.targetTexture = shadowTexture;
         TargetCamera.Render();
         _shadowMaterial.mainTexture = TargetCamera.targetTexture;
-        _shadowMaterial.SetTexture("Main Texture", TargetCamera.targetTexture);
+        _shadowMaterial.SetTexture("_ShadowTex", TargetCamera.targetTexture);
     }
 
     private void ReleaseTexture()
     {
+        if (TargetCamera == null) return;
         if (TargetCamera.targetTexture == null) return;
         TargetCamera.targetTexture.Release();
     }

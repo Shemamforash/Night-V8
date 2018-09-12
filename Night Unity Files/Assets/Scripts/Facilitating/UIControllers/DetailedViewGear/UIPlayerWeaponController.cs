@@ -7,9 +7,10 @@ namespace Facilitating.UIControllers
 {
     public class UIPlayerWeaponController : MonoBehaviour
     {
-        private EnhancedText _nameText, _typeText, _dpsText, _qualityText;
+        private EnhancedText _nameText, _dpsText;
         private GameObject _notEquippedObject, _equippedObject;
         public EnhancedButton EnhancedButton;
+        private DurabilityBarController _durabilityBar;
 
         public void Awake()
         {
@@ -17,9 +18,8 @@ namespace Facilitating.UIControllers
             _notEquippedObject = gameObject.FindChildWithName("Not Equipped");
             _equippedObject = gameObject.FindChildWithName("Equipped");
             _nameText = gameObject.FindChildWithName<EnhancedText>("Name");
-            _typeText = gameObject.FindChildWithName<EnhancedText>("Type");
             _dpsText = gameObject.FindChildWithName<EnhancedText>("Dps");
-            _qualityText = gameObject.FindChildWithName<EnhancedText>("Quality");
+            _durabilityBar = gameObject.FindChildWithName<DurabilityBarController>("Durability");
         }
 
         public void SetWeapon(Weapon weapon)
@@ -34,10 +34,9 @@ namespace Facilitating.UIControllers
                 _notEquippedObject.SetActive(false);
                 _equippedObject.SetActive(true);
                 _nameText.SetText(weapon.Name);
-                _typeText.SetText(weapon.GetWeaponType());
                 _dpsText.SetText(weapon.WeaponAttributes.DPS().Round(1) + " DPS");
-                _qualityText.SetText(weapon.Quality().ToString());
             }
+            _durabilityBar.SetWeapon(weapon);
         }
     }
 }

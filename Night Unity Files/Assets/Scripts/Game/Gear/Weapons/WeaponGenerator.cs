@@ -9,7 +9,7 @@ namespace Game.Gear.Weapons
     {
         private static readonly Dictionary<WeaponType, List<WeaponClass>> WeaponClasses = new Dictionary<WeaponType, List<WeaponClass>>();
         private static bool _readWeapons;
-        private static readonly List<WeaponType> WeaponTypes = new List<WeaponType>();
+        private static readonly List<WeaponType> _weaponTypes = new List<WeaponType>();
 
         public static Weapon GenerateWeapon(ItemQuality quality, WeaponType type)
         {
@@ -30,7 +30,7 @@ namespace Game.Gear.Weapons
             XmlNode classesNode = Helper.OpenRootNode("WeaponClasses", "Weapons");
             foreach (WeaponType type in Enum.GetValues(typeof(WeaponType)))
             {
-                WeaponTypes.Add(type);
+                _weaponTypes.Add(type);
                 WeaponClasses[type] = new List<WeaponClass>();
                 XmlNode classNode =classesNode.GetNode("Class[@name='" + type + "']");
                 foreach (XmlNode subtypeNode in Helper.GetNodesWithName(classNode, "Subtype"))
@@ -38,6 +38,12 @@ namespace Game.Gear.Weapons
             }
 
             _readWeapons = true;
+        }
+
+        public static List<WeaponType> GetWeaponTypes()
+        {
+            LoadBaseWeapons();
+            return _weaponTypes;
         }
     }
 }

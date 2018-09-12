@@ -255,6 +255,26 @@ class EnemyImporter(XMLWriter):
         write_single_value(self, "Species", get_value(self, "I", row))
 
 
+class BrandImporter(XMLWriter):
+    def __init__(self):
+        super(BrandImporter, self).__init__("Unlockables", "Brands")
+        write_tag(self, "Brands", self.read_brands)
+
+    def read_brands(self):
+        for row in range(3, 20):
+            write_tag(self, get_value(self, "A", row), self.read_brand, [row])
+
+    def read_brand(self, row):
+        write_single_value(self, "Requirement", get_value(self, "B", row))
+        write_single_value(self, "TargetValue", get_value(self, "C", row))
+        write_single_value(self, "SuccessName", get_value(self, "D", row))
+        write_single_value(self, "SuccessEffect", get_value(self, "E", row))
+        write_single_value(self, "SuccessValue", get_value(self, "F", row, ""))
+        write_single_value(self, "FailName", get_value(self, "G", row))
+        write_single_value(self, "FailEffect", get_value(self, "H", row))
+        write_single_value(self, "FailValue", get_value(self, "I", row))
+
+
 class SkillImporter(XMLWriter):
     def __init__(self):
         super(SkillImporter, self).__init__("Skills", "Skills")
@@ -303,12 +323,13 @@ def write_single_value(xml_writer, stat_name, value):
 
 # WeaponImporter()
 # GearImporter()
-WeatherImporter()
+# WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
-EnemyImporter()
+# EnemyImporter()
 # RecipeImporter()
 # ResourceImporter()
 # InscriptionImporter()
-SkillImporter()
+# SkillImporter()
 # EnvironmentImporter()
+BrandImporter()

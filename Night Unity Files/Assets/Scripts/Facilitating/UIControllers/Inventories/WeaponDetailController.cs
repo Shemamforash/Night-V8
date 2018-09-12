@@ -9,16 +9,13 @@ public class WeaponDetailController : MonoBehaviour
 {
     private EnhancedText _nameText, _inscriptionText;
     private EnhancedText _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _handlingText, _dpsText, _capacityText;
-    private RectTransform _durabilityTransform;
-    private ParticleSystem _durabilityParticles;
+
     private Weapon _weapon;
-    private const float AbsoluteMaxDurability = ((int) ItemQuality.Radiant + 1) * 10;
+    private DurabilityBarController _durabilityBar;
 
     public void Awake()
     {
-        _durabilityTransform = gameObject.FindChildWithName<RectTransform>("Max");
         _nameText = gameObject.FindChildWithName<EnhancedText>("Name");
-        _durabilityParticles = gameObject.FindChildWithName<ParticleSystem>("Current");
         _damageText = gameObject.FindChildWithName<EnhancedText>("Damage");
         _fireRateText = gameObject.FindChildWithName<EnhancedText>("Fire Rate");
         _dpsText = gameObject.FindChildWithName<EnhancedText>("DPS");
@@ -27,6 +24,7 @@ public class WeaponDetailController : MonoBehaviour
         _accuracyText = gameObject.FindChildWithName<EnhancedText>("Critical Chance");
         _handlingText = gameObject.FindChildWithName<EnhancedText>("Handling");
         _inscriptionText = gameObject.FindChildWithName<EnhancedText>("Inscription");
+        _durabilityBar = gameObject.FindChildWithName<DurabilityBarController>("Durability Bar");
     }
 
     public void SetWeapon(Weapon weapon)
@@ -60,8 +58,7 @@ public class WeaponDetailController : MonoBehaviour
 
     private void SetNoWeaponInfo()
     {
-        _durabilityTransform.anchorMin = Vector2.zero;
-        _durabilityTransform.anchorMax = Vector2.zero;
+        _durabilityBar.Reset();
         _nameText.SetText("");
         _damageText.SetText("");
         _fireRateText.SetText("");
@@ -75,28 +72,12 @@ public class WeaponDetailController : MonoBehaviour
 
     public void Hide()
     {
-        _durabilityParticles.Stop();
+        _durabilityBar.SetWeapon(null);
     }
 
     private void UpdateDurabilityParticles()
     {
-        if (_weapon == null)
-        {
-            _durabilityParticles.Stop();
-            return;
-        }
-
-        float maxDurability = ((int) _weapon.Quality() + 1) * 10;
-        float currentDurability = _weapon.WeaponAttributes.GetDurability().CurrentValue();
-        float rectAnchorOffset = maxDurability / AbsoluteMaxDurability / 2;
-        float particleOffset = 5.6f * (currentDurability / AbsoluteMaxDurability);
-        _durabilityTransform.anchorMin = new Vector2(0.5f - rectAnchorOffset, 0.5f);
-        _durabilityTransform.anchorMax = new Vector2(0.5f + rectAnchorOffset, 0.5f);
-        ParticleSystem.ShapeModule shape = _durabilityParticles.shape;
-        shape.radius = particleOffset;
-        ParticleSystem.EmissionModule emission = _durabilityParticles.emission;
-        emission.rateOverTime = 300 * particleOffset / 5.6f;
-        _durabilityParticles.Play();
+        _durabilityBar.SetWeapon(_weapon);
     }
 
     public void CompareTo(Weapon weapon)

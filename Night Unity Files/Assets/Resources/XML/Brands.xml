@@ -1,0 +1,172 @@
+<Brands>
+    <Power>
+        <Requirement>Deal num damage to enemies</Requirement>
+        <TargetValue>10000</TargetValue>
+        <SuccessName>Power</SuccessName>
+        <SuccessEffect>+1 Maximum Strength</SuccessEffect>
+        <SuccessValue>1</SuccessValue>
+        <FailName>Weakness</FailName>
+        <FailEffect>-1 Maximum Strength</FailEffect>
+        <FailValue>-1</FailValue>
+    </Power>
+    <Vigilance>
+        <Requirement>Find num items</Requirement>
+        <TargetValue>20</TargetValue>
+        <SuccessName>Vigilance</SuccessName>
+        <SuccessEffect>+1 Maximum Perception</SuccessEffect>
+        <SuccessValue>1</SuccessValue>
+        <FailName>Obliviousness</FailName>
+        <FailEffect>-1 Maximum Perception</FailEffect>
+        <FailValue>-1</FailValue>
+    </Vigilance>
+    <Resolution>
+        <Requirement>Use skills num times</Requirement>
+        <TargetValue>100</TargetValue>
+        <SuccessName>Resolution</SuccessName>
+        <SuccessEffect>+1 Maximum Willpower</SuccessEffect>
+        <SuccessValue>1</SuccessValue>
+        <FailName>Fear</FailName>
+        <FailEffect>-1 Maximum Willpower</FailEffect>
+        <FailValue>-1</FailValue>
+    </Resolution>
+    <Stamina>
+        <Requirement>Discover num regions</Requirement>
+        <TargetValue>10</TargetValue>
+        <SuccessName>Stamina</SuccessName>
+        <SuccessEffect>+1 Maximum Endurance</SuccessEffect>
+        <SuccessValue>1</SuccessValue>
+        <FailName>Sloth</FailName>
+        <FailEffect>-1 Maximum Endurance</FailEffect>
+        <FailValue>-1</FailValue>
+    </Stamina>
+    <Insight>
+        <Requirement>Gain num essence</Requirement>
+        <TargetValue>500</TargetValue>
+        <SuccessName>Insight</SuccessName>
+        <SuccessEffect>Essence recovers more durability on weapons</SuccessEffect>
+        <SuccessValue>1</SuccessValue>
+        <FailName>Ignorance</FailName>
+        <FailEffect>Weapons lose durability faster</FailEffect>
+        <FailValue>0.25</FailValue>
+    </Insight>
+    <Revival>
+        <Requirement>Take num damage</Requirement>
+        <TargetValue>10000</TargetValue>
+        <SuccessName>Immortality</SuccessName>
+        <SuccessEffect>When taking fatal damage, rally with a small amount of health</SuccessEffect>
+        <SuccessValue>0.25</SuccessValue>
+        <FailName>Frailty</FailName>
+        <FailEffect>Start combat with less health</FailEffect>
+        <FailValue>0.1</FailValue>
+    </Revival>
+    <Apathy>
+        <Requirement>Kill num enemies</Requirement>
+        <TargetValue>100</TargetValue>
+        <SuccessName>Barbarity</SuccessName>
+        <SuccessEffect>Gain willpower when claiming a region</SuccessEffect>
+        <SuccessValue>1</SuccessValue>
+        <FailName>Timidity</FailName>
+        <FailEffect>Small chance of losing willpower after combat</FailEffect>
+        <FailValue>0.2</FailValue>
+    </Apathy>
+    <Finesse>
+        <Requirement>Claim num regions using only your weapon</Requirement>
+        <TargetValue>10</TargetValue>
+        <SuccessName>Finesse</SuccessName>
+        <SuccessEffect>Automatically reload when magazine is exhausted</SuccessEffect>
+        <SuccessValue>0</SuccessValue>
+        <FailName>Clumsiness</FailName>
+        <FailEffect>Small chance reloading fails</FailEffect>
+        <FailValue>0.05</FailValue>
+    </Finesse>
+    <Ingenuity>
+        <Requirement>Kill an enemy with the last magazine round num times</Requirement>
+        <TargetValue>20</TargetValue>
+        <SuccessName>Deviousness</SuccessName>
+        <SuccessEffect>Instantly reload if the last round kills an enemy</SuccessEffect>
+        <SuccessValue>0</SuccessValue>
+        <FailName>Ineptitude</FailName>
+        <FailEffect>Small chance reloading fails</FailEffect>
+        <FailValue>0.05</FailValue>
+    </Ingenuity>
+    <Scavenging>
+        <Requirement>Find num resources</Requirement>
+        <TargetValue>50</TargetValue>
+        <SuccessName>Fortitude</SuccessName>
+        <SuccessEffect>+1 Resource on finding resource</SuccessEffect>
+        <SuccessValue>1</SuccessValue>
+        <FailName>Blindness</FailName>
+        <FailEffect>-1 Resource on finding resource</FailEffect>
+        <FailValue>1</FailValue>
+    </Scavenging>
+    <Gathering>
+        <Requirement>Find 50 food sources</Requirement>
+        <TargetValue>50</TargetValue>
+        <SuccessName>Fullness</SuccessName>
+        <SuccessEffect>Food sates your hunger more</SuccessEffect>
+        <SuccessValue>1</SuccessValue>
+        <FailName>Emptiness</FailName>
+        <FailEffect>Water causes you to become hungry</FailEffect>
+        <FailValue>1</FailValue>
+    </Gathering>
+    <Divining>
+        <Requirement>Find 50 water sources</Requirement>
+        <TargetValue>50</TargetValue>
+        <SuccessName>Wellness</SuccessName>
+        <SuccessEffect>Water quenches your thirst more</SuccessEffect>
+        <SuccessValue>1</SuccessValue>
+        <FailName>Dryness</FailName>
+        <FailEffect>Food causes you to become thirsty</FailEffect>
+        <FailValue>1</FailValue>
+    </Divining>
+    <Fire>
+        <Requirement>Set 100 enemies on fire</Requirement>
+        <TargetValue>100</TargetValue>
+        <SuccessName>The Inferno</SuccessName>
+        <SuccessEffect>Occasionally explode with fire on taking damage</SuccessEffect>
+        <SuccessValue>0.02</SuccessValue>
+        <FailName>Flammability</FailName>
+        <FailEffect>Take double damage from burning</FailEffect>
+        <FailValue>2</FailValue>
+    </Fire>
+    <Decay>
+        <Requirement>Inflict decay on 100 enemies</Requirement>
+        <TargetValue>100</TargetValue>
+        <SuccessName>The Void</SuccessName>
+        <SuccessEffect>Occasionally explode with decay on taking damage</SuccessEffect>
+        <SuccessValue>0.02</SuccessValue>
+        <FailName>Fragility</FailName>
+        <FailEffect>Take double damage from decay</FailEffect>
+        <FailValue>2</FailValue>
+    </Decay>
+    <Sickness>
+        <Requirement>Cause 100 enemies to become sick</Requirement>
+        <TargetValue>100</TargetValue>
+        <SuccessName>The Pit</SuccessName>
+        <SuccessEffect>Occasionally spread sickness on taking damage</SuccessEffect>
+        <SuccessValue>0.02</SuccessValue>
+        <FailName>Sickliness</FailName>
+        <FailEffect>Less sickness is required to damage you</FailEffect>
+        <FailValue>4</FailValue>
+    </Sickness>
+    <Mastery>
+        <Requirement>Claim 10 regions using only skills</Requirement>
+        <TargetValue>10</TargetValue>
+        <SuccessName>Mastery</SuccessName>
+        <SuccessEffect>Small chance for free skill activation</SuccessEffect>
+        <SuccessValue>0.05</SuccessValue>
+        <FailName>Distraction</FailName>
+        <FailEffect>Small chance skill becomes disabled in combat</FailEffect>
+        <FailValue>0.05</FailValue>
+    </Mastery>
+    <Prowess>
+        <Requirement>Kill an enemy with skills 50 times</Requirement>
+        <TargetValue>50</TargetValue>
+        <SuccessName>Alertness</SuccessName>
+        <SuccessEffect>Large chance skill cools down instantly if it kills an enemy</SuccessEffect>
+        <SuccessValue>0.5</SuccessValue>
+        <FailName>Absence</FailName>
+        <FailEffect>Small chance skill becomes disabled in combat</FailEffect>
+        <FailValue>0.05</FailValue>
+    </Prowess>
+</Brands>

@@ -10,24 +10,8 @@
         Thirst,
         Hunger,
 
-        ResourceFindBonus,
-        
-        HealthRecoveryBonus,
-        HealthLossBonus,
-        
-        EssenceLossBonus,
-        EssenceRecoveryBonus,
-
-        WillpowerLossBonus,
-        
-        ReloadFailChance,
-        
-        FreeSkillChance,
-        InactiveSkillChance,
-        
         SkillRechargeBonus,
         AdrenalineRechargeBonus,
-        KnockbackBonus,
 
         Damage,
         Accuracy,
@@ -39,12 +23,6 @@
         SicknessChance,
         DecayChance,
         BurnChance,
-        CompassBonus,
-        
-        HungerBonus,
-        ThirstBonus,
-        DehydratingFoodBonus,
-        StarvingWaterBonus,
-        InstantSkillRechargeChance
+        CompassBonus
     }
 }

@@ -16,7 +16,7 @@ Shader "Sam/Shadow"
 		_ColorMask ("Color Mask", Float) = 15
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
-		_ShadowTex("Main Texture", 2D) = "white" {}
+		_ShadowTex("Shadow Texture", 2D) = "white" {}
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
 	}
 
@@ -132,9 +132,9 @@ Shader "Sam/Shadow"
 /*ASEBEGIN
 Version=15401
 7;29;1906;1014;1783.55;381.1441;1.183542;True;True
-Node;AmplifyShaderEditor.TexturePropertyNode;49;-1100.937,158.7162;Float;True;Property;_ShadowTex;Main Texture;0;0;Create;False;0;0;False;0;None;;False;white;Auto;Texture2D;0;1;SAMPLER2D;0
+Node;AmplifyShaderEditor.TexturePropertyNode;49;-1100.937,158.7162;Float;True;Property;_ShadowTex;Shadow Texture;0;0;Create;False;0;0;False;0;None;None;False;white;Auto;Texture2D;0;1;SAMPLER2D;0
 Node;AmplifyShaderEditor.RangedFloatNode;44;-498.339,56.84189;Float;False;Constant;_Float0;Float 0;3;0;Create;True;0;0;False;0;1;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SamplerNode;1;-801.4286,229.7055;Float;True;Property;_TextureSample0;Texture Sample 0;0;0;Create;True;0;0;False;0;b235455690464cf438452e65c3b0e002;7ad304db104e7114aa30e9039038e05c;True;0;False;black;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SamplerNode;1;-801.4286,229.7055;Float;True;Property;_TextureSample0;Texture Sample 0;0;0;Create;True;0;0;False;0;None;7ad304db104e7114aa30e9039038e05c;True;0;False;black;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SimpleSubtractOpNode;43;-359.539,182.8419;Float;True;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;48;-276.7371,438.2161;Float;False;Constant;_Float1;Float 1;1;0;Create;True;0;0;False;0;20;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.ColorNode;42;-424.339,-184.1581;Float;False;Constant;_Color0;Color 0;3;0;Create;True;0;0;False;0;0,0,0,0;0,0,0,0;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
@@ -152,4 +152,4 @@ WireConnection;40;2;42;3
 WireConnection;40;3;47;0
 WireConnection;35;0;40;0
 ASEEND*/
-//CHKSM=238378C9B1D18C8986B26D8C7B15E589C152906D
+//CHKSM=30809EC25619B2158748000BB1B604D8A9A86A80

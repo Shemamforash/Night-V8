@@ -32,7 +32,7 @@ namespace Game.Combat.Generation
             _region.Visit();
             PathingGrid.FinaliseGrid();
         }
-        
+
         protected virtual void GenerateObjects()
         {
             GenerateShrine();
@@ -40,6 +40,7 @@ namespace Game.Combat.Generation
             {
                 HealShrineBehaviour.CreateObject(_region.HealShrinePosition.Value);
             }
+
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
@@ -72,7 +73,7 @@ namespace Game.Combat.Generation
         {
             if (_region.GetRegionType() == RegionType.Shrine)
             {
-                RiteShrineBehaviour.Generate(_region.ShrinePosition);
+                RiteShrineBehaviour.Generate(_region);
             }
 
             if (_region.GetRegionType() == RegionType.Fountain)
@@ -140,6 +141,7 @@ namespace Game.Combat.Generation
                     _availablePositions.RemoveAt(i);
                     continue;
                 }
+
                 if (radius != 0)
                 {
                     Vector2 topLeft = new Vector2(_availablePositions[i].x - radius, _availablePositions[i].y - radius);
@@ -222,8 +224,10 @@ namespace Game.Combat.Generation
                     _availablePositions.RemoveAt(i);
                     break;
                 }
+
                 _availablePositions.Shuffle();
             }
+
             Vector2 position = FindAndRemoveValidPosition(0.5f);
             _region.Fires.Add(GenerateFire(position));
             CreateImpassablePoint(position);
@@ -248,7 +252,7 @@ namespace Game.Combat.Generation
             {
                 _region.Containers.Add(new JournalSource(FindAndRemoveValidPosition(), journalEntry));
             }
-            
+
             for (int i = 0; i < _region.WaterSourceCount; ++i)
             {
                 _region.Containers.Add(new WaterSource(FindAndRemoveValidPosition()));
