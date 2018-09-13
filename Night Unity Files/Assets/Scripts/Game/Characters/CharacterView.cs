@@ -143,6 +143,7 @@ namespace Game.Characters
         {
             string brandString = "";
             List<BrandManager.Brand> brands = _player.BrandManager.GetActiveBrands();
+            if (brands.Count == 0) brandString = "No active rites";
             for (int i = 0; i < brands.Count; i++)
             {
                 BrandManager.Brand brand = brands[i];

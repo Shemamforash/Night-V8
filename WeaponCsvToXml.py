@@ -275,6 +275,28 @@ class BrandImporter(XMLWriter):
         write_single_value(self, "FailValue", get_value(self, "I", row))
 
 
+class StoryImporter(XMLWriter):
+    def __init__(self):
+        super(StoryImporter, self).__init__("Story", "Story")
+        write_tag(self, "Story", self.read_brands)
+
+    def read_brands(self):
+        for row in range(2, 36):
+            write_tag(self, "JournalEntry", self.read_journal_entry, [row])
+        for row in range(39, 41):
+            write_tag(self, "StoryPart", self.read_story_part, [row])
+
+    def read_story_part(self, row):
+        write_single_value(self, "Number", get_value(self, "A", row))
+        write_single_value(self, "Text", get_value(self, "B", row))
+
+    def read_journal_entry(self, row):
+        write_single_value(self, "Title", get_value(self, "A", row))
+        write_single_value(self, "Group", get_value(self, "B", row))
+        write_single_value(self, "Part", get_value(self, "C", row))
+        write_single_value(self, "Text", get_value(self, "D", row))
+
+
 class SkillImporter(XMLWriter):
     def __init__(self):
         super(SkillImporter, self).__init__("Skills", "Skills")
@@ -332,4 +354,5 @@ def write_single_value(xml_writer, stat_name, value):
 # InscriptionImporter()
 # SkillImporter()
 # EnvironmentImporter()
-BrandImporter()
+# BrandImporter()
+StoryImporter()

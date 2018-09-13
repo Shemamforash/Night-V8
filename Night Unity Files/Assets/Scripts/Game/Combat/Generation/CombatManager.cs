@@ -17,6 +17,7 @@ using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
+using TMPro;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
@@ -58,6 +59,16 @@ namespace Game.Combat.Generation
             Cursor.visible = false;
             base.Awake();
             _instance = this;
+            GameObject regionNameObject = GameObject.Find("Region Name");
+            regionNameObject.FindChildWithName<TextMeshProUGUI>("Text").text = _currentRegion.Name;
+            CanvasGroup canvasGroup = regionNameObject.GetComponent<CanvasGroup>();
+            canvasGroup.alpha = 1;
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendInterval(1);
+            sequence.Append(canvasGroup.DOFade(0, 3f));
+            canvasGroup = GameObject.Find("HUD").GetComponent<CanvasGroup>();
+            canvasGroup.alpha = 0;
+            sequence.Insert(3, canvasGroup.DOFade(1, 3f));
         }
 
         private static CombatManager Instance()

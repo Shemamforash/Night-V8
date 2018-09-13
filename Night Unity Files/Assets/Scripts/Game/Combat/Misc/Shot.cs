@@ -234,16 +234,16 @@ namespace Game.Combat.Misc
 
             _bulletTrail = BulletTrailFade.Create();
             _bulletTrail.SetAlpha(1);
-
-            _bulletTrail.SetPosition(transform);
             _rigidBody.velocity = _direction * Speed * Random.Range(0.9f, 1.1f);
             _lastPosition = transform.position;
+            _bulletTrail.SetPosition(transform);
             StartCoroutine(WaitToDie());
         }
 
         private void DeactivateShot()
         {
             Destroy(gameObject.GetComponent<LeaveFireTrail>());
+            _bulletTrail.StartFade(0.2f);
             _shotPool.Return(this);
         }
 
@@ -274,7 +274,6 @@ namespace Game.Combat.Misc
             if (Random.Range(0f, 1f) < _burnChance) FireBehaviour.Create(transform.position, 1f);
             DealDamage(other);
             DeactivateShot();
-            _bulletTrail.StartFade(0.2f);
         }
 
         private void ApplyDamage(ITakeDamageInterface hit)

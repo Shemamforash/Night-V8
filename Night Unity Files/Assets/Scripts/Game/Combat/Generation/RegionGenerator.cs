@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
+using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
@@ -78,12 +80,12 @@ namespace Game.Combat.Generation
 
             if (_region.GetRegionType() == RegionType.Fountain)
             {
-                FountainBehaviour.Generate(_region.ShrinePosition);
+                FountainBehaviour.Generate(_region);
             }
 
             if (_region.GetRegionType() == RegionType.Monument)
             {
-                SaveStoneBehaviour.Generate(_region.ShrinePosition);
+                SaveStoneBehaviour.Generate(_region);
             }
         }
 
@@ -206,11 +208,6 @@ namespace Game.Combat.Generation
             return num;
         }
 
-        private static int _healthShrineCounter;
-        private const int HealShrineTarget = 6;
-        private static int _essenceShrineCounter;
-        private const int EssenceShrineTarget = 30;
-
         protected virtual void PlaceItems()
         {
             _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f));
@@ -232,36 +229,18 @@ namespace Game.Combat.Generation
             _region.Fires.Add(GenerateFire(position));
             CreateImpassablePoint(position);
             //todo tidy me
-            if (_healthShrineCounter > HealShrineTarget)
-            {
+            if (Random.Range(0, 10) == 0)
                 _region.HealShrinePosition = FindAndRemoveValidPosition();
-                _healthShrineCounter = 0;
-            }
-
-            if (_essenceShrineCounter > EssenceShrineTarget / WorldState.CurrentLevel())
-            {
-                _region.EssenceShrinePosition = FindAndRemoveValidPosition();
-                _essenceShrineCounter = 0;
-            }
-
-            _healthShrineCounter += Random.Range(1, 3);
-            _essenceShrineCounter += Random.Range(1, 3);
 
             JournalEntry journalEntry = JournalEntry.GetEntry();
             if (journalEntry != null)
-            {
                 _region.Containers.Add(new JournalSource(FindAndRemoveValidPosition(), journalEntry));
-            }
 
             for (int i = 0; i < _region.WaterSourceCount; ++i)
-            {
                 _region.Containers.Add(new WaterSource(FindAndRemoveValidPosition()));
-            }
 
             for (int i = 0; i < _region.FoodSourceCount; ++i)
-            {
                 _region.Containers.Add(new FoodSource(FindAndRemoveValidPosition()));
-            }
 
             for (int i = 0; i < _region.ResourceSourceCount; ++i)
             {

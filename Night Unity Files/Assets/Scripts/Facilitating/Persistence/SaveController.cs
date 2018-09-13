@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Xml;
+using Facilitating.Audio;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -8,14 +9,15 @@ namespace Facilitating.Persistence
 {
     public static class SaveController
     {
-        private static readonly string GameSaveLocation = Application.persistentDataPath + "/Saves/NightSave.xml";
+        private static readonly string GameSaveLocation = Application.persistentDataPath + "/Saves/FullSave.xml";
+        private static readonly string QuickSaveLocation = Application.persistentDataPath + "/Saves/QuickSave.xml";
         private static readonly string SettingsSaveLocation = Application.persistentDataPath + "/Saves/GameSettings.xml";
         private static XmlDocument _saveDoc;
 
 
         public static void SaveGame()
         {
-            Save(GameSaveLocation, "Game");
+            Save(GameSaveLocation);
         }
 
         public static void ClearSave()
@@ -33,8 +35,7 @@ namespace Facilitating.Persistence
 
         public static void LoadGame()
         {
-            Load(GameSaveLocation, "Game");
-//            return Load(GameSaveLocation, PersistenceType.Game);
+            Load(GameSaveLocation);
         }
 
         public static bool SaveExists()
@@ -58,12 +59,12 @@ namespace Facilitating.Persistence
         }
 
         //Basic Load/Save Functions
-        private static void Load(string fileLocation, string saveType)
+        private static void Load(string fileLocation)
         {
             if (!File.Exists(fileLocation)) return;
             _saveDoc = new XmlDocument();
             _saveDoc.Load(fileLocation);
-            XmlNode root = _saveDoc.GetNode(saveType);
+            XmlNode root = _saveDoc.GetNode("BTVSave");
             WorldState.Load(root);
         }
 
@@ -72,17 +73,43 @@ namespace Facilitating.Persistence
             string saveDirectory = Application.persistentDataPath + "/Saves";
             if (Directory.Exists(saveDirectory)) return;
             Directory.CreateDirectory(saveDirectory);
-            File.Create(GameSaveLocation);
-            File.Create(SettingsSaveLocation);
         }
-        
-        private static void Save(string fileLocation, string saveType)
+
+        private static void Save(string fileLocation)
         {
             TryCreateDirectory();
             _saveDoc = new XmlDocument();
-            XmlNode root = _saveDoc.CreateChild(saveType);
+            XmlNode root = _saveDoc.CreateChild("BTVSave");
             WorldState.Save(root);
             _saveDoc.Save(fileLocation);
+        }
+
+        public static void QuickSave()
+        {
+            Save(QuickSaveLocation);
+        }
+
+        public static void LoadSettings()
+        {
+            Debug.Log(SettingsSaveLocation);
+            Debug.Log(File.Exists(SettingsSaveLocation));
+            if (!File.Exists(SettingsSaveLocation)) return;
+            _saveDoc = new XmlDocument();
+            _saveDoc.Load(SettingsSaveLocation);
+            XmlNode root = _saveDoc.GetNode("Settings");
+            GlobalAudioManager.Load(root);
+            PauseMenuController.Load(root);
+        }
+        
+        public static void SaveSettings()
+        {
+            Debug.Log("fart");
+            TryCreateDirectory();
+            _saveDoc = new XmlDocument();
+            XmlNode root = _saveDoc.CreateChild("Settings");
+            GlobalAudioManager.Save(root);
+            PauseMenuController.Save(root);
+            _saveDoc.Save(SettingsSaveLocation);
         }
     }
 }

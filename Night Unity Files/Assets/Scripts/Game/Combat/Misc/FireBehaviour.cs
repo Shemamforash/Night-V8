@@ -9,7 +9,7 @@ namespace Game.Combat.Misc
 {
     public class FireBehaviour : MonoBehaviour
     {
-        private const int MaxEmissionRate = 400;
+        private const int MaxEmissionRate = 100;
         private const float LightMaxRadius = 5f;
         private const float LifeTime = 8f;
         private static readonly ObjectPool<FireBehaviour> _firePool = new ObjectPool<FireBehaviour>("Fire Areas", "Prefabs/Combat/Effects/Fire Area");
@@ -19,6 +19,7 @@ namespace Game.Combat.Misc
         private CircleCollider2D _collider;
         private int EmissionRate;
         private bool _keepAlive;
+        private List<ITakeDamageInterface> _ignoreTargets;
 
         public void Awake()
         {
@@ -32,14 +33,21 @@ namespace Game.Combat.Misc
             FireBehaviour fire = _firePool.Create();
             fire.transform.position = position;
             fire._keepAlive = keepAlive;
+            fire._ignoreTargets = new List<ITakeDamageInterface>();
             fire.StartCoroutine(fire.Burn(position, size, lightOn));
             return fire;
         }
 
+        public void AddIgnoreTarget(ITakeDamageInterface _ignoreTarget)
+        {
+            _ignoreTargets.Add(_ignoreTarget);
+        }
+        
         public void OnTriggerStay2D(Collider2D other)
         {
             CharacterCombat character = other.GetComponent<CharacterCombat>();
             if (character == null) return;
+            if (_ignoreTargets.Contains(other.GetComponent<ITakeDamageInterface>())) return;
             character.Burn();
         }
 
@@ -78,6 +86,11 @@ namespace Game.Combat.Misc
         private void OnDestroy()
         {
             _firePool.Dispose(this);
+        }
+
+        public void AddIgnoreTargets(List<ITakeDamageInterface> targetsToIgnore)
+        {
+            _ignoreTargets.AddRange(targetsToIgnore);
         }
     }
 }

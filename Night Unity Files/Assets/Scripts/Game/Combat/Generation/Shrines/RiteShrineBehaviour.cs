@@ -97,7 +97,6 @@ namespace Game.Combat.Generation.Shrines
 
         private void FadeCandles(Transform riteTransform)
         {
-            Assert.IsNotNull(riteTransform);
             foreach (ParticleSystem candle in riteTransform.Find("Candles").GetComponentsInChildren<ParticleSystem>())
                 StartCoroutine(FadeCandle(candle));
         }

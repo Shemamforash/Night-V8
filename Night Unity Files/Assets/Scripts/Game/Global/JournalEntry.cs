@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Facilitating.Persistence;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Global
 {
@@ -14,16 +16,16 @@ namespace Game.Global
         private readonly int _numberInGroup;
 
         private static readonly Dictionary<int, List<JournalEntry>> LockedEntries = new Dictionary<int, List<JournalEntry>>();
+        private static readonly Dictionary<int, string> _mainStoryText = new Dictionary<int, string>();
         private static readonly List<JournalEntry> UnlockedEntries = new List<JournalEntry>();
-        //todo load journals
-        private static bool _loaded = true;
+        private static bool _loaded = false;
 
         private JournalEntry(XmlNode journalNode)
         {
             Title = journalNode.StringFromNode("Title");
-            Contents = journalNode.StringFromNode("Contents");
+            Contents = FormatString(journalNode.StringFromNode("Text"));
             _journalGroup = journalNode.IntFromNode("Group");
-            _numberInGroup = journalNode.IntFromNode("Number");
+            _numberInGroup = journalNode.IntFromNode("Part");
             if (!LockedEntries.ContainsKey(_journalGroup)) LockedEntries.Add(_journalGroup, new List<JournalEntry>());
             LockedEntries[_journalGroup].Add(this);
             LockedEntries[_journalGroup].Sort((a, b) => a._numberInGroup.CompareTo(b._numberInGroup));
@@ -41,7 +43,7 @@ namespace Game.Global
         public static void Save(XmlNode root)
         {
             root = root.CreateChild("Journals");
-            foreach(JournalEntry entry in UnlockedEntries)
+            foreach (JournalEntry entry in UnlockedEntries)
             {
                 XmlNode entryNode = root.CreateChild("Entry");
                 entryNode.CreateChild("Group", entry._journalGroup);
@@ -53,14 +55,14 @@ namespace Game.Global
         {
             ReadJournals();
             XmlNode journalNode = root.SelectSingleNode("Journals");
-            foreach(XmlNode entryNode in journalNode.SelectNodes("Entry"))
+            foreach (XmlNode entryNode in journalNode.SelectNodes("Entry"))
             {
                 int group = entryNode.IntFromNode("Group");
                 int number = entryNode.IntFromNode("Number");
                 LockedEntries[group][number].Unlock();
             }
         }
-        
+
         public static JournalEntry GetEntry()
         {
             return null;
@@ -78,10 +80,32 @@ namespace Game.Global
         private static void ReadJournals()
         {
             if (_loaded) return;
-            XmlNode root = Helper.OpenRootNode("Journals", "Journals");
-            foreach (XmlNode journalNode in Helper.GetNodesWithName(root, "Journal"))
+            XmlNode root = Helper.OpenRootNode("Story", "Story");
+            foreach (XmlNode journalNode in Helper.GetNodesWithName(root, "JournalEntry"))
                 new JournalEntry(journalNode);
+            
+            foreach (XmlNode storyNode in Helper.GetNodesWithName(root, "StoryPart"))
+            {
+                int partNo = storyNode.IntFromNode("Number");
+                string storyString = FormatString(storyNode.StringFromNode("Text"));
+                _mainStoryText.Add(partNo, storyString);
+            }
+
             _loaded = true;
+        }
+
+        private static string FormatString(string inputString)
+        {
+            inputString = inputString.Replace("\n", "");
+            Regex compiledRegex = new Regex(@"\s+", RegexOptions.Compiled);
+            inputString = compiledRegex.Replace(inputString, " ");
+            return inputString.Replace("[br]", "\n");
+        }
+
+        public static string GetStoryText(int currentLevel)
+        {
+            ReadJournals();
+            return !_mainStoryText.ContainsKey(currentLevel) ? "" : _mainStoryText[currentLevel];
         }
     }
 }

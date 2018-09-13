@@ -148,18 +148,15 @@ namespace FastLights
                 FLEdge e = _edges[i];
                 if (e.From.OutOfRange && e.To.OutOfRange)
                     continue;
-                if (e.From.OutOfRange)
+                List<Vector2> circleIntersections = AdvancedMaths.FindLineSegmentCircleIntersections(e.From.Position, e.To.Position, _origin, _radius);
+                if (circleIntersections.Count != 0)
                 {
-                    Vector2 newVertexPos = AdvancedMaths.FindLineSegmentCircleIntersections(e.From.Position, e.To.Position, _origin, _radius)[0];
-                    e.From.SetInRangePosition(newVertexPos, _origin);
+                    Vector2 newVertexPos = circleIntersections[0];
+                    if (e.From.OutOfRange)
+                        e.From.SetInRangePosition(newVertexPos, _origin);
+                    if (e.To.OutOfRange)
+                        e.To.SetInRangePosition(newVertexPos, _origin);
                 }
-
-                if (e.To.OutOfRange)
-                {
-                    Vector2 newVertexPos = AdvancedMaths.FindLineSegmentCircleIntersections(e.From.Position, e.To.Position, _origin, _radius)[0];
-                    e.To.SetInRangePosition(newVertexPos, _origin);
-                }
-
                 if (!e.CalculateVisibility(_origin)) continue;
                 visibleEdges.Add(e);
             }

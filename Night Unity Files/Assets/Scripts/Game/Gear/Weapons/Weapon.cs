@@ -63,6 +63,7 @@ namespace Game.Gear.Weapons
         public float CalculateIdealDistance()
         {
             float range = WeaponAttributes.Val(AttributeType.Accuracy);
+            range *= range;
             float idealDistance = (RangeMax - RangeMin) * range + RangeMin;
             return idealDistance;
         }

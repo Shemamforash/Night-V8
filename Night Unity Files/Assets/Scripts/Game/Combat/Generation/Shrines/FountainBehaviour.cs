@@ -4,6 +4,7 @@ using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Player;
 using Game.Combat.Ui;
+using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
@@ -14,17 +15,25 @@ namespace Game.Combat.Generation.Shrines
 {
     public class FountainBehaviour : BasicShrineBehaviour, IInputListener
     {
-        public const int Width = 5;
         private static GameObject _fountainPrefab;
         private List<EnemyBehaviour> _enemies;
         private bool _started;
+        private Region _region;
 
-        public static void Generate(Vector2 position)
+        public static void Generate(Region region)
         {
             if (_fountainPrefab == null) _fountainPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Fountain");
             GameObject riteShrineObject = Instantiate(_fountainPrefab);
-            riteShrineObject.transform.position = position;
-            PathingGrid.AddBlockingArea(position, 1.5f);
+            riteShrineObject.GetComponent<FountainBehaviour>().Initialise(region);
+        }
+
+        private void Initialise(Region region)
+        {
+            _region = region;
+            transform.position = region.ShrinePosition;
+            PathingGrid.AddBlockingArea(region.ShrinePosition, 1.5f);
+            if (!_region.FountainVisited) return;
+            Destroy(this);
         }
 
         public void OnTriggerExit2D(Collider2D other)

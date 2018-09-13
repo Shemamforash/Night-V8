@@ -106,7 +106,7 @@ namespace Game.Combat.Player
         protected override int GetBurnDamage()
         {
             int burnDamage = base.GetBurnDamage();
-            burnDamage = (int)(burnDamage * (Player.Attributes.FireDamageModifier + 1f));
+            burnDamage = (int) (burnDamage * (Player.Attributes.FireDamageModifier + 1f));
             return burnDamage;
         }
 
@@ -310,10 +310,38 @@ namespace Game.Combat.Player
             TryExplode();
         }
 
+        public override void TakeExplosionDamage(float damage, Vector2 direction)
+        {
+            base.TakeExplosionDamage(damage, direction);
+            TryExplode();
+        }
+
+        public override void TakeRawDamage(float damage, Vector2 direction)
+        {
+            base.TakeRawDamage(damage, direction);
+            TryExplode();
+        }
+
         private void TryExplode()
         {
-            if (Random.Range(0f, 1f) < Player.Attributes.FireExplodeChance) FireBehaviour.Create(transform.position, 2);
-            if (Random.Range(0f, 1f) < Player.Attributes.DecayExplodeChance) DecayBehaviour.Create(transform.position);
+            bool explodeWithFire = Random.Range(0f, 1f) < Player.Attributes.FireExplodeChance;
+            bool explodeWithDecay = Random.Range(0f, 1f) < Player.Attributes.DecayExplodeChance;
+            if (!explodeWithFire && !explodeWithDecay) return;
+            Explosion explosion = Explosion.CreateExplosion(transform.position, 20);
+            explosion.AddIgnoreTarget(this);
+            if (explodeWithFire && explodeWithDecay)
+            {
+                if (Random.Range(0, 2) == 0)
+                    explosion.SetIncendiary();
+                else
+                    explosion.SetDecay();
+            }
+            else if (explodeWithFire)
+                explosion.SetIncendiary();
+            else if (explodeWithDecay)
+                explosion.SetDecay();
+
+            explosion.InstantDetonate();
         }
 
         public void EquipWeapon(Weapon weapon)
@@ -328,7 +356,7 @@ namespace Game.Combat.Player
             _compassPulses = Player.Attributes.CalculateCompassPulses();
             UiCompassPulseController.InitialisePulses(_compassPulses);
         }
-        
+
         public void Initialise()
         {
             InputHandler.SetCurrentListener(this);
@@ -560,7 +588,6 @@ namespace Game.Combat.Player
             TakeRawDamage(damage, Vector2.zero);
             if (Random.Range(0f, 1f) >= Player.Attributes.InstantCooldownChance) return;
             SkillBar.ResetCooldowns();
-
         }
     }
 }

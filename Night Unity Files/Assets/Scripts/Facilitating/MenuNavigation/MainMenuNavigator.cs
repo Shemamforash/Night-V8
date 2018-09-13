@@ -18,7 +18,6 @@ namespace Facilitating.MenuNavigation
         private static bool _shownSplashScreen;
         private Image _fireBackground, _loadingIcon;
         private CanvasGroup _logo;
-        private ParticleSystem _fireParticles;
         private Sequence _fadeInSequence;
         private bool _starting;
         private static bool _seenIntro;
@@ -30,7 +29,6 @@ namespace Facilitating.MenuNavigation
             _logo = gameObject.FindChildWithName<CanvasGroup>("Logo");
             _fireBackground = gameObject.FindChildWithName<Image>("Fire Image");
             _loadingIcon = gameObject.FindChildWithName<Image>("Loading Icon");
-            _fireParticles = GameObject.Find("Fire").GetComponent<ParticleSystem>();
         }
 
         private void ResetAppearance()
@@ -53,14 +51,14 @@ namespace Facilitating.MenuNavigation
                 _seenIntro = true;
             }
 
-            _fadeInSequence.AppendCallback(() => _fireParticles.Play());
             _fadeInSequence.Append(_fireBackground.DOColor(new Color(1f, 0.4f, 0f, 1f), 1));
             _fadeInSequence.Join(_menuCanvasGroup.DOFade(1, 2f));
             _fadeInSequence.AppendCallback(() => MenuStateMachine.ShowMenu("Main Menu"));
         }
-        
+
         public void Awake()
         {
+            SaveController.LoadSettings();
             Cursor.visible = false;
             InputHandler.RegisterInputListener(this);
             CacheGameobjects();
@@ -73,6 +71,7 @@ namespace Facilitating.MenuNavigation
                 ContinueGame();
                 return;
             }
+
             ClearSaveAndLoad();
         }
 
@@ -110,14 +109,15 @@ namespace Facilitating.MenuNavigation
             SaveController.ClearSave();
             WorldState.ResetWorld();
             SaveController.SaveGame();
-            StartGame();
+            StartGame(true);
         }
 
-        private void StartGame()
+        private void StartGame(bool newGame)
         {
             _starting = true;
-            SceneChanger.ChangeScene("Game", true, f => _loadingIcon.fillAmount = f);
             InputHandler.SetCurrentListener(null);
+            if (newGame) StoryController.ShowText(JournalEntry.GetStoryText(1), "Game");
+            else SceneChanger.ChangeScene("Game", true, f => _loadingIcon.fillAmount = f);
         }
 
         public void ContinueGame()
@@ -125,7 +125,7 @@ namespace Facilitating.MenuNavigation
             if (SaveController.SaveExists() && !_starting)
             {
                 SaveController.LoadGame();
-                StartGame();
+                StartGame(false);
             }
             else
             {
@@ -136,6 +136,17 @@ namespace Facilitating.MenuNavigation
         public void ShowMenu(Menu menu)
         {
             MenuStateMachine.ShowMenu(menu.name);
+        }
+
+        public void QuitToMenu()
+        {
+            SaveController.QuickSave();
+        }
+
+        public void QuitToDesktop()
+        {
+            SaveController.QuickSave();
+            Application.Quit();
         }
     }
 }

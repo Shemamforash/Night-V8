@@ -34,7 +34,6 @@ namespace Game.Exploration.Regions
         public Vector2 ShrinePosition;
         public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
         public Vector2? HealShrinePosition = null;
-        public Vector2? EssenceShrinePosition = null;
         public Player _characterHere;
         public Vector2 CharacterPosition;
         private readonly List<int> _neighborIds = new List<int>();
@@ -42,6 +41,8 @@ namespace Game.Exploration.Regions
         private int _claimQuantity;
         private string _claimBenefit = "";
         public int RitesRemaining = 3;
+        public bool Saved;
+        public bool FountainVisited;
 
         public Region() : base(Vector2.zero)
         {
@@ -197,6 +198,8 @@ namespace Game.Exploration.Regions
             region._claimQuantity = doc.IntFromNode("ClaimQuantity");
             region._claimBenefit = doc.StringFromNode("ClaimBenefit");
             region.RitesRemaining = doc.IntFromNode("RitesRemaining");
+            region.Saved = doc.BoolFromNode("Saved");
+            region.FountainVisited = doc.BoolFromNode("FountainVisited");
 
             foreach (XmlNode enemyNode in doc.SelectSingleNode("Enemies").SelectNodes("Enemy"))
             {
@@ -205,11 +208,6 @@ namespace Game.Exploration.Regions
                 Enemy enemy = new Enemy(EnemyTemplate.GetEnemyTemplate(enemyType));
                 region._enemies.Add(enemy);
             }
-
-//        public int ClaimRemaining;
-//        private int _claimQuantity;
-
-//        private string _claimBenefit = "";
 
             return region;
         }
@@ -237,6 +235,9 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("ClaimQuantity", _claimQuantity);
             regionNode.CreateChild("ClaimBenefit", _claimBenefit);
             regionNode.CreateChild("RitesRemaining", RitesRemaining);
+            regionNode.CreateChild("Saved", Saved);
+            regionNode.CreateChild("FountainVisited", FountainVisited);
+
             XmlNode enemyNode = regionNode.CreateChild("Enemies");
             _enemies.ForEach(e => e.Save(enemyNode));
         }

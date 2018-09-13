@@ -197,7 +197,7 @@ namespace Game.Combat.Misc
             return _isDead;
         }
 
-        public void TakeRawDamage(float damage, Vector2 direction)
+        public virtual void TakeRawDamage(float damage, Vector2 direction)
         {
             float armourProtection = ArmourController.GetCurrentArmour() / 10f;
             float armourDamage = damage * armourProtection;
@@ -209,7 +209,7 @@ namespace Game.Combat.Misc
             _bloodSpatter.Spray(direction, healthDamage);
         }
 
-        public void TakeExplosionDamage(float damage, Vector2 origin)
+        public virtual void TakeExplosionDamage(float damage, Vector2 origin)
         {
             _spriteFlash.FlashSprite();
             HealthController.TakeDamage(damage);

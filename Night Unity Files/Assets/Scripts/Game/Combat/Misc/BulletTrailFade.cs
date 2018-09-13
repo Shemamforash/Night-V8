@@ -20,7 +20,7 @@ public class BulletTrailFade : MonoBehaviour
         c.a = alpha;
         _trailRenderer.startColor = c;
     }
-    
+
     public void StartFade(float duration)
     {
         transform.SetParent(null);
@@ -38,6 +38,7 @@ public class BulletTrailFade : MonoBehaviour
             yield return null;
         }
 
+        transform.SetParent(null);
         _pool.Return(this);
     }
 
@@ -55,8 +56,8 @@ public class BulletTrailFade : MonoBehaviour
 
     public void SetPosition(Transform parent)
     {
-        transform.SetParent(parent, false);
-        transform.position = parent.position;
+        transform.SetParent(parent);
+        transform.localPosition = Vector2.zero;
         _trailRenderer.Clear();
     }
 }

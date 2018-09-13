@@ -82,10 +82,17 @@ namespace Game.Combat.Enemies
             Cell targetCell = PathingGrid.WorldToCellPosition(_followTarget.position);
             if (!targetCell.Reachable) return;
             float distance = Vector2.Distance(transform.position, _followTarget.transform.position);
-            bool outOfRange = distance > _maxDistance || distance < _minDistance;
-            if (outOfRange)
+            if (distance > _maxDistance)
             {
                 GoToCell(targetCell, Random.Range(_minDistance, _maxDistance));
+                return;
+            }
+
+            if (distance < _minDistance)
+            {
+                Cell cell =PathingGrid.GetCellNearMe(transform.position, _maxDistance / 2f, _minDistance);
+                if (cell == null) return;
+                GoToCell(cell, Random.Range(_minDistance, _maxDistance));
                 return;
             }
 

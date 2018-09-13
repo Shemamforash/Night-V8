@@ -33,6 +33,8 @@ namespace Game.Combat.Misc
         private GameObject _spriteObject;
 
         [SerializeField] private AudioClip[] _explosionClips;
+        private bool _decay, _incendiary;
+        private List<ITakeDamageInterface> _targetsToIgnore;
 
 
         public void Awake()
@@ -60,12 +62,30 @@ namespace Game.Combat.Misc
             return explosion;
         }
 
+        public void SetIncendiary()
+        {
+            _incendiary = true;
+        }
+
+        public void SetDecay()
+        {
+            _decay = true;
+        }
+
+        public void AddIgnoreTarget(ITakeDamageInterface ignoreTarget)
+        {
+            _targetsToIgnore.Add(ignoreTarget);
+        }
+
         private void Initialise(Vector2 position, int damage, float radius = 1)
         {
             transform.position = position;
             _spriteObject.transform.localScale = Vector2.one * radius;
             _explosionRadius = radius;
             _damage = damage;
+            _incendiary = false;
+            _decay = false;
+            _targetsToIgnore = new List<ITakeDamageInterface>();
         }
 
         private static Explosion GetNewExplosion()
@@ -103,6 +123,11 @@ namespace Game.Combat.Misc
             {
                 ITakeDamageInterface i = col.GetComponent<ITakeDamageInterface>();
                 if (i == null) continue;
+                if (_targetsToIgnore.Contains(i))
+                {
+                    Debug.Log(col.name);
+                    return;
+                }
                 i.TakeExplosionDamage(_damage, transform.position);
                 EnemyBehaviour behaviour = i as EnemyBehaviour;
                 if (behaviour != null) enemiesHit.Add(behaviour);
@@ -154,6 +179,7 @@ namespace Game.Combat.Misc
                     {
                         _audioSource.clip =_explosionClips.RandomElement();
                         _audioSource.Play();
+                        TryGenerateFireDecay();
                         DealDamage();
                         ParticleSystem.ShapeModule shape = _particles.shape;
                         shape.radius = _explosionRadius;
@@ -178,6 +204,19 @@ namespace Game.Combat.Misc
             while (_audioSource.isPlaying) yield return null;
             gameObject.SetActive(false);
             _explosionPool.Add(this);
+        }
+
+        private void TryGenerateFireDecay()
+        {
+            if (_incendiary)
+            {
+                FireBehaviour.Create(transform.position, 1).AddIgnoreTargets(_targetsToIgnore);
+            }
+
+            if (_decay)
+            {
+                DecayBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore);
+            }
         }
 
         public void AddOnDetonate(Action<List<EnemyBehaviour>> action)

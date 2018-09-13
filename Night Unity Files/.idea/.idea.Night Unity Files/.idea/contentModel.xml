@@ -252,6 +252,7 @@
             <e p="Regions.xml" t="Include" />
             <e p="Resources.xml" t="Include" />
             <e p="Skills.xml" t="Include" />
+            <e p="Story.xml" t="Include" />
             <e p="Traits.xml" t="Include" />
             <e p="WeaponClasses.xml" t="Include" />
             <e p="Weather.xml" t="Include" />
@@ -260,7 +261,6 @@
         <e p="SaveIconController.cs" t="Include" />
         <e p="Saves" t="Include">
           <e p="CleanSave.xml" t="Include" />
-          <e p="GameSettings.xml" t="Include" />
           <e p="NightSave.xml" t="Include" />
         </e>
         <e p="Scripts" t="Include">

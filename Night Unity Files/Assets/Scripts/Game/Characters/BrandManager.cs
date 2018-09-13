@@ -61,6 +61,7 @@ namespace Game.Characters
             {
                 brandSelection.Add(_lockedBrands[i]);
             }
+
             return brandSelection;
         }
 

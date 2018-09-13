@@ -8,22 +8,20 @@ using UnityEngine.UI;
 
 namespace Facilitating.Audio
 {
-    public class GlobalAudioManager : MonoBehaviour, IPersistenceTemplate
+    public class GlobalAudioManager : MonoBehaviour
     {
         private static float _masterVolume = 1, _modifiedVolume;
         private static AudioMixer _audioMixer;
 
-        public void Load(XmlNode root)
+        public static void Load(XmlNode root)
         {
-            XmlNode node = root.GetNode("SoundSettings");
-            _masterVolume = node.FloatFromNode(nameof(_masterVolume));
+            float volume = root.FloatFromNode("Volume");
+            SetMasterVolume(volume);
         }
 
-        public XmlNode Save(XmlNode root)
+        public static void Save(XmlNode root)
         {
-            XmlNode node = root.CreateChild("SoundSettings");
-            node.CreateChild(nameof(_masterVolume), _masterVolume);
-            return node;
+            root.CreateChild("Volume", _masterVolume);
         }
 
         public static float Volume()
@@ -42,6 +40,7 @@ namespace Facilitating.Audio
             _masterVolume = volume;
             if (_audioMixer == null) _audioMixer = Resources.Load<AudioMixer>("AudioMixer/Master");
             _audioMixer.SetFloat("Master", NormalisedVolumeToAttenuation(_masterVolume));
+            SaveController.SaveSettings();
         }
 
         public static void SetModifiedVolume(float volume)

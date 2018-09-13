@@ -84,8 +84,8 @@ namespace Game.Combat.Enemies.Misc
         {
             Explosion explosion = Explosion.CreateExplosion(transform.position, _damage, _radius);
             explosion.AddOnDetonate(OnDetonate);
-            if (_incendiary) FireBehaviour.Create(transform.position, 2);
-            if (_decaying) DecayBehaviour.Create(transform.position);
+            if (_incendiary) explosion.SetIncendiary();
+            if (_decaying) explosion.SetDecay();
             if (_instantDetonate)
             {
                 explosion.InstantDetonate();

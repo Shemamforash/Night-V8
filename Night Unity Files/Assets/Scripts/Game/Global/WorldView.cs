@@ -53,7 +53,7 @@ namespace Game.Global
             _environmentText.text = _timeString + " in the " + _environmentString + ". It is " + _temperatureString + " and " + _weatherString + ". " + templeString;
         }
 
-        private static readonly string[] resources = {"Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
+        private static readonly string[] resources = {"Food", "Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
 
         public override void Awake()
         {
@@ -98,12 +98,12 @@ namespace Game.Global
                     case "Food":
                         quantity = 0;
                         WorldState.HomeInventory().Consumables().ForEach(c => quantity += c.HungerModifier);
-                        _resourceText[resourceType].text = "Food " + quantity;
+                        _resourceText[resourceType].text = "Food\n" + quantity;
                         continue;
                     case "Water":
                         quantity = 0;
                         WorldState.HomeInventory().Consumables().ForEach(c => quantity += c.ThirstModifier);
-                        _resourceText[resourceType].text = "Water " + quantity;
+                        _resourceText[resourceType].text = "Water\n" + quantity;
                         continue;
                 }
 
@@ -116,7 +116,7 @@ namespace Game.Global
 
 
                 _resourceText[resourceType].gameObject.SetActive(true);
-                _resourceText[resourceType].text = resourceType + " " + quantity;
+                _resourceText[resourceType].text = resourceType + "\n" + quantity;
             }
         }
     }

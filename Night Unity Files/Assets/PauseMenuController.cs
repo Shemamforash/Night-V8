@@ -1,5 +1,8 @@
-﻿using Facilitating.Audio;
+﻿using System.Xml;
+using Facilitating.Audio;
+using Facilitating.Persistence;
 using SamsHelper.Input;
+using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
@@ -91,5 +94,28 @@ public class PauseMenuController : MonoBehaviour, IInputListener
 			return;
 		} 
 		Screen.SetResolution((int) (Screen.currentResolution.width * 0.75f), (int) (Screen.currentResolution.height * 0.75f), false);
+		SaveController.SaveSettings();
+	}
+
+	public static void Load(XmlNode root)
+	{
+		_fullScreen = root.BoolFromNode("Fullscreen");
+		if (!_fullScreen)
+		{
+			int width = root.IntFromNode("Width");
+			int height = root.IntFromNode("Height");
+			Screen.SetResolution(width, height, false);
+		}
+		else
+		{
+			Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, true);
+		}
+	}
+	
+	public static void Save(XmlNode root)
+	{
+		root.CreateChild("Fullscreen", _fullScreen);
+		root.CreateChild("Width", Camera.main.pixelWidth);
+		root.CreateChild("Height", Camera.main.pixelHeight);
 	}
 }

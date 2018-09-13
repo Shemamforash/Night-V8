@@ -28,7 +28,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             {
                 float lerpVal = i / distance;
                 tempPos = Vector2.Lerp(_lastPosition, currentPosition, lerpVal);
-                FireBehaviour.Create(tempPos, 0.2f, false, false);
+                FireBehaviour.Create(tempPos, 0.2f, false, false).AddIgnoreTarget(GetComponent<ITakeDamageInterface>());
             }
 
             _lastPosition = tempPos;

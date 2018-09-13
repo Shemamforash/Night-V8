@@ -97,7 +97,6 @@ namespace Game.Global
             _isNight = false;
             _isPaused = false;
             Seed = Random.Range(0, int.MaxValue);
-            Seed = 0;
             Random.InitState(Seed);
             EnvironmentManager.Reset();
             WeatherManager.Reset();
@@ -126,7 +125,6 @@ namespace Game.Global
 
         private void IncrementDaysSpentHere()
         {
-            SaveController.SaveGame();
             ++_difficulty;
             ++DaysSpentHere;
         }
@@ -169,7 +167,7 @@ namespace Game.Global
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false);
             CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
-            SceneChanger.ChangeScene("Game");
+            StoryController.ShowText(JournalEntry.GetStoryText(_currentLevel - 1), "Game");
         }
 
         public static CharacterManager HomeInventory() => _homeInventory;
@@ -241,7 +239,6 @@ namespace Game.Global
         {
             ++Days;
             IncrementDaysSpentHere();
-            DayChangeSequence.Instance().ChangeDay();
         }
 
         public void Update()
