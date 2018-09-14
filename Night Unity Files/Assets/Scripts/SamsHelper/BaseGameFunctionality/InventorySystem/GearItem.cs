@@ -13,7 +13,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private readonly GearSubtype _gearType;
         private ItemQuality _itemQuality;
         protected Character EquippedCharacter;
-        
+
         protected GearItem(string name, GearSubtype gearSubtype, ItemQuality itemQuality) : base(name, GameObjectType.Gear)
         {
             SetQuality(itemQuality);
@@ -23,7 +23,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public override XmlNode Save(XmlNode root)
         {
             root = base.Save(root);
-            root.CreateChild("Quality", (int)_itemQuality);
+            root.CreateChild("Quality", (int) _itemQuality);
             return root;
         }
 
@@ -48,7 +48,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public virtual void Unequip()
         {
-            MoveTo(WorldState.HomeInventory());
+            Player player = EquippedCharacter as Player;
+            if (player == null) return;
+            if (player.TravelAction.AtHome()) MoveTo(WorldState.HomeInventory());
+            else MoveTo(player.Inventory());
             EquippedCharacter = null;
         }
 

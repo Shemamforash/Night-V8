@@ -18,7 +18,7 @@ namespace Game.Gear.Weapons
         {
             Fire();
             _stillFiring = true;
-            float time = 0.25f;
+            float time = 0.1f;
             while (time > 0f)
             {
                 time -= Time.deltaTime;

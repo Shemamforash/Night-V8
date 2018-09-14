@@ -414,6 +414,11 @@ namespace Game.Characters
             {
                 return Status == BrandStatus.Succeeded ? _successEffect : _failEffect;
             }
+
+            public string GetRequirementText()
+            {
+                return _requirementString;
+            }
         }
 
         private void UpdateBrandStatus(Brand brand)

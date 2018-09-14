@@ -34,6 +34,20 @@ namespace Game.Exploration.Weather
         private static AudioClip[] _lightWindClips, _mediumWindClips, _heavyWindClips;
         private AudioSource _nightTimeAudioSource, _dayTimeAudioSource;
 
+        public static AudioClip GetRainClip(float strength)
+        {
+            if (strength > 0.7f) return _heavyRainClips.RandomElement();
+            if (strength > 0.4) return _mediumRainClips.RandomElement();
+            return strength > 0 ? _lightRainClips.RandomElement() : null;
+        }
+
+        public static AudioClip GetWindClip(float strength)
+        {
+            if (strength > 0.7f) return _heavyWindClips.RandomElement();
+            if (strength > 0.4) return _mediumWindClips.RandomElement();
+            return strength > 0 ? _lightWindClips.RandomElement() : null;
+        }
+        
         private static void LoadAudioClips()
         {
             if (_audioLoaded) return;
@@ -149,9 +163,7 @@ namespace Game.Exploration.Weather
 
             protected override AudioClip GetAudioClipForWeather(float amount)
             {
-                if (amount > 0.7f) return _heavyRainClips.RandomElement();
-                if (amount > 0.4) return _mediumRainClips.RandomElement();
-                return amount > 0 ? _lightRainClips.RandomElement() : null;
+                return GetRainClip(amount);
             }
         }
 
@@ -163,9 +175,7 @@ namespace Game.Exploration.Weather
 
             protected override AudioClip GetAudioClipForWeather(float amount)
             {
-                if (amount > 0.7f) return _heavyWindClips.RandomElement();
-                if (amount > 0.4) return _mediumWindClips.RandomElement();
-                return amount > 0 ? _lightWindClips.RandomElement() : null;
+                return GetWindClip(amount);
             }
         }
 

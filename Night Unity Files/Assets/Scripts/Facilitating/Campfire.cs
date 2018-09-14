@@ -1,4 +1,7 @@
-﻿using SamsHelper.Libraries;
+﻿using Game.Characters;
+using Game.Global;
+using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +18,16 @@ namespace Facilitating
         private static float _fireLevel;
         private const float FireBurnOutPoint = 0.2f;
         private Image _fireLightImage;
-        
+        private static int _hourCounter;
+        private static bool _tending;
+        private static Crackling _crackling;
+
+        public void Awake()
+        {
+            _crackling = GetComponent<Crackling>();
+            _crackling.Silence();
+        }
+
         public void Start()
         {
             _fire = gameObject.FindChildWithName<ParticleSystem>("Fire");
@@ -56,22 +68,53 @@ namespace Facilitating
 
             _fireLightImage.color = Color.Lerp(Color.black, Color.white, _fireLevel);
         }
-        
+
         public void Update()
         {
             UpdateRates();
         }
-        
+
         public static void Tend()
         {
+            if (!_tending) _crackling.FadeIn(6f);
+            _tending = true;
             _fireLevel += 0.2f;
             if (_fireLevel > 1) _fireLevel = 1;
         }
 
+        public static void FinishTending()
+        {
+            _tending = false;
+            _hourCounter = 0;
+        }
+
         public static void Die()
         {
+            if (_tending) return;
+            ++_hourCounter;
+            if (_hourCounter == WorldState.MinutesPerHour)
+            {
+                CharacterManager.Characters.ForEach(c =>
+                {
+                    if (!c.TravelAction.AtHome()) return;
+                    CharacterAttributes attributes = c.Attributes;
+                    attributes.Get(AttributeType.Endurance).Increment();
+                    attributes.Get(AttributeType.Perception).Increment();
+                });
+                _hourCounter = 0;
+                if (WorldState.HomeInventory().GetResourceQuantity("Fuel") > 0)
+                {
+                    WorldState.HomeInventory().DecrementResource("Fuel", 1);
+                    _fireLevel = 1;
+                    return;
+                }
+            }
+
+            if (_fireLevel == 0) return;
+            _crackling.FadeOut(6f);
             _fireLevel -= 0.01f;
-            if (_fireLevel < 0) _fireLevel = 0;
+            if (_fireLevel > 0) return;
+            _fireLevel = 0;
         }
 
         public static bool IsLit()

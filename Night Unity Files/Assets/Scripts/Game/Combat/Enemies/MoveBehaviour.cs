@@ -72,13 +72,32 @@ namespace Game.Combat.Enemies
         private void Update()
         {
             if (!CombatManager.InCombat()) return;
+            UpdateTargetCell();
             CheckForRequiredPathfind();
             Move();
+        }
+
+        private void UpdateTargetCell()
+        {
+            if (_followTarget == null) return;
+            _outOfSight = Physics2D.Linecast(transform.position, _followTarget.position, 1 << 8).collider != null;
+            if (!_outOfSight) return;
+            _followCell = PathingGrid.WorldToCellPosition(_followTarget.position);
+            if (_followCell.Reachable) return;
+            List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(_followCell.Position, 1, 1);
+            if (cellsNearMe.Count == 0) return;
+            _followCell = cellsNearMe[0];
         }
 
         private void UpdateFollowTargetPosition()
         {
             if (_followTarget == null) return;
+            if (_outOfSight)
+            {
+                GoToCell(_followCell, Random.Range(1, 3));
+                return;
+            }
+
             Cell targetCell = PathingGrid.WorldToCellPosition(_followTarget.position);
             if (!targetCell.Reachable) return;
             float distance = Vector2.Distance(transform.position, _followTarget.transform.position);
@@ -90,16 +109,9 @@ namespace Game.Combat.Enemies
 
             if (distance < _minDistance)
             {
-                Cell cell =PathingGrid.GetCellNearMe(transform.position, _maxDistance / 2f, _minDistance);
+                Cell cell = PathingGrid.GetCellNearMe(transform.position, _maxDistance / 2f, _minDistance);
                 if (cell == null) return;
-                GoToCell(cell, Random.Range(_minDistance, _maxDistance));
-                return;
-            }
-
-            bool outOfSight = Physics2D.Linecast(transform.position, _followTarget.position, 1 << 8).collider != null;
-            if (outOfSight)
-            {
-                GoToCell(targetCell, Random.Range(_minDistance, _maxDistance));
+                GoToCell(cell);
             }
         }
 
@@ -122,6 +134,8 @@ namespace Game.Combat.Enemies
         }
 
         private Queue<Cell> _routeQueue;
+        private Cell _followCell;
+        private bool _outOfSight;
 
         private void Move()
         {
@@ -168,7 +182,8 @@ namespace Game.Combat.Enemies
             if (_destinationCell == _lastTargetCell) return;
             _lastTargetCell = _destinationCell;
             UpdateCurrentCell();
-            Debug.DrawLine(_currentCell.Position, _destinationCell.Position, Color.red, 1f);
+            if (_outOfSight) Debug.DrawLine(_currentCell.Position, _destinationCell.Position, Color.red, 1f);
+            else Debug.DrawLine(_currentCell.Position, _destinationCell.Position, Color.green, 1f);
             _route = PathingGrid.JPS(_currentCell, _destinationCell);
 
             if (_route.Count == 0) return;

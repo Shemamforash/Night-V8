@@ -91,8 +91,6 @@ namespace Facilitating.Persistence
 
         public static void LoadSettings()
         {
-            Debug.Log(SettingsSaveLocation);
-            Debug.Log(File.Exists(SettingsSaveLocation));
             if (!File.Exists(SettingsSaveLocation)) return;
             _saveDoc = new XmlDocument();
             _saveDoc.Load(SettingsSaveLocation);
@@ -103,7 +101,6 @@ namespace Facilitating.Persistence
         
         public static void SaveSettings()
         {
-            Debug.Log("fart");
             TryCreateDirectory();
             _saveDoc = new XmlDocument();
             XmlNode root = _saveDoc.CreateChild("Settings");

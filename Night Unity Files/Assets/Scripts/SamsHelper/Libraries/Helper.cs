@@ -28,7 +28,7 @@ namespace SamsHelper.Libraries
         {
             Debug.DrawLine(point, other, color, duration);
         }
-        
+
         public static Vector3 MouseToWorldCoordinates(float z = 0f)
         {
             Vector3 mousePos = UnityEngine.Input.mousePosition;
@@ -36,7 +36,7 @@ namespace SamsHelper.Libraries
             mousePos = Camera.main.ScreenToWorldPoint(mousePos);
             return mousePos;
         }
-        
+
         public static bool OnScreen(this GameObject gameObject)
         {
             return InCameraView(gameObject.transform.position);
@@ -77,7 +77,7 @@ namespace SamsHelper.Libraries
         }
 
         private static Camera mainCamera;
-        
+
         public static bool InCameraView(this Vector3 position)
         {
             if (mainCamera == null || mainCamera.gameObject == null) mainCamera = Camera.main;
@@ -195,6 +195,16 @@ namespace SamsHelper.Libraries
 
             list.Clear();
             list.AddRange(randomList);
+        }
+
+        public static void Shuffle<T>(this T[] arr)
+        {
+            List<T> list = new List<T>(arr);
+            Shuffle(list);
+            for (int i = 0; i < arr.Length; ++i)
+            {
+                arr[i] = list[i];
+            }
         }
 
         public static List<T> FindAllComponentsInChildren<T>(Transform t)

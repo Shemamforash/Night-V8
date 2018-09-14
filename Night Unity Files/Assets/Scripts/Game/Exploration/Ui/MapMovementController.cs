@@ -125,7 +125,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
     private static void ReturnToGame(Region region)
     {
         region.MapNode().Enter();
-        SceneChanger.ChangeScene("Game");
+        SceneChanger.GoToGameScene();
         InputHandler.SetCurrentListener(null);
     }
 

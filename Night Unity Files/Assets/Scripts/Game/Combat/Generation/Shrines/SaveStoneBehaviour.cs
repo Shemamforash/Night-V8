@@ -1,26 +1,31 @@
 ﻿using DG.Tweening;
 using Facilitating.Persistence;
 using Game.Combat.Generation;
+using Game.Combat.Generation.Shrines;
+using Game.Combat.Misc;
 using Game.Combat.Ui;
 using Game.Exploration.Regions;
 using SamsHelper.Input;
 using UnityEngine;
 
-public class SaveStoneBehaviour : MonoBehaviour, IInputListener
+public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
 {
     private static GameObject _saveStonePrefab;
     private Region _region;
+    private static SaveStoneBehaviour _instance;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void Awake()
     {
-        InputHandler.RegisterInputListener(this);
-        PlayerUi.SetEventText("There is space to carve your journey so far [T]");
+        _instance = this;
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    public static SaveStoneBehaviour Instance()
     {
-        InputHandler.UnregisterInputListener(this);
-        PlayerUi.FadeTextOut();
+        return _instance;
+    }
+    
+    protected override void StartShrine()
+    {
     }
 
     public static void Generate(Region region)
@@ -55,20 +60,24 @@ public class SaveStoneBehaviour : MonoBehaviour, IInputListener
         }
     }
 
-    public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+    public float InRange()
     {
-        if (axis != InputAxis.TakeItem) return;
+        if (_region.Saved) return -1;
+        return IsInRange ? 1 : -1;
+    }
+
+    public string GetEventText()
+    {
+        return "Carve your progress into the stone";
+    }
+
+    public void Activate()
+    {
+        Destroy(gameObject.GetComponent<Collider2D>());
+        Triggered = true;
         SaveController.SaveGame();
         DisableParticles(false);
         SaveIconController.Save();
         _region.Saved = true;
-    }
-
-    public void OnInputUp(InputAxis axis)
-    {
-    }
-
-    public void OnDoubleTap(InputAxis axis, float direction)
-    {
     }
 }

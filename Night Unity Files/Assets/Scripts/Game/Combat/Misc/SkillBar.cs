@@ -107,7 +107,6 @@ namespace Game.Combat.Misc
             if (TryLockSkill(skillNo)) return;
             bool freeSkill = IsSkillFree();
             if (!_skills[skillNo].Activate(freeSkill)) return;
-            Debug.Log(_cooldownModifier);
             _skillsCooldown.Duration = BaseSkillCooldown * _cooldownModifier;
             _skillsCooldown.Start();
         }

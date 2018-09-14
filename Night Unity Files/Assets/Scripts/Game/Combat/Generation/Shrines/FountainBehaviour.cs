@@ -2,24 +2,33 @@
 using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies;
+using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Combat.Ui;
 using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Generation.Shrines
 {
-    public class FountainBehaviour : BasicShrineBehaviour, IInputListener
+    public class FountainBehaviour : BasicShrineBehaviour, ICombatEvent
     {
         private static GameObject _fountainPrefab;
         private List<EnemyBehaviour> _enemies;
-        private bool _started;
         private Region _region;
+        private static FountainBehaviour _instance;
 
+        public void Awake()
+        {
+            _instance = this;
+        }
+
+        public static FountainBehaviour Instance()
+        {
+            return _instance;
+        }
+        
         public static void Generate(Region region)
         {
             if (_fountainPrefab == null) _fountainPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Fountain");
@@ -34,29 +43,6 @@ namespace Game.Combat.Generation.Shrines
             PathingGrid.AddBlockingArea(region.ShrinePosition, 1.5f);
             if (!_region.FountainVisited) return;
             Destroy(this);
-        }
-
-        public void OnTriggerExit2D(Collider2D other)
-        {
-            if (!other.gameObject.CompareTag("Player")) return;
-            InputHandler.UnregisterInputListener(this);
-            PlayerUi.FadeTextOut();
-        }
-
-        protected override void StartShrine()
-        {
-            InputHandler.RegisterInputListener(this);
-            PlayerUi.SetEventText("Drink from the fountain [T}");
-        }
-
-        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-            if (axis != InputAxis.TakeItem) return;
-            InputHandler.UnregisterInputListener(this);
-            Destroy(gameObject.GetComponent<Collider2D>());
-            Triggered = true;
-            PlayerUi.SetEventText("Earn your blessing", 2f);
-            StartCoroutine(SpawnEnemies());
         }
 
         private IEnumerator SpawnEnemies()
@@ -96,12 +82,26 @@ namespace Game.Combat.Generation.Shrines
             PlayerCombat.Instance.ResetCompass();
         }
 
-        public void OnInputUp(InputAxis axis)
+        protected override void StartShrine()
         {
         }
 
-        public void OnDoubleTap(InputAxis axis, float direction)
+        public float InRange()
         {
+            if (Triggered) return -1;
+            return IsInRange ? 1 : -1;
+        }
+
+        public string GetEventText()
+        {
+            return "Drink from the fountain... [T]";
+        }
+
+        public void Activate()
+        {
+            Destroy(gameObject.GetComponent<Collider2D>());
+            Triggered = true;
+            StartCoroutine(SpawnEnemies());
         }
     }
 }

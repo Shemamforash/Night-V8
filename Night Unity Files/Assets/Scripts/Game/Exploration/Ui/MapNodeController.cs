@@ -23,7 +23,7 @@ namespace Game.Exploration.Ui
         private bool _doneFading;
         private TextMeshProUGUI _fadeText, _costText;
 
-        private SpriteRenderer _ring1, _ring2, _ring3, _icon, _shadow;
+        private SpriteRenderer _ring1, _ring2, _ring3, _icon;
         private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite;
         private int _enduranceCost;
         private Region _region;
@@ -45,7 +45,6 @@ namespace Game.Exploration.Ui
             _ring2 = gameObject.FindChildWithName<SpriteRenderer>("Ring 2");
             _ring3 = gameObject.FindChildWithName<SpriteRenderer>("Ring 3");
             _icon = gameObject.FindChildWithName<SpriteRenderer>("Icon");
-            _shadow = gameObject.FindChildWithName<SpriteRenderer>("Shadow");
         }
 
         private void SetClaimParticlesActive(bool active)
@@ -159,7 +158,6 @@ namespace Game.Exploration.Ui
         {
             _audioSource.pitch = Random.Range(0.75f, 1.25f);
             _audioSource.DOFade(1, 1);
-            _shadow.DOColor(new Color(0.3f, 0.3f, 0.3f, 1f), 1f);
             _icon.DOColor(_iconColor, 1f);
             _ring1.DOColor(_ring1Colour, 1f);
             _ring2.DOColor(_ring2Colour, 1f);
@@ -174,7 +172,6 @@ namespace Game.Exploration.Ui
         public void LoseFocus(float time = 1f)
         {
             _audioSource.DOFade(0, 1);
-            _shadow.DOColor(new Color(0f, 0f, 0f, 1f), time);
             _icon.DOColor(UiAppearanceController.FadedColour, time);
             _ring1.DOColor(UiAppearanceController.InvisibleColour, time);
             _ring2.DOColor(UiAppearanceController.InvisibleColour, time);

@@ -182,10 +182,10 @@ namespace Game.Combat.Misc
             _spriteFlash.FlashSprite();
             MovementController.Knockback(shot.Direction(), shot.GetKnockbackForce());
             float armourProtection = ArmourController.GetCurrentArmour() / 10f;
-            float armourDamage = shot.DamageDealt() * armourProtection;
-            float healthDamage = shot.DamageDealt() - armourDamage;
+            int armourDamage = Mathf.CeilToInt(shot.DamageDealt() * armourProtection);
+            int healthDamage = shot.DamageDealt() - armourDamage;
             TakeArmourDamage(armourDamage);
-            HealthController.TakeDamage(Mathf.CeilToInt(healthDamage));
+            HealthController.TakeDamage(healthDamage);
             if (_bloodSpatter == null) return;
             _bloodSpatter.Spray(shot.Direction(), healthDamage);
             if (HealthController.GetCurrentHealth() != 0) return;

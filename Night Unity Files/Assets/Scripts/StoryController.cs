@@ -14,8 +14,8 @@ public class StoryController : MonoBehaviour, IInputListener
     private const float _timePerWord = 0.2f;
     private Queue<string> _paragraphs;
     private TextMeshProUGUI _storyText;
-    private static string _nextMenu;
     private bool _skipParagraph;
+    private static bool _goToCredits;
 
     public void Awake()
     {
@@ -31,14 +31,13 @@ public class StoryController : MonoBehaviour, IInputListener
         InputHandler.RegisterInputListener(this);
     }
 
-    public static void ShowText(string text, string nextMenu)
+    public static void ShowText(string text, bool goToCredits)
     {
         _text = text;
-        _nextMenu = nextMenu;
-        SceneChanger.ChangeScene("Story");
+        _goToCredits = goToCredits;
+        SceneChanger.GoToStoryScene();
     }
     
-
     private static float GetTimeToRead(string paragraph)
     {
         int wordCount = paragraph.Split(' ').Length;
@@ -51,7 +50,8 @@ public class StoryController : MonoBehaviour, IInputListener
         if (_paragraphs.Count == 0)
         {
             InputHandler.UnregisterInputListener(this);
-            SceneChanger.ChangeScene(_nextMenu);
+            if(_goToCredits) SceneChanger.GoToCreditsScene();
+            else SceneChanger.GoToGameScene();
             yield break;
         }
 

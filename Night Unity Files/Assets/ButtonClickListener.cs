@@ -24,7 +24,7 @@ public class ButtonClickListener : MonoBehaviour
             return;
         }
 
-        _audioSource.pitch = Random.Range(0.85f, 1f);
+        _audioSource.pitch = Random.Range(0.9f, 1f);
         _audioSource.PlayOneShot(_buttonSelectClips.RandomElement());
     }
 

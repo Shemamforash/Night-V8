@@ -14,6 +14,8 @@ using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
+using Game.Gear;
+using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -27,13 +29,12 @@ using Random = UnityEngine.Random;
 
 namespace Game.Combat.Player
 {
-    public class PlayerCombat : CharacterCombat, IInputListener
+    public class PlayerCombat : CharacterCombat, IInputListener, ICombatEvent
     {
         private EnemyBehaviour _currentTarget;
-        private float _skillCooldownModifier, _adrenalineGain;
+        private float _skillCooldownModifier;
         private readonly Number _adrenalineLevel = new Number(0, 0, 8);
         private Cooldown _dashCooldown;
-        private int _initialArmour;
         private Quaternion _lastTargetRotation;
         private int _compassPulses;
 
@@ -44,11 +45,9 @@ namespace Game.Combat.Player
         public Characters.Player Player;
         public FastLight _playerLight;
 
-        private const float MaxReloadPressedTime = 1f;
         public static PlayerCombat Instance;
 
         public float MuzzleFlashOpacity;
-//        private Image _vignetteRenderer;
 
         private bool _dashPressed;
 
@@ -67,7 +66,7 @@ namespace Game.Combat.Player
         public bool ConsumeAdrenaline(int amount)
         {
             if (amount > _adrenalineLevel.CurrentValue()) return false;
-            _adrenalineLevel.SetCurrentValue(0);
+            _adrenalineLevel.Decrement(amount);
             RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
             return true;
         }
@@ -174,7 +173,7 @@ namespace Game.Combat.Player
                         UiAreaInventoryController.OpenInventory();
                         break;
                     case InputAxis.TakeItem:
-                        UiAreaInventoryController.TakeItem();
+                        EventTextController.Activate();
                         break;
                     case InputAxis.Compass:
                         TryEmitPulse();
@@ -235,17 +234,21 @@ namespace Game.Combat.Player
             transform.Rotate(Vector3.forward, _rotateSpeedCurrent * Time.deltaTime * (-direction).Polarity());
         }
 
-        private void TransitionOffScreen()
+        public float InRange()
         {
-            float playerDistance = Vector2.Distance(Vector2.zero, transform.position);
-            if (playerDistance < PathingGrid.CombatMovementDistance / 2f) return;
-            playerDistance -= PathingGrid.CombatMovementDistance / 2f;
-            float alpha = Mathf.Clamp(playerDistance, 0, 1);
-            GameObject.Find("Screen Fader").GetComponent<Image>().color = new Color(0, 0, 0, alpha);
-            if (alpha != 1) return;
-            InputHandler.SetCurrentListener(null);
-            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            return CurrentCell().OutOfRange ? 1 : -1;
+        }
+
+        public string GetEventText()
+        {
+            return "Leave region [T}";
+        }
+
+        public void Activate()
+        {
             CombatManager.ExitCombat();
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            InputHandler.SetCurrentListener(null);
         }
 
         public override void Kill()
@@ -269,7 +272,7 @@ namespace Game.Combat.Player
             bool isWanderer = Player.CharacterTemplate.CharacterClass == CharacterClass.Wanderer;
             CombatManager.ExitCombat(!isWanderer);
             if (!isWanderer) return;
-            SceneChanger.ChangeScene("Game Over");
+            SceneChanger.GoToGameOverScene();
         }
 
         public override void Update()
@@ -278,13 +281,12 @@ namespace Game.Combat.Player
             base.Update();
             UpdateSkillActions.ForEach(a => a());
             FollowTarget();
-            TransitionOffScreen();
             UpdateMuzzleFlash();
         }
 
         public void UpdateAdrenaline(int damageDealt)
         {
-            _adrenalineLevel.Increment(damageDealt / 500f);
+            _adrenalineLevel.Increment(damageDealt / 300f);
             CombatManager.IncreaseDamageDealt(damageDealt);
             DamageDealtSinceMarkStarted += damageDealt;
             RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
@@ -346,9 +348,15 @@ namespace Game.Combat.Player
 
         public void EquipWeapon(Weapon weapon)
         {
-            Player.EquipWeapon(weapon);
             Destroy(_weaponBehaviour);
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
+            UIMagazineController.SetWeapon(_weaponBehaviour);
+        }
+
+        public void EquipArmour()
+        {
+            ArmourController = Player.ArmourController;
+            ArmourBarController().TakeDamage(ArmourController);
         }
 
         public void ResetCompass()
@@ -363,15 +371,15 @@ namespace Game.Combat.Player
 
             _muzzleFlash = GameObject.Find("Muzzle Flash").GetComponent<FastLight>();
             Player = CharacterManager.SelectedCharacter;
-            _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
-            ArmourController = Player.ArmourController;
+            Player.Inventory().Move(WeaponGenerator.GenerateWeapon(ItemQuality.Glowing), 1);
+            Player.Inventory().Move(Inscription.Generate(10), 1);
+            Player.Inventory().Move(ArmourPlate.Create(ItemQuality.Radiant), 1);
+            Player.Inventory().IncrementResource("Essence", 50);
+            EquipWeapon(Weapon());
+            EquipArmour();
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
-            _initialArmour = Player.ArmourController.GetProtectionLevel();
-
-            ArmourBarController().TakeDamage(ArmourController);
             MovementController.SetSpeed(Player.Attributes.CalculateSpeed());
-
-            _adrenalineGain = Player.Attributes.CalculateAdrenalineRecoveryRate();
+            Player.Attributes.CalculateAdrenalineRecoveryRate();
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
             ResetCompass();
 
@@ -401,7 +409,6 @@ namespace Game.Combat.Player
 //            _vignetteRenderer.material.SetFloat("_ViewDistance", CombatManager.VisibilityRange());
 
             SkillBar.BindSkills(Player, _skillCooldownModifier);
-            UIMagazineController.SetWeapon(_weaponBehaviour);
             transform.position = PathingGrid.GetEdgeCell().Position;
             float zRot = AdvancedMaths.AngleFromUp(transform.position, Vector2.zero);
             transform.rotation = Quaternion.Euler(0f, 0f, zRot);

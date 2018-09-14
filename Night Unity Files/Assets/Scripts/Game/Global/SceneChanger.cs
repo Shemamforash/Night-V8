@@ -10,38 +10,37 @@ namespace Game.Global
 {
     public class SceneChanger : MonoBehaviour
     {
-        private static Image _fader;
+        private static CanvasGroup _fader;
         private static SceneChanger _instance;
-        private static readonly Color InvisibleBlack = new Color(0, 0, 0, 0);
         private AudioSource _audioSource;
-        private const float FadeTime = 0.5f;
+        private static float _fadeInTime = DefaultFadeTime;
+        private const float DefaultFadeTime = 0.5f;
 
         public void Awake()
         {
             _instance = this;
             _audioSource = GetComponent<AudioSource>();
-            _fader = GameObject.Find("Screen Fader").GetComponent<Image>();
+            _fader = GameObject.Find("Screen Fader").GetComponent<CanvasGroup>();
             GlobalAudioManager.SetModifiedVolume(0f);
-            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetModifiedVolume, 1f, FadeTime);
+            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetModifiedVolume, 1f, _fadeInTime);
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(_fader.DOColor(InvisibleBlack, FadeTime));
+            _fader.alpha = 1;
+            sequence.Append(_fader.DOFade(0, _fadeInTime));
             if (SceneManager.GetActiveScene().name != "Game") return;
             sequence.InsertCallback(0.1f, WorldState.UnPause);
         }
 
-        private IEnumerator FadeOut(string sceneName, bool fade, Action<float> loadProgressAction)
+        private IEnumerator FadeOut(string sceneName, float fadeTime, Action<float> loadProgressAction)
         {
+            _fadeInTime = fadeTime;
+            if (_audioSource != null) _audioSource.DOFade(1, DefaultFadeTime);
+            GlobalAudioManager.SetModifiedVolume(1f);
+            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetModifiedVolume, 0f, DefaultFadeTime);
+            yield return _fader.DOFade(1, DefaultFadeTime).WaitForCompletion();
+
             AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync(sceneName);
             sceneLoaded.allowSceneActivation = false;
-            if (_audioSource != null) _audioSource.DOFade(1, FadeTime);
-            GlobalAudioManager.SetModifiedVolume(1f);
-            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetModifiedVolume, 0f, FadeTime);
-            if (fade)
-            {
-                loadProgressAction?.Invoke(sceneLoaded.progress);
-                yield return _fader.DOColor(Color.black, FadeTime).WaitForCompletion();
-            }
-
+            loadProgressAction?.Invoke(sceneLoaded.progress);
             while (sceneLoaded.progress != 0.9f)
             {
                 yield return null;
@@ -53,11 +52,46 @@ namespace Game.Global
             ButtonClickListener.SuppressClick();
         }
 
-        public static void ChangeScene(string sceneName, bool fade = true, Action<float> loadProgressAction = null)
+        public static void GoToGameOverScene()
         {
-            if (sceneName == "Map") Debug.Log("map");
+            ChangeScene("Game Over", DefaultFadeTime);
+        }
+
+        public static void GoToMapScene()
+        {
+            Debug.Log("map");
+            ChangeScene("Map", DefaultFadeTime);
+        }
+
+        public static void GoToStoryScene()
+        {
+            ChangeScene("Story", DefaultFadeTime);
+        }
+
+        public static void GoToCombatScene()
+        {
+            ChangeScene("Combat", 5f);
+        }
+
+        public static void GoToMainMenuScene()
+        {
+            ChangeScene("Menu", DefaultFadeTime);
+        }
+
+        public static void GoToCreditsScene()
+        {
+            ChangeScene("Credits", DefaultFadeTime);
+        }
+
+        public static void GoToGameScene(Action<float> loadProgressAction = null)
+        {
+            ChangeScene("Game", DefaultFadeTime, loadProgressAction);
+        }
+
+        private static void ChangeScene(string sceneName, float fadeTime, Action<float> loadProgressAction = null)
+        {
             WorldState.Pause();
-            _instance.StartCoroutine(_instance.FadeOut(sceneName, fade, loadProgressAction));
+            _instance.StartCoroutine(_instance.FadeOut(sceneName, fadeTime, loadProgressAction));
         }
     }
 }

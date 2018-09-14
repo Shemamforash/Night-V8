@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DefaultNamespace;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
+using Game.Combat.Player;
 using Game.Gear.Armour;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;

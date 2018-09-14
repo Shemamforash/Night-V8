@@ -9,7 +9,8 @@ namespace Game.Combat.Generation.Shrines
         protected bool Triggered;
         private readonly List<EnemyBehaviour> _enemiesAlive = new List<EnemyBehaviour>();
         private static GameObject _disappearPrefab;
-
+        protected bool IsInRange;
+        
         public void AddEnemy(EnemyBehaviour b)
         {
             _enemiesAlive.Add(b);
@@ -26,10 +27,17 @@ namespace Game.Combat.Generation.Shrines
         {
             if (Triggered) return;
             if (!other.gameObject.CompareTag("Player")) return;
+            IsInRange = true;
             StartShrine();
         }
 
-        public virtual void Update()
+        public void OnTriggerExit2D(Collider2D other)
+        {
+            if (!other.gameObject.CompareTag("Player")) return;
+            IsInRange = false;
+        }
+
+        public void Update()
         {
             if (!Triggered) return;
             if (EnemiesDead()) OnEnemiesDead();

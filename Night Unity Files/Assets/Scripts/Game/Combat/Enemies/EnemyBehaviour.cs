@@ -104,7 +104,7 @@ namespace Game.Combat.Enemies
         {
             ArmourController = Enemy.ArmourController;
             MovementController.SetSpeed(Enemy.Template.Speed);
-            HealthController.SetInitialHealth(Enemy.Template.Health, this);
+            HealthController.SetInitialHealth(Enemy.GetHealth(), this);
             MoveBehaviour = gameObject.AddComponent<MoveBehaviour>();
         }
 

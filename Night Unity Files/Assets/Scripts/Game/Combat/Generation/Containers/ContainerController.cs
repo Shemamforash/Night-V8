@@ -13,7 +13,6 @@ public abstract class ContainerController
     private readonly Vector2 _position;
     protected readonly Inventory _inventory;
     protected string PrefabLocation = "Container";
-    private ContainerBehaviour _containerBehaviour;
     protected string ImageLocation;
 
     protected ContainerController(Vector2 position, string name)
@@ -30,7 +29,6 @@ public abstract class ContainerController
         container.transform.position = _position;
         container.transform.localScale = Vector3.one;
         ContainerBehaviour cb = container.GetComponent<ContainerBehaviour>();
-        _containerBehaviour = cb;
         cb.SetContainerController(this);
         if (autoReveal) cb.Reveal();
         return cb;
@@ -67,12 +65,6 @@ public abstract class ContainerController
         }
 
         Inventory().MoveAllResources(CharacterManager.SelectedCharacter.Inventory());
-        Fade();
-    }
-
-    protected void Fade()
-    {
-        _containerBehaviour.StartCoroutine(_containerBehaviour.Fade());
     }
 
     public string GetContents()

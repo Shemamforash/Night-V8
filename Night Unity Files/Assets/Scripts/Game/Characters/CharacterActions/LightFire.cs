@@ -13,6 +13,7 @@ namespace Game.Characters.CharacterActions
                 --Duration;
                 Campfire.Tend();
                 if (Duration != 0) return;
+                Campfire.FinishTending();
                 playerCharacter.RestAction.Enter();
             };
         }

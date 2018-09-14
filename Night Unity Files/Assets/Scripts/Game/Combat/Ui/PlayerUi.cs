@@ -14,15 +14,11 @@ namespace Game.Combat.Ui
     public class PlayerUi : CharacterUi
     {
         private static PlayerUi _instance;
-        private Coroutine _fadeInCoroutine, _fadeOutCoroutine;
-        private static TextMeshProUGUI _eventText;
 
         public override void Awake()
         {
             base.Awake();
             _instance = this;
-            _eventText = GameObject.Find("Event Text").GetComponent<TextMeshProUGUI>();
-            _eventText.color = UiAppearanceController.InvisibleColour;
         }
 
         public static PlayerUi Instance()
@@ -51,30 +47,6 @@ namespace Game.Combat.Ui
             });
 
             PlayerCombat.Instance.SetTarget(nearestCharacter as EnemyBehaviour);
-        }
-
-        public static void SetEventText(string text)
-        {
-            _eventText.text = text;
-            FadeTextIn();
-        }
-
-        public static void SetEventText(string text, float duration)
-        {
-            SetEventText(text);
-            FadeTextOut(1, 1);
-        }
-
-        public static void FadeTextIn()
-        {
-            _eventText.DOColor(UiAppearanceController.FadedColour, 1f);
-        }
-
-        public static void FadeTextOut(float duration = 1f, float pause = 0f)
-        {
-            Sequence s = DOTween.Sequence();
-            s.AppendInterval(pause);
-            s.Append(_eventText.DOColor(UiAppearanceController.InvisibleColour, duration));
         }
     }
 }

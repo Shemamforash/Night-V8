@@ -40,6 +40,8 @@ namespace Game.Combat.Generation
         private int _damageDealt;
         private int _skillsUsed;
         private int _itemsFound;
+        public bool _drawGizmos;
+        private TextMeshProUGUI _regionNameText;
 
         public static bool AllEnemiesDead() => Instance()._enemies.Count == 0;
 
@@ -59,16 +61,9 @@ namespace Game.Combat.Generation
             Cursor.visible = false;
             base.Awake();
             _instance = this;
-            GameObject regionNameObject = GameObject.Find("Region Name");
-            regionNameObject.FindChildWithName<TextMeshProUGUI>("Text").text = _currentRegion.Name;
-            CanvasGroup canvasGroup = regionNameObject.GetComponent<CanvasGroup>();
-            canvasGroup.alpha = 1;
-            Sequence sequence = DOTween.Sequence();
-            sequence.AppendInterval(1);
-            sequence.Append(canvasGroup.DOFade(0, 3f));
-            canvasGroup = GameObject.Find("HUD").GetComponent<CanvasGroup>();
-            canvasGroup.alpha = 0;
-            sequence.Insert(3, canvasGroup.DOFade(1, 3f));
+            GameObject regionNameObject = GameObject.Find("Screen Fader");
+            _regionNameText = regionNameObject.FindChildWithName<TextMeshProUGUI>("Text");
+            _regionNameText.text = _currentRegion.Name;
         }
 
         private static CombatManager Instance()
@@ -215,7 +210,7 @@ namespace Game.Combat.Generation
 
         private void OnDrawGizmos()
         {
-            return;
+            if (!_drawGizmos) return;
             Vector3 cubeSize = 1f / PathingGrid.CellResolution * Vector3.one;
             Gizmos.color = Color.red;
             List<Cell> invalid = PathingGrid._invalidCells.ToList();
@@ -254,9 +249,10 @@ namespace Game.Combat.Generation
             brandManager.IncreaseHumansKilled(Instance()._humansKilled);
 
             Instance()._inCombat = false;
+            Instance()._regionNameText.text = "";
             PlayerCombat.Instance.ExitCombat();
             if (!returnToMap) return;
-            SceneChanger.ChangeScene("Map", false);
+            SceneChanger.GoToMapScene();
         }
 
         public static List<ITakeDamageInterface> GetCharactersInRange(Vector2 position, float range)
@@ -303,8 +299,6 @@ namespace Game.Combat.Generation
         public static void Remove(ITakeDamageInterface enemy)
         {
             Instance()._enemies.Remove(enemy);
-            if (Instance()._enemies.Count != 0) return;
-            RadianceController.Activate();
         }
 
         private void AddEnemy(EnemyBehaviour e)

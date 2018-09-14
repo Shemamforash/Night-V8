@@ -129,6 +129,7 @@ namespace Game.Combat.Enemies
                     return;
                 }
 
+                
                 _weaponBehaviour.StartFiring();
             };
         }

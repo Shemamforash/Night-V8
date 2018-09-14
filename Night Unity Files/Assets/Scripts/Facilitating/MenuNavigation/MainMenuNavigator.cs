@@ -16,7 +16,7 @@ namespace Facilitating.MenuNavigation
     {
         private CanvasGroup _menuCanvasGroup;
         private static bool _shownSplashScreen;
-        private Image _fireBackground, _loadingIcon;
+        private Image _loadingIcon;
         private CanvasGroup _logo;
         private Sequence _fadeInSequence;
         private bool _starting;
@@ -27,7 +27,6 @@ namespace Facilitating.MenuNavigation
         {
             _menuCanvasGroup = gameObject.FindChildWithName<CanvasGroup>("Menu Canvas Group");
             _logo = gameObject.FindChildWithName<CanvasGroup>("Logo");
-            _fireBackground = gameObject.FindChildWithName<Image>("Fire Image");
             _loadingIcon = gameObject.FindChildWithName<Image>("Loading Icon");
         }
 
@@ -36,7 +35,6 @@ namespace Facilitating.MenuNavigation
             _loadingIcon.fillAmount = 0;
             _menuCanvasGroup.alpha = 0f;
             _logo.alpha = 0f;
-            _fireBackground.color = UiAppearanceController.InvisibleColour;
         }
 
         private void CreateFadeInSequence()
@@ -51,7 +49,6 @@ namespace Facilitating.MenuNavigation
                 _seenIntro = true;
             }
 
-            _fadeInSequence.Append(_fireBackground.DOColor(new Color(1f, 0.4f, 0f, 1f), 1));
             _fadeInSequence.Join(_menuCanvasGroup.DOFade(1, 2f));
             _fadeInSequence.AppendCallback(() => MenuStateMachine.ShowMenu("Main Menu"));
         }
@@ -116,8 +113,8 @@ namespace Facilitating.MenuNavigation
         {
             _starting = true;
             InputHandler.SetCurrentListener(null);
-            if (newGame) StoryController.ShowText(JournalEntry.GetStoryText(1), "Game");
-            else SceneChanger.ChangeScene("Game", true, f => _loadingIcon.fillAmount = f);
+            if (newGame) StoryController.ShowText(JournalEntry.GetStoryText(1), false);
+            else SceneChanger.GoToGameScene(f => _loadingIcon.fillAmount = f);
         }
 
         public void ContinueGame()

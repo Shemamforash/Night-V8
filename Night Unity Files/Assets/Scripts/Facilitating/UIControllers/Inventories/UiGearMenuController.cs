@@ -35,6 +35,7 @@ namespace Facilitating.UIControllers
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
             if (isHeld || axis != InputAxis.SwitchTab) return;
+            _tabs.ForEach(t => Debug.Log(t._prevTab?._tabText.name + " " + t._tabText.name + " " + t._nextTab?._tabText.name));
             if (direction < 0) _currentTab.SelectPreviousTab();
             else _currentTab.SelectNextTab();
         }
@@ -55,9 +56,10 @@ namespace Facilitating.UIControllers
 
         private class Tab
         {
-            private readonly EnhancedText _tabText;
+            public readonly EnhancedText _tabText;
             private readonly UiInventoryMenuController _menu;
-            private Tab _prevTab, _nextTab;
+            public Tab _prevTab;
+            public Tab _nextTab;
 
             public Tab(string name, GameObject parent, UiInventoryMenuController menu)
             {
@@ -110,7 +112,7 @@ namespace Facilitating.UIControllers
             _craftingController = gearObject.FindChildWithName<UICraftingController>("Crafting");
             _consumableController = gearObject.FindChildWithName<UiConsumableController>("Consumables");
             _journalController = gearObject.FindChildWithName<UiJournalController>("Journals");
-            
+
             _tabs.Clear();
             CreateTab("Armour", _armourUpgradeController);
             CreateTab("Accessories", _accessoryController);

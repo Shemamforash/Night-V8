@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using DG.Tweening;
+using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using SamsHelper.Libraries;
@@ -9,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Game.Combat.Generation
 {
-    public sealed class ContainerBehaviour : MonoBehaviour
+    public sealed class ContainerBehaviour : MonoBehaviour, ICombatEvent
     {
         private const float MinDistanceToReveal = 0.5f;
         private float _currentFlashIntensity;
@@ -18,6 +19,7 @@ namespace Game.Combat.Generation
         private const float MaxRevealTime = 1f;
         private SpriteRenderer _glowSprite, _iconSprite, _ringSprite;
         private InsectBehaviour _insectBehaviour;
+        private bool _fading;
 
         public void Awake()
         {
@@ -52,15 +54,13 @@ namespace Game.Combat.Generation
             _insectBehaviour = insectBehaviour;
         }
 
-        public IEnumerator Fade()
+        private IEnumerator Fade()
         {
             _fading = true;
             if (_insectBehaviour != null) _insectBehaviour.Fade();
-            PlayerUi.FadeTextOut();
             _glowSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
             _iconSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
             _ringSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
-
             Tween t = _iconSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
             yield return t.WaitForCompletion();
             Destroy(this);
@@ -75,29 +75,29 @@ namespace Game.Combat.Generation
             _ringSprite.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
         }
 
-        private float _lastDistance = -1;
-        private bool _fading;
-
-        public void Update()
-        {
-            if (_fading) return;
-            float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
-            if (distanceToPlayer <= MinDistanceToReveal && _lastDistance > MinDistanceToReveal)
-            {
-                Reveal();
-                PlayerUi.SetEventText("Take " + ContainerController.GetContents() + " [T]");
-            }
-            else if (distanceToPlayer > MinDistanceToReveal && _lastDistance <= MinDistanceToReveal && _revealed)
-            {
-                PlayerUi.FadeTextOut();
-            }
-
-            _lastDistance = distanceToPlayer;
-        }
-
         public bool Revealed()
         {
             return _revealed;
+        }
+
+        public float InRange()
+        {
+            if (_fading) return -1;
+            float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
+            if (distanceToPlayer > MinDistanceToReveal) return -1;
+            Reveal();
+            return distanceToPlayer;
+        }
+
+        public string GetEventText()
+        {
+            return "Take " + ContainerController.GetContents() + " [T]";
+        }
+
+        public void Activate()
+        {
+            ContainerController.Take();
+            StartCoroutine(Fade());
         }
     }
 }

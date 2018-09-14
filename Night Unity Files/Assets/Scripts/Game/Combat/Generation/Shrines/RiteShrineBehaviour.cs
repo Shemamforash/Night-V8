@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Game.Characters;
+using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using Game.Exploration.Regions;
@@ -11,7 +12,7 @@ using UnityEngine.Assertions;
 
 namespace Game.Combat.Generation.Shrines
 {
-    public class RiteShrineBehaviour : MonoBehaviour, IInputListener
+    public class RiteShrineBehaviour : BasicShrineBehaviour, ICombatEvent
     {
         public const int Width = 5;
         private static GameObject _riteShrinePrefab;
@@ -19,6 +20,17 @@ namespace Game.Combat.Generation.Shrines
         private List<BrandManager.Brand> _brandChoice;
         private BrandManager.Brand _targetBrand;
         private RiteColliderBehaviour _targetRiteCollider;
+        private static RiteShrineBehaviour _instance;
+
+        public void Awake()
+        {
+            _instance = this;
+        }
+
+        public static RiteShrineBehaviour Instance()
+        {
+            return _instance;
+        }
 
         public static void Generate(Region region)
         {
@@ -51,7 +63,6 @@ namespace Game.Combat.Generation.Shrines
             StopCandles(_collider1.transform);
             Destroy(_collider1);
             Destroy(this);
-            InputHandler.UnregisterInputListener(this);
         }
 
         private void StopCandles(Transform candleParent)
@@ -65,7 +76,6 @@ namespace Game.Combat.Generation.Shrines
 
         public void EnterShrineCollider(RiteColliderBehaviour riteColliderBehaviour)
         {
-            InputHandler.RegisterInputListener(this);
             _targetRiteCollider = riteColliderBehaviour;
             if (riteColliderBehaviour == _collider1)
                 _targetBrand = _brandChoice[0];
@@ -73,26 +83,11 @@ namespace Game.Combat.Generation.Shrines
                 _targetBrand = _brandChoice[1];
             else if (riteColliderBehaviour == _collider3)
                 _targetBrand = _brandChoice[2];
-
-            PlayerUi.SetEventText("Accept the " + _targetBrand.GetName() + " [T]");
         }
 
         public void ExitShrineCollider()
         {
             _targetBrand = null;
-            InputHandler.UnregisterInputListener(this);
-            PlayerUi.FadeTextOut();
-        }
-
-        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-        {
-            if (axis != InputAxis.TakeItem) return;
-            PlayerCombat.Instance.Player.BrandManager.SetActiveBrand(_targetBrand);
-            PlayerUi.SetEventText("The Rite begins...");
-            PlayerUi.FadeTextOut();
-            InputHandler.UnregisterInputListener(this);
-            FadeCandles(_targetRiteCollider.transform);
-            Destroy(_targetRiteCollider);
         }
 
         private void FadeCandles(Transform riteTransform)
@@ -117,11 +112,26 @@ namespace Game.Combat.Generation.Shrines
             emission.rateOverTime = 0f;
         }
 
-        public void OnInputUp(InputAxis axis)
+        public float InRange()
         {
+            return _targetBrand == null ? -1 : 1;
         }
 
-        public void OnDoubleTap(InputAxis axis, float direction)
+        public string GetEventText()
+        {
+            return "Accept the " + _targetBrand.GetName() + " [T]\n<size=30>" + _targetBrand.GetRequirementText() + "</size>";
+        }
+
+        public void Activate()
+        {
+            Triggered = true;
+            PlayerCombat.Instance.Player.BrandManager.SetActiveBrand(_targetBrand);
+            FadeCandles(_targetRiteCollider.transform);
+            Destroy(_targetRiteCollider);
+            _targetBrand = null;
+        }
+
+        protected override void StartShrine()
         {
         }
     }

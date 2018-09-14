@@ -225,5 +225,10 @@ namespace Game.Combat.Enemies
 
             return controller;
         }
+
+        public int GetHealth()
+        {
+            return Template.Health + Template.Health / WorldState.MaxDifficulty * WorldState.Difficulty();
+        }
     }
 }

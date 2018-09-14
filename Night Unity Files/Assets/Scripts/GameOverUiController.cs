@@ -13,6 +13,6 @@ public class GameOverUiController : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         seq.Append(text.DOColor(Color.white, 2f));
         seq.Append(text.DOColor(UiAppearanceController.InvisibleColour, 5f));
-        seq.AppendCallback(() => SceneChanger.ChangeScene("Menu"));
+        seq.AppendCallback(SceneChanger.GoToMainMenuScene);
     }
 }

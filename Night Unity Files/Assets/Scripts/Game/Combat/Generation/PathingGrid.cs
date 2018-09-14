@@ -85,8 +85,9 @@ namespace Game.Combat.Generation
             _stopwatch.Stop();
             Helper.PrintTime("Neighbors: ", _stopwatch);
             _outOfRangeList.AddRange(_outOfRangeSet.ToList().Where(c => !c.Blocked));
+            _outOfRangeList.ForEach(c => c.OutOfRange = true);
             _edgePositionList.AddRange(_edgePositionSet.ToList().Where(c => !c.Blocked));
-            _edgePositionList.ForEach(c => c.EdgeCell = true);
+            _edgePositionList.ForEach(c => c.IsEdgeCell = true);
             for (int x = 0; x < GridWidth; ++x)
             {
                 for (int y = 0; y < GridWidth; ++y)

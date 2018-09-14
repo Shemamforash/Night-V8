@@ -36,6 +36,7 @@ namespace Game.Global
         private static bool _isNight, _isPaused;
         public static int Seed = -1;
         private static int _templesActivated;
+        public const int MaxDifficulty = 50;
 
         public static int GetRemainingTemples()
         {
@@ -119,7 +120,7 @@ namespace Game.Global
             Region r = new Region();
             r.SetRegionType(RegionType.Tomb);
             CombatManager.SetCurrentRegion(r);
-            SceneChanger.ChangeScene("Combat");
+            SceneChanger.GoToCombatScene();
             return true;
         }
 
@@ -167,7 +168,7 @@ namespace Game.Global
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false);
             CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
-            StoryController.ShowText(JournalEntry.GetStoryText(_currentLevel - 1), "Game");
+            StoryController.ShowText(JournalEntry.GetStoryText(_currentLevel - 1), _currentLevel == 5);
         }
 
         public static CharacterManager HomeInventory() => _homeInventory;

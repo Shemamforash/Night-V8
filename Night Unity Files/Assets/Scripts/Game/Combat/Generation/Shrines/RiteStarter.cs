@@ -47,7 +47,7 @@ namespace Game.Combat.Generation.Shrines
             r.SetRegionType(RegionType.Rite);
             Rite.SetBrand(_brand);
             CombatManager.SetCurrentRegion(r);
-            SceneChanger.ChangeScene("Combat");
+            SceneChanger.GoToCombatScene();
         }
     }
 }

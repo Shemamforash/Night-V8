@@ -30,6 +30,7 @@ namespace Facilitating.UIControllers
 
         public void SetArmour(ArmourController armour)
         {
+            if (_notEquippedObject == null) return;
             if (armour.GetProtectionLevel() == 0)
             {
                 _notEquippedObject.SetActive(true);

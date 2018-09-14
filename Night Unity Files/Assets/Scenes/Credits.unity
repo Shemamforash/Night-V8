@@ -389,6 +389,7 @@ GameObject:
   - component: {fileID: 627026809}
   - component: {fileID: 627026811}
   - component: {fileID: 627026810}
+  - component: {fileID: 627026812}
   m_Layer: 0
   m_Name: Screen Fader
   m_TagString: Untagged
@@ -448,6 +449,17 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 627026808}
   m_CullTransparentMesh: 0
+--- !u!225 &627026812
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 627026808}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &637882295
 GameObject:
   m_ObjectHideFlags: 0

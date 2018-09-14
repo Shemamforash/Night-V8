@@ -166,13 +166,9 @@ namespace Game.Characters
         {
             IsDead = true;
             if (CharacterTemplate.CharacterClass == CharacterClass.Wanderer)
-            {
-                SceneChanger.ChangeScene("Game Over");
-            }
+                SceneChanger.GoToGameOverScene();
             else
-            {
                 CharacterManager.RemoveCharacter(this);
-            }
         }
 
         public bool IsDead;
@@ -288,6 +284,8 @@ namespace Game.Characters
             ArmourController.SetPlateOne(plate);
             _characterView.ArmourController.SetArmour(ArmourController);
             WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
+            if (!CombatManager.InCombat()) return;
+            PlayerCombat.Instance.EquipArmour();
         }
 
         public void EquipArmourSlotTwo(ArmourPlate plate)
@@ -295,6 +293,8 @@ namespace Game.Characters
             ArmourController.SetPlateTwo(plate);
             _characterView.ArmourController.SetArmour(ArmourController);
             WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
+            if (!CombatManager.InCombat()) return;
+            PlayerCombat.Instance.EquipArmour();
         }
 
         public override void EquipAccessory(Accessory accessory)

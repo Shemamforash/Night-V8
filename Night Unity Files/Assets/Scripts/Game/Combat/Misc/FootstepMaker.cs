@@ -17,14 +17,17 @@ namespace Game.Combat.Misc
         private bool _leftLast;
         private Rigidbody2D _rigidBody;
         public bool UseHoofprint;
-        [SerializeField]
         private AudioClip[] _audioClips;
+        private int _nextClip;
         private AudioSource _audioSource;
 
         public void Awake()
         {
             if (_footstepParent == null) _footstepParent = GameObject.Find("World").transform.Find("Footsteps");
             _audioSource = GetComponent<AudioSource>();
+            _audioSource.volume = 0.4f;
+            _audioClips = Resources.LoadAll<AudioClip>("Sounds/Footsteps");
+            _nextClip = _audioClips.Length + 1;
         }
 
         private void SetTransformAndRotation(GameObject footprintObject)
@@ -66,7 +69,7 @@ namespace Game.Combat.Misc
 
         private Quaternion GetRotation()
         {
-            if(_rigidBody == null) _rigidBody = transform.parent.GetComponent<Rigidbody2D>();
+            if (_rigidBody == null) _rigidBody = transform.parent.GetComponent<Rigidbody2D>();
             float zRotation = AdvancedMaths.AngleFromUp(Vector3.zero, _rigidBody.velocity);
             return Quaternion.Euler(new Vector3(0, 0, zRotation));
         }
@@ -85,7 +88,15 @@ namespace Game.Combat.Misc
                 GetNewFootprint().transform.Translate(Vector3.right * 0.03f);
                 _leftLast = true;
             }
-            if(_audioClips.Length != 0) _audioSource.PlayOneShot(Helper.RandomElement(_audioClips));
+
+            ++_nextClip;
+            if (_nextClip >= _audioClips.Length)
+            {
+                _audioClips.Shuffle();
+                _nextClip = 0;
+            }
+
+            if (_audioClips.Length != 0) _audioSource.PlayOneShot(_audioClips[_nextClip]);
             _distanceTravelled = 0;
             _lastPosition = transform.position;
         }

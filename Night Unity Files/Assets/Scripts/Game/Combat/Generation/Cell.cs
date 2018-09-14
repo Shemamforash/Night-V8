@@ -13,7 +13,8 @@ namespace Game.Combat.Generation
 
         public bool Reachable = true;
         public bool Blocked;
-        public bool EdgeCell;
+        public bool IsEdgeCell;
+        public bool OutOfRange;
 
         public static Cell Generate(int xIndex, int yIndex)
         {

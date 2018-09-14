@@ -57,7 +57,6 @@ namespace Game.Exploration.Regions
             int timeRemaining = ClaimRemaining;
             if (timeRemaining > minutesPerDay) timeRemaining -= minutesPerDay;
             int timeRemainingInHours = Mathf.CeilToInt(timeRemaining / 24f);
-            Debug.Log(timeRemaining + " " + timeRemainingInHours);
             string hourString = timeRemainingInHours == 1 ? "hr" : "hrs";
             return " +" + _claimQuantity + " " + _claimBenefit + " in " + timeRemainingInHours + hourString;
         }

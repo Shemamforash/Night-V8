@@ -63,7 +63,7 @@ namespace Game.Combat.Misc
 
         public override void Update()
         {
-            if (!CurrentCell().EdgeCell) return;
+            if (!CurrentCell().IsEdgeCell) return;
             Sequence sequence = DOTween.Sequence();
             sequence.Append(GetComponent<SpriteRenderer>().DOColor(UiAppearanceController.InvisibleColour, 2f));
             sequence.AppendCallback(() =>

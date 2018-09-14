@@ -29,28 +29,9 @@ public class UiAreaInventoryController : IInputListener
     {
     }
 
-    private static ContainerController NearestContainer()
-    {
-        ContainerController nearestContainer = null;
-        float nearestContainerDistance = MaxShowInventoryDistance;
-        ContainerController.Containers.ForEach(c =>
-        {
-            float distance = Vector2.Distance(c.transform.position, PlayerCombat.Instance.transform.position);
-            if (distance > nearestContainerDistance) return;
-            nearestContainerDistance = distance;
-            nearestContainer = c.ContainerController;
-        });
-        return nearestContainer;
-    }
-
     public static void OpenInventory()
     {
         UiGearMenuController.ShowConsumableMenu();
         MenuStateMachine.ShowMenu("Inventories");
-    }
-
-    public static void TakeItem()
-    {
-        NearestContainer()?.Take();
     }
 }

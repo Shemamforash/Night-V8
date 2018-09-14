@@ -6,7 +6,7 @@ public class JournalSource : ContainerController
 {
     private readonly JournalEntry _journalEntry;
     private CanvasGroup _journalIndicator;
-    
+
     public JournalSource(Vector2 position, JournalEntry journalEntry) : base(position, "Journal")
     {
         _inventory.Name = "Journal";
@@ -23,6 +23,5 @@ public class JournalSource : ContainerController
         sequence.Append(_journalIndicator.DOFade(1f, 1f));
         sequence.AppendInterval(5f);
         sequence.Append(_journalIndicator.DOFade(0f, 1f));
-        Fade();
     }
 }

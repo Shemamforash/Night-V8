@@ -50,12 +50,12 @@ namespace Game.Combat.Misc
         {
             _rigidBody = GetComponent<Rigidbody2D>();
         }
-        
+
         public float GetKnockbackForce()
         {
             return _knockBackForce;
         }
-        
+
         private void OnDestroy()
         {
             _shotPool.Dispose(this);
@@ -192,7 +192,7 @@ namespace Game.Combat.Misc
 
             _lastPosition = newPosition;
         }
-        
+
         private void FixedUpdate()
         {
             if (!_fired) return;
@@ -214,15 +214,15 @@ namespace Game.Combat.Misc
         }
 
         private bool _pierce;
-        
+
         public void Pierce()
         {
             _pierce = true;
         }
-        
+
         public void Fire(float distance = 0.15f)
         {
-            if(_pierce) gameObject.layer = 20;
+            if (_pierce) gameObject.layer = 20;
             float angleModifier = 1 - Mathf.Sqrt(Random.Range(0f, 1f));
             if (Random.Range(0, 2) == 0) angleModifier = -angleModifier;
             float angleOffset = angleModifier * _accuracy;
@@ -335,8 +335,9 @@ namespace Game.Combat.Misc
 
         public int DamageDealt()
         {
-            if (_origin is EnemyBehaviour) _damageDealt = Mathf.FloorToInt(EnemyDamageModifier * _damageDealt);
-            return _damageDealt;
+            int damageDealt = _damageDealt;
+            if (_origin is EnemyBehaviour) damageDealt = Mathf.FloorToInt(EnemyDamageModifier * _damageDealt);
+            return damageDealt;
         }
 
         public void SetAccuracy(float accuracy)

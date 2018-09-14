@@ -99,12 +99,12 @@ namespace Game.Characters.CharacterActions
             bool discovered = CurrentRegion.Discover(PlayerCharacter);
             if(discovered) PlayerCharacter.BrandManager.IncreaseRegionsExplored();
             CombatManager.SetCurrentRegion(CurrentRegion);
-            SceneChanger.ChangeScene("Combat");
+            SceneChanger.GoToCombatScene();
         }
 
         protected override void OnClick()
         {
-            SceneChanger.ChangeScene("Map");
+            SceneChanger.GoToMapScene();
         }
 
         public Region GetCurrentNode()
