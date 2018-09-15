@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Facilitating.Persistence;
+using Game.Characters.CharacterActions;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -109,11 +110,12 @@ namespace Facilitating.MenuNavigation
             StartGame(true);
         }
 
-        private void StartGame(bool newGame)
+        private void StartGame(bool newGame, Travel travel = null)
         {
             _starting = true;
             InputHandler.SetCurrentListener(null);
             if (newGame) StoryController.ShowText(JournalEntry.GetStoryText(1), false);
+            else if(travel != null) travel.Enter();
             else SceneChanger.GoToGameScene(f => _loadingIcon.fillAmount = f);
         }
 
@@ -121,8 +123,8 @@ namespace Facilitating.MenuNavigation
         {
             if (SaveController.SaveExists() && !_starting)
             {
-                SaveController.LoadGame();
-                StartGame(false);
+                Travel travel = SaveController.LoadGame();
+                StartGame(false, travel);
             }
             else
             {

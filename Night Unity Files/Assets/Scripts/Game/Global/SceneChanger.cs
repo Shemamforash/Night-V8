@@ -21,8 +21,8 @@ namespace Game.Global
             _instance = this;
             _audioSource = GetComponent<AudioSource>();
             _fader = GameObject.Find("Screen Fader").GetComponent<CanvasGroup>();
-            GlobalAudioManager.SetModifiedVolume(0f);
-            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetModifiedVolume, 1f, _fadeInTime);
+            VolumeController.SetModifiedVolume(0f);
+            DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, _fadeInTime);
             Sequence sequence = DOTween.Sequence();
             _fader.alpha = 1;
             sequence.Append(_fader.DOFade(0, _fadeInTime));
@@ -34,8 +34,8 @@ namespace Game.Global
         {
             _fadeInTime = fadeTime;
             if (_audioSource != null) _audioSource.DOFade(1, DefaultFadeTime);
-            GlobalAudioManager.SetModifiedVolume(1f);
-            DOTween.To(GlobalAudioManager.Volume, GlobalAudioManager.SetModifiedVolume, 0f, DefaultFadeTime);
+            VolumeController.SetModifiedVolume(1f);
+            DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 0f, DefaultFadeTime);
             yield return _fader.DOFade(1, DefaultFadeTime).WaitForCompletion();
 
             AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync(sceneName);

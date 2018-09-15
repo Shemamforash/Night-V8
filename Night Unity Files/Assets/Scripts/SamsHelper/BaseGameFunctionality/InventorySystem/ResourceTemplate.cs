@@ -13,17 +13,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     public class ResourceTemplate
     {
         public readonly string Name, ResourceType;
-        public float Duration;
         private readonly bool Consumable;
+        public bool HasEffect;
+        public float EffectBonus;
         public AttributeType AttributeType;
-        public float ModifierVal;
-        private bool _additive;
-        private bool _hasEffect;
         private static readonly List<ResourceTemplate> Meat = new List<ResourceTemplate>();
         private static readonly List<ResourceTemplate> Water = new List<ResourceTemplate>();
         private static readonly List<ResourceTemplate> Plant = new List<ResourceTemplate>();
         private static readonly List<ResourceTemplate> Resources = new List<ResourceTemplate>();
-        public static readonly List<ResourceTemplate> AllResources = new List<ResourceTemplate>();
+        private static readonly List<ResourceTemplate> AllResources = new List<ResourceTemplate>();
         private static float OasisDRCur, SteppeDRCur, RuinsDRCur, DefilesDRCur, WastelandDRCur;
         private readonly Dictionary<EnvironmentType, DropRate> _dropRates = new Dictionary<EnvironmentType, DropRate>();
 
@@ -47,10 +45,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static ResourceTemplate StringToTemplate(string templateString)
         {
             return AllResources.FirstOrDefault(t => t.Name == templateString);
-        } 
-        
+        }
+
         private static string _lastType = "";
-        
+
         public ResourceTemplate(XmlNode resourceNode)
         {
             Name = resourceNode.StringFromNode("Name");
@@ -98,14 +96,14 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             SetEffect(resourceNode);
         }
 
-        public static ResourceTemplate GetMeat()
+        public static InventoryItem GetMeat()
         {
             float rand = Random.Range(0f, 1f);
             EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironment.EnvironmentType;
             foreach (ResourceTemplate meatTemplate in Meat)
             {
                 if (!meatTemplate._dropRates[currentEnvironment].ValueWithinRange(rand)) continue;
-                return meatTemplate;
+                return meatTemplate.Create();
             }
 
             throw new Exception("Can't have invalid meat!");
@@ -157,6 +155,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return item;
         }
 
+        public static InventoryItem Create(string name)
+        {
+            ResourceTemplate template = StringToTemplate(name);
+            if (template == null) throw new Exceptions.ResourceDoesNotExistException(name);
+            return template.Create();
+        }
+
         private void SetEffect(XmlNode resourceNode)
         {
             XmlNode attributeNode = resourceNode.SelectSingleNode("Attribute");
@@ -164,25 +169,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             string attributeString = attributeNode.InnerText;
             if (attributeString == "") return;
             AttributeType = Inventory.StringToAttributeType(attributeString);
-            ModifierVal = resourceNode.FloatFromNode("Modifier");
-            _additive = resourceNode.StringFromNode("Bonus") == "+";
-            string durationString = resourceNode.StringFromNode("Duration");
-            Duration = 0;
-            if (durationString != "")
-            {
-                Duration = int.Parse(durationString);
-            }
-        }
-
-        public AttributeModifier CreateModifier()
-        {
-            if (!_hasEffect) return null;
-            AttributeModifier attributeModifier = new AttributeModifier();
-            if (_additive)
-                attributeModifier.SetRawBonus(ModifierVal);
-            else
-                attributeModifier.SetFinalBonus(ModifierVal);
-            return attributeModifier;
+            EffectBonus = resourceNode.FloatFromNode("Modifier");
+            HasEffect = true;
         }
     }
 }

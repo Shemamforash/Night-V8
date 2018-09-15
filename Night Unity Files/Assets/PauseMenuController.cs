@@ -1,121 +1,81 @@
-﻿using System.Xml;
-using Facilitating.Audio;
-using Facilitating.Persistence;
-using SamsHelper.Input;
+﻿using DG.Tweening;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PauseMenuController : MonoBehaviour, IInputListener
+public class PauseMenuController : Menu
 {
-	private bool _open;
-	private string _lastMenu;
-	private static bool _fullScreen;
-	[SerializeField] private EnhancedText _title;
-	[SerializeField] private Slider _volumeSlider;
-	[SerializeField] private EnhancedText _fullscreenText;
-	
-	public void Awake()
-	{
-		InputHandler.RegisterInputListener(this);
-		_volumeSlider.onValueChanged.AddListener(GlobalAudioManager.SetMasterVolume);
-		_volumeSlider.value = GlobalAudioManager.Volume();
-	}
+    private static bool _open;
+    private static string _lastMenu;
+    private CanvasGroup _pausedCanvas, _optionsCanvas, _controlsCanvas;
+    private EnhancedButton _pausedButton, _controlsButton;
+    private Slider _volumeSlider;
+    private const float FadeDuration = 0.5f;
 
-	public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
-	{
-		if (isHeld || axis != InputAxis.Menu) return;
-		if (_open) Hide();
-		else Show();
-	}
+    public override void Awake()
+    {
+        base.Awake();
+        _pausedCanvas = gameObject.FindChildWithName<CanvasGroup>("Paused");
+        _optionsCanvas = gameObject.FindChildWithName<CanvasGroup>("Options Canvas");
+        _controlsCanvas = gameObject.FindChildWithName<CanvasGroup>("Controls Canvas");
 
-	private void Show()
-	{
-		_lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
-		ShowPauseMenu();
-		_open = true;
-		_title.gameObject.SetActive(true);
-	}
+        _pausedButton = gameObject.FindChildWithName<EnhancedButton>("Resume");
+        _volumeSlider = gameObject.FindChildWithName<Slider>("Volume");
+        _controlsButton = _controlsCanvas.gameObject.FindChildWithName<EnhancedButton>("Back");
+    }
 
-	public void Hide()
-	{
-		MenuStateMachine.ShowMenu(_lastMenu);
-		_open = false;
-		_title.gameObject.SetActive(false);
-	}
+    public override void Enter()
+    {
+        base.Enter();
+        _lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
+        _optionsCanvas.alpha = 1;
+        _open = true;
+    }
 
-	public void OnInputUp(InputAxis axis)
-	{
-	}
+    private static void Hide()
+    {
+        MenuStateMachine.ShowMenu(_lastMenu);
+        _open = false;
+    }
 
-	public void OnDoubleTap(InputAxis axis, float direction)
-	{
-	}
+    public void ShowOptions()
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(_controlsCanvas.DOFade(0, FadeDuration));
+        seq.Insert(0, _pausedCanvas.DOFade(0, FadeDuration));
+        seq.Append(_optionsCanvas.DOFade(1, FadeDuration));
+        _volumeSlider.Select();
+    }
 
-	public void ShowOptions()
-	{
-		MenuStateMachine.ShowMenu("Options Menu");
-		_volumeSlider.value = GlobalAudioManager.Volume();
-		_title.SetText("Options");
-		SetFullScreenText();
-	}
+    public void ShowControls()
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(_optionsCanvas.DOFade(0, FadeDuration));
+        seq.Insert(0, _pausedCanvas.DOFade(0, FadeDuration));
+        seq.Append(_controlsCanvas.DOFade(1, FadeDuration));
+        _controlsButton.Select();
+    }
 
-	private void SetFullScreenText()
-	{
-		_fullscreenText.SetText(_fullScreen ? "Fullscreen" : "Windowed");
-	}
+    public void ShowPauseMenu()
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(_optionsCanvas.DOFade(0, FadeDuration));
+        seq.Insert(0, _controlsCanvas.DOFade(0, FadeDuration));
+        seq.Append(_pausedCanvas.DOFade(1, FadeDuration));
+        _pausedButton.Select();
+    }
 
-	public void ShowControls()
-	{
-		MenuStateMachine.ShowMenu("Controls Menu");
-		_title.SetText("Controls");
-	}
+    public void Exit()
+    {
+        Application.Quit();
+    }
 
-	public void ShowPauseMenu()
-	{
-		MenuStateMachine.ShowMenu("Pause Sub Menu");
-		_title.SetText("Paused");
-	}
-
-	public void Exit()
-	{
-		Application.Quit();
-	}
-
-	public void SwitchFullscreen()
-	{
-		_fullScreen = !_fullScreen;
-		SetFullScreenText();
-		if (_fullScreen)
-		{
-			Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, true);
-			return;
-		} 
-		Screen.SetResolution((int) (Screen.currentResolution.width * 0.75f), (int) (Screen.currentResolution.height * 0.75f), false);
-		SaveController.SaveSettings();
-	}
-
-	public static void Load(XmlNode root)
-	{
-		_fullScreen = root.BoolFromNode("Fullscreen");
-		if (!_fullScreen)
-		{
-			int width = root.IntFromNode("Width");
-			int height = root.IntFromNode("Height");
-			Screen.SetResolution(width, height, false);
-		}
-		else
-		{
-			Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, true);
-		}
-	}
-	
-	public static void Save(XmlNode root)
-	{
-		root.CreateChild("Fullscreen", _fullScreen);
-		root.CreateChild("Width", Camera.main.pixelWidth);
-		root.CreateChild("Height", Camera.main.pixelHeight);
-	}
+    public static void ToggleOpen()
+    {
+        _open = !_open;
+        if (_open) Hide();
+        else MenuStateMachine.ShowMenu("Pause Menu");
+    }
 }

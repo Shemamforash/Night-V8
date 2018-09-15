@@ -215,11 +215,11 @@ namespace Game.Combat.Enemies
                 case "Meat":
                     if (Template.EnemyType == EnemyType.Grazer || Template.EnemyType == EnemyType.Watcher && Random.Range(0, 2) == 1)
                     {
-                        controller.AddToInventory(ResourceTemplate.AllResources.Find(r => r.Name == "Skin").Create());
+                        controller.AddToInventory(ResourceTemplate.Create("Skin"));
                         break;
                     }
 
-                    controller.AddToInventory(ResourceTemplate.GetMeat().Create());
+                    controller.AddToInventory(ResourceTemplate.GetMeat());
                     break;
             }
 

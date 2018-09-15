@@ -106,8 +106,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 AddItem(Accessory.LoadAccessory(accessoryNode));
             foreach (XmlNode inscriptionNode in itemNode.SelectSingleNode("Inscriptions").ChildNodes)
                 AddItem(Inscription.LoadInscription(inscriptionNode));
-//            foreach (XmlNode consumableNode in itemNode.SelectNodes("Consumables"))
-//                AddResource(Consumable.LoadConsumable(consumableNode));
         }
 
         public virtual XmlNode Save(XmlNode root)
@@ -120,7 +118,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             SaveItems(itemNode, "ArmourPlates", Armour);
             SaveItems(itemNode, "Accessories", Accessories);
             SaveItems(itemNode, "Inscriptions", Inscriptions);
-            SaveItems(itemNode, "Consumables", _consumables);
             return root;
         }
 
@@ -142,9 +139,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         private InventoryItem AddResource(string name)
         {
-            ResourceTemplate template = ResourceTemplate.AllResources.FirstOrDefault(t => t.Name == name);
-            if (template == null) throw new Exceptions.ResourceDoesNotExistException(template.Name);
-            InventoryItem newResource = template.Create();
+            InventoryItem newResource = ResourceTemplate.Create(name);
             newResource.SetParentInventory(this);
             if (newResource is Consumable)
             {
@@ -200,8 +195,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public void IncrementResource(string name, int amount)
         {
             if (amount < 0) throw new Exceptions.ResourceValueChangeInvalid(name, "increment", amount);
-            InventoryItem resource = GetResource(name);
-            if (resource == null) resource = AddResource(name);
+            InventoryItem resource = GetResource(name) ?? AddResource(name);
             resource.Increment(amount);
             UpdateContents();
         }

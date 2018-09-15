@@ -7,9 +7,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class Consumable : InventoryItem
     {
-        private readonly bool _hasEffect;
-        public readonly bool IsFood;
-        public readonly bool IsWater;
+        private readonly bool IsFood;
+        private readonly bool IsWater;
         public int ThirstModifier;
         public int HungerModifier;
 
@@ -18,8 +17,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             Template = template;
             IsFood = Template.ResourceType == "Food";
             IsWater = Template.ResourceType == "Water";
-            AttributeModifier modifier = template.CreateModifier();
-            _hasEffect = modifier != null;
             CalculateThirstOffset();
             CalculateHungerOffset();
         }
@@ -27,20 +24,20 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private void CalculateThirstOffset()
         {
             if (IsWater) ThirstModifier = 1;
-            if (!_hasEffect) return;
-            if (Template.AttributeType == AttributeType.Thirst) ThirstModifier += (int) Template.ModifierVal;
+            if (!Template.HasEffect) return;
+            if (Template.AttributeType == AttributeType.Thirst) ThirstModifier += (int) Template.EffectBonus;
         }
 
         private void CalculateHungerOffset()
         {
             if (IsFood) HungerModifier = 1;
-            if (!_hasEffect) return;
-            if (Template.AttributeType == AttributeType.Hunger) HungerModifier += (int) Template.ModifierVal;
+            if (!Template.HasEffect) return;
+            if (Template.AttributeType == AttributeType.Hunger) HungerModifier += (int) Template.EffectBonus;
         }
 
         public string Effect()
         {
-            return !_hasEffect ? "" : Template.ModifierVal + " " + Template.AttributeType;
+            return !Template.HasEffect ? "" : Template.EffectBonus + " " + Template.AttributeType;
         }
 
         private void ApplyEffect(Player selectedCharacter)
@@ -55,21 +52,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                     break;
             }
 
-            if (!_hasEffect) return;
+            if (!Template.HasEffect) return;
             CharacterAttribute attribute = selectedCharacter.Attributes.Get(Template.AttributeType);
-            new Effect(selectedCharacter, Template.CreateModifier(), attribute, Template.Duration);
+            attribute.Increment(Template.EffectBonus);
         }
 
         public void Consume(Player selectedCharacter)
         {
             ApplyEffect(selectedCharacter);
             ParentInventory().DecrementResource(Template.Name, 1);
-        }
-
-        public static Consumable LoadConsumable(XmlNode consumableNode)
-        {
-            //todo me
-            return null;
         }
     }
 }

@@ -2,14 +2,16 @@
 using System.Collections;
 using Facilitating.Persistence;
 using SamsHelper.BaseGameFunctionality.StateMachines;
+using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace SamsHelper.ReactiveUI.MenuSystem
 {
-    public class MenuStateMachine : MonoBehaviour
+    public class MenuStateMachine : MonoBehaviour, IInputListener
     {
         private static MenuStateMachine _instance;
         private static StateMachine States;
@@ -18,6 +20,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public void Awake()
         {
+            if(SceneManager.GetActiveScene().name != "Menu") InputHandler.RegisterInputListener(this);
             States = new StateMachine();
             _instance = this;
             foreach (Menu t in Helper.FindAllComponentsInChildren<Menu>(transform))
@@ -103,7 +106,21 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public static Menu CurrentMenu()
         {
-            return ((MenuState)States.GetCurrentState()).Menu;
+            return ((MenuState) States.GetCurrentState()).Menu;
+        }
+
+        public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
+        {
+            if (isHeld || axis != InputAxis.Menu) return;
+            PauseMenuController.ToggleOpen();
+        }
+
+        public void OnInputUp(InputAxis axis)
+        {
+        }
+
+        public void OnDoubleTap(InputAxis axis, float direction)
+        {
         }
     }
 }

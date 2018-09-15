@@ -22,7 +22,6 @@ namespace Game.Characters
         public readonly CharacterTemplate CharacterTemplate;
         public readonly StateMachine States = new StateMachine();
         public readonly BrandManager BrandManager = new BrandManager();
-        private readonly List<Effect> _effects = new List<Effect>();
         private CharacterView _characterView;
 
         public Craft CraftAction;
@@ -57,7 +56,6 @@ namespace Game.Characters
                 weaponKillNode.CreateChild(weaponKills.Key.ToString(), weaponKills.Value);
 
             ((BaseCharacterAction) States.GetCurrentState()).Save(doc);
-            _effects.ForEach(e => e.Save(doc));
             return doc;
         }
 
@@ -71,18 +69,15 @@ namespace Game.Characters
             _timeAlive = root.IntFromNode("TimeAlive");
 
             XmlNode weaponKillNode = root.SelectSingleNode("WeaponKills");
-            foreach (KeyValuePair<WeaponType, int> weaponKills in _weaponKills)
+            List<WeaponType> weaponTypes = WeaponGenerator.GetWeaponTypes();
+            weaponTypes.ForEach(t =>
             {
-                _weaponKills[weaponKills.Key] = weaponKillNode.IntFromNode(weaponKills.Key.ToString());
-                TryUnlockWeaponSkills(weaponKills.Key, false);
-            }
+                _weaponKills[t] = weaponKillNode.IntFromNode(t.ToString());
+                TryUnlockWeaponSkills(t, false);
+            });
 
             TryUnlockCharacterSkill(false);
             LoadCurrentAction(root);
-            foreach (XmlNode effectNode in root.SelectNodes("Effect"))
-            {
-                Effect.Load(this, effectNode);
-            }
         }
 
         private void LoadCurrentAction(XmlNode root)
@@ -131,18 +126,6 @@ namespace Game.Characters
             WeaponGenerator.GetWeaponTypes().ForEach(t => { _weaponKills.Add(t, 0); });
         }
 
-        public void AddEffect(Effect effect)
-        {
-            WorldEventManager.GenerateEvent(new CharacterMessage("I feel... different", this));
-            _effects.Add(effect);
-        }
-
-        public void RemoveEffect(Effect effect)
-        {
-            WorldEventManager.GenerateEvent(new CharacterMessage("Back to normal", this));
-            _effects.Remove(effect);
-        }
-
         public string GetStoryLine()
         {
             string storyLine = _currentStoryLine;
@@ -188,11 +171,6 @@ namespace Game.Characters
         public void Update()
         {
             ((BaseCharacterAction) States.GetCurrentState()).UpdateAction();
-            for (int i = _effects.Count - 1; i >= 0; --i)
-            {
-                _effects[i].UpdateEffect();
-            }
-
             UpdateTimeAlive();
         }
 

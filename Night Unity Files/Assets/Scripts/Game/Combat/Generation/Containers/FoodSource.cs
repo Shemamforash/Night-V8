@@ -26,12 +26,5 @@ namespace Game.Combat.Generation
             container.SetInsect(insect.GetComponent<InsectBehaviour>());
             return container;
         }
-
-        public void Change(int polarity)
-        {
-            int quantity = _inventory.GetResourceQuantity(_foodType); 
-            if (polarity < 0 && quantity == 1) _inventory.DecrementResource(_foodType, 1);
-            else if(polarity > 0 && quantity == 0) _inventory.IncrementResource(_foodType, 1);
-        }
     }
 }

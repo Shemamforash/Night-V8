@@ -286,7 +286,8 @@ namespace Game.Combat.Player
 
         public void UpdateAdrenaline(int damageDealt)
         {
-            _adrenalineLevel.Increment(damageDealt / 300f);
+            Debug.Log(_adrenalineRecoveryRate);
+            _adrenalineLevel.Increment(damageDealt / 300f * _adrenalineRecoveryRate);
             CombatManager.IncreaseDamageDealt(damageDealt);
             DamageDealtSinceMarkStarted += damageDealt;
             RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
@@ -378,9 +379,8 @@ namespace Game.Combat.Player
             EquipWeapon(Weapon());
             EquipArmour();
             _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
+            _adrenalineRecoveryRate = Player.Attributes.CalculateAdrenalineRecoveryRate();
             MovementController.SetSpeed(Player.Attributes.CalculateSpeed());
-            Player.Attributes.CalculateAdrenalineRecoveryRate();
-            _skillCooldownModifier = Player.Attributes.CalculateSkillCooldownModifier();
             ResetCompass();
 
             _dashCooldown = CombatManager.CreateCooldown();
@@ -478,6 +478,7 @@ namespace Game.Combat.Player
         public int DamageDealtSinceMarkStarted;
         private bool _damageTakenSinceMarkStarted;
         private float _dryFireTimer;
+        private float _adrenalineRecoveryRate;
         public const float DryFireTimerMax = 0.3f;
 
         //COOLDOWNS

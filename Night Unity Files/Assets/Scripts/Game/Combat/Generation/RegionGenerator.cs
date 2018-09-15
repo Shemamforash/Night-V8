@@ -31,6 +31,7 @@ namespace Game.Combat.Generation
             PathingGrid.InitialiseGrid();
             GenerateFreshEnvironment();
             GenerateObjects();
+            GenerateEdges();
             _region.Visit();
             PathingGrid.FinaliseGrid();
         }
@@ -47,6 +48,23 @@ namespace Game.Combat.Generation
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
             GenerateCharacter();
+        }
+
+        private void GenerateEdges()
+        {
+            EdgeCollider2D edgeCollider = gameObject.AddComponent<EdgeCollider2D>();
+            float radius = (PathingGrid.CombatAreaWidth / 2f) - 0.1f;
+            int numPoints = 500;
+            Vector2[] edgePoints = new Vector2[numPoints];
+            for (int i = 0; i < numPoints; ++i)
+            {
+                float angle = 2 * Mathf.PI * (i / (float) numPoints);
+                float x = radius * Mathf.Cos(angle);
+                float y = radius * Mathf.Sin(angle);
+                edgePoints[i] = new Vector2(x, y);
+            }
+
+            edgeCollider.points = edgePoints;
         }
 
         private void GenerateCharacter()

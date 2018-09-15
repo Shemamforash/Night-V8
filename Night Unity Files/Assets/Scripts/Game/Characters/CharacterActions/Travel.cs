@@ -96,8 +96,8 @@ namespace Game.Characters.CharacterActions
 
         private void EnterRegion()
         {
-            bool discovered = CurrentRegion.Discover(PlayerCharacter);
-            if(discovered) PlayerCharacter.BrandManager.IncreaseRegionsExplored();
+            bool justDiscovered = CurrentRegion.Discover();
+            if(justDiscovered) PlayerCharacter.BrandManager.IncreaseRegionsExplored();
             CombatManager.SetCurrentRegion(CurrentRegion);
             SceneChanger.GoToCombatScene();
         }
@@ -134,6 +134,7 @@ namespace Game.Characters.CharacterActions
             CurrentRegion = MapGenerator.GetRegionById(doc.IntFromNode("CurrentRegion"));
             _inTransit = doc.BoolFromNode("InTransit");
             _travelTime = doc.IntFromNode("TravelTime");
+            if (!_inTransit && !AtHome()) SaveController.ResumeInCombat = this;
             return doc;
         }
 

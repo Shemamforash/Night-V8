@@ -30,6 +30,7 @@ namespace Game.Global
         private static CharacterManager _homeInventory;
         private static int _currentLevel = 1;
 
+        private static int MinutesPassed;
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
         private static int _difficulty;
@@ -59,6 +60,7 @@ namespace Game.Global
             Days = worldStateValues.IntFromNode("Days");
             Hours = worldStateValues.IntFromNode("Hours");
             Minutes = worldStateValues.IntFromNode("Minutes");
+            MinutesPassed = worldStateValues.IntFromNode("MinutesPassed");
             _difficulty = worldStateValues.IntFromNode("Difficulty");
             _homeInventory.Load(doc);
             MapGenerator.Load(doc);
@@ -77,6 +79,7 @@ namespace Game.Global
             worldStateValues.CreateChild("Days", Days);
             worldStateValues.CreateChild("Hours", Hours);
             worldStateValues.CreateChild("Minutes", Minutes);
+            worldStateValues.CreateChild("MinutesPassed", MinutesPassed);
             worldStateValues.CreateChild("Difficulty", _difficulty);
             _homeInventory.Save(doc);
             MapGenerator.Save(doc);
@@ -208,6 +211,7 @@ namespace Game.Global
             MapGenerator.DiscoveredRegions().ForEach(r => r.Update());
             CharacterManager.Update();
             Campfire.Die();
+            ++MinutesPassed;
         }
 
         private static void HourPasses()

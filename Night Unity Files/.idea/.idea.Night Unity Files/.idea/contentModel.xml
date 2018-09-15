@@ -200,8 +200,6 @@
           </e>
           <e p="readme.txt" t="Include" />
         </e>
-        <e p="AudioPoolController.cs" t="Include" />
-        <e p="ButtonClickListener.cs" t="Include" />
         <e p="CameraLock.cs" t="Include" />
         <e p="CombatWeatherController.cs" t="Include" />
         <e p="Crackling.cs" t="Include" />
@@ -240,6 +238,7 @@
           </e>
         </e>
         <e p="Flicker.cs" t="Include" />
+        <e p="FullScreenController.cs" t="Include" />
         <e p="InstancedAudio.cs" t="Include" />
         <e p="PauseMenuController.cs" t="Include" />
         <e p="RadianceController.cs" t="Include" />
@@ -270,7 +269,6 @@
           <e p="ContainerTextBehaviour.cs" t="Include" />
           <e p="Facilitating" t="Include">
             <e p="Audio" t="Include">
-              <e p="GlobalAudioManager.cs" t="Include" />
               <e p="ThunderController.cs" t="Include" />
             </e>
             <e p="Campfire.cs" t="Include" />
@@ -290,8 +288,6 @@
               <e p="Highlight.cs" t="Include" />
               <e p="ManualScrollbar.cs" t="Include" />
               <e p="RefocusKeyboardInput.cs" t="Include" />
-              <e p="Toggler.cs" t="Include" />
-              <e p="WindowSizer.cs" t="Include" />
             </e>
             <e p="UIControllers" t="Include">
               <e p="Combat" t="Include">
@@ -350,7 +346,6 @@
               <e p="CharacterManager.cs" t="Include" />
               <e p="CharacterTemplate.cs" t="Include" />
               <e p="CharacterView.cs" t="Include" />
-              <e p="Effect.cs" t="Include" />
               <e p="Player.cs" t="Include" />
             </e>
             <e p="Combat" t="Include">
@@ -614,6 +609,7 @@
             <e p="Util.cs" t="Include" />
           </e>
           <e p="SamsHelper" t="Include">
+            <e p="AudioPoolController.cs" t="Include" />
             <e p="BaseGameFunctionality" t="Include">
               <e p="Basic" t="Include">
                 <e p="AttributesModifier.cs" t="Include" />
@@ -649,6 +645,7 @@
                 <e p="StateMachine.cs" t="Include" />
               </e>
             </e>
+            <e p="ButtonClickListener.cs" t="Include" />
             <e p="ColourPulse.cs" t="Include" />
             <e p="Direction.cs" t="Include" />
             <e p="Exceptions.cs" t="Include" />
@@ -848,6 +845,7 @@
           </e>
         </e>
         <e p="UiBrandMenu.cs" t="Include" />
+        <e p="VolumeController.cs" t="Include" />
         <e p="WormBehaviour.cs" t="Include" />
         <e p="WormBodyBehaviour.cs" t="Include" />
         <e p="WormSacBehaviour.cs" t="Include" />

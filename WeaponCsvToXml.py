@@ -67,19 +67,17 @@ class ResourceImporter(XMLWriter):
     def read_resource(self, row, consumable):
         write_single_value(self, "Name", get_value(self, "A", row, ""))
         write_single_value(self, "Type", get_value(self, "B", row, ""))
-        write_single_value(self, "OasisDropRate", get_value(self, "G", row, ""))
-        write_single_value(self, "SteppeDropRate", get_value(self, "H", row, ""))
-        write_single_value(self, "RuinsDropRate", get_value(self, "I", row, ""))
-        write_single_value(self, "DefilesDropRate", get_value(self, "J", row, ""))
-        write_single_value(self, "WastelandDropRate", get_value(self, "K", row, ""))
         if consumable:
             write_single_value(self, "Attribute", get_value(self, "C", row, ""))
             write_single_value(self, "Modifier", get_value(self, "D", row, ""))
-            write_single_value(self, "Bonus", get_value(self, "E", row, ""))
-            write_single_value(self, "Duration", get_value(self, "F", row, ""))
+        write_single_value(self, "OasisDropRate", get_value(self, "E", row, ""))
+        write_single_value(self, "SteppeDropRate", get_value(self, "F", row, ""))
+        write_single_value(self, "RuinsDropRate", get_value(self, "G", row, ""))
+        write_single_value(self, "DefilesDropRate", get_value(self, "H", row, ""))
+        write_single_value(self, "WastelandDropRate", get_value(self, "I", row, ""))
 
     def read_resources(self):
-        for row_no in range(3, 34):
+        for row_no in range(3, 35):
             if get_value(self, "B", row_no) == "Resource":
                 write_tag(self, "Resource", self.read_resource, [row_no, False])
             else:
@@ -348,9 +346,9 @@ def write_single_value(xml_writer, stat_name, value):
 # WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
-EnemyImporter()
+# EnemyImporter()
 # RecipeImporter()
-# ResourceImporter()
+ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
 # EnvironmentImporter()

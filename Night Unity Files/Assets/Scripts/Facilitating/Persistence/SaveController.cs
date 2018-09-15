@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Xml;
 using Facilitating.Audio;
+using Game.Characters.CharacterActions;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Facilitating.Persistence
         private static readonly string QuickSaveLocation = Application.persistentDataPath + "/Saves/QuickSave.xml";
         private static readonly string SettingsSaveLocation = Application.persistentDataPath + "/Saves/GameSettings.xml";
         private static XmlDocument _saveDoc;
+        public static Travel ResumeInCombat;
 
 
         public static void SaveGame()
@@ -33,9 +35,40 @@ namespace Facilitating.Persistence
 //            return Save(SettingsSaveLocation, PersistenceType.Settings);
 //        }
 
-        public static void LoadGame()
+        private static string GetMostRecentSaveLocation()
         {
-            Load(GameSaveLocation);
+            bool isPermanentSave = File.Exists(GameSaveLocation);
+            bool isQuickSave = File.Exists(QuickSaveLocation);
+            if (!isPermanentSave && !isQuickSave) return null;
+            if (!isPermanentSave) return QuickSaveLocation;
+            if (!isQuickSave) return GameSaveLocation;
+            int permanentMinutesPassed = GetMinutesPassed(GameSaveLocation);
+            int quickMinutesPassed = GetMinutesPassed(QuickSaveLocation);
+            return permanentMinutesPassed > quickMinutesPassed ? GameSaveLocation : QuickSaveLocation;
+        }
+
+        private static int GetMinutesPassed(string fileLocation)
+        {
+            _saveDoc = new XmlDocument();
+            _saveDoc.Load(fileLocation);
+            XmlNode root = _saveDoc.GetNode("BTVSave");
+            XmlNode worldStateValues = root.GetNode("WorldState");
+            int minutesPassed = worldStateValues.IntFromNode("MinutesPassed");
+            return minutesPassed;
+        }
+
+        public static Travel LoadGame()
+        {
+            string saveLocation = GetMostRecentSaveLocation();
+            if (saveLocation == null) return null;
+            _saveDoc = new XmlDocument();
+            _saveDoc.Load(saveLocation);
+            XmlNode root = _saveDoc.GetNode("BTVSave");
+            WorldState.Load(root);
+            if (ResumeInCombat == null) return null;
+            ResumeInCombat.Enter();
+            ResumeInCombat = null;
+            return ResumeInCombat;
         }
 
         public static bool SaveExists()
@@ -58,15 +91,6 @@ namespace Facilitating.Persistence
             return;
         }
 
-        //Basic Load/Save Functions
-        private static void Load(string fileLocation)
-        {
-            if (!File.Exists(fileLocation)) return;
-            _saveDoc = new XmlDocument();
-            _saveDoc.Load(fileLocation);
-            XmlNode root = _saveDoc.GetNode("BTVSave");
-            WorldState.Load(root);
-        }
 
         private static void TryCreateDirectory()
         {
@@ -95,17 +119,19 @@ namespace Facilitating.Persistence
             _saveDoc = new XmlDocument();
             _saveDoc.Load(SettingsSaveLocation);
             XmlNode root = _saveDoc.GetNode("Settings");
-            GlobalAudioManager.Load(root);
-            PauseMenuController.Load(root);
+            VolumeController.Load(root);
+            FullScreenController.Load(root);
+            CameraLock.Load(root);
         }
-        
+
         public static void SaveSettings()
         {
             TryCreateDirectory();
             _saveDoc = new XmlDocument();
             XmlNode root = _saveDoc.CreateChild("Settings");
-            GlobalAudioManager.Save(root);
-            PauseMenuController.Save(root);
+            VolumeController.Save(root);
+            FullScreenController.Save(root);
+            CameraLock.Save(root);
             _saveDoc.Save(SettingsSaveLocation);
         }
     }

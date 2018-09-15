@@ -367,7 +367,7 @@ namespace Game.Exploration.Regions
             _seen = true;
         }
 
-        public bool Discover(Player player = null)
+        public bool Discover()
         {
             if (_discovered) return false;
             _discovered = true;
