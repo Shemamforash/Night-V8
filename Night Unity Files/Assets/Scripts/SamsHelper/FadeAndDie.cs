@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Game.Combat.Generation;
 using UnityEngine;
 
 namespace SamsHelper
@@ -38,6 +39,7 @@ namespace SamsHelper
         {
             while (_age > 0)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 float normalisedLifeTime = _age / LifeTime;
                 _spriteRenderer.color = new Color(1f, 1f, 1f, normalisedLifeTime * _fullOpacity);
                 _age -= Time.deltaTime;

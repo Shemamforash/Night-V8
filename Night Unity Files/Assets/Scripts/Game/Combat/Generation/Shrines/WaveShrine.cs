@@ -53,6 +53,7 @@ namespace Game.Combat.Generation.Shrines
                 currentTime = 0f;
                 while (currentTime < SpawnDelay)
                 {
+                    if (!CombatManager.IsCombatActive()) yield return null;
                     Vector2 ghoulPos = AdvancedMaths.CalculatePointOnCircle(currentAngle, SpawnRadius, transform.position);
                     EnemyBehaviour enemy = CombatManager.SpawnEnemy(EnemyType.Ghoul, ghoulPos);
                     AddEnemy(enemy);
@@ -69,6 +70,7 @@ namespace Game.Combat.Generation.Shrines
             currentTime = waveDuration;
             while (currentTime > 0f)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 currentTime -= Time.deltaTime;
                 UpdateCountdown(currentTime, waveDuration);
                 if (EnemiesDead()) break;

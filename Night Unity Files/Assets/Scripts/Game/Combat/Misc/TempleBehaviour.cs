@@ -61,6 +61,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         _audioSource.PlayOneShot(_templateActivateAudioClip);
         while (vortexTime > 0f)
         {
+            if (!CombatManager.IsCombatActive()) yield return null;
             vortexTime -= Time.deltaTime;
             yield return null;
         }
@@ -75,6 +76,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         float currentTime = glowTimeMax;
         while (currentTime > 0f)
         {
+            if (!CombatManager.IsCombatActive()) yield return null;
             _glow.color = new Color(1, 1, 1, currentTime / glowTimeMax);
             currentTime -= Time.deltaTime;
             yield return null;
@@ -111,8 +113,10 @@ public class TempleBehaviour : BasicShrineBehaviour
         float currentTime = nextEnemy;
         while (nextEnemy > 0.1f && enemyTypesToSpawn.Count > 0)
         {
+            if (!CombatManager.IsCombatActive()) yield return null;
             while (currentTime > 0f)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 currentTime -= Time.deltaTime;
                 yield return null;
             }
@@ -130,9 +134,11 @@ public class TempleBehaviour : BasicShrineBehaviour
         int currentBossCount = _bossCount;
         while (currentBossCount > 0)
         {
+            if (!CombatManager.IsCombatActive()) yield return null;
             float bossTimer = 10f;
             while (bossTimer > 0f)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 bossTimer -= Time.deltaTime;
                 yield return null;
             }
@@ -169,6 +175,7 @@ public class TempleBehaviour : BasicShrineBehaviour
         float maxTime = duration;
         while (duration > 0f)
         {
+            if (!CombatManager.IsCombatActive()) yield return null;
             duration -= Time.deltaTime;
             ring.SetAlphaMultiplier(1f - duration / maxTime);
             yield return null;
@@ -185,6 +192,7 @@ public class TempleBehaviour : BasicShrineBehaviour
             float current = timeToLight;
             while (current > 0f)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 current -= Time.deltaTime;
                 yield return null;
             }

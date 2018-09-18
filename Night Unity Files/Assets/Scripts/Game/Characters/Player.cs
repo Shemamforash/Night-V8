@@ -253,7 +253,7 @@ namespace Game.Characters
             base.EquipWeapon(weapon);
             if (_characterView != null) _characterView.WeaponController.SetWeapon(weapon);
             WorldEventManager.GenerateEvent(new CharacterMessage("Yes, this'll do", this));
-            if (!CombatManager.InCombat()) return;
+            if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.EquipWeapon(weapon);
         }
 
@@ -262,7 +262,7 @@ namespace Game.Characters
             ArmourController.SetPlateOne(plate);
             _characterView.ArmourController.SetArmour(ArmourController);
             WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
-            if (!CombatManager.InCombat()) return;
+            if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.EquipArmour();
         }
 
@@ -271,7 +271,7 @@ namespace Game.Characters
             ArmourController.SetPlateTwo(plate);
             _characterView.ArmourController.SetArmour(ArmourController);
             WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
-            if (!CombatManager.InCombat()) return;
+            if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.EquipArmour();
         }
 

@@ -1,81 +1,131 @@
-﻿using DG.Tweening;
-using SamsHelper.Libraries;
+﻿using System.Collections;
+using DG.Tweening;
+using Facilitating.Persistence;
+using Game.Combat.Generation;
+using Game.Global;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class PauseMenuController : Menu
+[RequireComponent(typeof(CanvasGroup))]
+public class PauseMenuController : MonoBehaviour
 {
     private static bool _open;
     private static string _lastMenu;
-    private CanvasGroup _pausedCanvas, _optionsCanvas, _controlsCanvas;
-    private EnhancedButton _pausedButton, _controlsButton;
-    private Slider _volumeSlider;
-    private const float FadeDuration = 0.5f;
+    private static PauseMenuController _instance;
+    private CanvasGroup _background;
 
-    public override void Awake()
+    public void Awake()
     {
-        base.Awake();
-        _pausedCanvas = gameObject.FindChildWithName<CanvasGroup>("Paused");
-        _optionsCanvas = gameObject.FindChildWithName<CanvasGroup>("Options Canvas");
-        _controlsCanvas = gameObject.FindChildWithName<CanvasGroup>("Controls Canvas");
-
-        _pausedButton = gameObject.FindChildWithName<EnhancedButton>("Resume");
-        _volumeSlider = gameObject.FindChildWithName<Slider>("Volume");
-        _controlsButton = _controlsCanvas.gameObject.FindChildWithName<EnhancedButton>("Back");
+        _instance = this;
+        _open = false;
+        _background = GetComponent<CanvasGroup>();
+        _background.alpha = 0f;
     }
 
-    public override void Enter()
+    private void Show()
     {
-        base.Enter();
         _lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
-        _optionsCanvas.alpha = 1;
+        _instance.ShowPauseMenu();
         _open = true;
+        StartCoroutine(FadeInBackground());
+        Pause();
     }
 
-    private static void Hide()
+    private IEnumerator FadeInBackground()
+    {
+        float time = 0f;
+        while (time < 0.5f)
+        {
+            time += Time.unscaledDeltaTime;
+            if (time > 0.5f) time = 0.5f;
+            _background.alpha = time / 0.5f;
+            yield return null;
+        }
+    }
+
+    public void ReturnToMainMenu()
+    {
+        SaveController.QuickSave();
+        SceneChanger.GoToMainMenuScene();
+    }
+
+    public void QuitToDesktop()
+    {
+        SaveController.QuickSave();
+        Application.Quit();
+    }
+
+    public void Hide()
     {
         MenuStateMachine.ShowMenu(_lastMenu);
         _open = false;
+        Unpause();
+        _background.DOFade(0, 0.5f);
+    }
+
+    private void Pause()
+    {
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "Story":
+                StoryController.Pause();
+                break;
+            case "Credits":
+                CreditsController.Pause();
+                break;
+            case "Combat":
+                CombatManager.Pause();
+                break;
+        }
+    }
+
+    private void Unpause()
+    {
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "Story":
+                StoryController.Unpause();
+                break;
+            case "Credits":
+                CreditsController.Unpause();
+                break;
+            case "Combat":
+                CombatManager.Unpause();
+                break;
+        }
     }
 
     public void ShowOptions()
     {
-        Sequence seq = DOTween.Sequence();
-        seq.Append(_controlsCanvas.DOFade(0, FadeDuration));
-        seq.Insert(0, _pausedCanvas.DOFade(0, FadeDuration));
-        seq.Append(_optionsCanvas.DOFade(1, FadeDuration));
-        _volumeSlider.Select();
+        MenuStateMachine.ShowMenu("Options");
     }
 
     public void ShowControls()
     {
-        Sequence seq = DOTween.Sequence();
-        seq.Append(_optionsCanvas.DOFade(0, FadeDuration));
-        seq.Insert(0, _pausedCanvas.DOFade(0, FadeDuration));
-        seq.Append(_controlsCanvas.DOFade(1, FadeDuration));
-        _controlsButton.Select();
+        MenuStateMachine.ShowMenu("Controls");
     }
 
     public void ShowPauseMenu()
     {
-        Sequence seq = DOTween.Sequence();
-        seq.Append(_optionsCanvas.DOFade(0, FadeDuration));
-        seq.Insert(0, _controlsCanvas.DOFade(0, FadeDuration));
-        seq.Append(_pausedCanvas.DOFade(1, FadeDuration));
-        _pausedButton.Select();
+        MenuStateMachine.ShowMenu("Pause");
     }
 
-    public void Exit()
+    public void ExitToDesktop()
     {
         Application.Quit();
+    }
+
+    public void ExitToMenu()
+    {
+        SceneChanger.GoToMainMenuScene();
     }
 
     public static void ToggleOpen()
     {
         _open = !_open;
-        if (_open) Hide();
-        else MenuStateMachine.ShowMenu("Pause Menu");
+        if (!_open) _instance.Hide();
+        else _instance.Show();
     }
 }

@@ -60,7 +60,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             {
                 while (currentTime > 0)
                 {
-                    currentTime -= Time.deltaTime;
+                    currentTime -= Time.unscaledDeltaTime;
                     float alpha = currentTime / fadeTime;
                     currentState.Menu.SetAlpha(alpha);
                     yield return null;
@@ -75,7 +75,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             currentTime = fadeTime;
             while (currentTime > 0)
             {
-                currentTime -= Time.deltaTime;
+                currentTime -= Time.unscaledDeltaTime;
                 float alpha = 1 - currentTime / fadeTime;
                 currentState.Menu.SetAlpha(alpha);
                 yield return null;

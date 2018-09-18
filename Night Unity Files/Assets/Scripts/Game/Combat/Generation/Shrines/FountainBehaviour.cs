@@ -52,8 +52,10 @@ namespace Game.Combat.Generation.Shrines
             float timeToSpawn = 0f;
             for (int i = 0; i < Random.Range(daysSpent / 2f, daysSpent); ++i)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 while (timeToSpawn > 0f)
                 {
+                    if (!CombatManager.IsCombatActive()) yield return null;
                     timeToSpawn -= Time.deltaTime;
                     yield return null;
                 }

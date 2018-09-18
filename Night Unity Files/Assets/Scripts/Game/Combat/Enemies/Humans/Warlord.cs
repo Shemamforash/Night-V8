@@ -19,7 +19,6 @@ namespace Game.Combat.Enemies.Humans
                     || normalHealthBefore > 0.75f && currentNormalHealth <= 0.75f)
                 {
                     CurrentAction = null;
-                    SetActionText("Reinforcing");
                     SkillAnimationController.Create("Warlord", ReinforceCallTime, SummonEnemies);
                 }
             });

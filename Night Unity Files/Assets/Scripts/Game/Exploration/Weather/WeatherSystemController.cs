@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using DG.Tweening;
+using DG.Tweening.Plugins.Core.PathCore;
 using Facilitating;
 using Facilitating.Audio;
 using Game.Global;
@@ -51,12 +52,12 @@ namespace Game.Exploration.Weather
         private static void LoadAudioClips()
         {
             if (_audioLoaded) return;
-            _lightRainClips = Resources.LoadAll<AudioClip>("Sounds/Rain/Light");
-            _mediumRainClips = Resources.LoadAll<AudioClip>("Sounds/Rain/Medium");
-            _heavyRainClips = Resources.LoadAll<AudioClip>("Sounds/Rain/Heavy");
-            _lightWindClips = Resources.LoadAll<AudioClip>("Sounds/Wind/Light");
-            _mediumWindClips = Resources.LoadAll<AudioClip>("Sounds/Wind/Medium");
-            _heavyWindClips = Resources.LoadAll<AudioClip>("Sounds/Wind/Heavy");
+            _lightRainClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("rain/light");
+            _mediumRainClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("rain/medium");
+            _heavyRainClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("rain/heavy");
+            _lightWindClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("wind/light");
+            _mediumWindClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("wind/medium");
+            _heavyWindClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("wind/heavy");
             _audioLoaded = true;
         }
 

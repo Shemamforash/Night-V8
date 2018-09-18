@@ -10,14 +10,12 @@ namespace Game.Combat.Misc
         private static readonly ObjectPool<FireGenerator> _firePool = new ObjectPool<FireGenerator>("Fires", "Prefabs/Combat/Effects/Fire");
         private FastLight _light;
         private float _randomSeed;
-        private float _startRadius;
 
         public static void Create(Vector2 position, float radius = 1)
         {
             FireGenerator fire = _firePool.Create();
             fire.transform.position = position;
             fire._light.Radius = radius;
-            fire._startRadius = radius;
         }
 
         public void Awake()
@@ -31,7 +29,6 @@ namespace Game.Combat.Misc
             Color c = _light.Colour;
             float brightness = Mathf.PerlinNoise(Time.time * 2, _randomSeed) * 0.25f + 0.05f;
             c.a = brightness;
-            _light.Radius = _startRadius * (1 - brightness);
             _light.Colour = c;
         }
 

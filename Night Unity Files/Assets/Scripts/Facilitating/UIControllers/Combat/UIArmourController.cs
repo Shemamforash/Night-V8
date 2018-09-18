@@ -58,7 +58,7 @@ namespace Facilitating.UIControllers
                     chunk.SetInvisible();
             }
 
-            _armourText.text = armourController.GetCurrentArmour() / 10f + "x damage";
+            _armourText.text = "-" + armourController.GetCurrentArmour() * 10f + "% damage";
         }
 
         public void TakeDamage(ArmourController controller)
@@ -81,7 +81,7 @@ namespace Facilitating.UIControllers
             {
                 if (damageWasTaken)
                 {
-                    _image.color= Color.red;
+                    _image.color = Color.red;
                     _image.DOBlendableColor(Color.white, 0.25f);
                 }
                 else _armourObject.GetComponent<Image>().color = Color.white;

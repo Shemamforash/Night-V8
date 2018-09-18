@@ -14,7 +14,6 @@ namespace Game.Combat.Enemies.Humans
         private void ThrowGrenade()
         {
             _throwing = true;
-            SetActionText("Throwing Grenade");
             CurrentAction = null;
             SkillAnimationController.Create("Witch", 1f, () =>
             {
@@ -50,9 +49,9 @@ namespace Game.Combat.Enemies.Humans
             ResetCooldown();
         }
 
-        public override void Update()
+        public override void MyUpdate()
         {
-            base.Update();
+            base.MyUpdate();
             if (_throwing || !Alerted) return;
             _cooldownTime -= Time.deltaTime;
             if (_cooldownTime > 0) return;

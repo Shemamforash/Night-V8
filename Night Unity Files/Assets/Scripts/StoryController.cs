@@ -5,30 +5,32 @@ using DG.Tweening;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI.Elements;
+using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
 
-public class StoryController : MonoBehaviour, IInputListener
+public class StoryController : Menu, IInputListener
 {
     private static string _text;
     private const float _timePerWord = 0.2f;
-    private Queue<string> _paragraphs;
+    private List<string> _paragraphs;
     private TextMeshProUGUI _storyText;
-    private bool _skipParagraph;
     private static bool _goToCredits;
+    private static bool _paused;
+    private static Sequence _storySequence;
 
-    public void Awake()
+    public override void Awake()
     {
+        base.Awake();
         _storyText = GetComponent<TextMeshProUGUI>();
+        _storyText.color = UiAppearanceController.InvisibleColour;
+        _paused = false;
     }
 
-    public void Start()
+    public override void Enter()
     {
-        _paragraphs = new Queue<string>();
-        foreach (string paragraph in _text.Split(new[] {"\n"}, StringSplitOptions.None))
-            _paragraphs.Enqueue(paragraph);
-        StartCoroutine(DisplayParagraph());
         InputHandler.RegisterInputListener(this);
+        DisplayParagraph();
     }
 
     public static void ShowText(string text, bool goToCredits)
@@ -37,46 +39,66 @@ public class StoryController : MonoBehaviour, IInputListener
         _goToCredits = goToCredits;
         SceneChanger.GoToStoryScene();
     }
-    
-    private static float GetTimeToRead(string paragraph)
+
+    public static float GetTimeToRead(string paragraph)
     {
         int wordCount = paragraph.Split(' ').Length;
         float timeToRead = _timePerWord * wordCount;
         return timeToRead;
     }
 
-    private IEnumerator DisplayParagraph()
+    private void FadeIn(string paragraph)
     {
-        if (_paragraphs.Count == 0)
+        _storySequence.AppendCallback(() =>
         {
-            InputHandler.UnregisterInputListener(this);
-            if(_goToCredits) SceneChanger.GoToCreditsScene();
-            else SceneChanger.GoToGameScene();
-            yield break;
-        }
+            _storyText.text = paragraph + "\n\n    - <i>The Necromancer</i>";
+            _storyText.color = UiAppearanceController.InvisibleColour;
+        });
+        _storySequence.Append(_storyText.DOColor(Color.white, 1f));
+    }
 
-        string currentParagraph = _paragraphs.Dequeue();
-        float timeToRead = GetTimeToRead(currentParagraph);
-        _storyText.text = currentParagraph + "\n\n    - <i>The Necromancer</i>";
-        _storyText.color = UiAppearanceController.InvisibleColour;
-        Tween fade = _storyText.DOColor(Color.white, 1f);
-        yield return fade.WaitForCompletion();
-        while (timeToRead > 0 && !_skipParagraph)
+    private void ReadParagraph(string paragraph)
+    {
+        float timeToRead = GetTimeToRead(paragraph);
+        _storySequence.AppendInterval(timeToRead);
+    }
+
+    private void FadeOut()
+    {
+        _storySequence.AppendCallback(() => _storyText.color = Color.white);
+        _storySequence.Append(_storyText.DOColor(UiAppearanceController.InvisibleColour, 1f));
+    }
+
+    private void SplitParagraphs()
+    {
+        _paragraphs = new List<string>();
+        foreach (string paragraph in _text.Split(new[] {"\n"}, StringSplitOptions.None))
+            _paragraphs.Add(paragraph);
+    }
+
+    private void DisplayParagraph()
+    {
+        SplitParagraphs();
+        _storySequence = DOTween.Sequence();
+        foreach (string paragraph in _paragraphs)
         {
-            timeToRead -= Time.deltaTime;
-            yield return null;
+            FadeIn(paragraph);
+            ReadParagraph(paragraph);
+            FadeOut();
         }
+        _storySequence.AppendCallback(End);
+    }
 
-        _skipParagraph = false;
-        fade = _storyText.DOColor(UiAppearanceController.InvisibleColour, 1f);
-        yield return fade.WaitForCompletion();
-        StartCoroutine(DisplayParagraph());
+    private void End()
+    {
+        if (_goToCredits) SceneChanger.GoToCreditsScene();
+        else SceneChanger.GoToGameScene();
     }
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (isHeld || _skipParagraph) return;
-        _skipParagraph = true;
+        if (isHeld || _paused || axis == InputAxis.Menu) return;
+        _storySequence.Complete(true);
     }
 
     public void OnInputUp(InputAxis axis)
@@ -85,5 +107,17 @@ public class StoryController : MonoBehaviour, IInputListener
 
     public void OnDoubleTap(InputAxis axis, float direction)
     {
+    }
+
+    public static void Pause()
+    {
+        _storySequence.Pause();
+        _paused = true;
+    }
+
+    public static void Unpause()
+    {
+        _storySequence.Play();
+        _paused = false;
     }
 }

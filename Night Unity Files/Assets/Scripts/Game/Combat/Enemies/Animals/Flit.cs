@@ -21,10 +21,10 @@ namespace Game.Combat.Enemies.Animals
             Flee(PathingGrid.GetCellOutOfRange(transform.position));
         }
 
-        public override void Update()
+        public override void MyUpdate()
         {
             if (!_discovered) return;
-            base.Update();
+            base.MyUpdate();
         }
 
         public bool Discovered()

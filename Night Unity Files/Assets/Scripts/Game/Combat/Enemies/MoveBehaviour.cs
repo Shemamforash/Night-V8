@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Game.Combat.Generation;
-using Game.Combat.Player;
+using SamsHelper.Libraries;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
@@ -12,6 +11,7 @@ namespace Game.Combat.Enemies
     [RequireComponent(typeof(MovementController))]
     public class MoveBehaviour : MonoBehaviour
     {
+        private float _minDistance, _maxDistance;
         private Cell _currentCell;
         private Cell _destinationCell;
         private Cell _lastTargetCell;
@@ -27,7 +27,6 @@ namespace Game.Combat.Enemies
         private List<Cell> _route = new List<Cell>();
         private bool _shouldMove;
         private Transform _followTarget;
-        private float _minDistance, _maxDistance;
 
         public void Awake()
         {
@@ -63,15 +62,13 @@ namespace Game.Combat.Enemies
 
         private void FixedUpdate()
         {
-            if (!CombatManager.InCombat()) return;
             UpdateCurrentCell();
             if (_nextCell == null) return;
             _reachedTarget = Vector2.Distance(_currentCell.Position, _nextCell.Position) < 0.5f;
         }
 
-        private void Update()
+        public void MyUpdate()
         {
-            if (!CombatManager.InCombat()) return;
             UpdateTargetCell();
             CheckForRequiredPathfind();
             Move();
@@ -80,7 +77,6 @@ namespace Game.Combat.Enemies
         private void UpdateTargetCell()
         {
             if (_followTarget == null) return;
-            _outOfSight = Physics2D.Linecast(transform.position, _followTarget.position, 1 << 8).collider != null;
             if (!_outOfSight) return;
             _followCell = PathingGrid.WorldToCellPosition(_followTarget.position);
             if (_followCell.Reachable) return;
@@ -182,8 +178,7 @@ namespace Game.Combat.Enemies
             if (_destinationCell == _lastTargetCell) return;
             _lastTargetCell = _destinationCell;
             UpdateCurrentCell();
-            if (_outOfSight) Debug.DrawLine(_currentCell.Position, _destinationCell.Position, Color.red, 1f);
-            else Debug.DrawLine(_currentCell.Position, _destinationCell.Position, Color.green, 1f);
+            Debug.DrawLine(_currentCell.Position, _destinationCell.Position, _outOfSight ? Color.red : Color.green, 1f);
             _route = PathingGrid.JPS(_currentCell, _destinationCell);
 
             if (_route.Count == 0) return;

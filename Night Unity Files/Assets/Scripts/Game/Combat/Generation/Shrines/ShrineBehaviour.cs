@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies;
+using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
@@ -96,6 +97,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
         Color timerStartColor = _countdown.color;
         while (glowTime > 0f)
         {
+            if (!CombatManager.IsCombatActive()) yield return null;
             float lerpVal = 1 - glowTime / glowTimeMax;
             Color c = Color.Lerp(startingColour, UiAppearanceController.InvisibleColour, lerpVal);
             DangerIndicator.color = c;
@@ -121,6 +123,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
 
         while (glowTime > 0f)
         {
+            if (!CombatManager.IsCombatActive()) yield return null;
             float lerpVal = 1 - glowTime / glowTimeMax;
             Color c = Color.Lerp(Color.white, UiAppearanceController.InvisibleColour, lerpVal);
             DangerIndicator.color = c;
@@ -154,6 +157,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
         _flash.color = Color.white;
         while (time > 0f)
         {
+            if (!CombatManager.IsCombatActive()) yield return null;
             float lerpVal = 1 - (time / 0.2f);
             _flash.color = Color.Lerp(Color.white, UiAppearanceController.InvisibleColour, lerpVal);
             time -= Time.deltaTime;

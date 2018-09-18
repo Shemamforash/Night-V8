@@ -36,9 +36,9 @@ namespace Game.Combat.Enemies.Nightmares
 //        }
 
 
-        public override void Update()
+        public override void MyUpdate()
         {
-            base.Update();
+            base.MyUpdate();
 //            if (!_layingMines) return;
 //            _layMineTimer += Time.deltaTime;
 //            if (_layMineTimer < LayMineTimerMax) return;

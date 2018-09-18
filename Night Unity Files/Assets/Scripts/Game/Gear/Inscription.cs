@@ -96,6 +96,7 @@ namespace Game.Gear
 
         public static Inscription LoadInscription(XmlNode root)
         {
+            ReadTemplates();
             string templateString = root.StringFromNode("Template");
             InscriptionTemplate template = _inscriptionTemplates.First(t => t.Name == templateString);
             ItemQuality quality = (ItemQuality) root.IntFromNode("Quality");

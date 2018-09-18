@@ -19,7 +19,7 @@ namespace Game.Combat.Enemies.Humans
 
         protected override void OnAlert()
         {
-            FollowTarget();
+            //todo FollowTarget();
         }
 
         protected override void ReachTarget()
@@ -30,7 +30,6 @@ namespace Game.Combat.Enemies.Humans
         private void Detonate()
         {
             _detonated = true;
-            SetActionText("Detonating");
             SkillAnimationController.Create("Martyr", 2f, () =>
             {
                 Explosion.CreateExplosion(transform.position, 50, 2).InstantDetonate();

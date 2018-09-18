@@ -60,6 +60,7 @@ namespace Game.Combat.Player
         public List<Action> UpdateSkillActions = new List<Action>();
         public BaseWeaponBehaviour _weaponBehaviour;
         private FastLight _muzzleFlash;
+        private readonly CooldownManager _cooldownManager = new CooldownManager();
 
         public bool DamageTakenSinceLastShot;
 
@@ -275,10 +276,9 @@ namespace Game.Combat.Player
             SceneChanger.GoToGameOverScene();
         }
 
-        public override void Update()
+        public override void MyUpdate()
         {
-            if (!CombatManager.InCombat()) return;
-            base.Update();
+            base.MyUpdate();
             UpdateSkillActions.ForEach(a => a());
             FollowTarget();
             UpdateMuzzleFlash();
@@ -286,7 +286,6 @@ namespace Game.Combat.Player
 
         public void UpdateAdrenaline(int damageDealt)
         {
-            Debug.Log(_adrenalineRecoveryRate);
             _adrenalineLevel.Increment(damageDealt / 300f * _adrenalineRecoveryRate);
             CombatManager.IncreaseDamageDealt(damageDealt);
             DamageDealtSinceMarkStarted += damageDealt;
@@ -383,7 +382,7 @@ namespace Game.Combat.Player
             MovementController.SetSpeed(Player.Attributes.CalculateSpeed());
             ResetCompass();
 
-            _dashCooldown = CombatManager.CreateCooldown();
+            _dashCooldown = _cooldownManager.CreateCooldown();
             _dashCooldown.Duration = 1;
             _dashCooldown.SetDuringAction(a =>
             {

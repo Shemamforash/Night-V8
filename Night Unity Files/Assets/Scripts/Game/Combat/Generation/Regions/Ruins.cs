@@ -192,7 +192,7 @@ namespace Game.Combat.Generation
             CarvePassages(0, 0);
             List<Vector2> islandPositions = new List<Vector2>();
             if(ShouldPlaceShrine()) islandPositions.Add(_region.ShrinePosition);
-            for(int i = 0; i < Random.Range(5, 10); ++i) islandPositions.Add(FindAndRemoveValidPosition());
+            for(int i = 0; i < Random.Range(5, 10); ++i) islandPositions.Add(FindAndRemoveValidPosition(0,0, true));
             CreateIslands(islandPositions);
             while (_nodesWithWalls.Count > 0) CombineWalls();
         }
@@ -207,7 +207,7 @@ namespace Game.Combat.Generation
 
 //get random cell with a wall
 //select any wall from cell
-//progress to next wall:
+//progress to next wal
 //	if last wall was bottom wall:
 //		if next wall is bottom wall:
 //			if next wall.x > last wall.x add last wall 2,3 and next wall 2,3

@@ -61,7 +61,13 @@ namespace Game.Combat.Misc
             _moveBehaviour.GoToCell(PathingGrid.GetCellOutOfRange(transform.position));
         }
 
-        public override void Update()
+        public void Update()
+        {
+            if (!CombatManager.IsCombatActive()) return;
+            MyUpdate();
+        }
+        
+        public override void MyUpdate()
         {
             if (!CurrentCell().IsEdgeCell) return;
             Sequence sequence = DOTween.Sequence();

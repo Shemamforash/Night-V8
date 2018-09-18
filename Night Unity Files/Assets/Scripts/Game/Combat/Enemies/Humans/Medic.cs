@@ -16,9 +16,9 @@ namespace Game.Combat.Enemies.Humans
 //            MinimumFindCoverDistance = 20f;
         }
 
-        public override void Update()
+        public override void MyUpdate()
         {
-            base.Update();
+            base.MyUpdate();
             CheckHealTarget();
         }
 
@@ -40,13 +40,11 @@ namespace Game.Combat.Enemies.Humans
             Assert.IsNull(_healTarget);
             _healTarget = healTarget;
             SetTarget(_healTarget);
-            FollowTarget();
-            SetActionText("Healing " + healTarget.Enemy.Template.EnemyType);
+            //todo FollowTarget();
         }
 
         private void Heal()
         {
-            SetActionText("Healing " + _healTarget.Enemy.Name);
             SkillAnimationController.Create("Medic", 1.5f, () =>
             {
                 CombatManager.GetEnemiesInRange(transform.position, 2f).ForEach(e =>

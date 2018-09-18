@@ -1,4 +1,5 @@
-﻿using SamsHelper.Libraries;
+﻿using Facilitating.Persistence;
+using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -31,5 +32,10 @@ public class ButtonClickListener : MonoBehaviour
     public static void SuppressClick()
     {
         _suppressClick = true;
+    }
+
+    public void OnApplicationQuit()
+    {
+        SaveController.QuickSave();
     }
 }

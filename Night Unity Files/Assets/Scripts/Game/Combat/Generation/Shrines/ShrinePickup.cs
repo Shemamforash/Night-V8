@@ -27,6 +27,7 @@ namespace Game.Combat.Generation.Shrines
 
         public void Update()
         {
+            if (!CombatManager.IsCombatActive()) return;
             if (_player == null)
             {
                 if (Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position) > 0.2f) return;

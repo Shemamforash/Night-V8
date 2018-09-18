@@ -1,10 +1,12 @@
 ﻿using System.Collections;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Exploration.Weather;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Facilitating.Audio
@@ -13,18 +15,20 @@ namespace Facilitating.Audio
     {
         private const float LightningDuration = 0.15f;
         private static ThunderController _instance;
-        
+
         private AudioSource thunderSource;
         private float lightningTimer;
         private bool _waitingForThunder;
 
         public AudioClip[] thunderSounds;
         public Image lightningImage;
+        private bool _inCombat;
 
         public void Awake()
         {
             thunderSource = GetComponent<AudioSource>();
             _instance = this;
+            _inCombat = SceneManager.GetActiveScene().name == "Combat";
         }
 
         private IEnumerator LightningFlash()
@@ -46,14 +50,20 @@ namespace Facilitating.Audio
         private static void Strike()
         {
             _instance.StartCoroutine(_instance.LightningFlash());
-            if (!CombatManager.InCombat()) return;
+            if (!CombatManager.IsCombatActive()) return;
             Vector2 firePosition = PathingGrid.GetCellNearMe(PlayerCombat.Instance.CurrentCell(), 12f).Position;
             FireBehaviour.Create(firePosition, 1f);
         }
 
         public void Update()
         {
+            if (!ShouldUpdate()) return;
             UpdateThunder();
+        }
+
+        private bool ShouldUpdate()
+        {
+            return !(_inCombat && !CombatManager.IsCombatActive());
         }
 
         private void UpdateThunder()
@@ -67,12 +77,16 @@ namespace Facilitating.Audio
         {
             _waitingForThunder = true;
             float pause = 4 - WeatherManager.CurrentWeather().Thunder;
-            float pauseMultiplier = CombatManager.InCombat() ? 15f : 5f;
+            float pauseMultiplier = CombatManager.IsCombatActive() ? 15f : 5f;
             pause *= pauseMultiplier;
             pause = Random.Range(0.75f * pause, 1.25f * pause);
             while (pause > 0f)
             {
-                pause -= Time.deltaTime;
+                if (ShouldUpdate())
+                {
+                    pause -= Time.deltaTime;
+                }
+
                 yield return null;
             }
 

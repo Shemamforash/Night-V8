@@ -34,6 +34,11 @@ public class VolumeController : MonoBehaviour
         return _masterVolume;
     }
 
+    public static float ModifiedVolume()
+    {
+        return _modifiedVolume;
+    }
+
     private static float NormalisedVolumeToAttenuation(float volume)
     {
         if (volume == 0) volume = 0.001f;

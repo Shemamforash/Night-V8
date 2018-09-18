@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -35,6 +36,12 @@ namespace SamsHelper.Libraries
             mousePos.z = -Camera.main.transform.position.z - z;
             mousePos = Camera.main.ScreenToWorldPoint(mousePos);
             return mousePos;
+        }
+
+        public static T[] LoadAllFilesFromAssetBundle<T>(string bundleName) where T : Object
+        {
+            AssetBundle myLoadedAssetBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, bundleName));
+            return myLoadedAssetBundle.LoadAllAssets<T>();
         }
 
         public static bool OnScreen(this GameObject gameObject)

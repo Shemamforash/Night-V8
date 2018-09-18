@@ -24,7 +24,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             _canvasGroup.alpha = 1;
         }
 
-        public virtual void Exit()
+        public void Exit()
         {
             _canvasGroup.alpha = 0;
             InputHandler.SetCurrentListener(null);

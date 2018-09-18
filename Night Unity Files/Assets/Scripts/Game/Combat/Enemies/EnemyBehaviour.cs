@@ -21,7 +21,6 @@ namespace Game.Combat.Enemies
 {
     public class EnemyBehaviour : CharacterCombat
     {
-        public string ActionText;
         public Action CurrentAction;
         public Enemy Enemy;
         protected bool FacePlayer;
@@ -29,11 +28,11 @@ namespace Game.Combat.Enemies
 
         public override Weapon Weapon() => null;
 
-        public override void Update()
+        public override void MyUpdate()
         {
-            base.Update();
+            base.MyUpdate();
+            MoveBehaviour.MyUpdate();
             PushAwayFromNeighbors();
-            if (!CombatManager.InCombat()) return;
             UpdateRotation();
             UpdateMarkTime();
             if (MoveBehaviour.Moving()) return;
@@ -46,18 +45,6 @@ namespace Game.Combat.Enemies
             if (_markTime < 0f) return;
             _markTime -= Time.deltaTime;
             if (_markTime < 0f) PlayerCombat.Instance.EndMark(this);
-        }
-
-        protected bool MoveToCover(Action reachCoverAction)
-        {
-            bool moving = MoveBehaviour.MoveToCover();
-            if (moving)
-            {
-                SetActionText("Seeking Cover");
-                CurrentAction = reachCoverAction;
-            }
-
-            return moving;
         }
 
         private float _markTime;
@@ -119,12 +106,6 @@ namespace Game.Combat.Enemies
             Sprite spriteImage = Resources.Load<Sprite>("Images/Enemy Symbols/" + GetEnemyName());
             if (spriteImage == null) return;
             Sprite.sprite = spriteImage;
-        }
-
-        protected void SetActionText(string actionText)
-        {
-            ActionText = actionText;
-            EnemyUi.Instance().UpdateActionText(this, actionText);
         }
 
         protected override UIHealthBarController HealthBarController()

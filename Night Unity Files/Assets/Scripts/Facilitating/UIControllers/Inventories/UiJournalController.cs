@@ -10,7 +10,7 @@ using UnityEngine;
 public class UiJournalController : UiInventoryMenuController
 {
     private ListController _journalList;
-    private static EnhancedText _journalDescription;
+    private static EnhancedText _journalDescription, _journalTitle;
 
     protected override void Initialise()
     {
@@ -22,6 +22,7 @@ public class UiJournalController : UiInventoryMenuController
     {
         _journalList = gameObject.FindChildWithName<ListController>("List");
         _journalDescription = gameObject.FindChildWithName<EnhancedText>("Text");
+        _journalTitle = gameObject.FindChildWithName<EnhancedText>("Title");
     }
 
     private void UpdateJournalDescription(object obj)
@@ -31,6 +32,7 @@ public class UiJournalController : UiInventoryMenuController
             _journalDescription.SetText("No Journal Entries");
             return;
         }
+
         JournalEntry entry = (JournalEntry) obj;
         _journalDescription.SetText(entry.Contents);
     }
@@ -67,8 +69,9 @@ public class UiJournalController : UiInventoryMenuController
 
         protected override void UpdateCentreItemEmpty()
         {
-            _nameText.SetText("-");
+            _nameText.SetText("");
             _journalDescription.SetText("No Journal Entries Found");
+            _journalTitle.SetText("");
         }
 
         public override void SetColour(Color c)

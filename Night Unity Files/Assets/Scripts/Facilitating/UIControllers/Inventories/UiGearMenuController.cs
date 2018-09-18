@@ -144,7 +144,6 @@ namespace Facilitating.UIControllers
         {
             base.Enter();
             InputHandler.RegisterInputListener(this);
-            _currentTab = _tabs[0];
         }
 
         private static void OpenInventoryMenu(UiInventoryMenuController menu)

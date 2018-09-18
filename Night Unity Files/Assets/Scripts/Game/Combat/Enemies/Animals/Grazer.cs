@@ -25,10 +25,6 @@ namespace Game.Combat.Enemies.Animals
             _herd.ForEach(g => g.Flee(target));
         }
 
-        protected override void CheckForPlayer()
-        {
-        }
-
         public void AddHerdMembers(List<EnemyBehaviour> herd)
         {
             herd.ForEach(e =>

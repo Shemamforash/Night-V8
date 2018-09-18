@@ -58,6 +58,7 @@ public class SpawnTrailController : MonoBehaviour
         float timer = 1f;
         while (timer > 0f)
         {
+            if (!CombatManager.IsCombatActive()) yield return null;
             timer -= Time.deltaTime;
             _fastLight.Radius = timer;
             yield return null;
@@ -65,7 +66,20 @@ public class SpawnTrailController : MonoBehaviour
 
         _fastLight.enabled = false;
         while (_explosionParticles.particleCount != 0
-               && _trailParticles.particleCount != 0) yield return null;
+               && _trailParticles.particleCount != 0)
+        {
+            if (!CombatManager.IsCombatActive())
+            {
+                _explosionParticles.Pause();
+                _trailParticles.Pause();
+            }
+            else
+            {
+                _explosionParticles.Play();
+                _trailParticles.Play();
+            }
+            yield return null;
+        }
         _spawnPool.Return(this);
     }
 

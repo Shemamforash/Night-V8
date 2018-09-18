@@ -241,9 +241,8 @@ namespace Game.Combat.Misc
             Shield = gameObject.FindChildWithName<Shield>("Shield");
         }
 
-        public virtual void Update()
+        public virtual void MyUpdate()
         {
-            if (!CombatManager.InCombat()) return;
             if (GetTarget() != null) _distanceToTarget = Vector2.Distance(transform.position, GetTarget().transform.position);
             UpdateRecoil();
             UpdateConditions();

@@ -9,6 +9,7 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Ui
@@ -21,9 +22,10 @@ namespace Game.Exploration.Ui
         private int _currentLetter;
         private float _currentTime;
         private bool _doneFading;
-        private TextMeshProUGUI _fadeText, _costText;
+        private TextMeshProUGUI _fadeText, _costText, _claimText;
 
         private SpriteRenderer _ring1, _ring2, _ring3, _icon;
+        private Image _inactive, _active;
         private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite;
         private int _enduranceCost;
         private Region _region;
@@ -40,11 +42,14 @@ namespace Game.Exploration.Ui
         {
             _fadeText = gameObject.FindChildWithName<TextMeshProUGUI>("Fade");
             _costText = gameObject.FindChildWithName<TextMeshProUGUI>("Cost");
+            _claimText = gameObject.FindChildWithName<TextMeshProUGUI>("Claim Bonus");
             _audioSource = GetComponent<AudioSource>();
             _ring1 = gameObject.FindChildWithName<SpriteRenderer>("Ring 1");
             _ring2 = gameObject.FindChildWithName<SpriteRenderer>("Ring 2");
             _ring3 = gameObject.FindChildWithName<SpriteRenderer>("Ring 3");
             _icon = gameObject.FindChildWithName<SpriteRenderer>("Icon");
+            _inactive = gameObject.FindChildWithName<Image>("Inactive");
+            _active = gameObject.FindChildWithName<Image>("Active");
         }
 
         private void SetClaimParticlesActive(bool active)
@@ -141,7 +146,11 @@ namespace Game.Exploration.Ui
                 _costText.text = _enduranceCost + " end";
             }
 
-            _costText.text += _region.ClaimBenefitString();
+            _claimText.text = _region.ClaimBenefitString();
+
+            _claimText.color = UiAppearanceController.InvisibleColour;
+            _claimText.DOColor(UiAppearanceController.FadedColour, 1f);
+            
             _costText.color = UiAppearanceController.InvisibleColour;
             _costText.DOColor(UiAppearanceController.FadedColour, 1f);
             while (_doneFading == false)
@@ -164,6 +173,9 @@ namespace Game.Exploration.Ui
             _ring3.DOColor(_ring3Colour, 1f);
             _fadeText.DOColor(Color.white, 1f);
             _costText.DOColor(Color.white, 1f);
+            _claimText.DOColor(Color.white, 1f);
+            _active.DOColor(Color.white, 1f);
+            _inactive.DOColor(Color.white, 1f);
             transform.DOScale(Vector2.one * 1.25f, 1f);
             MapGenerator.SetRoute(_region);
             MapMovementController.UpdateEndurance(_enduranceCost);
@@ -178,6 +190,9 @@ namespace Game.Exploration.Ui
             _ring3.DOColor(UiAppearanceController.FadedColour, time);
             _fadeText.DOColor(UiAppearanceController.FadedColour, time);
             _costText.DOColor(UiAppearanceController.FadedColour, time);
+            _claimText.DOColor(UiAppearanceController.FadedColour, time);
+            _inactive.DOColor(UiAppearanceController.FadedColour, time);
+            _active.DOColor(UiAppearanceController.InvisibleColour, time);
             transform.DOScale(Vector2.one, time);
             MapMovementController.UpdateEndurance(0);
         }

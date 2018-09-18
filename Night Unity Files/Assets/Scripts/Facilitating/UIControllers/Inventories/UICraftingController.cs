@@ -29,7 +29,7 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         DisplayBuildings();
         CloseRecipeList();
         InputHandler.RegisterInputListener(this);
-        if (CombatManager.InCombat())
+        if (PlayerCombat.Instance != null)
         {
             _buildButton.enabled = false;
             _buildButton.GetComponent<EnhancedText>().SetStrikeThroughActive(true);    

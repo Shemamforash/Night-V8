@@ -22,9 +22,9 @@ namespace Game.Combat.Enemies.Nightmares
             MovementController.Move(direction.normalized);
         }
 
-        public override void Update()
+        public override void MyUpdate()
         {
-            base.Update();
+            base.MyUpdate();
             if (DistanceToTarget() > _distanceToTouch) return;
             GetTarget().Sicken();
             if (_ghoulDeathPrefab == null) _ghoulDeathPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Sicken Effect");

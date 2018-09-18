@@ -29,7 +29,6 @@ public class LeafBehaviour : MonoBehaviour
             leafObject.GetComponent<Rigidbody2D>().velocity = direction * Random.Range(2f, 4f);
         }
     }
-
     
     private void OnTriggerEnter2D(Collider2D other)
     {

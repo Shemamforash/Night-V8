@@ -31,8 +31,8 @@ namespace Facilitating.UIControllers
 
         private void UpdatePlates()
         {
-            _plateOneUi.SetPlate(CharacterManager.SelectedCharacter.ArmourController.GetPlateOne());
-            _plateTwoUi.SetPlate(CharacterManager.SelectedCharacter.ArmourController.GetPlateTwo());
+            _plateOneUi.SetPlate();
+            _plateTwoUi.SetPlate();
         }
 
         protected override void OnShow()
@@ -87,7 +87,7 @@ namespace Facilitating.UIControllers
 
             protected override void SetVisible(bool visible)
             {
-                _armourText.gameObject.SetActive(visible);
+                _armourText.SetColor(visible ? Color.white : UiAppearanceController.InvisibleColour);
             }
 
             protected override void CacheUiElements(Transform transform)
@@ -105,39 +105,26 @@ namespace Facilitating.UIControllers
                 ArmourPlate armour = (ArmourPlate) o;
                 int max = armour.GetMaxProtection();
                 int current = armour.GetCurrentProtection();
-                _armourText.SetText(armour.Name + " - " + current + "/" + max + " Armour");
+                ArmourController armourController = CharacterManager.SelectedCharacter.ArmourController;
+                bool equipped = armourController.GetPlateOne() == armour || armourController.GetPlateTwo() == armour;
+                string armourString = armour.Name + " - " + current + "/" + max + " Armour";
+                if (equipped) armourString = "(E) " + armourString;
+                _armourText.SetText(armourString);
             }
         }
 
         private class ArmourPlateUi
         {
-            private readonly EnhancedText _nameText, _currentArmourText, _armourDetailText;
             public readonly ListController PlateList;
 
             public ArmourPlateUi(GameObject gameObject)
             {
-                GameObject plate = gameObject.FindChildWithName("Plate");
-                _nameText = plate.FindChildWithName<EnhancedText>("Name");
-                _currentArmourText = plate.FindChildWithName<EnhancedText>("Current Armour");
-                _armourDetailText = plate.FindChildWithName<EnhancedText>("Armour Detail");
                 PlateList = gameObject.FindChildWithName<ListController>("List");
             }
 
-            public void SetPlate(ArmourPlate plate)
+            public void SetPlate()
             {
                 PlateList.Show(GetAvailableArmour);
-
-                if (plate == null)
-                {
-                    _nameText.SetText("");
-                    _currentArmourText.SetText("No Plate");
-                    _armourDetailText.SetText("");
-                    return;
-                }
-
-                _nameText.SetText(plate.Name);
-                _currentArmourText.SetText(plate.Protection + " Armour");
-                _armourDetailText.SetText("TODO");
             }
 
             public void Initialise(Action<object> equipPlateAction)

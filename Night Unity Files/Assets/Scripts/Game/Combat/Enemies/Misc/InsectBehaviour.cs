@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using DG.Tweening;
+using Game.Combat.Generation;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -42,6 +43,7 @@ public class InsectBehaviour : MonoBehaviour
         float initialRate = emission.rateOverDistance.constant;
         while (currentTime > 0f)
         {
+            if (!CombatManager.IsCombatActive()) yield return null;
             emission.rateOverDistance = currentTime * initialRate;
             currentTime -= Time.deltaTime;
             yield return null;
@@ -50,6 +52,8 @@ public class InsectBehaviour : MonoBehaviour
         emission.rateOverDistance = 0f;
         while (particles.particleCount > 0)
         {
+            if (!CombatManager.IsCombatActive()) particles.Pause();
+            else particles.Play();
             yield return null;
         }
 

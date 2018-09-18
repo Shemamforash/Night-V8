@@ -103,6 +103,7 @@ namespace Game.Combat.Generation.Shrines
             float currentTime = 2f;
             while (currentTime > 0f)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 currentTime -= Time.deltaTime;
                 float newEmission = startEmission * currentTime / 2f;
                 emission.rateOverTime = newEmission;

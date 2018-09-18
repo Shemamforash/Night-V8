@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using DG.Tweening;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
@@ -16,22 +14,12 @@ namespace Facilitating.UIControllers
 
         public void Awake()
         {
-            GameObject primaryMarkerParent = gameObject.FindChildWithName("Primary");
-            GameObject secondaryMarkerParent = gameObject.FindChildWithName("Secondary");
-            for (int i = 0; i < 10; ++i)
+            for (int i = 0; i < 20; ++i)
             {
                 string markerName = "Marker";
                 if (i != 0) markerName += " (" + i + ")";
-                Image primaryMarker = primaryMarkerParent.FindChildWithName<Image>(markerName);
+                Image primaryMarker = gameObject.FindChildWithName<Image>(markerName);
                 _markers.Add(new Marker(primaryMarker));
-            }
-
-            for (int i = 0; i < 10; ++i)
-            {
-                string markerName = "Marker";
-                if (i != 0) markerName += " (" + i + ")";
-                Image secondaryMarker = secondaryMarkerParent.FindChildWithName<Image>(markerName);
-                _markers.Add(new Marker(secondaryMarker));
             }
         }
 

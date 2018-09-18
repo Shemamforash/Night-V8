@@ -198,11 +198,11 @@ namespace Game.Exploration.Environment
             Environment currentEnvironment = EnvironmentManager.CurrentEnvironment;
             DistributeNodeTypes(RegionType.Temple, currentEnvironment.Temples, 4);
             DistributeNodeTypes(RegionType.Monument, currentEnvironment.Monuments, 4);
-            DistributeNodeTypes(RegionType.Shrine, currentEnvironment.Shrines, 1);
-            DistributeNodeTypes(RegionType.Fountain, currentEnvironment.Fountains, 1);
             DistributeNodeTypes(RegionType.Shelter, currentEnvironment.Shelters, 3);
-            DistributeNodeTypes(RegionType.Animal, currentEnvironment.Animals, -1, false);
+            DistributeNodeTypes(RegionType.Fountain, currentEnvironment.Fountains, 2);
+            DistributeNodeTypes(RegionType.Shrine, currentEnvironment.Shrines, 2);
             DistributeNodeTypes(RegionType.Danger, currentEnvironment.Dangers, -1, false);
+            DistributeNodeTypes(RegionType.Animal, currentEnvironment.Animals, -1, false);
             SetWaterQuantities();
             SetFoodQuantities();
             SetResourceQuantities();
@@ -293,8 +293,6 @@ namespace Game.Exploration.Environment
             _loaded = true;
         }
 
-        private static int assigned;
-
         private static void DistributeNodeTypes(RegionType type, int quantity, int minDepth = -1, bool mustNotTouch = true)
         {
             if (quantity == 0) return;
@@ -316,7 +314,6 @@ namespace Game.Exploration.Environment
 
                 if (!valid) continue;
                 region.SetRegionType(type);
-                ++assigned;
                 --quantity;
                 if (quantity == 0) break;
             }
@@ -328,7 +325,6 @@ namespace Game.Exploration.Environment
                 {
                     if (region.GetRegionType() != RegionType.None) continue;
                     region.SetRegionType(type);
-                    ++assigned;
                     --quantity;
                     if (quantity == 0) break;
                 }

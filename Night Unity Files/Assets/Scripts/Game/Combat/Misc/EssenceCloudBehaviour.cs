@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Game.Combat.Generation;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -60,6 +61,7 @@ public class EssenceCloudBehaviour : MonoBehaviour
 
     public void Update()
     {
+        if (!CombatManager.IsCombatActive()) return;
         if (!_essenceParticles.isPlaying) return;
         _currentTime += Time.deltaTime;
         if (_currentTime < DecayRate) return;

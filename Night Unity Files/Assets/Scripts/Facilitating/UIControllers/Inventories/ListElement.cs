@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SamsHelper.ReactiveUI.Elements;
+using UnityEngine;
 
 namespace DefaultNamespace
 {
@@ -7,7 +8,7 @@ namespace DefaultNamespace
         //either elementindex < 0 then hide
         //elementIndex >= length  then hide
         //element index >= 0 && < length then details
-        
+
         private int _elementIndex;
         private Transform _elementTransform;
 
@@ -15,13 +16,11 @@ namespace DefaultNamespace
         {
             if (o == null)
             {
-                if (isCentreItem)
-                    UpdateCentreItemEmpty();
-                else
-                    SetVisible(false);
-
+                if (isCentreItem) UpdateCentreItemEmpty();
+                else SetVisible(false);
                 return;
-            } 
+            }
+
             SetVisible(true);
             Update(o);
         }

@@ -18,6 +18,7 @@ public class Mine : MonoBehaviour
 
     public void Update()
     {
+        if (!CombatManager.IsCombatActive()) return ;
         if (_inactiveTime > 0)
         {
             _inactiveTime -= Time.deltaTime;

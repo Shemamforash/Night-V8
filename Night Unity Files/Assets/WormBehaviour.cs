@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Game.Combat.Enemies.Bosses;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -36,8 +37,8 @@ public class WormBehaviour : Boss, ITakeDamageInterface
 
     public void Update()
     {
-        TrySpawnWorm();
-        TrySpawnSacs();
+        if (!CombatManager.IsCombatActive()) return;
+        MyUpdate();
     }
 
     public void OnDestroy()
@@ -160,6 +161,12 @@ public class WormBehaviour : Boss, ITakeDamageInterface
 
     public void Kill()
     {
+    }
+
+    public void MyUpdate()
+    {
+        TrySpawnWorm();
+        TrySpawnSacs();
     }
 
     public static Boss Instance()

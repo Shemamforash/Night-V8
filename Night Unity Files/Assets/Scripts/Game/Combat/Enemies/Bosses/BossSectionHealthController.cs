@@ -79,5 +79,9 @@ namespace Game.Combat.Enemies.Bosses
             CombatManager.Remove(this);
             _boss.UnregisterSection(this);
         }
+
+        public void MyUpdate()
+        {
+        }
     }
 }

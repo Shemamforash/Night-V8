@@ -13,5 +13,6 @@ namespace Game.Combat.Misc
         void Sicken(int stacks = 0);
         bool IsDead();
         void Kill();
+        void MyUpdate();
     }
 }

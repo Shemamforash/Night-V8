@@ -34,6 +34,7 @@ namespace Game.Combat.Generation.Shrines
             float currentTime = shrineTimeMax;
             while (_pickupsLeft > 0 && currentTime > 0f)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 if (_currentPickup == null)
                 {
                     if (_shrinePickupPrefab == null) _shrinePickupPrefab = Resources.Load<GameObject>("Prefabs/Combat/Buildings/Shrine Pickup");
@@ -96,6 +97,7 @@ namespace Game.Combat.Generation.Shrines
             float currentTime = maxTime;
             while (currentTime > 0)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 _pickupGlow.color = new Color(1,1,1, currentTime / maxTime);
                 currentTime -= Time.deltaTime;
                 yield return null;

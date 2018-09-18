@@ -94,8 +94,8 @@ GameObject:
   - component: {fileID: 222778788493967516}
   - component: {fileID: 114520546645517446}
   - component: {fileID: 114707072591708340}
-  - component: {fileID: 114874690899544048}
   - component: {fileID: 114519283765546926}
+  - component: {fileID: 114960136488062138}
   m_Layer: 5
   m_Name: Camera Mode
   m_TagString: Untagged
@@ -392,7 +392,7 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_SelectOnUp: {fileID: 114966408741227510}
-    m_SelectOnDown: {fileID: 114459579125236518}
+    m_SelectOnDown: {fileID: 114520546645517446}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 0
@@ -454,7 +454,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08f9a963fa546e98d9916c29f6e9f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseAdvancedBorder: 1
 --- !u!114 &114338826389305530
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -474,7 +473,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Fixed
+  m_text: Camera Locked
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fe391577d14e55e4e8fdc08e90538a91, type: 2}
   m_sharedMaterial: {fileID: 21478447516401316, guid: fe391577d14e55e4e8fdc08e90538a91,
@@ -543,10 +542,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 0}
-    characterCount: 5
+    characterCount: 13
     spriteCount: 0
-    spaceCount: 0
-    wordCount: 1
+    spaceCount: 1
+    wordCount: 2
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -582,7 +581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 4
-    m_SelectOnUp: {fileID: 114251943537123038}
+    m_SelectOnUp: {fileID: 114520546645517446}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -609,11 +608,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_MethodName: ShowPauseMenu
-        m_Mode: 1
+        m_MethodName: ShowMenu
+        m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: SamsHelper.ReactiveUI.MenuSystem.Menu,
+            Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -758,7 +758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: 100
+  m_MinWidth: 220
   m_MinHeight: 60
   m_PreferredWidth: -1
   m_PreferredHeight: -1
@@ -778,7 +778,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 4
-    m_SelectOnUp: {fileID: 114966408741227510}
+    m_SelectOnUp: {fileID: 114251943537123038}
     m_SelectOnDown: {fileID: 114459579125236518}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
@@ -828,7 +828,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08f9a963fa546e98d9916c29f6e9f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseAdvancedBorder: 1
 --- !u!114 &114613355016084302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -929,7 +928,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08f9a963fa546e98d9916c29f6e9f43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseAdvancedBorder: 1
 --- !u!114 &114707265107646940
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1201,7 +1199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22cd1327a40adda45942681169a2e9d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114874690899544048
+--- !u!114 &114960136488062138
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1209,7 +1207,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1390379772634586}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22cd1327a40adda45942681169a2e9d5, type: 3}
+  m_Script: {fileID: 11500000, guid: 83b908fcab4a2c643bf26b7662d20043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114966408741227510
@@ -1470,7 +1468,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 206.4674, y: -160}
-  m_SizeDelta: {x: 100, y: 60}
+  m_SizeDelta: {x: 220, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224259097784254264
 RectTransform:

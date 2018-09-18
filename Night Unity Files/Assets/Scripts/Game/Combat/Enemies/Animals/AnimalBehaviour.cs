@@ -11,6 +11,7 @@ namespace Game.Combat.Enemies.Nightmares
 
         protected override void OnAlert()
         {
+            //todo
         }
 
         public override void Initialise(Enemy e)
@@ -22,7 +23,6 @@ namespace Game.Combat.Enemies.Nightmares
         {
             MoveBehaviour.GoToCell(target);
             CurrentAction = () => StartCoroutine(FleeArea());
-            SetActionText("Fleeing");
             Fleeing = true;
         }
 
@@ -39,12 +39,6 @@ namespace Game.Combat.Enemies.Nightmares
             }
 
             Destroy(gameObject);
-        }
-
-        protected override void CheckForPlayer()
-        {
-            if (Fleeing) return;
-            base.CheckForPlayer();
         }
     }
 }

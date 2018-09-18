@@ -2,60 +2,55 @@
 using DG.Tweening;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI.Elements;
+using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class CreditsController : MonoBehaviour, IInputListener
+public class CreditsController : Menu, IInputListener
 {
-    private List<TextMeshProUGUI> _texts = new List<TextMeshProUGUI>();
-    private int _lastText = -1;
+    private readonly List<TextMeshProUGUI> _texts = new List<TextMeshProUGUI>();
+    private static Sequence _creditsSequence;
+    private static bool _paused;
 
-    public void Awake()
+    public override void Awake()
     {
-        InputHandler.SetCurrentListener(this);
+        base.Awake();
+        _paused = false;
         int childCount = transform.childCount;
         for (int i = 0; i < childCount; ++i)
         {
             _texts.Add(transform.GetChild(i).GetComponent<TextMeshProUGUI>());
+            _texts[i].color = UiAppearanceController.InvisibleColour;
         }
-
-        FadeInText(0);
     }
 
-    public void OnDestroy()
+    public override void Enter()
     {
-        InputHandler.UnregisterInputListener(this);
+        base.Enter();
+        InputHandler.SetCurrentListener(this);
+        FadeInText();
     }
 
-    private void FadeInText(int i)
+    private void FadeInText()
     {
+        _creditsSequence = DOTween.Sequence();
         foreach (TextMeshProUGUI text in _texts)
         {
-            text.color = UiAppearanceController.InvisibleColour;
+            _creditsSequence.Append(text.DOColor(Color.white, 1f));
+            float timeToRead = StoryController.GetTimeToRead(text.text);
+            if (timeToRead < 5f) timeToRead = 5f;
+            _creditsSequence.AppendInterval(timeToRead);
+            _creditsSequence.Append(text.DOColor(UiAppearanceController.InvisibleColour, 1f));
         }
 
-        Sequence sequence = DOTween.Sequence();
-        if (_lastText != -1)
-        {
-            _texts[_lastText].color = Color.white;
-            sequence.Append(_texts[_lastText].DOColor(UiAppearanceController.InvisibleColour, 1f));
-        }
-
-        if (i == _texts.Count)
-        {
-            SceneManager.LoadScene("Menu");
-            return;
-        }
-        
-        sequence.Append(_texts[i].DOColor(Color.white, 1f));
-        _lastText = i;
+        _creditsSequence.AppendCallback(() => SceneManager.LoadScene("Menu"));
     }
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (isHeld) return;
-        FadeInText(_lastText + 1);
+        if (isHeld || axis == InputAxis.Menu || _paused) return;
+        _creditsSequence.Complete(true);
     }
 
     public void OnInputUp(InputAxis axis)
@@ -64,5 +59,17 @@ public class CreditsController : MonoBehaviour, IInputListener
 
     public void OnDoubleTap(InputAxis axis, float direction)
     {
+    }
+
+    public static void Pause()
+    {
+        _paused = true;
+        _creditsSequence.Pause();
+    }
+
+    public static void Unpause()
+    {
+        _paused = false;
+        _creditsSequence.Play();
     }
 }

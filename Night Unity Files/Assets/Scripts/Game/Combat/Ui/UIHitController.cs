@@ -7,7 +7,7 @@ namespace Game.Combat.Ui
 {
     public class UIHitController : MonoBehaviour
     {
-        private const float MaxHeight = 90f;
+        private const float MaxHeight = 50f;
         private const float FadeTime = 0.5f;
         private float _currentShotTime;
         private RectTransform _innerRect;

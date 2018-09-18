@@ -1,4 +1,5 @@
-﻿using Game.Combat.Player;
+﻿using Game.Combat.Generation;
+using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ public class SaltBehaviour : MonoBehaviour
 
     public void Update()
     {
+        if (!CombatManager.IsCombatActive()) return;
         Vector2 directionToPlayer = PlayerCombat.Instance.transform.position - transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
         if (distanceToPlayer > PickupRadius) return;

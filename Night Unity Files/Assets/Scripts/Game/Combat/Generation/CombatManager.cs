@@ -1,19 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DG.Tweening;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Animals;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
-using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Combat.Ui;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Global;
-using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -26,11 +22,10 @@ namespace Game.Combat.Generation
 {
     public class CombatManager : Menu
     {
-        private readonly CooldownManager _cooldowns = new CooldownManager();
         private static Region _currentRegion;
         private bool _inMelee;
         private float _visibilityRange;
-        private bool _inCombat;
+        private static bool _inCombat;
         private readonly List<ITakeDamageInterface> _enemies = new List<ITakeDamageInterface>();
         private static CombatManager _instance;
         private bool _shotFired;
@@ -42,17 +37,11 @@ namespace Game.Combat.Generation
         private int _itemsFound;
         public bool _drawGizmos;
         private TextMeshProUGUI _regionNameText;
+        private static bool _paused;
 
         public static bool AllEnemiesDead() => Instance()._enemies.Count == 0;
 
         public static float VisibilityRange() => Instance()._visibilityRange;
-
-        public static Cooldown CreateCooldown() => Instance()._cooldowns.CreateCooldown();
-
-        public static bool InCombat()
-        {
-            return Instance() != null && Instance()._inCombat;
-        }
 
         public static Region Region() => _currentRegion;
 
@@ -64,8 +53,19 @@ namespace Game.Combat.Generation
             GameObject regionNameObject = GameObject.Find("Screen Fader");
             _regionNameText = regionNameObject.FindChildWithName<TextMeshProUGUI>("Text");
             _regionNameText.text = _currentRegion.Name;
+            _paused = false;
         }
 
+        public void Update()
+        {
+            if (!IsCombatActive()) return;
+            PlayerCombat.Instance.MyUpdate();
+            for (int i = _enemies.Count - 1; i >= 0; --i)
+            {
+                _enemies[i].MyUpdate();
+            }
+        }
+        
         private static CombatManager Instance()
         {
             if (_instance == null) _instance = FindObjectOfType<CombatManager>();
@@ -88,10 +88,9 @@ namespace Game.Combat.Generation
             InputHandler.SetCurrentListener(PlayerCombat.Instance);
         }
 
-        public void Update()
+        public static bool IsCombatActive()
         {
-            if (!_inCombat) return;
-            _cooldowns.UpdateCooldowns();
+            return Instance() != null && _inCombat && !_paused;
         }
 
         public static void SetCurrentRegion(Region region)
@@ -146,8 +145,6 @@ namespace Game.Combat.Generation
             }
 
             PlayerCombat.Instance.Initialise();
-            _cooldowns.Clear();
-
             List<List<EnemyBehaviour>> GrazerHerds = new List<List<EnemyBehaviour>>();
             List<EnemyBehaviour> currentGrazerHerd = new List<EnemyBehaviour>();
             List<List<EnemyBehaviour>> FlitHerds = new List<List<EnemyBehaviour>>();
@@ -223,7 +220,7 @@ namespace Game.Combat.Generation
 
         public static void ExitCombat(bool returnToMap = true)
         {
-            if (!Instance()._inCombat)
+            if (!_inCombat)
             {
                 Debug.Log("Don't try and exit combat twice!");
                 return;
@@ -248,7 +245,7 @@ namespace Game.Combat.Generation
             brandManager.IncreaseSkillsUsed(Instance()._skillsUsed);
             brandManager.IncreaseHumansKilled(Instance()._humansKilled);
 
-            Instance()._inCombat = false;
+            _inCombat = false;
             Instance()._regionNameText.text = "";
             PlayerCombat.Instance.ExitCombat();
             if (!returnToMap) return;
@@ -358,6 +355,18 @@ namespace Game.Combat.Generation
         public static void SetHasFiredShot()
         {
             Instance()._shotFired = true;
+        }
+
+        public static void Pause()
+        {
+            _paused = true;
+            Time.timeScale = 0;
+        }
+
+        public static void Unpause()
+        {
+            _paused = false;
+            Time.timeScale = 1;
         }
     }
 }

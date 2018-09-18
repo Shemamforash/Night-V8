@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Game.Combat.Generation;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -33,6 +34,7 @@ public class BulletTrailFade : MonoBehaviour
         float fadeTime = duration;
         while (duration > 0f)
         {
+            if (!CombatManager.IsCombatActive()) yield return null;
             duration -= Time.deltaTime;
             _trailRenderer.startColor = Color.Lerp(startColour, UiAppearanceController.InvisibleColour, 1f - duration / fadeTime);
             yield return null;

@@ -26,6 +26,7 @@ namespace Game.Combat.Generation.Shrines
 
             while (currentTime > 0)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 currentTime -= Time.deltaTime;
 
                 UpdateCountdown(currentTime, roundTime);

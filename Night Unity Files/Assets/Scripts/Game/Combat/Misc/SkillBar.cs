@@ -19,6 +19,7 @@ namespace Game.Combat.Misc
         private static List<UISkillCostController> CostControllers;
         private static Cooldown _skillsCooldown;
         private static float _cooldownModifier;
+        private readonly CooldownManager _cooldowns = new CooldownManager();
 
         public void Awake()
         {
@@ -33,8 +34,14 @@ namespace Game.Combat.Misc
 
             _skills = new Skill[NoSlots];
             _skillsLocked = new List<int>();
-            _skillsCooldown = CombatManager.CreateCooldown();
+            _skillsCooldown = _cooldowns.CreateCooldown();
             CooldownControllers.ForEach(s => _skillsCooldown.SetController(s));
+        }
+
+        public void Update()
+        {
+            if (!CombatManager.IsCombatActive()) return;
+            _cooldowns.UpdateCooldowns();
         }
 
         public static void BindSkills(Characters.Player player, float skillCooldownModifier)

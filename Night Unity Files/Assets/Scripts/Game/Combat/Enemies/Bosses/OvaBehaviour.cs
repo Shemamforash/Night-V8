@@ -36,7 +36,7 @@ namespace Game.Combat.Enemies.Bosses
         {
             _spriteFlash.FlashSprite();
             _healthController.TakeDamage(damage);
-            TrySpawnSperm((int)damage);
+            TrySpawnSperm((int) damage);
         }
 
         public void TakeShotDamage(Shot shot)
@@ -64,24 +64,8 @@ namespace Game.Combat.Enemies.Bosses
 
         public void Update()
         {
-            if (SpawnTimer > 0f)
-            {
-                SpawnTimer -= Time.deltaTime;
-                return;
-            }
-
-            SpawnTimer = Random.Range(20f, 30f);
-            float normalisedHealth = _healthController.GetNormalisedHealthValue();
-            if (normalisedHealth < 0.25f)
-            {
-                CombatManager.SpawnEnemy(EnemyType.Revenant, Vector2.zero);
-            }
-            else if (normalisedHealth < 0.5f)
-            {
-                for (int i = 0; i < Random.Range(1, 4); ++i) CombatManager.SpawnEnemy(EnemyType.Shadow, Vector2.zero);
-            }
-
-            for (int i = 0; i < Random.Range(5, 11); ++i) CombatManager.SpawnEnemy(EnemyType.Ghoul, Vector2.zero);
+            if (!CombatManager.IsCombatActive()) return;
+            MyUpdate();
         }
 
         public void Decay()
@@ -104,6 +88,28 @@ namespace Game.Combat.Enemies.Bosses
         public void Kill()
         {
             KillBoss();
+        }
+
+        public void MyUpdate()
+        {
+            if (SpawnTimer > 0f)
+            {
+                SpawnTimer -= Time.deltaTime;
+                return;
+            }
+
+            SpawnTimer = Random.Range(20f, 30f);
+            float normalisedHealth = _healthController.GetNormalisedHealthValue();
+            if (normalisedHealth < 0.25f)
+            {
+                CombatManager.SpawnEnemy(EnemyType.Revenant, Vector2.zero);
+            }
+            else if (normalisedHealth < 0.5f)
+            {
+                for (int i = 0; i < Random.Range(1, 4); ++i) CombatManager.SpawnEnemy(EnemyType.Shadow, Vector2.zero);
+            }
+
+            for (int i = 0; i < Random.Range(5, 11); ++i) CombatManager.SpawnEnemy(EnemyType.Ghoul, Vector2.zero);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Fastlights;
+using Game.Combat.Generation;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -45,6 +46,7 @@ namespace Game.Combat.Misc
         
         public void OnTriggerStay2D(Collider2D other)
         {
+            if (!CombatManager.IsCombatActive()) return;
             CharacterCombat character = other.GetComponent<CharacterCombat>();
             if (character == null) return;
             if (_ignoreTargets.Contains(other.GetComponent<ITakeDamageInterface>())) return;
@@ -72,6 +74,7 @@ namespace Game.Combat.Misc
             while (_keepAlive) yield return null;
             while (_age < LifeTime)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 float normalisedTime = 1 - _age / LifeTime;
                 emission = _particles.emission;
                 emission.rateOverTime = (int) (normalisedTime * EmissionRate);

@@ -59,6 +59,10 @@ public class SpermSegmentBehaviour : MonoBehaviour, ITakeDamageInterface {
 	{
 	}
 
+	public void MyUpdate()
+	{
+	}
+
 	public void SetSperm(SpermBehaviour spermBehaviour)
 	{
 		_spermParent = spermBehaviour;

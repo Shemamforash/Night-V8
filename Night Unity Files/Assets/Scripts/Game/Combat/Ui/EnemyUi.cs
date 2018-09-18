@@ -11,7 +11,6 @@ namespace Game.Combat.Ui
     {
         private static EnemyUi _instance;
         private EnemyBehaviour _selectedEnemy;
-        public TextMeshProUGUI ActionText;
         public TextMeshProUGUI NameText;
         public UIHitController UiHitController;
 
@@ -27,7 +26,6 @@ namespace Game.Combat.Ui
             _instance = this;
             NameText = gameObject.FindChildWithName<TextMeshProUGUI>("Name");
             UiHitController = gameObject.FindChildWithName<UIHitController>("Cover");
-            ActionText = gameObject.FindChildWithName<TextMeshProUGUI>("Action");
             SetSelectedEnemy(null);
         }
 
@@ -42,7 +40,6 @@ namespace Game.Combat.Ui
 
             SetAlpha(1);
             NameText.text = enemy.GetEnemyName();
-            ActionText.text = enemy.ActionText;
             enemy.HealthController.UpdateHealth();
         }
 
@@ -50,12 +47,6 @@ namespace Game.Combat.Ui
         {
             if (enemy != _selectedEnemy) return;
             UiHitController.RegisterShot();
-        }
-
-        public void UpdateActionText(EnemyBehaviour enemy, string text)
-        {
-            if (enemy != _selectedEnemy) return;
-            ActionText.text = text;
         }
 
         public override UIHealthBarController GetHealthController(CharacterCombat enemy)

@@ -1,23 +1,41 @@
-﻿using Game.Combat.Generation;
+﻿using System;
+using System.Collections.Generic;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
+using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
     public class UnarmedBehaviour : EnemyBehaviour
     {
         protected bool Alerted;
-        private const float DetectionRange = 4f;
-        private Vector2 _originPosition;
+        private const float DetectionRange = 5f;
+        private const float LoseTargetRange = 10f;
+        private Cell _originCell;
         protected float WanderDistance = 3;
-        private Cell _targetLastCell;
+        private Cell _targetCell, _lastTargetCell;
 
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            _originPosition = transform.position;
-            if (Random.Range(0, 3) == 1) SetActionText("Resting");
-            else CurrentAction = Wander;
+            Wander(true);
+        }
+
+        private void Wander(bool resetOrigin)
+        {
+            Alerted = false;
+            if (resetOrigin) _originCell = PathingGrid.WorldToCellPosition(transform.position);
+            _targetCell = PathingGrid.GetCellNearMe(_originCell, WanderDistance);
+            float waitDuration = Random.Range(1f, 3f);
+            CurrentAction = () =>
+            {
+                if (MoveBehaviour.Moving()) return;
+                waitDuration -= Time.deltaTime;
+                if (waitDuration > 0) return;
+                Wander(false);
+            };
         }
 
         public void Alert(bool alertOthers)
@@ -30,9 +48,18 @@ namespace Game.Combat.Enemies
             {
                 UnarmedBehaviour enemy = e as UnarmedBehaviour;
                 if (enemy == this || enemy == null) return;
-                if (Vector2.Distance(enemy.CurrentCell().Position, CurrentCell().Position) > 10) return;
+                float distance = GetTarget().transform.Distance(enemy.transform);
+                if (distance > LoseTargetRange) return;
                 enemy.Alert(false);
             });
+        }
+
+        protected bool MoveToCover(Action reachCoverAction)
+        {
+            bool moving = MoveBehaviour.MoveToCover();
+            if (!moving) return false;
+            CurrentAction = reachCoverAction;
+            return true;
         }
 
         public override void TakeShotDamage(Shot shot)
@@ -41,49 +68,47 @@ namespace Game.Combat.Enemies
             Alert(true);
         }
 
-        private void WaitThenWander()
-        {
-            float waitDuration = Random.Range(1f, 3f);
-            CurrentAction = () =>
-            {
-                waitDuration -= Time.deltaTime;
-                if (waitDuration > 0) return;
-                Wander();
-            };
-        }
-
         protected virtual void OnAlert()
         {
-            MoveBehaviour.FollowTarget(GetTarget().transform, 0f, 0.2f);
+            _targetCell = GetTarget().CurrentCell();
         }
 
-        protected void FollowTarget()
+        private void GoToTargetCell()
         {
-            if (DistanceToTarget() > 0.1f) return;
-            ReachTarget();
+            if (_targetCell == _lastTargetCell) return;
+            MoveBehaviour.GoToCell(_targetCell);
+            _lastTargetCell = _targetCell;
         }
 
-        public override void Update()
+        public override void MyUpdate()
         {
-            base.Update();
-            CheckForPlayer();
-            FollowTarget();
+            base.MyUpdate();
+            UpdateDistanceToTarget();
+            CheckCanSeeTarget();
+            GoToTargetCell();
         }
 
-        private void Wander()
+        private void CheckCanSeeTarget()
         {
-            Cell targetCell = PathingGrid.WorldToCellPosition(_originPosition);
-            targetCell = PathingGrid.GetCellNearMe(targetCell, WanderDistance);
-            MoveBehaviour.GoToCell(targetCell);
-            CurrentAction = WaitThenWander;
-            SetActionText("Wandering");
+            if (!Alerted) return;
+            bool outOfSight = Physics2D.Linecast(transform.position, GetTarget().transform.position, 1 << 8).collider != null;
+            if (outOfSight) return;
+            Cell newTargetCell = GetTarget().CurrentCell();
+            if (!newTargetCell.Reachable)
+            {
+                List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(newTargetCell.Position, 1, 1);
+                if (cellsNearMe.Count == 0) return;
+                _targetCell = cellsNearMe[0];
+                return;
+            }
+            _targetCell = newTargetCell;
         }
 
-        protected virtual void CheckForPlayer()
+        private void UpdateDistanceToTarget()
         {
-            if (Alerted) return;
-            if (DistanceToTarget() > DetectionRange) return;
-            Alert(true);
+            float distance = DistanceToTarget();
+            if (distance > LoseTargetRange) Wander(true);
+            else if (distance < DetectionRange && !Alerted) Alert(true);
         }
 
         public override void Kill()

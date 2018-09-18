@@ -56,7 +56,6 @@ namespace Game.Combat.Enemies
                 return;
             }
 
-            SetActionText("Reloading");
             float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
             CurrentAction = () =>
             {
@@ -85,7 +84,6 @@ namespace Game.Combat.Enemies
             {
                 if (!_waitingForHeal)
                 {
-                    SetActionText("Waiting for Medic");
                     medic.RequestHeal(this);
                     _waitingForHeal = true;
                 }
@@ -118,7 +116,6 @@ namespace Game.Combat.Enemies
         private void Fire()
         {
             bool automatic = Weapon().WeaponAttributes.Automatic;
-            SetActionText("Firing");
             CurrentAction = () =>
             {
                 if (!_weaponBehaviour.CanFire())

@@ -33,13 +33,12 @@ namespace Game.Combat.Enemies.Humans
             ResetCooldown();
         }
 
-        public override void Update()
+        public override void MyUpdate()
         {
-            base.Update();
+            base.MyUpdate();
             if (_firing || !Alerted) return;
             _powerShotCooldown -= Time.deltaTime;
             if (_powerShotCooldown > 0) return;
-            SetActionText("Readying powershot");
             CurrentAction = null;
             SkillAnimationController.Create("Sniper", 1f, FirePowerShot);
         }

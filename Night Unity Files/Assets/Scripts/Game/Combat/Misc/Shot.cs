@@ -19,7 +19,7 @@ namespace Game.Combat.Misc
         private float Speed = 25f;
         private static GameObject _bulletPrefab;
         private BulletTrailFade _bulletTrail;
-        private const float EnemyDamageModifier = 0.5f;
+        private const float EnemyDamageModifier = 0.3f;
 
         private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Shots", "Prefabs/Combat/Bullet");
         private float _accuracy;

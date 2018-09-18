@@ -23,9 +23,9 @@ namespace Game.Combat.Enemies.Humans
             slashObject.transform.localPosition = Vector2.zero;
         }
 
-        public override void Update()
+        public override void MyUpdate()
         {
-            base.Update();
+            base.MyUpdate();
             if (!Alerted) return;
             if (DistanceToTarget() > MinMeleeDistance) return;
             StrikePlayer();

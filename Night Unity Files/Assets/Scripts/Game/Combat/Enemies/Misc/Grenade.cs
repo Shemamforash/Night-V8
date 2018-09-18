@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
@@ -56,6 +57,7 @@ namespace Game.Combat.Enemies.Misc
             float currentTime = 0f;
             while (currentTime < timeToReach)
             {
+                if (!CombatManager.IsCombatActive()) yield return null;
                 float normalisedTime = currentTime / timeToReach;
                 transform.position = Vector2.Lerp(origin, target, normalisedTime);
                 currentTime += Time.deltaTime;

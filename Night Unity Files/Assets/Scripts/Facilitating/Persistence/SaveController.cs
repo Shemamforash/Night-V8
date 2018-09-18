@@ -79,9 +79,17 @@ namespace Facilitating.Persistence
         //Node creation
         public static XmlNode CreateChild(this XmlNode parent, string tagName)
         {
-            XmlNode newNode = _saveDoc.CreateElement(tagName);
-            parent.AppendChild(newNode);
-            return newNode;
+            try
+            {
+                XmlNode newNode = _saveDoc.CreateElement(tagName);
+                parent.AppendChild(newNode);
+                return newNode;
+            }
+            catch (XmlException e)
+            {
+                Debug.Log(tagName);
+                throw e;
+            }
         }
 
         public static void CreateChild<T>(this XmlNode parent, string tagName, T value)
@@ -90,7 +98,6 @@ namespace Facilitating.Persistence
             newNode.InnerText = value == null ? "" : value.ToString();
             return;
         }
-
 
         private static void TryCreateDirectory()
         {
@@ -110,6 +117,7 @@ namespace Facilitating.Persistence
 
         public static void QuickSave()
         {
+            Debug.Log("Quicksaved");
             Save(QuickSaveLocation);
         }
 

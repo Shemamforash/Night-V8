@@ -76,17 +76,16 @@ namespace Game.Combat.Generation
         private void GenerateFreshEnvironment()
         {
             if (_region.Generated()) return;
-            _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f));
+            _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 2f, PathingGrid.CombatAreaWidth / 1.5f));
             Generate();
             _region.Barriers = barriers;
             PathingGrid.InitialiseGrid();
             _region.MarkGenerated();
         }
 
-        private void CreateImpassablePoint(Vector2 position)
+        private void CreateImpassablePoint(Vector2 position, float radius)
         {
-            //todo ensure i block things!
-            PathingGrid.AddBlockingArea(position, 1);
+            PathingGrid.AddBlockingArea(position, radius);
         }
 
         private void GenerateShrine()
@@ -117,9 +116,8 @@ namespace Game.Combat.Generation
         protected void PlaceShrine()
         {
             if (!ShouldPlaceShrine()) return;
-            Vector2 position = FindAndRemoveValidPosition(3f);
+            Vector2 position = FindAndRemoveValidPosition(1.5f, 1f);
             _region.ShrinePosition = position;
-            PathingGrid.AddBlockingArea(position, 3.5f);
         }
 
         private void GenerateGenericRock(float radius, float radiusVariation, float smoothness, Vector2 position)
@@ -149,12 +147,13 @@ namespace Game.Combat.Generation
             new Barrier(barrierVertices, "Barrier " + GetObjectNumber(), position, barriers);
         }
 
-        protected Vector2 FindAndRemoveValidPosition(float radius = 0, bool ignoreBounds = false)
+        protected Vector2 FindAndRemoveValidPosition(float radius, float impassableRadius, bool ignoreBounds = false)
         {
             for (int i = _availablePositions.Count - 1; i >= 0; --i)
             {
-                if (!ignoreBounds && _availablePositions[i].magnitude > PathingGrid.CombatMovementDistance / 2f - radius) continue;
-                Cell c = PathingGrid.WorldToCellPosition(_availablePositions[i], false);
+                Vector2 position = _availablePositions[i];
+                if (!ignoreBounds && position.magnitude > PathingGrid.CombatMovementDistance / 2f - radius) continue;
+                Cell c = PathingGrid.WorldToCellPosition(position, false);
                 if (c == null) continue;
                 if (!c.Reachable)
                 {
@@ -164,9 +163,10 @@ namespace Game.Combat.Generation
 
                 if (radius != 0)
                 {
-                    Vector2 topLeft = new Vector2(_availablePositions[i].x - radius, _availablePositions[i].y - radius);
-                    Vector2 bottomRight = new Vector2(_availablePositions[i].x + radius, _availablePositions[i].y + radius);
+                    Vector2 topLeft = new Vector2(position.x - radius, position.y - radius);
+                    Vector2 bottomRight = new Vector2(position.x + radius, position.y + radius);
                     if (!PathingGrid.IsSpaceAvailable(topLeft, bottomRight)) continue;
+                    if (impassableRadius != 0) CreateImpassablePoint(position, impassableRadius);
                 }
 
                 _availablePositions.RemoveAt(i);
@@ -176,8 +176,9 @@ namespace Game.Combat.Generation
             throw new Exceptions.RegionPositionNotFoundException();
         }
 
-        private EnemyCampfire GenerateFire(Vector2 position)
+        private void GenerateFire()
         {
+            Vector2 position = FindAndRemoveValidPosition(0.5f, 0f);
             int numberOfStones = Random.Range(6, 10);
             float radius = 0.2f;
             int angle = 0;
@@ -191,15 +192,17 @@ namespace Game.Combat.Generation
                 angle += angleStep;
                 --numberOfStones;
             }
-
-            return new EnemyCampfire(position);
+            CreateImpassablePoint(position, 0.4f);
+            _region.Fires.Add(new EnemyCampfire(position));
         }
 
         private void GenerateRocks(int number, float minPolyWidth, float maxPolyWidth, float radiusVariation, float smoothness)
         {
             while (number > 0)
             {
-                GenerateGenericRock(Random.Range(minPolyWidth, maxPolyWidth), radiusVariation, smoothness, FindAndRemoveValidPosition());
+                float radius = Random.Range(minPolyWidth, maxPolyWidth);
+                Vector2 position = FindAndRemoveValidPosition(radius, 0, true);
+                GenerateGenericRock(radius, radiusVariation, smoothness, position);
                 --number;
             }
         }
@@ -228,7 +231,7 @@ namespace Game.Combat.Generation
 
         protected virtual void PlaceItems()
         {
-            _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 3f, PathingGrid.CombatAreaWidth / 2f));
+            _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 2f, PathingGrid.CombatAreaWidth / 2f));
             if (_region._characterHere != null)
             {
                 _availablePositions.Sort((a, b) => -a.magnitude.CompareTo(b.magnitude));
@@ -243,26 +246,34 @@ namespace Game.Combat.Generation
                 _availablePositions.Shuffle();
             }
 
-            Vector2 position = FindAndRemoveValidPosition(0.5f);
-            _region.Fires.Add(GenerateFire(position));
-            CreateImpassablePoint(position);
+
+            if (_region.GetRegionType() == RegionType.Danger)
+            {
+                int numFires = Random.Range(3, 6);
+                while (numFires > 0)
+                {
+                    --numFires;
+                    GenerateFire();
+                }
+            }
+
             //todo tidy me
             if (Random.Range(0, 10) == 0)
-                _region.HealShrinePosition = FindAndRemoveValidPosition();
+                _region.HealShrinePosition = FindAndRemoveValidPosition(1, 1);
 
             JournalEntry journalEntry = JournalEntry.GetEntry();
             if (journalEntry != null)
-                _region.Containers.Add(new JournalSource(FindAndRemoveValidPosition(), journalEntry));
+                _region.Containers.Add(new JournalSource(FindAndRemoveValidPosition(1, 1), journalEntry));
 
             for (int i = 0; i < _region.WaterSourceCount; ++i)
-                _region.Containers.Add(new WaterSource(FindAndRemoveValidPosition()));
+                _region.Containers.Add(new WaterSource(FindAndRemoveValidPosition(1, 1)));
 
             for (int i = 0; i < _region.FoodSourceCount; ++i)
-                _region.Containers.Add(new FoodSource(FindAndRemoveValidPosition()));
+                _region.Containers.Add(new FoodSource(FindAndRemoveValidPosition(1, 1)));
 
             for (int i = 0; i < _region.ResourceSourceCount; ++i)
             {
-                Loot loot = new Loot(FindAndRemoveValidPosition(), "Resource");
+                Loot loot = new Loot(FindAndRemoveValidPosition(1, 1), "Resource");
                 loot.IncrementResource(ResourceTemplate.GetResource().Name, 1);
                 _region.Containers.Add(loot);
             }

@@ -18,6 +18,7 @@ namespace Game.Gear.Armour
 
         public override XmlNode Save(XmlNode doc)
         {
+            doc = base.Save(doc);
             doc.CreateChild("Health", _plateHealth.CurrentValue());
             return doc;
         }
