@@ -45,7 +45,7 @@ namespace Game.Combat.Enemies.Humans
 
         private void Heal()
         {
-            SkillAnimationController.Create("Medic", 1.5f, () =>
+            SkillAnimationController.Create(transform, "Medic", 1.5f, () =>
             {
                 CombatManager.GetEnemiesInRange(transform.position, 2f).ForEach(e =>
                 {

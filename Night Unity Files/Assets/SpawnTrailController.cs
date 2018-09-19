@@ -70,13 +70,13 @@ public class SpawnTrailController : MonoBehaviour
         {
             if (!CombatManager.IsCombatActive())
             {
-                _explosionParticles.Pause();
-                _trailParticles.Pause();
+                _explosionParticles.PauseParticles();
+                _trailParticles.PauseParticles();
             }
             else
             {
-                _explosionParticles.Play();
-                _trailParticles.Play();
+                _explosionParticles.ResumeParticles();
+                _trailParticles.ResumeParticles();
             }
             yield return null;
         }

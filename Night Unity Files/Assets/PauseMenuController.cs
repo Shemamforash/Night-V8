@@ -114,11 +114,13 @@ public class PauseMenuController : MonoBehaviour
 
     public void ExitToDesktop()
     {
+        SaveController.QuickSave();
         Application.Quit();
     }
 
     public void ExitToMenu()
     {
+        SaveController.QuickSave();
         SceneChanger.GoToMainMenuScene();
     }
 

@@ -20,7 +20,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         protected override void Attack()
         {
-            SkillAnimationController.Create("Spawn", 2f, () =>
+            SkillAnimationController.Create(transform, "Spawn", 2f, () =>
             {
                 int enemiesToSpawn = Random.Range(_countMin + 1, _countMax + 1);
                 List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(Enemy.CurrentCell(), enemiesToSpawn, 2f, 0.5f);

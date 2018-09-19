@@ -28,19 +28,19 @@ public class WeaponAudioController : MonoBehaviour
     private void LoadClips()
     {
         if (_loaded) return;
-        _lmgShots = Resources.LoadAll<AudioClip>("Sounds/LMG/Shots");
-        _smgShots = Resources.LoadAll<AudioClip>("Sounds/SMG/Shots");
-        _rifleShots = Resources.LoadAll<AudioClip>("Sounds/Rifle/Shots");
-        _pistolShots = Resources.LoadAll<AudioClip>("Sounds/Pistol/Shots");
-        _shotgunShots = Resources.LoadAll<AudioClip>("Sounds/Shotgun/Shots");
+        _lmgShots = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/lmg/shots");
+        _smgShots = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/smg/shots");
+        _rifleShots = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/rifle/shots");
+        _pistolShots = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/pistol/shots");
+        _shotgunShots = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/shotgun/shots");
 
-        _lmgCasings = Resources.LoadAll<AudioClip>("Sounds/LMG/Casings");
-        _smgCasings = Resources.LoadAll<AudioClip>("Sounds/SMG/Casings");
-        _rifleCasings = Resources.LoadAll<AudioClip>("Sounds/Rifle/Casings");
-        _pistolCasings = Resources.LoadAll<AudioClip>("Sounds/Pistol/Casings");
-        _shotgunCasings = Resources.LoadAll<AudioClip>("Sounds/Shotgun/Casings");
+        _lmgCasings = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/lmg/casings");
+        _smgCasings = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/smg/casings");
+        _rifleCasings = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/rifle/casings");
+        _pistolCasings = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/pistol/casings");
+        _shotgunCasings = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/shotgun/casings");
 
-        _dryFireClips = Resources.LoadAll<AudioClip>("Sounds/Dryfire");
+        _dryFireClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/dryfire");
         _loaded = true;
     }
 

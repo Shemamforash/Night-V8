@@ -31,8 +31,8 @@ namespace Game.Combat.Enemies
         public override void MyUpdate()
         {
             base.MyUpdate();
-            MoveBehaviour.MyUpdate();
             PushAwayFromNeighbors();
+            MoveBehaviour.MyUpdate();
             UpdateRotation();
             UpdateMarkTime();
             if (MoveBehaviour.Moving()) return;

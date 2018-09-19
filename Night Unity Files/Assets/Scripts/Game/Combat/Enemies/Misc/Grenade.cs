@@ -10,7 +10,7 @@ namespace Game.Combat.Enemies.Misc
 {
     public class Grenade : MonoBehaviour
     {
-        private static readonly float MaxSpeed = 2f;
+        private static readonly float ThrowForce = 5f;
         private static readonly ObjectPool<Grenade> _grenadePool = new ObjectPool<Grenade>("Grenades", "Prefabs/Combat/Enemies/Grenade");
         private readonly int _damage = 20;
         private Action<List<EnemyBehaviour>> OnDetonate;
@@ -52,18 +52,12 @@ namespace Game.Combat.Enemies.Misc
 
         private IEnumerator MoveToPosition(Vector2 origin, Vector2 target)
         {
-            float distance = Vector2.Distance(origin, target);
-            float timeToReach = distance / MaxSpeed;
-            float currentTime = 0f;
-            while (currentTime < timeToReach)
-            {
-                if (!CombatManager.IsCombatActive()) yield return null;
-                float normalisedTime = currentTime / timeToReach;
-                transform.position = Vector2.Lerp(origin, target, normalisedTime);
-                currentTime += Time.deltaTime;
-                yield return null;
-            }
-
+            Vector2 direction = target - origin;
+            float distance = direction.magnitude;
+            direction.Normalize();
+            Rigidbody2D rb2d = GetComponent<Rigidbody2D>();
+            rb2d.AddForce(direction * distance * ThrowForce);
+            while (rb2d.velocity.magnitude > 0.001f) yield return null;
             Detonate();
         }
 

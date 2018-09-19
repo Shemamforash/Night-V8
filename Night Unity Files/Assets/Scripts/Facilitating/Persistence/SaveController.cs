@@ -73,7 +73,7 @@ namespace Facilitating.Persistence
 
         public static bool SaveExists()
         {
-            return File.Exists(GameSaveLocation);
+            return File.Exists(GameSaveLocation) || File.Exists(QuickSaveLocation);
         }
 
         //Node creation

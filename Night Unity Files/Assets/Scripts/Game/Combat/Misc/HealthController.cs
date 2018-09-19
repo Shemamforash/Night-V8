@@ -12,7 +12,8 @@ namespace Game.Combat.Misc
         private readonly Number _healthRemaining = new Number();
         private ITakeDamageInterface _healthyThing;
         private event Action<float> OnTakeDamage;
-        private event Action<float> OnHeal;
+        private Action<float> OnHeal;
+        private Action OnKill;
 
         private UIHealthBarController GetHealthBarController()
         {
@@ -43,7 +44,12 @@ namespace Game.Combat.Misc
             _healthRemaining.Decrement(amount);
             GetHealthBarController()?.FadeNewHealth();
             OnTakeDamage?.Invoke(amount);
-            if (_healthRemaining.ReachedMin()) _healthyThing?.Kill();
+            if (_healthRemaining.ReachedMin())
+            {
+                OnKill?.Invoke();
+                _healthyThing?.Kill();
+            }
+
             UpdateHealth();
         }
 
@@ -60,9 +66,14 @@ namespace Game.Combat.Misc
             OnTakeDamage += a;
         }
 
-        public void AddOnHeal(Action<float> a)
+        public void SetOnKill(Action a)
         {
-            OnHeal += a;
+            OnKill = a;
+        }
+
+        public void SetOnHeal(Action<float> a)
+        {
+            OnHeal = a;
         }
 
         public float GetNormalisedHealthValue()

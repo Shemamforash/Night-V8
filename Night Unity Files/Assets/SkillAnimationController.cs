@@ -17,6 +17,7 @@ public class SkillAnimationController : MonoBehaviour
     private float _glowTime = 1f;
     private float _fadeTime = 2f;
     private Action _callback;
+    private Transform _followTransform;
 
     public void Awake()
     {
@@ -25,18 +26,26 @@ public class SkillAnimationController : MonoBehaviour
         Glow();
     }
 
-    public static void Create(string spriteName, float warmUpTime, Action callback)
+    public static void Create(Transform transform, string spriteName, float warmUpTime, Action callback)
     {
         SkillAnimationController skillAnimation = _skillPool.Create();
-        skillAnimation.Initialise(spriteName, warmUpTime, callback);
+        skillAnimation.Initialise(transform, spriteName, warmUpTime, callback);
+        skillAnimation.transform.position = transform.position;
     }
 
-    private void Initialise(string spriteName, float warmUpTime, Action callback)
+    private void Initialise(Transform transform, string spriteName, float warmUpTime, Action callback)
     {
         _callback = callback;
         _warmUpTime = warmUpTime;
+        _followTransform = transform;
         AssignSprite(spriteName);
         Glow();
+    }
+
+    public void LateUpdate()
+    {
+        if (_followTransform == null) return;
+        transform.position = _followTransform.position;
     }
 
     private void Glow()

@@ -67,11 +67,12 @@ namespace Game.Characters
 
         public void Start()
         {
-            foreach (Player player in Characters)
+            for (int i = 0; i < Characters.Count; i++)
             {
+                Player player = Characters[i];
                 if (player.CharacterView() != null) continue;
                 Transform characterAreaTransform = GameObject.Find("Character Section").transform;
-                if (Items().Count > 0) Helper.AddDelineator(characterAreaTransform);
+                if (i > 1) Helper.AddDelineator(characterAreaTransform);
                 GameObject characterObject = Helper.InstantiateUiObject("Prefabs/Character Template", characterAreaTransform);
                 characterObject.GetComponent<CharacterView>().SetPlayer(player);
                 characterObject.name = player.Name;

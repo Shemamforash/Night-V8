@@ -6,7 +6,7 @@ using UnityEngine.Audio;
 [RequireComponent(typeof(AudioSource))]
 public class ButtonClickListener : MonoBehaviour
 {
-    private static AudioClip[] _buttonSelectClips;
+    private static AudioClip _buttonSelectClip;
     private static AudioSource _audioSource;
     private static bool _suppressClick;
 
@@ -18,7 +18,7 @@ public class ButtonClickListener : MonoBehaviour
 
     public static void Click()
     {
-        if (_buttonSelectClips == null) _buttonSelectClips = Resources.LoadAll<AudioClip>("Sounds/Button Clicks");
+        if (_buttonSelectClip == null) _buttonSelectClip = Helper.LoadFileFromAssetBundle<AudioClip>("misc","Button Clicks");
         if (_suppressClick)
         {
             _suppressClick = false;
@@ -26,7 +26,7 @@ public class ButtonClickListener : MonoBehaviour
         }
 
         _audioSource.pitch = Random.Range(0.9f, 1f);
-        _audioSource.PlayOneShot(_buttonSelectClips.RandomElement());
+        _audioSource.PlayOneShot(_buttonSelectClip);
     }
 
     public static void SuppressClick()

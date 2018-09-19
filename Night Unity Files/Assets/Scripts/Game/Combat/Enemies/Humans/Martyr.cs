@@ -1,37 +1,40 @@
 ﻿using Game.Combat.Misc;
+using UnityEngine;
 
 namespace Game.Combat.Enemies.Humans
 {
     public class Martyr : UnarmedBehaviour
     {
         private bool _detonated;
+        private const float MinExplodeDistance = 0.2f;
 
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            HealthController.AddOnTakeDamage(damage =>
-            {
-                if (_detonated) return;
-                if (HealthController.GetCurrentHealth() != 0) return;
-                Detonate();
-            });
+            HealthController.SetOnKill(Detonate);
         }
 
-        protected override void OnAlert()
+        public override void MyUpdate()
         {
-            //todo FollowTarget();
+            base.MyUpdate();
+            if (!Alerted) return;
+            if (DistanceToTarget() > MinExplodeDistance) return;
+            Kill();
         }
 
-        protected override void ReachTarget()
+        public override void Kill()
         {
-            if (!_detonated) Detonate();
+            Detonate();
+            base.Kill();
         }
 
         private void Detonate()
         {
+            if (_detonated) return;
             _detonated = true;
-            SkillAnimationController.Create("Martyr", 2f, () =>
+            SkillAnimationController.Create(transform, "Martyr", 0.5f, () =>
             {
+                Debug.Log("Fart" + transform.position);
                 Explosion.CreateExplosion(transform.position, 50, 2).InstantDetonate();
             });
         }

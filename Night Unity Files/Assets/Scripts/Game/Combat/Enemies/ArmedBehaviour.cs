@@ -19,13 +19,13 @@ namespace Game.Combat.Enemies
             SetHealBehaviour();
             if (Weapon() == null) Debug.Log(enemy.Template.EnemyType + " " + enemy.Template.HasWeapon);
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
-            IdealWeaponDistance = Weapon().CalculateIdealDistance();
+            DistanceFromTargetCell = Weapon().CalculateIdealDistance();
         }
 
         protected override void OnAlert()
         {
             TryFire();
-            MoveBehaviour.FollowTarget(GetTarget().transform, IdealWeaponDistance * 0.5f, IdealWeaponDistance * 1.5f);
+//            MoveBehaviour.FollowTarget(GetTarget().transform, IdealWeaponDistance * 0.5f, IdealWeaponDistance * 1.5f);
         }
 
         protected void TryFire()
@@ -126,7 +126,7 @@ namespace Game.Combat.Enemies
                     return;
                 }
 
-                
+
                 _weaponBehaviour.StartFiring();
             };
         }

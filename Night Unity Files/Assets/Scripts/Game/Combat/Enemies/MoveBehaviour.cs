@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Game.Combat.Generation;
 using SamsHelper.Libraries;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
@@ -11,29 +12,59 @@ namespace Game.Combat.Enemies
     [RequireComponent(typeof(MovementController))]
     public class MoveBehaviour : MonoBehaviour
     {
-        private float _minDistance, _maxDistance;
+        private static readonly List<List<MoveBehaviour>> _moveBuckets = new List<List<MoveBehaviour>>();
+        private const int BucketSize = 15;
+        private static int _currentUpdateBucket;
+        
         private Cell _currentCell;
-        private Cell _destinationCell;
+        private Cell _targetCell;
         private Cell _lastTargetCell;
         private Cell _nextCell;
-        private float _timeOffset;
-        private static float _timeOffsetCounter;
 
-        private float _currentTime;
         private float _targetDistance;
         private bool _reachedTarget;
 
         private MovementController _movementController;
         private List<Cell> _route = new List<Cell>();
         private bool _shouldMove;
-        private Transform _followTarget;
+
 
         public void Awake()
         {
             _movementController = GetComponent<MovementController>();
-            _timeOffset = _timeOffsetCounter;
-            _timeOffsetCounter += 0.02f;
-            if (_timeOffsetCounter >= 1) _timeOffsetCounter = 0f;
+            AddToBucket();
+        }
+
+        private void OnDestroy()
+        {
+            RemoveFromBucket();
+        }
+
+        private void AddToBucket()
+        {
+            bool added = false;
+            foreach (List<MoveBehaviour> bucket in _moveBuckets)
+            {
+                if (bucket.Count >= BucketSize) continue;
+                bucket.Add(this);
+                added = true;
+                break;
+            }
+
+            if (added) return;
+            List<MoveBehaviour> newBucket = new List<MoveBehaviour>();
+            newBucket.Add(this);
+            _moveBuckets.Add(newBucket);
+        }
+
+        private void RemoveFromBucket()
+        {
+            List<MoveBehaviour> bucket = _moveBuckets.Find(b => b.Contains(this));
+            Assert.IsNotNull(bucket);
+            bucket.Remove(this);
+            if (bucket.Count != 0) return;
+            _moveBuckets.Remove(bucket);
+            if (_moveBuckets.Count == 0) _currentUpdateBucket = 0;
         }
 
         public bool MoveToCover()
@@ -51,12 +82,13 @@ namespace Game.Combat.Enemies
             _currentCell = PathingGrid.WorldToCellPosition(transform.position);
         }
 
-        public bool Moving() => _destinationCell != null;
+        public bool Moving() => _targetCell != null;
 
         public void GoToCell(Cell targetCell, float distanceFromTarget = 0)
         {
             if (targetCell == null || !targetCell.Reachable) return;
-            _destinationCell = targetCell;
+            _targetCell = targetCell;
+            _pathNeedsUpdating = true;
             _targetDistance = distanceFromTarget;
         }
 
@@ -67,60 +99,42 @@ namespace Game.Combat.Enemies
             _reachedTarget = Vector2.Distance(_currentCell.Position, _nextCell.Position) < 0.5f;
         }
 
+        public static void UpdateMoveBehaviours()
+        {
+            if (_moveBuckets.Count == 0) return;
+            _moveBuckets[_currentUpdateBucket].ForEach(m => m.UpdatePath());
+            ++_currentUpdateBucket;
+            if (_currentUpdateBucket < _moveBuckets.Count) return;
+            _currentUpdateBucket = 0;
+        }
+
         public void MyUpdate()
         {
-            UpdateTargetCell();
-            CheckForRequiredPathfind();
             Move();
         }
 
-        private void UpdateTargetCell()
+        private void DoStraightLinePath()
         {
-            if (_followTarget == null) return;
-            if (!_outOfSight) return;
-            _followCell = PathingGrid.WorldToCellPosition(_followTarget.position);
-            if (_followCell.Reachable) return;
-            List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(_followCell.Position, 1, 1);
-            if (cellsNearMe.Count == 0) return;
-            _followCell = cellsNearMe[0];
+            Vector2 difference = _targetCell.Position - _currentCell.Position;
+            float distance = difference.magnitude - _targetDistance;
+            Vector2 direction = difference.normalized;
+            Vector2 targetPosition = _currentCell.Position + direction * distance;
+            _targetCell = PathingGrid.WorldToCellPosition(targetPosition);
+            Debug.DrawLine(_currentCell.Position, _targetCell.Position, Color.yellow, 1f);
+            _route = new List<Cell>(new[] {_currentCell, _targetCell});
         }
 
-        private void UpdateFollowTargetPosition()
+        private void UpdatePath()
         {
-            if (_followTarget == null) return;
-            if (_outOfSight)
-            {
-                GoToCell(_followCell, Random.Range(1, 3));
-                return;
-            }
-
-            Cell targetCell = PathingGrid.WorldToCellPosition(_followTarget.position);
-            if (!targetCell.Reachable) return;
-            float distance = Vector2.Distance(transform.position, _followTarget.transform.position);
-            if (distance > _maxDistance)
-            {
-                GoToCell(targetCell, Random.Range(_minDistance, _maxDistance));
-                return;
-            }
-
-            if (distance < _minDistance)
-            {
-                Cell cell = PathingGrid.GetCellNearMe(transform.position, _maxDistance / 2f, _minDistance);
-                if (cell == null) return;
-                GoToCell(cell);
-            }
-        }
-
-        public void FollowTarget(Transform target, float minDistance, float maxDistance)
-        {
-            _followTarget = target;
-            _minDistance = minDistance;
-            _maxDistance = maxDistance;
-        }
-
-        public void StopFollowing()
-        {
-            _followTarget = null;
+            if (_targetCell == null || !_pathNeedsUpdating) return;
+            _pathNeedsUpdating = false;
+            _lastTargetCell = _targetCell;
+            UpdateCurrentCell();
+            bool outOfSight = Physics2D.Linecast(transform.position, _targetCell.Position, 1 << 8).collider != null;
+            Debug.DrawLine(_currentCell.Position, _targetCell.Position, outOfSight ? Color.red : Color.green, 1f);
+            if (outOfSight) DoPathfind();
+            else DoStraightLinePath();
+            Reposition();
         }
 
         private void MoveToNextCell()
@@ -131,7 +145,7 @@ namespace Game.Combat.Enemies
 
         private Queue<Cell> _routeQueue;
         private Cell _followCell;
-        private bool _outOfSight;
+        private bool _pathNeedsUpdating;
 
         private void Move()
         {
@@ -140,7 +154,7 @@ namespace Game.Combat.Enemies
             {
                 if (_routeQueue.Count == 0)
                 {
-                    _destinationCell = null;
+                    _targetCell = null;
                     _shouldMove = false;
                     return;
                 }
@@ -156,7 +170,7 @@ namespace Game.Combat.Enemies
             _routeQueue = new Queue<Cell>(_route);
             if (_routeQueue.Count == 0)
             {
-                _destinationCell = null;
+                _targetCell = null;
                 return;
             }
 
@@ -164,23 +178,9 @@ namespace Game.Combat.Enemies
             _shouldMove = true;
         }
 
-        private void CheckForRequiredPathfind()
+        private void DoPathfind()
         {
-            if (_currentTime > _timeOffsetCounter)
-            {
-                _currentTime -= Time.deltaTime;
-                return;
-            }
-
-            UpdateFollowTargetPosition();
-            _currentTime = 0.5f + _timeOffsetCounter;
-            if (_destinationCell == null) return;
-            if (_destinationCell == _lastTargetCell) return;
-            _lastTargetCell = _destinationCell;
-            UpdateCurrentCell();
-            Debug.DrawLine(_currentCell.Position, _destinationCell.Position, _outOfSight ? Color.red : Color.green, 1f);
-            _route = PathingGrid.JPS(_currentCell, _destinationCell);
-
+            _route = PathingGrid.JPS(_currentCell, _targetCell);
             if (_route.Count == 0) return;
             if (_targetDistance != 0)
             {
@@ -188,7 +188,7 @@ namespace Game.Combat.Enemies
                 {
                     Cell c = _route[i];
                     if (c == null) return;
-                    float distance = Vector2.Distance(c.Position, _destinationCell.Position);
+                    float distance = Vector2.Distance(c.Position, _targetCell.Position);
                     if (distance < _targetDistance)
                     {
                         _route.RemoveAt(i);
@@ -201,14 +201,6 @@ namespace Game.Combat.Enemies
             }
 
             PathingGrid.SmoothRoute(_route);
-            for (int i = 1; i < _route.Count; i++)
-            {
-                Vector2 last = new Vector2(_route[i - 1].x, _route[i - 1].y);
-                Vector2 current = new Vector2(_route[i].x, _route[i].y);
-                Debug.DrawLine(last, current, Color.green, 5f);
-            }
-
-            Reposition();
         }
     }
 }

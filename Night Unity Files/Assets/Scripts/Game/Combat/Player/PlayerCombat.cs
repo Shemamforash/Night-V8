@@ -171,7 +171,7 @@ namespace Game.Combat.Player
                         _dashPressed = true;
                         break;
                     case InputAxis.Inventory:
-                        UiAreaInventoryController.OpenInventory();
+                        UiGearMenuController.ShowArmourMenu();
                         break;
                     case InputAxis.TakeItem:
                         EventTextController.Activate();
@@ -316,6 +316,7 @@ namespace Game.Combat.Player
         {
             base.TakeExplosionDamage(damage, direction);
             TryExplode();
+            Shake(damage * 20);
         }
 
         public override void TakeRawDamage(float damage, Vector2 direction)
@@ -398,7 +399,7 @@ namespace Game.Combat.Player
             _adrenalineLevel.SetCurrentValue(0f);
 
             HealthController.SetInitialHealth(Player.Attributes.CalculateInitialHealth(), this, Player.Attributes.CalculateMaxHealth());
-            HealthController.AddOnHeal(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
+            HealthController.SetOnHeal(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
             HealthController.AddOnTakeDamage(a => HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue()));
 
             HeartBeatController.SetHealth(HealthController.GetNormalisedHealthValue());

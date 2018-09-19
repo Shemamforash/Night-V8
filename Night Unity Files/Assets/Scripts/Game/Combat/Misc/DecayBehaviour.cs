@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Game.Combat.Generation;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Misc
@@ -44,8 +45,8 @@ namespace Game.Combat.Misc
             _particles.Emit(50);
             while (_particles.particleCount > 0)
             {
-                if (!CombatManager.IsCombatActive()) _particles.Pause();
-                else _particles.Play();
+                if (!CombatManager.IsCombatActive()) _particles.PauseParticles();
+                else _particles.ResumeParticles();
                 yield return null;
             }
 

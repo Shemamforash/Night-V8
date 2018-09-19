@@ -1,4 +1,7 @@
-﻿using Game.Combat.Generation;
+﻿using System.Collections.Generic;
+using Game.Combat.Generation;
+using Game.Global;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Humans
@@ -19,29 +22,34 @@ namespace Game.Combat.Enemies.Humans
                     || normalHealthBefore > 0.75f && currentNormalHealth <= 0.75f)
                 {
                     CurrentAction = null;
-                    SkillAnimationController.Create("Warlord", ReinforceCallTime, SummonEnemies);
+                    SkillAnimationController.Create(transform, "Warlord", ReinforceCallTime, SummonEnemies);
                 }
             });
         }
 
         private void SummonEnemies()
         {
-            CombatManager.QueueEnemyToAdd(EnemyType.Sentinel);
-            switch (Random.Range(0, 4))
+            int reinforcementSize = WorldState.Difficulty() / 10 + 2;
+            List<EnemyTemplate> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
+            List<EnemyType> enemiesToSpawn = new List<EnemyType>();
+            while (reinforcementSize > 0)
             {
-                case 0:
-                    CombatManager.QueueEnemyToAdd(EnemyType.Sentinel);
+                allowedEnemies.Shuffle();
+                foreach (EnemyTemplate template in allowedEnemies)
+                {
+                    if (template.Value > reinforcementSize) continue;
+                    enemiesToSpawn.Add(template.EnemyType);
+                    reinforcementSize -= template.Value;
                     break;
-                case 1:
-                    CombatManager.QueueEnemyToAdd(EnemyType.Sniper);
-                    break;
-                case 2:
-                    CombatManager.QueueEnemyToAdd(EnemyType.Martyr);
-                    break;
-                case 3:
-                    CombatManager.QueueEnemyToAdd(EnemyType.Medic);
-                    break;
+                }
             }
+
+            enemiesToSpawn.ForEach(type =>
+            {
+                Vector2 spawnPosition = PathingGrid.GetCellNearMe(transform.position, 3).Position;
+                SpawnTrailController.Create(transform.position, spawnPosition, type);
+            });
+
             TryFire();
         }
     }

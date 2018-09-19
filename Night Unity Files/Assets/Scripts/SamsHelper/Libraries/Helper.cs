@@ -15,6 +15,18 @@ namespace SamsHelper.Libraries
 {
     public static class Helper
     {
+        public static void PauseParticles(this ParticleSystem ps)
+        {
+            ParticleSystem.MainModule main = ps.main;
+            main.simulationSpeed = 0;
+        }
+
+        public static void ResumeParticles(this ParticleSystem ps)
+        {
+            ParticleSystem.MainModule main = ps.main;
+            main.simulationSpeed = 1;
+        }
+        
         public static void DrawLine(this Transform transform, Vector2 other, Color color, float duration)
         {
             transform.position.DrawLine(other, color, duration);
@@ -38,11 +50,30 @@ namespace SamsHelper.Libraries
             return mousePos;
         }
 
+        private static List<AssetBundle> _loadedAssetBundles = new List<AssetBundle>();
+        
         public static T[] LoadAllFilesFromAssetBundle<T>(string bundleName) where T : Object
         {
-            AssetBundle myLoadedAssetBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, bundleName));
+            AssetBundle myLoadedAssetBundle = LoadAssetBundle(bundleName);
             return myLoadedAssetBundle.LoadAllAssets<T>();
         }
+
+        private static AssetBundle LoadAssetBundle(string bundleName)
+        {
+            AssetBundle myLoadedAssetBundle = _loadedAssetBundles.FirstOrDefault(b => b.name == bundleName);
+            if (myLoadedAssetBundle != null) return myLoadedAssetBundle;
+            myLoadedAssetBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, bundleName));
+            _loadedAssetBundles.Add(myLoadedAssetBundle);
+            return myLoadedAssetBundle;
+        }
+
+        public static T LoadFileFromAssetBundle<T>(string bundleName, string assetName) where T : Object
+        {
+            AssetBundle myLoadedAssetBundle = LoadAssetBundle(bundleName);
+            return myLoadedAssetBundle.LoadAsset<T>(assetName);
+        } 
+
+        public static float StartingTime => _startingTime;
 
         public static bool OnScreen(this GameObject gameObject)
         {

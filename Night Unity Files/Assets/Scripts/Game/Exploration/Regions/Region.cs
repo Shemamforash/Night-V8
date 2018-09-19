@@ -291,9 +291,6 @@ namespace Game.Exploration.Regions
             int difficulty = WorldState.Difficulty();
 
             int size = daysSpent + WorldState.CurrentLevel() * 5;
-            int minSize = Mathf.CeilToInt(size / 2f);
-            int maxSize = Mathf.CeilToInt(size * 1.5f);
-            size = Random.Range(minSize, maxSize);
 
             if (difficulty >= 20)
             {

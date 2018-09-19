@@ -40,7 +40,7 @@ namespace Game.Combat.Enemies.Humans
             _powerShotCooldown -= Time.deltaTime;
             if (_powerShotCooldown > 0) return;
             CurrentAction = null;
-            SkillAnimationController.Create("Sniper", 1f, FirePowerShot);
+//            SkillAnimationController.Create("Sniper", 1f, FirePowerShot);
         }
     }
 }

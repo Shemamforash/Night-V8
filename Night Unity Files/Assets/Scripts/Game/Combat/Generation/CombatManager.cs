@@ -12,9 +12,11 @@ using Game.Exploration.Weather;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
@@ -38,6 +40,7 @@ namespace Game.Combat.Generation
         public bool _drawGizmos;
         private TextMeshProUGUI _regionNameText;
         private static bool _paused;
+        private Image _regionUnderline;
 
         public static bool AllEnemiesDead() => Instance()._enemies.Count == 0;
 
@@ -52,6 +55,7 @@ namespace Game.Combat.Generation
             _instance = this;
             GameObject regionNameObject = GameObject.Find("Screen Fader");
             _regionNameText = regionNameObject.FindChildWithName<TextMeshProUGUI>("Text");
+            _regionUnderline = regionNameObject.FindChildWithName<Image>("Underline");
             _regionNameText.text = _currentRegion.Name;
             _paused = false;
         }
@@ -59,13 +63,14 @@ namespace Game.Combat.Generation
         public void Update()
         {
             if (!IsCombatActive()) return;
+            MoveBehaviour.UpdateMoveBehaviours();
             PlayerCombat.Instance.MyUpdate();
             for (int i = _enemies.Count - 1; i >= 0; --i)
             {
                 _enemies[i].MyUpdate();
             }
         }
-        
+
         private static CombatManager Instance()
         {
             if (_instance == null) _instance = FindObjectOfType<CombatManager>();
@@ -247,6 +252,7 @@ namespace Game.Combat.Generation
 
             _inCombat = false;
             Instance()._regionNameText.text = "";
+            Instance()._regionUnderline.color = UiAppearanceController.InvisibleColour;
             PlayerCombat.Instance.ExitCombat();
             if (!returnToMap) return;
             SceneChanger.GoToMapScene();

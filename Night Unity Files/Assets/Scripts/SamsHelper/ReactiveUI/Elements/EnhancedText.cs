@@ -25,6 +25,7 @@ namespace SamsHelper.ReactiveUI.Elements
         public void Awake()
         {
             _text = GetComponent<TextMeshProUGUI>();
+            _text.raycastTarget = false;
             _text.richText = true;
             _text.extraPadding = true;
             _text.font = UiAppearanceController.GetFont();

@@ -26,7 +26,7 @@ namespace Game.Combat.Misc
             if (_footstepParent == null) _footstepParent = GameObject.Find("World").transform.Find("Footsteps");
             _audioSource = GetComponent<AudioSource>();
             _audioSource.volume = 0.4f;
-            _audioClips = Resources.LoadAll<AudioClip>("Sounds/Footsteps");
+            _audioClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/footsteps");
             _nextClip = _audioClips.Length + 1;
         }
 

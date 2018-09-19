@@ -9,7 +9,7 @@ public class DroneController : MonoBehaviour
 
     public void Awake()
     {
-        if (_drones == null) _drones = Resources.LoadAll<AudioClip>("Sounds/Drones");
+        if (_drones == null) _drones = Helper.LoadAllFilesFromAssetBundle<AudioClip>("drones");
         _crossFader = GetComponent<CrossFader>();
         _crossFader.SetCrossFadeDuration(CrossFadeDuration);
         _crossFader.SetMaxVolume(0.6f);

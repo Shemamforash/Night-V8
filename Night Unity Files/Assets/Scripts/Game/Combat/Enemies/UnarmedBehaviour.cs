@@ -16,6 +16,8 @@ namespace Game.Combat.Enemies
         private Cell _originCell;
         protected float WanderDistance = 3;
         private Cell _targetCell, _lastTargetCell;
+        protected float DistanceFromTargetCell;
+        private bool _wandering;
 
         public override void Initialise(Enemy enemy)
         {
@@ -76,7 +78,7 @@ namespace Game.Combat.Enemies
         private void GoToTargetCell()
         {
             if (_targetCell == _lastTargetCell) return;
-            MoveBehaviour.GoToCell(_targetCell);
+            MoveBehaviour.GoToCell(_targetCell, DistanceFromTargetCell);
             _lastTargetCell = _targetCell;
         }
 
@@ -84,15 +86,13 @@ namespace Game.Combat.Enemies
         {
             base.MyUpdate();
             UpdateDistanceToTarget();
-            CheckCanSeeTarget();
+            UpdateTargetCell();
             GoToTargetCell();
         }
 
-        private void CheckCanSeeTarget()
+        private void UpdateTargetCell()
         {
             if (!Alerted) return;
-            bool outOfSight = Physics2D.Linecast(transform.position, GetTarget().transform.position, 1 << 8).collider != null;
-            if (outOfSight) return;
             Cell newTargetCell = GetTarget().CurrentCell();
             if (!newTargetCell.Reachable)
             {
@@ -101,13 +101,14 @@ namespace Game.Combat.Enemies
                 _targetCell = cellsNearMe[0];
                 return;
             }
+
             _targetCell = newTargetCell;
         }
 
         private void UpdateDistanceToTarget()
         {
             float distance = DistanceToTarget();
-            if (distance > LoseTargetRange) Wander(true);
+            if (Alerted && distance > LoseTargetRange) Wander(true);
             else if (distance < DetectionRange && !Alerted) Alert(true);
         }
 

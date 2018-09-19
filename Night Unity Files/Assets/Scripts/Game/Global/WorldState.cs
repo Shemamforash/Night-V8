@@ -92,12 +92,12 @@ namespace Game.Global
         public static void ResetWorld()
         {
             _homeInventory = new CharacterManager();
-            DaysSpentHere = 0;
+            DaysSpentHere = 10;
             _currentLevel = 1;
             Days = 0;
             Hours = 6;
             Minutes = 0;
-            _difficulty = 0;
+            _difficulty = 30;
             _isNight = false;
             _isPaused = false;
             Seed = Random.Range(0, int.MaxValue);

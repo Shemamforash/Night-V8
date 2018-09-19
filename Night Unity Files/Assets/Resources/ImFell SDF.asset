@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -915,23 +915,37 @@ MonoBehaviour:
   m_kerningInfo:
     kerningPairs: []
   m_kerningPair:
-    AscII_Left: 0
-    AscII_Right: 0
-    XadvanceOffset: 0
+    m_FirstGlyph: 0
+    m_FirstGlyphAdjustments:
+      xPlacement: 0
+      yPlacement: 0
+      xAdvance: 0
+      yAdvance: 0
+    m_SecondGlyph: 0
+    m_SecondGlyphAdjustments:
+      xPlacement: 0
+      yPlacement: 0
+      xAdvance: 0
+      yAdvance: 0
+    xOffset: 0
   fallbackFontAssets: []
-  fontCreationSettings:
-    fontSourcePath: 
-    fontSizingMode: 0
-    fontSize: 0
-    fontPadding: 0
-    fontPackingMode: 0
-    fontAtlasWidth: 0
-    fontAtlasHeight: 0
-    fontCharacterSet: 0
+  m_CreationSettings:
+    sourceFontFileName: 
+    sourceFontFileGUID: 
+    pointSizeSamplingMode: 0
+    pointSize: 0
+    padding: 0
+    packingMode: 0
+    atlasWidth: 0
+    atlasHeight: 0
+    characterSetSelectionMode: 0
+    characterSequence: 
+    referencedFontAssetGUID: 
+    referencedTextAssetGUID: 
     fontStyle: 0
-    fontStlyeModifier: 0
-    fontRenderMode: 0
-    fontKerning: 0
+    fontStyleModifier: 0
+    renderMode: 0
+    includeFontFeatures: 0
   fontWeights:
   - regularTypeface: {fileID: 0}
     italicTypeface: {fileID: 0}
@@ -963,10 +977,10 @@ MonoBehaviour:
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: ImFell SDF Material
-  m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
+  m_Shader: {fileID: 4800000, guid: fe393ace9b354375a9cb14cdbbc28be4, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -1008,6 +1022,7 @@ Material:
     - _BumpOutline: 0
     - _ColorMask: 15
     - _Diffuse: 0.5
+    - _DiffusePower: 1
     - _FaceDilate: 0
     - _FaceUVSpeedX: 0
     - _FaceUVSpeedY: 0
@@ -1049,6 +1064,7 @@ Material:
     - _WeightNormal: 0
     m_Colors:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
     - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
@@ -1061,7 +1077,7 @@ Material:
 --- !u!28 &28870675824793758
 Texture2D:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: ImFell SDF Atlas
   m_ImageContentsHash:
@@ -1076,6 +1092,8 @@ Texture2D:
   m_TextureFormat: 1
   m_MipCount: 1
   m_IsReadable: 0
+  m_StreamingMipmaps: 0
+  m_StreamingMipmapsPriority: 0
   m_AlphaIsTransparency: 0
   m_ImageCount: 1
   m_TextureDimension: 2

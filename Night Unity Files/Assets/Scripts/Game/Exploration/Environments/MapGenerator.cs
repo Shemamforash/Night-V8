@@ -318,19 +318,8 @@ namespace Game.Exploration.Environment
                 if (quantity == 0) break;
             }
 
-            if (quantity > 0)
-            {
-                _regions.Shuffle();
-                foreach (Region region in _regions)
-                {
-                    if (region.GetRegionType() != RegionType.None) continue;
-                    region.SetRegionType(type);
-                    --quantity;
-                    if (quantity == 0) break;
-                }
-            }
-
-            Assert.IsTrue(quantity == 0);
+            if (quantity <= 0) return;
+            DistributeNodeTypes(type, quantity, minDepth - 1, false);
         }
 
         private static void SetWaterQuantities()

@@ -52,8 +52,8 @@ public class InsectBehaviour : MonoBehaviour
         emission.rateOverDistance = 0f;
         while (particles.particleCount > 0)
         {
-            if (!CombatManager.IsCombatActive()) particles.Pause();
-            else particles.Play();
+            if (!CombatManager.IsCombatActive()) particles.PauseParticles();
+            else particles.ResumeParticles();
             yield return null;
         }
 

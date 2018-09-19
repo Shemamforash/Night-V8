@@ -7,7 +7,7 @@
 
         protected override void Attack()
         {
-            SkillAnimationController.Create("Beam", 1f, () =>
+            SkillAnimationController.Create(transform, "Beam", 1f, () =>
             {
                 _beamController = BeamController.Create(transform);
                 _beamController.SetBeamWidth(BeamWidth);

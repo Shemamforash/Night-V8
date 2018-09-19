@@ -28,10 +28,4 @@ public class UiAreaInventoryController : IInputListener
     public void OnDoubleTap(InputAxis axis, float direction)
     {
     }
-
-    public static void OpenInventory()
-    {
-        UiGearMenuController.ShowConsumableMenu();
-        MenuStateMachine.ShowMenu("Inventories");
-    }
 }

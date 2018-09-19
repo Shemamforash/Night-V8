@@ -95,8 +95,6 @@ namespace SamsHelper.ReactiveUI.Elements
             if (_borderPrefab == null) _borderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border");
             _border = Instantiate(_borderPrefab).GetComponent<UIBorderController>();
             _border.transform.SetParent(transform, false);
-            
-            if(transform.parent.parent.name == "Left Plate") Debug.Log("fart");
         }
 
         private void Enter()

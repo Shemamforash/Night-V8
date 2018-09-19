@@ -17,24 +17,17 @@ namespace Facilitating.MenuNavigation
     {
         private CanvasGroup _menuCanvasGroup;
         private static bool _shownSplashScreen;
-        private Image _loadingIcon;
         private CanvasGroup _logo;
         private Sequence _fadeInSequence;
-        private bool _starting;
         private static bool _seenIntro;
-        public bool Load;
+        private GameController _gameController;
 
-        private void CacheGameobjects()
+        private void CacheGameObjects()
         {
+            _gameController = gameObject.GetComponent<GameController>();
             _menuCanvasGroup = gameObject.FindChildWithName<CanvasGroup>("Menu Canvas Group");
-            _logo = gameObject.FindChildWithName<CanvasGroup>("Logo");
-            _loadingIcon = gameObject.FindChildWithName<Image>("Loading Icon");
-        }
-
-        private void ResetAppearance()
-        {
-            _loadingIcon.fillAmount = 0;
             _menuCanvasGroup.alpha = 0f;
+            _logo = gameObject.FindChildWithName<CanvasGroup>("Logo");
             _logo.alpha = 0f;
         }
 
@@ -49,28 +42,29 @@ namespace Facilitating.MenuNavigation
                 _fadeInSequence.Append(_logo.DOFade(0f, 1f));
                 _seenIntro = true;
             }
-
             _fadeInSequence.Join(_menuCanvasGroup.DOFade(1, 2f));
             _fadeInSequence.AppendCallback(() => MenuStateMachine.ShowMenu("Main Menu"));
         }
 
         public void Awake()
         {
-            SaveController.LoadSettings();
             Cursor.visible = false;
             InputHandler.RegisterInputListener(this);
-            CacheGameobjects();
-            ResetAppearance();
+            SaveController.LoadSettings();
+            CacheGameObjects();
             CreateFadeInSequence();
-            _starting = false;
-            return;
-            if (Load)
-            {
-                ContinueGame();
-                return;
-            }
+            CheckForExistingSave();
+        }
 
-            ClearSaveAndLoad();
+        private void CheckForExistingSave()
+        {
+            if (SaveController.SaveExists()) return;
+            GameObject menuContainer = gameObject.FindChildWithName("Main Menu");
+            GameObject continueButton = menuContainer.FindChildWithName("Continue");
+            continueButton.SetActive(false);
+            EnhancedButton newGameButton = menuContainer.FindChildWithName<EnhancedButton>("New Game");
+            EnhancedButton optionsButton = menuContainer.FindChildWithName<EnhancedButton>("Options");
+            newGameButton.SetDownNavigation(optionsButton);
         }
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
@@ -87,65 +81,17 @@ namespace Facilitating.MenuNavigation
         {
         }
 
-        public void CloseGame()
-        {
-            Application.Quit();
-        }
-
         public void StartNewGame()
         {
             if (SaveController.SaveExists())
                 MenuStateMachine.ShowMenu("Overwrite Save Warning");
             else
-                ClearSaveAndLoad();
-        }
-
-        private void ClearSaveAndLoad()
-        {
-            if (_starting) return;
-            _starting = true;
-            SaveController.ClearSave();
-            WorldState.ResetWorld();
-            SaveController.SaveGame();
-            StartGame(true);
-        }
-
-        private void StartGame(bool newGame, Travel travel = null)
-        {
-            _starting = true;
-            InputHandler.SetCurrentListener(null);
-            if (newGame) StoryController.ShowText(JournalEntry.GetStoryText(1), false);
-            else if(travel != null) travel.Enter();
-            else SceneChanger.GoToGameScene(f => _loadingIcon.fillAmount = f);
-        }
-
-        public void ContinueGame()
-        {
-            if (SaveController.SaveExists() && !_starting)
-            {
-                Travel travel = SaveController.LoadGame();
-                StartGame(false, travel);
-            }
-            else
-            {
-                MenuStateMachine.ShowMenu("No Save Warning");
-            }
+                _gameController.ClearSaveAndLoad();
         }
 
         public void ShowMenu(Menu menu)
         {
             MenuStateMachine.ShowMenu(menu.name);
-        }
-
-        public void QuitToMenu()
-        {
-            SaveController.QuickSave();
-        }
-
-        public void QuitToDesktop()
-        {
-            SaveController.QuickSave();
-            Application.Quit();
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Game.Combat.Enemies.Humans
     public class Brawler : UnarmedBehaviour
     {
         private const float MinMeleeDistance = 0.5f;
-        private const float MeleeDamage = 20;
+        private const float MeleeDamage = 5;
         private const float MeleeForce = 20;
         private ParticleSystem _slashParticles;
         private static GameObject _prefab;
@@ -56,7 +56,7 @@ namespace Game.Combat.Enemies.Humans
             direction.x = x;
             direction.y = y;
             _slashParticles.Emit(1);
-            GetTarget().TakeRawDamage(5, direction);
+            GetTarget().TakeRawDamage(MeleeDamage, direction);
             GetTarget().MovementController.Knockback(transform.position, MeleeForce);
         }
     }

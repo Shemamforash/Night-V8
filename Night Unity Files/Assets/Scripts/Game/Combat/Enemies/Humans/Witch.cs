@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Combat.Enemies.Misc;
+using Game.Global;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -15,20 +16,23 @@ namespace Game.Combat.Enemies.Humans
         {
             _throwing = true;
             CurrentAction = null;
-            SkillAnimationController.Create("Witch", 1f, () =>
+            SkillAnimationController.Create(transform, "Witch", 1f, () =>
             {
                 Vector2 currentPosition = transform.position;
                 Vector2 targetPosition = GetTarget().transform.position;
-                switch (Random.Range(0, 3))
+                int max = 1;
+                if (WorldState.Difficulty() > 10) max = 2;
+                if (WorldState.Difficulty() > 20) max = 3;
+                switch (Random.Range(0, max))
                 {
                     case 0:
                         Grenade.CreateBasic(currentPosition, targetPosition);
                         break;
                     case 1:
-                        Grenade.CreateBasic(currentPosition, targetPosition);
+                        Grenade.CreateDecay(currentPosition, targetPosition);
                         break;
                     case 2:
-                        Grenade.CreateBasic(currentPosition, targetPosition);
+                        Grenade.CreateIncendiary(currentPosition, targetPosition);
                         break;
                 }
 

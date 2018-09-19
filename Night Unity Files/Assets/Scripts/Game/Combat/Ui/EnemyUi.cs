@@ -41,6 +41,7 @@ namespace Game.Combat.Ui
             SetAlpha(1);
             NameText.text = enemy.GetEnemyName();
             enemy.HealthController.UpdateHealth();
+            GetArmourController(enemy.Enemy).TakeDamage(enemy.ArmourController);
         }
 
         public void RegisterHit(EnemyBehaviour enemy)

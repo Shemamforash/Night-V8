@@ -227,76 +227,6 @@
           </e>
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
-        <e p="DoozyUI" t="Include">
-          <e p="PlayMaker" t="Include">
-            <e p="Actions" t="Include">
-              <e p="ApplicationQuitOrClose.cs" t="Include" />
-              <e p="DisableBackButton.cs" t="Include" />
-              <e p="EnableBackButton.cs" t="Include" />
-              <e p="SendButtonClick.cs" t="Include" />
-              <e p="SendGameEvent.cs" t="Include" />
-              <e p="ShowHide.cs" t="Include" />
-              <e p="ShowUINotification.cs" t="Include" />
-              <e p="ToggleMusic.cs" t="Include" />
-              <e p="TogglePause.cs" t="Include" />
-              <e p="ToggleSound.cs" t="Include" />
-            </e>
-            <e p="Scripts" t="Include">
-              <e p="PlaymakerEventDispatcher.cs" t="Include" />
-            </e>
-          </e>
-          <e p="Scripts" t="Include">
-            <e p="DUI" t="Include">
-              <e p="DUI.cs" t="Include" />
-            </e>
-            <e p="EventSystem" t="Include">
-              <e p="Message.cs" t="Include" />
-            </e>
-            <e p="Helpers" t="Include">
-              <e p="DoozyUI_Data.cs" t="Include" />
-              <e p="FileHelper.cs" t="Include" />
-              <e p="RadialLayout.cs" t="Include" />
-              <e p="RendererExtensions.cs" t="Include" />
-              <e p="SceneLoader.cs" t="Include" />
-              <e p="Singleton.cs" t="Include" />
-              <e p="UpdateSortingLayerName.cs" t="Include" />
-            </e>
-            <e p="OrientationManager" t="Include">
-              <e p="OrientationManager.cs" t="Include" />
-            </e>
-            <e p="ScriptableObjects" t="Include">
-              <e p="AnimData.cs" t="Include" />
-              <e p="DUISettings.cs" t="Include" />
-              <e p="LoopData.cs" t="Include" />
-              <e p="NamesDatabase.cs" t="Include" />
-              <e p="PunchData.cs" t="Include" />
-              <e p="UISound.cs" t="Include" />
-            </e>
-            <e p="Soundy" t="Include">
-              <e p="Soundy.cs" t="Include" />
-            </e>
-            <e p="TouchManager" t="Include">
-              <e p="GestureDetector.cs" t="Include" />
-              <e p="TouchManager.cs" t="Include" />
-            </e>
-            <e p="UI" t="Include">
-              <e p="Enums.cs" t="Include" />
-              <e p="UIAnimationManager.cs" t="Include" />
-              <e p="UIAnimator.cs" t="Include" />
-              <e p="UIAnimatorUtil.cs" t="Include" />
-              <e p="UIButton.cs" t="Include" />
-              <e p="UICanvas.cs" t="Include" />
-              <e p="UIEffect.cs" t="Include" />
-              <e p="UIElement.cs" t="Include" />
-              <e p="UIManager.cs" t="Include" />
-              <e p="UINavigation.cs" t="Include" />
-              <e p="UINotification.cs" t="Include" />
-              <e p="UINotificationManager.cs" t="Include" />
-              <e p="UIToggle.cs" t="Include" />
-              <e p="UITrigger.cs" t="Include" />
-            </e>
-          </e>
-        </e>
         <e p="DroneController.cs" t="Include" />
         <e p="DurabilityBarController.cs" t="Include" />
         <e p="EventTextController.cs" t="Include" />
@@ -312,7 +242,9 @@
         </e>
         <e p="Flicker.cs" t="Include" />
         <e p="FullScreenController.cs" t="Include" />
+        <e p="GameController.cs" t="Include" />
         <e p="InstancedAudio.cs" t="Include" />
+        <e p="LoadingController.cs" t="Include" />
         <e p="PauseMenuController.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="Quick" t="Include">
@@ -742,7 +674,6 @@
               <e p="WorldView.cs" t="Include" />
             </e>
           </e>
-          <e p="GameOverUiController.cs" t="Include" />
           <e p="JPS" t="Include">
             <e p="AStarFinder.cs" t="Include" />
             <e p="DiagonalMovement.cs" t="Include" />
@@ -838,7 +769,6 @@
           </e>
           <e p="StoryController.cs" t="Include" />
           <e p="SunBehaviour.cs" t="Include" />
-          <e p="TileLayer.cs" t="Include" />
           <e p="Triangle-NET-Unity-Port-master" t="Include">
             <e p="Behavior.cs" t="Include" />
             <e p="Configuration.cs" t="Include" />
