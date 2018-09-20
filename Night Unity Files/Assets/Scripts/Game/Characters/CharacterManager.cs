@@ -84,6 +84,7 @@ namespace Game.Characters
             IncrementResource("Radiance", 20);
             IncrementResource("Fuel", 20);
             IncrementResource("Water", 20);
+            IncrementResource("Essence", 20);
         }
 
         public static void AddCharacter(Player playerCharacter)

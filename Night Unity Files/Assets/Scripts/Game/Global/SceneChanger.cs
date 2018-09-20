@@ -36,6 +36,7 @@ namespace Game.Global
             if (_audioSource != null) _audioSource.DOFade(1, DefaultFadeTime);
             VolumeController.SetModifiedVolume(1f);
             DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 0f, DefaultFadeTime);
+            LoadingController.SetLoadingScreenActive();
             yield return _fader.DOFade(1, DefaultFadeTime).WaitForCompletion();
 
             AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync(sceneName);

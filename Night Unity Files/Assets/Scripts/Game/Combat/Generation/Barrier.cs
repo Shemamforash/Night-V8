@@ -60,6 +60,9 @@ namespace Game.Combat.Generation
             _barrierObject.tag = "Barrier";
             _barrierObject.transform.localScale = Vector2.one;
             _barrierObject.transform.position = Position;
+            Material material = new Material(Shader.Find("Sprites/Mask"));
+            material.color = Color.green;
+            _barrierObject.GetComponent<Renderer>().material = material;
             Collider = _barrierObject.GetComponent<PolygonCollider2D>();
             Vector3[] meshVerts = CreateMesh();
             AddCollider(meshVerts);

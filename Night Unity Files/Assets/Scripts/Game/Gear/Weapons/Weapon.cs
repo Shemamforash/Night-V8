@@ -47,7 +47,7 @@ namespace Game.Gear.Weapons
             WeaponAttributes.Load(root);
 //            _inscription.Load(root);
         }
-        
+
         public override XmlNode Save(XmlNode root)
         {
             root = base.Save(root);
@@ -70,10 +70,12 @@ namespace Game.Gear.Weapons
 
         public void SetInscription(Inscription inscription)
         {
-            _inscription?.RemoveModifier(this);
+            UnapplyInscription();
+            _inscription?.RemoveModifierFromWeapon(this);
             _inscription = inscription;
             _inscription.ParentInventory()?.DestroyItem(inscription);
-            _inscription.ApplyModifier(this);
+            _inscription.ApplyModifierToWeapon(this);
+            ApplyInscription();
         }
 
         public float CalculateBaseAccuracy()
@@ -147,14 +149,14 @@ namespace Game.Gear.Weapons
         private void ApplyInscription()
         {
             if (_inscriptionApplied) return;
-            _inscription?.ApplyModifier(_character);
+            _inscription?.ApplyModifierToCharacter(_character);
             _inscriptionApplied = true;
         }
 
         private void UnapplyInscription()
         {
             if (!_inscriptionApplied) return;
-            _inscription?.RemoveModifier(_character);
+            _inscription?.RemoveModifierFromCharacter(_character);
             _inscriptionApplied = false;
         }
 

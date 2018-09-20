@@ -49,6 +49,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         private void CalculateFinalValue()
         {
             _calculatedValue = (base.CurrentValue() + _rawBonus) * _finalBonus;
+            Debug.Log(_calculatedValue + " " + base.CurrentValue() + " " + _rawBonus + " " + _finalBonus);
         }
 
         public void Recalculate()

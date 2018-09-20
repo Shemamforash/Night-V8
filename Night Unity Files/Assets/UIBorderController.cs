@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -17,7 +18,6 @@ public class UIBorderController : MonoBehaviour
         Active,
         Selected
     }
-
 
     private void Awake()
     {
@@ -43,6 +43,7 @@ public class UIBorderController : MonoBehaviour
 
     private void OnDisable()
     {
+        _currentState = BorderState.Active;
         UpdateBorder(true);
     }
     

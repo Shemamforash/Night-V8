@@ -26,6 +26,7 @@ public class UiCombatRingBoundDrawer : MonoBehaviour
 	
 	private static void CreateRing(float radius, float width, Color colour)
 	{
+		Debug.Log("ring");
 		if (_ringPrefab == null) _ringPrefab = Resources.Load<GameObject>("Prefabs/Map/Map Ring");
 		GameObject ring = Instantiate(_ringPrefab);
 		ring.transform.SetParent(_instance.transform);

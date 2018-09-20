@@ -5,6 +5,7 @@ using Facilitating.Persistence;
 using Game.Characters;
 using Game.Gear.Weapons;
 using Game.Global;
+using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
@@ -38,24 +39,41 @@ namespace Game.Gear
             _inscriptionCost = ((int) quality + 1) * 5;
         }
 
-        public void ApplyModifier(Character character)
+        private bool IsCharacterAttribute(AttributeType attribute)
         {
-            Player player = character as Player;
-            player?.Attributes.Get(_template.AttributeTarget).AddModifier(_modifier);
+            return attribute == AttributeType.Strength ||
+                   attribute == AttributeType.Endurance ||
+                   attribute == AttributeType.Willpower ||
+                   attribute == AttributeType.Perception;
         }
 
-        public void ApplyModifier(Weapon item)
+        public void ApplyModifierToCharacter(Character character)
         {
+            if (!IsCharacterAttribute(_template.AttributeTarget)) return;
+            Player player = character as Player;
+            CharacterAttribute attribute = player?.Attributes.Get(_template.AttributeTarget);
+            Assert.IsNotNull(attribute);
+            attribute.Max += _modifier.RawBonus();
+        }
+
+        public void ApplyModifierToWeapon(Weapon item)
+        {
+            if (IsCharacterAttribute(_template.AttributeTarget)) return;
+            Debug.Log("w before " + _template.AttributeTarget + " = " + item.WeaponAttributes.Val(_template.AttributeTarget) + " " + _modifier.FinalBonus() + " " + _modifier.RawBonus());
             item.WeaponAttributes.Get(_template.AttributeTarget).AddModifier(_modifier);
+            Debug.Log("w after " + _template.AttributeTarget + " = " + item.WeaponAttributes.Val(_template.AttributeTarget));
         }
 
-        public void RemoveModifier(Character character)
+        public void RemoveModifierFromCharacter(Character character)
         {
+            if (!IsCharacterAttribute(_template.AttributeTarget)) return;
             Player player = character as Player;
-            player?.Attributes.Get(_template.AttributeTarget).RemoveModifier(_modifier);
+            CharacterAttribute attribute = player?.Attributes.Get(_template.AttributeTarget);
+            Assert.IsNotNull(attribute);
+            attribute.Max -= _modifier.RawBonus();
         }
 
-        public void RemoveModifier(Weapon item)
+        public void RemoveModifierFromWeapon(Weapon item)
         {
             item.WeaponAttributes.Get(_template.AttributeTarget).RemoveModifier(_modifier);
         }
@@ -129,27 +147,28 @@ namespace Game.Gear
                 return modifier;
             }
 
-            public string GetSummary()
+            public string GetSummary(ItemQuality quality)
             {
+                float scaledValue = _modifierValue * ((int) quality + 1);
                 if (_additive)
                 {
-                    return "+" + _modifierValue + " " + AttributeTarget;
+                    return "+" + scaledValue + " " + AttributeTarget;
                 }
 
-                return "+" + (int) (_modifierValue * 100) + "% " + AttributeTarget;
+                return "+" + (int) (scaledValue * 100) + "% " + AttributeTarget;
             }
         }
 
         public override string GetSummary()
         {
-            return _template.GetSummary();
+            return _template.GetSummary(Quality());
         }
 
         public int InscriptionCost()
         {
             return _inscriptionCost;
         }
-        
+
         public bool CanAfford()
         {
             return WorldState.HomeInventory().GetResourceQuantity("Essence") >= _inscriptionCost;

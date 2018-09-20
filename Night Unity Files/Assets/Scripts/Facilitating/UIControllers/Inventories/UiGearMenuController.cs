@@ -35,7 +35,6 @@ namespace Facilitating.UIControllers
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
             if (isHeld || axis != InputAxis.SwitchTab) return;
-            _tabs.ForEach(t => Debug.Log(t._prevTab?._tabText.name + " " + t._tabText.name + " " + t._nextTab?._tabText.name));
             if (direction < 0) _currentTab.SelectPreviousTab();
             else _currentTab.SelectNextTab();
         }
@@ -56,10 +55,10 @@ namespace Facilitating.UIControllers
 
         private class Tab
         {
-            public readonly EnhancedText _tabText;
+            private readonly EnhancedText _tabText;
             private readonly UiInventoryMenuController _menu;
-            public Tab _prevTab;
-            public Tab _nextTab;
+            private Tab _prevTab;
+            private Tab _nextTab;
 
             public Tab(string name, GameObject parent, UiInventoryMenuController menu)
             {
@@ -74,7 +73,7 @@ namespace Facilitating.UIControllers
                 OpenInventoryMenu(_menu);
             }
 
-            private void Deselect()
+            public void Deselect()
             {
                 _tabText.SetUnderlineActive(false);
             }
@@ -134,6 +133,7 @@ namespace Facilitating.UIControllers
 
         public static void Close()
         {
+            _currentTab.Deselect();
             _currentMenuController.Hide();
             InputHandler.UnregisterInputListener(_instance);
             MenuStateMachine.ReturnToDefault();

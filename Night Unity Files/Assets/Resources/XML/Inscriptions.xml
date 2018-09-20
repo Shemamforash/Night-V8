@@ -30,15 +30,9 @@
         <Additive>False</Additive>
     </Inscription>
     <Inscription>
-        <Name>The Depths</Name>
+        <Name>Oppression</Name>
         <Attribute>Capacity</Attribute>
         <Value>0.1</Value>
-        <Additive>False</Additive>
-    </Inscription>
-    <Inscription>
-        <Name>Oppression</Name>
-        <Attribute>Pellets</Attribute>
-        <Value>1.5</Value>
         <Additive>False</Additive>
     </Inscription>
     <Inscription>
