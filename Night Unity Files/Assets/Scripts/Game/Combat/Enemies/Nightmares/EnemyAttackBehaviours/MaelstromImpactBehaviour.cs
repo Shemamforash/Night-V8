@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;

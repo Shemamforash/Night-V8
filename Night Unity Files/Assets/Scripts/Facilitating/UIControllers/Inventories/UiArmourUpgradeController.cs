@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DefaultNamespace;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
-using Game.Combat.Player;
 using Game.Gear.Armour;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -11,7 +10,6 @@ using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Facilitating.UIControllers
 {
@@ -144,7 +142,6 @@ namespace Facilitating.UIControllers
             switch (axis)
             {
                 case InputAxis.Horizontal:
-                    Debug.Log("fart");
                     SetPlateListActive(direction < 0 ? _plateOneUi : _plateTwoUi);
                     return;
                 case InputAxis.Cover:

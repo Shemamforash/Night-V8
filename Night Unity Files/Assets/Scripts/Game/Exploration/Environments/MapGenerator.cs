@@ -11,7 +11,6 @@ using UnityEngine;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Facilitating.Persistence;
-using Assert = NUnit.Framework.Assert;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
@@ -50,7 +49,6 @@ namespace Game.Exploration.Environment
 
         public static void Load(XmlNode doc)
         {
-            Debug.Log(_regions.Count);
             _regions.Clear();
             XmlNode regionsNode = doc.SelectSingleNode("Regions");
             foreach (XmlNode regionNode in regionsNode.SelectNodes("Region"))
@@ -300,6 +298,7 @@ namespace Game.Exploration.Environment
             foreach (Region region in _regions)
             {
                 if (region.GetRegionType() != RegionType.None) continue;
+                if(region.GetRegionType() == RegionType.Temple) Debug.Log(minDepth + " " + region.Depth);
                 if (minDepth != -1 && region.Depth < minDepth) continue;
                 bool valid = true;
                 if (mustNotTouch)

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Enemies.Misc;
-using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Gear.Armour;
 using UnityEngine;

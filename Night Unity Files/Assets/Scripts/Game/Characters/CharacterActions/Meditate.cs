@@ -1,5 +1,4 @@
-﻿using Game.Global;
-using SamsHelper.BaseGameFunctionality.Basic;
+﻿using SamsHelper.BaseGameFunctionality.Basic;
 
 namespace Game.Characters.CharacterActions
 {

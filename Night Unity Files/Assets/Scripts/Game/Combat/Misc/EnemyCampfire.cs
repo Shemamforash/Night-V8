@@ -1,30 +1,15 @@
-﻿using System.Xml;
-using Facilitating.Persistence;
-using Game.Combat.Generation;
-using SamsHelper.Libraries;
-using SamsHelper.Persistence;
+﻿using Game.Combat.Generation;
 using UnityEngine;
 
 namespace Game.Combat.Misc
 {
-    public class EnemyCampfire : IPersistenceTemplate
+    public class EnemyCampfire
     {
-        public readonly Vector2 FirePosition;
+        private readonly Vector2 FirePosition;
 
         public EnemyCampfire(Vector2 position)
         {
             FirePosition = position;
-        }
-
-        public void Load(XmlNode doc)
-        {
-        }
-
-        public XmlNode Save(XmlNode doc)
-        {
-            XmlNode campfireNode = doc.CreateChild("Campfire");
-            campfireNode.CreateChild("Position", FirePosition.ToString());
-            return doc;
         }
 
         public void CreateObject()

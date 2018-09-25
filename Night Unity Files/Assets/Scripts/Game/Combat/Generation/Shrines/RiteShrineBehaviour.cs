@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Combat.Ui;
 using Game.Exploration.Regions;
-using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Game.Combat.Generation.Shrines
 {

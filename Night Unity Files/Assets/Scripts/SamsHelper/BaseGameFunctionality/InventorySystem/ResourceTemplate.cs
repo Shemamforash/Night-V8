@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Game.Characters;
 using Game.Exploration.Environment;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;

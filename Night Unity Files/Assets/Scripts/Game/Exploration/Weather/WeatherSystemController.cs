@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections;
-using DG.Tweening;
-using DG.Tweening.Plugins.Core.PathCore;
-using Facilitating;
-using Facilitating.Audio;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Audio;
-using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Weather
 {

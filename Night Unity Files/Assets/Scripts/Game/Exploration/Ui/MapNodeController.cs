@@ -123,7 +123,7 @@ namespace Game.Exploration.Ui
         public void Enter()
         {
             Camera.main.DOOrthoSize(3, 1f);
-            Camera.main.transform.DOMove(transform.position, 1f);
+            Camera.main.transform.DOMove(transform.position, 0.25f);
             _audioSource = GetComponent<AudioSource>();
             _audioSource.PlayOneShot(_enterClip);
         }

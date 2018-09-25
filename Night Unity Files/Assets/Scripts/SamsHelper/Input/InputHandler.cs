@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Facilitating.Persistence;
-using Game.Combat.Generation.Shrines;
 using SamsHelper.Libraries;
 using UnityEngine;
 

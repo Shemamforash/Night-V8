@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using Game.Combat.Generation;
-using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Debug = UnityEngine.Debug;
-using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
@@ -18,7 +15,6 @@ namespace Game.Combat.Enemies
         
         private Cell _currentCell;
         private Cell _targetCell;
-        private Cell _lastTargetCell;
         private Cell _nextCell;
 
         private float _targetDistance;
@@ -116,9 +112,11 @@ namespace Game.Combat.Enemies
         private void DoStraightLinePath()
         {
             Vector2 difference = _targetCell.Position - _currentCell.Position;
-            float distance = difference.magnitude - _targetDistance;
+            float distanceToTarget = difference.magnitude;
+            if (distanceToTarget < 0) return;
+            float directionToTargetCell = difference.magnitude - _targetDistance;
             Vector2 direction = difference.normalized;
-            Vector2 targetPosition = _currentCell.Position + direction * distance;
+            Vector2 targetPosition = _currentCell.Position + direction * directionToTargetCell;
             _targetCell = PathingGrid.WorldToCellPosition(targetPosition);
             Debug.DrawLine(_currentCell.Position, _targetCell.Position, Color.yellow, 1f);
             _route = new List<Cell>(new[] {_currentCell, _targetCell});
@@ -128,7 +126,6 @@ namespace Game.Combat.Enemies
         {
             if (_targetCell == null || !_pathNeedsUpdating) return;
             _pathNeedsUpdating = false;
-            _lastTargetCell = _targetCell;
             UpdateCurrentCell();
             bool outOfSight = Physics2D.Linecast(transform.position, _targetCell.Position, 1 << 8).collider != null;
             Debug.DrawLine(_currentCell.Position, _targetCell.Position, outOfSight ? Color.red : Color.green, 1f);
@@ -146,6 +143,7 @@ namespace Game.Combat.Enemies
         private Queue<Cell> _routeQueue;
         private Cell _followCell;
         private bool _pathNeedsUpdating;
+        private float _minDistanceToMove;
 
         private void Move()
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using Game.Combat.Enemies.Misc;
+﻿using Game.Combat.Enemies.Misc;
 using Game.Global;
 using UnityEngine;
 using Random = UnityEngine.Random;

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;

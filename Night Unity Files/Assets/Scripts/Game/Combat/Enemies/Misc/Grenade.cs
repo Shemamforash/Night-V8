@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Game.Combat.Generation;
 using Game.Combat.Misc;
+using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Misc
 {
     public class Grenade : MonoBehaviour
     {
-        private static readonly float ThrowForce = 5f;
+        private static readonly float ThrowForce = 75f;
         private static readonly ObjectPool<Grenade> _grenadePool = new ObjectPool<Grenade>("Grenades", "Prefabs/Combat/Enemies/Grenade");
         private readonly int _damage = 20;
         private Action<List<EnemyBehaviour>> OnDetonate;
         private bool _incendiary, _decaying;
         private bool _instantDetonate;
         private float _radius = 1;
+        private Rigidbody2D _rb2d;
 
+        public void Awake()
+        {
+            _rb2d = GetComponent<Rigidbody2D>();
+        }
+        
         public static Grenade CreateBasic(Vector2 origin, Vector2 target, bool instantDetonate = false)
         {
             Grenade grenade = _grenadePool.Create();
@@ -31,14 +38,14 @@ namespace Game.Combat.Enemies.Misc
             _radius = radius;
         }
 
-        public static Grenade CreateIncendiary(Vector2 origin, Vector2 target,bool instantDetonate = false)
+        public static Grenade CreateIncendiary(Vector2 origin, Vector2 target, bool instantDetonate = false)
         {
             Grenade g = CreateBasic(origin, target, instantDetonate);
             g._incendiary = true;
             return g;
         }
 
-        public static Grenade CreateDecay(Vector2 origin, Vector2 target,bool instantDetonate = false)
+        public static Grenade CreateDecay(Vector2 origin, Vector2 target, bool instantDetonate = false)
         {
             Grenade g = CreateBasic(origin, target, instantDetonate);
             g._decaying = true;
@@ -52,12 +59,16 @@ namespace Game.Combat.Enemies.Misc
 
         private IEnumerator MoveToPosition(Vector2 origin, Vector2 target)
         {
+            transform.position = origin;
             Vector2 direction = target - origin;
             float distance = direction.magnitude;
-            direction.Normalize();
-            Rigidbody2D rb2d = GetComponent<Rigidbody2D>();
-            rb2d.AddForce(direction * distance * ThrowForce);
-            while (rb2d.velocity.magnitude > 0.001f) yield return null;
+            direction /= distance;
+            Vector2 force = direction * distance * ThrowForce;
+            _rb2d.AddForce(force);
+            yield return null;
+            while (_rb2d.velocity.magnitude > 0.2f &&
+                   PlayerCombat.Instance.transform.Distance(transform) > 0.5f) yield return null;
+            _instantDetonate = true;
             Detonate();
         }
 

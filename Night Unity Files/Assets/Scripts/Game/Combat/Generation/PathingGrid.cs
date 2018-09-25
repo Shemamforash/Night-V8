@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Threading;
 using EpPathFinding.cs;
-using Game.Combat.Enemies;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Debug = UnityEngine.Debug;
-using Node = SamsHelper.Libraries.Node;
 
 namespace Game.Combat.Generation
 {
@@ -31,7 +27,6 @@ namespace Game.Combat.Generation
         }
 
         public static Cell[][] Grid;
-        private static readonly List<Cell> _gridNodes = new List<Cell>();
         public static readonly HashSet<Cell> _invalidCells = new HashSet<Cell>();
 
         private static Vector2 _lastPlayerPosition;
@@ -434,7 +429,6 @@ namespace Game.Combat.Generation
             _edgePositionList.Clear();
             _edgePositionSet.Clear();
             _invalidCells.Clear();
-            _gridNodes.Clear();
             _hiddenCells.Clear();
             _cellsInRange.Clear();
             Grid = new Cell[GridWidth][];
@@ -459,8 +453,6 @@ namespace Game.Combat.Generation
                     {
                         _edgePositionSet.Add(Grid[x][y]);
                     }
-
-                    _gridNodes.Add(Grid[x][y]);
                 }
             }
         }

@@ -2,7 +2,6 @@
 using System.Xml;
 using Facilitating;
 using Facilitating.Persistence;
-using Facilitating.UI;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
@@ -12,7 +11,6 @@ using Game.Exploration.Weather;
 using Game.Exploration.WorldEvents;
 using SamsHelper.Libraries;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
 namespace Game.Global
@@ -104,7 +102,7 @@ namespace Game.Global
             Random.InitState(Seed);
             EnvironmentManager.Reset();
             WeatherManager.Reset();
-            WorldEventManager.Reset();
+            WorldEventManager.Clear();
         }
 
         public void Start()

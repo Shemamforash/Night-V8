@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using DG.Tweening;
 using EZCameraShake;
 using Facilitating;
 using Facilitating.UIControllers;
@@ -10,7 +8,6 @@ using Fastlights;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Animals;
-using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
@@ -24,7 +21,6 @@ using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Game.Combat.Player

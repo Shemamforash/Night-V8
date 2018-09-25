@@ -5,8 +5,6 @@ using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
-using Game.Combat.Player;
-using Game.Exploration.Environment;
 using Game.Global;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;

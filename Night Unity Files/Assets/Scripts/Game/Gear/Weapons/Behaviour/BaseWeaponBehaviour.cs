@@ -1,5 +1,4 @@
-﻿using Game.Characters;
-using Game.Combat.Misc;
+﻿using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using SamsHelper;

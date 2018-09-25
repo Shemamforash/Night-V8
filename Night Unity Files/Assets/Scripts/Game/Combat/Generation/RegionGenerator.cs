@@ -1,10 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
-using Facilitating.Persistence;
-using Game.Characters;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
-using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Global;
 using NUnit.Framework;

@@ -1,14 +1,10 @@
 ﻿using DG.Tweening;
 using Facilitating.Persistence;
-using Game.Characters.CharacterActions;
-using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 using Menu = SamsHelper.ReactiveUI.MenuSystem.Menu;
 
 namespace Facilitating.MenuNavigation

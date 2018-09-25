@@ -1,5 +1,4 @@
 ﻿using System;
-using DG.Tweening;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
 using Game.Gear.Weapons;

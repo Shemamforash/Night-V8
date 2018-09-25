@@ -32,10 +32,11 @@ namespace Game.Combat.Enemies.Humans
         {
             if (_detonated) return;
             _detonated = true;
+            Vector2 currentPosition = transform.position;
             SkillAnimationController.Create(transform, "Martyr", 0.5f, () =>
             {
                 Debug.Log("Fart" + transform.position);
-                Explosion.CreateExplosion(transform.position, 50, 2).InstantDetonate();
+                Explosion.CreateExplosion(currentPosition, 50, 2).InstantDetonate();
             });
         }
     }

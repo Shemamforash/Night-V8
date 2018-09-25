@@ -1,6 +1,4 @@
-﻿using Game.Combat.Player;
-using SamsHelper.Libraries;
-using UnityEngine;
+﻿using SamsHelper.Libraries;
 
 namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 {

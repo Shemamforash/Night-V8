@@ -8,13 +8,12 @@ using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
-    public class Inventory : MyGameObject, IPersistenceTemplate
+    public class Inventory : MyGameObject
     {
         private readonly Dictionary<string, InventoryItem> _resources = new Dictionary<string, InventoryItem>();
         private readonly List<InventoryItem> _items = new List<InventoryItem>();
@@ -108,7 +107,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                 AddItem(Inscription.LoadInscription(inscriptionNode));
         }
 
-        public virtual XmlNode Save(XmlNode root)
+        public override XmlNode Save(XmlNode root)
         {
             root = base.Save(root);
             XmlNode resourceNode = root.CreateChild("Resources");

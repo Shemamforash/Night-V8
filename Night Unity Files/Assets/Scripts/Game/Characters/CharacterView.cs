@@ -1,15 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
 using Game.Global;
-using SamsHelper;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Game.Characters
@@ -17,8 +14,7 @@ namespace Game.Characters
     public class CharacterView : MonoBehaviour
     {
         private Player _player;
-        private TextMeshProUGUI _currentActionText;
-        private SteppedProgressBar _progressSimple, _progressDetailed;
+        private ActionProgressController _progressSimple, _progressDetailed;
         private GameObject _detailedView;
         private GameObject SimpleView;
         private EnhancedText _brandText;
@@ -33,7 +29,6 @@ namespace Game.Characters
         private EnhancedText _exploreText, _craftText;
         private List<EnhancedButton> _buttons;
         private Transform _actionList;
-        private TextMeshProUGUI _detailedCurrentActionText;
         private bool _actionListActive = true;
 
         public void SetPlayer(Player player)
@@ -96,8 +91,7 @@ namespace Game.Characters
             SimpleView = transform.Find("Simple").gameObject;
             SimpleView.SetActive(true);
             FindInSimpleView<TextMeshProUGUI>("Name").text = _player.Name;
-            _currentActionText = FindInSimpleView<TextMeshProUGUI>("Current Action");
-            _progressSimple = FindInSimpleView<SteppedProgressBar>("Action Progress");
+            _progressSimple = FindInSimpleView<ActionProgressController>("Current Action");
         }
 
         private void CacheDetailedViewElements()
@@ -105,10 +99,8 @@ namespace Game.Characters
             _detailedView = transform.Find("Detailed").gameObject;
             _detailedView.SetActive(true);
             _detailedView.SetActive(false);
-
             _actionList = gameObject.FindChildWithName<Transform>("Action List");
-            _detailedCurrentActionText = FindInDetailedView<TextMeshProUGUI>("Current Action");
-            _progressDetailed = FindInDetailedView<SteppedProgressBar>("Action Progress");
+            _progressDetailed = FindInDetailedView<ActionProgressController>("Current Action");
             _exploreButton = FindInDetailedView<EnhancedButton>("Explore");
             _exploreText = _exploreButton.GetComponent<EnhancedText>();
             _craftButton = FindInDetailedView<EnhancedButton>("Craft");
@@ -206,43 +198,15 @@ namespace Game.Characters
         }
 
         private BaseCharacterAction _lastState;
-        private float _lastRemainingTime;
         
         private void UpdateCurrentAction()
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
-            UpdateCurrentActionText();
-            if (_lastState == currentState) return;
-            string actionString = currentState.GetDisplayName();
-            _currentActionText.text = actionString;
-            _detailedCurrentActionText.text = actionString;
-
-            if (currentState is Rest)
-            {
-                SetActionListActive(true);
-                _progressSimple.gameObject.SetActive(false);
-                _progressDetailed.gameObject.SetActive(false);
-                return;
-            }
-
-            SetActionListActive(false);
-            _progressSimple.gameObject.SetActive(true);
-            _progressDetailed.gameObject.SetActive(true);
-            _lastRemainingTime = currentState.GetRemainingTime();
-            _progressSimple.ResetValue(_lastRemainingTime);
-            _progressDetailed.ResetValue(_lastRemainingTime);
+//            if (_lastState == currentState) return;
             _lastState = currentState;
-        }
-        
-        private void UpdateCurrentActionText()
-        {
-            BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
-            if (currentState == _player.RestAction) return;
-            float currentTime = currentState.GetRemainingTime();
-            if (currentTime == _lastRemainingTime) return;
-            _lastRemainingTime = currentTime;
-            _progressSimple.SetValue(_lastRemainingTime);
-            _progressDetailed.SetValue(_lastRemainingTime);
+            _progressDetailed.UpdateCurrentAction(currentState);
+            _progressSimple.UpdateCurrentAction(currentState);
+            SetActionListActive(currentState is Rest);
         }
         
         private void SetActionListActive(bool active)
@@ -250,7 +214,6 @@ namespace Game.Characters
             RefreshNavigation();
             _actionListActive = active;
             _actionList.gameObject.SetActive(active);
-            _detailedCurrentActionText.gameObject.SetActive(!active);
         }
 
         private T FindInSimpleView<T>(string elementName) where T : class

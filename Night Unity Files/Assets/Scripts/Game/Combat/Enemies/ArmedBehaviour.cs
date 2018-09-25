@@ -2,6 +2,7 @@
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Gear.Weapons;
+using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
@@ -17,9 +18,10 @@ namespace Game.Combat.Enemies
         {
             base.Initialise(enemy);
             SetHealBehaviour();
-            if (Weapon() == null) Debug.Log(enemy.Template.EnemyType + " " + enemy.Template.HasWeapon);
+            Assert.IsNotNull(Weapon());
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             DistanceFromTargetCell = Weapon().CalculateIdealDistance();
+            MinDistanceToMove = DistanceFromTargetCell * 0.25f;
         }
 
         protected override void OnAlert()

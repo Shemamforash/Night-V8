@@ -3,12 +3,10 @@ using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
-using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Gear.Armour

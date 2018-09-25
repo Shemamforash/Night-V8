@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
-using Facilitating.Persistence;
 using Game.Gear;
-using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 using UnityEngine;
 
 namespace Game.Characters

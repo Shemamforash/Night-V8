@@ -3,9 +3,7 @@ using Facilitating.Persistence;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
-using Game.Combat.Ui;
 using Game.Exploration.Regions;
-using SamsHelper.Input;
 using UnityEngine;
 
 public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent

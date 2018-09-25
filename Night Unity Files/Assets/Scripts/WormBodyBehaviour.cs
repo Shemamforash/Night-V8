@@ -70,7 +70,6 @@ public class WormBodyBehaviour : MonoBehaviour
         endSequence.InsertCallback(0.5f, () => _teethObject.SetActive(false));
         endSequence.InsertCallback(2f, () =>
         {
-            WormBehaviour.Unregister(this);
             Destroy(gameObject);
         });
         sequence.Append(endSequence);

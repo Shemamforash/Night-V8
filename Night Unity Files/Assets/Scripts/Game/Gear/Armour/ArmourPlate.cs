@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Xml;
 using Facilitating.Persistence;
-using Game.Gear.Weapons;
-using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;

@@ -659,7 +659,7 @@ Prefab:
     - target: {fileID: 224406748351478654, guid: 4fe5ba7b3b82b48459f07afec379ddf6,
         type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 224406748351478654, guid: 4fe5ba7b3b82b48459f07afec379ddf6,
         type: 2}
@@ -714,17 +714,17 @@ Prefab:
     - target: {fileID: 224644406813064220, guid: 4fe5ba7b3b82b48459f07afec379ddf6,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -5
+      value: -4.9999847
       objectReference: {fileID: 0}
     - target: {fileID: 224758896681517766, guid: 4fe5ba7b3b82b48459f07afec379ddf6,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -5
+      value: -4.9999847
       objectReference: {fileID: 0}
     - target: {fileID: 224772561730326138, guid: 4fe5ba7b3b82b48459f07afec379ddf6,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: -9.999985
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fe5ba7b3b82b48459f07afec379ddf6, type: 2}
@@ -743,6 +743,7 @@ GameObject:
   - component: {fileID: 1369750287}
   - component: {fileID: 1369750288}
   - component: {fileID: 1369750289}
+  - component: {fileID: 1369750290}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -948,6 +949,17 @@ AudioLowPassFilter:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1369750290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1369750282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da17f9109a564c399e34e27663ea6419, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1376902196
 GameObject:
   m_ObjectHideFlags: 0

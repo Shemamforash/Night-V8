@@ -1,6 +1,5 @@
 ﻿using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace SamsHelper
 {

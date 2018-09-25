@@ -16,7 +16,7 @@ namespace Game.Combat.Enemies
         private Cell _originCell;
         protected float WanderDistance = 3;
         private Cell _targetCell, _lastTargetCell;
-        protected float DistanceFromTargetCell;
+        protected float DistanceFromTargetCell, MinDistanceToMove;
         private bool _wandering;
 
         public override void Initialise(Enemy enemy)
@@ -81,6 +81,7 @@ namespace Game.Combat.Enemies
             MoveBehaviour.GoToCell(_targetCell, DistanceFromTargetCell);
             _lastTargetCell = _targetCell;
         }
+
 
         public override void MyUpdate()
         {

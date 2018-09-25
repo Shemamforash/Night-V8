@@ -12,6 +12,7 @@
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="ActionProgressController.cs" t="Include" />
         <e p="AmplifyShaderEditor" t="Include">
           <e p="CreatingTerrainsWithASE.txt" t="Include" />
           <e p="Plugins" t="Include">
@@ -202,12 +203,6 @@
           </e>
           <e p="readme.txt" t="Include" />
         </e>
-        <e p="CameraFollow.cs" t="Include" />
-        <e p="CameraLock.cs" t="Include" />
-        <e p="CombatWeatherController.cs" t="Include" />
-        <e p="Crackling.cs" t="Include" />
-        <e p="CreditsController.cs" t="Include" />
-        <e p="CrossFader.cs" t="Include" />
         <e p="Demigiant" t="Include">
           <e p="DemiLib" t="Include">
             <e p="Core" t="Include">
@@ -227,9 +222,6 @@
           </e>
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
-        <e p="DroneController.cs" t="Include" />
-        <e p="DurabilityBarController.cs" t="Include" />
-        <e p="EventTextController.cs" t="Include" />
         <e p="EZ Camera Shake" t="Include">
           <e p="Scripts" t="Include">
             <e p="CameraShakeInstance.cs" t="Include" />
@@ -240,12 +232,6 @@
             </e>
           </e>
         </e>
-        <e p="Flicker.cs" t="Include" />
-        <e p="FullScreenController.cs" t="Include" />
-        <e p="GameController.cs" t="Include" />
-        <e p="InstancedAudio.cs" t="Include" />
-        <e p="LoadingController.cs" t="Include" />
-        <e p="PauseMenuController.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="Quick" t="Include">
             <e p="Editor" t="Include">
@@ -323,7 +309,6 @@
             </e>
           </e>
         </e>
-        <e p="RadianceController.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="XML" t="Include">
             <e p="Brands.xml" t="Include" />
@@ -342,13 +327,21 @@
             <e p="Weather.xml" t="Include" />
           </e>
         </e>
-        <e p="SaveIconController.cs" t="Include" />
         <e p="Saves" t="Include">
           <e p="CleanSave.xml" t="Include" />
           <e p="NightSave.xml" t="Include" />
         </e>
         <e p="Scripts" t="Include">
+          <e p="CameraFollow.cs" t="Include" />
+          <e p="CameraLock.cs" t="Include" />
+          <e p="CombatWeatherController.cs" t="Include" />
           <e p="ContainerTextBehaviour.cs" t="Include" />
+          <e p="Crackling.cs" t="Include" />
+          <e p="CreditsController.cs" t="Include" />
+          <e p="CrossFader.cs" t="Include" />
+          <e p="DroneController.cs" t="Include" />
+          <e p="DurabilityBarController.cs" t="Include" />
+          <e p="EventTextController.cs" t="Include" />
           <e p="Facilitating" t="Include">
             <e p="Audio" t="Include">
               <e p="ThunderController.cs" t="Include" />
@@ -374,7 +367,6 @@
             <e p="UIControllers" t="Include">
               <e p="Combat" t="Include">
                 <e p="HeartBeatController.cs" t="Include" />
-                <e p="UiAreaInventoryController.cs" t="Include" />
                 <e p="UIArmourController.cs" t="Include" />
                 <e p="UiCompassController.cs" t="Include" />
                 <e p="UISkillCostController.cs" t="Include" />
@@ -408,6 +400,8 @@
             <e p="FLVertex.cs" t="Include" />
             <e p="LightObstructor.cs" t="Include" />
           </e>
+          <e p="Flicker.cs" t="Include" />
+          <e p="FullScreenController.cs" t="Include" />
           <e p="Game" t="Include">
             <e p="Characters" t="Include">
               <e p="AttributeModifier.cs" t="Include" />
@@ -613,7 +607,6 @@
               </e>
               <e p="Regions" t="Include">
                 <e p="Region.cs" t="Include" />
-                <e p="RegionManager.cs" t="Include" />
                 <e p="RegionType.cs" t="Include" />
               </e>
               <e p="UI" t="Include">
@@ -674,6 +667,8 @@
               <e p="WorldView.cs" t="Include" />
             </e>
           </e>
+          <e p="GameController.cs" t="Include" />
+          <e p="InstancedAudio.cs" t="Include" />
           <e p="JPS" t="Include">
             <e p="AStarFinder.cs" t="Include" />
             <e p="DiagonalMovement.cs" t="Include" />
@@ -689,11 +684,12 @@
             <e p="ParamBase.cs" t="Include" />
             <e p="Util.cs" t="Include" />
           </e>
+          <e p="PauseMenuController.cs" t="Include" />
+          <e p="RadianceController.cs" t="Include" />
           <e p="SamsHelper" t="Include">
             <e p="AudioPoolController.cs" t="Include" />
             <e p="BaseGameFunctionality" t="Include">
               <e p="Basic" t="Include">
-                <e p="AttributesModifier.cs" t="Include" />
                 <e p="AttributeType.cs" t="Include" />
                 <e p="CharacterAttribute.cs" t="Include" />
                 <e p="DamageSpriteFlash.cs" t="Include" />
@@ -747,16 +743,12 @@
               <e p="Polygon.cs" t="Include" />
               <e p="VectorExtensions.cs" t="Include" />
             </e>
-            <e p="Persistence" t="Include">
-              <e p="IPersistenceTemplate.cs" t="Include" />
-            </e>
             <e p="ReactiveUI" t="Include">
               <e p="Elements" t="Include">
                 <e p="EnhancedButton.cs" t="Include" />
                 <e p="EnhancedText.cs" t="Include" />
                 <e p="UiAppearanceController.cs" t="Include" />
               </e>
-              <e p="INumberChangeListener.cs" t="Include" />
               <e p="MenuSystem" t="Include">
                 <e p="Menu.cs" t="Include" />
                 <e p="MenuState.cs" t="Include" />
@@ -767,6 +759,11 @@
             <e p="RingDrawer.cs" t="Include" />
             <e p="Rotate.cs" t="Include" />
           </e>
+          <e p="SaveIconController.cs" t="Include" />
+          <e p="ShadowShaderController.cs" t="Include" />
+          <e p="SkillAnimationController.cs" t="Include" />
+          <e p="SpawnTrailController.cs" t="Include" />
+          <e p="SteppedProgressBar.cs" t="Include" />
           <e p="StoryController.cs" t="Include" />
           <e p="SunBehaviour.cs" t="Include" />
           <e p="Triangle-NET-Unity-Port-master" t="Include">
@@ -885,6 +882,12 @@
               <e p="VoronoiBase.cs" t="Include" />
             </e>
           </e>
+          <e p="UIBorderController.cs" t="Include" />
+          <e p="UiBrandMenu.cs" t="Include" />
+          <e p="VolumeController.cs" t="Include" />
+          <e p="WormBehaviour.cs" t="Include" />
+          <e p="WormBodyBehaviour.cs" t="Include" />
+          <e p="WormSacBehaviour.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">
           <e p="Combat Vignette Shader.shader" t="Include" />
@@ -895,10 +898,6 @@
           <e p="RadialLight.shader" t="Include" />
           <e p="Shadow.shader" t="Include" />
         </e>
-        <e p="ShadowShaderController.cs" t="Include" />
-        <e p="SkillAnimationController.cs" t="Include" />
-        <e p="SpawnTrailController.cs" t="Include" />
-        <e p="SteppedProgressBar.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Resources" t="Include">
             <e p="LineBreaking Following Characters.txt" t="Include" />
@@ -924,12 +923,6 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
-        <e p="UIBorderController.cs" t="Include" />
-        <e p="UiBrandMenu.cs" t="Include" />
-        <e p="VolumeController.cs" t="Include" />
-        <e p="WormBehaviour.cs" t="Include" />
-        <e p="WormBodyBehaviour.cs" t="Include" />
-        <e p="WormSacBehaviour.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

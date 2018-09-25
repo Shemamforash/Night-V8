@@ -1,6 +1,5 @@
 ﻿using Game.Combat.Enemies.Bosses;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
-using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;

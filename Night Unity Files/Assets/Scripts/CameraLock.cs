@@ -1,7 +1,5 @@
 ﻿using System.Xml;
 using Facilitating.Persistence;
-using Game.Combat.Generation;
-using Game.Combat.Player;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;

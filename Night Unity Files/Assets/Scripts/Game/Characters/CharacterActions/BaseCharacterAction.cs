@@ -5,7 +5,6 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
-using UnityEngine;
 
 namespace Game.Characters.CharacterActions
 {

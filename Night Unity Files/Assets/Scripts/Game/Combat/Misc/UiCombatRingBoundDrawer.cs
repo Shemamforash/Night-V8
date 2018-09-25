@@ -1,4 +1,5 @@
-﻿using Game.Combat.Generation;
+﻿using System.Collections.Generic;
+using Game.Combat.Generation;
 using SamsHelper;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class UiCombatRingBoundDrawer : MonoBehaviour
 {
 	private static GameObject _ringPrefab;
 	private static UiCombatRingBoundDrawer _instance;
+	private static List<GameObject> _rings = new List<GameObject>();
 
 	public void Awake()
 	{
@@ -20,15 +22,17 @@ public class UiCombatRingBoundDrawer : MonoBehaviour
 	
 	public static void Draw()
 	{
+		_rings.ForEach(Destroy);
+		_rings.Clear();
 		CreateRing(PathingGrid.CombatMovementDistance / 2f, 0.02f, Color.white);
 		CreateRing(PathingGrid.CombatAreaWidth / 2f, 0.01f, UiAppearanceController.FadedColour);
 	}
 	
 	private static void CreateRing(float radius, float width, Color colour)
 	{
-		Debug.Log("ring");
 		if (_ringPrefab == null) _ringPrefab = Resources.Load<GameObject>("Prefabs/Map/Map Ring");
 		GameObject ring = Instantiate(_ringPrefab);
+		_rings.Add(ring);
 		ring.transform.SetParent(_instance.transform);
 		ring.transform.position = Vector2.zero;
 		ring.transform.localScale = Vector2.one;

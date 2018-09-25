@@ -1,5 +1,4 @@
 ﻿using Facilitating;
-using Game.Global;
 
 namespace Game.Characters.CharacterActions
 {

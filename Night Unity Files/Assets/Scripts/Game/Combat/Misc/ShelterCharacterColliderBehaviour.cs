@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Game.Combat.Misc;
+﻿using Game.Combat.Misc;
 using UnityEngine;
 
 public class ShelterCharacterColliderBehaviour : MonoBehaviour

@@ -1,5 +1,4 @@
-﻿using System;
-using Game.Characters;
+﻿using Game.Characters;
 using Game.Exploration.Environment;
 using Game.Exploration.Weather;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -13,7 +12,7 @@ namespace Facilitating.UIControllers
     public class UIConditionController : MonoBehaviour
     {
         private Slider ConditionSlider;
-        private EnhancedText ConditionText, ModifierIndicator;
+        private EnhancedText ConditionText;
         public bool Simple;
 
         public void Awake()
@@ -26,7 +25,6 @@ namespace Facilitating.UIControllers
             ConditionText = gameObject.FindChildWithName<EnhancedText>("Text");
             ConditionSlider = gameObject.FindChildWithName<Slider>("Progress");
             if (Simple) return;
-            ModifierIndicator = gameObject.FindChildWithName<EnhancedText>("Modifier Indicator");
         }
         
         public void UpdateThirst(Player player)
@@ -38,13 +36,13 @@ namespace Facilitating.UIControllers
             switch (EnvironmentManager.GetTemperature())
             {
                 case TemperatureCategory.Hot:
-                    ModifierIndicator.SetText("+Thirst");
+//                    ModifierIndicator.SetText("+Thirst");
                     break;
                 case TemperatureCategory.Burning:
-                    ModifierIndicator.SetText("++Thirst");
+//                    ModifierIndicator.SetText("++Thirst");
                     break;
                 default:
-                    ModifierIndicator.SetText("");
+//                    ModifierIndicator.SetText("");
                     break;
             }
         }
@@ -58,13 +56,13 @@ namespace Facilitating.UIControllers
             switch (EnvironmentManager.GetTemperature())
             {
                 case TemperatureCategory.Freezing:
-                    ModifierIndicator.SetText("++Hunger");
+//                    ModifierIndicator.SetText("++Hunger");
                     break;
                 case TemperatureCategory.Cold:
-                    ModifierIndicator.SetText("+Hunger");
+//                    ModifierIndicator.SetText("+Hunger");
                     break;
                 default:
-                    ModifierIndicator.SetText("");
+//                    ModifierIndicator.SetText("");
                     break;
             }
         }

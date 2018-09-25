@@ -4,7 +4,6 @@ using Game.Characters;
 using Game.Gear;
 using Game.Global;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {

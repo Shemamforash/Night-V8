@@ -1,6 +1,4 @@
-﻿using System.Xml;
-using Game.Characters;
-using Game.Gear.Weapons;
+﻿using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem

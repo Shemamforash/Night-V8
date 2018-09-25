@@ -1,13 +1,10 @@
 ﻿using System.Xml;
-using Facilitating.Persistence;
 using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
-using UnityEngine;
 
 namespace Game.Gear.Weapons
 {

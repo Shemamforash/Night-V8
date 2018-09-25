@@ -7,11 +7,11 @@ using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
+// ReSharper disable All
 
 public class WormBehaviour : Boss, ITakeDamageInterface
 {
     private float _timeToNextWorm, _timeToNextSac;
-    private static readonly List<WormBodyBehaviour> _worms = new List<WormBodyBehaviour>();
     private static GameObject _prefab;
     private readonly HealthController _healthController = new HealthController();
     private static WormBehaviour _instance;
@@ -54,7 +54,6 @@ public class WormBehaviour : Boss, ITakeDamageInterface
         if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Worm/Worm Body");
         WormBodyBehaviour newWorm = Instantiate(_prefab).GetComponent<WormBodyBehaviour>();
         newWorm.Initialise(wormPosition);
-        _worms.Add(newWorm);
         _timeToNextWorm = Random.Range(8f, 12f);
     }
 
@@ -115,11 +114,6 @@ public class WormBehaviour : Boss, ITakeDamageInterface
 
         _spawning = false;
         _timeToNextSac = Random.Range(5f, 10f);
-    }
-
-    public static void Unregister(WormBodyBehaviour wormBodyBehaviour)
-    {
-        _worms.Remove(wormBodyBehaviour);
     }
 
     public GameObject GetGameObject()

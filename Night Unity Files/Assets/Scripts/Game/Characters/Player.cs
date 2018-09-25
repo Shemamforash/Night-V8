@@ -2,7 +2,6 @@
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters.CharacterActions;
-using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Exploration.WorldEvents;
 using Game.Gear.Armour;
@@ -11,7 +10,6 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
-using UnityEngine;
 
 namespace Game.Characters
 {

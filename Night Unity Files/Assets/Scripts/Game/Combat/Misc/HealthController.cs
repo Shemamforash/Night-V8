@@ -1,5 +1,4 @@
 ﻿using System;
-using Game.Characters;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using NUnit.Framework;
@@ -42,7 +41,6 @@ namespace Game.Combat.Misc
             if (amount == 0) return;
             if (_healthRemaining.ReachedMin()) return;
             _healthRemaining.Decrement(amount);
-            GetHealthBarController()?.FadeNewHealth();
             OnTakeDamage?.Invoke(amount);
             if (_healthRemaining.ReachedMin())
             {

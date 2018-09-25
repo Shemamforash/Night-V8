@@ -2,11 +2,8 @@
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
-using Game.Global;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.Elements;
 
 public class UiConsumableController : UiInventoryMenuController
 {

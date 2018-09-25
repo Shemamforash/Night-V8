@@ -13,7 +13,6 @@ using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;

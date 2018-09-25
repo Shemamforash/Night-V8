@@ -3,7 +3,6 @@ using DG.Tweening;
 using Facilitating.Persistence;
 using Game.Combat.Generation;
 using Game.Global;
-using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;

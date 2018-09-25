@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using Facilitating.Persistence;
 using Game.Exploration.Environment;
 using Game.Exploration.Weather;
 using Game.Exploration.WorldEvents;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 using SamsHelper.ReactiveUI;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Characters
 {

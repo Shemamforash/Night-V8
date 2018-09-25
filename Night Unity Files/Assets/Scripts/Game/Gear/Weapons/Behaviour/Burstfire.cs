@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Game.Combat.Misc;
 
 namespace Game.Gear.Weapons
 {

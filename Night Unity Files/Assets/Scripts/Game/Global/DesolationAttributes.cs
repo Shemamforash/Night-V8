@@ -4,11 +4,10 @@ using Facilitating.Persistence;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 
 namespace Game.Global
 {
-    public class DesolationAttributes : IPersistenceTemplate
+    public class DesolationAttributes
     {
         private readonly Dictionary<AttributeType, CharacterAttribute> _attributes = new Dictionary<AttributeType, CharacterAttribute>();
 

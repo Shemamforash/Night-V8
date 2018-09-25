@@ -2,14 +2,11 @@
 using Facilitating.UIControllers;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
-using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Global;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
-using SamsHelper.ReactiveUI.MenuSystem;
 
 public class UICraftingController : UiInventoryMenuController, IInputListener
 {

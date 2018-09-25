@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Threading;
-using DG.Tweening;
 using Facilitating.UIControllers;
-using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Combat.Ui;
 using Game.Gear.Weapons;
-using NUnit.Framework;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {

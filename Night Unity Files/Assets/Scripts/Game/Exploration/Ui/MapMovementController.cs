@@ -10,8 +10,6 @@ using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using UnityEngine;
-using UnityEngine.Assertions;
-using UnityEngine.SceneManagement;
 
 public class MapMovementController : MonoBehaviour, IInputListener
 {

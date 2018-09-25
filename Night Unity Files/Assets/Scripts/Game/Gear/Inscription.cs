@@ -9,8 +9,6 @@ using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
-using UnityEditor;
 using UnityEngine;
 
 namespace Game.Gear
@@ -51,6 +49,7 @@ namespace Game.Gear
         {
             if (!IsCharacterAttribute(_template.AttributeTarget)) return;
             Player player = character as Player;
+            if (player == null) return;
             CharacterAttribute attribute = player?.Attributes.Get(_template.AttributeTarget);
             Assert.IsNotNull(attribute);
             attribute.Max += _modifier.RawBonus();
@@ -59,15 +58,14 @@ namespace Game.Gear
         public void ApplyModifierToWeapon(Weapon item)
         {
             if (IsCharacterAttribute(_template.AttributeTarget)) return;
-            Debug.Log("w before " + _template.AttributeTarget + " = " + item.WeaponAttributes.Val(_template.AttributeTarget) + " " + _modifier.FinalBonus() + " " + _modifier.RawBonus());
             item.WeaponAttributes.Get(_template.AttributeTarget).AddModifier(_modifier);
-            Debug.Log("w after " + _template.AttributeTarget + " = " + item.WeaponAttributes.Val(_template.AttributeTarget));
         }
 
         public void RemoveModifierFromCharacter(Character character)
         {
             if (!IsCharacterAttribute(_template.AttributeTarget)) return;
             Player player = character as Player;
+            if (player == null) return;
             CharacterAttribute attribute = player?.Attributes.Get(_template.AttributeTarget);
             Assert.IsNotNull(attribute);
             attribute.Max -= _modifier.RawBonus();
@@ -116,6 +114,7 @@ namespace Game.Gear
         {
             ReadTemplates();
             string templateString = root.StringFromNode("Template");
+            Debug.Log(templateString);
             InscriptionTemplate template = _inscriptionTemplates.First(t => t.Name == templateString);
             ItemQuality quality = (ItemQuality) root.IntFromNode("Quality");
             Inscription inscription = new Inscription(template, quality);

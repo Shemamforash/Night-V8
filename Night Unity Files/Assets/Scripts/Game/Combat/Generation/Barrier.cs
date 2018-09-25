@@ -1,42 +1,18 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
-using Facilitating.Persistence;
 using FastLights;
 using NUnit.Framework;
 using SamsHelper.Libraries;
-using SamsHelper.Persistence;
 using UnityEngine;
 
 namespace Game.Combat.Generation
 {
-    public class Barrier : Polygon, IPersistenceTemplate
+    public class Barrier : Polygon
     {
         public PolygonCollider2D Collider;
         private GameObject _barrierObject;
         private static GameObject _barrierPrefab;
         private readonly string _barrierName;
         private static Transform _barrierParent;
-
-        public void Load(XmlNode doc)
-        {
-        }
-
-        public XmlNode Save(XmlNode doc)
-        {
-            XmlNode barrierNode = doc.CreateChild("Barrier");
-            string vertexString = "";
-            for (int i = 0; i < Vertices.Count; ++i)
-            {
-                vertexString += Vertices[i].ToString();
-                if (i == Vertices.Count - 1) break;
-                vertexString += ",";
-            }
-
-            barrierNode.CreateChild("Name", _barrierName);
-            barrierNode.CreateChild("Position", Position.ToString());
-            barrierNode.CreateChild("Vertices", vertexString);
-            return barrierNode;
-        }
 
         public Barrier(List<Vector2> vertices, string barrierName, Vector2 position, List<Barrier> barriers) : base(vertices, position)
         {

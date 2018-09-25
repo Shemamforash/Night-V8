@@ -1,18 +1,10 @@
 ﻿using System.Collections.Generic;
-using DefaultNamespace;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
-using Game.Combat.Generation;
-using Game.Gear;
 using Game.Gear.Armour;
 using Game.Global;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
-using SamsHelper.Input;
 using SamsHelper.Libraries;
-using SamsHelper.ReactiveUI.Elements;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace Facilitating.UIControllers
 {

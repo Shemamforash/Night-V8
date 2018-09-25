@@ -1,5 +1,4 @@
-﻿using SamsHelper.ReactiveUI.Elements;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DefaultNamespace
 {

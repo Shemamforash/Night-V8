@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Game.Characters;
+﻿using Game.Characters;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;

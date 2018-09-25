@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Xml;
-using Facilitating.Audio;
 using Game.Characters.CharacterActions;
 using Game.Global;
 using SamsHelper.Libraries;
@@ -61,6 +60,7 @@ namespace Facilitating.Persistence
         {
             string saveLocation = GetMostRecentSaveLocation();
             if (saveLocation == null) return null;
+            Debug.Log(saveLocation);
             _saveDoc = new XmlDocument();
             _saveDoc.Load(saveLocation);
             XmlNode root = _saveDoc.GetNode("BTVSave");

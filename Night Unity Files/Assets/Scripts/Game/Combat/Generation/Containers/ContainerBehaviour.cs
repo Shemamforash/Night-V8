@@ -2,11 +2,9 @@
 using DG.Tweening;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Combat.Ui;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Combat.Generation
 {

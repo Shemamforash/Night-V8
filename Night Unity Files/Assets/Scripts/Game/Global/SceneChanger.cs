@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using DG.Tweening;
-using Facilitating.Audio;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace Game.Global
 {
@@ -14,6 +12,7 @@ namespace Game.Global
         private static SceneChanger _instance;
         private AudioSource _audioSource;
         private static float _fadeInTime = DefaultFadeTime;
+        private static string _sceneToLoad;
         private const float DefaultFadeTime = 0.5f;
 
         public void Awake()
@@ -26,31 +25,31 @@ namespace Game.Global
             Sequence sequence = DOTween.Sequence();
             _fader.alpha = 1;
             sequence.Append(_fader.DOFade(0, _fadeInTime));
+            sequence.AppendCallback(() => StartCoroutine(LoadNextScene()));
             if (SceneManager.GetActiveScene().name != "Game") return;
             sequence.InsertCallback(0.1f, WorldState.UnPause);
         }
 
-        private IEnumerator FadeOut(string sceneName, float fadeTime, Action<float> loadProgressAction)
+        private IEnumerator LoadNextScene()
+        {
+            if (_sceneToLoad == null) yield break;
+            AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync(_sceneToLoad);
+            _sceneToLoad = null;
+            sceneLoaded.allowSceneActivation = false;
+            while (sceneLoaded.progress != 0.9f) yield return null;
+            sceneLoaded.allowSceneActivation = true;
+            ButtonClickListener.SuppressClick();
+        }
+
+        private IEnumerator FadeOut(string sceneName, float fadeTime)
         {
             _fadeInTime = fadeTime;
+            _sceneToLoad = sceneName;
             if (_audioSource != null) _audioSource.DOFade(1, DefaultFadeTime);
             VolumeController.SetModifiedVolume(1f);
             DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 0f, DefaultFadeTime);
-            LoadingController.SetLoadingScreenActive();
             yield return _fader.DOFade(1, DefaultFadeTime).WaitForCompletion();
-
-            AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync(sceneName);
-            sceneLoaded.allowSceneActivation = false;
-            loadProgressAction?.Invoke(sceneLoaded.progress);
-            while (sceneLoaded.progress != 0.9f)
-            {
-                yield return null;
-                loadProgressAction?.Invoke(sceneLoaded.progress);
-            }
-
-            loadProgressAction?.Invoke(1);
-            sceneLoaded.allowSceneActivation = true;
-            ButtonClickListener.SuppressClick();
+            SceneManager.LoadScene("Loading");
         }
 
         public static void GoToGameOverScene()
@@ -84,15 +83,15 @@ namespace Game.Global
             ChangeScene("Credits", DefaultFadeTime);
         }
 
-        public static void GoToGameScene(Action<float> loadProgressAction = null)
+        public static void GoToGameScene()
         {
-            ChangeScene("Game", DefaultFadeTime, loadProgressAction);
+            ChangeScene("Game", DefaultFadeTime);
         }
 
-        private static void ChangeScene(string sceneName, float fadeTime, Action<float> loadProgressAction = null)
+        private static void ChangeScene(string sceneName, float fadeTime)
         {
             WorldState.Pause();
-            _instance.StartCoroutine(_instance.FadeOut(sceneName, fadeTime, loadProgressAction));
+            _instance.StartCoroutine(_instance.FadeOut(sceneName, fadeTime));
         }
     }
 }

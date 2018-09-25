@@ -7,6 +7,7 @@ using UnityEngine;
 public class ContainerTextBehaviour : MonoBehaviour
 {
     private TextMeshProUGUI _text;
+    private const float MaxShowInventoryDistance = 1;
 
     public void Awake()
     {
@@ -18,7 +19,7 @@ public class ContainerTextBehaviour : MonoBehaviour
         float distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
         _text.color = UiAppearanceController.InvisibleColour;
         transform.rotation = PlayerCombat.Instance.transform.rotation;
-        if (distanceToPlayer > UiAreaInventoryController.MaxShowInventoryDistance) return;
+        if (distanceToPlayer > MaxShowInventoryDistance) return;
         _text.color = Color.white;
     }
 }

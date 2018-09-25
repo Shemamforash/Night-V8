@@ -3,7 +3,6 @@ using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Exploration.Environment;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 

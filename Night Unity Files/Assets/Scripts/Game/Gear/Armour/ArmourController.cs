@@ -4,13 +4,11 @@ using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Misc;
-using Game.Combat.Player;
 using Game.Combat.Ui;
-using SamsHelper.Persistence;
 
 namespace Game.Gear.Armour
 {
-    public class ArmourController : IPersistenceTemplate
+    public class ArmourController
     {
         private readonly Character _character;
         private ArmourPlate _plateOne, _plateTwo;

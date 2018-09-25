@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;

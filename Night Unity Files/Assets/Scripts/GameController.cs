@@ -2,10 +2,8 @@
 using Game.Characters.CharacterActions;
 using Game.Global;
 using SamsHelper.Input;
-using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 	private bool _starting;
