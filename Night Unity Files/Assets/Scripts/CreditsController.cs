@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
+using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -44,7 +45,7 @@ public class CreditsController : Menu, IInputListener
             _creditsSequence.Append(text.DOColor(UiAppearanceController.InvisibleColour, 1f));
         }
 
-        _creditsSequence.AppendCallback(() => SceneManager.LoadScene("Menu"));
+        _creditsSequence.AppendCallback(SceneChanger.GoToMainMenuScene);
     }
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)

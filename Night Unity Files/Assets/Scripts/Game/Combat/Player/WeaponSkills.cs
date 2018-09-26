@@ -93,9 +93,6 @@ namespace Game.Combat.Player
 
     public class Sweep : Skill
     {
-        private ParticleSystem _pushParticles;
-        private GameObject _pushPrefab;
-
         public Sweep() : base(nameof(Sweep))
         {
         }
@@ -115,11 +112,19 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            for (int i = 0; i < 20; ++i)
+            int remainingAmmo = PlayerCombat.Instance._weaponBehaviour.AmmoInMagazine;
+            if (remainingAmmo == 0) remainingAmmo = 1;
+            remainingAmmo *= 10;
+            float angleIncrement = 360f / remainingAmmo;
+            for (int i = 0; i < remainingAmmo; ++i)
             {
+                float angle = i * angleIncrement * Mathf.Deg2Rad;
+                float x = Mathf.Cos(angle);
+                float y = Mathf.Sin(angle);
+                Vector2 dir = new Vector2(x, y);
                 Shot s = Shot.Create(PlayerCombat.Instance);
+                s.OverrideDirection(dir);
                 s.Fire();
-                s.Seek();
             }
         }
     }

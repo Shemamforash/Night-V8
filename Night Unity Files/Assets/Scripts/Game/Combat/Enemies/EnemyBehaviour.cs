@@ -15,7 +15,6 @@ namespace Game.Combat.Enemies
     {
         public Action CurrentAction;
         public Enemy Enemy;
-        protected bool FacePlayer;
         public MoveBehaviour MoveBehaviour;
 
         public override Weapon Weapon() => null;
@@ -62,11 +61,8 @@ namespace Game.Combat.Enemies
         private void UpdateRotation()
         {
             float rotation;
-            if (FacePlayer && GetTarget() != null) rotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
+            if (GetTarget() != null) rotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
             else rotation = AdvancedMaths.AngleFromUp(transform.position, transform.position + (Vector3) GetComponent<Rigidbody2D>().velocity);
-//            float currentRotation = transform.eulerAngles.z;
-//            float rotateBy = AdvancedMaths.GetSmallestAngleBetweenTwoAngles(currentRotation, rotation);
-//            rotateBy *= Time.deltaTime;
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         }
 

@@ -29,7 +29,20 @@ public class LeafBehaviour : MonoBehaviour
             leafObject.GetComponent<Rigidbody2D>().velocity = direction * Random.Range(2f, 4f);
         }
     }
-    
+
+    public static void CreateLeaves(Vector2 origin)
+    {
+        if (prefab == null) prefab = Resources.Load<GameObject>("Prefabs/Combat/Dust");
+        for (int j = 0; j < Random.Range(10, 20); ++j)
+        {
+            Vector2 position = AdvancedMaths.RandomVectorWithinRange(origin, 0.1f);
+            GameObject leafObject = Instantiate(prefab);
+            leafObject.transform.position = position;
+            leafObject.transform.localScale = Random.Range(0.05f, 0.1f) * Vector2.one;
+            leafObject.GetComponent<Rigidbody2D>().velocity = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized * Random.Range(2f, 4f);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.layer == 8) return;

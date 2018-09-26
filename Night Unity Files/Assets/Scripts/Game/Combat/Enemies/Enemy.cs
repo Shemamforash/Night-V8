@@ -200,6 +200,7 @@ namespace Game.Combat.Enemies
         public Loot DropLoot(Vector2 position)
         {
             Loot controller = new Loot(position, Name);
+            Debug.Log(Template.DropResource);
             switch (Template.DropResource)
             {
                 case "Salt":

@@ -15,7 +15,8 @@ namespace Game.Combat.Enemies
         private const float LoseTargetRange = 10f;
         private Cell _originCell;
         protected float WanderDistance = 3;
-        private Cell _targetCell, _lastTargetCell;
+        protected Cell TargetCell;
+        private Cell _lastTargetCell;
         protected float DistanceFromTargetCell, MinDistanceToMove;
         private bool _wandering;
 
@@ -29,7 +30,7 @@ namespace Game.Combat.Enemies
         {
             Alerted = false;
             if (resetOrigin) _originCell = PathingGrid.WorldToCellPosition(transform.position);
-            _targetCell = PathingGrid.GetCellNearMe(_originCell, WanderDistance);
+            TargetCell = PathingGrid.GetCellNearMe(_originCell, WanderDistance);
             float waitDuration = Random.Range(1f, 3f);
             CurrentAction = () =>
             {
@@ -72,14 +73,14 @@ namespace Game.Combat.Enemies
 
         protected virtual void OnAlert()
         {
-            _targetCell = GetTarget().CurrentCell();
+            TargetCell = GetTarget().CurrentCell();
         }
 
         private void GoToTargetCell()
         {
-            if (_targetCell == _lastTargetCell) return;
-            MoveBehaviour.GoToCell(_targetCell, DistanceFromTargetCell);
-            _lastTargetCell = _targetCell;
+            if (TargetCell == _lastTargetCell) return;
+            MoveBehaviour.GoToCell(TargetCell, DistanceFromTargetCell);
+            _lastTargetCell = TargetCell;
         }
 
 
@@ -99,11 +100,11 @@ namespace Game.Combat.Enemies
             {
                 List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(newTargetCell.Position, 1, 1);
                 if (cellsNearMe.Count == 0) return;
-                _targetCell = cellsNearMe[0];
+                TargetCell = cellsNearMe[0];
                 return;
             }
 
-            _targetCell = newTargetCell;
+            TargetCell = newTargetCell;
         }
 
         private void UpdateDistanceToTarget()

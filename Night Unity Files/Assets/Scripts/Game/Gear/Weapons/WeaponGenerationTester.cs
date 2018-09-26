@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
+
 namespace Game.Gear.Weapons
 {
     public static class WeaponGenerationTester

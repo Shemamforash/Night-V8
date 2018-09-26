@@ -31,7 +31,7 @@ public class WormBodyBehaviour : MonoBehaviour
         if (_dealDamageTimer > 0f) return;
         _dealDamageTimer = 0.2f;
         PlayerCombat.Instance.TakeRawDamage(5, AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized);
-        PlayerCombat.Instance.MovementController.Knockback(AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized * Random.Range(20, 40));
+        PlayerCombat.Instance.MovementController.KnockBack(AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized * Random.Range(20, 40));
     }
     
     public void Initialise(Vector2 position)

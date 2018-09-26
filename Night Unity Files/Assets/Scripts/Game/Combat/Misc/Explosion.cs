@@ -26,22 +26,22 @@ namespace Game.Combat.Misc
         private SpriteRenderer _explosionSprite;
 
         private FastLight _light;
-        private ParticleSystem _particles;
+        private ParticleSystem _fragments, _smoke;
         private SpriteRenderer _warningRing;
         private AudioSource _audioSource;
         private Action<List<EnemyBehaviour>> OnExplode;
         private GameObject _spriteObject;
 
         [SerializeField] private AudioClip[] _explosionClips;
-        private bool _decay, _incendiary;
+        private bool _decay, _incendiary, _sicken;
         private List<ITakeDamageInterface> _targetsToIgnore;
-
 
         public void Awake()
         {
             _warningRing = gameObject.FindChildWithName<SpriteRenderer>("Warning");
             _explosionSprite = gameObject.FindChildWithName<SpriteRenderer>("Explosion");
-            _particles = gameObject.FindChildWithName<ParticleSystem>("Fragments");
+            _fragments = gameObject.FindChildWithName<ParticleSystem>("Fragments");
+            _smoke = gameObject.FindChildWithName<ParticleSystem>("Smoke");
             _light = gameObject.FindChildWithName<FastLight>("Light");
             _spriteObject = gameObject.FindChildWithName("Sprites");
             _audioSource = gameObject.FindChildWithName<AudioSource>("Audio");
@@ -62,7 +62,7 @@ namespace Game.Combat.Misc
             return explosion;
         }
 
-        public void SetIncendiary()
+        public void SetBurn()
         {
             _incendiary = true;
         }
@@ -128,10 +128,12 @@ namespace Game.Combat.Misc
                     Debug.Log(col.name);
                     return;
                 }
+
                 i.TakeExplosionDamage(_damage, transform.position);
                 EnemyBehaviour behaviour = i as EnemyBehaviour;
                 if (behaviour != null) enemiesHit.Add(behaviour);
             }
+
             OnExplode?.Invoke(enemiesHit);
         }
 
@@ -147,7 +149,7 @@ namespace Game.Combat.Misc
                 yield return null;
             }
 
-            if(grenade != null) grenade.Deactivate();
+            if (grenade != null) grenade.Deactivate();
             StartCoroutine(Explode());
         }
 
@@ -179,13 +181,11 @@ namespace Game.Combat.Misc
                 {
                     if (!emitted)
                     {
-                        _audioSource.clip =_explosionClips.RandomElement();
+                        _audioSource.clip = _explosionClips.RandomElement();
                         _audioSource.Play();
-                        TryGenerateFireDecay();
+                        AddConditions();
                         DealDamage();
-                        ParticleSystem.ShapeModule shape = _particles.shape;
-                        shape.radius = _explosionRadius;
-                        _particles.Emit((int) (_explosionRadius * _explosionRadius * 400f));
+                        EmitParticles();
                         emitted = true;
                         _light.Radius = _explosionRadius * 1.5f;
                     }
@@ -208,22 +208,32 @@ namespace Game.Combat.Misc
             _explosionPool.Add(this);
         }
 
-        private void TryGenerateFireDecay()
+        private void EmitParticles()
         {
-            if (_incendiary)
-            {
-                FireBehaviour.Create(transform.position, 1).AddIgnoreTargets(_targetsToIgnore);
-            }
+            ParticleSystem.ShapeModule shape = _fragments.shape;
+            shape.radius = _explosionRadius;
+            int fragments = (int) ((_explosionRadius - 0.5f) * 85f + 100);
+            _fragments.Emit(fragments);
+            ParticleSystem.MainModule main = _smoke.main;
+            main.startSpeed = _explosionRadius;
+            _smoke.Emit((int) (_explosionRadius * 30f));
+        }
 
-            if (_decay)
-            {
-                DecayBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore);
-            }
+        private void AddConditions()
+        {
+            if (_incendiary) FireBehaviour.Create(transform.position, 1).AddIgnoreTargets(_targetsToIgnore);
+            if (_decay) DecayBehaviour.Create(transform.position).AddIgnoreTargets(_targetsToIgnore);
+            if (_sicken) SickenBehaviour.Create(transform.position, _targetsToIgnore);
         }
 
         public void AddOnDetonate(Action<List<EnemyBehaviour>> action)
         {
             OnExplode += action;
+        }
+
+        public void SetSicken()
+        {
+            _sicken = true;
         }
     }
 }

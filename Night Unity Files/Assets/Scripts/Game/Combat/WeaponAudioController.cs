@@ -11,8 +11,7 @@ public class WeaponAudioController : MonoBehaviour
     private static AudioClip[] _lmgShots, _smgShots, _rifleShots, _pistolShots, _shotgunShots;
     private static AudioClip[] _lmgCasings, _smgCasings, _rifleCasings, _pistolCasings, _shotgunCasings;
     private static AudioClip[] _dryFireClips;
-
-    [SerializeField] private AudioClip[] _armourBreakClips;
+    private static AudioClip[] _armourBreakClips;
     [SerializeField] private AudioClip _pistolClipIn, _pistolClipOut, _lmgClipIn, _lmgClipOut, _smgClipIn, _smgClipOut, _rifleClipIn, _rifleClipOut, _shotgunClipIn, _shotgunClipOut;
     [SerializeField] public AudioClip SpoolClip;
 
@@ -41,6 +40,7 @@ public class WeaponAudioController : MonoBehaviour
         _shotgunCasings = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/shotgun/casings");
 
         _dryFireClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/dryfire");
+        _armourBreakClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/armourbreak");
         _loaded = true;
     }
 

@@ -24,8 +24,8 @@ namespace Game.Global
             DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, _fadeInTime);
             Sequence sequence = DOTween.Sequence();
             _fader.alpha = 1;
+            StartCoroutine(LoadNextScene());
             sequence.Append(_fader.DOFade(0, _fadeInTime));
-            sequence.AppendCallback(() => StartCoroutine(LoadNextScene()));
             if (SceneManager.GetActiveScene().name != "Game") return;
             sequence.InsertCallback(0.1f, WorldState.UnPause);
         }

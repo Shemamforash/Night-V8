@@ -17,7 +17,6 @@ namespace Game.Combat.Enemies
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
-            SetHealBehaviour();
             Assert.IsNotNull(Weapon());
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             DistanceFromTargetCell = Weapon().CalculateIdealDistance();
@@ -32,27 +31,13 @@ namespace Game.Combat.Enemies
 
         protected void TryFire()
         {
-            FacePlayer = false;
             Aim();
         }
 
         public override Weapon Weapon() => Enemy.EquippedWeapon;
 
-        private static Medic FindMedic()
-        {
-            foreach (ITakeDamageInterface o in CombatManager.EnemiesOnScreen())
-            {
-                Medic medic = o as Medic;
-                if (medic == null || medic.HasTarget()) continue;
-                return medic;
-            }
-
-            return null;
-        }
-
         private void Reload()
         {
-            FacePlayer = false;
             if (MoveToCover(Reload))
             {
                 return;
@@ -68,41 +53,6 @@ namespace Game.Combat.Enemies
             };
         }
 
-        private void SetHealBehaviour()
-        {
-            HealthController.AddOnTakeDamage(a =>
-            {
-                if (HealthController.GetNormalisedHealthValue() > 0.25f || _waitingForHeal) return;
-                Medic m = FindMedic();
-                if (m == null) return;
-                MoveToCover(() => WaitForHeal(m));
-            });
-        }
-
-        private void WaitForHeal(Medic medic)
-        {
-            FacePlayer = false;
-            CurrentAction = () =>
-            {
-                if (!_waitingForHeal)
-                {
-                    medic.RequestHeal(this);
-                    _waitingForHeal = true;
-                }
-
-                if (medic != null) return;
-                medic = FindMedic();
-                if (medic == null)
-                {
-                    TryFire();
-                }
-                else
-                {
-                    WaitForHeal(medic);
-                }
-            };
-        }
-
         private void Aim()
         {
             if (_weaponBehaviour.Empty())
@@ -111,7 +61,6 @@ namespace Game.Combat.Enemies
                 return;
             }
 
-            FacePlayer = true;
             CurrentAction = Fire;
         }
 

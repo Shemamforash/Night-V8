@@ -72,7 +72,7 @@ namespace Game.Gear.Armour
         public override XmlNode Save(XmlNode doc)
         {
             doc = base.Save(doc);
-            doc.CreateChild("Template", _template.Name);
+            doc.CreateChild("AccessoryTemplate", _template.Name);
             return doc;
         }
 
@@ -100,7 +100,7 @@ namespace Game.Gear.Armour
 
         public static Accessory LoadAccessory(XmlNode accessoryNode)
         {
-            string templateString = accessoryNode.StringFromNode("Template");
+            string templateString = accessoryNode.StringFromNode("AccessoryTemplate");
             AccessoryTemplate template = _accessoryTemplates.First(t => t.Name == templateString);
             Accessory accessory = new Accessory(template, ItemQuality.Dark);
             accessory.Load(accessoryNode);

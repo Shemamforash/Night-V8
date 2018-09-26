@@ -179,7 +179,7 @@ namespace Game.Combat.Misc
         public virtual void TakeShotDamage(Shot shot)
         {
             _spriteFlash.FlashSprite();
-            MovementController.Knockback(shot.Direction(), shot.GetKnockbackForce());
+            MovementController.KnockBack(shot.Direction(), shot.GetKnockbackForce());
             float armourProtection = ArmourController.GetCurrentArmour() / 10f;
             int armourDamage = Mathf.CeilToInt(shot.DamageDealt() * armourProtection);
             int healthDamage = shot.DamageDealt() - armourDamage;
@@ -212,12 +212,9 @@ namespace Game.Combat.Misc
         {
             _spriteFlash.FlashSprite();
             HealthController.TakeDamage(damage);
-            Vector2 dir = (Vector2) transform.position - origin;
-            float distance = dir.magnitude;
-            dir.Normalize();
-            MovementController.AddForce(dir * 1f / distance * 10f);
+            MovementController.KnockBack(origin, 20f / origin.Distance(transform.position));
         }
-
+        
         public virtual void Kill()
         {
             _isDead = true;

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Exploration.Weather;
 using Game.Gear.Weapons;
+using QuickEngine.Extensions;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -34,7 +36,7 @@ namespace Game.Combat.Misc
         private bool _fired;
         public CharacterCombat _origin;
         private Vector3 _originPosition;
-        private float _pierceChance, _burnChance, _decayChange, _sicknessChance;
+        private float _pierceChance, _burnChance, _decayChance, _sicknessChance;
         private Rigidbody2D _rigidBody;
 
         private Weapon _weapon;
@@ -92,6 +94,11 @@ namespace Game.Combat.Misc
             return shot;
         }
 
+        public void OverrideDirection(Vector2 direction)
+        {
+            _direction = direction;
+        }
+        
         private void Initialise(CharacterCombat origin, Vector3 direction)
         {
             _origin = origin;
@@ -151,7 +158,7 @@ namespace Game.Combat.Misc
             WeaponAttributes attributes = _weapon.WeaponAttributes;
             _damage = (int) attributes.Val(AttributeType.Damage);
             _accuracy = _weapon.CalculateBaseAccuracy();
-            _decayChange = attributes.Val(AttributeType.DecayChance);
+            _decayChance = attributes.Val(AttributeType.DecayChance);
             _burnChance = attributes.Val(AttributeType.BurnChance);
             _sicknessChance = attributes.Val(AttributeType.SicknessChance);
         }
@@ -294,9 +301,31 @@ namespace Game.Combat.Misc
 
         private void ApplyConditions(ITakeDamageInterface hit)
         {
-            if (Random.Range(0f, 1f) < _decayChange) hit.Decay();
-            if (Random.Range(0f, 1f) < _sicknessChance) hit.Sicken();
-            if (Random.Range(0f, 1f) < _burnChance) hit.Burn();
+            float random = Random.Range(0f, 1f);
+            bool canDecay = random < _decayChance;
+            bool canBurn = random < _burnChance;
+            bool canSicken = random < _sicknessChance;
+            List<int> conditions = new List<int>();
+            if (canDecay) conditions.Add(0);
+            if (canBurn) conditions.Add(1);
+            if (canSicken) conditions.Add(2);
+            if (conditions.Count == 0) return;
+            int condition = conditions.GetRandomElement();
+            Explosion explosion = Explosion.CreateExplosion(transform.position, 10, 0.5f);
+            switch (condition)
+            {
+                case 0:
+                    explosion.SetDecay();
+                    break;
+                case 1:
+                    explosion.SetBurn();
+                    break;
+                case 2:
+                    explosion.SetSicken();
+                    break;
+            }
+
+            explosion.InstantDetonate();
         }
 
         public void GuaranteeHit()
@@ -324,7 +353,7 @@ namespace Game.Combat.Misc
         public void SetDecayChance(float chance)
         {
             Assert.IsTrue(chance >= 0 && chance <= 1);
-            _decayChange = chance;
+            _decayChance = chance;
         }
 
         public void SetSicknessChance(float chance)

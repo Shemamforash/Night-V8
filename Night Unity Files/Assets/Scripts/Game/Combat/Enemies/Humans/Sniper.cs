@@ -6,25 +6,23 @@ namespace Game.Combat.Enemies.Humans
 {
     public class Sniper : ArmedBehaviour
     {
-        private bool _firing;
         private float _powerShotCooldown;
+        private bool _firing;
 
         private void ResetCooldown()
         {
             _powerShotCooldown = Random.Range(5, 10);
+            _firing = false;
         }
 
         private void FirePowerShot()
         {
-            _firing = true;
-            FacePlayer = true;
             Shot powerShot = Shot.Create(this);
             powerShot.LeaveFireTrail();
             powerShot.SetBurnChance(1);
             powerShot.Fire();
             ResetCooldown();
             TryFire();
-            _firing = false;
         }
 
         protected override void OnAlert()
@@ -36,11 +34,12 @@ namespace Game.Combat.Enemies.Humans
         public override void MyUpdate()
         {
             base.MyUpdate();
-            if (_firing || !Alerted) return;
+            if (!Alerted || _firing) return;
             _powerShotCooldown -= Time.deltaTime;
             if (_powerShotCooldown > 0) return;
             CurrentAction = null;
-//            SkillAnimationController.Create("Sniper", 1f, FirePowerShot);
+            _firing = true;
+            SkillAnimationController.Create(transform, "Sniper", 1f, FirePowerShot);
         }
     }
 }

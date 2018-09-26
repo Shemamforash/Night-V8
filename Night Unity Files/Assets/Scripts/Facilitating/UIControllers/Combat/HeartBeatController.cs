@@ -1,22 +1,20 @@
-﻿using SamsHelper.ReactiveUI.Elements;
+﻿using Game.Combat.Player;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 namespace Facilitating.UIControllers
 {
     public class HeartBeatController : MonoBehaviour
     {
-        private static HeartBeatController _instance;
         private float _currentTime;
         private readonly float _heartBeatLongGap = 1f;
 
         private ParticleSystem _heartBeatParticles;
         private readonly float _heartBeatShortGap = 0.25f;
         private bool _timingLongBeat;
-        [Range(0f, 1f)] public float Health;
 
         public void Awake()
         {
-            _instance = this;
             _heartBeatParticles = GetComponent<ParticleSystem>();
         }
 
@@ -25,19 +23,24 @@ namespace Facilitating.UIControllers
             SetTrailAlpha(0f);
         }
 
-        public static void SetHealth(float health)
+        private void TryPlayParticles(float health)
         {
-            _instance.Health = health;
-            if (_instance.Health <= 0.4f)
-                _instance._heartBeatParticles.Play();
-            else
-                _instance._heartBeatParticles.Stop();
+            if (health <= 0.4f)
+            {
+                if (!_heartBeatParticles.isPlaying) _heartBeatParticles.Play();
+            }
+            else if (_heartBeatParticles.isPlaying)
+            {
+                _heartBeatParticles.Stop();
+            }
         }
 
         public void Update()
         {
-            if (Health >= 0.4f) return;
-            float maxAlpha = 1f - Health / 0.4f;
+            float health = PlayerCombat.Instance.HealthController.GetNormalisedHealthValue();
+            TryPlayParticles(health);
+            if (health >= 0.4f) return;
+            float maxAlpha = 1f - health / 0.4f;
             float minAlpha = Mathf.Clamp(maxAlpha - 0.6f, 0f, 1f);
             float currentAlpha;
             _currentTime += Time.deltaTime;

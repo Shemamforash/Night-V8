@@ -108,6 +108,7 @@ namespace Game.Combat.Misc
 
         public static void ActivateSkill(int skillNo)
         {
+            Debug.Log(_skillsLocked.Contains(skillNo) + " " + _skillsCooldown.Running());
             if (_skillsLocked.Contains(skillNo)) return;
             if (_skillsCooldown.Running()) return;
             if (TryLockSkill(skillNo)) return;

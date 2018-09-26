@@ -5,15 +5,14 @@ namespace Game.Combat.Generation
 {
     public class FoodSource : ContainerController
     {
-        private readonly string _foodType;
         private GameObject _insectPrefab;
 
         public FoodSource(Vector2 position) : base(position, "Plant")
         {
-            _foodType = ResourceTemplate.GetPlant().Name;
-            _inventory.Name = _foodType;
-            _inventory.IncrementResource(_foodType, 1);
-            ImageLocation = "Plants/" + _foodType;
+            string foodType = ResourceTemplate.GetPlant().Name;
+            _inventory.Name = foodType;
+            _inventory.IncrementResource(foodType, 1);
+            ImageLocation = "Plants/" + foodType;
         }
 
         public override ContainerBehaviour CreateObject(bool autoreveal = false)

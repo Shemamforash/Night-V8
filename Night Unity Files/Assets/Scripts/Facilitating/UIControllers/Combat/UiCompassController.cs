@@ -63,7 +63,7 @@ public class UiCompassController : MonoBehaviour
         _showItemTimeCurrent = 0f;
         ContainerController.Containers.ForEach(c =>
         {
-            if (c.Revealed() && Helper.OnScreen(c.gameObject)) return;
+            if (c.Revealed()) return;
             if (Vector2.Distance(c.transform.position, transform.position) > MaxDetectDistance) return;
             GameObject indicator = Instantiate(_indicatorPrefab);
             indicator.transform.SetParent(transform, false);

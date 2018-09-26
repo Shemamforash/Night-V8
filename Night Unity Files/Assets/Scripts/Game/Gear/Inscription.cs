@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Combat.Player;
 using Game.Gear.Weapons;
 using Game.Global;
 using NUnit.Framework;
@@ -19,17 +21,15 @@ namespace Game.Gear
         private static bool _readTemplates;
         private readonly AttributeModifier _modifier;
         private readonly InscriptionTemplate _template;
-        private readonly InscriptionTier _inscriptionTier;
         private readonly int _inscriptionCost;
 
-        private Inscription(InscriptionTemplate template, ItemQuality quality) : base("A " + (InscriptionTier) quality + " of " + template.Name, GearSubtype.Inscription, quality)
+        private Inscription(InscriptionTemplate template, ItemQuality quality) : base("A " + QualityToInscription(quality) + " of " + template.Name, GearSubtype.Inscription, quality)
         {
             _template = template;
             _modifier = _template.GetModifier();
-            _inscriptionTier = (InscriptionTier) (int) quality;
             float finalBonus = _modifier.FinalBonus();
             float rawBonus = _modifier.RawBonus();
-            int tierModifier = (int) (_inscriptionTier + 1);
+            int tierModifier = (int) (quality + 1);
             finalBonus *= tierModifier;
             rawBonus *= tierModifier;
             _modifier.SetFinalBonus(finalBonus);
@@ -53,6 +53,8 @@ namespace Game.Gear
             CharacterAttribute attribute = player?.Attributes.Get(_template.AttributeTarget);
             Assert.IsNotNull(attribute);
             attribute.Max += _modifier.RawBonus();
+            if (PlayerCombat.Instance == null) return;
+            PlayerCombat.Instance.RecalculateAttributes();
         }
 
         public void ApplyModifierToWeapon(Weapon item)
@@ -69,6 +71,8 @@ namespace Game.Gear
             CharacterAttribute attribute = player?.Attributes.Get(_template.AttributeTarget);
             Assert.IsNotNull(attribute);
             attribute.Max -= _modifier.RawBonus();
+            if (PlayerCombat.Instance == null) return;
+            PlayerCombat.Instance.RecalculateAttributes();
         }
 
         public void RemoveModifierFromWeapon(Weapon item)
@@ -94,26 +98,36 @@ namespace Game.Gear
             _readTemplates = true;
         }
 
-        private enum InscriptionTier
+        private static string QualityToInscription(ItemQuality quality)
         {
-            Murmur,
-            Whisper,
-            Cry,
-            Wail,
-            Bellow
+            switch (quality)
+            {
+                case ItemQuality.Dark:
+                    return "Murmur";
+                case ItemQuality.Dull:
+                    return "Whisper";
+                case ItemQuality.Glowing:
+                    return "Cry";
+                case ItemQuality.Shining:
+                    return "Wail";
+                case ItemQuality.Radiant:
+                    return "Bellow";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public override XmlNode Save(XmlNode root)
         {
             root = base.Save(root);
-            root.CreateChild("Template", _template.Name);
+            root.CreateChild("InscriptionTemplate", _template.Name);
             return root;
         }
 
         public static Inscription LoadInscription(XmlNode root)
         {
             ReadTemplates();
-            string templateString = root.StringFromNode("Template");
+            string templateString = root.StringFromNode("InscriptionTemplate");
             Debug.Log(templateString);
             InscriptionTemplate template = _inscriptionTemplates.First(t => t.Name == templateString);
             ItemQuality quality = (ItemQuality) root.IntFromNode("Quality");

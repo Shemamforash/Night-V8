@@ -35,7 +35,6 @@ namespace Game.Combat.Enemies.Humans
             Vector2 currentPosition = transform.position;
             SkillAnimationController.Create(transform, "Martyr", 0.5f, () =>
             {
-                Debug.Log("Fart" + transform.position);
                 Explosion.CreateExplosion(currentPosition, 50, 2).InstantDetonate();
             });
         }

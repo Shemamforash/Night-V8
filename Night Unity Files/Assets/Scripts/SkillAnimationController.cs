@@ -59,10 +59,8 @@ public class SkillAnimationController : MonoBehaviour
         sequence.Insert(0f, _glowSprite.DOColor(Color.red, _warmUpTime).SetEase(Ease.InExpo));
         sequence.AppendCallback(() =>
         {
-            Debug.Log("callback" + _callback);
             _callback?.Invoke();
         });
-
         sequence.AppendInterval(_glowTime);
         sequence.Append(_skillSprite.DOColor(UiAppearanceController.InvisibleColour, _fadeTime).SetEase(Ease.OutQuad));
         sequence.Insert(_warmUpTime + _glowTime, _glowSprite.DOColor(_transparentRed, _fadeTime).SetEase(Ease.OutQuad));

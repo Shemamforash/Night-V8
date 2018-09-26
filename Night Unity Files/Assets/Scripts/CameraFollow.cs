@@ -12,7 +12,6 @@ public class CameraFollow : MonoBehaviour {
 		_playerTransform = PlayerCombat.Instance.transform;
 	}
 
-
 	public void LateUpdate()
 	{
 		if (!CombatManager.IsCombatActive()) return;

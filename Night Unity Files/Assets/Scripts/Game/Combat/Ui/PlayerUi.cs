@@ -27,14 +27,13 @@ namespace Game.Combat.Ui
 
         public void Update()
         {
-            List<ITakeDamageInterface> chars = CombatManager.GetEnemiesInRange(PlayerCombat.Instance.transform.position, 10f);
+            List<ITakeDamageInterface> chars = CombatManager.GetEnemiesInRange(PlayerCombat.Instance.transform.position, 5f);
             Vector2 playerDir = PlayerCombat.Instance.transform.up;
             float nearestAngle = 360;
             ITakeDamageInterface nearestCharacter = null;
             chars.ForEach(c =>
             {
                 GameObject enemy = c.GetGameObject();
-                if (!enemy.OnScreen()) return;
                 Vector2 enemyDir = enemy.transform.position - PlayerCombat.Instance.transform.position;
                 float enemyAngle = Vector2.Angle(playerDir, enemyDir);
                 if (enemyAngle > 10) return;

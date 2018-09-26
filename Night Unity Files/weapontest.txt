@@ -1,65 +1,65 @@
-Type: Pistol  ---  Quality: Rusted
-        DPS: 85.1 (min: 51.3 /max: 106 )
-        Damage: 30.2 (min: 12.6 /max: 45)
-        Accuracy: 67.8 (min: 55 /max: 82.5)
-        FireRate: 5.3 (min: 3.6 /max: 7.2)
+Type: Pistol  ---  Quality: Dark
+        DPS: 105.2 (min: 102.5 /max: 106.8 )
+        Damage: 36 (min: 23.4 /max: 45)
+        Accuracy: 0.7 (min: 0.6 /max: 0.7)
+        FireRate: 5.7 (min: 3.6 /max: 7.2)
 
-Pistol Slinger Rusted
-Durability: 10 (50)
-DPS: 105.9553
-Automatic: True
-Capacity:   10
-Pellets:    1
-Damage:     34.2
-Fire Rate:  3.6
-Reload:     0.45
-Accuracy: 66
-Pistol Shortshooter Rusted
-Durability: 10 (50)
-DPS: 51.25424
+Pistol Shortshooter Dark
+Durability: 10 (10)
+DPS: 106.7681
 Automatic: False
 Capacity:   12
 Pellets:    1
-Damage:     12.6
-Fire Rate:  4.8
-Reload:     0.45
-Accuracy: 55
+Damage:     23.4
+Fire Rate:  6
+Reload:     0.63
+Accuracy: 0.66
+Pistol Deepdriver Dark
+Durability: 10 (10)
+DPS: 102.5316
+Automatic: False
+Capacity:   6
+Pellets:    1
+Damage:     45
+Fire Rate:  7.2
+Reload:     1.8
+Accuracy: 0.715
 Type: Pistol  ---  Quality: Radiant
-        DPS: 106.2 (min: 64.2 /max: 132.8 )
-        Damage: 32.8 (min: 12.6 /max: 53)
-        Accuracy: 69 (min: 55 /max: 85.5)
-        FireRate: 5.4 (min: 3.6 /max: 7.7)
+        DPS: 501.8 (min: 500 /max: 503.2 )
+        Damage: 66.4 (min: 23.4 /max: 125)
+        Accuracy: 0.8 (min: 0.6 /max: 1)
+        FireRate: 7.5 (min: 3.6 /max: 12)
 
-Pistol Slinger Radiant
-Durability: 14 (50)
-DPS: 132.7547
-Automatic: True
-Capacity:   10
-Pellets:    1
-Damage:     40.28
-Fire Rate:  3.84
-Reload:     0.43
-Accuracy: 68.4
 Pistol Shortshooter Radiant
-Durability: 14 (50)
-DPS: 64.20189
+Durability: 50 (50)
+DPS: 503.2258
 Automatic: False
 Capacity:   12
 Pellets:    1
-Damage:     14.84
-Fire Rate:  5.12
-Reload:     0.43
-Accuracy: 57
+Damage:     65
+Fire Rate:  10
+Reload:     0.35
+Accuracy: 0.9
+Pistol Deepdriver Radiant
+Durability: 50 (50)
+DPS: 500
+Automatic: False
+Capacity:   6
+Pellets:    1
+Damage:     125
+Fire Rate:  12
+Reload:     1
+Accuracy: 0.975
 
 
-Type: Rifle  ---  Quality: Rusted
-        DPS: 104 (min: 102.3 /max: 105.2 )
-        Damage: 131.7 (min: 90 /max: 162)
-        Accuracy: 99 (min: 99 /max: 99)
-        FireRate: 1.5 (min: 1.2 /max: 2.4)
+Type: Rifle  ---  Quality: Dark
+        DPS: 104.5 (min: 103.8 /max: 105.2 )
+        Damage: 132.4 (min: 90 /max: 165.6)
+        Accuracy: 0.8 (min: 0.8 /max: 0.8)
+        FireRate: 1.6 (min: 1.2 /max: 2.4)
 
-Rifle Groundrider Rusted
-Durability: 10 (50)
+Rifle Groundrider Dark
+Durability: 10 (10)
 DPS: 105.1948
 Automatic: False
 Capacity:   6
@@ -67,204 +67,204 @@ Pellets:    1
 Damage:     135
 Fire Rate:  1.2
 Reload:     2.7
-Accuracy: 99
-Rifle Voidwalker Rusted
-Durability: 10 (50)
-DPS: 102.3158
-Automatic: False
+Accuracy: 0.77
+Rifle Shoulderbreaker Dark
+Durability: 10 (10)
+DPS: 103.8462
+Automatic: True
 Capacity:   6
 Pellets:    1
-Damage:     162
-Fire Rate:  1.2
-Reload:     4.5
-Accuracy: 99
+Damage:     90
+Fire Rate:  2.4
+Reload:     2.7
+Accuracy: 0.77
 Type: Rifle  ---  Quality: Radiant
-        DPS: 129.4 (min: 127.4 /max: 131.3 )
-        Damage: 142.9 (min: 90 /max: 190.8)
-        Accuracy: 99.5 (min: 99 /max: 100)
-        FireRate: 1.6 (min: 1.2 /max: 2.6)
+        DPS: 500.7 (min: 500 /max: 501.8 )
+        Damage: 249.9 (min: 90 /max: 460)
+        Accuracy: 0.9 (min: 0.8 /max: 1)
+        FireRate: 2.1 (min: 1.2 /max: 4)
 
-Rifle Groundrider Radiant
-Durability: 14 (50)
-DPS: 131.2693
-Automatic: False
-Capacity:   6
-Pellets:    1
-Damage:     159
-Fire Rate:  1.28
-Reload:     2.58
-Accuracy: 100
 Rifle Voidwalker Radiant
-Durability: 14 (50)
-DPS: 127.3769
+Durability: 50 (50)
+DPS: 501.8182
 Automatic: False
 Capacity:   6
 Pellets:    1
-Damage:     190.8
-Fire Rate:  1.28
-Reload:     4.3
-Accuracy: 100
+Damage:     460
+Fire Rate:  2
+Reload:     2.5
+Accuracy: 1
+Rifle Shoulderbreaker Radiant
+Durability: 50 (50)
+DPS: 500
+Automatic: True
+Capacity:   6
+Pellets:    1
+Damage:     250
+Fire Rate:  4
+Reload:     1.5
+Accuracy: 1
 
 
-Type: Shotgun  ---  Quality: Rusted
-        DPS: 107.9 (min: 103.4 /max: 113.9 )
-        Damage: 9.5 (min: 5.4 /max: 14.4)
-        Accuracy: 22 (min: 22 /max: 22)
-        FireRate: 4.7 (min: 1.8 /max: 7.2)
+Type: Shotgun  ---  Quality: Dark
+        DPS: 103.1 (min: 101.3 /max: 105.6 )
+        Damage: 10.2 (min: 5.4 /max: 14.4)
+        Accuracy: 0.2 (min: 0.2 /max: 0.2)
+        FireRate: 4.9 (min: 1.8 /max: 7.2)
 
-Shotgun Skullcrusher Rusted
-Durability: 10 (50)
-DPS: 113.9341
-Automatic: False
-Capacity:   2
-Pellets:    10
-Damage:     14.4
-Fire Rate:  7.2
-Reload:     2.25
-Accuracy: 22
-Shotgun Bonebreaker Rusted
-Durability: 10 (50)
-DPS: 103.3823
+Shotgun Bonebreaker Dark
+Durability: 10 (10)
+DPS: 105.565
 Automatic: False
 Capacity:   10
 Pellets:    10
 Damage:     9
 Fire Rate:  1.8
-Reload:     3.15
-Accuracy: 22
-Type: Shotgun  ---  Quality: Radiant
-        DPS: 134.2 (min: 129 /max: 140.7 )
-        Damage: 10.4 (min: 5.4 /max: 17)
-        Accuracy: 22.4 (min: 22 /max: 22.8)
-        FireRate: 4.9 (min: 1.8 /max: 7.7)
-
-Shotgun Skullcrusher Radiant
-Durability: 14 (50)
-DPS: 140.7225
+Reload:     2.97
+Accuracy: 0.22
+Shotgun Skullcrusher Dark
+Durability: 10 (10)
+DPS: 101.3094
 Automatic: False
 Capacity:   2
 Pellets:    10
-Damage:     16.96
-Fire Rate:  7.68
-Reload:     2.15
-Accuracy: 22.8
-Shotgun Bonebreaker Radiant
-Durability: 14 (50)
-DPS: 128.9799
+Damage:     14.4
+Fire Rate:  7.2
+Reload:     2.565
+Accuracy: 0.22
+Type: Shotgun  ---  Quality: Radiant
+        DPS: 501.3 (min: 500 /max: 502.6 )
+        Damage: 17.9 (min: 5.4 /max: 40)
+        Accuracy: 0.3 (min: 0.2 /max: 0.3)
+        FireRate: 6.3 (min: 1.8 /max: 12)
+
+Shotgun Skullcrusher Radiant
+Durability: 50 (50)
+DPS: 502.6178
 Automatic: False
-Capacity:   10
+Capacity:   2
 Pellets:    10
-Damage:     10.6
-Fire Rate:  1.92
-Reload:     3.01
-Accuracy: 22.8
+Damage:     40
+Fire Rate:  12
+Reload:     1.425
+Accuracy: 0.3
+Shotgun Leadspreader Radiant
+Durability: 50 (50)
+DPS: 500
+Automatic: True
+Capacity:   6
+Pellets:    10
+Damage:     15
+Fire Rate:  8
+Reload:     1.05
+Accuracy: 0.3
 
 
-Type: SMG  ---  Quality: Rusted
-        DPS: 103.9 (min: 101 /max: 108.6 )
-        Damage: 12.9 (min: 10.8 /max: 16.2)
-        Accuracy: 33 (min: 33 /max: 33)
-        FireRate: 12.2 (min: 9.6 /max: 14.4)
+Type: SMG  ---  Quality: Dark
+        DPS: 105.1 (min: 104.9 /max: 105.4 )
+        Damage: 13.8 (min: 10.8 /max: 18)
+        Accuracy: 0.3 (min: 0.3 /max: 0.3)
+        FireRate: 11.9 (min: 9.6 /max: 14.4)
 
-SMG Spitter Rusted
-Durability: 10 (50)
-DPS: 108.6033
+SMG Spitter Dark
+Durability: 10 (10)
+DPS: 105.423
 Automatic: False
 Capacity:   30
 Pellets:    1
 Damage:     10.8
 Fire Rate:  14.4
-Reload:     0.9
-Accuracy: 33
-SMG Gripshaker Rusted
-Durability: 10 (50)
-DPS: 100.987
+Reload:     0.99
+Accuracy: 0.33
+SMG Gripshaker Dark
+Durability: 10 (10)
+DPS: 104.8544
 Automatic: True
 Capacity:   20
 Pellets:    1
-Damage:     16.2
+Damage:     18
 Fire Rate:  9.6
-Reload:     1.125
-Accuracy: 33
+Reload:     1.35
+Accuracy: 0.33
 Type: SMG  ---  Quality: Radiant
-        DPS: 129.9 (min: 126 /max: 135.6 )
-        Damage: 14 (min: 10.8 /max: 19.1)
-        Accuracy: 33.6 (min: 33 /max: 34.2)
-        FireRate: 12.6 (min: 9.6 /max: 15.4)
+        DPS: 498.8 (min: 496.2 /max: 500 )
+        Damage: 25 (min: 10.8 /max: 50)
+        Accuracy: 0.4 (min: 0.3 /max: 0.5)
+        FireRate: 16.4 (min: 9.6 /max: 24)
 
 SMG Spitter Radiant
-Durability: 14 (50)
-DPS: 135.6498
+Durability: 50 (50)
+DPS: 500
 Automatic: False
 Capacity:   30
 Pellets:    1
-Damage:     12.72
-Fire Rate:  15.36
-Reload:     0.86
-Accuracy: 34.2
-SMG Gripshaker Radiant
-Durability: 14 (50)
-DPS: 126.0186
+Damage:     30
+Fire Rate:  24
+Reload:     0.55
+Accuracy: 0.45
+SMG Spewer Radiant
+Durability: 50 (50)
+DPS: 496.2406
 Automatic: True
-Capacity:   20
+Capacity:   30
 Pellets:    1
-Damage:     19.08
-Fire Rate:  10.24
-Reload:     1.075
-Accuracy: 34.2
+Damage:     30
+Fire Rate:  22
+Reload:     0.45
+Accuracy: 0.45
 
 
-Type: LMG  ---  Quality: Rusted
-        DPS: 107.4 (min: 103.3 /max: 110.7 )
-        Damage: 26.1 (min: 21.6 /max: 32.4)
-        Accuracy: 44 (min: 44 /max: 44)
-        FireRate: 6.9 (min: 6 /max: 8.4)
+Type: LMG  ---  Quality: Dark
+        DPS: 105.3 (min: 104.6 /max: 106.5 )
+        Damage: 25.8 (min: 21.6 /max: 30.6)
+        Accuracy: 0.4 (min: 0.4 /max: 0.4)
+        FireRate: 6.7 (min: 5.4 /max: 8.4)
 
-LMG Gouger Rusted
-Durability: 10 (50)
-DPS: 110.7061
+LMG Breacher Dark
+Durability: 10 (10)
+DPS: 106.5027
+Automatic: True
+Capacity:   70
+Pellets:    1
+Damage:     25.2
+Fire Rate:  5.4
+Reload:     3.6
+Accuracy: 0.44
+LMG Gouger Dark
+Durability: 10 (10)
+DPS: 104.5558
 Automatic: True
 Capacity:   50
 Pellets:    1
-Damage:     32.4
+Damage:     30.6
 Fire Rate:  6
 Reload:     6.3
-Accuracy: 44
-LMG Annihilator Rusted
-Durability: 10 (50)
-DPS: 103.3257
-Automatic: True
-Capacity:   50
-Pellets:    1
-Damage:     21.6
-Fire Rate:  8.400001
-Reload:     4.5
-Accuracy: 44
+Accuracy: 0.44
 Type: LMG  ---  Quality: Radiant
-        DPS: 134.8 (min: 128.7 /max: 137.9 )
-        Damage: 28.9 (min: 21.6 /max: 38.2)
-        Accuracy: 44.8 (min: 44 /max: 45.6)
-        FireRate: 7 (min: 6 /max: 9)
+        DPS: 501 (min: 500 /max: 502.4 )
+        Damage: 49.5 (min: 21.6 /max: 85)
+        Accuracy: 0.5 (min: 0.4 /max: 0.6)
+        FireRate: 8.7 (min: 5.4 /max: 14)
 
-LMG Gouger Radiant
-Durability: 14 (50)
-DPS: 137.936
-Automatic: True
-Capacity:   50
-Pellets:    1
-Damage:     38.16
-Fire Rate:  6.4
-Reload:     6.02
-Accuracy: 45.6
 LMG Annihilator Radiant
-Durability: 14 (50)
-DPS: 128.7403
+Durability: 50 (50)
+DPS: 502.3923
 Automatic: True
 Capacity:   50
 Pellets:    1
-Damage:     25.44
-Fire Rate:  8.96
-Reload:     4.3
-Accuracy: 45.6
+Damage:     60
+Fire Rate:  14
+Reload:     2.4
+Accuracy: 0.6
+LMG Gouger Radiant
+Durability: 50 (50)
+DPS: 500
+Automatic: True
+Capacity:   50
+Pellets:    1
+Damage:     85
+Fire Rate:  10
+Reload:     3.5
+Accuracy: 0.6
 
 

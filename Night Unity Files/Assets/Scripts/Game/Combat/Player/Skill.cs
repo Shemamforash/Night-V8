@@ -61,7 +61,7 @@ namespace Game.Combat.Player
             float distance = Vector2.Distance(character.transform.position, position);
             if (distance < 0f) distance = 1;
             float scaledForce = force / distance;
-            character.MovementController.Knockback(position, scaledForce);
+            character.MovementController.KnockBack(position, scaledForce);
         }
 
         protected List<ITakeDamageInterface> KnockbackInRange(float range, float force)
@@ -76,7 +76,11 @@ namespace Game.Combat.Player
         {
             if (Target() == null && _skillValue.NeedsTarget) return false;
             if (!freeSkill && !PlayerCombat.Instance.ConsumeAdrenaline(AdrenalineCost())) return false;
-            if (_skillValue.AppliesToMagazine) PlayerCombat.Instance.OnFireActions.Add(MagazineEffect);
+            if (_skillValue.AppliesToMagazine)
+            {
+                PlayerCombat.Instance.OnFireActions.Add(MagazineEffect);
+                ActiveSkillController.Play();
+            }
             else InstantEffect();
             UIMagazineController.UpdateMagazineUi();
             CombatManager.IncreaseSkillsUsed();

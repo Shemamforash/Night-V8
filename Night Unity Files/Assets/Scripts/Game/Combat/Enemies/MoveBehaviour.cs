@@ -112,13 +112,12 @@ namespace Game.Combat.Enemies
         private void DoStraightLinePath()
         {
             Vector2 difference = _targetCell.Position - _currentCell.Position;
-            float distanceToTarget = difference.magnitude;
-            if (distanceToTarget < 0) return;
-            float directionToTargetCell = difference.magnitude - _targetDistance;
+            float distanceToTargetCell = difference.magnitude - _targetDistance;
+            if (distanceToTargetCell < 0) return;
             Vector2 direction = difference.normalized;
-            Vector2 targetPosition = _currentCell.Position + direction * directionToTargetCell;
+            Vector2 targetPosition = _currentCell.Position + direction * distanceToTargetCell;
             _targetCell = PathingGrid.WorldToCellPosition(targetPosition);
-            Debug.DrawLine(_currentCell.Position, _targetCell.Position, Color.yellow, 1f);
+//            Debug.DrawLine(_currentCell.Position, _targetCell.Position, Color.yellow, 1f);
             _route = new List<Cell>(new[] {_currentCell, _targetCell});
         }
 
@@ -128,7 +127,7 @@ namespace Game.Combat.Enemies
             _pathNeedsUpdating = false;
             UpdateCurrentCell();
             bool outOfSight = Physics2D.Linecast(transform.position, _targetCell.Position, 1 << 8).collider != null;
-            Debug.DrawLine(_currentCell.Position, _targetCell.Position, outOfSight ? Color.red : Color.green, 1f);
+//            Debug.DrawLine(_currentCell.Position, _targetCell.Position, outOfSight ? Color.red : Color.green, 1f);
             if (outOfSight) DoPathfind();
             else DoStraightLinePath();
             Reposition();

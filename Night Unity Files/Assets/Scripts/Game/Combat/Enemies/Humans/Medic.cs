@@ -1,6 +1,7 @@
-﻿using Game.Combat.Generation;
+﻿using System.Collections.Generic;
+using Game.Combat.Generation;
+using Game.Combat.Misc;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Game.Combat.Enemies.Humans
 {
@@ -8,39 +9,80 @@ namespace Game.Combat.Enemies.Humans
     {
         private static GameObject _healPrefab;
         private EnemyBehaviour _healTarget;
+        private float _healCooldown;
+        private bool _goingToHeal;
+        private const float HealDistance = 0.5f;
 
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
             if (_healPrefab == null) _healPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Heal Indicator");
+
 //            MinimumFindCoverDistance = 20f;
+        }
+
+        private void ResetCooldown()
+        {
+            _healCooldown = Random.Range(5, 10);
         }
 
         public override void MyUpdate()
         {
             base.MyUpdate();
-            CheckHealTarget();
+            UpdateHealCooldown();
+            TryHeal();
         }
 
-        private void CheckHealTarget()
+        private void TryHeal()
         {
-            if (_healTarget == null) return;
-            if (!_healTarget.IsDead()) return;
-            _healTarget = null;
-            TryFire();
-        }
-
-        protected override void ReachTarget()
-        {
+            if (DistanceToTarget() > HealDistance / 2f) return;
             Heal();
+            ResetCooldown();
         }
 
-        public void RequestHeal(EnemyBehaviour healTarget)
+        private void UpdateHealCooldown()
         {
-            Assert.IsNull(_healTarget);
-            _healTarget = healTarget;
-            SetTarget(_healTarget);
-            //todo FollowTarget();
+            if (_healCooldown < 0)
+            {
+                FindTargetsToHeal();
+                return;
+            }
+
+            _healCooldown -= Time.deltaTime;
+        }
+
+        private void FindTargetsToHeal()
+        {
+            List<ITakeDamageInterface> chars = CombatManager.GetEnemiesInRange(transform.position, 5f);
+            List<EnemyBehaviour> enemiesNearby = new List<EnemyBehaviour>();
+            chars.ForEach(c =>
+            {
+                EnemyBehaviour behaviour = c as EnemyBehaviour;
+                if (behaviour == null) return;
+                if (behaviour is Martyr) return;
+                enemiesNearby.Add(behaviour);
+            });
+            if (enemiesNearby.Count == 0)
+            {
+                TargetCell = GetTarget().CurrentCell();
+                return;
+            }
+
+            enemiesNearby.Sort((a, b) =>
+            {
+                float enemyHealthA = a.HealthController.GetCurrentHealth();
+                float enemyHealthB = a.HealthController.GetCurrentHealth();
+                return enemyHealthA.CompareTo(enemyHealthB);
+            });
+            if (enemiesNearby[0].HealthController.GetNormalisedHealthValue() > 0.75f)
+            {
+                TargetCell = GetTarget().CurrentCell();
+                return;
+            }
+
+            Debug.Log(enemiesNearby[0].name);
+            TargetCell = enemiesNearby[0].CurrentCell();
+            _goingToHeal = true;
         }
 
         private void Heal()
@@ -59,11 +101,6 @@ namespace Game.Combat.Enemies.Humans
                 });
                 TryFire();
             });
-        }
-
-        public bool HasTarget()
-        {
-            return _healTarget != null;
         }
     }
 }

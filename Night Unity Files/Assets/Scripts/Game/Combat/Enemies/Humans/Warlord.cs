@@ -31,6 +31,7 @@ namespace Game.Combat.Enemies.Humans
         {
             int reinforcementSize = WorldState.Difficulty() / 10 + 2;
             List<EnemyTemplate> allowedEnemies = WorldState.GetAllowedHumanEnemyTypes();
+            allowedEnemies.RemoveAll(t => t.EnemyType == EnemyType.Warlord);
             List<EnemyType> enemiesToSpawn = new List<EnemyType>();
             while (reinforcementSize > 0)
             {

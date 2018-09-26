@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4029609774517734}
   - component: {fileID: 198566784878165244}
   - component: {fileID: 199859067035638064}
+  - component: {fileID: 114925649049950290}
   m_Layer: 0
   m_Name: Sicken Effect
   m_TagString: Untagged
@@ -41,6 +42,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114925649049950290
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1485465037404448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f5f4048c6a41ae9343df917ff6cb35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!198 &198566784878165244
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -53,7 +65,7 @@ ParticleSystem:
   stopAction: 2
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -809,7 +821,7 @@ ParticleSystem:
           m_PostInfinity: 2
           m_RotationOrder: 4
   EmissionModule:
-    enabled: 1
+    enabled: 0
     serializedVersion: 4
     rateOverTime:
       serializedVersion: 2

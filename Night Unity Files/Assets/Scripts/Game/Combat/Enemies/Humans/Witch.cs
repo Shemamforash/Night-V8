@@ -18,20 +18,23 @@ namespace Game.Combat.Enemies.Humans
             SkillAnimationController.Create(transform, "Witch", 1f, () =>
             {
                 Vector2 currentPosition = transform.position;
-                Vector2 targetPosition = GetTarget().transform.position;
+                Transform targetTransform = GetTarget().transform;
                 int max = 1;
                 if (WorldState.Difficulty() > 10) max = 2;
-                if (WorldState.Difficulty() > 20) max = 3;
+                if (WorldState.Difficulty() > 20) max = 4;
                 switch (Random.Range(0, max))
                 {
                     case 0:
-                        Grenade.CreateBasic(currentPosition, targetPosition);
+                        Grenade.CreateBasic(currentPosition, targetTransform);
                         break;
                     case 1:
-                        Grenade.CreateDecay(currentPosition, targetPosition);
+                        Grenade.CreateIncendiary(currentPosition, targetTransform);
                         break;
                     case 2:
-                        Grenade.CreateIncendiary(currentPosition, targetPosition);
+                        Grenade.CreateDecay(currentPosition, targetTransform);
+                        break;
+                    case 3:
+                        Grenade.CreateSickness(currentPosition, targetTransform);
                         break;
                 }
 

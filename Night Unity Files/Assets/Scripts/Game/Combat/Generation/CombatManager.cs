@@ -93,9 +93,19 @@ namespace Game.Combat.Generation
             InputHandler.SetCurrentListener(PlayerCombat.Instance);
         }
 
+        public static bool IsPlayerInCombat()
+        {
+            return Instance() != null && _inCombat;
+        }
+        
         public static bool IsCombatActive()
         {
-            return Instance() != null && _inCombat && !_paused;
+            return IsPlayerInCombat() && !IsCombatPaused();
+        }
+
+        public static bool IsCombatPaused()
+        {
+            return Instance() != null && _paused;
         }
 
         public static void SetCurrentRegion(Region region)
@@ -270,11 +280,6 @@ namespace Game.Combat.Generation
             return new List<ITakeDamageInterface>(Instance()._enemies.Where(e => Vector2.Distance(e.GetGameObject().transform.position, position) <= range));
         }
 
-        public static List<ITakeDamageInterface> EnemiesOnScreen()
-        {
-            return Instance()._enemies.FindAll(e => e.GetGameObject().gameObject.OnScreen());
-        }
-
         public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate type, CharacterCombat target = null)
         {
             Enemy e = _currentRegion.AddEnemy(type);
@@ -313,7 +318,7 @@ namespace Game.Combat.Generation
         {
             ITakeDamageInterface nearestEnemy = null;
             float nearestDistance = 10000;
-            EnemiesOnScreen().ForEach(e =>
+            Enemies().ForEach(e =>
             {
                 float distance = Vector2.Distance(e.GetGameObject().transform.position, position);
                 if (distance >= nearestDistance) return;
