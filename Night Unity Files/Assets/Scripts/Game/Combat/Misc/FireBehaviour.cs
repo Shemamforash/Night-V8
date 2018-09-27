@@ -21,6 +21,7 @@ namespace Game.Combat.Misc
         private int EmissionRate;
         private bool _keepAlive;
         private List<ITakeDamageInterface> _ignoreTargets;
+        private float _lifeTime;
 
         public void Awake()
         {
@@ -29,21 +30,27 @@ namespace Game.Combat.Misc
             _collider = GetComponent<CircleCollider2D>();
         }
 
-        public static FireBehaviour Create(Vector3 position, float size, bool keepAlive = false, bool lightOn = true)
+        public static FireBehaviour Create(Vector3 position, float size, float lifeTime = LifeTime, bool keepAlive = false, bool lightOn = true)
         {
             FireBehaviour fire = _firePool.Create();
-            fire.transform.position = position;
-            fire._keepAlive = keepAlive;
-            fire._ignoreTargets = new List<ITakeDamageInterface>();
-            fire.StartCoroutine(fire.Burn(position, size, lightOn));
+            fire.Initialise(position, size, lifeTime, keepAlive, lightOn);
             return fire;
+        }
+
+        private void Initialise(Vector3 position, float size, float lifeTime = LifeTime, bool keepAlive = false, bool lightOn = true)
+        {
+            transform.position = position;
+            _lifeTime = lifeTime;
+            _keepAlive = keepAlive;
+            _ignoreTargets = new List<ITakeDamageInterface>();
+            StartCoroutine(Burn(position, size, lightOn));
         }
 
         public void AddIgnoreTarget(ITakeDamageInterface _ignoreTarget)
         {
             _ignoreTargets.Add(_ignoreTarget);
         }
-        
+
         public void OnTriggerStay2D(Collider2D other)
         {
             if (!CombatManager.IsCombatActive()) return;
@@ -72,7 +79,7 @@ namespace Game.Combat.Misc
             gameObject.SetActive(true);
             _age = 0f;
             while (_keepAlive) yield return null;
-            while (_age < LifeTime)
+            while (_age < _lifeTime)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;
                 float normalisedTime = 1 - _age / LifeTime;

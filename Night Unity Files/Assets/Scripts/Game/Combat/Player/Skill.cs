@@ -14,7 +14,7 @@ namespace Game.Combat.Player
     {
         private static readonly Dictionary<string, SkillValue> _skillValues = new Dictionary<string, SkillValue>();
         private static bool _loaded;
-        
+
         public readonly string Name;
         private SkillValue _skillValue;
 
@@ -51,17 +51,18 @@ namespace Game.Combat.Player
 
         protected static EnemyBehaviour Target()
         {
-            return (EnemyBehaviour)PlayerCombat.Instance.GetTarget();
+            return (EnemyBehaviour) PlayerCombat.Instance.GetTarget();
         }
 
         private static void KnockbackSingleTarget(Vector2 position, ITakeDamageInterface c, float force)
         {
-            CharacterCombat character =  c as CharacterCombat;
+            CharacterCombat character = c as CharacterCombat;
             if (character == null) return;
             float distance = Vector2.Distance(character.transform.position, position);
             if (distance < 0f) distance = 1;
             float scaledForce = force / distance;
-            character.MovementController.KnockBack(position, scaledForce);
+            Vector2 direction = (position - (Vector2) character.transform.position).normalized;
+            character.MovementController.KnockBack(direction, scaledForce);
         }
 
         protected List<ITakeDamageInterface> KnockbackInRange(float range, float force)
@@ -82,9 +83,15 @@ namespace Game.Combat.Player
                 ActiveSkillController.Play();
             }
             else InstantEffect();
+
             UIMagazineController.UpdateMagazineUi();
             CombatManager.IncreaseSkillsUsed();
             return true;
+        }
+
+        public bool CanAfford()
+        {
+            return PlayerCombat.Instance.CanAffordSkill(AdrenalineCost());
         }
 
         protected void Heal(float percent)

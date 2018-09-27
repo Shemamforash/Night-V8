@@ -92,6 +92,7 @@ namespace Game.Combat.Misc
             }
 
             _sicknessDuration = 0;
+            Debug.Log(SicknessStacks);
         }
 
         public bool IsSick() => SicknessStacks > 0;
@@ -179,7 +180,7 @@ namespace Game.Combat.Misc
         public virtual void TakeShotDamage(Shot shot)
         {
             _spriteFlash.FlashSprite();
-            MovementController.KnockBack(shot.Direction(), shot.GetKnockbackForce());
+            MovementController.KnockBack(shot.Direction(), shot.GetKnockBackForce());
             float armourProtection = ArmourController.GetCurrentArmour() / 10f;
             int armourDamage = Mathf.CeilToInt(shot.DamageDealt() * armourProtection);
             int healthDamage = shot.DamageDealt() - armourDamage;
@@ -212,9 +213,10 @@ namespace Game.Combat.Misc
         {
             _spriteFlash.FlashSprite();
             HealthController.TakeDamage(damage);
-            MovementController.KnockBack(origin, 20f / origin.Distance(transform.position));
+            Vector2 direction = (origin - (Vector2) transform.position).normalized;
+            MovementController.KnockBack(direction, 50f / origin.Distance(transform.position));
         }
-        
+
         public virtual void Kill()
         {
             _isDead = true;

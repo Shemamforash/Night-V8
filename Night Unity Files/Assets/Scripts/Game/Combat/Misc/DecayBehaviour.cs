@@ -12,13 +12,20 @@ namespace Game.Combat.Misc
         private ParticleSystem _particles;
         private static readonly ObjectPool<DecayBehaviour> _decayPool = new ObjectPool<DecayBehaviour>("Decay Areas", "Prefabs/Combat/Effects/Decay Area");
         private List<ITakeDamageInterface> _ignoreTargets;
+        private float _radius;
 
-        public static DecayBehaviour Create(Vector3 position)
+        public static DecayBehaviour Create(Vector3 position, float radius = 1f)
         {
             DecayBehaviour decayBehaviour = _decayPool.Create();
-            decayBehaviour.transform.position = position;
-            decayBehaviour._ignoreTargets = new List<ITakeDamageInterface>();
+            decayBehaviour.Initialise(position, radius);
             return decayBehaviour;
+        }
+
+        private void Initialise(Vector3 position, float radius)
+        {
+            transform.position = position;
+            _radius = radius;
+            _ignoreTargets = new List<ITakeDamageInterface>();
         }
 
         public void AddIgnoreTarget(ITakeDamageInterface _ignoreTarget)
@@ -42,7 +49,9 @@ namespace Game.Combat.Misc
 
         private IEnumerator EmitAndDie()
         {
-            _particles.Emit(50);
+            ParticleSystem.ShapeModule shape = _particles.shape;
+            shape.radius = _radius;
+            _particles.Emit((int) (50 * _radius));
             while (_particles.particleCount > 0)
             {
                 if (!CombatManager.IsCombatActive()) _particles.PauseParticles();

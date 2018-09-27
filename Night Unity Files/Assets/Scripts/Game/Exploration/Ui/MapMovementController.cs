@@ -68,6 +68,11 @@ public class MapMovementController : MonoBehaviour, IInputListener
             newNearestRegion = region;
         });
         if (nearestDistance > 1.5f) newNearestRegion = null;
+        SetNearestRegion(newNearestRegion);
+    }
+
+    private void SetNearestRegion(Region newNearestRegion)
+    {
         if (_nearestRegion == newNearestRegion) return;
         _nearestRegion?.MapNode().LoseFocus();
         _nearestRegion = newNearestRegion;
@@ -105,19 +110,23 @@ public class MapMovementController : MonoBehaviour, IInputListener
         if (!isRegionVisible) _direction = Vector2.zero;
     }
 
+    private bool CanAffordToTravel()
+    {
+        int enduranceCost = _nearestRegion.MapNode().GetEnduranceCost();
+        bool canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(enduranceCost);
+        bool travellingToGate = _nearestRegion.GetRegionType() == RegionType.Gate;
+        bool canAffordToTravel = canAfford || travellingToGate;
+        return canAffordToTravel;
+    }
+
     private void TravelToRegion()
     {
         if (_nearestRegion == null) return;
-        int _enduranceCost = RoutePlotter.RouteBetween(_currentRegion, _nearestRegion).Count - 1;
-        bool enoughEndurance = _enduranceCost <= CharacterManager.SelectedCharacter.Attributes.Val(AttributeType.Endurance);
-        bool travellingToGate = _nearestRegion.GetRegionType() == RegionType.Gate;
-        if (!enoughEndurance && !travellingToGate) return;
+        if (!CanAffordToTravel()) return;
         Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
-        travelAction.TravelTo(_nearestRegion, _enduranceCost);
-        if (_currentRegion != _nearestRegion)
-        {
-            ReturnToGame(_nearestRegion);
-        }
+        travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetEnduranceCost());
+        if (_currentRegion == _nearestRegion) return;
+        ReturnToGame(_nearestRegion);
     }
 
     private static void ReturnToGame(Region region)

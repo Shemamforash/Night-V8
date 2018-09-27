@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Characters;
+using Game.Characters.CharacterActions;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Animals;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
@@ -10,6 +11,7 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -264,8 +266,19 @@ namespace Game.Combat.Generation
             Instance()._regionNameText.text = "";
             Instance()._regionUnderline.color = UiAppearanceController.InvisibleColour;
             PlayerCombat.Instance.ExitCombat();
+            ChangeScene(returnToMap);
+        }
+
+        private static void ChangeScene(bool returnToMap)
+        {
             if (!returnToMap) return;
-            SceneChanger.GoToMapScene();
+            if (CharacterManager.SelectedCharacter.CanAffordTravel())
+            {
+                SceneChanger.GoToMapScene();
+                return;
+            }
+            Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
+            travelAction.TravelTo(MapGenerator.GetInitialNode(), 0);
         }
 
         public static List<ITakeDamageInterface> GetCharactersInRange(Vector2 position, float range)

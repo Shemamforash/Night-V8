@@ -47,7 +47,7 @@ namespace Game.Combat.Player
 
         private bool _dashPressed;
 
-        private CharacterCombat _lockedTarget;
+        private CharacterCombat _lockedOn;
         private const float RotateSpeedMax = 100f;
         private float _rotateSpeedCurrent;
         private const float RotateAcceleration = 400f;
@@ -61,10 +61,15 @@ namespace Game.Combat.Player
 
         public bool ConsumeAdrenaline(int amount)
         {
-            if (amount > _adrenalineLevel.CurrentValue()) return false;
+            if (!CanAffordSkill(amount)) return false;
             _adrenalineLevel.Decrement(amount);
             RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
             return true;
+        }
+
+        public bool CanAffordSkill(int amount)
+        {
+            return amount <= _adrenalineLevel.CurrentValue();
         }
 
         private void Move(Vector2 direction)
@@ -209,21 +214,19 @@ namespace Game.Combat.Player
 
         private void FollowTarget()
         {
-            if (_lockedTarget == null) return;
-            float rotation = AdvancedMaths.AngleFromUp(transform.position, _lockedTarget.transform.position);
+            if (_lockedOn == null) return;
+            float rotation = AdvancedMaths.AngleFromUp(transform.position, _lockedOn.transform.position);
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         }
 
         private void LockTarget()
         {
-            if (_currentTarget == null) return;
-            _lockedTarget = _lockedTarget == null ? _currentTarget : null;
-            TargetBehaviour.SetLocked(_lockedTarget != null);
+            _lockedOn = _lockedOn == null ? _currentTarget : null;
         }
 
         private void Rotate(float direction)
         {
-            if (_lockedTarget != null) return;
+            if (_lockedOn != null) return;
             _rotateSpeedCurrent += RotateAcceleration * Time.deltaTime;
             if (_rotateSpeedCurrent > RotateSpeedMax) _rotateSpeedCurrent = RotateSpeedMax;
             transform.Rotate(Vector3.forward, _rotateSpeedCurrent * Time.deltaTime * (-direction).Polarity());
@@ -395,7 +398,8 @@ namespace Game.Combat.Player
 
             _muzzleFlash = GameObject.Find("Muzzle Flash").GetComponent<FastLight>();
             Player = CharacterManager.SelectedCharacter;
-            Player.Inventory().Move(WeaponGenerator.GenerateWeapon(ItemQuality.Glowing), 1);
+#if UNITY_EDITOR
+            Player.Inventory().Move(WeaponGenerator.GenerateWeapon(ItemQuality.Radiant), 1);
             for (int i = 0; i < 50; ++i)
             {
                 Player.Inventory().Move(Inscription.Generate(10), 1);
@@ -403,6 +407,7 @@ namespace Game.Combat.Player
 
             Player.Inventory().Move(ArmourPlate.Create(ItemQuality.Radiant), 1);
             Player.Inventory().IncrementResource("Essence", 50);
+#endif
             HealthController.SetInitialHealth(Player.Attributes.CalculateInitialHealth(), this, Player.Attributes.CalculateMaxHealth());
             EquipWeapon(Weapon());
             EquipArmour();
@@ -435,22 +440,15 @@ namespace Game.Combat.Player
             return _dashCooldown == null && _dashPressed && ConsumeAdrenaline(1);
         }
 
-        public void Knockback(Vector3 source, float force = 10f)
-        {
-            MovementController.KnockBack(source, force);
-            StopReloading();
-        }
-
         public void SetTarget(EnemyBehaviour e)
         {
-            Debug.Log(e + " " + _lockedTarget);
-            if (_lockedTarget != null) return;
-            if (e != null) return;
-            Flit flit = e as Flit;
-            if (flit != null && !flit.Discovered()) return;
-            TargetBehaviour.SetTarget(e == null ? null : e.transform);
+            if (_lockedOn != null) return;
+            if (e != null)
+            {
+                Flit flit = e as Flit;
+                if (flit != null && !flit.Discovered()) return;
+            }
             _currentTarget = e;
-            EnemyUi.Instance().SetSelectedEnemy(e);
         }
 
         public override Weapon Weapon() => Player.EquippedWeapon;
@@ -599,6 +597,11 @@ namespace Game.Combat.Player
             TakeRawDamage(damage, Vector2.zero);
             if (Random.Range(0f, 1f) >= Player.Attributes.InstantCooldownChance) return;
             SkillBar.ResetCooldowns();
+        }
+
+        public bool IsTargetLocked()
+        {
+            return _lockedOn != null;
         }
     }
 }

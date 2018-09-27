@@ -2,10 +2,12 @@
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI;
+using TMPro;
 using UnityEngine;
 
 public class DurabilityBarController : MonoBehaviour
 {
+    private TextMeshProUGUI _durabilityText;
     private RectTransform _durabilityTransform;
     private ParticleSystem _durabilityParticles;
     private Weapon _weapon;
@@ -18,6 +20,7 @@ public class DurabilityBarController : MonoBehaviour
     {
         _durabilityTransform = gameObject.FindChildWithName<RectTransform>("Max");
         _durabilityParticles = gameObject.FindChildWithName<ParticleSystem>("Current");
+        _durabilityText = transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
     }
 
     public void Reset()
@@ -26,11 +29,18 @@ public class DurabilityBarController : MonoBehaviour
         _durabilityTransform.anchorMax = Vector2.zero;
     }
 
+    private void SetText(string str)
+    {
+        if (_durabilityText == null) return;
+        _durabilityText.text = str;
+    }
+
     public void Update()
     {
         if (_weapon == null)
         {
             _durabilityParticles.Stop();
+            SetText("");
             return;
         }
 
@@ -39,6 +49,7 @@ public class DurabilityBarController : MonoBehaviour
         if (!_forceUpdate && pixelWidth == _lastPixelWidth) return;
 
         Number durability = _weapon.WeaponAttributes.GetDurability();
+        SetText((int) durability.CurrentValue() + " Imbued Essence");
         float maxDurability = durability.Max;
         float normalisedDurability = durability.Normalised();
         float rectAnchorOffset = maxDurability / AbsoluteMaxDurability / 2;
@@ -47,8 +58,9 @@ public class DurabilityBarController : MonoBehaviour
         _forceUpdate = false;
         _lastPixelWidth = pixelWidth;
 
-        _durabilityTransform.anchorMin = new Vector2(0.5f - rectAnchorOffset, 0.5f);
-        _durabilityTransform.anchorMax = new Vector2(0.5f + rectAnchorOffset, 0.5f);
+        float yAnchor = _durabilityTransform.anchorMin.y;
+        _durabilityTransform.anchorMin = new Vector2(0.5f - rectAnchorOffset, yAnchor);
+        _durabilityTransform.anchorMax = new Vector2(0.5f + rectAnchorOffset, yAnchor);
 
         float worldWidth = pixelWidth * WorldWidthCoefficient * normalisedDurability;
         ParticleSystem.ShapeModule shape = _durabilityParticles.shape;

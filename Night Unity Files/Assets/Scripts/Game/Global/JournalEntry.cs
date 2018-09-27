@@ -17,7 +17,7 @@ namespace Game.Global
         private static readonly Dictionary<int, List<JournalEntry>> LockedEntries = new Dictionary<int, List<JournalEntry>>();
         private static readonly Dictionary<int, string> _mainStoryText = new Dictionary<int, string>();
         private static readonly List<JournalEntry> UnlockedEntries = new List<JournalEntry>();
-        private static bool _loaded = false;
+        private static bool _loaded;
 
         private JournalEntry(XmlNode journalNode)
         {
@@ -64,7 +64,6 @@ namespace Game.Global
 
         public static JournalEntry GetEntry()
         {
-            return null;
             ReadJournals();
             List<JournalEntry> randomGroup = LockedEntries[LockedEntries.Keys.ToArray().RandomElement()];
             return LockedEntries.Count == 0 ? null : randomGroup[0];

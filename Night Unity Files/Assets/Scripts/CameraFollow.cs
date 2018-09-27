@@ -2,22 +2,30 @@
 using Game.Combat.Player;
 using UnityEngine;
 
-public class CameraFollow : MonoBehaviour {
+public class CameraFollow : MonoBehaviour
+{
+    private Transform _playerTransform;
+    private Vector3 _position;
+    private Quaternion _rotation;
 
-	private Transform _playerTransform;
-	
-	private void Start()
-	{
-		if (PlayerCombat.Instance == null) return;
-		_playerTransform = PlayerCombat.Instance.transform;
-	}
+    private void Start()
+    {
+        if (PlayerCombat.Instance == null) return;
+        _playerTransform = PlayerCombat.Instance.transform;
+    }
 
-	public void LateUpdate()
-	{
-		if (!CombatManager.IsCombatActive()) return;
-		if (CameraLock.IsCameraLocked()) transform.rotation = _playerTransform.rotation;
-		Vector3 playerPosition = _playerTransform.position;
-		playerPosition.z = transform.position.z;
-		transform.position = playerPosition;
-	}
+    public void LateUpdate()
+    {
+        if (!CombatManager.IsCombatActive())
+        {
+            transform.position = _position;
+            return;
+        }
+
+        if (CameraLock.IsCameraLocked()) _rotation = _playerTransform.rotation;
+        transform.rotation = _rotation;
+        _position = _playerTransform.position;
+        _position.z = transform.position.z;
+        transform.position = _position;
+    }
 }

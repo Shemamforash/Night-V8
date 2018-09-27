@@ -37,10 +37,9 @@ namespace Game.Combat.Enemies
             _forceToadd += direction * speed * Time.deltaTime / 0.016f;
         }
 
-        public void KnockBack(Vector3 source, float force = 10f)
+        public void KnockBack(Vector3 direction, float force = 10f)
         {
-            Vector3 direction = (transform.position - source).normalized;
-            _forceToadd = direction * force;
+            _rigidbody.AddForce(direction * force);
         }
 
         public void AddForce(Vector2 force)

@@ -58,7 +58,8 @@ namespace Facilitating.UIControllers
                     chunk.SetInvisible();
             }
 
-            _armourText.text = "-" + armourController.GetCurrentArmour() * 10f + "% damage";
+            if (slotsUsed == 0) _armourText.text = "No Armour";
+            else _armourText.text = "-" + armourController.GetCurrentArmour() * 10f + "% damage from Armour";
         }
 
         public void TakeDamage(ArmourController controller)

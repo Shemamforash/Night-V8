@@ -67,7 +67,7 @@ namespace Facilitating.Audio
 
         private void UpdateThunder()
         {
-//            if (WeatherManager.CurrentWeather().Thunder == 0) return;
+            if (WeatherManager.CurrentWeather().Thunder == 0) return;
             if (_waitingForThunder) return;
             StartCoroutine(ThunderStrike());
         }

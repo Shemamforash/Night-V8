@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using Game.Combat.Enemies.Misc;
+using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Combat.Enemies.Humans
 {
@@ -16,12 +19,24 @@ namespace Game.Combat.Enemies.Humans
 
         private void Push()
         {
-            PushController.Create(transform.position, 0f);
-            PushController.Create(transform.position, 90f);
-            PushController.Create(transform.position, 180f);
-            PushController.Create(transform.position, 270f);
-            ResetCooldown();
-            TryFire();
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendCallback(() => PushController.Create(transform.position, 0f, 360));
+            sequence.AppendInterval(0.25f);
+            sequence.AppendCallback(() => PushController.Create(transform.position, 0f, 360));
+            sequence.AppendInterval(0.5f);
+            sequence.AppendCallback(() =>
+            {
+                for (int i = 0; i < 10; ++i)
+                {
+                    Vector2 position = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1);
+                    position.Normalize();
+                    position = (Vector2)transform.position + position * Random.Range(1f, 2f);
+                    Grenade.CreateBasic(transform.position, position);
+                }
+
+                ResetCooldown();
+                TryFire();
+            });
         }
 
         protected override void OnAlert()

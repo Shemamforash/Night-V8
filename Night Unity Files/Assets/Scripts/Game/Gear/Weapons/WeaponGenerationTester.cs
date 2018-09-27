@@ -35,7 +35,6 @@ namespace Game.Gear.Weapons
                 _testResultString += "\n\n";
             }
 
-//            Debug.Log(_testResultString);
             File.WriteAllText(Directory.GetCurrentDirectory() + "/weapontest.txt", _testResultString.Replace("\n", Environment.NewLine));
         }
 

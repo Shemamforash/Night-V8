@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
+using Game.Combat.Player;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Humans
@@ -8,7 +9,6 @@ namespace Game.Combat.Enemies.Humans
     public class Medic : ArmedBehaviour
     {
         private static GameObject _healPrefab;
-        private EnemyBehaviour _healTarget;
         private float _healCooldown;
         private bool _goingToHeal;
         private const float HealDistance = 0.5f;
@@ -17,8 +17,6 @@ namespace Game.Combat.Enemies.Humans
         {
             base.Initialise(enemy);
             if (_healPrefab == null) _healPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Heal Indicator");
-
-//            MinimumFindCoverDistance = 20f;
         }
 
         private void ResetCooldown()
@@ -35,6 +33,12 @@ namespace Game.Combat.Enemies.Humans
 
         private void TryHeal()
         {
+            if (!_goingToHeal) return;
+            if (GetTarget() == null)
+            {
+                _goingToHeal = false;
+                SetTarget(PlayerCombat.Instance);
+            }
             if (DistanceToTarget() > HealDistance / 2f) return;
             Heal();
             ResetCooldown();
@@ -42,6 +46,7 @@ namespace Game.Combat.Enemies.Humans
 
         private void UpdateHealCooldown()
         {
+            if (_goingToHeal) return;
             if (_healCooldown < 0)
             {
                 FindTargetsToHeal();
@@ -64,7 +69,7 @@ namespace Game.Combat.Enemies.Humans
             });
             if (enemiesNearby.Count == 0)
             {
-                TargetCell = GetTarget().CurrentCell();
+                SetTarget(PlayerCombat.Instance);
                 return;
             }
 
@@ -76,12 +81,11 @@ namespace Game.Combat.Enemies.Humans
             });
             if (enemiesNearby[0].HealthController.GetNormalisedHealthValue() > 0.75f)
             {
-                TargetCell = GetTarget().CurrentCell();
+                SetTarget(PlayerCombat.Instance);
                 return;
             }
 
-            Debug.Log(enemiesNearby[0].name);
-            TargetCell = enemiesNearby[0].CurrentCell();
+            SetTarget(enemiesNearby[0]);
             _goingToHeal = true;
         }
 
@@ -96,7 +100,7 @@ namespace Game.Combat.Enemies.Humans
                     int healAmount = (int) (enemy.HealthController.GetMaxHealth() * 0.2f);
                     enemy.HealthController.Heal(healAmount);
                     GameObject healObject = Instantiate(_healPrefab);
-                    healObject.transform.position = _healTarget.transform.position;
+                    healObject.transform.position = enemy.transform.position;
                     healObject.transform.localScale = Vector3.one;
                 });
                 TryFire();

@@ -1,4 +1,4 @@
-﻿using SamsHelper.BaseGameFunctionality.Basic;
+﻿using Game.Global;
 
 namespace Game.Characters.CharacterActions
 {
@@ -18,8 +18,9 @@ namespace Game.Characters.CharacterActions
 
         protected override void OnClick()
         {
-            if (PlayerCharacter.Attributes.Get(AttributeType.Strength).ReachedMax()) return;
-            if (Duration == 0) SetDuration();
+            int maxSleepTime = PlayerCharacter.GetMaxSleepTime();
+            if (maxSleepTime == 0) return;
+            SetDuration(maxSleepTime * WorldState.MinutesPerHour / 2);
             Enter();
         }
     }

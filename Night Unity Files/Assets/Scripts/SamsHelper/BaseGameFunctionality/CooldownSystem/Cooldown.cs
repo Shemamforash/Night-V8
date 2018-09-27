@@ -90,7 +90,6 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
 
             _duringCooldown?.Invoke(Duration - elapsed);
             float normalisedDuration = 1 - (Duration - elapsed) / Duration;
-            Controllers.ForEach(c => c.UpdateCooldownFill(normalisedDuration));
         }
     }
 }

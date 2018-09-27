@@ -1,11 +1,11 @@
-﻿using SamsHelper.ReactiveUI.Elements;
+﻿using Game.Combat.Misc;
+using Game.Combat.Player;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 public class TargetBehaviour : MonoBehaviour
 {
-    private static Transform _target;
     private static SpriteRenderer _targetSprite;
-    private static bool _locked;
 
     private void Awake()
     {
@@ -13,20 +13,21 @@ public class TargetBehaviour : MonoBehaviour
         _targetSprite.color = UiAppearanceController.InvisibleColour;
     }
 
-    public static void SetTarget(Transform target)
+    private void UpdateSpriteColour(bool isLocked, CharacterCombat target)
     {
-        _target = target;
-        _targetSprite.color = _target == null ? UiAppearanceController.InvisibleColour : UiAppearanceController.FadedColour;
+        Color c;
+        if (isLocked) c = Color.white;
+        else if (target != null) c = UiAppearanceController.FadedColour;
+        else c = UiAppearanceController.InvisibleColour;
+        _targetSprite.color = c;
     }
-
-    public static void SetLocked(bool locked)
-    {
-        _targetSprite.color = locked ? Color.white : UiAppearanceController.FadedColour;
-    }
-
+    
     public void LateUpdate()
     {
-        if (_target == null) return;
-        transform.position = _target.transform.position;
+        CharacterCombat currentTarget = PlayerCombat.Instance.GetTarget();
+        bool isLocked = PlayerCombat.Instance.IsTargetLocked();
+        UpdateSpriteColour(isLocked, currentTarget);
+        if (currentTarget == null) return;
+        transform.position = currentTarget.transform.position;
     }
 }

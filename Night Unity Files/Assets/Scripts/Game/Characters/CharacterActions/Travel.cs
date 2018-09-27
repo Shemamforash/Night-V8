@@ -54,7 +54,6 @@ namespace Game.Characters.CharacterActions
 
         private void TransferResources()
         {
-            PlayerCharacter.Attributes.DecreaseWillpower();
             foreach (InventoryItem item in PlayerCharacter.Inventory().Contents())
             {
                 if (item.Template == null) continue;
@@ -119,6 +118,7 @@ namespace Game.Characters.CharacterActions
             _travelTime = 0;
             _inTransit = true;
             _target = target;
+            if (target.GetRegionType() != RegionType.Gate) CharacterManager.SelectedCharacter.Attributes.DecreaseWillpower();
             SetDuration(enduranceCost * MinutesPerEndurancePoint);
         }
 

@@ -135,16 +135,15 @@ namespace Game.Exploration.Ui
             _ring3.transform.Rotate(new Vector3(0, 0, 1), -4 * Time.deltaTime);
         }
 
+        public int GetEnduranceCost()
+        {
+            return _enduranceCost;
+        }
+
         private IEnumerator FadeInLetters()
         {
-            if (_region.GetRegionType() == RegionType.Gate)
-            {
-                _costText.text = "Return home";
-            }
-            else
-            {
-                _costText.text = _enduranceCost + " end";
-            }
+            if (_region.GetRegionType() == RegionType.Gate) _costText.text = "Return home";
+            else _costText.text = _enduranceCost + " Grit";
 
             _claimText.text = _region.ClaimBenefitString();
 

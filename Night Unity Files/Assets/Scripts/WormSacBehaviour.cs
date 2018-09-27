@@ -88,7 +88,8 @@ public class WormSacBehaviour : BossSectionHealthController
         foreach (EnemyType enemyType in typesToAdd)
         {
             EnemyBehaviour enemy = CombatManager.SpawnEnemy(enemyType, transform.position);
-            enemy.MovementController.KnockBack(transform.position, Random.Range(20f, 30f));
+            Vector2 direction = (enemy.transform.position - transform.position).normalized;
+            enemy.MovementController.KnockBack(direction, Random.Range(20f, 30f));
         }
     }
 

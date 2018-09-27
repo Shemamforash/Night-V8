@@ -1,7 +1,4 @@
-﻿using Game.Combat.Enemies.Humans;
-using Game.Combat.Generation;
-using Game.Combat.Misc;
-using Game.Gear.Weapons;
+﻿using Game.Gear.Weapons;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
@@ -19,8 +16,8 @@ namespace Game.Combat.Enemies
             base.Initialise(enemy);
             Assert.IsNotNull(Weapon());
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
-            DistanceFromTargetCell = Weapon().CalculateIdealDistance();
-            MinDistanceToMove = DistanceFromTargetCell * 0.25f;
+            MaxDistance = Weapon().CalculateIdealDistance();
+            MinDistance = MaxDistance * 0.25f;
         }
 
         protected override void OnAlert()

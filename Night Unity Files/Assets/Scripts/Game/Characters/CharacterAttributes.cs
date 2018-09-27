@@ -172,6 +172,12 @@ namespace Game.Characters
             float thirstIncrementAmount = thirstTemperatureModifier / DehydrateDeathTime;
             float hungerIncrementAmount = hungerTemperatureModifier / StarvationDeathTime;
 
+            if (!_player.IsConsuming())
+            {
+                thirstIncrementAmount = 0;
+                hungerIncrementAmount = 0;
+            }
+
             CharacterAttribute hunger = Get(AttributeType.Hunger);
             hunger.Increment(hungerIncrementAmount);
             if (hunger.ReachedMax()) _player.Kill();
@@ -215,16 +221,7 @@ namespace Game.Characters
 
         public void DecreaseWillpower()
         {
-            CharacterAttribute willpower = Get(AttributeType.Willpower);
-            willpower.Decrement();
-            int perceptionValue = (int) Val(AttributeType.Perception);
-            int strengthValue = (int) Val(AttributeType.Strength);
-            int enduranceValue = (int) Val(AttributeType.Endurance);
-            bool perceptionIsMax = perceptionValue > strengthValue && perceptionValue > enduranceValue;
-            bool strengthIsMax = strengthValue > perceptionValue && strengthValue > enduranceValue;
-            if (perceptionIsMax) Get(AttributeType.Perception).Decrement();
-            else if (strengthIsMax) Get(AttributeType.Strength).Decrement();
-            else Get(AttributeType.Endurance).Decrement();
+            Get(AttributeType.Willpower).Decrement();
         }
 
         public int CalculateCompassPulses()

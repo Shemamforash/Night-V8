@@ -20,7 +20,7 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             _canvasGroup = GetComponent<CanvasGroup>();
             _readyParticles = gameObject.FindChildWithName<ParticleSystem>("Ready");
             _cooldownFill.fillAmount = 1;
-            UpdateCooldownFill(1);
+            UpdateCooldownFill(1, false);
         }
 
         public void Text(string text)
@@ -28,23 +28,22 @@ namespace SamsHelper.BaseGameFunctionality.CooldownSystem
             _cooldownText.SetText(text);
         }
 
-        public void UpdateCooldownFill(float normalisedValue)
+        public void UpdateCooldownFill(float normalisedValue, bool canAfford)
         {
-            Color targetColor = _cooldownNotReadyColor;
-            if (normalisedValue == 1)
-            {
-                targetColor = Color.white;
-                if (!_readyParticles.isPlaying) _readyParticles.Play();
-            }
-            else if (_readyParticles.isPlaying) _readyParticles.Stop();
+            bool shouldPlay = normalisedValue == 1 && canAfford;
+            bool shouldStop = !shouldPlay && _readyParticles.isPlaying;
+            shouldPlay = shouldPlay && !_readyParticles.isPlaying;
+            if (shouldPlay) _readyParticles.Play();
+            else if (shouldStop) _readyParticles.Stop();
 
+            Color targetColor = normalisedValue == 1 ? Color.white : _cooldownNotReadyColor;
             _cooldownText.SetColor(targetColor);
             _cooldownFill.fillAmount = normalisedValue;
         }
 
         public void Reset()
         {
-            UpdateCooldownFill(1);
+            UpdateCooldownFill(1, false);
         }
 
         public void SetVisible(bool visible)

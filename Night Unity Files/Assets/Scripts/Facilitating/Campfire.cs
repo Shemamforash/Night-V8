@@ -88,29 +88,33 @@ namespace Facilitating
             _hourCounter = 0;
         }
 
+        private static void TryAddFuel()
+        {
+            ++_hourCounter;
+            if (_hourCounter != WorldState.MinutesPerHour) return;
+            CharacterManager.Characters.ForEach(c =>
+            {
+                if (!c.TravelAction.AtHome()) return;
+                CharacterAttributes attributes = c.Attributes;
+                attributes.Get(AttributeType.Endurance).Increment();
+                attributes.Get(AttributeType.Perception).Increment();
+            });
+            _hourCounter = 0;
+            if (WorldState.HomeInventory().GetResourceQuantity("Fuel") == 0) return;
+            WorldState.HomeInventory().DecrementResource("Fuel", 1);
+            _fireLevel = 1;
+        }
+
         public static void Die()
         {
             if (_tending) return;
-            ++_hourCounter;
-            if (_hourCounter == WorldState.MinutesPerHour)
+            if (_fireLevel == 0)
             {
-                CharacterManager.Characters.ForEach(c =>
-                {
-                    if (!c.TravelAction.AtHome()) return;
-                    CharacterAttributes attributes = c.Attributes;
-                    attributes.Get(AttributeType.Endurance).Increment();
-                    attributes.Get(AttributeType.Perception).Increment();
-                });
                 _hourCounter = 0;
-                if (WorldState.HomeInventory().GetResourceQuantity("Fuel") > 0)
-                {
-                    WorldState.HomeInventory().DecrementResource("Fuel", 1);
-                    _fireLevel = 1;
-                    return;
-                }
+                return;
             }
 
-            if (_fireLevel == 0) return;
+            TryAddFuel();
             _crackling.FadeOut(6f);
             _fireLevel -= 0.01f;
             if (_fireLevel > 0) return;

@@ -18,14 +18,15 @@ namespace Game.Global
         public readonly string Ingredient2;
         public readonly int Ingredient1Quantity;
         public readonly int Ingredient2Quantity;
-        public readonly float DurationInHours;
+        public const float DurationInHours = 1f;
         private static readonly List<Recipe> _recipes = new List<Recipe>();
         private static bool _loaded;
         public readonly string ProductName;
         public readonly int ProductQuantity;
         private readonly bool _requiresFire;
+        public readonly bool IsBuilding;
 
-        private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string productName, int productQuantity, float duration) : base(productName,
+        private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string productName, int productQuantity, bool isBuilding) : base(productName,
             GameObjectType.Resource)
         {
             Ingredient1 = ingredient1;
@@ -34,8 +35,8 @@ namespace Game.Global
             Ingredient2Quantity = ingredient2Quantity;
             ProductQuantity = productQuantity;
             ProductName = productName;
-            DurationInHours = duration;
             _requiresFire = ingredient1 == "Fire" || ingredient2 == "Fire";
+            IsBuilding = isBuilding;
         }
 
         public bool CanCraft()
@@ -141,8 +142,9 @@ namespace Game.Global
                 int ingredient2Quantity = recipeNode.IntFromNode("Ingredient1Quantity");
                 string productName = recipeNode.StringFromNode("ProductName");
                 int productQuantity = recipeNode.IntFromNode("ProductQuantity");
+                bool isBuilding = recipeNode.BoolFromNode("IsBuilding");
 
-                Recipe recipe = new Recipe(ingredient1Name, ingredient2Name, ingredient1Quantity, ingredient2Quantity, productName, productQuantity, 1);
+                Recipe recipe = new Recipe(ingredient1Name, ingredient2Name, ingredient1Quantity, ingredient2Quantity, productName, productQuantity, isBuilding);
                 _recipes.Add(recipe);
             }
 
@@ -152,6 +154,11 @@ namespace Game.Global
         public static Recipe FindRecipe(string recipeName)
         {
             return _recipes.FirstOrDefault(r => r.Name == recipeName);
+        }
+
+        public int Built()
+        {
+            return WorldState.HomeInventory().GetBuildingCount(ProductName);
         }
     }
 }

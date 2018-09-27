@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,8 +23,8 @@ namespace Game.Global
             DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, _fadeInTime);
             Sequence sequence = DOTween.Sequence();
             _fader.alpha = 1;
-            StartCoroutine(LoadNextScene());
             sequence.Append(_fader.DOFade(0, _fadeInTime));
+            sequence.AppendCallback(() => StartCoroutine(LoadNextScene()));
             if (SceneManager.GetActiveScene().name != "Game") return;
             sequence.InsertCallback(0.1f, WorldState.UnPause);
         }
@@ -41,7 +40,7 @@ namespace Game.Global
             ButtonClickListener.SuppressClick();
         }
 
-        private IEnumerator FadeOut(string sceneName, float fadeTime)
+        private IEnumerator FadeOut(string sceneName, float fadeTime, bool goToLoadingScene = true)
         {
             _fadeInTime = fadeTime;
             _sceneToLoad = sceneName;
@@ -49,23 +48,34 @@ namespace Game.Global
             VolumeController.SetModifiedVolume(1f);
             DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 0f, DefaultFadeTime);
             yield return _fader.DOFade(1, DefaultFadeTime).WaitForCompletion();
-            SceneManager.LoadScene("Loading");
+            TryGoToLoadingScene(goToLoadingScene);
+        }
+
+        private void TryGoToLoadingScene(bool goToLoadingScene)
+        {
+            if (goToLoadingScene)
+            {
+                SceneManager.LoadScene("Loading");
+                return;
+            }
+
+            StartCoroutine(LoadNextScene());
         }
 
         public static void GoToGameOverScene()
         {
-            ChangeScene("Game Over", DefaultFadeTime);
+            ChangeScene("Game Over", DefaultFadeTime, false);
         }
 
         public static void GoToMapScene()
         {
             Debug.Log("map");
-            ChangeScene("Map", DefaultFadeTime);
+            ChangeScene("Map", DefaultFadeTime, false);
         }
 
         public static void GoToStoryScene()
         {
-            ChangeScene("Story", DefaultFadeTime);
+            ChangeScene("Story", DefaultFadeTime, false);
         }
 
         public static void GoToCombatScene()
@@ -75,12 +85,12 @@ namespace Game.Global
 
         public static void GoToMainMenuScene()
         {
-            ChangeScene("Menu", DefaultFadeTime);
+            ChangeScene("Menu", DefaultFadeTime, false);
         }
 
         public static void GoToCreditsScene()
         {
-            ChangeScene("Credits", DefaultFadeTime);
+            ChangeScene("Credits", DefaultFadeTime, false);
         }
 
         public static void GoToGameScene()
@@ -88,10 +98,10 @@ namespace Game.Global
             ChangeScene("Game", DefaultFadeTime);
         }
 
-        private static void ChangeScene(string sceneName, float fadeTime)
+        private static void ChangeScene(string sceneName, float fadeTime, bool goToLoadingScene = true)
         {
             WorldState.Pause();
-            _instance.StartCoroutine(_instance.FadeOut(sceneName, fadeTime));
+            _instance.StartCoroutine(_instance.FadeOut(sceneName, fadeTime, goToLoadingScene));
         }
     }
 }

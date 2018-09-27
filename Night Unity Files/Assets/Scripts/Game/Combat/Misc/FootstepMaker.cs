@@ -7,7 +7,7 @@ namespace Game.Combat.Misc
 {
     public class FootstepMaker : MonoBehaviour
     {
-        private const float DistanceToFootPrint = 2f;
+        private const float DistanceToFootPrint = 0.5f;
         private readonly List<GameObject> _footstepPool = new List<GameObject>();
         private float _distanceTravelled;
         private GameObject _footprintPrefab;
@@ -77,6 +77,7 @@ namespace Game.Combat.Misc
         private void Update()
         {
             _distanceTravelled += Vector3.Distance(_lastPosition, transform.position);
+            _lastPosition = transform.position;
             if (_distanceTravelled < DistanceToFootPrint) return;
             if (_leftLast)
             {
@@ -96,9 +97,10 @@ namespace Game.Combat.Misc
                 _nextClip = 0;
             }
 
+            _audioSource.volume = Random.Range(0.6f, 0.8f);
+            _audioSource.pitch = Random.Range(0.9f, 1.1f);
             if (_audioClips.Length != 0) _audioSource.PlayOneShot(_audioClips[_nextClip]);
             _distanceTravelled = 0;
-            _lastPosition = transform.position;
         }
     }
 }

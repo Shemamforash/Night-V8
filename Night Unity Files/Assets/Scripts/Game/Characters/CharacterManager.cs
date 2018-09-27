@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Game.Gear;
 using Game.Gear.Weapons;
@@ -242,6 +244,25 @@ namespace Game.Characters
         public void AddBuilding(Building building)
         {
             _buildings.Add(building);
+        }
+
+        public int GetBuildingCount(string buildingName)
+        {
+            switch (buildingName)
+            {
+                case "Shelter":
+                    return _buildings.Count(b => b is Shelter);
+                case "Trap":
+                    return _buildings.Count(b => b is Trap);
+                case "Water Collector":
+                    return _buildings.Count(b => b is WaterCollector);
+                case "Condenser":
+                    return _buildings.Count(b => b is Condenser);
+                case "Essence Filter":
+                    return _buildings.Count(b => b is EssenceFilter);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public List<Building> Buildings()

@@ -9,20 +9,17 @@ namespace Game.Combat.Enemies
     [RequireComponent(typeof(MovementController))]
     public class MoveBehaviour : MonoBehaviour
     {
-        private static readonly List<List<MoveBehaviour>> _moveBuckets = new List<List<MoveBehaviour>>();
         private const int BucketSize = 15;
+
+        private static readonly List<List<MoveBehaviour>> _moveBuckets = new List<List<MoveBehaviour>>();
         private static int _currentUpdateBucket;
-        
-        private Cell _currentCell;
-        private Cell _targetCell;
-        private Cell _nextCell;
 
-        private float _targetDistance;
-        private bool _reachedTarget;
-
-        private MovementController _movementController;
         private List<Cell> _route = new List<Cell>();
-        private bool _shouldMove;
+        private Queue<Cell> _routeQueue;
+        private Cell _currentCell, _targetCell, _nextCell;
+        private MovementController _movementController;
+        private float _minDistance, _maxDistance;
+        private bool _reachedTarget, _shouldMove, _pathNeedsUpdating;
 
 
         public void Awake()
@@ -69,7 +66,7 @@ namespace Game.Combat.Enemies
             if (PathingGrid.IsCellHidden(_currentCell)) return false;
             Cell safeCell = PathingGrid.FindCoverNearMe(_currentCell);
             if (safeCell == null) return false;
-            GoToCell(safeCell);
+            GoToCell(safeCell, 0.1f, 0f);
             return true;
         }
 
@@ -80,12 +77,13 @@ namespace Game.Combat.Enemies
 
         public bool Moving() => _targetCell != null;
 
-        public void GoToCell(Cell targetCell, float distanceFromTarget = 0)
+        public void GoToCell(Cell targetCell, float maxDistance = 0.1f, float minDistance = 0f)
         {
             if (targetCell == null || !targetCell.Reachable) return;
             _targetCell = targetCell;
             _pathNeedsUpdating = true;
-            _targetDistance = distanceFromTarget;
+            _minDistance = minDistance;
+            _maxDistance = maxDistance;
         }
 
         private void FixedUpdate()
@@ -112,10 +110,11 @@ namespace Game.Combat.Enemies
         private void DoStraightLinePath()
         {
             Vector2 difference = _targetCell.Position - _currentCell.Position;
-            float distanceToTargetCell = difference.magnitude - _targetDistance;
-            if (distanceToTargetCell < 0) return;
+            float distanceToTargetCell = difference.magnitude;
+            if (distanceToTargetCell <= _maxDistance || distanceToTargetCell >= _minDistance) return;
             Vector2 direction = difference.normalized;
-            Vector2 targetPosition = _currentCell.Position + direction * distanceToTargetCell;
+            float distance = Random.Range(_minDistance, _maxDistance);
+            Vector2 targetPosition = _currentCell.Position + direction * distance;
             _targetCell = PathingGrid.WorldToCellPosition(targetPosition);
 //            Debug.DrawLine(_currentCell.Position, _targetCell.Position, Color.yellow, 1f);
             _route = new List<Cell>(new[] {_currentCell, _targetCell});
@@ -128,7 +127,7 @@ namespace Game.Combat.Enemies
             UpdateCurrentCell();
             bool outOfSight = Physics2D.Linecast(transform.position, _targetCell.Position, 1 << 8).collider != null;
 //            Debug.DrawLine(_currentCell.Position, _targetCell.Position, outOfSight ? Color.red : Color.green, 1f);
-            if (outOfSight) DoPathfind();
+            if (outOfSight) DoPathFind();
             else DoStraightLinePath();
             Reposition();
         }
@@ -138,11 +137,6 @@ namespace Game.Combat.Enemies
             Vector3 direction = ((Vector3) _nextCell.Position - transform.position).normalized;
             _movementController.Move(direction);
         }
-
-        private Queue<Cell> _routeQueue;
-        private Cell _followCell;
-        private bool _pathNeedsUpdating;
-        private float _minDistanceToMove;
 
         private void Move()
         {
@@ -175,25 +169,20 @@ namespace Game.Combat.Enemies
             _shouldMove = true;
         }
 
-        private void DoPathfind()
+        private void DoPathFind()
         {
             _route = PathingGrid.JPS(_currentCell, _targetCell);
             if (_route.Count == 0) return;
-            if (_targetDistance != 0)
+            float targetDistance = Random.Range(_minDistance, _maxDistance);
+            if (targetDistance != 0)
             {
                 for (int i = _route.Count - 1; i >= 0; --i)
                 {
                     Cell c = _route[i];
                     if (c == null) return;
                     float distance = Vector2.Distance(c.Position, _targetCell.Position);
-                    if (distance < _targetDistance)
-                    {
-                        _route.RemoveAt(i);
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    if (distance < targetDistance) _route.RemoveAt(i);
+                    else break;
                 }
             }
 

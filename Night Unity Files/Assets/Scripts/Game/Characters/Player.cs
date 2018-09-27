@@ -10,6 +10,7 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 namespace Game.Characters
 {
@@ -209,39 +210,31 @@ namespace Game.Characters
             }
         }
 
-        public void Rest()
-        {
-            CharacterAttribute endurance = Attributes.Get(AttributeType.Endurance);
-            CharacterAttribute perception = Attributes.Get(AttributeType.Perception);
-            bool alreadyMaxEndurance = endurance.ReachedMax();
-            bool alreadyMaxPerception = perception.ReachedMax();
-            endurance.Increment();
-            perception.Increment();
-            if (!alreadyMaxEndurance && endurance.ReachedMax())
-            {
-                WorldEventManager.GenerateEvent(new CharacterMessage("I ache, but I am ready", this));
-            }
-
-            if (!alreadyMaxPerception && perception.ReachedMax())
-            {
-                WorldEventManager.GenerateEvent(new CharacterMessage("My mind is sharp, and my eyes keen", this));
-            }
-        }
-
         public void Meditate()
         {
-            Rest();
-            Attributes.Get(AttributeType.Willpower).Increment();
-            if (!Attributes.Get(AttributeType.Willpower).ReachedMax()) return;
+            CharacterAttribute perception = Attributes.Get(AttributeType.Perception);
+            CharacterAttribute willpower = Attributes.Get(AttributeType.Willpower);
+            perception.Increment();
+            willpower.Increment();
+            if (!(perception.ReachedMax() && willpower.ReachedMax())) return;
             WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clear, I can focus now", this));
             RestAction.Enter();
         }
 
+        public bool CanAffordTravel(int enduranceCost = 1)
+        {
+            int enduranceRemaining = Mathf.CeilToInt(Attributes.Val(AttributeType.Endurance));
+            int willRemaining = Mathf.CeilToInt(Attributes.Val(AttributeType.Willpower));
+            return enduranceRemaining >= enduranceCost && willRemaining > 0;
+        }
+
         public void Sleep()
         {
-            Rest();
-            Attributes.Get(AttributeType.Strength).Increment();
-            if (!Attributes.Get(AttributeType.Strength).ReachedMax()) return;
+            CharacterAttribute strength = Attributes.Get(AttributeType.Strength);
+            CharacterAttribute endurance = Attributes.Get(AttributeType.Endurance);
+            strength.Increment();
+            endurance.Increment();
+            if (!(strength.ReachedMax() && endurance.ReachedMax())) return;
             WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clear, I can focus now", this));
             RestAction.Enter();
         }
@@ -312,6 +305,38 @@ namespace Game.Characters
         public CharacterView CharacterView()
         {
             return _characterView;
+        }
+
+        public int GetMaxMeditateTime()
+        {
+            int willpower = Mathf.CeilToInt(Attributes.Val(AttributeType.Willpower));
+            int willpowerMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Willpower));
+            int willpowerLoss = willpowerMax - willpower;
+
+            int perception = Mathf.CeilToInt(Attributes.Val(AttributeType.Perception));
+            int perceptionMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Perception));
+            int perceptionLoss = perceptionMax - perception;
+
+            return Mathf.Max(willpowerLoss, perceptionLoss);
+        }
+
+        public int GetMaxSleepTime()
+        {
+            int endurance = Mathf.CeilToInt(Attributes.Val(AttributeType.Endurance));
+            int enduranceMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Endurance));
+            int enduranceLoss = enduranceMax - endurance;
+
+            int strength = Mathf.CeilToInt(Attributes.Val(AttributeType.Strength));
+            int strengthMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Strength));
+            int strengthLoss = strengthMax - strength;
+
+            return Mathf.Max(enduranceLoss, strengthLoss);
+        }
+
+        public bool IsConsuming()
+        {
+            State currentState = States.GetCurrentState();
+            return currentState != MeditateAction && currentState != SleepAction;
         }
     }
 }

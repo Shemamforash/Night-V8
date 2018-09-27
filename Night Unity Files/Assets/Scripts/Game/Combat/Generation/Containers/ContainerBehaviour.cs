@@ -17,7 +17,7 @@ namespace Game.Combat.Generation
         private const float MaxRevealTime = 1f;
         private SpriteRenderer _glowSprite, _iconSprite, _ringSprite;
         private InsectBehaviour _insectBehaviour;
-        private bool _fading;
+        private bool _fading, _showRing;
 
         public void Awake()
         {
@@ -34,6 +34,7 @@ namespace Game.Combat.Generation
             ContainerController.Containers.Add(this);
             ContainerController = containerController;
             _iconSprite.sprite = Resources.Load<Sprite>("Images/Container Symbols/" + containerController.GetImageLocation());
+            _showRing = !(containerController is FoodSource);
         }
 
         public void Pulse()
@@ -70,6 +71,7 @@ namespace Game.Combat.Generation
             CombatManager.IncreaseItemsFound();
             _revealed = true;
             _iconSprite.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
+            if (!_showRing) return;
             _ringSprite.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
         }
 

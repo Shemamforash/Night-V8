@@ -17,9 +17,9 @@ namespace Game.Combat.Misc
             _particles = GetComponent<ParticleSystem>();
         }
 
-        public static void Create(Vector2 position, List<ITakeDamageInterface> ignoreTargets)
+        public static void Create(Vector2 position, List<ITakeDamageInterface> ignoreTargets, float radius = 1f)
         {
-            List<ITakeDamageInterface> characters = CombatManager.GetCharactersInRange(position, 1f);
+            List<ITakeDamageInterface> characters = CombatManager.GetCharactersInRange(position, radius);
             characters.ForEach(c =>
             {
                 if (ignoreTargets.Contains(c)) return;

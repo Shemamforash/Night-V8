@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Facilitating.UIControllers;
-using Game.Combat.Generation;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.CooldownSystem;
 using SamsHelper.Libraries;
@@ -16,12 +16,14 @@ namespace Game.Combat.Misc
         private static List<int> _skillsLocked;
         private static List<CooldownController> CooldownControllers;
         private static List<UISkillCostController> CostControllers;
-        private static Cooldown _skillsCooldown;
         private static float _cooldownModifier;
-        private readonly CooldownManager _cooldowns = new CooldownManager();
+        private static Coroutine _cooldownCoroutine;
+        private static SkillBar _instance;
+        private static bool _finishEarly;
 
         public void Awake()
         {
+            _instance = this;
             CooldownControllers = new List<CooldownController>();
             CostControllers = new List<UISkillCostController>();
 
@@ -33,14 +35,38 @@ namespace Game.Combat.Misc
 
             _skills = new Skill[NoSlots];
             _skillsLocked = new List<int>();
-            _skillsCooldown = _cooldowns.CreateCooldown();
-            CooldownControllers.ForEach(s => _skillsCooldown.SetController(s));
         }
 
-        public void Update()
+        private void UpdateCooldownControllers(float normalisedDuration)
         {
-            if (!CombatManager.IsCombatActive()) return;
-            _cooldowns.UpdateCooldowns();
+            for (int i = 0; i < CooldownControllers.Count; i++)
+            {
+                bool skillReady = false;
+                if (i < _skills.Length)
+                {
+                    skillReady = _skills[i].CanAfford();
+                }
+
+                CooldownControllers[i].UpdateCooldownFill(normalisedDuration, skillReady);
+            }
+        }
+
+        private IEnumerator SkillsCooldown()
+        {
+            float duration = BaseSkillCooldown * _cooldownModifier;
+            float currentTime = 0f;
+            UpdateCooldownControllers(0f);
+            while (currentTime < duration)
+            {
+                currentTime += Time.deltaTime;
+                if (_finishEarly) currentTime = duration;
+                if (currentTime > duration) currentTime = duration;
+                UpdateCooldownControllers(currentTime / duration);
+                yield return null;
+            }
+
+            _finishEarly = false;
+            _cooldownCoroutine = null;
         }
 
         public static void BindSkills(Characters.Player player, float skillCooldownModifier)
@@ -108,20 +134,19 @@ namespace Game.Combat.Misc
 
         public static void ActivateSkill(int skillNo)
         {
-            Debug.Log(_skillsLocked.Contains(skillNo) + " " + _skillsCooldown.Running());
+            Debug.Log(_skillsLocked.Contains(skillNo) + " " + (_cooldownCoroutine == null));
             if (_skillsLocked.Contains(skillNo)) return;
-            if (_skillsCooldown.Running()) return;
+            if (_cooldownCoroutine != null) return;
             if (TryLockSkill(skillNo)) return;
             bool freeSkill = IsSkillFree();
             if (!_skills[skillNo].Activate(freeSkill)) return;
-            _skillsCooldown.Duration = BaseSkillCooldown * _cooldownModifier;
-            _skillsCooldown.Start();
+            _cooldownCoroutine = _instance.StartCoroutine(_instance.SkillsCooldown());
         }
 
         public static void ResetCooldowns()
         {
             //todo fix me
-            _skillsCooldown.Cancel();
+            _finishEarly = true;
         }
     }
 }

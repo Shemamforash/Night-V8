@@ -53,9 +53,10 @@ class RecipeImporter(XMLWriter):
         write_single_value(self, "Ingredient2Quantity", get_value(self, "D", row, "0"))
         write_single_value(self, "ProductName", get_value(self, "E", row, ""))
         write_single_value(self, "ProductQuantity", get_value(self, "F", row, "0"))
+        write_single_value(self, "IsBuilding", get_value(self, "G", row))
 
     def read_recipes(self):
-        for row_no in range(2, 20):
+        for row_no in range(4, 22):
             write_tag(self, "Recipe", self.read_recipe, [row_no])
 
 
@@ -341,13 +342,13 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-WeaponImporter()
+# WeaponImporter()
 # GearImporter()
 # WeatherImporter()
 # RegionImporter()
 # CharacterImporter()
-EnemyImporter()
-# RecipeImporter()
+# EnemyImporter()
+RecipeImporter()
 # ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()

@@ -53,7 +53,7 @@ namespace Game.Combat.Misc
             _rigidBody = GetComponent<Rigidbody2D>();
         }
 
-        public float GetKnockbackForce()
+        public float GetKnockBackForce()
         {
             return _knockBackForce;
         }
@@ -98,7 +98,7 @@ namespace Game.Combat.Misc
         {
             _direction = direction;
         }
-        
+
         private void Initialise(CharacterCombat origin, Vector3 direction)
         {
             _origin = origin;
@@ -212,6 +212,8 @@ namespace Game.Combat.Misc
             _age = 0;
             while (_age < MaxAge)
             {
+                float distanceTravelled = _originPosition.Distance(transform.position);
+                if (distanceTravelled > 15f) _age = MaxAge;
                 _age += Time.deltaTime;
                 yield return null;
             }
@@ -261,6 +263,8 @@ namespace Game.Combat.Misc
 
         private void DealDamage(GameObject other)
         {
+            _damageDealt = _damage;
+            _damageDealt = (int) (_damageDealt * _finalDamageModifier);
             OnHitAction?.Invoke();
             ITakeDamageInterface hit = other.GetComponent<ITakeDamageInterface>();
             if (hit == null) return;
@@ -281,25 +285,23 @@ namespace Game.Combat.Misc
             if (Random.Range(0f, 1f) < _burnChance) FireBehaviour.Create(transform.position, 1f);
             DealDamage(other);
             DeactivateShot();
+            ApplyConditions();
         }
 
         private void ApplyDamage(ITakeDamageInterface hit)
         {
-            _damageDealt = _damage;
-            _damageDealt = (int) (_damageDealt * _finalDamageModifier);
-            ApplyConditions(hit);
-            CalculateKnockbackForce();
+            CalculateKnockBackForce();
             hit.TakeShotDamage(this);
         }
 
-        private void CalculateKnockbackForce()
+        private void CalculateKnockBackForce()
         {
             float rainModifier = WeatherManager.CurrentWeather().Attributes.RainAmount;
             _knockBackModifier += rainModifier;
-            _knockBackForce = 6.5f * Mathf.Pow(_damageDealt, 0.25f);
+            _knockBackForce = _damageDealt / 4f * _knockBackModifier;
         }
 
-        private void ApplyConditions(ITakeDamageInterface hit)
+        private void ApplyConditions()
         {
             float random = Random.Range(0f, 1f);
             bool canDecay = random < _decayChance;
@@ -311,21 +313,20 @@ namespace Game.Combat.Misc
             if (canSicken) conditions.Add(2);
             if (conditions.Count == 0) return;
             int condition = conditions.GetRandomElement();
-            Explosion explosion = Explosion.CreateExplosion(transform.position, 10, 0.5f);
+            float radius = _damageDealt / 400f;
+            if (radius < 0.25f) radius = 0.25f;
             switch (condition)
             {
                 case 0:
-                    explosion.SetDecay();
+                    DecayBehaviour.Create(transform.position, radius);
                     break;
                 case 1:
-                    explosion.SetBurn();
+                    FireBehaviour.Create(transform.position, radius, 4f, false, false);
                     break;
                 case 2:
-                    explosion.SetSicken();
+                    SickenBehaviour.Create(transform.position, new List<ITakeDamageInterface> {_origin}, radius);
                     break;
             }
-
-            explosion.InstantDetonate();
         }
 
         public void GuaranteeHit()
@@ -338,10 +339,9 @@ namespace Game.Combat.Misc
             OnHitAction += a;
         }
 
-        public void SetKnockbackForce(float forceModifier)
+        public void AddKnockBackModifier(float forceModifier)
         {
-            Assert.IsTrue(forceModifier >= 0f && forceModifier <= 1f);
-            _knockBackModifier = forceModifier;
+            _knockBackModifier += forceModifier;
         }
 
         public void SetBurnChance(float chance)

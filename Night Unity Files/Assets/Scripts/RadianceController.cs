@@ -32,7 +32,6 @@ public class RadianceController : MonoBehaviour, ICombatEvent
 
     public void Activate()
     {
-        Debug.Log(_radianceAvailable);
         WorldState.HomeInventory().DecrementResource("Essence", 1);
         PlayerCombat.Instance.Player.TravelAction.GetCurrentNode().Claim();
         if (_stonePrefab == null) _stonePrefab = Resources.Load<GameObject>("Prefabs/Combat/Effects/Radiance Stone");

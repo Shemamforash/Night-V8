@@ -22,7 +22,7 @@ public class PushController : MonoBehaviour
         rotation = 180 - rotation;
         shape.rotation = new Vector3(0, 0, rotation);
         shape.arc = arcSize;
-        int emitCount = (int) (3 * arcSize);
+        int emitCount = (int) (4 * arcSize);
         _pushParticles.Emit(emitCount);
         StartCoroutine(WaitAndDie());
     }

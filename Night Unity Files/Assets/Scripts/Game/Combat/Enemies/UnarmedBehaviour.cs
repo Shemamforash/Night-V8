@@ -15,9 +15,9 @@ namespace Game.Combat.Enemies
         private const float LoseTargetRange = 10f;
         private Cell _originCell;
         protected float WanderDistance = 3;
-        protected Cell TargetCell;
+        private Cell _targetCell;
         private Cell _lastTargetCell;
-        protected float DistanceFromTargetCell, MinDistanceToMove;
+        protected float MaxDistance, MinDistance;
         private bool _wandering;
 
         public override void Initialise(Enemy enemy)
@@ -30,7 +30,7 @@ namespace Game.Combat.Enemies
         {
             Alerted = false;
             if (resetOrigin) _originCell = PathingGrid.WorldToCellPosition(transform.position);
-            TargetCell = PathingGrid.GetCellNearMe(_originCell, WanderDistance);
+            _targetCell = PathingGrid.GetCellNearMe(_originCell, WanderDistance);
             float waitDuration = Random.Range(1f, 3f);
             CurrentAction = () =>
             {
@@ -73,16 +73,15 @@ namespace Game.Combat.Enemies
 
         protected virtual void OnAlert()
         {
-            TargetCell = GetTarget().CurrentCell();
+            _targetCell = GetTarget().CurrentCell();
         }
 
         private void GoToTargetCell()
         {
-            if (TargetCell == _lastTargetCell) return;
-            MoveBehaviour.GoToCell(TargetCell, DistanceFromTargetCell);
-            _lastTargetCell = TargetCell;
+            if (_targetCell == _lastTargetCell) return;
+            MoveBehaviour.GoToCell(_targetCell, MaxDistance, MinDistance);
+            _lastTargetCell = _targetCell;
         }
-
 
         public override void MyUpdate()
         {
@@ -100,11 +99,11 @@ namespace Game.Combat.Enemies
             {
                 List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(newTargetCell.Position, 1, 1);
                 if (cellsNearMe.Count == 0) return;
-                TargetCell = cellsNearMe[0];
+                _targetCell = cellsNearMe[0];
                 return;
             }
 
-            TargetCell = newTargetCell;
+            _targetCell = newTargetCell;
         }
 
         private void UpdateDistanceToTarget()

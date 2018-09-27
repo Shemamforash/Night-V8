@@ -15,7 +15,7 @@ namespace Game.Combat.Enemies.Nightmares
 
         private void Attack()
         {
-            MoveBehaviour.GoToCell(GetTarget().CurrentCell(), Random.Range(2f, 5f));
+            MoveBehaviour.GoToCell(GetTarget().CurrentCell(), 5f, 2f);
             CurrentAction = Attack;
         }
     }

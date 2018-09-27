@@ -1,4 +1,4 @@
-﻿using SamsHelper.BaseGameFunctionality.Basic;
+﻿using Game.Global;
 
 namespace Game.Characters.CharacterActions
 {
@@ -18,8 +18,9 @@ namespace Game.Characters.CharacterActions
 
         protected override void OnClick()
         {
-            if (PlayerCharacter.Attributes.Get(AttributeType.Willpower).ReachedMax()) return;
-            if (Duration == 0) SetDuration();
+            int maxMeditateTime = PlayerCharacter.GetMaxMeditateTime();
+            if (maxMeditateTime == 0) return;
+            SetDuration(maxMeditateTime * WorldState.MinutesPerHour / 2);
             Enter();
         }
     }

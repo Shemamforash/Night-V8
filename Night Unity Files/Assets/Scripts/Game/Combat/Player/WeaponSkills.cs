@@ -151,7 +151,7 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            s.SetKnockbackForce(100);
+            s.AddKnockBackModifier(3);
         }
     }
 

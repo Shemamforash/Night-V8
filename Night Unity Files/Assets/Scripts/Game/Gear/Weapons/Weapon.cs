@@ -42,7 +42,6 @@ namespace Game.Gear.Weapons
         {
             base.Load(root);
             WeaponAttributes.Load(root);
-//            _inscription.Load(root);
         }
 
         public override XmlNode Save(XmlNode root)

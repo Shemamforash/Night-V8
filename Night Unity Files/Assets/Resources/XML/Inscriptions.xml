@@ -39,19 +39,19 @@
         <Name>Terror</Name>
         <Attribute>DecayChance</Attribute>
         <Value>0.1</Value>
-        <Additive>False</Additive>
+        <Additive>True</Additive>
     </Inscription>
     <Inscription>
         <Name>Cinders</Name>
         <Attribute>BurnChance</Attribute>
         <Value>0.1</Value>
-        <Additive>False</Additive>
+        <Additive>True</Additive>
     </Inscription>
     <Inscription>
         <Name>Pestilence</Name>
         <Attribute>SicknessChance</Attribute>
         <Value>0.1</Value>
-        <Additive>False</Additive>
+        <Additive>True</Additive>
     </Inscription>
     <Inscription>
         <Name>Vigor</Name>

@@ -6,7 +6,7 @@ namespace Game.Combat.Enemies.Humans
     public class Martyr : UnarmedBehaviour
     {
         private bool _detonated;
-        private const float MinExplodeDistance = 0.2f;
+        private const float MinExplodeDistance = 0.5f;
 
         public override void Initialise(Enemy enemy)
         {

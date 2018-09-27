@@ -163,12 +163,14 @@ namespace Game.Gear
             public string GetSummary(ItemQuality quality)
             {
                 float scaledValue = _modifierValue * ((int) quality + 1);
-                if (_additive)
+                if (!_additive || AttributeTarget == AttributeType.DecayChance ||
+                    AttributeTarget == AttributeType.BurnChance ||
+                    AttributeTarget == AttributeType.SicknessChance)
                 {
-                    return "+" + scaledValue + " " + AttributeTarget;
+                    return "+" + (int) (scaledValue * 100) + "% " + AttributeTarget;
                 }
 
-                return "+" + (int) (scaledValue * 100) + "% " + AttributeTarget;
+                return "+" + scaledValue + " " + AttributeTarget;
             }
         }
 

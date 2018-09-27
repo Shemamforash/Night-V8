@@ -265,13 +265,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         private void LoadResource(string type, XmlNode root)
         {
-            Debug.Log(type + " " + root.IntFromNode(type));
-            IncrementResource(type, root.IntFromNode(type));
+            IncrementResource(type, root.IntFromNode(type.Replace(" ", "_")));
         }
 
         private void SaveResource(string type, XmlNode root)
         {
-            root.CreateChild(type, GetResourceQuantity(type));
+            root.CreateChild(type.Replace(" ", "_"), GetResourceQuantity(type));
         }
 
         public void DestroyItem(InventoryItem item)

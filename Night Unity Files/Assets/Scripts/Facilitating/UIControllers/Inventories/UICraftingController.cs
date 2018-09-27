@@ -10,57 +10,27 @@ using SamsHelper.ReactiveUI.Elements;
 
 public class UICraftingController : UiInventoryMenuController, IInputListener
 {
-    private EnhancedButton _buildButton;
-    private EnhancedText _builtText;
     private ListController _buildingsList;
 
     protected override void CacheElements()
     {
-        _builtText = gameObject.FindChildWithName<EnhancedText>("Built");
         _buildingsList = gameObject.FindChildWithName<ListController>("List");
-        _buildButton = gameObject.FindChildWithName<EnhancedButton>("Build");
     }
 
     protected override void OnShow()
     {
-        DisplayBuildings();
-        CloseRecipeList();
         InputHandler.RegisterInputListener(this);
-        if (PlayerCombat.Instance != null)
-        {
-            _buildButton.enabled = false;
-            _buildButton.GetComponent<EnhancedText>().SetStrikeThroughActive(true);    
-        }
-        else
-        {
-            _buildButton.enabled = true;
-            _buildButton.GetComponent<EnhancedText>().SetStrikeThroughActive(false);    
-        }
+        _buildingsList.Show(GetAvailableRecipes);
     }
 
     protected override void Initialise()
     {
-        _buildingsList.Initialise(typeof(RecipeElement), CreateRecipe, CloseRecipeList);
-        _buildButton.AddOnClick(() =>
-        {
-            InputHandler.UnregisterInputListener(this);
-            _buildingsList.Show(GetAvailableRecipes);
-            _builtText.gameObject.SetActive(false);
-            _buildButton.gameObject.SetActive(false);
-        });
+        _buildingsList.Initialise(typeof(RecipeElement), CreateRecipe, UiGearMenuController.Close);
     }
 
     protected override void OnHide()
     {
         InputHandler.UnregisterInputListener(this);
-    }
-
-    private void CloseRecipeList()
-    {
-        _buildingsList.Hide();
-        _builtText.gameObject.SetActive(true);
-        _buildButton.gameObject.SetActive(true);
-        _buildButton.Select();
     }
 
     private void CreateRecipe(object obj)
@@ -83,9 +53,12 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
         {
             Recipe recipe = (Recipe) o;
             string productString = recipe.ProductQuantity > 1 ? recipe.ProductName + " x" + recipe.ProductQuantity : recipe.ProductName;
-            string durationString = WorldState.TimeToHours((int) (recipe.DurationInHours * WorldState.MinutesPerHour));
+            string durationString = WorldState.TimeToHours((int) (Recipe.DurationInHours * WorldState.MinutesPerHour));
             productString += " (" + durationString + ")";
             LeftText.SetText("");
+
+            if (recipe.IsBuilding) LeftText.SetText("Built " + recipe.Built());
+
             CentreText.SetText(productString);
             string ingredient1String = recipe.Ingredient1Quantity > 1 ? recipe.Ingredient1 + " x" + recipe.Ingredient1Quantity : recipe.Ingredient1;
             if (recipe.Ingredient1 == "None") ingredient1String = "";
@@ -98,25 +71,6 @@ public class UICraftingController : UiInventoryMenuController, IInputListener
             LeftText.SetStrikeThroughActive(!canAfford);
             RightText.SetStrikeThroughActive(!canAfford);
         }
-    }
-
-    private void DisplayBuildings()
-    {
-        List<Building> buildings = WorldState.HomeInventory().Buildings();
-        if (buildings.Count == 0)
-        {
-            _builtText.SetText("Nothing built");
-            return;
-        }
-
-        string buildingString = "";
-        for (int i = 0; i < buildings.Count; ++i)
-        {
-            buildingString += buildings[i].Name;
-            if (i < buildings.Count - 1) buildingString += "\n";
-        }
-
-        _builtText.SetText(buildingString);
     }
 
     private static List<object> GetAvailableRecipes()

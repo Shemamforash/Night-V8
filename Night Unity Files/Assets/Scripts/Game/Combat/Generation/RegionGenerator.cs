@@ -23,13 +23,33 @@ namespace Game.Combat.Generation
         {
             _region = region;
             Random.InitState(region.RegionID + WorldState.Seed);
-            PathingGrid.SetCombatAreaWidth(region.GetRegionType() == RegionType.Rite ? 20 : Random.Range(25, 35));
+            SetRegionWidth();
             PathingGrid.InitialiseGrid();
             GenerateFreshEnvironment();
             GenerateObjects();
             GenerateEdges();
             _region.Visit();
             PathingGrid.FinaliseGrid();
+        }
+
+        private void SetRegionWidth()
+        {
+            if (_region.GetRegionType() == RegionType.Rite)
+            {
+                PathingGrid.SetCombatAreaWidth(20);
+                return;
+            }
+
+            bool mustBeFullSize = _region.GetRegionType() == RegionType.Temple || _region.GetRegionType() == RegionType.Tomb || _region.GetRegionType() == RegionType.Nightmare;
+            if (mustBeFullSize)
+            {
+                PathingGrid.SetCombatAreaWidth(30);
+                return;
+            }
+
+            int difficulty = WorldState.Difficulty();
+            int width = (int) (20 + difficulty / 5f);
+            PathingGrid.SetCombatAreaWidth(width);
         }
 
         protected virtual void GenerateObjects()
@@ -188,6 +208,7 @@ namespace Game.Combat.Generation
                 angle += angleStep;
                 --numberOfStones;
             }
+
             CreateImpassablePoint(position, 0.4f);
             _region.Fires.Add(new EnemyCampfire(position));
         }
@@ -258,6 +279,7 @@ namespace Game.Combat.Generation
                 _region.HealShrinePosition = FindAndRemoveValidPosition(1, 1);
 
             JournalEntry journalEntry = JournalEntry.GetEntry();
+            Debug.Log(journalEntry);
             if (journalEntry != null)
                 _region.Containers.Add(new JournalSource(FindAndRemoveValidPosition(1, 1), journalEntry));
 

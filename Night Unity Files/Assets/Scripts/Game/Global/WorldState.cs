@@ -20,7 +20,6 @@ namespace Game.Global
     {
         public const int MinutesPerHour = 12;
         private const int IntervalSize = 60 / MinutesPerHour;
-        //todo make me correct
         public const float MinuteInSeconds = 1f;
         private const float DayLengthInSeconds = 24f * MinutesPerHour * MinuteInSeconds;
         private const int MinuteInterval = 60 / MinutesPerHour;
@@ -42,7 +41,7 @@ namespace Game.Global
         {
             return EnvironmentManager.CurrentEnvironment.Temples - _templesActivated;
         }
-        
+
         public void Awake()
         {
             Cursor.visible = false;
@@ -91,15 +90,20 @@ namespace Game.Global
         public static void ResetWorld()
         {
             _homeInventory = new CharacterManager();
-            DaysSpentHere = 10;
+            DaysSpentHere = 0;
             _currentLevel = 1;
             Days = 0;
             Hours = 6;
             Minutes = 0;
-            _difficulty = 30;
+            _difficulty = 0;
             _isNight = false;
             _isPaused = false;
             Seed = Random.Range(0, int.MaxValue);
+#if UNITY_EDITOR
+            _difficulty = 30;
+            DaysSpentHere = 10;
+#endif
+
             Random.InitState(Seed);
             EnvironmentManager.Reset();
             WeatherManager.Reset();
@@ -315,7 +319,7 @@ namespace Game.Global
             int water = weather.Water;
             int fog = weather.Fog;
             int ice = weather.Ice;
-            if(water < 1) _homeInventory.DecrementResource("Water", -water);
+            if (water < 1) _homeInventory.DecrementResource("Water", -water);
             _homeInventory.Buildings().ForEach(b =>
             {
                 WaterCollector waterCollector = b as WaterCollector;

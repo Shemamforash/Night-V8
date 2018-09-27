@@ -2,6 +2,7 @@
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(AudioSource))]
 public class ButtonClickListener : MonoBehaviour
@@ -37,6 +38,7 @@ public class ButtonClickListener : MonoBehaviour
 
     public void OnApplicationQuit()
     {
+        if (SceneManager.GetActiveScene().name == "Menu") return;
         SaveController.QuickSave();
     }
 }

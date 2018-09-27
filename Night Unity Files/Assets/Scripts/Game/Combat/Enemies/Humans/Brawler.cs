@@ -57,7 +57,8 @@ namespace Game.Combat.Enemies.Humans
             direction.y = y;
             _slashParticles.Emit(1);
             GetTarget().TakeRawDamage(MeleeDamage, direction);
-            GetTarget().MovementController.KnockBack(transform.position, MeleeForce);
+            direction = GetTarget().transform.Direction(transform);
+            GetTarget().MovementController.KnockBack(direction, MeleeForce);
         }
     }
 }

@@ -10,7 +10,6 @@ namespace Game.Gear.Weapons
 {
     public class WeaponAttributes : DesolationAttributes
     {
-        private const int MaxDurability = 50;
         private readonly Number _durability;
         private float _dps;
         private readonly AttributeModifier _damageDurabilityModifier;
