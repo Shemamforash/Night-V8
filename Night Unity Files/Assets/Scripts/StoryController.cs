@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Game.Global;
@@ -16,7 +17,7 @@ public class StoryController : Menu, IInputListener
     private TextMeshProUGUI _storyText;
     private static bool _goToCredits;
     private static bool _paused;
-    private static Sequence _storySequence;
+    private bool _skipParagraph;
 
     public override void Awake()
     {
@@ -29,7 +30,7 @@ public class StoryController : Menu, IInputListener
     public override void Enter()
     {
         InputHandler.RegisterInputListener(this);
-        DisplayParagraph();
+        StartCoroutine(DisplayParagraph());
     }
 
     public static void ShowText(string text, bool goToCredits)
@@ -46,28 +47,6 @@ public class StoryController : Menu, IInputListener
         return timeToRead;
     }
 
-    private void FadeIn(string paragraph)
-    {
-        _storySequence.AppendCallback(() =>
-        {
-            _storyText.text = paragraph + "\n\n    - <i>The Necromancer</i>";
-            _storyText.color = UiAppearanceController.InvisibleColour;
-        });
-        _storySequence.Append(_storyText.DOColor(Color.white, 1f));
-    }
-
-    private void ReadParagraph(string paragraph)
-    {
-        float timeToRead = GetTimeToRead(paragraph);
-        _storySequence.AppendInterval(timeToRead);
-    }
-
-    private void FadeOut()
-    {
-        _storySequence.AppendCallback(() => _storyText.color = Color.white);
-        _storySequence.Append(_storyText.DOColor(UiAppearanceController.InvisibleColour, 1f));
-    }
-
     private void SplitParagraphs()
     {
         _paragraphs = new List<string>();
@@ -75,17 +54,32 @@ public class StoryController : Menu, IInputListener
             _paragraphs.Add(paragraph);
     }
 
-    private void DisplayParagraph()
+    private IEnumerator DisplayParagraph()
     {
         SplitParagraphs();
-        _storySequence = DOTween.Sequence();
         foreach (string paragraph in _paragraphs)
         {
-            FadeIn(paragraph);
-            ReadParagraph(paragraph);
-            FadeOut();
+            //fade in
+            _storyText.text = paragraph + "\n\n    - <i>The Necromancer</i>";
+            _storyText.color = UiAppearanceController.InvisibleColour;
+            yield return _storyText.DOFade(1f, 1f).WaitForCompletion();
+
+            //read
+            float timeToRead = GetTimeToRead(paragraph);
+            while (timeToRead > 0 && !_skipParagraph)
+            {
+                if (!_paused) timeToRead -= Time.deltaTime;
+                yield return null;
+            }
+
+            _skipParagraph = false;
+
+            //fade out
+            _storyText.color = Color.white;
+            yield return _storyText.DOFade(0f, 1f).WaitForCompletion();
         }
-        _storySequence.AppendCallback(End);
+
+        End();
     }
 
     private void End()
@@ -96,8 +90,8 @@ public class StoryController : Menu, IInputListener
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (isHeld || _paused || axis == InputAxis.Menu) return;
-        _storySequence.Complete(true);
+        if (isHeld || _paused || axis != InputAxis.TakeItem || _skipParagraph) return;
+        _skipParagraph = true;
     }
 
     public void OnInputUp(InputAxis axis)
@@ -110,13 +104,11 @@ public class StoryController : Menu, IInputListener
 
     public static void Pause()
     {
-        _storySequence.Pause();
         _paused = true;
     }
 
     public static void Unpause()
     {
-        _storySequence.Play();
         _paused = false;
     }
 }

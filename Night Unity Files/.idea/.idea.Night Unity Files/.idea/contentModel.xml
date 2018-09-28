@@ -204,6 +204,8 @@
           </e>
           <e p="readme.txt" t="Include" />
         </e>
+        <e p="BrandReplaceMenuController.cs" t="Include" />
+        <e p="CharacterBrandUIController.cs" t="Include" />
         <e p="Demigiant" t="Include">
           <e p="DemiLib" t="Include">
             <e p="Core" t="Include">
@@ -367,6 +369,8 @@
             </e>
             <e p="UIControllers" t="Include">
               <e p="Combat" t="Include">
+                <e p="CompassIndicatorBehaviour.cs" t="Include" />
+                <e p="CompassItem.cs" t="Include" />
                 <e p="HeartBeatController.cs" t="Include" />
                 <e p="UIArmourController.cs" t="Include" />
                 <e p="UiCompassController.cs" t="Include" />
@@ -406,7 +410,10 @@
           <e p="Game" t="Include">
             <e p="Characters" t="Include">
               <e p="AttributeModifier.cs" t="Include" />
+              <e p="Brand.cs" t="Include" />
               <e p="BrandManager.cs" t="Include" />
+              <e p="Brands.cs" t="Include" />
+              <e p="BrandStatus.cs" t="Include" />
               <e p="Character.cs" t="Include" />
               <e p="CharacterActions" t="Include">
                 <e p="BaseCharacterAction.cs" t="Include" />
@@ -632,8 +639,8 @@
             <e p="Gear" t="Include">
               <e p="Armour" t="Include">
                 <e p="Accessory.cs" t="Include" />
+                <e p="Armour.cs" t="Include" />
                 <e p="ArmourController.cs" t="Include" />
-                <e p="ArmourPlate.cs" t="Include" />
               </e>
               <e p="Inscription.cs" t="Include" />
               <e p="ItemQuality.cs" t="Include" />

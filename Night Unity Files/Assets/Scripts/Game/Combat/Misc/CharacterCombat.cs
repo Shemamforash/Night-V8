@@ -92,7 +92,6 @@ namespace Game.Combat.Misc
             }
 
             _sicknessDuration = 0;
-            Debug.Log(SicknessStacks);
         }
 
         public bool IsSick() => SicknessStacks > 0;
@@ -112,7 +111,7 @@ namespace Game.Combat.Misc
 
         protected virtual int GetDecayDamage()
         {
-            int decayDamage = Mathf.FloorToInt(ArmourPlate.PlateHealthUnit * 0.5f);
+            int decayDamage = Mathf.FloorToInt(Armour.ArmourHealthUnit * 0.5f);
             if (decayDamage < 1) decayDamage = 1;
             return decayDamage;
         }
@@ -172,7 +171,7 @@ namespace Game.Combat.Misc
 
         public void TakeArmourDamage(float damage)
         {
-            ArmourController.TakeDamage(this, Mathf.CeilToInt(damage));
+            ArmourController.TakeDamage(Mathf.CeilToInt(damage));
         }
 
         public Cell CurrentCell() => PathingGrid.WorldToCellPosition(transform.position);
@@ -181,7 +180,7 @@ namespace Game.Combat.Misc
         {
             _spriteFlash.FlashSprite();
             MovementController.KnockBack(shot.Direction(), shot.GetKnockBackForce());
-            float armourProtection = ArmourController.GetCurrentArmour() / 10f;
+            float armourProtection = ArmourController.GetCurrentProtection() / 10f;
             int armourDamage = Mathf.CeilToInt(shot.DamageDealt() * armourProtection);
             int healthDamage = shot.DamageDealt() - armourDamage;
             TakeArmourDamage(armourDamage);
@@ -199,7 +198,7 @@ namespace Game.Combat.Misc
 
         public virtual void TakeRawDamage(float damage, Vector2 direction)
         {
-            float armourProtection = ArmourController.GetCurrentArmour() / 10f;
+            float armourProtection = ArmourController.GetCurrentProtection() / 10f;
             float armourDamage = damage * armourProtection;
             float healthDamage = damage - armourDamage;
             TakeArmourDamage(armourDamage);
@@ -213,7 +212,7 @@ namespace Game.Combat.Misc
         {
             _spriteFlash.FlashSprite();
             HealthController.TakeDamage(damage);
-            Vector2 direction = (origin - (Vector2) transform.position).normalized;
+            Vector2 direction = ((Vector2) transform.position - origin).normalized;
             MovementController.KnockBack(direction, 50f / origin.Distance(transform.position));
         }
 

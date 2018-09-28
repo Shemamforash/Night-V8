@@ -13,7 +13,7 @@ namespace Game.Global
 
         private void AddAttribute(AttributeType attributeType)
         {
-            _attributes.Add(attributeType, new CharacterAttribute(attributeType));
+            _attributes.Add(attributeType, new CharacterAttribute());
         }
 
         public void SetVal(AttributeType type, float value)

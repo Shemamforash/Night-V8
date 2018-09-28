@@ -54,6 +54,7 @@ namespace Game.Combat.Misc
         private IEnumerator SkillsCooldown()
         {
             float duration = BaseSkillCooldown * _cooldownModifier;
+            Debug.Log(BaseSkillCooldown + " " + _cooldownModifier);
             float currentTime = 0f;
             UpdateCooldownControllers(0f);
             while (currentTime < duration)
@@ -134,7 +135,6 @@ namespace Game.Combat.Misc
 
         public static void ActivateSkill(int skillNo)
         {
-            Debug.Log(_skillsLocked.Contains(skillNo) + " " + (_cooldownCoroutine == null));
             if (_skillsLocked.Contains(skillNo)) return;
             if (_cooldownCoroutine != null) return;
             if (TryLockSkill(skillNo)) return;

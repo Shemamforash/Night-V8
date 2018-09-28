@@ -758,6 +758,7 @@ GameObject:
   - component: {fileID: 114100629319653572}
   - component: {fileID: 114661499513471804}
   - component: {fileID: 58215125495486528}
+  - component: {fileID: 114083223592811162}
   m_Layer: 10
   m_Name: Default Enemy
   m_TagString: Untagged
@@ -4690,6 +4691,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &114083223592811162
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1969838416443470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ae40966a5a4e299f3184ae2830bdac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114100629319653572
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4734,7 +4746,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bada4488ddac4d4bb99626e84df18aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _armourBreakClips: []
   _pistolClipIn: {fileID: 8300000, guid: 1f327117f7bc9524bb5cd8870a94406c, type: 3}
   _pistolClipOut: {fileID: 8300000, guid: daf5283ee66dca7449f90c36c3a91af0, type: 3}
   _lmgClipIn: {fileID: 8300000, guid: eccda95838f4b8747ad24375ef8bc4b0, type: 3}

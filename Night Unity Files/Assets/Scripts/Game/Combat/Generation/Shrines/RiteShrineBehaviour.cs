@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -14,8 +15,8 @@ namespace Game.Combat.Generation.Shrines
         public const int Width = 5;
         private static GameObject _riteShrinePrefab;
         private RiteColliderBehaviour _collider1, _collider2, _collider3;
-        private List<BrandManager.Brand> _brandChoice;
-        private BrandManager.Brand _targetBrand;
+        private List<Brand> _brandChoice;
+        private Brand _targetBrand;
         private RiteColliderBehaviour _targetRiteCollider;
         private static RiteShrineBehaviour _instance;
 
@@ -57,6 +58,7 @@ namespace Game.Combat.Generation.Shrines
             }
 
             if (_brandChoice.Count != 0) return;
+            GetComponent<CompassItem>().Die();
             StopCandles(_collider1.transform);
             Destroy(_collider1);
             Destroy(this);
@@ -122,11 +124,22 @@ namespace Game.Combat.Generation.Shrines
 
         public void Activate()
         {
+            BrandManager brandManager = PlayerCombat.Instance.Player.BrandManager;
+            if (brandManager.TryActivateBrand(_targetBrand))
+            {
+                ActivateBrand();
+                return;
+            }
+            BrandReplaceMenuController.Show(this, _targetBrand);
+        }
+
+        public void ActivateBrand()
+        {
             Triggered = true;
-            PlayerCombat.Instance.Player.BrandManager.SetActiveBrand(_targetBrand);
             FadeCandles(_targetRiteCollider.transform);
             Destroy(_targetRiteCollider);
             _targetBrand = null;
+            if (_brandChoice.Count == 0) GetComponent<CompassItem>().Die();
         }
 
         protected override void StartShrine()

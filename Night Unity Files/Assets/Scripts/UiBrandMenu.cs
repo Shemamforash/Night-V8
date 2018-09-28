@@ -27,17 +27,17 @@ public class UiBrandMenu : Menu
         gameObject.SetActive(false);
     }
 
-    private void Show(BrandManager.Brand brand)
+    private void Show(Brand brand)
     {
         string titleString = "";
         string benefitString = "";
         switch (brand.Status)
         {
-            case BrandManager.BrandStatus.Failed:
+            case BrandStatus.Failed:
                 titleString = "failed";
                 benefitString = "A curse of " + brand.GetFailName() + " has been cast upon " + CharacterManager.SelectedCharacter.Name;
                 break;
-            case BrandManager.BrandStatus.Succeeded:
+            case BrandStatus.Succeeded:
                 titleString = "passed";
                 benefitString = "A boon of " + brand.GetSuccessName() + " has been granted upon " + CharacterManager.SelectedCharacter.Name;
                 break;
@@ -50,7 +50,7 @@ public class UiBrandMenu : Menu
         gameObject.SetActive(true);
     }
 
-    public static void ShowBrand(BrandManager.Brand brand)
+    public static void ShowBrand(Brand brand)
     {
         _instance.Show(brand);
     }

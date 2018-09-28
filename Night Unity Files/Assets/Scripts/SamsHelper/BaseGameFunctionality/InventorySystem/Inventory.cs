@@ -20,7 +20,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private readonly List<InventoryItem> _contents = new List<InventoryItem>();
         private readonly List<Consumable> _consumables = new List<Consumable>();
         public readonly List<Weapon> Weapons = new List<Weapon>();
-        public readonly List<ArmourPlate> Armour = new List<ArmourPlate>();
+        public readonly List<Armour> Armour = new List<Armour>();
         public readonly List<Accessory> Accessories = new List<Accessory>();
         public readonly List<Inscription> Inscriptions = new List<Inscription>();
         private static bool _loaded;
@@ -100,7 +100,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             foreach (XmlNode weaponNode in itemNode.SelectSingleNode("Weapons").ChildNodes)
                 AddItem(Weapon.LoadWeapon(weaponNode));
             foreach (XmlNode armourNode in itemNode.SelectSingleNode("ArmourPlates").ChildNodes)
-                AddItem(ArmourPlate.LoadArmour(armourNode));
+                AddItem(Game.Gear.Armour.Armour.LoadArmour(armourNode));
             foreach (XmlNode accessoryNode in itemNode.SelectSingleNode("Accessories").ChildNodes)
                 AddItem(Accessory.LoadAccessory(accessoryNode));
             foreach (XmlNode inscriptionNode in itemNode.SelectSingleNode("Inscriptions").ChildNodes)
@@ -168,7 +168,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _items.Add(item);
             Assert.IsFalse(item is Consumable);
             if (item is Weapon) Weapons.Add((Weapon) item);
-            else if (item is ArmourPlate) Armour.Add((ArmourPlate) item);
+            else if (item is Armour) Armour.Add((Armour) item);
             else if (item is Accessory) Accessories.Add((Accessory) item);
             else if (item is Inscription) Inscriptions.Add((Inscription) item);
             UpdateContents();
@@ -184,7 +184,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             _consumables.Remove(item as Consumable);
             _resources.Remove(item.Name);
             Weapons.Remove(item as Weapon);
-            Armour.Remove(item as ArmourPlate);
+            Armour.Remove(item as Armour);
             Accessories.Remove(item as Accessory);
             Inscriptions.Remove(item as Inscription);
             UpdateContents();
@@ -277,7 +277,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         {
             _items.Remove(item);
             Weapons.Remove(item as Weapon);
-            Armour.Remove(item as ArmourPlate);
+            Armour.Remove(item as Armour);
             Accessories.Remove(item as Accessory);
             Inscriptions.Remove(item as Inscription);
         }

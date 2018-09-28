@@ -8,9 +8,17 @@ namespace Game.Characters
 {
     public class AttributeModifier
     {
+        private int _depth;
         private float _finalBonus, _rawBonus;
         public readonly List<CharacterAttribute> TargetAttributes = new List<CharacterAttribute>();
 
+        public AttributeModifier(int depth = 0)
+        {
+            _depth = depth;
+        }
+
+        public int Depth() => _depth;
+        
         public void SetFinalBonus(float finalBonus)
         {
             _finalBonus = finalBonus;

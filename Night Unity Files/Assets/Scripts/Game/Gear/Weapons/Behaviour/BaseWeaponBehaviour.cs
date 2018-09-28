@@ -77,6 +77,7 @@ namespace Game.Gear.Weapons
                 shot.Fire();
             }
 
+            if(Origin is PlayerCombat) PlayerCombat.Instance.Shake(Weapon.WeaponAttributes.DPS());
             Origin.WeaponAudio.Fire(Weapon);
             ConsumeAmmo(1);
             if (!(Origin is PlayerCombat)) return;

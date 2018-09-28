@@ -157,8 +157,6 @@ public class WeaponAudioController : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(0.25f);
         sequence.AppendCallback(() => { _audioPool.PlayClip(casings.RandomElement(), -0.6f); });
-        if (!transform.parent.CompareTag("Player")) return;
-        PlayerCombat.Instance.Shake(weapon.WeaponAttributes.DPS());
     }
 
     public void BreakArmour()

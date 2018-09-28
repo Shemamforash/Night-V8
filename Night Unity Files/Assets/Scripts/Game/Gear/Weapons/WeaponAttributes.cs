@@ -24,10 +24,10 @@ namespace Game.Gear.Weapons
         public WeaponAttributes(Weapon weapon, WeaponClass weaponClass)
         {
             _weapon = weapon;
-            _damageDurabilityModifier = new AttributeModifier();
-            _fireRateDurabilityModifier = new AttributeModifier();
-            _reloadSpeedDurabilityModifier = new AttributeModifier();
-            _accuracyDurabilityModifier = new AttributeModifier();
+            _damageDurabilityModifier = new AttributeModifier(-1);
+            _fireRateDurabilityModifier = new AttributeModifier(-1);
+            _reloadSpeedDurabilityModifier = new AttributeModifier(-1);
+            _accuracyDurabilityModifier = new AttributeModifier(-1);
             AddMod(AttributeType.Damage, _damageDurabilityModifier);
             AddMod(AttributeType.FireRate, _fireRateDurabilityModifier);
             AddMod(AttributeType.ReloadSpeed, _reloadSpeedDurabilityModifier);

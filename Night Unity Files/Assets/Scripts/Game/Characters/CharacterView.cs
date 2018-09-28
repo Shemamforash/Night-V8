@@ -17,7 +17,7 @@ namespace Game.Characters
         private ActionProgressController _progressSimple, _progressDetailed;
         private GameObject _detailedView;
         private GameObject SimpleView;
-        private EnhancedText _brandText;
+        private CharacterBrandUIController _brandUi;
         [HideInInspector] public UIPlayerAccessoryController AccessoryController;
         [HideInInspector] public UIPlayerArmourController ArmourController;
         [HideInInspector] public UIPlayerWeaponController WeaponController;
@@ -61,7 +61,7 @@ namespace Game.Characters
         public void Update()
         {
             UpdateAttributes();
-            UpdateBrands();
+            _brandUi.UpdateBrands(_player.BrandManager);
             UpdateActionButtons();
             UpdateCurrentAction();
         }
@@ -125,25 +125,9 @@ namespace Game.Characters
             ArmourController = FindInDetailedView<UIPlayerArmourController>("Armour");
             ArmourController.EnhancedButton.AddOnClick(UiGearMenuController.ShowArmourMenu);
             ArmourController.EnhancedButton.SetOnDownAction(() => CharacterManager.SelectNextCharacter(true));
-            ArmourController.SetArmour(_player.ArmourController);
-            _player.ArmourController.AddOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));
+            _player.ArmourController.SetOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));
 
-            _brandText = _detailedView.FindChildWithName<EnhancedText>("Brands");
-        }
-
-        private void UpdateBrands()
-        {
-            string brandString = "";
-            List<BrandManager.Brand> brands = _player.BrandManager.GetActiveBrands();
-            if (brands.Count == 0) brandString = "No active rites";
-            for (int i = 0; i < brands.Count; i++)
-            {
-                BrandManager.Brand brand = brands[i];
-                brandString += brand.GetProgressString();
-                if (i < brands.Count - 1) brandString += "\n";
-            }
-
-            _brandText.SetText(brandString);
+            _brandUi = _detailedView.FindChildWithName<CharacterBrandUIController>("Brands");
         }
 
         public void SelectInitial()
@@ -198,7 +182,7 @@ namespace Game.Characters
         }
 
         private BaseCharacterAction _lastState;
-        
+
         private void UpdateCurrentAction()
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
@@ -208,7 +192,7 @@ namespace Game.Characters
             _progressSimple.UpdateCurrentAction(currentState);
             SetActionListActive(currentState is Rest);
         }
-        
+
         private void SetActionListActive(bool active)
         {
             RefreshNavigation();

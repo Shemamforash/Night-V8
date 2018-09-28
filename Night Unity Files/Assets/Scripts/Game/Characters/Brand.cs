@@ -1,0 +1,134 @@
+using System.Xml;
+using Facilitating.Persistence;
+using Game.Combat.Generation.Shrines;
+using SamsHelper.Libraries;
+using UnityEngine;
+using Game.Characters.Brands;
+
+namespace Game.Characters
+{
+    public abstract class Brand
+    {
+        private readonly string _riteName;
+        protected readonly Player Player;
+
+        private int _counterTarget;
+        private string _successName, _failName, _successEffect, _failEffect, _requirementString;
+        protected float SuccessModifier, FailModifier;
+
+        private int _counter;
+        public BrandStatus Status = BrandStatus.Locked;
+
+        protected Brand(Player player, string riteName)
+        {
+            Player = player;
+            _riteName = riteName;
+            SetStatus(BrandStatus.Locked);
+        }
+
+        public void ReadData(XmlNode root)
+        {
+            root = root.SelectSingleNode(_riteName);
+            _requirementString = root.StringFromNode("Requirement");
+            _counterTarget = root.IntFromNode("TargetValue");
+            _requirementString = _requirementString.Replace("num", _counterTarget.ToString());
+            _successName = root.StringFromNode("SuccessName");
+            _successEffect = root.StringFromNode("SuccessEffect");
+            SuccessModifier = root.FloatFromNode("SuccessValue");
+            _failName = root.StringFromNode("FailName");
+            _failEffect = root.StringFromNode("FailEffect");
+            FailModifier = root.FloatFromNode("FailValue");
+        }
+
+        protected string Progress()
+        {
+            return _counter + "/" + _counterTarget;
+        }
+
+        public void SetStatus(BrandStatus status)
+        {
+            Status = status;
+            Player.BrandManager.UpdateBrandStatus(this);
+        }
+
+        public string GetName()
+        {
+            return "Rite of " + _riteName;
+        }
+
+        public void UpdateValue(int amount)
+        {
+            _counter += amount;
+            if (_counter >= _counterTarget)
+            {
+                RiteStarter.Generate(this);
+            }
+        }
+
+        public void Succeed()
+        {
+            Debug.Log("unlocked " + _successName);
+            SetStatus(BrandStatus.Succeeded);
+            UiBrandMenu.ShowBrand(this);
+            OnSucceed();
+        }
+
+        public void Fail()
+        {
+            SetStatus(BrandStatus.Failed);
+            OnFail();
+        }
+
+        protected abstract void OnSucceed();
+        protected abstract void OnFail();
+
+        public void PrintStatus()
+        {
+            Debug.Log(this + " " + Status + " " + _counter + "/" + _counterTarget);
+        }
+
+        public string GetProgressString()
+        {
+            return "Rite of " + _riteName + ": " + GetProgressSubstring();
+        }
+
+        protected abstract string GetProgressSubstring();
+
+        public void Load(XmlNode doc)
+        {
+            _counter = doc.IntFromNode("TimeRemaining");
+            Status = (BrandStatus) doc.IntFromNode("Status");
+            if (this is StrengthBrand || this is EnduranceBrand || this is PerceptionBrand || this is WillpowerBrand) return;
+            if (Status == BrandStatus.Succeeded) OnSucceed();
+            else if (Status == BrandStatus.Failed) OnFail();
+        }
+
+        public XmlNode Save(XmlNode doc)
+        {
+            doc.CreateChild("Name", _riteName);
+            doc.CreateChild("TimeRemaining", _counter);
+            doc.CreateChild("Status", (int) Status);
+            return doc;
+        }
+
+        public string GetSuccessName()
+        {
+            return _successName;
+        }
+
+        public string GetFailName()
+        {
+            return _failName;
+        }
+
+        public string GetEffectString()
+        {
+            return Status == BrandStatus.Succeeded ? _successEffect : _failEffect;
+        }
+
+        public string GetRequirementText()
+        {
+            return _requirementString;
+        }
+    }
+}

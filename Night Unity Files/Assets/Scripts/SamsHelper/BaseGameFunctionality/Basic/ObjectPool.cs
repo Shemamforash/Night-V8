@@ -19,9 +19,19 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             _poolName = poolName;
         }
 
+        public ObjectPool(string prefabLocation)
+        {
+            _prefabLocation = prefabLocation;
+        }
+
         public T Create()
         {
-            if (_poolParent == null) _poolParent = new GameObject(_poolName).transform;
+            if (_poolParent == null && _poolName != null)
+            {
+                _poolParent = new GameObject(_poolName).transform;
+                _poolParent.SetParent(GameObject.Find("Dynamic").transform);
+            }
+
             T newThing;
             if (_pool.Count == 0)
             {

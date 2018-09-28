@@ -11,10 +11,10 @@ namespace Game.Combat.Generation.Shrines
 {
     public class RiteStarter : MonoBehaviour
     {
-        private BrandManager.Brand _brand;
+        private Brand _brand;
         private static GameObject _prefab;
 
-        public static void Generate(BrandManager.Brand brand)
+        public static void Generate(Brand brand)
         {
             Vector2 position = GetPosition();
             

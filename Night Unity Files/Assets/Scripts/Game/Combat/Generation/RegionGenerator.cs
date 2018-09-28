@@ -279,7 +279,6 @@ namespace Game.Combat.Generation
                 _region.HealShrinePosition = FindAndRemoveValidPosition(1, 1);
 
             JournalEntry journalEntry = JournalEntry.GetEntry();
-            Debug.Log(journalEntry);
             if (journalEntry != null)
                 _region.Containers.Add(new JournalSource(FindAndRemoveValidPosition(1, 1), journalEntry));
 

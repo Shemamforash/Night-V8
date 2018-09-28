@@ -3,7 +3,6 @@ using System.Xml;
 using Facilitating.Persistence;
 using Facilitating.UIControllers;
 using Game.Characters;
-using Game.Combat.Misc;
 using Game.Combat.Ui;
 
 namespace Game.Gear.Armour
@@ -11,7 +10,8 @@ namespace Game.Gear.Armour
     public class ArmourController
     {
         private readonly Character _character;
-        private ArmourPlate _plateOne, _plateTwo;
+        private Armour _chest, _head;
+        private Action _onArmourChange;
 
         public ArmourController(Character character)
         {
@@ -24,16 +24,14 @@ namespace Game.Gear.Armour
 
         public XmlNode Save(XmlNode doc)
         {
-            _plateOne?.Save(doc.CreateChild("Plate 1"));
-            _plateTwo?.Save(doc.CreateChild("Plate 2"));
+            _chest?.Save(doc.CreateChild("Chest"));
+            _head?.Save(doc.CreateChild("Head"));
             return doc;
         }
 
-        private event Action _onArmourChange;
-
-        public void TakeDamage(CharacterCombat character, float amount)
+        public void TakeDamage(float amount)
         {
-            DivideDamageOrHeal(character, amount);
+            DivideDamageOrHeal(amount);
             GetUiArmourController()?.TakeDamage(this);
         }
 
@@ -42,99 +40,67 @@ namespace Game.Gear.Armour
             return _character is Player ? PlayerUi.Instance().GetArmourController(_character) : EnemyUi.Instance().GetArmourController(_character);
         }
 
-        private bool TakePlateDamage(CharacterCombat character, ArmourPlate plate, float damage)
+        private void TakePlateDamage(ref Armour plate, float damage)
         {
-            if (plate == null) return false;
-            float armour = plate.GetCurrentProtection();
-            float totalHealth = GetCurrentArmour();
-            float proportion = armour / totalHealth;
-            plate.TakeDamage(proportion * damage);
-            bool plateDestroyed = plate.GetCurrentProtection() == 0;
-            if (plateDestroyed)
-            {
-                character.WeaponAudio.BreakArmour();
-            }
-            return plateDestroyed;
+            if (plate == null) return;
+            float plateProtection = plate.GetCurrentProtection();
+            float totalProtection = GetCurrentProtection();
+            float proportion = plateProtection / totalProtection;
+            if (!plate.TakeDamage(proportion * damage)) return;
+            plate = null;
         }
 
-        private void DivideDamageOrHeal(CharacterCombat character, float amount)
+        private void DivideDamageOrHeal(float amount)
         {
-            if (TakePlateDamage(character, _plateOne, amount))
-                _plateOne = null;
-
-            if (TakePlateDamage(character, _plateTwo, amount))
-                _plateTwo = null;
+            TakePlateDamage(ref _chest, amount);
+            TakePlateDamage(ref _head, amount);
         }
 
-        public void SetPlateOne(ArmourPlate plate)
+        public void SetChestArmour(Armour chest)
         {
-            _plateOne?.Unequip();
-            plate?.Equip(_character);
-            _plateOne = plate;
+            _chest?.Unequip();
+            chest?.Equip(_character);
+            _chest = chest;
             _onArmourChange?.Invoke();
         }
 
-        public int GetCurrentArmour()
+        public void SetHeadArmour(Armour head)
         {
-            int plateOneCurrent = _plateOne?.GetCurrentProtection() ?? 0;
-            int plateTwoCurrent = _plateTwo?.GetCurrentProtection() ?? 0;
+            _head?.Unequip();
+            head?.Equip(_character);
+            _head = head;
+            _onArmourChange?.Invoke();
+        }
+
+        public int GetCurrentProtection()
+        {
+            int plateOneCurrent = _head?.GetCurrentProtection() ?? 0;
+            int plateTwoCurrent = _chest?.GetCurrentProtection() ?? 0;
             return plateOneCurrent + plateTwoCurrent;
-        }
-
-        public int GetMaxArmour()
-        {
-            int plateOneMax = _plateOne?.GetMaxProtection() ?? 0;
-            int plateTwoMax = _plateTwo?.GetMaxProtection() ?? 0;
-            return plateOneMax + plateTwoMax;
-        }
-
-        public void AddOnArmourChange(Action a)
-        {
-            _onArmourChange += a;
-        }
-
-        public void SetPlateTwo(ArmourPlate plate)
-        {
-            _plateTwo?.Unequip();
-            plate?.Equip(_character);
-            _plateTwo = plate;
-            _onArmourChange?.Invoke();
         }
 
         public void AutoFillSlots(int range)
         {
-            int plateOne, plateTwo;
-            if (range > 5)
-            {
-                plateOne = 5;
-                plateTwo = range - 5;
-            }
-            else
-            {
-                plateOne = range;
-                plateTwo = 0;
-            }
-
-            if (plateOne != 0) SetPlateOne(ArmourPlate.Create((ItemQuality) plateOne - 1));
-            if (plateTwo != 0) SetPlateTwo(ArmourPlate.Create((ItemQuality) plateTwo - 1));
+            int plateOne = range > 5 ? 5 : range;
+            int plateTwo = range > 5 ? range - 5 : 0;
+            if (plateOne != 0) SetChestArmour(Armour.Create((ItemQuality) plateOne - 1));
+            if (plateTwo != 0) SetHeadArmour(Armour.Create((ItemQuality) plateTwo - 1));
         }
 
-        public int GetProtectionLevel()
+        public int GetTotalProtection()
         {
-            //todo plate damage
-            int plateOneProtection = _plateOne?.Protection ?? 0;
-            int plateTwoProtection = _plateTwo?.Protection ?? 0;
-            return plateOneProtection + plateTwoProtection;
+            int chestProtection = _chest?.GetMaxProtection() ?? 0;
+            int headProtection = _head?.GetMaxProtection() ?? 0;
+            return chestProtection + headProtection;
         }
 
-        public ArmourPlate GetPlateOne()
+        public void SetOnArmourChange(Action a)
         {
-            return _plateOne;
+            _onArmourChange = a;
+            _onArmourChange.Invoke();
         }
 
-        public ArmourPlate GetPlateTwo()
-        {
-            return _plateTwo;
-        }
+        public Armour GetChestArmour() => _chest;
+        public Armour GetHeadArmour() => _head;
     }
 }

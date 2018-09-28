@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
+using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -94,6 +95,7 @@ namespace Game.Combat.Enemies
         private void UpdateTargetCell()
         {
             if (!Alerted) return;
+            if (GetTarget() == null) SetTarget(PlayerCombat.Instance);
             Cell newTargetCell = GetTarget().CurrentCell();
             if (!newTargetCell.Reachable)
             {

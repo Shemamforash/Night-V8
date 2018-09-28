@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using DG.Tweening;
+using Facilitating.UIControllers;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
@@ -15,14 +16,12 @@ namespace Game.Combat.Generation
         public ContainerController ContainerController;
         private bool _revealed;
         private const float MaxRevealTime = 1f;
-        private SpriteRenderer _glowSprite, _iconSprite, _ringSprite;
+        private SpriteRenderer _iconSprite, _ringSprite;
         private InsectBehaviour _insectBehaviour;
         private bool _fading, _showRing;
 
         public void Awake()
         {
-            _glowSprite = gameObject.FindChildWithName<SpriteRenderer>("Glow");
-            _glowSprite.color = UiAppearanceController.InvisibleColour;
             _iconSprite = gameObject.FindChildWithName<SpriteRenderer>("Icon");
             _iconSprite.color = UiAppearanceController.InvisibleColour;
             _ringSprite = gameObject.FindChildWithName<SpriteRenderer>("Ring");
@@ -35,12 +34,6 @@ namespace Game.Combat.Generation
             ContainerController = containerController;
             _iconSprite.sprite = Resources.Load<Sprite>("Images/Container Symbols/" + containerController.GetImageLocation());
             _showRing = !(containerController is FoodSource);
-        }
-
-        public void Pulse()
-        {
-            _glowSprite.color = new Color(1, 1, 1, 0.3f);
-            _glowSprite.DOFade(0f, 2f);
         }
 
         private void OnDestroy()
@@ -57,10 +50,10 @@ namespace Game.Combat.Generation
         {
             _fading = true;
             if (_insectBehaviour != null) _insectBehaviour.Fade();
-            _glowSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
             _iconSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
             _ringSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
             Tween t = _iconSprite.DOColor(UiAppearanceController.InvisibleColour, MaxRevealTime);
+            GetComponent<CompassItem>().Die();
             yield return t.WaitForCompletion();
             Destroy(this);
         }
@@ -73,11 +66,6 @@ namespace Game.Combat.Generation
             _iconSprite.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
             if (!_showRing) return;
             _ringSprite.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
-        }
-
-        public bool Revealed()
-        {
-            return _revealed;
         }
 
         public float InRange()

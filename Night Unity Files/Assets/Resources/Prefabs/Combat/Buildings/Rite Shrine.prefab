@@ -137,6 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4214566240638876}
   - component: {fileID: 114521284175842804}
+  - component: {fileID: 114867095464667800}
   m_Layer: 0
   m_Name: Rite Shrine
   m_TagString: Untagged
@@ -445,7 +446,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1307364973777018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.709897, y: -1.9437807, z: 2.7871668}
+  m_LocalPosition: {x: 3.6341758, y: 0.32909298, z: 2.7871668}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4765152565621730}
@@ -474,7 +475,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1630098561384218}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.4, y: 0.25, z: 0}
+  m_LocalPosition: {x: -0.45, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4032737385973870}
@@ -482,7 +483,7 @@ Transform:
   - {fileID: 4587163298656518}
   - {fileID: 4372304435512996}
   - {fileID: 4176428655276078}
-  m_Father: {fileID: 4998413947935282}
+  m_Father: {fileID: 4939901954110880}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4372304435512996
@@ -682,14 +683,14 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1792635911759596}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.45, y: 0.25, z: 0}
+  m_LocalPosition: {x: 0.4, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4921778477871964}
   - {fileID: 4237073804044724}
   - {fileID: 4815867963346100}
   - {fileID: 4785188344366350}
-  m_Father: {fileID: 4939901954110880}
+  m_Father: {fileID: 4998413947935282}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4939901954110880
@@ -702,7 +703,7 @@ Transform:
   m_LocalPosition: {x: 0.45, y: -0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4931906373845622}
+  - {fileID: 4362623013669136}
   m_Father: {fileID: 4765152565621730}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -716,7 +717,7 @@ Transform:
   m_LocalPosition: {x: -0.4, y: -0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4362623013669136}
+  - {fileID: 4931906373845622}
   m_Father: {fileID: 4765152565621730}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1500,6 +1501,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23998f1d47fb47708772c6f93451edc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114867095464667800
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1307364973777018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ae40966a5a4e299f3184ae2830bdac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!198 &198082411430224302

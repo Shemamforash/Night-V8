@@ -31,7 +31,7 @@ namespace Facilitating.UIControllers
         public void SetArmour(ArmourController armour)
         {
             if (_notEquippedObject == null) return;
-            if (armour.GetProtectionLevel() == 0)
+            if (armour.GetTotalProtection() == 0)
             {
                 _notEquippedObject.SetActive(true);
                 _equippedObject.SetActive(false);
@@ -40,10 +40,10 @@ namespace Facilitating.UIControllers
 
             _notEquippedObject.SetActive(false);
             _equippedObject.SetActive(true);
-            for (int i = 0; i < _plates.Count; ++i) _plates[i].color = i >= armour.GetProtectionLevel() ? UiAppearanceController.InvisibleColour : Color.white;
+            for (int i = 0; i < _plates.Count; ++i) _plates[i].color = i >= armour.GetTotalProtection() ? UiAppearanceController.InvisibleColour : Color.white;
 
-            _ratingText.SetText("Max Armour: " + armour.GetMaxArmour());
-            _platesText.SetText(armour.GetProtectionLevel() + " Armour");
+            _ratingText.SetText("Max Armour: " + armour.GetTotalProtection());
+            _platesText.SetText(armour.GetTotalProtection() + " Armour");
         }
     }
 }

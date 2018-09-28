@@ -151,12 +151,12 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            PlayerCombat.Instance.TakeArmourDamage(ArmourPlate.PlateHealthUnit);
+            PlayerCombat.Instance.TakeArmourDamage(Armour.ArmourHealthUnit);
             KnockbackInRange(2f, 25).ForEach(e =>
             {
                 CharacterCombat c = e as CharacterCombat;
                 if (c == null) return;
-                c.TakeArmourDamage(ArmourPlate.PlateHealthUnit);
+                c.TakeArmourDamage(Armour.ArmourHealthUnit);
             });
         }
     }
@@ -184,7 +184,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            PlayerCombat.Instance.TakeArmourDamage(ArmourPlate.PlateHealthUnit);
+            PlayerCombat.Instance.TakeArmourDamage(Armour.ArmourHealthUnit);
             KnockbackInRange(4f, 100f);
         }
     }
@@ -228,7 +228,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            PlayerCombat.Instance.TakeArmourDamage(-ArmourPlate.PlateHealthUnit);
+            PlayerCombat.Instance.TakeArmourDamage(-Armour.ArmourHealthUnit);
             Vector2 position = PlayerCombat.Instance.transform.position;
             FireBehaviour.Create(position, 2f);
         }
@@ -257,7 +257,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            PlayerCombat.Instance.TakeArmourDamage(ArmourPlate.PlateHealthUnit);
+            PlayerCombat.Instance.TakeArmourDamage(Armour.ArmourHealthUnit);
             Heal(0.5f);
         }
     }

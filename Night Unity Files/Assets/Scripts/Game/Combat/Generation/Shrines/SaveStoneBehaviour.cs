@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Facilitating.Persistence;
+using Facilitating.UIControllers;
 using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
@@ -39,6 +40,7 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
         transform.position = _region.ShrinePosition;
         PathingGrid.AddBlockingArea(_region.ShrinePosition, 0.5f);
         if (!_region.Saved) return;
+        GetComponent<CompassItem>().Die();
         DisableParticles(true);
         Destroy(this);
     }
@@ -72,6 +74,7 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
     public void Activate()
     {
         Destroy(gameObject.GetComponent<Collider2D>());
+        GetComponent<CompassItem>().Die();
         Triggered = true;
         SaveController.SaveGame();
         DisableParticles(false);

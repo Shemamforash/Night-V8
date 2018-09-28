@@ -18,7 +18,7 @@ namespace Facilitating.UIControllers
         private static ArmourPlateUi _plateOneUi;
         private static ArmourPlateUi _plateTwoUi;
 
-        private ArmourPlate _currentSelectedPlate;
+        private Armour _currentSelectedArmour;
         private bool _upgradingAllowed;
 
         protected override void CacheElements()
@@ -60,7 +60,7 @@ namespace Facilitating.UIControllers
 
         private void EquipPlateOne(object armourObject)
         {
-            ArmourPlate armour = (ArmourPlate) armourObject;
+            Armour armour = (Armour) armourObject;
             CharacterManager.SelectedCharacter.EquipArmourSlotOne(armour);
             UpdatePlates();
             SetPlateListActive(_plateOneUi);
@@ -68,7 +68,7 @@ namespace Facilitating.UIControllers
 
         private void EquipPlateTwo(object armourObject)
         {
-            ArmourPlate armour = (ArmourPlate) armourObject;
+            Armour armour = (Armour) armourObject;
             CharacterManager.SelectedCharacter.EquipArmourSlotTwo(armour);
             UpdatePlates();
             SetPlateListActive(_plateTwoUi);
@@ -100,11 +100,11 @@ namespace Facilitating.UIControllers
 
             protected override void Update(object o)
             {
-                ArmourPlate armour = (ArmourPlate) o;
+                Armour armour = (Armour) o;
                 int max = armour.GetMaxProtection();
                 int current = armour.GetCurrentProtection();
                 ArmourController armourController = CharacterManager.SelectedCharacter.ArmourController;
-                bool equipped = armourController.GetPlateOne() == armour || armourController.GetPlateTwo() == armour;
+                bool equipped = armourController.GetChestArmour() == armour || armourController.GetHeadArmour() == armour;
                 string armourString = armour.Name + " - " + current + "/" + max + " Armour";
                 if (equipped) armourString = "(E) " + armourString;
                 _armourText.SetText(armourString);

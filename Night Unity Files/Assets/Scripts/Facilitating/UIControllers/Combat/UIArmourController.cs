@@ -43,8 +43,8 @@ namespace Facilitating.UIControllers
 
         private void SetSlotsFilled(ArmourController armourController, bool damageWasTaken = false)
         {
-            int slotsAvailable = armourController.GetMaxArmour();
-            int slotsUsed = armourController.GetCurrentArmour();
+            int slotsAvailable = armourController.GetTotalProtection();
+            int slotsUsed = armourController.GetCurrentProtection();
 
             for (int i = 0; i < _armourChunks.Count; i++)
             {
@@ -59,7 +59,7 @@ namespace Facilitating.UIControllers
             }
 
             if (slotsUsed == 0) _armourText.text = "No Armour";
-            else _armourText.text = "-" + armourController.GetCurrentArmour() * 10f + "% damage from Armour";
+            else _armourText.text = "-" + armourController.GetCurrentProtection() * 10f + "% damage from Armour";
         }
 
         public void TakeDamage(ArmourController controller)

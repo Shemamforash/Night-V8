@@ -10,7 +10,7 @@ namespace Game.Combat.Misc
         void TakeExplosionDamage(float damage, Vector2 origin);
         void Decay();
         void Burn();
-        void Sicken(int stacks = 0);
+        void Sicken(int stacks = 1);
         bool IsDead();
         void Kill();
         void MyUpdate();

@@ -43,7 +43,7 @@ namespace Facilitating.UIControllers
                 WorldState.HomeInventory().Move(weapon, 1);
                 Inscription inscription = Inscription.Generate();
                 WorldState.HomeInventory().Move(inscription, 1);
-                ArmourPlate plate = ArmourPlate.Create(qualities.RandomElement());
+                Armour plate = Armour.Create(qualities.RandomElement());
                 WorldState.HomeInventory().Move(plate, 1);
             }
 #endif

@@ -1,4 +1,5 @@
-﻿using Game.Combat.Generation;
+﻿using Facilitating.UIControllers;
+using Game.Combat.Generation;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class HealShrineBehaviour : MonoBehaviour
         p.Emit(100);
         PlayerCombat.Instance.HealthController.Heal(100);
         gameObject.FindChildWithName<ColourPulse>("Health Shrine Glow").PulseAndEnd();
+        GetComponent<CompassItem>().Die();
         Destroy(this);
     }
 

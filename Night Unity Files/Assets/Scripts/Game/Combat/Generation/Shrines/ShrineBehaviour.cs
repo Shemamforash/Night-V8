@@ -16,7 +16,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
     private SpriteRenderer _glow;
     private SpriteMask _countdownMask;
     private SpriteRenderer _countdown;
-    private BrandManager.Brand _brand;
+    private Brand _brand;
 
     private static GameObject _bossPrefab, _firePrefab, _wavePrefab, _chasePrefab;
 
@@ -35,7 +35,7 @@ public abstract class ShrineBehaviour : BasicShrineBehaviour
         _countdownMask.alphaCutoff = 1f;
     }
 
-    public static void Generate(BrandManager.Brand brand)
+    public static void Generate(Brand brand)
     {
         if (_bossPrefab == null)
         {

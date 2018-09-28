@@ -405,7 +405,7 @@ namespace Game.Combat.Player
                 Player.Inventory().Move(Inscription.Generate(10), 1);
             }
 
-            Player.Inventory().Move(ArmourPlate.Create(ItemQuality.Radiant), 1);
+            Player.Inventory().Move(Armour.Create(ItemQuality.Radiant), 1);
             Player.Inventory().IncrementResource("Essence", 50);
 #endif
             HealthController.SetInitialHealth(Player.Attributes.CalculateInitialHealth(), this, Player.Attributes.CalculateMaxHealth());

@@ -10161,6 +10161,16 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ClearSaveAndLoad
       objectReference: {fileID: 0}
+    - target: {fileID: 114048020223056434, guid: 0cee5739a825969428bec206cac2348d,
+        type: 2}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114776737673131028, guid: 0cee5739a825969428bec206cac2348d,
+        type: 2}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0cee5739a825969428bec206cac2348d, type: 2}
   m_IsPrefabAsset: 0
@@ -11460,6 +11470,11 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 225887079187452636, guid: b3eae0f9d0f47c140868cc9aba3d3fec,
+        type: 2}
+      propertyPath: m_Alpha
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3eae0f9d0f47c140868cc9aba3d3fec, type: 2}

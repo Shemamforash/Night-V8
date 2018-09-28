@@ -8,6 +8,7 @@ public class BulletTrailFade : MonoBehaviour
 {
     private static readonly ObjectPool<BulletTrailFade> _pool = new ObjectPool<BulletTrailFade>("Bullet Trails", "Prefabs/Combat/Visuals/Bullet Trail");
     private TrailRenderer _trailRenderer;
+    private Transform _follow;
 
     public void Awake()
     {
@@ -24,7 +25,6 @@ public class BulletTrailFade : MonoBehaviour
 
     public void StartFade(float duration)
     {
-        transform.SetParent(null);
         StartCoroutine(Fade(duration));
     }
 
@@ -40,7 +40,7 @@ public class BulletTrailFade : MonoBehaviour
             yield return null;
         }
 
-        transform.SetParent(null);
+        _trailRenderer.Clear();
         _pool.Return(this);
     }
 
@@ -56,10 +56,15 @@ public class BulletTrailFade : MonoBehaviour
         _pool.Dispose(this);
     }
 
-    public void SetPosition(Transform parent)
+    public void LateUpdate()
     {
-        transform.SetParent(parent);
-        transform.localPosition = Vector2.zero;
+        transform.position = _follow.transform.position;
+    }
+
+    public void SetPosition(Transform follow)
+    {
+        _follow = follow;
+        transform.position = follow.position;
         _trailRenderer.Clear();
     }
 }

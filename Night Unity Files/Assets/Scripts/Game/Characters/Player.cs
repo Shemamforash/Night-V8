@@ -248,18 +248,18 @@ namespace Game.Characters
             PlayerCombat.Instance.EquipWeapon(weapon);
         }
 
-        public void EquipArmourSlotOne(ArmourPlate plate)
+        public void EquipArmourSlotOne(Armour plate)
         {
-            ArmourController.SetPlateOne(plate);
+            ArmourController.SetChestArmour(plate);
             _characterView.ArmourController.SetArmour(ArmourController);
             WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
             if (PlayerCombat.Instance == null) return;
             PlayerCombat.Instance.EquipArmour();
         }
 
-        public void EquipArmourSlotTwo(ArmourPlate plate)
+        public void EquipArmourSlotTwo(Armour plate)
         {
-            ArmourController.SetPlateTwo(plate);
+            ArmourController.SetHeadArmour(plate);
             _characterView.ArmourController.SetArmour(ArmourController);
             WorldEventManager.GenerateEvent(new CharacterMessage("That might help", this));
             if (PlayerCombat.Instance == null) return;

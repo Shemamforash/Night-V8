@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
@@ -11,16 +12,8 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 {
     public class CharacterAttribute : Number
     {
-        public readonly AttributeType AttributeType;
-        private float _rawBonus;
-        private float _finalBonus;
         private readonly List<AttributeModifier> _modifiers = new List<AttributeModifier>();
         private float _calculatedValue;
-
-        public CharacterAttribute(AttributeType attributeType)
-        {
-            AttributeType = attributeType;
-        }
 
         public override float CurrentValue()
         {
@@ -45,22 +38,27 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             Recalculate();
         }
 
-        private void CalculateFinalValue()
-        {
-            _calculatedValue = (base.CurrentValue() + _rawBonus) * _finalBonus;
-        }
-
         public void Recalculate()
         {
-            _rawBonus = 0;
-            _finalBonus = 1;
+            float rawBonus = _modifiers.Sum(m => m.RawBonus());
+            _calculatedValue = base.CurrentValue() + rawBonus;
+            if (_modifiers.Count == 0) return;
+            _modifiers.Sort((a, b) => a.Depth().CompareTo(b.Depth()));
 
+            int currentDepth = _modifiers[0].Depth();
+            float finalBonus = 1;
             _modifiers.ForEach(m =>
             {
-                _rawBonus += m.RawBonus();
-                _finalBonus += m.FinalBonus();
+                int depth = m.Depth();
+                if (depth != currentDepth)
+                {
+                    _calculatedValue *= finalBonus;
+                    finalBonus = 1;
+                    currentDepth = depth;
+                }
+                finalBonus += m.FinalBonus();
             });
-            CalculateFinalValue();
+            _calculatedValue *= finalBonus;
         }
 
         public void AddModifier(AttributeModifier modifier)

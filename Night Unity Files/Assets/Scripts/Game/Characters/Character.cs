@@ -26,8 +26,8 @@ namespace Game.Characters
             doc = base.Save(doc);
             XmlNode equipped = doc.CreateChild("EquippedItems");
             if (EquippedWeapon != null) equipped.CreateChild("Weapon", EquippedWeapon.ID());
-            if (ArmourController?.GetPlateOne() != null) equipped.CreateChild("ArmourPlate1", ArmourController.GetPlateOne().ID());
-            if (ArmourController?.GetPlateTwo() != null) equipped.CreateChild("ArmourPlate2", ArmourController.GetPlateTwo().ID());
+            if (ArmourController?.GetChestArmour() != null) equipped.CreateChild("ArmourPlate1", ArmourController.GetChestArmour().ID());
+            if (ArmourController?.GetHeadArmour() != null) equipped.CreateChild("ArmourPlate2", ArmourController.GetHeadArmour().ID());
             if (EquippedAccessory != null) equipped.CreateChild("Accessory", EquippedAccessory.ID());
             CharacterInventory?.Save(doc);
             return doc;
@@ -48,8 +48,8 @@ namespace Game.Characters
             int armourPlate2Id = armourNode2?.IntFromNode("ArmourPlate2") ?? -1;
             EquipWeapon((Weapon) CharacterInventory.FindItem(weaponId));
             EquipAccessory((Accessory) CharacterInventory.FindItem(accessoryId));
-            ArmourController.SetPlateOne((ArmourPlate) CharacterInventory.FindItem(armourPlate1Id));
-            ArmourController.SetPlateTwo((ArmourPlate) CharacterInventory.FindItem(armourPlate2Id));
+            ArmourController.SetChestArmour((Armour) CharacterInventory.FindItem(armourPlate1Id));
+            ArmourController.SetHeadArmour((Armour) CharacterInventory.FindItem(armourPlate2Id));
         }
 
         public virtual void EquipWeapon(Weapon weapon)

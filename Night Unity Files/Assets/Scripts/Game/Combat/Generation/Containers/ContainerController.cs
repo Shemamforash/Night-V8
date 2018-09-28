@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Player;
@@ -68,7 +69,7 @@ public abstract class ContainerController
 
     public string GetContents()
     {
-        return _inventory.Contents()[0].Name;
+        return !_inventory.Contents().Any() ? "" : _inventory.Contents()[0].Name;
     }
 
     public string GetImageLocation()

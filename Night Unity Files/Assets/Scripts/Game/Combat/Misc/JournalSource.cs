@@ -10,7 +10,6 @@ public class JournalSource : ContainerController
     public JournalSource(Vector2 position, JournalEntry journalEntry) : base(position, "Journal")
     {
         _inventory.Name = "Journal";
-        PrefabLocation = "Puddle";
         ImageLocation = "Journal";
         _journalEntry = journalEntry;
     }

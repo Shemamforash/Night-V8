@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Facilitating.UIControllers;
 using Game.Characters;
 using Game.Combat.Enemies;
 using Game.Combat.Misc;
@@ -42,6 +43,7 @@ namespace Game.Combat.Generation.Shrines
             transform.position = region.ShrinePosition;
             PathingGrid.AddBlockingArea(region.ShrinePosition, 1.5f);
             if (!_region.FountainVisited) return;
+            GetComponent<CompassItem>().Die();
             Destroy(this);
         }
 
@@ -101,6 +103,7 @@ namespace Game.Combat.Generation.Shrines
 
         public void Activate()
         {
+            GetComponent<CompassItem>().Die();
             Destroy(gameObject.GetComponent<Collider2D>());
             Triggered = true;
             StartCoroutine(SpawnEnemies());

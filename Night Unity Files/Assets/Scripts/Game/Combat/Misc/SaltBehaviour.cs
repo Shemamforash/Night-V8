@@ -7,8 +7,8 @@ public class SaltBehaviour : MonoBehaviour
 {
     private static GameObject _prefab;
     private Rigidbody2D _rigidBody;
-    private const float Force = 0.2f;
-    private const float PickupRadius = 1f;
+    private const float Force = 0.4f;
+    private const float PickupRadius = 2f;
 
     public void Awake()
     {

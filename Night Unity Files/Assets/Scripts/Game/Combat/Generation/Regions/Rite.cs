@@ -4,9 +4,9 @@ namespace Game.Combat.Generation
 {
     public class Rite : RegionGenerator
     {
-        private static BrandManager.Brand _brand;
+        private static Brand _brand;
         
-        public static void SetBrand(BrandManager.Brand brand)
+        public static void SetBrand(Brand brand)
         {
             _brand = brand;
         }
