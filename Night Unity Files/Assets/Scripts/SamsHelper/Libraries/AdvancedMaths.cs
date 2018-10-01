@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using QuickEngine.Extensions;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
+using UnityEngine.Profiling;
 
 namespace SamsHelper.Libraries
 {
@@ -85,63 +89,61 @@ namespace SamsHelper.Libraries
             return 360f - (b - a);
         }
 
-        public static List<Vector2> GetPoissonDiscDistribution(int numberOfPoints, float minRadius, float maxRadius, float maxSampleDistance, bool includeInitialSample = false)
+        public static List<Vector2> GetPoissonDiscDistribution(int numberOfPoints, float maxSampleDistance, bool includeInitialSample = false, float scale = 1)
         {
             List<Vector2> samples = new List<Vector2>();
-            List<Vector2> activeSamples = new List<Vector2>();
-            if (includeInitialSample)
-            {
-                samples.Add(new Vector2(0, 0));
-            }
-            else
-            {
-                Vector2 random = new Vector2(Random.Range(-maxSampleDistance, maxSampleDistance), Random.Range(-maxSampleDistance, maxSampleDistance));
-                samples.Add(random);
-            }
+            Vector2 initialSample = Vector2.zero;
+            if (!includeInitialSample)
+                initialSample = new Vector2(Random.Range(-maxSampleDistance, maxSampleDistance), Random.Range(-maxSampleDistance, maxSampleDistance));
+            samples.Add(initialSample);
 
-            activeSamples.Add(samples[0]);
+            int gridWidth = Mathf.CeilToInt(Mathf.Sqrt(numberOfPoints) / 0.8f);
+            if (gridWidth % 2 == 0) ++gridWidth;
+            float gridRadius = gridWidth / 2f;
+            float squareWidth = maxSampleDistance / gridWidth;
 
-            for (int i = 0; i < numberOfPoints - 1 && activeSamples.Count != 0; ++i)
+            float maxDistance = gridRadius * squareWidth;
+            maxDistance *= maxDistance;
+            for (int x = 0; x < gridWidth; ++x)
             {
-                int targetSamples = 100;
-                Vector2 randomSample = Vector2.positiveInfinity;
-                while (targetSamples != 0)
+                for (int y = 0; y < gridWidth; ++y)
                 {
-                    randomSample = activeSamples[Random.Range(0, activeSamples.Count)];
-                    Vector2 randomPoint = new Vector2();
-                    float leftBound = randomSample.x - maxRadius;
-                    leftBound = Mathf.Clamp(leftBound, -maxSampleDistance, maxSampleDistance);
-                    float rightBound = randomSample.x + maxRadius;
-                    rightBound = Mathf.Clamp(rightBound, -maxSampleDistance, maxSampleDistance);
-                    float lowerBound = randomSample.y - maxRadius;
-                    lowerBound = Mathf.Clamp(lowerBound, -maxSampleDistance, maxSampleDistance);
-                    float upperBound = randomSample.y + maxRadius;
-                    upperBound = Mathf.Clamp(upperBound, -maxSampleDistance, maxSampleDistance);
-                    randomPoint.x = Random.Range(leftBound, rightBound);
-                    randomPoint.y = Random.Range(lowerBound, upperBound);
-                    float distance = Vector2.Distance(randomSample, randomPoint);
-                    if (distance >= minRadius && distance <= maxRadius)
-                    {
-                        if (!samples.Any(s => Vector2.Distance(s, randomPoint) < minRadius))
-                        {
-                            samples.Add(randomPoint);
-                            activeSamples.Add(randomPoint);
-                            break;
-                        }
-                    }
+                    float sqrRad = squareWidth / 2f;
+                    float xPos = (x - gridRadius) * squareWidth;
+                    float yPos = (y - gridRadius) * squareWidth;
+                    xPos += sqrRad;
+                    yPos += sqrRad;
+                    float sqrDistance = xPos * xPos + yPos * yPos;
 
-                    --targetSamples;
+                    if (sqrDistance >= maxDistance) continue;
+                    Vector2 topLeft = new Vector2(-sqrRad, -sqrRad);
+                    topLeft *= scale;
+                    Vector2 bottomRight = new Vector2(sqrRad, sqrRad);
+                    bottomRight *= scale;
+
+                    topLeft.x += xPos;
+                    topLeft.y += yPos;
+                    bottomRight.x += xPos;
+                    bottomRight.y += yPos;
+
+//                    Debug.DrawLine(new Vector2(topLeft.x, topLeft.y), new Vector2(bottomRight.x, topLeft.y), Color.yellow, 5f);
+//                    Debug.DrawLine(new Vector2(topLeft.x, bottomRight.y), new Vector2(bottomRight.x, bottomRight.y), Color.yellow, 5f);
+//
+//                    Debug.DrawLine(new Vector2(bottomRight.x, topLeft.y), new Vector2(bottomRight.x, bottomRight.y), Color.yellow, 5f);
+//                    Debug.DrawLine(new Vector2(topLeft.x, topLeft.y), new Vector2(topLeft.x, bottomRight.y), Color.yellow, 5f);
+
+                    samples.Add(RandomPointInSquare(topLeft, bottomRight));
                 }
-
-                if (targetSamples == 0) activeSamples.Remove(randomSample);
-            }
-
-            if (samples.Count != numberOfPoints)
-            {
-                Debug.Log("Found " + samples.Count + " samples out of " + numberOfPoints + " desired samples, consider modifying the parameters to reach desired number of samples");
             }
 
             return samples;
+        }
+
+        public static Vector2 RandomPointInSquare(Vector2 topLeft, Vector2 bottomRight)
+        {
+            float x = Random.Range(topLeft.x, bottomRight.x);
+            float y = Random.Range(topLeft.y, bottomRight.y);
+            return new Vector2(x, y);
         }
 
         public static Quaternion RotationToTarget(Vector3 origin, Vector3 target)

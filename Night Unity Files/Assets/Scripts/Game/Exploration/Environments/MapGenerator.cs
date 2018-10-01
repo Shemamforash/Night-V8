@@ -11,13 +11,14 @@ using UnityEngine;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Facilitating.Persistence;
+using QuickEngine.Extensions;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
 {
     public class MapGenerator : MonoBehaviour
     {
-        private const int MapWidth = 120, MinRadius = 6, MaxRadius = 9;
+        private const int MapWidth = 120, MinRadius = 6, MaxRadius = 12;
         private const int WaterSourcesPerEnvironment = 30;
         private const int FoodSourcesPerEnvironment = 20;
         private const int ResourcesPerEnvironment = 30;
@@ -155,7 +156,7 @@ namespace Game.Exploration.Environment
             SetRegionTypes();
             initialNode.Discover();
 #if UNITY_EDITOR
-//            _regions.ForEach(r => r.Discover());
+            _regions.ForEach(r => r.Discover());
 #endif
         }
 
@@ -180,8 +181,15 @@ namespace Game.Exploration.Environment
             while (!succeeded)
             {
                 _regions.ForEach(s => { s.Reset(); });
-                List<Vector2> samples = AdvancedMaths.GetPoissonDiscDistribution(_regions.Count, MinRadius, MaxRadius, MapWidth / 2f, true);
-                for (int i = 0; i < samples.Count; ++i)
+                float rootRegions = Mathf.Sqrt(_regions.Count);
+                float normalised = rootRegions / 8f;
+                float mapWidth = MapWidth * 0.65f * normalised;
+                List<Vector2> samples = AdvancedMaths.GetPoissonDiscDistribution(_regions.Count, mapWidth, true, 0.75f);
+                _regions[0].SetPosition(Vector2.zero);
+                samples.RemoveAll(s => s.magnitude < 4);
+                samples.Shuffle();
+                int regionCount = _regions.Count;
+                for (int i = 1; i < regionCount; ++i)
                 {
                     Vector2Int point = new Vector2Int((int) samples[i].x, (int) samples[i].y);
                     _regions[i].SetPosition(point);
@@ -298,7 +306,7 @@ namespace Game.Exploration.Environment
             foreach (Region region in _regions)
             {
                 if (region.GetRegionType() != RegionType.None) continue;
-                if(region.GetRegionType() == RegionType.Temple) Debug.Log(minDepth + " " + region.Depth);
+                if (region.GetRegionType() == RegionType.Temple) Debug.Log(minDepth + " " + region.Depth);
                 if (minDepth != -1 && region.Depth < minDepth) continue;
                 bool valid = true;
                 if (mustNotTouch)

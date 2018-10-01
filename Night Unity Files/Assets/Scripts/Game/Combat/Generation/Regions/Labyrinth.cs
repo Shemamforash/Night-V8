@@ -19,6 +19,7 @@ namespace Game.Combat.Generation
             PlaceShrine();
             GenerateSplinteredArea(Random.Range(4, 7));
             PlaceItems();
+            GenerateTinyRocks(Random.Range(0, 30));
         }
 
         private void JoinNeighbors(List<CrackNode> points, List<Edge> existingEdges)

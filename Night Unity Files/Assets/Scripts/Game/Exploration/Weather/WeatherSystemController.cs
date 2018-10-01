@@ -28,6 +28,7 @@ namespace Game.Exploration.Weather
         private static bool _audioLoaded;
         private static AudioClip[] _lightRainClips, _mediumRainClips, _heavyRainClips;
         private static AudioClip[] _lightWindClips, _mediumWindClips, _heavyWindClips;
+        private static AudioClip[] _dayAudio, _nightAudio;
         private AudioSource _nightTimeAudioSource, _dayTimeAudioSource;
 
         public static AudioClip GetRainClip(float strength)
@@ -53,6 +54,8 @@ namespace Game.Exploration.Weather
             _lightWindClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("wind/light");
             _mediumWindClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("wind/medium");
             _heavyWindClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("wind/heavy");
+            _nightAudio = Helper.LoadAllFilesFromAssetBundle<AudioClip>("nighttime");
+            _dayAudio = Helper.LoadAllFilesFromAssetBundle<AudioClip>("daytime");
             _audioLoaded = true;
         }
 
@@ -67,7 +70,9 @@ namespace Game.Exploration.Weather
             _sun = gameObject.FindChildWithName<ParticleSystem>("Sun");
             _stars = gameObject.FindChildWithName<ParticleSystem>("Stars");
             _nightTimeAudioSource = _stars.GetComponent<AudioSource>();
+            _nightTimeAudioSource.clip = _nightAudio.RandomElement();
             _dayTimeAudioSource = _sun.GetComponent<AudioSource>();
+            _dayTimeAudioSource.clip = _dayAudio.RandomElement();
             _instance = this;
             if (_currentWeather != null) ChangeWeatherInstant();
         }

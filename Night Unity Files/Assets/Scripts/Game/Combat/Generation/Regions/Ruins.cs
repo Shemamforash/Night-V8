@@ -167,10 +167,11 @@ namespace Game.Combat.Generation
             n.SetRightEdge(verts);
         }
 
-        private const int WidthInCells = 30;
+        private int WidthInCells = 30;
 
         private void PlaceWalls()
         {
+            WidthInCells = Random.Range(25, 35);
             nodes = new RuinNode[WidthInCells, WidthInCells];
             int startPos = (int) -(WidthInCells / CellWidth);
             for (int x = startPos; x < startPos + WidthInCells; ++x)
@@ -192,7 +193,7 @@ namespace Game.Combat.Generation
             CarvePassages(0, 0);
             List<Vector2> islandPositions = new List<Vector2>();
             if(ShouldPlaceShrine()) islandPositions.Add(_region.ShrinePosition);
-            for(int i = 0; i < Random.Range(5, 10); ++i) islandPositions.Add(FindAndRemoveValidPosition(0,0, true));
+            for(int i = 0; i < Random.Range(4, 8); ++i) islandPositions.Add(FindAndRemoveValidPosition(0,0, true));
             CreateIslands(islandPositions);
             while (_nodesWithWalls.Count > 0) CombineWalls();
         }

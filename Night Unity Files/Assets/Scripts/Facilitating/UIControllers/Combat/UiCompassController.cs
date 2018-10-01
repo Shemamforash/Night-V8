@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Facilitating.UIControllers;
 using Game.Combat.Generation;
+using Game.Combat.Player;
 using SamsHelper.Libraries;
 using TriangleNet.Topology.DCEL;
 using UnityEngine;
@@ -70,20 +71,20 @@ public class UiCompassController : MonoBehaviour
             _showItemTimeCurrent += Time.deltaTime;
             if (_showItemTimeCurrent > ShowItemTimeMax) _showItemTimeCurrent = ShowItemTimeMax;
             float baseAlpha = 1 - _showItemTimeCurrent / ShowItemTimeMax;
-            List<Tuple<float, float>> alphaRotations = GetItemsInRange(baseAlpha);
+            List<Tuple<float, float, float>> alphaRotations = GetItemsInRange(baseAlpha);
             SquashRotations(alphaRotations);
             yield return null;
         }
     }
 
-    private void SquashRotations(List<Tuple<float, float>> alphaRotations)
+    private void SquashRotations(List<Tuple<float, float, float>> alphaRotations)
     {
         alphaRotations.Sort((a, b) => a.Item2.CompareTo(b.Item2));
         for (int i = 0; i < 18; ++i)
         {
             float angleFrom = i * 20;
             float angleTo = angleFrom + 20;
-            List<Tuple<float, float>> itemsWithinAngle = alphaRotations.Where(c => c.Item2 >= angleFrom && c.Item2 <= angleTo).ToList();
+            List<Tuple<float, float, float>> itemsWithinAngle = alphaRotations.Where(c => c.Item2 >= angleFrom && c.Item2 <= angleTo).ToList();
             if (itemsWithinAngle.Count == 0)
             {
                 _indicators[i].SetAlpha(0f);
@@ -92,13 +93,14 @@ public class UiCompassController : MonoBehaviour
 
             float alpha = 0;
             float angle = 0;
+            float nearestDistance = 1000;
             itemsWithinAngle.ForEach(tup =>
             {
-                alpha += tup.Item1;
-                angle += tup.Item2;
+                if (tup.Item3 >= nearestDistance) return;
+                nearestDistance = tup.Item3;
+                alpha = tup.Item1;
+                angle = tup.Item2;
             });
-            alpha /= itemsWithinAngle.Count;
-            angle /= itemsWithinAngle.Count;
             _indicators[i].SetAlpha(alpha);
             _indicators[i].SetRotation(angle);
         }
@@ -141,20 +143,22 @@ public class UiCompassController : MonoBehaviour
 //        return alphaRotations;
 //    }
 
-    private List<Tuple<float, float>> GetItemsInRange(float baseAlpha)
+    private List<Tuple<float, float, float>> _alphaRotations = new List<Tuple<float, float, float>>();
+
+
+    private List<Tuple<float, float, float>> GetItemsInRange(float baseAlpha)
     {
-        List<Tuple<float, float>> alphaRotations = new List<Tuple<float, float>>();
+        _alphaRotations.Clear();
         _compassItems.ForEach(c =>
         {
             float distance = Vector2.Distance(transform.position, c.transform.position);
-            Debug.Log(distance + "/" + MaxDetectDistance);
             if (distance > MaxDetectDistance) return;
-            distance = 1 - distance / MaxDetectDistance;
-            float newAlpha = baseAlpha * distance;
+            float inverseDistance = 1 - distance / MaxDetectDistance;
+            float newAlpha = baseAlpha * inverseDistance;
             float rotation = AdvancedMaths.AngleFromUp(transform.position, c.transform.position);
-            alphaRotations.Add(Tuple.Create(newAlpha, rotation));
+            _alphaRotations.Add(Tuple.Create(newAlpha, rotation, distance));
         });
-        return alphaRotations;
+        return _alphaRotations;
     }
 
     public static void RegisterCompassItem(CompassItem compassItem)

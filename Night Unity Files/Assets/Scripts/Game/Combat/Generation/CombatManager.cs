@@ -144,7 +144,8 @@ namespace Game.Combat.Generation
                 switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
                 {
                     case EnvironmentType.Desert:
-                        worldObject.AddComponent<Desert>().Initialise(_currentRegion);
+//                        worldObject.AddComponent<Desert>().Initialise(_currentRegion);
+                        worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
                         break;
                     case EnvironmentType.Mountains:
                         worldObject.AddComponent<Steppe>().Initialise(_currentRegion);

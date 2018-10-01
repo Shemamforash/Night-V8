@@ -39,6 +39,7 @@ namespace Facilitating.MenuNavigation
                 _fadeInSequence.Append(_logo.DOFade(0f, 1f));
                 _seenIntro = true;
             }
+
             _fadeInSequence.Join(_menuCanvasGroup.DOFade(1, 2f));
             _fadeInSequence.AppendCallback(() => MenuStateMachine.ShowMenu("Main Menu"));
         }

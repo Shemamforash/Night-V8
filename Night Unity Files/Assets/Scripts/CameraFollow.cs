@@ -19,6 +19,7 @@ public class CameraFollow : MonoBehaviour
         if (!CombatManager.IsCombatActive())
         {
             transform.position = _position;
+            transform.rotation = _rotation;
             return;
         }
 

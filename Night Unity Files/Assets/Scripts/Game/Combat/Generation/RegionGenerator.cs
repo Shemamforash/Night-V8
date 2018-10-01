@@ -92,7 +92,7 @@ namespace Game.Combat.Generation
         private void GenerateFreshEnvironment()
         {
             if (_region.Generated()) return;
-            _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 2f, PathingGrid.CombatAreaWidth / 1.5f));
+            _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(900, PathingGrid.CombatAreaWidth * 1.5f));
             Generate();
             _region.Barriers = barriers;
             PathingGrid.InitialiseGrid();
@@ -165,15 +165,16 @@ namespace Game.Combat.Generation
 
         protected Vector2 FindAndRemoveValidPosition(float radius, float impassableRadius, bool ignoreBounds = false)
         {
-            for (int i = _availablePositions.Count - 1; i >= 0; --i)
+            while (_availablePositions.Count > 0)
             {
-                Vector2 position = _availablePositions[i];
+                int randomIndex = Random.Range(0, _availablePositions.Count);
+                Vector2 position = _availablePositions[randomIndex];
                 if (!ignoreBounds && position.magnitude > PathingGrid.CombatMovementDistance / 2f - radius) continue;
                 Cell c = PathingGrid.WorldToCellPosition(position, false);
                 if (c == null) continue;
                 if (!c.Reachable)
                 {
-                    _availablePositions.RemoveAt(i);
+                    _availablePositions.RemoveAt(randomIndex);
                     continue;
                 }
 
@@ -185,10 +186,10 @@ namespace Game.Combat.Generation
                     if (impassableRadius != 0) CreateImpassablePoint(position, impassableRadius);
                 }
 
-                _availablePositions.RemoveAt(i);
+                _availablePositions.RemoveAt(randomIndex);
                 return c.Position;
             }
-
+            
             throw new Exceptions.RegionPositionNotFoundException();
         }
 
@@ -248,7 +249,7 @@ namespace Game.Combat.Generation
 
         protected virtual void PlaceItems()
         {
-            _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(1000, 1f, 2f, PathingGrid.CombatAreaWidth / 2f));
+            _availablePositions = new List<Vector2>(AdvancedMaths.GetPoissonDiscDistribution(400, PathingGrid.CombatAreaWidth, false, 0.8f));
             if (_region._characterHere != null)
             {
                 _availablePositions.Sort((a, b) => -a.magnitude.CompareTo(b.magnitude));

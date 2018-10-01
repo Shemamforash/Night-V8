@@ -16,15 +16,15 @@ namespace Game.Combat.Generation
     {
         protected override void Generate()
         {
-            Vector2 leftPosition = new Vector2(Random.Range(-7f, -4f), 0);
-            Vector2 rightPosition = new Vector2(Random.Range(4f, 7f), 0);
+            Vector2 leftPosition = new Vector2(Random.Range(-7f, -3.5f), 0);
+            Vector2 rightPosition = new Vector2(Random.Range(3.5f, 7f), 0);
             int rotateAmount = Random.Range(0, 360);
             GenerateRockWall(leftPosition, true, rotateAmount);
             GenerateRockWall(rightPosition, false, rotateAmount);
             PlaceShrine();
             PlaceItems();
-            GenerateSmallRocks(Random.Range(5, 15));
-            GenerateTinyRocks(Random.Range(20, 40));
+            GenerateSmallRocks(Random.Range(5, 20));
+            GenerateTinyRocks(Random.Range(20, 60));
         }
 
         private List<Vector2> RockWall(bool left)

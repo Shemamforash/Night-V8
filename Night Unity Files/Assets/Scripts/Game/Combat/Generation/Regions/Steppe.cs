@@ -36,7 +36,7 @@ namespace Game.Combat.Generation
 
         private void GenerateMap()
         {
-            RandomFillPercent = Random.Range(45, 48);
+            RandomFillPercent = Random.Range(45, 49);
             RegionAreaThreshold = Random.Range(40, 140);
             _map = new CavePoint[Width, Width];
             RandomFillMap();

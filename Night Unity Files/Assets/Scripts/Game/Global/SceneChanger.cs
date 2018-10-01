@@ -64,33 +64,32 @@ namespace Game.Global
 
         public static void GoToGameOverScene()
         {
-            ChangeScene("Game Over", DefaultFadeTime, false);
+            ChangeScene("Game Over", DefaultFadeTime);
         }
 
         public static void GoToMapScene()
         {
-            Debug.Log("map");
-            ChangeScene("Map", DefaultFadeTime, false);
+            ChangeScene("Map", DefaultFadeTime);
         }
 
         public static void GoToStoryScene()
         {
-            ChangeScene("Story", DefaultFadeTime, false);
+            ChangeScene("Story", DefaultFadeTime);
         }
 
         public static void GoToCombatScene()
         {
-            ChangeScene("Combat", 5f);
+            ChangeScene("Combat", 5f, true);
         }
 
         public static void GoToMainMenuScene()
         {
-            ChangeScene("Menu", DefaultFadeTime, false);
+            ChangeScene("Menu", DefaultFadeTime);
         }
 
         public static void GoToCreditsScene()
         {
-            ChangeScene("Credits", DefaultFadeTime, false);
+            ChangeScene("Credits", DefaultFadeTime);
         }
 
         public static void GoToGameScene()
@@ -98,7 +97,7 @@ namespace Game.Global
             ChangeScene("Game", DefaultFadeTime);
         }
 
-        private static void ChangeScene(string sceneName, float fadeTime, bool goToLoadingScene = true)
+        private static void ChangeScene(string sceneName, float fadeTime, bool goToLoadingScene = false)
         {
             WorldState.Pause();
             _instance.StartCoroutine(_instance.FadeOut(sceneName, fadeTime, goToLoadingScene));

@@ -27,7 +27,7 @@ namespace Game.Combat.Generation.Shrines
 
         private static Vector2 GetPosition()
         {
-            List<Vector2> points = AdvancedMaths.GetPoissonDiscDistribution(50, 1, 2, 5);
+            List<Vector2> points = AdvancedMaths.GetPoissonDiscDistribution(50, 5);
             foreach (Vector2 p in points)
             {
                 if (p.magnitude > PathingGrid.CombatMovementDistance - 1) continue;

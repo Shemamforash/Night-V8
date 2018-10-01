@@ -124,7 +124,11 @@ namespace Game.Characters
 
         public float CalculateSpeed() => 5f + Val(AttributeType.Endurance) * 0.25f;
 
-        public float CalculateSkillCooldownModifier() => (float) Math.Pow(0.95f, Val(AttributeType.Willpower)) + Val(AttributeType.SkillRechargeBonus);
+        public float CalculateSkillCooldownModifier()
+        {
+            float skillRechargeBonus = -(Val(AttributeType.SkillRechargeBonus) - 1f);
+            return (float) Math.Pow(0.95f, Val(AttributeType.Willpower)) + skillRechargeBonus;
+        }
 
         public int CalculateMaxHealth()
         {

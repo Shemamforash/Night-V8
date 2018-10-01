@@ -19,7 +19,7 @@ namespace Facilitating.Audio
         private float lightningTimer;
         private bool _waitingForThunder;
 
-        public AudioClip[] thunderSounds;
+        private static AudioClip[] _thunderSounds;
         public Image lightningImage;
         private bool _inCombat;
 
@@ -34,7 +34,8 @@ namespace Facilitating.Audio
         {
             thunderSource.volume = Random.Range(0.9f, 1f);
             thunderSource.pitch = Random.Range(0.8f, 1f);
-            thunderSource.PlayOneShot(thunderSounds.RandomElement(), Random.Range(0.6f, 1f));
+            if (_thunderSounds == null) _thunderSounds = Helper.LoadAllFilesFromAssetBundle<AudioClip>("thunder");
+            thunderSource.PlayOneShot(_thunderSounds.RandomElement(), Random.Range(0.6f, 1f));
             lightningTimer = LightningDuration;
             while (lightningTimer > 0f)
             {

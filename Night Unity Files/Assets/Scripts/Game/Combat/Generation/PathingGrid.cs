@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using EpPathFinding.cs;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
@@ -49,26 +51,27 @@ namespace Game.Combat.Generation
         {
             HashSet<Cell> intersectingCells = GetIntersectingGridCells(barrier);
             if (intersectingCells.Intersect(_invalidCells).Count() != 0) return false;
-            foreach (Cell cell in intersectingCells)
-            {
-                _invalidCells.Add(cell);
-                _outOfRangeSet.Remove(cell);
-                _edgePositionSet.Remove(cell);
-            }
+
+            _outOfRangeList.RemoveAll(e => intersectingCells.Contains(e));
+            _edgePositionList.RemoveAll(e => intersectingCells.Contains(e));
+
+            foreach (Cell cell in intersectingCells) _invalidCells.Add(cell);
 
             return true;
         }
 
+        private static List<Vector2> _blockingVerts = new List<Vector2>();
+
         public static void AddBlockingArea(Vector2 origin, float radius)
         {
-            List<Vector2> verts = new List<Vector2>();
+            _blockingVerts.Clear();
             for (int angle = 0; angle < 360; angle += 20)
             {
                 Vector2 vert = AdvancedMaths.CalculatePointOnCircle(angle, radius, Vector2.zero);
-                verts.Add(vert);
+                _blockingVerts.Add(vert);
             }
 
-            Polygon polygon = new Polygon(verts, origin);
+            Polygon polygon = new Polygon(_blockingVerts, origin);
             AddBarrier(polygon);
         }
 
@@ -79,17 +82,17 @@ namespace Game.Combat.Generation
             _stopwatch = Stopwatch.StartNew();
             _stopwatch.Stop();
             Helper.PrintTime("Neighbors: ", _stopwatch);
-            _outOfRangeList.AddRange(_outOfRangeSet.ToList().Where(c => !c.Blocked));
             _outOfRangeList.ForEach(c => c.OutOfRange = true);
-            _edgePositionList.AddRange(_edgePositionSet.ToList().Where(c => !c.Blocked));
             _edgePositionList.ForEach(c => c.IsEdgeCell = true);
-            for (int x = 0; x < GridWidth; ++x)
+
+            int i = 0;
+            Parallel.For(i, GridWidth, x =>
             {
                 for (int y = 0; y < GridWidth; ++y)
                 {
                     _searchGrid.SetWalkableAt(x, y, Grid[x][y].Reachable);
                 }
-            }
+            });
         }
 
         public static Cell GetEdgeCell()
@@ -111,17 +114,16 @@ namespace Game.Combat.Generation
             return cellInFrontOfMe == null ? null : CellsInRange(cellInFrontOfMe, WorldToGridDistance(distance));
         }
 
+        private static List<Cell> _sharedCells = new List<Cell>();
+
         public static Cell GetCellOrbitingTarget(Cell current, Cell target, Vector2 direction, float distanceFromTarget, float distanceFromCurrent)
         {
             List<Cell> cellsAroundTarget = CellsInRange(target, WorldToGridDistance(distanceFromTarget), 3);
             List<Cell> cellsInFrontOfMe = GetCellsInFrontOfMe(current, direction, distanceFromCurrent);
-            List<Cell> sharedCells = new List<Cell>(cellsAroundTarget.Intersect(cellsInFrontOfMe));
-            if (sharedCells.Count == 0)
-            {
-                return FindNearestCell(cellsAroundTarget, false, current);
-            }
-
-            return Helper.RandomElement(sharedCells);
+            _sharedCells.Clear();
+            _sharedCells.AddRange(cellsAroundTarget.Intersect(cellsInFrontOfMe));
+            if (_sharedCells.Count != 0) return _sharedCells.RandomElement();
+            return FindNearestCell(cellsAroundTarget, false, current);
         }
 
         public static Cell WorldToCellPosition(Vector2 position, bool print = true)
@@ -160,20 +162,22 @@ namespace Game.Combat.Generation
             return false;
         }
 
+        private static List<Cell> _cellsToRemove = new List<Cell>();
+
         public static void SmoothRoute(List<Cell> route)
         {
             int currentIndex = 0;
             while (currentIndex < route.Count)
             {
                 Cell current = route[currentIndex];
-                List<Cell> cellsToRemove = new List<Cell>();
+                _cellsToRemove.Clear();
                 bool noneHit = false;
                 for (int i = route.Count - 1; i > currentIndex; --i)
                 {
                     Cell next = route[i];
                     if (noneHit)
                     {
-                        cellsToRemove.Add(next);
+                        _cellsToRemove.Add(next);
                     }
                     else if (!IsLineObstructed(current.Position, next.Position, true))
                     {
@@ -181,10 +185,12 @@ namespace Game.Combat.Generation
                     }
                 }
 
-                cellsToRemove.ForEach(cell => route.Remove(cell));
+                _cellsToRemove.ForEach(cell => route.Remove(cell));
                 ++currentIndex;
             }
         }
+
+        private static List<Cell> _cellPath = new List<Cell>();
 
         public static List<Cell> JPS(Cell start, Cell end)
         {
@@ -193,14 +199,14 @@ namespace Game.Combat.Generation
             GridPos endPos = new GridPos(end.x, end.y);
             JumpPointParam jpParam = new JumpPointParam(_searchGrid, startPos, endPos);
             List<GridPos> path = JumpPointFinder.FindPath(jpParam);
-            List<Cell> cellPath = new List<Cell>();
+            _cellPath.Clear();
             path.ForEach(pos =>
             {
                 float x = (pos.x - GridWidth / 2f) / CellResolution;
                 float y = (pos.y - GridWidth / 2f) / CellResolution;
-                cellPath.Add(WorldToCellPosition(new Vector2(x, y)));
+                _cellPath.Add(WorldToCellPosition(new Vector2(x, y)));
             });
-            return cellPath;
+            return _cellPath;
         }
 
         public static Cell GetCellNearMe(Vector2 position, float distanceMax, float distanceMin = 0)
@@ -291,6 +297,8 @@ namespace Game.Combat.Generation
             return cells.All(c => c.Reachable);
         }
 
+        private static List<Cell> _cellsInSquare = new List<Cell>();
+
         private static List<Cell> CellsInSquare(Vector3 topLeft, Vector3 bottomRight)
         {
             Vector2Int topLeftGridPosition = WorldToGridPosition(topLeft);
@@ -303,29 +311,31 @@ namespace Game.Combat.Generation
             yMin = Mathf.Clamp(yMin, 0, GridWidth - 1);
             xMax = Mathf.Clamp(xMax, 0, GridWidth - 1);
             yMax = Mathf.Clamp(yMax, 0, GridWidth - 1);
-            List<Cell> cellsInSquare = new List<Cell>();
+            _cellsInSquare.Clear();
             for (int x = xMin; x <= xMax; ++x)
             {
                 for (int y = yMin; y <= yMax; ++y)
                 {
                     if (Grid[x][y] == null) continue;
-                    cellsInSquare.Add(Grid[x][y]);
+                    _cellsInSquare.Add(Grid[x][y]);
                 }
             }
 
-            return cellsInSquare;
+            return _cellsInSquare;
         }
+
+        private static HashSet<Cell> _intersectingCells = new HashSet<Cell>();
 
         private static HashSet<Cell> GetIntersectingGridCells(Polygon p)
         {
-            HashSet<Cell> intersectingCells = new HashSet<Cell>();
+            _intersectingCells.Clear();
             List<Cell> possibleCells = CellsInSquare(p.TopLeft, p.BottomRight);
             foreach (Cell c in possibleCells)
             {
                 if (!AdvancedMaths.IsPointInPolygon(c.Position - p.Position, p.Vertices)) continue;
                 c.Blocked = true;
                 c.Reachable = false;
-                intersectingCells.Add(c);
+                _intersectingCells.Add(c);
             }
 
             for (int i = 0; i < p.Vertices.Count; ++i)
@@ -336,16 +346,19 @@ namespace Game.Combat.Generation
                 cells.ForEach(c =>
                 {
                     c.Reachable = false;
-                    intersectingCells.Add(c);
+                    _intersectingCells.Add(c);
                 });
             }
 
-            return intersectingCells;
+            return _intersectingCells;
         }
+
+        private static HashSet<Cell> _cellsOnLine = new HashSet<Cell>();
+
 
         private static List<Cell> CellsOnLine(Vector2 start, Vector2 end)
         {
-            HashSet<Cell> cells = new HashSet<Cell>();
+            _cellsOnLine.Clear();
             float distance = Vector2.Distance(start, end);
             float obstructionInterval = 1f / (CellResolution * 2);
             int interval = (int) (distance / obstructionInterval);
@@ -356,12 +369,12 @@ namespace Game.Combat.Generation
                 Vector2Int pos = WorldToGridPosition(currentPosition);
                 if (pos.x < 0 || pos.x >= GridWidth || pos.y < 0 || pos.y >= GridWidth) continue;
                 Cell cellHere = Grid[pos.x][pos.y];
-                cells.Add(cellHere);
+                _cellsOnLine.Add(cellHere);
             }
 
             Vector2Int endPos = WorldToGridPosition(end);
-            if (!(endPos.x < 0 || endPos.x >= GridWidth || endPos.y < 0 || endPos.y >= GridWidth)) cells.Add(Grid[endPos.x][endPos.y]);
-            return cells.ToList();
+            if (!(endPos.x < 0 || endPos.x >= GridWidth || endPos.y < 0 || endPos.y >= GridWidth)) _cellsOnLine.Add(Grid[endPos.x][endPos.y]);
+            return _cellsOnLine.ToList();
         }
 
         private static Vector2Int WorldToGridPosition(Vector2 position)
@@ -414,10 +427,8 @@ namespace Game.Combat.Generation
 
         private static int WorldToGridDistance(float distance) => Mathf.FloorToInt(distance * CellResolution);
 
-        private static readonly HashSet<Cell> _outOfRangeSet = new HashSet<Cell>();
         public static readonly List<Cell> _outOfRangeList = new List<Cell>();
 
-        private static readonly HashSet<Cell> _edgePositionSet = new HashSet<Cell>();
         public static readonly List<Cell> _edgePositionList = new List<Cell>();
 
         private static StaticGrid _searchGrid;
@@ -425,9 +436,7 @@ namespace Game.Combat.Generation
         private static void GenerateBaseGrid()
         {
             _outOfRangeList.Clear();
-            _outOfRangeSet.Clear();
             _edgePositionList.Clear();
-            _edgePositionSet.Clear();
             _invalidCells.Clear();
             _hiddenCells.Clear();
             _cellsInRange.Clear();
@@ -435,7 +444,9 @@ namespace Game.Combat.Generation
             _searchGrid = new StaticGrid(GridWidth, GridWidth);
             int outOfRangeDistanceSqrd = (int) Mathf.Pow(CombatMovementDistance * CellResolution * 0.5f, 2f);
             int edgeDistanceSquared = (int) Mathf.Pow((CombatMovementDistance - 1) * CellResolution * 0.5f, 2f);
-            for (int x = 0; x < GridWidth; ++x)
+
+            int i = 0;
+            for(int x = 0; x < GridWidth; ++x)
             {
                 if (Grid[x] == null) Grid[x] = new Cell[GridWidth];
                 for (int y = 0; y < GridWidth; ++y)
@@ -443,16 +454,10 @@ namespace Game.Combat.Generation
                     float xComp = Mathf.Pow(x - GridWidth / 2f, 2f);
                     float yComp = Mathf.Pow(y - GridWidth / 2f, 2f);
                     float distanceSqrd = xComp + yComp;
-                    Grid[x][y] = Cell.Generate(x, y);
-
-                    if (distanceSqrd > outOfRangeDistanceSqrd)
-                    {
-                        _outOfRangeSet.Add(Grid[x][y]);
-                    }
-                    else if (distanceSqrd > edgeDistanceSquared)
-                    {
-                        _edgePositionSet.Add(Grid[x][y]);
-                    }
+                    Cell c = Cell.Generate(x, y);
+                    Grid[x][y] = c;
+                    if (distanceSqrd > outOfRangeDistanceSqrd) _outOfRangeList.Add(c);
+                    else if (distanceSqrd > edgeDistanceSquared) _edgePositionList.Add(c);
                 }
             }
         }

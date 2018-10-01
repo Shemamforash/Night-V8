@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using FastLights;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -75,12 +77,6 @@ namespace Fastlights
             float nearestDistance = float.MaxValue;
             bool didIntersect = false;
 
-//            int targetBucket = Mathf.FloorToInt(target.InRangeAngle / bucketAngle);
-//            int bucketCount = _edgeBuckets.Count;
-//            for (int j = 0; j < bucketCount; ++j)
-//            {
-//                EdgeBucket b = _edgeBuckets[j];
-//                if (!b.AngleFallsInBucket(target.InRangeAngle)) continue;
             int edgeCount = edges.Count;
 
             for (int i = 0; i < edgeCount; i++)
@@ -113,7 +109,6 @@ namespace Fastlights
                 nearestDistance = distance;
                 intersectPoint = tempIntersect.Item2;
             }
-//            }
 
             _intersectionExists = didIntersect;
             _intersectionPoint = intersectPoint;
@@ -121,54 +116,58 @@ namespace Fastlights
 
         private bool _intersectionExists;
         private Vector2 _intersectionPoint;
+        private readonly List<List<FLEdge>> _edgeSegments = new List<List<FLEdge>>();
+        private List<FLEdge> _edges = new List<FLEdge>();
+        private List<FLVertex> _verts = new List<FLVertex>();
+        private List<FLEdge> _segments = new List<FLEdge>();
 
         private void DrawLight()
         {
             meshVertices.Clear();
-            List<List<FLEdge>> edgeSegments = new List<List<FLEdge>>();
+            _edgeSegments.Clear();
 
             float sqrRadius = Radius * Radius;
             int obstructorCount = _allObstructors.Count;
+
             for (int i = 0; i < obstructorCount; i++)
             {
                 LightObstructor o = _allObstructors[i];
-//                if (!o.Visible()) continue;
                 _visibleEdges = o.GetVisibleVertices(_position, sqrRadius, Radius);
                 if (_visibleEdges == null) continue;
-                edgeSegments.AddRange(_visibleEdges);
+                _edgeSegments.AddRange(_visibleEdges);
             }
 
-            if (edgeSegments.Count == 0)
+            if (_edgeSegments.Count == 0)
             {
                 InsertLineSegments(0, 360);
                 BuildMesh();
                 return;
             }
 
-            List<FLEdge> edges = new List<FLEdge>();
-            List<FLVertex> verts = new List<FLVertex>();
-            int edgeSegmentCount = edgeSegments.Count;
+            _edges.Clear();
+            _verts.Clear();
+            int edgeSegmentCount = _edgeSegments.Count;
             for (int i = 0; i < edgeSegmentCount; i++)
             {
-                List<FLEdge> s = edgeSegments[i];
-                int segmentLength = s.Count;
+                _segments = _edgeSegments[i];
+                int segmentLength = _segments.Count;
                 for (int j = 0; j < segmentLength; ++j)
                 {
-                    edges.Add(s[j]);
-                    verts.Add(s[j].From);
+                    _edges.Add(_segments[j]);
+                    _verts.Add(_segments[j].From);
                     if (j != segmentLength - 1) continue;
-                    verts.Add(s[j].To);
+                    _verts.Add(_segments[j].To);
                 }
             }
 
-            verts.Sort((a, b) => a.InRangeAngle.CompareTo(b.InRangeAngle));
+            _verts.Sort((a, b) => a.InRangeAngle.CompareTo(b.InRangeAngle));
 
             FLVertex endVert = null;
-            int vertCount = verts.Count;
+            int vertCount = _verts.Count;
             for (int i = 0; i < vertCount; i++)
             {
-                FLVertex vert = verts[i];
-                CalculateNearestIntersection(vert, edges);
+                FLVertex vert = _verts[i];
+                CalculateNearestIntersection(vert, _edges);
                 if (_intersectionExists)
                 {
                     float distance = Vector2.SqrMagnitude(_intersectionPoint - _position);
@@ -197,7 +196,7 @@ namespace Fastlights
                 }
             }
 
-            if (endVert != null) InsertLineSegments(endVert.InRangeAngle, verts[0].InRangeAngle);
+            if (endVert != null) InsertLineSegments(endVert.InRangeAngle, _verts[0].InRangeAngle);
             BuildMesh();
         }
 
@@ -210,7 +209,7 @@ namespace Fastlights
             for (int i = 0; i < meshVertices.Count; ++i)
             {
                 v[i] = meshVertices[i];
-                if (Target != null) v[i] -= Target.transform.position;
+                if (Target != null) v[i] -= (Vector3) _position;
             }
 
             mesh.vertices = v;
