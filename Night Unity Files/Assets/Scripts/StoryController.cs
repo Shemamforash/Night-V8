@@ -12,18 +12,24 @@ using UnityEngine;
 public class StoryController : Menu, IInputListener
 {
     private static string _text;
-    private const float _timePerWord = 0.2f;
+    public const float SkipAllTimerMax = 1f;
+    private const float _timePerWord = 0.2f, MinAlpha = 0.25f;
     private List<string> _paragraphs;
     private TextMeshProUGUI _storyText;
     private static bool _goToCredits;
     private static bool _paused;
     private bool _skipParagraph;
+    private float _heldCounter;
+    private bool _skipAll;
+    private CanvasGroup _skipCanvas;
 
     public override void Awake()
     {
         base.Awake();
         _storyText = GetComponent<TextMeshProUGUI>();
         _storyText.color = UiAppearanceController.InvisibleColour;
+        _skipCanvas = GameObject.Find("Skip").GetComponent<CanvasGroup>();
+        _skipCanvas.alpha = MinAlpha;
         _paused = false;
     }
 
@@ -66,11 +72,13 @@ public class StoryController : Menu, IInputListener
 
             //read
             float timeToRead = GetTimeToRead(paragraph);
-            while (timeToRead > 0 && !_skipParagraph)
+            while (timeToRead > 0 && !_skipParagraph && !_skipAll)
             {
                 if (!_paused) timeToRead -= Time.deltaTime;
                 yield return null;
             }
+
+            if (_skipAll) break;
 
             _skipParagraph = false;
 
@@ -90,12 +98,23 @@ public class StoryController : Menu, IInputListener
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (isHeld || _paused || axis != InputAxis.TakeItem || _skipParagraph) return;
-        _skipParagraph = true;
+        if (axis != InputAxis.TakeItem || _paused || _skipAll || !isHeld) return;
+        _heldCounter += Time.deltaTime;
+        float normalised = _heldCounter / SkipAllTimerMax;
+        if (normalised > 1) normalised = 1;
+        normalised *= normalised;
+        _skipCanvas.alpha = Mathf.Lerp(MinAlpha, 0.8f, normalised);
+        if (_heldCounter < SkipAllTimerMax) return;
+        _skipCanvas.alpha = 1f;
+        _skipAll = true;
     }
 
     public void OnInputUp(InputAxis axis)
     {
+        if (axis != InputAxis.TakeItem || _paused || _skipParagraph || _skipAll) return;
+        _skipParagraph = true;
+        _skipCanvas.DOFade(MinAlpha, 0.2f);
+        _heldCounter = 0;
     }
 
     public void OnDoubleTap(InputAxis axis, float direction)

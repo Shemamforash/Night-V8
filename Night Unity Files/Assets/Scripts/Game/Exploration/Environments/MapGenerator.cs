@@ -187,7 +187,6 @@ namespace Game.Exploration.Environment
                 List<Vector2> samples = AdvancedMaths.GetPoissonDiscDistribution(_regions.Count, mapWidth, true, 0.75f);
                 _regions[0].SetPosition(Vector2.zero);
                 samples.RemoveAll(s => s.magnitude < 4);
-                samples.Shuffle();
                 int regionCount = _regions.Count;
                 for (int i = 1; i < regionCount; ++i)
                 {

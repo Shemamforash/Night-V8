@@ -213,7 +213,7 @@ namespace Game.Combat.Misc
             _spriteFlash.FlashSprite();
             HealthController.TakeDamage(damage);
             Vector2 direction = ((Vector2) transform.position - origin).normalized;
-            MovementController.KnockBack(direction, 50f / origin.Distance(transform.position));
+            MovementController.KnockBack(direction, damage / 2f * origin.Distance(transform.position));
         }
 
         public virtual void Kill()

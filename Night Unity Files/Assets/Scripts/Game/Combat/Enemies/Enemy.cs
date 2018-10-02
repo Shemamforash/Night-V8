@@ -199,7 +199,7 @@ namespace Game.Combat.Enemies
 
         public Loot DropLoot(Vector2 position)
         {
-            Loot controller = new Loot(position, Name);
+            Loot controller = new Loot(position);
             Debug.Log(Template.DropResource);
             switch (Template.DropResource)
             {
@@ -213,6 +213,7 @@ namespace Game.Combat.Enemies
                     if (Random.Range(0, 20) == 0) controller.AddToInventory(Inscription.Generate());
                     break;
                 case "Meat":
+                    controller.SetIsMeatSource();
                     if (Template.EnemyType == EnemyType.Grazer || Template.EnemyType == EnemyType.Watcher && Random.Range(0, 2) == 1)
                     {
                         controller.AddToInventory(ResourceTemplate.Create("Skin"));

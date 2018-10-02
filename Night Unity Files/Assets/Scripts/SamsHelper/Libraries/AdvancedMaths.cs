@@ -136,6 +136,7 @@ namespace SamsHelper.Libraries
                 }
             }
 
+            samples.Shuffle();
             return samples;
         }
 

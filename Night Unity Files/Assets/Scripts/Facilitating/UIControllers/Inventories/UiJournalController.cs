@@ -11,6 +11,7 @@ public class UiJournalController : UiInventoryMenuController
 {
     private ListController _journalList;
     private static EnhancedText _journalDescription, _journalTitle;
+    private CanvasGroup _noJournalGroup;
 
     protected override void Initialise()
     {
@@ -23,17 +24,22 @@ public class UiJournalController : UiInventoryMenuController
         _journalList = gameObject.FindChildWithName<ListController>("List");
         _journalDescription = gameObject.FindChildWithName<EnhancedText>("Text");
         _journalTitle = gameObject.FindChildWithName<EnhancedText>("Title");
+        _noJournalGroup = gameObject.FindChildWithName<CanvasGroup>("No Journals");
     }
 
     private void UpdateJournalDescription(object obj)
     {
         if (obj == null)
         {
-            _journalDescription.SetText("No Journal Entries");
+            _journalTitle.SetText("");
+            _journalDescription.SetText("");
+            _noJournalGroup.alpha = 1;
             return;
         }
 
         JournalEntry entry = (JournalEntry) obj;
+        _noJournalGroup.alpha = 0;
+        _journalTitle.SetText(entry.Title);
         _journalDescription.SetText(entry.Contents);
     }
 

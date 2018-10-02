@@ -7,7 +7,7 @@ namespace Game.Combat.Generation
     {
         public bool IsValid;
 
-        public Loot(Vector2 position, string name) : base(position, name)
+        public Loot(Vector2 position) : base(position, "Loot")
         {
         }
 
@@ -20,6 +20,11 @@ namespace Game.Combat.Generation
         public void IncrementResource(string name, int amount)
         {
             _inventory.IncrementResource(name, amount);
+        }
+
+        public void SetIsMeatSource()
+        {
+            ImageLocation = "Meat";
         }
     }
 }

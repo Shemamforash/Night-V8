@@ -14,6 +14,7 @@ namespace Facilitating.UIControllers
             if(_glowPrefab == null) _glowPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Glow");
             GameObject glowObject = Instantiate(_glowPrefab);
             glowObject.transform.SetParent(transform);
+            glowObject.transform.localPosition = Vector2.zero;
             _glow = glowObject.GetComponent<SpriteRenderer>();
             _glow.color = UiAppearanceController.InvisibleColour;
         }

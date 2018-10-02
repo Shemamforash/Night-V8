@@ -111,12 +111,13 @@ namespace Game.Combat.Enemies
         {
             Vector2 difference = _targetCell.Position - _currentCell.Position;
             float distanceToTargetCell = difference.magnitude;
-            if (distanceToTargetCell <= _maxDistance || distanceToTargetCell >= _minDistance) return;
+            if (distanceToTargetCell <= _maxDistance && distanceToTargetCell >= _minDistance) return;
             Vector2 direction = difference.normalized;
-            float distance = Random.Range(_minDistance, _maxDistance);
+            float distanceFromTarget = Random.Range(_minDistance, _maxDistance);
+            float distance = distanceToTargetCell - distanceFromTarget;
             Vector2 targetPosition = _currentCell.Position + direction * distance;
             _targetCell = PathingGrid.WorldToCellPosition(targetPosition);
-//            Debug.DrawLine(_currentCell.Position, _targetCell.Position, Color.yellow, 1f);
+            Debug.DrawLine(_currentCell.Position, _targetCell.Position, Color.yellow, 1f);
             _route = new List<Cell>(new[] {_currentCell, _targetCell});
         }
 

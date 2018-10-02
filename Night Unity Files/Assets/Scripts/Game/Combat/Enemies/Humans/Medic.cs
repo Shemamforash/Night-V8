@@ -11,6 +11,7 @@ namespace Game.Combat.Enemies.Humans
         private static GameObject _healPrefab;
         private float _healCooldown;
         private bool _goingToHeal;
+        private bool _healing;
         private const float HealDistance = 0.5f;
 
         public override void Initialise(Enemy enemy)
@@ -27,6 +28,7 @@ namespace Game.Combat.Enemies.Humans
         public override void MyUpdate()
         {
             base.MyUpdate();
+            if (_healing) return;
             UpdateHealCooldown();
             TryHeal();
         }
@@ -39,9 +41,9 @@ namespace Game.Combat.Enemies.Humans
                 _goingToHeal = false;
                 SetTarget(PlayerCombat.Instance);
             }
+
             if (DistanceToTarget() > HealDistance / 2f) return;
             Heal();
-            ResetCooldown();
         }
 
         private void UpdateHealCooldown()
@@ -86,11 +88,15 @@ namespace Game.Combat.Enemies.Humans
             }
 
             SetTarget(enemiesNearby[0]);
+            MinDistance = 0f;
+            MaxDistance = 0f;
             _goingToHeal = true;
         }
 
         private void Heal()
         {
+            _goingToHeal = false;
+            _healing = true;
             SkillAnimationController.Create(transform, "Medic", 1.5f, () =>
             {
                 CombatManager.GetEnemiesInRange(transform.position, 2f).ForEach(e =>
@@ -104,6 +110,9 @@ namespace Game.Combat.Enemies.Humans
                     healObject.transform.localScale = Vector3.one;
                 });
                 TryFire();
+                ResetCooldown();
+                CalculateMaxMinDistance();
+                _healing = false;
             });
         }
     }

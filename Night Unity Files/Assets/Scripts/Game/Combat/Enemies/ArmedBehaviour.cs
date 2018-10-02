@@ -16,6 +16,11 @@ namespace Game.Combat.Enemies
             base.Initialise(enemy);
             Assert.IsNotNull(Weapon());
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
+            CalculateMaxMinDistance();
+        }
+
+        protected void CalculateMaxMinDistance()
+        {
             MaxDistance = Weapon().CalculateIdealDistance();
             MinDistance = MaxDistance * 0.25f;
         }

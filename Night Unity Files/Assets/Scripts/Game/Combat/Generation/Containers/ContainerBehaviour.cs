@@ -26,6 +26,7 @@ namespace Game.Combat.Generation
             _iconSprite.color = UiAppearanceController.InvisibleColour;
             _ringSprite = gameObject.FindChildWithName<SpriteRenderer>("Ring");
             _ringSprite.color = UiAppearanceController.InvisibleColour;
+            transform.rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
         }
 
         public void SetContainerController(ContainerController containerController)
@@ -33,7 +34,7 @@ namespace Game.Combat.Generation
             ContainerController.Containers.Add(this);
             ContainerController = containerController;
             _iconSprite.sprite = Resources.Load<Sprite>("Images/Container Symbols/" + containerController.GetImageLocation());
-            _showRing = !(containerController is FoodSource);
+            _showRing = containerController is Loot;
         }
 
         private void OnDestroy()

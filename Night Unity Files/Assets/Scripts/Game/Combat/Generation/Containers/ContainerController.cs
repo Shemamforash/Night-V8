@@ -64,7 +64,9 @@ public abstract class ContainerController
             });
         }
 
+        Debug.Log("before " + Inventory().Contents().Count + " " + CharacterManager.SelectedCharacter.Inventory());
         Inventory().MoveAllResources(CharacterManager.SelectedCharacter.Inventory());
+        Debug.Log("after " + Inventory().Contents().Count + " " + CharacterManager.SelectedCharacter.Inventory());
     }
 
     public string GetContents()

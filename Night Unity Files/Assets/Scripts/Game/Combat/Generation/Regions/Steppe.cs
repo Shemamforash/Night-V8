@@ -21,7 +21,7 @@ namespace Game.Combat.Generation
         private const int Width = 200;
         private static int RegionAreaThreshold = 100;
         private static CavePoint[,] _map;
-        private List<Region> _regions = new List<Region>();
+        private List<Area> _regions = new List<Area>();
         private int RandomFillPercent = 48;
         private static bool _includeOnlyInRangeCells;
 
@@ -44,7 +44,7 @@ namespace Game.Combat.Generation
             for (int i = 0; i < 5; i++) SmoothMap();
 
             _includeOnlyInRangeCells = true;
-            List<Region> inRange = GenerateRegions(true);
+            List<Area> inRange = GenerateRegions(true);
             ConnectRegions(inRange);
 //            inRange.ForEach(r =>
 //            {
@@ -74,9 +74,9 @@ namespace Game.Combat.Generation
 //            drawPoints.ForEach(c => { Gizmos.DrawCube(c.worldPosition, cubeSize); });
 //        }
 
-        private static List<CavePoint> SmoothEdges(Region region)
+        private static List<CavePoint> SmoothEdges(Area area)
         {
-            List<CavePoint> edges = region.Edges().ToList();
+            List<CavePoint> edges = area.Edges().ToList();
             for (int i = edges.Count - 1; i >= 0; --i)
             {
                 CavePoint edge = edges[i];
@@ -180,7 +180,7 @@ namespace Game.Combat.Generation
             });
         }
 
-        private static Region GenerateRegion(CavePoint startCell, bool accessible)
+        private static Area GenerateRegion(CavePoint startCell, bool accessible)
         {
             HashSet<CavePoint> points = new HashSet<CavePoint>();
             HashSet<CavePoint> edges = new HashSet<CavePoint>();
@@ -206,16 +206,16 @@ namespace Game.Combat.Generation
                 });
             }
 
-            return new Region(points, edges);
+            return new Area(points, edges);
         }
         
-        private void ConnectRegions(List<Region> regions)
+        private void ConnectRegions(List<Area> regions)
         {
             for (int i = regions.Count - 1; i >= 0; --i)
             {
-                Region region = regions[i];
+                Area area = regions[i];
                 bool regionOutOfRange = true;
-                foreach (CavePoint point in region.Edges())
+                foreach (CavePoint point in area.Edges())
                 {
                     if (point.OutOfRange()) continue;
                     regionOutOfRange = false;
@@ -230,24 +230,24 @@ namespace Game.Combat.Generation
                 float nearestRegion = Mathf.Infinity;
                 int nearestRegionIndex = -1;
                 Tuple<CavePoint, CavePoint, float> nearestRegionEdgePoints = null;
-                Region fromRegion = regions[0];
+                Area fromArea = regions[0];
                 regions.RemoveAt(0);
                 for (int i = 0; i < regions.Count; ++i)
                 {
-                    Tuple<CavePoint, CavePoint, float> edgePoints = NearestEdgePoints(fromRegion, regions[i]);
+                    Tuple<CavePoint, CavePoint, float> edgePoints = NearestEdgePoints(fromArea, regions[i]);
                     if (edgePoints == null || edgePoints.Item3 > nearestRegion) continue;
                     nearestRegion = edgePoints.Item3;
                     nearestRegionIndex = i;
                     nearestRegionEdgePoints = edgePoints;
                 }
 
-                Region b = regions[nearestRegionIndex];
+                Area b = regions[nearestRegionIndex];
                 regions.RemoveAt(nearestRegionIndex);
-                regions.Add(fromRegion.Combine(b, nearestRegionEdgePoints));
+                regions.Add(fromArea.Combine(b, nearestRegionEdgePoints));
             }
         }
 
-        private static Tuple<CavePoint, CavePoint, float> NearestEdgePoints(Region a, Region b)
+        private static Tuple<CavePoint, CavePoint, float> NearestEdgePoints(Area a, Area b)
         {
             float nearestDistance = float.PositiveInfinity;
             CavePoint from = null;
@@ -269,18 +269,18 @@ namespace Game.Combat.Generation
             return from == null ? null : Tuple.Create(from, to, nearestDistance);
         }
 
-        private List<Region> GenerateRegions(bool accessible)
+        private List<Area> GenerateRegions(bool accessible)
         {
-            List<Region> regions = new List<Region>();
+            List<Area> regions = new List<Area>();
             FindCells(!accessible).ForEach(c => c.IsEdge = false);
             List<CavePoint> cells = FindCells(accessible);
             while (cells.Count > 0)
             {
                 CavePoint startCell = cells[0];
-                Region newRegion = GenerateRegion(startCell, accessible);
-                cells.RemoveAll(c => newRegion.Points().Contains(c));
-                if (!newRegion.IsValid()) continue;
-                regions.Add(newRegion);
+                Area newArea = GenerateRegion(startCell, accessible);
+                cells.RemoveAll(c => newArea.Points().Contains(c));
+                if (!newArea.IsValid()) continue;
+                regions.Add(newArea);
             }
 
             return regions;
@@ -348,12 +348,12 @@ namespace Game.Combat.Generation
 
         private static int GetSurroundingWallCount(CavePoint point) => point.Neighbors().Count(p => p != null && !p.accessible);
 
-        private class Region
+        private class Area
         {
             private readonly HashSet<CavePoint> _edges;
             private readonly HashSet<CavePoint> _points;
 
-            public Region(HashSet<CavePoint> points, HashSet<CavePoint> edges)
+            public Area(HashSet<CavePoint> points, HashSet<CavePoint> edges)
             {
                 _points = points;
                 _edges = edges;
@@ -377,12 +377,12 @@ namespace Game.Combat.Generation
                 foreach (CavePoint cavePoint in _points) cavePoint.accessible = false;
             }
 
-            public Region Combine(Region otherRegion, Tuple<CavePoint, CavePoint, float> nearestEdges)
+            public Area Combine(Area otherArea, Tuple<CavePoint, CavePoint, float> nearestEdges)
             {
                 List<CavePoint> line = GetLine(nearestEdges.Item1, nearestEdges.Item2);
                 line.ForEach(c => DrawCircle(c, 4));
                 ClearEdge();
-                otherRegion.ClearEdge();
+                otherArea.ClearEdge();
                 return GenerateRegion(_points.ToList()[0], true);
             }
 

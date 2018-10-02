@@ -20,6 +20,7 @@ namespace Game.Combat.Misc
         private static Coroutine _cooldownCoroutine;
         private static SkillBar _instance;
         private static bool _finishEarly;
+        private bool SkillsAreFree = true;
 
         public void Awake()
         {
@@ -39,16 +40,7 @@ namespace Game.Combat.Misc
 
         private void UpdateCooldownControllers(float normalisedDuration)
         {
-            for (int i = 0; i < CooldownControllers.Count; i++)
-            {
-                bool skillReady = false;
-                if (i < _skills.Length)
-                {
-                    skillReady = _skills[i].CanAfford();
-                }
-
-                CooldownControllers[i].UpdateCooldownFill(normalisedDuration, skillReady);
-            }
+            CooldownControllers.ForEach(c => c.UpdateCooldownFill(normalisedDuration));
         }
 
         private IEnumerator SkillsCooldown()
@@ -65,6 +57,7 @@ namespace Game.Combat.Misc
                 UpdateCooldownControllers(currentTime / duration);
                 yield return null;
             }
+            UpdateCooldownControllers(1);
 
             _finishEarly = false;
             _cooldownCoroutine = null;
@@ -113,9 +106,8 @@ namespace Game.Combat.Misc
         private static void BindSkill(int slot, Skill skill)
         {
             _skills[slot] = skill;
-            CooldownControllers[slot].SetVisible(skill != null);
+            CooldownControllers[slot].SetSkill(skill);
             if (skill == null) return;
-            CooldownControllers[slot].Text(skill.Name);
             CostControllers[slot].SetCost(skill.AdrenalineCost());
         }
 
@@ -139,7 +131,7 @@ namespace Game.Combat.Misc
             if (_cooldownCoroutine != null) return;
             if (TryLockSkill(skillNo)) return;
             bool freeSkill = IsSkillFree();
-            if (!_skills[skillNo].Activate(freeSkill)) return;
+            if (!_skills[skillNo].Activate(freeSkill || _instance.SkillsAreFree)) return;
             _cooldownCoroutine = _instance.StartCoroutine(_instance.SkillsCooldown());
         }
 

@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class JournalSource : ContainerController
 {
-    private readonly JournalEntry _journalEntry;
+    private JournalEntry _journalEntry;
     private CanvasGroup _journalIndicator;
 
-    public JournalSource(Vector2 position, JournalEntry journalEntry) : base(position, "Journal")
+    public JournalSource(Vector2 position) : base(position, "Journal")
     {
         _inventory.Name = "Journal";
         ImageLocation = "Journal";
+    }
+
+    public void SetEntry(JournalEntry journalEntry)
+    {
         _journalEntry = journalEntry;
     }
 

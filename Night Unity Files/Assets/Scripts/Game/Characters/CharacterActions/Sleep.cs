@@ -6,13 +6,13 @@ namespace Game.Characters.CharacterActions
     {
         public Sleep(Player playerCharacter) : base(nameof(Sleep), playerCharacter)
         {
-            DisplayName = "Sleeping\n+End +Str";
+            DisplayName = "Sleeping\n+Fettle +Grit";
+            HourCallback = playerCharacter.Sleep;
             MinuteCallback = () =>
             {
                 --Duration;
                 if (Duration != 0) return;
-                playerCharacter.Sleep();
-                SetDuration();
+                PlayerCharacter.RestAction.Enter();
             };
         }
 

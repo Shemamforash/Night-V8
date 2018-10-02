@@ -2,6 +2,7 @@
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Global;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 public class RadianceController : MonoBehaviour, ICombatEvent
@@ -12,10 +13,32 @@ public class RadianceController : MonoBehaviour, ICombatEvent
     private static RadianceController _instance;
     private bool _activated;
 
+
     public void Awake()
     {
         _instance = this;
         _radianceAvailable = WorldState.HomeInventory().GetResourceQuantity("Radiance");
+    }
+
+
+    private class RadianceBehaviour : MonoBehaviour
+    {
+        private AudioSource _audioSource;
+        private float _pitchAnchor;
+
+        public void Awake()
+        {
+            _audioSource = gameObject.FindChildWithName<AudioSource>("Drone");
+            _pitchAnchor = Random.Range(0.9f, 1.1f);
+        }
+
+        public void Update()
+        {
+            float noise = Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0);
+            noise = noise / 5f - 0.1f;
+            float pitch = _pitchAnchor + noise;
+            _audioSource.pitch = pitch;
+        }
     }
 
     public float InRange()
@@ -36,6 +59,7 @@ public class RadianceController : MonoBehaviour, ICombatEvent
         PlayerCombat.Instance.Player.TravelAction.GetCurrentNode().Claim();
         if (_stonePrefab == null) _stonePrefab = Resources.Load<GameObject>("Prefabs/Combat/Effects/Radiance Stone");
         GameObject stoneObject = Instantiate(_stonePrefab);
+        stoneObject.AddComponent<RadianceBehaviour>();
         stoneObject.transform.position = transform.position;
         _activated = true;
     }

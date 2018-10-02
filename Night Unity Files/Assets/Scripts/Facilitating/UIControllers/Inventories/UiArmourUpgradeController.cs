@@ -23,8 +23,8 @@ namespace Facilitating.UIControllers
 
         protected override void CacheElements()
         {
-            _plateOneUi = new ArmourPlateUi(gameObject.FindChildWithName("Left Plate"));
-            _plateTwoUi = new ArmourPlateUi(gameObject.FindChildWithName("Right Plate"));
+            _plateOneUi = new ArmourPlateUi(gameObject.FindChildWithName("Left Plate"), Armour.ArmourType.Chest);
+            _plateTwoUi = new ArmourPlateUi(gameObject.FindChildWithName("Right Plate"), Armour.ArmourType.Head);
         }
 
         private void UpdatePlates()
@@ -51,11 +51,17 @@ namespace Facilitating.UIControllers
             _plateTwoUi.Initialise(EquipPlateTwo);
         }
 
-        private static List<object> GetAvailableArmour()
+        private static List<object> GetAvailableArmour(Armour.ArmourType armourType)
         {
             Player player = CharacterManager.SelectedCharacter;
             Inventory inventory = player.TravelAction.AtHome() ? WorldState.HomeInventory() : player.Inventory();
-            return inventory.Armour.ToObjectList();
+            List<object> armourList = inventory.Armour.ToObjectList();
+            armourList.RemoveAll(a =>
+            {
+                bool isNotCorrectType = ((Armour) a).GetArmourType() != armourType;
+                return isNotCorrectType;
+            });
+            return armourList;
         }
 
         private void EquipPlateOne(object armourObject)
@@ -114,15 +120,17 @@ namespace Facilitating.UIControllers
         private class ArmourPlateUi
         {
             public readonly ListController PlateList;
+            private readonly Armour.ArmourType _armourType;
 
-            public ArmourPlateUi(GameObject gameObject)
+            public ArmourPlateUi(GameObject gameObject, Armour.ArmourType armourType)
             {
                 PlateList = gameObject.FindChildWithName<ListController>("List");
+                _armourType = armourType;
             }
 
             public void SetPlate()
             {
-                PlateList.Show(GetAvailableArmour);
+                PlateList.Show(() => GetAvailableArmour(_armourType));
             }
 
             public void Initialise(Action<object> equipPlateAction)
@@ -133,7 +141,7 @@ namespace Facilitating.UIControllers
 
         private static void SetPlateListActive(ArmourPlateUi plate)
         {
-            plate.PlateList.Show(GetAvailableArmour);
+            plate.SetPlate();
         }
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)

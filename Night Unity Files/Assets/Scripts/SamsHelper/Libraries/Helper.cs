@@ -565,7 +565,7 @@ namespace SamsHelper.Libraries
 
         public static void PrintTime(string message, Stopwatch stopWatch)
         {
-            Debug.Log(message + stopWatch.Elapsed.ToString("mm\\:ss\\.ff"));
+            Debug.Log(message + stopWatch.Elapsed.ToString("mm\\:ss\\.ffff"));
         }
     }
 }

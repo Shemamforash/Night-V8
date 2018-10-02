@@ -75,15 +75,7 @@ namespace Game.Combat.Player
         protected override void InstantEffect()
         {
             Shot s = Shot.Create(PlayerCombat.Instance);
-            s.AddOnHit(() =>
-            {
-                for (int i = 0; i < PlayerCombat.Instance._weaponBehaviour.AmmoInMagazine; ++i)
-                {
-                    Shot fragment = Shot.Create(s);
-                    fragment.SetAccuracy(180f);
-                    fragment.Fire(0.4f);
-                }
-            });
+            s.AddOnHit(() => { VortexBehaviour.Create(s.transform.position); });
             s.Fire();
             PlayerCombat.Instance.ConsumeAmmo();
         }

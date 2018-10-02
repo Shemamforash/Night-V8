@@ -17,7 +17,7 @@ namespace Game.Combat.Generation
     {
         public static int CombatAreaWidth = 30;
         public static int CombatMovementDistance = CombatAreaWidth - 3;
-        public const int CellResolution = 4;
+        public const int CellResolution = 6;
         public const float CellWidth = 1f / CellResolution;
         public static int GridWidth;
 
@@ -56,7 +56,6 @@ namespace Game.Combat.Generation
             _edgePositionList.RemoveAll(e => intersectingCells.Contains(e));
 
             foreach (Cell cell in intersectingCells) _invalidCells.Add(cell);
-
             return true;
         }
 
@@ -72,7 +71,7 @@ namespace Game.Combat.Generation
             }
 
             Polygon polygon = new Polygon(_blockingVerts, origin);
-            AddBarrier(polygon);
+            AddBarrier(polygon); 
         }
 
         public static void FinaliseGrid()
@@ -446,7 +445,7 @@ namespace Game.Combat.Generation
             int edgeDistanceSquared = (int) Mathf.Pow((CombatMovementDistance - 1) * CellResolution * 0.5f, 2f);
 
             int i = 0;
-            for(int x = 0; x < GridWidth; ++x)
+            for (int x = 0; x < GridWidth; ++x)
             {
                 if (Grid[x] == null) Grid[x] = new Cell[GridWidth];
                 for (int y = 0; y < GridWidth; ++y)

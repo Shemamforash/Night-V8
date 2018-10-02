@@ -6,13 +6,13 @@ namespace Game.Characters.CharacterActions
     {
         public Meditate(Player playerCharacter) : base(nameof(Meditate), playerCharacter)
         {
-            DisplayName = "Meditating\n+Per +Wil";
+            DisplayName = "Meditating\n+Soul +Will";
+            HourCallback = playerCharacter.Meditate;
             MinuteCallback = () =>
             {
                 --Duration;
                 if (Duration != 0) return;
-                playerCharacter.Meditate();
-                SetDuration();
+                PlayerCharacter.RestAction.Enter();
             };
         }
 

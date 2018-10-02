@@ -37,7 +37,7 @@ namespace Facilitating.UIControllers
             List<ItemQuality> qualities = new List<ItemQuality>();
 #if UNITY_EDITOR
             foreach (ItemQuality value in Enum.GetValues(typeof(ItemQuality))) qualities.Add(value);
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 50; ++i)
             {
                 Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Glowing);
                 WorldState.HomeInventory().Move(weapon, 1);

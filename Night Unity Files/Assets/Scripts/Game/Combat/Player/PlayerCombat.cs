@@ -124,6 +124,18 @@ namespace Game.Combat.Player
             return sicknessTargetTicks;
         }
 
+        private void MoveVertical(float direction = 0)
+        {
+            if(CameraLock.IsCameraLocked()) Move(direction * transform.up);
+            else Move(direction * Camera.main.transform.up);
+        }
+
+        private void MoveHorizontal(float direction = 0)
+        {
+            if (CameraLock.IsCameraLocked()) Move(direction * transform.right);
+            else Move(direction * Camera.main.transform.right);
+        }
+        
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -135,10 +147,10 @@ namespace Game.Combat.Player
                         FireWeapon();
                         break;
                     case InputAxis.Horizontal:
-                        Move(direction * transform.right);
+                        MoveHorizontal(direction);
                         break;
                     case InputAxis.Vertical:
-                        Move(direction * transform.up);
+                        MoveVertical(direction);
                         break;
                     case InputAxis.SwitchTab:
                         Rotate(direction);

@@ -66,6 +66,7 @@ namespace Game.Combat.Generation
         {
             if (!IsCombatActive()) return;
             MoveBehaviour.UpdateMoveBehaviours();
+            if (Time.timeSinceLevelLoad < 3f) return;
             PlayerCombat.Instance.MyUpdate();
             for (int i = _enemies.Count - 1; i >= 0; --i)
             {
@@ -99,7 +100,7 @@ namespace Game.Combat.Generation
         {
             return Instance() != null && _inCombat;
         }
-        
+
         public static bool IsCombatActive()
         {
             return IsPlayerInCombat() && !IsCombatPaused();
@@ -144,8 +145,7 @@ namespace Game.Combat.Generation
                 switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
                 {
                     case EnvironmentType.Desert:
-//                        worldObject.AddComponent<Desert>().Initialise(_currentRegion);
-                        worldObject.AddComponent<Labyrinth>().Initialise(_currentRegion);
+                        worldObject.AddComponent<Desert>().Initialise(_currentRegion);
                         break;
                     case EnvironmentType.Mountains:
                         worldObject.AddComponent<Steppe>().Initialise(_currentRegion);
@@ -216,9 +216,6 @@ namespace Game.Combat.Generation
                 for (int i = 0; i < cells.Count; ++i)
                 {
                     herd[i].transform.position = cells[i].Position;
-                    Grazer g = herd[i] as Grazer;
-                    if (g == null) continue;
-                    g.AddHerdMembers(herd);
                 }
             });
         }
@@ -278,8 +275,12 @@ namespace Game.Combat.Generation
                 SceneChanger.GoToMapScene();
                 return;
             }
+
             Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
-            travelAction.TravelTo(MapGenerator.GetInitialNode(), 0);
+            int enduranceCost = RoutePlotter.RouteBetween(_currentRegion, MapGenerator.GetInitialNode()).Count - 1;
+            travelAction.TravelTo(MapGenerator.GetInitialNode(), enduranceCost);
+            SceneChanger.GoToGameScene();
+            InputHandler.SetCurrentListener(null);
         }
 
         public static List<ITakeDamageInterface> GetCharactersInRange(Vector2 position, float range)

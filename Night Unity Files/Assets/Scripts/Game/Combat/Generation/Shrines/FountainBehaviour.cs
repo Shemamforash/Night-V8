@@ -41,7 +41,7 @@ namespace Game.Combat.Generation.Shrines
         {
             _region = region;
             transform.position = region.ShrinePosition;
-            PathingGrid.AddBlockingArea(region.ShrinePosition, 1.5f);
+            PathingGrid.AddBlockingArea(region.ShrinePosition, 1.5f );
             if (!_region.FountainVisited) return;
             GetComponent<CompassItem>().Die();
             Destroy(this);
