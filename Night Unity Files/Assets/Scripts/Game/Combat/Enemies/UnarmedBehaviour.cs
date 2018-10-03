@@ -12,7 +12,7 @@ namespace Game.Combat.Enemies
     public class UnarmedBehaviour : EnemyBehaviour
     {
         protected bool Alerted;
-        private const float DetectionRange = 3f;
+        protected float DetectionRange = 3f;
         private const float LoseTargetRange = 6f;
         private Cell _originCell;
         protected float WanderDistance = 3;
@@ -58,14 +58,6 @@ namespace Game.Combat.Enemies
             });
         }
 
-        protected bool MoveToCover(Action reachCoverAction)
-        {
-            bool moving = MoveBehaviour.MoveToCover();
-            if (!moving) return false;
-            CurrentAction = reachCoverAction;
-            return true;
-        }
-
         public override void TakeShotDamage(Shot shot)
         {
             base.TakeShotDamage(shot);
@@ -87,12 +79,23 @@ namespace Game.Combat.Enemies
         public override void MyUpdate()
         {
             base.MyUpdate();
+//            DrawLine();
             UpdateDistanceToTarget();
             UpdateTargetCell();
             GoToTargetCell();
         }
 
-        private void UpdateTargetCell()
+        private void DrawLine()
+        {
+            Vector2 to = GetTarget().transform.position;
+            Vector2 from = transform.position;
+            Vector2 dir = (to - from).normalized;
+            to = from + dir * MaxDistance;
+            from = from + dir * MinDistance;
+            Debug.DrawLine(to, from, Color.red, 0.02f);
+        }
+
+        protected virtual void UpdateTargetCell()
         {
             if (!Alerted) return;
             if (GetTarget() == null) SetTarget(PlayerCombat.Instance);

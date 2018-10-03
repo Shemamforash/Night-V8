@@ -119,7 +119,7 @@ namespace Facilitating.UIControllers
 
         private class ArmourPlateUi
         {
-            public readonly ListController PlateList;
+            private readonly ListController PlateList;
             private readonly Armour.ArmourType _armourType;
 
             public ArmourPlateUi(GameObject gameObject, Armour.ArmourType armourType)

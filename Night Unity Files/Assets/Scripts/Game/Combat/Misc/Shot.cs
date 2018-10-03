@@ -282,7 +282,6 @@ namespace Game.Combat.Misc
                 BulletImpactBehaviour.Create(collision.contacts[0].point, angle);
             }
 
-            if (Random.Range(0f, 1f) < _burnChance) FireBehaviour.Create(transform.position, 1f);
             DealDamage(other);
             DeactivateShot();
             ApplyConditions();
@@ -314,10 +313,11 @@ namespace Game.Combat.Misc
             if (conditions.Count == 0) return;
             int condition = conditions.GetRandomElement();
             float radius = _damageDealt / 400f;
-            if (radius < 0.25f) radius = 0.25f;
+            if (radius < 0.5f) radius = 0.5f;
             switch (condition)
             {
                 case 0:
+                    Debug.Log("fart");
                     DecayBehaviour.Create(transform.position, radius);
                     break;
                 case 1:

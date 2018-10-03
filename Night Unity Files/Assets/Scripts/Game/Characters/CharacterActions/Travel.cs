@@ -74,7 +74,7 @@ namespace Game.Characters.CharacterActions
                 }
             }
 
-            PlayerCharacter.Inventory().MoveAllResources(WorldState.HomeInventory());
+            PlayerCharacter.Inventory().MoveAll(WorldState.HomeInventory());
         }
 
         private void ReachTarget()

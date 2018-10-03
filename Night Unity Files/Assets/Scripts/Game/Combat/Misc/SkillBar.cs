@@ -46,7 +46,6 @@ namespace Game.Combat.Misc
         private IEnumerator SkillsCooldown()
         {
             float duration = BaseSkillCooldown * _cooldownModifier;
-            Debug.Log(BaseSkillCooldown + " " + _cooldownModifier);
             float currentTime = 0f;
             UpdateCooldownControllers(0f);
             while (currentTime < duration)

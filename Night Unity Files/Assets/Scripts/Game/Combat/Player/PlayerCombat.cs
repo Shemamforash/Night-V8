@@ -321,11 +321,11 @@ namespace Game.Combat.Player
             TryExplode();
         }
 
-        public override void TakeExplosionDamage(float damage, Vector2 direction)
+        public override void TakeExplosionDamage(float damage, Vector2 direction, float radius)
         {
-            base.TakeExplosionDamage(damage, direction);
+            base.TakeExplosionDamage(damage, direction, radius);
             TryExplode();
-            Shake(damage * 20);
+            Shake(damage * 100);
         }
 
         public override void TakeRawDamage(float damage, Vector2 direction)

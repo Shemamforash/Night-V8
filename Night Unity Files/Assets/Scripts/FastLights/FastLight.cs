@@ -1,6 +1,9 @@
-﻿﻿using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FastLights;
 using SamsHelper.Libraries;
@@ -116,27 +119,30 @@ namespace Fastlights
 
         private bool _intersectionExists;
         private Vector2 _intersectionPoint;
-        private readonly List<List<FLEdge>> _edgeSegments = new List<List<FLEdge>>();
+        private List<List<FLEdge>> _edgeSegments = new List<List<FLEdge>>();
         private List<FLEdge> _edges = new List<FLEdge>();
         private List<FLVertex> _verts = new List<FLVertex>();
         private List<FLEdge> _segments = new List<FLEdge>();
+
+        private ConcurrentQueue<List<FLEdge>> _edgeSegmentQueue;
 
         private void DrawLight()
         {
             meshVertices.Clear();
             _edgeSegments.Clear();
+            _edgeSegmentQueue = new ConcurrentQueue<List<FLEdge>>();
 
             float sqrRadius = Radius * Radius;
             int obstructorCount = _allObstructors.Count;
 
-            for (int i = 0; i < obstructorCount; i++)
+            Parallel.For(0, obstructorCount, i =>
             {
                 LightObstructor o = _allObstructors[i];
-                _visibleEdges = o.GetVisibleVertices(_position, sqrRadius, Radius);
-                if (_visibleEdges == null) continue;
-                _edgeSegments.AddRange(_visibleEdges);
-            }
+                List<List<FLEdge>> visibleEdges = o.GetVisibleVertices(_position, sqrRadius, Radius);
+                visibleEdges?.ForEach(v => _edgeSegmentQueue.Enqueue(v));
+            });
 
+            _edgeSegments = _edgeSegmentQueue.ToList();
             if (_edgeSegments.Count == 0)
             {
                 InsertLineSegments(0, 360);

@@ -129,7 +129,7 @@ namespace Game.Combat.Misc
                     return;
                 }
 
-                i.TakeExplosionDamage(_damage, transform.position);
+                i.TakeExplosionDamage(_damage, transform.position, _explosionRadius);
                 EnemyBehaviour behaviour = i as EnemyBehaviour;
                 if (behaviour != null) enemiesHit.Add(behaviour);
             }

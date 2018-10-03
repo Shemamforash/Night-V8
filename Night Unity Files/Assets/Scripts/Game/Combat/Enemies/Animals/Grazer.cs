@@ -11,14 +11,11 @@ namespace Game.Combat.Enemies.Animals
             base.Initialise(e);
             WanderDistance = 1f;
         }
-        
-        public override void TakeShotDamage(Shot shot)
+
+        protected override void OnAlert()
         {
-            base.TakeShotDamage(shot);
-            if (Fleeing) return;
             Cell target = PathingGrid.GetCellOutOfRange(transform.position);
             Flee(target);
-            Alert(true);
         }
     }
 }

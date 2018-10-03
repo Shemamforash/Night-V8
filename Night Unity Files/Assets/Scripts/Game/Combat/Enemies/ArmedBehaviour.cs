@@ -1,4 +1,6 @@
-﻿using Game.Gear.Weapons;
+﻿using System;
+using Game.Combat.Generation;
+using Game.Gear.Weapons;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
@@ -22,13 +24,12 @@ namespace Game.Combat.Enemies
         protected void CalculateMaxMinDistance()
         {
             MaxDistance = Weapon().CalculateIdealDistance();
-            MinDistance = MaxDistance * 0.25f;
+            MinDistance = MaxDistance * 0.5f;
         }
 
         protected override void OnAlert()
         {
             TryFire();
-//            MoveBehaviour.FollowTarget(GetTarget().transform, IdealWeaponDistance * 0.5f, IdealWeaponDistance * 1.5f);
         }
 
         protected void TryFire()
@@ -38,13 +39,26 @@ namespace Game.Combat.Enemies
 
         public override Weapon Weapon() => Enemy.EquippedWeapon;
 
-        private void Reload()
+        private Cell _coverCell;
+
+        private void TryReload()
         {
-            if (MoveToCover(Reload))
+            _coverCell = MoveBehaviour.MoveToCover();
+            if (_coverCell == null)
             {
+                Reload();
                 return;
             }
 
+            CurrentAction = () =>
+            {
+                if (CurrentCell() != _coverCell) return;
+                Reload();
+            };
+        }
+
+        private void Reload()
+        {
             float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
             CurrentAction = () =>
             {
@@ -57,13 +71,8 @@ namespace Game.Combat.Enemies
 
         private void Aim()
         {
-            if (_weaponBehaviour.Empty())
-            {
-                Reload();
-                return;
-            }
-
-            CurrentAction = Fire;
+            if (_weaponBehaviour.Empty()) TryReload();
+            else CurrentAction = Fire;
         }
 
         private void Fire()
@@ -78,7 +87,6 @@ namespace Game.Combat.Enemies
                     Aim();
                     return;
                 }
-
 
                 _weaponBehaviour.StartFiring();
             };

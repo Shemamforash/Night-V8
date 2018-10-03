@@ -7,7 +7,7 @@ namespace Game.Combat.Misc
         GameObject GetGameObject();
         void TakeShotDamage(Shot shot);
         void TakeRawDamage(float damage, Vector2 direction);
-        void TakeExplosionDamage(float damage, Vector2 origin);
+        void TakeExplosionDamage(float damage, Vector2 origin, float radius);
         void Decay();
         void Burn();
         void Sicken(int stacks = 1);

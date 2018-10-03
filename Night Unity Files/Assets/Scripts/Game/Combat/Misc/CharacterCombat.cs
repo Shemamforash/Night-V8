@@ -208,12 +208,17 @@ namespace Game.Combat.Misc
             _bloodSpatter.Spray(direction, healthDamage);
         }
 
-        public virtual void TakeExplosionDamage(float damage, Vector2 origin)
+        public virtual void TakeExplosionDamage(float damage, Vector2 origin, float radius)
         {
             _spriteFlash.FlashSprite();
             HealthController.TakeDamage(damage);
-            Vector2 direction = ((Vector2) transform.position - origin).normalized;
-            MovementController.KnockBack(direction, damage / 2f * origin.Distance(transform.position));
+            Vector2 direction = (Vector2) transform.position - origin;
+            float distance = direction.magnitude;
+            direction.Normalize();
+            distance = radius - distance;
+            float force = damage / 2f * distance;
+            Debug.Log(force + " " +damage + " " +distance);
+            MovementController.KnockBack(direction, force);
         }
 
         public virtual void Kill()

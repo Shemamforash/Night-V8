@@ -13,10 +13,14 @@ namespace FastLights
         public float InRangeAngle;
         public bool OutOfRange;
         private List<FLVertex> _segment;
+        private static long _idCounter = long.MinValue;
+        public readonly long ID;
 
         public FLVertex(Transform parentTransform, Vector3 localPosition)
         {
             Position = parentTransform.TransformPoint(localPosition);
+            ID = _idCounter;
+            ++_idCounter;
         }
 
         public bool IsStart, IsEnd;

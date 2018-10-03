@@ -11,6 +11,23 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1894966673124636}
   m_IsPrefabAsset: 1
+--- !u!1 &1028139322735054
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4311786710615504}
+  - component: {fileID: 198831745494020620}
+  - component: {fileID: 199450087620732192}
+  m_Layer: 0
+  m_Name: Shards
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1894966673124636
 GameObject:
   m_ObjectHideFlags: 0
@@ -19,8 +36,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4363158438395858}
-  - component: {fileID: 198816675401881986}
-  - component: {fileID: 199829503614555838}
   - component: {fileID: 58103087465667430}
   - component: {fileID: 114155236954069746}
   m_Layer: 0
@@ -30,6 +45,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4311786710615504
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1028139322735054}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4363158438395858}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4363158438395858
 Transform:
   m_ObjectHideFlags: 1
@@ -37,9 +65,10 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1894966673124636}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.9362619, y: 0.05868633, z: 3.9545817}
+  m_LocalPosition: {x: 7.570264, y: -2.281928, z: 3.9545817}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4311786710615504}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -69,12 +98,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f5b2a1b0cdc4d048d9ef3e6fd507c09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!198 &198816675401881986
+--- !u!198 &198831745494020620
 ParticleSystem:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1894966673124636}
+  m_GameObject: {fileID: 1028139322735054}
   serializedVersion: 5
   lengthInSec: 2
   simulationSpeed: 1
@@ -837,7 +866,7 @@ ParticleSystem:
           m_PostInfinity: 2
           m_RotationOrder: 4
   EmissionModule:
-    enabled: 1
+    enabled: 0
     serializedVersion: 4
     rateOverTime:
       serializedVersion: 2
@@ -4668,13 +4697,13 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!199 &199829503614555838
+--- !u!199 &199450087620732192
 ParticleSystemRenderer:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1894966673124636}
+  m_GameObject: {fileID: 1028139322735054}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0

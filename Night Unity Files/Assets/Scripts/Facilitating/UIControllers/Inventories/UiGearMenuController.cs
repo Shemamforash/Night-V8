@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
+using Game.Combat.Generation;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Input;
@@ -34,9 +36,17 @@ namespace Facilitating.UIControllers
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
-            if (isHeld || axis != InputAxis.SwitchTab) return;
-            if (direction < 0) _currentTab.SelectPreviousTab();
-            else _currentTab.SelectNextTab();
+            if (isHeld) return;
+            switch (axis)
+            {
+                case InputAxis.SwitchTab:
+                    if (direction < 0) _currentTab.SelectPreviousTab();
+                    else _currentTab.SelectNextTab();
+                    break;
+                case InputAxis.Inventory:
+                    Close();
+                    break;
+            }
         }
 
         public void OnInputUp(InputAxis axis)
@@ -138,12 +148,16 @@ namespace Facilitating.UIControllers
             InputHandler.UnregisterInputListener(_instance);
             MenuStateMachine.ReturnToDefault();
             _open = false;
+            CombatManager.Unpause();
+            DOTween.defaultTimeScaleIndependent = false;
         }
 
         public override void Enter()
         {
             base.Enter();
             InputHandler.RegisterInputListener(this);
+            DOTween.defaultTimeScaleIndependent = true;
+            CombatManager.Pause();
         }
 
         private static void OpenInventoryMenu(UiInventoryMenuController menu)

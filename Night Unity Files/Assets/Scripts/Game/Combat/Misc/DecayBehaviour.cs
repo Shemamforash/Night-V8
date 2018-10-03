@@ -13,6 +13,13 @@ namespace Game.Combat.Misc
         private static readonly ObjectPool<DecayBehaviour> _decayPool = new ObjectPool<DecayBehaviour>("Decay Areas", "Prefabs/Combat/Effects/Decay Area");
         private List<ITakeDamageInterface> _ignoreTargets;
         private float _radius;
+        private CircleCollider2D _collider;
+
+        private void Awake()
+        {
+            _particles = gameObject.FindChildWithName<ParticleSystem>("Shards");
+            _collider = GetComponent<CircleCollider2D>();
+        }
 
         public static DecayBehaviour Create(Vector3 position, float radius = 1f)
         {
@@ -23,20 +30,15 @@ namespace Game.Combat.Misc
 
         private void Initialise(Vector3 position, float radius)
         {
-            transform.position = position;
             _radius = radius;
             _ignoreTargets = new List<ITakeDamageInterface>();
+            _collider.radius = _radius;
+            StartCoroutine(EmitAndDie(position));
         }
 
         public void AddIgnoreTarget(ITakeDamageInterface _ignoreTarget)
         {
             _ignoreTargets.Add(_ignoreTarget);
-        }
-
-        private void Awake()
-        {
-            _particles = GetComponent<ParticleSystem>();
-            StartCoroutine(EmitAndDie());
         }
 
         public void OnTriggerEnter2D(Collider2D other)
@@ -47,19 +49,22 @@ namespace Game.Combat.Misc
             character.Decay();
         }
 
-        private IEnumerator EmitAndDie()
+        private IEnumerator EmitAndDie(Vector2 position)
         {
+            transform.position = position;
             ParticleSystem.ShapeModule shape = _particles.shape;
-            shape.radius = _radius;
-            _particles.Emit((int) (50 * _radius));
+            shape.radius = _radius - 0.5f;
+            _particles.Emit((int) (150 * _radius));
+            bool active = CombatManager.IsCombatActive();
             while (_particles.particleCount > 0)
             {
-                if (!CombatManager.IsCombatActive()) _particles.PauseParticles();
-                else _particles.ResumeParticles();
+                if (!CombatManager.IsCombatActive() && active) _particles.PauseParticles();
+                else if (CombatManager.IsCombatActive() && !active) _particles.ResumeParticles();
+                active = CombatManager.IsCombatActive();
                 yield return null;
             }
 
-            _decayPool.Return(this);
+            _decayPool.Dispose(this);
         }
 
         private void OnDestroy()

@@ -588,6 +588,7 @@
                 <e p="TempleBehaviour.cs" t="Include" />
                 <e p="UiCombatRingBoundDrawer.cs" t="Include" />
                 <e p="UiCompassPulseController.cs" t="Include" />
+                <e p="VortexBehaviour.cs" t="Include" />
               </e>
               <e p="Player" t="Include">
                 <e p="CharacterSkills.cs" t="Include" />
@@ -932,7 +933,6 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
-        <e p="VortexBehaviour.cs" t="Include" />
       </e>
       <e p="Library" t="ExcludeRecursive" />
       <e p="Night Unity Files.sln" t="IncludeFlat" />

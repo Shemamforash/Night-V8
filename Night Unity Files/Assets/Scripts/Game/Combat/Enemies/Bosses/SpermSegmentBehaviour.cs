@@ -27,7 +27,7 @@ public class SpermSegmentBehaviour : MonoBehaviour, ITakeDamageInterface {
 		TakeDamage(damage);
 	}
 
-	public void TakeExplosionDamage(float damage, Vector2 origin)
+	public void TakeExplosionDamage(float damage, Vector2 origin, float radius)
 	{
 		TakeDamage(damage);
 	}

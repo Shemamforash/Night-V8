@@ -129,7 +129,7 @@ namespace SamsHelper.Input
 
             public void CheckPress()
             {
-                _currentInputValue = UnityEngine.Input.GetAxis(_axisString);
+                _currentInputValue = UnityEngine.Input.GetAxisRaw(_axisString);
                 bool isPressed = _currentInputValue != 0f;
                 if (isPressed)
                 {

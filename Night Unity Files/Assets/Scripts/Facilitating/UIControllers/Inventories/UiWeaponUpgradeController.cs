@@ -45,6 +45,8 @@ namespace Facilitating.UIControllers
                 WorldState.HomeInventory().Move(inscription, 1);
                 Armour plate = Armour.Create(qualities.RandomElement());
                 WorldState.HomeInventory().Move(plate, 1);
+                Accessory accessory = Accessory.Generate();
+                WorldState.HomeInventory().Move(accessory, 1);
             }
 #endif
 

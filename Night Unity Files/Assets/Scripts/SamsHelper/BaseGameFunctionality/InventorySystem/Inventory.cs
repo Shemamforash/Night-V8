@@ -254,13 +254,15 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             IncrementResource(item.Name, quantity);
         }
 
-        public void MoveAllResources(Inventory target)
+        public void MoveAll(Inventory target)
         {
             List<InventoryItem> resources = _resources.Values.ToList();
             for (int i = resources.Count - 1; i >= 0; --i)
             {
                 target.Move(resources[i], Mathf.FloorToInt(resources[i].Quantity()));
             }
+
+            _items.ForEach(c => { target.Move(c, 1); });
         }
 
         private void LoadResource(string type, XmlNode root)

@@ -60,14 +60,14 @@ namespace Game.Combat.Enemies
             if (_moveBuckets.Count == 0) _currentUpdateBucket = 0;
         }
 
-        public bool MoveToCover()
+        public Cell MoveToCover()
         {
             UpdateCurrentCell();
-            if (PathingGrid.IsCellHidden(_currentCell)) return false;
+            if (PathingGrid.IsCellHidden(_currentCell)) return null;
             Cell safeCell = PathingGrid.FindCoverNearMe(_currentCell);
-            if (safeCell == null) return false;
-            GoToCell(safeCell, 0.1f, 0f);
-            return true;
+            if (safeCell == null) return null;
+            GoToCell(safeCell);
+            return safeCell;
         }
 
         private void UpdateCurrentCell()
@@ -117,7 +117,7 @@ namespace Game.Combat.Enemies
             float distance = distanceToTargetCell - distanceFromTarget;
             Vector2 targetPosition = _currentCell.Position + direction * distance;
             _targetCell = PathingGrid.WorldToCellPosition(targetPosition);
-            Debug.DrawLine(_currentCell.Position, _targetCell.Position, Color.yellow, 1f);
+//            Debug.DrawLine(_currentCell.Position, _targetCell.Position, Color.yellow, 1f);
             _route = new List<Cell>(new[] {_currentCell, _targetCell});
         }
 

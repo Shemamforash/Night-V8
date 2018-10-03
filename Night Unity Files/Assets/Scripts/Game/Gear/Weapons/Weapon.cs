@@ -12,7 +12,7 @@ namespace Game.Gear.Weapons
     {
         public const float MaxAccuracyOffsetInDegrees = 25f;
         private const float RangeMin = 1f;
-        private const float RangeMax = 4.5f;
+        private const float RangeMax = 5.5f;
         public readonly WeaponAttributes WeaponAttributes;
         public readonly Skill WeaponSkillOne, WeaponSkillTwo;
         private Character _character;

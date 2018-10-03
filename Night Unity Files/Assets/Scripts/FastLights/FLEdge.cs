@@ -25,7 +25,7 @@ namespace FastLights
 
         public bool BelongsToEdge(FLVertex v)
         {
-            return v == From || v == To;
+            return v.ID == From.ID || v.ID == To.ID;
         }
 
         public void Draw()

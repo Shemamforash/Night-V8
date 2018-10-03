@@ -30,6 +30,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             {
                 _poolParent = new GameObject(_poolName).transform;
                 _poolParent.SetParent(GameObject.Find("Dynamic").transform);
+                _poolParent.localPosition = Vector3.zero;
             }
 
             T newThing;
