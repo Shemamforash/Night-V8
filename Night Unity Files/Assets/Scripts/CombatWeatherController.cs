@@ -33,12 +33,10 @@ public class CombatWeatherController : MonoBehaviour
         float amount = strength * max;
         ParticleSystem.EmissionModule emission = ps.emission;
         emission.rateOverTime = amount;
-        if (amount != 0)
-        {
-            ps.Play();
-            AudioSource audioSource = ps.GetComponent<AudioSource>();
-            audioSource.clip = getAudioClip?.Invoke(strength);
-            audioSource.Play();
-        }
+        if (amount == 0) return;
+        ps.Play();
+        AudioSource audioSource = ps.GetComponent<AudioSource>();
+        audioSource.clip = getAudioClip?.Invoke(strength);
+        audioSource.Play();
     }
 }

@@ -315,6 +315,35 @@ class SkillImporter(XMLWriter):
         write_single_value(self, "Description", get_value(self, "G", row))
 
 
+class WeatherProbabilityImporter(XMLWriter):
+    def __init__(self):
+        super(WeatherProbabilityImporter, self).__init__("Weather", "WeatherProbabilities")
+        write_tag(self, "Regions", self.read_regions)
+
+    def read_regions(self):
+        write_tag(self, "Desert", self.read_weathers, [20, 28])
+        write_tag(self, "Mountains", self.read_weathers, [31, 42])
+        write_tag(self, "Sea", self.read_weathers, [45, 55])
+        write_tag(self, "Ruins", self.read_weathers, [58, 67])
+        write_tag(self, "Wasteland", self.read_weathers, [70, 78])
+
+    def read_weathers(self, row_from, row_to):
+        difference = row_to - row_from
+
+        types = ""
+        for column in range(2, difference + 1):
+            types += get_value(self, num2alpha[column], row_from) + ","
+        types = types[:-1]
+        write_single_value(self, "Types", types)
+
+        for column in range(2, difference + 1):
+            probabilities = ""
+            for row in range(row_from + 1, row_to):
+                probabilities = probabilities  + get_value(self, num2alpha[column], row)+ ","
+            probabilities = probabilities[:-1]
+            write_single_value(self, get_value(self, num2alpha[column], row_from), probabilities)
+
+
 def write_tag(xml_writer, tag_name, nested_method=None, args=None, parameters=[], values=[]):
     tag = "<" + tag_name
     for parameter_value in zip(parameters, values):
@@ -345,10 +374,11 @@ def write_single_value(xml_writer, stat_name, value):
 # WeaponImporter()
 # GearImporter()
 # WeatherImporter()
+WeatherProbabilityImporter();
 # RegionImporter()
 # CharacterImporter()
 # EnemyImporter()
-RecipeImporter()
+# RecipeImporter()
 # ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()

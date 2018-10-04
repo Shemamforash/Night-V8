@@ -110,6 +110,7 @@ namespace Game.Combat.Enemies.Humans
                     healObject.transform.position = enemy.transform.position;
                     healObject.transform.localScale = Vector3.one;
                 });
+                SetTarget(PlayerCombat.Instance);
                 TryFire();
                 ResetCooldown();
                 CalculateMaxMinDistance();

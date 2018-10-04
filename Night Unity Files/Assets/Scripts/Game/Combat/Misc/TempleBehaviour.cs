@@ -83,16 +83,17 @@ public class TempleBehaviour : BasicShrineBehaviour
         _glow.color = UiAppearanceController.InvisibleColour;
     }
 
-    private IEnumerator StartSpawningEnemies()
+    private void SpawnInitialEnemies()
     {
         int startEnemies = 10;
         List<Cell> cells = PathingGrid.GetCellsNearMe(transform.position, startEnemies, 5, 2);
         for (int i = 0; i < startEnemies; ++i)
-        {
             CombatManager.SpawnEnemy(EnemyType.Ghoul, cells[i].Position);
-        }
+    }
 
-        List<EnemyType> enemyTypesToSpawn = new List<EnemyType>();
+    private Queue<EnemyTemplate> GetEnemyTypesToSpawn()
+    {
+        List<EnemyTemplate> enemyTypesToSpawn = new List<EnemyTemplate>();
         List<EnemyTemplate> allowedTypes = WorldState.GetAllowedNightmareEnemyTypes();
         int size = WorldState.Difficulty() * 5;
 
@@ -102,37 +103,61 @@ public class TempleBehaviour : BasicShrineBehaviour
             {
                 if (e.Value > size) continue;
                 size -= e.Value;
-                enemyTypesToSpawn.Add(allowedTypes.RandomElement().EnemyType);
+                enemyTypesToSpawn.Add(e);
                 break;
             }
         }
 
-        float nextEnemy = 1f;
-        float currentTime = nextEnemy;
-        while (nextEnemy > 0.1f && enemyTypesToSpawn.Count > 0)
+        enemyTypesToSpawn.Shuffle();
+        Queue<EnemyTemplate> typeQueue = new Queue<EnemyTemplate>();
+        enemyTypesToSpawn.ForEach(e => typeQueue.Enqueue(e));
+        return typeQueue;
+    }
+
+    private void SpawnEnemy(EnemyTemplate template)
+    {
+        Cell cell = PathingGrid.GetCellNearMe(transform.position, 5, 2);
+        EnemyBehaviour enemy = CombatManager.SpawnEnemy(template.EnemyType, cell.Position);
+        enemy.GetComponent<Split>()?.SetShrine(this);
+        AddEnemy(enemy);
+    }
+
+    private IEnumerator StartSpawningEnemies()
+    {
+        SpawnInitialEnemies();
+        yield return new WaitForSeconds(5f);
+        Queue<EnemyTemplate> enemyTypesToSpawn = GetEnemyTypesToSpawn();
+
+        while (!enemyTypesToSpawn.NotEmpty())
         {
-            if (!CombatManager.IsCombatActive()) yield return null;
-            while (currentTime > 0f)
+            EnemyTemplate nextEnemy = enemyTypesToSpawn.Dequeue();
+            float nextEnemyArrivalTime = nextEnemy.Value * 4;
+            while (nextEnemyArrivalTime > 0f)
             {
-                if (!CombatManager.IsCombatActive()) yield return null;
-                currentTime -= Time.deltaTime;
+                if (CombatManager.IsCombatActive()) nextEnemyArrivalTime -= Time.deltaTime;
                 yield return null;
             }
 
-            Cell cell = PathingGrid.GetCellNearMe(transform.position, 5, 2);
-            EnemyBehaviour enemy = CombatManager.SpawnEnemy(enemyTypesToSpawn.RemoveRandom(), cell.Position);
-            enemy.GetComponent<Split>()?.SetShrine(this);
-            AddEnemy(enemy);
-            nextEnemy *= 0.95f;
-            currentTime = nextEnemy;
-            yield return null;
+            SpawnEnemy(nextEnemy);
         }
 
+        StartCoroutine(StartSpawningBosses());
+    }
+
+    private void SpawnBoss()
+    {
+        EnemyBehaviour newBoss = BossShrine.GenerateBoss(transform.position);
+        newBoss.GetComponent<Split>()?.SetShrine(this);
+        AddEnemy(newBoss);
+        _bosses.Add(newBoss);
+    }
+
+    private IEnumerator StartSpawningBosses()
+    {
         _bossCount = WorldState.CurrentLevel() + 1;
         int currentBossCount = _bossCount;
         while (currentBossCount > 0)
         {
-            if (!CombatManager.IsCombatActive()) yield return null;
             float bossTimer = 10f;
             while (bossTimer > 0f)
             {
@@ -141,10 +166,7 @@ public class TempleBehaviour : BasicShrineBehaviour
                 yield return null;
             }
 
-            EnemyBehaviour newBoss = BossShrine.GenerateBoss(transform.position);
-            newBoss.GetComponent<Split>()?.SetShrine(this);
-            AddEnemy(newBoss);
-            _bosses.Add(newBoss);
+            SpawnBoss();
             --currentBossCount;
         }
 

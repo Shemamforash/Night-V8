@@ -18,7 +18,7 @@ namespace Game.Exploration.Environment
 {
     public class MapGenerator : MonoBehaviour
     {
-        private const int MapWidth = 120, MinRadius = 6, MaxRadius = 12;
+        private const int MapWidth = 120, MinRadius = 6, MaxRadius = 15;
         private const int WaterSourcesPerEnvironment = 30;
         private const int FoodSourcesPerEnvironment = 20;
         private const int ResourcesPerEnvironment = 30;
@@ -183,7 +183,7 @@ namespace Game.Exploration.Environment
                 _regions.ForEach(s => { s.Reset(); });
                 float rootRegions = Mathf.Sqrt(_regions.Count);
                 float normalised = rootRegions / 8f;
-                float mapWidth = MapWidth * 0.65f * normalised;
+                float mapWidth = MapWidth * 0.6f * normalised;
                 List<Vector2> samples = AdvancedMaths.GetPoissonDiscDistribution(_regions.Count, mapWidth, true, 0.75f);
                 _regions[0].SetPosition(Vector2.zero);
                 samples.RemoveAll(s => s.magnitude < 4);
@@ -404,7 +404,7 @@ namespace Game.Exploration.Environment
             Graph map = CreateMinimumSpanningTree();
             try
             {
-                SetMaxNodeDepth(8 + WorldState.Difficulty() * 3, map);
+                SetMaxNodeDepth(4 + WorldState.Difficulty() * 2, map);
             }
             catch (Exception)
             {

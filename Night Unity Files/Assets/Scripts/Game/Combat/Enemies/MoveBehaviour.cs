@@ -57,6 +57,7 @@ namespace Game.Combat.Enemies
             bucket.Remove(this);
             if (bucket.Count != 0) return;
             _moveBuckets.Remove(bucket);
+            if (_currentUpdateBucket >= _moveBuckets.Count) _currentUpdateBucket = _moveBuckets.Count - 1;
             if (_moveBuckets.Count == 0) _currentUpdateBucket = 0;
         }
 

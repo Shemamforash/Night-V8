@@ -54,6 +54,7 @@ namespace Game.Combat.Misc
             transform.position = position;
             ParticleSystem.ShapeModule shape = _particles.shape;
             shape.radius = _radius - 0.5f;
+            _particles.randomSeed = (uint) Random.Range(uint.MinValue, uint.MaxValue);
             _particles.Emit((int) (150 * _radius));
             bool active = CombatManager.IsCombatActive();
             while (_particles.particleCount > 0)

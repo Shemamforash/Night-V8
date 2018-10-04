@@ -1,5 +1,4 @@
-﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
-using Game.Combat.Misc;
+﻿using Game.Combat.Misc;
 using Game.Combat.Player;
 using UnityEngine;
 
@@ -13,7 +12,6 @@ namespace Game.Combat.Enemies.Nightmares
         {
             base.Initialise(enemy);
             CurrentAction = SeekPlayer;
-            gameObject.AddComponent<FeedTarget>();
         }
 
         private void SeekPlayer()

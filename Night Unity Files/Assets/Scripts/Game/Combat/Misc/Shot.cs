@@ -303,9 +303,9 @@ namespace Game.Combat.Misc
         private void ApplyConditions()
         {
             float random = Random.Range(0f, 1f);
-            bool canDecay = random < _decayChance;
-            bool canBurn = random < _burnChance;
-            bool canSicken = random < _sicknessChance;
+            bool canDecay = random < _decayChance / _weapon.GetAttributeValue(AttributeType.Pellets);
+            bool canBurn = random < _burnChance / _weapon.GetAttributeValue(AttributeType.Pellets);
+            bool canSicken = random < _sicknessChance / _weapon.GetAttributeValue(AttributeType.Pellets);
             List<int> conditions = new List<int>();
             if (canDecay) conditions.Add(0);
             if (canBurn) conditions.Add(1);

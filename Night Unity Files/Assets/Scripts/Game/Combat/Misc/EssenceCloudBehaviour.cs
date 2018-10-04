@@ -41,11 +41,7 @@ public class EssenceCloudBehaviour : MonoBehaviour
         _essencePuff.Emit(_essenceCount);
         _essenceCloudPool.Return(this);
         Inventory inventory = PlayerCombat.Instance.Player.Inventory();
-        while (_essenceCount > 0)
-        {
-            --_essenceCount;
-            inventory.IncrementResource("Essence", 1);
-        }
+        inventory.IncrementResource("Essence", _essenceCount);
     }
 
     public void OnDestroy()
@@ -57,6 +53,7 @@ public class EssenceCloudBehaviour : MonoBehaviour
     {
         _essenceParticles.Stop();
         while (_essenceParticles.particleCount > 0) yield return null;
+        _essenceCloudPool.Return(this);
     }
 
     public void Update()

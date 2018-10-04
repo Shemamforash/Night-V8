@@ -615,5 +615,10 @@ namespace Game.Combat.Player
         {
             return _lockedOn != null;
         }
+
+        public void ReduceAdrenaline(float amount)
+        {
+            _adrenalineLevel.Decrement(amount);
+        }
     }
 }

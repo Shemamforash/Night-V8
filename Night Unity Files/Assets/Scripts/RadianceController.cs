@@ -1,9 +1,13 @@
-﻿using Game.Combat.Generation;
+﻿using System;
+using System.Linq;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class RadianceController : MonoBehaviour, ICombatEvent
 {
@@ -45,6 +49,11 @@ public class RadianceController : MonoBehaviour, ICombatEvent
     {
         if (_activated) return -1;
         if (!CombatManager.AllEnemiesDead()) return -1;
+        RegionType region = CombatManager.Region().GetRegionType();
+        if (region == RegionType.Nightmare
+            || region == RegionType.Temple
+            || region == RegionType.Tomb
+            || region == RegionType.Rite) return -1;
         return _radianceAvailable > 0 ? 1 : -1;
     }
 

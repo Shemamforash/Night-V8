@@ -44,6 +44,8 @@ public class DurabilityBarController : MonoBehaviour
             return;
         }
 
+        if (Time.timeScale < 0.1f) _durabilityParticles.Simulate(Time.unscaledDeltaTime, true, false);
+
         float pixelWidth = _durabilityTransform.rect.width;
         if (!_durabilityParticles.isPlaying) _durabilityParticles.Play();
         if (!_forceUpdate && pixelWidth == _lastPixelWidth) return;

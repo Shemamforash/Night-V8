@@ -235,6 +235,7 @@
             </e>
           </e>
         </e>
+        <e p="GateTransitController.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="Quick" t="Include">
             <e p="Editor" t="Include">
@@ -328,6 +329,7 @@
             <e p="Traits.xml" t="Include" />
             <e p="WeaponClasses.xml" t="Include" />
             <e p="Weather.xml" t="Include" />
+            <e p="WeatherProbabilities.xml" t="Include" />
           </e>
         </e>
         <e p="Saves" t="Include">
@@ -492,7 +494,6 @@
                     <e p="Drone.cs" t="Include" />
                     <e p="ErraticDash.cs" t="Include" />
                     <e p="Feed.cs" t="Include" />
-                    <e p="FeedTarget.cs" t="Include" />
                     <e p="GhastProjectile.cs" t="Include" />
                     <e p="Heavyshot.cs" t="Include" />
                     <e p="LeaveFireTrail.cs" t="Include" />
@@ -726,8 +727,6 @@
                 <e p="ResourceTemplate.cs" t="Include" />
               </e>
               <e p="StateMachines" t="Include">
-                <e p="ProbabalisticState.cs" t="Include" />
-                <e p="ProbabalisticStateMachine.cs" t="Include" />
                 <e p="State.cs" t="Include" />
                 <e p="StateMachine.cs" t="Include" />
               </e>

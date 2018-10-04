@@ -6,7 +6,7 @@ using SamsHelper.Libraries;
 
 namespace Game.Exploration.Weather
 {
-    public class Weather : ProbabalisticState
+    public class Weather : State
     {
         private readonly int _temperature, _duration;
         private readonly float _visibility;
@@ -15,7 +15,7 @@ namespace Game.Exploration.Weather
         private readonly string _displayName;
         public readonly WeatherAttributes Attributes;
 
-        public Weather(ProbabalisticStateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, weatherNode.StringFromNode("Name"))
+        public Weather(StateMachine weatherStates, XmlNode weatherNode) : base(weatherStates, weatherNode.StringFromNode("Name"))
         {
             _displayName = weatherNode.StringFromNode("DisplayName");
             _temperature = weatherNode.IntFromNode("Temperature");

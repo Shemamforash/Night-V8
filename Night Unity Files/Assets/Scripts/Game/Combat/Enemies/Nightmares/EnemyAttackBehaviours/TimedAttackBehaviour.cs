@@ -20,7 +20,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             _targetTime = Random.Range(MinTimer, MaxTimer);
         }
         
-        public void Update()
+        public virtual void Update()
         {
             if (Paused) return;
             _currentTimer += Time.deltaTime;

@@ -19,6 +19,8 @@ public class SkillAnimationController : MonoBehaviour
     private Action _callback;
     private Transform _followTransform;
     private static readonly Color _transparentRed = new Color(1f, 0f, 0f, 0f);
+    private Sequence _glowSequence;
+    private bool _fading;
 
     public void Awake()
     {
@@ -46,25 +48,33 @@ public class SkillAnimationController : MonoBehaviour
 
     public void LateUpdate()
     {
-        if (_followTransform == null) return;
+        if (_followTransform == null)
+        {
+            if (_fading) return;
+            _glowSequence.Kill();
+            _glowSequence = DOTween.Sequence();
+            _glowSequence.Append(_skillSprite.DOColor(UiAppearanceController.InvisibleColour, _fadeTime).SetEase(Ease.OutQuad));
+            _glowSequence.Insert(_warmUpTime + _glowTime, _glowSprite.DOColor(_transparentRed, _fadeTime).SetEase(Ease.OutQuad));
+            _glowSequence.AppendCallback(() => _skillPool.Return(this));
+            _fading = true;
+            return;
+        }
+
         transform.position = _followTransform.position;
     }
 
     private void Glow()
     {
-        Sequence sequence = DOTween.Sequence();
+        _glowSequence = DOTween.Sequence();
         _skillSprite.color = UiAppearanceController.InvisibleColour;
         _glowSprite.color = _transparentRed;
-        sequence.Append(_skillSprite.DOColor(Color.white, _warmUpTime).SetEase(Ease.InExpo));
-        sequence.Insert(0f, _glowSprite.DOColor(Color.red, _warmUpTime).SetEase(Ease.InExpo));
-        sequence.AppendCallback(() =>
-        {
-            _callback?.Invoke();
-        });
-        sequence.AppendInterval(_glowTime);
-        sequence.Append(_skillSprite.DOColor(UiAppearanceController.InvisibleColour, _fadeTime).SetEase(Ease.OutQuad));
-        sequence.Insert(_warmUpTime + _glowTime, _glowSprite.DOColor(_transparentRed, _fadeTime).SetEase(Ease.OutQuad));
-        sequence.AppendCallback(() => _skillPool.Return(this));
+        _glowSequence.Append(_skillSprite.DOColor(Color.white, _warmUpTime).SetEase(Ease.InExpo));
+        _glowSequence.Insert(0f, _glowSprite.DOColor(Color.red, _warmUpTime).SetEase(Ease.InExpo));
+        _glowSequence.AppendCallback(() => { _callback?.Invoke(); });
+        _glowSequence.AppendInterval(_glowTime);
+        _glowSequence.Append(_skillSprite.DOColor(UiAppearanceController.InvisibleColour, _fadeTime).SetEase(Ease.OutQuad));
+        _glowSequence.Insert(_warmUpTime + _glowTime, _glowSprite.DOColor(_transparentRed, _fadeTime).SetEase(Ease.OutQuad));
+        _glowSequence.AppendCallback(() => _skillPool.Return(this));
     }
 
     public void OnDestroy()

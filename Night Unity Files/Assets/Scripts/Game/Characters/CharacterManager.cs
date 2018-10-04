@@ -216,11 +216,11 @@ namespace Game.Characters
             attributes.SetMax(AttributeType.Willpower, playerCharacter.CharacterTemplate.Willpower);
 
 #if UNITY_EDITOR
-//            int max = 20;
-//            attributes.SetMax(AttributeType.Endurance, max);
-//            attributes.SetMax(AttributeType.Strength, max);
-//            attributes.SetMax(AttributeType.Perception, max);
-//            attributes.SetMax(AttributeType.Willpower, max);
+            int max = 20;
+            attributes.SetMax(AttributeType.Endurance, max);
+            attributes.SetMax(AttributeType.Strength, max);
+            attributes.SetMax(AttributeType.Perception, max);
+            attributes.SetMax(AttributeType.Willpower, max);
 #endif
 
             attributes.Get(AttributeType.Endurance).SetToMax();

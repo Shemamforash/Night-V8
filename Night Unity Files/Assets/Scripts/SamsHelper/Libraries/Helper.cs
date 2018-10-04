@@ -15,6 +15,22 @@ namespace SamsHelper.Libraries
 {
     public static class Helper
     {
+        public static bool Empty<T>(this Queue<T> queue) => queue.Count == 0;
+
+        public static bool Empty<T>(this List<T> list) => list.Count == 0;
+
+        public static bool Empty<T>(this T[] arr) => arr.Length == 0;
+
+        public static bool Empty<T>(this Stack<T> stack) => stack.Count == 0;
+
+        public static bool NotEmpty<T>(this Queue<T> queue) => queue.Count != 0;
+
+        public static bool NotEmpty<T>(this List<T> list) => list.Count != 0;
+
+        public static bool NotEmpty<T>(this T[] arr) => arr.Length != 0;
+
+        public static bool NotEmpty<T>(this Stack<T> stack) => stack.Count != 0;
+        
         public static void PauseParticles(this ParticleSystem ps)
         {
             ParticleSystem.MainModule main = ps.main;
@@ -26,7 +42,7 @@ namespace SamsHelper.Libraries
             ParticleSystem.MainModule main = ps.main;
             main.simulationSpeed = 1;
         }
-        
+
         public static void DrawLine(this Transform transform, Vector2 other, Color color, float duration)
         {
             transform.position.DrawLine(other, color, duration);
@@ -51,7 +67,7 @@ namespace SamsHelper.Libraries
         }
 
         private static List<AssetBundle> _loadedAssetBundles = new List<AssetBundle>();
-        
+
         public static T[] LoadAllFilesFromAssetBundle<T>(string bundleName) where T : Object
         {
             AssetBundle myLoadedAssetBundle = LoadAssetBundle(bundleName);
@@ -71,7 +87,7 @@ namespace SamsHelper.Libraries
         {
             AssetBundle myLoadedAssetBundle = LoadAssetBundle(bundleName);
             return myLoadedAssetBundle.LoadAsset<T>(assetName);
-        } 
+        }
 
         public static float StartingTime => _startingTime;
 

@@ -1,61 +1,139 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Game.Exploration.Environment;
+using QuickEngine.Extensions;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Weather
 {
     public static class WeatherManager
     {
-        private static readonly ProbabalisticStateMachine _weatherStates = new ProbabalisticStateMachine();
+        private static readonly StateMachine _weatherStates = new StateMachine();
+        private static readonly Dictionary<EnvironmentType, WeatherProbabilities> _regionWeatherProbabilities = new Dictionary<EnvironmentType, WeatherProbabilities>();
+
+        private class WeatherProbabilities
+        {
+            private readonly List<string> _types;
+            private readonly Dictionary<string, List<float>> _probabilities = new Dictionary<string, List<float>>();
+
+            public WeatherProbabilities(XmlNode node)
+            {
+                string typeString = node.StringFromNode("Types");
+                _types = typeString.Split(',').ToList();
+                foreach (XmlNode subNode in node.ChildNodes)
+                {
+                    if (subNode.Name == "Types") continue;
+                    List<float> probabilityValues = subNode.InnerText.Split(',').Select(float.Parse).ToList();
+                    _probabilities.Add(subNode.Name, probabilityValues);
+                }
+            }
+
+            public string NextWeather(string currentWeather)
+            {
+                if (currentWeather == "" ||
+                    !_probabilities.ContainsKey(currentWeather)) return _types.RandomElement();
+                List<float> pValues = _probabilities[currentWeather];
+                float rand = Random.Range(0f, 1f);
+                float count = 0;
+                for (int i = 0; i < pValues.Count; i++)
+                {
+                    count += pValues[i];
+                    if (count <= rand) continue;
+                    return _types[i];
+                }
+
+                Debug.Log(currentWeather);
+                pValues.ToArray().PrintList();
+                _types.ToArray().PrintList();
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+
         private static bool _loaded;
 
         public static void Start()
         {
             LoadWeather();
-//            GenerateWeatherString(2000);
         }
 
         public static void GoToWeather()
         {
-            _weatherStates.GetState(_weatherStates.CalculateNextState()).Enter();
+            EnvironmentType currentEnvironment = EnvironmentManager.CurrentEnvironment.EnvironmentType;
+            string currentWeather = _weatherStates.GetCurrentState()?.Name ?? "";
+            string nextWeatherName = _regionWeatherProbabilities[currentEnvironment].NextWeather(currentWeather);
+            _weatherStates.GetState(nextWeatherName).Enter();
         }
 
         public static Weather CurrentWeather()
         {
             return (Weather) _weatherStates.GetCurrentState();
         }
-        
+
         private static void LoadWeather()
         {
             if (_loaded) return;
             XmlNode root = Helper.OpenRootNode("Weather", "WeatherTypes");
             foreach (XmlNode weatherNode in Helper.GetNodesWithName(root, "Weather"))
                 new Weather(_weatherStates, weatherNode);
-            _weatherStates.LoadProbabilities("WeatherProbabilityTable");
+
+            root = Helper.OpenRootNode("WeatherProbabilities", "Regions");
+            Array environmentTypes = Enum.GetValues(typeof(EnvironmentType));
+
+            foreach (XmlNode regionNode in root.ChildNodes)
+            {
+                foreach (EnvironmentType environmentType in environmentTypes)
+                {
+                    if (environmentType.ToString() != regionNode.Name) continue;
+                    WeatherProbabilities probabilities = new WeatherProbabilities(regionNode);
+                    _regionWeatherProbabilities.Add(environmentType, probabilities);
+                    break;
+                }
+            }
+
+//            GenerateWeatherString(1000);
             _loaded = true;
         }
 
         private static void GenerateWeatherString(int stringLength)
         {
-            string weatherString = "";
-            Dictionary<string, int> _weatherOccurences = new Dictionary<string, int>();
-            while (stringLength > 0)
+            float max = stringLength;
+            for (int i = 0; i < 5; ++i)
             {
-                string currentWeatherName = CurrentWeather().Name;
-                if (_weatherOccurences.ContainsKey(currentWeatherName))
-                    _weatherOccurences[currentWeatherName]++;
-                else
-                    _weatherOccurences[currentWeatherName] = 1;
-                weatherString += currentWeatherName;
-                CurrentWeather().Exit();
-                --stringLength;
-            }
+                stringLength = (int)max;
+                Debug.Log(EnvironmentManager.CurrentEnvironment.EnvironmentType);
+                GoToWeather();
+                Dictionary<string, int> _weatherOccurrences = new Dictionary<string, int>();
+                string weatherString = "";
+                while (stringLength > 0)
+                {
+                    string currentWeatherName = CurrentWeather().Name;
+                    if (_weatherOccurrences.ContainsKey(currentWeatherName))
+                        _weatherOccurrences[currentWeatherName]++;
+                    else
+                        _weatherOccurrences[currentWeatherName] = 1;
+                    weatherString += currentWeatherName;
+                    GoToWeather();
+                    --stringLength;
+                }
 
-            foreach (string key in _weatherOccurences.Keys) Debug.Log(key + " occured " + _weatherOccurences[key] + " times.");
-            Debug.Log(weatherString);
+                foreach (string key in _weatherOccurrences.Keys)
+                {
+                    int count = _weatherOccurrences[key];
+                    float proportion = count / max;
+                    proportion *= 100;
+                    proportion = Helper.Round(proportion);
+                    string occurences = key + " occured " + _weatherOccurrences[key] + " times. -- (" + proportion + "%)";
+                    weatherString = occurences + "\n" + weatherString;
+                }
+
+                Debug.Log(weatherString);
+                EnvironmentManager.NextLevel(false);
+            }
         }
 
         public static void Reset()

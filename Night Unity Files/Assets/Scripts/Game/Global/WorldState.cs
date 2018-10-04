@@ -122,12 +122,7 @@ namespace Game.Global
         public static bool ActivateTemple()
         {
             ++_templesActivated;
-            if (_templesActivated != EnvironmentManager.CurrentEnvironment.Temples) return false;
-            Region r = new Region();
-            r.SetRegionType(RegionType.Tomb);
-            CombatManager.SetCurrentRegion(r);
-            SceneChanger.GoToCombatScene();
-            return true;
+            return _templesActivated == EnvironmentManager.CurrentEnvironment.Temples;
         }
 
         private void IncrementDaysSpentHere()
@@ -334,6 +329,11 @@ namespace Game.Global
                 if (condenser == null) return;
                 if (fog > 0) _homeInventory.IncrementResource("Water", fog);
             });
+        }
+
+        public static bool Paused()
+        {
+            return _isPaused;
         }
     }
 }
