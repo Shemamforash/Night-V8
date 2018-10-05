@@ -60,7 +60,7 @@ namespace Game.Combat.Enemies.Humans
 
         private List<EnemyBehaviour> GetEnemiesNearby()
         {
-            List<ITakeDamageInterface> chars = CombatManager.GetEnemiesInRange(transform.position, 5f);
+            List<CanTakeDamage> chars = CombatManager.GetEnemiesInRange(transform.position, 5f);
             List<EnemyBehaviour> enemiesNearby = new List<EnemyBehaviour>();
             chars.ForEach(c =>
             {

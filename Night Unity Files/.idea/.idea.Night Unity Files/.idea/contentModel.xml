@@ -447,19 +447,32 @@
                 <e p="Bosses" t="Include">
                   <e p="Boss.cs" t="Include" />
                   <e p="BossSectionHealthController.cs" t="Include" />
-                  <e p="OvaBehaviour.cs" t="Include" />
-                  <e p="SerpentBehaviour.cs" t="Include" />
-                  <e p="SerpentEggBehaviour.cs" t="Include" />
-                  <e p="SerpentEggs.cs" t="Include" />
-                  <e p="SpermBehaviour.cs" t="Include" />
-                  <e p="SpermSegmentBehaviour.cs" t="Include" />
-                  <e p="StarFishArmBehaviour.cs" t="Include" />
-                  <e p="StarfishBehaviour.cs" t="Include" />
-                  <e p="StarFishMainArmBehaviour.cs" t="Include" />
-                  <e p="SwarmBehaviour.cs" t="Include" />
-                  <e p="SwarmSegmentBehaviour.cs" t="Include" />
+                  <e p="Ova" t="Include">
+                    <e p="OvaBehaviour.cs" t="Include" />
+                    <e p="SpermBehaviour.cs" t="Include" />
+                    <e p="SpermSegmentBehaviour.cs" t="Include" />
+                  </e>
+                  <e p="Serpent" t="Include">
+                    <e p="SerpentBehaviour.cs" t="Include" />
+                    <e p="SerpentBombAttack.cs" t="Include" />
+                    <e p="SerpentEggBehaviour.cs" t="Include" />
+                    <e p="WingHealthScript.cs" t="Include" />
+                  </e>
+                  <e p="Starfish" t="Include">
+                    <e p="StarFishArmBehaviour.cs" t="Include" />
+                    <e p="StarfishBehaviour.cs" t="Include" />
+                    <e p="StarFishMainArmBehaviour.cs" t="Include" />
+                  </e>
+                  <e p="Swarm" t="Include">
+                    <e p="SwarmBehaviour.cs" t="Include" />
+                    <e p="SwarmSegmentBehaviour.cs" t="Include" />
+                  </e>
                   <e p="TailFollowBehaviour.cs" t="Include" />
-                  <e p="WingHealthScript.cs" t="Include" />
+                  <e p="Worm" t="Include">
+                    <e p="WormBehaviour.cs" t="Include" />
+                    <e p="WormBodyBehaviour.cs" t="Include" />
+                    <e p="WormSacBehaviour.cs" t="Include" />
+                  </e>
                 </e>
                 <e p="Enemy.cs" t="Include" />
                 <e p="EnemyBehaviour.cs" t="Include" />
@@ -566,6 +579,7 @@
               <e p="Misc" t="Include">
                 <e p="BulletImpactBehaviour.cs" t="Include" />
                 <e p="BulletTrailFade.cs" t="Include" />
+                <e p="CanTakeDamage.cs" t="Include" />
                 <e p="CharacterCombat.cs" t="Include" />
                 <e p="DecayBehaviour.cs" t="Include" />
                 <e p="EnemyCampfire.cs" t="Include" />
@@ -576,7 +590,6 @@
                 <e p="FootstepMaker.cs" t="Include" />
                 <e p="HealthController.cs" t="Include" />
                 <e p="ICombatEvent.cs" t="Include" />
-                <e p="ITakeDamageInterface.cs" t="Include" />
                 <e p="JournalSource.cs" t="Include" />
                 <e p="Mine.cs" t="Include" />
                 <e p="SaltBehaviour.cs" t="Include" />
@@ -894,9 +907,6 @@
           <e p="UIBorderController.cs" t="Include" />
           <e p="UiBrandMenu.cs" t="Include" />
           <e p="VolumeController.cs" t="Include" />
-          <e p="WormBehaviour.cs" t="Include" />
-          <e p="WormBodyBehaviour.cs" t="Include" />
-          <e p="WormSacBehaviour.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">
           <e p="Combat Vignette Shader.shader" t="Include" />

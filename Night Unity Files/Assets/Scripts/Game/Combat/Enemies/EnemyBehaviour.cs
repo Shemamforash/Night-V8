@@ -30,6 +30,11 @@ namespace Game.Combat.Enemies
             CurrentAction?.Invoke();
         }
 
+        public override string GetDisplayName()
+        {
+            return Enemy.Name;
+        }
+
         private void UpdateMarkTime()
         {
             if (!_marked) return;
@@ -43,7 +48,7 @@ namespace Game.Combat.Enemies
 
         private void PushAwayFromNeighbors()
         {
-            List<ITakeDamageInterface> chars = CombatManager.GetCharactersInRange(transform.position, 1f);
+            List<CanTakeDamage> chars = CombatManager.GetCharactersInRange(transform.position, 1f);
             Vector2 forceDir = Vector2.zero;
             chars.ForEach(c =>
             {
@@ -61,7 +66,7 @@ namespace Game.Combat.Enemies
         private void UpdateRotation()
         {
             float rotation;
-            if (GetTarget() != null) rotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
+            if (GetTarget() != null) rotation = AdvancedMaths.AngleFromUp(transform.position, TargetPosition());
             else rotation = AdvancedMaths.AngleFromUp(transform.position, transform.position + (Vector3) GetComponent<Rigidbody2D>().velocity);
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
         }
@@ -91,19 +96,22 @@ namespace Game.Combat.Enemies
 
         private void AssignSprite()
         {
-            Sprite spriteImage = Resources.Load<Sprite>("Images/Enemy Symbols/" + GetEnemyName());
+            Sprite spriteImage = Resources.Load<Sprite>("Images/Enemy Symbols/" + GetDisplayName());
             if (spriteImage == null) return;
             Sprite.sprite = spriteImage;
         }
 
-        protected override UIHealthBarController HealthBarController()
+        public override void Burn()
         {
-            return EnemyUi.Instance().GetHealthController(this);
+            if (GetBurnTicks() == 0) PlayerCombat.Instance.Player.BrandManager.IncreaseBurnCount();
+            base.Burn();
         }
 
-        protected override UIArmourController ArmourBarController()
+        public override void Sicken(int stacks = 1)
         {
-            return EnemyUi.Instance().GetArmourController(Enemy);
+            if (SicknessStacks >= GetSicknessTargetTicks())
+                PlayerCombat.Instance.Player.BrandManager.IncreaseSickenCount();
+            base.Sicken(stacks);
         }
 
         public override void TakeShotDamage(Shot shot)
@@ -143,12 +151,6 @@ namespace Game.Combat.Enemies
             Enemy.Kill();
             Destroy(gameObject);
         }
-
-        protected virtual void ReachTarget()
-        {
-        }
-
-        public virtual string GetEnemyName() => Enemy.Name;
 
         public void Mark()
         {

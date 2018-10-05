@@ -4,16 +4,14 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Bosses
 {
-    public abstract class BossSectionHealthController : MonoBehaviour, ITakeDamageInterface
+    public abstract class BossSectionHealthController : CanTakeDamage
     {
         private int InitialHealth;
-        protected readonly HealthController HealthController = new HealthController();
-        private DamageSpriteFlash _spriteFlash;
         private Boss _boss;
 
-        public virtual void Awake()
+        protected override void Awake()
         {
-            _spriteFlash = GetComponent<DamageSpriteFlash>();
+            base.Awake();
             HealthController.SetInitialHealth(GetInitialHealth(), this);
             CombatManager.Enemies().Add(this);
         }
@@ -30,39 +28,6 @@ namespace Game.Combat.Enemies.Bosses
             _boss.RegisterSection(this);
         }
 
-        protected virtual void TakeDamage(float damage)
-        {
-            _spriteFlash.FlashSprite();
-            HealthController.TakeDamage(damage);
-        }
-
-        public void TakeShotDamage(Shot shot)
-        {
-            TakeDamage(shot.DamageDealt());
-        }
-
-        public void TakeRawDamage(float damage, Vector2 direction)
-        {
-            TakeDamage(damage);
-        }
-
-        public void TakeExplosionDamage(float damage, Vector2 origin, float radius)
-        {
-            TakeDamage(damage);
-        }
-
-        public void Decay()
-        {
-        }
-
-        public void Burn()
-        {
-        }
-
-        public void Sicken(int stacks = 0)
-        {
-        }
-
         public bool IsDead()
         {
             return HealthController.GetCurrentHealth() == 0;
@@ -73,15 +38,10 @@ namespace Game.Combat.Enemies.Bosses
             return gameObject;
         }
 
-        public virtual void Kill()
+        public override void Kill()
         {
-            Destroy(gameObject);
-            CombatManager.Remove(this);
+            base.Kill();
             _boss.UnregisterSection(this);
-        }
-
-        public void MyUpdate()
-        {
         }
     }
 }

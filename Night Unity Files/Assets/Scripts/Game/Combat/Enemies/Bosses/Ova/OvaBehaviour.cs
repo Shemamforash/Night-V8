@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Bosses
 {
-    public class OvaBehaviour : Boss, ITakeDamageInterface
+    public class OvaBehaviour : Boss
     {
         private HealthController _healthController;
         private const float SpermSpawnThreshold = 200f;
@@ -12,7 +12,7 @@ namespace Game.Combat.Enemies.Bosses
         private float SpawnTimer = 15f;
         private DamageSpriteFlash _spriteFlash;
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
             _spriteFlash = GetComponent<DamageSpriteFlash>();
@@ -62,36 +62,9 @@ namespace Game.Combat.Enemies.Bosses
             SpermBehaviour.Create();
         }
 
-        public void Update()
+        public override void MyUpdate()
         {
-            if (!CombatManager.IsCombatActive()) return;
-            MyUpdate();
-        }
-
-        public void Decay()
-        {
-        }
-
-        public void Burn()
-        {
-        }
-
-        public void Sicken(int stacks = 0)
-        {
-        }
-
-        public bool IsDead()
-        {
-            return _healthController.GetCurrentHealth() == 0;
-        }
-
-        public void Kill()
-        {
-            KillBoss();
-        }
-
-        public void MyUpdate()
-        {
+            base.MyUpdate();
             if (SpawnTimer > 0f)
             {
                 SpawnTimer -= Time.deltaTime;
@@ -110,6 +83,11 @@ namespace Game.Combat.Enemies.Bosses
             }
 
             for (int i = 0; i < Random.Range(5, 11); ++i) CombatManager.SpawnEnemy(EnemyType.Ghoul, Vector2.zero);
+        }
+
+        public override string GetDisplayName()
+        {
+            return "Ova";
         }
     }
 }

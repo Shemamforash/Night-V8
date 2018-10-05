@@ -1,5 +1,6 @@
 ﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Generation;
+using Game.Combat.Misc;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
@@ -21,7 +22,7 @@ namespace Game.Combat.Enemies.Nightmares
 
         private void Orbit()
         {
-            Cell target = PathingGrid.GetCellOrbitingTarget(CurrentCell(), GetTarget().CurrentCell(), GetComponent<Rigidbody2D>().velocity, 4f, 0.5f);
+            Cell target = PathingGrid.GetCellOrbitingTarget(CurrentCell(), ((CharacterCombat)GetTarget()).CurrentCell(), GetComponent<Rigidbody2D>().velocity, 4f, 0.5f);
             MoveBehaviour.GoToCell(target);
             CurrentAction = Orbit;
         }

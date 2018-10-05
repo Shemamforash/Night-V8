@@ -9,29 +9,45 @@ namespace Game.Combat.Ui
     public class CharacterUi : MonoBehaviour
     {
         private UIArmourController _armourController;
-        public UIHealthBarController _healthBarController;
+        private UIHealthBarController _healthBarController;
         private CanvasGroup CanvasGroup;
+        protected CanTakeDamage Character;
 
         public virtual void Awake()
         {
             CanvasGroup = GetComponent<CanvasGroup>();
         }
 
-        protected void SetAlpha(float a)
+        private void SetAlpha(float a)
         {
             CanvasGroup.alpha = a;
         }
 
-        public virtual UIHealthBarController GetHealthController(CharacterCombat enemy)
+        protected UIHealthBarController GetHealthController()
         {
             if (_healthBarController == null) _healthBarController = gameObject.FindChildWithName<UIHealthBarController>("Health");
             return _healthBarController;
         }
 
-        public virtual UIArmourController GetArmourController(Character character)
+        protected UIArmourController GetArmourController()
         {
             if (_armourController == null) _armourController = gameObject.FindChildWithName<UIArmourController>("Armour");
             return _armourController;
+        }
+
+        protected virtual void LateUpdate()
+        {
+            if (Character == null)
+            {
+                SetAlpha(0);
+                return;
+            }
+
+            SetAlpha(1);
+            if (Character.IsBurning()) GetHealthController().StartBurning();
+            else GetHealthController().StopBurning();
+            GetHealthController().SetSicknessLevel(Character.GetSicknessLevel());
+            GetArmourController().TakeDamage(Character.ArmourController);
         }
     }
 }

@@ -1,160 +1,119 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
 using Game.Combat.Player;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 public class BeamController : MonoBehaviour
 {
+    private static readonly ObjectPool<BeamController> _beamPool = new ObjectPool<BeamController>("Beams", "Prefabs/Combat/Enemies/Beam");
     private static GameObject _prefab;
     private LineRenderer _glowLine, _beamLine, _leadLine;
-    private float LeadDurationMax;
-    private float BeamDurationMax;
+    private const float LeadDurationMax = 0.5f;
+    private const float BeamDurationMax = 0.5f;
     private ParticleSystem _particleBurst;
     private Transform _origin;
-    private float _initialBeamWidth;
-    private float _takeDamageTimer;
-    private const float BeamDamageTimeMax = 0.25f;
-    private const int BeamDamage = 2;
+    private Vector3 _targetPosition;
+    private const int BeamDamage = 25;
 
-    public static BeamController Create(Transform origin, float leadLineDuration = 1f, float beamDuration = 2f)
+    public static BeamController Create(Transform origin)
     {
-        if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Enemies/Beam");
-        GameObject beam = Instantiate(_prefab);
-        BeamController beamController = beam.GetComponent<BeamController>();
-        beamController.LeadDurationMax = leadLineDuration;
-        beamController.BeamDurationMax = beamDuration;
-        beamController._origin = origin;
-        beamController.Initialise();
+        BeamController beamController = _beamPool.Create();
+        beamController.Initialise(origin);
         return beamController;
     }
 
     public void Awake()
     {
         _particleBurst = gameObject.FindChildWithName<ParticleSystem>("Burst");
-    }
-
-    public void SetBeamWidth(float widthModifier)
-    {
-        float glowLineWidth = _glowLine.startWidth * widthModifier;
-        float beamLineWidth = _beamLine.startWidth * widthModifier;
-        float leadLineWidth = _leadLine.startWidth * widthModifier;
-        _initialBeamWidth = beamLineWidth;
-
-        AnimationCurve curve = new AnimationCurve();
-        curve.AddKey(0, glowLineWidth);
-        curve.AddKey(1, glowLineWidth);
-        _glowLine.widthCurve = curve;
-
-        curve = new AnimationCurve();
-        curve.AddKey(0, beamLineWidth);
-        curve.AddKey(1, beamLineWidth);
-        _beamLine.widthCurve = curve;
-
-        curve = new AnimationCurve();
-        curve.AddKey(0, leadLineWidth);
-        curve.AddKey(1, leadLineWidth);
-        _leadLine.widthCurve = curve;
-    }
-
-    private void UpdatePosition()
-    {
-        Vector2 targetPosition = _origin.position + _origin.up * 20f;
-        Vector3[] positions = {_origin.position, targetPosition};
-        _takeDamageTimer += Time.deltaTime;
-        if (_takeDamageTimer > BeamDamageTimeMax)
-        {
-            _takeDamageTimer -= BeamDamageTimeMax;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, targetPosition, (1 << 17) | (1 << 8) | (1 << 14));
-            if (hit.collider == null || !hit.collider.CompareTag("Player")) return;
-            Vector2 dir = targetPosition - (Vector2)transform.position;
-            dir.Normalize();
-            PlayerCombat.Instance.TakeRawDamage(BeamDamage, dir);
-        }
-        _glowLine.SetPositions(positions);
-        _beamLine.SetPositions(positions);
-        _leadLine.SetPositions(positions);
-        _particleBurst.transform.position = _origin.position;
-        float angle = AdvancedMaths.AngleFromUp(_origin.position, targetPosition) + 90f;
-        _particleBurst.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-    }
-
-    private void Initialise()
-    {
         _glowLine = gameObject.FindChildWithName<LineRenderer>("Glow");
         _beamLine = gameObject.FindChildWithName<LineRenderer>("Beam");
         _leadLine = gameObject.FindChildWithName<LineRenderer>("Lead");
+    }
+
+    private void LateUpdate()
+    {
+        if (_origin == null) return;
         transform.position = _origin.position;
-        UpdatePosition();
-        StartCoroutine(ShowLeadLine());
+        _targetPosition = transform.position + _origin.up * 20f;
+        Vector3[] positions = {transform.position, _targetPosition};
+        _glowLine.SetPositions(positions);
+        _beamLine.SetPositions(positions);
+        _leadLine.SetPositions(positions);
+        float rotation = AdvancedMaths.AngleFromUp(transform.position, _targetPosition) + 90;
+        transform.rotation = Quaternion.Euler(0, 0, rotation);
     }
 
-    public void Update()
+    private void Initialise(Transform origin)
     {
-        UpdatePosition();
+        _origin = origin;
+        transform.position = _origin.position;
+        ShowLine();
     }
 
-    private IEnumerator ShowLeadLine()
+    private void SetLeadLineActive()
     {
-        float leadDuration = LeadDurationMax;
         _leadLine.enabled = true;
         _glowLine.enabled = false;
         _beamLine.enabled = false;
-        while (leadDuration > 0f)
-        {
-            float normalisedTime = 1f - leadDuration / LeadDurationMax;
-            Color leadColour = new Color(1, 1, 1, 0.2f + 0.4f * normalisedTime);
-            _leadLine.startColor = leadColour;
-            _leadLine.endColor = leadColour;
-            leadDuration -= Time.deltaTime;
-            yield return null;
-        }
-
-        _leadLine.enabled = false;
-        StartCoroutine(ShowBeam());
     }
 
-    private IEnumerator ShowBeam()
+    private void SetBeamLineActive()
     {
+        _leadLine.enabled = false;
         _glowLine.enabled = true;
         _beamLine.enabled = true;
+    }
 
-        Color lineColor = new Color(1, 1, 1, 0.5f);
-        _glowLine.startColor = lineColor;
-        _glowLine.endColor = lineColor;
-        _beamLine.startColor = new Color(1, 1, 1, 1);
-        _beamLine.endColor = lineColor;
-
-        float beamDuration = BeamDurationMax / 4f;
-        _particleBurst.Emit(25);
-
-        while (beamDuration > 0f)
-        {
-            beamDuration -= Time.deltaTime;
-            yield return null;
-        }
-
-        beamDuration = BeamDurationMax;
-        while (beamDuration > 0f)
-        {
-            beamDuration -= Time.deltaTime;
-            float normalisedTime = beamDuration / BeamDurationMax;
-            Color glowLineColor = new Color(1, 1, 1, normalisedTime * 0.5f);
-            _glowLine.startColor = glowLineColor;
-            _glowLine.endColor = glowLineColor;
-
-            _beamLine.startColor = new Color(1, 1, 1, normalisedTime);
-            _beamLine.endColor = new Color(1, 1, 1, normalisedTime * 0.5f);
-
-            AnimationCurve curve = new AnimationCurve();
-            curve.AddKey(0, _initialBeamWidth * normalisedTime);
-            curve.AddKey(1, _initialBeamWidth * normalisedTime);
-            _beamLine.widthCurve = curve;
-
-            yield return null;
-        }
-
+    private void SetNoLineActive()
+    {
+        _leadLine.enabled = false;
         _glowLine.enabled = false;
         _beamLine.enabled = false;
-        Destroy(gameObject);
+    }
+
+    private void ShowLine()
+    {
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendCallback(SetLeadLineActive);
+        Color startColor = UiAppearanceController.InvisibleColour;
+        Color endColor = new Color(1f, 1f, 1f, 0.5f);
+        sequence.Append(_leadLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), LeadDurationMax));
+        sequence.AppendCallback(() =>
+        {
+            SetBeamLineActive();
+            _particleBurst.Clear();
+            _particleBurst.Play();
+            DoBeamDamage();
+        });
+        startColor = Color.white;
+        endColor = UiAppearanceController.InvisibleColour;
+        sequence.Append(_beamLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), BeamDurationMax).SetEase(Ease.OutExpo));
+        sequence.Insert(LeadDurationMax, _glowLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), BeamDurationMax).SetEase(Ease.OutExpo));
+        sequence.AppendCallback(SetNoLineActive);
+        sequence.AppendInterval(1f);
+        sequence.AppendCallback(() => _beamPool.Return(this));
+    }
+
+    private void OnDestroy()
+    {
+        _beamPool.Dispose(this);
+    }
+
+    private void DoBeamDamage()
+    {
+        ContactFilter2D cf = new ContactFilter2D();
+        cf.layerMask = (1 << 17) | (1 << 8) | (1 << 14);
+        Collider2D[] hits = new Collider2D[100];
+        int count = gameObject.GetComponent<BoxCollider2D>().OverlapCollider(cf, hits);
+        for (int i = 0; i < count; ++i)
+        {
+            Collider2D hit = hits[i];
+            if (!hit.gameObject.CompareTag("Player")) continue;
+            Vector2 dir = transform.up;
+            PlayerCombat.Instance.TakeRawDamage(BeamDamage, dir);
+            break;
+        }
     }
 }

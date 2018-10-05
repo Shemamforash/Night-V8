@@ -1,4 +1,5 @@
-﻿using SamsHelper.Libraries;
+﻿using Game.Combat.Misc;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Humans
@@ -6,7 +7,7 @@ namespace Game.Combat.Enemies.Humans
     public class Brawler : UnarmedBehaviour
     {
         private const float MinMeleeDistance = 0.5f;
-        private const float MeleeDamage = 5;
+        private const int MeleeDamage = 5;
         private const float MeleeForce = 20;
         private ParticleSystem _slashParticles;
         private static GameObject _prefab;
@@ -43,8 +44,8 @@ namespace Game.Combat.Enemies.Humans
             ParticleSystem.MainModule main = _slashParticles.main;
             int flip = Random.Range(0, 2);
             main.flipRotation = flip;
-            main.startRotation = AdvancedMaths.AngleFromUp(transform.position, GetTarget().transform.position);
-            Vector2 direction = transform.Direction(GetTarget().transform);
+            main.startRotation = AdvancedMaths.AngleFromUp(transform.position, TargetPosition());
+            Vector2 direction = transform.Direction(TargetPosition());
             float x = -direction.y;
             float y = direction.x;
             if (flip == 1)
@@ -57,8 +58,8 @@ namespace Game.Combat.Enemies.Humans
             direction.y = y;
             _slashParticles.Emit(1);
             GetTarget().TakeRawDamage(MeleeDamage, direction);
-            direction = GetTarget().transform.Direction(transform);
-            GetTarget().MovementController.KnockBack(direction, MeleeForce);
+            direction = TargetPosition().Direction(transform);
+            ((CharacterCombat) GetTarget()).MovementController.KnockBack(direction, MeleeForce);
         }
     }
 }

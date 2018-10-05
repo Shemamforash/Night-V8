@@ -1,4 +1,5 @@
 ﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+using Game.Combat.Misc;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
@@ -15,7 +16,7 @@ namespace Game.Combat.Enemies.Nightmares
 
         private void Attack()
         {
-            MoveBehaviour.GoToCell(GetTarget().CurrentCell(), 5f, 2f);
+            MoveBehaviour.GoToCell(((CharacterCombat)GetTarget()).CurrentCell(), 5f, 2f);
             CurrentAction = Attack;
         }
     }

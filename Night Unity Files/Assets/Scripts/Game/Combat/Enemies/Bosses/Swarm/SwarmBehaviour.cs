@@ -20,7 +20,7 @@ public class SwarmBehaviour : Boss
         Instantiate(prefab).transform.position = new Vector2(0, 0);
     }
     
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _instance = this;
@@ -33,6 +33,11 @@ public class SwarmBehaviour : Boss
         RecalculateFireTimer();
         _fireCounter = Random.Range(_fireCounterMin, _fireCounterMax);
         _contractTimer = Random.Range(8f, 12f);
+    }
+
+    public override string GetDisplayName()
+    {
+        return "Swarm";
     }
 
     private void RecalculateFireTimer()

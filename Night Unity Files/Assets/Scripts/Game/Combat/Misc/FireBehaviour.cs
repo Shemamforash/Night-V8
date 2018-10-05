@@ -20,7 +20,7 @@ namespace Game.Combat.Misc
         private CircleCollider2D _collider;
         private int EmissionRate;
         private bool _keepAlive;
-        private List<ITakeDamageInterface> _ignoreTargets;
+        private List<CanTakeDamage> _ignoreTargets;
         private float _lifeTime;
         private SpriteRenderer _flash;
 
@@ -44,11 +44,11 @@ namespace Game.Combat.Misc
         {
             _lifeTime = lifeTime;
             _keepAlive = keepAlive;
-            _ignoreTargets = new List<ITakeDamageInterface>();
+            _ignoreTargets = new List<CanTakeDamage>();
             StartCoroutine(Burn(position, size, lightOn));
         }
 
-        public void AddIgnoreTarget(ITakeDamageInterface _ignoreTarget)
+        public void AddIgnoreTarget(CanTakeDamage _ignoreTarget)
         {
             _ignoreTargets.Add(_ignoreTarget);
         }
@@ -58,7 +58,7 @@ namespace Game.Combat.Misc
             if (!CombatManager.IsCombatActive()) return;
             CharacterCombat character = other.GetComponent<CharacterCombat>();
             if (character == null) return;
-            if (_ignoreTargets.Contains(other.GetComponent<ITakeDamageInterface>())) return;
+            if (_ignoreTargets.Contains(other.GetComponent<CanTakeDamage>())) return;
             character.Burn();
         }
 
@@ -135,7 +135,7 @@ namespace Game.Combat.Misc
             _firePool.Dispose(this);
         }
 
-        public void AddIgnoreTargets(List<ITakeDamageInterface> targetsToIgnore)
+        public void AddIgnoreTargets(List<CanTakeDamage> targetsToIgnore)
         {
             _ignoreTargets.AddRange(targetsToIgnore);
         }

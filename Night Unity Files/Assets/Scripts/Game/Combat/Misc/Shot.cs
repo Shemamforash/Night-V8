@@ -170,10 +170,10 @@ namespace Game.Combat.Misc
 
         private void SeekTarget()
         {
-            ITakeDamageInterface nearestEnemy = CombatManager.NearestEnemy(transform.position);
+            CanTakeDamage nearestEnemy = CombatManager.NearestEnemy(transform.position);
             if (nearestEnemy == null) return;
             Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
-            float angle = Vector2.Angle(dir, nearestEnemy.GetGameObject().transform.position - transform.position);
+            float angle = Vector2.Angle(dir, nearestEnemy.transform.position - transform.position);
             float force = 50;
             if (angle > 90)
             {
@@ -266,7 +266,7 @@ namespace Game.Combat.Misc
             _damageDealt = _damage;
             _damageDealt = (int) (_damageDealt * _finalDamageModifier);
             OnHitAction?.Invoke();
-            ITakeDamageInterface hit = other.GetComponent<ITakeDamageInterface>();
+            CanTakeDamage hit = other.GetComponent<CanTakeDamage>();
             if (hit == null) return;
             PlayerCombat player = _origin as PlayerCombat;
             if (player != null) player.OnShotConnects(hit);
@@ -287,7 +287,7 @@ namespace Game.Combat.Misc
             ApplyConditions();
         }
 
-        private void ApplyDamage(ITakeDamageInterface hit)
+        private void ApplyDamage(CanTakeDamage hit)
         {
             CalculateKnockBackForce();
             hit.TakeShotDamage(this);
@@ -324,7 +324,7 @@ namespace Game.Combat.Misc
                     FireBehaviour.Create(transform.position, radius, 4f, false, false);
                     break;
                 case 2:
-                    SickenBehaviour.Create(transform.position, new List<ITakeDamageInterface> {_origin}, radius);
+                    SickenBehaviour.Create(transform.position, new List<CanTakeDamage> {_origin}, radius);
                     break;
             }
         }

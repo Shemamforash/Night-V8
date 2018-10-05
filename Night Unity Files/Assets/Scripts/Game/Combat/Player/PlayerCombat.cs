@@ -27,7 +27,6 @@ namespace Game.Combat.Player
 {
     public class PlayerCombat : CharacterCombat, IInputListener, ICombatEvent
     {
-        private EnemyBehaviour _currentTarget;
         private float _skillCooldownModifier;
         private readonly Number _adrenalineLevel = new Number(0, 0, 8);
         private Coroutine _dashCooldown;
@@ -47,7 +46,7 @@ namespace Game.Combat.Player
 
         private bool _dashPressed;
 
-        private CharacterCombat _lockedOn;
+        private CanTakeDamage _lockedOn;
         private const float RotateSpeedMax = 100f;
         private float _rotateSpeedCurrent;
         private const float RotateAcceleration = 400f;
@@ -86,21 +85,10 @@ namespace Game.Combat.Player
             }
         }
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
             Instance = this;
-//            _vignetteRenderer = GameObject.Find("Vignette").GetComponent<Image>();
-        }
-
-        protected override UIHealthBarController HealthBarController()
-        {
-            return PlayerUi.Instance().GetHealthController(this);
-        }
-
-        protected override UIArmourController ArmourBarController()
-        {
-            return PlayerUi.Instance().GetArmourController(Player);
         }
 
         protected override int GetBurnDamage()
@@ -126,7 +114,7 @@ namespace Game.Combat.Player
 
         private void MoveVertical(float direction = 0)
         {
-            if(CameraLock.IsCameraLocked()) Move(direction * transform.up);
+            if (CameraLock.IsCameraLocked()) Move(direction * transform.up);
             else Move(direction * Camera.main.transform.up);
         }
 
@@ -135,7 +123,7 @@ namespace Game.Combat.Player
             if (CameraLock.IsCameraLocked()) Move(direction * transform.right);
             else Move(direction * Camera.main.transform.right);
         }
-        
+
         //input
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -233,7 +221,7 @@ namespace Game.Combat.Player
 
         private void LockTarget()
         {
-            _lockedOn = _lockedOn == null ? _currentTarget : null;
+            _lockedOn = _lockedOn == null ? GetTarget() : null;
         }
 
         private void Rotate(float direction)
@@ -293,6 +281,11 @@ namespace Game.Combat.Player
             UpdateMuzzleFlash();
         }
 
+        public override string GetDisplayName()
+        {
+            return "Player";
+        }
+
         public void UpdateAdrenaline(int damageDealt)
         {
             _adrenalineLevel.Increment(damageDealt / 150f * _adrenalineRecoveryRate);
@@ -321,14 +314,14 @@ namespace Game.Combat.Player
             TryExplode();
         }
 
-        public override void TakeExplosionDamage(float damage, Vector2 direction, float radius)
+        public override void TakeExplosionDamage(int damage, Vector2 direction, float radius)
         {
             base.TakeExplosionDamage(damage, direction, radius);
             TryExplode();
             Shake(damage * 100);
         }
 
-        public override void TakeRawDamage(float damage, Vector2 direction)
+        public override void TakeRawDamage(int damage, Vector2 direction)
         {
             base.TakeRawDamage(damage, direction);
             TryExplode();
@@ -379,7 +372,6 @@ namespace Game.Combat.Player
         public void EquipArmour()
         {
             ArmourController = Player.ArmourController;
-            ArmourBarController().TakeDamage(ArmourController);
         }
 
         public void ResetCompass()
@@ -452,15 +444,16 @@ namespace Game.Combat.Player
             return _dashCooldown == null && _dashPressed && ConsumeAdrenaline(1);
         }
 
-        public void SetTarget(EnemyBehaviour e)
+        public override void SetTarget(CanTakeDamage target)
         {
             if (_lockedOn != null) return;
-            if (e != null)
+            if (target != null)
             {
-                Flit flit = e as Flit;
+                Flit flit = target as Flit;
                 if (flit != null && !flit.Discovered()) return;
             }
-            _currentTarget = e;
+
+            base.SetTarget(target);
         }
 
         public override Weapon Weapon() => Player.EquippedWeapon;
@@ -575,15 +568,13 @@ namespace Game.Combat.Player
             WeaponAudio.DryFire();
         }
 
-        public void OnShotConnects(ITakeDamageInterface hit)
+        public void OnShotConnects(CanTakeDamage hit)
         {
-            if (!Player.Attributes.ReloadOnLastRound || !_weaponBehaviour.Empty() || !hit.IsDead()) return;
+            if (!Player.Attributes.ReloadOnLastRound || !_weaponBehaviour.Empty()) return;
             InstantReload();
         }
 
         //MISC
-
-        public override CharacterCombat GetTarget() => _currentTarget;
 
         public void ConsumeAmmo(int amount = -1)
         {

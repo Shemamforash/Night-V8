@@ -9,10 +9,12 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         private const float Interval = 0.2f;
         private const float FirePauseTime = 0.1f;
         private float _currentTime;
+        private float _lifeTime;
 
-        public void Initialise()
+        public void Initialise(float lifeTime = 2f)
         {
             _lastPosition = transform.position;
+            _lifeTime = lifeTime;
         }
 
         public void Update()
@@ -28,7 +30,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             {
                 float lerpVal = i / distance;
                 tempPos = Vector2.Lerp(_lastPosition, currentPosition, lerpVal);
-                FireBehaviour.Create(tempPos, 0.2f, 2f, false, false).AddIgnoreTarget(GetComponent<ITakeDamageInterface>());
+                FireBehaviour.Create(tempPos, 0.2f, _lifeTime, false, false).AddIgnoreTarget(GetComponent<CanTakeDamage>());
             }
 
             _lastPosition = tempPos;

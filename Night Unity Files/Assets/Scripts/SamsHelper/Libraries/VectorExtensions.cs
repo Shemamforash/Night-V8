@@ -22,7 +22,7 @@ namespace SamsHelper.Libraries
             vectorString = vectorString.Replace(")", "");
             return vectorString;
         }
-        
+
         public static Vector2 ToVector2(this string vectorString)
         {
             vectorString = CleanupVectorString(vectorString);
@@ -33,10 +33,10 @@ namespace SamsHelper.Libraries
             return vect;
         }
 
-        public static Vector3 Direction(this Transform from, Transform to)
-        {
-            return (from.position - to.position).normalized;
-        }
+        public static Vector3 Direction(this Transform from, Transform to) => Direction(from.position, to.position);
+        public static Vector3 Direction(this Vector3 from, Vector3 to) => (from - to).normalized;
+        public static Vector3 Direction(this Transform from, Vector3 to) => Direction(from.position, to);
+        public static Vector3 Direction(this Vector3 from, Transform to) => Direction(from, to.position);
 
         public static float Distance(this Transform from, Transform to)
         {
@@ -67,6 +67,5 @@ namespace SamsHelper.Libraries
         {
             return Vector3.SqrMagnitude(from - to);
         }
-
     }
 }

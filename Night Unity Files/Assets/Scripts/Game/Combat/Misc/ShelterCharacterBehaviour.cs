@@ -21,7 +21,7 @@ namespace Game.Combat.Misc
         private TextMeshProUGUI _text;
         private MoveBehaviour _moveBehaviour;
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
             _text = gameObject.FindChildWithName<TextMeshProUGUI>("Text");
@@ -37,7 +37,7 @@ namespace Game.Combat.Misc
             return null;
         }
 
-        public override CharacterCombat GetTarget()
+        public override CanTakeDamage GetTarget()
         {
             return null;
         }
@@ -85,6 +85,11 @@ namespace Game.Combat.Misc
             });
         }
 
+        public override string GetDisplayName()
+        {
+            return new[] {"Lonely Wanderer", "Stranger", "Haggard Figure"}.RandomElement();
+        }
+
         private Cell _targetLastCell;
 
         public override void Kill()
@@ -108,16 +113,6 @@ namespace Game.Combat.Misc
                 CombatManager.QueueEnemyToAdd(template, this);
                 size -= template.Value;
             }
-        }
-
-        protected override UIHealthBarController HealthBarController()
-        {
-            return null;
-        }
-
-        protected override UIArmourController ArmourBarController()
-        {
-            return null;
         }
 
         public override void TakeShotDamage(Shot shot)

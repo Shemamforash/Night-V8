@@ -18,7 +18,7 @@ namespace Game.Combat.Enemies.Humans
             SkillAnimationController.Create(transform, "Witch", 1f, () =>
             {
                 Vector2 currentPosition = transform.position;
-                Transform targetTransform = GetTarget().transform;
+                Transform targetTransform = TargetTransform();
                 int max = 1;
                 if (WorldState.Difficulty() > 10) max = 2;
                 if (WorldState.Difficulty() > 20) max = 4;

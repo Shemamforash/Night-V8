@@ -34,7 +34,7 @@ namespace Game.Combat.Misc
 
         [SerializeField] private AudioClip[] _explosionClips;
         private bool _decay, _incendiary, _sicken;
-        private List<ITakeDamageInterface> _targetsToIgnore;
+        private List<CanTakeDamage> _targetsToIgnore;
 
         public void Awake()
         {
@@ -72,7 +72,7 @@ namespace Game.Combat.Misc
             _decay = true;
         }
 
-        public void AddIgnoreTarget(ITakeDamageInterface ignoreTarget)
+        public void AddIgnoreTarget(CanTakeDamage ignoreTarget)
         {
             _targetsToIgnore.Add(ignoreTarget);
         }
@@ -85,7 +85,7 @@ namespace Game.Combat.Misc
             _damage = damage;
             _incendiary = false;
             _decay = false;
-            _targetsToIgnore = new List<ITakeDamageInterface>();
+            _targetsToIgnore = new List<CanTakeDamage>();
         }
 
         private static Explosion GetNewExplosion()
@@ -121,7 +121,7 @@ namespace Game.Combat.Misc
             List<EnemyBehaviour> enemiesHit = new List<EnemyBehaviour>();
             foreach (Collider2D col in colliders)
             {
-                ITakeDamageInterface i = col.GetComponent<ITakeDamageInterface>();
+                CanTakeDamage i = col.GetComponent<CanTakeDamage>();
                 if (i == null) continue;
                 if (_targetsToIgnore.Contains(i))
                 {

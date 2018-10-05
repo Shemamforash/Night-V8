@@ -2,7 +2,7 @@
 using Game.Combat.Misc;
 using UnityEngine;
 
-public class SpermSegmentBehaviour : MonoBehaviour, ITakeDamageInterface {
+public class SpermSegmentBehaviour : CanTakeDamage {
 	private SpermBehaviour _spermParent;
 	private DamageSpriteFlash _spriteFlash;
 
@@ -40,6 +40,11 @@ public class SpermSegmentBehaviour : MonoBehaviour, ITakeDamageInterface {
 	{
 		_spriteFlash.FlashSprite();
 		_spermParent.TakeDamage((int) damage);
+	}
+
+	public override string GetDisplayName()
+	{
+		return "Sperm";
 	}
 
 	public void Burn()

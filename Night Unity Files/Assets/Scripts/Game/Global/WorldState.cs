@@ -28,6 +28,10 @@ namespace Game.Global
         private static CharacterManager _homeInventory;
         private static int _currentLevel = 1;
 
+        private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
+        private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
+        private static bool _needsTransit = true;
+
         private static int MinutesPassed;
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
@@ -117,12 +121,17 @@ namespace Game.Global
             WeatherManager.Start();
             WorldView.Update(Hours);
             CharacterManager.Update();
+            if (!_needsTransit) return;
+            GateTransitController.StartTransit();
+            _needsTransit = false;
         }
 
         public static bool ActivateTemple()
         {
             ++_templesActivated;
-            return _templesActivated == EnvironmentManager.CurrentEnvironment.Temples;
+            bool complete = _templesActivated == EnvironmentManager.CurrentEnvironment.Temples;
+            if (complete) _needsTransit = true;
+            return complete;
         }
 
         private void IncrementDaysSpentHere()
@@ -269,9 +278,6 @@ namespace Game.Global
             if (difficultyMax > 4) difficultyMax = 4;
             return Random.Range(difficultyMin, difficultyMax);
         }
-
-        private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
-        private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
 
         private static void CheckEnemyUnlock()
         {

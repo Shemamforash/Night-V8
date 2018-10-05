@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 {
@@ -6,20 +8,22 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
     {
         private Transform _targetTransform;
         private Vector2 _targetPosition;
-        private EnemyBehaviour _enemy;
         private float _orbitRadiusMin = 3f;
         private float _orbitRadiusMax = 6f;
         private float _changeOrbitTime;
         private float _currentOrbitRadius;
         private bool _oppositeSpin;
+        private Action<Vector2> _forceAction;
+        private float _speed;
 
-        public void Initialise(Transform target, float orbitRadiusMin, float orbitRadiusMax = -1)
+        public void Initialise(Transform target, Action<Vector2> forceAction, float speed, float orbitRadiusMin, float orbitRadiusMax = -1)
         {
+            _forceAction = forceAction;
             _targetTransform = target;
             _orbitRadiusMin = orbitRadiusMin;
             _orbitRadiusMax = orbitRadiusMax < 0 ? _orbitRadiusMin : orbitRadiusMax;
-            _enemy = GetComponent<EnemyBehaviour>();
             _oppositeSpin = Random.Range(0, 2) == 0;
+            _speed = speed;
         }
 
         private float GetOrbitRadius()
@@ -31,19 +35,24 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             return _currentOrbitRadius;
         }
 
+        public void SwitchSpin()
+        {
+            _oppositeSpin = !_oppositeSpin;
+        }
+
         public void Update()
         {
             _targetPosition = _targetTransform == null ? _targetPosition : (Vector2) _targetTransform.position;
             Vector2 currentPosition = transform.position;
             Vector2 dirToTarget = _targetPosition - currentPosition;
             dirToTarget.Normalize();
-            Vector2 tangeant = new Vector2(-dirToTarget.y, dirToTarget.x);
+            Vector2 tangent = new Vector2(-dirToTarget.y, dirToTarget.x);
             Vector2 pos = -dirToTarget * GetOrbitRadius() + _targetPosition;
             float mult = 2;
             if (_oppositeSpin) mult = -mult;
-            pos += tangeant * mult;
-            Vector2 dirToTangeant = (pos - currentPosition).normalized;
-            _enemy.MovementController.AddForce(dirToTangeant * 10f);
+            pos += tangent * mult;
+            Vector2 dirToTangent = (pos - currentPosition).normalized;
+            _forceAction.Invoke(dirToTangent * _speed);
         }
     }
 }

@@ -69,6 +69,11 @@ public class StarFishArmBehaviour : BossSectionHealthController {
 		Detach(false);
 	}
 
+	public override string GetDisplayName()
+	{
+		return "Starfish";
+	}
+
 	public void OnDestroy()
 	{
 		StarfishBehaviour.UnregisterArm(this);

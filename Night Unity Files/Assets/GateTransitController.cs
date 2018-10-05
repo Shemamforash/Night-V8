@@ -14,37 +14,53 @@ public class GateTransitController : MonoBehaviour
     private ParticleSystem _gateParticles;
     private ParticleSystem _streakParticles;
     private SpriteRenderer _glow;
+    private static GateTransitController _instance;
 
     private void Awake()
     {
+        _instance = this;
         _gateParticles = GetComponent<ParticleSystem>();
         _streakParticles = gameObject.FindChildWithName<ParticleSystem>("Streaks");
         _glow = gameObject.FindChildWithName<SpriteRenderer>("Light");
         _glow.color = UiAppearanceController.InvisibleColour;
-        StartCoroutine(Transit());
+    }
+
+    public static void StartTransit()
+    {
+        _instance.StartCoroutine(_instance.Transit());
     }
 
     private IEnumerator Transit()
     {
+        WorldState.Pause();
+        GameObject.Find("Game").SetActive(false);
+        StartCoroutine(GoToNextArea());
+
         _gateParticles.Play();
         _streakParticles.Play();
         float maxTime = _streakParticles.main.duration;
         float currentTime = 0f;
+        Color from = new Color(1f, 1f, 1f, 0f);
+        Color to = Color.white;
         while (currentTime < maxTime)
         {
             if (WorldState.Paused()) yield return null;
             currentTime += Time.deltaTime;
             float normalisedTime = currentTime / maxTime;
-            float alpha = Mathf.PerlinNoise(currentTime, 0);
-            alpha = (alpha - 0.5f) / 5f + normalisedTime;
-            alpha = Mathf.Clamp(alpha, 0f, 1f);
-            _glow.color = new Color(1f, 0.5f, 0.7f, alpha);
+            _glow.color = Color.Lerp(from, to, normalisedTime);
+            _glow.transform.localScale = Vector2.Lerp(Vector2.one * 4, Vector2.one * 16, normalisedTime);
             yield return null;
         }
 
+        _glow.color = UiAppearanceController.InvisibleColour;
+    }
+
+    private IEnumerator GoToNextArea()
+    {
         Image screenFader = GameObject.Find("Screen Fader").GetComponent<Image>();
         screenFader.color = Color.white;
         screenFader.gameObject.GetComponent<CanvasGroup>().alpha = 1;
+
         Region r = new Region();
         r.SetRegionType(RegionType.Tomb);
         CombatManager.SetCurrentRegion(r);

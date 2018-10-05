@@ -30,7 +30,7 @@ namespace Game.Combat.Generation
         private bool _inMelee;
         private float _visibilityRange;
         private static bool _inCombat;
-        private readonly List<ITakeDamageInterface> _enemies = new List<ITakeDamageInterface>();
+        private readonly List<CanTakeDamage> _enemies = new List<CanTakeDamage>();
         private static CombatManager _instance;
         private bool _shotFired;
         private int _enemiesKilled;
@@ -74,7 +74,7 @@ namespace Game.Combat.Generation
             }
         }
 
-        private static CombatManager Instance()
+        public static CombatManager Instance()
         {
             if (_instance == null) _instance = FindObjectOfType<CombatManager>();
             return _instance;
@@ -172,7 +172,6 @@ namespace Game.Combat.Generation
             _currentRegion.Enemies().ForEach(e =>
             {
                 EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
-                AddEnemy(enemyBehaviour);
                 switch (e.Template.EnemyType)
                 {
                     case EnemyType.Grazer:
@@ -283,16 +282,16 @@ namespace Game.Combat.Generation
             InputHandler.SetCurrentListener(null);
         }
 
-        public static List<ITakeDamageInterface> GetCharactersInRange(Vector2 position, float range)
+        public static List<CanTakeDamage> GetCharactersInRange(Vector2 position, float range)
         {
-            List<ITakeDamageInterface> charactersInRange = GetEnemiesInRange(position, range);
+            List<CanTakeDamage> charactersInRange = GetEnemiesInRange(position, range);
             if (Vector2.Distance(PlayerCombat.Instance.transform.position, position) <= range) charactersInRange.Add(PlayerCombat.Instance);
             return charactersInRange;
         }
 
-        public static List<ITakeDamageInterface> GetEnemiesInRange(Vector2 position, float range)
+        public static List<CanTakeDamage> GetEnemiesInRange(Vector2 position, float range)
         {
-            return new List<ITakeDamageInterface>(Instance()._enemies.Where(e => Vector2.Distance(e.GetGameObject().transform.position, position) <= range));
+            return new List<CanTakeDamage>(Instance()._enemies.Where(e => Vector2.Distance(e.transform.position, position) <= range));
         }
 
         public static EnemyBehaviour QueueEnemyToAdd(EnemyTemplate type, CharacterCombat target = null)
@@ -301,7 +300,6 @@ namespace Game.Combat.Generation
             EnemyBehaviour enemyBehaviour = e.GetEnemyBehaviour();
             if (target != null) enemyBehaviour.SetTarget(target);
             (enemyBehaviour as UnarmedBehaviour)?.Alert(true);
-            Instance().AddEnemy(enemyBehaviour);
             return enemyBehaviour;
         }
 
@@ -319,23 +317,23 @@ namespace Game.Combat.Generation
             return enemy;
         }
 
-        public static void Remove(ITakeDamageInterface enemy)
+        public static void Remove(CanTakeDamage enemy)
         {
             Instance()._enemies.Remove(enemy);
         }
 
-        private void AddEnemy(EnemyBehaviour e)
+        public void AddEnemy(CanTakeDamage e)
         {
             _enemies.Add(e);
         }
 
-        public static ITakeDamageInterface NearestEnemy(Vector2 position)
+        public static CanTakeDamage NearestEnemy(Vector2 position)
         {
-            ITakeDamageInterface nearestEnemy = null;
+            CanTakeDamage nearestEnemy = null;
             float nearestDistance = 10000;
             Enemies().ForEach(e =>
             {
-                float distance = Vector2.Distance(e.GetGameObject().transform.position, position);
+                float distance = Vector2.Distance(e.transform.position, position);
                 if (distance >= nearestDistance) return;
                 nearestDistance = distance;
                 nearestEnemy = e;
@@ -343,15 +341,15 @@ namespace Game.Combat.Generation
             return nearestEnemy;
         }
 
-        public static ITakeDamageInterface NearestCharacter(Vector2 position)
+        public static CanTakeDamage NearestCharacter(Vector2 position)
         {
-            ITakeDamageInterface nearestEnemy = NearestEnemy(position);
+            CanTakeDamage nearestEnemy = NearestEnemy(position);
             float playerDistance = Vector2.Distance(position, PlayerCombat.Instance.transform.position);
-            float enemyDistance = Vector2.Distance(position, nearestEnemy.GetGameObject().transform.position);
+            float enemyDistance = Vector2.Distance(position, nearestEnemy.transform.position);
             return playerDistance < enemyDistance ? PlayerCombat.Instance : nearestEnemy;
         }
 
-        public static List<ITakeDamageInterface> Enemies() => Instance()._enemies;
+        public static List<CanTakeDamage> Enemies() => Instance()._enemies;
 
         public static void IncreaseSkillsUsed()
         {

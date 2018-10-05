@@ -32,12 +32,6 @@ namespace Game.Gear.Armour
         public void TakeDamage(float amount)
         {
             DivideDamageOrHeal(amount);
-            GetUiArmourController()?.TakeDamage(this);
-        }
-
-        private UIArmourController GetUiArmourController()
-        {
-            return _character is Player ? PlayerUi.Instance().GetArmourController(_character) : EnemyUi.Instance().GetArmourController(_character);
         }
 
         private void TakePlateDamage(ref Armour plate, float damage)

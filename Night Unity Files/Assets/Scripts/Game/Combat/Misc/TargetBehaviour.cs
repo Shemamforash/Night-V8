@@ -13,7 +13,7 @@ public class TargetBehaviour : MonoBehaviour
         _targetSprite.color = UiAppearanceController.InvisibleColour;
     }
 
-    private void UpdateSpriteColour(bool isLocked, CharacterCombat target)
+    private void UpdateSpriteColour(bool isLocked, CanTakeDamage target)
     {
         Color c;
         if (isLocked) c = Color.white;
@@ -24,10 +24,10 @@ public class TargetBehaviour : MonoBehaviour
     
     public void LateUpdate()
     {
-        CharacterCombat currentTarget = PlayerCombat.Instance.GetTarget();
+        CanTakeDamage currentTarget = PlayerCombat.Instance.GetTarget();
         bool isLocked = PlayerCombat.Instance.IsTargetLocked();
         UpdateSpriteColour(isLocked, currentTarget);
         if (currentTarget == null) return;
-        transform.position = currentTarget.transform.position;
+        transform.position = PlayerCombat.Instance.TargetPosition();
     }
 }

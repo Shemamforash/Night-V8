@@ -52,7 +52,7 @@ namespace Game.Combat.Enemies
             {
                 UnarmedBehaviour enemy = e as UnarmedBehaviour;
                 if (enemy == this || enemy == null) return;
-                float distance = GetTarget().transform.Distance(enemy.transform);
+                float distance = TargetTransform().Distance(enemy.transform);
                 if (distance > LoseTargetRange) return;
                 enemy.Alert(false);
             });
@@ -66,7 +66,7 @@ namespace Game.Combat.Enemies
 
         protected virtual void OnAlert()
         {
-            _targetCell = GetTarget().CurrentCell();
+            _targetCell = ((CharacterCombat) GetTarget()).CurrentCell();
         }
 
         private void GoToTargetCell()
@@ -87,7 +87,7 @@ namespace Game.Combat.Enemies
 
         private void DrawLine()
         {
-            Vector2 to = GetTarget().transform.position;
+            Vector2 to = TargetPosition();
             Vector2 from = transform.position;
             Vector2 dir = (to - from).normalized;
             to = from + dir * MaxDistance;
@@ -99,7 +99,7 @@ namespace Game.Combat.Enemies
         {
             if (!Alerted) return;
             if (GetTarget() == null) SetTarget(PlayerCombat.Instance);
-            Cell newTargetCell = GetTarget().CurrentCell();
+            Cell newTargetCell = ((CharacterCombat) GetTarget()).CurrentCell();
             if (!newTargetCell.Reachable)
             {
                 List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(newTargetCell.Position, 1, 1);

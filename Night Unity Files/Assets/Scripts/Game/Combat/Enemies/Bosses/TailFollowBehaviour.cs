@@ -40,10 +40,15 @@ namespace Game.Combat.Enemies.Bosses
             }
         }
 
+        public TailFollowBehaviour GetChild()
+        {
+            return _child;
+        }
+
         private void SetPosition(Vector2 position)
         {
             _positionList.Enqueue(position);
-            if (_positionList.Count < 10) return;
+            if (_positionList.Count < 8) return;
             Vector3 newPosition = _positionList.Dequeue();
             if (!_isHead) newPosition += _parent.transform.up * _parentDistance;
             else newPosition += _parentRigidbody.transform.up * _parentDistance;

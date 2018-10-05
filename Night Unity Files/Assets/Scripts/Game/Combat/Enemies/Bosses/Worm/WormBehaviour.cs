@@ -9,7 +9,7 @@ using SamsHelper.Libraries;
 using UnityEngine;
 // ReSharper disable All
 
-public class WormBehaviour : Boss, ITakeDamageInterface
+public class WormBehaviour : Boss
 {
     private float _timeToNextWorm, _timeToNextSac;
     private static GameObject _prefab;
@@ -18,7 +18,7 @@ public class WormBehaviour : Boss, ITakeDamageInterface
     private readonly ObjectPool<WormSacBehaviour> _wormSacs = new ObjectPool<WormSacBehaviour>("Sacs", "Prefabs/Combat/Bosses/Worm/Worm Sac");
     private bool _spawning;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _instance = this;
@@ -121,41 +121,11 @@ public class WormBehaviour : Boss, ITakeDamageInterface
         return gameObject;
     }
 
-    public void TakeShotDamage(Shot shot)
-    {
-        TakeDamage(shot.DamageDealt());
-    }
-
-    public void TakeRawDamage(float damage, Vector2 direction)
-    {
-        TakeDamage(damage);
-    }
-
-    public void TakeExplosionDamage(float damage, Vector2 origin, float radius)
-    {
-        TakeDamage(damage);
-    }
-
-    public void Decay()
-    {
-    }
-
-    public void Burn()
-    {
-    }
-
-    public void Sicken(int stacks = 0)
-    {
-    }
-
     public bool IsDead()
     {
         return _healthController.GetCurrentHealth() == 0;
     }
 
-    public void Kill()
-    {
-    }
 
     public void MyUpdate()
     {
@@ -163,17 +133,19 @@ public class WormBehaviour : Boss, ITakeDamageInterface
         TrySpawnSacs();
     }
 
+    public override string GetDisplayName()
+    {
+        return "Worm";
+    }
+
     public static Boss Instance()
     {
         return _instance;
     }
 
-    public static void TakeDamage(float damage)
+    public static void TakeDamage(int damage)
     {
-        if (_instance._healthController.GetCurrentHealth() == 0) return;
-        _instance._healthController.TakeDamage(damage);
-        if (_instance._healthController.GetCurrentHealth() != 0) return;
-        _instance.KillBoss();
+        _instance.TakeRawDamage(damage, Vector2.zero);
     }
 
     public static void ReturnSac(WormSacBehaviour wormSacBehaviour)

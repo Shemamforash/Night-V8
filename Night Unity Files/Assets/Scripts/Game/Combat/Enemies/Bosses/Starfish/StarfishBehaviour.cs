@@ -21,12 +21,17 @@ public class StarfishBehaviour : Boss
         Instantiate(prefab).transform.position = new Vector2(0, 0);
     }
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _instance = this;
     }
-    
+
+    public override string GetDisplayName()
+    {
+        return "Starfish";
+    }
+
     public void Start()
     {
         for (int i = 1; i < 6; ++i)

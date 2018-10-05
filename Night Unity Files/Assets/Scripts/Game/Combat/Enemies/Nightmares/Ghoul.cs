@@ -24,7 +24,7 @@ namespace Game.Combat.Enemies.Nightmares
         {
             base.MyUpdate();
             if (DistanceToTarget() > _distanceToTouch) return;
-            SickenBehaviour.Create(GetTarget().transform.position, GetTarget());
+            SickenBehaviour.Create(TargetPosition(), GetTarget());
             LeafBehaviour.CreateLeaves(transform.position);
             Kill();
         }

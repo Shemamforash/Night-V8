@@ -10,16 +10,16 @@ namespace Game.Combat.Misc
     {
         private static readonly ObjectPool<SickenBehaviour> _sicknessPool = new ObjectPool<SickenBehaviour>("Fire Areas", "Prefabs/Combat/Visuals/Sicken Effect");
         private ParticleSystem _particles;
-        private List<ITakeDamageInterface> _ignoreTargets;
+        private List<CanTakeDamage> _ignoreTargets;
 
         public void Awake()
         {
             _particles = GetComponent<ParticleSystem>();
         }
 
-        public static void Create(Vector2 position, List<ITakeDamageInterface> ignoreTargets, float radius = 1f)
+        public static void Create(Vector2 position, List<CanTakeDamage> ignoreTargets, float radius = 1f)
         {
-            List<ITakeDamageInterface> characters = CombatManager.GetCharactersInRange(position, radius);
+            List<CanTakeDamage> characters = CombatManager.GetCharactersInRange(position, radius);
             characters.ForEach(c =>
             {
                 if (ignoreTargets.Contains(c)) return;
@@ -30,7 +30,7 @@ namespace Game.Combat.Misc
             });
         }
 
-        public static void Create(Vector2 position, ITakeDamageInterface target)
+        public static void Create(Vector2 position, CanTakeDamage target)
         {
             SickenBehaviour sickness = _sicknessPool.Create();
             sickness.StartCoroutine(sickness.Sicken(position));

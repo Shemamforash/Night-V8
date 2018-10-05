@@ -54,7 +54,7 @@ namespace Game.Combat.Player
             return (EnemyBehaviour) PlayerCombat.Instance.GetTarget();
         }
 
-        private static void KnockbackSingleTarget(Vector2 position, ITakeDamageInterface c, float force)
+        private static void KnockbackSingleTarget(Vector2 position, CanTakeDamage c, float force)
         {
             CharacterCombat character = c as CharacterCombat;
             if (character == null) return;
@@ -65,10 +65,10 @@ namespace Game.Combat.Player
             character.MovementController.KnockBack(direction, scaledForce);
         }
 
-        protected List<ITakeDamageInterface> KnockbackInRange(float range, float force)
+        protected List<CanTakeDamage> KnockbackInRange(float range, float force)
         {
             Vector2 position = PlayerCombat.Instance.transform.position;
-            List<ITakeDamageInterface> enemiesInRange = CombatManager.GetEnemiesInRange(position, range);
+            List<CanTakeDamage> enemiesInRange = CombatManager.GetEnemiesInRange(position, range);
             enemiesInRange.ForEach(e => { KnockbackSingleTarget(position, e, force); });
             return enemiesInRange;
         }

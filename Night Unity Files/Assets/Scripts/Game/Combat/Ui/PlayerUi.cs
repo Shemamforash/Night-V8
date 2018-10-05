@@ -27,14 +27,13 @@ namespace Game.Combat.Ui
 
         public void Update()
         {
-            List<ITakeDamageInterface> chars = CombatManager.GetEnemiesInRange(PlayerCombat.Instance.transform.position, 5f);
+            List<CanTakeDamage> chars = CombatManager.GetEnemiesInRange(PlayerCombat.Instance.transform.position, 5f);
             Vector2 playerDir = PlayerCombat.Instance.transform.up;
             float nearestAngle = 360;
-            ITakeDamageInterface nearestCharacter = null;
+            CanTakeDamage nearestCharacter = null;
             chars.ForEach(c =>
             {
-                GameObject enemy = c.GetGameObject();
-                Vector2 enemyDir = enemy.transform.position - PlayerCombat.Instance.transform.position;
+                Vector2 enemyDir = c.transform.position - PlayerCombat.Instance.transform.position;
                 float enemyAngle = Vector2.Angle(playerDir, enemyDir);
                 if (enemyAngle > 10) return;
                 if (enemyAngle > nearestAngle) return;
@@ -42,7 +41,17 @@ namespace Game.Combat.Ui
                 nearestCharacter = c;
             });
 
-            PlayerCombat.Instance.SetTarget(nearestCharacter as EnemyBehaviour);
+            PlayerCombat.Instance.SetTarget(nearestCharacter);
         }
+
+        protected override void LateUpdate()
+        {
+            Character = PlayerCombat.Instance;
+            base.LateUpdate();
+            if (Character == null) return;
+            GetHealthController().SetValue(PlayerCombat.Instance.HealthController.GetHealth());
+            GetArmourController().TakeDamage(PlayerCombat.Instance.ArmourController);
+        }
+
     }
 }

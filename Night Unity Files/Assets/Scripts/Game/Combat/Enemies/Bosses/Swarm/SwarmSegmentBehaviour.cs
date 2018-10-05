@@ -16,7 +16,7 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
     private bool _seeking;
     private float _seekLifeTime = 5f;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -27,6 +27,11 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
         _rOffset = Random.Range(0f, 360f);
         _force = Random.Range(0.7f, 1.3f);
         _followSpeed = Random.Range(5f, 10f);
+    }
+
+    public override string GetDisplayName()
+    {
+        return "Swarm";
     }
 
     public override void Start()

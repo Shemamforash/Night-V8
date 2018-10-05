@@ -11,7 +11,7 @@ namespace Game.Combat.Misc
     {
         private ParticleSystem _particles;
         private static readonly ObjectPool<DecayBehaviour> _decayPool = new ObjectPool<DecayBehaviour>("Decay Areas", "Prefabs/Combat/Effects/Decay Area");
-        private List<ITakeDamageInterface> _ignoreTargets;
+        private List<CanTakeDamage> _ignoreTargets;
         private float _radius;
         private CircleCollider2D _collider;
 
@@ -31,12 +31,12 @@ namespace Game.Combat.Misc
         private void Initialise(Vector3 position, float radius)
         {
             _radius = radius;
-            _ignoreTargets = new List<ITakeDamageInterface>();
+            _ignoreTargets = new List<CanTakeDamage>();
             _collider.radius = _radius;
             StartCoroutine(EmitAndDie(position));
         }
 
-        public void AddIgnoreTarget(ITakeDamageInterface _ignoreTarget)
+        public void AddIgnoreTarget(CanTakeDamage _ignoreTarget)
         {
             _ignoreTargets.Add(_ignoreTarget);
         }
@@ -45,7 +45,7 @@ namespace Game.Combat.Misc
         {
             CharacterCombat character = other.GetComponent<CharacterCombat>();
             if (character == null) return;
-            if (_ignoreTargets.Contains(other.GetComponent<ITakeDamageInterface>())) return;
+            if (_ignoreTargets.Contains(other.GetComponent<CanTakeDamage>())) return;
             character.Decay();
         }
 
@@ -73,7 +73,7 @@ namespace Game.Combat.Misc
             _decayPool.Dispose(this);
         }
 
-        public void AddIgnoreTargets(List<ITakeDamageInterface> targetsToIgnore)
+        public void AddIgnoreTargets(List<CanTakeDamage> targetsToIgnore)
         {
             _ignoreTargets.AddRange(targetsToIgnore);
         }

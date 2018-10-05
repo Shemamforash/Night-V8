@@ -9,30 +9,16 @@ namespace Game.Combat.Misc
     public class HealthController
     {
         private readonly Number _healthRemaining = new Number();
-        private ITakeDamageInterface _healthyThing;
+        private CanTakeDamage _healthyThing;
         private event Action<float> OnTakeDamage;
         private Action<float> OnHeal;
         private Action OnKill;
 
-        private UIHealthBarController GetHealthBarController()
-        {
-            CharacterCombat c = _healthyThing as CharacterCombat;
-            if (c == null) return null;
-            if (_healthyThing is PlayerCombat) return PlayerUi.Instance().GetHealthController(c);
-            return EnemyUi.Instance().GetHealthController(c);
-        }
-
-        public void SetInitialHealth(int initialHealth, ITakeDamageInterface character, int maxHealth = -1)
+        public void SetInitialHealth(int initialHealth, CanTakeDamage character, int maxHealth = -1)
         {
             _healthyThing = character;
             _healthRemaining.Max = maxHealth == -1 ? initialHealth : maxHealth;
             _healthRemaining.SetCurrentValue(initialHealth);
-            UpdateHealth();
-        }
-
-        public void UpdateHealth()
-        {
-            GetHealthBarController()?.SetValue(_healthRemaining);
         }
 
         public void TakeDamage(float amount)
@@ -42,13 +28,9 @@ namespace Game.Combat.Misc
             if (_healthRemaining.ReachedMin()) return;
             _healthRemaining.Decrement(amount);
             OnTakeDamage?.Invoke(amount);
-            if (_healthRemaining.ReachedMin())
-            {
-                OnKill?.Invoke();
-                _healthyThing?.Kill();
-            }
-
-            UpdateHealth();
+            if (!_healthRemaining.ReachedMin()) return;
+            OnKill?.Invoke();
+            _healthyThing?.Kill();
         }
 
         public void Heal(int amount)
@@ -56,7 +38,6 @@ namespace Game.Combat.Misc
             Assert.IsTrue(amount >= 0);
             _healthRemaining.Increment(amount);
             OnHeal?.Invoke(amount);
-            UpdateHealth();
         }
 
         public void AddOnTakeDamage(Action<float> a)
@@ -87,6 +68,11 @@ namespace Game.Combat.Misc
         public float GetMaxHealth()
         {
             return _healthRemaining.Max;
+        }
+
+        public Number GetHealth()
+        {
+            return _healthRemaining;
         }
     }
 }

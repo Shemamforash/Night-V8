@@ -77,7 +77,7 @@ namespace Game.Combat.Generation.Shrines
                     AddComponentOnce<ErraticDash>(boss);
                     break;
                 case 1:
-                    AddComponentOnce<Orbit>(boss).Initialise(PlayerCombat.Instance.transform, 3, 5);
+                    AddComponentOnce<Orbit>(boss).Initialise(PlayerCombat.Instance.transform, v => boss.MovementController.AddForce(v), 10, 3, 5);
                     break;
                 case 2:
                     AddComponentOnce<Teleport>(boss).Initialise(5, 2);
