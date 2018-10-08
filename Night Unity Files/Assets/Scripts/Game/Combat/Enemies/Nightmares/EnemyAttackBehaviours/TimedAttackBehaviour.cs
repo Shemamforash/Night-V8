@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Combat.Generation;
+using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 {
@@ -22,7 +23,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         
         public virtual void Update()
         {
-            if (Paused) return;
+            if (Paused || !CombatManager.IsCombatActive()) return;
             _currentTimer += Time.deltaTime;
             if (_currentTimer < _targetTime) return;
             Attack();

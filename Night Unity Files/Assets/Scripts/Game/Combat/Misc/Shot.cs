@@ -317,7 +317,6 @@ namespace Game.Combat.Misc
             switch (condition)
             {
                 case 0:
-                    Debug.Log("fart");
                     DecayBehaviour.Create(transform.position, radius);
                     break;
                 case 1:

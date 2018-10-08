@@ -108,7 +108,7 @@ namespace Game.Gear.Armour
             return new Armour(quality, armourType);
         }
 
-        private static Armour Create(ItemQuality quality, ArmourType armourType)
+        public static Armour Create(ItemQuality quality, ArmourType armourType)
         {
             return new Armour(quality, armourType);
         }

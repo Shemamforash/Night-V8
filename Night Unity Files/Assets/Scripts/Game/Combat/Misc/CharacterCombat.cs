@@ -67,8 +67,7 @@ namespace Game.Combat.Misc
             float distance = direction.magnitude;
             direction.Normalize();
             distance = radius - distance;
-            float force = damage / 2f * distance;
-            Debug.Log(force + " " + damage + " " + distance);
+            float force = damage * distance;
             MovementController.KnockBack(direction, force);
         }
 

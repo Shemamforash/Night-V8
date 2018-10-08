@@ -8,8 +8,8 @@ public class SpermSegmentBehaviour : CanTakeDamage {
 
 	public void Awake()
 	{
+		base.Awake();
 		_spriteFlash = GetComponent<DamageSpriteFlash>();
-		CombatManager.Enemies().Add(this);
 	}
 
 	public GameObject GetGameObject()

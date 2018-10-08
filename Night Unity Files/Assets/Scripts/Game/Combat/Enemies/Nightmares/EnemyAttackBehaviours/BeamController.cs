@@ -10,9 +10,9 @@ public class BeamController : MonoBehaviour
     private static readonly ObjectPool<BeamController> _beamPool = new ObjectPool<BeamController>("Beams", "Prefabs/Combat/Enemies/Beam");
     private static GameObject _prefab;
     private LineRenderer _glowLine, _beamLine, _leadLine;
-    private const float LeadDurationMax = 0.5f;
-    private const float BeamDurationMax = 0.5f;
-    private ParticleSystem _particleBurst;
+    private const float LeadDurationMax = 2f;
+    private const float BeamDurationMax = 1f;
+    private ParticleSystem _burst, _charge, _energy, _spray;
     private Transform _origin;
     private Vector3 _targetPosition;
     private const int BeamDamage = 25;
@@ -26,7 +26,10 @@ public class BeamController : MonoBehaviour
 
     public void Awake()
     {
-        _particleBurst = gameObject.FindChildWithName<ParticleSystem>("Burst");
+        _burst = gameObject.FindChildWithName<ParticleSystem>("Burst");
+        _charge = gameObject.FindChildWithName<ParticleSystem>("Charge");
+        _energy = gameObject.FindChildWithName<ParticleSystem>("Energy");
+        _spray = gameObject.FindChildWithName<ParticleSystem>("Spray");
         _glowLine = gameObject.FindChildWithName<LineRenderer>("Glow");
         _beamLine = gameObject.FindChildWithName<LineRenderer>("Beam");
         _leadLine = gameObject.FindChildWithName<LineRenderer>("Lead");
@@ -36,7 +39,7 @@ public class BeamController : MonoBehaviour
     {
         if (_origin == null) return;
         transform.position = _origin.position;
-        _targetPosition = transform.position + _origin.up * 20f;
+        _targetPosition = transform.position + _origin.up * 50f;
         Vector3[] positions = {transform.position, _targetPosition};
         _glowLine.SetPositions(positions);
         _beamLine.SetPositions(positions);
@@ -75,6 +78,8 @@ public class BeamController : MonoBehaviour
 
     private void ShowLine()
     {
+        _charge.Play();
+        _energy.Play();
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(SetLeadLineActive);
         Color startColor = UiAppearanceController.InvisibleColour;
@@ -83,10 +88,14 @@ public class BeamController : MonoBehaviour
         sequence.AppendCallback(() =>
         {
             SetBeamLineActive();
-            _particleBurst.Clear();
-            _particleBurst.Play();
+            _burst.Clear();
+            _spray.Clear();
+            _burst.Play();
+            _spray.Play();
             DoBeamDamage();
         });
+
+        sequence.AppendInterval(0.5f);
         startColor = Color.white;
         endColor = UiAppearanceController.InvisibleColour;
         sequence.Append(_beamLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), BeamDurationMax).SetEase(Ease.OutExpo));

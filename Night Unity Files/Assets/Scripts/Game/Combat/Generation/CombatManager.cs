@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game.Characters;
 using Game.Characters.CharacterActions;
@@ -11,6 +12,7 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Global;
+using QuickEngine.Extensions;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -44,6 +46,24 @@ namespace Game.Combat.Generation
         private static bool _paused;
         private Image _regionUnderline;
 
+        public static List<EnemyTemplate> GenerateEnemies(int size, List<EnemyTemplate> allowedTypes)
+        {
+            List<EnemyTemplate> templates = new List<EnemyTemplate>();
+            while (size > 0)
+            {
+                allowedTypes.Shuffle();
+                foreach (EnemyTemplate e in allowedTypes)
+                {
+                    if (e.Value > size) continue;
+                    templates.Add(e);
+                    size -= size;
+                    break;
+                }
+            }
+
+            return templates;
+        }
+        
         public static bool AllEnemiesDead() => Instance()._enemies.Count == 0;
 
         public static float VisibilityRange() => Instance()._visibilityRange;
@@ -58,8 +78,36 @@ namespace Game.Combat.Generation
             GameObject regionNameObject = GameObject.Find("Screen Fader");
             _regionNameText = regionNameObject.FindChildWithName<TextMeshProUGUI>("Text");
             _regionUnderline = regionNameObject.FindChildWithName<Image>("Underline");
-            _regionNameText.text = _currentRegion.Name;
+            _regionNameText.text = GetCurrentRegionName();
             _paused = false;
+        }
+
+        private string GetCurrentRegionName()
+        {
+            string regionName = _currentRegion.Name;
+            if (_currentRegion.GetRegionType() == RegionType.Tomb)
+            {
+                switch (EnvironmentManager.CurrentEnvironment.EnvironmentType)
+                {
+                    case EnvironmentType.Desert:
+                        regionName = "Eo's Tomb";
+                        break;
+                    case EnvironmentType.Mountains:
+                        regionName = "The Garden of Hythinea";
+                        break;
+                    case EnvironmentType.Ruins:
+                        regionName = "Rhallos' Armory";
+                        break;
+                    case EnvironmentType.Sea:
+                        regionName = "Chambers of Ahna";
+                        break;
+                    case EnvironmentType.Wasteland:
+                        regionName = "The Throne of Corypthos";
+                        break;
+                }
+            }
+
+            return regionName;
         }
 
         public void Update()

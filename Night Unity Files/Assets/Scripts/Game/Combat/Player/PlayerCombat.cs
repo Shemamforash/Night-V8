@@ -581,14 +581,14 @@ namespace Game.Combat.Player
             _weaponBehaviour.ConsumeAmmo(amount);
         }
 
-        public void StartMark(EnemyBehaviour target)
+        public void StartMark(CanTakeDamage target)
         {
             target.Mark();
             DamageDealtSinceMarkStarted = 0;
             _damageTakenSinceMarkStarted = false;
         }
 
-        public void EndMark(EnemyBehaviour target)
+        public void EndMark(CanTakeDamage target)
         {
             if (_damageTakenSinceMarkStarted) return;
             target.HealthController.TakeDamage(DamageDealtSinceMarkStarted);

@@ -216,7 +216,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1924024157971058}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.917935, y: -6.3183866, z: 0.125957}
+  m_LocalPosition: {x: 0.7239492, y: -2.524682, z: 0.125957}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4587476493550782}
@@ -316,7 +316,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 10
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -417,11 +417,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77425b0830fc4686a6f7d1160a878c50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explosionClips:
-  - {fileID: 8300000, guid: afd0f970ca7a1af4fb8669f8077df958, type: 3}
-  - {fileID: 8300000, guid: 05239a0b53c77a34480fd39dc172279d, type: 3}
-  - {fileID: 8300000, guid: 79a5aaa79c486f845ab0e9f86a026a1a, type: 3}
-  - {fileID: 8300000, guid: c711db96f3b6ece41804be4d9b4ae35f, type: 3}
 --- !u!198 &198828231033353156
 ParticleSystem:
   m_ObjectHideFlags: 1

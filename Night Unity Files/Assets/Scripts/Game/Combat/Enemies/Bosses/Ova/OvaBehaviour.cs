@@ -17,8 +17,7 @@ namespace Game.Combat.Enemies.Bosses
             base.Awake();
             _spriteFlash = GetComponent<DamageSpriteFlash>();
             _healthController = new HealthController();
-            _healthController.SetInitialHealth(1000, this);
-            CombatManager.Enemies().Add(this);
+//            _healthController.SetInitialHealth(1000, this);
         }
 
         public static void Create()
@@ -62,9 +61,9 @@ namespace Game.Combat.Enemies.Bosses
             SpermBehaviour.Create();
         }
 
-        public override void MyUpdate()
+        public void MyUpdate()
         {
-            base.MyUpdate();
+//            base.MyUpdate();
             if (SpawnTimer > 0f)
             {
                 SpawnTimer -= Time.deltaTime;
@@ -85,7 +84,7 @@ namespace Game.Combat.Enemies.Bosses
             for (int i = 0; i < Random.Range(5, 11); ++i) CombatManager.SpawnEnemy(EnemyType.Ghoul, Vector2.zero);
         }
 
-        public override string GetDisplayName()
+        public string GetDisplayName()
         {
             return "Ova";
         }

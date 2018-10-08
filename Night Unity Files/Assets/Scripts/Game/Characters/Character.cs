@@ -48,8 +48,8 @@ namespace Game.Characters
             int armourPlate2Id = armourNode2?.IntFromNode("ArmourPlate2") ?? -1;
             EquipWeapon((Weapon) CharacterInventory.FindItem(weaponId));
             EquipAccessory((Accessory) CharacterInventory.FindItem(accessoryId));
-            ArmourController.SetChestArmour((Armour) CharacterInventory.FindItem(armourPlate1Id));
-            ArmourController.SetHeadArmour((Armour) CharacterInventory.FindItem(armourPlate2Id));
+            ArmourController.SetArmour((Armour) CharacterInventory.FindItem(armourPlate1Id));
+            ArmourController.SetArmour((Armour) CharacterInventory.FindItem(armourPlate2Id));
         }
 
         public virtual void EquipWeapon(Weapon weapon)

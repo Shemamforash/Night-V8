@@ -6,14 +6,13 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Bosses
 {
-    public abstract class Boss : CanTakeDamage
+    public abstract class Boss : MonoBehaviour
     {
         protected readonly List<BossSectionHealthController> Sections = new List<BossSectionHealthController>();
         protected Rigidbody2D RigidBody;
 
-        protected override void Awake()
+        protected virtual void Awake()
         {
-            base.Awake();
             RigidBody = GetComponent<Rigidbody2D>();
         }
 
@@ -28,9 +27,9 @@ namespace Game.Combat.Enemies.Bosses
             if (Sections.Count == 0) Kill();
         }
 
-        public override void Kill()
+        public void Kill()
         {
-            base.Kill();
+            Destroy(gameObject);
             CombatManager.ExitCombat(false);
             WorldState.TravelToNextEnvironment();
         }

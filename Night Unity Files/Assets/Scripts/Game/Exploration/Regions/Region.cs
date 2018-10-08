@@ -287,23 +287,8 @@ namespace Game.Exploration.Regions
         private void GenerateEncounter(List<EnemyTemplate> allowedTypes)
         {
             if (!_canHaveEnemies) return;
-            int daysSpent = WorldState.GetDaysSpentHere();
-            int difficulty = WorldState.Difficulty();
-
-            int size = daysSpent + WorldState.CurrentLevel() * 5;
-
-            if (difficulty >= 20)
-            {
-                difficulty -= 20;
-                size += Mathf.FloorToInt(difficulty / 5f);
-            }
-
-            while (size > 0)
-            {
-                EnemyTemplate template = allowedTypes.RandomElement();
-                AddEnemy(template);
-                size -= template.Value;
-            }
+            List<EnemyTemplate> templates = CombatManager.GenerateEnemies(WorldState.Difficulty(), allowedTypes);
+            templates.ForEach(template => AddEnemy(template));
         }
 
         public List<Enemy> Enemies() => _enemies;

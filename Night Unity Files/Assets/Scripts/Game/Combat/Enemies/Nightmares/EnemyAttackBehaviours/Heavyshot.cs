@@ -17,7 +17,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             _speed = speed;
             _offset = offset;
         }
-        
+
         public override void Awake()
         {
             base.Awake();
@@ -30,6 +30,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         protected override void Attack()
         {
+            Debug.Log("attacking");
             if (!_firing) return;
             StartCoroutine(FireMaelstromShot());
         }

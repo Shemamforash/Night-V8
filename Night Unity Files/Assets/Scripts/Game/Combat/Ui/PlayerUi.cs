@@ -10,21 +10,6 @@ namespace Game.Combat.Ui
 {
     public class PlayerUi : CharacterUi
     {
-        private static PlayerUi _instance;
-
-        public override void Awake()
-        {
-            base.Awake();
-            _instance = this;
-        }
-
-        public static PlayerUi Instance()
-        {
-            if (_instance != null) return _instance;
-            _instance = FindObjectOfType<PlayerUi>();
-            return _instance;
-        }
-
         public void Update()
         {
             List<CanTakeDamage> chars = CombatManager.GetEnemiesInRange(PlayerCombat.Instance.transform.position, 5f);
@@ -48,10 +33,6 @@ namespace Game.Combat.Ui
         {
             Character = PlayerCombat.Instance;
             base.LateUpdate();
-            if (Character == null) return;
-            GetHealthController().SetValue(PlayerCombat.Instance.HealthController.GetHealth());
-            GetArmourController().TakeDamage(PlayerCombat.Instance.ArmourController);
         }
-
     }
 }

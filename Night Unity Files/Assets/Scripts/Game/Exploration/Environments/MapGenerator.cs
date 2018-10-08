@@ -404,7 +404,7 @@ namespace Game.Exploration.Environment
             Graph map = CreateMinimumSpanningTree();
             try
             {
-                SetMaxNodeDepth(4 + WorldState.Difficulty() * 2, map);
+                SetMaxNodeDepth(4 + WorldState.CurrentLevel() * 2, map);
             }
             catch (Exception)
             {

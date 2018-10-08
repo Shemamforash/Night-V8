@@ -24,30 +24,38 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             _prefabLocation = prefabLocation;
         }
 
+        private void CreatePoolParent()
+        {
+            if (_poolParent != null || _poolName == null) return;
+            _poolParent = new GameObject(_poolName).transform;
+            _poolParent.SetParent(GameObject.Find("Dynamic").transform);
+            _poolParent.localPosition = Vector3.zero;
+        }
+
         public T Create()
         {
-            if (_poolParent == null && _poolName != null)
-            {
-                _poolParent = new GameObject(_poolName).transform;
-                _poolParent.SetParent(GameObject.Find("Dynamic").transform);
-                _poolParent.localPosition = Vector3.zero;
-            }
+            CreatePoolParent();
+            return _pool.Count == 0 ? CreateNew() : Retrieve();
+        }
 
-            T newThing;
-            if (_pool.Count == 0)
-            {
-                if (_prefab == null) _prefab = Resources.Load<GameObject>(_prefabLocation);
-                GameObject newGameObject = Object.Instantiate(_prefab);
-                newThing = newGameObject.GetComponent<T>();
-                newThing.transform.SetParent(_poolParent, false);
-                _active.Add(newThing);
-                return newThing;
-            }
-
-            newThing = _pool.RemoveLast();
-            if (newThing == null) return Create();
+        private T Retrieve()
+        {
+            T newThing = _pool.RemoveLast();
+            if (newThing == null) return CreateNew();
+            newThing.transform.position = Vector3.zero;
             _active.Add(newThing);
             newThing.gameObject.SetActive(true);
+            return newThing;
+        }
+
+        private T CreateNew()
+        {
+            if (_prefab == null) _prefab = Resources.Load<GameObject>(_prefabLocation);
+            GameObject newGameObject = Object.Instantiate(_prefab);
+            T newThing = newGameObject.GetComponent<T>();
+            newThing.transform.SetParent(_poolParent, false);
+            newThing.transform.position = Vector3.zero;
+            _active.Add(newThing);
             return newThing;
         }
 

@@ -35,7 +35,7 @@ public class SwarmBehaviour : Boss
         _contractTimer = Random.Range(8f, 12f);
     }
 
-    public override string GetDisplayName()
+    public string GetDisplayName()
     {
         return "Swarm";
     }

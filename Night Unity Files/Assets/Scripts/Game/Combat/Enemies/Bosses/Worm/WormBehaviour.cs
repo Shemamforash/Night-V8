@@ -22,7 +22,7 @@ public class WormBehaviour : Boss
     {
         base.Awake();
         _instance = this;
-        _healthController.SetInitialHealth(1000, this);
+//        _healthController.SetInitialHealth(1000, this);
     }
 
     public static void Create()
@@ -133,7 +133,7 @@ public class WormBehaviour : Boss
         TrySpawnSacs();
     }
 
-    public override string GetDisplayName()
+    public string GetDisplayName()
     {
         return "Worm";
     }
@@ -145,7 +145,7 @@ public class WormBehaviour : Boss
 
     public static void TakeDamage(int damage)
     {
-        _instance.TakeRawDamage(damage, Vector2.zero);
+//        _instance.TakeRawDamage(damage, Vector2.zero);
     }
 
     public static void ReturnSac(WormSacBehaviour wormSacBehaviour)

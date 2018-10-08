@@ -1,81 +1,92 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Game.Characters;
 using Game.Combat.Enemies.Bosses;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
+using Game.Combat.Generation;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
 
 public class SerpentBehaviour : Boss
 {
-    private const float Speed = 3f;
-    private float _findNewTargetTime;
-    private Vector3 _targetPosition;
     private static GameObject _serpentPrefab;
     private static SerpentBehaviour _instance;
-    private float _beamTimer;
-    private float _distanceToPlayer;
-    private bool _firing;
-    private Orbit _orbit;
-    private bool _canPush;
-    private bool _dropBombs;
+    private static float Speed = 3f;
+
     private TailFollowBehaviour _head;
+    private SerpentBombAttack _bombAttack;
+
+    private Vector3 _targetPosition;
+    private bool _firing, _pushing, _gettingInPosition, _canPush;
+    private float _pushTimer, _beamTimer;
+
 
     protected override void Awake()
     {
         base.Awake();
-        _orbit = gameObject.AddComponent<Orbit>();
-        _orbit.Initialise(PlayerCombat.Instance.transform, v => RigidBody.AddForce(v), Speed, 4, 6);
+        _bombAttack = gameObject.AddComponent<SerpentBombAttack>();
         _instance = this;
         _head = gameObject.FindChildWithName<TailFollowBehaviour>("Wing Segment (0)");
+        GetNewTargetPosition();
     }
 
-    public override string GetDisplayName()
+    private IEnumerator DoBeamAttack()
     {
-        return "Serpent";
-    }
-
-    private void DoBeamAttack()
-    {
-        if (_firing) return;
         _firing = true;
-        SkillAnimationController.Create(transform, "Beam", 1f, () =>
+        float time = 1f;
+        while (time > 0f)
         {
-            BeamController.Create(transform);
-            ResetBeamTimer();
-        });
-    }
+            if (!CombatManager.IsCombatActive()) yield return null;
+            time -= Time.deltaTime;
+            yield return null;
+        }
 
-    private void ResetBeamTimer()
-    {
+        BeamController.Create(transform);
+        time = 3f;
+        while (time > 0f)
+        {
+            if (!CombatManager.IsCombatActive()) yield return null;
+            time -= Time.deltaTime;
+            yield return null;
+        }
+
         _beamTimer = Random.Range(5, 10);
         _firing = false;
+        GetNewTargetPosition();
     }
 
     private void UpdateBeamTimer()
     {
-        CheckToFireBeam();
-        if (_beamTimer < 0) return;
+        if (_firing) return;
+        if (_beamTimer < 0)
+        {
+            GetInPosition();
+            return;
+        }
+
         _beamTimer -= Time.deltaTime;
+    }
+
+    private void GetInPosition()
+    {
+        if (!_gettingInPosition)
+        {
+            _targetPosition = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized * 10;
+            _targetPosition += PlayerCombat.Instance.transform.position;
+            Speed = 5;
+            _gettingInPosition = true;
+        }
+
+        if (Vector2.Distance(transform.position, _targetPosition) > 1f) return;
+        Speed = 3;
+        _gettingInPosition = false;
+        StartCoroutine(DoBeamAttack());
     }
 
     public List<BossSectionHealthController> GetSections()
     {
         return Sections;
-    }
-
-    private void CheckToFireBeam()
-    {
-        if (_beamTimer > 0 || _firing) return;
-        if (_distanceToPlayer < 5f)
-        {
-            DoBeamAttack();
-        }
-        else if (Vector2.Distance(_targetPosition, PlayerCombat.Instance.transform.position) < 5f)
-        {
-            Vector3 dirVector = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1);
-            _targetPosition = PlayerCombat.Instance.transform.position + dirVector * 7;
-        }
     }
 
     public static SerpentBehaviour Instance()
@@ -98,24 +109,23 @@ public class SerpentBehaviour : Boss
         if (prevWingCount > 30 && currentWingCount <= 30)
         {
             GameObject tailEnd = transform.FindChildWithName("Tail End").gameObject;
-            tailEnd.AddComponent<LeaveFireTrail>().Initialise(10);
+            tailEnd.AddComponent<LeaveFireTrail>().Initialise(20);
         }
-        else if (prevWingCount > 20 && currentWingCount <= 20)
-            _canPush = true;
         else if (prevWingCount > 10 && currentWingCount <= 10)
-            gameObject.AddComponent<SerpentBombAttack>();
+            _canPush = true;
+
+        if (currentWingCount > 20) return;
+        float timeToBomb = currentWingCount / 40f + 0.25f;
+        _bombAttack.SetMinTimeToBomb(timeToBomb);
     }
 
     public void Update()
     {
-//        UpdateDistanceToPlayer();
-//        UpdateBeamTimer();
-//        UpdateTargetPosition();
+        if (!CombatManager.IsCombatActive()) return;
+        UpdateBeamTimer();
+        UpdateTargetPosition();
         UpdatePush();
     }
-
-    private float _pushTimer;
-    private bool _pushing;
 
     private void UpdatePush()
     {
@@ -133,8 +143,8 @@ public class SerpentBehaviour : Boss
         {
             float angleA = AdvancedMaths.AngleFromUp(Vector2.zero, current.transform.right);
             float angleB = angleA + 180;
-            PushController.Create(current.transform.position, angleA);
-            PushController.Create(current.transform.position, angleB);
+            PushController.Create(current.transform.position, angleA, 90);
+            PushController.Create(current.transform.position, angleB, 90);
             yield return new WaitForSeconds(0.05f);
             current = current.GetChild();
         }
@@ -143,14 +153,21 @@ public class SerpentBehaviour : Boss
         _pushTimer = Random.Range(5, 10);
     }
 
-    private void UpdateTargetPosition()
+    private void GetNewTargetPosition()
     {
-        if (!_firing) return;
-        _targetPosition = PlayerCombat.Instance.transform.position;
+        Vector2 dir = AdvancedMaths.RandomDirection();
+        _targetPosition = dir * Random.Range(5f, 7.5f);
     }
 
-    private void UpdateDistanceToPlayer()
+    private void UpdateTargetPosition()
     {
-        _distanceToPlayer = Vector2.Distance(transform.position, PlayerCombat.Instance.transform.position);
+        if (!_gettingInPosition)
+        {
+            if (_firing) _targetPosition = PlayerCombat.Instance.transform.position;
+            else if (Vector2.Distance(transform.position, _targetPosition) < 1f) GetNewTargetPosition();
+        }
+
+        Vector2 direction = _targetPosition.Direction(transform.position);
+        RigidBody.AddForce(direction * Speed);
     }
 }

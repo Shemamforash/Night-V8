@@ -25,7 +25,6 @@ namespace Game.Combat.Enemies
             PushAwayFromNeighbors();
             MoveBehaviour.MyUpdate();
             UpdateRotation();
-            UpdateMarkTime();
             if (MoveBehaviour.Moving()) return;
             CurrentAction?.Invoke();
         }
@@ -34,17 +33,6 @@ namespace Game.Combat.Enemies
         {
             return Enemy.Name;
         }
-
-        private void UpdateMarkTime()
-        {
-            if (!_marked) return;
-            if (_markTime < 0f) return;
-            _markTime -= Time.deltaTime;
-            if (_markTime < 0f) PlayerCombat.Instance.EndMark(this);
-        }
-
-        private float _markTime;
-        private bool _marked;
 
         private void PushAwayFromNeighbors()
         {
@@ -150,12 +138,6 @@ namespace Game.Combat.Enemies
             CombatManager.Remove(this);
             Enemy.Kill();
             Destroy(gameObject);
-        }
-
-        public void Mark()
-        {
-            _marked = true;
-            _markTime = 5f;
         }
     }
 }

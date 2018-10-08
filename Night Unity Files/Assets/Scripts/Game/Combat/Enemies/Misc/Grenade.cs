@@ -9,43 +9,48 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Misc
 {
-    public class Grenade : MonoBehaviour
+    public sealed class Grenade : MonoBehaviour
     {
         private static readonly float ThrowForce = 75f;
         private static readonly ObjectPool<Grenade> _grenadePool = new ObjectPool<Grenade>("Grenades", "Prefabs/Combat/Enemies/Grenade");
-        private readonly int _damage = 20;
+        private const int Damage = 20;
         private Action<List<EnemyBehaviour>> OnDetonate;
         private bool _incendiary, _decaying, _sickening;
-        private bool _instantDetonate;
         private float _radius = 1;
         private Rigidbody2D _rb2d;
         private Transform _target;
-        private Vector2 _origin;
 
         public void Awake()
         {
             _rb2d = GetComponent<Rigidbody2D>();
         }
 
-        public static Grenade CreateBasic(Vector2 origin, Transform target, bool instantDetonate = false)
+        public static Grenade CreateBasic(Vector2 origin, Transform target)
         {
             Grenade grenade = _grenadePool.Create();
-            grenade._instantDetonate = instantDetonate;
             grenade.StartMoving(origin, target);
             return grenade;
         }
 
-        public static Grenade CreateBasic(Vector2 origin, Vector2 target, bool instantDetonate = false)
+        public static Grenade CreateBasic(Vector2 origin, Vector2 target)
         {
             Grenade grenade = _grenadePool.Create();
-            grenade._instantDetonate = instantDetonate;
             grenade.StartMoving(origin, target);
             return grenade;
+        }
+
+        private void ResetGrenade()
+        {
+            _incendiary = false;
+            _decaying = false;
+            _sickening = false;
+            _radius = 1;
         }
 
         private void StartMoving(Vector2 origin, Vector2 target)
         {
-            transform.position = origin;
+            ResetGrenade();
+            transform.position = new Vector3(origin.x, origin.y, 0f);
             Vector2 direction = target - origin;
             float distance = direction.magnitude;
             direction /= distance;
@@ -58,45 +63,44 @@ namespace Game.Combat.Enemies.Misc
             _radius = radius;
         }
 
-        public static void CreateIncendiary(Vector2 origin, Transform target, bool instantDetonate = false)
+        public static void CreateIncendiary(Vector2 origin, Transform target)
         {
-            Grenade g = CreateBasic(origin, target, instantDetonate);
+            Grenade g = CreateBasic(origin, target);
             g._incendiary = true;
         }
 
-        public static void CreateDecay(Vector2 origin, Transform target, bool instantDetonate = false)
+        public static void CreateDecay(Vector2 origin, Transform target)
         {
-            Grenade g = CreateBasic(origin, target, instantDetonate);
+            Grenade g = CreateBasic(origin, target);
             g._decaying = true;
         }
 
-        public static void CreateSickness(Vector2 origin, Transform target, bool instantDetonate = false)
+        public static void CreateSickness(Vector2 origin, Transform target)
         {
-            Grenade g = CreateBasic(origin, target, instantDetonate);
+            Grenade g = CreateBasic(origin, target);
             g._sickening = true;
         }
 
-        public static void CreateIncendiary(Vector2 origin, Vector2 target, bool instantDetonate = false)
+        public static void CreateIncendiary(Vector2 origin, Vector2 target)
         {
-            Grenade g = CreateBasic(origin, target, instantDetonate);
+            Grenade g = CreateBasic(origin, target);
             g._incendiary = true;
         }
 
-        public static void CreateDecay(Vector2 origin, Vector2 target, bool instantDetonate = false)
+        public static void CreateDecay(Vector2 origin, Vector2 target)
         {
-            Grenade g = CreateBasic(origin, target, instantDetonate);
+            Grenade g = CreateBasic(origin, target);
             g._decaying = true;
         }
 
-        public static void CreateSickness(Vector2 origin, Vector2 target, bool instantDetonate = false)
+        public static void CreateSickness(Vector2 origin, Vector2 target)
         {
-            Grenade g = CreateBasic(origin, target, instantDetonate);
+            Grenade g = CreateBasic(origin, target);
             g._sickening = true;
         }
 
         private void StartMoving(Vector3 origin, Transform target)
         {
-            _origin = origin;
             _target = target;
             StartMoving(origin, target.position);
         }
@@ -106,7 +110,6 @@ namespace Game.Combat.Enemies.Misc
             bool closeEnough = _target != null && _target.Distance(transform) <= 0.5f;
             bool slowEnough = _rb2d.velocity.magnitude <= 0.25f;
             if (!closeEnough && !slowEnough) return;
-            _instantDetonate = true;
             Detonate();
         }
 
@@ -117,27 +120,13 @@ namespace Game.Combat.Enemies.Misc
 
         private void Detonate()
         {
-            CreateExplosion();
-        }
-
-        public void Deactivate()
-        {
-            _grenadePool.Return(this);
-        }
-
-        protected virtual void CreateExplosion()
-        {
-            Explosion explosion = Explosion.CreateExplosion(transform.position, _damage, _radius);
+            Explosion explosion = Explosion.CreateExplosion(transform.position, Damage, _radius);
             explosion.AddOnDetonate(OnDetonate);
             if (_incendiary) explosion.SetBurn();
             if (_decaying) explosion.SetDecay();
             if (_sickening) explosion.SetSicken();
-            if (_instantDetonate)
-            {
-                explosion.InstantDetonate();
-                Deactivate();
-            }
-            else explosion.Detonate(this);
+            explosion.InstantDetonate();
+            _grenadePool.Return(this);
         }
 
         public void AddOnDetonate(Action<List<EnemyBehaviour>> action)

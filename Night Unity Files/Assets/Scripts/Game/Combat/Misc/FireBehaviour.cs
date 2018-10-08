@@ -56,7 +56,7 @@ namespace Game.Combat.Misc
         public void OnTriggerStay2D(Collider2D other)
         {
             if (!CombatManager.IsCombatActive()) return;
-            CharacterCombat character = other.GetComponent<CharacterCombat>();
+            CanTakeDamage character = other.GetComponent<CanTakeDamage>();
             if (character == null) return;
             if (_ignoreTargets.Contains(other.GetComponent<CanTakeDamage>())) return;
             character.Burn();

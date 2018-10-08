@@ -10,7 +10,6 @@ namespace Game.Global
         private static CanvasGroup _fader;
         private static SceneChanger _instance;
         private AudioSource _audioSource;
-        private static float _fadeInTime = DefaultFadeTime;
         private static string _sceneToLoad;
         private const float DefaultFadeTime = 0.5f;
 
@@ -20,10 +19,11 @@ namespace Game.Global
             _audioSource = GetComponent<AudioSource>();
             _fader = GameObject.Find("Screen Fader").GetComponent<CanvasGroup>();
             VolumeController.SetModifiedVolume(0f);
-            DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, _fadeInTime);
+            float fadeInTime = SceneManager.GetActiveScene().name == "Combat" ? 3f : DefaultFadeTime;
+            DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, fadeInTime);
             Sequence sequence = DOTween.Sequence();
             _fader.alpha = 1;
-            sequence.Append(_fader.DOFade(0, _fadeInTime));
+            sequence.Append(_fader.DOFade(0, fadeInTime));
             sequence.AppendCallback(() => StartCoroutine(LoadNextScene()));
             if (SceneManager.GetActiveScene().name != "Game") return;
             sequence.InsertCallback(0.1f, WorldState.UnPause);
@@ -40,9 +40,8 @@ namespace Game.Global
             ButtonClickListener.SuppressClick();
         }
 
-        private IEnumerator FadeOut(string sceneName, float fadeTime, bool goToLoadingScene = true)
+        private IEnumerator FadeOut(string sceneName, bool goToLoadingScene = true)
         {
-            _fadeInTime = fadeTime;
             _sceneToLoad = sceneName;
             if (_audioSource != null) _audioSource.DOFade(1, DefaultFadeTime);
             VolumeController.SetModifiedVolume(1f);
@@ -64,43 +63,43 @@ namespace Game.Global
 
         public static void GoToGameOverScene()
         {
-            ChangeScene("Game Over", DefaultFadeTime);
+            ChangeScene("Game Over");
         }
 
         public static void GoToMapScene()
         {
-            ChangeScene("Map", DefaultFadeTime);
+            ChangeScene("Map");
         }
 
         public static void GoToStoryScene()
         {
-            ChangeScene("Story", DefaultFadeTime);
+            ChangeScene("Story");
         }
 
         public static void GoToCombatScene()
         {
-            ChangeScene("Combat", 5f, true);
+            ChangeScene("Combat", true);
         }
 
         public static void GoToMainMenuScene()
         {
-            ChangeScene("Menu", DefaultFadeTime);
+            ChangeScene("Menu");
         }
 
         public static void GoToCreditsScene()
         {
-            ChangeScene("Credits", DefaultFadeTime);
+            ChangeScene("Credits");
         }
 
         public static void GoToGameScene()
         {
-            ChangeScene("Game", DefaultFadeTime);
+            ChangeScene("Game");
         }
 
-        private static void ChangeScene(string sceneName, float fadeTime, bool goToLoadingScene = false)
+        private static void ChangeScene(string sceneName, bool goToLoadingScene = false)
         {
             WorldState.Pause();
-            _instance.StartCoroutine(_instance.FadeOut(sceneName, fadeTime, goToLoadingScene));
+            _instance.StartCoroutine(_instance.FadeOut(sceneName, goToLoadingScene));
         }
     }
 }

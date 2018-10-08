@@ -50,18 +50,26 @@ namespace Game.Gear.Armour
             TakePlateDamage(ref _head, amount);
         }
 
-        public void SetChestArmour(Armour chest)
+        public void SetArmour(Armour armour)
+        {
+            if (armour.GetArmourType() == Armour.ArmourType.Chest)
+                SetChestArmour(armour);
+            else
+                SetHeadArmour(armour);
+        }
+        
+        private void SetChestArmour(Armour chest)
         {
             _chest?.Unequip();
-            chest?.Equip(_character);
+            if (_character != null) _chest?.Equip(_character);
             _chest = chest;
             _onArmourChange?.Invoke();
         }
 
-        public void SetHeadArmour(Armour head)
+        private void SetHeadArmour(Armour head)
         {
             _head?.Unequip();
-            head?.Equip(_character);
+            if (_character != null) head?.Equip(_character);
             _head = head;
             _onArmourChange?.Invoke();
         }

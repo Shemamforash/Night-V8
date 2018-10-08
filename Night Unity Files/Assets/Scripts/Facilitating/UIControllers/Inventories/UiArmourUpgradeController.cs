@@ -67,7 +67,7 @@ namespace Facilitating.UIControllers
         private void EquipPlateOne(object armourObject)
         {
             Armour armour = (Armour) armourObject;
-            CharacterManager.SelectedCharacter.EquipArmourSlotOne(armour);
+            CharacterManager.SelectedCharacter.EquipChestArmour(armour);
             UpdatePlates();
             SetPlateListActive(_plateOneUi);
         }
@@ -75,7 +75,7 @@ namespace Facilitating.UIControllers
         private void EquipPlateTwo(object armourObject)
         {
             Armour armour = (Armour) armourObject;
-            CharacterManager.SelectedCharacter.EquipArmourSlotTwo(armour);
+            CharacterManager.SelectedCharacter.EquipHeadArmour(armour);
             UpdatePlates();
             SetPlateListActive(_plateTwoUi);
         }

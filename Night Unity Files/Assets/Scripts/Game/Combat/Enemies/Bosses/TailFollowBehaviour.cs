@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Bosses
 {
     public class TailFollowBehaviour : MonoBehaviour
     {
-        [SerializeField] private float _parentDistance;
         [SerializeField] private bool _isHead;
         private TailFollowBehaviour _parent;
         private TailFollowBehaviour _child;
         private readonly Queue<Vector3> _positionList = new Queue<Vector3>();
         private Vector3 _lastPosition;
         private Rigidbody2D _parentRigidbody;
+        private int ignoreCount;
 
         public void Awake()
         {
@@ -29,15 +30,7 @@ namespace Game.Combat.Enemies.Bosses
             }
 
             for (int i = 0; i < tailSegments.Count; ++i)
-            {
-                if (i == 0)
-                {
-                    tailSegments[i].SetParent(this);
-                    continue;
-                }
-
-                tailSegments[i].SetParent(tailSegments[i - 1]);
-            }
+                tailSegments[i].SetParent(i == 0 ? this : tailSegments[i - 1]);
         }
 
         public TailFollowBehaviour GetChild()
@@ -45,13 +38,22 @@ namespace Game.Combat.Enemies.Bosses
             return _child;
         }
 
+        private void SetInactive()
+        {
+            gameObject.transform.position = Vector2.zero;
+            if (_child == null) return;
+            _child.SetInactive();
+        }
+
         private void SetPosition(Vector2 position)
         {
             _positionList.Enqueue(position);
-            if (_positionList.Count < 8) return;
+            if (_positionList.Count < 8)
+            {
+                SetInactive();
+                return;
+            }
             Vector3 newPosition = _positionList.Dequeue();
-            if (!_isHead) newPosition += _parent.transform.up * _parentDistance;
-            else newPosition += _parentRigidbody.transform.up * _parentDistance;
             transform.position = newPosition;
             if (_child == null) return;
             _child.SetPosition(_lastPosition);

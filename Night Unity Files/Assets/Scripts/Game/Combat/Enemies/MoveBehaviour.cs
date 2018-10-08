@@ -91,6 +91,7 @@ namespace Game.Combat.Enemies
         {
             UpdateCurrentCell();
             if (_nextCell == null) return;
+            if (_currentCell == null) Debug.Log(gameObject.name);
             _reachedTarget = Vector2.Distance(_currentCell.Position, _nextCell.Position) < 0.5f;
         }
 

@@ -30,7 +30,8 @@ public class TombPortalBehaviour : MonoBehaviour
         switch (EnvironmentManager.CurrentEnvironment.LevelNo)
         {
             case 0:
-                SerpentBehaviour.Create();
+                StarfishBehaviour.Create();
+//                SerpentBehaviour.Create();
                 break;
             case 1:
                 StarfishBehaviour.Create();

@@ -41,11 +41,8 @@ namespace Facilitating.UIControllers
             for (int i = ArmourDivisions - 1; i >= 0; --i) _armourChunks.Add(new ArmourChunk(segments[i]));
         }
 
-        private void SetSlotsFilled(ArmourController armourController, bool damageWasTaken = false)
+        private void SetSlotsFilled(int slotsAvailable, int slotsUsed, bool damageWasTaken = false)
         {
-            int slotsAvailable = armourController.GetTotalProtection();
-            int slotsUsed = armourController.GetCurrentProtection();
-
             for (int i = 0; i < _armourChunks.Count; i++)
             {
                 ArmourChunk chunk = _armourChunks[i];
@@ -59,12 +56,19 @@ namespace Facilitating.UIControllers
             }
 
             if (slotsUsed == 0) _armourText.text = "No Armour";
-            else _armourText.text = "-" + armourController.GetCurrentProtection() * 10f + "% damage from Armour";
+            else _armourText.text = "-" + slotsAvailable * 10f + "% damage from Armour";
         }
 
         public void TakeDamage(ArmourController controller)
         {
-            SetSlotsFilled(controller, true);
+            int slotsAvailable = controller.GetTotalProtection();
+            int slotsUsed = controller.GetCurrentProtection();
+            TakeDamage(slotsAvailable, slotsUsed);
+        }
+
+        public void TakeDamage(int slotsAvailable, int slotsUsed)
+        {
+            SetSlotsFilled(slotsAvailable, slotsUsed, true);
         }
 
         private class ArmourChunk

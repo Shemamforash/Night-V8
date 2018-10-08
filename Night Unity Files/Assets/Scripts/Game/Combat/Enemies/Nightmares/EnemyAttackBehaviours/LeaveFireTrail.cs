@@ -6,7 +6,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
     public class LeaveFireTrail : MonoBehaviour
     {
         private Vector2 _lastPosition = Vector2.negativeInfinity;
-        private const float Interval = 0.2f;
+        private const float Interval = 0.4f;
         private const float FirePauseTime = 0.1f;
         private float _currentTime;
         private float _lifeTime;
@@ -30,7 +30,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             {
                 float lerpVal = i / distance;
                 tempPos = Vector2.Lerp(_lastPosition, currentPosition, lerpVal);
-                FireBehaviour.Create(tempPos, 0.2f, _lifeTime, false, false).AddIgnoreTarget(GetComponent<CanTakeDamage>());
+                FireBehaviour.Create(tempPos, 0.25f, _lifeTime, false, false).AddIgnoreTarget(GetComponent<CanTakeDamage>());
             }
 
             _lastPosition = tempPos;

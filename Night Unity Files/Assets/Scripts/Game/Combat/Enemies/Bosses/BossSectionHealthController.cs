@@ -1,6 +1,5 @@
-﻿using Game.Combat.Generation;
-using Game.Combat.Misc;
-using UnityEngine;
+﻿using Game.Combat.Misc;
+using Game.Gear.Armour;
 
 namespace Game.Combat.Enemies.Bosses
 {
@@ -12,8 +11,12 @@ namespace Game.Combat.Enemies.Bosses
         protected override void Awake()
         {
             base.Awake();
+            ArmourController = new ArmourController(null);
+        }
+
+        protected void UpdateInitialHealth()
+        {
             HealthController.SetInitialHealth(GetInitialHealth(), this);
-            CombatManager.Enemies().Add(this);
         }
 
         protected abstract int GetInitialHealth();
@@ -26,16 +29,6 @@ namespace Game.Combat.Enemies.Bosses
         public virtual void Start()
         {
             _boss.RegisterSection(this);
-        }
-
-        public bool IsDead()
-        {
-            return HealthController.GetCurrentHealth() == 0;
-        }
-
-        public GameObject GetGameObject()
-        {
-            return gameObject;
         }
 
         public override void Kill()

@@ -23,13 +23,13 @@ namespace Game.Combat.Ui
             CanvasGroup.alpha = a;
         }
 
-        protected UIHealthBarController GetHealthController()
+        private UIHealthBarController GetHealthController()
         {
             if (_healthBarController == null) _healthBarController = gameObject.FindChildWithName<UIHealthBarController>("Health");
             return _healthBarController;
         }
 
-        protected UIArmourController GetArmourController()
+        private UIArmourController GetArmourController()
         {
             if (_armourController == null) _armourController = gameObject.FindChildWithName<UIArmourController>("Armour");
             return _armourController;
@@ -44,10 +44,11 @@ namespace Game.Combat.Ui
             }
 
             SetAlpha(1);
+            GetHealthController().SetValue(Character.HealthController.GetHealth());
+            GetArmourController().TakeDamage(Character.ArmourController);
             if (Character.IsBurning()) GetHealthController().StartBurning();
             else GetHealthController().StopBurning();
             GetHealthController().SetSicknessLevel(Character.GetSicknessLevel());
-            GetArmourController().TakeDamage(Character.ArmourController);
         }
     }
 }

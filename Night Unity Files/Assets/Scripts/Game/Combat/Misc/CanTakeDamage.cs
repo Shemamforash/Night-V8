@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Gear.Armour;
@@ -19,6 +20,8 @@ namespace Game.Combat.Misc
         private const float BurnTickDuration = 4f;
         protected int SicknessStacks;
         private float _sicknessDuration;
+        private float _markTime;
+        private bool _marked;
 
         public void TakeArmourDamage(float damage)
         {
@@ -43,6 +46,7 @@ namespace Game.Combat.Misc
         public virtual void MyUpdate()
         {
             UpdateConditions();
+            UpdateMarkTime();
         }
 
         public abstract string GetDisplayName();
@@ -179,6 +183,20 @@ namespace Game.Combat.Misc
         {
             Vector2 direction = (origin - (Vector2) transform.position).normalized;
             TakeDamage(damage, direction);
+        }
+
+        public void Mark()
+        {
+            _marked = true;
+            _markTime = 5f;
+        }
+
+        private void UpdateMarkTime()
+        {
+            if (!_marked) return;
+            if (_markTime < 0f) return;
+            _markTime -= Time.deltaTime;
+            if (_markTime < 0f) PlayerCombat.Instance.EndMark(this);
         }
     }
 }

@@ -392,5 +392,10 @@ namespace SamsHelper.Libraries
             float y = Mathf.Sin(angle * Mathf.Deg2Rad) * radius + origin.y;
             return new Vector2(x, y);
         }
+
+        public static Vector2 RandomDirection()
+        {
+            return RandomVectorWithinRange(Vector2.zero, 1).normalized;
+        }
     }
 }

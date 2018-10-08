@@ -11,16 +11,16 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private float _lifeTime = 5f;
     private float _speed = 3f;
     private SpriteRenderer[] _sprites;
-    private bool _dying;
+    private bool _dying, _follow;
 
-    public static void Create(Vector3 direction, Vector3 position, float speed)
+    public static void Create(Vector3 direction, Vector3 position, float speed, bool follow = true)
     {
         MaelstromShotBehaviour shot = _shotPool.Create();
         shot.transform.position = position;
-        shot.ResetShot(direction, speed);
+        shot.ResetShot(direction, speed, follow);
     }
 
-    private void ResetShot(Vector2 direction, float speed)
+    private void ResetShot(Vector2 direction, float speed, bool follow)
     {
         foreach (SpriteRenderer spriteRenderer in _sprites) spriteRenderer.enabled = true;
         _direction = direction;
@@ -28,6 +28,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
         _lifeTime = 5f;
         _rigidBody.velocity = _direction * _speed * 4;
         _dying = false;
+        _follow = follow;
     }
 
     public void Awake()
@@ -38,7 +39,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (_dying) return;
+        if (_dying || !_follow) return;
         Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
         float angle = Vector2.Angle(dir, PlayerCombat.Instance.transform.position - transform.position);
         float force = 1000;
@@ -63,6 +64,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         PlayerCombat player = other.gameObject.GetComponent<PlayerCombat>();
+        player.TakeRawDamage(10, _rigidBody.velocity.normalized);
         player.MovementController.AddForce(_rigidBody.velocity.normalized * 20f);
         Explode();
     }
@@ -78,9 +80,10 @@ public class MaelstromShotBehaviour : MonoBehaviour
             timer -= Time.deltaTime;
             yield return null;
         }
+
         _shotPool.Return(this);
     }
-    
+
     private void Explode()
     {
         MaelstromImpactBehaviour.Create(transform.position, _rigidBody.velocity.normalized);

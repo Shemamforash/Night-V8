@@ -32,7 +32,7 @@ namespace Game.Combat.Misc
         private Action<List<EnemyBehaviour>> OnExplode;
         private GameObject _spriteObject;
 
-        [SerializeField] private AudioClip[] _explosionClips;
+        private static AudioClip[] _explosionClips;
         private bool _decay, _incendiary, _sicken;
         private List<CanTakeDamage> _targetsToIgnore;
 
@@ -48,6 +48,8 @@ namespace Game.Combat.Misc
 
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
             _light.Colour = UiAppearanceController.InvisibleColour;
+
+            if (_explosionClips == null) _explosionClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/explosions");
         }
 
         public void OnDestroy()
@@ -103,10 +105,10 @@ namespace Game.Combat.Misc
             return explosion;
         }
 
-        public void Detonate(Grenade grenade = null)
+        public void Detonate()
         {
             gameObject.SetActive(true);
-            StartCoroutine(Warmup(grenade));
+            StartCoroutine(Warmup());
         }
 
         public void InstantDetonate()
@@ -123,12 +125,7 @@ namespace Game.Combat.Misc
             {
                 CanTakeDamage i = col.GetComponent<CanTakeDamage>();
                 if (i == null) continue;
-                if (_targetsToIgnore.Contains(i))
-                {
-                    Debug.Log(col.name);
-                    return;
-                }
-
+                if (_targetsToIgnore.Contains(i)) return;
                 i.TakeExplosionDamage(_damage, transform.position, _explosionRadius);
                 EnemyBehaviour behaviour = i as EnemyBehaviour;
                 if (behaviour != null) enemiesHit.Add(behaviour);
@@ -137,7 +134,7 @@ namespace Game.Combat.Misc
             OnExplode?.Invoke(enemiesHit);
         }
 
-        private IEnumerator Warmup(Grenade grenade)
+        private IEnumerator Warmup()
         {
             _age = 0f;
             while (_age < ExplosionWarmupTime)
@@ -149,7 +146,6 @@ namespace Game.Combat.Misc
                 yield return null;
             }
 
-            if (grenade != null) grenade.Deactivate();
             StartCoroutine(Explode());
         }
 

@@ -73,7 +73,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            CharacterCombat target = Target();
+            CanTakeDamage target = Target();
             float healPercent = 0;
             if (target.IsBurning()) healPercent += 0.1f;
             if (target.IsSick()) healPercent += 0.1f;
@@ -90,7 +90,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            CharacterCombat target = Target();
+            CanTakeDamage target = Target();
             target.Sicken(10);
             if (target.HealthController.GetCurrentHealth() == 0) Explosion.CreateExplosion(target.transform.position, 20).InstantDetonate();
         }

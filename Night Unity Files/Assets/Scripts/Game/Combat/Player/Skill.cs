@@ -49,9 +49,9 @@ namespace Game.Combat.Player
             _loaded = true;
         }
 
-        protected static EnemyBehaviour Target()
+        protected static CanTakeDamage Target()
         {
-            return (EnemyBehaviour) PlayerCombat.Instance.GetTarget();
+            return PlayerCombat.Instance.GetTarget();
         }
 
         private static void KnockbackSingleTarget(Vector2 position, CanTakeDamage c, float force)
