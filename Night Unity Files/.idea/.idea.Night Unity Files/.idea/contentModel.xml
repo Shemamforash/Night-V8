@@ -461,7 +461,9 @@
                   <e p="Starfish" t="Include">
                     <e p="StarFishArmBehaviour.cs" t="Include" />
                     <e p="StarfishBehaviour.cs" t="Include" />
+                    <e p="StarfishGhoulSpawn.cs" t="Include" />
                     <e p="StarFishMainArmBehaviour.cs" t="Include" />
+                    <e p="StarfishSpreadFire.cs" t="Include" />
                   </e>
                   <e p="Swarm" t="Include">
                     <e p="SwarmBehaviour.cs" t="Include" />

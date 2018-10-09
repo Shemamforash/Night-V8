@@ -1,43 +1,82 @@
-﻿using DG.Tweening;
+﻿using System.Collections.Generic;
+using DG.Tweening;
 using Game.Combat.Enemies.Bosses;
+using Game.Combat.Misc;
 using SamsHelper.Libraries;
 using UnityEngine;
 
 public class SwarmBehaviour : Boss
 {
-    private static SwarmBehaviour _instance;
+    private static readonly List<SwarmBehaviour> _swarms = new List<SwarmBehaviour>();
     private const float MoveSpeed = 0.33f;
-    public int SwarmCount = 100;
+    private const int SwarmCount = 500;
     private float _fireCounter;
     private float _fireCounterMin, _fireCounterMax;
     private float _contractTimer;
     private bool _contracting;
     private float _burstForce;
+    private static GameObject _swarmPrefab;
+    private float _burstCounter;
 
     public static void Create()
     {
-        GameObject prefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Swarm/Swarm Boss");
-        Instantiate(prefab).transform.position = new Vector2(0, 0);
+        CreateNew().Initialise(null, Vector2.zero);
     }
-    
-    protected override void Awake()
+
+    private static SwarmBehaviour CreateNew()
     {
-        base.Awake();
-        _instance = this;
-        GameObject swarmPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Swarm/Swarm Segment");
-        for (int i = 0; i < SwarmCount; ++i)
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Swarm/Swarm Boss");
+        GameObject swarm = Instantiate(prefab);
+        return swarm.GetComponent<SwarmBehaviour>();
+    }
+
+    private static void Create(List<SwarmSegmentBehaviour> inheritedChildren, Vector2 position)
+    {
+        CreateNew().Initialise(inheritedChildren, position);
+    }
+
+    private void Initialise(List<SwarmSegmentBehaviour> inheritedChildren, Vector2 position)
+    {
+        transform.position = position;
+        if (inheritedChildren == null) SpawnNewChildren();
+        else
         {
-            Instantiate(swarmPrefab).transform.SetParent(transform);
+            inheritedChildren.ForEach(s => { s.SetSwarmParent(this); });
         }
 
         RecalculateFireTimer();
-        _fireCounter = Random.Range(_fireCounterMin, _fireCounterMax);
-        _contractTimer = Random.Range(8f, 12f);
     }
 
-    public string GetDisplayName()
+    private void SpawnNewChildren()
     {
-        return "Swarm";
+        if (_swarmPrefab == null) _swarmPrefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Swarm/Swarm Segment");
+        for (int i = 0; i < SwarmCount; ++i)
+        {
+            SwarmSegmentBehaviour swarm = Instantiate(_swarmPrefab).GetComponent<SwarmSegmentBehaviour>();
+            swarm.SetSwarmParent(this);
+        }
+    }
+
+    private void Split()
+    {
+        int centreCount = (int) (SectionCount() / 2f);
+        if (centreCount == 0) return;
+        List<SwarmSegmentBehaviour> transferredSwarmSegments = new List<SwarmSegmentBehaviour>();
+        for (int i = centreCount - 1; i >= 0; --i)
+        {
+            transferredSwarmSegments.Add((SwarmSegmentBehaviour) Sections[i]);
+            Sections.RemoveAt(i);
+        }
+
+        Create(transferredSwarmSegments, transform.position);
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _swarms.Add(this);
+        _fireCounter = Random.Range(_fireCounterMin, _fireCounterMax);
+        _contractTimer = Random.Range(8f, 12f);
     }
 
     private void RecalculateFireTimer()
@@ -48,6 +87,7 @@ public class SwarmBehaviour : Boss
 
     private void UpdateFireCounter()
     {
+        if (_burstCounter < 0f) return;
         _fireCounter -= Time.deltaTime;
         if (_fireCounter > 0f) return;
         _fireCounter = Random.Range(_fireCounterMin, _fireCounterMax);
@@ -57,8 +97,21 @@ public class SwarmBehaviour : Boss
         Sections.RemoveAt(0);
     }
 
+    private void UpdateBurstCounter()
+    {
+        if (SectionCount() > 100) return;
+        if (_burstCounter < 0f) return;
+        _burstCounter -= Time.deltaTime;
+        if (_burstCounter > 0f) return;
+        Sections.ForEach(s => ((SwarmSegmentBehaviour) s).StartBurst());
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendInterval(3f);
+        sequence.AppendCallback(() => _burstCounter = Random.Range(10, 20));
+    }
+
     private void UpdateContractTimer()
     {
+        if (_burstCounter < 0f) return;
         _contractTimer -= Time.deltaTime;
         if (_contractTimer > 0f) return;
         _contractTimer = Random.Range(8f, 12f);
@@ -78,7 +131,6 @@ public class SwarmBehaviour : Boss
 
             _contracting = false;
         });
-
     }
 
     public void FixedUpdate()
@@ -92,18 +144,34 @@ public class SwarmBehaviour : Boss
     {
         UpdateFireCounter();
         UpdateContractTimer();
+        UpdateBurstCounter();
         if (!_contracting) _burstForce = Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0f);
-        Sections.ForEach(s => ((SwarmSegmentBehaviour) s).UpdateSection(transform.position, _burstForce * 1.3f - 0.3f));
+        for (int i = Sections.Count - 1; i >= 0; --i)
+        {
+            ((SwarmSegmentBehaviour) Sections[i]).UpdateSection(transform.position, _burstForce * 1.3f - 0.3f);
+        }
     }
 
     public override void UnregisterSection(BossSectionHealthController segment)
     {
-        base.UnregisterSection(segment);
+        int beforeCount = SectionCount();
+        Sections.Remove(segment);
+        int afterCount = SectionCount();
+        if (beforeCount > SwarmCount / 2 && afterCount <= SwarmCount / 2) Split();
         RecalculateFireTimer();
+        if (Sections.Count != 0) return;
+        if (_swarms.Count == 1)
+        {
+            _swarms.Remove(this);
+            Kill();
+        }
+        else Destroy(gameObject);
     }
 
-    public static SwarmBehaviour Instance()
+    public static List<CanTakeDamage> GetAllSegments()
     {
-        return _instance;
+        List<CanTakeDamage> segments = new List<CanTakeDamage>();
+        _swarms.ForEach(s => { segments.AddRange(s.Sections); });
+        return segments;
     }
 }

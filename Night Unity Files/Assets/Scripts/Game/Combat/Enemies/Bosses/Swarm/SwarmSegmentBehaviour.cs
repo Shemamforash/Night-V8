@@ -1,9 +1,11 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using Game.Combat.Enemies.Bosses;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SwarmSegmentBehaviour : BossSectionHealthController
 {
@@ -12,9 +14,17 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
     private float _aOffset, _rOffset;
     private float _force;
     private float _followSpeed;
-    [SerializeField] private float _seekSpeed = 3f;
-    private bool _seeking;
+    private const float SeekSpeed = 3f;
     private float _seekLifeTime = 5f;
+
+    private enum SwarmState
+    {
+        Following,
+        Seeking,
+        Bursting
+    }
+
+    private SwarmState _currentState = SwarmState.Following;
 
     protected override void Awake()
     {
@@ -34,10 +44,10 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
         return "Swarm";
     }
 
-    public override void Start()
+    public void SetSwarmParent(SwarmBehaviour swarmParent)
     {
-        SetBoss(SwarmBehaviour.Instance());
-        base.Start();
+        transform.SetParent(swarmParent.transform);
+        SetBoss(swarmParent);
     }
 
     protected override int GetInitialHealth()
@@ -47,44 +57,48 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
 
     protected void FixedUpdate()
     {
-        if (_seeking) _rigidBody.AddForce(dir);
+        if (_currentState == SwarmState.Seeking) _rigidBody.AddForce(dir);
         else _rigidBody.velocity = dir;
     }
 
     public void UpdateSection(Vector3 parentPosition, float burstForce)
     {
-        if (_seeking) return;
-        Follow(parentPosition, burstForce);
-    }
-
-    public void Update()
-    {
-        Seek();
+        switch (_currentState)
+        {
+            case SwarmState.Following:
+                Follow(parentPosition, burstForce);
+                break;
+            case SwarmState.Seeking:
+                Seek();
+                break;
+        }
     }
 
     private void Seek()
     {
-        if (!_seeking) return;
         _seekLifeTime -= Time.deltaTime;
         Vector3 playerPosition = PlayerCombat.Instance.transform.position;
         Vector2 desiredVelocity = playerPosition - transform.position;
         desiredVelocity.Normalize();
-        desiredVelocity *= _seekSpeed;
+        desiredVelocity *= SeekSpeed;
         dir = desiredVelocity - _rigidBody.velocity;
         if (_seekLifeTime > 0f && playerPosition.Distance(transform.position) > 0.5f) return;
-        switch (Random.Range(0, 3))
+        Explosion explosion = Explosion.CreateExplosion(transform.position, 10);
+        explosion.AddIgnoreTargets(SwarmBehaviour.GetAllSegments());
+        switch (Random.Range(0, 4))
         {
             case 0:
-                Explosion.CreateExplosion(transform.position, 3, 0.25f).InstantDetonate();
+                explosion.SetBurn();
                 break;
             case 1:
-                FireBehaviour.Create(transform.position, 1);
+                explosion.SetDecay();
                 break;
             case 2:
-                DecayBehaviour.Create(transform.position);
+                explosion.SetSicken();
                 break;
         }
 
+        explosion.InstantDetonate();
         Kill();
     }
 
@@ -108,8 +122,9 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
 
     public void StartSeeking()
     {
-        _seeking = true;
-        Vector2 swarmDir = SwarmBehaviour.Instance().GetComponent<Rigidbody2D>().velocity;
+        if (_currentState != SwarmState.Following) return;
+        _currentState = SwarmState.Seeking;
+        Vector2 swarmDir = Parent.GetComponent<Rigidbody2D>().velocity;
         float x = swarmDir.y;
         float y = -swarmDir.x;
         if (Random.Range(0, 2) == 0)
@@ -122,5 +137,24 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
         swarmDir.y = y;
         _rigidBody.AddForce(swarmDir.normalized * 100f);
         transform.DOScale(0.4f, _seekLifeTime).SetEase(Ease.InOutFlash, 10, -1);
+    }
+
+    public void StartBurst()
+    {
+        if (_currentState != SwarmState.Following) return;
+        _currentState = SwarmState.Bursting;
+        Vector2 targetPosition = AdvancedMaths.RandomDirection() * Mathf.Sqrt(Random.Range(0f, 30f));
+        Vector2 origin = transform.position;
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(_rigidBody.DOMove(targetPosition, 1f).SetEase(Ease.InExpo));
+        sequence.AppendCallback(() =>
+        {
+            Explosion explosion = Explosion.CreateExplosion(transform.position, 20);
+            explosion.AddIgnoreTargets(SwarmBehaviour.GetAllSegments());
+            explosion.Detonate();
+        });
+        sequence.AppendInterval(Random.Range(0.75f, 1f));
+        sequence.Append(_rigidBody.DOMove(origin, 1).SetEase(Ease.InExpo));
+        sequence.AppendCallback(() => _currentState = SwarmState.Following);
     }
 }

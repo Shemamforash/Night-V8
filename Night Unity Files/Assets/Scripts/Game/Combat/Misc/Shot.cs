@@ -23,7 +23,7 @@ namespace Game.Combat.Misc
         private BulletTrailFade _bulletTrail;
         private const float EnemyDamageModifier = 0.3f;
 
-        private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Shots", "Prefabs/Combat/Bullet");
+        private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Shots", "Prefabs/Combat/Shots/Bullet");
         private float _accuracy;
         private float _age;
 
@@ -195,6 +195,7 @@ namespace Game.Combat.Misc
             {
                 RaycastHit2D hit = _collisions[i];
                 DealDamage(hit.collider.gameObject);
+                _damage = Mathf.CeilToInt(_damage * 0.5f);
             }
 
             _lastPosition = newPosition;
@@ -283,8 +284,8 @@ namespace Game.Combat.Misc
             }
 
             DealDamage(other);
-            DeactivateShot();
             ApplyConditions();
+            if (other.layer != 12 && other.layer != 13) DeactivateShot();
         }
 
         private void ApplyDamage(CanTakeDamage hit)

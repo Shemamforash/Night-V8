@@ -24,10 +24,9 @@ public class WingHealthScript : BossSectionHealthController
         return 20;
     }
 
-    public override void Start()
+    public void Start()
     {
         SetBoss(SerpentBehaviour.Instance());
-        base.Start();
     }
 
     public override string GetDisplayName()

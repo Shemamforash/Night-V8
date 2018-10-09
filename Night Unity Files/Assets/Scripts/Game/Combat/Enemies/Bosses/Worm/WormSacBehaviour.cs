@@ -68,10 +68,9 @@ public class WormSacBehaviour : BossSectionHealthController
         return "Sac";
     }
 
-    public override void Start()
+    public void Start()
     {
         SetBoss(WormBehaviour.Instance());
-        base.Start();
     }
 
     private IEnumerator ScaleUp()

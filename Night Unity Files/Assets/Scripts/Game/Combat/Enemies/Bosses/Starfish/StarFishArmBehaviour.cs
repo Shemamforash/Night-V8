@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using Game.Combat.Enemies;
 using Game.Combat.Enemies.Bosses;
-using Game.Combat.Generation;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -17,11 +15,10 @@ public class StarFishArmBehaviour : BossSectionHealthController
     private Transform _prevSegment;
     private int _distance;
 
-    public override void Start()
+    public void Start()
     {
         SetBoss(StarfishBehaviour.Instance());
         ArmourController.AutoFillSlots((int) ((20 - _distance) / 2f));
-        base.Start();
     }
 
     protected override int GetInitialHealth()

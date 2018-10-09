@@ -6,12 +6,13 @@ namespace Game.Combat.Enemies.Bosses
     public abstract class BossSectionHealthController : CanTakeDamage
     {
         private int InitialHealth;
-        private Boss _boss;
+        protected Boss Parent;
 
         protected override void Awake()
         {
             base.Awake();
             ArmourController = new ArmourController(null);
+            UpdateInitialHealth();
         }
 
         protected void UpdateInitialHealth()
@@ -23,18 +24,15 @@ namespace Game.Combat.Enemies.Bosses
 
         protected void SetBoss(Boss boss)
         {
-            _boss = boss;
-        }
-
-        public virtual void Start()
-        {
-            _boss.RegisterSection(this);
+            if(Parent != null) Parent.UnregisterSection(this);
+            Parent = boss;
+            Parent.RegisterSection(this);
         }
 
         public override void Kill()
         {
+            Parent.UnregisterSection(this);
             base.Kill();
-            _boss.UnregisterSection(this);
         }
     }
 }

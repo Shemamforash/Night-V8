@@ -11,7 +11,7 @@ public class MaelstromImpactBehaviour : MonoBehaviour {
 	{
 		MaelstromImpactBehaviour impact = _impactPool.Create();
 		impact.transform.position = position;
-		float rot = AdvancedMaths.AngleFromUp(Vector2.zero, direction);
+		float rot = AdvancedMaths.AngleFromUp(Vector2.zero, direction) - 90;
 		impact.transform.rotation = Quaternion.Euler(0, 0, rot);
 		impact.StartCoroutine(impact.WaitAndDie());
 	}

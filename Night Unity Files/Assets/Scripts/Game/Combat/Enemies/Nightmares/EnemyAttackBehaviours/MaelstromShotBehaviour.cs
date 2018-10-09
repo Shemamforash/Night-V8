@@ -54,11 +54,10 @@ public class MaelstromShotBehaviour : MonoBehaviour
 
     public void Update()
     {
+        if (_dying) return;
         _lifeTime -= Time.deltaTime;
-        if (_lifeTime < 0)
-        {
-            Explode();
-        }
+        if (_lifeTime > 0) return;
+        StartCoroutine(WaitToDie());
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -74,13 +73,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
         foreach (SpriteRenderer spriteRenderer in _sprites) spriteRenderer.enabled = false;
         _dying = true;
         _rigidBody.velocity = Vector2.zero;
-        float timer = 0.5f;
-        while (timer > 0f)
-        {
-            timer -= Time.deltaTime;
-            yield return null;
-        }
-
+        yield return new WaitForSeconds(0.5f);
         _shotPool.Return(this);
     }
 

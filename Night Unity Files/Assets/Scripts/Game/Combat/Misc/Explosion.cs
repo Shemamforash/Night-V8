@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Fastlights;
 using Game.Combat.Enemies;
-using Game.Combat.Enemies.Misc;
 using Game.Combat.Generation;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -77,6 +76,11 @@ namespace Game.Combat.Misc
         public void AddIgnoreTarget(CanTakeDamage ignoreTarget)
         {
             _targetsToIgnore.Add(ignoreTarget);
+        }
+
+        public void AddIgnoreTargets(List<CanTakeDamage> ignoreTargets)
+        {
+            _targetsToIgnore.AddRange(ignoreTargets);
         }
 
         private void Initialise(Vector2 position, int damage, float radius = 1)
