@@ -158,9 +158,11 @@ namespace Game.Combat.Misc
         public virtual void TakeShotDamage(Shot shot)
         {
             TakeDamage(shot.DamageDealt(), shot.Direction());
+            if (this is PlayerCombat) return;
+            PlayerCombat.Instance.UpdateAdrenaline(shot.DamageDealt());
         }
 
-        private void TakeDamage(int damage, Vector2 direction)
+        protected virtual void TakeDamage(int damage, Vector2 direction)
         {
             _spriteFlash.FlashSprite();
             float armourProtection = 0;

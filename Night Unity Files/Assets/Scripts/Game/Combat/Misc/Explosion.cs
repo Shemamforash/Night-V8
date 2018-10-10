@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Fastlights;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
+using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
@@ -12,8 +13,7 @@ namespace Game.Combat.Misc
 {
     public class Explosion : MonoBehaviour
     {
-        private static GameObject _explosionPrefab;
-        private static readonly List<Explosion> _explosionPool = new List<Explosion>();
+        private static readonly ObjectPool<Explosion> _explosionPool = new ObjectPool<Explosion>("Explosions", "Prefabs/Combat/Visuals/Explosion");
 
         private const float ExplodeTime = 0.2f;
         private const float ExplosionWarmupTime = 1f;
@@ -53,12 +53,12 @@ namespace Game.Combat.Misc
 
         public void OnDestroy()
         {
-            _explosionPool.Remove(this);
+            _explosionPool.Dispose(this);
         }
 
         public static Explosion CreateExplosion(Vector2 position, int damage, float radius = 1)
         {
-            Explosion explosion = GetNewExplosion();
+            Explosion explosion = _explosionPool.Create();
             explosion.Initialise(position, damage, radius);
             return explosion;
         }
@@ -92,21 +92,6 @@ namespace Game.Combat.Misc
             _incendiary = false;
             _decay = false;
             _targetsToIgnore = new List<CanTakeDamage>();
-        }
-
-        private static Explosion GetNewExplosion()
-        {
-            if (_explosionPool.Count == 0)
-            {
-                if (_explosionPrefab == null) _explosionPrefab = Resources.Load<GameObject>("Prefabs/Combat/Visuals/Explosion");
-                GameObject explosionObject = Instantiate(_explosionPrefab);
-                explosionObject.transform.localScale = Vector3.one;
-                return explosionObject.GetComponent<Explosion>();
-            }
-
-            Explosion explosion = _explosionPool[0];
-            _explosionPool.RemoveAt(0);
-            return explosion;
         }
 
         public void Detonate()
@@ -204,8 +189,7 @@ namespace Game.Combat.Misc
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
             _light.Colour = UiAppearanceController.InvisibleColour;
             while (_audioSource.isPlaying) yield return null;
-            gameObject.SetActive(false);
-            _explosionPool.Add(this);
+            _explosionPool.Return(this);
         }
 
         private void EmitParticles()

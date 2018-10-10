@@ -104,11 +104,9 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            int remainingAmmo = PlayerCombat.Instance._weaponBehaviour.AmmoInMagazine;
-            if (remainingAmmo == 0) remainingAmmo = 1;
-            remainingAmmo *= 10;
-            float angleIncrement = 360f / remainingAmmo;
-            for (int i = 0; i < remainingAmmo; ++i)
+            int shots = 50;
+            float angleIncrement = 360f / shots;
+            for (int i = 0; i < shots; ++i)
             {
                 float angle = i * angleIncrement * Mathf.Deg2Rad;
                 float x = Mathf.Cos(angle);

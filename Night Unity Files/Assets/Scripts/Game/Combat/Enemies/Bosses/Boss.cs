@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Bosses
 {
-    public abstract class Boss : MonoBehaviour
+    public class Boss : MonoBehaviour
     {
         protected readonly List<BossSectionHealthController> Sections = new List<BossSectionHealthController>();
         protected Rigidbody2D RigidBody;

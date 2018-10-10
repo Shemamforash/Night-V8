@@ -23,7 +23,7 @@ public class StarFishArmBehaviour : BossSectionHealthController
 
     protected override int GetInitialHealth()
     {
-        return (int) (20f * (15 - _distance) / 2f);
+        return (int) (10f * (15 - _distance) / 2f);
     }
 
     public void SetPosition(float angle)

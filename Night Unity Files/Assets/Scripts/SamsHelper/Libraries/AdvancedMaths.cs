@@ -397,5 +397,14 @@ namespace SamsHelper.Libraries
         {
             return RandomVectorWithinRange(Vector2.zero, 1).normalized;
         }
+
+        public static Vector2 RandomPointInCircle(float radius)
+        {
+            float randomAngle = Random.Range(0f, 1f) * 2f * Mathf.PI;
+            radius = radius * Mathf.Sqrt(Random.Range(0f, 1f));
+            float x = radius * Mathf.Cos(randomAngle);
+            float y = radius * Mathf.Sin(randomAngle);
+            return new Vector2(x, y);
+        }
     }
 }

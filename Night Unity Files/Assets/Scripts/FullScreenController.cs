@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class FullScreenController : MonoBehaviour {
-	private static bool _fullScreen;
+	private static bool _fullScreen = true;
 	private EnhancedText _fullscreenText;
 
 	private void Awake()

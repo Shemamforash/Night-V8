@@ -20,7 +20,7 @@ namespace Game.Combat.Misc
     {
         private float Speed = 25f;
         private static GameObject _bulletPrefab;
-        private BulletTrailFade _bulletTrail;
+        private BulletTrail _bulletTrail;
         private const float EnemyDamageModifier = 0.3f;
 
         private static readonly ObjectPool<Shot> _shotPool = new ObjectPool<Shot>("Shots", "Prefabs/Combat/Shots/Bullet");
@@ -47,6 +47,7 @@ namespace Game.Combat.Misc
         private event Action OnHitAction;
         private readonly RaycastHit2D[] _collisions = new RaycastHit2D[50];
         private Vector2 _lastPosition;
+        private bool _hasHit;
 
         public void Awake()
         {
@@ -74,6 +75,7 @@ namespace Game.Combat.Misc
             _seekTarget = false;
             _leaveFireTrail = false;
             _pierce = false;
+            _hasHit = false;
             OnHitAction = null;
         }
 
@@ -83,14 +85,6 @@ namespace Game.Combat.Misc
             shot.gameObject.layer = origin is PlayerCombat ? 16 : 15;
             Vector3 direction = origin.Direction();
             shot.Initialise(origin, direction);
-            return shot;
-        }
-
-        public static Shot Create(Shot origin)
-        {
-            Shot shot = _shotPool.Create();
-            shot.gameObject.layer = origin.gameObject.layer;
-            shot.Initialise(origin);
             return shot;
         }
 
@@ -126,15 +120,6 @@ namespace Game.Combat.Misc
             }
 
             _originPosition = origin.transform.position;
-            SetUpComponents();
-        }
-
-        private void Initialise(Shot shot)
-        {
-            _origin = null;
-            _direction = shot._direction;
-            _weapon = shot._weapon;
-            _originPosition = shot.transform.position;
             SetUpComponents();
         }
 
@@ -242,11 +227,28 @@ namespace Game.Combat.Misc
             _fired = true;
             if (_origin != null) _origin.IncreaseRecoil();
 
-            _bulletTrail = BulletTrailFade.Create();
+            switch (_weapon.WeaponType())
+            {
+                case WeaponType.Pistol:
+                    _bulletTrail = PistolTrail.Create();
+                    break;
+                case WeaponType.Rifle:
+                    _bulletTrail = RifleTrail.Create();
+                    break;
+                case WeaponType.LMG:
+                    _bulletTrail = LMGTrail.Create();
+                    break;
+                case WeaponType.Shotgun:
+                    _bulletTrail = ShotgunTrail.Create();
+                    break;
+                default:
+                    _bulletTrail = BasicTrail.Create();
+                    break;
+            }
             _bulletTrail.SetAlpha(1);
             _rigidBody.velocity = _direction * Speed * Random.Range(0.9f, 1.1f);
             _lastPosition = transform.position;
-            _bulletTrail.SetPosition(transform);
+            _bulletTrail.SetTarget(transform);
             StartCoroutine(WaitToDie());
         }
 
@@ -276,6 +278,8 @@ namespace Game.Combat.Misc
 
         private void Hit(Collision2D collision)
         {
+            if (_hasHit) return;
+            _hasHit = true;
             GameObject other = collision.gameObject;
             if (collision.contacts.Length > 0)
             {

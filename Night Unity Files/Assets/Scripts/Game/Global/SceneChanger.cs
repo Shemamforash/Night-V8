@@ -78,7 +78,7 @@ namespace Game.Global
 
         public static void GoToCombatScene()
         {
-            ChangeScene("Combat", true);
+            ChangeScene("Combat"); // true);
         }
 
         public static void GoToMainMenuScene()

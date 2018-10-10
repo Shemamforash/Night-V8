@@ -403,9 +403,9 @@ namespace Game.Combat.Player
             _muzzleFlash = GameObject.Find("Muzzle Flash").GetComponent<FastLight>();
             Player = CharacterManager.SelectedCharacter;
 #if UNITY_EDITOR
-            Player.Inventory().Move(WeaponGenerator.GenerateWeapon(ItemQuality.Radiant), 1);
             for (int i = 0; i < 50; ++i)
             {
+                Player.Inventory().Move(WeaponGenerator.GenerateWeapon(ItemQuality.Radiant), 1);
                 Player.Inventory().Move(Inscription.Generate(10), 1);
             }
 

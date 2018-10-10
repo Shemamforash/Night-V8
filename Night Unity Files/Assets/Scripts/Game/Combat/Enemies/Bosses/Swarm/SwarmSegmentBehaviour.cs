@@ -1,5 +1,4 @@
-﻿using System;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Game.Combat.Enemies.Bosses;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -14,7 +13,7 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
     private float _aOffset, _rOffset;
     private float _force;
     private float _followSpeed;
-    private const float SeekSpeed = 3f;
+    private const float SeekSpeed = 4f;
     private float _seekLifeTime = 5f;
 
     private enum SwarmState
@@ -143,17 +142,17 @@ public class SwarmSegmentBehaviour : BossSectionHealthController
     {
         if (_currentState != SwarmState.Following) return;
         _currentState = SwarmState.Bursting;
-        Vector2 targetPosition = AdvancedMaths.RandomDirection() * Mathf.Sqrt(Random.Range(0f, 30f));
+        Vector2 targetPosition = AdvancedMaths.RandomPointInCircle(14f);
         Vector2 origin = transform.position;
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(_rigidBody.DOMove(targetPosition, 1f).SetEase(Ease.InExpo));
+        sequence.Append(_rigidBody.DOMove(targetPosition, Random.Range(1f, 2f)).SetEase(Ease.InExpo));
         sequence.AppendCallback(() =>
         {
             Explosion explosion = Explosion.CreateExplosion(transform.position, 20);
             explosion.AddIgnoreTargets(SwarmBehaviour.GetAllSegments());
             explosion.Detonate();
         });
-        sequence.AppendInterval(Random.Range(0.75f, 1f));
+        sequence.AppendInterval(1f);
         sequence.Append(_rigidBody.DOMove(origin, 1).SetEase(Ease.InExpo));
         sequence.AppendCallback(() => _currentState = SwarmState.Following);
     }

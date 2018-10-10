@@ -105,7 +105,6 @@ namespace Game.Combat.Enemies
         public override void TakeShotDamage(Shot shot)
         {
             base.TakeShotDamage(shot);
-            PlayerCombat.Instance.UpdateAdrenaline(shot.DamageDealt());
             if (HealthController.GetCurrentHealth() != 0) return;
             PlayerCombat.Instance.Player.IncreaseKills();
         }

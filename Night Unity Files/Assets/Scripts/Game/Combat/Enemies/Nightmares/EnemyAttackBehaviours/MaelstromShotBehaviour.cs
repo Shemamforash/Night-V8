@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.Libraries;
+using TMPro;
 using UnityEngine;
 
 public class MaelstromShotBehaviour : MonoBehaviour
@@ -12,6 +14,9 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private float _speed = 3f;
     private SpriteRenderer[] _sprites;
     private bool _dying, _follow;
+    private MaelstromShotTrail _trail;
+    private float _angleModifier;
+    private const float AngleDecay = 0.97f;
 
     public static void Create(Vector3 direction, Vector3 position, float speed, bool follow = true)
     {
@@ -23,12 +28,17 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private void ResetShot(Vector2 direction, float speed, bool follow)
     {
         foreach (SpriteRenderer spriteRenderer in _sprites) spriteRenderer.enabled = true;
+
         _direction = direction;
         _speed = speed;
         _lifeTime = 5f;
         _rigidBody.velocity = _direction * _speed * 4;
         _dying = false;
         _follow = follow;
+        _angleModifier = 1;
+        _trail = MaelstromShotTrail.Create();
+        _trail.SetAlpha(1);
+        _trail.SetTarget(transform);
     }
 
     public void Awake()
@@ -42,12 +52,10 @@ public class MaelstromShotBehaviour : MonoBehaviour
         if (_dying || !_follow) return;
         Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
         float angle = Vector2.Angle(dir, PlayerCombat.Instance.transform.position - transform.position);
+        _angleModifier *= AngleDecay;
         float force = 1000;
-        if (angle > 90)
-        {
-            force = -force;
-        }
-
+        if (angle > 90) force = -force;
+        force *= _angleModifier;
         _rigidBody.AddForce(force * dir * Time.fixedDeltaTime * _rigidBody.mass);
         _rigidBody.velocity = Vector3.ClampMagnitude(_rigidBody.velocity, _speed);
     }
@@ -70,6 +78,7 @@ public class MaelstromShotBehaviour : MonoBehaviour
 
     private IEnumerator WaitToDie()
     {
+        _trail.StartFade(0.2f);
         foreach (SpriteRenderer spriteRenderer in _sprites) spriteRenderer.enabled = false;
         _dying = true;
         _rigidBody.velocity = Vector2.zero;

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using DG.Tweening;
+using Game.Characters;
 using Game.Combat.Generation;
 using Game.Exploration.Regions;
 using Game.Global;
@@ -34,10 +35,10 @@ public class GateTransitController : MonoBehaviour
     {
         WorldState.Pause();
         GameObject.Find("Game").SetActive(false);
-        StartCoroutine(GoToNextArea());
-
         _gateParticles.Play();
         _streakParticles.Play();
+        StartCoroutine(GoToNextArea());
+
         float maxTime = _streakParticles.main.duration;
         float currentTime = 0f;
         Color from = new Color(1f, 1f, 1f, 0f);
@@ -52,6 +53,7 @@ public class GateTransitController : MonoBehaviour
             yield return null;
         }
 
+//        StartCoroutine(GoToNextArea());
         _glow.color = UiAppearanceController.InvisibleColour;
     }
 
@@ -63,14 +65,9 @@ public class GateTransitController : MonoBehaviour
 
         Region r = new Region();
         r.SetRegionType(RegionType.Tomb);
-        CombatManager.SetCurrentRegion(r);
-        AsyncOperation sceneLoaded = SceneManager.LoadSceneAsync("Combat");
-        sceneLoaded.allowSceneActivation = false;
-
+        Player wanderer = CharacterManager.Characters.Find(c => c.CharacterTemplate.CharacterClass == CharacterClass.Wanderer);
+        CharacterManager.SelectedCharacter = wanderer;
         yield return screenFader.DOColor(Color.black, 3f).WaitForCompletion();
-
-        while (sceneLoaded.progress != 0.9f) yield return null;
-        sceneLoaded.allowSceneActivation = true;
-        ButtonClickListener.SuppressClick();
+        wanderer.TravelAction.TravelToInstant(r);
     }
 }

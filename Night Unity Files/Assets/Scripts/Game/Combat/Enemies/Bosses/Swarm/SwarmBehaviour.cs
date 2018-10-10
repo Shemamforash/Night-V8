@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
 using Game.Combat.Enemies.Bosses;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
-using SamsHelper.Libraries;
+using Game.Combat.Player;
 using UnityEngine;
 
 public class SwarmBehaviour : Boss
 {
     private static readonly List<SwarmBehaviour> _swarms = new List<SwarmBehaviour>();
-    private const float MoveSpeed = 0.33f;
+    private float _moveSpeed;
     private const int SwarmCount = 500;
     private float _fireCounter;
     private float _fireCounterMin, _fireCounterMax;
@@ -17,6 +18,8 @@ public class SwarmBehaviour : Boss
     private float _burstForce;
     private static GameObject _swarmPrefab;
     private float _burstCounter;
+    private Orbit _orbit;
+    private int FirstSplitThreshold, SecondSplitThreshold, ThirdSplitThreshold;
 
     public static void Create()
     {
@@ -39,11 +42,7 @@ public class SwarmBehaviour : Boss
     {
         transform.position = position;
         if (inheritedChildren == null) SpawnNewChildren();
-        else
-        {
-            inheritedChildren.ForEach(s => { s.SetSwarmParent(this); });
-        }
-
+        else inheritedChildren.ForEach(s => { s.SetSwarmParent(this); });
         RecalculateFireTimer();
     }
 
@@ -74,9 +73,22 @@ public class SwarmBehaviour : Boss
     protected override void Awake()
     {
         base.Awake();
+        FirstSplitThreshold = (int) (SwarmCount * 0.75f);
+        SecondSplitThreshold = (int) (SwarmCount * 0.5f);
+        ThirdSplitThreshold = (int) (SwarmCount * 0.25f);
+        _orbit = gameObject.AddComponent<Orbit>();
+        _moveSpeed = Random.Range(0.5f, 1f);
+        if (Random.Range(0, 2) == 0) _orbit.SwitchSpin();
         _swarms.Add(this);
         _fireCounter = Random.Range(_fireCounterMin, _fireCounterMax);
         _contractTimer = Random.Range(8f, 12f);
+    }
+
+    private void Start()
+    {
+        float minOrbitRadius = Random.Range(1.5f, 2.5f);
+        float maxOrbitRadius = minOrbitRadius * 2f;
+        _orbit.Initialise(PlayerCombat.Instance.transform, RigidBody.AddForce, _moveSpeed, minOrbitRadius, maxOrbitRadius);
     }
 
     private void RecalculateFireTimer()
@@ -94,7 +106,6 @@ public class SwarmBehaviour : Boss
         if (SectionCount() == 0) return;
         SwarmSegmentBehaviour swarmSegment = (SwarmSegmentBehaviour) Sections[0];
         swarmSegment.StartSeeking();
-        Sections.RemoveAt(0);
     }
 
     private void UpdateBurstCounter()
@@ -105,7 +116,7 @@ public class SwarmBehaviour : Boss
         if (_burstCounter > 0f) return;
         Sections.ForEach(s => ((SwarmSegmentBehaviour) s).StartBurst());
         Sequence sequence = DOTween.Sequence();
-        sequence.AppendInterval(3f);
+        sequence.AppendInterval(4f);
         sequence.AppendCallback(() => _burstCounter = Random.Range(10, 20));
     }
 
@@ -120,8 +131,8 @@ public class SwarmBehaviour : Boss
         sequence.Append(DOTween.To(() => _burstForce, f => _burstForce = f, -1f, 1f).SetEase(Ease.OutBounce));
         sequence.AppendCallback(() =>
         {
-            float angleIntervals = 1f / 20f * SectionCount() + 5;
-            for (float angle = 0f; angle < 360f; angle += angleIntervals)
+            float angleInterval = 360 / 3f;
+            for (float angle = 0f; angle < 360f; angle += angleInterval)
             {
                 Vector3 direction = new Vector2();
                 direction.x = Mathf.Cos(angle);
@@ -133,13 +144,6 @@ public class SwarmBehaviour : Boss
         });
     }
 
-    public void FixedUpdate()
-    {
-        Vector2 mousePosition = Helper.MouseToWorldCoordinates();
-        Vector2 dir = (mousePosition - (Vector2) transform.position).normalized;
-        RigidBody.AddForce(dir * MoveSpeed);
-    }
-
     public void Update()
     {
         UpdateFireCounter();
@@ -147,25 +151,27 @@ public class SwarmBehaviour : Boss
         UpdateBurstCounter();
         if (!_contracting) _burstForce = Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0f);
         for (int i = Sections.Count - 1; i >= 0; --i)
-        {
             ((SwarmSegmentBehaviour) Sections[i]).UpdateSection(transform.position, _burstForce * 1.3f - 0.3f);
-        }
+    }
+
+    private void CheckToSplit()
+    {
+        int afterCount = SectionCount();
+        int beforeCount = afterCount + 1;
+        if (beforeCount > FirstSplitThreshold && afterCount <= FirstSplitThreshold) Split();
+        if (beforeCount > SecondSplitThreshold && afterCount <= SecondSplitThreshold) Split();
+        if (beforeCount > ThirdSplitThreshold && afterCount <= ThirdSplitThreshold) Split();
     }
 
     public override void UnregisterSection(BossSectionHealthController segment)
     {
-        int beforeCount = SectionCount();
         Sections.Remove(segment);
-        int afterCount = SectionCount();
-        if (beforeCount > SwarmCount / 2 && afterCount <= SwarmCount / 2) Split();
+        CheckToSplit();
         RecalculateFireTimer();
         if (Sections.Count != 0) return;
-        if (_swarms.Count == 1)
-        {
-            _swarms.Remove(this);
-            Kill();
-        }
-        else Destroy(gameObject);
+        _swarms.Remove(this);
+        if (_swarms.Count == 0) Kill();
+        Destroy(gameObject);
     }
 
     public static List<CanTakeDamage> GetAllSegments()

@@ -1,23 +1,25 @@
 ﻿using Game.Combat.Generation;
 using Game.Combat.Misc;
+using Game.Gear.Armour;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Bosses
 {
-    public class OvaBehaviour : Boss
+    public class OvaBehaviour : CanTakeDamage
     {
-        private HealthController _healthController;
         private const float SpermSpawnThreshold = 200f;
-        private float _damageTaken;
+        private float _damageTakenSinceLastSpawn;
         private float SpawnTimer = 15f;
-        private DamageSpriteFlash _spriteFlash;
+        private Boss _boss;
+        private const int StartingHealth = 2000;
 
         protected override void Awake()
         {
             base.Awake();
-            _spriteFlash = GetComponent<DamageSpriteFlash>();
-            _healthController = new HealthController();
-//            _healthController.SetInitialHealth(1000, this);
+            _boss = GetComponent<Boss>();
+            HealthController.SetInitialHealth(StartingHealth, this);
+            ArmourController = new ArmourController(null);
+            ArmourController.AutoFillSlots(10);
         }
 
         public static void Create()
@@ -26,44 +28,35 @@ namespace Game.Combat.Enemies.Bosses
             Instantiate(ovaPrefab).transform.position = new Vector2(0, 0);
         }
 
-        public GameObject GetGameObject()
+        protected override void TakeDamage(int damage, Vector2 direction)
         {
-            return gameObject;
+            int healthBefore = (int) HealthController.GetCurrentHealth();
+            base.TakeDamage(damage, direction);
+            int healthAfter = (int) HealthController.GetCurrentHealth();
+            int damageTaken = healthBefore - healthAfter;
+            CheckAddExplosion(healthBefore, healthAfter);
+            TrySpawnSperm(damageTaken);
+            if (HealthController.GetCurrentHealth() != 0) return;
+            _boss.Kill();
         }
 
-        private void TakeDamage(float damage)
+        private void CheckAddExplosion(int healthBefore, int healthAfter)
         {
-            _spriteFlash.FlashSprite();
-            _healthController.TakeDamage(damage);
-            TrySpawnSperm((int) damage);
-        }
-
-        public void TakeShotDamage(Shot shot)
-        {
-            TakeDamage(shot.DamageDealt());
-        }
-
-        public void TakeRawDamage(float damage, Vector2 direction)
-        {
-            TakeDamage(damage);
-        }
-
-        public void TakeExplosionDamage(float damage, Vector2 origin, float radius)
-        {
-            TakeDamage(damage);
+            if (healthBefore <= StartingHealth / 2 || healthAfter > StartingHealth / 2f) return;
+            gameObject.AddComponent<OvaExplosionAttack>().Initialise(15f, 10f);
         }
 
         private void TrySpawnSperm(int damage)
         {
-            _damageTaken += damage;
-            if (!(_damageTaken > SpermSpawnThreshold)) return;
-            _damageTaken -= SpermSpawnThreshold;
+            _damageTakenSinceLastSpawn += damage;
+            if (!(_damageTakenSinceLastSpawn > SpermSpawnThreshold)) return;
+            _damageTakenSinceLastSpawn -= SpermSpawnThreshold;
             SpermBehaviour.Create();
         }
 
-        public void MyUpdate()
+        public override void MyUpdate()
         {
-//            base.MyUpdate();
+            base.MyUpdate();
             if (SpawnTimer > 0f)
             {
                 SpawnTimer -= Time.deltaTime;
@@ -71,22 +64,19 @@ namespace Game.Combat.Enemies.Bosses
             }
 
             SpawnTimer = Random.Range(20f, 30f);
-            float normalisedHealth = _healthController.GetNormalisedHealthValue();
-            if (normalisedHealth < 0.25f)
-            {
-                CombatManager.SpawnEnemy(EnemyType.Revenant, Vector2.zero);
-            }
-            else if (normalisedHealth < 0.5f)
-            {
-                for (int i = 0; i < Random.Range(1, 4); ++i) CombatManager.SpawnEnemy(EnemyType.Shadow, Vector2.zero);
-            }
 
+            float normalisedHealth = HealthController.GetNormalisedHealthValue();
+            if (normalisedHealth < 0.25f)
+                CombatManager.SpawnEnemy(EnemyType.Revenant, Vector2.zero);
+            else if (normalisedHealth < 0.5f)
+                for (int i = 0; i < Random.Range(1, 4); ++i)
+                    CombatManager.SpawnEnemy(EnemyType.Shadow, Vector2.zero);
             for (int i = 0; i < Random.Range(5, 11); ++i) CombatManager.SpawnEnemy(EnemyType.Ghoul, Vector2.zero);
         }
 
-        public string GetDisplayName()
+        public override string GetDisplayName()
         {
-            return "Ova";
+            return "Ahna, The Dead One";
         }
     }
 }

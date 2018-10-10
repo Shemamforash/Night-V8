@@ -1,37 +1,34 @@
 ﻿using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Gear.Armour;
 using SamsHelper.Libraries;
 using UnityEngine;
 
-public class SpermBehaviour : MonoBehaviour
+public class SpermBehaviour : CanTakeDamage
 {
     private static GameObject _spermPrefab;
     private bool _followPlayer;
-    private HealthController _healthController;
     private Heavyshot _heavyShot;
     private Rigidbody2D _rigidbody;
     private Vector3 _targetPosition;
     private float Speed;
 
-    public void Awake()
+    protected override void Awake()
     {
-        Speed = Random.Range(2f, 3f);
-        _healthController = new HealthController();
-        _healthController.SetInitialHealth(150, null);
+        base.Awake();
+        Speed = Random.Range(2f, 4f);
+        HealthController.SetInitialHealth(150, null);
+        ArmourController = new ArmourController(null);
         _heavyShot = GetComponent<Heavyshot>();
         _rigidbody = GetComponent<Rigidbody2D>();
         _heavyShot.Initialise(1f, 0.4f, 5, 0.5f);
         _heavyShot.SetFiring(false);
-        gameObject.GetComponent<SpermSegmentBehaviour>().SetSperm(this);
-        Helper.FindAllComponentsInChildren<SpermSegmentBehaviour>(transform).ForEach(s => { s.SetSperm(this); });
     }
 
-    public bool IsDead() => _healthController.GetCurrentHealth() == 0;
-
-    public void TakeDamage(int damage)
+    public override string GetDisplayName()
     {
-        _healthController.TakeDamage(damage);
+        return "Ahna's Bane";
     }
 
     private void SetFollowing(bool following)
@@ -40,8 +37,9 @@ public class SpermBehaviour : MonoBehaviour
         _heavyShot.SetFiring(following);
     }
 
-    public void Update()
+    public override void MyUpdate()
     {
+        base.MyUpdate();
         float distanceToTarget = transform.Distance(PlayerCombat.Instance.transform.position);
         if (_followPlayer)
         {
@@ -50,8 +48,8 @@ public class SpermBehaviour : MonoBehaviour
                 SetFollowing(false);
                 Vector3 dirToPlayer = PlayerCombat.Instance.transform.position - transform.position;
                 dirToPlayer.Normalize();
-                Vector2 locationBeyondPlyer = transform.position + dirToPlayer * Random.Range(4f, 6f);
-                _targetPosition = AdvancedMaths.RandomVectorWithinRange(locationBeyondPlyer, 1f);
+                Vector2 locationBeyondPlayer = transform.position + dirToPlayer * Random.Range(4f, 6f);
+                _targetPosition = AdvancedMaths.RandomVectorWithinRange(locationBeyondPlayer, 1f);
                 return;
             }
 

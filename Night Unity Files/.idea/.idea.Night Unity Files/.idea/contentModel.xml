@@ -449,8 +449,8 @@
                   <e p="BossSectionHealthController.cs" t="Include" />
                   <e p="Ova" t="Include">
                     <e p="OvaBehaviour.cs" t="Include" />
+                    <e p="OvaExplosionAttack.cs" t="Include" />
                     <e p="SpermBehaviour.cs" t="Include" />
-                    <e p="SpermSegmentBehaviour.cs" t="Include" />
                   </e>
                   <e p="Serpent" t="Include">
                     <e p="SerpentBehaviour.cs" t="Include" />
@@ -579,8 +579,17 @@
                 <e p="Triangulator.cs" t="Include" />
               </e>
               <e p="Misc" t="Include">
-                <e p="BulletImpactBehaviour.cs" t="Include" />
-                <e p="BulletTrailFade.cs" t="Include" />
+                <e p="BulletTrails" t="Include">
+                  <e p="BasicTrail.cs" t="Include" />
+                  <e p="BulletImpactBehaviour.cs" t="Include" />
+                  <e p="BulletTrail.cs" t="Include" />
+                  <e p="LMGTrail.cs" t="Include" />
+                  <e p="MaelstromShotTrail.cs" t="Include" />
+                  <e p="PistolTrail.cs" t="Include" />
+                  <e p="RifleTrail.cs" t="Include" />
+                  <e p="Shot.cs" t="Include" />
+                  <e p="ShotgunTrail.cs" t="Include" />
+                </e>
                 <e p="CanTakeDamage.cs" t="Include" />
                 <e p="CharacterCombat.cs" t="Include" />
                 <e p="DecayBehaviour.cs" t="Include" />
@@ -597,7 +606,6 @@
                 <e p="SaltBehaviour.cs" t="Include" />
                 <e p="ShelterCharacterBehaviour.cs" t="Include" />
                 <e p="ShelterCharacterColliderBehaviour.cs" t="Include" />
-                <e p="Shot.cs" t="Include" />
                 <e p="SickenBehaviour.cs" t="Include" />
                 <e p="SkillBar.cs" t="Include" />
                 <e p="TargetBehaviour.cs" t="Include" />
