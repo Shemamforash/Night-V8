@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Facilitating.UIControllers;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using Game.Combat.Ui;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Combat.Enemies
 {
@@ -71,7 +70,9 @@ namespace Game.Combat.Enemies
         private void InitialiseAttributes()
         {
             ArmourController = Enemy.ArmourController;
-            MovementController.SetSpeed(Enemy.Template.Speed);
+            float speed = Enemy.Template.Speed;
+            speed = Random.Range(speed * 0.8f, speed * 1.2f);
+            MovementController.SetSpeed(speed);
             HealthController.SetInitialHealth(Enemy.GetHealth(), this);
             MoveBehaviour = gameObject.AddComponent<MoveBehaviour>();
         }
@@ -127,7 +128,7 @@ namespace Game.Combat.Enemies
 
             Loot loot = Enemy.DropLoot(transform.position);
 
-            if (loot.IsValid)
+            if (loot != null)
             {
                 loot.CreateObject(true);
                 CombatManager.Region().Containers.Add(loot);

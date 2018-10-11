@@ -30,7 +30,6 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         protected override void Attack()
         {
-            Debug.Log("attacking");
             if (!_firing) return;
             StartCoroutine(FireMaelstromShot());
         }

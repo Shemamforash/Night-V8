@@ -1,50 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Xml;
 using Game.Gear;
 using Game.Gear.Weapons;
-using Game.Global;
 using SamsHelper;
 using SamsHelper.BaseGameFunctionality.Basic;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Characters
 {
-    public class CharacterManager : Inventory
+    public static class CharacterManager
     {
         public static Player SelectedCharacter;
         public static readonly List<Player> Characters = new List<Player>();
         private static readonly List<CharacterTemplate> Templates = new List<CharacterTemplate>();
         private static bool _loaded;
-        private static readonly List<Building> _buildings = new List<Building>();
 
-        public CharacterManager() : base("Vehicle")
+        public static void Reset()
         {
-            Reset();
+            SelectedCharacter = null;
+            for (int i = Characters.Count - 1; i >= 0; --i)
+                RemoveCharacter(Characters[i]);
             AddCharacter(GenerateDriver());
         }
 
-        private static void Reset()
-        {
-            SelectedCharacter = null;
-            if (Characters.Count > 0)
-            {
-                for (int i = Characters.Count - 1; i >= 0; --i)
-                {
-                    RemoveCharacter(Characters[i]);
-                }
-            }
-
-            _buildings.Clear();
-        }
-
-        public override void Load(XmlNode doc)
+        public static void Load(XmlNode doc)
         {
             Reset();
-            base.Load(doc);
             XmlNode characterManagerNode = doc.GetNode("Inventory");
             foreach (XmlNode characterNode in Helper.GetNodesWithName(characterManagerNode, "Character"))
             {
@@ -56,15 +38,12 @@ namespace Game.Characters
             }
         }
 
-        public override XmlNode Save(XmlNode doc)
+        public static void Save(XmlNode doc)
         {
-            doc = base.Save(doc);
             foreach (Player c in Characters) c.Save(doc);
-            _buildings.ForEach(b => b.Save(doc));
-            return doc;
         }
 
-        public void Start()
+        public static void Start()
         {
             for (int i = 0; i < Characters.Count; i++)
             {
@@ -79,11 +58,6 @@ namespace Game.Characters
 
             Characters[0].CharacterView().SelectInitial();
             Characters.ForEach(c => c.CharacterView().RefreshNavigation());
-            IncrementResource("Salt", 20);
-            IncrementResource("Radiance", 20);
-            IncrementResource("Fuel", 20);
-            IncrementResource("Water", 20);
-            IncrementResource("Essence", 20);
         }
 
         public static void AddCharacter(Player playerCharacter)
@@ -96,11 +70,6 @@ namespace Game.Characters
             GameObject.Destroy(playerCharacter.CharacterView());
             Characters.Remove(playerCharacter);
             Characters.ForEach(c => c.CharacterView().RefreshNavigation());
-        }
-
-        public void UpdateBuildings()
-        {
-            _buildings.ForEach(b => b.Update());
         }
 
         private static void ExitCharacter(Player character)
@@ -163,7 +132,7 @@ namespace Game.Characters
             throw new Exceptions.UnknownCharacterClassException(characterClass.ToString());
         }
 
-        private CharacterTemplate FindClass(string characterClass)
+        private static CharacterTemplate FindClass(string characterClass)
         {
             LoadTemplates();
             foreach (CharacterTemplate t in Templates)
@@ -177,7 +146,7 @@ namespace Game.Characters
             throw new Exceptions.UnknownCharacterClassException(characterClass);
         }
 
-        private Player GenerateDriver()
+        private static Player GenerateDriver()
         {
             Player driver = GenerateCharacter(CharacterClass.Wanderer);
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Dark, WeaponType.Pistol);
@@ -239,35 +208,6 @@ namespace Game.Characters
                 if (c.IsDead)
                     RemoveCharacter(c);
             }
-        }
-
-        public void AddBuilding(Building building)
-        {
-            _buildings.Add(building);
-        }
-
-        public int GetBuildingCount(string buildingName)
-        {
-            switch (buildingName)
-            {
-                case "Shelter":
-                    return _buildings.Count(b => b is Shelter);
-                case "Trap":
-                    return _buildings.Count(b => b is Trap);
-                case "Water Collector":
-                    return _buildings.Count(b => b is WaterCollector);
-                case "Condenser":
-                    return _buildings.Count(b => b is Condenser);
-                case "Essence Filter":
-                    return _buildings.Count(b => b is EssenceFilter);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        public List<Building> Buildings()
-        {
-            return _buildings;
         }
 
         public static void SelectPreviousCharacter(bool selectGear)

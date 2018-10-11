@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Characters;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
@@ -97,17 +98,17 @@ namespace Game.Global
                 {
                     case "Food":
                         quantity = 0;
-                        WorldState.HomeInventory().Consumables().ForEach(c => quantity += c.HungerModifier);
+                        Inventory.Consumables().ForEach(c => quantity += c.HungerModifier);
                         _resourceText[resourceType].text = "Food\n" + quantity;
                         continue;
                     case "Water":
                         quantity = 0;
-                        WorldState.HomeInventory().Consumables().ForEach(c => quantity += c.ThirstModifier);
+                        Inventory.Consumables().ForEach(c => quantity += c.ThirstModifier);
                         _resourceText[resourceType].text = "Water\n" + quantity;
                         continue;
                 }
 
-                quantity = Mathf.FloorToInt(WorldState.HomeInventory().GetResourceQuantity(resourceType));
+                quantity = Mathf.FloorToInt(Inventory.GetResourceQuantity(resourceType));
                 if (quantity == 0 && resourceType != "Food" && resourceType != "Water")
                 {
                     _resourceText[resourceType].gameObject.SetActive(false);

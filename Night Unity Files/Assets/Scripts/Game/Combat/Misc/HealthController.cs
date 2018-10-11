@@ -1,6 +1,4 @@
 ﻿using System;
-using Game.Combat.Player;
-using Game.Combat.Ui;
 using NUnit.Framework;
 using SamsHelper.ReactiveUI;
 
@@ -30,7 +28,7 @@ namespace Game.Combat.Misc
             OnTakeDamage?.Invoke(amount);
             if (!_healthRemaining.ReachedMin()) return;
             OnKill?.Invoke();
-            _healthyThing?.Kill();
+            _healthyThing.Kill();
         }
 
         public void Heal(int amount)

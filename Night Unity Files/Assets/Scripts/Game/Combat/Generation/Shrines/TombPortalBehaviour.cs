@@ -30,7 +30,7 @@ public class TombPortalBehaviour : MonoBehaviour
         switch (EnvironmentManager.CurrentEnvironment.LevelNo)
         {
             case 0:
-                OvaBehaviour.Create();
+                WormBehaviour.Create();
 //                SerpentBehaviour.Create();
                 break;
             case 1:

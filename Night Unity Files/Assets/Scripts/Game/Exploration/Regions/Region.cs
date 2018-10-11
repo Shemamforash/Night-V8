@@ -122,7 +122,7 @@ namespace Game.Exploration.Regions
             }
 
             if (ClaimRemaining % (24 * WorldState.MinutesPerHour) != 0) return;
-            WorldState.HomeInventory().IncrementResource(_claimBenefit, 1);
+            Inventory.IncrementResource(_claimBenefit, 1);
         }
 
         public bool Generated()

@@ -206,6 +206,7 @@
         </e>
         <e p="BrandReplaceMenuController.cs" t="Include" />
         <e p="CharacterBrandUIController.cs" t="Include" />
+        <e p="CombatMusicController.cs" t="Include" />
         <e p="Demigiant" t="Include">
           <e p="DemiLib" t="Include">
             <e p="Core" t="Include">
@@ -225,6 +226,7 @@
           </e>
           <e p="readme_DOTweenPro.txt" t="Include" />
         </e>
+        <e p="DismantleMenuController.cs" t="Include" />
         <e p="EZ Camera Shake" t="Include">
           <e p="Scripts" t="Include">
             <e p="CameraShakeInstance.cs" t="Include" />
@@ -542,6 +544,7 @@
                   <e p="ContainerBehaviour.cs" t="Include" />
                   <e p="ContainerController.cs" t="Include" />
                   <e p="FoodSource.cs" t="Include" />
+                  <e p="JournalSource.cs" t="Include" />
                   <e p="Loot.cs" t="Include" />
                   <e p="WaterSource.cs" t="Include" />
                 </e>
@@ -601,7 +604,6 @@
                 <e p="FootstepMaker.cs" t="Include" />
                 <e p="HealthController.cs" t="Include" />
                 <e p="ICombatEvent.cs" t="Include" />
-                <e p="JournalSource.cs" t="Include" />
                 <e p="Mine.cs" t="Include" />
                 <e p="SaltBehaviour.cs" t="Include" />
                 <e p="ShelterCharacterBehaviour.cs" t="Include" />

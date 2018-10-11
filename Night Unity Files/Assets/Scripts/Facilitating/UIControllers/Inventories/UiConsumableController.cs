@@ -58,7 +58,7 @@ public class UiConsumableController : UiInventoryMenuController
 
     private List<object> GetAvailableConsumables()
     {
-        return UiGearMenuController.Inventory().Consumables().ToObjectList();
+        return Inventory.Consumables().ToObjectList();
     }
 
     public void Consume(object consumableObject)

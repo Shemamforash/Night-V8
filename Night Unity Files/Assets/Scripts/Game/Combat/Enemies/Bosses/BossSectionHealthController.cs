@@ -22,7 +22,7 @@ namespace Game.Combat.Enemies.Bosses
 
         protected abstract int GetInitialHealth();
 
-        protected void SetBoss(Boss boss)
+        protected  void SetBoss(Boss boss)
         {
             if(Parent != null) Parent.UnregisterSection(this);
             Parent = boss;

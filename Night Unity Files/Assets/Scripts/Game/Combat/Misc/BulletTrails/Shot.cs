@@ -180,7 +180,6 @@ namespace Game.Combat.Misc
             {
                 RaycastHit2D hit = _collisions[i];
                 DealDamage(hit.collider.gameObject);
-                _damage = Mathf.CeilToInt(_damage * 0.5f);
             }
 
             _lastPosition = newPosition;
@@ -245,6 +244,7 @@ namespace Game.Combat.Misc
                     _bulletTrail = BasicTrail.Create();
                     break;
             }
+
             _bulletTrail.SetAlpha(1);
             _rigidBody.velocity = _direction * Speed * Random.Range(0.9f, 1.1f);
             _lastPosition = transform.position;
@@ -274,6 +274,7 @@ namespace Game.Combat.Misc
             PlayerCombat player = _origin as PlayerCombat;
             if (player != null) player.OnShotConnects(hit);
             ApplyDamage(hit);
+            _damage = Mathf.CeilToInt(_damage * 0.5f);
         }
 
         private void Hit(Collision2D collision)

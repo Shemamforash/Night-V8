@@ -197,33 +197,52 @@ namespace Game.Combat.Enemies
             IsDead = true;
         }
 
+        private Loot DropHumanLoot(Vector2 position)
+        {
+            SaltBehaviour.Create(position, Template.DropCount);
+            bool dropWeapon = Random.Range(0, 20) == 0 && EquippedWeapon != null;
+            bool dropAccessory = Random.Range(0, 30) == 0;
+            if (dropWeapon && dropAccessory)
+            {
+                if (Random.Range(0, 2) == 0) dropWeapon = false;
+                else dropAccessory = false;
+            }
+
+            if (dropWeapon) return new Loot(position, EquippedWeapon);
+            return dropAccessory ? new Loot(position, Accessory.Generate()) : null;
+        }
+
+        private Loot DropNightmareLoot(Vector2 position)
+        {
+            EssenceCloudBehaviour.Create(position, Template.DropCount);
+            bool dropInscription = Random.Range(0, 20) == 0;
+            return dropInscription ? new Loot(position, Inscription.Generate()) : null;
+        }
+
+        private Loot DropAnimalLoot(Vector2 position)
+        {
+            InventoryItem item;
+            if (Template.EnemyType == EnemyType.Grazer || Template.EnemyType == EnemyType.Watcher && Random.Range(0, 3) == 1)
+                item = ResourceTemplate.Create("Skin");
+            else
+                item = ResourceTemplate.GetMeat();
+            Loot loot = new Loot(position, item);
+            return loot;
+        }
+
         public Loot DropLoot(Vector2 position)
         {
-            Loot controller = new Loot(position);
             switch (Template.DropResource)
             {
                 case "Salt":
-                    SaltBehaviour.Create(position, Template.DropCount);
-                    if (EquippedWeapon != null && Random.Range(0, 20) == 0) controller.AddToInventory(EquippedWeapon);
-                    else if (Random.Range(0, 20) == 0) controller.AddToInventory(Accessory.Generate());
-                    break;
+                    return DropHumanLoot(position);
                 case "Essence":
-                    EssenceCloudBehaviour.Create(position, Template.DropCount);
-                    if (Random.Range(0, 20) == 0) controller.AddToInventory(Inscription.Generate());
-                    break;
+                    return DropNightmareLoot(position);
                 case "Meat":
-                    controller.SetIsMeatSource();
-                    if (Template.EnemyType == EnemyType.Grazer || Template.EnemyType == EnemyType.Watcher && Random.Range(0, 2) == 1)
-                    {
-                        controller.AddToInventory(ResourceTemplate.Create("Skin"));
-                        break;
-                    }
-
-                    controller.AddToInventory(ResourceTemplate.GetMeat());
-                    break;
+                    return DropAnimalLoot(position);
             }
 
-            return controller;
+            return null;
         }
 
         public int GetHealth()

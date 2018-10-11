@@ -13,12 +13,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private bool _stackable;
         public ResourceTemplate Template;
 
-        public InventoryItem(ResourceTemplate template, GameObjectType type, Inventory parentInventory = null) : base(template.Name, type, parentInventory)
+        public InventoryItem(ResourceTemplate template, GameObjectType type) : base(template.Name, type)
         {
             Template = template;
         }
 
-        protected InventoryItem(string name, GameObjectType type, Inventory parentInventory = null) : base(name, type, parentInventory)
+        protected InventoryItem(string name, GameObjectType type) : base(name, type)
         {
             _quantity.Increment();
         }

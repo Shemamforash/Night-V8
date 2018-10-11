@@ -48,33 +48,7 @@ namespace Game.Characters.CharacterActions
         {
             CurrentRegion = MapGenerator.GetInitialNode();
             _inTransit = false;
-            TransferResources();
             PlayerCharacter.RestAction.Enter();
-        }
-
-        private void TransferResources()
-        {
-            foreach (InventoryItem item in PlayerCharacter.Inventory().Contents())
-            {
-                if (item.Template == null) continue;
-                switch (item.Template.ResourceType)
-                {
-                    case "Water":
-                        PlayerCharacter.BrandManager.IncreaseWaterFound();
-                        break;
-                    case "Plant":
-                        PlayerCharacter.BrandManager.IncreaseFoodFound();
-                        break;
-                    case "Meat":
-                        PlayerCharacter.BrandManager.IncreaseFoodFound();
-                        break;
-                    case "Resource":
-                        PlayerCharacter.BrandManager.IncreaseResourceFound();
-                        break;
-                }
-            }
-
-            PlayerCharacter.Inventory().MoveAll(WorldState.HomeInventory());
         }
 
         private void ReachTarget()
@@ -83,20 +57,19 @@ namespace Game.Characters.CharacterActions
             _inTransit = false;
             if (AtHome())
             {
-                TransferResources();
                 PlayerCharacter.RestAction.Enter();
                 WorldEventManager.GenerateEvent(new CharacterMessage("I'm back, but the journey has taken it's toll", PlayerCharacter));
             }
             else
             {
-               EnterRegion();
+                EnterRegion();
             }
         }
 
         private void EnterRegion()
         {
             bool justDiscovered = CurrentRegion.Discover();
-            if(justDiscovered) PlayerCharacter.BrandManager.IncreaseRegionsExplored();
+            if (justDiscovered) PlayerCharacter.BrandManager.IncreaseRegionsExplored();
             CombatManager.SetCurrentRegion(CurrentRegion);
             SceneChanger.GoToCombatScene();
         }
@@ -114,7 +87,7 @@ namespace Game.Characters.CharacterActions
         public void TravelTo(Region target, int enduranceCost)
         {
             Enter();
-            if(target == CurrentRegion && CurrentRegion.GetRegionType() != RegionType.Gate) EnterRegion();
+            if (target == CurrentRegion && CurrentRegion.GetRegionType() != RegionType.Gate) EnterRegion();
             _travelTime = 0;
             _inTransit = true;
             _target = target;

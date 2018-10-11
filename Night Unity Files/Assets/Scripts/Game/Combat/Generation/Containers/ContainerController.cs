@@ -4,6 +4,7 @@ using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Exploration.Environment;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
 
@@ -11,14 +12,13 @@ public abstract class ContainerController
 {
     public static readonly List<ContainerBehaviour> Containers = new List<ContainerBehaviour>();
     private readonly Vector2 _position;
-    protected readonly Inventory _inventory;
+    protected InventoryItem Item;
     protected string PrefabLocation = "Container";
     protected string ImageLocation;
 
-    protected ContainerController(Vector2 position, string name)
+    protected ContainerController(Vector2 position)
     {
         _position = position;
-        _inventory = new Inventory(name);
         ImageLocation = "Loot";
     }
 
@@ -34,44 +34,49 @@ public abstract class ContainerController
         return cb;
     }
 
-    private Inventory Inventory()
-    {
-        if (!EnvironmentManager.BelowFreezing()) return _inventory;
-        int waterQuantity = _inventory.GetResourceQuantity("Water");
-        if (waterQuantity <= 0) return _inventory;
-        _inventory.DecrementResource("Water", waterQuantity);
-        _inventory.IncrementResource("Ice", waterQuantity);
-        return _inventory;
-    }
-
     public virtual void Take()
     {
         int resourceBonus = (int) PlayerCombat.Instance.Player.Attributes.ResourceFindModifier;
         if (resourceBonus != 0)
         {
-            Inventory().Contents().ForEach(i =>
+            ResourceTemplate resourceTemplate = Item.Template;
+            if (resourceTemplate == null) return;
+            if (resourceTemplate.ResourceType != "Resource") return;
+            if (resourceBonus > 0) Item.Increment(resourceBonus);
+            else
             {
-                ResourceTemplate resourceTemplate = i.Template;
-                if (resourceTemplate == null) return;
-                if (resourceTemplate.ResourceType != "Resource") return;
-                if (resourceBonus > 0) i.Increment(resourceBonus);
-                else
-                {
-                    int quantity = i.Quantity();
-                    if (quantity - resourceBonus <= 0) resourceBonus = quantity - 1;
-                    i.Decrement(resourceBonus);
-                }
-            });
+                int quantity = Item.Quantity();
+                if (quantity - resourceBonus <= 0) resourceBonus = quantity - 1;
+                Item.Decrement(resourceBonus);
+            }
         }
 
-        Debug.Log("before " + Inventory().Contents().Count + " " + CharacterManager.SelectedCharacter.Inventory());
-        Inventory().MoveAll(CharacterManager.SelectedCharacter.Inventory());
-        Debug.Log("after " + Inventory().Contents().Count + " " + CharacterManager.SelectedCharacter.Inventory());
+        Player player = CharacterManager.SelectedCharacter;
+        if (Item.Template != null)
+        {
+            switch (Item.Template.ResourceType)
+            {
+                case "Water":
+                    player.BrandManager.IncreaseWaterFound();
+                    break;
+                case "Plant":
+                    player.BrandManager.IncreaseFoodFound();
+                    break;
+                case "Meat":
+                    player.BrandManager.IncreaseFoodFound();
+                    break;
+                case "Resource":
+                    player.BrandManager.IncreaseResourceFound();
+                    break;
+            }
+        }
+
+        Inventory.Move(Item, Item.Quantity());
     }
 
     public string GetContents()
     {
-        return !_inventory.Contents().Any() ? "" : _inventory.Contents()[0].Name;
+        return Item == null ? "" : Item.Name;
     }
 
     public string GetImageLocation()

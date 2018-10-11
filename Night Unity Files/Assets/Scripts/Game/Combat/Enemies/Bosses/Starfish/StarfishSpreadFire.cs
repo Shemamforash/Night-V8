@@ -10,9 +10,11 @@ namespace Game.Combat.Enemies.Bosses.Starfish
         private bool _tier2Active;
 
         private float _spinAttackCooldown, _burstAttackCooldown, _radialAttackTimer, _radialAttackAngle;
+        private bool _attacking;
 
         public void UpdateSpreadFire()
         {
+            if (_attacking) return;
             UpdateSpinAttack();
             UpdateBurstAttack();
             UpdateRadialAttack();
@@ -31,7 +33,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
             if (!_tier2Active) return;
             _radialAttackTimer -= Time.deltaTime;
             if (_radialAttackTimer > 0f) return;
-            _radialAttackTimer = 0.5f;
+            _radialAttackTimer = 1f;
             int count = 20;
             float angleInterval = 360f / count;
             for (int j = 0; j < count; ++j)
@@ -57,6 +59,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
 
         private IEnumerator DoBurstAttack()
         {
+            _attacking = true;
             int count = 50;
             float angleInterval = 360f / count;
             float startAngle = 0f;
@@ -73,14 +76,16 @@ namespace Game.Combat.Enemies.Bosses.Starfish
                 }
 
                 startAngle = startAngle == 0 ? angleInterval / 2f : 0;
-                yield return new WaitForSeconds(0.25f);
+                yield return new WaitForSeconds(0.5f);
             }
 
             _burstAttackCooldown = Random.Range(5f, 10f);
+            _attacking = false;
         }
 
         private IEnumerator DoSpinAttack()
         {
+            _attacking = true;
             int count = 50;
             float angleInterval = 180f / count;
             while (count > 0f)
@@ -100,6 +105,7 @@ namespace Game.Combat.Enemies.Bosses.Starfish
             }
 
             _spinAttackCooldown = Random.Range(5f, 7.5f);
+            _attacking = false;
         }
 
         public void StartTier1()

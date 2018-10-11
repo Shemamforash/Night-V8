@@ -233,9 +233,9 @@ namespace Game.Characters
             return Mathf.CeilToInt(Val(AttributeType.Perception) + Val(AttributeType.CompassBonus));
         }
 
-        public void Drink()
+        public void Drink(int thirstOffset)
         {
-            int thirstLoss = (int) ThirstModifier + 1;
+            int thirstLoss = (int) ThirstModifier + thirstOffset;
             int hungerGain = (int) WaterHungerModifier;
             CharacterAttribute thirst = Get(AttributeType.Thirst);
             thirst.Decrement(thirstLoss);
@@ -244,9 +244,9 @@ namespace Game.Characters
             WorldEventManager.GenerateEvent(new CharacterMessage("I needed that", _player));
         }
 
-        public void Eat()
+        public void Eat(int hungerOffset)
         {
-            int hungerLoss = (int) HungerModifier + 1;
+            int hungerLoss = (int) HungerModifier + hungerOffset;
             int thirstGain = (int) FoodThirstModifier;
             CharacterAttribute hunger = Get(AttributeType.Hunger);
             hunger.Decrement(hungerLoss);

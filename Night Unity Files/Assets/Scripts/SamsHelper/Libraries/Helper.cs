@@ -30,7 +30,7 @@ namespace SamsHelper.Libraries
         public static bool NotEmpty<T>(this T[] arr) => arr.Length != 0;
 
         public static bool NotEmpty<T>(this Stack<T> stack) => stack.Count != 0;
-        
+
         public static void PauseParticles(this ParticleSystem ps)
         {
             ParticleSystem.MainModule main = ps.main;

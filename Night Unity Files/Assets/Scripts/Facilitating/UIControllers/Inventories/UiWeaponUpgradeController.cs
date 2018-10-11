@@ -40,13 +40,13 @@ namespace Facilitating.UIControllers
             for (int i = 0; i < 50; ++i)
             {
                 Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Glowing);
-                WorldState.HomeInventory().Move(weapon, 1);
+                Inventory.Move(weapon, 1);
                 Inscription inscription = Inscription.Generate();
-                WorldState.HomeInventory().Move(inscription, 1);
+                Inventory.Move(inscription, 1);
                 Armour plate = Armour.Create(qualities.RandomElement());
-                WorldState.HomeInventory().Move(plate, 1);
+                Inventory.Move(plate, 1);
                 Accessory accessory = Accessory.Generate();
-                WorldState.HomeInventory().Move(accessory, 1);
+                Inventory.Move(accessory, 1);
             }
 #endif
 
@@ -83,24 +83,20 @@ namespace Facilitating.UIControllers
 
         private static List<object> GetAvailableWeapons()
         {
-            Player player = CharacterManager.SelectedCharacter;
-            Inventory inventory = player.TravelAction.AtHome() ? WorldState.HomeInventory() : player.Inventory();
-            return inventory.Weapons.ToObjectList();
+            return Inventory.GetAvailableWeapons().ToObjectList();
         }
 
         private static List<object> GetAvailableInscriptions()
         {
-            Player player = CharacterManager.SelectedCharacter;
-            Inventory inventory = player.TravelAction.AtHome() ? WorldState.HomeInventory() : player.Inventory();
-            return inventory.Inscriptions.ToObjectList();
+            return Inventory.Inscriptions.ToObjectList();
         }
 
         private void Infuse()
         {
             if (CharacterManager.SelectedCharacter.EquippedWeapon == null) return;
             if (CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.GetDurability().ReachedMax()) return;
-            if (WorldState.HomeInventory().GetResourceQuantity("Essence") == 0) return;
-            WorldState.HomeInventory().DecrementResource("Essence", 1);
+            if (Inventory.GetResourceQuantity("Essence") == 0) return;
+            Inventory.DecrementResource("Essence", 1);
             CharacterManager.SelectedCharacter.BrandManager.IncreaseEssenceInfused();
             int durabilityGain = 1 + (int) CharacterManager.SelectedCharacter.Attributes.EssenceRecoveryModifier;
             CharacterManager.SelectedCharacter.EquippedWeapon.WeaponAttributes.IncreaseDurability(durabilityGain);
@@ -161,8 +157,8 @@ namespace Facilitating.UIControllers
             }
         }
 
-        private static bool WeaponsAreAvailable() => UiGearMenuController.Inventory().Weapons.Count != 0;
-        private static bool InscriptionsAreAvailable() => UiGearMenuController.Inventory().Inscriptions.Count != 0;
+        private static bool WeaponsAreAvailable() => GetAvailableWeapons().Count != 0;
+        private static bool InscriptionsAreAvailable() => GetAvailableInscriptions().Count != 0;
 
         private class WeaponElement : BasicListElement
         {

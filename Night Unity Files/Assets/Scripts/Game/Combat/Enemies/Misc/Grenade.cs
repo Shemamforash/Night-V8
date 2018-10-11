@@ -51,6 +51,7 @@ namespace Game.Combat.Enemies.Misc
         {
             ResetGrenade();
             transform.position = new Vector3(origin.x, origin.y, 0f);
+            return;
             Vector2 direction = target - origin;
             float distance = direction.magnitude;
             direction /= distance;

@@ -402,16 +402,6 @@ namespace Game.Combat.Player
 
             _muzzleFlash = GameObject.Find("Muzzle Flash").GetComponent<FastLight>();
             Player = CharacterManager.SelectedCharacter;
-#if UNITY_EDITOR
-            for (int i = 0; i < 50; ++i)
-            {
-                Player.Inventory().Move(WeaponGenerator.GenerateWeapon(ItemQuality.Radiant), 1);
-                Player.Inventory().Move(Inscription.Generate(10), 1);
-            }
-
-            Player.Inventory().Move(Armour.Create(ItemQuality.Radiant), 1);
-            Player.Inventory().IncrementResource("Essence", 50);
-#endif
             HealthController.SetInitialHealth(Player.Attributes.CalculateInitialHealth(), this, Player.Attributes.CalculateMaxHealth());
             EquipWeapon(Weapon());
             EquipArmour();

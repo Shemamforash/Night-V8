@@ -11,7 +11,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     {
         private readonly GearSubtype _gearType;
         private ItemQuality _itemQuality;
-        protected Character EquippedCharacter;
+        public Character EquippedCharacter;
 
         protected GearItem(string name, GearSubtype gearSubtype, ItemQuality itemQuality) : base(name, GameObjectType.Gear)
         {
@@ -42,26 +42,17 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public virtual void Equip(Character character)
         {
             EquippedCharacter = character;
-            MoveTo(character.Inventory());
         }
 
         public virtual void Unequip()
         {
             Player player = EquippedCharacter as Player;
             if (player == null) return;
-            if (player.TravelAction.AtHome()) MoveTo(WorldState.HomeInventory());
-            else MoveTo(player.Inventory());
             EquippedCharacter = null;
         }
 
         public abstract string GetSummary();
 
         public GearSubtype GetGearType() => _gearType;
-
-        private void MoveTo(Inventory targetInventory)
-        {
-            targetInventory.Move(this, 1);
-            SetParentInventory(targetInventory);
-        }
     }
 }

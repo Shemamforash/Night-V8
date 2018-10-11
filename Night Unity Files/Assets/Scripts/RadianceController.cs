@@ -5,6 +5,7 @@ using Game.Combat.Misc;
 using Game.Combat.Player;
 using Game.Exploration.Regions;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -17,13 +18,11 @@ public class RadianceController : MonoBehaviour, ICombatEvent
     private static RadianceController _instance;
     private bool _activated;
 
-
     public void Awake()
     {
         _instance = this;
-        _radianceAvailable = WorldState.HomeInventory().GetResourceQuantity("Radiance");
+        _radianceAvailable = Inventory.GetResourceQuantity("Radiance");
     }
-
 
     private class RadianceBehaviour : MonoBehaviour
     {
@@ -64,7 +63,7 @@ public class RadianceController : MonoBehaviour, ICombatEvent
 
     public void Activate()
     {
-        WorldState.HomeInventory().DecrementResource("Essence", 1);
+        Inventory.DecrementResource("Essence", 1);
         PlayerCombat.Instance.Player.TravelAction.GetCurrentNode().Claim();
         if (_stonePrefab == null) _stonePrefab = Resources.Load<GameObject>("Prefabs/Combat/Effects/Radiance Stone");
         GameObject stoneObject = Instantiate(_stonePrefab);

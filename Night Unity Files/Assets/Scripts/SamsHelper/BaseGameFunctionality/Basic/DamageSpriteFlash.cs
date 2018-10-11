@@ -6,7 +6,7 @@ public class DamageSpriteFlash : MonoBehaviour {
 	private Tween colourTween;
 	private SpriteRenderer _sprite;
 
-	private void Awake()
+	protected void Awake()
 	{
 		_sprite = GetComponent<SpriteRenderer>();
 	}

@@ -42,10 +42,10 @@ namespace Game.Global
         public bool CanCraft()
         {
             if (_requiresFire && !Campfire.IsLit()) return false;
-            float ingredient1OwnedQuantity = WorldState.HomeInventory().GetResourceQuantity(Ingredient1);
+            float ingredient1OwnedQuantity = Inventory.GetResourceQuantity(Ingredient1);
             if (ingredient1OwnedQuantity < Ingredient1Quantity) return false;
             if (Ingredient2 == "None") return true;
-            float ingredient2OwnedQuantity = WorldState.HomeInventory().GetResourceQuantity(Ingredient2);
+            float ingredient2OwnedQuantity = Inventory.GetResourceQuantity(Ingredient2);
             return ingredient2OwnedQuantity >= Ingredient2Quantity;
         }
 
@@ -53,8 +53,8 @@ namespace Game.Global
         {
             Assert.IsTrue(CanCraft());
             if (!CanCraft()) return;
-            WorldState.HomeInventory().DecrementResource(Ingredient1, Ingredient1Quantity);
-            if (Ingredient2 != "None") WorldState.HomeInventory().DecrementResource(Ingredient2, Ingredient2Quantity);
+            Inventory.DecrementResource(Ingredient1, Ingredient1Quantity);
+            if (Ingredient2 != "None") Inventory.DecrementResource(Ingredient2, Ingredient2Quantity);
         }
 
         public void Craft()
@@ -65,40 +65,40 @@ namespace Game.Global
                     CharacterManager.SelectedCharacter.LightFireAction.Enter();
                     break;
                 case "Shelter":
-                    WorldState.HomeInventory().AddBuilding(new Shelter());
+                    Inventory.AddBuilding(new Shelter());
                     break;
                 case "Trap":
-                    WorldState.HomeInventory().AddBuilding(new Trap());
+                    Inventory.AddBuilding(new Trap());
                     break;
                 case "Water Collector":
-                    WorldState.HomeInventory().AddBuilding(new WaterCollector());
+                    Inventory.AddBuilding(new WaterCollector());
                     break;
                 case "Condenser":
-                    WorldState.HomeInventory().AddBuilding(new Condenser());
+                    Inventory.AddBuilding(new Condenser());
                     break;
                 case "Essence Filter":
-                    WorldState.HomeInventory().AddBuilding(new EssenceFilter());
+                    Inventory.AddBuilding(new EssenceFilter());
                     break;
                 case "Leather Plate":
-                    WorldState.HomeInventory().Move(Armour.Create(ItemQuality.Dark), 1);
+                    Inventory.Move(Armour.Create(ItemQuality.Dark), 1);
                     break;
                 case "Reinforced Leather Plate":
-                    WorldState.HomeInventory().Move(Armour.Create(ItemQuality.Dull), 1);
+                    Inventory.Move(Armour.Create(ItemQuality.Dull), 1);
                     break;
                 case "Metal Plate":
-                    WorldState.HomeInventory().Move(Armour.Create(ItemQuality.Glowing), 1);
+                    Inventory.Move(Armour.Create(ItemQuality.Glowing), 1);
                     break;
                 case "Alloy Plate":
-                    WorldState.HomeInventory().Move(Armour.Create(ItemQuality.Radiant), 1);
+                    Inventory.Move(Armour.Create(ItemQuality.Radiant), 1);
                     break;
                 case "Living Metal Plate":
-                    WorldState.HomeInventory().Move(Armour.Create(ItemQuality.Shining), 1);
+                    Inventory.Move(Armour.Create(ItemQuality.Shining), 1);
                     break;
                 case "Ice":
-                    WorldState.HomeInventory().IncrementResource(ProductName, ProductQuantity);
+                    Inventory.IncrementResource(ProductName, ProductQuantity);
                     break;
                 case "Radiance":
-                    WorldState.HomeInventory().IncrementResource(ProductName, 1);
+                    Inventory.IncrementResource(ProductName, 1);
                     break;
             }
         }
@@ -158,7 +158,7 @@ namespace Game.Global
 
         public int Built()
         {
-            return WorldState.HomeInventory().GetBuildingCount(ProductName);
+            return Inventory.GetBuildingCount(ProductName);
         }
     }
 }

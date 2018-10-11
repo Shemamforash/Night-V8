@@ -24,15 +24,9 @@ namespace Facilitating.UIControllers
         private static UiInventoryMenuController _currentMenuController;
         private static UiGearMenuController _instance;
 
-        private static Inventory _currentInventory;
         private static Tab _currentTab;
         private static bool _open;
         private static readonly List<Tab> _tabs = new List<Tab>();
-
-        public static Inventory Inventory()
-        {
-            return _currentInventory;
-        }
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
         {
@@ -162,9 +156,6 @@ namespace Facilitating.UIControllers
 
         private static void OpenInventoryMenu(UiInventoryMenuController menu)
         {
-            Player player = CharacterManager.SelectedCharacter;
-            _currentInventory = player.TravelAction.AtHome() ? WorldState.HomeInventory() : player.Inventory();
-
             if (!_open)
             {
                 _currentMenuController = menu;

@@ -305,7 +305,12 @@ namespace Game.Combat.Generation
                 CreateContainer<FoodSource>();
 
             for (int i = 0; i < _region.ResourceSourceCount; ++i)
-                CreateContainer<Loot>()?.IncrementResource(ResourceTemplate.GetResource().Name, 1);
+            {
+                InventoryItem item = ResourceTemplate.GetResource().Create();
+                item.Increment(1);
+                Debug.Log(item.Quantity());
+                CreateContainer<Loot>()?.SetItem(item);
+            }
         }
 
         private T CreateContainer<T>() where T : ContainerController

@@ -1,5 +1,7 @@
 ﻿using Game.Combat.Generation;
 using Game.Combat.Player;
+using Game.Global;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -39,7 +41,7 @@ public class SaltBehaviour : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (!other.gameObject.CompareTag("Player")) return;
-        PlayerCombat.Instance.Player.Inventory().IncrementResource("Salt", 1);
+        Inventory.IncrementResource("Salt", 1);
         Destroy(gameObject);
     }
 }

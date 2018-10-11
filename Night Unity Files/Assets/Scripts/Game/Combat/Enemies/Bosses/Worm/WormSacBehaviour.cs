@@ -16,6 +16,9 @@ public class WormSacBehaviour : BossSectionHealthController
     private const float InflateDuration = 10f;
     private const float MaxScaleFactor = 3f;
     private float _noiseOffset;
+    private float _damageToDie = 200;
+    private static GameObject _prefab;
+    private static Transform _parent;
 
     protected override void Awake()
     {
@@ -26,9 +29,32 @@ public class WormSacBehaviour : BossSectionHealthController
         StartCoroutine(ScaleUp());
     }
 
+    public static WormSacBehaviour Create(WormBehaviour wormBehaviour)
+    {
+        if (_prefab == null) _prefab = Resources.Load<GameObject>("Prefabs/Combat/Bosses/Worm/Worm Sac");
+        if (_parent == null)
+        {
+            _parent = new GameObject().transform;
+            _parent.SetParent(GameObject.Find("Dynamic").transform);
+        }
+
+        GameObject sac = Instantiate(_prefab);
+        sac.transform.SetParent(_parent);
+        WormSacBehaviour sacBehaviour = sac.GetComponent<WormSacBehaviour>();
+        sacBehaviour.SetBoss(wormBehaviour);
+        sacBehaviour.SetHealth();
+        return sacBehaviour;
+    }
+
     protected override int GetInitialHealth()
     {
         return 100;
+    }
+
+
+    private void SetHealth()
+    {
+        HealthController.SetInitialHealth(((WormBehaviour) Parent).CurrentHealth(), this, ((WormBehaviour) Parent).MaxHealth());
     }
 
     private void TakeDamage(float damage)
@@ -36,7 +62,11 @@ public class WormSacBehaviour : BossSectionHealthController
         float healthBefore = HealthController.GetCurrentHealth();
         float healthAfter = Mathf.Clamp(healthBefore - damage, 0, 100000);
         int difference = (int) (healthBefore - healthAfter);
-        WormBehaviour.TakeDamage(difference);
+        if (Parent != null) ((WormBehaviour) Parent).TakeDamage(difference);
+        _damageToDie -= damage;
+        SetHealth();
+        if (_damageToDie > 0) return;
+        Kill();
     }
 
     public override void TakeShotDamage(Shot s)
@@ -56,21 +86,16 @@ public class WormSacBehaviour : BossSectionHealthController
         TakeDamage(damage);
         base.TakeExplosionDamage(damage, origin, radius);
     }
-    
+
     public override void Kill()
     {
-        CombatManager.Remove(this);
-        WormBehaviour.ReturnSac(this);
+        base.Kill();
+        Parent.UnregisterSection(this);
     }
 
     public override string GetDisplayName()
     {
-        return "Sac";
-    }
-
-    public void Start()
-    {
-        SetBoss(WormBehaviour.Instance());
+        return "Spawn of Coropthynos";
     }
 
     private IEnumerator ScaleUp()
@@ -91,7 +116,7 @@ public class WormSacBehaviour : BossSectionHealthController
     private void Pop()
     {
         Kill();
-        WormBehaviour.ReturnSac(this);
+        Parent.UnregisterSection(this);
         List<EnemyTemplate> validEnemies = WorldState.GetAllowedNightmareEnemyTypes();
         List<EnemyType> typesToAdd = new List<EnemyType>();
         int size = Random.Range(4, 7);
@@ -124,7 +149,7 @@ public class WormSacBehaviour : BossSectionHealthController
         _sacSprite.color = new Color(1, 1, 1, normalisedScaleFactor);
 
         float scaleFactor = normalisedScaleFactor * MaxScaleFactor;
-        _collider.radius = scaleFactor;
+        _collider.radius = scaleFactor * 0.15f;
         transform.localScale = Vector2.one * scaleFactor;
     }
 

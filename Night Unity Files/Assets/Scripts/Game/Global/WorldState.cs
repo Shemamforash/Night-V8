@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Xml;
 using Facilitating;
 using Facilitating.Persistence;
@@ -10,6 +11,9 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Exploration.WorldEvents;
+using Game.Gear.Armour;
+using Game.Gear.Weapons;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -25,7 +29,6 @@ namespace Game.Global
         private const int MinuteInterval = 60 / MinutesPerHour;
 
         private static int DaysSpentHere;
-        private static CharacterManager _homeInventory;
         private static int _currentLevel = 1;
 
         private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
@@ -64,7 +67,8 @@ namespace Game.Global
             Minutes = worldStateValues.IntFromNode("Minutes");
             MinutesPassed = worldStateValues.IntFromNode("MinutesPassed");
             _difficulty = worldStateValues.IntFromNode("Difficulty");
-            _homeInventory.Load(doc);
+            Inventory.Load(doc);
+            CharacterManager.Load(doc);
             MapGenerator.Load(doc);
             WeatherManager.Load(doc);
             EnvironmentManager.Load(doc);
@@ -83,7 +87,8 @@ namespace Game.Global
             worldStateValues.CreateChild("Minutes", Minutes);
             worldStateValues.CreateChild("MinutesPassed", MinutesPassed);
             worldStateValues.CreateChild("Difficulty", _difficulty);
-            _homeInventory.Save(doc);
+            Inventory.Save(doc);
+            CharacterManager.Save(doc);
             MapGenerator.Save(doc);
             WeatherManager.Save(doc);
             EnvironmentManager.Save(doc);
@@ -93,7 +98,8 @@ namespace Game.Global
 
         public static void ResetWorld()
         {
-            _homeInventory = new CharacterManager();
+            CharacterManager.Reset();
+            Inventory.Reset();
             DaysSpentHere = 0;
             _currentLevel = 1;
             Days = 0;
@@ -116,7 +122,7 @@ namespace Game.Global
 
         public void Start()
         {
-            _homeInventory.Start();
+            CharacterManager.Start();
             EnvironmentManager.Start();
             WeatherManager.Start();
             WorldView.Update(Hours);
@@ -181,7 +187,6 @@ namespace Game.Global
             StoryController.ShowText(JournalEntry.GetStoryText(_currentLevel - 1), _currentLevel == 5);
         }
 
-        public static CharacterManager HomeInventory() => _homeInventory;
 
         public static void Pause()
         {
@@ -224,7 +229,7 @@ namespace Game.Global
         private static void HourPasses()
         {
             Campfire.Die();
-            HomeInventory().UpdateBuildings();
+            Inventory.UpdateBuildings();
         }
 
         private void IncrementHours()
@@ -320,20 +325,20 @@ namespace Game.Global
             int water = weather.Water;
             int fog = weather.Fog;
             int ice = weather.Ice;
-            if (water < 1) _homeInventory.DecrementResource("Water", -water);
-            _homeInventory.Buildings().ForEach(b =>
+            if (water < 1) Inventory.DecrementResource("Water", -water);
+            Inventory.Buildings().ForEach(b =>
             {
                 WaterCollector waterCollector = b as WaterCollector;
                 if (waterCollector != null)
                 {
-                    if (water > 0) _homeInventory.IncrementResource("Water", water);
-                    if (ice > 0) _homeInventory.IncrementResource("Ice", ice);
+                    if (water > 0) Inventory.IncrementResource("Water", water);
+                    if (ice > 0) Inventory.IncrementResource("Ice", ice);
                     return;
                 }
 
                 Condenser condenser = b as Condenser;
                 if (condenser == null) return;
-                if (fog > 0) _homeInventory.IncrementResource("Water", fog);
+                if (fog > 0) Inventory.IncrementResource("Water", fog);
             });
         }
 

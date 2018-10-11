@@ -1,4 +1,5 @@
 ﻿using Game.Characters;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
@@ -10,7 +11,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public int ThirstModifier;
         public int HungerModifier;
 
-        public Consumable(ResourceTemplate template, Inventory parentInventory = null) : base(template, GameObjectType.Resource, parentInventory)
+        public Consumable(ResourceTemplate template) : base(template, GameObjectType.Resource)
         {
             Template = template;
             IsFood = Template.ResourceType == "Food";
@@ -43,10 +44,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             switch (Template.ResourceType)
             {
                 case "Food":
-                    selectedCharacter.Attributes.Eat();
+                    selectedCharacter.Attributes.Eat(HungerModifier);
                     break;
                 case "Water":
-                    selectedCharacter.Attributes.Drink();
+                    selectedCharacter.Attributes.Drink(ThirstModifier);
                     break;
             }
 
@@ -58,7 +59,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public void Consume(Player selectedCharacter)
         {
             ApplyEffect(selectedCharacter);
-            ParentInventory().DecrementResource(Template.Name, 1);
+            Inventory.DecrementResource(Template.Name, 1);
         }
     }
 }

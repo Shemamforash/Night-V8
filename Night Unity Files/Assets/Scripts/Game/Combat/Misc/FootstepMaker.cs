@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Combat.Generation;
 using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -7,9 +8,9 @@ namespace Game.Combat.Misc
 {
     public class FootstepMaker : MonoBehaviour
     {
-        private const float DistanceToFootPrint = 0.5f;
+        private const float TimeToFootPrint = 0.75f;
         private readonly List<GameObject> _footstepPool = new List<GameObject>();
-        private float _distanceTravelled;
+        private float _timePassed;
         private GameObject _footprintPrefab;
 
         private Transform _footstepParent;
@@ -28,6 +29,7 @@ namespace Game.Combat.Misc
             _audioSource.volume = 0.4f;
             _audioClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/footsteps");
             _nextClip = _audioClips.Length + 1;
+            _lastPosition = transform.position;
         }
 
         private void SetTransformAndRotation(GameObject footprintObject)
@@ -74,22 +76,8 @@ namespace Game.Combat.Misc
             return Quaternion.Euler(new Vector3(0, 0, zRotation));
         }
 
-        private void Update()
+        private void PlayClip()
         {
-            _distanceTravelled += Vector3.Distance(_lastPosition, transform.position);
-            _lastPosition = transform.position;
-            if (_distanceTravelled < DistanceToFootPrint) return;
-            if (_leftLast)
-            {
-                GetNewFootprint().transform.Translate(Vector3.left * 0.03f);
-                _leftLast = false;
-            }
-            else
-            {
-                GetNewFootprint().transform.Translate(Vector3.right * 0.03f);
-                _leftLast = true;
-            }
-
             ++_nextClip;
             if (_nextClip >= _audioClips.Length)
             {
@@ -97,10 +85,29 @@ namespace Game.Combat.Misc
                 _nextClip = 0;
             }
 
-            _audioSource.volume = Random.Range(0.6f, 0.8f);
+            _audioSource.volume = Random.Range(0.4f, 0.5f);
             _audioSource.pitch = Random.Range(0.9f, 1.1f);
             if (_audioClips.Length != 0) _audioSource.PlayOneShot(_audioClips[_nextClip]);
-            _distanceTravelled = 0;
+        }
+
+        private void Update()
+        {
+            if (!CombatManager.IsCombatActive()) return;
+            if (Vector2.Distance(_lastPosition, transform.position) < 0.25f) return;
+            _timePassed += Time.deltaTime;
+            if (_timePassed < TimeToFootPrint) return;
+            _timePassed = 0f;
+            _lastPosition = transform.position;
+            PlaceFootprint();
+            PlayClip();
+        }
+
+        private void PlaceFootprint()
+        {
+            Vector3 dir = _leftLast ? Vector3.left : Vector3.right;
+            dir *= 0.03f;
+            _leftLast = !_leftLast;
+            GetNewFootprint().transform.Translate(dir);
         }
     }
 }

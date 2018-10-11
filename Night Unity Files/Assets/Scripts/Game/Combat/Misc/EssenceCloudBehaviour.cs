@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Game.Combat.Generation;
 using Game.Combat.Player;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
@@ -40,8 +41,7 @@ public class EssenceCloudBehaviour : MonoBehaviour
         if (!other.gameObject.CompareTag("Player")) return;
         _essencePuff.Emit(_essenceCount);
         _essenceCloudPool.Return(this);
-        Inventory inventory = PlayerCombat.Instance.Player.Inventory();
-        inventory.IncrementResource("Essence", _essenceCount);
+        Inventory.IncrementResource("Essence", _essenceCount);
     }
 
     public void OnDestroy()

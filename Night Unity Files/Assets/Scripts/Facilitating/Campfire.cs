@@ -1,6 +1,7 @@
 ﻿using Game.Characters;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.UI;
@@ -100,8 +101,8 @@ namespace Facilitating
                 attributes.Get(AttributeType.Perception).Increment();
             });
             _hourCounter = 0;
-            if (WorldState.HomeInventory().GetResourceQuantity("Fuel") == 0) return;
-            WorldState.HomeInventory().DecrementResource("Fuel", 1);
+            if (Inventory.GetResourceQuantity("Fuel") == 0) return;
+            Inventory.DecrementResource("Fuel", 1);
             _fireLevel = 1;
         }
 

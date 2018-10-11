@@ -53,9 +53,7 @@ namespace Facilitating.UIControllers
 
         private static List<object> GetAvailableArmour(Armour.ArmourType armourType)
         {
-            Player player = CharacterManager.SelectedCharacter;
-            Inventory inventory = player.TravelAction.AtHome() ? WorldState.HomeInventory() : player.Inventory();
-            List<object> armourList = inventory.Armour.ToObjectList();
+            List<object> armourList = Inventory.GetAvailableArmour().ToObjectList();
             armourList.RemoveAll(a =>
             {
                 bool isNotCorrectType = ((Armour) a).GetArmourType() != armourType;

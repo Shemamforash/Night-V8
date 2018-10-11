@@ -31,7 +31,14 @@ namespace Game.Gear.Armour
 
         public void TakeDamage(float amount)
         {
-            DivideDamageOrHeal(amount);
+            DivideDamage(amount);
+        }
+
+        public void Repair(float amount)
+        {
+            float remaining = amount;
+            if(_chest != null) remaining = _chest.Repair(amount);
+            if (_head != null) _head.Repair(remaining);
         }
 
         private void TakePlateDamage(ref Armour plate, float damage)
@@ -44,7 +51,7 @@ namespace Game.Gear.Armour
             plate = null;
         }
 
-        private void DivideDamageOrHeal(float amount)
+        private void DivideDamage(float amount)
         {
             TakePlateDamage(ref _chest, amount);
             TakePlateDamage(ref _head, amount);

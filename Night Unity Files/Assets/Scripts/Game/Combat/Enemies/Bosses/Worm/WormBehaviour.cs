@@ -4,25 +4,21 @@ using Game.Combat.Enemies.Bosses;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
-// ReSharper disable All
 
 public class WormBehaviour : Boss
 {
     private float _timeToNextWorm, _timeToNextSac;
     private static GameObject _prefab;
     private readonly HealthController _healthController = new HealthController();
-    private static WormBehaviour _instance;
-    private readonly ObjectPool<WormSacBehaviour> _wormSacs = new ObjectPool<WormSacBehaviour>("Sacs", "Prefabs/Combat/Bosses/Worm/Worm Sac");
     private bool _spawning;
+    private List<WormSacBehaviour> _wormSacs = new List<WormSacBehaviour>();
 
     protected override void Awake()
     {
         base.Awake();
-        _instance = this;
-//        _healthController.SetInitialHealth(1000, this);
+        _healthController.SetInitialHealth(2000, null);
     }
 
     public static void Create()
@@ -33,17 +29,13 @@ public class WormBehaviour : Boss
     public override void UnregisterSection(BossSectionHealthController section)
     {
         Sections.Remove(section);
+        _wormSacs.Remove((WormSacBehaviour) section);
     }
 
     public void Update()
     {
         if (!CombatManager.IsCombatActive()) return;
         MyUpdate();
-    }
-
-    public void OnDestroy()
-    {
-        _wormSacs.Clear();
     }
 
     private void TrySpawnWorm()
@@ -91,7 +83,8 @@ public class WormBehaviour : Boss
     {
         _spawning = true;
         List<Transform> occupiedPositions = new List<Transform>();
-        _wormSacs.Active().ForEach(sac => occupiedPositions.Add(sac.transform));
+        _wormSacs.RemoveAll(w => w == null);
+        _wormSacs.ForEach(sac => occupiedPositions.Add(sac.transform));
 
         Vector2 emptyPosition = GetEmptySpaceNearby(occupiedPositions, 7f, 0f, Vector2.zero);
         int noSacs = Random.Range(3, 5);
@@ -105,7 +98,8 @@ public class WormBehaviour : Boss
             }
 
             Vector2 position = GetEmptySpaceNearby(occupiedPositions, 1f, 0.25f, emptyPosition);
-            WormSacBehaviour sac = _wormSacs.Create();
+            WormSacBehaviour sac = WormSacBehaviour.Create(this);
+            _wormSacs.Add(sac);
             sac.Initialise(position);
             occupiedPositions.Add(sac.transform);
             --noSacs;
@@ -116,41 +110,26 @@ public class WormBehaviour : Boss
         _timeToNextSac = Random.Range(5f, 10f);
     }
 
-    public GameObject GetGameObject()
-    {
-        return gameObject;
-    }
-
-    public bool IsDead()
-    {
-        return _healthController.GetCurrentHealth() == 0;
-    }
-
-
     public void MyUpdate()
     {
         TrySpawnWorm();
         TrySpawnSacs();
     }
 
-    public string GetDisplayName()
+    public void TakeDamage(int damage)
     {
-        return "Worm";
+        _healthController.TakeDamage(damage);
+        if (_healthController.GetCurrentHealth() != 0) return;
+        Kill();
     }
 
-    public static Boss Instance()
+    public int CurrentHealth()
     {
-        return _instance;
+        return (int) _healthController.GetCurrentHealth();
     }
 
-    public static void TakeDamage(int damage)
+    public int MaxHealth()
     {
-//        _instance.TakeRawDamage(damage, Vector2.zero);
-    }
-
-    public static void ReturnSac(WormSacBehaviour wormSacBehaviour)
-    {
-        _instance._wormSacs.Return(wormSacBehaviour);
-        _instance.UnregisterSection(wormSacBehaviour);
+        return (int) _healthController.GetMaxHealth();
     }
 }

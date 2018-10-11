@@ -80,7 +80,7 @@ namespace Game.Gear
             item.WeaponAttributes.Get(_template.AttributeTarget).RemoveModifier(_modifier);
         }
 
-        public static Inscription Generate(int diff = -1)
+        public static Inscription Generate()
         {
             ReadTemplates();
             int tier = WorldState.GenerateGearLevel();
@@ -186,7 +186,7 @@ namespace Game.Gear
 
         public bool CanAfford()
         {
-            return WorldState.HomeInventory().GetResourceQuantity("Essence") >= _inscriptionCost;
+            return Inventory.GetResourceQuantity("Essence") >= _inscriptionCost;
         }
     }
 }

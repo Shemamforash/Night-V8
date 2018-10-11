@@ -15,7 +15,7 @@ public class BeamController : MonoBehaviour
     private ParticleSystem _burst, _charge, _energy, _spray;
     private Transform _origin;
     private Vector3 _targetPosition;
-    private const int BeamDamage = 25;
+    private const int BeamDamage = 100;
 
     public static BeamController Create(Transform origin)
     {
@@ -122,6 +122,7 @@ public class BeamController : MonoBehaviour
             if (!hit.gameObject.CompareTag("Player")) continue;
             Vector2 dir = transform.up;
             PlayerCombat.Instance.TakeRawDamage(BeamDamage, dir);
+            PlayerCombat.Instance.MovementController.KnockBack(dir, 50f);
             break;
         }
     }

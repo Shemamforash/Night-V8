@@ -5,26 +5,15 @@ namespace Game.Combat.Generation
 {
     public class Loot : ContainerController
     {
-        public bool IsValid;
-
-        public Loot(Vector2 position) : base(position, "Loot")
+        public Loot(Vector2 position, InventoryItem item) : base(position)
         {
+            SetItem(item);
         }
 
-        public void AddToInventory(InventoryItem item)
+        public void SetItem(InventoryItem item)
         {
-            IsValid = true;
-            _inventory.Move(item, 1);
-        }
-
-        public void IncrementResource(string name, int amount)
-        {
-            _inventory.IncrementResource(name, amount);
-        }
-
-        public void SetIsMeatSource()
-        {
-            ImageLocation = "Meat";
+            Item = item;
+            if (item.Template.ResourceType == "Meat") ImageLocation = "Meat";   
         }
     }
 }

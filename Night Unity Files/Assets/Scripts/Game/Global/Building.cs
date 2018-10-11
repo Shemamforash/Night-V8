@@ -9,7 +9,7 @@ namespace Game.Global
     {
         protected Building(string name) : base(name, GameObjectType.Building)
         {
-            WorldState.HomeInventory().AddBuilding(this);
+            Inventory.AddBuilding(this);
         }
 
         public abstract void Update();
@@ -23,9 +23,9 @@ namespace Game.Global
 
         public override void Update()
         {
-            if (WeatherManager.CurrentWeather().Name == "Drizzle") WorldState.HomeInventory().IncrementResource("Water", 1);
-            else if (WeatherManager.CurrentWeather().Name == "Rain") WorldState.HomeInventory().IncrementResource("Water", 1);
-            else if (WeatherManager.CurrentWeather().Name == "Downpour") WorldState.HomeInventory().IncrementResource("Water", 1);
+            if (WeatherManager.CurrentWeather().Name == "Drizzle") Inventory.IncrementResource("Water", 1);
+            else if (WeatherManager.CurrentWeather().Name == "Rain") Inventory.IncrementResource("Water", 1);
+            else if (WeatherManager.CurrentWeather().Name == "Downpour") Inventory.IncrementResource("Water", 1);
         }
     }
 
@@ -58,7 +58,7 @@ namespace Game.Global
         {
             --counter;
             if (counter != 0) return;
-            WorldState.HomeInventory().IncrementResource("Meat", 1);
+            Inventory.IncrementResource("Meat", 1);
             ResetCounter();
         }
     }
@@ -71,8 +71,8 @@ namespace Game.Global
 
         public override void Update()
         {
-            if (WeatherManager.CurrentWeather().Name == "Mist") WorldState.HomeInventory().IncrementResource("Water", 1);
-            if (WeatherManager.CurrentWeather().Name == "Fog") WorldState.HomeInventory().IncrementResource("Water", 1);
+            if (WeatherManager.CurrentWeather().Name == "Mist") Inventory.IncrementResource("Water", 1);
+            if (WeatherManager.CurrentWeather().Name == "Fog") Inventory.IncrementResource("Water", 1);
         }
     }
 
@@ -84,7 +84,7 @@ namespace Game.Global
 
         public override void Update()
         {
-            WorldState.HomeInventory().IncrementResource("Essence", 1);
+            Inventory.IncrementResource("Essence", 1);
         }
     }
 }

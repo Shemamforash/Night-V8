@@ -16,7 +16,7 @@ namespace Game.Combat.Misc
             transform.position = followTransform.position;
             ClearTrails();
         }
-        
+
         public void SetAlpha(float alpha)
         {
             Color c = GetColour();
@@ -31,20 +31,20 @@ namespace Game.Combat.Misc
 
         private IEnumerator Fade(float duration)
         {
-            Color startColour = GetColour();
             float fadeTime = duration;
             while (duration > 0f)
             {
                 if (!CombatManager.IsCombatActive()) yield return null;
                 duration -= Time.deltaTime;
-                Color lerpedColour = Color.Lerp(startColour, UiAppearanceController.InvisibleColour, 1f - duration / fadeTime);
-                SetColour(lerpedColour);
+                float alpha = 1f - duration / fadeTime;
+                SetAlpha(alpha);
                 yield return null;
             }
+
             ClearTrails();
             GetObjectPool().Return(this);
         }
-        
+
         public void LateUpdate()
         {
             transform.position = _followTransform.transform.position;

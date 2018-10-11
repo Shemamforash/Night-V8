@@ -2,6 +2,7 @@
 using Facilitating.Persistence;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
@@ -11,13 +12,11 @@ namespace Game.Characters
     public abstract class Character : MyGameObject
     {
         public readonly ArmourController ArmourController;
-        private readonly Inventory CharacterInventory;
         public Accessory EquippedAccessory;
         public Weapon EquippedWeapon;
 
         protected Character(string name) : base(name, GameObjectType.Character)
         {
-            CharacterInventory = new Inventory(name);
             ArmourController = new ArmourController(this);
         }
 
@@ -29,14 +28,12 @@ namespace Game.Characters
             if (ArmourController?.GetChestArmour() != null) equipped.CreateChild("ArmourPlate1", ArmourController.GetChestArmour().ID());
             if (ArmourController?.GetHeadArmour() != null) equipped.CreateChild("ArmourPlate2", ArmourController.GetHeadArmour().ID());
             if (EquippedAccessory != null) equipped.CreateChild("Accessory", EquippedAccessory.ID());
-            CharacterInventory?.Save(doc);
             return doc;
         }
 
         public override void Load(XmlNode root)
         {
             base.Load(root);
-            CharacterInventory.Load(root.SelectSingleNode("Inventory"));
             XmlNode equipmentNode = root.SelectSingleNode("EquippedItems");
             XmlNode weaponNode = equipmentNode.SelectSingleNode("Weapon");
             XmlNode accessoryNode = equipmentNode.SelectSingleNode("Accesory");
@@ -46,10 +43,10 @@ namespace Game.Characters
             int accessoryId = accessoryNode?.IntFromNode("Accessory") ?? -1;
             int armourPlate1Id = armourNode1?.IntFromNode("ArmourPlate1") ?? -1;
             int armourPlate2Id = armourNode2?.IntFromNode("ArmourPlate2") ?? -1;
-            EquipWeapon((Weapon) CharacterInventory.FindItem(weaponId));
-            EquipAccessory((Accessory) CharacterInventory.FindItem(accessoryId));
-            ArmourController.SetArmour((Armour) CharacterInventory.FindItem(armourPlate1Id));
-            ArmourController.SetArmour((Armour) CharacterInventory.FindItem(armourPlate2Id));
+            EquipWeapon((Weapon) Inventory.FindItem(weaponId));
+            EquipAccessory((Accessory) Inventory.FindItem(accessoryId));
+            ArmourController.SetArmour((Armour) Inventory.FindItem(armourPlate1Id));
+            ArmourController.SetArmour((Armour) Inventory.FindItem(armourPlate2Id));
         }
 
         public virtual void EquipWeapon(Weapon weapon)
@@ -65,7 +62,5 @@ namespace Game.Characters
             EquippedAccessory = accessory;
             accessory?.Equip(this);
         }
-
-        public Inventory Inventory() => CharacterInventory;
     }
 }

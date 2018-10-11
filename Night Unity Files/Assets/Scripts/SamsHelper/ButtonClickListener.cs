@@ -19,7 +19,7 @@ public class ButtonClickListener : MonoBehaviour
 
     public static void Click()
     {
-        if (_buttonSelectClip == null) _buttonSelectClip = Helper.LoadFileFromAssetBundle<AudioClip>("misc","Button Clicks");
+        if (_buttonSelectClip == null) _buttonSelectClip = Helper.LoadFileFromAssetBundle<AudioClip>("misc", "Button Click");
         if (_suppressClick)
         {
             _suppressClick = false;

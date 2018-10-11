@@ -55,11 +55,7 @@ namespace Facilitating.UIControllers
 
         private static List<object> GetAvailableAccessories()
         {
-            Player player = CharacterManager.SelectedCharacter;
-            Inventory inventory = player.TravelAction.AtHome() ? WorldState.HomeInventory() : player.Inventory();
-            List<Accessory> accessories = inventory.Accessories;
-            if (player.EquippedAccessory != null) accessories.Add(player.EquippedAccessory);
-            return inventory.Accessories.ToObjectList();
+            return Inventory.GetAvailableAccessories().ToObjectList();
         }
     }
 }

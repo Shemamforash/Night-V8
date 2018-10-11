@@ -121,8 +121,17 @@ namespace Game.Gear.Armour
             if (!_armourHealth.ReachedMin()) return false;
             PlayerCombat.Instance.WeaponAudio.BreakArmour();
             Unequip();
-            ParentInventory().DestroyItem(this);
+            Inventory.DestroyItem(this);
             return true;
+        }
+
+        public float Repair(float amount)
+        {
+            float difference = _armourHealth.Max - _armourHealth.CurrentValue();
+            _armourHealth.Increment(amount);
+            amount -= difference;
+            if (amount < 0) amount = 0;
+            return amount;
         }
 
         public ArmourType GetArmourType() => _armourType;

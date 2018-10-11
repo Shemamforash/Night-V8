@@ -7,11 +7,11 @@ namespace Game.Combat.Generation
     {
         private GameObject _insectPrefab;
 
-        public FoodSource(Vector2 position) : base(position, "Plant")
+        public FoodSource(Vector2 position) : base(position)
         {
             string foodType = ResourceTemplate.GetPlant().Name;
-            _inventory.Name = foodType;
-            _inventory.IncrementResource(foodType, 1);
+            Item = ResourceTemplate.Create(foodType);
+            Item.Increment(1);
             ImageLocation = "Plants/" + foodType;
         }
 

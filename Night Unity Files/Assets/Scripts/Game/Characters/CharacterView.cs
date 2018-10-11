@@ -3,6 +3,7 @@ using System.Linq;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
 using Game.Global;
+using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
@@ -151,7 +152,7 @@ namespace Game.Characters
         public void RefreshNavigation()
         {
             _craftButton.enabled = Recipe.RecipesAvailable();
-            _consumeButton.enabled = WorldState.HomeInventory().Consumables().Count > 0;
+            _consumeButton.enabled = Inventory.Consumables().Count > 0;
             _meditateButton.enabled = _player.CanMeditate();
             _sleepButton.enabled = _player.CanSleep();
             List<EnhancedButton> activeButtons = _buttons.FindAll(b => b.enabled);

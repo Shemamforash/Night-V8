@@ -69,7 +69,7 @@ namespace Game.Gear.Weapons
             UnapplyInscription();
             _inscription?.RemoveModifierFromWeapon(this);
             _inscription = inscription;
-            _inscription.ParentInventory()?.DestroyItem(inscription);
+            Inventory.DestroyItem(inscription);
             _inscription.ApplyModifierToWeapon(this);
             ApplyInscription();
         }
