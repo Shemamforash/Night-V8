@@ -21,6 +21,15 @@ namespace SamsHelper.Libraries
 
         public static bool Empty<T>(this T[] arr) => arr.Length == 0;
 
+        private static Transform _dynamicParent; 
+        
+        public static void SetAsDynamicChild(this Transform t)
+        {
+            if (_dynamicParent == null) _dynamicParent = GameObject.Find("Dynamic").transform; 
+            t.SetParent(_dynamicParent);
+            t.transform.position = Vector3.zero;
+        }
+        
         public static bool Empty<T>(this Stack<T> stack) => stack.Count == 0;
 
         public static bool NotEmpty<T>(this Queue<T> queue) => queue.Count != 0;
@@ -56,6 +65,16 @@ namespace SamsHelper.Libraries
         public static void DrawLine(this Vector2 point, Vector2 other, Color color, float duration)
         {
             Debug.DrawLine(point, other, color, duration);
+        }
+
+        public static bool RollDie(float target, float max)
+        {
+            return Random.Range(0, max) == target;
+        }
+
+        public static bool RollDie(int target, int max)
+        {
+            return Random.Range(0, max) == target;
         }
 
         public static Vector3 MouseToWorldCoordinates(float z = 0f)

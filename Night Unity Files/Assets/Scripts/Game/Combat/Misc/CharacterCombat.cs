@@ -22,7 +22,8 @@ namespace Game.Combat.Misc
         private CanTakeDamage _target;
         public MovementController MovementController;
         public Shield Shield;
-
+        private const float ExplosionForceModifier = 5;
+        
         protected float DistanceToTarget()
         {
             if (_distanceToTarget == -1) _distanceToTarget = Vector2.Distance(transform.position, TargetPosition());
@@ -67,7 +68,7 @@ namespace Game.Combat.Misc
             float distance = direction.magnitude;
             direction.Normalize();
             distance = radius - distance;
-            float force = damage * distance;
+            float force = damage * distance * ExplosionForceModifier;
             MovementController.KnockBack(direction, force);
         }
 

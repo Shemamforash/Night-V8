@@ -359,9 +359,7 @@
               <e p="MainMenuNavigator.cs" t="Include" />
             </e>
             <e p="Persistence" t="Include">
-              <e p="GameData.cs" t="Include" />
               <e p="SaveController.cs" t="Include" />
-              <e p="StatsTracker.cs" t="Include" />
             </e>
             <e p="RageBarController.cs" t="Include" />
             <e p="UI" t="Include">

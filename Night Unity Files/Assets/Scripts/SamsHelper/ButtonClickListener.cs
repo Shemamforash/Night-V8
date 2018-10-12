@@ -28,6 +28,7 @@ public class ButtonClickListener : MonoBehaviour
 
         if (_audioSource == null) return;
         _audioSource.pitch = Random.Range(0.9f, 1f);
+        _audioSource.volume = 0.5f;
         _audioSource.PlayOneShot(_buttonSelectClip);
     }
 

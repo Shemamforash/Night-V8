@@ -308,7 +308,6 @@ namespace Game.Combat.Generation
             {
                 InventoryItem item = ResourceTemplate.GetResource().Create();
                 item.Increment(1);
-                Debug.Log(item.Quantity());
                 CreateContainer<Loot>()?.SetItem(item);
             }
         }

@@ -1,4 +1,5 @@
-﻿using SamsHelper.Input;
+﻿using DG.Tweening;
+using SamsHelper.Input;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,6 +27,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public void Exit()
         {
+            DOTween.defaultTimeScaleIndependent = false;
             _canvasGroup.alpha = 0;
             InputHandler.SetCurrentListener(null);
         }

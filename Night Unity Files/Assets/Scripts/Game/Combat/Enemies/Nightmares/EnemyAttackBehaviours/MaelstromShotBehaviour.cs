@@ -28,7 +28,6 @@ public class MaelstromShotBehaviour : MonoBehaviour
     private void ResetShot(Vector2 direction, float speed, bool follow)
     {
         foreach (SpriteRenderer spriteRenderer in _sprites) spriteRenderer.enabled = true;
-
         _direction = direction;
         _speed = speed;
         _lifeTime = 5f;

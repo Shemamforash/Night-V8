@@ -33,7 +33,7 @@ namespace Game.Global
 
         private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
         private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
-        private static bool _needsTransit = true;
+        private static bool _needsTransit; // = true;
 
         private static int MinutesPassed;
         private static float _currentTime;
@@ -228,6 +228,7 @@ namespace Game.Global
 
         private static void HourPasses()
         {
+            if (Hours == 6) SaveIconController.Save();
             Campfire.Die();
             Inventory.UpdateBuildings();
         }

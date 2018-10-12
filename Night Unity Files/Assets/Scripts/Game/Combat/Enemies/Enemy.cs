@@ -208,15 +208,21 @@ namespace Game.Combat.Enemies
                 else dropAccessory = false;
             }
 
-            if (dropWeapon) return new Loot(position, EquippedWeapon);
-            return dropAccessory ? new Loot(position, Accessory.Generate()) : null;
+            if (!dropWeapon && !dropAccessory) return null;
+            Loot loot = new Loot(position);
+            if (dropWeapon) loot.SetItem(EquippedWeapon);
+            if (dropAccessory) loot.SetItem(Accessory.Generate());
+            return loot;
         }
 
         private Loot DropNightmareLoot(Vector2 position)
         {
             EssenceCloudBehaviour.Create(position, Template.DropCount);
             bool dropInscription = Random.Range(0, 20) == 0;
-            return dropInscription ? new Loot(position, Inscription.Generate()) : null;
+            if (!dropInscription) return null;
+            Loot loot = new Loot(position);
+            loot.SetItem(Inscription.Generate());
+            return loot;
         }
 
         private Loot DropAnimalLoot(Vector2 position)
@@ -226,7 +232,8 @@ namespace Game.Combat.Enemies
                 item = ResourceTemplate.Create("Skin");
             else
                 item = ResourceTemplate.GetMeat();
-            Loot loot = new Loot(position, item);
+            Loot loot = new Loot(position);
+            loot.SetItem(item);
             return loot;
         }
 

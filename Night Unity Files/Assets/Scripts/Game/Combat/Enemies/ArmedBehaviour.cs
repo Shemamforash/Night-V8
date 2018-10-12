@@ -1,5 +1,4 @@
-﻿using System;
-using Game.Combat.Generation;
+﻿using Game.Combat.Generation;
 using Game.Gear.Weapons;
 using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -19,12 +18,13 @@ namespace Game.Combat.Enemies
             Assert.IsNotNull(Weapon());
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             CalculateMaxMinDistance();
+            Debug.Log(ArmourController.GetCurrentProtection());
         }
 
         protected void CalculateMaxMinDistance()
         {
-            MaxDistance = Weapon().CalculateIdealDistance();
-            MinDistance = MaxDistance * 0.5f;
+            MaxDistance = 5;
+            MinDistance = Weapon().CalculateMinimumDistance();
         }
 
         protected override void OnAlert()

@@ -51,12 +51,17 @@ namespace Game.Combat.Enemies.Misc
         {
             ResetGrenade();
             transform.position = new Vector3(origin.x, origin.y, 0f);
-            return;
             Vector2 direction = target - origin;
             float distance = direction.magnitude;
             direction /= distance;
             Vector2 force = direction * distance * ThrowForce;
             _rb2d.AddForce(force);
+        }
+
+        private void StartMoving(Vector3 origin, Transform target)
+        {
+            _target = target;
+            StartMoving(origin, target.position);
         }
 
         public void SetExplosionRadius(float radius)
@@ -98,12 +103,6 @@ namespace Game.Combat.Enemies.Misc
         {
             Grenade g = CreateBasic(origin, target);
             g._sickening = true;
-        }
-
-        private void StartMoving(Vector3 origin, Transform target)
-        {
-            _target = target;
-            StartMoving(origin, target.position);
         }
 
         private void Update()

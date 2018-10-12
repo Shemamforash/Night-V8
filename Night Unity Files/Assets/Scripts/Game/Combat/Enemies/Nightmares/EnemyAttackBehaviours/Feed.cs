@@ -54,8 +54,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
         {
             if (_feedParticlePrefab == null) _feedParticlePrefab = Resources.Load<GameObject>("Prefabs/Combat/Effects/Life Draw");
             _feedParticles = Instantiate(_feedParticlePrefab).GetComponent<ParticleSystem>();
-            _feedParticles.transform.SetParent(GameObject.Find("Dynamic").transform);
-            _feedParticles.transform.position = Vector3.zero;
+            _feedParticles.transform.SetAsDynamicChild();
 
             float currentTime = 0f;
             _attacking = true;

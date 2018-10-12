@@ -1,7 +1,4 @@
-﻿using DG.Tweening;
-using Facilitating.Persistence;
-using Facilitating.UIControllers;
-using Game.Combat.Generation;
+﻿using Game.Combat.Generation;
 using Game.Combat.Generation.Shrines;
 using Game.Combat.Misc;
 using Game.Exploration.Regions;
@@ -10,7 +7,6 @@ using UnityEngine;
 public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
 {
     private static GameObject _saveStonePrefab;
-    private Region _region;
     private static SaveStoneBehaviour _instance;
 
     public void Awake()
@@ -36,49 +32,22 @@ public class SaveStoneBehaviour : BasicShrineBehaviour, ICombatEvent
 
     private void Initialise(Region region)
     {
-        _region = region;
-        transform.position = _region.ShrinePosition;
-        PathingGrid.AddBlockingArea(_region.ShrinePosition, 0.5f);
-        if (!_region.Saved) return;
-        GetComponent<CompassItem>().Die();
-        DisableParticles(true);
-        Destroy(this);
-    }
-
-    private void DisableParticles(bool clear)
-    {
-        foreach (ParticleSystem ps in transform.GetComponentsInChildren<ParticleSystem>(transform))
-        {
-            ps.Stop();
-            if (clear) ps.Clear();
-        }
-
-        foreach (TrailRenderer trailRenderer in transform.GetComponentsInChildren<TrailRenderer>(transform))
-        {
-            if (clear) trailRenderer.Clear();
-            else trailRenderer.DOTime(0, 1);
-        }
+        transform.position = region.ShrinePosition;
+        PathingGrid.AddBlockingArea(region.ShrinePosition, 0.5f);
     }
 
     public float InRange()
     {
-        if (_region.Saved) return -1;
         return IsInRange ? 1 : -1;
     }
 
     public string GetEventText()
     {
-        return "Carve your progress into the stone";
+        return "Make an offering upon the alter";
     }
 
     public void Activate()
     {
-        Destroy(gameObject.GetComponent<Collider2D>());
-        GetComponent<CompassItem>().Die();
-        Triggered = true;
-        SaveController.SaveGame();
-        DisableParticles(false);
-        SaveIconController.Save();
-        _region.Saved = true;
+        DismantleMenuController.Show();
     }
 }

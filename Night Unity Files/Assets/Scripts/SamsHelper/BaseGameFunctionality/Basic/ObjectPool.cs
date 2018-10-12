@@ -28,8 +28,7 @@ namespace SamsHelper.BaseGameFunctionality.Basic
         {
             if (_poolParent != null || _poolName == null) return;
             _poolParent = new GameObject(_poolName).transform;
-            _poolParent.SetParent(GameObject.Find("Dynamic").transform);
-            _poolParent.localPosition = Vector3.zero;
+            _poolParent.SetAsDynamicChild();
         }
 
         public T Create()

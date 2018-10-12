@@ -41,7 +41,6 @@ namespace Game.Exploration.Regions
         private int _claimQuantity;
         private string _claimBenefit = "";
         public int RitesRemaining = 3;
-        public bool Saved;
         public bool FountainVisited;
 
         public Region() : base(Vector2.zero)
@@ -197,7 +196,6 @@ namespace Game.Exploration.Regions
             region._claimQuantity = doc.IntFromNode("ClaimQuantity");
             region._claimBenefit = doc.StringFromNode("ClaimBenefit");
             region.RitesRemaining = doc.IntFromNode("RitesRemaining");
-            region.Saved = doc.BoolFromNode("Saved");
             region.FountainVisited = doc.BoolFromNode("FountainVisited");
 
             foreach (XmlNode enemyNode in doc.SelectSingleNode("Enemies").SelectNodes("Enemy"))
@@ -234,7 +232,6 @@ namespace Game.Exploration.Regions
             regionNode.CreateChild("ClaimQuantity", _claimQuantity);
             regionNode.CreateChild("ClaimBenefit", _claimBenefit);
             regionNode.CreateChild("RitesRemaining", RitesRemaining);
-            regionNode.CreateChild("Saved", Saved);
             regionNode.CreateChild("FountainVisited", FountainVisited);
 
             XmlNode enemyNode = regionNode.CreateChild("Enemies");
@@ -288,6 +285,7 @@ namespace Game.Exploration.Regions
         {
             if (!_canHaveEnemies) return;
             List<EnemyTemplate> templates = CombatManager.GenerateEnemies(WorldState.Difficulty(), allowedTypes);
+            Debug.Log(templates.Count);
             templates.ForEach(template => AddEnemy(template));
         }
 

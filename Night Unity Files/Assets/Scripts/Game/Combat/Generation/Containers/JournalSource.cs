@@ -7,7 +7,7 @@ public class JournalSource : ContainerController
     private JournalEntry _journalEntry;
     private CanvasGroup _journalIndicator;
 
-    private JournalSource(Vector2 position) : base(position){
+    public JournalSource(Vector2 position) : base(position){
         ImageLocation = "Journal";
     }
 

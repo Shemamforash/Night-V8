@@ -14,7 +14,7 @@ namespace Facilitating.MenuNavigation
     {
         private CanvasGroup _menuCanvasGroup;
         private static bool _shownSplashScreen;
-        private CanvasGroup _logo;
+        private CanvasGroup _logo, _latin, _english;
         private Sequence _fadeInSequence;
         private static bool _seenIntro;
         private GameController _gameController;
@@ -24,7 +24,11 @@ namespace Facilitating.MenuNavigation
             _gameController = gameObject.GetComponent<GameController>();
             _menuCanvasGroup = gameObject.FindChildWithName<CanvasGroup>("Menu Canvas Group");
             _menuCanvasGroup.alpha = 0f;
+            _latin = gameObject.FindChildWithName<CanvasGroup>("Latin");
+            _english = gameObject.FindChildWithName<CanvasGroup>("English");
             _logo = gameObject.FindChildWithName<CanvasGroup>("Logo");
+            _english.alpha = 0f;
+            _latin.alpha = 0f;
             _logo.alpha = 0f;
         }
 
@@ -33,10 +37,17 @@ namespace Facilitating.MenuNavigation
             _fadeInSequence = DOTween.Sequence();
             if (!_seenIntro)
             {
-                _fadeInSequence.AppendInterval(1f);
-                _fadeInSequence.Append(_logo.DOFade(1f, 1f));
+                _fadeInSequence.AppendInterval(1f); //1
+                _fadeInSequence.Append(_logo.DOFade(1f, 1f)); //2
+                _fadeInSequence.AppendInterval(3f); //5
+                _fadeInSequence.Append(_logo.DOFade(0f, 1f)); //6
+                _fadeInSequence.Append(_latin.DOFade(1f, 1f)); //7
+                _fadeInSequence.AppendInterval(3f); //10
+                _fadeInSequence.Append(_english.DOFade(1f, 1f)); //11
+                _fadeInSequence.AppendInterval(6f); //17
+                _fadeInSequence.Append(_latin.DOFade(0f, 1f)); //18
+                _fadeInSequence.Insert(17, _english.DOFade(0f, 1f));
                 _fadeInSequence.AppendInterval(2f);
-                _fadeInSequence.Append(_logo.DOFade(0f, 1f));
                 _seenIntro = true;
             }
 

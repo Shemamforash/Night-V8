@@ -56,12 +56,12 @@ namespace Game.Gear.Weapons
 
         public static Weapon Generate(ItemQuality quality, WeaponClass weaponClass) => new Weapon(weaponClass, quality);
 
-        public float CalculateIdealDistance()
+            public float CalculateMinimumDistance()
         {
             float range = WeaponAttributes.Val(AttributeType.Accuracy);
             range *= range;
-            float idealDistance = (RangeMax - RangeMin) * range + RangeMin;
-            return idealDistance;
+            float minimumDistance = (RangeMax - RangeMin) * range + RangeMin * 0.5f;
+            return minimumDistance;
         }
 
         public void SetInscription(Inscription inscription)

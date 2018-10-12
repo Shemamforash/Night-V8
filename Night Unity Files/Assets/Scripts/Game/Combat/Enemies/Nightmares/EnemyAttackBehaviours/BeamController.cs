@@ -99,7 +99,7 @@ public class BeamController : MonoBehaviour
         startColor = Color.white;
         endColor = UiAppearanceController.InvisibleColour;
         sequence.Append(_beamLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), BeamDurationMax).SetEase(Ease.OutExpo));
-        sequence.Insert(LeadDurationMax, _glowLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), BeamDurationMax).SetEase(Ease.OutExpo));
+        sequence.Insert(LeadDurationMax + 0.5f, _glowLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), BeamDurationMax).SetEase(Ease.OutExpo));
         sequence.AppendCallback(SetNoLineActive);
         sequence.AppendInterval(1f);
         sequence.AppendCallback(() => _beamPool.Return(this));

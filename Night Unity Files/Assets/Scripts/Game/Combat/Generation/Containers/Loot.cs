@@ -5,15 +5,14 @@ namespace Game.Combat.Generation
 {
     public class Loot : ContainerController
     {
-        public Loot(Vector2 position, InventoryItem item) : base(position)
+        public Loot(Vector2 position) : base(position)
         {
-            SetItem(item);
         }
 
         public void SetItem(InventoryItem item)
         {
             Item = item;
-            if (item.Template.ResourceType == "Meat") ImageLocation = "Meat";   
+            if (item.Template?.ResourceType == "Meat") ImageLocation = "Meat";   
         }
     }
 }

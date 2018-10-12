@@ -35,7 +35,7 @@ public class WormSacBehaviour : BossSectionHealthController
         if (_parent == null)
         {
             _parent = new GameObject().transform;
-            _parent.SetParent(GameObject.Find("Dynamic").transform);
+            _parent.SetAsDynamicChild();
         }
 
         GameObject sac = Instantiate(_prefab);
