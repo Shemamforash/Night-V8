@@ -14,6 +14,7 @@ public class CombatMusicController : MonoBehaviour
 
     public void Awake()
     {
+        return;
         _layer1 = gameObject.FindChildWithName<AudioSource>("Layer 1");
         _layer2 = gameObject.FindChildWithName<AudioSource>("Layer 2");
         _layer3 = gameObject.FindChildWithName<AudioSource>("Layer 3");
@@ -36,6 +37,7 @@ public class CombatMusicController : MonoBehaviour
 
     public void Update()
     {
+        return;
         Vector2 playerPosition = PlayerCombat.Instance.transform.position;
         List<CanTakeDamage> enemies = CombatManager.Enemies();
         float nearestEnemy = 1000f;

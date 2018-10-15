@@ -142,8 +142,8 @@ public class SerpentBehaviour : Boss
         {
             float angleA = AdvancedMaths.AngleFromUp(Vector2.zero, current.transform.right);
             float angleB = angleA + 180;
-            PushController.Create(current.transform.position, angleA, 90);
-            PushController.Create(current.transform.position, angleB, 90);
+            PushController.Create(current.transform.position, angleA, false, 90);
+            PushController.Create(current.transform.position, angleB, false, 90);
             yield return new WaitForSeconds(0.05f);
             current = current.GetChild();
         }

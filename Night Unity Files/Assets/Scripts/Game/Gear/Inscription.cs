@@ -37,55 +37,22 @@ namespace Game.Gear
             _inscriptionCost = ((int) quality + 1) * 5;
         }
 
-        private bool IsCharacterAttribute(AttributeType attribute)
+        public AttributeModifier Modifier()
         {
-            return attribute == AttributeType.Strength ||
-                   attribute == AttributeType.Endurance ||
-                   attribute == AttributeType.Willpower ||
-                   attribute == AttributeType.Perception;
+            return _modifier;
         }
 
-        public void ApplyModifierToCharacter(Character character)
+        public AttributeType Target()
         {
-            if (!IsCharacterAttribute(_template.AttributeTarget)) return;
-            Player player = character as Player;
-            if (player == null) return;
-            CharacterAttribute attribute = player?.Attributes.Get(_template.AttributeTarget);
-            Assert.IsNotNull(attribute);
-            attribute.Max += _modifier.RawBonus();
-            if (PlayerCombat.Instance == null) return;
-            PlayerCombat.Instance.RecalculateAttributes();
-        }
-
-        public void ApplyModifierToWeapon(Weapon item)
-        {
-            if (IsCharacterAttribute(_template.AttributeTarget)) return;
-            item.WeaponAttributes.Get(_template.AttributeTarget).AddModifier(_modifier);
-        }
-
-        public void RemoveModifierFromCharacter(Character character)
-        {
-            if (!IsCharacterAttribute(_template.AttributeTarget)) return;
-            Player player = character as Player;
-            if (player == null) return;
-            CharacterAttribute attribute = player?.Attributes.Get(_template.AttributeTarget);
-            Assert.IsNotNull(attribute);
-            attribute.Max -= _modifier.RawBonus();
-            if (PlayerCombat.Instance == null) return;
-            PlayerCombat.Instance.RecalculateAttributes();
-        }
-
-        public void RemoveModifierFromWeapon(Weapon item)
-        {
-            item.WeaponAttributes.Get(_template.AttributeTarget).RemoveModifier(_modifier);
+            return _template.AttributeTarget;
         }
 
         public static Inscription Generate()
         {
             ReadTemplates();
-            int tier = WorldState.GenerateGearLevel();
+            ItemQuality tier = WorldState.GenerateGearLevel();
             InscriptionTemplate randomTemplate = _inscriptionTemplates.RandomElement();
-            return new Inscription(randomTemplate, (ItemQuality) tier);
+            return new Inscription(randomTemplate, tier);
         }
 
         private static void ReadTemplates()

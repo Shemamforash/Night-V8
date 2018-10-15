@@ -197,7 +197,7 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            PlayerCombat.Instance.Shield.Activate(5f);
+//            PlayerCombat.Instance.Shield.Activate(5f);
         }
     }
 

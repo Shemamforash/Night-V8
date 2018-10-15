@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -31,15 +32,15 @@ namespace Game.Gear.Armour
         public override void Equip(Character character)
         {
             base.Equip(character);
-            Player player = character as Player;
-            player?.Attributes.Get(_template.TargetAttribute).AddModifier(modifier);
+            (character as Player)?.ApplyModifier(_template.TargetAttribute, modifier);
+            ApplyToWeapon(character.EquippedWeapon);
         }
 
         public override void Unequip()
         {
             base.Unequip();
-            Player player = EquippedCharacter as Player;
-            player?.Attributes.Get(_template.TargetAttribute).RemoveModifier(modifier);
+            (EquippedCharacter as Player)?.RemoveModifier(_template.TargetAttribute, modifier);
+            RemoveFromWeapon(EquippedCharacter.EquippedWeapon);
         }
 
         private static void ReadTemplates()
@@ -105,6 +106,16 @@ namespace Game.Gear.Armour
             Accessory accessory = new Accessory(template, ItemQuality.Dark);
             accessory.Load(accessoryNode);
             return accessory;
+        }
+
+        public void ApplyToWeapon(Weapon weapon)
+        {
+            weapon?.ApplyModifier(_template.TargetAttribute, modifier);
+        }
+
+        public void RemoveFromWeapon(Weapon weapon)
+        {
+            weapon?.RemoveModifier(_template.TargetAttribute, modifier);
         }
     }
 }

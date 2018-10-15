@@ -96,7 +96,6 @@ public class TempleBehaviour : BasicShrineBehaviour
         List<EnemyTemplate> enemyTypesToSpawn = new List<EnemyTemplate>();
         List<EnemyTemplate> allowedTypes = WorldState.GetAllowedNightmareEnemyTypes();
         int size = WorldState.Difficulty() * 5;
-
         while (size > 0)
         {
             foreach (EnemyTemplate e in allowedTypes)
@@ -125,13 +124,13 @@ public class TempleBehaviour : BasicShrineBehaviour
     private IEnumerator StartSpawningEnemies()
     {
         SpawnInitialEnemies();
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
         Queue<EnemyTemplate> enemyTypesToSpawn = GetEnemyTypesToSpawn();
 
         while (!enemyTypesToSpawn.NotEmpty())
         {
             EnemyTemplate nextEnemy = enemyTypesToSpawn.Dequeue();
-            float nextEnemyArrivalTime = nextEnemy.Value * 4;
+            float nextEnemyArrivalTime = nextEnemy.Value;
             while (nextEnemyArrivalTime > 0f)
             {
                 if (CombatManager.IsCombatActive()) nextEnemyArrivalTime -= Time.deltaTime;

@@ -14,7 +14,7 @@
     <Inscription>
         <Name>Haste</Name>
         <Attribute>ReloadSpeed</Attribute>
-        <Value>0.1</Value>
+        <Value>-0.1</Value>
         <Additive>False</Additive>
     </Inscription>
     <Inscription>

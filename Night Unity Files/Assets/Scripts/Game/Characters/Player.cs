@@ -7,6 +7,7 @@ using Game.Exploration.WorldEvents;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
+using NUnit.Framework;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Libraries;
@@ -337,6 +338,24 @@ namespace Game.Characters
         {
             State currentState = States.GetCurrentState();
             return currentState != MeditateAction && currentState != SleepAction;
+        }
+
+        public void ApplyModifier(AttributeType target, AttributeModifier modifier)
+        {
+            if (!CharacterAttribute.IsCharacterAttribute(target)) return;
+            CharacterAttribute attribute = Attributes.Get(target);
+            attribute.Max += modifier.RawBonus();
+            if (PlayerCombat.Instance == null) return;
+            PlayerCombat.Instance.RecalculateAttributes();
+        }
+
+        public void RemoveModifier(AttributeType target, AttributeModifier modifier)
+        {
+            if (!CharacterAttribute.IsCharacterAttribute(target)) return;
+            CharacterAttribute attribute = Attributes.Get(target);
+            attribute.Max -= modifier.RawBonus();
+            if (PlayerCombat.Instance == null) return;
+            PlayerCombat.Instance.RecalculateAttributes();
         }
     }
 }

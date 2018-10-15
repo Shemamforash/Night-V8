@@ -20,9 +20,9 @@ namespace Game.Combat.Enemies.Humans
         private void Push()
         {
             Sequence sequence = DOTween.Sequence();
-            sequence.AppendCallback(() => PushController.Create(transform.position, 0f, 360));
+            sequence.AppendCallback(() => PushController.Create(transform.position, 0f, false, 360));
             sequence.AppendInterval(0.25f);
-            sequence.AppendCallback(() => PushController.Create(transform.position, 0f, 360));
+            sequence.AppendCallback(() => PushController.Create(transform.position, 0f, false, 360));
             sequence.AppendInterval(0.5f);
             sequence.AppendCallback(() =>
             {

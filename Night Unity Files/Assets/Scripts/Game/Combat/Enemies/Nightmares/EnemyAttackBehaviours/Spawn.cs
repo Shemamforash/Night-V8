@@ -28,7 +28,7 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
                 for (int i = 0; i < enemiesToSpawn; ++i)
                 {
                     EnemyBehaviour enemy = CombatManager.SpawnEnemy(_spawnType, cellsNearMe[i].Position);
-                    enemy.Shield.Activate(2f);
+//                    enemy.Shield.Activate(2f);
                 }
             });
         }

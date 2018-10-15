@@ -22,9 +22,7 @@ namespace Game.Combat.Enemies
         {
             base.MyUpdate();
             PushAwayFromNeighbors();
-            MoveBehaviour.MyUpdate();
             UpdateRotation();
-            if (MoveBehaviour.Moving()) return;
             CurrentAction?.Invoke();
         }
 

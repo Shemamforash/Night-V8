@@ -39,7 +39,7 @@ namespace Facilitating.UIControllers
             foreach (ItemQuality value in Enum.GetValues(typeof(ItemQuality))) qualities.Add(value);
             for (int i = 0; i < 50; ++i)
             {
-                Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Glowing);
+                Weapon weapon = WeaponGenerator.GenerateWeapon();
                 Inventory.Move(weapon, 1);
                 Inscription inscription = Inscription.Generate();
                 Inventory.Move(inscription, 1);

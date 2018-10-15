@@ -7,12 +7,12 @@ namespace Game.Combat.Misc
     public class RifleTrail : BulletTrail
     {
         private static readonly ObjectPool<BulletTrail> _pool = new ObjectPool<BulletTrail>("Rifle Trails", "Prefabs/Combat/Shots/Rifle Trail");
-        private ParticleSystem _path1, _path2;
+        private ParticleSystem _path1;// _path2;
 
         public void Awake()
         {
             _path1 = gameObject.FindChildWithName<ParticleSystem>("Trail 1");
-            _path2 = gameObject.FindChildWithName<ParticleSystem>("Trail 2");
+//            _path2 = gameObject.FindChildWithName<ParticleSystem>("Trail 2");
         }
 
         public static RifleTrail Create()
@@ -28,7 +28,7 @@ namespace Game.Combat.Misc
         protected override void ClearTrails()
         {
             _path1.Clear();
-            _path2.Clear();
+//            _path2.Clear();
         }
 
         protected override Color GetColour()
@@ -41,8 +41,8 @@ namespace Game.Combat.Misc
         {
             ParticleSystem.TrailModule trails = _path1.trails;
             trails.colorOverTrail.gradient.colorKeys[1].color = color;
-            trails = _path2.trails;
-            trails.colorOverTrail.gradient.colorKeys[1].color = color;
+//            trails = _path2.trails;
+//            trails.colorOverTrail.gradient.colorKeys[1].color = color;
         }
     }
 }

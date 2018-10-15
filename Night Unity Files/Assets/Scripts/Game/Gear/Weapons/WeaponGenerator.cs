@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
+using Game.Global;
 using SamsHelper.Libraries;
 
 namespace Game.Gear.Weapons
@@ -22,6 +23,12 @@ namespace Game.Gear.Weapons
             LoadBaseWeapons();
             Weapon weapon = Weapon.Generate(quality);
             return weapon;
+        }
+
+        public static Weapon GenerateWeapon()
+        {
+            LoadBaseWeapons();
+            return GenerateWeapon(WorldState.GenerateGearLevel());
         }
 
         private static void LoadBaseWeapons()

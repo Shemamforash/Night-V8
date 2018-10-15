@@ -436,6 +436,7 @@
             </e>
             <e p="Combat" t="Include">
               <e p="Enemies" t="Include">
+                <e p="AIMoveManager.cs" t="Include" />
                 <e p="Animals" t="Include">
                   <e p="AnimalBehaviour.cs" t="Include" />
                   <e p="Curio.cs" t="Include" />

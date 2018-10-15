@@ -56,8 +56,10 @@ namespace SamsHelper.BaseGameFunctionality.Basic
                     finalBonus = 1;
                     currentDepth = depth;
                 }
+
                 finalBonus += m.FinalBonus();
             });
+            if (finalBonus < 0) finalBonus = 0;
             _calculatedValue *= finalBonus;
         }
 
@@ -93,6 +95,14 @@ namespace SamsHelper.BaseGameFunctionality.Basic
             Min = attributeNode.FloatFromNode("Min");
             Max = attributeNode.FloatFromNode("Max");
             SetCurrentValue(attributeNode.FloatFromNode("Value"));
+        }
+
+        public static bool IsCharacterAttribute(AttributeType attribute)
+        {
+            return attribute == AttributeType.Strength ||
+                   attribute == AttributeType.Endurance ||
+                   attribute == AttributeType.Willpower ||
+                   attribute == AttributeType.Perception;
         }
     }
 }

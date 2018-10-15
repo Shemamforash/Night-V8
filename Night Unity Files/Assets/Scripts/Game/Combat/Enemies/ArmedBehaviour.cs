@@ -18,17 +18,18 @@ namespace Game.Combat.Enemies
             Assert.IsNotNull(Weapon());
             _weaponBehaviour = Weapon().InstantiateWeaponBehaviour(this);
             CalculateMaxMinDistance();
-            Debug.Log(ArmourController.GetCurrentProtection());
         }
 
         protected void CalculateMaxMinDistance()
         {
-            MaxDistance = 5;
             MinDistance = Weapon().CalculateMinimumDistance();
+            MaxDistance = MinDistance * 2f;
+            if (MaxDistance > 4f) MaxDistance = 4f;
         }
 
         protected override void OnAlert()
         {
+            _aimTime = Random.Range(0.5f, 1f);
             TryFire();
         }
 
@@ -40,26 +41,17 @@ namespace Game.Combat.Enemies
         public override Weapon Weapon() => Enemy.EquippedWeapon;
 
         private Cell _coverCell;
+        private float _aimTime;
 
-        private void TryReload()
+        public override void MyUpdate()
         {
-            _coverCell = MoveBehaviour.MoveToCover();
-            if (_coverCell == null)
-            {
-                Reload();
-                return;
-            }
-
-            CurrentAction = () =>
-            {
-                if (CurrentCell() != _coverCell) return;
-                Reload();
-            };
+            base.MyUpdate();
+            if (_aimTime > 0f) _aimTime -= Time.deltaTime;
         }
 
         private void Reload()
         {
-            float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed);
+            float duration = Weapon().GetAttributeValue(AttributeType.ReloadSpeed) * 2f;
             CurrentAction = () =>
             {
                 duration -= Time.deltaTime;
@@ -71,15 +63,29 @@ namespace Game.Combat.Enemies
 
         private void Aim()
         {
-            if (_weaponBehaviour.Empty()) TryReload();
-            else CurrentAction = Fire;
+            CurrentAction = () =>
+            {
+                if (_aimTime > 0f) return;
+                if (_weaponBehaviour.Empty()) Reload();
+                else CurrentAction = Fire;
+            };
         }
 
         private void Fire()
         {
             bool automatic = Weapon().WeaponAttributes.Automatic;
+            float fireTime = 2f;
             CurrentAction = () =>
             {
+                fireTime -= Time.deltaTime;
+                if (fireTime <= 0)
+                {
+                    _weaponBehaviour.StopFiring();
+                    _aimTime = Random.Range(0.5f, 1f);
+                    Aim();
+                    return;
+                }
+
                 if (!_weaponBehaviour.CanFire())
                 {
                     if (!_weaponBehaviour.Empty() && automatic) return;

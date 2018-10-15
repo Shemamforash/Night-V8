@@ -56,7 +56,7 @@ namespace Game.Gear.Weapons
 
         public static Weapon Generate(ItemQuality quality, WeaponClass weaponClass) => new Weapon(weaponClass, quality);
 
-            public float CalculateMinimumDistance()
+        public float CalculateMinimumDistance()
         {
             float range = WeaponAttributes.Val(AttributeType.Accuracy);
             range *= range;
@@ -66,12 +66,36 @@ namespace Game.Gear.Weapons
 
         public void SetInscription(Inscription inscription)
         {
-            UnapplyInscription();
-            _inscription?.RemoveModifierFromWeapon(this);
+            RemoveInscription();
+            ApplyInscriptionModifier();
             _inscription = inscription;
             Inventory.DestroyItem(inscription);
-            _inscription.ApplyModifierToWeapon(this);
+            RemoveInscriptionModifier();
             ApplyInscription();
+        }
+
+        private void ApplyInscriptionModifier()
+        {
+            if (_inscription == null) return;
+            ApplyModifier(_inscription.Target(), _inscription.Modifier());
+        }
+
+        private void RemoveInscriptionModifier()
+        {
+            if (_inscription == null) return;
+            RemoveModifier(_inscription.Target(), _inscription.Modifier());
+        }
+
+        public void ApplyModifier(AttributeType target, AttributeModifier modifier)
+        {
+            if (CharacterAttribute.IsCharacterAttribute(target)) return;
+            WeaponAttributes.Get(target).AddModifier(modifier);
+        }
+
+        public void RemoveModifier(AttributeType target, AttributeModifier modifier)
+        {
+            if (CharacterAttribute.IsCharacterAttribute(target)) return;
+            WeaponAttributes.Get(target).RemoveModifier(modifier);
         }
 
         public float CalculateBaseAccuracy()
@@ -134,25 +158,27 @@ namespace Game.Gear.Weapons
             base.Equip(character);
             _character = character;
             ApplyInscription();
+            _character.EquippedAccessory?.ApplyToWeapon(this);
         }
 
         public override void Unequip()
         {
             base.Unequip();
-            UnapplyInscription();
+            RemoveInscription();
+            _character.EquippedAccessory?.RemoveFromWeapon(this);
         }
 
         private void ApplyInscription()
         {
-            if (_inscriptionApplied) return;
-            _inscription?.ApplyModifierToCharacter(_character);
+            if (_inscriptionApplied || _inscription == null) return;
+            (_character as Player)?.ApplyModifier(_inscription.Target(), _inscription.Modifier());
             _inscriptionApplied = true;
         }
 
-        private void UnapplyInscription()
+        private void RemoveInscription()
         {
-            if (!_inscriptionApplied) return;
-            _inscription?.RemoveModifierFromCharacter(_character);
+            if (!_inscriptionApplied || _inscription == null) return;
+            (_character as Player)?.RemoveModifier(_inscription.Target(), _inscription.Modifier());
             _inscriptionApplied = false;
         }
 

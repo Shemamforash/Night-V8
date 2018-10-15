@@ -41,6 +41,8 @@ namespace Game.Combat.Misc
 
         private Weapon _weapon;
         private bool _seekTarget, _leaveFireTrail;
+        private const float SeekDecay = 0.95f;
+        private float _seekModifier;
         private float _knockBackForce;
         private float _knockBackModifier;
         private const float MaxAge = 3f;
@@ -76,6 +78,7 @@ namespace Game.Combat.Misc
             _leaveFireTrail = false;
             _pierce = false;
             _hasHit = false;
+            _seekModifier = 1f;
             OnHitAction = null;
         }
 
@@ -101,10 +104,10 @@ namespace Game.Combat.Misc
             switch (_weapon.WeaponType())
             {
                 case WeaponType.Pistol:
-                    Speed = 20f;
+                    Speed = 25f;
                     break;
                 case WeaponType.Rifle:
-                    Speed = 25;
+                    Speed = 35;
                     break;
                 case WeaponType.Shotgun:
                     Speed = 15f;
@@ -160,11 +163,9 @@ namespace Game.Combat.Misc
             Vector2 dir = new Vector2(-_rigidBody.velocity.y, _rigidBody.velocity.x).normalized;
             float angle = Vector2.Angle(dir, nearestEnemy.transform.position - transform.position);
             float force = 50;
-            if (angle > 90)
-            {
-                force = -force;
-            }
-
+            force *= _seekModifier;
+            _seekModifier *= SeekDecay;
+            if (angle > 90) force = -force;
             _rigidBody.velocity += force * dir * Time.fixedDeltaTime;
             _rigidBody.velocity = _rigidBody.velocity.normalized * Speed;
         }

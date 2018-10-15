@@ -56,14 +56,14 @@ namespace Game.Combat.Generation
                 {
                     if (e.Value > size) continue;
                     templates.Add(e);
-                    size -= size;
+                    size -= e.Value;
                     break;
                 }
             }
 
             return templates;
         }
-        
+
         public static bool AllEnemiesDead() => Instance()._enemies.Count == 0;
 
         public static float VisibilityRange() => Instance()._visibilityRange;
@@ -113,7 +113,7 @@ namespace Game.Combat.Generation
         public void Update()
         {
             if (!IsCombatActive()) return;
-            MoveBehaviour.UpdateMoveBehaviours();
+            AIMoveManager.UpdateMoveBehaviours();
             if (Time.timeSinceLevelLoad < 3f) return;
             PlayerCombat.Instance.MyUpdate();
             for (int i = _enemies.Count - 1; i >= 0; --i)

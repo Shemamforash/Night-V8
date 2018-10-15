@@ -75,6 +75,7 @@ namespace Game.Combat.Misc
             SicknessStacks += stacks;
             if (SicknessStacks >= GetSicknessTargetTicks())
             {
+                _spriteFlash.FlashSprite();
                 HealthController.TakeDamage(HealthController.GetMaxHealth() / 4f);
                 SicknessStacks = 0;
             }
@@ -124,6 +125,7 @@ namespace Game.Combat.Misc
                 float newBurnTick = burnTick - Time.deltaTime;
                 if (burnTick >= 3f && newBurnTick < 3f || burnTick >= 2f && newBurnTick < 2f || burnTick >= 1f && newBurnTick < 1f || burnTick > 0f && newBurnTick < 0f)
                 {
+                    _spriteFlash.FlashSprite();
                     HealthController.TakeDamage(GetBurnDamage());
                 }
 

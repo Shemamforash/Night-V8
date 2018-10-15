@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
 using Game.Combat.Ui;
 using Game.Gear.Weapons;
@@ -58,11 +59,9 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            if (PlayerCombat.Instance._weaponBehaviour.Empty()) return;
             Shot s = Shot.Create(PlayerCombat.Instance);
             s.SetBurnChance(1);
             s.Fire();
-            PlayerCombat.Instance.ConsumeAmmo(1);
         }
     }
 
@@ -77,7 +76,6 @@ namespace Game.Combat.Player
             Shot s = Shot.Create(PlayerCombat.Instance);
             s.AddOnHit(() => { VortexBehaviour.Create(s.transform.position); });
             s.Fire();
-            PlayerCombat.Instance.ConsumeAmmo();
         }
     }
 
@@ -89,10 +87,9 @@ namespace Game.Combat.Player
         {
         }
 
-        protected override void MagazineEffect(Shot s)
+        protected override void InstantEffect()
         {
-            float angle = AdvancedMaths.AngleFromUp(s._origin.transform.position, PlayerCombat.Instance.transform.position) + 80f;
-            PushController.Create(s._origin.transform.position, angle);
+            PushController.Create(PlayerCombat.Instance.transform.position, 0, true, 360f);
         }
     }
 
@@ -113,6 +110,7 @@ namespace Game.Combat.Player
                 float y = Mathf.Sin(angle);
                 Vector2 dir = new Vector2(x, y);
                 Shot s = Shot.Create(PlayerCombat.Instance);
+                s.SetDamageModifier(2);
                 s.OverrideDirection(dir);
                 s.Fire();
             }
@@ -141,7 +139,8 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            s.AddKnockBackModifier(3);
+            float rotation = PlayerCombat.Instance.transform.rotation.z;
+            PushController.Create(PlayerCombat.Instance.transform.position, rotation, true, 5f);
         }
     }
 
@@ -155,12 +154,7 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            BaseWeaponBehaviour weaponBehaviour = PlayerCombat.Instance._weaponBehaviour;
-            if (weaponBehaviour.Empty()) return;
-            Shot shot = Shot.Create(s._origin);
-            shot.Fire();
-            weaponBehaviour.ConsumeAmmo(1);
-            UIMagazineController.UpdateMagazineUi();
+            s.Seek();
         }
     }
 
@@ -204,7 +198,7 @@ namespace Game.Combat.Player
         {
             if (PlayerCombat.Instance.DamageTakenSinceLastShot)
             {
-                s.SetDamageModifier(2);
+                s.SetDamageModifier(5);
             }
 
             PlayerCombat.Instance.DamageTakenSinceLastShot = false;

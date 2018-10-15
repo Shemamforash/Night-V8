@@ -13,6 +13,7 @@ using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
+using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
@@ -50,16 +51,9 @@ namespace Game.Combat.Enemies
 
         private void GenerateWeapon()
         {
-            int difficulty = WorldState.GenerateGearLevel();
-            ItemQuality targetQuality = (ItemQuality) difficulty;
-            Assert.IsTrue((int) targetQuality < 5);
-            Weapon weapon = WeaponGenerator.GenerateWeapon(targetQuality);
+            Weapon weapon = WeaponGenerator.GenerateWeapon();
             EquipWeapon(weapon);
-            bool hasInscription = Random.Range(0, 4) == 0;
-            if (hasInscription)
-            {
-                weapon.SetInscription(Inscription.Generate());
-            }
+            if (Helper.RollDie(0, 5)) weapon.SetInscription(Inscription.Generate());
         }
 
         private void GenerateArmour()

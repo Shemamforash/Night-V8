@@ -21,7 +21,6 @@ namespace Game.Combat.Misc
         private float _recoveryTimer;
         private CanTakeDamage _target;
         public MovementController MovementController;
-        public Shield Shield;
         private const float ExplosionForceModifier = 5;
         
         protected float DistanceToTarget()
@@ -78,7 +77,6 @@ namespace Game.Combat.Misc
             Sprite = GetComponent<SpriteRenderer>();
             MovementController = GetComponent<MovementController>();
             WeaponAudio = gameObject.FindChildWithName<WeaponAudioController>("Weapon Audio");
-            Shield = gameObject.FindChildWithName<Shield>("Shield");
         }
 
         public override void MyUpdate()

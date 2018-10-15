@@ -284,8 +284,8 @@ namespace Game.Exploration.Regions
         private void GenerateEncounter(List<EnemyTemplate> allowedTypes)
         {
             if (!_canHaveEnemies) return;
-            List<EnemyTemplate> templates = CombatManager.GenerateEnemies(WorldState.Difficulty(), allowedTypes);
-            Debug.Log(templates.Count);
+            int size = (int) (0.5 * WorldState.Difficulty() + 4);
+            List<EnemyTemplate> templates = CombatManager.GenerateEnemies(size, allowedTypes);
             templates.ForEach(template => AddEnemy(template));
         }
 

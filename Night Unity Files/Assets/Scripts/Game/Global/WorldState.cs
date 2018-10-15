@@ -11,6 +11,7 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Exploration.WorldEvents;
+using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
@@ -110,8 +111,7 @@ namespace Game.Global
             _isPaused = false;
             Seed = Random.Range(0, int.MaxValue);
 #if UNITY_EDITOR
-            _difficulty = 30;
-            DaysSpentHere = 10;
+//            _difficulty = 30;
 #endif
 
             Random.InitState(Seed);
@@ -274,7 +274,7 @@ namespace Game.Global
             SceneryController.SetTime(normalisedTime);
         }
 
-        public static int GenerateGearLevel()
+        public static ItemQuality GenerateGearLevel()
         {
             int difficulty = Mathf.FloorToInt(Difficulty() / 10f);
             int difficultyMin = difficulty - 1;
@@ -282,7 +282,7 @@ namespace Game.Global
             else if (difficultyMin > 4) difficultyMin = 4;
             int difficultyMax = difficulty + 1;
             if (difficultyMax > 4) difficultyMax = 4;
-            return Random.Range(difficultyMin, difficultyMax);
+            return (ItemQuality) Random.Range(difficultyMin, difficultyMax);
         }
 
         private static void CheckEnemyUnlock()

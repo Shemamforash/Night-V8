@@ -18,7 +18,7 @@ namespace Game.Exploration.Environment
 {
     public class MapGenerator : MonoBehaviour
     {
-        private const int MapWidth = 120, MinRadius = 6, MaxRadius = 15;
+        private const int MapWidth = 120, MinRadius = 6, MaxRadius = 12;
         private const int WaterSourcesPerEnvironment = 30;
         private const int FoodSourcesPerEnvironment = 20;
         private const int ResourcesPerEnvironment = 30;
