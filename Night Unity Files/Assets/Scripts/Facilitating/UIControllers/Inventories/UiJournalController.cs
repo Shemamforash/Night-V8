@@ -64,7 +64,7 @@ public class UiJournalController : UiInventoryMenuController
 
         protected override void CacheUiElements(Transform transform)
         {
-            _nameText = transform.gameObject.FindChildWithName<EnhancedText>("Name");
+            _nameText = transform.GetComponent<EnhancedText>();
         }
 
         protected override void Update(object o)

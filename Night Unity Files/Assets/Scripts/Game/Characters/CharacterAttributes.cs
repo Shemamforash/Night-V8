@@ -120,14 +120,18 @@ namespace Game.Characters
             WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
 
-        public float CalculateAdrenalineRecoveryRate() => Mathf.Pow(1.05f, Val(AttributeType.Perception) + Val(AttributeType.AdrenalineRechargeBonus));
+        public float CalculateAdrenalineRecoveryRate()
+        {
+            Debug.Log(Val(AttributeType.AdrenalineRechargeBonus));
+            return (0.1f * Val(AttributeType.Perception) + 1) * Val(AttributeType.AdrenalineRechargeBonus);
+        }
 
         public float CalculateSpeed() => 5f + Val(AttributeType.Endurance) * 0.25f;
 
         public float CalculateSkillCooldownModifier()
         {
-            float skillRechargeBonus = -(Val(AttributeType.SkillRechargeBonus) - 1f);
-            return (float) Math.Pow(0.95f, Val(AttributeType.Willpower)) + skillRechargeBonus;
+            Debug.Log(Val(AttributeType.SkillRechargeBonus));
+            return (-0.025f * Val(AttributeType.Willpower) + 1) * Val(AttributeType.SkillRechargeBonus);
         }
 
         public int CalculateMaxHealth()

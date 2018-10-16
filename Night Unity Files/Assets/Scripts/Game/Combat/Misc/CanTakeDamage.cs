@@ -65,7 +65,7 @@ namespace Game.Combat.Misc
 
         public bool IsBurning() => _burnTicks.Count > 0;
 
-        public void Decay()
+        public virtual void Decay()
         {
             TakeArmourDamage(GetDecayDamage());
         }

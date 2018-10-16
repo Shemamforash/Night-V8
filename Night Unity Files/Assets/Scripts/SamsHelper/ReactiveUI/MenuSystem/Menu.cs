@@ -25,7 +25,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             _canvasGroup.alpha = 1;
         }
 
-        public void Exit()
+        public virtual void Exit()
         {
             DOTween.defaultTimeScaleIndependent = false;
             _canvasGroup.alpha = 0;

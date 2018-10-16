@@ -66,10 +66,10 @@ namespace Game.Global
             ChangeScene("Game Over");
         }
 
-        public static void GoToMapScene()
-        {
-            ChangeScene("Map");
-        }
+//        public static void GoToMapScene()
+//        {
+//            ChangeScene("Map");
+//        }
 
         public static void GoToStoryScene()
         {

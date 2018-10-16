@@ -56,7 +56,7 @@ class RecipeImporter(XMLWriter):
         write_single_value(self, "IsBuilding", get_value(self, "G", row))
 
     def read_recipes(self):
-        for row_no in range(4, 22):
+        for row_no in range(4, 28):
             write_tag(self, "Recipe", self.read_recipe, [row_no])
 
 
@@ -78,7 +78,7 @@ class ResourceImporter(XMLWriter):
         write_single_value(self, "WastelandDropRate", get_value(self, "I", row, ""))
 
     def read_resources(self):
-        for row_no in range(3, 35):
+        for row_no in range(3, 38):
             if get_value(self, "B", row_no) == "Resource":
                 write_tag(self, "Resource", self.read_resource, [row_no, False])
             else:
@@ -107,7 +107,7 @@ class GearImporter(XMLWriter):
         write_tag(self, "GearList", self.read_gear)
 
     def read_gear(self):
-        for row in range(3, 13):
+        for row in range(3, 12):
             write_tag(self, "Gear", self.read_single_gear, [row])
 
     def read_single_gear(self, row):
@@ -268,10 +268,11 @@ class BrandImporter(XMLWriter):
         write_single_value(self, "TargetValue", get_value(self, "C", row))
         write_single_value(self, "SuccessName", get_value(self, "D", row))
         write_single_value(self, "SuccessEffect", get_value(self, "E", row))
-        write_single_value(self, "SuccessValue", get_value(self, "F", row, ""))
+        write_single_value(self, "SuccessValue", get_value(self, "F", row, "0"))
         write_single_value(self, "FailName", get_value(self, "G", row))
         write_single_value(self, "FailEffect", get_value(self, "H", row))
         write_single_value(self, "FailValue", get_value(self, "I", row))
+        write_single_value(self, "RequiresSkill", get_value(self, "J", row))
 
 
 class StoryImporter(XMLWriter):
@@ -372,16 +373,16 @@ def write_single_value(xml_writer, stat_name, value):
 
 
 # WeaponImporter()
-# GearImporter()
+GearImporter()
 # WeatherImporter()
-WeatherProbabilityImporter();
+# WeatherProbabilityImporter();
 # RegionImporter()
 # CharacterImporter()
-# EnemyImporter()
-# RecipeImporter()
-# ResourceImporter()
+EnemyImporter()
+RecipeImporter()
+ResourceImporter()
 # InscriptionImporter()
 # SkillImporter()
 # EnvironmentImporter()
-# BrandImporter()
+BrandImporter()
 # StoryImporter()

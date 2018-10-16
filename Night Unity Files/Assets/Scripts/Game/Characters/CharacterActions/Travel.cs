@@ -5,8 +5,8 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.WorldEvents;
 using Game.Global;
-using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.MenuSystem;
 
 namespace Game.Characters.CharacterActions
 {
@@ -76,7 +76,7 @@ namespace Game.Characters.CharacterActions
 
         protected override void OnClick()
         {
-            SceneChanger.GoToMapScene();
+            MenuStateMachine.ShowMenu("Map Menu");
         }
 
         public Region GetCurrentNode()

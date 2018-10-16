@@ -88,6 +88,15 @@ namespace Game.Combat.Enemies
             Sprite.sprite = spriteImage;
         }
 
+        public override void Decay()
+        {
+            int armourCountBefore = ArmourController.GetCurrentProtection();
+            base.Decay();
+            int armourCountAfter = ArmourController.GetCurrentProtection();
+            if (armourCountBefore - armourCountAfter == 0) return;
+            PlayerCombat.Instance.Player.BrandManager.IncreaseDecayCount();
+        }
+
         public override void Burn()
         {
             if (GetBurnTicks() == 0) PlayerCombat.Instance.Player.BrandManager.IncreaseBurnCount();

@@ -85,7 +85,8 @@ namespace Game.Combat.Player
             else InstantEffect();
 
             UIMagazineController.UpdateMagazineUi();
-            CombatManager.IncreaseSkillsUsed();
+            PlayerCombat.Instance.Player.BrandManager.IncreaseSkillsUsed();
+            RadianceController.SetSkillWasUsed();
             return true;
         }
 

@@ -9,6 +9,7 @@ using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.MenuSystem;
 using UnityEngine;
 
 public class MapMovementController : MonoBehaviour, IInputListener
@@ -18,23 +19,37 @@ public class MapMovementController : MonoBehaviour, IInputListener
     private const float Speed = 40f;
     private List<Region> _availableRegions;
     private Region _nearestRegion;
-    private Region _currentRegion;
+    private static Region _currentRegion;
     private static UIAttributeMarkerController _enduranceMarker;
+    private static Camera _mapCamera;
+    private static Player _player;
+    private static MapMovementController _instance;
+    private bool _pressed;
 
     public void Awake()
     {
-        Cursor.visible = false;
-        Recenter();
         _rigidBody2D = GetComponent<Rigidbody2D>();
         _availableRegions = MapGenerator.DiscoveredRegions();
-        _currentRegion = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode();
         _enduranceMarker = GameObject.Find("Endurance").FindChildWithName<UIAttributeMarkerController>("Bar");
-        InputHandler.SetCurrentListener(this);
+        _mapCamera = GameObject.Find("Map Camera").GetComponent<Camera>();
+        _instance = this;
     }
 
-    public void Start()
+    public static void Enter(Player player)
     {
-        _enduranceMarker.SetValue(CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Endurance));
+        ResourcesUiController.Hide();
+        _player = player;
+        _enduranceMarker.SetValue(_player.Attributes.Get(AttributeType.Endurance));
+        _currentRegion = _player.TravelAction.GetCurrentNode();
+        InputHandler.SetCurrentListener(_instance);
+        Recenter();
+    }
+
+    public static void Exit()
+    {
+        ResourcesUiController.Show();
+        InputHandler.SetCurrentListener(null);
+        _player = null;
     }
 
     public static void UpdateEndurance(int enduranceCost)
@@ -45,19 +60,39 @@ public class MapMovementController : MonoBehaviour, IInputListener
 
     private static void Recenter()
     {
-        Vector3 position = CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode().Position;
+        Vector3 position = _currentRegion.Position;
         position.z = -10;
-        Camera.main.transform.DOMove(position, 0.5f);
+        _mapCamera.transform.DOMove(position, 0.5f);
     }
 
     public void FixedUpdate()
     {
-        _rigidBody2D.AddForce(_direction * Speed);
+        if (_player == null) return;
+        if (!_pressed && _nearestRegion != null) LocateToNearestRegion();
+        _rigidBody2D.AddForce(_direction);
         _direction = Vector2.zero;
+    }
+
+    private Vector3 velocity;
+
+    private void LocateToNearestRegion()
+    {
+        float distance = ((Vector2) transform.position).Distance(_nearestRegion.Position);
+        if (distance < 0.01f)
+        {
+            Vector3 snappedPosition = _nearestRegion.Position;
+            snappedPosition.z = transform.position.z;
+            transform.position = snappedPosition;
+            return;
+        }
+
+        _direction = _nearestRegion.Position.Direction(transform.position);
+        _direction = Vector3.one * distance * Time.fixedDeltaTime * 100;
     }
 
     public void Update()
     {
+        if (_player == null) return;
         float nearestDistance = 1000;
         Region newNearestRegion = null;
         _availableRegions.ForEach(region =>
@@ -84,13 +119,15 @@ public class MapMovementController : MonoBehaviour, IInputListener
         switch (axis)
         {
             case InputAxis.Horizontal:
+                _pressed = true;
                 _direction.x += direction;
                 break;
             case InputAxis.Vertical:
+                _pressed = true;
                 _direction.y += direction;
                 break;
             case InputAxis.Cover:
-                ReturnToGame(_currentRegion);
+                if (!MapMenuController.IsReturningFromCombat) ReturnToGame(_currentRegion);
                 break;
             case InputAxis.Fire:
                 TravelToRegion();
@@ -108,6 +145,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         }
 
         if (!isRegionVisible) _direction = Vector2.zero;
+        _direction *= Speed;
     }
 
     private bool CanAffordToTravel()
@@ -126,18 +164,21 @@ public class MapMovementController : MonoBehaviour, IInputListener
         Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
         travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetEnduranceCost());
         if (_currentRegion == _nearestRegion) return;
+        MapMenuController.IsReturningFromCombat = false;
         ReturnToGame(_nearestRegion);
     }
 
     private static void ReturnToGame(Region region)
     {
         region.MapNode().Enter();
-        SceneChanger.GoToGameScene();
+        MenuStateMachine.ShowMenu("Game Menu");
         InputHandler.SetCurrentListener(null);
     }
 
     public void OnInputUp(InputAxis axis)
     {
+        if (axis != InputAxis.Horizontal && axis != InputAxis.Vertical) return;
+        _pressed = false;
     }
 
     public void OnDoubleTap(InputAxis axis, float direction)

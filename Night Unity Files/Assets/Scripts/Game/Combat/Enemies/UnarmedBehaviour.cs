@@ -116,11 +116,5 @@ namespace Game.Combat.Enemies
             if (Alerted && distance > LoseTargetRange) Wander(true);
             else if (distance < DetectionRange && !Alerted) Alert(true);
         }
-
-        public override void Kill()
-        {
-            base.Kill();
-            CombatManager.IncreaseHumansKilled();
-        }
     }
 }

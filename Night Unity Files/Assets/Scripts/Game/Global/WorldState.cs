@@ -187,7 +187,6 @@ namespace Game.Global
             StoryController.ShowText(JournalEntry.GetStoryText(_currentLevel - 1), _currentLevel == 5);
         }
 
-
         public static void Pause()
         {
             _isPaused = true;

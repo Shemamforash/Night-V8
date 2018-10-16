@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Fastlights;
 using Game.Combat.Enemies;
 using Game.Combat.Generation;
+using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -31,7 +32,6 @@ namespace Game.Combat.Misc
         private Action<List<EnemyBehaviour>> OnExplode;
         private GameObject _spriteObject;
 
-        private static AudioClip[] _explosionClips;
         private bool _decay, _incendiary, _sicken;
         private List<CanTakeDamage> _targetsToIgnore;
 
@@ -47,8 +47,6 @@ namespace Game.Combat.Misc
 
             _explosionSprite.color = UiAppearanceController.InvisibleColour;
             _light.Colour = UiAppearanceController.InvisibleColour;
-
-            if (_explosionClips == null) _explosionClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/explosions");
         }
 
         public void OnDestroy()
@@ -166,7 +164,7 @@ namespace Game.Combat.Misc
                 {
                     if (!emitted)
                     {
-                        _audioSource.clip = _explosionClips.RandomElement();
+                        _audioSource.clip = AudioClips.ExplosionClips.RandomElement();
                         _audioSource.Play();
                         AddConditions();
                         DealDamage();

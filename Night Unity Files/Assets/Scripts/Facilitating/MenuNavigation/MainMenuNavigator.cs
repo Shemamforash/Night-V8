@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using Facilitating.Persistence;
 using Game.Gear.Weapons;
+using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;

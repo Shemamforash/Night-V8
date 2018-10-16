@@ -29,43 +29,25 @@ namespace Game.Exploration.Weather
         [SerializeField] private float _starsMax;
         [SerializeField] [Range(0, 1)] private float _sunMinBrightness, _sunMaxBrightness;
 
-        private static bool _audioLoaded;
-        private static AudioClip[] _lightRainClips, _mediumRainClips, _heavyRainClips;
-        private static AudioClip[] _lightWindClips, _mediumWindClips, _heavyWindClips;
-        private static AudioClip[] _dayAudio, _nightAudio;
+       
         private AudioSource _nightTimeAudioSource, _dayTimeAudioSource;
 
         public static AudioClip GetRainClip(float strength)
         {
-            if (strength > 0.7f) return _heavyRainClips.RandomElement();
-            if (strength > 0.4) return _mediumRainClips.RandomElement();
-            return strength > 0 ? _lightRainClips.RandomElement() : null;
+            if (strength > 0.7f) return AudioClips.HeavyRainClips.RandomElement();
+            if (strength > 0.4) return AudioClips.MediumRainClips.RandomElement();
+            return strength > 0 ? AudioClips.LightRainClips.RandomElement() : null;
         }
 
         public static AudioClip GetWindClip(float strength)
         {
-            if (strength > 0.7f) return _heavyWindClips.RandomElement();
-            if (strength > 0.4) return _mediumWindClips.RandomElement();
-            return strength > 0 ? _lightWindClips.RandomElement() : null;
-        }
-
-        private static void LoadAudioClips()
-        {
-            if (_audioLoaded) return;
-            _lightRainClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("rain/light");
-            _mediumRainClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("rain/medium");
-            _heavyRainClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("rain/heavy");
-            _lightWindClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("wind/light");
-            _mediumWindClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("wind/medium");
-            _heavyWindClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("wind/heavy");
-            _nightAudio = Helper.LoadAllFilesFromAssetBundle<AudioClip>("nighttime");
-            _dayAudio = Helper.LoadAllFilesFromAssetBundle<AudioClip>("daytime");
-            _audioLoaded = true;
+            if (strength > 0.7f) return AudioClips.HeavyWindClips.RandomElement();
+            if (strength > 0.4) return AudioClips.MediumWindClips.RandomElement();
+            return strength > 0 ? AudioClips.LightWindClips.RandomElement() : null;
         }
 
         public void Awake()
         {
-            LoadAudioClips();
             _fog = new FogSystem(gameObject.FindChildWithName("Fog"), _fogMax);
             _rain = new RainSystem(gameObject.FindChildWithName("Rain"), _rainMax);
             _hail = new HailSystem(gameObject.FindChildWithName("Hail"), _hailMax);
@@ -74,9 +56,9 @@ namespace Game.Exploration.Weather
             _sun = gameObject.FindChildWithName<ParticleSystem>("Sun");
             _stars = gameObject.FindChildWithName<ParticleSystem>("Stars");
             _nightTimeAudioSource = _stars.GetComponent<AudioSource>();
-            _nightTimeAudioSource.clip = _nightAudio.RandomElement();
+            _nightTimeAudioSource.clip = AudioClips.NightAudio.RandomElement();
             _dayTimeAudioSource = _sun.GetComponent<AudioSource>();
-            _dayTimeAudioSource.clip = _dayAudio.RandomElement();
+            _dayTimeAudioSource.clip = AudioClips.DayAudio.RandomElement();
             _instance = this;
             if (_currentWeather != null) ChangeWeatherInstant();
         }

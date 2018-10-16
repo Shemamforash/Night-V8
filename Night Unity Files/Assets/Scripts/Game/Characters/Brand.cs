@@ -18,12 +18,19 @@ namespace Game.Characters
 
         private int _counter;
         public BrandStatus Status = BrandStatus.Locked;
+        private bool _requiresSkillUnlock;
 
         protected Brand(Player player, string riteName)
         {
             Player = player;
             _riteName = riteName;
             SetStatus(BrandStatus.Locked);
+        }
+
+        public bool PlayerRequirementsMet(Player player)
+        {
+            if (!_requiresSkillUnlock) return true;
+            return player.CharacterSkillOne != null;
         }
 
         public void ReadData(XmlNode root)
@@ -38,6 +45,7 @@ namespace Game.Characters
             _failName = root.StringFromNode("FailName");
             _failEffect = root.StringFromNode("FailEffect");
             FailModifier = root.FloatFromNode("FailValue");
+            _requiresSkillUnlock = root.BoolFromNode("RequiresSkill");
         }
 
         protected string Progress()

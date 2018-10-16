@@ -3,6 +3,7 @@ using System.Linq;
 using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 
@@ -18,10 +19,9 @@ public class CombatMusicController : MonoBehaviour
         _layer1 = gameObject.FindChildWithName<AudioSource>("Layer 1");
         _layer2 = gameObject.FindChildWithName<AudioSource>("Layer 2");
         _layer3 = gameObject.FindChildWithName<AudioSource>("Layer 3");
-        _layer1.clip = Helper.LoadFileFromAssetBundle<AudioClip>("music/combat/simmav", "simmav a");
-        _layer2.clip = Helper.LoadFileFromAssetBundle<AudioClip>("music/combat/simmav", "simmav b");
-        _layer3.clip = Helper.LoadFileFromAssetBundle<AudioClip>("music/combat/simmav", "simmav c");
-
+        _layer1.clip = AudioClips.SimmavA;
+        _layer2.clip = AudioClips.SimmavB;
+        _layer3.clip = AudioClips.SimmavC;
         SetVolume(_layer1, 1);
         SetVolume(_layer2, 0);
         SetVolume(_layer3, 0);

@@ -154,9 +154,9 @@ namespace Game.Characters.Brands
         }
     }
 
-    public class OnlySkillBrand : Brand
+    public class AdrenalineUsedBrand : Brand
     {
-        public OnlySkillBrand(Player player) : base(player, "Mastery")
+        public AdrenalineUsedBrand(Player player) : base(player, "Mastery")
         {
         }
 

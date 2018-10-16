@@ -278,6 +278,7 @@ namespace Game.Characters
 
         public void IncreaseKills()
         {
+            BrandManager.IncreaseEnemiesKilled();
             WeaponType weaponType = EquippedWeapon.WeaponType();
             _weaponKills[weaponType] = _weaponKills[weaponType] + 1;
             TryUnlockWeaponSkills(weaponType, true);

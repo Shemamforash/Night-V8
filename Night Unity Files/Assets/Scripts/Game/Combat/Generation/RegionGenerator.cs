@@ -58,11 +58,6 @@ namespace Game.Combat.Generation
         protected virtual void GenerateObjects()
         {
             GenerateShrine();
-            if (_region.HealShrinePosition != null)
-            {
-                HealShrineBehaviour.CreateObject(_region.HealShrinePosition.Value);
-            }
-
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
@@ -280,17 +275,6 @@ namespace Game.Combat.Generation
                 {
                     --numFires;
                     GenerateFire();
-                }
-            }
-
-            if (Random.Range(0, 10) == 0)
-            {
-                Vector2? potentialPosition = FindAndRemoveValidPosition(0.4f);
-                if (potentialPosition != null)
-                {
-                    Vector2 position = potentialPosition.Value;
-                    _region.HealShrinePosition = position;
-                    CreateImpassablePoint(position, 1);
                 }
             }
 

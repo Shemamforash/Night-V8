@@ -70,6 +70,10 @@ public abstract class ContainerController
                     break;
             }
         }
+        else
+        {
+            player.BrandManager.IncreaseItemsFound();
+        }
 
         Inventory.Move(Item, Item.Quantity());
     }

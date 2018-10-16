@@ -61,6 +61,7 @@ namespace Game.Combat.Player
         public bool ConsumeAdrenaline(int amount)
         {
             if (!CanAffordSkill(amount)) return false;
+            Player.BrandManager.IncreaseAdrenalineUsed(amount);
             _adrenalineLevel.Decrement(amount);
             RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
             return true;
@@ -289,7 +290,7 @@ namespace Game.Combat.Player
         public void UpdateAdrenaline(int damageDealt)
         {
             _adrenalineLevel.Increment(damageDealt / 150f * _adrenalineRecoveryRate);
-            CombatManager.IncreaseDamageDealt(damageDealt);
+            Player.BrandManager.IncreaseDamageDealt(damageDealt);
             DamageDealtSinceMarkStarted += damageDealt;
             RageBarController.SetRageBarFill(_adrenalineLevel.Normalised());
         }
@@ -310,7 +311,7 @@ namespace Game.Combat.Player
             UpdateSkillActions.Clear();
             _damageTakenSinceMarkStarted = true;
             DamageTakenSinceLastShot = true;
-            CombatManager.IncreaseDamageTaken(shot.DamageDealt());
+            Player.BrandManager.IncreaseDamageTaken(shot.DamageDealt());
             TryExplode();
         }
 
@@ -542,7 +543,6 @@ namespace Game.Combat.Player
 
             if (!_weaponBehaviour.CanFire()) return;
             _weaponBehaviour.StartFiring();
-            CombatManager.SetHasFiredShot();
             if (_weaponBehaviour.Empty()) ActiveSkillController.Stop();
         }
 

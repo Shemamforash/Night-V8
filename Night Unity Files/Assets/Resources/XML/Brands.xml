@@ -8,6 +8,7 @@
         <FailName>Weakness</FailName>
         <FailEffect>-1 Maximum Strength</FailEffect>
         <FailValue>-1</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Power>
     <Vigilance>
         <Requirement>Find num items</Requirement>
@@ -18,6 +19,7 @@
         <FailName>Obliviousness</FailName>
         <FailEffect>-1 Maximum Perception</FailEffect>
         <FailValue>-1</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Vigilance>
     <Resolution>
         <Requirement>Use skills num times</Requirement>
@@ -28,6 +30,7 @@
         <FailName>Fear</FailName>
         <FailEffect>-1 Maximum Willpower</FailEffect>
         <FailValue>-1</FailValue>
+        <RequiresSkill>TRUE</RequiresSkill>
     </Resolution>
     <Stamina>
         <Requirement>Discover num regions</Requirement>
@@ -38,6 +41,7 @@
         <FailName>Sloth</FailName>
         <FailEffect>-1 Maximum Endurance</FailEffect>
         <FailValue>-1</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Stamina>
     <Insight>
         <Requirement>Gain num essence</Requirement>
@@ -48,6 +52,7 @@
         <FailName>Ignorance</FailName>
         <FailEffect>Weapons lose durability faster</FailEffect>
         <FailValue>0.25</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Insight>
     <Revival>
         <Requirement>Take num damage</Requirement>
@@ -58,6 +63,7 @@
         <FailName>Frailty</FailName>
         <FailEffect>Start combat with less health</FailEffect>
         <FailValue>0.1</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Revival>
     <Apathy>
         <Requirement>Kill num enemies</Requirement>
@@ -66,8 +72,9 @@
         <SuccessEffect>Gain willpower when claiming a region</SuccessEffect>
         <SuccessValue>1</SuccessValue>
         <FailName>Timidity</FailName>
-        <FailEffect>Small chance of losing willpower after combat</FailEffect>
-        <FailValue>0.2</FailValue>
+        <FailEffect>Killing enemies causes you damage</FailEffect>
+        <FailValue>0.02</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Apathy>
     <Finesse>
         <Requirement>Claim num regions using only your weapon</Requirement>
@@ -78,6 +85,7 @@
         <FailName>Clumsiness</FailName>
         <FailEffect>Small chance reloading fails</FailEffect>
         <FailValue>0.05</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Finesse>
     <Ingenuity>
         <Requirement>Kill an enemy with the last magazine round num times</Requirement>
@@ -88,6 +96,7 @@
         <FailName>Ineptitude</FailName>
         <FailEffect>Small chance reloading fails</FailEffect>
         <FailValue>0.05</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Ingenuity>
     <Scavenging>
         <Requirement>Find num resources</Requirement>
@@ -97,10 +106,11 @@
         <SuccessValue>1</SuccessValue>
         <FailName>Blindness</FailName>
         <FailEffect>-1 Resource on finding resource</FailEffect>
-        <FailValue>1</FailValue>
+        <FailValue>-1</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Scavenging>
     <Gathering>
-        <Requirement>Find 50 food sources</Requirement>
+        <Requirement>Find num food sources</Requirement>
         <TargetValue>50</TargetValue>
         <SuccessName>Fullness</SuccessName>
         <SuccessEffect>Food sates your hunger more</SuccessEffect>
@@ -108,9 +118,10 @@
         <FailName>Emptiness</FailName>
         <FailEffect>Water causes you to become hungry</FailEffect>
         <FailValue>1</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Gathering>
     <Divining>
-        <Requirement>Find 50 water sources</Requirement>
+        <Requirement>Find num water sources</Requirement>
         <TargetValue>50</TargetValue>
         <SuccessName>Wellness</SuccessName>
         <SuccessEffect>Water quenches your thirst more</SuccessEffect>
@@ -118,9 +129,10 @@
         <FailName>Dryness</FailName>
         <FailEffect>Food causes you to become thirsty</FailEffect>
         <FailValue>1</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Divining>
     <Fire>
-        <Requirement>Set 100 enemies on fire</Requirement>
+        <Requirement>Set num enemies on fire</Requirement>
         <TargetValue>100</TargetValue>
         <SuccessName>The Inferno</SuccessName>
         <SuccessEffect>Occasionally explode with fire on taking damage</SuccessEffect>
@@ -128,9 +140,10 @@
         <FailName>Flammability</FailName>
         <FailEffect>Take double damage from burning</FailEffect>
         <FailValue>2</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Fire>
     <Decay>
-        <Requirement>Inflict decay on 100 enemies</Requirement>
+        <Requirement>Inflict decay on num enemies</Requirement>
         <TargetValue>100</TargetValue>
         <SuccessName>The Void</SuccessName>
         <SuccessEffect>Occasionally explode with decay on taking damage</SuccessEffect>
@@ -138,29 +151,32 @@
         <FailName>Fragility</FailName>
         <FailEffect>Take double damage from decay</FailEffect>
         <FailValue>2</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Decay>
     <Sickness>
-        <Requirement>Cause 100 enemies to become sick</Requirement>
+        <Requirement>Cause num enemies to become sick</Requirement>
         <TargetValue>100</TargetValue>
         <SuccessName>The Pit</SuccessName>
-        <SuccessEffect>Occasionally spread sickness on taking damage</SuccessEffect>
+        <SuccessEffect>Killing sick enemies spreads it to nearby enemies</SuccessEffect>
         <SuccessValue>0.02</SuccessValue>
         <FailName>Sickliness</FailName>
         <FailEffect>Less sickness is required to damage you</FailEffect>
         <FailValue>4</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Sickness>
     <Mastery>
-        <Requirement>Claim 10 regions using only skills</Requirement>
-        <TargetValue>10</TargetValue>
+        <Requirement>Consume num adrenaline</Requirement>
+        <TargetValue>1000</TargetValue>
         <SuccessName>Mastery</SuccessName>
         <SuccessEffect>Small chance for free skill activation</SuccessEffect>
         <SuccessValue>0.05</SuccessValue>
         <FailName>Distraction</FailName>
         <FailEffect>Small chance skill becomes disabled in combat</FailEffect>
         <FailValue>0.05</FailValue>
+        <RequiresSkill>FALSE</RequiresSkill>
     </Mastery>
     <Prowess>
-        <Requirement>Kill an enemy with skills 50 times</Requirement>
+        <Requirement>Kill an enemy with skills num times</Requirement>
         <TargetValue>50</TargetValue>
         <SuccessName>Alertness</SuccessName>
         <SuccessEffect>Large chance skill cools down instantly if it kills an enemy</SuccessEffect>
@@ -168,5 +184,6 @@
         <FailName>Absence</FailName>
         <FailEffect>Small chance skill becomes disabled in combat</FailEffect>
         <FailValue>0.05</FailValue>
+        <RequiresSkill>TRUE</RequiresSkill>
     </Prowess>
 </Brands>

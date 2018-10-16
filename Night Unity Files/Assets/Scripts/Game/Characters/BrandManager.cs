@@ -49,7 +49,7 @@ namespace Game.Characters
             return null;
         }
 
-        public XmlNode Save(XmlNode doc)
+        public void Save(XmlNode doc)
         {
             doc = doc.CreateChild("Brands");
             _completedBrands.ForEach(b => { b.Save(doc.CreateChild("Brand")); });
@@ -61,25 +61,58 @@ namespace Game.Characters
                 activeBrands[i].Save(brandNode);
             }
 
-            return doc;
+            return;
         }
 
         public List<Brand> GetBrandChoice(int ritesRemaining)
         {
-            List<Brand> brandSelection = new List<Brand>();
-            if (_lockedBrands.Count == 0) return brandSelection;
+            List<Brand> possibleBrands = new List<Brand>();
+            if (_lockedBrands.Count == 0) return possibleBrands;
             List<Brand> activeBrands = GetActiveBrands();
-            if (activeBrands.Count(b => b is EnduranceBrand) != 0) brandSelection.RemoveAll(b => b is EnduranceBrand);
-            if (activeBrands.Count(b => b is PerceptionBrand) != 0) brandSelection.RemoveAll(b => b is PerceptionBrand);
-            if (activeBrands.Count(b => b is StrengthBrand) != 0) brandSelection.RemoveAll(b => b is StrengthBrand);
-            if (activeBrands.Count(b => b is WillpowerBrand) != 0) brandSelection.RemoveAll(b => b is WillpowerBrand);
-            _lockedBrands.Shuffle();
-            Debug.Log(_lockedBrands.Count);
-            for (int i = 0; i < ritesRemaining && i < _lockedBrands.Count; ++i)
+            bool enduranceBrandsAllowed = true;
+            bool strengthBrandsAllowed = true;
+            bool willpowerBrandsAllowed = true;
+            bool perceptionBrandsAllowed = true;
+            activeBrands.ForEach(b =>
             {
-                brandSelection.Add(_lockedBrands[i]);
-            }
+                if (b is EnduranceBrand) enduranceBrandsAllowed = false;
+                if (b is StrengthBrand) strengthBrandsAllowed = false;
+                if (b is WillpowerBrand) willpowerBrandsAllowed = false;
+                if (b is PerceptionBrand) perceptionBrandsAllowed = false;
+            });
+            _lockedBrands.ForEach(b =>
+            {
+                if (!b.PlayerRequirementsMet(CharacterManager.SelectedCharacter)) return;
+                if (b is EnduranceBrand)
+                {
+                    if (!enduranceBrandsAllowed) return;
+                    enduranceBrandsAllowed = false;
+                }
 
+                if (b is StrengthBrand)
+                {
+                    if (!strengthBrandsAllowed) return;
+                    strengthBrandsAllowed = false;
+                }
+
+                if (b is WillpowerBrand)
+                {
+                    if (!willpowerBrandsAllowed) return;
+                    willpowerBrandsAllowed = false;
+                }
+
+                if (b is PerceptionBrand)
+                {
+                    if (!perceptionBrandsAllowed) return;
+                    perceptionBrandsAllowed = false;
+                }
+
+                if (possibleBrands.Any(v => v.GetType() == b.GetType())) return;
+                possibleBrands.Add(b);
+            });
+            possibleBrands.Shuffle();
+            List<Brand> brandSelection = new List<Brand>();
+            for (int i = 0; i < ritesRemaining && i < possibleBrands.Count; ++i) brandSelection.Add(_lockedBrands[i]);
             return brandSelection;
         }
 
@@ -158,7 +191,7 @@ namespace Game.Characters
             new WillpowerRecoveryBrand(_player);
             new AutomaticReloadBrand(_player);
             new InstantReloadBrand(_player);
-            new OnlySkillBrand(_player);
+            new AdrenalineUsedBrand(_player);
             new SkillKillBrand(_player);
         }
 
@@ -186,17 +219,17 @@ namespace Game.Characters
         }
 
         public void IncreaseDamageDealt(int damage) => UpdateBrandValue(typeof(StrengthBrand), damage);
-        public void IncreaseItemsFound(int count) => UpdateBrandValue(typeof(PerceptionBrand), count);
-        public void IncreaseSkillsUsed(int count) => UpdateBrandValue(typeof(WillpowerBrand), count);
+        public void IncreaseItemsFound() => UpdateBrandValue(typeof(PerceptionBrand), 1);
+        public void IncreaseSkillsUsed() => UpdateBrandValue(typeof(WillpowerBrand), 1);
         public void IncreaseRegionsExplored() => UpdateBrandValue(typeof(EnduranceBrand), 1);
         public void IncreaseEssenceInfused() => UpdateBrandValue(typeof(EssenceChangeBrand), 1);
         public void IncreaseDamageTaken(int damage) => UpdateBrandValue(typeof(HealthRecoveryBrand), damage);
-        public void IncreaseHumansKilled(int count) => UpdateBrandValue(typeof(WillpowerRecoveryBrand), count);
+        public void IncreaseEnemiesKilled() => UpdateBrandValue(typeof(WillpowerRecoveryBrand), 1);
         public void IncreaseBattlesNoSkills() => UpdateBrandValue(typeof(AutomaticReloadBrand), 1);
         public void IncreaseResourceFound() => UpdateBrandValue(typeof(ResourceBrand), 1);
         public void IncreaseFoodFound() => UpdateBrandValue(typeof(FoodBrand), 1);
         public void IncreaseWaterFound() => UpdateBrandValue(typeof(WaterBrand), 1);
-        public void IncreaseOnlySkillBattles() => UpdateBrandValue(typeof(OnlySkillBrand), 1);
+        public void IncreaseAdrenalineUsed(int amount) => UpdateBrandValue(typeof(AdrenalineUsedBrand), amount);
         public void IncreaseBurnCount() => UpdateBrandValue(typeof(IgniteBrand), 1);
         public void IncreaseDecayCount() => UpdateBrandValue(typeof(DecayBrand), 1);
         public void IncreaseSickenCount() => UpdateBrandValue(typeof(SicknessBrand), 1);

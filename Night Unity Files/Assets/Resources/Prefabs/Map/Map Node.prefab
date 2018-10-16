@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4726889822844966}
   - component: {fileID: 212459324117532364}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Ring 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,7 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4357936201528982}
   - component: {fileID: 212163789067277432}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,7 +52,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4829227994754968}
   - component: {fileID: 212248987328201432}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Ring 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ GameObject:
   - component: {fileID: 224062928752417088}
   - component: {fileID: 222093706212426444}
   - component: {fileID: 114774137617336312}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Fade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 224245257560667492}
   - component: {fileID: 222131930382272362}
   - component: {fileID: 114368602488376978}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Active
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 222949632547637076}
   - component: {fileID: 114306572508488804}
   - component: {fileID: 114861283070552868}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Cost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 4676640432127054}
   - component: {fileID: 198753561737786752}
   - component: {fileID: 199646726431162610}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Claimed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,7 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4157606748397158}
   - component: {fileID: 212411862762051308}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -153,7 +153,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4573518759716990}
   - component: {fileID: 212538834893508220}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Ring 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 224589753753537558}
   - component: {fileID: 222052673960816660}
   - component: {fileID: 114654687116049090}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Inactive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 222089847278109132}
   - component: {fileID: 114883046917084294}
   - component: {fileID: 114720797253147510}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Claim Bonus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 224403549947896436}
   - component: {fileID: 223821099129664230}
   - component: {fileID: 114480233143002334}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 222572669357977206}
   - component: {fileID: 114470755279825318}
   - component: {fileID: 82324289534132550}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Map Node
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -456,6 +456,7 @@ MonoBehaviour:
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
+  m_colorMode: 3
   m_fontColorGradient:
     topLeft: {r: 1, g: 1, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}
@@ -665,6 +666,7 @@ MonoBehaviour:
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
+  m_colorMode: 3
   m_fontColorGradient:
     topLeft: {r: 1, g: 1, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}
@@ -792,6 +794,7 @@ MonoBehaviour:
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
+  m_colorMode: 3
   m_fontColorGradient:
     topLeft: {r: 1, g: 1, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}

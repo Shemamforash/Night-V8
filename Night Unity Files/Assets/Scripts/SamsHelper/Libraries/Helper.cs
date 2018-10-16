@@ -87,10 +87,10 @@ namespace SamsHelper.Libraries
 
         private static List<AssetBundle> _loadedAssetBundles = new List<AssetBundle>();
 
-        public static T[] LoadAllFilesFromAssetBundle<T>(string bundleName) where T : Object
+        public static AssetBundleRequest LoadAllFilesFromAssetBundle<T>(string bundleName) where T : Object
         {
             AssetBundle myLoadedAssetBundle = LoadAssetBundle(bundleName);
-            return myLoadedAssetBundle.LoadAllAssets<T>();
+            return myLoadedAssetBundle.LoadAllAssetsAsync<T>();
         }
 
         private static AssetBundle LoadAssetBundle(string bundleName)
@@ -102,10 +102,10 @@ namespace SamsHelper.Libraries
             return myLoadedAssetBundle;
         }
 
-        public static T LoadFileFromAssetBundle<T>(string bundleName, string assetName) where T : Object
+        public static AssetBundleRequest LoadFileFromAssetBundle<T>(string bundleName, string assetName) where T : Object
         {
             AssetBundle myLoadedAssetBundle = LoadAssetBundle(bundleName);
-            return myLoadedAssetBundle.LoadAsset<T>(assetName);
+            return myLoadedAssetBundle.LoadAssetAsync<T>(assetName);
         }
 
         public static float StartingTime => _startingTime;

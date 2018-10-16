@@ -50,6 +50,7 @@ namespace Game.Combat.Misc
         private readonly RaycastHit2D[] _collisions = new RaycastHit2D[50];
         private Vector2 _lastPosition;
         private bool _hasHit;
+        public const float DistanceFromOrigin = 0.2f;
 
         public void Awake()
         {
@@ -215,13 +216,14 @@ namespace Game.Combat.Misc
             _pierce = true;
         }
 
-        public void Fire(float distance = 0.15f)
+        public void Fire()
         {
+            if(_origin is PlayerCombat) RadianceController.SetHasFiredShot();
             if (_pierce) gameObject.layer = 20;
             float angleModifier = 1 - Mathf.Sqrt(Random.Range(0f, 1f));
             if (Random.Range(0, 2) == 0) angleModifier = -angleModifier;
             float angleOffset = angleModifier * _accuracy;
-            transform.position = _originPosition + _direction * distance;
+            transform.position = _originPosition + _direction * DistanceFromOrigin;
             _direction = Quaternion.AngleAxis(angleOffset, Vector3.forward) * _direction;
             if (_leaveFireTrail) gameObject.AddComponent<LeaveFireTrail>().Initialise();
             _fired = true;
@@ -262,6 +264,7 @@ namespace Game.Combat.Misc
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            if (collision.collider.gameObject.layer == 14) return;
             Hit(collision);
         }
 
@@ -291,7 +294,7 @@ namespace Game.Combat.Misc
 
             DealDamage(other);
             ApplyConditions();
-            if (other.layer != 12 && other.layer != 13) DeactivateShot();
+            DeactivateShot();
         }
 
         private void ApplyDamage(CanTakeDamage hit)

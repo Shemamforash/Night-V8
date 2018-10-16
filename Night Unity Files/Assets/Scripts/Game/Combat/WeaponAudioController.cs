@@ -2,46 +2,22 @@
 using DG.Tweening;
 using Game.Combat.Player;
 using Game.Gear.Weapons;
+using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 public class WeaponAudioController : MonoBehaviour
 {
-    private static AudioClip[] _lmgShots, _smgShots, _rifleShots, _pistolShots, _shotgunShots;
-    private static AudioClip[] _lmgCasings, _smgCasings, _rifleCasings, _pistolCasings, _shotgunCasings;
-    private static AudioClip[] _dryFireClips;
-    private static AudioClip[] _armourBreakClips;
+    
     [SerializeField] private AudioClip _pistolClipIn, _pistolClipOut, _lmgClipIn, _lmgClipOut, _smgClipIn, _smgClipOut, _rifleClipIn, _rifleClipOut, _shotgunClipIn, _shotgunClipOut;
     [SerializeField] public AudioClip SpoolClip;
 
     private AudioPoolController _audioPool;
-    private static bool _loaded;
 
     public void Awake()
     {
-        LoadClips();
         _audioPool = GetComponent<AudioPoolController>();
-    }
-
-    private void LoadClips()
-    {
-        if (_loaded) return;
-        _lmgShots = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/lmg/shots");
-        _smgShots = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/smg/shots");
-        _rifleShots = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/rifle/shots");
-        _pistolShots = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/pistol/shots");
-        _shotgunShots = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/shotgun/shots");
-
-        _lmgCasings = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/lmg/casings");
-        _smgCasings = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/smg/casings");
-        _rifleCasings = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/rifle/casings");
-        _pistolCasings = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/pistol/casings");
-        _shotgunCasings = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/shotgun/casings");
-
-        _dryFireClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/dryfire");
-        _armourBreakClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/armourbreak");
-        _loaded = true;
     }
 
     public void Destroy()
@@ -90,7 +66,7 @@ public class WeaponAudioController : MonoBehaviour
 
     public void DryFire()
     {
-        _audioPool.PlayClip(_dryFireClips.RandomElement());
+        _audioPool.PlayClip(AudioClips.DryFireClips.RandomElement());
     }
 
     public void StopReload(WeaponType weaponType)
@@ -127,24 +103,24 @@ public class WeaponAudioController : MonoBehaviour
         switch (weaponType)
         {
             case WeaponType.Pistol:
-                shots = _pistolShots;
-                casings = _pistolCasings;
+                shots = AudioClips.PistolShots;
+                casings = AudioClips.PistolCasings;
                 break;
             case WeaponType.Rifle:
-                shots = _rifleShots;
-                casings = _rifleCasings;
+                shots = AudioClips.RifleShots;
+                casings = AudioClips.RifleCasings;
                 break;
             case WeaponType.Shotgun:
-                shots = _shotgunShots;
-                casings = _shotgunCasings;
+                shots = AudioClips.ShotgunShots;
+                casings = AudioClips.ShotgunCasings;
                 break;
             case WeaponType.SMG:
-                shots = _smgShots;
-                casings = _smgCasings;
+                shots = AudioClips.SMGShots;
+                casings = AudioClips.SMGCasings;
                 break;
             case WeaponType.LMG:
-                shots = _lmgShots;
-                casings = _lmgCasings;
+                shots = AudioClips.LMGShots;
+                casings = AudioClips.LMGCasings;
                 break;
         }
 
@@ -161,6 +137,6 @@ public class WeaponAudioController : MonoBehaviour
 
     public void BreakArmour()
     {
-        _audioPool.PlayClip(_armourBreakClips.RandomElement());
+        _audioPool.PlayClip(AudioClips.ArmourBreakClips.RandomElement());
     }
 }

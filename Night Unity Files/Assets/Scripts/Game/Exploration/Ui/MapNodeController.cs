@@ -176,7 +176,7 @@ namespace Game.Exploration.Ui
             _active.DOColor(Color.white, 1f);
             _inactive.DOColor(Color.white, 1f);
             transform.DOScale(Vector2.one * 1.25f, 1f);
-            MapGenerator.SetRoute(_region);
+            MapMenuController.SetRoute(_region);
             MapMovementController.UpdateEndurance(_enduranceCost);
         }
 

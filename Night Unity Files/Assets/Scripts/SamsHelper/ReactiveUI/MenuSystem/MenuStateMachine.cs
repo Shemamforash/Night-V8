@@ -15,7 +15,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
         private static MenuStateMachine _instance;
         private static StateMachine States;
         public Menu InitialMenu;
-        public static Action OnTransition;
+        private static Action OnTransition;
 
         public void Awake()
         {

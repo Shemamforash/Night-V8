@@ -33,7 +33,6 @@ namespace Game.Exploration.Regions
         private int _lastVisitDay = -1;
         public Vector2 ShrinePosition;
         public int WaterSourceCount, FoodSourceCount, ResourceSourceCount;
-        public Vector2? HealShrinePosition = null;
         public Player _characterHere;
         public Vector2 CharacterPosition;
         private readonly List<int> _neighborIds = new List<int>();
@@ -249,17 +248,18 @@ namespace Game.Exploration.Regions
         {
             if (!_seen) return;
             if (_nodePrefab == null) _nodePrefab = Resources.Load<GameObject>("Prefabs/Map/Map Node");
-            GameObject nodeObject = GameObject.Instantiate(_nodePrefab);
-            nodeObject.transform.SetParent(MapGenerator.MapTransform);
-            nodeObject.name = Name;
-            nodeObject.transform.position = new Vector3(Position.x, Position.y, 0);
-            nodeObject.transform.localScale = Vector3.one;
-            _mapNode = nodeObject.transform.GetComponentInChildren<MapNodeController>(true);
+            if (_nodeObject != null) return;
+            _nodeObject = GameObject.Instantiate(_nodePrefab);
+            _nodeObject.transform.SetParent(MapMenuController.MapTransform);
+            _nodeObject.name = Name;
+            _nodeObject.transform.position = new Vector3(Position.x, Position.y, 0);
+            _nodeObject.transform.localScale = Vector3.one;
+            _mapNode = _nodeObject.transform.GetComponentInChildren<MapNodeController>(true);
             if (_regionType == RegionType.Temple)
             {
                 GameObject g = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Map/Map Shadow"));
-                g.transform.SetParent(nodeObject.transform, false);
-                g.transform.position = nodeObject.transform.position;
+                g.transform.SetParent(_nodeObject.transform, false);
+                g.transform.position = _nodeObject.transform.position;
             }
 
             _mapNode.SetRegion(this);
@@ -366,6 +366,7 @@ namespace Game.Exploration.Regions
 
         private static int _currentId;
         private bool _canHaveEnemies;
+        private GameObject _nodeObject;
 
         public bool Seen()
         {

@@ -62,7 +62,6 @@ namespace Game.Combat.Generation
         public void Reveal()
         {
             if (_revealed) return;
-            CombatManager.IncreaseItemsFound();
             _revealed = true;
             _iconSprite.DOColor(new Color(1, 1, 1, 0.6f), MaxRevealTime);
             if (!_showRing) return;

@@ -1,0 +1,174 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
+using Game.Characters;
+using Game.Exploration.Regions;
+using Game.Global;
+using SamsHelper;
+using SamsHelper.Libraries;
+using UnityEngine;
+using System.Text.RegularExpressions;
+using System.Xml;
+using Facilitating.Persistence;
+using QuickEngine.Extensions;
+using SamsHelper.ReactiveUI.MenuSystem;
+using Random = UnityEngine.Random;
+
+namespace Game.Exploration.Environment
+{
+    public class MapMenuController : Menu
+    {
+        private static List<Region> route;
+        public static Transform MapTransform;
+
+        private readonly List<Tuple<Region, Region>> _allRoutes = new List<Tuple<Region, Region>>();
+        private readonly Queue<Tuple<Region, Region>> _undrawnRoutes = new Queue<Tuple<Region, Region>>();
+        private float nextRouteTime = 0.25f;
+        private float currentTime;
+        private bool _isActive;
+        private readonly List<GameObject> _rings = new List<GameObject>();
+        public static bool IsReturningFromCombat;
+
+        public override void Awake()
+        {
+            base.Awake();
+            MapTransform = GameObject.Find("Nodes").transform;
+            CreateMapRings();
+            CreateRouteLinks();
+        }
+
+        public void Start()
+        {
+            if (IsReturningFromCombat) ReturnFromCombat();
+        }
+
+        private void ReturnFromCombat()
+        {
+            MenuStateMachine.ShowMenu("Map Menu");
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            _isActive = true;
+            _rings.ForEach(r => r.SetActive(true));
+            MapGenerator.Regions().ForEach(n => n.CreateObject());
+            MapMovementController.Enter(CharacterManager.SelectedCharacter);
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            _rings.ForEach(r => r.SetActive(false));
+            _isActive = false;
+            MapMovementController.Exit();
+        }
+
+        private void CreateRouteLinks()
+        {
+            List<Region> _discovered = MapGenerator.DiscoveredRegions();
+            foreach (Region from in _discovered)
+            {
+                foreach (Region to in _discovered)
+                {
+                    if (!from.Neighbors().Contains(to)) continue;
+                    _allRoutes.Add(Tuple.Create(from, to));
+                }
+            }
+        }
+
+        private void DrawBasicRoutes()
+        {
+            if (_undrawnRoutes.Count == 0)
+            {
+                _allRoutes.Shuffle();
+                _allRoutes.ForEach(a => _undrawnRoutes.Enqueue(a));
+            }
+
+            currentTime += Time.deltaTime;
+            if (currentTime < 1f / _allRoutes.Count) return;
+            Tuple<Region, Region> link = _undrawnRoutes.Dequeue();
+            Region from = link.Item1;
+            Region to = link.Item2;
+            Vector3[] rArr = new Vector3[Random.Range(2, 6)];
+            for (int j = 0; j < rArr.Length; ++j)
+            {
+                if (j == 0)
+                {
+                    rArr[j] = from.Position;
+                    continue;
+                }
+
+                if (j == rArr.Length - 1)
+                {
+                    rArr[j] = to.Position;
+                    continue;
+                }
+
+                float normalisedDistance = (float) j / rArr.Length;
+                Vector2 pos = AdvancedMaths.PointAlongLine(from.Position, to.Position, normalisedDistance);
+                pos = AdvancedMaths.RandomVectorWithinRange(pos, Random.Range(0.1f, 0.1f));
+                rArr[j] = pos;
+            }
+
+            FadeAndDieTrailRenderer.CreatePale(rArr);
+            currentTime = 0f;
+        }
+
+        private void CreateMapRings()
+        {
+            GameObject ringPrefab = Resources.Load<GameObject>("Prefabs/Map/Map Ring");
+            Transform ringParent = GameObject.Find("Rings").transform;
+            for (int i = 1; i <= 10; ++i)
+            {
+                int ringRadius = i * MapGenerator.MinRadius;
+                GameObject ring = Instantiate(ringPrefab, transform.position, ringPrefab.transform.rotation);
+                ring.layer = 23;
+                ring.transform.SetParent(ringParent);
+                ring.name = "Ring: distance " + i + " hours";
+                RingDrawer ringDrawer = ring.GetComponent<RingDrawer>();
+                ringDrawer.DrawCircle(ringRadius);
+                float alpha = 1f / 9f * i + 1f / 9f;
+                alpha = 1 - alpha;
+                ringDrawer.SetColor(new Color(1, 1, 1, alpha));
+                _rings.Add(ringDrawer.gameObject);
+            }
+
+            _rings.ForEach(r => r.SetActive(false));
+        }
+
+        private void DrawTargetRoute()
+        {
+            if (route.Count <= 1) return;
+            nextRouteTime -= Time.deltaTime;
+            if (nextRouteTime > 0) return;
+            nextRouteTime = Random.Range(0.2f, 0.5f);
+
+            Vector3[] rArr = new Vector3[route.Count];
+            for (int j = 0; j < route.Count; ++j)
+            {
+                Vector3 pos = route[j].Position;
+                float range = j > 0 && j < route.Count - 1 ? Random.Range(0.25f, 0.5f) : 0.1f;
+                pos = AdvancedMaths.RandomVectorWithinRange(pos, range);
+                rArr[j] = pos;
+            }
+
+            FadeAndDieTrailRenderer.CreateRed(rArr);
+//            _routeTrails.Add(g);
+        }
+
+        public void Update()
+        {
+            if (!_isActive) return;
+            DrawBasicRoutes();
+            if (route == null || route.Count == 1) return;
+            DrawTargetRoute();
+        }
+
+        public static void SetRoute(Region to)
+        {
+            route = RoutePlotter.RouteBetween(CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode(), to);
+        }
+    }
+}

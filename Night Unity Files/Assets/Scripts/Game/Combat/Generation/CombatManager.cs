@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Combat.Enemies;
-using Game.Combat.Enemies.Animals;
 using Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours;
 using Game.Combat.Misc;
 using Game.Combat.Player;
@@ -12,8 +10,6 @@ using Game.Exploration.Environment;
 using Game.Exploration.Regions;
 using Game.Exploration.Weather;
 using Game.Global;
-using QuickEngine.Extensions;
-using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
@@ -29,22 +25,15 @@ namespace Game.Combat.Generation
     public class CombatManager : Menu
     {
         private static Region _currentRegion;
-        private bool _inMelee;
         private float _visibilityRange;
         private static bool _inCombat;
         private readonly List<CanTakeDamage> _enemies = new List<CanTakeDamage>();
         private static CombatManager _instance;
-        private bool _shotFired;
-        private int _enemiesKilled;
-        private int _humansKilled;
-        private int _damageTaken;
-        private int _damageDealt;
-        private int _skillsUsed;
-        private int _itemsFound;
         public bool _drawGizmos;
         private TextMeshProUGUI _regionNameText;
         private static bool _paused;
         private Image _regionUnderline;
+       
 
         public static List<EnemyTemplate> GenerateEnemies(int size, List<EnemyTemplate> allowedTypes)
         {
@@ -288,25 +277,6 @@ namespace Game.Combat.Generation
                 return;
             }
 
-            BrandManager brandManager = PlayerCombat.Instance.Player.BrandManager;
-            if (Enemies().Count == 0)
-            {
-                if (Instance()._skillsUsed == 0)
-                {
-                    brandManager.IncreaseBattlesNoSkills();
-                }
-                else if (!Instance()._shotFired)
-                {
-                    brandManager.IncreaseOnlySkillBattles();
-                }
-            }
-
-            brandManager.IncreaseDamageDealt(Instance()._damageDealt);
-            brandManager.IncreaseDamageTaken(Instance()._damageTaken);
-            brandManager.IncreaseItemsFound(Instance()._itemsFound);
-            brandManager.IncreaseSkillsUsed(Instance()._skillsUsed);
-            brandManager.IncreaseHumansKilled(Instance()._humansKilled);
-
             _inCombat = false;
             Instance()._regionNameText.text = "";
             Instance()._regionUnderline.color = UiAppearanceController.InvisibleColour;
@@ -314,12 +284,14 @@ namespace Game.Combat.Generation
             ChangeScene(returnToMap);
         }
 
+     
         private static void ChangeScene(bool returnToMap)
         {
             if (!returnToMap) return;
             if (CharacterManager.SelectedCharacter.CanAffordTravel())
             {
-                SceneChanger.GoToMapScene();
+                SceneChanger.GoToGameScene();
+                MapMenuController.IsReturningFromCombat = true;
                 return;
             }
 
@@ -398,36 +370,6 @@ namespace Game.Combat.Generation
         }
 
         public static List<CanTakeDamage> Enemies() => Instance()._enemies;
-
-        public static void IncreaseSkillsUsed()
-        {
-            ++Instance()._skillsUsed;
-        }
-
-        public static void IncreaseDamageDealt(int damageDealt)
-        {
-            Instance()._damageDealt += damageDealt;
-        }
-
-        public static void IncreaseDamageTaken(int damageTaken)
-        {
-            Instance()._damageTaken += damageTaken;
-        }
-
-        public static void IncreaseItemsFound()
-        {
-            ++Instance()._itemsFound;
-        }
-
-        public static void IncreaseHumansKilled()
-        {
-            ++Instance()._humansKilled;
-        }
-
-        public static void SetHasFiredShot()
-        {
-            Instance()._shotFired = true;
-        }
 
         public static void Pause()
         {

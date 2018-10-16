@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Combat.Generation;
+using Game.Global;
 using SamsHelper;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -18,7 +19,6 @@ namespace Game.Combat.Misc
         private bool _leftLast;
         private Rigidbody2D _rigidBody;
         public bool UseHoofprint;
-        private AudioClip[] _audioClips;
         private int _nextClip;
         private AudioSource _audioSource;
 
@@ -27,8 +27,7 @@ namespace Game.Combat.Misc
             if (_footstepParent == null) _footstepParent = GameObject.Find("World").transform.Find("Footsteps");
             _audioSource = GetComponent<AudioSource>();
             _audioSource.volume = 0.4f;
-            _audioClips = Helper.LoadAllFilesFromAssetBundle<AudioClip>("combat/footsteps");
-            _nextClip = _audioClips.Length + 1;
+            _nextClip = AudioClips.FootstepClips.Length + 1;
             _lastPosition = transform.position;
         }
 
@@ -79,15 +78,15 @@ namespace Game.Combat.Misc
         private void PlayClip()
         {
             ++_nextClip;
-            if (_nextClip >= _audioClips.Length)
+            if (_nextClip >= AudioClips.FootstepClips.Length)
             {
-                _audioClips.Shuffle();
+                AudioClips.FootstepClips.Shuffle();
                 _nextClip = 0;
             }
 
             _audioSource.volume = Random.Range(0.4f, 0.5f);
             _audioSource.pitch = Random.Range(0.9f, 1.1f);
-            if (_audioClips.Length != 0) _audioSource.PlayOneShot(_audioClips[_nextClip]);
+            if (AudioClips.FootstepClips.Length != 0) _audioSource.PlayOneShot(AudioClips.FootstepClips[_nextClip]);
         }
 
         private void Update()

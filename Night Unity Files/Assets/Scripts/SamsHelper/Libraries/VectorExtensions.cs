@@ -38,6 +38,11 @@ namespace SamsHelper.Libraries
         public static Vector3 Direction(this Transform from, Vector3 to) => Direction(from.position, to);
         public static Vector3 Direction(this Vector3 from, Transform to) => Direction(from, to.position);
 
+        public static Vector2 Direction(this Vector2 from, Vector2 to) => (from - to).normalized;
+        public static Vector2 Direction(this Transform from, Vector2 to) => Direction((Vector2) from.position, to);
+        public static Vector2 Direction(this Vector2 from, Transform to) => Direction(from, (Vector2) to.position);
+
+
         public static float Distance(this Transform from, Transform to)
         {
             return from.position.Distance(to.position);
