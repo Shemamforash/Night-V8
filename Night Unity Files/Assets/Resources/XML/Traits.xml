@@ -69,15 +69,15 @@
     </Skill>
     <Skill>
         <Name>Hardy</Name>
-        <Requirement>Recover 50 points of willpower</Requirement>
+        <Requirement>Recover 50 points of will</Requirement>
     </Skill>
     <Skill>
         <Name>Resolute</Name>
-        <Requirement>Recover 100 points of willpower</Requirement>
+        <Requirement>Recover 100 points of will</Requirement>
     </Skill>
     <Skill>
         <Name>Fearless</Name>
-        <Requirement>Recover 200 points of willpower</Requirement>
+        <Requirement>Recover 200 points of will</Requirement>
     </Skill>
     <Skill>
         <Name>1</Name>

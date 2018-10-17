@@ -4,8 +4,8 @@
     {
         Desert,
         Mountains,
-        Ruins,
         Sea,
+        Ruins,
         Wasteland
     }
 }

@@ -56,21 +56,15 @@ namespace Facilitating.UIControllers
                 _state = state;
             }
 
-            public void UpdateColor(bool isInvisible)
+            public void UpdateColor()
             {
                 if (!_stateChanged) return;
-                Color c = Color.white;
-                if (_state == MarkerState.Faded)
-                {
-                    c = UiAppearanceController.FadedColour;
-                    if (isInvisible) c = UiAppearanceController.InvisibleColour;
-                }
-
+                Color c = _state == MarkerState.Faded ? UiAppearanceController.InvisibleColour : Color.white;
                 _image.DOColor(c, 1f);
             }
         }
 
-        public void SetValue(int max, int current, bool useRed = false)
+        public void SetValue(int max, int current)
         {
             for (int i = 0; i < 20; ++i)
             {
@@ -84,7 +78,7 @@ namespace Facilitating.UIControllers
                 _markers[i].SetState(newState);
             }
 
-            _markers.ForEach(m => m.UpdateColor(useRed));
+            _markers.ForEach(m => m.UpdateColor());
         }
 
         public void SetValue(CharacterAttribute attribute)

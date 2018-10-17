@@ -296,8 +296,8 @@ namespace Game.Combat.Generation
             }
 
             Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
-            int enduranceCost = RoutePlotter.RouteBetween(_currentRegion, MapGenerator.GetInitialNode()).Count - 1;
-            travelAction.TravelTo(MapGenerator.GetInitialNode(), enduranceCost);
+            int gritCost = RoutePlotter.RouteBetween(_currentRegion, MapGenerator.GetInitialNode()).Count - 1;
+            travelAction.TravelTo(MapGenerator.GetInitialNode(), gritCost);
             SceneChanger.GoToGameScene();
             InputHandler.SetCurrentListener(null);
         }

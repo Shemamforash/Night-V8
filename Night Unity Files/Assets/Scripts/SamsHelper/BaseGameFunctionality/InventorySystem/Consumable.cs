@@ -1,65 +1,102 @@
 ﻿using Game.Characters;
-using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
+using UnityEngine;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
 {
     public class Consumable : InventoryItem
     {
-        private readonly bool IsFood;
-        private readonly bool IsWater;
-        public int ThirstModifier;
-        public int HungerModifier;
+        private Player _player;
 
         public Consumable(ResourceTemplate template) : base(template, GameObjectType.Resource)
         {
             Template = template;
-            IsFood = Template.ResourceType == "Food";
-            IsWater = Template.ResourceType == "Water";
-            CalculateThirstOffset();
-            CalculateHungerOffset();
         }
 
-        private void CalculateThirstOffset()
+        private void ApplyEffect()
         {
-            if (IsWater) ThirstModifier = 1;
-            if (!Template.HasEffect) return;
-            if (Template.AttributeType == AttributeType.Thirst) ThirstModifier += (int) Template.EffectBonus;
-        }
-
-        private void CalculateHungerOffset()
-        {
-            if (IsFood) HungerModifier = 1;
-            if (!Template.HasEffect) return;
-            if (Template.AttributeType == AttributeType.Hunger) HungerModifier += (int) Template.EffectBonus;
-        }
-
-        public string Effect()
-        {
-            return !Template.HasEffect ? "" : Template.EffectBonus + " " + Template.AttributeType;
-        }
-
-        private void ApplyEffect(Player selectedCharacter)
-        {
+            _player = CharacterManager.SelectedCharacter;
+            Debug.Log(Template.EffectBonus);
             switch (Template.ResourceType)
             {
-                case "Food":
-                    selectedCharacter.Attributes.Eat(HungerModifier);
+                case "Meat":
+                    _player.Attributes.Eat((int) Template.EffectBonus);
                     break;
                 case "Water":
-                    selectedCharacter.Attributes.Drink(ThirstModifier);
+                    _player.Attributes.Drink((int) Template.EffectBonus);
                     break;
             }
 
             if (!Template.HasEffect) return;
-            CharacterAttribute attribute = selectedCharacter.Attributes.Get(Template.AttributeType);
-            attribute.Increment(Template.EffectBonus);
+            if (Template.IsEffectPermanent) ApplyPermanentEffect();
+            else ApplyImpermanentEffect();
         }
 
-        public void Consume(Player selectedCharacter)
+        private void ApplyPermanentEffect()
         {
-            ApplyEffect(selectedCharacter);
+            CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
+            if (!CharacterAttribute.IsCharacterAttribute(Template.AttributeType))
+            {
+                if (Template.EffectBonus < 0) attribute.Decrement(-Template.EffectBonus);
+                else attribute.Increment(Template.EffectBonus);
+                return;
+            }
+
+            switch (Template.AttributeType)
+            {
+                case AttributeType.Fettle:
+                    _player.Attributes.ChangeFettleMax((int) Template.EffectBonus);
+                    break;
+                case AttributeType.Grit:
+                    _player.Attributes.ChangeGritMax((int) Template.EffectBonus);
+                    break;
+                case AttributeType.Will:
+                    _player.Attributes.ChangeWillMax((int) Template.EffectBonus);
+                    break;
+                case AttributeType.Focus:
+                    _player.Attributes.ChangeFocusMax((int) Template.EffectBonus);
+                    break;
+            }
+        }
+
+        private void ApplyImpermanentEffect()
+        {
+            CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
+            if (Template.EffectBonus > 0) attribute.Increment(Template.EffectBonus);
+            else attribute.Decrement(-Template.EffectBonus);
+        }
+
+        public void Consume()
+        {
+            if (!CanConsume()) return;
+            ApplyEffect();
             Inventory.DecrementResource(Template.Name, 1);
+        }
+
+        public bool CanConsume()
+        {
+            _player = CharacterManager.SelectedCharacter;
+            switch (Template.ResourceType)
+            {
+                case "Meat":
+                    return !_player.Attributes.Get(AttributeType.Hunger).ReachedMax();
+                case "Water":
+                    return !_player.Attributes.Get(AttributeType.Thirst).ReachedMax();
+            }
+
+            return Template.IsEffectPermanent ? CheckCanConsumePermanent() : CheckCanConsumeImpermanent();
+        }
+
+        private bool CheckCanConsumeImpermanent()
+        {
+            return !_player.Attributes.Get(Template.AttributeType).ReachedMax();
+        }
+
+        private bool CheckCanConsumePermanent()
+        {
+            CharacterAttribute attribute = _player.Attributes.Get(Template.AttributeType);
+            if (CharacterAttribute.IsCharacterAttribute(Template.AttributeType)) return attribute.Max != 20;
+            return true;
         }
     }
 }

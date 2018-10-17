@@ -36,7 +36,6 @@ public class MaelstromShotBehaviour : MonoBehaviour
         _follow = follow;
         _angleModifier = 1;
         _trail = MaelstromShotTrail.Create();
-        _trail.SetAlpha(1);
         _trail.SetTarget(transform);
     }
 

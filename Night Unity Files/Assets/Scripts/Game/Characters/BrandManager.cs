@@ -17,6 +17,10 @@ namespace Game.Characters
         private Player _player;
         private readonly List<Brand> _completedBrands = new List<Brand>();
         private Brand _activeBrandOne, _activeBrandTwo, _activeBrandThree;
+        private bool _gritBrandsAllowed;
+        private bool _fettleBrandsAllowed;
+        private bool _willBrandsAllowed;
+        private bool _focusBrandsAllowed;
 
         public List<Brand> GetActiveBrands()
         {
@@ -64,55 +68,40 @@ namespace Game.Characters
             return;
         }
 
+        private void ResetAllowedBrands()
+        {
+            _gritBrandsAllowed = true;
+            _fettleBrandsAllowed = true;
+            _willBrandsAllowed = true;
+            _focusBrandsAllowed = true;
+            List<Brand> activeBrands = GetActiveBrands();
+            activeBrands.ForEach(b =>
+            {
+                if (b is GritBrand) _gritBrandsAllowed = false;
+                if (b is FettleBrand) _fettleBrandsAllowed = false;
+                if (b is WillBrand) _willBrandsAllowed = false;
+                if (b is FocusBrand) _focusBrandsAllowed = false;
+            });
+        }
+
         public List<Brand> GetBrandChoice(int ritesRemaining)
         {
             List<Brand> possibleBrands = new List<Brand>();
             if (_lockedBrands.Count == 0) return possibleBrands;
-            List<Brand> activeBrands = GetActiveBrands();
-            bool enduranceBrandsAllowed = true;
-            bool strengthBrandsAllowed = true;
-            bool willpowerBrandsAllowed = true;
-            bool perceptionBrandsAllowed = true;
-            activeBrands.ForEach(b =>
-            {
-                if (b is EnduranceBrand) enduranceBrandsAllowed = false;
-                if (b is StrengthBrand) strengthBrandsAllowed = false;
-                if (b is WillpowerBrand) willpowerBrandsAllowed = false;
-                if (b is PerceptionBrand) perceptionBrandsAllowed = false;
-            });
+            ResetAllowedBrands();
             _lockedBrands.ForEach(b =>
             {
                 if (!b.PlayerRequirementsMet(CharacterManager.SelectedCharacter)) return;
-                if (b is EnduranceBrand)
-                {
-                    if (!enduranceBrandsAllowed) return;
-                    enduranceBrandsAllowed = false;
-                }
-
-                if (b is StrengthBrand)
-                {
-                    if (!strengthBrandsAllowed) return;
-                    strengthBrandsAllowed = false;
-                }
-
-                if (b is WillpowerBrand)
-                {
-                    if (!willpowerBrandsAllowed) return;
-                    willpowerBrandsAllowed = false;
-                }
-
-                if (b is PerceptionBrand)
-                {
-                    if (!perceptionBrandsAllowed) return;
-                    perceptionBrandsAllowed = false;
-                }
-
                 if (possibleBrands.Any(v => v.GetType() == b.GetType())) return;
                 possibleBrands.Add(b);
             });
+            if (!_gritBrandsAllowed) possibleBrands.RemoveAll(b => b is GritBrand);
+            if (!_fettleBrandsAllowed) possibleBrands.RemoveAll(b => b is FettleBrand);
+            if (!_willBrandsAllowed) possibleBrands.RemoveAll(b => b is WillBrand);
+            if (!_focusBrandsAllowed) possibleBrands.RemoveAll(b => b is FocusBrand);
             possibleBrands.Shuffle();
             List<Brand> brandSelection = new List<Brand>();
-            for (int i = 0; i < ritesRemaining && i < possibleBrands.Count; ++i) brandSelection.Add(_lockedBrands[i]);
+            for (int i = 0; i < ritesRemaining && i < possibleBrands.Count; ++i) brandSelection.Add(possibleBrands[i]);
             return brandSelection;
         }
 
@@ -156,29 +145,29 @@ namespace Game.Characters
 
         private void CreateAttributeBrands()
         {
-            new StrengthBrand(_player);
-            new StrengthBrand(_player);
-            new StrengthBrand(_player);
-            new StrengthBrand(_player);
-            new StrengthBrand(_player);
+            new FettleBrand(_player);
+            new FettleBrand(_player);
+            new FettleBrand(_player);
+            new FettleBrand(_player);
+            new FettleBrand(_player);
 
-            new PerceptionBrand(_player);
-            new PerceptionBrand(_player);
-            new PerceptionBrand(_player);
-            new PerceptionBrand(_player);
-            new PerceptionBrand(_player);
+            new FocusBrand(_player);
+            new FocusBrand(_player);
+            new FocusBrand(_player);
+            new FocusBrand(_player);
+            new FocusBrand(_player);
 
-            new WillpowerBrand(_player);
-            new WillpowerBrand(_player);
-            new WillpowerBrand(_player);
-            new WillpowerBrand(_player);
-            new WillpowerBrand(_player);
+            new WillBrand(_player);
+            new WillBrand(_player);
+            new WillBrand(_player);
+            new WillBrand(_player);
+            new WillBrand(_player);
 
-            new EnduranceBrand(_player);
-            new EnduranceBrand(_player);
-            new EnduranceBrand(_player);
-            new EnduranceBrand(_player);
-            new EnduranceBrand(_player);
+            new GritBrand(_player);
+            new GritBrand(_player);
+            new GritBrand(_player);
+            new GritBrand(_player);
+            new GritBrand(_player);
         }
 
         private void CreateOtherBrands()
@@ -187,8 +176,8 @@ namespace Game.Characters
             new EssenceChangeBrand(_player);
             new HealthRecoveryBrand(_player);
             new HealthRecoveryBrand(_player);
-            new WillpowerRecoveryBrand(_player);
-            new WillpowerRecoveryBrand(_player);
+            new WillRecoveryBrand(_player);
+            new WillRecoveryBrand(_player);
             new AutomaticReloadBrand(_player);
             new InstantReloadBrand(_player);
             new AdrenalineUsedBrand(_player);
@@ -218,13 +207,13 @@ namespace Game.Characters
             });
         }
 
-        public void IncreaseDamageDealt(int damage) => UpdateBrandValue(typeof(StrengthBrand), damage);
-        public void IncreaseItemsFound() => UpdateBrandValue(typeof(PerceptionBrand), 1);
-        public void IncreaseSkillsUsed() => UpdateBrandValue(typeof(WillpowerBrand), 1);
-        public void IncreaseRegionsExplored() => UpdateBrandValue(typeof(EnduranceBrand), 1);
+        public void IncreaseDamageDealt(int damage) => UpdateBrandValue(typeof(FettleBrand), damage);
+        public void IncreaseItemsFound() => UpdateBrandValue(typeof(FocusBrand), 1);
+        public void IncreaseSkillsUsed() => UpdateBrandValue(typeof(WillBrand), 1);
+        public void IncreaseRegionsExplored() => UpdateBrandValue(typeof(GritBrand), 1);
         public void IncreaseEssenceInfused() => UpdateBrandValue(typeof(EssenceChangeBrand), 1);
         public void IncreaseDamageTaken(int damage) => UpdateBrandValue(typeof(HealthRecoveryBrand), damage);
-        public void IncreaseEnemiesKilled() => UpdateBrandValue(typeof(WillpowerRecoveryBrand), 1);
+        public void IncreaseEnemiesKilled() => UpdateBrandValue(typeof(WillRecoveryBrand), 1);
         public void IncreaseBattlesNoSkills() => UpdateBrandValue(typeof(AutomaticReloadBrand), 1);
         public void IncreaseResourceFound() => UpdateBrandValue(typeof(ResourceBrand), 1);
         public void IncreaseFoodFound() => UpdateBrandValue(typeof(FoodBrand), 1);

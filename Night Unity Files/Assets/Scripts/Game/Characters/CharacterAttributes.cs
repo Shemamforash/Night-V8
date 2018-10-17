@@ -31,7 +31,7 @@ namespace Game.Characters
         public float DurabilityLossModifier;
         public float RallyHealthModifier;
         public float StartHealthModifier;
-        public float ClaimRegionWillpowerGainModifier;
+        public float ClaimRegionWillGainModifier;
         public float EnemyKillHealthLoss;
         public float ReloadFailureChance;
         public float ResourceFindModifier;
@@ -83,9 +83,9 @@ namespace Game.Characters
             }
         }
 
-        public void ChangeEnduranceMax(int polarity)
+        public void ChangeGritMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Endurance, polarity)) return;
+            if (!IncreaseAttribute(AttributeType.Grit, polarity)) return;
             string message = polarity > 0 ? "My body will endure" : "My body weakens";
             WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
@@ -99,49 +99,47 @@ namespace Game.Characters
             return true;
         }
 
-        public void ChangeStrengthMax(int polarity)
+        public void ChangeFettleMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Strength, polarity)) return;
-            string message = polarity > 0 ? "My strength grows" : "My strength wains";
+            if (!IncreaseAttribute(AttributeType.Fettle, polarity)) return;
+            string message = polarity > 0 ? "My fettle grows" : "My fettle wains";
             WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
 
-        public void ChangePerceptionMax(int polarity)
+        public void ChangeFocusMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Perception, polarity)) return;
+            if (!IncreaseAttribute(AttributeType.Focus, polarity)) return;
             string message = polarity > 0 ? "My eyes become keener" : "My vision blurs";
             WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
 
-        public void ChangeWillpowerMax(int polarity)
+        public void ChangeWillMax(int polarity)
         {
-            if (!IncreaseAttribute(AttributeType.Willpower, polarity)) return;
+            if (!IncreaseAttribute(AttributeType.Will, polarity)) return;
             string message = polarity > 0 ? "My mind is clearer now" : "My mind is clouded";
             WorldEventManager.GenerateEvent(new CharacterMessage(message, _player));
         }
 
         public float CalculateAdrenalineRecoveryRate()
         {
-            Debug.Log(Val(AttributeType.AdrenalineRechargeBonus));
-            return (0.1f * Val(AttributeType.Perception) + 1) * Val(AttributeType.AdrenalineRechargeBonus);
+            return (0.1f * Val(AttributeType.Focus) + 1) * Val(AttributeType.AdrenalineRechargeBonus);
         }
 
-        public float CalculateSpeed() => 5f + Val(AttributeType.Endurance) * 0.25f;
+        public float CalculateSpeed() => 5f + Val(AttributeType.Grit) * 0.25f;
 
         public float CalculateSkillCooldownModifier()
         {
-            Debug.Log(Val(AttributeType.SkillRechargeBonus));
-            return (-0.025f * Val(AttributeType.Willpower) + 1) * Val(AttributeType.SkillRechargeBonus);
+            return (-0.025f * Val(AttributeType.Will) + 1) * Val(AttributeType.SkillRechargeBonus);
         }
 
         public int CalculateMaxHealth()
         {
-            return (int) (Max(AttributeType.Strength) * PlayerHealthChunkSize);
+            return (int) (Max(AttributeType.Fettle) * PlayerHealthChunkSize);
         }
 
         public int CalculateInitialHealth()
         {
-            int startingHealth = (int) (Val(AttributeType.Strength) * PlayerHealthChunkSize);
+            int startingHealth = (int) (Val(AttributeType.Fettle) * PlayerHealthChunkSize);
             startingHealth = Mathf.FloorToInt(startingHealth * (1f - StartHealthModifier));
             return startingHealth;
         }
@@ -227,41 +225,35 @@ namespace Game.Characters
             return GetAttributeStatus(Get(AttributeType.Thirst), _dehydrationLevels);
         }
 
-        public void DecreaseWillpower()
-        {
-            Get(AttributeType.Willpower).Decrement();
-        }
-
         public int CalculateCompassPulses()
         {
-            return Mathf.CeilToInt(Val(AttributeType.Perception) + Val(AttributeType.CompassBonus));
+            return Mathf.CeilToInt(Val(AttributeType.Focus) + Val(AttributeType.CompassBonus));
         }
 
-        public void Drink(int thirstOffset)
+        public void Drink(int thirstRecovery)
         {
-            int thirstLoss = (int) ThirstModifier + thirstOffset;
+            int thirstLoss = (int) ThirstModifier + thirstRecovery;
             int hungerGain = (int) WaterHungerModifier;
-            CharacterAttribute thirst = Get(AttributeType.Thirst);
-            thirst.Decrement(thirstLoss);
-            thirst.Increment(hungerGain);
+            Debug.Log("thirst modifier " + thirstLoss + " hunger gain " + hungerGain);
             Get(AttributeType.Thirst).Decrement(thirstLoss);
+            Get(AttributeType.Hunger).Increment(hungerGain);
             WorldEventManager.GenerateEvent(new CharacterMessage("I needed that", _player));
         }
 
-        public void Eat(int hungerOffset)
+        public void Eat(int hungerRecovery)
         {
-            int hungerLoss = (int) HungerModifier + hungerOffset;
+            int hungerLoss = (int) HungerModifier + hungerRecovery;
             int thirstGain = (int) FoodThirstModifier;
-            CharacterAttribute hunger = Get(AttributeType.Hunger);
-            hunger.Decrement(hungerLoss);
-            hunger.Increment(thirstGain);
+            Debug.Log("hunger modifier " + hungerRecovery + " thirst gain " + thirstGain);
+            Get(AttributeType.Hunger).Decrement(hungerLoss);
+            Get(AttributeType.Thirst).Increment(thirstGain);
             WorldEventManager.GenerateEvent(new CharacterMessage("That should stave off starvation, at least for a while", _player));
         }
 
-        public void CalculateNewStrength(float health)
+        public void CalculateNewFettle(float health)
         {
-            float newStrength = Mathf.CeilToInt(health / PlayerHealthChunkSize);
-            SetVal(AttributeType.Strength, newStrength);
+            float newFettle = Mathf.CeilToInt(health / PlayerHealthChunkSize);
+            SetVal(AttributeType.Fettle, newFettle);
         }
 
         public void UnlockWeaponSkillTwo(WeaponType weaponType, bool showScreen)

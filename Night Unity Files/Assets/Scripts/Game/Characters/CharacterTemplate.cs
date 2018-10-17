@@ -9,18 +9,16 @@ namespace Game.Characters
     public class CharacterTemplate
     {
         public readonly CharacterClass CharacterClass;
-        public readonly List<string> StoryLines;
-        public readonly int Strength, Endurance, Willpower, Perception;
+        public readonly int Fettle, Grit, Will, Focus;
         private static readonly List<CharacterClass> _characterClasses = new List<CharacterClass>();
 
         public CharacterTemplate(XmlNode classNode, List<CharacterTemplate> templates)
         {
             CharacterClass = StringToClass(classNode.StringFromNode("Name"));
-            Endurance = classNode.IntFromNode("Endurance");
-            Willpower = classNode.IntFromNode("Willpower");
-            Strength = classNode.IntFromNode("Strength");
-            Perception = classNode.IntFromNode("Perception");
-            StoryLines = new List<string>(classNode.StringFromNode("Story").Split('.'));
+            Grit = classNode.IntFromNode("Grit");
+            Will = classNode.IntFromNode("Will");
+            Fettle = classNode.IntFromNode("Fettle");
+            Focus = classNode.IntFromNode("Focus");
             templates.Add(this);
         }
 

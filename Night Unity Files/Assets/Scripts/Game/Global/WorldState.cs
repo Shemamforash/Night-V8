@@ -111,7 +111,7 @@ namespace Game.Global
             _isPaused = false;
             Seed = Random.Range(0, int.MaxValue);
 #if UNITY_EDITOR
-//            _difficulty = 30;
+            _difficulty = 30;
 #endif
 
             Random.InitState(Seed);

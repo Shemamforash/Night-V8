@@ -18,6 +18,16 @@ namespace Game.Combat.Misc
             return (LMGTrail) _pool.Create();
         }
 
+        protected override void StopEmitting()
+        {
+            _path.Stop();
+        }
+
+        protected override bool Done()
+        {
+            return _path.particleCount == 0;
+        }
+
         protected override ObjectPool<BulletTrail> GetObjectPool()
         {
             return _pool;
@@ -26,18 +36,6 @@ namespace Game.Combat.Misc
         protected override void ClearTrails()
         {
             _path.Clear();
-        }
-
-        protected override Color GetColour()
-        {
-            ParticleSystem.MainModule main = _path.main;
-            return main.startColor.color;
-        }
-
-        protected override void SetColour(Color color)
-        {
-            ParticleSystem.MainModule main = _path.main;
-            main.startColor = color;
         }
     }
 }

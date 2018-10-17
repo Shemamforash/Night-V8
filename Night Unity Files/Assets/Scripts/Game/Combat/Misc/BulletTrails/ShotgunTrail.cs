@@ -21,6 +21,16 @@ namespace Game.Combat.Misc
             return (ShotgunTrail) _pool.Create();
         }
 
+        protected override void StopEmitting()
+        {
+            _points.Stop();
+        }
+
+        protected override bool Done()
+        {
+            return _points.particleCount == 0 && _trail.positionCount == 0;
+        }
+
         protected override ObjectPool<BulletTrail> GetObjectPool()
         {
             return _pool;
@@ -30,16 +40,6 @@ namespace Game.Combat.Misc
         {
             _trail.Clear();
             _points.Clear();
-        }
-
-        protected override Color GetColour()
-        {
-            return _trail.startColor;
-        }
-
-        protected override void SetColour(Color color)
-        {
-            _trail.startColor = color;
         }
     }
 }

@@ -22,6 +22,17 @@ public class MaelstromShotTrail : BulletTrail
         return (MaelstromShotTrail) _pool.Create();
     }
 
+    protected override void StopEmitting()
+    {
+        _paths.Stop();
+        _points.Stop();
+    }
+
+    protected override bool Done()
+    {
+        return _paths.particleCount == 0 && _points.particleCount == 0 && _trail.positionCount == 0;
+    }
+
     protected override ObjectPool<BulletTrail> GetObjectPool()
     {
         return _pool;
@@ -32,19 +43,5 @@ public class MaelstromShotTrail : BulletTrail
         _trail.Clear();
         _paths.Clear();
         _points.Clear();
-    }
-
-    protected override Color GetColour()
-    {
-        return _trail.startColor;
-    }
-
-    protected override void SetColour(Color color)
-    {
-        _trail.startColor = color;
-        ParticleSystem.MainModule main = _paths.main;
-        main.startColor = color;
-        main = _points.main;
-        main.startColor = color;
     }
 }

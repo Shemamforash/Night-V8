@@ -45,9 +45,10 @@ public class UIBorderController : MonoBehaviour
         _currentState = BorderState.Active;
         UpdateBorder(true);
     }
-    
+
     private void UpdateBorder(bool instant = false)
     {
+        bool currentTimeScale = DOTween.defaultTimeScaleIndependent;
         DOTween.defaultTimeScaleIndependent = true;
         switch (_currentState)
         {
@@ -62,7 +63,7 @@ public class UIBorderController : MonoBehaviour
                 break;
         }
 
-        DOTween.defaultTimeScaleIndependent = false;
+        DOTween.defaultTimeScaleIndependent = currentTimeScale;
     }
 
     private void MakeInactive(bool instant = false)

@@ -95,7 +95,7 @@ public class TempleBehaviour : BasicShrineBehaviour
     {
         List<EnemyTemplate> enemyTypesToSpawn = new List<EnemyTemplate>();
         List<EnemyTemplate> allowedTypes = WorldState.GetAllowedNightmareEnemyTypes();
-        int size = WorldState.Difficulty() * 5;
+        int size = (Mathf.FloorToInt(WorldState.Difficulty() / 10f) + 1) * 20;
         while (size > 0)
         {
             foreach (EnemyTemplate e in allowedTypes)

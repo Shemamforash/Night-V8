@@ -106,7 +106,7 @@ namespace Game.Characters
         {
             _counter = doc.IntFromNode("TimeRemaining");
             Status = (BrandStatus) doc.IntFromNode("Status");
-            if (this is StrengthBrand || this is EnduranceBrand || this is PerceptionBrand || this is WillpowerBrand) return;
+            if (this is FettleBrand || this is GritBrand || this is FocusBrand || this is WillBrand) return;
             if (Status == BrandStatus.Succeeded) OnSucceed();
             else if (Status == BrandStatus.Failed) OnFail();
         }

@@ -1,4 +1,5 @@
-﻿using Game.Characters;
+﻿using DG.Tweening;
+using Game.Characters;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -7,14 +8,14 @@ namespace Facilitating.UIControllers
 {
     public class UIAttributeController : MonoBehaviour
     {
-        private UIAttributeMarkerController _strengthMarker, _perceptionMarker, _enduranceMarker, _willpowerMarker;
+        private UIAttributeMarkerController _fettleMarker, _focusMarker, _gritMarker, _willMarker;
 
         public void Awake()
         {
-            _strengthMarker = CacheAttributeElement("Strength");
-            _perceptionMarker = CacheAttributeElement("Perception");
-            _enduranceMarker = CacheAttributeElement("Endurance");
-            _willpowerMarker = CacheAttributeElement("Willpower");
+            _fettleMarker = CacheAttributeElement("Fettle");
+            _focusMarker = CacheAttributeElement("Focus");
+            _gritMarker = CacheAttributeElement("Grit");
+            _willMarker = CacheAttributeElement("Will");
         }
 
         private UIAttributeMarkerController CacheAttributeElement(string elementName)
@@ -24,10 +25,10 @@ namespace Facilitating.UIControllers
 
         public void UpdateAttributes(Player player)
         {
-            _strengthMarker.SetValue(player.Attributes.Get(AttributeType.Strength));
-            _enduranceMarker.SetValue(player.Attributes.Get(AttributeType.Endurance));
-            _perceptionMarker.SetValue(player.Attributes.Get(AttributeType.Perception));
-            _willpowerMarker.SetValue(player.Attributes.Get(AttributeType.Willpower));
+            _fettleMarker.SetValue(player.Attributes.Get(AttributeType.Fettle));
+            _gritMarker.SetValue(player.Attributes.Get(AttributeType.Grit));
+            _focusMarker.SetValue(player.Attributes.Get(AttributeType.Focus));
+            _willMarker.SetValue(player.Attributes.Get(AttributeType.Will));
         }
     }
 }

@@ -16,22 +16,24 @@ public class MapMovementController : MonoBehaviour, IInputListener
 {
     private Rigidbody2D _rigidBody2D;
     private Vector2 _direction;
-    private const float Speed = 40f;
+    private const float PanSpeed = 40f;
+    private float CurrentSpeed;
     private List<Region> _availableRegions;
     private Region _nearestRegion;
     private static Region _currentRegion;
-    private static UIAttributeMarkerController _enduranceMarker;
-    private static Camera _mapCamera;
+    private static UIAttributeMarkerController _gritMarker;
+    public static Camera MapCamera;
     private static Player _player;
     private static MapMovementController _instance;
     private bool _pressed;
+    private Vector3 velocity;
 
     public void Awake()
     {
         _rigidBody2D = GetComponent<Rigidbody2D>();
         _availableRegions = MapGenerator.DiscoveredRegions();
-        _enduranceMarker = GameObject.Find("Endurance").FindChildWithName<UIAttributeMarkerController>("Bar");
-        _mapCamera = GameObject.Find("Map Camera").GetComponent<Camera>();
+        _gritMarker = GameObject.Find("Grit").FindChildWithName<UIAttributeMarkerController>("Bar");
+        MapCamera = GameObject.Find("Map Camera").GetComponent<Camera>();
         _instance = this;
     }
 
@@ -39,8 +41,9 @@ public class MapMovementController : MonoBehaviour, IInputListener
     {
         ResourcesUiController.Hide();
         _player = player;
-        _enduranceMarker.SetValue(_player.Attributes.Get(AttributeType.Endurance));
+        _gritMarker.SetValue(_player.Attributes.Get(AttributeType.Grit));
         _currentRegion = _player.TravelAction.GetCurrentNode();
+        MapCamera.DOOrthoSize(7, 1f);
         InputHandler.SetCurrentListener(_instance);
         Recenter();
     }
@@ -49,31 +52,32 @@ public class MapMovementController : MonoBehaviour, IInputListener
     {
         ResourcesUiController.Show();
         InputHandler.SetCurrentListener(null);
+        MapCamera.DOOrthoSize(3, 1f);
         _player = null;
     }
 
-    public static void UpdateEndurance(int enduranceCost)
+    public static void UpdateGrit(int gritCost)
     {
-        CharacterAttribute endurance = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Endurance);
-        _enduranceMarker.SetValue((int) endurance.Max, (int) (endurance.CurrentValue() - enduranceCost), true);
+        CharacterAttribute grit = CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit);
+        _gritMarker.SetValue((int) grit.Max, (int) (grit.CurrentValue() - gritCost));
     }
 
     private static void Recenter()
     {
         Vector3 position = _currentRegion.Position;
         position.z = -10;
-        _mapCamera.transform.DOMove(position, 0.5f);
+        MapCamera.transform.position = position;
     }
 
     public void FixedUpdate()
     {
         if (_player == null) return;
         if (!_pressed && _nearestRegion != null) LocateToNearestRegion();
+        _direction.Normalize();
+        _direction *= CurrentSpeed;
         _rigidBody2D.AddForce(_direction);
         _direction = Vector2.zero;
     }
-
-    private Vector3 velocity;
 
     private void LocateToNearestRegion()
     {
@@ -87,7 +91,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         }
 
         _direction = _nearestRegion.Position.Direction(transform.position);
-        _direction = Vector3.one * distance * Time.fixedDeltaTime * 100;
+        CurrentSpeed = distance * Time.fixedDeltaTime * 100;
     }
 
     public void Update()
@@ -134,7 +138,6 @@ public class MapMovementController : MonoBehaviour, IInputListener
                 break;
         }
 
-        _direction.Normalize();
         bool isRegionVisible = false;
         foreach (Region r in _availableRegions)
         {
@@ -145,13 +148,13 @@ public class MapMovementController : MonoBehaviour, IInputListener
         }
 
         if (!isRegionVisible) _direction = Vector2.zero;
-        _direction *= Speed;
+        CurrentSpeed = PanSpeed;
     }
 
     private bool CanAffordToTravel()
     {
-        int enduranceCost = _nearestRegion.MapNode().GetEnduranceCost();
-        bool canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(enduranceCost);
+        int gritCost = _nearestRegion.MapNode().GetGritCost();
+        bool canAfford = CharacterManager.SelectedCharacter.CanAffordTravel(gritCost);
         bool travellingToGate = _nearestRegion.GetRegionType() == RegionType.Gate;
         bool canAffordToTravel = canAfford || travellingToGate;
         return canAffordToTravel;
@@ -162,7 +165,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         if (_nearestRegion == null) return;
         if (!CanAffordToTravel()) return;
         Travel travelAction = CharacterManager.SelectedCharacter.TravelAction;
-        travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetEnduranceCost());
+        travelAction.TravelTo(_nearestRegion, _nearestRegion.MapNode().GetGritCost());
         if (_currentRegion == _nearestRegion) return;
         MapMenuController.IsReturningFromCombat = false;
         ReturnToGame(_nearestRegion);

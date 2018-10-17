@@ -1,19 +1,19 @@
 namespace Game.Characters.Brands
 {
-    public class StrengthBrand : Brand
+    public class FettleBrand : Brand
     {
-        public StrengthBrand(Player player) : base(player, "Power")
+        public FettleBrand(Player player) : base(player, "Power")
         {
         }
 
         protected override void OnSucceed()
         {
-            Player.Attributes.ChangeStrengthMax((int) SuccessModifier);
+            Player.Attributes.ChangeFettleMax((int) SuccessModifier);
         }
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangeStrengthMax((int) FailModifier);
+            Player.Attributes.ChangeFettleMax((int) FailModifier);
         }
 
         protected override string GetProgressSubstring()
@@ -22,20 +22,20 @@ namespace Game.Characters.Brands
         }
     }
 
-    public class EnduranceBrand : Brand
+    public class GritBrand : Brand
     {
-        public EnduranceBrand(Player player) : base(player, "Stamina")
+        public GritBrand(Player player) : base(player, "Stamina")
         {
         }
 
         protected override void OnSucceed()
         {
-            Player.Attributes.ChangeEnduranceMax((int) SuccessModifier);
+            Player.Attributes.ChangeGritMax((int) SuccessModifier);
         }
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangeEnduranceMax((int) FailModifier);
+            Player.Attributes.ChangeGritMax((int) FailModifier);
         }
 
         protected override string GetProgressSubstring()
@@ -44,20 +44,20 @@ namespace Game.Characters.Brands
         }
     }
 
-    public class PerceptionBrand : Brand
+    public class FocusBrand : Brand
     {
-        public PerceptionBrand(Player player) : base(player, "Vigilance")
+        public FocusBrand(Player player) : base(player, "Vigilance")
         {
         }
 
         protected override void OnSucceed()
         {
-            Player.Attributes.ChangePerceptionMax((int) SuccessModifier);
+            Player.Attributes.ChangeFocusMax((int) SuccessModifier);
         }
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangePerceptionMax((int) FailModifier);
+            Player.Attributes.ChangeFocusMax((int) FailModifier);
         }
 
         protected override string GetProgressSubstring()
@@ -66,20 +66,20 @@ namespace Game.Characters.Brands
         }
     }
 
-    public class WillpowerBrand : Brand
+    public class WillBrand : Brand
     {
-        public WillpowerBrand(Player player) : base(player, "Resolution")
+        public WillBrand(Player player) : base(player, "Resolution")
         {
         }
 
         protected override void OnSucceed()
         {
-            Player.Attributes.ChangeWillpowerMax((int) SuccessModifier);
+            Player.Attributes.ChangeWillMax((int) SuccessModifier);
         }
 
         protected override void OnFail()
         {
-            Player.Attributes.ChangeWillpowerMax((int) FailModifier);
+            Player.Attributes.ChangeWillMax((int) FailModifier);
         }
 
         protected override string GetProgressSubstring()
@@ -132,15 +132,15 @@ namespace Game.Characters.Brands
         }
     }
 
-    public class WillpowerRecoveryBrand : Brand
+    public class WillRecoveryBrand : Brand
     {
-        public WillpowerRecoveryBrand(Player player) : base(player, "Apathy")
+        public WillRecoveryBrand(Player player) : base(player, "Apathy")
         {
         }
 
         protected override void OnSucceed()
         {
-            Player.Attributes.ClaimRegionWillpowerGainModifier += SuccessModifier;
+            Player.Attributes.ClaimRegionWillGainModifier += SuccessModifier;
         }
 
         protected override void OnFail()

@@ -5,13 +5,18 @@ using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
 using TMPro;
 using UnityEngine;
+using System.Linq;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Game.Global
 {
     public class WorldView : Menu
     {
-        private static TextMeshProUGUI _environmentText;
         private static string _environmentString, _temperatureString, _weatherString, _timeString;
+        private static TextMeshProUGUI _environmentText;
+        private readonly Dictionary<string, TextMeshProUGUI> _resourceText = new Dictionary<string, TextMeshProUGUI>();
+        private Selectable _lastSelectedButton;
 
         public static void SetEnvironmentText(string text)
         {
@@ -54,7 +59,7 @@ namespace Game.Global
             _environmentText.text = _timeString + " in the " + _environmentString + ". It is " + _temperatureString + " and " + _weatherString + ". " + templeString;
         }
 
-        private static readonly string[] resources = {"Food", "Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
+        private static readonly string[] resources = {"Meat", "Water", "Essence", "Ice", "Salt", "Scrap", "Fuel", "Charcoal", "Fruit", "Skin", "Leather", "Metal", "Meteor", "Alloy"};
 
         public override void Awake()
         {
@@ -75,6 +80,13 @@ namespace Game.Global
             base.Enter();
             Player selectedCharacter = CharacterManager.SelectedCharacter;
             CharacterManager.SelectCharacter(selectedCharacter);
+            if (_lastSelectedButton != null) _lastSelectedButton.Select();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            _lastSelectedButton = EventSystem.current.currentSelectedGameObject.GetComponent<Selectable>();
         }
 
         private static string TimeToName(int hours)
@@ -87,7 +99,6 @@ namespace Game.Global
             return "Night";
         }
 
-        private readonly Dictionary<string, TextMeshProUGUI> _resourceText = new Dictionary<string, TextMeshProUGUI>();
 
         public void Update()
         {
@@ -96,14 +107,12 @@ namespace Game.Global
                 int quantity;
                 switch (resourceType)
                 {
-                    case "Food":
-                        quantity = 0;
-                        Inventory.Consumables().ForEach(c => quantity += c.HungerModifier);
-                        _resourceText[resourceType].text = "Food\n" + quantity;
+                    case "Meat":
+                        quantity = Inventory.Consumables().Count(c => c.Template.ResourceType == "Meat");
+                        _resourceText[resourceType].text = "Meat\n" + quantity;
                         continue;
                     case "Water":
-                        quantity = 0;
-                        Inventory.Consumables().ForEach(c => quantity += c.ThirstModifier);
+                        quantity = Inventory.Consumables().Count(c => c.Template.ResourceType == "Water");
                         _resourceText[resourceType].text = "Water\n" + quantity;
                         continue;
                 }
@@ -114,7 +123,6 @@ namespace Game.Global
                     _resourceText[resourceType].gameObject.SetActive(false);
                     continue;
                 }
-
 
                 _resourceText[resourceType].gameObject.SetActive(true);
                 _resourceText[resourceType].text = resourceType + "\n" + quantity;

@@ -26,6 +26,7 @@ namespace Game.Global
         public static AudioClip[] Drones;
         public static AudioClip ButtonSelectClip;
         public static AudioClip SimmavA, SimmavB, SimmavC;
+        private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
         private static bool _loaded;
 
         public void Awake()
@@ -33,30 +34,40 @@ namespace Game.Global
             StartCoroutine(LoadAudio());
         }
 
-        private IEnumerator LoadAllClipsFromBundle(Action<AudioClip[]> setClipAction, string bundleName)
+        private AssetBundle FindAssetBundle(string name)
+        {
+            return _loadedBundles.FirstOrDefault(b => b.name == name);
+        }
+
+        private IEnumerator LoadAssetBundle(string bundleName)
         {
             AssetBundleCreateRequest bundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, bundleName));
             yield return bundleRequest;
-            AssetBundle bundle = bundleRequest.assetBundle;
+            _loadedBundles.Add(bundleRequest.assetBundle);
+        }
+
+        private IEnumerator LoadAllClipsFromBundle(Action<AudioClip[]> setClipAction, string bundleName)
+        {
+            AssetBundle bundle = FindAssetBundle(bundleName);
+            if (bundle == null) yield return StartCoroutine(LoadAssetBundle(bundleName));
+            bundle = FindAssetBundle(bundleName);
             Assert.IsNotNull(bundle);
             AssetBundleRequest assetBundleRequest = bundle.LoadAllAssetsAsync<AudioClip>();
             yield return assetBundleRequest;
             AudioClip[] clips = new AudioClip[assetBundleRequest.allAssets.Length];
             for (int i = 0; i < clips.Length; ++i) clips[i] = (AudioClip) assetBundleRequest.allAssets[i];
             setClipAction(clips);
-            bundle.Unload(false);
         }
 
         private IEnumerator LoadClip(Action<AudioClip> setClipAction, string bundleName, string assetName)
         {
-            AssetBundleCreateRequest bundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, bundleName));
-            yield return bundleRequest;
-            AssetBundle bundle = bundleRequest.assetBundle;
+            AssetBundle bundle = FindAssetBundle(bundleName);
+            if (bundle == null) yield return StartCoroutine(LoadAssetBundle(bundleName));
+            bundle = FindAssetBundle(bundleName);
             Assert.IsNotNull(bundle);
             AssetBundleRequest assetBundleRequest = bundle.LoadAssetAsync<AudioClip>(assetName);
             yield return assetBundleRequest;
             setClipAction((AudioClip) assetBundleRequest.asset);
-            bundle.Unload(false);
         }
 
         private IEnumerator LoadAudio()
@@ -97,7 +108,7 @@ namespace Game.Global
 
             Debug.Log("loading misc audio");
             yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "misc", "Button Click"));
-            
+
             Debug.Log("loading music");
             yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "music/combat/simmav", "simmav a"));
             yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "music/combat/simmav", "simmav b"));

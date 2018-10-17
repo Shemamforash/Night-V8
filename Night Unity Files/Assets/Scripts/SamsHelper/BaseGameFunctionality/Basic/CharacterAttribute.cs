@@ -99,10 +99,10 @@ namespace SamsHelper.BaseGameFunctionality.Basic
 
         public static bool IsCharacterAttribute(AttributeType attribute)
         {
-            return attribute == AttributeType.Strength ||
-                   attribute == AttributeType.Endurance ||
-                   attribute == AttributeType.Willpower ||
-                   attribute == AttributeType.Perception;
+            return attribute == AttributeType.Fettle ||
+                   attribute == AttributeType.Grit ||
+                   attribute == AttributeType.Will ||
+                   attribute == AttributeType.Focus;
         }
     }
 }

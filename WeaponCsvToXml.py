@@ -71,11 +71,13 @@ class ResourceImporter(XMLWriter):
         if consumable:
             write_single_value(self, "Attribute", get_value(self, "C", row, ""))
             write_single_value(self, "Modifier", get_value(self, "D", row, ""))
-        write_single_value(self, "OasisDropRate", get_value(self, "E", row, ""))
-        write_single_value(self, "SteppeDropRate", get_value(self, "F", row, ""))
-        write_single_value(self, "RuinsDropRate", get_value(self, "G", row, ""))
-        write_single_value(self, "DefilesDropRate", get_value(self, "H", row, ""))
-        write_single_value(self, "WastelandDropRate", get_value(self, "I", row, ""))
+        write_single_value(self, "Permanent", get_value(self, "E", row, ""))
+        write_single_value(self, "DesertDropRate", get_value(self, "F", row, ""))
+        write_single_value(self, "MountainsDropRate", get_value(self, "G", row, ""))
+        write_single_value(self, "SeaDropRate", get_value(self, "H", row, ""))
+        write_single_value(self, "RuinsDropRate", get_value(self, "I", row, ""))
+        write_single_value(self, "WastelandDropRate", get_value(self, "J", row, ""))
+        write_single_value(self, "Description", get_value(self, "K", row, ""))
 
     def read_resources(self):
         for row_no in range(3, 38):
@@ -227,11 +229,10 @@ class CharacterImporter(XMLWriter):
 
     def read_class(self, row):
         write_single_value(self, "Name", get_value(self, "A", row))
-        write_single_value(self, "Endurance", get_value(self, "D", row))
-        write_single_value(self, "Strength", get_value(self, "E", row))
-        write_single_value(self, "Willpower", get_value(self, "F", row))
-        write_single_value(self, "Perception", get_value(self, "G", row))
-        write_single_value(self, "Story", get_value(self, "M", row))
+        write_single_value(self, "Grit", get_value(self, "D", row))
+        write_single_value(self, "Fettle", get_value(self, "E", row))
+        write_single_value(self, "Will", get_value(self, "F", row))
+        write_single_value(self, "Focus", get_value(self, "G", row))
 
 
 class EnemyImporter(XMLWriter):
@@ -372,17 +373,17 @@ def write_single_value(xml_writer, stat_name, value):
     xml_writer.output_file.writelines("<" + stat_name + ">" + value + "</" + stat_name + ">")
 
 
-# WeaponImporter()
+WeaponImporter()
 GearImporter()
-# WeatherImporter()
-# WeatherProbabilityImporter();
-# RegionImporter()
-# CharacterImporter()
+WeatherImporter()
+WeatherProbabilityImporter();
+RegionImporter()
+CharacterImporter()
 EnemyImporter()
 RecipeImporter()
 ResourceImporter()
-# InscriptionImporter()
-# SkillImporter()
-# EnvironmentImporter()
+InscriptionImporter()
+SkillImporter()
+EnvironmentImporter()
 BrandImporter()
-# StoryImporter()
+StoryImporter()

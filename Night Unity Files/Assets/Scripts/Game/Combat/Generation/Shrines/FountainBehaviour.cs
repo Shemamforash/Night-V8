@@ -78,10 +78,10 @@ namespace Game.Combat.Generation.Shrines
         {
             CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Thirst).Decrement(10);
             CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Hunger).Decrement(10);
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Endurance).SetToMax();
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Perception).SetToMax();
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Strength).SetToMax();
-            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Willpower).SetToMax();
+            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Grit).SetToMax();
+            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Focus).SetToMax();
+            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Fettle).SetToMax();
+            CharacterManager.SelectedCharacter.Attributes.Get(AttributeType.Will).SetToMax();
             PlayerCombat.Instance.HealthController.Heal(1000000);
             PlayerCombat.Instance.ResetCompass();
         }

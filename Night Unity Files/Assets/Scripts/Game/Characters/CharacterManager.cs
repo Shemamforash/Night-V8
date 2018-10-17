@@ -74,13 +74,11 @@ namespace Game.Characters
 
         private static void ExitCharacter(Player character)
         {
-            character.CharacterView().SwitchToSimpleView();
         }
 
         public static void SelectCharacter(Player player)
         {
             SelectedCharacter = player;
-            player.CharacterView().SwitchToDetailedView();
         }
 
         private static Player PreviousCharacter(Player character)
@@ -179,23 +177,23 @@ namespace Game.Characters
         {
             CharacterAttributes attributes = playerCharacter.Attributes;
 
-            attributes.SetMax(AttributeType.Endurance, playerCharacter.CharacterTemplate.Endurance);
-            attributes.SetMax(AttributeType.Strength, playerCharacter.CharacterTemplate.Strength);
-            attributes.SetMax(AttributeType.Perception, playerCharacter.CharacterTemplate.Perception);
-            attributes.SetMax(AttributeType.Willpower, playerCharacter.CharacterTemplate.Willpower);
+            attributes.SetMax(AttributeType.Grit, playerCharacter.CharacterTemplate.Grit);
+            attributes.SetMax(AttributeType.Fettle, playerCharacter.CharacterTemplate.Fettle);
+            attributes.SetMax(AttributeType.Focus, playerCharacter.CharacterTemplate.Focus);
+            attributes.SetMax(AttributeType.Will, playerCharacter.CharacterTemplate.Will);
 
 #if UNITY_EDITOR
-            int max = 20;
-            attributes.SetMax(AttributeType.Endurance, max);
-            attributes.SetMax(AttributeType.Strength, max);
-            attributes.SetMax(AttributeType.Perception, max);
-            attributes.SetMax(AttributeType.Willpower, max);
+//            int max = 20;
+//            attributes.SetMax(AttributeType.Grit, max);
+//            attributes.SetMax(AttributeType.Fettle, max);
+//            attributes.SetMax(AttributeType.Focus, max);
+//            attributes.SetMax(AttributeType.Will, max);
 #endif
 
-            attributes.Get(AttributeType.Endurance).SetToMax();
-            attributes.Get(AttributeType.Strength).SetToMax();
-            attributes.Get(AttributeType.Perception).SetToMax();
-            attributes.Get(AttributeType.Willpower).SetToMax();
+            attributes.Get(AttributeType.Grit).SetToMax();
+            attributes.Get(AttributeType.Fettle).SetToMax();
+            attributes.Get(AttributeType.Focus).SetToMax();
+            attributes.Get(AttributeType.Will).SetToMax();
         }
 
         public static void Update()

@@ -103,8 +103,8 @@ namespace Game.Exploration.Regions
                     throw new ArgumentOutOfRangeException();
             }
 
-            int willpowerGain = Mathf.FloorToInt(PlayerCombat.Instance.Player.Attributes.ClaimRegionWillpowerGainModifier);
-            PlayerCombat.Instance.Player.Attributes.Get(AttributeType.Willpower).Increment(willpowerGain);
+            int willGain = Mathf.FloorToInt(PlayerCombat.Instance.Player.Attributes.ClaimRegionWillGainModifier);
+            PlayerCombat.Instance.Player.Attributes.Get(AttributeType.Will).Increment(willGain);
         }
 
         public void Update()
@@ -244,11 +244,21 @@ namespace Game.Exploration.Regions
             return _mapNode;
         }
 
-        public void CreateObject()
+        public void HideNode()
+        {
+            _mapNode.Hide();
+        }
+
+        public void ShowNode()
         {
             if (!_seen) return;
+            if (_nodeObject == null) CreateNodeObject();
+            _mapNode.Show();
+        }
+
+        private void CreateNodeObject()
+        {
             if (_nodePrefab == null) _nodePrefab = Resources.Load<GameObject>("Prefabs/Map/Map Node");
-            if (_nodeObject != null) return;
             _nodeObject = GameObject.Instantiate(_nodePrefab);
             _nodeObject.transform.SetParent(MapMenuController.MapTransform);
             _nodeObject.name = Name;
@@ -328,7 +338,7 @@ namespace Game.Exploration.Regions
 
         private void GenerateShelter()
         {
-            if (CharacterManager.Characters.Count < 4)
+            if (CharacterManager.Characters.Count < 3)
             {
                 _characterHere = CharacterManager.GenerateRandomCharacter();
             }

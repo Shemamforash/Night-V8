@@ -32,23 +32,13 @@ namespace Game.Characters
         public Meditate MeditateAction;
         public Sleep SleepAction;
 
-        private int _storyProgress;
         private int _timeAlive;
-        private bool _storyUnlocked;
-        private string _currentStoryLine;
-
-        public bool CanPerformAction()
-        {
-            return Attributes.Val(AttributeType.Willpower) > 0;
-        }
 
         public override XmlNode Save(XmlNode doc)
         {
             doc = base.Save(doc);
             Attributes.Save(doc);
             BrandManager.Save(doc);
-            doc.CreateChild("StoryUnlocked", _storyUnlocked);
-            doc.CreateChild("StoryProgress", _storyProgress);
             doc.CreateChild("TimeAlive", _timeAlive);
             doc.CreateChild("CharacterClass", CharacterTemplate.CharacterClass.ToString());
             XmlNode weaponKillNode = doc.CreateChild("WeaponKills");
@@ -64,8 +54,6 @@ namespace Game.Characters
             base.Load(root);
             Attributes.Load(root);
             BrandManager.Load(root);
-            _storyUnlocked = root.BoolFromNode("StoryUnlocked");
-            _storyProgress = root.IntFromNode("StoryProgress");
             _timeAlive = root.IntFromNode("TimeAlive");
 
             XmlNode weaponKillNode = root.SelectSingleNode("WeaponKills");
@@ -121,28 +109,8 @@ namespace Game.Characters
 
             AddStates();
             BrandManager.Initialise(this);
-            UnlockStoryLine();
 
             WeaponGenerator.GetWeaponTypes().ForEach(t => { _weaponKills.Add(t, 0); });
-        }
-
-        public string GetStoryLine()
-        {
-            string storyLine = _currentStoryLine;
-            _currentStoryLine = null;
-            return storyLine;
-        }
-
-        public bool HasAvailableStoryLine()
-        {
-            return _currentStoryLine != null;
-        }
-
-        private void UnlockStoryLine()
-        {
-            if (_storyProgress == CharacterTemplate.StoryLines.Count) return;
-            _currentStoryLine = CharacterTemplate.StoryLines[_storyProgress];
-            ++_storyProgress;
         }
 
         public void Kill()
@@ -178,7 +146,6 @@ namespace Game.Characters
         {
             ++_timeAlive;
             if (_timeAlive != WorldState.MinutesPerHour * 24) return;
-            UnlockStoryLine();
             IncreaseTimeSurvived();
             _timeAlive = 0;
         }
@@ -204,8 +171,8 @@ namespace Game.Characters
 
         public void Tire()
         {
-            Attributes.Get(AttributeType.Endurance).Decrement();
-            if (Attributes.Val(AttributeType.Endurance) <= 1)
+            Attributes.Get(AttributeType.Grit).Decrement();
+            if (Attributes.Val(AttributeType.Grit) <= 1)
             {
                 WorldEventManager.GenerateEvent(new CharacterMessage("I really need some rest", this));
             }
@@ -213,29 +180,28 @@ namespace Game.Characters
 
         public void Meditate()
         {
-            CharacterAttribute perception = Attributes.Get(AttributeType.Perception);
-            CharacterAttribute willpower = Attributes.Get(AttributeType.Willpower);
-            perception.Increment();
-            willpower.Increment();
-            if (!(perception.ReachedMax() && willpower.ReachedMax())) return;
+            CharacterAttribute focus = Attributes.Get(AttributeType.Focus);
+            CharacterAttribute will = Attributes.Get(AttributeType.Will);
+            focus.Increment();
+            will.Increment();
+            if (!(focus.ReachedMax() && will.ReachedMax())) return;
             WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clear, I can focus now", this));
             RestAction.Enter();
         }
 
-        public bool CanAffordTravel(int enduranceCost = 1)
+        public bool CanAffordTravel(int gritCost = 1)
         {
-            int enduranceRemaining = Mathf.CeilToInt(Attributes.Val(AttributeType.Endurance));
-            int willRemaining = Mathf.CeilToInt(Attributes.Val(AttributeType.Willpower));
-            return enduranceRemaining >= enduranceCost && willRemaining > 0;
+            int gritRemaining = Mathf.CeilToInt(Attributes.Val(AttributeType.Grit));
+            return gritRemaining >= gritCost;
         }
 
         public void Sleep()
         {
-            CharacterAttribute strength = Attributes.Get(AttributeType.Strength);
-            CharacterAttribute endurance = Attributes.Get(AttributeType.Endurance);
-            strength.Increment();
-            endurance.Increment();
-            if (!(strength.ReachedMax() && endurance.ReachedMax())) return;
+            CharacterAttribute fettle = Attributes.Get(AttributeType.Fettle);
+            CharacterAttribute grit = Attributes.Get(AttributeType.Grit);
+            fettle.Increment();
+            grit.Increment();
+            if (!(fettle.ReachedMax() && grit.ReachedMax())) return;
             WorldEventManager.GenerateEvent(new CharacterMessage("My mind is clear, I can focus now", this));
             RestAction.Enter();
         }
@@ -294,14 +260,14 @@ namespace Game.Characters
 
         public bool CanMeditate()
         {
-            return Attributes.Val(AttributeType.Perception) < Attributes.Max(AttributeType.Perception) ||
-                   Attributes.Val(AttributeType.Willpower) < Attributes.Max(AttributeType.Willpower);
+            return Attributes.Val(AttributeType.Focus) < Attributes.Max(AttributeType.Focus) ||
+                   Attributes.Val(AttributeType.Will) < Attributes.Max(AttributeType.Will);
         }
 
         public bool CanSleep()
         {
-            return Attributes.Val(AttributeType.Strength) < Attributes.Max(AttributeType.Strength) ||
-                   Attributes.Val(AttributeType.Endurance) < Attributes.Max(AttributeType.Endurance);
+            return Attributes.Val(AttributeType.Fettle) < Attributes.Max(AttributeType.Fettle) ||
+                   Attributes.Val(AttributeType.Grit) < Attributes.Max(AttributeType.Grit);
         }
 
         public CharacterView CharacterView()
@@ -311,28 +277,28 @@ namespace Game.Characters
 
         public int GetMaxMeditateTime()
         {
-            int willpower = Mathf.CeilToInt(Attributes.Val(AttributeType.Willpower));
-            int willpowerMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Willpower));
-            int willpowerLoss = willpowerMax - willpower;
+            int will = Mathf.CeilToInt(Attributes.Val(AttributeType.Will));
+            int willMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Will));
+            int willLoss = willMax - will;
 
-            int perception = Mathf.CeilToInt(Attributes.Val(AttributeType.Perception));
-            int perceptionMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Perception));
-            int perceptionLoss = perceptionMax - perception;
+            int focus = Mathf.CeilToInt(Attributes.Val(AttributeType.Focus));
+            int focusMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Focus));
+            int focusLoss = focusMax - focus;
 
-            return Mathf.Max(willpowerLoss, perceptionLoss);
+            return Mathf.Max(willLoss, focusLoss);
         }
 
         public int GetMaxSleepTime()
         {
-            int endurance = Mathf.CeilToInt(Attributes.Val(AttributeType.Endurance));
-            int enduranceMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Endurance));
-            int enduranceLoss = enduranceMax - endurance;
+            int grit = Mathf.CeilToInt(Attributes.Val(AttributeType.Grit));
+            int gritMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Grit));
+            int gritLoss = gritMax - grit;
 
-            int strength = Mathf.CeilToInt(Attributes.Val(AttributeType.Strength));
-            int strengthMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Strength));
-            int strengthLoss = strengthMax - strength;
+            int fettle = Mathf.CeilToInt(Attributes.Val(AttributeType.Fettle));
+            int fettleMax = Mathf.CeilToInt(Attributes.Max(AttributeType.Fettle));
+            int fettleLoss = fettleMax - fettle;
 
-            return Mathf.Max(enduranceLoss, strengthLoss);
+            return Mathf.Max(gritLoss, fettleLoss);
         }
 
         public bool IsConsuming()

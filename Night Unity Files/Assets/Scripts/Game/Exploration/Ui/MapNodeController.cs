@@ -24,22 +24,27 @@ namespace Game.Exploration.Ui
         private bool _doneFading;
         private TextMeshProUGUI _fadeText, _costText, _claimText;
 
-        private SpriteRenderer _ring1, _ring2, _ring3, _icon;
+        private CanvasGroup _canvas;
+        private SpriteRenderer _ring1, _ring2, _ring3, _icon, _shadow;
         private Image _inactive, _active;
         private static Sprite _animalSprite, _dangerSprite, _gateSprite, _fountainSprite, _monumentSprite, _shelterSprite, _shrineSprite, _templeSprite;
-        private int _enduranceCost;
+        private int _gritCost;
         private Region _region;
+        private ParticleSystem _claimedParticles;
+
 
         private readonly Color _ring1Colour = new Color(1, 1, 1, 0.1f);
         private readonly Color _ring2Colour = new Color(1, 1, 1, 0.1f);
         private readonly Color _ring3Colour = new Color(1, 1, 1, 0.25f);
         private readonly Color _iconColor = new Color(1, 1, 1, 0.8f);
+        private const float FadeTime = 0.5f;
 
         private AudioSource _audioSource;
         public AudioClip _enterClip;
 
         public void Awake()
         {
+            _canvas = gameObject.FindChildWithName<CanvasGroup>("Canvas");
             _fadeText = gameObject.FindChildWithName<TextMeshProUGUI>("Fade");
             _costText = gameObject.FindChildWithName<TextMeshProUGUI>("Cost");
             _claimText = gameObject.FindChildWithName<TextMeshProUGUI>("Claim Bonus");
@@ -48,8 +53,10 @@ namespace Game.Exploration.Ui
             _ring2 = gameObject.FindChildWithName<SpriteRenderer>("Ring 2");
             _ring3 = gameObject.FindChildWithName<SpriteRenderer>("Ring 3");
             _icon = gameObject.FindChildWithName<SpriteRenderer>("Icon");
+            _shadow = gameObject.FindChildWithName<SpriteRenderer>("Shadow");
             _inactive = gameObject.FindChildWithName<Image>("Inactive");
             _active = gameObject.FindChildWithName<Image>("Active");
+            _claimedParticles = gameObject.FindChildWithName<ParticleSystem>("Claimed");
         }
 
         private void SetClaimParticlesActive(bool active)
@@ -58,12 +65,84 @@ namespace Game.Exploration.Ui
             if (active) claimedParticles.Play();
         }
 
+        private void SetTrailAlpha(float alpha)
+        {
+            ParticleSystem.TrailModule trails = _claimedParticles.trails;
+            Color c = trails.colorOverTrail.color;
+            c.a = alpha;
+            trails.colorOverTrail = c;
+        }
+
+        private float GetTrailAlpha()
+        {
+            return _claimedParticles.trails.colorOverTrail.color.a;
+        }
+
+        private void ShowInstant()
+        {
+            _ring1.color = _ring1Colour;
+            _ring2.color = _ring2Colour;
+            _ring3.color = _ring3Colour;
+            _icon.color = _iconColor;
+            _shadow.color = Color.black;
+            SetTrailAlpha(1);
+            _canvas.alpha = 1;
+        }
+
+        private void ShowSlow()
+        {
+            HideInstant();
+            _ring1.DOColor(_ring1Colour, FadeTime);
+            _ring2.DOColor(_ring2Colour, FadeTime);
+            _ring3.DOColor(_ring3Colour, FadeTime);
+            _icon.DOColor(_iconColor, FadeTime);
+            _shadow.DOColor(Color.black, FadeTime);
+            DOTween.To(GetTrailAlpha, SetTrailAlpha, 1f, FadeTime);
+            _canvas.DOFade(1f, FadeTime);
+        }
+        
+        public void Show()
+        {
+            float distanceFromCamera = Vector2.Distance(MapMovementController.MapCamera.transform.position, transform.position);
+            if (distanceFromCamera > 15) ShowInstant();
+            else ShowSlow();
+        }
+
+        public void Hide()
+        {
+            float distanceFromCamera = Vector2.Distance(MapMovementController.MapCamera.transform.position, transform.position);
+            if (distanceFromCamera > 15) HideInstant();
+            else HideSlow();
+        }
+
+        private void HideSlow()
+        {
+            _ring1.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
+            _ring2.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
+            _ring3.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
+            _icon.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
+            _shadow.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
+            DOTween.To(GetTrailAlpha, SetTrailAlpha, 0f, FadeTime);
+            _canvas.DOFade(0f, FadeTime);
+        }
+
+        private void HideInstant()
+        {
+            _ring1.color = UiAppearanceController.InvisibleColour;
+            _ring2.color = UiAppearanceController.InvisibleColour;
+            _ring3.color = UiAppearanceController.InvisibleColour;
+            _icon.color = UiAppearanceController.InvisibleColour;
+            _shadow.color = UiAppearanceController.InvisibleColour;
+            SetTrailAlpha(0f);
+            _canvas.alpha = 0f;
+        }
+
         public void SetRegion(Region region)
         {
             _region = region;
             SetClaimParticlesActive(region.ClaimRemaining > 0);
-            _enduranceCost = RoutePlotter.RouteBetween(region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode()).Count - 1;
-            if (region.GetRegionType() == RegionType.Gate) _enduranceCost = 0;
+            _gritCost = RoutePlotter.RouteBetween(region, CharacterManager.SelectedCharacter.TravelAction.GetCurrentNode()).Count - 1;
+            if (region.GetRegionType() == RegionType.Gate) _gritCost = 0;
             for (int i = 0; i < region.Name.Length; ++i)
             {
                 _letters.Add(new Letter(region.Name[i].ToString()));
@@ -122,8 +201,6 @@ namespace Game.Exploration.Ui
 
         public void Enter()
         {
-            Camera.main.DOOrthoSize(3, 1f);
-            Camera.main.transform.DOMove(transform.position, 0.25f);
             _audioSource = GetComponent<AudioSource>();
             _audioSource.PlayOneShot(_enterClip);
         }
@@ -135,21 +212,21 @@ namespace Game.Exploration.Ui
             _ring3.transform.Rotate(new Vector3(0, 0, 1), -4 * Time.deltaTime);
         }
 
-        public int GetEnduranceCost()
+        public int GetGritCost()
         {
-            return _enduranceCost;
+            return _gritCost;
         }
 
         private IEnumerator FadeInLetters()
         {
             if (_region.GetRegionType() == RegionType.Gate) _costText.text = "Return home";
-            else _costText.text = _enduranceCost + " Grit";
+            else _costText.text = _gritCost + " Grit";
 
             _claimText.text = _region.ClaimBenefitString();
 
             _claimText.color = UiAppearanceController.InvisibleColour;
             _claimText.DOColor(UiAppearanceController.FadedColour, 1f);
-            
+
             _costText.color = UiAppearanceController.InvisibleColour;
             _costText.DOColor(UiAppearanceController.FadedColour, 1f);
             while (_doneFading == false)
@@ -177,7 +254,7 @@ namespace Game.Exploration.Ui
             _inactive.DOColor(Color.white, 1f);
             transform.DOScale(Vector2.one * 1.25f, 1f);
             MapMenuController.SetRoute(_region);
-            MapMovementController.UpdateEndurance(_enduranceCost);
+            MapMovementController.UpdateGrit(_gritCost);
         }
 
         public void LoseFocus(float time = 1f)
@@ -193,7 +270,7 @@ namespace Game.Exploration.Ui
             _inactive.DOColor(UiAppearanceController.FadedColour, time);
             _active.DOColor(UiAppearanceController.InvisibleColour, time);
             transform.DOScale(Vector2.one, time);
-            MapMovementController.UpdateEndurance(0);
+            MapMovementController.UpdateGrit(0);
         }
 
         private class Letter

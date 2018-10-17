@@ -29,6 +29,7 @@ public class UiConsumableController : UiInventoryMenuController
     protected override void OnShow()
     {
         UpdateCondition();
+        ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, 1); });
         _consumableList.Show(GetAvailableConsumables);
     }
 
@@ -49,10 +50,14 @@ public class UiConsumableController : UiInventoryMenuController
         protected override void Update(object o)
         {
             Consumable consumable = (Consumable) o;
+            bool canConsume = consumable.CanConsume();
+            LeftText.SetStrikeThroughActive(!canConsume);
+            CentreText.SetStrikeThroughActive(!canConsume);
+            RightText.SetStrikeThroughActive(!canConsume);
             string nameText = consumable.Quantity() > 1 ? consumable.Name + " x" + consumable.Quantity() : consumable.Name;
             LeftText.SetText(nameText);
             CentreText.SetText("");
-            RightText.SetText(consumable.Effect());
+            RightText.SetText(consumable.Template.Description);
         }
     }
 
@@ -64,7 +69,7 @@ public class UiConsumableController : UiInventoryMenuController
     public void Consume(object consumableObject)
     {
         Consumable consumable = (Consumable) consumableObject;
-        consumable.Consume(CharacterManager.SelectedCharacter);
+        consumable.Consume();
         UpdateCondition();
     }
 }

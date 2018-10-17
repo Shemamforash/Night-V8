@@ -59,15 +59,11 @@ public class GateTransitController : MonoBehaviour
 
     private IEnumerator GoToNextArea()
     {
-        Image screenFader = GameObject.Find("Screen Fader").GetComponent<Image>();
-        screenFader.color = Color.white;
-        screenFader.gameObject.GetComponent<CanvasGroup>().alpha = 1;
-
         Region r = new Region();
         r.SetRegionType(RegionType.Tomb);
         Player wanderer = CharacterManager.Characters.Find(c => c.CharacterTemplate.CharacterClass == CharacterClass.Wanderer);
         CharacterManager.SelectedCharacter = wanderer;
-        yield return screenFader.DOColor(Color.black, 3f).WaitForCompletion();
+        yield return SceneChanger.FlashWhite(Color.black, 3f).WaitForCompletion();
         wanderer.TravelAction.TravelToInstant(r);
     }
 }

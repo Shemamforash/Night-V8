@@ -32,18 +32,18 @@ namespace Game.Exploration.Weather
        
         private AudioSource _nightTimeAudioSource, _dayTimeAudioSource;
 
-        public static AudioClip GetRainClip(float strength)
+        public static AudioClip GetRainClip(float fettle)
         {
-            if (strength > 0.7f) return AudioClips.HeavyRainClips.RandomElement();
-            if (strength > 0.4) return AudioClips.MediumRainClips.RandomElement();
-            return strength > 0 ? AudioClips.LightRainClips.RandomElement() : null;
+            if (fettle > 0.7f) return AudioClips.HeavyRainClips.RandomElement();
+            if (fettle > 0.4) return AudioClips.MediumRainClips.RandomElement();
+            return fettle > 0 ? AudioClips.LightRainClips.RandomElement() : null;
         }
 
-        public static AudioClip GetWindClip(float strength)
+        public static AudioClip GetWindClip(float fettle)
         {
-            if (strength > 0.7f) return AudioClips.HeavyWindClips.RandomElement();
-            if (strength > 0.4) return AudioClips.MediumWindClips.RandomElement();
-            return strength > 0 ? AudioClips.LightWindClips.RandomElement() : null;
+            if (fettle > 0.7f) return AudioClips.HeavyWindClips.RandomElement();
+            if (fettle > 0.4) return AudioClips.MediumWindClips.RandomElement();
+            return fettle > 0 ? AudioClips.LightWindClips.RandomElement() : null;
         }
 
         public void Awake()

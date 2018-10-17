@@ -150,6 +150,10 @@ namespace Game.Combat.Misc
             _decayChance = attributes.Val(AttributeType.DecayChance);
             _burnChance = attributes.Val(AttributeType.BurnChance);
             _sicknessChance = attributes.Val(AttributeType.SicknessChance);
+            if (!(_origin is PlayerCombat)) return;
+            _decayChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.DecayChance);
+            _burnChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.BurnChance);
+            _sicknessChance += PlayerCombat.Instance.Player.Attributes.Val(AttributeType.SicknessChance);
         }
 
         public void SetDamageModifier(float modifier)
@@ -218,7 +222,7 @@ namespace Game.Combat.Misc
 
         public void Fire()
         {
-            if(_origin is PlayerCombat) RadianceController.SetHasFiredShot();
+            if (_origin is PlayerCombat) RadianceController.SetHasFiredShot();
             if (_pierce) gameObject.layer = 20;
             float angleModifier = 1 - Mathf.Sqrt(Random.Range(0f, 1f));
             if (Random.Range(0, 2) == 0) angleModifier = -angleModifier;
@@ -248,7 +252,6 @@ namespace Game.Combat.Misc
                     break;
             }
 
-            _bulletTrail.SetAlpha(1);
             _rigidBody.velocity = _direction * Speed * Random.Range(0.9f, 1.1f);
             _lastPosition = transform.position;
             _bulletTrail.SetTarget(transform);

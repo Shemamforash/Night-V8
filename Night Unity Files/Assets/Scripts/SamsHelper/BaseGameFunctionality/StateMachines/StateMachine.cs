@@ -5,7 +5,7 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
 {
     public class StateMachine
     {
-        protected readonly Dictionary<string, State> States = new Dictionary<string, State>();
+        private readonly Dictionary<string, State> States = new Dictionary<string, State>();
         private State _currentState;
         private State _defaultState;
 

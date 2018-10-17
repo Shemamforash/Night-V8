@@ -35,7 +35,7 @@ namespace Game.Combat.Player
 
         private Coroutine _reloadingCoroutine;
 
-        private Number _strengthText;
+        private Number _fettleText;
 
         public Characters.Player Player;
         public FastLight _playerLight;
@@ -188,7 +188,7 @@ namespace Game.Combat.Player
         {
             if (_compassPulses == 0) return;
             if (!UiCompassController.EmitPulse()) return;
-            Player.Attributes.Get(AttributeType.Perception).Decrement();
+            Player.Attributes.Get(AttributeType.Focus).Decrement();
             UiCompassPulseController.UpdateCompassPulses();
             --_compassPulses;
         }
@@ -240,7 +240,7 @@ namespace Game.Combat.Player
 
         public string GetEventText()
         {
-            return "Leave region [T}";
+            return "Leave region [T]";
         }
 
         public void Activate()
@@ -328,6 +328,12 @@ namespace Game.Combat.Player
             TryExplode();
         }
 
+        protected override void TakeDamage(int damage, Vector2 direction)
+        {
+            base.TakeDamage(damage, direction);
+            Player.Attributes.CalculateNewFettle(HealthController.GetCurrentHealth());
+        }
+
         private void TryExplode()
         {
             bool explodeWithFire = Random.Range(0f, 1f) < Player.Attributes.FireExplodeChance;
@@ -397,13 +403,18 @@ namespace Game.Combat.Player
             _dashCooldown = null;
         }
 
+        public void RecalculateHealth()
+        {
+            HealthController.SetInitialHealth(Player.Attributes.CalculateInitialHealth(), this, Player.Attributes.CalculateMaxHealth());
+        }
+        
         public void Initialise()
         {
             InputHandler.SetCurrentListener(this);
 
             _muzzleFlash = GameObject.Find("Muzzle Flash").GetComponent<FastLight>();
             Player = CharacterManager.SelectedCharacter;
-            HealthController.SetInitialHealth(Player.Attributes.CalculateInitialHealth(), this, Player.Attributes.CalculateMaxHealth());
+            RecalculateHealth();
             EquipWeapon(Weapon());
             EquipArmour();
             ResetCompass();
@@ -452,7 +463,6 @@ namespace Game.Combat.Player
         public void ExitCombat()
         {
             StopReloading();
-            Player.Attributes.CalculateNewStrength(HealthController.GetCurrentHealth());
         }
 
         //RELOADING

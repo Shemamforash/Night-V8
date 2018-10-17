@@ -28,15 +28,15 @@ public class CombatWeatherController : MonoBehaviour
     }
 
 
-    private static void SetParticleSystemEmissionRate(ParticleSystem ps, float strength, float max, Func<float, AudioClip> getAudioClip)
+    private static void SetParticleSystemEmissionRate(ParticleSystem ps, float fettle, float max, Func<float, AudioClip> getAudioClip)
     {
-        float amount = strength * max;
+        float amount = fettle * max;
         ParticleSystem.EmissionModule emission = ps.emission;
         emission.rateOverTime = amount;
         if (amount == 0) return;
         ps.Play();
         AudioSource audioSource = ps.GetComponent<AudioSource>();
-        audioSource.clip = getAudioClip?.Invoke(strength);
+        audioSource.clip = getAudioClip?.Invoke(fettle);
         audioSource.Play();
     }
 }

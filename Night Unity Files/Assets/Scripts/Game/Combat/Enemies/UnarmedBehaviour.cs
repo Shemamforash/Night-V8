@@ -11,8 +11,8 @@ namespace Game.Combat.Enemies
     public class UnarmedBehaviour : EnemyBehaviour
     {
         protected bool Alerted;
-        protected float DetectionRange = 3f;
-        private const float LoseTargetRange = 6f;
+        protected float DetectionRange = 6f;
+        private const float LoseTargetRange = 10f;
         private Cell _originCell;
         protected float WanderDistance = 3;
         private Cell _targetCell;

@@ -22,6 +22,7 @@ namespace Facilitating.UIControllers
         private static UiConsumableController _consumableController;
         private static UiJournalController _journalController;
         private static UiInventoryMenuController _currentMenuController;
+        private static UiWillController _willController;
         private static UiGearMenuController _instance;
 
         private static Tab _currentTab;
@@ -115,6 +116,7 @@ namespace Facilitating.UIControllers
             _craftingController = gearObject.FindChildWithName<UICraftingController>("Crafting");
             _consumableController = gearObject.FindChildWithName<UiConsumableController>("Consumables");
             _journalController = gearObject.FindChildWithName<UiJournalController>("Journals");
+            _willController = gearObject.FindChildWithName<UiWillController>("Will Recovery");
 
             _tabs.Clear();
             CreateTab("Armour", _armourUpgradeController);
@@ -123,6 +125,8 @@ namespace Facilitating.UIControllers
             CreateTab("Crafting", _craftingController);
             CreateTab("Consumables", _consumableController);
             CreateTab("Journals", _journalController);
+            CreateTab("Will Recovery", _willController);
+            
             for (int i = 0; i < _tabs.Count; ++i)
             {
                 int prevIndex = i - 1;
@@ -152,6 +156,7 @@ namespace Facilitating.UIControllers
             InputHandler.RegisterInputListener(this);
             DOTween.defaultTimeScaleIndependent = true;
             CombatManager.Pause();
+            
         }
 
         private static void OpenInventoryMenu(UiInventoryMenuController menu)

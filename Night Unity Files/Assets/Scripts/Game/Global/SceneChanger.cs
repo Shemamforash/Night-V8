@@ -2,12 +2,14 @@
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Game.Global
 {
     public class SceneChanger : MonoBehaviour
     {
         private static CanvasGroup _fader;
+        private static Image _faderImage;
         private static SceneChanger _instance;
         private AudioSource _audioSource;
         private static string _sceneToLoad;
@@ -18,15 +20,29 @@ namespace Game.Global
             _instance = this;
             _audioSource = GetComponent<AudioSource>();
             _fader = GameObject.Find("Screen Fader").GetComponent<CanvasGroup>();
+            _faderImage = _fader.GetComponent<Image>();
             VolumeController.SetModifiedVolume(0f);
             float fadeInTime = SceneManager.GetActiveScene().name == "Combat" ? 3f : DefaultFadeTime;
             DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 1f, fadeInTime);
             Sequence sequence = DOTween.Sequence();
             _fader.alpha = 1;
+            _faderImage.color = Color.black;
             sequence.Append(_fader.DOFade(0, fadeInTime));
             sequence.AppendCallback(() => StartCoroutine(LoadNextScene()));
             if (SceneManager.GetActiveScene().name != "Game") return;
             sequence.InsertCallback(0.1f, WorldState.UnPause);
+        }
+
+        public static Tweener FlashWhite(Color to, float duration)
+        {
+            _faderImage.color = Color.white;
+            _fader.alpha = 1;
+            _fader.gameObject.GetComponent<CanvasGroup>().alpha = 1;
+            bool timeScaleIndependent = DOTween.defaultTimeScaleIndependent;
+            DOTween.defaultTimeScaleIndependent = true;
+            Tweener tweener = _faderImage.DOColor(to, duration);
+            DOTween.defaultTimeScaleIndependent = timeScaleIndependent;
+            return tweener;
         }
 
         private IEnumerator LoadNextScene()
@@ -46,6 +62,7 @@ namespace Game.Global
             if (_audioSource != null) _audioSource.DOFade(1, DefaultFadeTime);
             VolumeController.SetModifiedVolume(1f);
             DOTween.To(VolumeController.Volume, VolumeController.SetModifiedVolume, 0f, DefaultFadeTime);
+            _faderImage.color = Color.black;
             yield return _fader.DOFade(1, DefaultFadeTime).WaitForCompletion();
             TryGoToLoadingScene(goToLoadingScene);
         }
@@ -65,11 +82,6 @@ namespace Game.Global
         {
             ChangeScene("Game Over");
         }
-
-//        public static void GoToMapScene()
-//        {
-//            ChangeScene("Map");
-//        }
 
         public static void GoToStoryScene()
         {

@@ -1,4 +1,5 @@
-﻿using Game.Global;
+﻿using Game.Combat.Generation;
+using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.MenuSystem;
@@ -25,10 +26,12 @@ public class CombatJournalController : Menu, IInputListener {
     public override void Enter()
     {
         InputHandler.SetCurrentListener(this);
+        CombatManager.Pause();
     }    
     
     private void Close()
     {
+        CombatManager.Unpause();
         MenuStateMachine.ReturnToDefault();
     }
 

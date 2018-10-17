@@ -12,7 +12,10 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using Facilitating.Persistence;
 using QuickEngine.Extensions;
+using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
@@ -27,7 +30,7 @@ namespace Game.Exploration.Environment
         private float nextRouteTime = 0.25f;
         private float currentTime;
         private bool _isActive;
-        private readonly List<GameObject> _rings = new List<GameObject>();
+        private readonly List<RingDrawer> _rings = new List<RingDrawer>();
         public static bool IsReturningFromCombat;
 
         public override void Awake()
@@ -38,30 +41,30 @@ namespace Game.Exploration.Environment
             CreateRouteLinks();
         }
 
-        public void Start()
-        {
-            if (IsReturningFromCombat) ReturnFromCombat();
-        }
-
         private void ReturnFromCombat()
         {
             MenuStateMachine.ShowMenu("Map Menu");
+            IsReturningFromCombat = false;
         }
 
         public override void Enter()
         {
             base.Enter();
             _isActive = true;
-            _rings.ForEach(r => r.SetActive(true));
-            MapGenerator.Regions().ForEach(n => n.CreateObject());
+            _rings.ForEach(r => r.TweenColour(UiAppearanceController.InvisibleColour, Color.white, 0.5f));
+            MapGenerator.Regions().ForEach(n =>
+            {
+                n.ShowNode();
+            });
             MapMovementController.Enter(CharacterManager.SelectedCharacter);
         }
 
         public override void Exit()
         {
             base.Exit();
-            _rings.ForEach(r => r.SetActive(false));
+            _rings.ForEach(r => r.TweenColour(Color.white, UiAppearanceController.InvisibleColour, 0.5f));
             _isActive = false;
+            MapGenerator.Regions().ForEach(n => n.HideNode());
             MapMovementController.Exit();
         }
 
@@ -132,10 +135,10 @@ namespace Game.Exploration.Environment
                 float alpha = 1f / 9f * i + 1f / 9f;
                 alpha = 1 - alpha;
                 ringDrawer.SetColor(new Color(1, 1, 1, alpha));
-                _rings.Add(ringDrawer.gameObject);
+                _rings.Add(ringDrawer);
             }
 
-            _rings.ForEach(r => r.SetActive(false));
+            _rings.ForEach(r => r.SetColor(UiAppearanceController.InvisibleColour));
         }
 
         private void DrawTargetRoute()
@@ -160,6 +163,7 @@ namespace Game.Exploration.Environment
 
         public void Update()
         {
+            if (IsReturningFromCombat) ReturnFromCombat();
             if (!_isActive) return;
             DrawBasicRoutes();
             if (route == null || route.Count == 1) return;

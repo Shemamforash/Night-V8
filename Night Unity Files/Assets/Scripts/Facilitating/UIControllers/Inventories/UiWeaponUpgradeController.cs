@@ -64,7 +64,7 @@ namespace Facilitating.UIControllers
                 InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
-            _infuseButton.AddOnClick(Infuse);
+            _infuseButton.AddOnHold(Infuse, 0.25f);
         }
 
         protected override void Initialise()
@@ -170,9 +170,7 @@ namespace Facilitating.UIControllers
             {
                 Weapon weapon = (Weapon) o;
                 CentreText.SetText(weapon.Name);
-                Inscription inscription = weapon.GetInscription();
-                string inscriptionText = inscription == null ? "No Inscription" : inscription.Name;
-                LeftText.SetText(inscriptionText);
+                LeftText.SetText(weapon.WeaponType().ToString());
                 RightText.SetText(weapon.WeaponAttributes.DPS().Round(1) + " DPS");
             }
         }

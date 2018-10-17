@@ -1,4 +1,5 @@
-﻿using SamsHelper.ReactiveUI.Elements;
+﻿using DG.Tweening;
+using SamsHelper.ReactiveUI.Elements;
 using UnityEngine;
 
 namespace SamsHelper
@@ -43,15 +44,10 @@ namespace SamsHelper
             _lineRenderer.endColor = invisible;
         }
 
-//        public void Update()
-//        {
-//            if (_lastRadius != -1 && _lastRadius != radius)
-//            {
-//                DrawCircle(radius);
-//            }
-//
-//            _lastRadius = radius;
-//        }
+        public void TweenColour(Color from, Color target, float time)
+        {
+            _lineRenderer.DOColor(new Color2(from, from), new Color2(target, target), time);
+        }
 
         public void DrawCircle(float radius)
         {

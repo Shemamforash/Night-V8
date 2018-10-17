@@ -2,10 +2,10 @@
 {
     public enum AttributeType
     {
-        Strength,
-        Endurance,
-        Perception,
-        Willpower,
+        Fettle,
+        Grit,
+        Focus,
+        Will,
 
         Thirst,
         Hunger,

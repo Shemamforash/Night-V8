@@ -17,36 +17,27 @@ namespace Game.Combat.Misc
             ClearTrails();
         }
 
-        public void SetAlpha(float alpha)
-        {
-            Color c = GetColour();
-            c.a = alpha;
-            SetColour(c);
-        }
-
         public void StartFade(float duration)
         {
-            StartCoroutine(Fade(duration));
+            StartCoroutine(Fade());
         }
 
-        private IEnumerator Fade(float duration)
+        private IEnumerator Fade()
         {
-            float fadeTime = duration;
-            while (duration > 0f)
-            {
-                if (!CombatManager.IsCombatActive()) yield return null;
-                duration -= Time.deltaTime;
-                float alpha = 1f - duration / fadeTime;
-                SetAlpha(alpha);
-                yield return null;
-            }
-
+            _followTransform = null;
+//            StopEmitting();
+            while (!Done()) yield return null;
             ClearTrails();
             GetObjectPool().Return(this);
         }
 
+        protected abstract void StopEmitting();
+
+        protected abstract bool Done();
+
         public void LateUpdate()
         {
+            if (_followTransform == null) return;
             transform.position = _followTransform.transform.position;
         }
 
@@ -57,7 +48,5 @@ namespace Game.Combat.Misc
 
         protected abstract ObjectPool<BulletTrail> GetObjectPool();
         protected abstract void ClearTrails();
-        protected abstract Color GetColour();
-        protected abstract void SetColour(Color color);
     }
 }

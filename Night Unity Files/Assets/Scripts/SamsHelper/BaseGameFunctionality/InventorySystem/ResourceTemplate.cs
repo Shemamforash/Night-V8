@@ -5,6 +5,7 @@ using System.Xml;
 using Game.Exploration.Environment;
 using SamsHelper.BaseGameFunctionality.Basic;
 using SamsHelper.Libraries;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace SamsHelper.BaseGameFunctionality.InventorySystem
@@ -13,6 +14,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     {
         public readonly string Name, ResourceType;
         private readonly bool Consumable;
+        public readonly string Description;
+        public readonly bool IsEffectPermanent;
         public bool HasEffect;
         public float EffectBonus;
         public AttributeType AttributeType;
@@ -20,8 +23,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static readonly List<ResourceTemplate> Water = new List<ResourceTemplate>();
         private static readonly List<ResourceTemplate> Plant = new List<ResourceTemplate>();
         private static readonly List<ResourceTemplate> Resources = new List<ResourceTemplate>();
-        private static readonly List<ResourceTemplate> AllResources = new List<ResourceTemplate>();
-        private static float OasisDRCur, SteppeDRCur, RuinsDRCur, DefilesDRCur, WastelandDRCur;
+        public static readonly List<ResourceTemplate> AllResources = new List<ResourceTemplate>();
+        private static float DesertDRCur, MountainsDRCur, RuinsDRCur, SeaDRCur, WastelandDRCur;
         private readonly Dictionary<EnvironmentType, DropRate> _dropRates = new Dictionary<EnvironmentType, DropRate>();
 
         private class DropRate
@@ -53,6 +56,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             Name = resourceNode.StringFromNode("Name");
             Consumable = true;
             ResourceType = resourceNode.StringFromNode("Type");
+            IsEffectPermanent = resourceNode.BoolFromNode("Permanent");
+            Description = resourceNode.StringFromNode("Description");
             AllResources.Add(this);
             switch (ResourceType)
             {
@@ -73,24 +78,24 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
             if (_lastType != ResourceType)
             {
-                OasisDRCur = 0f;
-                SteppeDRCur = 0f;
+                DesertDRCur = 0f;
+                MountainsDRCur = 0f;
                 RuinsDRCur = 0f;
-                DefilesDRCur = 0f;
+                SeaDRCur = 0f;
                 WastelandDRCur = 0f;
             }
 
             _lastType = ResourceType;
 
-            float oasisDr = resourceNode.FloatFromNode("OasisDropRate");
-            float steppeDr = resourceNode.FloatFromNode("SteppeDropRate");
+            float desertDr = resourceNode.FloatFromNode("DesertDropRate");
+            float mountainsDr = resourceNode.FloatFromNode("MountainsDropRate");
             float ruinsDr = resourceNode.FloatFromNode("RuinsDropRate");
-            float defilesDr = resourceNode.FloatFromNode("DefilesDropRate");
+            float seaDr = resourceNode.FloatFromNode("SeaDropRate");
             float wastelandDr = resourceNode.FloatFromNode("WastelandDropRate");
-            _dropRates.Add(EnvironmentType.Desert, new DropRate(ref OasisDRCur, oasisDr));
-            _dropRates.Add(EnvironmentType.Mountains, new DropRate(ref SteppeDRCur, steppeDr));
+            _dropRates.Add(EnvironmentType.Desert, new DropRate(ref DesertDRCur, desertDr));
+            _dropRates.Add(EnvironmentType.Mountains, new DropRate(ref MountainsDRCur, mountainsDr));
+            _dropRates.Add(EnvironmentType.Sea, new DropRate(ref SeaDRCur, seaDr));
             _dropRates.Add(EnvironmentType.Ruins, new DropRate(ref RuinsDRCur, ruinsDr));
-            _dropRates.Add(EnvironmentType.Sea, new DropRate(ref DefilesDRCur, defilesDr));
             _dropRates.Add(EnvironmentType.Wasteland, new DropRate(ref WastelandDRCur, wastelandDr));
             SetEffect(resourceNode);
         }

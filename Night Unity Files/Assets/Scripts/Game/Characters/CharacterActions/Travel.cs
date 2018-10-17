@@ -16,7 +16,7 @@ namespace Game.Characters.CharacterActions
         private Region CurrentRegion;
         private bool _inTransit;
         private int _travelTime;
-        private const int MinutesPerEndurancePoint = WorldState.MinutesPerHour / 2;
+        private const int MinutesPerGritPoint = WorldState.MinutesPerHour / 2;
 
         public Travel(Player playerCharacter) : base("Travel", playerCharacter)
         {
@@ -31,7 +31,7 @@ namespace Game.Characters.CharacterActions
 
                 --Duration;
                 ++_travelTime;
-                if (_travelTime != MinutesPerEndurancePoint) return;
+                if (_travelTime != MinutesPerGritPoint) return;
                 _travelTime = 0;
                 if (_target.GetRegionType() == RegionType.Gate) return;
                 playerCharacter.Tire();
@@ -84,15 +84,14 @@ namespace Game.Characters.CharacterActions
             return CurrentRegion ?? (CurrentRegion = MapGenerator.GetInitialNode());
         }
 
-        public void TravelTo(Region target, int enduranceCost)
+        public void TravelTo(Region target, int gritCost)
         {
             Enter();
             if (target == CurrentRegion && CurrentRegion.GetRegionType() != RegionType.Gate) EnterRegion();
             _travelTime = 0;
             _inTransit = true;
             _target = target;
-            if (target.GetRegionType() != RegionType.Gate || enduranceCost == 0) CharacterManager.SelectedCharacter.Attributes.DecreaseWillpower();
-            SetDuration(enduranceCost * MinutesPerEndurancePoint);
+            SetDuration(gritCost * MinutesPerGritPoint);
         }
 
         public void TravelToInstant(Region target)

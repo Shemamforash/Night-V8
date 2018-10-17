@@ -97,8 +97,8 @@ namespace Facilitating
             {
                 if (!c.TravelAction.AtHome()) return;
                 CharacterAttributes attributes = c.Attributes;
-                attributes.Get(AttributeType.Endurance).Increment();
-                attributes.Get(AttributeType.Perception).Increment();
+                attributes.Get(AttributeType.Grit).Increment();
+                attributes.Get(AttributeType.Focus).Increment();
             });
             _hourCounter = 0;
             if (Inventory.GetResourceQuantity("Fuel") == 0) return;
