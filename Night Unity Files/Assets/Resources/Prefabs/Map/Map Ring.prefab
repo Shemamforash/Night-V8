@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edb8fd49a1324643bdaebe5d6744c123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 3
+  Radius: 0
   _material: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!120 &120160026962222358
 LineRenderer:
@@ -266,7 +266,7 @@ LineRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 0
+    textureMode: 1
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0

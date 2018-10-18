@@ -238,12 +238,12 @@ namespace SamsHelper.ReactiveUI.Elements
 
             public void Reset()
             {
-                _startTime = Time.time;
+                _startTime = Time.realtimeSinceStartup;
             }
 
             public void ExecuteIfDone()
             {
-                if (!(Time.time - _startTime > _duration)) return;
+                if (!(Time.realtimeSinceStartup - _startTime > _duration)) return;
                 _holdAction();
                 Reset();
             }

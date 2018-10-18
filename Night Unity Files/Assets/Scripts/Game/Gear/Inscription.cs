@@ -47,6 +47,11 @@ namespace Game.Gear
             return _template.AttributeTarget;
         }
 
+        public string TemplateName()
+        {
+            return _template.Name;
+        }
+
         public static Inscription Generate()
         {
             ReadTemplates();

@@ -106,8 +106,9 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            Vector2 playerPosition = PlayerCombat.Instance.transform.position;
-            Grenade g = Grenade.CreateBasic(playerPosition, PlayerCombat.Instance.TargetPosition());
+            Vector3 playerPosition = PlayerCombat.Instance.transform.position;
+            Vector2 targetPosition = playerPosition + PlayerCombat.Instance.transform.up;
+            Grenade g = Grenade.CreateBasic(playerPosition, targetPosition, true);
             g.AddOnDetonate(enemies => { Heal(enemies.Count * 0.05f); });
         }
     }
@@ -120,8 +121,9 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            Vector2 playerPosition = PlayerCombat.Instance.transform.position;
-            Grenade.CreateIncendiary(playerPosition, PlayerCombat.Instance.TargetPosition());
+            Vector3 playerPosition = PlayerCombat.Instance.transform.position;
+            Vector2 targetPosition = playerPosition + PlayerCombat.Instance.transform.up;
+            Grenade.CreateIncendiary(playerPosition, targetPosition, true);
         }
     }
 
@@ -324,8 +326,9 @@ namespace Game.Combat.Player
 
         protected override void InstantEffect()
         {
-            Vector2 playerPosition = PlayerCombat.Instance.transform.position;
-            Grenade.CreateDecay(playerPosition, PlayerCombat.Instance.TargetPosition());
+            Vector3 playerPosition = PlayerCombat.Instance.transform.position;
+            Vector2 targetPosition = playerPosition + PlayerCombat.Instance.transform.up;
+            Grenade.CreateDecay(playerPosition, targetPosition, true);
         }
     }
 }

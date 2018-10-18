@@ -9,9 +9,8 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
     {
         private Transform _targetTransform;
         private Vector2 _targetPosition;
-        private float _orbitRadiusMin = 3f;
-        private float _orbitRadiusMax = 6f;
-        private float _changeOrbitTime;
+        private float _orbitRadiusMin = 2.5f;
+        private float _orbitRadiusMax = 5f;
         private float _currentOrbitRadius;
         private bool _oppositeSpin;
         private Action<Vector2> _forceAction;
@@ -29,10 +28,8 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
 
         private float GetOrbitRadius()
         {
-            _changeOrbitTime -= Time.deltaTime;
-            if (!(_changeOrbitTime <= 0)) return _currentOrbitRadius;
-            _changeOrbitTime = Random.Range(2, 4);
-            _currentOrbitRadius = Random.Range(_orbitRadiusMin, _orbitRadiusMax);
+            float noise = Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0f);
+            _currentOrbitRadius = _orbitRadiusMin + noise * (_orbitRadiusMax - _orbitRadiusMin);
             return _currentOrbitRadius;
         }
 
@@ -54,7 +51,14 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             if (_oppositeSpin) mult = -mult;
             pos += tangent * mult;
             Vector2 dirToTangent = (pos - currentPosition).normalized;
-            _forceAction.Invoke(dirToTangent * _speed);
+            _forceAction.Invoke(dirToTangent * GetSpeed());
+        }
+
+        private float GetSpeed()
+        {
+            float noise = Mathf.PerlinNoise(0f, Time.timeSinceLevelLoad);
+            noise = 0.9f + noise / 5f;
+            return _speed * noise;
         }
     }
 }

@@ -177,8 +177,8 @@ public class TempleBehaviour : BasicShrineBehaviour
     {
         while (!EnemiesDead()) yield return null;
         End();
-        bool templeComplete = WorldState.ActivateTemple();
-        CombatManager.ExitCombat(!templeComplete);
+        WorldState.ActivateTemple();
+        CombatManager.ExitCombat();
     }
 
     private void StartLights()

@@ -46,7 +46,7 @@ namespace Game.Combat.Player
 
         private bool _dashPressed;
 
-        private CanTakeDamage _lockedOn;
+//        private CanTakeDamage _lockedOn;
         private const float RotateSpeedMax = 100f;
         private float _rotateSpeedCurrent;
         private const float RotateAcceleration = 400f;
@@ -213,21 +213,21 @@ namespace Game.Combat.Player
         {
         }
 
-        private void FollowTarget()
-        {
-            if (_lockedOn == null) return;
-            float rotation = AdvancedMaths.AngleFromUp(transform.position, _lockedOn.transform.position);
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
-        }
+//        private void FollowTarget()
+//        {
+//            if (_lockedOn == null) return;
+//            float rotation = AdvancedMaths.AngleFromUp(transform.position, _lockedOn.transform.position);
+//            transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+//        }
 
         private void LockTarget()
         {
-            _lockedOn = _lockedOn == null ? GetTarget() : null;
+//            _lockedOn = _lockedOn == null ? GetTarget() : null;
         }
 
         private void Rotate(float direction)
         {
-            if (_lockedOn != null) return;
+//            if (_lockedOn != null) return;
             _rotateSpeedCurrent += RotateAcceleration * Time.deltaTime;
             if (_rotateSpeedCurrent > RotateSpeedMax) _rotateSpeedCurrent = RotateSpeedMax;
             transform.Rotate(Vector3.forward, _rotateSpeedCurrent * Time.deltaTime * (-direction).Polarity());
@@ -278,7 +278,7 @@ namespace Game.Combat.Player
         {
             base.MyUpdate();
             UpdateSkillActions.ForEach(a => a());
-            FollowTarget();
+//            FollowTarget();
             UpdateMuzzleFlash();
         }
 
@@ -364,6 +364,11 @@ namespace Game.Combat.Player
             RecalculateAttributes();
         }
 
+        public void EquipInscription()
+        {
+            UIMagazineController.SetWeapon(_weaponBehaviour);
+        }
+        
         public void RecalculateAttributes()
         {
             int currentHealth = (int) HealthController.GetCurrentHealth();
@@ -448,7 +453,7 @@ namespace Game.Combat.Player
 
         public override void SetTarget(CanTakeDamage target)
         {
-            if (_lockedOn != null) return;
+//            if (_lockedOn != null) return;
             if (target != null)
             {
                 Flit flit = target as Flit;
@@ -602,10 +607,10 @@ namespace Game.Combat.Player
             SkillBar.ResetCooldowns();
         }
 
-        public bool IsTargetLocked()
-        {
-            return _lockedOn != null;
-        }
+//        public bool IsTargetLocked()
+//        {
+//            return _lockedOn != null;
+//        }
 
         public void ReduceAdrenaline(float amount)
         {

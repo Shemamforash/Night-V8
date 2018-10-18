@@ -127,17 +127,14 @@ namespace Game.Global
             WeatherManager.Start();
             WorldView.Update(Hours);
             CharacterManager.Update();
-            if (!_needsTransit) return;
-            GateTransitController.StartTransit();
-            _needsTransit = false;
+           
         }
 
-        public static bool ActivateTemple()
+        public static void ActivateTemple()
         {
             ++_templesActivated;
             bool complete = _templesActivated == EnvironmentManager.CurrentEnvironment.Temples;
             if (complete) _needsTransit = true;
-            return complete;
         }
 
         private void IncrementDaysSpentHere()
@@ -261,8 +258,18 @@ namespace Game.Global
         public void Update()
         {
 //            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
-            if (!_isPaused) IncrementWorldTime();
+            if (_isPaused) return;
+            IncrementWorldTime();
             UpdateScenery();
+            CheckNeedsTransit();
+        }
+
+        private void CheckNeedsTransit()
+        {
+            if (!_needsTransit) return;
+            if (!CharacterManager.Wanderer.TravelAction.AtHome()) return;
+            GateTransitController.StartTransit();
+            _needsTransit = false;
         }
 
         private static void UpdateScenery()

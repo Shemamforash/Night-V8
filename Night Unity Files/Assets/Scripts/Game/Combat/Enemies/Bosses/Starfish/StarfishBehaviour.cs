@@ -100,7 +100,7 @@ public class StarfishBehaviour : Boss
             float x = Mathf.Cos(angle * Mathf.Deg2Rad);
             float y = Mathf.Sin(angle * Mathf.Deg2Rad);
             Vector3 direction = new Vector2(x, y) * Random.Range(3f, 5f);
-            Grenade.CreateBasic(transform.position, direction);
+            Grenade.CreateBasic(transform.position, direction, false);
         }
 
         //debug.log("i");

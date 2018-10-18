@@ -33,6 +33,12 @@ public class WormBodyBehaviour : MonoBehaviour
         PlayerCombat.Instance.TakeRawDamage(5, AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized);
         PlayerCombat.Instance.MovementController.KnockBack(AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1).normalized * Random.Range(20, 40));
     }
+
+    public void Update()
+    {
+        if (!_dealDamage) return;
+        PlayerCombat.Instance.Shake(500);
+    }
     
     public void Initialise(Vector2 position)
     {

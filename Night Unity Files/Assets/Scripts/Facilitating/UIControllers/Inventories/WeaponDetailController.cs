@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class WeaponDetailController : MonoBehaviour
 {
-    private EnhancedText _nameText, _inscriptionText;
+    private EnhancedText _nameText, _inscriptionText, _typeText;
     private EnhancedText _damageText, _fireRateText, _reloadSpeedText, _accuracyText, _handlingText, _dpsText, _capacityText;
 
     private Weapon _weapon;
@@ -16,6 +16,7 @@ public class WeaponDetailController : MonoBehaviour
     public void Awake()
     {
         _nameText = gameObject.FindChildWithName<EnhancedText>("Name");
+        _typeText = gameObject.FindChildWithName<EnhancedText>("Type");
         _damageText = gameObject.FindChildWithName<EnhancedText>("Damage");
         _fireRateText = gameObject.FindChildWithName<EnhancedText>("Fire Rate");
         _dpsText = gameObject.FindChildWithName<EnhancedText>("DPS");
@@ -36,7 +37,7 @@ public class WeaponDetailController : MonoBehaviour
     private void SetWeaponInfo(Weapon weapon)
     {
         WeaponAttributes attr = weapon.WeaponAttributes;
-        _nameText.SetText(weapon.Name);
+        _nameText.SetText(weapon.GetDisplayName());
         _dpsText.SetText(attr.DPS().Round(1) + " Damage/sec");
         _damageText.SetText(attr.Val(AttributeType.Damage).Round(1) + " Damage");
         _fireRateText.SetText(attr.Val(AttributeType.FireRate).Round(1) + " Rounds/Sec");
@@ -45,8 +46,9 @@ public class WeaponDetailController : MonoBehaviour
         _capacityText.SetText(Mathf.FloorToInt(attr.Val(AttributeType.Capacity)) + " Capacity");
         _accuracyText.SetText((attr.Val(AttributeType.Accuracy) * 100).Round(1) + "% Accuracy");
         Inscription inscription = weapon.GetInscription();
-        string inscriptionText = inscription == null ? "No Inscription" : inscription.Name;
+        string inscriptionText = inscription == null ? "No Inscription" : inscription.GetSummary();
         _inscriptionText.SetText(inscriptionText);
+        _typeText.SetText(weapon.WeaponType().ToString());
     }
 
     public void UpdateWeaponInfo()
@@ -68,6 +70,7 @@ public class WeaponDetailController : MonoBehaviour
         _accuracyText.SetText("");
         _handlingText.SetText("");
         _inscriptionText.SetText("");
+        _typeText.SetText("");
     }
 
     public void Hide()

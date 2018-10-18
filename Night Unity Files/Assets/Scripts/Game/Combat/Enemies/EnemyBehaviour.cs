@@ -50,10 +50,10 @@ namespace Game.Combat.Enemies
 
         private void UpdateRotation()
         {
-            float rotation;
-            if (GetTarget() != null) rotation = AdvancedMaths.AngleFromUp(transform.position, TargetPosition());
-            else rotation = AdvancedMaths.AngleFromUp(transform.position, transform.position + (Vector3) GetComponent<Rigidbody2D>().velocity);
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotation));
+            float targetRotation;
+            if (GetTarget() != null) targetRotation = AdvancedMaths.AngleFromUp(transform.position, TargetPosition());
+            else targetRotation = AdvancedMaths.AngleFromUp(transform.position, transform.position + (Vector3) GetComponent<Rigidbody2D>().velocity);
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, targetRotation));
         }
 
         public virtual void Initialise(Enemy enemy)

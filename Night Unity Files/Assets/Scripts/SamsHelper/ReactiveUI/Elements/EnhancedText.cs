@@ -17,6 +17,7 @@ namespace SamsHelper.ReactiveUI.Elements
             Custom
         }
 
+        public bool UseUppercase;
         private TextMeshProUGUI _text;
         public float CustomFontSize;
 
@@ -36,6 +37,7 @@ namespace SamsHelper.ReactiveUI.Elements
         public void SetText(string text)
         {
             if (_text == null) _text = GetComponent<TextMeshProUGUI>();
+            if (UseUppercase) text = text.ToUpper();
             _text.text = text;
         }
 

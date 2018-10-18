@@ -111,7 +111,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             foreach (XmlNode weaponNode in itemNode.SelectSingleNode("Weapons").ChildNodes)
                 AddItem(Weapon.LoadWeapon(weaponNode));
             foreach (XmlNode armourNode in itemNode.SelectSingleNode("ArmourPlates").ChildNodes)
-                AddItem(Game.Gear.Armour.Armour.LoadArmour(armourNode));
+                AddItem(Armour.LoadArmour(armourNode));
             foreach (XmlNode accessoryNode in itemNode.SelectSingleNode("Accessories").ChildNodes)
                 AddItem(Accessory.LoadAccessory(accessoryNode));
             foreach (XmlNode inscriptionNode in itemNode.SelectSingleNode("Inscriptions").ChildNodes)
@@ -120,6 +120,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
 
         public static void Save(XmlNode root)
         {
+            root = root.CreateChild("Inventory");
             XmlNode resourceNode = root.CreateChild("Resources");
             InventoryResources().ForEach(r => SaveResource(r.Name, resourceNode));
             XmlNode itemNode = root.CreateChild("Items");

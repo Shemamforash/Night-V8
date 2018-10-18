@@ -37,7 +37,7 @@ public class SerpentEggBehaviour : MonoBehaviour
     {
         for (int i = 0; i < Random.Range(2, 5); ++i)
         {
-            Grenade g = Grenade.CreateBasic(transform.position, AdvancedMaths.RandomVectorWithinRange(transform.position, 2f));
+            Grenade g = Grenade.CreateBasic(transform.position, AdvancedMaths.RandomVectorWithinRange(transform.position, 2f), false);
             g.SetExplosionRadius(Random.Range(0.5f, 1f));
         }
     }

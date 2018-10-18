@@ -37,7 +37,7 @@ public class GateTransitController : MonoBehaviour
         GameObject.Find("Game").SetActive(false);
         _gateParticles.Play();
         _streakParticles.Play();
-        StartCoroutine(GoToNextArea());
+//        StartCoroutine(GoToNextArea());
 
         float maxTime = _streakParticles.main.duration;
         float currentTime = 0f;
@@ -53,7 +53,7 @@ public class GateTransitController : MonoBehaviour
             yield return null;
         }
 
-//        StartCoroutine(GoToNextArea());
+        StartCoroutine(GoToNextArea());
         _glow.color = UiAppearanceController.InvisibleColour;
     }
 

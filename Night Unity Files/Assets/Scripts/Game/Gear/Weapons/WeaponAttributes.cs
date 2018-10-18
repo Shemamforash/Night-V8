@@ -69,7 +69,7 @@ namespace Game.Gear.Weapons
 
         public WeaponClassType GetWeaponClass() => WeaponClassType;
 
-        private void RecalculateAttributeValues()
+        public void RecalculateAttributeValues()
         {
             float damageModifier = 0.08f * _durability.CurrentValue();
             float fireRateModifier = 0.02f * _durability.CurrentValue();

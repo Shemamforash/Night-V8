@@ -95,7 +95,7 @@ public class ListController : MonoBehaviour, IInputListener
 
     private void UpdateList(bool playSound = true)
     {
-        _listObjects = GetContentsAction?.Invoke();
+        _listObjects = GetContentsAction.Invoke();
         _listSize = _listObjects.Count;
         Select(playSound);
     }

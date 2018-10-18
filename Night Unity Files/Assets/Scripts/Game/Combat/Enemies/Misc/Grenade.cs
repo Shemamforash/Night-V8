@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Combat.Generation;
 using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -11,31 +12,25 @@ namespace Game.Combat.Enemies.Misc
 {
     public sealed class Grenade : MonoBehaviour
     {
-        private static readonly float ThrowForce = 75f;
+        private static readonly float ThrowForce = 300f;
         private static readonly ObjectPool<Grenade> _grenadePool = new ObjectPool<Grenade>("Grenades", "Prefabs/Combat/Enemies/Grenade");
         private const int Damage = 20;
         private Action<List<EnemyBehaviour>> OnDetonate;
         private bool _incendiary, _decaying, _sickening;
         private float _radius = 1;
         private Rigidbody2D _rb2d;
-        private Transform _target;
+        private bool _isPlayerGrenade;
 
         public void Awake()
         {
             _rb2d = GetComponent<Rigidbody2D>();
         }
 
-        public static Grenade CreateBasic(Vector2 origin, Transform target)
-        {
-            Grenade grenade = _grenadePool.Create();
-            grenade.StartMoving(origin, target);
-            return grenade;
-        }
 
-        public static Grenade CreateBasic(Vector2 origin, Vector2 target)
+        public static Grenade CreateBasic(Vector2 origin, Vector2 target, bool isPlayerGrenade)
         {
             Grenade grenade = _grenadePool.Create();
-            grenade.StartMoving(origin, target);
+            grenade.StartMoving(origin, target, isPlayerGrenade);
             return grenade;
         }
 
@@ -47,21 +42,14 @@ namespace Game.Combat.Enemies.Misc
             _radius = 1;
         }
 
-        private void StartMoving(Vector2 origin, Vector2 target)
+        private void StartMoving(Vector2 origin, Vector2 target, bool isPlayerGrenade)
         {
             ResetGrenade();
+            _isPlayerGrenade = isPlayerGrenade;
             transform.position = new Vector3(origin.x, origin.y, 0f);
-            Vector2 direction = target - origin;
-            float distance = direction.magnitude;
-            direction /= distance;
-            Vector2 force = direction * distance * ThrowForce;
+            Vector2 direction = (target - origin).normalized;
+            Vector2 force = direction * ThrowForce;
             _rb2d.AddForce(force);
-        }
-
-        private void StartMoving(Vector3 origin, Transform target)
-        {
-            _target = target;
-            StartMoving(origin, target.position);
         }
 
         public void SetExplosionRadius(float radius)
@@ -69,47 +57,35 @@ namespace Game.Combat.Enemies.Misc
             _radius = radius;
         }
 
-        public static void CreateIncendiary(Vector2 origin, Transform target)
+        public static void CreateIncendiary(Vector2 origin, Vector2 target, bool isPlayerGrenade)
         {
-            Grenade g = CreateBasic(origin, target);
+            Grenade g = CreateBasic(origin, target, isPlayerGrenade);
             g._incendiary = true;
         }
 
-        public static void CreateDecay(Vector2 origin, Transform target)
+        public static void CreateDecay(Vector2 origin, Vector2 target, bool isPlayerGrenade)
         {
-            Grenade g = CreateBasic(origin, target);
+            Grenade g = CreateBasic(origin, target, isPlayerGrenade);
             g._decaying = true;
         }
 
-        public static void CreateSickness(Vector2 origin, Transform target)
+        public static void CreateSickness(Vector2 origin, Vector2 target, bool isPlayerGrenade)
         {
-            Grenade g = CreateBasic(origin, target);
-            g._sickening = true;
-        }
-
-        public static void CreateIncendiary(Vector2 origin, Vector2 target)
-        {
-            Grenade g = CreateBasic(origin, target);
-            g._incendiary = true;
-        }
-
-        public static void CreateDecay(Vector2 origin, Vector2 target)
-        {
-            Grenade g = CreateBasic(origin, target);
-            g._decaying = true;
-        }
-
-        public static void CreateSickness(Vector2 origin, Vector2 target)
-        {
-            Grenade g = CreateBasic(origin, target);
+            Grenade g = CreateBasic(origin, target, isPlayerGrenade);
             g._sickening = true;
         }
 
         private void Update()
         {
-            bool closeEnough = _target != null && _target.Distance(transform) <= 0.5f;
-            bool slowEnough = _rb2d.velocity.magnitude <= 0.25f;
-            if (!closeEnough && !slowEnough) return;
+            CanTakeDamage nearestTarget = _isPlayerGrenade ? CombatManager.NearestEnemy(transform.position) : PlayerCombat.Instance;
+            if (_rb2d.velocity.magnitude > 0.25f)
+            {
+                if (nearestTarget == null) return;
+                if (nearestTarget.transform.Distance(transform) > 0.75f) return;
+                if (_isPlayerGrenade && transform.Distance(PlayerCombat.Instance.transform) < 1) return;
+                return;
+            }
+
             Detonate();
         }
 

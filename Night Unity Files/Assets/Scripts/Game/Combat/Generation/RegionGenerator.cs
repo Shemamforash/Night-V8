@@ -67,7 +67,8 @@ namespace Game.Combat.Generation
         private void GenerateEdges()
         {
             EdgeCollider2D edgeCollider = gameObject.AddComponent<EdgeCollider2D>();
-            float radius = (PathingGrid.CombatAreaWidth / 2f) - 0.1f;
+            gameObject.layer = 13;
+            float radius = PathingGrid.CombatAreaWidth / 2f - 0.1f;
             int numPoints = 500;
             Vector2[] edgePoints = new Vector2[numPoints];
             for (int i = 0; i < numPoints; ++i)

@@ -15,6 +15,7 @@ namespace SamsHelper
         public float LifeTime;
         private static readonly Color _red = new Color(1, 0, 0, 0.1f);
         private static readonly Color _pale = new Color(0.2f, 0.2f, 0.2f, 0.2f);
+        private Sequence _sequence;
 
         public void Awake()
         {
@@ -42,9 +43,14 @@ namespace SamsHelper
             _trailRenderer.startColor = color;
             _trailRenderer.endColor = color;
             _trailRenderer.Clear();
-            Sequence sequence = DOTween.Sequence();
-            sequence.Append(transform.DOPath(rArr, Random.Range(1f, 3f), PathType.CatmullRom, PathMode.TopDown2D));
-            sequence.AppendCallback(() => StartFade(1f));
+            _sequence = DOTween.Sequence();
+            _sequence.Append(transform.DOPath(rArr, Random.Range(1f, 3f), PathType.CatmullRom, PathMode.TopDown2D));
+            _sequence.AppendCallback(() => StartFade(1f));
+        }
+
+        public static void ForceFadeAll()
+        {
+            _pathPool.Active().ForEach(p => p.ForceFade());
         }
 
         private void StartFade(float lifeTime)
@@ -54,6 +60,13 @@ namespace SamsHelper
             LifeTime = lifeTime;
             _age = LifeTime;
             StartCoroutine(Fade());
+        }
+
+        public void ForceFade()
+        {
+            if (Fading) return;
+            _sequence.Kill();
+            StartFade(0.5f);
         }
 
         private IEnumerator Fade()
@@ -71,6 +84,7 @@ namespace SamsHelper
                 yield return null;
             }
 
+            Fading = false;
             _pathPool.Return(this);
         }
 

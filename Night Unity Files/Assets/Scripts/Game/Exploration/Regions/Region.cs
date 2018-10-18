@@ -246,6 +246,7 @@ namespace Game.Exploration.Regions
 
         public void HideNode()
         {
+            if (!_seen) return;
             _mapNode.Hide();
         }
 
@@ -338,10 +339,8 @@ namespace Game.Exploration.Regions
 
         private void GenerateShelter()
         {
-            if (CharacterManager.Characters.Count < 3)
-            {
-                _characterHere = CharacterManager.GenerateRandomCharacter();
-            }
+            if (CharacterManager.Characters.Count == 3) return;
+            _characterHere = CharacterManager.GenerateRandomCharacter();
         }
 
         public void SetRegionType(RegionType type)

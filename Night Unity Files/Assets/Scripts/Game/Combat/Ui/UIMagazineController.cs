@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Combat.Player;
 using Game.Gear.Weapons;
 using SamsHelper.Libraries;
 using UnityEngine;
@@ -22,20 +23,8 @@ namespace Game.Combat.Ui
 
         public static void UpdateMagazineUi()
         {
-            string magazineMessage = "";
-            if (_weapon.Empty())
-            {
-                magazineMessage = "RELOAD";
-            }
-
-            if (magazineMessage == "")
-            {
-                UpdateMagazine();
-            }
-            else
-            {
-                EmptyMagazine();
-            }
+            if (_weapon.Empty()) EmptyMagazine();
+            else UpdateMagazine();
         }
 
         private static void UpdateMagazine(int remaining = -1)
@@ -60,7 +49,7 @@ namespace Game.Combat.Ui
 
         public static void SetWeapon(BaseWeaponBehaviour weapon)
         {
-            _weapon = weapon;
+            _weapon = PlayerCombat.Instance._weaponBehaviour;
             if (weapon == null) return;
             _capacity = weapon.Capacity();
             MagazineAmmo.ForEach(a => a.Destroy());

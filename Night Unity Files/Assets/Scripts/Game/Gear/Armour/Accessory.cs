@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml;
 using Facilitating.Persistence;
 using Game.Characters;
+using Game.Combat.Player;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -34,6 +35,8 @@ namespace Game.Gear.Armour
             base.Equip(character);
             (character as Player)?.ApplyModifier(_template.TargetAttribute, modifier);
             ApplyToWeapon(character.EquippedWeapon);
+            if (PlayerCombat.Instance == null) return;
+            PlayerCombat.Instance.RecalculateAttributes();
         }
 
         public override void Unequip()
@@ -41,6 +44,8 @@ namespace Game.Gear.Armour
             base.Unequip();
             (EquippedCharacter as Player)?.RemoveModifier(_template.TargetAttribute, modifier);
             RemoveFromWeapon(EquippedCharacter.EquippedWeapon);
+            if (PlayerCombat.Instance == null) return;
+            PlayerCombat.Instance.RecalculateAttributes();
         }
 
         private static void ReadTemplates()

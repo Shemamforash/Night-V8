@@ -11,6 +11,7 @@ namespace Game.Characters
 {
     public static class CharacterManager
     {
+        public static Player Wanderer;
         public static Player SelectedCharacter;
         public static readonly List<Player> Characters = new List<Player>();
         private static readonly List<CharacterTemplate> Templates = new List<CharacterTemplate>();
@@ -21,7 +22,7 @@ namespace Game.Characters
             SelectedCharacter = null;
             for (int i = Characters.Count - 1; i >= 0; --i)
                 RemoveCharacter(Characters[i]);
-            AddCharacter(GenerateDriver());
+            GenerateDriver();
         }
 
         public static void Load(XmlNode doc)
@@ -144,12 +145,12 @@ namespace Game.Characters
             throw new Exceptions.UnknownCharacterClassException(characterClass);
         }
 
-        private static Player GenerateDriver()
+        private static void GenerateDriver()
         {
-            Player driver = GenerateCharacter(CharacterClass.Wanderer);
+            Wanderer = GenerateCharacter(CharacterClass.Wanderer);
             Weapon weapon = WeaponGenerator.GenerateWeapon(ItemQuality.Dark, WeaponType.Pistol);
-            driver.EquipWeapon(weapon);
-            return driver;
+            Wanderer.EquipWeapon(weapon);
+            AddCharacter(Wanderer);
         }
 
         private static Player GenerateCharacter(CharacterClass characterClass)

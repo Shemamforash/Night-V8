@@ -1,4 +1,5 @@
 ﻿using Game.Characters;
+using Game.Combat.Player;
 using SamsHelper.BaseGameFunctionality.Basic;
 using UnityEngine;
 
@@ -71,6 +72,8 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (!CanConsume()) return;
             ApplyEffect();
             Inventory.DecrementResource(Template.Name, 1);
+            if (PlayerCombat.Instance == null) return;
+            PlayerCombat.Instance.RecalculateAttributes();
         }
 
         public bool CanConsume()

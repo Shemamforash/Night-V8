@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DefaultNamespace;
 using Facilitating.UIControllers.Inventories;
 using Game.Characters;
+using Game.Combat.Player;
 using Game.Gear;
 using Game.Gear.Armour;
 using Game.Gear.Weapons;
@@ -64,7 +65,7 @@ namespace Facilitating.UIControllers
                 InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
-            _infuseButton.AddOnHold(Infuse, 0.25f);
+            _infuseButton.AddOnHold(Infuse, 0.5f);
         }
 
         protected override void Initialise()
@@ -132,6 +133,8 @@ namespace Facilitating.UIControllers
             Weapon weapon = CharacterManager.SelectedCharacter.EquippedWeapon;
             weapon.SetInscription(inscription);
             Show();
+            if (PlayerCombat.Instance == null) return;
+            PlayerCombat.Instance.EquipInscription();
         }
 
         private void SetWeapon()
@@ -169,7 +172,7 @@ namespace Facilitating.UIControllers
             protected override void Update(object o)
             {
                 Weapon weapon = (Weapon) o;
-                CentreText.SetText(weapon.Name);
+                CentreText.SetText(weapon.GetDisplayName());
                 LeftText.SetText(weapon.WeaponType().ToString());
                 RightText.SetText(weapon.WeaponAttributes.DPS().Round(1) + " DPS");
             }

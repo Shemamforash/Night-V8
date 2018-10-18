@@ -5,6 +5,7 @@ using DG.Tweening;
 using Game.Characters;
 using Game.Exploration.Environment;
 using Game.Exploration.Regions;
+using SamsHelper;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using TMPro;
@@ -100,7 +101,7 @@ namespace Game.Exploration.Ui
             DOTween.To(GetTrailAlpha, SetTrailAlpha, 1f, FadeTime);
             _canvas.DOFade(1f, FadeTime);
         }
-        
+
         public void Show()
         {
             float distanceFromCamera = Vector2.Distance(MapMovementController.MapCamera.transform.position, transform.position);
@@ -121,7 +122,7 @@ namespace Game.Exploration.Ui
             _ring2.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
             _ring3.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
             _icon.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
-            _shadow.DOColor(UiAppearanceController.InvisibleColour, FadeTime);
+            _shadow.DOColor(new Color(0, 0, 0, 0), FadeTime);
             DOTween.To(GetTrailAlpha, SetTrailAlpha, 0f, FadeTime);
             _canvas.DOFade(0f, FadeTime);
         }
@@ -132,7 +133,7 @@ namespace Game.Exploration.Ui
             _ring2.color = UiAppearanceController.InvisibleColour;
             _ring3.color = UiAppearanceController.InvisibleColour;
             _icon.color = UiAppearanceController.InvisibleColour;
-            _shadow.color = UiAppearanceController.InvisibleColour;
+            _shadow.color = new Color(0, 0, 0, 0);
             SetTrailAlpha(0f);
             _canvas.alpha = 0f;
         }

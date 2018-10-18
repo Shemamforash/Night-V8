@@ -21,7 +21,7 @@ namespace Game.Combat.Misc
         private float _recoveryTimer;
         private CanTakeDamage _target;
         public MovementController MovementController;
-        private const float ExplosionForceModifier = 5;
+        private const float ExplosionForceModifier = 10;
         
         protected float DistanceToTarget()
         {

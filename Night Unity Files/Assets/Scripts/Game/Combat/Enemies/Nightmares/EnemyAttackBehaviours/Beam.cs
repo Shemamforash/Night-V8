@@ -6,10 +6,7 @@
 
         protected override void Attack()
         {
-            SkillAnimationController.Create(transform, "Beam", 1f, () =>
-            {
-                _beamController = BeamController.Create(transform);
-            });
+            _beamController = BeamController.Create(transform);
         }
 
         private void OnDestroy()

@@ -1,5 +1,4 @@
-﻿using Game.Combat.Generation;
-using Game.Combat.Player;
+﻿using Game.Combat.Player;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
@@ -16,7 +15,7 @@ public class CameraFollow : MonoBehaviour
 
     public void LateUpdate()
     {
-        if (!CombatManager.IsCombatActive())
+        if (PlayerCombat.Instance == null)
         {
             transform.position = _position;
             transform.rotation = _rotation;

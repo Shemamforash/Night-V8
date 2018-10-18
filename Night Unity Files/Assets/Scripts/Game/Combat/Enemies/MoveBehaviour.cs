@@ -73,6 +73,7 @@ namespace Game.Combat.Enemies
             Vector2 direction = (_targetCell.Position - _currentCell.Position).normalized;
             Vector2 targetPosition = _targetCell.Position + direction * _minDistance * 1.2f;
             _targetCell = PathingGrid.WorldToCellPosition(targetPosition);
+            if(_targetCell == null) Debug.Log(direction + " " + _minDistance);
             return new List<Cell>(new[] {_targetCell});
         }
 

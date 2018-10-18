@@ -265,11 +265,13 @@ namespace EpPathFinding.cs
             }
         }
 
+        private static Stack<JumpSnapshot> stack = new Stack<JumpSnapshot>();
+        
         private static GridPos jumpLoop(JumpPointParam iParam, int iX, int iY, int iPx, int iPy)
         {
             GridPos retVal = null;
-            Stack<JumpSnapshot> stack = new Stack<JumpSnapshot>();
-
+            stack.Clear();
+            
             JumpSnapshot currentSnapshot = new JumpSnapshot();
             JumpSnapshot newSnapshot = null;
             currentSnapshot.iX = iX;

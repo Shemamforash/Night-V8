@@ -21,15 +21,15 @@ namespace SamsHelper.Libraries
 
         public static bool Empty<T>(this T[] arr) => arr.Length == 0;
 
-        private static Transform _dynamicParent; 
-        
+        private static Transform _dynamicParent;
+
         public static void SetAsDynamicChild(this Transform t)
         {
-            if (_dynamicParent == null) _dynamicParent = GameObject.Find("Dynamic").transform; 
+            if (_dynamicParent == null) _dynamicParent = GameObject.Find("Dynamic").transform;
             t.SetParent(_dynamicParent);
             t.transform.position = Vector3.zero;
         }
-        
+
         public static bool Empty<T>(this Stack<T> stack) => stack.Count == 0;
 
         public static bool NotEmpty<T>(this Queue<T> queue) => queue.Count != 0;

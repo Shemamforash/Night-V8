@@ -42,7 +42,7 @@ namespace Game.Combat.Generation.Shrines
             EndChallenge();
         }
 
-        private static T AddComponentOnce<T>(EnemyBehaviour b) where T: MonoBehaviour
+        private static T AddComponentOnce<T>(EnemyBehaviour b) where T : MonoBehaviour
         {
             T existing = b.gameObject.GetComponent<T>();
             return existing != null ? existing : b.gameObject.AddComponent<T>();
@@ -77,7 +77,7 @@ namespace Game.Combat.Generation.Shrines
                     AddComponentOnce<ErraticDash>(boss);
                     break;
                 case 1:
-                    AddComponentOnce<Orbit>(boss).Initialise(PlayerCombat.Instance.transform, v => boss.MovementController.AddForce(v), 10, 3, 5);
+                    AddComponentOnce<Orbit>(boss).Initialise(PlayerCombat.Instance.transform, v => boss.MovementController.AddForce(v), 10, 2, 5);
                     break;
                 case 2:
                     AddComponentOnce<Teleport>(boss).Initialise(5, 2);
@@ -94,22 +94,23 @@ namespace Game.Combat.Generation.Shrines
             switch (Random.Range(0, 7))
             {
                 case 0:
-                    AddComponentOnce<Bombardment>(boss).Initialise(3, 3, 2);
+                    int count = Random.Range(1, 5);
+                    AddComponentOnce<Bombardment>(boss).Initialise(count, count, count / 2f);
                     break;
                 case 1:
-                    AddComponentOnce<Heavyshot>(boss).Initialise(5, 3);
+                    AddComponentOnce<Heavyshot>(boss).Initialise(6, 3);
                     break;
                 case 2:
                     AddComponentOnce<LeaveFireTrail>(boss).Initialise();
                     break;
                 case 3:
-                    AddComponentOnce<Push>(boss).Initialise(5, 3);
+                    AddComponentOnce<Push>(boss).Initialise(10, 3);
                     break;
                 case 4:
                     AddComponentOnce<Split>(boss).Initialise(1, 6, EnemyType.Ghoul, 50, 2);
                     break;
                 case 5:
-                    AddComponentOnce<Spawn>(boss).Initialise(EnemyType.Ghoul, 5, 2, 5);
+                    AddComponentOnce<Spawn>(boss).Initialise(EnemyType.Ghoul, 10, 2, 5);
                     break;
             }
         }

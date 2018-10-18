@@ -283,7 +283,6 @@ namespace Game.Combat.Generation
             PlayerCombat.Instance.ExitCombat();
             ChangeScene(returnToMap);
         }
-
      
         private static void ChangeScene(bool returnToMap)
         {

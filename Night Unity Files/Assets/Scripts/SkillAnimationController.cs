@@ -30,16 +30,17 @@ public class SkillAnimationController : MonoBehaviour
         _glowSprite.color = _transparentRed;
     }
 
-    public static void Create(Transform t, string spriteName, float warmUpTime, Action callback)
+    public static void Create(Transform t, string spriteName, float warmUpTime, Action callback, float cooldownTime = 2f)
     {
         SkillAnimationController skillAnimation = _skillPool.Create();
-        skillAnimation.Initialise(t, spriteName, warmUpTime, callback);
+        skillAnimation.Initialise(t, spriteName, warmUpTime, callback, cooldownTime);
     }
 
-    private void Initialise(Transform t, string spriteName, float warmUpTime, Action callback)
+    private void Initialise(Transform t, string spriteName, float warmUpTime, Action callback, float cooldownTime)
     {
         _callback = callback;
         _warmUpTime = warmUpTime;
+        _fadeTime = cooldownTime;
         _followTransform = t;
         transform.position = t.position;
         AssignSprite(spriteName);

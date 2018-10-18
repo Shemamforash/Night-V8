@@ -39,6 +39,6 @@ public class UiCombatRingBoundDrawer : MonoBehaviour
 		RingDrawer rd = ring.GetComponent<RingDrawer>();
 		rd.SetLineWidth(width);
 		rd.SetColor(colour);
-		rd.DrawCircle(radius);
+		rd.SetRadius(radius);
 	}
 }

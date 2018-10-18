@@ -67,11 +67,19 @@ namespace Game.Gear.Weapons
         public void SetInscription(Inscription inscription)
         {
             RemoveInscription();
-            ApplyInscriptionModifier();
+            RemoveInscriptionModifier();
             _inscription = inscription;
             Inventory.DestroyItem(inscription);
-            RemoveInscriptionModifier();
+            ApplyInscriptionModifier();
             ApplyInscription();
+            WeaponAttributes.RecalculateAttributeValues();
+        }
+
+        public string GetDisplayName()
+        {
+            string displayName = Name;
+            if (_inscription != null) displayName += " of " + _inscription.TemplateName();
+            return displayName;
         }
 
         private void ApplyInscriptionModifier()
@@ -90,12 +98,14 @@ namespace Game.Gear.Weapons
         {
             if (CharacterAttribute.IsCharacterAttribute(target)) return;
             WeaponAttributes.Get(target).AddModifier(modifier);
+            WeaponAttributes.RecalculateAttributeValues();
         }
 
         public void RemoveModifier(AttributeType target, AttributeModifier modifier)
         {
             if (CharacterAttribute.IsCharacterAttribute(target)) return;
             WeaponAttributes.Get(target).RemoveModifier(modifier);
+            WeaponAttributes.RecalculateAttributeValues();
         }
 
         public float CalculateBaseAccuracy()

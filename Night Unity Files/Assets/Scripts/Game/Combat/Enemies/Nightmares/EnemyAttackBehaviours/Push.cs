@@ -6,13 +6,13 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
     {
         public void Start()
         {
-            Initialise(2f);
+            Initialise(4f, 1.5f);
         }
 
         protected override void Attack()
         {
             float angle = AdvancedMaths.AngleFromUp(transform.position, Enemy.TargetPosition());
-            PushController.Create(transform.position, angle, false);
+            SkillAnimationController.Create(transform, "Beam", 0.5f, () => { PushController.Create(transform.position, angle, false); }, 0.5f);
         }
     }
 }

@@ -43,8 +43,8 @@ namespace Game.Exploration.Environment
 
         private void ReturnFromCombat()
         {
+            if (MenuStateMachine.CurrentMenu() == this) return;
             MenuStateMachine.ShowMenu("Map Menu");
-            IsReturningFromCombat = false;
         }
 
         public override void Enter()
@@ -52,10 +52,7 @@ namespace Game.Exploration.Environment
             base.Enter();
             _isActive = true;
             _rings.ForEach(r => r.TweenColour(UiAppearanceController.InvisibleColour, Color.white, 0.5f));
-            MapGenerator.Regions().ForEach(n =>
-            {
-                n.ShowNode();
-            });
+            MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
             MapMovementController.Enter(CharacterManager.SelectedCharacter);
         }
 
@@ -66,6 +63,7 @@ namespace Game.Exploration.Environment
             _isActive = false;
             MapGenerator.Regions().ForEach(n => n.HideNode());
             MapMovementController.Exit();
+            FadeAndDieTrailRenderer.ForceFadeAll();
         }
 
         private void CreateRouteLinks()
@@ -123,19 +121,38 @@ namespace Game.Exploration.Environment
         {
             GameObject ringPrefab = Resources.Load<GameObject>("Prefabs/Map/Map Ring");
             Transform ringParent = GameObject.Find("Rings").transform;
+            int counter = 0;
+            float alpha = 0.2f;
             for (int i = 1; i <= 10; ++i)
             {
                 int ringRadius = i * MapGenerator.MinRadius;
                 GameObject ring = Instantiate(ringPrefab, transform.position, ringPrefab.transform.rotation);
+                float rotateSpeed = Mathf.Pow(0.9f, i - 1);
+                if (i % 2 == 0) rotateSpeed = -rotateSpeed;
+                ring.AddComponent<Rotate>().RotateSpeed = rotateSpeed;
                 ring.layer = 23;
                 ring.transform.SetParent(ringParent);
                 ring.name = "Ring: distance " + i + " hours";
                 RingDrawer ringDrawer = ring.GetComponent<RingDrawer>();
-                ringDrawer.DrawCircle(ringRadius);
-                float alpha = 1f / 9f * i + 1f / 9f;
-                alpha = 1 - alpha;
-                ringDrawer.SetColor(new Color(1, 1, 1, alpha));
+                ringDrawer.SetRadius(ringRadius);
+                alpha *= 0.9f;
+                switch (counter)
+                {
+                    case 0:
+                        ringDrawer.UseBorder1();
+                        break;
+                    case 1:
+                        ringDrawer.UseBorder2();
+                        break;
+                    case 2:
+                        ringDrawer.UseBorder3();
+                        break;
+                }
+
+                ringDrawer.SetAlphaMultiplier(alpha);
                 _rings.Add(ringDrawer);
+                ++counter;
+                if (counter == 3) counter = 0;
             }
 
             _rings.ForEach(r => r.SetColor(UiAppearanceController.InvisibleColour));
@@ -158,7 +175,6 @@ namespace Game.Exploration.Environment
             }
 
             FadeAndDieTrailRenderer.CreateRed(rArr);
-//            _routeTrails.Add(g);
         }
 
         public void Update()

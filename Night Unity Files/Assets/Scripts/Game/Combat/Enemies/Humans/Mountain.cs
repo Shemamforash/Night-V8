@@ -20,9 +20,9 @@ namespace Game.Combat.Enemies.Humans
         private void Push()
         {
             Sequence sequence = DOTween.Sequence();
-            sequence.AppendCallback(() => PushController.Create(transform.position, 0f, false, 360));
+            sequence.AppendCallback(() => SkillAnimationController.Create(transform, "Beam", 0.25f, () => { PushController.Create(transform.position, 0f, false, 360); }, 0.5f));
             sequence.AppendInterval(0.25f);
-            sequence.AppendCallback(() => PushController.Create(transform.position, 0f, false, 360));
+            sequence.AppendCallback(() => SkillAnimationController.Create(transform, "Beam", 0.25f, () => { PushController.Create(transform.position, 0f, false, 360); }, 0.5f));
             sequence.AppendInterval(0.5f);
             sequence.AppendCallback(() =>
             {
@@ -30,8 +30,8 @@ namespace Game.Combat.Enemies.Humans
                 {
                     Vector2 position = AdvancedMaths.RandomVectorWithinRange(Vector2.zero, 1);
                     position.Normalize();
-                    position = (Vector2)transform.position + position * Random.Range(1f, 2f);
-                    Grenade.CreateBasic(transform.position, position);
+                    position = (Vector2) transform.position + position * Random.Range(1f, 2f);
+                    Grenade.CreateBasic(transform.position, position, false);
                 }
 
                 ResetCooldown();

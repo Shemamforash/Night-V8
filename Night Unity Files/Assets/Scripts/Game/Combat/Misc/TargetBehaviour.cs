@@ -25,8 +25,9 @@ public class TargetBehaviour : MonoBehaviour
     public void LateUpdate()
     {
         CanTakeDamage currentTarget = PlayerCombat.Instance.GetTarget();
-        bool isLocked = PlayerCombat.Instance.IsTargetLocked();
-        UpdateSpriteColour(isLocked, currentTarget);
+        currentTarget = null;
+//        bool isLocked = PlayerCombat.Instance.IsTargetLocked();
+        UpdateSpriteColour(false, currentTarget);
         if (currentTarget == null) return;
         transform.position = PlayerCombat.Instance.TargetPosition();
     }

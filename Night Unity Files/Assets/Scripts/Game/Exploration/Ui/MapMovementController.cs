@@ -91,7 +91,7 @@ public class MapMovementController : MonoBehaviour, IInputListener
         }
 
         _direction = _nearestRegion.Position.Direction(transform.position);
-        CurrentSpeed = distance * Time.fixedDeltaTime * 100;
+        CurrentSpeed = distance * Time.fixedDeltaTime * 250;
     }
 
     public void Update()

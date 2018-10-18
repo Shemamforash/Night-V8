@@ -107,7 +107,7 @@ namespace Game.Global
             yield return StartCoroutine(LoadAllClipsFromBundle(a => Drones = a, "drones"));
 
             Debug.Log("loading misc audio");
-            yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "misc", "Button Click"));
+            yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "misc/buttonclick", "Button Click"));
 
             Debug.Log("loading music");
             yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "music/combat/simmav", "simmav a"));

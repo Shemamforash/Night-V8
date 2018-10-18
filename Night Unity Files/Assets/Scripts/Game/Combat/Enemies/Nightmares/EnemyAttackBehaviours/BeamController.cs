@@ -10,11 +10,12 @@ public class BeamController : MonoBehaviour
     private static readonly ObjectPool<BeamController> _beamPool = new ObjectPool<BeamController>("Beams", "Prefabs/Combat/Enemies/Beam");
     private static GameObject _prefab;
     private LineRenderer _glowLine, _beamLine, _leadLine;
-    private const float LeadDurationMax = 2f;
+    private const float LeadDurationMax = 0.5f;
     private const float BeamDurationMax = 1f;
     private ParticleSystem _burst, _charge, _energy, _spray;
     private Transform _origin;
     private Vector3 _targetPosition;
+    private bool _firing;
     private const int BeamDamage = 100;
 
     public static BeamController Create(Transform origin)
@@ -39,7 +40,7 @@ public class BeamController : MonoBehaviour
     {
         if (_origin == null) return;
         transform.position = _origin.position;
-        _targetPosition = transform.position + _origin.up * 50f;
+        if (!_firing) _targetPosition = transform.position + _origin.up * 50f;
         Vector3[] positions = {transform.position, _targetPosition};
         _glowLine.SetPositions(positions);
         _beamLine.SetPositions(positions);
@@ -74,6 +75,7 @@ public class BeamController : MonoBehaviour
         _leadLine.enabled = false;
         _glowLine.enabled = false;
         _beamLine.enabled = false;
+        _firing = false;
     }
 
     private void ShowLine()
@@ -87,6 +89,7 @@ public class BeamController : MonoBehaviour
         sequence.Append(_leadLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), LeadDurationMax));
         sequence.AppendCallback(() =>
         {
+            _firing = true;
             SetBeamLineActive();
             _burst.Clear();
             _spray.Clear();
@@ -95,7 +98,7 @@ public class BeamController : MonoBehaviour
             DoBeamDamage();
         });
 
-        sequence.AppendInterval(0.5f);
+        sequence.AppendInterval(0.1f);
         startColor = Color.white;
         endColor = UiAppearanceController.InvisibleColour;
         sequence.Append(_beamLine.DOColor(new Color2(startColor, startColor), new Color2(endColor, endColor), BeamDurationMax).SetEase(Ease.OutExpo));
@@ -122,7 +125,7 @@ public class BeamController : MonoBehaviour
             if (!hit.gameObject.CompareTag("Player")) continue;
             Vector2 dir = transform.up;
             PlayerCombat.Instance.TakeRawDamage(BeamDamage, dir);
-            PlayerCombat.Instance.MovementController.KnockBack(dir, 50f);
+            PlayerCombat.Instance.MovementController.KnockBack(dir, 150f);
             break;
         }
     }
