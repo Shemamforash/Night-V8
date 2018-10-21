@@ -17,10 +17,12 @@ namespace Game.Combat.Misc
         private static List<CooldownController> CooldownControllers;
         private static List<UISkillCostController> CostControllers;
         private static float _cooldownModifier;
-        private static Coroutine _cooldownCoroutine;
         private static SkillBar _instance;
         private static bool _finishEarly;
         private bool SkillsAreFree = true;
+        private static bool _skillsReady;
+        private static float _cooldownRemaining;
+        private static float _duration;
 
         public void Awake()
         {
@@ -36,6 +38,7 @@ namespace Game.Combat.Misc
 
             _skills = new Skill[NoSlots];
             _skillsLocked = new List<int>();
+            _skillsReady = false;
         }
 
         private void UpdateCooldownControllers(float normalisedDuration)
@@ -43,25 +46,24 @@ namespace Game.Combat.Misc
             CooldownControllers.ForEach(c => c.UpdateCooldownFill(normalisedDuration));
         }
 
-        private IEnumerator SkillsCooldown()
+        public void Update()
         {
-            float duration = BaseSkillCooldown * _cooldownModifier;
-            float currentTime = 0f;
-            UpdateCooldownControllers(0f);
-            while (currentTime < duration)
+            if (_skillsReady) return;
+            if (_finishEarly) _cooldownRemaining = -1;
+            _cooldownRemaining -= Time.deltaTime;
+            if (_cooldownRemaining < 0)
             {
-                currentTime += Time.deltaTime;
-                if (_finishEarly) currentTime = duration;
-                if (currentTime > duration) currentTime = duration;
-                UpdateCooldownControllers(currentTime / duration);
-                yield return null;
+                _cooldownRemaining = 0;
+                UpdateCooldownControllers(1);
+                _skillsReady = true;
+                _finishEarly = false;
+                return;
             }
-            UpdateCooldownControllers(1);
 
-            _finishEarly = false;
-            _cooldownCoroutine = null;
+            float normalisedTime = 1 - _cooldownRemaining / _duration;
+            UpdateCooldownControllers(normalisedTime);
         }
-
+        
         public static void BindSkills(Characters.Player player, float skillCooldownModifier)
         {
             _cooldownModifier = skillCooldownModifier;
@@ -85,7 +87,7 @@ namespace Game.Combat.Misc
                     weaponSkillTwo = player.EquippedWeapon.WeaponSkillTwo;
             }
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
             characterSkillOne = player.CharacterSkillOne;
             characterSkillTwo = player.CharacterSkillTwo;
 
@@ -94,7 +96,7 @@ namespace Game.Combat.Misc
                 weaponSkillOne = player.EquippedWeapon.WeaponSkillOne;
                 weaponSkillTwo = player.EquippedWeapon.WeaponSkillTwo;
             }
-#endif
+//#endif
 
             BindSkill(0, characterSkillOne);
             BindSkill(1, characterSkillTwo);
@@ -127,16 +129,22 @@ namespace Game.Combat.Misc
         public static void ActivateSkill(int skillNo)
         {
             if (_skillsLocked.Contains(skillNo)) return;
-            if (_cooldownCoroutine != null) return;
+            if (!_skillsReady) return;
             if (TryLockSkill(skillNo)) return;
             bool freeSkill = IsSkillFree();
             if (!_skills[skillNo].Activate(freeSkill || _instance.SkillsAreFree)) return;
-            _cooldownCoroutine = _instance.StartCoroutine(_instance.SkillsCooldown());
+            StartCooldown();
+        }
+
+        private static void StartCooldown()
+        {
+            _skillsReady = false;
+            _duration = BaseSkillCooldown * _cooldownModifier;
+            _cooldownRemaining = _duration;
         }
 
         public static void ResetCooldowns()
         {
-            //todo fix me
             _finishEarly = true;
         }
     }

@@ -4,6 +4,9 @@ using Game.Characters;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Exploration.Environment;
+using Game.Gear;
+using Game.Gear.Armour;
+using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using UnityEngine;
@@ -75,7 +78,11 @@ public abstract class ContainerController
             player.BrandManager.IncreaseItemsFound();
         }
 
-        Inventory.Move(Item, Item.Quantity());
+        if(Item is Weapon) Inventory.Move((Weapon)Item);
+        else if (Item is Armour) Inventory.Move((Armour) Item);
+        else if (Item is Accessory) Inventory.Move((Accessory) Item);
+        else if (Item is Inscription) Inventory.Move((Inscription) Item);
+        else Inventory.Move(Item);
     }
 
     public string GetContents()

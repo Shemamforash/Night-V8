@@ -316,14 +316,7 @@ namespace Fastlights
         private void UpdateColour()
         {
             if (!_hasUpdated && _lastColour == Colour) return;
-            Mesh mesh = _meshFilter.mesh;
-            Color32[] colors = new Color32[mesh.vertices.Length];
-            for (int i = 0; i < colors.Length; ++i)
-            {
-                colors[i] = Colour;
-            }
-
-            mesh.colors32 = colors;
+            _meshRenderer.material.SetColor("_Color", Colour);
             _lastColour = Colour;
         }
 

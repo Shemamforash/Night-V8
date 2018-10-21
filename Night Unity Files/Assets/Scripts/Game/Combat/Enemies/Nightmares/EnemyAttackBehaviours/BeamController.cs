@@ -10,7 +10,7 @@ public class BeamController : MonoBehaviour
     private static readonly ObjectPool<BeamController> _beamPool = new ObjectPool<BeamController>("Beams", "Prefabs/Combat/Enemies/Beam");
     private static GameObject _prefab;
     private LineRenderer _glowLine, _beamLine, _leadLine;
-    private const float LeadDurationMax = 0.5f;
+    private const float LeadDurationMax = 1f;
     private const float BeamDurationMax = 1f;
     private ParticleSystem _burst, _charge, _energy, _spray;
     private Transform _origin;

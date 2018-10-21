@@ -139,7 +139,7 @@ namespace Game.Combat.Player
 
         protected override void MagazineEffect(Shot s)
         {
-            float rotation = PlayerCombat.Instance.transform.rotation.z;
+            float rotation = AdvancedMaths.AngleFromUp(Vector3.zero, PlayerCombat.Instance.transform.up);
             PushController.Create(PlayerCombat.Instance.transform.position, rotation, true, 5f);
         }
     }

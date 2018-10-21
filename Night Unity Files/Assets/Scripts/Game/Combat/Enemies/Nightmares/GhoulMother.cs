@@ -2,7 +2,7 @@
 
 namespace Game.Combat.Enemies.Nightmares
 {
-    public class GhoulMother : EnemyBehaviour
+    public class GhoulMother : NightmareEnemyBehaviour
     {
         private const int MinGhoulsReleased = 3;
         private const int MaxGhoulsReleased = 6;

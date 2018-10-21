@@ -13,6 +13,7 @@ namespace Game.Combat.Enemies.Bosses
 
         protected virtual void Awake()
         {
+            gameObject.layer = 24;
             RigidBody = GetComponent<Rigidbody2D>();
         }
 

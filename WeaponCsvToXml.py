@@ -54,6 +54,7 @@ class RecipeImporter(XMLWriter):
         write_single_value(self, "ProductName", get_value(self, "E", row, ""))
         write_single_value(self, "ProductQuantity", get_value(self, "F", row, "0"))
         write_single_value(self, "IsBuilding", get_value(self, "G", row))
+        write_single_value(self, "LevelNo", get_value(self, "H", row))
 
     def read_recipes(self):
         for row_no in range(4, 28):

@@ -17,7 +17,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private void ApplyEffect()
         {
             _player = CharacterManager.SelectedCharacter;
-            Debug.Log(Template.EffectBonus);
             switch (Template.ResourceType)
             {
                 case "Meat":

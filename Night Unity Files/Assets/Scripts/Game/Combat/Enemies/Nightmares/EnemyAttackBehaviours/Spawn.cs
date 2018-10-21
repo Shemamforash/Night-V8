@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Game.Combat.Generation;
+﻿using Game.Combat.Generation;
+using SamsHelper.Libraries;
 using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
@@ -23,12 +23,11 @@ namespace Game.Combat.Enemies.Nightmares.EnemyAttackBehaviours
             SkillAnimationController.Create(transform, "Spawn", 2f, () =>
             {
                 int enemiesToSpawn = Random.Range(_countMin + 1, _countMax + 1);
-                List<Cell> cellsNearMe = PathingGrid.GetCellsNearMe(Enemy.CurrentCell(), enemiesToSpawn, 2f, 0.5f);
-                enemiesToSpawn = cellsNearMe.Count;
+                
                 for (int i = 0; i < enemiesToSpawn; ++i)
                 {
-                    EnemyBehaviour enemy = CombatManager.SpawnEnemy(_spawnType, cellsNearMe[i].Position);
-//                    enemy.Shield.Activate(2f);
+                    Vector2 spawnPosition = AdvancedMaths.RandomDirection() * Random.Range(0.5f, 2f) + (Vector2) transform.position;
+                    CombatManager.SpawnEnemy(_spawnType, spawnPosition);
                 }
             });
         }

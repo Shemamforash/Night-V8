@@ -59,10 +59,10 @@ namespace Game.Combat.Enemies
         private void GenerateArmour()
         {
             int difficulty = Mathf.FloorToInt(WorldState.Difficulty() / 5f);
-            int armourMin = difficulty - 2;
+            int armourMin = difficulty - 3;
             if (armourMin < 0) armourMin = 0;
             else if (armourMin > 10) armourMin = 10;
-            int armourMax = difficulty + 2;
+            int armourMax = difficulty;
             if (armourMax < 0) armourMax = 0;
             else if (armourMax > 10) armourMax = 10;
             ArmourController.AutoFillSlots(Random.Range(armourMin, armourMax));

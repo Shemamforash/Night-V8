@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Characters;
+using Game.Characters.Brands;
 using Game.Combat.Player;
 using Game.Exploration.Regions;
 using Game.Global;

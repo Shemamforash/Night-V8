@@ -18,6 +18,8 @@ public class ListController : MonoBehaviour, IInputListener
     private List<object> _listObjects = new List<object>();
     private int _listSize;
     private EnhancedButton _centreButton;
+    private float _skipTime;
+    private const float SkipTimeMax = 0.25f;
 
     private void CacheElements()
     {
@@ -107,7 +109,18 @@ public class ListController : MonoBehaviour, IInputListener
 
     public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)
     {
-        if (isHeld) return;
+        if (isHeld)
+        {
+            if (axis != InputAxis.Vertical) return;
+            _skipTime += Time.unscaledDeltaTime;
+            if (_skipTime < SkipTimeMax) return;
+            _skipTime = SkipTimeMax;
+        }
+        else
+        {
+            _skipTime = 0f;
+        }
+
         switch (axis)
         {
             case InputAxis.Vertical:

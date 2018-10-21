@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
 {
-    public class Ghoul : EnemyBehaviour
+    public class Ghoul : NightmareEnemyBehaviour
     {
         private float _distanceToTouch = 0.5f;
 

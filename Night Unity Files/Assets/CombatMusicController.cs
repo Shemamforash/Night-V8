@@ -12,19 +12,20 @@ public class CombatMusicController : MonoBehaviour
     private AudioSource _layer1, _layer2, _layer3;
     private float _layer2TargetVolume, _layer3TargetVolume;
     private float _layer2VolumeGain = 1f, _layer3VolumeGain = 0.5f;
+    private float _startTime;
 
     public void Awake()
     {
-        return;
         _layer1 = gameObject.FindChildWithName<AudioSource>("Layer 1");
         _layer2 = gameObject.FindChildWithName<AudioSource>("Layer 2");
         _layer3 = gameObject.FindChildWithName<AudioSource>("Layer 3");
+        _startTime = Random.Range(0f, AudioClips.SimmavA.length);
         _layer1.clip = AudioClips.SimmavA;
         _layer2.clip = AudioClips.SimmavB;
         _layer3.clip = AudioClips.SimmavC;
-        SetVolume(_layer1, 1);
-        SetVolume(_layer2, 0);
-        SetVolume(_layer3, 0);
+        SetInitialVolume(_layer1, 1);
+        SetInitialVolume(_layer2, 0);
+        SetInitialVolume(_layer3, 0);
     }
 
     private void UpdateLayerVolume(float targetVolume, AudioSource layer, float incrementAmount)
@@ -37,7 +38,6 @@ public class CombatMusicController : MonoBehaviour
 
     public void Update()
     {
-        return;
         Vector2 playerPosition = PlayerCombat.Instance.transform.position;
         List<CanTakeDamage> enemies = CombatManager.Enemies();
         float nearestEnemy = 1000f;
@@ -50,9 +50,10 @@ public class CombatMusicController : MonoBehaviour
         UpdateLayerVolume(_layer3TargetVolume, _layer3, _layer3VolumeGain);
     }
 
-    private void SetVolume(AudioSource source, float volume)
+    private void SetInitialVolume(AudioSource source, float volume)
     {
         source.volume = volume;
+        source.time = _startTime;
         source.Play();
     }
 }

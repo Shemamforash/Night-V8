@@ -33,15 +33,9 @@ public class RadianceController : MonoBehaviour, ICombatEvent
         public void Awake()
         {
             _audioSource = gameObject.FindChildWithName<AudioSource>("Drone");
-            _pitchAnchor = Random.Range(0.9f, 1.1f);
-        }
-
-        public void Update()
-        {
             float noise = Mathf.PerlinNoise(Time.timeSinceLevelLoad, 0);
             noise = noise / 5f - 0.1f;
-            float pitch = _pitchAnchor + noise;
-            _audioSource.pitch = pitch;
+            _audioSource.pitch = 1 + noise;
         }
     }
 

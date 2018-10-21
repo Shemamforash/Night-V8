@@ -54,7 +54,7 @@ GameObject:
   - component: {fileID: 33162448263427168}
   - component: {fileID: 23719301310897374}
   - component: {fileID: 114022848514243232}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,7 +216,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1924024157971058}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7239492, y: -2.524682, z: 0.125957}
+  m_LocalPosition: {x: -18.563454, y: -3.205664, z: 0.125957}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4587476493550782}
@@ -268,7 +268,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 2e91f08796cbd44849f1e15382cade3d, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -316,7 +316,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 10
+  MaxDistance: 20
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72222bbca7e42b94ab82d1ed6b2eb699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Colour: {r: 0.5754717, g: 0.122833565, b: 0.078720205, a: 0.7075956}
+  Colour: {r: 1, g: 1, b: 1, a: 0}
   Radius: 0
   LightMaterial: {fileID: 2100000, guid: 2e91f08796cbd44849f1e15382cade3d, type: 2}
   Target: {fileID: 1924024157971058}
@@ -9793,7 +9793,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 5f4dd223536dc6449b8119cb02e41f30, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -36,6 +36,7 @@ public class GateTransitController : MonoBehaviour
         WorldState.Pause();
         GameObject.Find("Game").SetActive(false);
         _gateParticles.Play();
+        _streakParticles.Stop();
         _streakParticles.Play();
 //        StartCoroutine(GoToNextArea());
 

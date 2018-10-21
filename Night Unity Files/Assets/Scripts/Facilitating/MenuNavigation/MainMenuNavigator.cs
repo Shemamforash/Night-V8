@@ -1,11 +1,13 @@
 ﻿using DG.Tweening;
 using Facilitating.Persistence;
+using Game.Characters;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
 using SamsHelper.ReactiveUI.Elements;
 using SamsHelper.ReactiveUI.MenuSystem;
+using TMPro;
 using UnityEngine;
 using Menu = SamsHelper.ReactiveUI.MenuSystem.Menu;
 
@@ -19,6 +21,7 @@ namespace Facilitating.MenuNavigation
         private Sequence _fadeInSequence;
         private static bool _seenIntro;
         private GameController _gameController;
+        private bool _skipping;
 
         private void CacheGameObjects()
         {
@@ -36,6 +39,14 @@ namespace Facilitating.MenuNavigation
         private void CreateFadeInSequence()
         {
             _fadeInSequence = DOTween.Sequence();
+            TextMeshProUGUI latinText = _latin.GetComponent<TextMeshProUGUI>();
+            float finalLatinTextSize = 90;
+            latinText.fontSize = finalLatinTextSize - 5f;
+
+            TextMeshProUGUI englishText = _english.GetComponent<TextMeshProUGUI>();
+            float finalEnglishTextSize = 50;
+            englishText.fontSize = finalEnglishTextSize - 5f;
+
             if (!_seenIntro)
             {
                 _fadeInSequence.AppendInterval(1f); //1
@@ -47,17 +58,22 @@ namespace Facilitating.MenuNavigation
                 _fadeInSequence.Append(_english.DOFade(1f, 1f)); //11
                 _fadeInSequence.AppendInterval(6f); //17
                 _fadeInSequence.Append(_latin.DOFade(0f, 1f)); //18
-                _fadeInSequence.Insert(17, _english.DOFade(0f, 1f));
                 _fadeInSequence.AppendInterval(2f);
+                
+                _fadeInSequence.Insert(6, latinText.DOFontSize(finalLatinTextSize, 5));
+                _fadeInSequence.Insert(10, englishText.DOFontSize(finalEnglishTextSize, 5));
+                _fadeInSequence.Insert(17, _english.DOFade(0f, 1f));
+
                 _seenIntro = true;
             }
 
-            _fadeInSequence.Join(_menuCanvasGroup.DOFade(1, 2f));
+            _fadeInSequence.Append(_menuCanvasGroup.DOFade(1, 2f));
             _fadeInSequence.AppendCallback(() => MenuStateMachine.ShowMenu("Main Menu"));
         }
 
         public void Awake()
         {
+            _skipping = false;
             Cursor.visible = false;
             InputHandler.RegisterInputListener(this);
             SaveController.LoadSettings();
@@ -82,6 +98,27 @@ namespace Facilitating.MenuNavigation
         {
             InputHandler.UnregisterInputListener(this);
             _fadeInSequence.Complete(true);
+        }
+
+        public void Update()
+        {
+            if (_skipping) return;
+            if (Input.GetKeyDown(KeyCode.Alpha1)) SkipToPoint(1);
+            else if (Input.GetKeyDown(KeyCode.Alpha2)) SkipToPoint(2);
+            else if (Input.GetKeyDown(KeyCode.Alpha3)) SkipToPoint(3);
+            else if (Input.GetKeyDown(KeyCode.Alpha4)) SkipToPoint(4);
+            else if (Input.GetKeyDown(KeyCode.Alpha5)) SkipToPoint(5);
+        }
+
+        private void SkipToPoint(int num)
+        {
+            SaveController.ClearSave();
+            WorldState.ResetWorld(num, (num - 1) * 10);
+            if (num > 2) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter());
+            if (num > 4) CharacterManager.AddCharacter(CharacterManager.GenerateRandomCharacter());
+            SaveController.SaveGame();
+            _gameController.StartGame(true);
+            _skipping = true;
         }
 
         public void OnInputUp(InputAxis axis)

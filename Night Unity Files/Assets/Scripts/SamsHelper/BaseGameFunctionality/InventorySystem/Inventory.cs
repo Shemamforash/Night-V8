@@ -19,7 +19,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
     {
         private static readonly Dictionary<string, InventoryItem> _resources = new Dictionary<string, InventoryItem>();
         private static readonly List<InventoryItem> _items = new List<InventoryItem>();
-        private static readonly List<InventoryItem> _contents = new List<InventoryItem>();
         private static readonly List<Consumable> _consumables = new List<Consumable>();
         private static readonly List<Weapon> _weapons = new List<Weapon>();
         private static readonly List<Armour> _armour = new List<Armour>();
@@ -29,17 +28,26 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static List<AttributeType> _attributeTypes;
         private static readonly List<Building> _buildings = new List<Building>();
 
-        public static InventoryItem FindItem(int id)
+        public static Weapon FindWeapon(int id)
         {
-            return _contents.FirstOrDefault(i => i.ID() == id);
+            return _weapons.FirstOrDefault(i => i.ID() == id);
         }
 
+        public static Armour FindArmour(int id)
+        {
+            return _armour.FirstOrDefault(i => i.ID() == id);
+        }
+
+        public static Accessory FindAccessory(int id)
+        {
+            return _accessories.FirstOrDefault(i => i.ID() == id);
+        }
+        
         public static void Reset()
         {
             LoadResources();
             _resources.Clear();
             _items.Clear();
-            _contents.Clear();
             _consumables.Clear();
             _weapons.Clear();
             _armour.Clear();
@@ -47,11 +55,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             Inscriptions.Clear();
             _buildings.Clear();
 #if UNITY_EDITOR
-            IncrementResource("Salt", 20);
-            IncrementResource("Radiance", 20);
-            IncrementResource("Fuel", 20);
-            IncrementResource("Water", 20);
-            IncrementResource("Essence", 20);
+//            IncrementResource("Salt", 20);
+//            IncrementResource("Radiance", 20);
+//            IncrementResource("Fuel", 20);
+//            IncrementResource("Water", 20);
+//            IncrementResource("Essence", 20);
 #endif
         }
 
@@ -109,13 +117,13 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             InventoryResources().ForEach(r => LoadResource(r.Name, resourceNode));
             XmlNode itemNode = inventoryNode.SelectSingleNode("Items");
             foreach (XmlNode weaponNode in itemNode.SelectSingleNode("Weapons").ChildNodes)
-                AddItem(Weapon.LoadWeapon(weaponNode));
+                Move(Weapon.LoadWeapon(weaponNode));
             foreach (XmlNode armourNode in itemNode.SelectSingleNode("ArmourPlates").ChildNodes)
-                AddItem(Armour.LoadArmour(armourNode));
+                Move(Armour.LoadArmour(armourNode));
             foreach (XmlNode accessoryNode in itemNode.SelectSingleNode("Accessories").ChildNodes)
-                AddItem(Accessory.LoadAccessory(accessoryNode));
+                Move(Accessory.LoadAccessory(accessoryNode));
             foreach (XmlNode inscriptionNode in itemNode.SelectSingleNode("Inscriptions").ChildNodes)
-                AddItem(Inscription.LoadInscription(inscriptionNode));
+                Move(Inscription.LoadInscription(inscriptionNode));
         }
 
         public static void Save(XmlNode root)
@@ -150,11 +158,7 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         private static InventoryItem AddResource(string name)
         {
             InventoryItem newResource = ResourceTemplate.Create(name);
-            if (newResource is Consumable)
-            {
-                _consumables.Add((Consumable) newResource);
-            }
-
+            if (newResource is Consumable) _consumables.Add((Consumable) newResource);
             _resources.Add(name, newResource);
             return newResource;
         }
@@ -166,46 +170,11 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return item;
         }
 
-        public static bool ContainsItem(InventoryItem item)
-        {
-            if (!item.IsStackable()) return _items.Contains(item);
-            return _resources.ContainsKey(item.Name) && item.Quantity() != 0;
-        }
-
-        private static void AddItem(InventoryItem item)
-        {
-            _items.Add(item);
-            Assert.IsFalse(item is Consumable);
-            if (item is Weapon) _weapons.Add((Weapon) item);
-            else if (item is Armour) _armour.Add((Armour) item);
-            else if (item is Accessory) _accessories.Add((Accessory) item);
-            else if (item is Inscription) Inscriptions.Add((Inscription) item);
-            UpdateContents();
-        }
-
-        //Returns item if the item was successfully removed
-        //Returns null if the item could not be removed (stackable but 0)
-        //Throws an error if the item was not in the inventory
-        private static InventoryItem RemoveItem(InventoryItem item)
-        {
-            if (!_contents.Contains(item)) throw new Exceptions.ItemNotInInventoryException(item.Name);
-            _items.Remove(item);
-            _consumables.Remove(item as Consumable);
-            _resources.Remove(item.Name);
-            _weapons.Remove(item as Weapon);
-            _armour.Remove(item as Armour);
-            _accessories.Remove(item as Accessory);
-            Inscriptions.Remove(item as Inscription);
-            UpdateContents();
-            return item;
-        }
-
         public static void IncrementResource(string name, int amount)
         {
             if (amount < 0) throw new Exceptions.ResourceValueChangeInvalid(name, "increment", amount);
             InventoryItem resource = GetResource(name) ?? AddResource(name);
             resource.Increment(amount);
-            UpdateContents();
         }
 
         public static void DecrementResource(string name, int amount)
@@ -215,29 +184,12 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             if (resource == null) return;
             if (resource.Quantity() < amount) return;
             resource.Decrement(amount);
-            if (resource.Quantity() == 0) RemoveItem(resource);
-            UpdateContents();
+            if (resource.Quantity() == 0) _resources.Remove(name);
         }
 
         public static int GetResourceQuantity(string type)
         {
             return GetResource(type)?.Quantity() ?? 0;
-        }
-
-        private static void UpdateContents()
-        {
-            _contents.Clear();
-            _items.ForEach(i => _contents.Add(i));
-            foreach (InventoryItem r in _resources.Values)
-            {
-                Assert.IsTrue(r.Quantity() > 0);
-                _contents.Add(r);
-            }
-        }
-
-        public static List<InventoryItem> Contents()
-        {
-            return _contents;
         }
 
         public static void UpdateBuildings()
@@ -264,6 +216,10 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
                     return _buildings.Count(b => b is Condenser);
                 case "Essence Filter":
                     return _buildings.Count(b => b is EssenceFilter);
+                case "Purifier":
+                    return _buildings.Count(b => b is Purifier);
+                case "Smoker":
+                    return _buildings.Count(b => b is Smoker);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -272,12 +228,6 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
         public static List<Building> Buildings()
         {
             return _buildings;
-        }
-
-        //Returns item in target inventory if the item was successfully moved
-        private static void Move(InventoryItem item)
-        {
-            AddItem(item);
         }
 
         public static List<Weapon> GetAvailableWeapons() => GetAvailableItems(_weapons);
@@ -289,17 +239,34 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             return items.FindAll(w => w.EquippedCharacter == null || w.EquippedCharacter == CharacterManager.SelectedCharacter);
         }
 
-        public static void Move(InventoryItem item, int quantity)
+        public static void Move(InventoryItem item)
         {
-            if (!item.IsStackable())
-            {
-                Move(item);
-                return;
-            }
+            Assert.IsTrue(item.IsStackable());
+            IncrementResource(item.Name, item.Quantity());
+        }
 
-            if (quantity > item.Quantity()) quantity = Mathf.FloorToInt(item.Quantity());
-            if (quantity <= 0) return;
-            IncrementResource(item.Name, quantity);
+        public static void Move(Weapon weapon)
+        {
+            _items.Add(weapon);
+            _weapons.Add(weapon);
+        }
+
+        public static void Move(Armour armour)
+        {
+            _items.Add(armour);
+            _armour.Add(armour);
+        }
+
+        public static void Move(Accessory accessory)
+        {
+            _items.Add(accessory);
+            _accessories.Add(accessory);
+        }
+
+        public static void Move(Inscription inscription)
+        {
+            _items.Add(inscription);
+            Inscriptions.Add(inscription);
         }
 
         private static void LoadResource(string type, XmlNode root)
@@ -312,13 +279,28 @@ namespace SamsHelper.BaseGameFunctionality.InventorySystem
             root.CreateChild(type.Replace(" ", "_"), GetResourceQuantity(type));
         }
 
-        public static void DestroyItem(InventoryItem item)
+        public static void Destroy(Weapon weapon)
         {
-            _items.Remove(item);
-            _weapons.Remove(item as Weapon);
-            _armour.Remove(item as Armour);
-            _accessories.Remove(item as Accessory);
-            Inscriptions.Remove(item as Inscription);
+            _items.Remove(weapon);
+            _weapons.Remove(weapon);
         }
+
+        public static void Destroy(Armour armour)
+        {
+            _items.Remove(armour);
+            _armour.Remove(armour);
+        }
+
+        public static void Destroy(Accessory accessory)
+        {
+            _items.Remove(accessory);
+            _accessories.Remove(accessory);
+        }
+
+        public static void Destroy(Inscription inscription)
+        {
+            _items.Remove(inscription);
+            Inscriptions.Remove(inscription);
+        }        
     }
 }

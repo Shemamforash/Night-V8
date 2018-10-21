@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4896082127528270}
   - component: {fileID: 198576934203429638}
   - component: {fileID: 199876432594562064}
+  - component: {fileID: 58955258690424784}
   m_Layer: 10
   m_Name: Ring
   m_TagString: Untagged
@@ -233,7 +234,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1926464004039016}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.21, y: -0.04, z: 0}
+  m_LocalPosition: {x: 0.7630273, y: -0.018286228, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4346499666339682}
@@ -321,6 +322,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 4
+--- !u!58 &58955258690424784
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1093796096816170}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.0050706863, y: -0.008436859}
+  serializedVersion: 2
+  m_Radius: 1.46
 --- !u!114 &114975459494550844
 MonoBehaviour:
   m_ObjectHideFlags: 1

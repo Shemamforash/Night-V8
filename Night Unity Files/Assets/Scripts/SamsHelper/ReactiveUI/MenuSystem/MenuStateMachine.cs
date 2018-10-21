@@ -105,7 +105,7 @@ namespace SamsHelper.ReactiveUI.MenuSystem
 
         public static Menu CurrentMenu()
         {
-            return ((MenuState) States.GetCurrentState()).Menu;
+            return ((MenuState) States.GetCurrentState())?.Menu;
         }
 
         public void OnInputDown(InputAxis axis, bool isHeld, float direction = 0)

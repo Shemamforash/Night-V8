@@ -110,9 +110,9 @@ namespace Game.Global
             yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "misc/buttonclick", "Button Click"));
 
             Debug.Log("loading music");
-            yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "music/combat/simmav", "simmav a"));
-            yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "music/combat/simmav", "simmav b"));
-            yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "music/combat/simmav", "simmav c"));
+            yield return StartCoroutine(LoadClip(a => SimmavA = a, "music/combat/simmav", "simmav a"));
+            yield return StartCoroutine(LoadClip(a => SimmavB = a, "music/combat/simmav", "simmav b"));
+            yield return StartCoroutine(LoadClip(a => SimmavC = a, "music/combat/simmav", "simmav c"));
 
             watch.Stop();
             Helper.PrintTime("Done loading audio in: ", watch);

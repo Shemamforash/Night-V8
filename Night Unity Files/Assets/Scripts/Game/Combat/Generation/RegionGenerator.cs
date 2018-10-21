@@ -32,6 +32,7 @@ namespace Game.Combat.Generation
             GenerateObjects();
             GenerateEdges();
             _region.Visit();
+            GenerateCharacter();
             PathingGrid.FinaliseGrid();
         }
 
@@ -61,7 +62,6 @@ namespace Game.Combat.Generation
             _region.Fires.ForEach(f => f.CreateObject());
             _region.Containers.ForEach(c => c.CreateObject());
             _region.Barriers.ForEach(b => b.CreateObject());
-            GenerateCharacter();
         }
 
         private void GenerateEdges()

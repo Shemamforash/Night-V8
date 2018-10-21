@@ -27,7 +27,7 @@ namespace Game.Gear.Armour
         {
             doc = base.Save(doc);
             doc.CreateChild("Health", _armourHealth.CurrentValue());
-            doc.CreateChild("Type", _armourType);
+            doc.CreateChild("Type", (int)_armourType);
             return doc;
         }
 
@@ -121,7 +121,7 @@ namespace Game.Gear.Armour
             if (!_armourHealth.ReachedMin()) return false;
             PlayerCombat.Instance.WeaponAudio.BreakArmour();
             Unequip();
-            Inventory.DestroyItem(this);
+            Inventory.Destroy(this);
             return true;
         }
 

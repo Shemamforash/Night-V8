@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace;
 using DG.Tweening;
@@ -190,7 +189,10 @@ public class DismantleMenuController : Menu
         }
 
         _objectToDismantle.Unequip();
-        Inventory.DestroyItem(_objectToDismantle);
+        if (_objectToDismantle is Weapon) Inventory.Destroy((Weapon) _objectToDismantle);
+        else if (_objectToDismantle is Accessory) Inventory.Destroy((Accessory) _objectToDismantle);
+        else if (_objectToDismantle is Armour) Inventory.Destroy((Armour) _objectToDismantle);
+        else if (_objectToDismantle is Inscription) Inventory.Destroy((Inscription) _objectToDismantle);
         Cancel();
     }
 

@@ -1,19 +1,20 @@
 ﻿using Game.Combat.Misc;
 using Game.Combat.Player;
 using SamsHelper.Libraries;
+using SamsHelper.ReactiveUI.Elements;
 using TMPro;
 
 namespace Game.Combat.Ui
 {
     public class EnemyUi : CharacterUi
     {
-        public TextMeshProUGUI NameText;
+        public EnhancedText NameText;
         public UIHitController UiHitController;
 
         public override void Awake()
         {
             base.Awake();
-            NameText = gameObject.FindChildWithName<TextMeshProUGUI>("Name");
+            NameText = gameObject.FindChildWithName<EnhancedText>("Name");
             UiHitController = gameObject.FindChildWithName<UIHitController>("Cover");
         }
 
@@ -22,7 +23,7 @@ namespace Game.Combat.Ui
             Character = PlayerCombat.Instance.GetTarget();
             base.LateUpdate();
             if (Character == null) return;
-            NameText.text = Character.GetDisplayName();
+            NameText.SetText(Character.GetDisplayName());
         }
 
         public void RegisterHit(CanTakeDamage enemy)

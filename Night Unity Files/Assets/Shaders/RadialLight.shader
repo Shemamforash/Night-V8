@@ -3,6 +3,7 @@
 Shader "LOS/Radial Light" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "radial" {}
+		_Color ("Color", Color) = (1,1,1,1)
 	}
 	SubShader {
         Tags {
@@ -28,6 +29,7 @@ Shader "LOS/Radial Light" {
 
             uniform sampler2D _MainTex; 
          	uniform float _intensity;
+         	fixed4 _Color;
             
             struct vIn {
                 float4 vertex : POSITION;
@@ -54,6 +56,7 @@ Shader "LOS/Radial Light" {
                 float4 _MainTex_var = tex2D(_MainTex, i.uv0);
                 float texRGBAverage = (_MainTex_var.r + _MainTex_var.g + _MainTex_var.b) / 3;
                 fixed4 color = fixed4(i.color.rgb * _intensity, texRGBAverage * i.color.a);
+                color *= _Color;
                 if(i.color.r > color.r) {
                     color.r = i.color.r;
                 }

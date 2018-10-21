@@ -27,6 +27,7 @@ namespace Game.Combat.Ui
         public void SetValue(Number health)
         {
             _healthText.text = (int) health.CurrentValue() + "/" + (int) health.Max;
+            _healthText.text = "";
             _healthBar.SetValue(health.Normalised());
         }
 

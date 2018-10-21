@@ -4,7 +4,7 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: RadialLight
   m_Shader: {fileID: 4800000, guid: af67dd49cde3f0749acde4dd0c4d3d49, type: 3}
@@ -25,4 +25,4 @@ Material:
     m_Floats:
     - _Opacity: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 0.60583115, b: 0.042452812, a: 1}

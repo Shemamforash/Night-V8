@@ -6,6 +6,7 @@ using Game.Combat.Enemies;
 using Game.Combat.Generation;
 using Game.Combat.Player;
 using Game.Combat.Ui;
+using Game.Gear.Armour;
 using Game.Gear.Weapons;
 using Game.Global;
 using SamsHelper.Libraries;
@@ -30,6 +31,8 @@ namespace Game.Combat.Misc
             transform.SetParent(GameObject.Find("World").transform);
             _moveBehaviour = GetComponent<MoveBehaviour>();
             MovementController.SetSpeed(1);
+            ArmourController = new ArmourController(null);
+            ArmourController.AutoFillSlots(10);
         }
 
         public override Weapon Weapon()
@@ -44,9 +47,11 @@ namespace Game.Combat.Misc
 
         public static void Generate(Vector2 position)
         {
+            Debug.Log("generated");
             if (_shelterCharacterPrefab == null) _shelterCharacterPrefab = Resources.Load<GameObject>("Prefabs/Combat/Shelter Character");
             GameObject characterObject = Instantiate(_shelterCharacterPrefab);
             characterObject.transform.position = position;
+            Debug.Log(position);
         }
 
         public void Enter()
@@ -65,7 +70,7 @@ namespace Game.Combat.Misc
             if (!CombatManager.IsCombatActive()) return;
             MyUpdate();
         }
-        
+
         public override void MyUpdate()
         {
             if (!CurrentCell().IsEdgeCell) return;

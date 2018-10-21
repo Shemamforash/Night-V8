@@ -20,12 +20,12 @@ namespace Game.Combat.Enemies.Misc
         private float _radius = 1;
         private Rigidbody2D _rb2d;
         private bool _isPlayerGrenade;
+        private readonly Collider2D[] _colliders = new Collider2D[50];
 
         public void Awake()
         {
             _rb2d = GetComponent<Rigidbody2D>();
         }
-
 
         public static Grenade CreateBasic(Vector2 origin, Vector2 target, bool isPlayerGrenade)
         {
@@ -75,15 +75,14 @@ namespace Game.Combat.Enemies.Misc
             g._sickening = true;
         }
 
-        private void Update()
+        public void Update()
         {
-            CanTakeDamage nearestTarget = _isPlayerGrenade ? CombatManager.NearestEnemy(transform.position) : PlayerCombat.Instance;
-            if (_rb2d.velocity.magnitude > 0.25f)
+            if (_rb2d.velocity.magnitude > 0.5f)
             {
-                if (nearestTarget == null) return;
-                if (nearestTarget.transform.Distance(transform) > 0.75f) return;
+                int layerMask = _isPlayerGrenade ? 1 << 24 | 1 << 10 : 1 << 17;
+                int hits = Physics2D.OverlapCircleNonAlloc(transform.position, _radius / 2f, _colliders, layerMask);
+                if (hits == 0) return;
                 if (_isPlayerGrenade && transform.Distance(PlayerCombat.Instance.transform) < 1) return;
-                return;
             }
 
             Detonate();

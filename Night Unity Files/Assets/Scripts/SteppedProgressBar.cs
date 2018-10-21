@@ -76,8 +76,8 @@ public class SteppedProgressBar : MonoBehaviour
         {
             _faderImage = GetComponent<Image>();
             Sequence seq = DOTween.Sequence();
-            _faderImage.color = Color.white;
-            seq.Append(_faderImage.DOColor(new Color(0, 0, 0, 0), Duration));
+            _faderImage.color = Color.red;
+            seq.Append(_faderImage.DOColor(new Color(1, 0, 0, 0), Duration));
             seq.AppendCallback(() =>
             {
                 Destroy(gameObject);

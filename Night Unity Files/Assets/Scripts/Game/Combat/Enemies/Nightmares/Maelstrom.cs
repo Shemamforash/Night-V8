@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
 {
-    public class Maelstrom : EnemyBehaviour
+    public class Maelstrom : NightmareEnemyBehaviour
     {
         private const int DamageToSplit = 100;
 

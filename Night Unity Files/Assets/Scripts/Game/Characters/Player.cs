@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using Facilitating.Persistence;
+using Game.Characters.Brands;
 using Game.Characters.CharacterActions;
 using Game.Combat.Player;
 using Game.Exploration.WorldEvents;
@@ -109,7 +110,6 @@ namespace Game.Characters
 
             AddStates();
             BrandManager.Initialise(this);
-
             WeaponGenerator.GetWeaponTypes().ForEach(t => { _weaponKills.Add(t, 0); });
         }
 

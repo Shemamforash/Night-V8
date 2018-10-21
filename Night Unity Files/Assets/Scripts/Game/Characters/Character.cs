@@ -43,10 +43,10 @@ namespace Game.Characters
             int accessoryId = accessoryNode?.IntFromNode("Accessory") ?? -1;
             int armourPlate1Id = armourNode1?.IntFromNode("ArmourPlate1") ?? -1;
             int armourPlate2Id = armourNode2?.IntFromNode("ArmourPlate2") ?? -1;
-            EquipWeapon((Weapon) Inventory.FindItem(weaponId));
-            EquipAccessory((Accessory) Inventory.FindItem(accessoryId));
-            ArmourController.SetArmour((Armour) Inventory.FindItem(armourPlate1Id));
-            ArmourController.SetArmour((Armour) Inventory.FindItem(armourPlate2Id));
+            EquipWeapon(Inventory.FindWeapon(weaponId));
+            EquipAccessory(Inventory.FindAccessory(accessoryId));
+            ArmourController.SetArmour(Inventory.FindArmour(armourPlate1Id));
+            ArmourController.SetArmour(Inventory.FindArmour(armourPlate2Id));
         }
 
         public virtual void EquipWeapon(Weapon weapon)

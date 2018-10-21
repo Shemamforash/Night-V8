@@ -36,20 +36,20 @@ namespace Facilitating.UIControllers
             _infoGameObject = gameObject.FindChildWithName("Info");
 
             List<ItemQuality> qualities = new List<ItemQuality>();
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
             foreach (ItemQuality value in Enum.GetValues(typeof(ItemQuality))) qualities.Add(value);
             for (int i = 0; i < 50; ++i)
             {
                 Weapon weapon = WeaponGenerator.GenerateWeapon();
-                Inventory.Move(weapon, 1);
+                Inventory.Move(weapon);
                 Inscription inscription = Inscription.Generate();
-                Inventory.Move(inscription, 1);
+                Inventory.Move(inscription);
                 Armour plate = Armour.Create(qualities.RandomElement());
-                Inventory.Move(plate, 1);
+                Inventory.Move(plate);
                 Accessory accessory = Accessory.Generate();
-                Inventory.Move(accessory, 1);
+                Inventory.Move(accessory);
             }
-#endif
+//#endif
 
             _swapButton.AddOnClick(() =>
             {
@@ -65,6 +65,7 @@ namespace Facilitating.UIControllers
                 InputHandler.UnregisterInputListener(this);
                 _infoGameObject.SetActive(false);
             });
+            _infuseButton.AddOnClick(Infuse);
             _infuseButton.AddOnHold(Infuse, 0.5f);
         }
 

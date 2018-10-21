@@ -57,6 +57,7 @@ namespace Facilitating.UIControllers
 
             if (slotsUsed == 0) _armourText.text = "No Armour";
             else _armourText.text = "-" + slotsAvailable * 10f + "% damage from Armour";
+            _armourText.text = "";
         }
 
         public void TakeDamage(ArmourController controller)

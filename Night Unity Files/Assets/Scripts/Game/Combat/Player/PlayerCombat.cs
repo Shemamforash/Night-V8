@@ -6,6 +6,7 @@ using Facilitating;
 using Facilitating.UIControllers;
 using Fastlights;
 using Game.Characters;
+using Game.Characters.Brands;
 using Game.Combat.Enemies;
 using Game.Combat.Enemies.Animals;
 using Game.Combat.Generation;

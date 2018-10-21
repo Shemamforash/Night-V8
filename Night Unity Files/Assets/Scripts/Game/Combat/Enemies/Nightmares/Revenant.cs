@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
 {
-    public class Revenant : EnemyBehaviour
+    public class Revenant : NightmareEnemyBehaviour
     {
         private Split _split;
         private LeaveFireTrail _fireTrail;
@@ -15,16 +15,9 @@ namespace Game.Combat.Enemies.Nightmares
             base.Initialise(enemy);
             _split = gameObject.AddComponent<Split>();
             _fireTrail = gameObject.AddComponent<LeaveFireTrail>();
+            gameObject.AddComponent<Orbit>().Initialise(GetTarget().transform, v => MovementController.Move(v), 1, 0.5f, 4f);
             _fireTrail.Initialise();
             _split.Initialise(3, 200, EnemyType.Revenant, 1000, -1, true);
-            CurrentAction = Orbit;
-        }
-
-        private void Orbit()
-        {
-            Cell target = PathingGrid.GetCellOrbitingTarget(CurrentCell(), ((CharacterCombat)GetTarget()).CurrentCell(), GetComponent<Rigidbody2D>().velocity, 4f, 0.5f);
-            MoveBehaviour.GoToCell(target);
-            CurrentAction = Orbit;
         }
 
         public override void Kill()

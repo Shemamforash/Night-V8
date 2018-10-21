@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Game.Gear;
 using Game.Gear.Weapons;
@@ -64,6 +65,7 @@ namespace Game.Characters
         public static void AddCharacter(Player playerCharacter)
         {
             Characters.Add(playerCharacter);
+            Characters.ForEach(c => c.CharacterView()?.RefreshNavigation());
         }
 
         public static void RemoveCharacter(Player playerCharacter)
@@ -73,10 +75,6 @@ namespace Game.Characters
             Characters.ForEach(c => c.CharacterView().RefreshNavigation());
         }
 
-        private static void ExitCharacter(Player character)
-        {
-        }
-
         public static void SelectCharacter(Player player)
         {
             SelectedCharacter = player;
@@ -84,28 +82,14 @@ namespace Game.Characters
 
         private static Player PreviousCharacter(Player character)
         {
-            for (int i = 0; i < Characters.Count; ++i)
-            {
-                if (Characters[i] != character) continue;
-                if (i != 0) return Characters[i - 1];
-
-                break;
-            }
-
-            return null;
+            int charIndex = Characters.IndexOf(character);
+            return charIndex != 0 ? Characters[charIndex - 1] : null;
         }
 
         private static Player NextCharacter(Player character)
         {
-            for (int i = 0; i < Characters.Count; ++i)
-            {
-                if (Characters[i] != character) continue;
-                if (i != Characters.Count - 1) return Characters[i + 1];
-
-                break;
-            }
-
-            return null;
+            int charIndex = Characters.IndexOf(character);
+            return charIndex != Characters.Count - 1 ? Characters[charIndex + 1] : null;
         }
 
         private static void LoadTemplates()
@@ -120,28 +104,16 @@ namespace Game.Characters
         private static CharacterTemplate FindClass(CharacterClass characterClass)
         {
             LoadTemplates();
-            foreach (CharacterTemplate t in Templates)
-            {
-                if (t.CharacterClass == characterClass)
-                {
-                    return t;
-                }
-            }
-
+            CharacterTemplate template = Templates.FirstOrDefault(t => t.CharacterClass == characterClass);
+            if (template != null) return template;
             throw new Exceptions.UnknownCharacterClassException(characterClass.ToString());
         }
 
         private static CharacterTemplate FindClass(string characterClass)
         {
             LoadTemplates();
-            foreach (CharacterTemplate t in Templates)
-            {
-                if (t.CharacterClass.ToString() == characterClass)
-                {
-                    return t;
-                }
-            }
-
+            CharacterTemplate template = Templates.FirstOrDefault(t => t.CharacterClass.ToString() == characterClass);
+            if (template != null) return template;
             throw new Exceptions.UnknownCharacterClassException(characterClass);
         }
 
@@ -183,13 +155,13 @@ namespace Game.Characters
             attributes.SetMax(AttributeType.Focus, playerCharacter.CharacterTemplate.Focus);
             attributes.SetMax(AttributeType.Will, playerCharacter.CharacterTemplate.Will);
 
-#if UNITY_EDITOR
-//            int max = 20;
-//            attributes.SetMax(AttributeType.Grit, max);
-//            attributes.SetMax(AttributeType.Fettle, max);
-//            attributes.SetMax(AttributeType.Focus, max);
-//            attributes.SetMax(AttributeType.Will, max);
-#endif
+//#if UNITY_EDITOR
+            int max = 20;
+            attributes.SetMax(AttributeType.Grit, Random.Range(6, 12));
+            attributes.SetMax(AttributeType.Fettle, Random.Range(6, 12));
+            attributes.SetMax(AttributeType.Focus, Random.Range(6, 12));
+            attributes.SetMax(AttributeType.Will, Random.Range(6, 12));
+//#endif
 
             attributes.Get(AttributeType.Grit).SetToMax();
             attributes.Get(AttributeType.Fettle).SetToMax();
@@ -213,32 +185,19 @@ namespace Game.Characters
         {
             Player previousPlayer = PreviousCharacter(SelectedCharacter);
             if (previousPlayer == null) return;
-            ExitCharacter(SelectedCharacter);
             SelectCharacter(previousPlayer);
-            if (selectGear)
-            {
-                previousPlayer.CharacterView().ArmourController.EnhancedButton.Select();
-            }
-            else
-            {
-                previousPlayer.CharacterView().SelectLast();
-            }
+            if (selectGear) previousPlayer.CharacterView().ArmourController.EnhancedButton.Select();
+            else previousPlayer.CharacterView().SelectLast();
         }
 
         public static void SelectNextCharacter(bool selectGear)
         {
             Player nextCharacter = NextCharacter(SelectedCharacter);
+            Debug.Log(nextCharacter);
             if (nextCharacter == null) return;
-            ExitCharacter(SelectedCharacter);
             SelectCharacter(nextCharacter);
-            if (selectGear)
-            {
-                nextCharacter.CharacterView().WeaponController.EnhancedButton.Select();
-            }
-            else
-            {
-                nextCharacter.CharacterView().SelectInitial();
-            }
+            if (selectGear) nextCharacter.CharacterView().WeaponController.EnhancedButton.Select();
+            else nextCharacter.CharacterView().SelectInitial();
         }
     }
 }

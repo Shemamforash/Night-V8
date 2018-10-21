@@ -13,8 +13,8 @@ public class GameController : MonoBehaviour {
 		_starting = false;
 		Cursor.visible = false;
 	}
-	
-	private void StartGame(bool newGame, Travel travel = null)
+
+	public void StartGame(bool newGame, Travel travel = null)
 	{
 		_starting = true;
 		InputHandler.SetCurrentListener(null);

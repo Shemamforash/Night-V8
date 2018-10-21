@@ -30,10 +30,7 @@ namespace Game.Exploration.Environment
         public static void NextLevel(bool reset)
         {
             LoadEnvironments();
-            if (reset)
-            {
-                _currentEnvironment = _environments[0];
-            }
+            if (reset) _currentEnvironment = _environments[WorldState._currentLevel - 1];
             else
             {
                 int nextEnvironmentIndex = _currentEnvironment.LevelNo + 1;

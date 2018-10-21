@@ -12,6 +12,7 @@ public class DroneController : MonoBehaviour
         _crossFader = GetComponent<CrossFader>();
         _crossFader.SetCrossFadeDuration(CrossFadeDuration);
         _crossFader.SetMaxVolume(0.6f);
+        _crossFader.StartAtRandomPosition();
         _crossFader.CrossFade(AudioClips.Drones.RandomElement());
     }
 

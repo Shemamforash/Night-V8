@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
 {
-    public class Shadow : EnemyBehaviour
+    public class Shadow : NightmareEnemyBehaviour
     {
         private float _stealHealthTimer;
         private const float StealHealthTimerMax = 5f;

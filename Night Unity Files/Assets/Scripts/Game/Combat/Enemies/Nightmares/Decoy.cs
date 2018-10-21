@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
 {
-    public class Decoy : EnemyBehaviour
+    public class Decoy : NightmareEnemyBehaviour
     {
         private string _decoyName;
-        
+
         public override string GetDisplayName()
         {
             return _decoyName;
@@ -14,7 +14,7 @@ namespace Game.Combat.Enemies.Nightmares
 
         public static EnemyBehaviour Create(EnemyBehaviour origin)
         {
-            Decoy decoy = (Decoy)CombatManager.QueueEnemyToAdd(EnemyType.Decoy);
+            Decoy decoy = (Decoy) CombatManager.QueueEnemyToAdd(EnemyType.Decoy);
             decoy._decoyName = origin.GetDisplayName();
             decoy.GetComponent<SpriteRenderer>().sprite = origin.GetComponent<SpriteRenderer>().sprite;
             decoy.MovementController.SetSpeed(origin.Enemy.Template.Speed);

@@ -11,6 +11,7 @@ namespace Game.Combat.Enemies.Bosses
         protected override void Awake()
         {
             base.Awake();
+            gameObject.layer = 24;
             ArmourController = new ArmourController(null);
             UpdateInitialHealth();
         }
@@ -22,9 +23,9 @@ namespace Game.Combat.Enemies.Bosses
 
         protected abstract int GetInitialHealth();
 
-        protected  void SetBoss(Boss boss)
+        protected void SetBoss(Boss boss)
         {
-            if(Parent != null) Parent.UnregisterSection(this);
+            if (Parent != null) Parent.UnregisterSection(this);
             Parent = boss;
             Parent.RegisterSection(this);
         }

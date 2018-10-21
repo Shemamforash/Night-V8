@@ -29,7 +29,9 @@ public class UiConsumableController : UiInventoryMenuController
     protected override void OnShow()
     {
         UpdateCondition();
-        ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, 1); });
+#if UNITY_EDITOR
+        ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, 20); });
+#endif
         _consumableList.Show(GetAvailableConsumables);
     }
 

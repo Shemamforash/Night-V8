@@ -14,11 +14,9 @@ namespace Game.Combat.Misc
     {
         public WeaponAudioController WeaponAudio;
         private const float RecoilRecoveryRate = 2f;
-        private const float TimeToStartRecovery = 0.5f;
         private readonly Number Recoil = new Number(0, 0, 1f);
         private float _distanceToTarget = -1;
         protected SpriteRenderer Sprite;
-        private float _recoveryTimer;
         private CanTakeDamage _target;
         public MovementController MovementController;
         private const float ExplosionForceModifier = 10;
@@ -82,7 +80,7 @@ namespace Game.Combat.Misc
         public override void MyUpdate()
         {
             if (GetTarget() != null) _distanceToTarget = Vector2.Distance(transform.position, TargetPosition());
-            UpdateRecoil();
+            Recoil.Decrement(RecoilRecoveryRate * Time.deltaTime);
         }
 
         public void IncreaseRecoil()
@@ -92,21 +90,9 @@ namespace Game.Combat.Misc
             recoilLoss /= 100;
             recoilLoss *= MovementController.Moving() ? 2 : 1;
             Recoil.Increment(recoilLoss);
-            _recoveryTimer = TimeToStartRecovery;
         }
 
         public virtual float GetAccuracyModifier() => Recoil.CurrentValue();
-
-        private void UpdateRecoil()
-        {
-            if (_recoveryTimer > 0)
-            {
-                _recoveryTimer -= Time.deltaTime;
-                return;
-            }
-
-            Recoil.Decrement(RecoilRecoveryRate * Time.deltaTime);
-        }
 
         public virtual void SetTarget(CanTakeDamage target)
         {

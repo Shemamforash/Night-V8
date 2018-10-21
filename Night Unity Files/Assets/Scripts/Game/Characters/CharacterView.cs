@@ -74,6 +74,7 @@ namespace Game.Characters
             _actionList = gameObject.FindChildWithName<Transform>("Action List");
             _actionProgress = gameObject.FindChildWithName<ActionProgressController>("Current Action");
             _exploreButton = gameObject.FindChildWithName<EnhancedButton>("Explore");
+            _exploreButton.AddOnSelectEvent(() => CharacterManager.SelectCharacter(_player));
             _exploreText = _exploreButton.GetComponent<EnhancedText>();
             _craftButton = gameObject.FindChildWithName<EnhancedButton>("Craft");
             _craftText = _craftButton.GetComponent<EnhancedText>();
@@ -130,16 +131,16 @@ namespace Game.Characters
             for (int i = 0; i < activeButtons.Count; ++i)
             {
                 EnhancedButton activeButton = activeButtons[i];
-                activeButton.SetOnDownAction(null);
+//                activeButton.SetOnDownAction(null);
                 TextMeshProUGUI textObject = activeButton.GetComponent<TextMeshProUGUI>();
                 string text = textObject.text;
                 text = text.Replace("<s>", "");
                 text = text.Replace("</s>", "");
                 textObject.text = text;
                 textObject.color = Color.white;
-                activeButton.SetDownNavigation(i + 1 < activeButtons.Count ? activeButtons[i + 1] : null);
-                if (i != activeButtons.Count - 1) continue;
-                activeButton.SetOnDownAction(() => CharacterManager.SelectNextCharacter(!_actionListActive));
+//                activeButton.SetDownNavigation(i + 1 < activeButtons.Count ? activeButtons[i + 1] : null);
+//                if (i != activeButtons.Count - 1) continue;
+//                activeButton.SetOnDownAction(() => CharacterManager.SelectNextCharacter(!_actionListActive));
             }
 
             List<EnhancedButton> inactiveButtons = _buttons.FindAll(b => !b.enabled);

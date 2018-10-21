@@ -531,6 +531,7 @@
                   <e p="GhoulMother.cs" t="Include" />
                   <e p="Maelstrom.cs" t="Include" />
                   <e p="Nightmare.cs" t="Include" />
+                  <e p="NightmareEnemyBehaviour.cs" t="Include" />
                   <e p="Revenant.cs" t="Include" />
                   <e p="Shadow.cs" t="Include" />
                 </e>

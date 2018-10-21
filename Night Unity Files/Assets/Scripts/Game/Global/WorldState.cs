@@ -30,7 +30,7 @@ namespace Game.Global
         private const int MinuteInterval = 60 / MinutesPerHour;
 
         private static int DaysSpentHere;
-        private static int _currentLevel = 1;
+        public static int _currentLevel = 1;
 
         private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
         private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
@@ -39,7 +39,7 @@ namespace Game.Global
         private static int MinutesPassed;
         private static float _currentTime;
         public static int Days, Hours = 6, Minutes;
-        private static int _difficulty;
+        public static int _difficulty;
         private static bool _isNight, _isPaused;
         public static int Seed = -1;
         private static int _templesActivated;
@@ -97,21 +97,21 @@ namespace Game.Global
             JournalEntry.Save(doc);
         }
 
-        public static void ResetWorld()
+        public static void ResetWorld(int currentLevel = 1, int difficulty = 0)
         {
             CharacterManager.Reset();
             Inventory.Reset();
             DaysSpentHere = 0;
-            _currentLevel = 1;
+            _currentLevel = currentLevel;
             Days = 0;
             Hours = 6;
             Minutes = 0;
-            _difficulty = 0;
+            _difficulty = difficulty;
             _isNight = false;
             _isPaused = false;
             Seed = Random.Range(0, int.MaxValue);
 #if UNITY_EDITOR
-            _difficulty = 30;
+//            _difficulty = 30;
 #endif
 
             Random.InitState(Seed);

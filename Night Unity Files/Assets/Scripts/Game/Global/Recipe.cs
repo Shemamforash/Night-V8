@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Facilitating;
 using Game.Characters;
+using Game.Exploration.Environment;
 using Game.Gear;
 using Game.Gear.Armour;
 using SamsHelper.BaseGameFunctionality.Basic;
@@ -26,7 +28,7 @@ namespace Game.Global
         private readonly bool _requiresFire;
         public readonly bool IsBuilding;
 
-        private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string productName, int productQuantity, bool isBuilding) : base(productName,
+        private Recipe(string ingredient1, string ingredient2, int ingredient1Quantity, int ingredient2Quantity, string productName, int productQuantity, bool isBuilding, int levelNo) : base(productName,
             GameObjectType.Resource)
         {
             Ingredient1 = ingredient1;
@@ -37,6 +39,7 @@ namespace Game.Global
             ProductName = productName;
             _requiresFire = ingredient1 == "Fire" || ingredient2 == "Fire";
             IsBuilding = isBuilding;
+            _levelNo = levelNo;
         }
 
         public bool CanCraft()
@@ -80,19 +83,25 @@ namespace Game.Global
                     Inventory.AddBuilding(new EssenceFilter());
                     break;
                 case "Leather Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Dark), 1);
+                    Inventory.Move(Armour.Create(ItemQuality.Dark));
+                    break;
+                case "Smoker":
+                    Inventory.AddBuilding(new Smoker());
+                    break;
+                case "Purifier":
+                    Inventory.AddBuilding(new Purifier());
                     break;
                 case "Reinforced Leather Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Dull), 1);
+                    Inventory.Move(Armour.Create(ItemQuality.Dull));
                     break;
                 case "Metal Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Glowing), 1);
+                    Inventory.Move(Armour.Create(ItemQuality.Glowing));
                     break;
                 case "Alloy Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Radiant), 1);
+                    Inventory.Move(Armour.Create(ItemQuality.Radiant));
                     break;
                 case "Living Metal Plate":
-                    Inventory.Move(Armour.Create(ItemQuality.Shining), 1);
+                    Inventory.Move(Armour.Create(ItemQuality.Shining));
                     break;
                 case "Ice":
                     Inventory.IncrementResource(ProductName, ProductQuantity);
@@ -104,11 +113,12 @@ namespace Game.Global
         }
 
         private bool _unlocked;
+        private int _levelNo;
 
         private bool Available()
         {
             if (_unlocked) return true;
-            _unlocked = CanCraft();
+            _unlocked = _levelNo <= EnvironmentManager.CurrentEnvironment.LevelNo;
             return _unlocked;
         }
 
@@ -143,8 +153,9 @@ namespace Game.Global
                 string productName = recipeNode.StringFromNode("ProductName");
                 int productQuantity = recipeNode.IntFromNode("ProductQuantity");
                 bool isBuilding = recipeNode.BoolFromNode("IsBuilding");
+                int levelNo = recipeNode.IntFromNode("LevelNo");
 
-                Recipe recipe = new Recipe(ingredient1Name, ingredient2Name, ingredient1Quantity, ingredient2Quantity, productName, productQuantity, isBuilding);
+                Recipe recipe = new Recipe(ingredient1Name, ingredient2Name, ingredient1Quantity, ingredient2Quantity, productName, productQuantity, isBuilding, levelNo);
                 _recipes.Add(recipe);
             }
 

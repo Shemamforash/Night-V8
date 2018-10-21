@@ -5,13 +5,14 @@ using UnityEngine;
 
 namespace Game.Combat.Enemies.Nightmares
 {
-    public class Nightmare : EnemyBehaviour
+    public class Nightmare : NightmareEnemyBehaviour
     {
         private const int HealthLostTarget = 200;
 
         public override void Initialise(Enemy enemy)
         {
             base.Initialise(enemy);
+            Destroy(gameObject.GetComponent<MoveBehaviour>());
             gameObject.AddComponent<Feed>().Initialise(HealthLostTarget);
             gameObject.AddComponent<Bombardment>().Initialise(1, 0.5f, 0.2f);
         }
