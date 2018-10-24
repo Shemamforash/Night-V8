@@ -117,5 +117,11 @@ namespace Game.Combat.Enemies.Humans
                 _healing = false;
             });
         }
+
+        protected override void TryFire()
+        {
+            if (!(GetTarget() is PlayerCombat || GetTarget() is ShelterCharacterBehaviour)) return;
+            base.TryFire();
+        }
     }
 }

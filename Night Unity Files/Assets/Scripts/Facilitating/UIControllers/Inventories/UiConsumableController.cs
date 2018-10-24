@@ -4,6 +4,7 @@ using Facilitating.UIControllers.Inventories;
 using Game.Characters;
 using SamsHelper.BaseGameFunctionality.InventorySystem;
 using SamsHelper.Libraries;
+using UnityEngine;
 
 public class UiConsumableController : UiInventoryMenuController
 {
@@ -30,7 +31,8 @@ public class UiConsumableController : UiInventoryMenuController
     {
         UpdateCondition();
 #if UNITY_EDITOR
-        ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, 20); });
+        ResourceTemplate.AllResources.ForEach(r => { Inventory.IncrementResource(r.Name, Random.Range(5, 20)); });
+        Inventory.IncrementResource("Essence", 38);
 #endif
         _consumableList.Show(GetAvailableConsumables);
     }

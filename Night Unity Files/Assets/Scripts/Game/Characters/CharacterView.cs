@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Facilitating.UIControllers;
 using Game.Characters.CharacterActions;
 using Game.Global;
@@ -23,6 +24,7 @@ namespace Game.Characters
         private UIAttributeController _attributeController;
         private UIConditionController _thirstController, _hungerController;
         private EnhancedButton _exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton;
+        private CanvasGroup _viewCanvas;
         private EnhancedText _exploreText, _craftText;
         private List<EnhancedButton> _buttons;
         private Transform _actionList;
@@ -31,7 +33,7 @@ namespace Game.Characters
         public void SetPlayer(Player player)
         {
             _player = player;
-            CacheDetailedViewElements();
+            CacheElements();
             BindUi();
             _player.SetCharacterView(this);
         }
@@ -54,7 +56,6 @@ namespace Game.Characters
         {
             UpdateAttributes();
             _brandUi.UpdateBrands(_player.BrandManager);
-            UpdateActionButtons();
             UpdateCurrentAction();
         }
 
@@ -65,16 +66,13 @@ namespace Game.Characters
             _hungerController.UpdateHunger(_player);
         }
 
-        private void UpdateActionButtons()
+        private void CacheElements()
         {
-        }
+            _viewCanvas = gameObject.FindChildWithName<CanvasGroup>("Vertical Group");
 
-        private void CacheDetailedViewElements()
-        {
             _actionList = gameObject.FindChildWithName<Transform>("Action List");
             _actionProgress = gameObject.FindChildWithName<ActionProgressController>("Current Action");
             _exploreButton = gameObject.FindChildWithName<EnhancedButton>("Explore");
-            _exploreButton.AddOnSelectEvent(() => CharacterManager.SelectCharacter(_player));
             _exploreText = _exploreButton.GetComponent<EnhancedText>();
             _craftButton = gameObject.FindChildWithName<EnhancedButton>("Craft");
             _craftText = _craftButton.GetComponent<EnhancedText>();
@@ -82,25 +80,41 @@ namespace Game.Characters
             _meditateButton = gameObject.FindChildWithName<EnhancedButton>("Meditate");
             _sleepButton = gameObject.FindChildWithName<EnhancedButton>("Sleep");
             _buttons = new List<EnhancedButton> {_exploreButton, _craftButton, _consumeButton, _meditateButton, _sleepButton};
-            _exploreButton.SetOnUpAction(() => CharacterManager.SelectPreviousCharacter(!_actionListActive));
+            _buttons.ForEach(b => b.AddOnSelectEvent(SelectCharacter));
 
-            gameObject.FindChildWithName<TextMeshProUGUI>("Detailed Name").text = _player.Name;
+            gameObject.FindChildWithName<TextMeshProUGUI>("Character Name").text = _player.Name;
 
             WeaponController = gameObject.FindChildWithName<UIPlayerWeaponController>("Weapon");
             WeaponController.EnhancedButton.AddOnClick(UiGearMenuController.ShowWeaponMenu);
-            WeaponController.EnhancedButton.SetOnUpAction(() => CharacterManager.SelectPreviousCharacter(true));
+            WeaponController.EnhancedButton.AddOnSelectEvent(SelectCharacter);
             WeaponController.SetWeapon(_player.EquippedWeapon);
 
             AccessoryController = gameObject.FindChildWithName<UIPlayerAccessoryController>("Accessory");
+            AccessoryController.EnhancedButton.AddOnSelectEvent(SelectCharacter);
             AccessoryController.SetAccessory(_player.EquippedAccessory);
             AccessoryController.EnhancedButton.AddOnClick(UiGearMenuController.ShowAccessoryMenu);
 
             ArmourController = gameObject.FindChildWithName<UIPlayerArmourController>("Armour");
+            ArmourController.EnhancedButton.AddOnSelectEvent(SelectCharacter);
             ArmourController.EnhancedButton.AddOnClick(UiGearMenuController.ShowArmourMenu);
-            ArmourController.EnhancedButton.SetOnDownAction(() => CharacterManager.SelectNextCharacter(true));
             _player.ArmourController.SetOnArmourChange(() => ArmourController.SetArmour(_player.ArmourController));
 
             _brandUi = gameObject.FindChildWithName<CharacterBrandUIController>("Brands");
+        }
+
+        private void SelectCharacter()
+        {
+            CharacterManager.SelectCharacter(_player);
+            _viewCanvas.DOFade(1f, 0.3f);
+            CharacterManager.Characters.ForEach(c =>
+            {
+                if (c != _player) c.CharacterView().DeselectCharacter();
+            });
+        }
+
+        private void DeselectCharacter()
+        {
+            _viewCanvas.DOFade(0.4f, 0.3f);
         }
 
         public void SelectInitial()
@@ -117,10 +131,6 @@ namespace Game.Characters
             else _buttons.Last(b => b.enabled).Select();
         }
 
-        //actions[0], weaponui, & consumption toggle navigate to actions[last], accessoryui, & consumption buttons respectively
-        //inverse is true to navigate to character below
-        //if no character above, all navigate to inventory button
-        //if no character below do nothing
         public void RefreshNavigation()
         {
             _craftButton.enabled = Recipe.RecipesAvailable();
@@ -131,16 +141,12 @@ namespace Game.Characters
             for (int i = 0; i < activeButtons.Count; ++i)
             {
                 EnhancedButton activeButton = activeButtons[i];
-//                activeButton.SetOnDownAction(null);
                 TextMeshProUGUI textObject = activeButton.GetComponent<TextMeshProUGUI>();
                 string text = textObject.text;
                 text = text.Replace("<s>", "");
                 text = text.Replace("</s>", "");
                 textObject.text = text;
                 textObject.color = Color.white;
-//                activeButton.SetDownNavigation(i + 1 < activeButtons.Count ? activeButtons[i + 1] : null);
-//                if (i != activeButtons.Count - 1) continue;
-//                activeButton.SetOnDownAction(() => CharacterManager.SelectNextCharacter(!_actionListActive));
             }
 
             List<EnhancedButton> inactiveButtons = _buttons.FindAll(b => !b.enabled);
@@ -158,14 +164,7 @@ namespace Game.Characters
         {
             BaseCharacterAction currentState = (BaseCharacterAction) _player.States.GetCurrentState();
             _actionProgress.UpdateCurrentAction(currentState);
-            SetActionListActive(currentState is Rest);
-        }
-
-        private void SetActionListActive(bool active)
-        {
             RefreshNavigation();
-            _actionListActive = active;
-            _actionList.gameObject.SetActive(active);
         }
     }
 }

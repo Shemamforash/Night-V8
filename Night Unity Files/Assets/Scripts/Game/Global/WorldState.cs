@@ -34,7 +34,7 @@ namespace Game.Global
 
         private static readonly List<EnemyTemplate> _allowedHumanEnemies = new List<EnemyTemplate>();
         private static readonly List<EnemyTemplate> _allowedNightmareEnemies = new List<EnemyTemplate>();
-        private static bool _needsTransit; // = true;
+        private static bool _needsTransit; //= true;
 
         private static int MinutesPassed;
         private static float _currentTime;
@@ -127,7 +127,6 @@ namespace Game.Global
             WeatherManager.Start();
             WorldView.Update(Hours);
             CharacterManager.Update();
-           
         }
 
         public static void ActivateTemple()
@@ -181,7 +180,7 @@ namespace Game.Global
             DaysSpentHere = 0;
             EnvironmentManager.NextLevel(false);
             CharacterManager.Characters.ForEach(c => { c.TravelAction.ReturnToHomeInstant(); });
-            StoryController.ShowText(JournalEntry.GetStoryText(_currentLevel - 1), _currentLevel == 5);
+            StoryController.ShowText(JournalEntry.GetStoryText(_currentLevel - 1), _currentLevel == 6);
         }
 
         public static void Pause()

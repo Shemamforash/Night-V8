@@ -80,18 +80,6 @@ namespace Game.Characters
             SelectedCharacter = player;
         }
 
-        private static Player PreviousCharacter(Player character)
-        {
-            int charIndex = Characters.IndexOf(character);
-            return charIndex != 0 ? Characters[charIndex - 1] : null;
-        }
-
-        private static Player NextCharacter(Player character)
-        {
-            int charIndex = Characters.IndexOf(character);
-            return charIndex != Characters.Count - 1 ? Characters[charIndex + 1] : null;
-        }
-
         private static void LoadTemplates()
         {
             if (_loaded) return;
@@ -179,25 +167,6 @@ namespace Game.Characters
                 if (c.IsDead)
                     RemoveCharacter(c);
             }
-        }
-
-        public static void SelectPreviousCharacter(bool selectGear)
-        {
-            Player previousPlayer = PreviousCharacter(SelectedCharacter);
-            if (previousPlayer == null) return;
-            SelectCharacter(previousPlayer);
-            if (selectGear) previousPlayer.CharacterView().ArmourController.EnhancedButton.Select();
-            else previousPlayer.CharacterView().SelectLast();
-        }
-
-        public static void SelectNextCharacter(bool selectGear)
-        {
-            Player nextCharacter = NextCharacter(SelectedCharacter);
-            Debug.Log(nextCharacter);
-            if (nextCharacter == null) return;
-            SelectCharacter(nextCharacter);
-            if (selectGear) nextCharacter.CharacterView().WeaponController.EnhancedButton.Select();
-            else nextCharacter.CharacterView().SelectInitial();
         }
     }
 }

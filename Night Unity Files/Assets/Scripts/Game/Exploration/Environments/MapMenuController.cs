@@ -27,8 +27,8 @@ namespace Game.Exploration.Environment
 
         private readonly List<Tuple<Region, Region>> _allRoutes = new List<Tuple<Region, Region>>();
         private readonly Queue<Tuple<Region, Region>> _undrawnRoutes = new Queue<Tuple<Region, Region>>();
-        private float nextRouteTime = 0.25f;
-        private float currentTime;
+        private float _nextRouteTime;
+        private float _currentTime;
         private bool _isActive;
         private readonly List<RingDrawer> _rings = new List<RingDrawer>();
         public static bool IsReturningFromCombat;
@@ -37,6 +37,7 @@ namespace Game.Exploration.Environment
         public override void Awake()
         {
             base.Awake();
+            _nextRouteTime = 2f / MapGenerator.Regions().Count;
             MapTransform = GameObject.Find("Nodes").transform;
             CreateMapRings();
             CreateRouteLinks();
@@ -92,8 +93,8 @@ namespace Game.Exploration.Environment
                 _allRoutes.ForEach(a => _undrawnRoutes.Enqueue(a));
             }
 
-            currentTime += Time.deltaTime;
-            if (currentTime < 1f / _allRoutes.Count) return;
+            _currentTime += Time.deltaTime;
+            if (_currentTime < 1f / _allRoutes.Count) return;
             Tuple<Region, Region> link = _undrawnRoutes.Dequeue();
             Region from = link.Item1;
             Region to = link.Item2;
@@ -119,7 +120,7 @@ namespace Game.Exploration.Environment
             }
 
             FadeAndDieTrailRenderer.CreatePale(rArr);
-            currentTime = 0f;
+            _currentTime = 0f;
         }
 
         private void CreateMapRings()
@@ -166,9 +167,9 @@ namespace Game.Exploration.Environment
         private void DrawTargetRoute()
         {
             if (route.Count <= 1) return;
-            nextRouteTime -= Time.deltaTime;
-            if (nextRouteTime > 0) return;
-            nextRouteTime = Random.Range(0.2f, 0.5f);
+            _nextRouteTime -= Time.deltaTime;
+            if (_nextRouteTime > 0) return;
+            _nextRouteTime = Random.Range(0.2f, 0.5f);
 
             Vector3[] rArr = new Vector3[route.Count];
             for (int j = 0; j < route.Count; ++j)

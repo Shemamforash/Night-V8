@@ -60,8 +60,8 @@ namespace Facilitating.MenuNavigation
                 _fadeInSequence.Append(_latin.DOFade(0f, 1f)); //18
                 _fadeInSequence.AppendInterval(2f);
                 
-                _fadeInSequence.Insert(6, latinText.DOFontSize(finalLatinTextSize, 5));
-                _fadeInSequence.Insert(10, englishText.DOFontSize(finalEnglishTextSize, 5));
+                _fadeInSequence.Insert(6, latinText.DOFontSize(finalLatinTextSize, 13));
+                _fadeInSequence.Insert(10, englishText.DOFontSize(finalEnglishTextSize, 9));
                 _fadeInSequence.Insert(17, _english.DOFade(0f, 1f));
 
                 _seenIntro = true;

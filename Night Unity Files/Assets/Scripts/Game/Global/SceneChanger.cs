@@ -38,11 +38,7 @@ namespace Game.Global
             _faderImage.color = Color.white;
             _fader.alpha = 1;
             _fader.gameObject.GetComponent<CanvasGroup>().alpha = 1;
-            bool timeScaleIndependent = DOTween.defaultTimeScaleIndependent;
-            DOTween.defaultTimeScaleIndependent = true;
-            Tweener tweener = _faderImage.DOColor(to, duration);
-            DOTween.defaultTimeScaleIndependent = timeScaleIndependent;
-            return tweener;
+            return _faderImage.DOColor(to, duration).SetUpdate(UpdateType.Normal, true);
         }
 
         private IEnumerator LoadNextScene()

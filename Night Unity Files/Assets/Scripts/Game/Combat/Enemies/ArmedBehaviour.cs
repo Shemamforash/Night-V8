@@ -33,7 +33,7 @@ namespace Game.Combat.Enemies
             TryFire();
         }
 
-        protected void TryFire()
+        protected virtual void TryFire()
         {
             Aim();
         }

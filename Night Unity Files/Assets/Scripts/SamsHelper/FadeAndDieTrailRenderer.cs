@@ -13,8 +13,8 @@ namespace SamsHelper
         private TrailRenderer _trailRenderer;
         private bool Fading;
         public float LifeTime;
-        private static readonly Color _red = new Color(1, 0, 0, 0.1f);
-        private static readonly Color _pale = new Color(0.2f, 0.2f, 0.2f, 0.2f);
+        private static readonly Color _red = new Color(1, 0, 0, 0.3f);
+        private static readonly Color _pale = new Color(0.5f, 0.5f, 0.5f, 0.3f);
         private Sequence _sequence;
 
         public void Awake()
@@ -45,7 +45,7 @@ namespace SamsHelper
             _trailRenderer.Clear();
             _sequence = DOTween.Sequence();
             _sequence.Append(transform.DOPath(rArr, Random.Range(1f, 3f), PathType.CatmullRom, PathMode.TopDown2D));
-            _sequence.AppendCallback(() => StartFade(1f));
+            _sequence.AppendCallback(() => StartFade(2f));
         }
 
         public static void ForceFadeAll()
