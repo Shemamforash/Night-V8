@@ -11,39 +11,27 @@ namespace Facilitating.UIControllers
     {
         private readonly List<Image> _plates = new List<Image>();
         private GameObject _equippedObject, _notEquippedObject;
-        private EnhancedText _ratingText, _platesText;
         public EnhancedButton EnhancedButton;
 
         public void Awake()
         {
             EnhancedButton = GetComponent<EnhancedButton>();
-            _equippedObject = gameObject.FindChildWithName("Equipped");
+            _equippedObject = gameObject.FindChildWithName("Armour Bar");
             _notEquippedObject = gameObject.FindChildWithName("Not Equipped");
             for (int i = 9; i >= 0; --i)
             {
                 _plates.Add(gameObject.FindChildWithName<Image>("Plate " + i));
             }
-
-            _ratingText = gameObject.FindChildWithName<EnhancedText>("Rating");
-            _platesText = gameObject.FindChildWithName<EnhancedText>("Plates");
         }
 
         public void SetArmour(ArmourController armour)
         {
             if (_notEquippedObject == null) return;
-            if (armour.GetTotalProtection() == 0)
-            {
-                _notEquippedObject.SetActive(true);
-                _equippedObject.SetActive(false);
-                return;
-            }
-
-            _notEquippedObject.SetActive(false);
-            _equippedObject.SetActive(true);
+            bool hasProtection = armour.GetTotalProtection() != 0;
+            _notEquippedObject.SetActive(!hasProtection);
+            _equippedObject.SetActive(hasProtection);
+            if (!hasProtection) return;
             for (int i = 0; i < _plates.Count; ++i) _plates[i].color = i >= armour.GetTotalProtection() ? UiAppearanceController.InvisibleColour : Color.white;
-
-            _ratingText.SetText("Max Armour: " + armour.GetTotalProtection());
-            _platesText.SetText(armour.GetTotalProtection() + " Armour");
         }
     }
 }

@@ -243,7 +243,7 @@ namespace Game.Exploration.Ui
         public void GainFocus()
         {
             _audioSource.pitch = Random.Range(0.75f, 1.25f);
-            _audioSource.DOFade(1, 1);
+            _audioSource.DOFade(0.5f, 1);
             _icon.DOColor(_iconColor, 1f);
             _ring1.DOColor(_ring1Colour, 1f);
             _ring2.DOColor(_ring2Colour, 1f);

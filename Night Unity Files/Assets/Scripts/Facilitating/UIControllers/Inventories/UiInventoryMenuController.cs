@@ -17,12 +17,14 @@ namespace Facilitating.UIControllers.Inventories
         public void Show()
         {
             gameObject.SetActive(true);
+            VolumeController.FadeInMuffle();
             OnShow();
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
+            VolumeController.FadeOutMuffle();
             OnHide();
         }
 

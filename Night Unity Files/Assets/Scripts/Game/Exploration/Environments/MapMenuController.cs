@@ -32,7 +32,6 @@ namespace Game.Exploration.Environment
         private bool _isActive;
         private readonly List<RingDrawer> _rings = new List<RingDrawer>();
         public static bool IsReturningFromCombat;
-        private AudioSource _mapAudio;
 
         public override void Awake()
         {
@@ -41,8 +40,6 @@ namespace Game.Exploration.Environment
             MapTransform = GameObject.Find("Nodes").transform;
             CreateMapRings();
             CreateRouteLinks();
-            _mapAudio = GetComponent<AudioSource>();
-            _mapAudio.volume = 0f;
         }
 
         private void ReturnFromCombat()
@@ -56,9 +53,9 @@ namespace Game.Exploration.Environment
             base.Enter();
             _isActive = true;
             _rings.ForEach(r => r.TweenColour(UiAppearanceController.InvisibleColour, Color.white, 0.5f));
-            _mapAudio.DOFade(1f, 0.5f);
             MapGenerator.Regions().ForEach(n => { n.ShowNode(); });
             MapMovementController.Enter(CharacterManager.SelectedCharacter);
+            VolumeController.FadeInMuffle();
         }
 
         public override void Exit()
@@ -66,10 +63,10 @@ namespace Game.Exploration.Environment
             base.Exit();
             _rings.ForEach(r => r.TweenColour(Color.white, UiAppearanceController.InvisibleColour, 0.5f));
             _isActive = false;
-            _mapAudio.DOFade(0f, 0.5f);
             MapGenerator.Regions().ForEach(n => n.HideNode());
             MapMovementController.Exit();
             FadeAndDieTrailRenderer.ForceFadeAll();
+            VolumeController.FadeOutMuffle();
         }
 
         private void CreateRouteLinks()

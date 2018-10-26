@@ -15,6 +15,7 @@ public class ButtonClickListener : MonoBehaviour
     {
         _audioSource = GetComponent<AudioSource>();
         _audioSource.outputAudioMixerGroup = Resources.Load<AudioMixer>("AudioMixer/Master").FindMatchingGroups("Modified")[0];
+        _audioSource.clip = AudioClips.ButtonSelectClip;
     }
 
     public static void Click()
@@ -27,8 +28,8 @@ public class ButtonClickListener : MonoBehaviour
 
         if (_audioSource == null) return;
         _audioSource.pitch = Random.Range(0.9f, 1f);
-        _audioSource.volume = 0.5f;
-        _audioSource.PlayOneShot(AudioClips.ButtonSelectClip);
+        _audioSource.volume = 0.2f;
+        _audioSource.Play();
     }
 
     public static void SuppressClick()

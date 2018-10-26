@@ -23,7 +23,7 @@ namespace Game.Global
         public static AudioClip[] LightRainClips, MediumRainClips, HeavyRainClips;
         public static AudioClip[] LightWindClips, MediumWindClips, HeavyWindClips;
         public static AudioClip[] DayAudio, NightAudio;
-        public static AudioClip[] Drones;
+        public static AudioClip[] Ambient;
         public static AudioClip ButtonSelectClip;
         public static AudioClip SimmavA, SimmavB, SimmavC;
         private static readonly List<AssetBundle> _loadedBundles = new List<AssetBundle>();
@@ -104,7 +104,7 @@ namespace Game.Global
             yield return StartCoroutine(LoadAllClipsFromBundle(a => HeavyWindClips = a, "wind/heavy"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => NightAudio = a, "nighttime"));
             yield return StartCoroutine(LoadAllClipsFromBundle(a => DayAudio = a, "daytime"));
-            yield return StartCoroutine(LoadAllClipsFromBundle(a => Drones = a, "drones"));
+            yield return StartCoroutine(LoadAllClipsFromBundle(a => Ambient = a, "drones"));
 
             Debug.Log("loading misc audio");
             yield return StartCoroutine(LoadClip(a => ButtonSelectClip = a, "misc/buttonclick", "Button Click"));

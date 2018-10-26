@@ -52,5 +52,10 @@ namespace SamsHelper.BaseGameFunctionality.StateMachines
         {
             return currentState == _defaultState;
         }
+
+        public string GetDefaultStateName()
+        {
+            return _defaultState.Name;
+        }
     }
 }

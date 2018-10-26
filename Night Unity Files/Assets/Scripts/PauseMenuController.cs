@@ -25,6 +25,7 @@ public class PauseMenuController : MonoBehaviour
 
     private void Show()
     {
+        VolumeController.FadeInMuffle();
         _lastMenu = MenuStateMachine.CurrentMenu().gameObject.name;
         _instance.ShowPauseMenu();
         _open = true;
@@ -58,6 +59,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void Hide()
     {
+        VolumeController.FadeOutMuffle();
         MenuStateMachine.ShowMenu(_lastMenu);
         _open = false;
         Unpause();

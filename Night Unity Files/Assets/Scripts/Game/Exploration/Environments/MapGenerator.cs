@@ -8,14 +8,14 @@ using Game.Exploration.Regions;
 using Game.Global;
 using SamsHelper.Libraries;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Exploration.Environment
 {
     public static class MapGenerator
     {
-        public const int MinRadius = 6;
-        private const int MapWidth = 120;
-        private const int MaxRadius = 12;
+        public const int MinRadius = 4;
+        private const int MaxRadius = 8;
         private const int WaterSourcesPerEnvironment = 30;
         private const int FoodSourcesPerEnvironment = 20;
         private const int ResourcesPerEnvironment = 30;
@@ -97,20 +97,42 @@ namespace Game.Exploration.Environment
         private static void ConnectRegions()
         {
             bool succeeded = false;
+
             while (!succeeded)
             {
                 _regions.ForEach(s => { s.Reset(); });
-                float rootRegions = Mathf.Sqrt(_regions.Count);
-                float normalised = rootRegions / 8f;
-                float mapWidth = MapWidth * 0.6f * normalised;
-                List<Vector2> samples = AdvancedMaths.GetPoissonDiscDistribution(_regions.Count, mapWidth, true, 0.75f);
+                int regionCount = _regions.Count - 1;
+                int ringNo = 0;
+                int regionNo = 1;
                 _regions[0].SetPosition(Vector2.zero);
-                samples.RemoveAll(s => s.magnitude < 4);
-                int regionCount = _regions.Count;
-                for (int i = 1; i < regionCount; ++i)
+                
+                while (regionCount > 0)
                 {
-                    Vector2Int point = new Vector2Int((int) samples[i].x, (int) samples[i].y);
-                    _regions[i].SetPosition(point);
+                    int maxRingSize = 3 * (ringNo + 1);
+                    int regionsOnRing = Random.Range(ringNo, maxRingSize);
+                    if (regionsOnRing > regionCount) regionsOnRing = regionCount;
+                    regionCount -= regionsOnRing;
+
+                    float radius = (ringNo + 1) * MinRadius;
+                    float angleInterval = 360f / maxRingSize;
+                    int[] slots = new int[maxRingSize];
+                    for (int i = 0; i < maxRingSize; ++i)
+                    {
+                        if (i < regionsOnRing) slots[i] = 1;
+                        else slots[i] = 0;
+                    }
+
+                    slots.Shuffle();
+                    for (int i = 0; i < maxRingSize; ++i)
+                    {
+                        if (slots[i] == 0) continue;
+                        float angle = Random.Range(i * angleInterval, (i + 1) * angleInterval);
+                        Vector2 position = AdvancedMaths.CalculatePointOnCircle(angle, radius, Vector2.zero);
+                        _regions[regionNo].SetPosition(position);
+                        ++regionNo;
+                    }
+
+                    ++ringNo;
                 }
 
                 succeeded = ConnectNodes();

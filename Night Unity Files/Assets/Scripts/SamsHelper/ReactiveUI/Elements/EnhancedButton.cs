@@ -20,6 +20,7 @@ namespace SamsHelper.ReactiveUI.Elements
         private event Action OnSelectActions;
         private event Action OnDeselectActions;
         private bool _isSelected;
+        private bool _enabled = true;
 
         public void OnDeselect(BaseEventData eventData)
         {
@@ -90,7 +91,7 @@ namespace SamsHelper.ReactiveUI.Elements
             _button = GetComponent<Button>();
             if (_borderPrefab == null) _borderPrefab = Resources.Load<GameObject>("Prefabs/Borders/Border");
             _border = Instantiate(_borderPrefab).GetComponent<UIBorderController>();
-            _border.transform.SetParent(transform, false);
+            _border.SetButton(this);
         }
 
         private void Enter()
@@ -252,6 +253,16 @@ namespace SamsHelper.ReactiveUI.Elements
         public void Select()
         {
             Button().Select();
+        }
+
+        public void SetEnabled(bool b)
+        {
+            _enabled = b;
+        }
+
+        public bool IsEnabled()
+        {
+            return _enabled;
         }
     }
 }

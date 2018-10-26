@@ -27,8 +27,6 @@ namespace Game.Characters
         private CanvasGroup _viewCanvas;
         private EnhancedText _exploreText, _craftText;
         private List<EnhancedButton> _buttons;
-        private Transform _actionList;
-        private bool _actionListActive = true;
 
         public void SetPlayer(Player player)
         {
@@ -70,7 +68,6 @@ namespace Game.Characters
         {
             _viewCanvas = gameObject.FindChildWithName<CanvasGroup>("Vertical Group");
 
-            _actionList = gameObject.FindChildWithName<Transform>("Action List");
             _actionProgress = gameObject.FindChildWithName<ActionProgressController>("Current Action");
             _exploreButton = gameObject.FindChildWithName<EnhancedButton>("Explore");
             _exploreText = _exploreButton.GetComponent<EnhancedText>();
@@ -119,44 +116,22 @@ namespace Game.Characters
 
         public void SelectInitial()
         {
-            CharacterManager.SelectCharacter(_player);
-            if (!_actionListActive) WeaponController.EnhancedButton.Select();
-            else _exploreButton.Select();
-        }
-
-        public void SelectLast()
-        {
-            CharacterManager.SelectCharacter(_player);
-            if (!_actionListActive) ArmourController.EnhancedButton.Select();
-            else _buttons.Last(b => b.enabled).Select();
+            _exploreButton.Select();
         }
 
         public void RefreshNavigation()
         {
-            _craftButton.enabled = Recipe.RecipesAvailable();
-            _consumeButton.enabled = Inventory.Consumables().Count > 0;
-            _meditateButton.enabled = _player.CanMeditate();
-            _sleepButton.enabled = _player.CanSleep();
-            List<EnhancedButton> activeButtons = _buttons.FindAll(b => b.enabled);
-            for (int i = 0; i < activeButtons.Count; ++i)
+            bool atHome = _player.TravelAction.AtHome();
+            bool resting = _player.States.GetCurrentState() is Rest;
+            _exploreButton.SetEnabled(atHome && resting);
+            _craftButton.SetEnabled(Recipe.RecipesAvailable() && atHome && resting);
+            _consumeButton.SetEnabled(Inventory.Consumables().Count > 0);
+            _meditateButton.SetEnabled(_player.CanMeditate() && atHome && resting);
+            _sleepButton.SetEnabled(_player.CanSleep() && atHome && resting);
+            _buttons.ForEach(b =>
             {
-                EnhancedButton activeButton = activeButtons[i];
-                TextMeshProUGUI textObject = activeButton.GetComponent<TextMeshProUGUI>();
-                string text = textObject.text;
-                text = text.Replace("<s>", "");
-                text = text.Replace("</s>", "");
-                textObject.text = text;
-                textObject.color = Color.white;
-            }
-
-            List<EnhancedButton> inactiveButtons = _buttons.FindAll(b => !b.enabled);
-            inactiveButtons.ForEach(b =>
-            {
-                TextMeshProUGUI textObject = b.gameObject.GetComponent<TextMeshProUGUI>();
-                string text = textObject.text;
-                text = "<s>" + text + "</s>";
-                textObject.text = text;
-                textObject.color = UiAppearanceController.FadedColour;
+                TextMeshProUGUI textObject = b.GetComponent<TextMeshProUGUI>();
+                textObject.color = b.IsEnabled() ? Color.white : UiAppearanceController.FadedColour;
             });
         }
 

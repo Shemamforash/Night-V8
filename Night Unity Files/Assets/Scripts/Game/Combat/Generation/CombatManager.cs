@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Game.Characters;
 using Game.Characters.CharacterActions;
 using Game.Combat.Enemies;
@@ -33,7 +34,6 @@ namespace Game.Combat.Generation
         private TextMeshProUGUI _regionNameText;
         private static bool _paused;
         private Image _regionUnderline;
-       
 
         public static List<EnemyTemplate> GenerateEnemies(int size, List<EnemyTemplate> allowedTypes)
         {
@@ -65,9 +65,16 @@ namespace Game.Combat.Generation
             base.Awake();
             _instance = this;
             GameObject regionNameObject = GameObject.Find("Screen Fader");
-            _regionNameText = regionNameObject.FindChildWithName<TextMeshProUGUI>("Text");
             _regionUnderline = regionNameObject.FindChildWithName<Image>("Underline");
-            _regionNameText.text = GetCurrentRegionName();
+            _regionUnderline.color = UiAppearanceController.InvisibleColour;
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendInterval(0.5f);
+            sequence.AppendCallback(() =>
+            {
+                _regionNameText = regionNameObject.FindChildWithName<TextMeshProUGUI>("Text");
+                _regionUnderline.color = Color.white;
+                _regionNameText.text = GetCurrentRegionName();
+            });
             _paused = false;
         }
 
@@ -283,7 +290,7 @@ namespace Game.Combat.Generation
             PlayerCombat.Instance.ExitCombat();
             ChangeScene(returnToMap);
         }
-     
+
         private static void ChangeScene(bool returnToMap)
         {
             if (!returnToMap) return;

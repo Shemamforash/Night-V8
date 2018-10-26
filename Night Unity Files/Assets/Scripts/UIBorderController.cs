@@ -6,10 +6,12 @@ using UnityEngine.UI;
 
 public class UIBorderController : MonoBehaviour
 {
-    private Image _activeTop, _inactiveTop;
+    private Image _activeTop;
+    private CanvasGroup _inactiveTop, _highlightCanvas;
     private const float FadeTime = 0.25f;
     [SerializeField] private BorderState _currentState;
     private bool _needsUpdate;
+    private EnhancedButton _button;
 
     private enum BorderState
     {
@@ -22,7 +24,8 @@ public class UIBorderController : MonoBehaviour
     {
         GameObject top = gameObject.FindChildWithName("Top");
         _activeTop = top.FindChildWithName<Image>("Active");
-        _inactiveTop = top.FindChildWithName<Image>("Inactive");
+        _inactiveTop = top.FindChildWithName<CanvasGroup>("Inactive");
+        _highlightCanvas = gameObject.FindChildWithName<CanvasGroup>("Highlight");
         SetActive();
     }
 
@@ -70,21 +73,32 @@ public class UIBorderController : MonoBehaviour
     {
         float time = instant ? 0 : FadeTime;
         _activeTop.DOColor(UiAppearanceController.InvisibleColour, time);
-        _inactiveTop.DOColor(UiAppearanceController.InvisibleColour, time);
+        _inactiveTop.DOFade(0, time);
+        _highlightCanvas.DOFade(0, time);
     }
 
     private void MakeActive(bool instant = false)
     {
         float time = instant ? 0 : FadeTime;
         _activeTop.DOColor(UiAppearanceController.InvisibleColour, time);
-        _inactiveTop.DOColor(UiAppearanceController.FadedColour, time);
+        _inactiveTop.DOFade(0.4f, time);
+        _highlightCanvas.DOFade(0.15f, time);
     }
 
     private void MakeSelected(bool instant = false)
     {
         float time = instant ? 0 : FadeTime;
-        _activeTop.DOColor(Color.white, time);
-        _inactiveTop.DOColor(Color.white, time);
+        if (_button.IsEnabled())
+        {
+            _activeTop.DOColor(Color.white, time);
+            _inactiveTop.DOFade(1, time);
+            _highlightCanvas.DOFade(0.75f, time);
+            return;
+        }
+
+        _activeTop.DOColor(UiAppearanceController.FadedColour, time);
+        _inactiveTop.DOFade(0.4f, time);
+        _highlightCanvas.DOFade(0f, time);
     }
 
     public void SetInactive()
@@ -100,5 +114,11 @@ public class UIBorderController : MonoBehaviour
     public void SetSelected()
     {
         SetState(BorderState.Selected);
+    }
+
+    public void SetButton(EnhancedButton enhancedButton)
+    {
+        _button = enhancedButton;
+        transform.SetParent(_button.transform, false);
     }
 }

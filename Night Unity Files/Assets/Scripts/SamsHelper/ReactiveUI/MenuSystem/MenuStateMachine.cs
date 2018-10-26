@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using DG.Tweening;
 using SamsHelper.BaseGameFunctionality.StateMachines;
 using SamsHelper.Input;
 using SamsHelper.Libraries;
@@ -53,7 +54,6 @@ namespace SamsHelper.ReactiveUI.MenuSystem
             float fadeTime = 0.1f;
             float currentTime = fadeTime;
             EventSystem.current.sendNavigationEvents = false;
-
             MenuState currentState = (MenuState) States.GetCurrentState();
             if (currentState != null)
             {
